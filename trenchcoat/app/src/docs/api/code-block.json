@@ -1,0 +1,346 @@
+{
+ "elements": [
+  {
+   "tag": "tc-code-block",
+   "className": "TcCodeBlock",
+   "description": "Streaming code with syntax colours, Copy, Apply, and a line diff against the current file.",
+   "properties": [
+    {
+     "name": "code",
+     "attribute": "code",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The code; it may grow every frame while streaming",
+     "readonly": false
+    },
+    {
+     "name": "language",
+     "attribute": "language",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Language for the colours: ts, tsx, js, jsx, py, json, html, xml, css, sh/bash, or plain",
+     "readonly": false
+    },
+    {
+     "name": "filename",
+     "attribute": "filename",
+     "type": "string",
+     "default": "\"\"",
+     "description": "File name shown in the head, e.g. \"src/auth/session.ts\"",
+     "readonly": false
+    },
+    {
+     "name": "current",
+     "attribute": null,
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The file as it is now. When given, a Diff button shows the changes the code would make",
+     "readonly": false
+    },
+    {
+     "name": "view",
+     "attribute": "view",
+     "type": "CodeBlockView",
+     "default": "\"code\"",
+     "description": "\"code\" or \"diff\". Changed by the user unless a tc-view-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "streaming",
+     "attribute": "streaming",
+     "type": "boolean",
+     "default": "false",
+     "description": "The code is still coming in: a caret blinks at the end, Diff and Apply wait",
+     "readonly": false
+    },
+    {
+     "name": "applyable",
+     "attribute": "applyable",
+     "type": "boolean",
+     "default": "false",
+     "description": "Show the Apply button (fires tc-apply)",
+     "readonly": false
+    },
+    {
+     "name": "applied",
+     "attribute": "applied",
+     "type": "boolean",
+     "default": "false",
+     "description": "The code has been applied: Apply turns into a disabled \"Applied\"",
+     "readonly": false
+    },
+    {
+     "name": "applyLabel",
+     "attribute": "apply-label",
+     "type": "string",
+     "default": "\"Apply\"",
+     "description": "Apply button text",
+     "readonly": false
+    },
+    {
+     "name": "appliedLabel",
+     "attribute": "applied-label",
+     "type": "string",
+     "default": "\"Applied\"",
+     "description": "Applied state text",
+     "readonly": false
+    },
+    {
+     "name": "lineNumbers",
+     "attribute": "line-numbers",
+     "type": "boolean",
+     "default": "true",
+     "description": "Line numbers in a gutter",
+     "readonly": false
+    },
+    {
+     "name": "wrap",
+     "attribute": "wrap",
+     "type": "boolean",
+     "default": "false",
+     "description": "Wrap long lines instead of scrolling sideways",
+     "readonly": false
+    },
+    {
+     "name": "maxHeight",
+     "attribute": "max-height",
+     "type": "number",
+     "default": "0",
+     "description": "Cap the body's height in px (0: grow with the code); a capped body scrolls and follows the end while streaming",
+     "readonly": false
+    },
+    {
+     "name": "bare",
+     "attribute": "bare",
+     "type": "boolean",
+     "default": "false",
+     "description": "No tray or card around it – for use inside another component's card",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-copy",
+     "detail": "",
+     "description": "The code was copied to the clipboard ({ text: string })",
+     "cancelable": false
+    },
+    {
+     "name": "tc-apply",
+     "detail": "",
+     "description": "Apply was pressed ({ code: string, filename: string, language: string })",
+     "cancelable": false
+    },
+    {
+     "name": "tc-view-change",
+     "detail": "",
+     "description": "Code or Diff was picked ({ view: \"code\" | \"diff\" }); cancelable",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "cblk",
+   "cssProperties": [
+    {
+     "name": "--tc-code-block-keyword",
+     "value": "var(--tc-tone-violet-fg)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-code-block-string",
+     "value": "var(--tc-status-success-fg)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-code-block-number",
+     "value": "var(--tc-tone-amber-fg)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-code-block-comment",
+     "value": "var(--tc-text-muted)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-code-block-function",
+     "value": "var(--tc-status-info-fg)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-code-block-type",
+     "value": "var(--tc-tone-pink-fg)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-code-block-property",
+     "value": "var(--tc-tone-rose-fg)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-code-block-tag",
+     "value": "var(--tc-tone-pink-fg)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-code-block-punctuation",
+     "value": "var(--tc-text-muted)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-code-block-text",
+     "value": "var(--tc-text-primary)",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-active",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-border-default",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-code-block-digits",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-sm",
+    "--tc-control-px-sm",
+    "--tc-control-radius-sm",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-shimmer",
+    "--tc-duration-slow",
+    "--tc-ease-in-out",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-mono",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-radius-2xs",
+    "--tc-radius-lg",
+    "--tc-radius-sm",
+    "--tc-shadow-raised",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-info-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tone-amber-fg",
+    "--tc-tone-pink-fg",
+    "--tc-tone-rose-fg",
+    "--tc-tone-violet-fg",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "react": [
+  {
+   "component": "CodeBlock",
+   "exported": true,
+   "props": [
+    {
+     "name": "view",
+     "type": "CodeBlockView",
+     "optional": true,
+     "description": "\"code\" or \"diff\" (controlled) – Diff shows the changes against `current`"
+    },
+    {
+     "name": "defaultView",
+     "type": "CodeBlockView",
+     "optional": true,
+     "description": "The view to start with when uncontrolled"
+    },
+    {
+     "name": "onViewChange",
+     "type": "(view: CodeBlockView) => void",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "onCopy",
+     "type": "(text: string) => void",
+     "optional": true,
+     "description": "Called with the code after Copy put it on the clipboard"
+    },
+    {
+     "name": "onApply",
+     "type": "(apply: CodeBlockApply) => void",
+     "optional": true,
+     "description": "Shows the Apply button; called with the code, the file name and the language"
+    }
+   ],
+   "hides": [
+    "view",
+    "applyable",
+    "onCopy"
+   ]
+  }
+ ],
+ "changelog": [
+  "`tc-code-block` – a streaming code block: a small tokenizer per language (TS/JS, Python, JSON, HTML, CSS, shell) re-highlighting only changed lines, Copy, Apply, and a line diff against `current` with folded unchanged runs. Toolbar keyboard; `tc-view-change`, `tc-copy`, `tc-apply`.",
+  "`tc-artifact-panel` – what a run produced: a list, a preview per kind (Markdown text, code through `tc-code-block`, images, tables from CSV), versions with a diff against the one before, and download (a Blob by default, cancelable)."
+ ],
+ "size": {
+  "min": 81833,
+  "gzip": 22288
+ }
+}

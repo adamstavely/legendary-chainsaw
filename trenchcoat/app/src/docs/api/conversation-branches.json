@@ -1,0 +1,244 @@
+{
+ "elements": [
+  {
+   "tag": "tc-conversation-branches",
+   "className": "TcConversationBranches",
+   "description": "A conversation that forks when a past message is edited: a \"‹ 2 / 3 ›\" switcher on each message with siblings, and\nthe picked branch's messages below it.",
+   "properties": [
+    {
+     "name": "messages",
+     "attribute": null,
+     "type": "BranchMessage[]",
+     "default": "[]",
+     "description": "Every message of every branch, in the order they were written; each names its parent",
+     "readonly": false
+    },
+    {
+     "name": "selected",
+     "attribute": null,
+     "type": "BranchSelection",
+     "default": "{}",
+     "description": "The picked child per parent id (\"\" for the first messages); a parent without an entry shows its newest child",
+     "readonly": false
+    },
+    {
+     "name": "editable",
+     "attribute": "editable",
+     "type": "boolean",
+     "default": "true",
+     "description": "Your messages can be edited (default true; editable=\"false\" turns it off)",
+     "readonly": false
+    },
+    {
+     "name": "replyActions",
+     "attribute": null,
+     "type": "MessageActionKey[]",
+     "default": "[\"copy\", \"feedback\"]",
+     "description": "The actions under each reply (message-actions' keys); an empty list hides the bar",
+     "readonly": false
+    },
+    {
+     "name": "renderContent",
+     "attribute": null,
+     "type": "((message: BranchMessage) => Node | string) | undefined",
+     "default": "undefined",
+     "description": "Draws a message's content – a Node or a string. Default: the text, a paragraph per blank line",
+     "readonly": false
+    },
+    {
+     "name": "label",
+     "attribute": "label",
+     "type": "string",
+     "default": "\"Conversation\"",
+     "description": "Accessible name of the conversation",
+     "readonly": false
+    },
+    {
+     "name": "userName",
+     "attribute": "user-name",
+     "type": "string",
+     "default": "\"You\"",
+     "description": "Who \"you\" are, for screen readers",
+     "readonly": false
+    },
+    {
+     "name": "assistantName",
+     "attribute": "assistant-name",
+     "type": "string",
+     "default": "\"Assistant\"",
+     "description": "Who answers, for screen readers",
+     "readonly": false
+    },
+    {
+     "name": "caption",
+     "attribute": "caption",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The caption line (Standard: on the tray, Clean: the card's last row); unset, it sums up the branches",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-selected-change",
+     "detail": "",
+     "description": "A branch was picked in a switcher, or a new branch was made; detail `{ selected, messageId, index, count }`. Cancelable: prevent it to control `selected`",
+     "cancelable": true
+    },
+    {
+     "name": "tc-messages-change",
+     "detail": "",
+     "description": "Messages were added (a new branch, its replies); detail `{ messages: BranchMessage[] }`. Cancelable: prevent it to control `messages`",
+     "cancelable": true
+    },
+    {
+     "name": "tc-edit",
+     "detail": "",
+     "description": "Send was pressed on an edited message; detail `{ messageId, text, message, respondWith }`. Cancelable: prevent it to drop the edit. Call `respondWith(replies | promise)` to answer the new branch",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "cvb",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-accent",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-sm",
+    "--tc-control-px-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-instant",
+    "--tc-duration-reveal-slow",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-ease-in-out",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-fill-default",
+    "--tc-fill-hover",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-line-height-relaxed",
+    "--tc-line-height-tight",
+    "--tc-radius-2xl",
+    "--tc-radius-lg",
+    "--tc-radius-sm",
+    "--tc-radius-xl",
+    "--tc-shadow-raised",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-6",
+    "--tc-status-danger-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "react": [
+  {
+   "component": "ConversationBranches",
+   "exported": true,
+   "props": [
+    {
+     "name": "messages",
+     "type": "BranchMessage[]",
+     "optional": true,
+     "description": "Every message of every branch. Controlled when defined; otherwise the element keeps them, starting at `defaultMessages`"
+    },
+    {
+     "name": "defaultMessages",
+     "type": "BranchMessage[]",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "onMessagesChange",
+     "type": "(messages: BranchMessage[]) => void",
+     "optional": true,
+     "description": "Called with the whole list when messages are added (a new branch, its replies)"
+    },
+    {
+     "name": "selected",
+     "type": "BranchSelection",
+     "optional": true,
+     "description": "The picked child per parent id (\"\" for the first messages). Controlled when defined"
+    },
+    {
+     "name": "defaultSelected",
+     "type": "BranchSelection",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "onSelectedChange",
+     "type": "(selected: BranchSelection, change: { messageId: string; index: number; count: number }) => void",
+     "optional": true,
+     "description": "Called when a branch is picked, or a new branch was made"
+    },
+    {
+     "name": "onEdit",
+     "type": "(edit: ConversationEdit) => BranchMessage[] | Promise<BranchMessage[]> | void | false",
+     "optional": true,
+     "description": "Called when an edited message is sent. Return the new branch's replies (or a promise of them) to answer it;\nreturn false to drop the edit"
+    }
+   ],
+   "hides": [
+    "messages",
+    "selected",
+    "onChange"
+   ]
+  }
+ ],
+ "changelog": [
+  "`tc-conversation-branches` – edit a past message to fork the conversation; a 2 / 3 switcher on the edited message, each branch's replies (with `tc-message-actions`) below, and `tc-edit` answered with the new replies or a promise of them."
+ ],
+ "size": {
+  "min": 30790,
+  "gzip": 9042
+ }
+}

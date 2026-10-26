@@ -1,0 +1,234 @@
+{
+ "elements": [
+  {
+   "tag": "tc-billing-schedule",
+   "className": "TcBillingSchedule",
+   "description": "One phase of a billing plan: dates, products, a discount or a minimum, and the totals.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Create a billing schedule\"",
+     "description": "The heading",
+     "readonly": false
+    },
+    {
+     "name": "phase",
+     "attribute": "phase",
+     "type": "string",
+     "default": "\"Build-out phase\"",
+     "description": "Phase name",
+     "readonly": false
+    },
+    {
+     "name": "currency",
+     "attribute": "currency",
+     "type": "string",
+     "default": "\"$\"",
+     "description": "Currency symbol shown with prices",
+     "readonly": false
+    },
+    {
+     "name": "catalog",
+     "attribute": null,
+     "type": "BillingCatalogItem[]",
+     "default": "[ { name: \"Set-up fee\", repeat: \"once\", price: 4999 }, { name: \"Platform licence\", repeat: \"monthly\", price: 1200 }, { name: \"Premium support\", repeat: \"monthly\", price: 350 }, { name: \"Extra seats (10)\", repeat: \"monthly\", price: 240 }, { name: \"Onboarding workshop\", repeat: \"once\", price: 1500 }, ]",
+     "description": "Products offered under \"Add product\"",
+     "readonly": false
+    },
+    {
+     "name": "lines",
+     "attribute": null,
+     "type": "BillingScheduleLine[]",
+     "default": "[{ id: \"seed-1\", kind: \"product\", name: \"Set-up fee\", repeat: \"once\", price: 4999, timing: \"advance\" }]",
+     "description": "Schedule lines",
+     "readonly": false
+    },
+    {
+     "name": "start",
+     "attribute": "start",
+     "type": "string",
+     "default": "\"2026-01-01\"",
+     "description": "Start date, yyyy-mm-dd",
+     "readonly": false
+    },
+    {
+     "name": "duration",
+     "attribute": "duration",
+     "type": "BillingDuration",
+     "default": "\"milestone\"",
+     "description": "Phase length",
+     "readonly": false
+    },
+    {
+     "name": "name",
+     "attribute": "name",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "Form field name: a hidden input carries the schedule as JSON for native form submission",
+     "readonly": false
+    },
+    {
+     "name": "disabled",
+     "attribute": "disabled",
+     "type": "boolean",
+     "default": "false",
+     "description": "Disables every field and button",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-phase-change",
+     "detail": "",
+     "description": "The phase name changes; detail `{ phase }`. Cancelable (controlled use)",
+     "cancelable": true
+    },
+    {
+     "name": "tc-start-change",
+     "detail": "",
+     "description": "The start date changes; detail `{ start }`. Cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-duration-change",
+     "detail": "",
+     "description": "The duration changes; detail `{ duration }`. Cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-lines-change",
+     "detail": "",
+     "description": "The lines change; detail `{ lines }`. Cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-schedule-change",
+     "detail": "",
+     "description": "After every change the user makes (not on connect); detail: the whole schedule",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "bs",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-border-default",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-px-md",
+    "--tc-control-radius-md",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-instant",
+    "--tc-duration-moderate",
+    "--tc-duration-quick",
+    "--tc-duration-slow",
+    "--tc-ease-decelerate",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-font-size",
+    "--tc-field-h",
+    "--tc-field-px",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-field-shadow-hover",
+    "--tc-field-shadow-invalid",
+    "--tc-fill-default",
+    "--tc-fill-hover",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-sans",
+    "--tc-font-size-2xs",
+    "--tc-font-size-lg",
+    "--tc-font-size-lg-plus",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-icon-muted",
+    "--tc-line-height-loose",
+    "--tc-line-height-normal",
+    "--tc-line-height-tight",
+    "--tc-menu-bg",
+    "--tc-menu-item-font-size",
+    "--tc-menu-item-h",
+    "--tc-menu-item-hover",
+    "--tc-menu-item-px",
+    "--tc-menu-item-radius",
+    "--tc-menu-item-selected-fg",
+    "--tc-menu-padding",
+    "--tc-menu-radius",
+    "--tc-menu-shadow",
+    "--tc-radius-badge",
+    "--tc-radius-lg",
+    "--tc-radius-sm",
+    "--tc-radius-xl",
+    "--tc-radius-xs",
+    "--tc-shadow-overlay",
+    "--tc-shadow-raised",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-7",
+    "--tc-status-danger-fg",
+    "--tc-surface-overlay",
+    "--tc-surface-raised",
+    "--tc-surface-sunken",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tray-inset",
+    "--tc-tray-radius",
+    "--tc-z-dropdown"
+   ]
+  }
+ ],
+ "react": [
+  {
+   "component": "BillingSchedule",
+   "exported": true,
+   "props": [],
+   "hides": [
+    "heading"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 54222,
+  "gzip": 12658
+ }
+}

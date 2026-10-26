@@ -1,0 +1,342 @@
+{
+ "elements": [
+  {
+   "tag": "tc-email-draft",
+   "className": "TcEmailDraft",
+   "description": "An agent-written email waiting for review: recipient, attachment, tones, inline editing, Discard and Send.",
+   "properties": [
+    {
+     "name": "reference",
+     "attribute": "reference",
+     "type": "string",
+     "default": "\"SUB-1182\"",
+     "description": "Reference of the record, e.g. a subscription or invoice number",
+     "readonly": false
+    },
+    {
+     "name": "account",
+     "attribute": "account",
+     "type": "string",
+     "default": "\"Northwind Logistics\"",
+     "description": "Account or company under the reference",
+     "readonly": false
+    },
+    {
+     "name": "amount",
+     "attribute": "amount",
+     "type": "string",
+     "default": "\"$8,900\"",
+     "description": "Amount shown on the right",
+     "readonly": false
+    },
+    {
+     "name": "status",
+     "attribute": "status",
+     "type": "string",
+     "default": "\"Renews in 5 days\"",
+     "description": "Status chip next to the reference",
+     "readonly": false
+    },
+    {
+     "name": "agent",
+     "attribute": "agent",
+     "type": "string",
+     "default": "\"Renewal agent\"",
+     "description": "Who wrote the draft",
+     "readonly": false
+    },
+    {
+     "name": "contacts",
+     "attribute": null,
+     "type": "DraftContact[]",
+     "default": "[ { name: \"Jonas Weber\", email: \"jonas@northwind.io\" }, { name: \"Lena Hart\", email: \"lena@northwind.io\" }, { name: \"Finance team\", email: \"billing@northwind.io\" }, ]",
+     "description": "",
+     "readonly": false
+    },
+    {
+     "name": "recipient",
+     "attribute": "recipient",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The email of the contact it goes to – unset is the first contact; one not in `contacts` falls back to the first",
+     "readonly": false
+    },
+    {
+     "name": "attachment",
+     "attribute": "attachment",
+     "type": "string | null",
+     "default": "\"Renewal-quote.pdf\"",
+     "description": "The file attached – removing it is remembered for that file only, so a new attachment shows again",
+     "readonly": false
+    },
+    {
+     "name": "tones",
+     "attribute": null,
+     "type": "DraftTone[]",
+     "default": "[ { id: \"friendly\", label: \"Friendly\", body: (c) => `Hi ${first(c)}, a heads-up that your Growth plan renews on October 9 for $8,900 a year. If you'd like to add seats or switch to monthly billing, you can review the quote here:`, }, { id: \"short\", label: \"Short\", body: (c) => `Hi ${first(c)}, your Growth plan renews on October 9 ($8,900/year). Quote for changes:`, }, { id: \"formal\", label: \"Formal\", body: (c) => `Dear ${c.name}, this is a reminder that your Growth subscription is scheduled to renew on October 9 at $8,900 per year. Should you wish to adjust seats or billing, please review the attached quote:`, }, ]",
+     "description": "Text variants to switch between – the first one is shown first",
+     "readonly": false
+    },
+    {
+     "name": "tone",
+     "attribute": "tone",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The id of the tone shown – unset is the first; one not in `tones` falls back to the first",
+     "readonly": false
+    },
+    {
+     "name": "link",
+     "attribute": null,
+     "type": "{ label: string; href: string }",
+     "default": "{ label: \"Review quote\", href: \"#\" }",
+     "description": "Label and target of the link appended to the email",
+     "readonly": false
+    },
+    {
+     "name": "onSend",
+     "attribute": null,
+     "type": "((email: DraftEmail) => void | Promise<unknown>) | undefined",
+     "default": "undefined",
+     "description": "Sends the email. Return a promise to keep the card in its sending state until it settles – a rejection brings\nthe draft back with an error. Without it sending is simulated (and warns once, unless `demo` is set)",
+     "readonly": false
+    },
+    {
+     "name": "undoSend",
+     "attribute": "undo-send",
+     "type": "boolean | undefined",
+     "default": "undefined",
+     "description": "The receipt offers Undo for a send (tc-undo takes it back) – unset: only when there's no `onSend`",
+     "readonly": false
+    },
+    {
+     "name": "undoDiscard",
+     "attribute": "undo-discard",
+     "type": "boolean | undefined",
+     "default": "undefined",
+     "description": "The receipt offers Undo for a discard (tc-undo takes it back) – unset: yes",
+     "readonly": false
+    },
+    {
+     "name": "demo",
+     "attribute": "demo",
+     "type": "boolean",
+     "default": "false",
+     "description": "Demo mode: sending without onSend is simulated silently. For galleries and prototypes",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-recipient-change",
+     "detail": "",
+     "description": "Another contact is picked; detail `{ email: string, contact: DraftContact }`. Cancelable: prevent it to control `recipient`",
+     "cancelable": true
+    },
+    {
+     "name": "tc-tone-change",
+     "detail": "",
+     "description": "Another tone is picked; detail `{ tone: string }`. Cancelable: prevent it to control `tone`",
+     "cancelable": true
+    },
+    {
+     "name": "tc-discard",
+     "detail": "",
+     "description": "The draft is discarded; detail `null`",
+     "cancelable": false
+    },
+    {
+     "name": "tc-undo",
+     "detail": "",
+     "description": "A send or discard is taken back from the receipt; detail `{ action: \"send\" | \"discard\" }`",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "ed",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-active",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-border-default",
+    "--tc-border-selected",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-md",
+    "--tc-control-px-sm",
+    "--tc-control-radius-md",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-reveal",
+    "--tc-duration-slow",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-fill-default",
+    "--tc-fill-hover",
+    "--tc-fill-selected",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-sans",
+    "--tc-font-size-2xs",
+    "--tc-font-size-lg",
+    "--tc-font-size-lg-plus",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-loose",
+    "--tc-line-height-normal",
+    "--tc-line-height-relaxed",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-menu-bg",
+    "--tc-menu-item-font-size",
+    "--tc-menu-item-h",
+    "--tc-menu-item-hover",
+    "--tc-menu-item-px",
+    "--tc-menu-item-radius",
+    "--tc-menu-item-selected-fg",
+    "--tc-menu-padding",
+    "--tc-menu-radius",
+    "--tc-menu-shadow",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-2xl",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-shadow-control",
+    "--tc-shadow-raised",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-status-danger-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tray-inset",
+    "--tc-tray-radius",
+    "--tc-z-dropdown"
+   ]
+  }
+ ],
+ "react": [
+  {
+   "component": "EmailDraft",
+   "exported": true,
+   "props": [
+    {
+     "name": "recipient",
+     "type": "string",
+     "optional": true,
+     "description": "The email of the contact it goes to – controlled when defined; one not in `contacts` falls back to the first"
+    },
+    {
+     "name": "defaultRecipient",
+     "type": "string",
+     "optional": true,
+     "description": "The email of the contact picked at first – defaults to the first contact"
+    },
+    {
+     "name": "onRecipientChange",
+     "type": "(email: string, contact: DraftContact) => void",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "tone",
+     "type": "string",
+     "optional": true,
+     "description": "The id of the tone shown – controlled when defined; one not in `tones` falls back to the first"
+    },
+    {
+     "name": "defaultTone",
+     "type": "string",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "onToneChange",
+     "type": "(id: string) => void",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "onDiscard",
+     "type": "() => void",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "onUndo",
+     "type": "(action: \"send\" | \"discard\") => void",
+     "optional": true,
+     "description": "Takes back a send or a discard that already reached you through onSend / onDiscard. Without it the receipt\noffers no Undo for those – only for what never left the component"
+    }
+   ],
+   "hides": [
+    "recipient",
+    "tone",
+    "undoSend",
+    "undoDiscard"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 55779,
+  "gzip": 12908
+ }
+}

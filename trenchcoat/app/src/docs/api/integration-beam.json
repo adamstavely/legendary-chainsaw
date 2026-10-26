@@ -1,0 +1,136 @@
+{
+ "elements": [
+  {
+   "tag": "tc-integration-beam",
+   "className": "TcIntegrationBeam",
+   "description": "Your product joined to the tools it connects by beams that pulse in sync cycles. Each tool toggles on click.",
+   "properties": [
+    {
+     "name": "left",
+     "attribute": null,
+     "type": "IntegrationBeamTool[] | undefined",
+     "default": "undefined",
+     "description": "Tools that send data in (left, or above on narrow widths) – three look best; unset shows a default set",
+     "readonly": false
+    },
+    {
+     "name": "right",
+     "attribute": null,
+     "type": "IntegrationBeamTool[] | undefined",
+     "default": "undefined",
+     "description": "Tools that receive data (right, or below on narrow widths) – three look best; unset shows a default set",
+     "readonly": false
+    },
+    {
+     "name": "center",
+     "attribute": null,
+     "type": "IntegrationBeamCenter",
+     "default": "{ name: \"Acme\" }",
+     "description": "The product in the middle",
+     "readonly": false
+    },
+    {
+     "name": "label",
+     "attribute": "label",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "Accessible description of the scene – defaults to the product and the tools it connects",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [],
+   "slots": [],
+   "methods": [],
+   "ui": "ib",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-duration-base",
+    "--tc-duration-moderate",
+    "--tc-duration-slow",
+    "--tc-ease-in-out",
+    "--tc-ease-standard",
+    "--tc-focus-outline",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-integration-beam-accent",
+    "--tc-integration-beam-breathe",
+    "--tc-integration-beam-ease",
+    "--tc-integration-beam-faint",
+    "--tc-integration-beam-glow",
+    "--tc-integration-beam-hub",
+    "--tc-integration-beam-hub-edge",
+    "--tc-integration-beam-hub-mark",
+    "--tc-integration-beam-line",
+    "--tc-integration-beam-line-hi",
+    "--tc-integration-beam-pulse",
+    "--tc-integration-beam-ring",
+    "--tc-integration-beam-shadow",
+    "--tc-integration-beam-tip-color",
+    "--tc-integration-beam-tip-from",
+    "--tc-line-height-tight",
+    "--tc-radius-2xl",
+    "--tc-radius-full",
+    "--tc-radius-md",
+    "--tc-shadow-raised",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-surface-inverse",
+    "--tc-surface-raised",
+    "--tc-surface-sunken",
+    "--tc-text-on-inverse",
+    "--tc-text-primary",
+    "--tc-text-secondary"
+   ]
+  }
+ ],
+ "react": [
+  {
+   "component": "IntegrationBeam",
+   "exported": true,
+   "props": [
+    {
+     "name": "left",
+     "type": "BeamTool[]",
+     "optional": true,
+     "description": "Tools that send data in (left, or above on narrow widths) – three look best"
+    },
+    {
+     "name": "right",
+     "type": "BeamTool[]",
+     "optional": true,
+     "description": "Tools that receive data (right, or below on narrow widths) – three look best"
+    },
+    {
+     "name": "center",
+     "type": "BeamCenter",
+     "optional": true,
+     "description": "The product in the middle"
+    }
+   ],
+   "hides": [
+    "left",
+    "right",
+    "center",
+    "children"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 30383,
+  "gzip": 11200
+ }
+}

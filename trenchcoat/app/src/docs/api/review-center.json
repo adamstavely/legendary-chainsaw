@@ -1,0 +1,546 @@
+{
+ "elements": [
+  {
+   "tag": "tc-review-center",
+   "className": "TcReviewCenter",
+   "description": "Human in the loop: the queue of what your agents want to do, one item at a time.",
+   "properties": [
+    {
+     "name": "items",
+     "attribute": null,
+     "type": "ReviewItem[]",
+     "default": "[]",
+     "description": "Everything waiting for review – decided items hide themselves, new ids slide in",
+     "readonly": false
+    },
+    {
+     "name": "onDecide",
+     "attribute": null,
+     "type": "ReviewDecide | undefined",
+     "default": "undefined",
+     "description": "Decides an item; may return a promise (see ReviewDecide)",
+     "readonly": false
+    },
+    {
+     "name": "reviewed",
+     "attribute": "reviewed",
+     "type": "number",
+     "default": "0",
+     "description": "How many were reviewed before (e.g. today) – the header counts on from here",
+     "readonly": false
+    },
+    {
+     "name": "total",
+     "attribute": "total",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The total for the header – defaults to reviewed + waiting",
+     "readonly": false
+    },
+    {
+     "name": "sla",
+     "attribute": "sla",
+     "type": "",
+     "default": null,
+     "description": "How long an item may wait, in ms – the waiting time turns amber at 75% and red past it (default 30 min)",
+     "readonly": false
+    },
+    {
+     "name": "now",
+     "attribute": "now",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The clock (epoch ms) – defaults to the real one, read after connecting",
+     "readonly": false
+    },
+    {
+     "name": "lowConfidence",
+     "attribute": "low-confidence",
+     "type": "number",
+     "default": "0.7",
+     "description": "Below this confidence an item counts as unsure (default 0.7)",
+     "readonly": false
+    },
+    {
+     "name": "reasons",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[\"Wrong info\", \"Tone\", \"Not allowed\", \"Other\"]",
+     "description": "The quick reasons for a rejection, picked with 1–4",
+     "readonly": false
+    },
+    {
+     "name": "order",
+     "attribute": "order",
+     "type": "\"risk\" | \"oldest\" | \"given\"",
+     "default": "\"risk\"",
+     "description": "\"risk\" (default): high risk first, then oldest · \"oldest\" · \"given\": as passed",
+     "readonly": false
+    },
+    {
+     "name": "filter",
+     "attribute": "filter",
+     "type": "ReviewFilter",
+     "default": "\"all\"",
+     "description": "",
+     "readonly": false
+    },
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Review center\"",
+     "description": "The heading",
+     "readonly": false
+    },
+    {
+     "name": "undoTimeout",
+     "attribute": null,
+     "type": "number | false",
+     "default": "6000",
+     "description": "How long the Undo chip stays after a decision, in ms – false keeps it until the next decision",
+     "readonly": false
+    },
+    {
+     "name": "shortcuts",
+     "attribute": "shortcuts",
+     "type": "boolean",
+     "default": "true",
+     "description": "The single-key shortcuts while focus is inside – false turns them off; Esc and ⌘/Ctrl combinations keep working",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-filter-change",
+     "detail": "",
+     "description": "The filter changes; detail `{ filter }`. Cancelable: preventDefault() keeps the current one",
+     "cancelable": true
+    },
+    {
+     "name": "tc-undo",
+     "detail": "",
+     "description": "A decision was taken back; detail `{ item, result }` – put the item back if you dropped it",
+     "cancelable": false
+    },
+    {
+     "name": "tc-skip",
+     "detail": "",
+     "description": "An item was skipped; detail `{ item }`",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [
+    {
+     "name": "approve",
+     "params": "",
+     "returns": "void",
+     "description": ""
+    },
+    {
+     "name": "reject",
+     "params": "reason?: string",
+     "returns": "void",
+     "description": "Opens the reason picker, or rejects right away with a reason"
+    },
+    {
+     "name": "edit",
+     "params": "focus: unknown",
+     "returns": "void",
+     "description": "Edits the current item in place"
+    },
+    {
+     "name": "setDraft",
+     "params": "text: string, field?: string",
+     "returns": "void",
+     "description": "Replaces the draft of the body (or of a field, by its label) while editing"
+    },
+    {
+     "name": "save",
+     "params": "",
+     "returns": "void",
+     "description": "Approves with the edits"
+    },
+    {
+     "name": "cancel",
+     "params": "",
+     "returns": "void",
+     "description": ""
+    },
+    {
+     "name": "skip",
+     "params": "",
+     "returns": "void",
+     "description": ""
+    },
+    {
+     "name": "next",
+     "params": "",
+     "returns": "void",
+     "description": ""
+    },
+    {
+     "name": "previous",
+     "params": "",
+     "returns": "void",
+     "description": ""
+    },
+    {
+     "name": "undo",
+     "params": "",
+     "returns": "void",
+     "description": ""
+    },
+    {
+     "name": "peek",
+     "params": "index: number | null",
+     "returns": "void",
+     "description": "Shows the note of the n-th flagged span of the current item – null hides it"
+    },
+    {
+     "name": "select",
+     "params": "id: string",
+     "returns": "void",
+     "description": ""
+    }
+   ],
+   "ui": "rvc",
+   "cssProperties": [
+    {
+     "name": "--tc-review-center-tok-kw",
+     "value": "light-dark(color(display-p3 0.843 0.298 0.507), color(display-p3 0.98 0.52 0.68))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-review-center-tok-str",
+     "value": "light-dark(color(display-p3 0.38 0.647 0.378), color(display-p3 0.56 0.82 0.54))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-review-center-tok-type",
+     "value": "light-dark(color(display-p3 0.247 0.556 0.969), color(display-p3 0.48 0.7 1))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-review-center-tok-fn",
+     "value": "light-dark(color(display-p3 0.587 0.29 0.667), color(display-p3 0.78 0.56 0.88))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-review-center-progress-edge",
+     "value": "light-dark(rgba(0, 96, 226, 0.32), rgba(91, 154, 255, 0.42))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-review-center-progress-mark",
+     "value": "light-dark(rgba(0, 96, 226, 0.7), rgba(112, 170, 255, 0.85))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-review-center-queue-bg",
+     "value": "light-dark(#fafafa, #1f1f22)",
+     "looks": [
+      "standard"
+     ]
+    },
+    {
+     "name": "--tc-review-center-code-dim",
+     "value": "light-dark(rgba(0, 0, 0, 0.45), rgba(255, 255, 255, 0.42))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-review-center-diff-add-bg",
+     "value": "light-dark(rgba(0, 160, 80, 0.06), rgba(60, 220, 130, 0.07))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-review-center-diff-del-bg",
+     "value": "light-dark(rgba(215, 36, 0, 0.05), rgba(255, 90, 70, 0.07))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-review-center-ins-bg",
+     "value": "light-dark(rgba(0, 164, 51, 0.13), rgba(60, 220, 130, 0.18))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-review-center-high-edge",
+     "value": "light-dark(rgba(215, 36, 0, 0.34), rgba(255, 90, 70, 0.4))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-review-center-mid-edge",
+     "value": "light-dark(rgba(204, 110, 0, 0.4), rgba(255, 150, 60, 0.42))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-review-center-low-edge",
+     "value": "light-dark(rgba(0, 140, 50, 0.3), rgba(60, 220, 130, 0.36))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-review-center-flag-bg",
+     "value": "light-dark(rgba(255, 166, 0, 0.16), rgba(255, 170, 40, 0.16))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-review-center-flag-edge",
+     "value": "light-dark(rgba(214, 130, 0, 0.55), rgba(255, 180, 70, 0.55))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-review-center-flag-hot",
+     "value": "light-dark(rgba(255, 166, 0, 0.28), rgba(255, 170, 40, 0.28))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-review-center-flag-ink",
+     "value": "light-dark(#8a4600, #ffcf8a)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-review-center-height",
+     "value": "552px",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-review-center-queue",
+     "value": "296px",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-review-center-row",
+     "value": "max(56px, 3.5rem)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-review-center-arrive",
+     "value": "2600ms",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-review-center-glow",
+     "value": "1100ms",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-active",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-border-default",
+    "--tc-border-selected",
+    "--tc-border-strong",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-px-sm",
+    "--tc-control-radius-md",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-instant",
+    "--tc-duration-moderate",
+    "--tc-duration-quick",
+    "--tc-duration-reveal",
+    "--tc-duration-shimmer",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-duration-slowest",
+    "--tc-ease-decelerate",
+    "--tc-ease-in-out",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-field-bg-sunken",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-fill-default",
+    "--tc-fill-hover",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-2xs",
+    "--tc-font-size-lg",
+    "--tc-font-size-lg-plus",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xl",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-kbd-bg",
+    "--tc-kbd-fg",
+    "--tc-kbd-font-size",
+    "--tc-kbd-font-weight",
+    "--tc-kbd-h",
+    "--tc-kbd-on-inverse-bg",
+    "--tc-kbd-px",
+    "--tc-kbd-radius",
+    "--tc-kbd-shadow",
+    "--tc-line-height-loose",
+    "--tc-line-height-none",
+    "--tc-line-height-normal",
+    "--tc-line-height-relaxed",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-menu-radius",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-2xl",
+    "--tc-radius-2xs",
+    "--tc-radius-badge",
+    "--tc-radius-full",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-radius-xl",
+    "--tc-radius-xs",
+    "--tc-review-center-tone-bg",
+    "--tc-review-center-tone-edge",
+    "--tc-review-center-tone-fg",
+    "--tc-seg-thumb-bg",
+    "--tc-seg-thumb-shadow",
+    "--tc-shadow-overlay",
+    "--tc-shadow-raised",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-12",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-4-5",
+    "--tc-space-5",
+    "--tc-space-6",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-surface-overlay",
+    "--tc-surface-raised",
+    "--tc-surface-sunken",
+    "--tc-surface-tray",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "react": [
+  {
+   "component": "ReviewCenter",
+   "exported": true,
+   "props": [],
+   "hides": [
+    "heading"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 112113,
+  "gzip": 24298
+ }
+}

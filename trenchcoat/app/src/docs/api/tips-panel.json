@@ -1,0 +1,221 @@
+{
+ "elements": [
+  {
+   "tag": "tc-tips-panel",
+   "className": "TcTipsPanel",
+   "description": "A panel of short tips, each with one action that marks it done.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Tips\"",
+     "description": "The heading, and the region's name",
+     "readonly": false
+    },
+    {
+     "name": "tips",
+     "attribute": null,
+     "type": "TipsPanelTip[]",
+     "default": "[]",
+     "description": "",
+     "readonly": false
+    },
+    {
+     "name": "done",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[]",
+     "description": "Ids of the tips whose action was taken",
+     "readonly": false
+    },
+    {
+     "name": "closable",
+     "attribute": "closable",
+     "type": "boolean",
+     "default": "false",
+     "description": "Shows the Close button in the footer",
+     "readonly": false
+    },
+    {
+     "name": "closeLabel",
+     "attribute": "close-label",
+     "type": "string",
+     "default": "\"Close\"",
+     "description": "",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-done-change",
+     "detail": "",
+     "description": "A tip's action was taken; detail `{ done: string[], tip }` is the new list of done ids. Cancelable: preventDefault() keeps `done` as it is (controlled use)",
+     "cancelable": true
+    },
+    {
+     "name": "tc-tip-action",
+     "detail": "",
+     "description": "A tip's action was taken; detail `{ id: string }`",
+     "cancelable": false
+    },
+    {
+     "name": "tc-close",
+     "detail": "",
+     "description": "The Close button was pressed",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "tp",
+   "cssProperties": [
+    {
+     "name": "--tc-tips-panel-max-height",
+     "value": "420px",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent-text",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-active",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-border-default",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-px-md",
+    "--tc-control-radius-md",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-lg-plus",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xl",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-hairline",
+    "--tc-kbd-bg",
+    "--tc-kbd-fg",
+    "--tc-kbd-font-size",
+    "--tc-kbd-font-weight",
+    "--tc-kbd-h",
+    "--tc-kbd-px",
+    "--tc-kbd-radius",
+    "--tc-kbd-shadow",
+    "--tc-line-height-loose",
+    "--tc-line-height-none",
+    "--tc-line-height-normal",
+    "--tc-line-height-relaxed",
+    "--tc-line-height-tight",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-xl",
+    "--tc-shadow-raised",
+    "--tc-space-0-5",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-5",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "react": [
+  {
+   "component": "TipsPanel",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "tips",
+     "type": "Tip[]",
+     "optional": false,
+     "description": ""
+    },
+    {
+     "name": "done",
+     "type": "string[]",
+     "optional": true,
+     "description": "Ids of the tips whose action was taken. Controlled when defined – pair it with `onDoneChange`"
+    },
+    {
+     "name": "defaultDone",
+     "type": "string[]",
+     "optional": true,
+     "description": "Ids already done on mount when `done` isn't controlled"
+    },
+    {
+     "name": "onDoneChange",
+     "type": "(done: string[]) => void",
+     "optional": true,
+     "description": "Called with the new list of done ids whenever a tip's action is taken"
+    },
+    {
+     "name": "onClose",
+     "type": "() => void",
+     "optional": true,
+     "description": "Shows the Close button in the footer"
+    }
+   ],
+   "hides": [
+    "heading",
+    "tips",
+    "done",
+    "closable"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 19897,
+  "gzip": 6033
+ }
+}

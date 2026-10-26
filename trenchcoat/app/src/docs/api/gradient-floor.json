@@ -1,0 +1,123 @@
+{
+ "elements": [
+  {
+   "tag": "tc-gradient-floor",
+   "className": "TcGradientFloor",
+   "description": "A blurred colour gradient glowing up from the bottom edge, behind its children.",
+   "properties": [
+    {
+     "name": "colors",
+     "attribute": null,
+     "type": "GradientFloorColors",
+     "default": "[\"#FF7700\", \"#FF0055\", \"#0073FF\"]",
+     "description": "Gradient from the crest down: [top, middle, bottom]",
+     "readonly": false
+    },
+    {
+     "name": "speed",
+     "attribute": "speed",
+     "type": "number",
+     "default": "3",
+     "description": "Seconds per morph loop; 0 keeps the shape still (the sideways drift keeps going)",
+     "readonly": false
+    },
+    {
+     "name": "playFor",
+     "attribute": "play-for",
+     "type": "number",
+     "default": "5",
+     "description": "Seconds of motion before the floor slows down and rests (rounded to whole drift loops of 2.5 s); Infinity never\nstops – then give users a way to pause it (WCAG 2.2.2)",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [],
+   "slots": [],
+   "methods": [],
+   "ui": "gf",
+   "cssProperties": [
+    {
+     "name": "--tc-gradient-floor-bg",
+     "value": "light-dark(#fafafa, #111113)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-gradient-floor-drift",
+     "value": "2.5s",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-ease-in-out",
+    "--tc-gradient-floor-passes"
+   ]
+  }
+ ],
+ "react": [
+  {
+   "component": "GradientFloorOwn",
+   "exported": false,
+   "props": [
+    {
+     "name": "children",
+     "type": "React.ReactNode",
+     "optional": true,
+     "description": "Content rendered above the floor"
+    },
+    {
+     "name": "colors",
+     "type": "[string, string, string]",
+     "optional": true,
+     "description": "Gradient from the crest down: [top, middle, bottom]"
+    },
+    {
+     "name": "speed",
+     "type": "number",
+     "optional": true,
+     "description": "Seconds per morph loop; 0 keeps the shape still (the sideways drift keeps going)"
+    },
+    {
+     "name": "playFor",
+     "type": "number",
+     "optional": true,
+     "description": "Seconds of motion before the floor slows down and rests (rounded to whole drift loops of 2.5 s); Infinity never\nstops – then give users a way to pause it (WCAG 2.2.2)"
+    },
+    {
+     "name": "className",
+     "type": "string",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "ref",
+     "type": "React.Ref<TcGradientFloor>",
+     "optional": true,
+     "description": "The root element"
+    }
+   ],
+   "hides": []
+  },
+  {
+   "component": "GradientFloor",
+   "exported": true,
+   "props": [],
+   "hides": []
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 11671,
+  "gzip": 5008
+ }
+}

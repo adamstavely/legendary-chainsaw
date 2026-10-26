@@ -1,0 +1,297 @@
+{
+ "elements": [
+  {
+   "tag": "tc-dropzone",
+   "className": "TcDropzone",
+   "description": "Drag files in and watch them upload – a form-associated element.",
+   "properties": [
+    {
+     "name": "accept",
+     "attribute": null,
+     "type": "string[] | undefined",
+     "default": "undefined",
+     "description": "Allowed types: extensions (\".pdf\"), MIME types (\"application/pdf\") or wildcards (\"image/*\") – any file when unset",
+     "readonly": false
+    },
+    {
+     "name": "maxSize",
+     "attribute": "max-size",
+     "type": "",
+     "default": null,
+     "description": "Largest file in bytes",
+     "readonly": false
+    },
+    {
+     "name": "onUpload",
+     "attribute": null,
+     "type": "DropzoneUpload | undefined",
+     "default": "undefined",
+     "description": "Uploads a file; simulated when unset (and warns once, unless `demo` is set)",
+     "readonly": false
+    },
+    {
+     "name": "value",
+     "attribute": null,
+     "type": "UploadItem[]",
+     "default": "[]",
+     "description": "The list of files",
+     "readonly": false
+    },
+    {
+     "name": "name",
+     "attribute": "name",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Name for form submission: the added files (not the rejected ones) are submitted under it",
+     "readonly": false
+    },
+    {
+     "name": "required",
+     "attribute": "required",
+     "type": "boolean",
+     "default": "false",
+     "description": "A form needs at least one file that isn't rejected",
+     "readonly": false
+    },
+    {
+     "name": "disabled",
+     "attribute": "disabled",
+     "type": "boolean",
+     "default": "false",
+     "description": "No files can be added, retried or removed",
+     "readonly": false
+    },
+    {
+     "name": "hint",
+     "attribute": "hint",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "Text under the title – defaults to the accepted types and size",
+     "readonly": false
+    },
+    {
+     "name": "autoplay",
+     "attribute": "autoplay",
+     "type": "boolean",
+     "default": "false",
+     "description": "Plays a sample drop on its own – nice for previews",
+     "readonly": false
+    },
+    {
+     "name": "demo",
+     "attribute": "demo",
+     "type": "boolean",
+     "default": "false",
+     "description": "Demo mode: files dropped without onUpload are simulated silently",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-value-change",
+     "detail": "",
+     "description": "The list of files changed (added, progressed, finished, failed, removed); detail `{ value: UploadItem[] }`. Cancelable.",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "dz",
+   "cssProperties": [
+    {
+     "name": "--tc-dropzone-area-bg",
+     "value": "light-dark(#fafafa, #1d1d20)",
+     "looks": [
+      "standard"
+     ]
+    },
+    {
+     "name": "--tc-dropzone-area-border-hover",
+     "value": "light-dark(rgba(0, 0, 0, 0.2), rgba(255, 255, 255, 0.26))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-border-default",
+    "--tc-border-selected",
+    "--tc-border-strong",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-md",
+    "--tc-control-px-sm",
+    "--tc-control-radius-md",
+    "--tc-control-radius-sm",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-quick",
+    "--tc-duration-shimmer",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-ease-decelerate",
+    "--tc-ease-move",
+    "--tc-ease-spring",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-strong",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-line-height-tight",
+    "--tc-radius-2xl",
+    "--tc-radius-2xs",
+    "--tc-radius-3xl",
+    "--tc-radius-lg",
+    "--tc-radius-sm",
+    "--tc-radius-xl",
+    "--tc-shadow-raised",
+    "--tc-shimmer",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-4-5",
+    "--tc-space-5",
+    "--tc-space-6",
+    "--tc-status-danger-fg",
+    "--tc-status-danger-solid",
+    "--tc-status-success-fg",
+    "--tc-status-warning-fg",
+    "--tc-surface-overlay",
+    "--tc-surface-raised",
+    "--tc-surface-sunken",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary"
+   ]
+  }
+ ],
+ "react": [
+  {
+   "component": "DropzoneOwn",
+   "exported": false,
+   "props": [
+    {
+     "name": "accept",
+     "type": "string[]",
+     "optional": true,
+     "description": "Allowed types: extensions (\".pdf\"), MIME types (\"application/pdf\") or wildcards (\"image/*\") – any file when\nleft out"
+    },
+    {
+     "name": "maxSize",
+     "type": "number",
+     "optional": true,
+     "description": "Largest file in bytes"
+    },
+    {
+     "name": "onUpload",
+     "type": "DropzoneUpload",
+     "optional": true,
+     "description": "Upload a file and report its progress (0–1); throw to mark it as failed. `signal` aborts when the row is\nremoved or the dropzone unmounts – stop the upload then. Simulated when left out (and warns once, unless\n`demo` is set)"
+    },
+    {
+     "name": "value",
+     "type": "UploadItem[]",
+     "optional": true,
+     "description": "The list of files. Controlled when defined – pass back what onChange reports (progress included), preload\nfiles that are already uploaded, or clear it with []. Otherwise the dropzone keeps its own list"
+    },
+    {
+     "name": "defaultValue",
+     "type": "UploadItem[]",
+     "optional": true,
+     "description": "Starting list when uncontrolled"
+    },
+    {
+     "name": "onChange",
+     "type": "(items: UploadItem[]) => void",
+     "optional": true,
+     "description": "Called whenever the list changes"
+    },
+    {
+     "name": "name",
+     "type": "string",
+     "optional": true,
+     "description": "Name for native form submission: the added files (not the rejected ones) are submitted under it"
+    },
+    {
+     "name": "required",
+     "type": "boolean",
+     "optional": true,
+     "description": "A native form needs at least one file that isn't rejected"
+    },
+    {
+     "name": "disabled",
+     "type": "boolean",
+     "optional": true,
+     "description": "No files can be added, retried or removed"
+    },
+    {
+     "name": "hint",
+     "type": "string",
+     "optional": true,
+     "description": "Text under the title – defaults to the accepted types and size"
+    },
+    {
+     "name": "autoplay",
+     "type": "boolean",
+     "optional": true,
+     "description": "Plays a sample drop on its own – nice for previews"
+    },
+    {
+     "name": "demo",
+     "type": "boolean",
+     "optional": true,
+     "description": "Demo mode: files dropped without onUpload are simulated silently. For galleries and prototypes"
+    }
+   ],
+   "hides": []
+  },
+  {
+   "component": "Dropzone",
+   "exported": true,
+   "props": [],
+   "hides": []
+  }
+ ],
+ "changelog": [
+  "dropzone reports progress through `onChange` at most once a second (status changes are still reported at once)."
+ ],
+ "size": {
+  "min": 52329,
+  "gzip": 14276
+ }
+}

@@ -1,0 +1,335 @@
+{
+ "elements": [
+  {
+   "tag": "tc-fan-out-grid",
+   "className": "TcFanOutGrid",
+   "description": "A big job fanned out to many workers: one cell per task, live.",
+   "properties": [
+    {
+     "name": "tasks",
+     "attribute": null,
+     "type": "FanoutTask[]",
+     "default": "[]",
+     "description": "",
+     "readonly": false
+    },
+    {
+     "name": "job",
+     "attribute": "job",
+     "type": "string",
+     "default": "\"\"",
+     "description": "What the whole job does – e.g. \"Enrich 240 leads\"",
+     "readonly": false
+    },
+    {
+     "name": "workers",
+     "attribute": "workers",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "How many workers run at once – used for the time left (defaults to the tasks running now)",
+     "readonly": false
+    },
+    {
+     "name": "now",
+     "attribute": "now",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The clock, in epoch ms – without it (and without `elapsed`) the element reads the clock and ticks while tasks run",
+     "readonly": false
+    },
+    {
+     "name": "startedAt",
+     "attribute": "started-at",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "When the job started, in epoch ms – defaults to the earliest task start",
+     "readonly": false
+    },
+    {
+     "name": "elapsed",
+     "attribute": "elapsed",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The clock as ms from the start of the job; task start/end are then job-relative too. Wins over `now`",
+     "readonly": false
+    },
+    {
+     "name": "onRetry",
+     "attribute": null,
+     "type": "((ids: string[]) => void | Promise<unknown>) | undefined",
+     "default": "undefined",
+     "description": "\"Retry failed\" sends the failed tasks' ids here – unset, the button doesn't show. A promise holds the button\nwhile it runs; a rejection says so and the button stays to try again",
+     "readonly": false
+    },
+    {
+     "name": "selected",
+     "attribute": null,
+     "type": "string | null",
+     "default": "null",
+     "description": "The id of the task whose window is kept open (null: none). Changed by the user unless a tc-selected-change\nlistener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "filter",
+     "attribute": null,
+     "type": "FanoutStatus | null",
+     "default": "null",
+     "description": "The state every other cell steps back from (null: none). Changed by the user unless a tc-filter-change listener\ncalls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "formatCost",
+     "attribute": null,
+     "type": "(amount: number) => string",
+     "default": "dollars",
+     "description": "Formats every cost – defaults to dollars, e.g. \"$0.014\"",
+     "readonly": false
+    },
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Fan-out\"",
+     "description": "The title on the bar",
+     "readonly": false
+    },
+    {
+     "name": "icon",
+     "attribute": null,
+     "type": "Element | undefined",
+     "default": "undefined",
+     "description": "A small mark before the title (cloned); unset shows the default",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-selected-change",
+     "detail": "",
+     "description": "The task kept open changes ({ selected: string | null }); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-filter-change",
+     "detail": "",
+     "description": "The state filter changes ({ filter: FanoutStatus | null }); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-select",
+     "detail": "",
+     "description": "A task was picked with a click or Enter, or let go ({ task: FanoutTask | null })",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "fog",
+   "cssProperties": [
+    {
+     "name": "--tc-fan-out-grid-cell",
+     "value": "12px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-fan-out-grid-gap",
+     "value": "12px",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent-text",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-border-default",
+    "--tc-border-selected",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-md",
+    "--tc-control-radius-md",
+    "--tc-control-radius-sm",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-shimmer",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-duration-slowest",
+    "--tc-ease-in-out",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fan-out-grid-status-bg",
+    "--tc-fan-out-grid-status-edge",
+    "--tc-fan-out-grid-status-fill",
+    "--tc-fan-out-grid-status-ink",
+    "--tc-fill-default",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-menu-bg",
+    "--tc-menu-radius",
+    "--tc-menu-shadow",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-2xs",
+    "--tc-radius-full",
+    "--tc-radius-sm",
+    "--tc-radius-xs",
+    "--tc-shadow-raised",
+    "--tc-shimmer",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-4-5",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-danger-solid",
+    "--tc-status-info-bg",
+    "--tc-status-info-fg",
+    "--tc-status-info-solid",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-success-solid",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-status-warning-solid",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "react": [
+  {
+   "component": "FanoutGrid",
+   "exported": true,
+   "props": [
+    {
+     "name": "tasks",
+     "type": "FanoutTask[]",
+     "optional": false,
+     "description": ""
+    },
+    {
+     "name": "job",
+     "type": "string",
+     "optional": true,
+     "description": "What the whole job does – e.g. \"Enrich 240 leads\""
+    },
+    {
+     "name": "selected",
+     "type": "string | null",
+     "optional": true,
+     "description": "The id of the task whose window is kept open. Controlled when defined (null: none)"
+    },
+    {
+     "name": "defaultSelected",
+     "type": "string | null",
+     "optional": true,
+     "description": "The task kept open on mount when `selected` isn't controlled"
+    },
+    {
+     "name": "onSelectedChange",
+     "type": "(id: string | null) => void",
+     "optional": true,
+     "description": "Called with the id of the task kept open (null when let go), controlled or not"
+    },
+    {
+     "name": "onSelect",
+     "type": "(task: FanoutTask | null) => void",
+     "optional": true,
+     "description": "A task was picked (click or Enter) – null when it's let go"
+    },
+    {
+     "name": "filter",
+     "type": "FanoutStatus | null",
+     "optional": true,
+     "description": "The state every other cell steps back from. Controlled when defined (null: no filter)"
+    },
+    {
+     "name": "defaultFilter",
+     "type": "FanoutStatus | null",
+     "optional": true,
+     "description": "The filter on mount when `filter` isn't controlled"
+    },
+    {
+     "name": "onFilterChange",
+     "type": "(filter: FanoutStatus | null) => void",
+     "optional": true,
+     "description": "Called with the new filter, controlled or not"
+    },
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "icon",
+     "type": "React.ReactNode",
+     "optional": true,
+     "description": "A small mark before the title, e.g. the agent's logo"
+    }
+   ],
+   "hides": [
+    "heading",
+    "icon",
+    "selected",
+    "filter",
+    "onSelect",
+    "job"
+   ]
+  }
+ ],
+ "changelog": [
+  "fan-out-grid cells and agent-queue backlog squares stay 12 px but sit 24 px apart, and each takes clicks across 24 px (WCAG 2.5.8) – the grids show fewer items per row."
+ ],
+ "size": {
+  "min": 38152,
+  "gzip": 11259
+ }
+}

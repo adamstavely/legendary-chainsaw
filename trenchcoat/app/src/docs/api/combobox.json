@@ -1,0 +1,334 @@
+{
+ "elements": [
+  {
+   "tag": "tc-combobox",
+   "className": "TcCombobox",
+   "description": "Pick one or many options from a searchable, grouped list; picked options show as chips.",
+   "properties": [
+    {
+     "name": "options",
+     "attribute": null,
+     "type": "ComboboxOption[]",
+     "default": "[]",
+     "description": "Every option",
+     "readonly": false
+    },
+    {
+     "name": "value",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[]",
+     "description": "The picked values. Changed by the user unless a tc-value-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "single",
+     "attribute": "single",
+     "type": "boolean",
+     "default": "false",
+     "description": "Pick one instead of many",
+     "readonly": false
+    },
+    {
+     "name": "open",
+     "attribute": "open",
+     "type": "boolean",
+     "default": "false",
+     "description": "Whether the list is open. Changed by the user unless a tc-open-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "placeholder",
+     "attribute": "placeholder",
+     "type": "string",
+     "default": "\"Search…\"",
+     "description": "Text in the empty input",
+     "readonly": false
+    },
+    {
+     "name": "creatable",
+     "attribute": "creatable",
+     "type": "boolean",
+     "default": "false",
+     "description": "Offer \"Create “…”\" when nothing matches the typed text exactly",
+     "readonly": false
+    },
+    {
+     "name": "createOption",
+     "attribute": null,
+     "type": "((text: string) => ComboboxOption | void | Promise<ComboboxOption | void>) | undefined",
+     "default": "undefined",
+     "description": "Turns typed text into an option – defaults to { value: text, label: text }. May return a promise: the create\nrow shows that it's working, and a rejection shows an error there so it can be tried again",
+     "readonly": false
+    },
+    {
+     "name": "createLabel",
+     "attribute": null,
+     "type": "(text: string) => string",
+     "default": null,
+     "description": "Text of the create row",
+     "readonly": false
+    },
+    {
+     "name": "maxVisibleTags",
+     "attribute": "max-visible-tags",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "Show at most this many chips, the rest as \"+3\" (Clean always stays one line)",
+     "readonly": false
+    },
+    {
+     "name": "label",
+     "attribute": "label",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Visible label above the field (or use a page <label for>)",
+     "readonly": false
+    },
+    {
+     "name": "emptyText",
+     "attribute": "empty-text",
+     "type": "string",
+     "default": "\"No results\"",
+     "description": "Shown when nothing matches",
+     "readonly": false
+    },
+    {
+     "name": "name",
+     "attribute": "name",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Submitted with the form: one entry per picked value",
+     "readonly": false
+    },
+    {
+     "name": "disabled",
+     "attribute": "disabled",
+     "type": "boolean",
+     "default": "false",
+     "description": "Can't be changed or focused; also disabled inside a disabled <fieldset>",
+     "readonly": false
+    },
+    {
+     "name": "required",
+     "attribute": "required",
+     "type": "boolean",
+     "default": "false",
+     "description": "At least one value must be picked before the form submits",
+     "readonly": false
+    },
+    {
+     "name": "invalid",
+     "attribute": "invalid",
+     "type": "boolean",
+     "default": "false",
+     "description": "Shows the field as invalid (red edge, aria-invalid on the input)",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-value-change",
+     "detail": "ComboboxValueChange",
+     "description": "The user picked or removed values ({ value, options }); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-open-change",
+     "detail": "OpenChange",
+     "description": "The list opens or closes ({ open }); cancelable",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [
+    {
+     "name": "focus",
+     "params": "options?: FocusOptions",
+     "returns": "void",
+     "description": ""
+    }
+   ],
+   "ui": "cbx",
+   "cssProperties": [
+    {
+     "name": "--tc-combobox-chip-border-armed",
+     "value": "light-dark(rgba(0, 0, 0, 0.27), rgba(255, 255, 255, 0.3))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent-highlight",
+    "--tc-action-ghost-bg-hover",
+    "--tc-avatar-font-size",
+    "--tc-avatar-font-weight",
+    "--tc-avatar-md",
+    "--tc-avatar-sm",
+    "--tc-border-default",
+    "--tc-border-strong",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-instant",
+    "--tc-duration-moderate",
+    "--tc-duration-quick",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-ease-decelerate",
+    "--tc-ease-move",
+    "--tc-ease-spring",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-font-size",
+    "--tc-field-h",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-field-shadow-hover",
+    "--tc-field-shadow-invalid",
+    "--tc-fill-default",
+    "--tc-fill-strong",
+    "--tc-focus-ring",
+    "--tc-focus-ring-width",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xl",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-kbd-bg",
+    "--tc-kbd-fg",
+    "--tc-kbd-font-size",
+    "--tc-kbd-font-weight",
+    "--tc-kbd-h",
+    "--tc-kbd-px",
+    "--tc-kbd-radius",
+    "--tc-kbd-shadow",
+    "--tc-line-height-none",
+    "--tc-line-height-normal",
+    "--tc-line-height-tight",
+    "--tc-menu-bg",
+    "--tc-menu-item-font-size",
+    "--tc-menu-item-h",
+    "--tc-menu-item-hover",
+    "--tc-menu-item-px",
+    "--tc-menu-item-radius",
+    "--tc-menu-item-selected-fg",
+    "--tc-menu-padding",
+    "--tc-menu-radius",
+    "--tc-menu-shadow",
+    "--tc-radius-2xs",
+    "--tc-radius-sm",
+    "--tc-radius-xs",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-10",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-placeholder",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius",
+    "--tc-z-dropdown"
+   ]
+  }
+ ],
+ "react": [
+  {
+   "component": "Combobox",
+   "exported": true,
+   "props": [
+    {
+     "name": "options",
+     "type": "ComboboxOptionNode[]",
+     "optional": false,
+     "description": "Every option; icons and avatars may be React nodes"
+    },
+    {
+     "name": "multiple",
+     "type": "boolean",
+     "optional": true,
+     "description": "Pick many (the default) or one"
+    },
+    {
+     "name": "value",
+     "type": "string[]",
+     "optional": true,
+     "description": "The picked values (controlled). Leave undefined to let the combobox keep them, starting at `defaultValue`"
+    },
+    {
+     "name": "defaultValue",
+     "type": "string[]",
+     "optional": true,
+     "description": "The values picked at first when uncontrolled"
+    },
+    {
+     "name": "onChange",
+     "type": "(value: string[], options: ComboboxOption[]) => void",
+     "optional": true,
+     "description": "Every pick and removal, with the picked options"
+    },
+    {
+     "name": "open",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether the list is open (controlled)"
+    },
+    {
+     "name": "defaultOpen",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether the list starts open when uncontrolled"
+    },
+    {
+     "name": "onOpenChange",
+     "type": "(open: boolean) => void",
+     "optional": true,
+     "description": "The list opened or closed"
+    }
+   ],
+   "hides": [
+    "value",
+    "open",
+    "single",
+    "onChange",
+    "options"
+   ]
+  }
+ ],
+ "changelog": [
+  "Lit 3 web components: `tc-button`, `tc-combobox` and `tc-data-table` (the pilot), `tc-look-provider` for an app-wide default look, the shared controllers (row window, focus rescue, smooth height, off-screen, on-screen, ARIA forwarding, hotkeys, rolling numbers). Pixel-identical to the React components in both looks and themes.",
+  "combobox `invalid`, otp-input `labelledBy`, stepper-form tags `autoComplete`, decision-tree Previous/Next buttons, inline-diff \"Undo last decision\", agent-plan Move up/down buttons, delegate-board click-to-assign."
+ ],
+ "size": {
+  "min": 47653,
+  "gzip": 13653
+ }
+}

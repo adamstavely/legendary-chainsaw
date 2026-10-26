@@ -1,0 +1,61 @@
+{
+ "elements": [
+  {
+   "tag": "tc-enrichment-orbit",
+   "className": "TcEnrichmentOrbit",
+   "description": "A tile inside two rings with comets and orbiting data nodes.",
+   "properties": [
+    {
+     "name": "label",
+     "attribute": "label",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Accessible description – when set, the scene is announced as an image; otherwise it is decorative",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [],
+   "slots": [],
+   "methods": [],
+   "ui": "eo",
+   "cssProperties": [
+    {
+     "name": "--tc-enrichment-orbit-comet",
+     "value": "7s",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-enrichment-orbit-node",
+     "value": "22s",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": []
+  }
+ ],
+ "react": [
+  {
+   "component": "EnrichmentOrbit",
+   "exported": false,
+   "props": [],
+   "hides": []
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 12685,
+  "gzip": 5352
+ }
+}

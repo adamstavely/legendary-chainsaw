@@ -1,0 +1,328 @@
+{
+ "elements": [
+  {
+   "tag": "tc-inline-diff",
+   "className": "TcInlineDiff",
+   "description": "Review an AI's word-level edits to prose: accept or reject each change in place.",
+   "properties": [
+    {
+     "name": "original",
+     "attribute": "original",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The text as it is now",
+     "readonly": false
+    },
+    {
+     "name": "suggested",
+     "attribute": "suggested",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The text the AI suggests",
+     "readonly": false
+    },
+    {
+     "name": "changes",
+     "attribute": null,
+     "type": "DiffSegment[] | undefined",
+     "default": "undefined",
+     "description": "Pre-computed segments instead of original + suggested",
+     "readonly": false
+    },
+    {
+     "name": "decisions",
+     "attribute": null,
+     "type": "InlineDiffDecisions",
+     "default": "{}",
+     "description": "The verdicts so far. Changed by the user unless a tc-decisions-change listener calls preventDefault(); new text\nresets them (reported as {})",
+     "readonly": false
+    },
+    {
+     "name": "label",
+     "attribute": "label",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Small line above the card (Clean: at the top of the card), e.g. \"Suggested by AI · Make it shorter\"",
+     "readonly": false
+    },
+    {
+     "name": "fill",
+     "attribute": "fill",
+     "type": "boolean",
+     "default": "false",
+     "description": "Grow to the container's height: the card fills the rest below the label, the toolbar staying in place",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-decisions-change",
+     "detail": "",
+     "description": "A decision, undo or reset, or new text starting over ({ decisions: InlineDiffDecisions }); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-text-change",
+     "detail": "",
+     "description": "Every decision (and undo), with the text so far ({ text: string }) – pending changes keep the original words",
+     "cancelable": false
+    },
+    {
+     "name": "tc-done",
+     "detail": "",
+     "description": "No change is pending any more ({ text: string }, the final text)",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [
+    {
+     "name": "highlight",
+     "params": "index: number | null",
+     "returns": "void",
+     "description": "Shows the popover on a change (by its index among the changes) without moving focus; null hides it"
+    },
+    {
+     "name": "accept",
+     "params": "index: number",
+     "returns": "void",
+     "description": ""
+    },
+    {
+     "name": "reject",
+     "params": "index: number",
+     "returns": "void",
+     "description": ""
+    },
+    {
+     "name": "acceptAll",
+     "params": "",
+     "returns": "void",
+     "description": ""
+    },
+    {
+     "name": "rejectAll",
+     "params": "",
+     "returns": "void",
+     "description": ""
+    },
+    {
+     "name": "undo",
+     "params": "",
+     "returns": "void",
+     "description": "Restores the last decision (or the last \"all\" batch)"
+    },
+    {
+     "name": "reset",
+     "params": "",
+     "returns": "void",
+     "description": "Back to every change pending"
+    }
+   ],
+   "ui": "df",
+   "cssProperties": [
+    {
+     "name": "--tc-inline-diff-ins-bg-active",
+     "value": "light-dark(rgba(26, 154, 82, 0.16), rgba(62, 194, 122, 0.22))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-inline-diff-del-bg-active",
+     "value": "light-dark(rgba(229, 72, 77, 0.14), rgba(240, 90, 90, 0.22))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-inline-diff-strike",
+     "value": "light-dark(rgba(229, 72, 77, 0.6), rgba(255, 120, 120, 0.7))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-inline-diff-popover-fill",
+     "value": "light-dark(rgba(255, 255, 255, 0.14), rgba(0, 0, 0, 0.08))",
+     "looks": [
+      "standard"
+     ]
+    },
+    {
+     "name": "--tc-inline-diff-popover-kbd-text",
+     "value": "light-dark(rgba(255, 255, 255, 0.55), rgba(0, 0, 0, 0.5))",
+     "looks": [
+      "standard"
+     ]
+    },
+    {
+     "name": "--tc-inline-diff-primary-kbd-bg",
+     "value": "var(--tc-kbd-on-inverse-bg)",
+     "looks": [
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-inline-diff-primary-kbd-text",
+     "value": "light-dark(rgba(255, 255, 255, 0.66), rgba(28, 28, 30, 0.6))",
+     "looks": [
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-active",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-border-default",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-sm",
+    "--tc-control-radius-md",
+    "--tc-control-radius-sm",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-instant",
+    "--tc-duration-moderate",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-ease-decelerate",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-lg-plus",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-strong",
+    "--tc-icon-muted",
+    "--tc-kbd-font-size",
+    "--tc-kbd-font-weight",
+    "--tc-kbd-h",
+    "--tc-kbd-on-inverse-bg",
+    "--tc-kbd-px",
+    "--tc-kbd-radius",
+    "--tc-line-height-loose",
+    "--tc-line-height-none",
+    "--tc-line-height-normal",
+    "--tc-line-height-relaxed",
+    "--tc-line-height-tight",
+    "--tc-pill-font-size",
+    "--tc-radius-badge",
+    "--tc-radius-lg",
+    "--tc-radius-sm",
+    "--tc-radius-xs",
+    "--tc-shadow-overlay",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-4-5",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-success-solid",
+    "--tc-surface-inverse",
+    "--tc-surface-on-tray",
+    "--tc-surface-overlay",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-on-inverse",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "react": [
+  {
+   "component": "InlineDiff",
+   "exported": true,
+   "props": [
+    {
+     "name": "onChange",
+     "type": "(text: string) => void",
+     "optional": true,
+     "description": "Called on every decision (and undo) with the text so far – pending changes keep the original words"
+    },
+    {
+     "name": "onDone",
+     "type": "(text: string) => void",
+     "optional": true,
+     "description": "Called once no change is pending, with the final text"
+    },
+    {
+     "name": "decisions",
+     "type": "InlineDiffDecisions",
+     "optional": true,
+     "description": "The verdicts so far (controlled). New text resets them: an uncontrolled diff starts over, a controlled one\nreports `{}` through onDecisionsChange"
+    },
+    {
+     "name": "defaultDecisions",
+     "type": "InlineDiffDecisions",
+     "optional": true,
+     "description": "The verdicts to start with when uncontrolled"
+    },
+    {
+     "name": "onDecisionsChange",
+     "type": "(decisions: InlineDiffDecisions) => void",
+     "optional": true,
+     "description": "Every decision, undo and reset, with all verdicts so far"
+    },
+    {
+     "name": "ref",
+     "type": "React.Ref<InlineDiffHandle>",
+     "optional": true,
+     "description": "The imperative handle (the element implements it)"
+    }
+   ],
+   "hides": [
+    "decisions",
+    "onChange",
+    "ref"
+   ]
+  }
+ ],
+ "changelog": [
+  "inline-diff: `diffWords` uses Myers' O(ND) diff instead of a capped LCS table. Long texts stay word by word (a 3,000-word text with 150 edits gives 150 changes, where anything over ~1,500 words used to become one replacement), and the work grows with the edits, not the length squared. Its third argument is now a work budget (tokens × edits); past it the middle is still one replacement."
+ ],
+ "size": {
+  "min": 47707,
+  "gzip": 11983
+ }
+}

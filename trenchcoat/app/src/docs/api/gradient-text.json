@@ -1,0 +1,195 @@
+{
+ "elements": [
+  {
+   "tag": "tc-gradient-text",
+   "className": "TcGradientText",
+   "description": "Text filled with a slowly flowing liquid gradient, swept in from the left when it is first seen.",
+   "properties": [
+    {
+     "name": "text",
+     "attribute": "text",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The text",
+     "readonly": false
+    },
+    {
+     "name": "content",
+     "attribute": null,
+     "type": "Element | undefined",
+     "default": "undefined",
+     "description": "Rich content instead of `text`: an element that's cloned for the text and for its gradient copy",
+     "readonly": false
+    },
+    {
+     "name": "colors",
+     "attribute": null,
+     "type": "string[] | undefined",
+     "default": "undefined",
+     "description": "Gradient start, end and up to two blob colours: [start, end, blob, blob]",
+     "readonly": false
+    },
+    {
+     "name": "speed",
+     "attribute": "speed",
+     "type": "number",
+     "default": "8",
+     "description": "Seconds per flow cycle",
+     "readonly": false
+    },
+    {
+     "name": "playFor",
+     "attribute": "play-for",
+     "type": "number",
+     "default": "5",
+     "description": "Seconds the flow runs before it rests (on the nearest quarter cycle below); Infinity never stops – then give\nusers a way to pause it (WCAG 2.2.2)",
+     "readonly": false
+    },
+    {
+     "name": "sweep",
+     "attribute": "sweep",
+     "type": "boolean",
+     "default": "true",
+     "description": "Sweep the colour in from left to right when the text scrolls into view (attribute: sweep=\"false\" turns it off)",
+     "readonly": false
+    },
+    {
+     "name": "as",
+     "attribute": "as",
+     "type": "GradientTextTag",
+     "default": "\"span\"",
+     "description": "What the text is: inline text, a paragraph or a heading (h1, h2: the host becomes a heading of that level)",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [],
+   "slots": [],
+   "methods": [],
+   "ui": "gt",
+   "cssProperties": [
+    {
+     "name": "--tc-gradient-text-c1",
+     "value": "light-dark(#dd0674, #f472b6)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-gradient-text-c2",
+     "value": "light-dark(#5e3ee0, #a78bfa)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-gradient-text-c3",
+     "value": "light-dark(#ec4899, #f9a8d4)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-gradient-text-c4",
+     "value": "light-dark(#7c5cff, #c4b5fd)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-gradient-text-sweep",
+     "value": "1100ms",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-duration-base",
+    "--tc-duration-moderate",
+    "--tc-ease-in-out",
+    "--tc-ease-standard",
+    "--tc-gradient-text-passes",
+    "--tc-gradient-text-speed"
+   ]
+  }
+ ],
+ "react": [
+  {
+   "component": "GradientTextOwn",
+   "exported": false,
+   "props": [
+    {
+     "name": "children",
+     "type": "React.ReactNode",
+     "optional": false,
+     "description": ""
+    },
+    {
+     "name": "colors",
+     "type": "string[]",
+     "optional": true,
+     "description": "Gradient start, end and up to two blob colors: [start, end, blob, blob]"
+    },
+    {
+     "name": "speed",
+     "type": "number",
+     "optional": true,
+     "description": "Seconds per flow cycle"
+    },
+    {
+     "name": "playFor",
+     "type": "number",
+     "optional": true,
+     "description": "Seconds the flow runs before it rests (on the nearest quarter cycle below); Infinity never stops – then give\nusers a way to pause it (WCAG 2.2.2)"
+    },
+    {
+     "name": "sweep",
+     "type": "boolean",
+     "optional": true,
+     "description": "Sweep the color in from left to right when the text scrolls into view"
+    },
+    {
+     "name": "as",
+     "type": "\"span\" | \"h1\" | \"h2\" | \"p\"",
+     "optional": true,
+     "description": "What the text is: inline text, a paragraph or a heading"
+    },
+    {
+     "name": "className",
+     "type": "string",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "ref",
+     "type": "React.Ref<TcGradientText>",
+     "optional": true,
+     "description": "The root element"
+    }
+   ],
+   "hides": []
+  },
+  {
+   "component": "GradientText",
+   "exported": true,
+   "props": [],
+   "hides": [
+    "text",
+    "content"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 10726,
+  "gzip": 4262
+ }
+}

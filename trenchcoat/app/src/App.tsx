@@ -1,5 +1,7 @@
 import { Component, createContext, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { LookProvider } from "../../src/elements/react";
+import { DocsPage } from "./docs/DocsPage";
+import { GUIDANCE } from "./docs/guidance";
 import { CATEGORIES, ENTRIES, LIBRARY_INFO, type Entry, type LibraryInfo, type Variant } from "./registry";
 
 type Mode = Variant | "both";
@@ -79,13 +81,16 @@ export function App() {
   const [mode, setMode] = useStoredMode();
   const [theme, setTheme] = useStoredTheme();
   const route = useHash();
-  const focused = ENTRIES.find((e) => e.id === route);
+  // #/<id> or #/<id>/<section> – ids can hold a slash (illustrations/voice-orb), so the longest match wins
+  const focused = ENTRIES.filter((e) => route === e.id || route.startsWith(`${e.id}/`)).sort((a, b) => b.id.length - a.id.length)[0];
+  const section = focused && route.length > focused.id.length ? route.slice(focused.id.length + 1) : "";
   const library = LIBRARY_INFO.find((l) => route === `library/${l.key}`);
 
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return null;
-    return ENTRIES.filter((e) => `${e.name} ${e.slug} ${e.library} ${e.description}`.toLowerCase().includes(q));
+    // Names, descriptions and the docs pages' guidance text
+    return ENTRIES.filter((e) => `${e.name} ${e.slug} ${e.library} ${e.description} ${GUIDANCE[e.slug]?.text ?? ""}`.toLowerCase().includes(q));
   }, [query]);
 
   // Standard/Clean only exists for components, so the switch only shows where components are on screen
@@ -138,7 +143,7 @@ export function App() {
                 <div key={cat} className="navgroup">
                   {groups.length > 1 && <div className="navcat">{cat}</div>}
                   {list.map((e) => (
-                    <a key={e.id} href={`#/${e.id}`} className={route === e.id ? "active" : ""}>
+                    <a key={e.id} href={`#/${e.id}`} className={focused?.id === e.id ? "active" : ""}>
                       {e.name}
                       {!e.Demo && <span className="dot" title="No demo yet" />}
                     </a>
@@ -155,7 +160,7 @@ export function App() {
         {results ? (
           <Results list={results} query={query} mode={mode} />
         ) : focused ? (
-          <FocusView entry={focused} mode={mode} />
+          <FocusView entry={focused} mode={mode} section={section} />
         ) : library ? (
           <LibraryPage lib={library} mode={mode} />
         ) : (
@@ -371,14 +376,30 @@ function Home() {
   );
 }
 
-function FocusView({ entry, mode }: { entry: Entry; mode: Mode }) {
+/** Pieces that are elements get a design-system page; blocks and screens keep the plain focus view */
+const DOCUMENTED = new Set(["components", "illustrations", "motion"]);
+
+function FocusView({ entry, mode, section }: { entry: Entry; mode: Mode; section: string }) {
   const i = ENTRIES.indexOf(entry);
   const prev = ENTRIES[(i - 1 + ENTRIES.length) % ENTRIES.length];
   const next = ENTRIES[(i + 1) % ENTRIES.length];
   const lib = LIBRARY_INFO.find((l) => l.key === entry.library)!;
   useEffect(() => {
-    window.scrollTo(0, 0);
+    if (!DOCUMENTED.has(entry.library)) window.scrollTo(0, 0);
   }, [entry]);
+  if (DOCUMENTED.has(entry.library)) {
+    return (
+      <div className="focus">
+        <div className="focusnav">
+          <a href={`#/library/${lib.key}`}>← {lib.label}</a>
+          <div className="spacer" />
+          <a href={`#/${prev.id}`}>‹ {prev.name}</a>
+          <a href={`#/${next.id}`}>{next.name} ›</a>
+        </div>
+        <DocsPage entry={entry} section={section} example={<Card key={entry.id} entry={entry} mode={mode} large stagesOnly />} />
+      </div>
+    );
+  }
   return (
     <div className="focus">
       <div className="focusnav">
@@ -392,7 +413,7 @@ function FocusView({ entry, mode }: { entry: Entry; mode: Mode }) {
   );
 }
 
-function Card({ entry, mode, large = false }: { entry: Entry; mode: Mode; large?: boolean }) {
+function Card({ entry, mode, large = false, stagesOnly = false }: { entry: Entry; mode: Mode; large?: boolean; stagesOnly?: boolean }) {
   const [run, setRun] = useState(0);
   const variants = (mode === "both" ? (["standard", "clean"] as Variant[]) : [mode]).map((v) =>
     entry.load[v] ? v : (Object.keys(entry.load)[0] as Variant),
@@ -401,7 +422,15 @@ function Card({ entry, mode, large = false }: { entry: Entry; mode: Mode; large?
   const both = shown.length > 1;
 
   return (
-    <article className={`card layout-${entry.layout} ${large ? "large" : ""} ${both ? "wide" : ""}`} id={entry.id}>
+    <article className={`card layout-${entry.layout} ${large ? "large" : ""} ${both ? "wide" : ""} ${stagesOnly ? "stages-only" : ""}`} id={entry.id}>
+      {stagesOnly ? (
+        <div className="cardhead slim">
+          <div className="spacer" />
+          <button className="ghost" onClick={() => setRun((n) => n + 1)} title="Remount the component to replay its animations">
+            ↻ Replay
+          </button>
+        </div>
+      ) : (
       <div className="cardhead">
         <div className="titles">
           <h3>
@@ -420,6 +449,7 @@ function Card({ entry, mode, large = false }: { entry: Entry; mode: Mode; large?
           )}
         </div>
       </div>
+      )}
       <div className={both ? "stages two" : "stages"}>
         {shown.map((v) => (
           <div key={v} className="stagewrap">

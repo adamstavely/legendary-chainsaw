@@ -1,0 +1,347 @@
+{
+ "elements": [
+  {
+   "tag": "tc-agent-steering",
+   "className": "TcAgentSteering",
+   "description": "Steer an agent while it works: the run, its plan, the queued notes and a field to add one.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"\"",
+     "description": "What the agent is working on, e.g. \"Migrate users table\"",
+     "readonly": false
+    },
+    {
+     "name": "agent",
+     "attribute": "agent",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Name of the agent or model, e.g. \"Opus 5.5\"",
+     "readonly": false
+    },
+    {
+     "name": "steps",
+     "attribute": null,
+     "type": "SteerStep[]",
+     "default": "[]",
+     "description": "",
+     "readonly": false
+    },
+    {
+     "name": "queue",
+     "attribute": null,
+     "type": "SteerNote[]",
+     "default": "[]",
+     "description": "Notes waiting for the next step, oldest first",
+     "readonly": false
+    },
+    {
+     "name": "status",
+     "attribute": "status",
+     "type": "SteerRunStatus",
+     "default": "\"running\"",
+     "description": "",
+     "readonly": false
+    },
+    {
+     "name": "startedAt",
+     "attribute": null,
+     "type": "number | Date | undefined",
+     "default": "undefined",
+     "description": "When the run started (epoch ms or a Date) – the clock in the header ticks from here",
+     "readonly": false
+    },
+    {
+     "name": "draft",
+     "attribute": "draft",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The text in the field",
+     "readonly": false
+    },
+    {
+     "name": "placeholder",
+     "attribute": "placeholder",
+     "type": "string",
+     "default": "\"Steer the agent…\"",
+     "description": "",
+     "readonly": false
+    },
+    {
+     "name": "onQueue",
+     "attribute": null,
+     "type": "SteerSend | undefined",
+     "default": "undefined",
+     "description": "↵ in the field: queue this note for the next step. May return a promise (see SteerSend)",
+     "readonly": false
+    },
+    {
+     "name": "onInterrupt",
+     "attribute": null,
+     "type": "SteerSend | undefined",
+     "default": "undefined",
+     "description": "⌘↵ in the field, or \"Now\" on a queued note (then with its id): apply it to the active step right away. Unset\nhides \"Now\" and the hint",
+     "readonly": false
+    },
+    {
+     "name": "removable",
+     "attribute": "removable",
+     "type": "boolean",
+     "default": "false",
+     "description": "Shows ✕ on the queued notes (tc-remove)",
+     "readonly": false
+    },
+    {
+     "name": "pausable",
+     "attribute": "pausable",
+     "type": "boolean",
+     "default": "false",
+     "description": "Shows Pause in the header while running (tc-pause)",
+     "readonly": false
+    },
+    {
+     "name": "resumable",
+     "attribute": "resumable",
+     "type": "boolean",
+     "default": "false",
+     "description": "Shows Resume in the header while paused (tc-resume)",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-draft-change",
+     "detail": "",
+     "description": "The text in the field changed; detail `{ draft: string }`. Cancelable: preventDefault() keeps `draft` as it is (controlled use)",
+     "cancelable": true
+    },
+    {
+     "name": "tc-remove",
+     "detail": "",
+     "description": "✕ on a queued note; detail `{ id: string }`",
+     "cancelable": false
+    },
+    {
+     "name": "tc-pause",
+     "detail": "",
+     "description": "Pause was pressed",
+     "cancelable": false
+    },
+    {
+     "name": "tc-resume",
+     "detail": "",
+     "description": "Resume was pressed",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "st",
+   "cssProperties": [
+    {
+     "name": "--tc-agent-steering-accent",
+     "value": "light-dark(rgba(0, 96, 226, 0.765), #5b9aff)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-agent-steering-rail",
+     "value": "light-dark(rgba(0, 0, 0, 0.15), rgba(255, 255, 255, 0.16))",
+     "looks": [
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-active",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-border-default",
+    "--tc-border-strong",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-sm",
+    "--tc-control-radius-md",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-reveal-slow",
+    "--tc-duration-shimmer",
+    "--tc-duration-slow",
+    "--tc-ease-decelerate",
+    "--tc-ease-emphasized",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-bg-sunken",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-field-shadow-hover",
+    "--tc-fill-default",
+    "--tc-fill-hover",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-kbd-bg",
+    "--tc-kbd-fg",
+    "--tc-kbd-font-size",
+    "--tc-kbd-font-weight",
+    "--tc-kbd-h",
+    "--tc-kbd-px",
+    "--tc-kbd-radius",
+    "--tc-kbd-shadow",
+    "--tc-line-height-none",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-pill-font-size-lg",
+    "--tc-pill-font-weight",
+    "--tc-pill-h-lg",
+    "--tc-pill-px-lg",
+    "--tc-pill-radius",
+    "--tc-radius-2xs",
+    "--tc-radius-badge",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-radius-xl",
+    "--tc-shadow-raised",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-7",
+    "--tc-status-danger-fg",
+    "--tc-status-success-solid",
+    "--tc-status-warning-solid",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-on-accent",
+    "--tc-text-placeholder",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "react": [
+  {
+   "component": "AgentSteering",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": false,
+     "description": "What the agent is working on, e.g. \"Migrate users table\""
+    },
+    {
+     "name": "onInterrupt",
+     "type": "(text: string, queuedId?: string) => void | Promise<unknown>",
+     "optional": true,
+     "description": "⌘↵ in the field, or \"Now\" on a queued note (then with its id): apply it to the active step right away. May\nreturn a promise, like onQueue"
+    },
+    {
+     "name": "draft",
+     "type": "string",
+     "optional": true,
+     "description": "The text in the field. Controlled when defined – pair with onDraftChange; otherwise the component keeps it,\nstarting from `defaultDraft`"
+    },
+    {
+     "name": "defaultDraft",
+     "type": "string",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "onDraftChange",
+     "type": "(text: string) => void",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "onRemove",
+     "type": "(id: string) => void",
+     "optional": true,
+     "description": "✕ on a queued note"
+    },
+    {
+     "name": "onPause",
+     "type": "() => void",
+     "optional": true,
+     "description": "Shows Pause / Resume in the header"
+    },
+    {
+     "name": "onResume",
+     "type": "() => void",
+     "optional": true,
+     "description": ""
+    }
+   ],
+   "hides": [
+    "heading",
+    "draft",
+    "removable",
+    "pausable",
+    "resumable",
+    "onInterrupt"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 46735,
+  "gzip": 12088
+ }
+}

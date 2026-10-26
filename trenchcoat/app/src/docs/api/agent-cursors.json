@@ -1,0 +1,504 @@
+{
+ "elements": [
+  {
+   "tag": "tc-agent-cursors",
+   "className": "TcAgentCursors",
+   "description": "Agents working in a document like teammates in a multiplayer editor: pointers, selections, suggestions and comments.",
+   "properties": [
+    {
+     "name": "agents",
+     "attribute": null,
+     "type": "CursorAgent[]",
+     "default": "[]",
+     "description": "",
+     "readonly": false
+    },
+    {
+     "name": "blocks",
+     "attribute": null,
+     "type": "DocBlock[]",
+     "default": "[]",
+     "description": "",
+     "readonly": false
+    },
+    {
+     "name": "suggestions",
+     "attribute": null,
+     "type": "DocSuggestion[]",
+     "default": "[]",
+     "description": "",
+     "readonly": false
+    },
+    {
+     "name": "comments",
+     "attribute": null,
+     "type": "DocComment[]",
+     "default": "[]",
+     "description": "Comment pins on the page",
+     "readonly": false
+    },
+    {
+     "name": "cursors",
+     "attribute": null,
+     "type": "Record<string, AgentCursor | null | undefined>",
+     "default": "{}",
+     "description": "Where each agent is – a missing or null entry means the agent has left the document",
+     "readonly": false
+    },
+    {
+     "name": "following",
+     "attribute": "following",
+     "type": "string | null",
+     "default": "null",
+     "description": "The agent you follow (the others fade back), or null",
+     "readonly": false
+    },
+    {
+     "name": "height",
+     "attribute": "height",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "A fixed page height in px – the rest of the document fades out towards the bottom",
+     "readonly": false
+    },
+    {
+     "name": "formatCost",
+     "attribute": null,
+     "type": "(amount: number) => string",
+     "default": "dollars",
+     "description": "Formats every cost – defaults to dollars, e.g. \"$0.42\"",
+     "readonly": false
+    },
+    {
+     "name": "tabs",
+     "attribute": null,
+     "type": "DocTab[] | undefined",
+     "default": "undefined",
+     "description": "Tabs above the page, e.g. the document and a table view of it",
+     "readonly": false
+    },
+    {
+     "name": "tab",
+     "attribute": "tab",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The open tab – unset is the first. The page content is yours to switch",
+     "readonly": false
+    },
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Untitled\"",
+     "description": "The document's title in the header",
+     "readonly": false
+    },
+    {
+     "name": "canAccept",
+     "attribute": "can-accept",
+     "type": "boolean",
+     "default": "false",
+     "description": "Shows Accept in a suggestion's window (fires tc-accept)",
+     "readonly": false
+    },
+    {
+     "name": "canReject",
+     "attribute": "can-reject",
+     "type": "boolean",
+     "default": "false",
+     "description": "Shows Reject in a suggestion's window (fires tc-reject)",
+     "readonly": false
+    },
+    {
+     "name": "canAcceptAll",
+     "attribute": "can-accept-all",
+     "type": "boolean",
+     "default": "false",
+     "description": "Shows \"Accept all\" in the header (fires tc-accept-all)",
+     "readonly": false
+    },
+    {
+     "name": "canResolve",
+     "attribute": "can-resolve",
+     "type": "boolean",
+     "default": "false",
+     "description": "Shows the resolve check in a comment's window (fires tc-resolve)",
+     "readonly": false
+    },
+    {
+     "name": "onReply",
+     "attribute": null,
+     "type": "AgentCursorsReply | undefined",
+     "default": "undefined",
+     "description": "A reply typed into a comment's window and sent with Enter. May return a promise: the field waits while it\nruns, and if it rejects the text comes back so it can be sent again",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-following-change",
+     "detail": "",
+     "description": "A face was clicked to follow an agent, or to stop ({ following }: AgentFollowingChange); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-tab-change",
+     "detail": "",
+     "description": "Another tab was picked ({ tab }: AgentTabChange); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-accept",
+     "detail": "",
+     "description": "A suggestion was accepted; `detail` is the `DocSuggestion`",
+     "cancelable": false
+    },
+    {
+     "name": "tc-reject",
+     "detail": "",
+     "description": "A suggestion was rejected; `detail` is the `DocSuggestion`",
+     "cancelable": false
+    },
+    {
+     "name": "tc-accept-all",
+     "detail": "",
+     "description": "\"Accept all\" was pressed",
+     "cancelable": false
+    },
+    {
+     "name": "tc-resolve",
+     "detail": "",
+     "description": "A comment was resolved; `detail` is the `DocComment`",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "agc",
+   "cssProperties": [
+    {
+     "name": "--tc-agent-cursors-gap",
+     "value": "16px",
+     "looks": [
+      "both",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-agent-cursors-c",
+     "value": "light-dark(#1f1f22, #e4e4e7)",
+     "looks": [
+      "both",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-agent-cursors-flag-bg",
+     "value": "light-dark(#141416, #f4f4f5)",
+     "looks": [
+      "both",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-agent-cursors-flag-fg",
+     "value": "var(--tc-text-on-inverse)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-agent-cursors-flag-soft",
+     "value": "light-dark(rgba(255, 255, 255, 0.14), rgba(0, 0, 0, 0.08))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-agent-cursors-flag-muted",
+     "value": "color-mix(in srgb, var(--tc-agent-cursors-flag-fg) 65%, transparent)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-agent-cursors-edge",
+     "value": "linear-gradient(90deg, #ff4fa3, #8b6bff 55%, #3b8bff)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-agent-cursors-shimmer",
+     "value": "light-dark(rgba(0, 0, 0, 0.04), rgba(255, 255, 255, 0.05))",
+     "looks": [
+      "both",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-agent-cursors-shine",
+     "value": "light-dark(rgba(0, 0, 0, 0.015), rgba(255, 255, 255, 0.1))",
+     "looks": [
+      "both",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-agent-cursors-outline",
+     "value": "light-dark(#ffffff, #1c1c1f)",
+     "looks": [
+      "both",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-agent-cursors-glide",
+     "value": "var(--tc-duration-slowest)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-agent-cursors-blink",
+     "value": "1100ms",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-active",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-agent-cursors-h",
+    "--tc-agent-cursors-height",
+    "--tc-agent-cursors-pill-bg",
+    "--tc-agent-cursors-pill-fg",
+    "--tc-agent-cursors-pin",
+    "--tc-agent-cursors-pin-h",
+    "--tc-agent-cursors-pin-w",
+    "--tc-agent-cursors-pin-x",
+    "--tc-agent-cursors-shift",
+    "--tc-agent-cursors-tint",
+    "--tc-border-default",
+    "--tc-border-subtle",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-md",
+    "--tc-control-px-sm",
+    "--tc-control-radius-md",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-quick",
+    "--tc-duration-reveal-slow",
+    "--tc-duration-shimmer",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-duration-slowest",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-hover",
+    "--tc-fill-strong",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-sans",
+    "--tc-font-size-2xl",
+    "--tc-font-size-2xs",
+    "--tc-font-size-lg",
+    "--tc-font-size-lg-plus",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-display-sm",
+    "--tc-line-height-loose",
+    "--tc-line-height-none",
+    "--tc-line-height-normal",
+    "--tc-line-height-relaxed",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-menu-bg",
+    "--tc-menu-radius",
+    "--tc-menu-shadow",
+    "--tc-pill-font-size-lg",
+    "--tc-pill-font-weight",
+    "--tc-pill-h-lg",
+    "--tc-pill-px-lg",
+    "--tc-pill-radius",
+    "--tc-radius-2xl",
+    "--tc-radius-2xs",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-radius-xl",
+    "--tc-radius-xs",
+    "--tc-seg-thumb-bg",
+    "--tc-shadow-overlay",
+    "--tc-shadow-raised",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-12",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-4-5",
+    "--tc-space-5",
+    "--tc-space-6",
+    "--tc-space-8",
+    "--tc-status-danger-solid",
+    "--tc-status-info-bg",
+    "--tc-status-info-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-surface-inverse",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-on-inverse",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tooltip-bg",
+    "--tc-tooltip-fg",
+    "--tc-tooltip-font-size",
+    "--tc-tooltip-px",
+    "--tc-tooltip-py",
+    "--tc-tooltip-radius",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "react": [
+  {
+   "component": "AgentCursors",
+   "exported": true,
+   "props": [
+    {
+     "name": "agents",
+     "type": "CursorAgent[]",
+     "optional": false,
+     "description": ""
+    },
+    {
+     "name": "onResolveComment",
+     "type": "(comment: DocComment) => void",
+     "optional": true,
+     "description": "Resolves a comment – the black check in its window"
+    },
+    {
+     "name": "onAccept",
+     "type": "(suggestion: DocSuggestion) => void",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "onReject",
+     "type": "(suggestion: DocSuggestion) => void",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "onAcceptAll",
+     "type": "() => void",
+     "optional": true,
+     "description": "Shows \"Accept all\" in the header when there is more than one suggestion"
+    },
+    {
+     "name": "following",
+     "type": "string | null",
+     "optional": true,
+     "description": "The agent you follow (the others fade back). Controlled when defined (null = nobody)"
+    },
+    {
+     "name": "defaultFollowing",
+     "type": "string | null",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "onFollowingChange",
+     "type": "(agent: string | null) => void",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "tab",
+     "type": "string",
+     "optional": true,
+     "description": "The open tab. Controlled when defined; otherwise the component keeps it, starting from `defaultTab`"
+    },
+    {
+     "name": "defaultTab",
+     "type": "string",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "onTabChange",
+     "type": "(tab: string) => void",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": ""
+    }
+   ],
+   "hides": [
+    "agents",
+    "following",
+    "tab",
+    "heading",
+    "canAccept",
+    "canReject",
+    "canAcceptAll",
+    "canResolve"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 81922,
+  "gzip": 21240
+ }
+}

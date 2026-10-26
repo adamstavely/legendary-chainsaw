@@ -1,0 +1,205 @@
+{
+ "elements": [
+  {
+   "tag": "tc-project-flow",
+   "className": "TcProjectFlow",
+   "description": "Cards for a task, its subtasks, roles and tech stack build up one after another.",
+   "properties": [
+    {
+     "name": "theme",
+     "attribute": "theme",
+     "type": "\"light\" | \"dark\" | undefined",
+     "default": "undefined",
+     "description": "Light or dark cards; without it the scene follows the page theme",
+     "readonly": false
+    },
+    {
+     "name": "label",
+     "attribute": "label",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "Describes the scene to assistive tech (role=\"img\"); without it the illustration is decorative and hidden",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [],
+   "slots": [],
+   "methods": [],
+   "ui": "pf",
+   "cssProperties": [
+    {
+     "name": "--tc-project-flow-bg",
+     "value": "transparent",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-project-flow-fade",
+     "value": "light-dark(#ffffff, #141414)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-project-flow-dot",
+     "value": "light-dark(#f2f2f2, #272727)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-project-flow-card",
+     "value": "light-dark(#ffffff, #1a1a1a)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-project-flow-card-edge",
+     "value": "light-dark(#efeeee, #202020)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-project-flow-card-border",
+     "value": "2px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-project-flow-title",
+     "value": "light-dark(#1b1b1b, #ffffff)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-project-flow-sub",
+     "value": "light-dark(#737373, rgba(255, 255, 255, 0.6))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-project-flow-pill",
+     "value": "light-dark(#fdf7e8, #352d19)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-project-flow-pill-edge",
+     "value": "light-dark(#ffebb9, #352d19)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-project-flow-pill-text",
+     "value": "light-dark(#8a6510, #eeb629)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-project-flow-pill-weight",
+     "value": "500",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-project-flow-tile",
+     "value": "light-dark(#ffffff, #292929)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-project-flow-tile-end",
+     "value": "light-dark(#f8f8f8, #292929)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-project-flow-avatar-purple",
+     "value": "light-dark(#f0e8fd, #2e2653)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-project-flow-avatar-yellow",
+     "value": "light-dark(#fdf7e8, #352d19)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-project-flow-avatar-pink",
+     "value": "light-dark(#fde8e8, #59274b)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-project-flow-client-backdrop",
+     "value": "light-dark(rgba(189, 189, 189, 0.2), rgba(218, 218, 218, 0.2))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-project-flow-client-glow",
+     "value": "light-dark(rgba(190, 190, 190, 0.6), rgba(0, 0, 0, 0.6))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-project-flow-line",
+     "value": "light-dark(#e8e8e8, rgba(255, 255, 255, 0.8))",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-4",
+    "--tc-text-primary"
+   ]
+  }
+ ],
+ "react": [
+  {
+   "component": "ProjectFlow",
+   "exported": true,
+   "props": [],
+   "hides": [
+    "children",
+    "look",
+    "pageScheme",
+    "settled"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 91620,
+  "gzip": 25423
+ }
+}

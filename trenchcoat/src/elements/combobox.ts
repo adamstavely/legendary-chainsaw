@@ -111,6 +111,7 @@ export class TcCombobox extends TcElement {
   @property({ type: Boolean }) accessor single = false;
   /** Whether the list is open. Changed by the user unless a tc-open-change listener calls preventDefault() */
   @property({ type: Boolean, reflect: true }) accessor open = false;
+  /** Text in the empty input */
   @property() accessor placeholder = "Search…";
   /** Offer "Create “…”" when nothing matches the typed text exactly */
   @property({ type: Boolean }) accessor creatable = false;
@@ -127,6 +128,7 @@ export class TcCombobox extends TcElement {
   @property({ attribute: "empty-text" }) accessor emptyText = "No results";
   /** Submitted with the form: one entry per picked value */
   @property({ reflect: true }) accessor name = "";
+  /** Can't be changed or focused; also disabled inside a disabled <fieldset> */
   @property({ type: Boolean, reflect: true }) accessor disabled = false;
   /** At least one value must be picked before the form submits */
   @property({ type: Boolean, reflect: true }) accessor required = false;

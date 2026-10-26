@@ -1,0 +1,285 @@
+{
+ "elements": [
+  {
+   "tag": "tc-voice-mode",
+   "className": "TcVoiceMode",
+   "description": "A voice conversation: the orb, live captions for every turn, and Mute, Captions, Interrupt and End.",
+   "properties": [
+    {
+     "name": "state",
+     "attribute": "state",
+     "type": "VoiceModeState",
+     "default": "\"idle\"",
+     "description": "What the assistant is doing: idle · listening · thinking · speaking",
+     "readonly": false
+    },
+    {
+     "name": "turns",
+     "attribute": null,
+     "type": "VoiceTurn[]",
+     "default": "[]",
+     "description": "The conversation so far, oldest first. A turn still coming in has `partial` set",
+     "readonly": false
+    },
+    {
+     "name": "level",
+     "attribute": "level",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "Input or output loudness from 0 to 1, for the orb – unset, the orb fakes a natural level",
+     "readonly": false
+    },
+    {
+     "name": "muted",
+     "attribute": "muted",
+     "type": "boolean",
+     "default": "false",
+     "description": "The microphone is muted. Changed by the element unless a tc-muted-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "captions",
+     "attribute": null,
+     "type": "boolean",
+     "default": "true",
+     "description": "The captions are shown. Changed by the element unless a tc-captions-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"\"",
+     "description": "A title over the orb – unset, there's none",
+     "readonly": false
+    },
+    {
+     "name": "name",
+     "attribute": "name",
+     "type": "string",
+     "default": "\"Assistant\"",
+     "description": "The assistant's name on its turns and in what screen readers hear",
+     "readonly": false
+    },
+    {
+     "name": "userName",
+     "attribute": "user-name",
+     "type": "string",
+     "default": "\"You\"",
+     "description": "The person's name on their turns",
+     "readonly": false
+    },
+    {
+     "name": "placeholder",
+     "attribute": "placeholder",
+     "type": "string",
+     "default": "\"Start talking – your words show up here.\"",
+     "description": "Shown while there are no turns yet",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "VoiceModeLabels",
+     "default": "{}",
+     "description": "The line under the orb, per state and while muted",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-muted-change",
+     "detail": "",
+     "description": "Mute was switched (`{ muted: boolean }`); cancelable – prevent it to keep `muted` (controlled use)",
+     "cancelable": true
+    },
+    {
+     "name": "tc-captions-change",
+     "detail": "",
+     "description": "Captions were shown or hidden (`{ captions: boolean }`); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-interrupt",
+     "detail": "",
+     "description": "Interrupt was pressed (or Esc) while the assistant thinks or speaks; detail: null",
+     "cancelable": false
+    },
+    {
+     "name": "tc-end",
+     "detail": "",
+     "description": "End was pressed; detail: null",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "vm",
+   "cssProperties": [
+    {
+     "name": "--tc-voice-mode-blink",
+     "value": "var(--tc-duration-reveal-slow)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-voice-orb-accent",
+     "value": "var(--tc-accent)",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-text",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-border-selected",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-lg",
+    "--tc-control-h-md",
+    "--tc-control-px-md",
+    "--tc-control-px-sm",
+    "--tc-control-radius-md",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-duration-reveal-slow",
+    "--tc-duration-slow",
+    "--tc-ease-emphasized",
+    "--tc-ease-in-out",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-hover",
+    "--tc-fill-selected",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-lg-plus",
+    "--tc-font-size-md",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-line-height-relaxed",
+    "--tc-radius-2xs",
+    "--tc-radius-md",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-5",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-border",
+    "--tc-status-danger-fg",
+    "--tc-status-danger-solid",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "react": [
+  {
+   "component": "VoiceMode",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "A title over the orb"
+    },
+    {
+     "name": "muted",
+     "type": "boolean",
+     "optional": true,
+     "description": "The microphone is muted (controlled when defined)"
+    },
+    {
+     "name": "defaultMuted",
+     "type": "boolean",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "onMutedChange",
+     "type": "(muted: boolean) => void",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "captions",
+     "type": "boolean",
+     "optional": true,
+     "description": "The captions are shown (controlled when defined)"
+    },
+    {
+     "name": "defaultCaptions",
+     "type": "boolean",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "onCaptionsChange",
+     "type": "(captions: boolean) => void",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "onInterrupt",
+     "type": "() => void",
+     "optional": true,
+     "description": "Interrupt was pressed (or Esc) while the assistant thinks or speaks"
+    },
+    {
+     "name": "onEnd",
+     "type": "() => void",
+     "optional": true,
+     "description": "End was pressed"
+    }
+   ],
+   "hides": []
+  }
+ ],
+ "changelog": [
+  "`tc-voice-mode` – a voice conversation: `tc-voice-orb` for the state, live captions that announce finished turns once, and Mute / Captions / Interrupt / End in a toolbar; Esc interrupts. The audio stays the app's."
+ ],
+ "size": {
+  "min": 23947,
+  "gzip": 7656
+ }
+}

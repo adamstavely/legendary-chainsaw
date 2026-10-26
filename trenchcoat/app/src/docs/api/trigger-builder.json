@@ -1,0 +1,239 @@
+{
+ "elements": [
+  {
+   "tag": "tc-trigger-builder",
+   "className": "TcTriggerBuilder",
+   "description": "When an automation runs: an event or a schedule, conditions, a plain-language summary and the next run times.",
+   "properties": [
+    {
+     "name": "value",
+     "attribute": null,
+     "type": "TriggerValue",
+     "default": "{ kind: \"schedule\", schedule: DEFAULT_SCHEDULE, active: null, conditions: [], match: \"all\" }",
+     "description": "The trigger definition. Changed by the user unless a tc-value-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "events",
+     "attribute": null,
+     "type": "TriggerEvent[]",
+     "default": "[]",
+     "description": "The events a trigger can listen for",
+     "readonly": false
+    },
+    {
+     "name": "scheduleFields",
+     "attribute": null,
+     "type": "TriggerField[]",
+     "default": "[]",
+     "description": "What a schedule's conditions can test (none: schedules have no conditions)",
+     "readonly": false
+    },
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Trigger\"",
+     "description": "Names the group, shown at the top",
+     "readonly": false
+    },
+    {
+     "name": "now",
+     "attribute": "now",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "Counts the next runs from here (ms since epoch); unset: when the element connected",
+     "readonly": false
+    },
+    {
+     "name": "runCount",
+     "attribute": "run-count",
+     "type": "number",
+     "default": "5",
+     "description": "How many next runs to list",
+     "readonly": false
+    },
+    {
+     "name": "timeZone",
+     "attribute": "time-zone",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Shown under the card – unset: the browser's time zone",
+     "readonly": false
+    },
+    {
+     "name": "name",
+     "attribute": "name",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Submitted with the form: the definition as JSON",
+     "readonly": false
+    },
+    {
+     "name": "disabled",
+     "attribute": "disabled",
+     "type": "boolean",
+     "default": "false",
+     "description": "",
+     "readonly": false
+    },
+    {
+     "name": "nextRuns",
+     "attribute": null,
+     "type": "number[]",
+     "default": null,
+     "description": "The upcoming runs of a schedule (empty for an event trigger)",
+     "readonly": true
+    },
+    {
+     "name": "summary",
+     "attribute": null,
+     "type": "string",
+     "default": null,
+     "description": "The trigger in one sentence",
+     "readonly": true
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-value-change",
+     "detail": "",
+     "description": "The trigger changed ({ value: TriggerValue }); cancelable – prevent it to control `value`",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "tgb",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-sm",
+    "--tc-control-px-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-font-size",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-field-shadow-hover",
+    "--tc-fill-hover",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-2xs",
+    "--tc-font-size-lg-plus",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-line-height-relaxed",
+    "--tc-line-height-tight",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-7",
+    "--tc-surface-inverse",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-on-accent",
+    "--tc-text-on-inverse",
+    "--tc-text-placeholder",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "react": [
+  {
+   "component": "TriggerBuilder",
+   "exported": true,
+   "props": [
+    {
+     "name": "events",
+     "type": "TriggerEventNode[]",
+     "optional": true,
+     "description": "The events a trigger can listen for"
+    },
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "Shown at the top; names the group"
+    },
+    {
+     "name": "value",
+     "type": "TriggerValue",
+     "optional": true,
+     "description": "The trigger definition (controlled)"
+    },
+    {
+     "name": "defaultValue",
+     "type": "TriggerValue",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "onChange",
+     "type": "(value: TriggerValue) => void",
+     "optional": true,
+     "description": ""
+    }
+   ],
+   "hides": [
+    "value",
+    "defaultValue",
+    "events",
+    "heading",
+    "onChange"
+   ]
+  }
+ ],
+ "changelog": [
+  "`tc-trigger-builder` – an event or a schedule, an active window, conditions with all/any, a plain-language summary and the next run times; form-associated (JSON under `name`, validity, reset). Built from combobox, date-range-picker and segmented-control."
+ ],
+ "size": {
+  "min": 95771,
+  "gzip": 22733
+ }
+}

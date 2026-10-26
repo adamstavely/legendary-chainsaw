@@ -1,0 +1,175 @@
+{
+ "elements": [
+  {
+   "tag": "tc-team-invite",
+   "className": "TcTeamInvite",
+   "description": "A third teammate is dragged into the empty slot and joins the team.",
+   "properties": [
+    {
+     "name": "avatars",
+     "attribute": null,
+     "type": "TeamInviteAvatar[]",
+     "default": "[]",
+     "description": "The two teammates that are already connected, then the one being invited",
+     "readonly": false
+    },
+    {
+     "name": "label",
+     "attribute": "label",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "Describes the scene to assistive tech; defaults to a sentence built from the avatars' names when they have any",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [],
+   "slots": [],
+   "methods": [],
+   "ui": "ti",
+   "cssProperties": [
+    {
+     "name": "--tc-team-invite-u",
+     "value": "calc(100cqw / 600)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-team-invite-bubble-ring",
+     "value": "light-dark(rgba(10, 10, 10, 0.06), rgba(255, 255, 255, 0.08))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-team-invite-face",
+     "value": "light-dark(#eef0f4, #2e2e33)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-team-invite-line-a",
+     "value": "light-dark(#e4e7ec, rgba(255, 255, 255, 0.14))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-team-invite-line-b",
+     "value": "light-dark(#e4e7ec, rgba(255, 255, 255, 0.14))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-team-invite-dash",
+     "value": "light-dark(#e4e7ec, rgba(255, 255, 255, 0.14))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-team-invite-plus",
+     "value": "light-dark(#c4c4c4, #5c5c61)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-team-invite-online",
+     "value": "light-dark(#34c46a, #3fd17a)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-team-invite-dot-ring",
+     "value": "light-dark(#e2f6e9, #24392c)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-team-invite-dot-edge",
+     "value": "light-dark(rgba(52, 196, 106, 0.1), rgba(63, 209, 122, 0.12))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-team-invite-cursor",
+     "value": "#141b34",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-team-invite-shadow",
+     "value": "0 calc(10 * var(--tc-team-invite-u)) calc(24 * var(--tc-team-invite-u)) light-dark(rgba(0, 0, 0, 0.07), rgba(0, 0, 0, 0.4)), 0 calc(2 * var(--tc-team-invite-u)) calc(5 * var(--tc-team-invite-u)) light-dark(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.3))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-team-invite-lift",
+     "value": "0 calc(18 * var(--tc-team-invite-u)) calc(34 * var(--tc-team-invite-u)) light-dark(rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.5)), 0 calc(3 * var(--tc-team-invite-u)) calc(8 * var(--tc-team-invite-u)) light-dark(rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.3))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-team-invite-loop",
+     "value": "4.4s",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-team-invite-runs",
+     "value": "2.7",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-ease-in-out",
+    "--tc-ease-out",
+    "--tc-surface-overlay"
+   ]
+  }
+ ],
+ "react": [
+  {
+   "component": "TeamInvite",
+   "exported": true,
+   "props": [
+    {
+     "name": "avatars",
+     "type": "[TeamInviteAvatar, TeamInviteAvatar, TeamInviteAvatar]",
+     "optional": false,
+     "description": "The two teammates that are already connected, then the one being invited"
+    }
+   ],
+   "hides": [
+    "children",
+    "look",
+    "avatars"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 17601,
+  "gzip": 5946
+ }
+}

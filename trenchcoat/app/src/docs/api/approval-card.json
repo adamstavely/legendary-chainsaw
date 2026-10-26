@@ -1,0 +1,424 @@
+{
+ "elements": [
+  {
+   "tag": "tc-approval-card",
+   "className": "TcApprovalCard",
+   "description": "An agent's request for approval, with Approve / Deny, an optional countdown, and a compact row once decided.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The action, e.g. \"Send campaign email\" – the group's name",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": null,
+     "type": "string | Element | undefined",
+     "default": "undefined",
+     "description": "One line of context below the heading: text, or an element (cloned)",
+     "readonly": false
+    },
+    {
+     "name": "risk",
+     "attribute": "risk",
+     "type": "ApprovalRisk | undefined",
+     "default": "undefined",
+     "description": "Tinted badge in the header; leave out to hide it",
+     "readonly": false
+    },
+    {
+     "name": "icon",
+     "attribute": null,
+     "type": "Element | undefined",
+     "default": "undefined",
+     "description": "Icon element in the header tile (cloned) – defaults to a small shield",
+     "readonly": false
+    },
+    {
+     "name": "details",
+     "attribute": null,
+     "type": "ApprovalDetail[] | undefined",
+     "default": "undefined",
+     "description": "Key-value rows in the preview, e.g. To, Subject, Scheduled",
+     "readonly": false
+    },
+    {
+     "name": "preview",
+     "attribute": null,
+     "type": "string | Element | undefined",
+     "default": "undefined",
+     "description": "Anything to show above the details, e.g. a recipient list: text, or an element (cloned)",
+     "readonly": false
+    },
+    {
+     "name": "status",
+     "attribute": "status",
+     "type": "ApprovalStatus",
+     "default": "\"pending\"",
+     "description": "The status",
+     "readonly": false
+    },
+    {
+     "name": "onApprove",
+     "attribute": null,
+     "type": "((decision: { always: boolean }) => void | Promise<unknown>) | undefined",
+     "default": "undefined",
+     "description": "Called on Approve with the \"Always allow\" choice. Return a promise to show a spinner and lock the card until it\nsettles; a rejection keeps it pending and shows `errorLabel`, and Approve can be pressed again to retry",
+     "readonly": false
+    },
+    {
+     "name": "errorLabel",
+     "attribute": "error-label",
+     "type": "string",
+     "default": "\"Couldn't approve. Try again.\"",
+     "description": "Shown under the buttons when an onApprove promise rejects",
+     "readonly": false
+    },
+    {
+     "name": "editable",
+     "attribute": "editable",
+     "type": "boolean",
+     "default": "false",
+     "description": "Shows an \"Edit\" button (it fires tc-edit)",
+     "readonly": false
+    },
+    {
+     "name": "expiresIn",
+     "attribute": "expires-in",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "Seconds until the request expires and is denied with reason \"timeout\"",
+     "readonly": false
+    },
+    {
+     "name": "allowStopTimer",
+     "attribute": "allow-stop-timer",
+     "type": "boolean",
+     "default": "true",
+     "description": "Show a \"Stop\" button next to the countdown that turns the time limit off (WCAG 2.2.1). Default true",
+     "readonly": false
+    },
+    {
+     "name": "stopTimerLabel",
+     "attribute": "stop-timer-label",
+     "type": "string",
+     "default": "\"Stop\"",
+     "description": "Its label – the countdown (\"Expires in 42 seconds…\") describes it",
+     "readonly": false
+    },
+    {
+     "name": "allowAlways",
+     "attribute": "allow-always",
+     "type": "boolean",
+     "default": "true",
+     "description": "Show the \"Always allow this action\" checkbox. Default true",
+     "readonly": false
+    },
+    {
+     "name": "alwaysLabel",
+     "attribute": "always-label",
+     "type": "string",
+     "default": "\"Always allow this action\"",
+     "description": "",
+     "readonly": false
+    },
+    {
+     "name": "approveLabel",
+     "attribute": "approve-label",
+     "type": "string",
+     "default": "\"Approve\"",
+     "description": "",
+     "readonly": false
+    },
+    {
+     "name": "denyLabel",
+     "attribute": "deny-label",
+     "type": "string",
+     "default": "\"Deny\"",
+     "description": "",
+     "readonly": false
+    },
+    {
+     "name": "editLabel",
+     "attribute": "edit-label",
+     "type": "string",
+     "default": "\"Edit\"",
+     "description": "",
+     "readonly": false
+    },
+    {
+     "name": "shortcuts",
+     "attribute": "shortcuts",
+     "type": "boolean",
+     "default": "true",
+     "description": "Show ⌘↵ / Esc hints on the buttons (the shortcuts work either way). Default true",
+     "readonly": false
+    },
+    {
+     "name": "label",
+     "attribute": null,
+     "type": "string | Element | undefined",
+     "default": "undefined",
+     "description": "Small label on the gray tray above the card, e.g. \"Step 4 · gmail.send\": text, or an element (cloned)",
+     "readonly": false
+    },
+    {
+     "name": "actions",
+     "attribute": "actions",
+     "type": "\"tray\" | \"card\" | undefined",
+     "default": "undefined",
+     "description": "Where the buttons sit: on the gray tray below the card or inside the white card. Default: \"tray\" in the Standard look, \"card\" in the Clean look",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-status-change",
+     "detail": "",
+     "description": "The card was approved, denied or expired; detail `{ status }`. Cancelable: preventDefault() keeps the status (controlled use)",
+     "cancelable": true
+    },
+    {
+     "name": "tc-deny",
+     "detail": "",
+     "description": "Denied by the user or by the countdown; detail `{ reason: \"user\" | \"timeout\" }`",
+     "cancelable": false
+    },
+    {
+     "name": "tc-expire",
+     "detail": "",
+     "description": "The countdown ran out (tc-deny fires too)",
+     "cancelable": false
+    },
+    {
+     "name": "tc-edit",
+     "detail": "",
+     "description": "Edit was pressed (shown with `editable`)",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "ap",
+   "cssProperties": [
+    {
+     "name": "--tc-approval-card-icon-bg",
+     "value": "light-dark(#f4f4f4, #1f1f22)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-approval-card-primary-kbd-fg",
+     "value": "light-dark(rgba(255, 255, 255, 0.72), rgba(25, 25, 27, 0.6))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-approval-card-spin",
+     "value": "800ms",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-active",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-border-control",
+    "--tc-border-control-hover",
+    "--tc-border-default",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-md",
+    "--tc-control-radius-md",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-duration-instant",
+    "--tc-duration-moderate",
+    "--tc-duration-quick",
+    "--tc-duration-shimmer",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-duration-slowest",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-size-lg",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-kbd-bg",
+    "--tc-kbd-fg",
+    "--tc-kbd-font-size",
+    "--tc-kbd-font-weight",
+    "--tc-kbd-h",
+    "--tc-kbd-on-inverse-bg",
+    "--tc-kbd-px",
+    "--tc-kbd-radius",
+    "--tc-kbd-shadow",
+    "--tc-line-height-none",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-pill-font-size-lg",
+    "--tc-pill-font-weight",
+    "--tc-pill-h-lg",
+    "--tc-pill-px-lg",
+    "--tc-pill-radius",
+    "--tc-radius-lg",
+    "--tc-radius-xs",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-surface-control",
+    "--tc-surface-inverse",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-on-inverse",
+    "--tc-text-primary",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "react": [
+  {
+   "component": "ApprovalCard",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": false,
+     "description": "The action, e.g. \"Send campaign email\""
+    },
+    {
+     "name": "description",
+     "type": "React.ReactNode",
+     "optional": true,
+     "description": "One line of context below the title"
+    },
+    {
+     "name": "icon",
+     "type": "React.ReactNode",
+     "optional": true,
+     "description": "Icon in the header tile – defaults to a small shield"
+    },
+    {
+     "name": "details",
+     "type": "ApprovalDetail[]",
+     "optional": true,
+     "description": "Key-value rows in the preview, e.g. To, Subject, Scheduled"
+    },
+    {
+     "name": "preview",
+     "type": "React.ReactNode",
+     "optional": true,
+     "description": "Anything to show above the details, e.g. a recipient list – children work too"
+    },
+    {
+     "name": "children",
+     "type": "React.ReactNode",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "label",
+     "type": "React.ReactNode",
+     "optional": true,
+     "description": "Small label on the gray tray above the card"
+    },
+    {
+     "name": "status",
+     "type": "ApprovalStatus",
+     "optional": true,
+     "description": "The status. Controlled when defined – the card then only asks for changes through `onStatusChange`"
+    },
+    {
+     "name": "defaultStatus",
+     "type": "ApprovalStatus",
+     "optional": true,
+     "description": "Starting status when `status` isn't controlled"
+    },
+    {
+     "name": "onStatusChange",
+     "type": "(status: ApprovalStatus) => void",
+     "optional": true,
+     "description": "Called with the new status whenever the card is approved, denied or expires (controlled or not)"
+    },
+    {
+     "name": "onDeny",
+     "type": "(decision: { reason: DenyReason }) => void",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "onEdit",
+     "type": "() => void",
+     "optional": true,
+     "description": "Shows an \"Edit\" button"
+    },
+    {
+     "name": "onExpire",
+     "type": "() => void",
+     "optional": true,
+     "description": "Called when the countdown runs out (onDeny is called too)"
+    }
+   ],
+   "hides": [
+    "children"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 39278,
+  "gzip": 11411
+ }
+}

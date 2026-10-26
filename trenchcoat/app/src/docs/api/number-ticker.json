@@ -1,0 +1,138 @@
+{
+ "elements": [
+  {
+   "tag": "tc-number-ticker",
+   "className": "TcNumberTicker",
+   "description": "A number whose digits roll like an odometer when it changes.",
+   "properties": [
+    {
+     "name": "value",
+     "attribute": "value",
+     "type": "number",
+     "default": "0",
+     "description": "The number to show",
+     "readonly": false
+    },
+    {
+     "name": "format",
+     "attribute": null,
+     "type": "Intl.NumberFormatOptions | undefined",
+     "default": "undefined",
+     "description": "Intl.NumberFormat options, e.g. { style: \"currency\", currency: \"USD\" }",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "Locale for formatting, e.g. \"en-US\" – defaults to the browser's",
+     "readonly": false
+    },
+    {
+     "name": "duration",
+     "attribute": "duration",
+     "type": "number",
+     "default": "900",
+     "description": "Length of a roll in ms",
+     "readonly": false
+    },
+    {
+     "name": "delay",
+     "attribute": "delay",
+     "type": "number",
+     "default": "0",
+     "description": "Wait before the first count-in, in ms",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [],
+   "slots": [],
+   "methods": [],
+   "ui": "nt",
+   "cssProperties": [
+    {
+     "name": "--tc-number-ticker-lh",
+     "value": "1.15em",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-duration-slower",
+    "--tc-ease-out"
+   ]
+  }
+ ],
+ "react": [
+  {
+   "component": "NumberTickerOwn",
+   "exported": false,
+   "props": [
+    {
+     "name": "value",
+     "type": "number",
+     "optional": false,
+     "description": "The number to show"
+    },
+    {
+     "name": "format",
+     "type": "Intl.NumberFormatOptions",
+     "optional": true,
+     "description": "Intl.NumberFormat options, e.g. { style: \"currency\", currency: \"USD\" }"
+    },
+    {
+     "name": "locale",
+     "type": "string",
+     "optional": true,
+     "description": "Locale for formatting, e.g. \"en-US\" – defaults to the browser's"
+    },
+    {
+     "name": "duration",
+     "type": "number",
+     "optional": true,
+     "description": "Length of a roll in ms"
+    },
+    {
+     "name": "delay",
+     "type": "number",
+     "optional": true,
+     "description": "Wait before the first count-in, in ms"
+    },
+    {
+     "name": "className",
+     "type": "string",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "ref",
+     "type": "React.Ref<TcNumberTicker>",
+     "optional": true,
+     "description": "The root element"
+    }
+   ],
+   "hides": []
+  },
+  {
+   "component": "NumberTicker",
+   "exported": true,
+   "props": [],
+   "hides": []
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 10286,
+  "gzip": 4419
+ }
+}

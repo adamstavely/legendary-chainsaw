@@ -61,7 +61,9 @@
     "build:package": "vite build -c vite.package.config.ts && tsc -p tsconfig.package.json && cem analyze --config custom-elements-manifest.config.mjs",
     "examples": "node scripts/examples.mjs",
     "gen:elements": "node scripts/gen-elements.mjs",
-    "check:dead-css": "node scripts/dead-css.mjs"
+    "check:dead-css": "node scripts/dead-css.mjs",
+    "gen:docs": "node scripts/gen-docs.mjs",
+    "check:docs": "node scripts/gen-docs.mjs --check && node scripts/check-docs.mjs"
   },
   "dependencies": {
     "@lit/context": "1.1.6",
@@ -91,6 +93,7 @@
     "jsdom": "26.1.0",
     "lit-analyzer": "2.0.3",
     "lucide-react": "1.55.0",
+    "marked": "18.1.0",
     "pixelmatch": "^8.0.0",
     "pngjs": "^7.0.0",
     "prettier": "3.6.2",

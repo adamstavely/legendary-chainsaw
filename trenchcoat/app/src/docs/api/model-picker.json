@@ -1,0 +1,328 @@
+{
+ "elements": [
+  {
+   "tag": "tc-model-picker",
+   "className": "TcModelPicker",
+   "description": "The model menu of an AI chat: models with strength bars, extended thinking with its effort, and web search.",
+   "properties": [
+    {
+     "name": "models",
+     "attribute": null,
+     "type": "PickerModel[]",
+     "default": "[]",
+     "description": "",
+     "readonly": false
+    },
+    {
+     "name": "value",
+     "attribute": "value",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Id of the chosen model – unset or unknown shows the first",
+     "readonly": false
+    },
+    {
+     "name": "thinking",
+     "attribute": "thinking",
+     "type": "boolean",
+     "default": "false",
+     "description": "Extended thinking switch",
+     "readonly": false
+    },
+    {
+     "name": "webSearch",
+     "attribute": "web-search",
+     "type": "boolean",
+     "default": "false",
+     "description": "Web search switch",
+     "readonly": false
+    },
+    {
+     "name": "effort",
+     "attribute": "effort",
+     "type": "ModelEffort",
+     "default": "\"medium\"",
+     "description": "How hard the model thinks – only shown while extended thinking is on",
+     "readonly": false
+    },
+    {
+     "name": "open",
+     "attribute": "open",
+     "type": "boolean",
+     "default": "false",
+     "description": "Whether the menu is open",
+     "readonly": false
+    },
+    {
+     "name": "align",
+     "attribute": "align",
+     "type": "\"start\" | \"end\"",
+     "default": "\"start\"",
+     "description": "Which edge of the trigger the menu lines up with",
+     "readonly": false
+    },
+    {
+     "name": "side",
+     "attribute": "side",
+     "type": "\"bottom\" | \"top\"",
+     "default": "\"bottom\"",
+     "description": "Whether the menu opens below or above the trigger – above suits a composer at the bottom of the screen",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-value-change",
+     "detail": "",
+     "description": "A model was picked (`{ value: string }`); cancelable – prevent it to keep `value` (controlled use)",
+     "cancelable": true
+    },
+    {
+     "name": "tc-thinking-change",
+     "detail": "",
+     "description": "Extended thinking was switched (`{ thinking: boolean }`); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-web-search-change",
+     "detail": "",
+     "description": "Web search was switched (`{ webSearch: boolean }`); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-effort-change",
+     "detail": "",
+     "description": "The effort changed (`{ effort: ModelEffort }`); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-open-change",
+     "detail": "",
+     "description": "The menu opens or closes (`{ open: boolean }`); cancelable",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "mdp",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-accent",
+    "--tc-action-ghost-bg-hover",
+    "--tc-avatar-font-weight",
+    "--tc-avatar-radius-agent",
+    "--tc-border-default",
+    "--tc-border-selected",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-radius-md",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-instant",
+    "--tc-duration-moderate",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-ease-decelerate",
+    "--tc-ease-emphasized",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-selected",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-sans",
+    "--tc-font-size-2xs",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-kbd-bg",
+    "--tc-kbd-fg",
+    "--tc-kbd-font-size",
+    "--tc-kbd-font-weight",
+    "--tc-kbd-h",
+    "--tc-kbd-px",
+    "--tc-kbd-radius",
+    "--tc-kbd-shadow",
+    "--tc-line-height-normal",
+    "--tc-line-height-tight",
+    "--tc-menu-bg",
+    "--tc-menu-item-font-size",
+    "--tc-menu-item-h",
+    "--tc-menu-item-hover",
+    "--tc-menu-item-px",
+    "--tc-menu-item-radius",
+    "--tc-menu-item-selected-fg",
+    "--tc-menu-padding",
+    "--tc-menu-radius",
+    "--tc-menu-shadow",
+    "--tc-radius-2xs",
+    "--tc-radius-sm",
+    "--tc-seg-pad",
+    "--tc-seg-thumb-bg",
+    "--tc-seg-thumb-shadow",
+    "--tc-seg-track-bg",
+    "--tc-seg-track-radius",
+    "--tc-shadow-control",
+    "--tc-shadow-raised",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-surface-control",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-switch-h",
+    "--tc-switch-knob",
+    "--tc-switch-knob-bg",
+    "--tc-switch-off",
+    "--tc-switch-on",
+    "--tc-switch-radius",
+    "--tc-switch-w",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tray-inset",
+    "--tc-tray-radius",
+    "--tc-z-dropdown"
+   ]
+  }
+ ],
+ "react": [
+  {
+   "component": "ModelPicker",
+   "exported": true,
+   "props": [
+    {
+     "name": "models",
+     "type": "PickerModel[]",
+     "optional": false,
+     "description": ""
+    },
+    {
+     "name": "value",
+     "type": "string",
+     "optional": true,
+     "description": "Id of the chosen model (controlled when defined)"
+    },
+    {
+     "name": "defaultValue",
+     "type": "string",
+     "optional": true,
+     "description": "The model chosen at first when uncontrolled – defaults to the first one"
+    },
+    {
+     "name": "onChange",
+     "type": "(id: string) => void",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "thinking",
+     "type": "boolean",
+     "optional": true,
+     "description": "Extended thinking switch"
+    },
+    {
+     "name": "defaultThinking",
+     "type": "boolean",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "onThinkingChange",
+     "type": "(on: boolean) => void",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "webSearch",
+     "type": "boolean",
+     "optional": true,
+     "description": "Web search switch"
+    },
+    {
+     "name": "defaultWebSearch",
+     "type": "boolean",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "onWebSearchChange",
+     "type": "(on: boolean) => void",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "effort",
+     "type": "ModelEffort",
+     "optional": true,
+     "description": "How hard the model thinks – only shown while extended thinking is on"
+    },
+    {
+     "name": "defaultEffort",
+     "type": "ModelEffort",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "onEffortChange",
+     "type": "(effort: ModelEffort) => void",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "open",
+     "type": "boolean",
+     "optional": true,
+     "description": "Controlled open state of the menu"
+    },
+    {
+     "name": "defaultOpen",
+     "type": "boolean",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "onOpenChange",
+     "type": "(open: boolean) => void",
+     "optional": true,
+     "description": ""
+    }
+   ],
+   "hides": []
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 42653,
+  "gzip": 11006
+ }
+}

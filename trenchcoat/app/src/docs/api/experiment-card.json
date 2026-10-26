@@ -1,0 +1,398 @@
+{
+ "elements": [
+  {
+   "tag": "tc-experiment-card",
+   "className": "TcExperimentCard",
+   "description": "An A/B test that unfolds into the full comparison; pick a winner and run an action on it.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The test's name",
+     "readonly": false
+    },
+    {
+     "name": "variants",
+     "attribute": null,
+     "type": "ExperimentVariant[]",
+     "default": "[]",
+     "description": "",
+     "readonly": false
+    },
+    {
+     "name": "metrics",
+     "attribute": null,
+     "type": "ExperimentMetric[]",
+     "default": "[]",
+     "description": "",
+     "readonly": false
+    },
+    {
+     "name": "metric",
+     "attribute": "metric",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The metric id shown; unset shows the first metric",
+     "readonly": false
+    },
+    {
+     "name": "winner",
+     "attribute": "winner",
+     "type": "string | null",
+     "default": "null",
+     "description": "The id of the variant picked as the winner, or null",
+     "readonly": false
+    },
+    {
+     "name": "status",
+     "attribute": null,
+     "type": "ExperimentStatus | undefined",
+     "default": "undefined",
+     "description": "The tag under the title, e.g. { label: \"Running\", tone: \"green\" }",
+     "readonly": false
+    },
+    {
+     "name": "note",
+     "attribute": "note",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Short text next to the status, e.g. \"Day 9 of 14\"",
+     "readonly": false
+    },
+    {
+     "name": "action",
+     "attribute": null,
+     "type": "ExperimentAction | undefined",
+     "default": "undefined",
+     "description": "The button that appears on the tray once a winner is picked",
+     "readonly": false
+    },
+    {
+     "name": "hint",
+     "attribute": "hint",
+     "type": "string | Element | undefined",
+     "default": "undefined",
+     "description": "Replaces the line on the tray while nothing is hovered or picked: text, or an element (cloned)",
+     "readonly": false
+    },
+    {
+     "name": "trigger",
+     "attribute": "trigger",
+     "type": "\"hover\" | \"click\"",
+     "default": "\"hover\"",
+     "description": "\"hover\" opens under the pointer (taps and the keyboard still toggle), \"click\" only on click",
+     "readonly": false
+    },
+    {
+     "name": "open",
+     "attribute": "open",
+     "type": "boolean",
+     "default": "false",
+     "description": "",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-open-change",
+     "detail": "",
+     "description": "The card opens or closes; detail `{ open: boolean }`. Cancelable.",
+     "cancelable": true
+    },
+    {
+     "name": "tc-metric-change",
+     "detail": "",
+     "description": "Another metric was picked; detail `{ metric: string }`. Cancelable.",
+     "cancelable": true
+    },
+    {
+     "name": "tc-winner-change",
+     "detail": "",
+     "description": "A variant was picked as the winner, or the pick cleared; detail `{ winner: string | null }`. Cancelable.",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "xc",
+   "cssProperties": [
+    {
+     "name": "--tc-experiment-card-series-control",
+     "value": "light-dark(rgba(0, 0, 0, 0.22), rgba(255, 255, 255, 0.3))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-experiment-card-series-1",
+     "value": "light-dark(rgba(0, 96, 226, 0.765), #4d8dff)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-experiment-card-series-2",
+     "value": "light-dark(#5b5bd6, #8585f0)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-experiment-card-series-3",
+     "value": "#e8a20c",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-experiment-card-series-4",
+     "value": "#1a9a52",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-active",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-border-default",
+    "--tc-border-selected",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-md",
+    "--tc-control-px-sm",
+    "--tc-control-radius-md",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-instant",
+    "--tc-duration-moderate",
+    "--tc-duration-quick",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-duration-slowest",
+    "--tc-ease-decelerate",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-experiment-card-color",
+    "--tc-experiment-card-size",
+    "--tc-experiment-card-tag-bg",
+    "--tc-experiment-card-tag-fg",
+    "--tc-fill-default",
+    "--tc-fill-selected",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-line-height-none",
+    "--tc-line-height-normal",
+    "--tc-line-height-tight",
+    "--tc-meter-h",
+    "--tc-meter-radius",
+    "--tc-meter-track",
+    "--tc-pill-font-size",
+    "--tc-pill-font-size-lg",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-h-lg",
+    "--tc-pill-px",
+    "--tc-pill-px-lg",
+    "--tc-pill-radius",
+    "--tc-radius-2xs",
+    "--tc-radius-badge",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-seg-pad",
+    "--tc-seg-thumb-bg",
+    "--tc-seg-thumb-shadow",
+    "--tc-seg-track-bg",
+    "--tc-seg-track-radius",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-info-bg",
+    "--tc-status-info-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-surface-raised",
+    "--tc-surface-sunken",
+    "--tc-text-muted",
+    "--tc-text-on-inverse",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tone-violet-bg",
+    "--tc-tone-violet-fg",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "react": [
+  {
+   "component": "ExperimentCard",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": false,
+     "description": ""
+    },
+    {
+     "name": "variants",
+     "type": "ExperimentVariant[]",
+     "optional": false,
+     "description": ""
+    },
+    {
+     "name": "metrics",
+     "type": "ExperimentMetric[]",
+     "optional": false,
+     "description": ""
+    },
+    {
+     "name": "metric",
+     "type": "string",
+     "optional": true,
+     "description": "Controlled metric id"
+    },
+    {
+     "name": "defaultMetric",
+     "type": "string",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "onMetricChange",
+     "type": "(id: string) => void",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "winner",
+     "type": "string | null",
+     "optional": true,
+     "description": "Controlled id of the variant picked as the winner"
+    },
+    {
+     "name": "defaultWinner",
+     "type": "string | null",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "onWinnerChange",
+     "type": "(id: string | null) => void",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "status",
+     "type": "{ label: string; tone?: ExperimentTone }",
+     "optional": true,
+     "description": "The tag under the title, e.g. { label: \"Running\", tone: \"green\" }"
+    },
+    {
+     "name": "note",
+     "type": "string",
+     "optional": true,
+     "description": "Short text next to the status, e.g. \"Day 9 of 14\""
+    },
+    {
+     "name": "action",
+     "type": "{ label: string | ((variant: ExperimentVariant) => string); onClick: (variant: ExperimentVariant) => void | Promise<unknown> }",
+     "optional": true,
+     "description": "The button that appears on the tray (Clean: in the last row) once a winner is picked. `label` gets the picked\nvariant. `onClick` may return a promise: the button waits while it runs, and a rejection says so on the tray and\nlets you try again"
+    },
+    {
+     "name": "hint",
+     "type": "React.ReactNode",
+     "optional": true,
+     "description": "Replaces the line on the tray (Clean: in the last row) while nothing is hovered or picked"
+    },
+    {
+     "name": "trigger",
+     "type": "\"hover\" | \"click\"",
+     "optional": true,
+     "description": "\"hover\" opens under the pointer (taps and the keyboard still toggle), \"click\" only on click"
+    },
+    {
+     "name": "open",
+     "type": "boolean",
+     "optional": true,
+     "description": "Controlled open state"
+    },
+    {
+     "name": "defaultOpen",
+     "type": "boolean",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "onOpenChange",
+     "type": "(open: boolean) => void",
+     "optional": true,
+     "description": ""
+    }
+   ],
+   "hides": [
+    "heading",
+    "variants",
+    "metrics",
+    "metric",
+    "winner",
+    "status",
+    "note",
+    "action",
+    "hint",
+    "trigger",
+    "open"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 45543,
+  "gzip": 11055
+ }
+}

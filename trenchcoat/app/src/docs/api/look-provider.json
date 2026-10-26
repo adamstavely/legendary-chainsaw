@@ -1,0 +1,33 @@
+{
+ "elements": [
+  {
+   "tag": "tc-look-provider",
+   "className": "TcLookProvider",
+   "description": "Sets the default look for every Trenchcoat element inside it. Renders nothing of its own (display: contents).\n  <tc-look-provider look=\"clean\"> … </tc-look-provider>",
+   "properties": [
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "",
+     "readonly": false
+    }
+   ],
+   "events": [],
+   "slots": [],
+   "methods": [],
+   "ui": "",
+   "cssProperties": [],
+   "tokens": []
+  }
+ ],
+ "react": [],
+ "changelog": [
+  "Lit 3 web components: `tc-button`, `tc-combobox` and `tc-data-table` (the pilot), `tc-look-provider` for an app-wide default look, the shared controllers (row window, focus rescue, smooth height, off-screen, on-screen, ARIA forwarding, hotkeys, rolling numbers). Pixel-identical to the React components in both looks and themes."
+ ],
+ "size": {
+  "min": 2595,
+  "gzip": 1446
+ }
+}

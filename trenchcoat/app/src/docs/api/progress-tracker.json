@@ -1,0 +1,205 @@
+{
+ "elements": [
+  {
+   "tag": "tc-progress-tracker",
+   "className": "TcProgressTracker",
+   "description": "A checklist with a progress bar.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Getting started\"",
+     "description": "The heading, and the progress bar's name",
+     "readonly": false
+    },
+    {
+     "name": "steps",
+     "attribute": null,
+     "type": "ProgressStep[]",
+     "default": "[]",
+     "description": "The checklist. Each step's `done` flag is where it starts; when the flags change, the tracker follows them",
+     "readonly": false
+    },
+    {
+     "name": "done",
+     "attribute": null,
+     "type": "string[] | undefined",
+     "default": "undefined",
+     "description": "Ids of the ticked steps; unset, the tracker keeps its own",
+     "readonly": false
+    },
+    {
+     "name": "defaultDone",
+     "attribute": null,
+     "type": "string[] | undefined",
+     "default": "undefined",
+     "description": "Ids ticked at first when `done` is unset – defaults to the steps marked `done`",
+     "readonly": false
+    },
+    {
+     "name": "autoPlay",
+     "attribute": "auto-play",
+     "type": "boolean",
+     "default": "false",
+     "description": "Ticks the open steps one after another, then starts over",
+     "readonly": false
+    },
+    {
+     "name": "interval",
+     "attribute": "interval",
+     "type": "number",
+     "default": "2200",
+     "description": "Pause between two automatic steps, in ms",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-done-change",
+     "detail": "",
+     "description": "A step was ticked or cleared (by a click or auto play); detail `{ done: string[], steps }` – the ticked ids and every step with its new `done` flag. Cancelable: preventDefault() leaves the ticks as they are (controlled use)",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "progress",
+   "cssProperties": [
+    {
+     "name": "--tc-progress-tracker-shine",
+     "value": "light-dark(rgba(255, 255, 255, 0.82), #ffffff)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-border-control",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-h-sm",
+    "--tc-control-radius-sm",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-instant",
+    "--tc-duration-quick",
+    "--tc-duration-reveal",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-duration-slowest",
+    "--tc-ease-decelerate",
+    "--tc-ease-in",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-hover",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-lg-plus",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xl",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-icon-muted",
+    "--tc-line-height-loose",
+    "--tc-line-height-normal",
+    "--tc-line-height-relaxed",
+    "--tc-line-height-tight",
+    "--tc-meter-fill",
+    "--tc-meter-h",
+    "--tc-meter-h-hero",
+    "--tc-meter-radius",
+    "--tc-meter-track",
+    "--tc-radius-sm",
+    "--tc-radius-xl",
+    "--tc-space-0-5",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-surface-inverse",
+    "--tc-surface-raised",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-on-accent",
+    "--tc-text-on-inverse",
+    "--tc-text-primary",
+    "--tc-text-strong"
+   ]
+  }
+ ],
+ "react": [
+  {
+   "component": "ProgressTracker",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "steps",
+     "type": "ProgressStep[]",
+     "optional": false,
+     "description": "The checklist. Each step's `done` flag is where it starts; when the flags change, the tracker follows them"
+    },
+    {
+     "name": "done",
+     "type": "string[]",
+     "optional": true,
+     "description": "Ids of the ticked steps. Controlled when defined – pair it with `onDoneChange`"
+    },
+    {
+     "name": "defaultDone",
+     "type": "string[]",
+     "optional": true,
+     "description": "Ids ticked on mount when `done` isn't controlled – defaults to the steps marked `done`"
+    },
+    {
+     "name": "onDoneChange",
+     "type": "(done: string[]) => void",
+     "optional": true,
+     "description": "Called with the ticked ids whenever a step is ticked or cleared"
+    },
+    {
+     "name": "onChange",
+     "type": "(steps: ProgressStep[]) => void",
+     "optional": true,
+     "description": "Called with every step and its new `done` flag whenever a step is ticked or cleared"
+    }
+   ],
+   "hides": [
+    "heading",
+    "steps",
+    "done",
+    "defaultDone",
+    "onChange"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 23185,
+  "gzip": 6970
+ }
+}

@@ -1,0 +1,343 @@
+{
+ "elements": [
+  {
+   "tag": "tc-chat-history",
+   "className": "TcChatHistory",
+   "description": "The conversation list: search, pinning, folders, rename and delete with Undo, grouped by date; windowed.",
+   "properties": [
+    {
+     "name": "conversations",
+     "attribute": null,
+     "type": "ChatConversation[]",
+     "default": "[]",
+     "description": "Every conversation",
+     "readonly": false
+    },
+    {
+     "name": "folders",
+     "attribute": null,
+     "type": "ChatFolder[]",
+     "default": "[]",
+     "description": "Folders, in the order they show; chats name theirs with `folder`",
+     "readonly": false
+    },
+    {
+     "name": "value",
+     "attribute": "value",
+     "type": "string | null",
+     "default": "null",
+     "description": "The open chat's id",
+     "readonly": false
+    },
+    {
+     "name": "now",
+     "attribute": null,
+     "type": "number | Date | undefined",
+     "default": "undefined",
+     "description": "\"Now\" for the date groups (epoch ms or a Date). Unset: the time the element was connected",
+     "readonly": false
+    },
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Chats\"",
+     "description": "The heading, and the tree's name",
+     "readonly": false
+    },
+    {
+     "name": "maxHeight",
+     "attribute": "max-height",
+     "type": "number",
+     "default": "420",
+     "description": "Height of the list before it scrolls, in px",
+     "readonly": false
+    },
+    {
+     "name": "undoFor",
+     "attribute": "undo-for",
+     "type": "number",
+     "default": "6000",
+     "description": "How long Undo stays after a delete, in ms. It waits while the pointer or focus is on it and starts over after;\n`Infinity` keeps it until the next delete (WCAG 2.2.1)",
+     "readonly": false
+    },
+    {
+     "name": "hints",
+     "attribute": "hints",
+     "type": "boolean",
+     "default": "true",
+     "description": "Show the keyboard hints (hints=\"false\" hides them)",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "Locale for the month names; unset uses the page's",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-value-change",
+     "detail": "",
+     "description": "A chat was opened (click, Enter); detail `{ value: string | null }`. Cancelable: prevent it to control `value`",
+     "cancelable": true
+    },
+    {
+     "name": "tc-conversations-change",
+     "detail": "",
+     "description": "The list changed (renamed, pinned, moved, deleted, restored); detail `{ conversations }`. Cancelable: prevent it to control `conversations`",
+     "cancelable": true
+    },
+    {
+     "name": "tc-rename",
+     "detail": "",
+     "description": "A chat was renamed; detail `{ id, title }`",
+     "cancelable": false
+    },
+    {
+     "name": "tc-pin",
+     "detail": "",
+     "description": "A chat was pinned or unpinned; detail `{ id, pinned }`",
+     "cancelable": false
+    },
+    {
+     "name": "tc-move",
+     "detail": "",
+     "description": "A chat was moved to a folder, or out of one (`folder: null`); detail `{ id, folder }`",
+     "cancelable": false
+    },
+    {
+     "name": "tc-delete",
+     "detail": "",
+     "description": "A chat was deleted (Undo may still bring it back); detail `{ id, conversation }`",
+     "cancelable": false
+    },
+    {
+     "name": "tc-restore",
+     "detail": "",
+     "description": "Undo brought a deleted chat back; detail `{ id, conversation }`",
+     "cancelable": false
+    },
+    {
+     "name": "tc-new-chat",
+     "detail": "",
+     "description": "New chat was pressed",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "chh",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-chat-history-max",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-duration-instant",
+    "--tc-duration-moderate",
+    "--tc-duration-slow",
+    "--tc-ease-decelerate",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-bg-sunken",
+    "--tc-field-font-size",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-field-shadow-hover",
+    "--tc-fill-default",
+    "--tc-fill-hover",
+    "--tc-fill-strong",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-sans",
+    "--tc-font-size-2xs",
+    "--tc-font-size-lg-plus",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-kbd-bg",
+    "--tc-kbd-fg",
+    "--tc-kbd-font-size",
+    "--tc-kbd-font-weight",
+    "--tc-kbd-h",
+    "--tc-kbd-px",
+    "--tc-kbd-radius",
+    "--tc-kbd-shadow",
+    "--tc-line-height-loose",
+    "--tc-line-height-normal",
+    "--tc-line-height-relaxed",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-menu-bg",
+    "--tc-menu-item-font-size",
+    "--tc-menu-item-h",
+    "--tc-menu-item-hover",
+    "--tc-menu-item-px",
+    "--tc-menu-item-radius",
+    "--tc-menu-item-selected-fg",
+    "--tc-menu-padding",
+    "--tc-menu-radius",
+    "--tc-menu-shadow",
+    "--tc-radius-2xs",
+    "--tc-radius-badge",
+    "--tc-radius-lg",
+    "--tc-radius-sm",
+    "--tc-radius-xs",
+    "--tc-shadow-raised",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-5",
+    "--tc-space-6",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-placeholder",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tray-inset",
+    "--tc-tray-radius",
+    "--tc-z-dropdown"
+   ]
+  }
+ ],
+ "react": [
+  {
+   "component": "ChatHistory",
+   "exported": true,
+   "props": [
+    {
+     "name": "conversations",
+     "type": "ChatConversation[]",
+     "optional": true,
+     "description": "Every conversation. Controlled when defined; otherwise the list keeps them, starting at `defaultConversations`"
+    },
+    {
+     "name": "defaultConversations",
+     "type": "ChatConversation[]",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "onConversationsChange",
+     "type": "(conversations: ChatConversation[]) => void",
+     "optional": true,
+     "description": "Called with the whole list after any change (rename, pin, move, delete, Undo)"
+    },
+    {
+     "name": "value",
+     "type": "string | null",
+     "optional": true,
+     "description": "The open chat's id. Controlled when defined (null for none)"
+    },
+    {
+     "name": "defaultValue",
+     "type": "string | null",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "onChange",
+     "type": "(value: string | null) => void",
+     "optional": true,
+     "description": "Called with the id of the chat that was opened"
+    },
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "onRename",
+     "type": "(id: string, title: string) => void",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "onPin",
+     "type": "(id: string, pinned: boolean) => void",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "onMove",
+     "type": "(id: string, folder: string | null) => void",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "onDelete",
+     "type": "(id: string, conversation: ChatConversation) => void",
+     "optional": true,
+     "description": "Called when a chat is deleted – Undo may still bring it back (onRestore)"
+    },
+    {
+     "name": "onRestore",
+     "type": "(id: string, conversation: ChatConversation) => void",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "onNewChat",
+     "type": "() => void",
+     "optional": true,
+     "description": ""
+    }
+   ],
+   "hides": [
+    "conversations",
+    "value",
+    "defaultValue",
+    "heading",
+    "onChange"
+   ]
+  }
+ ],
+ "changelog": [
+  "`tc-chat-history` – conversations grouped by Pinned, folders, Today … month: search, rename in place (F2), pin, move, delete with undo, a context menu; the WAI-ARIA tree pattern, windowed (10,000 chats render under 120 rows)."
+ ],
+ "size": {
+  "min": 48580,
+  "gzip": 13708
+ }
+}

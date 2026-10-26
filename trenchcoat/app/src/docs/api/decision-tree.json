@@ -1,0 +1,395 @@
+{
+ "elements": [
+  {
+   "tag": "tc-decision-tree",
+   "className": "TcDecisionTree",
+   "description": "An agent's open decision drawn as a tree of options and consequences – pick a path or write your own instruction.",
+   "properties": [
+    {
+     "name": "decisions",
+     "attribute": null,
+     "type": "TreeDecision[]",
+     "default": "[]",
+     "description": "Everything waiting for a call – decided ones leave on their own, new ids join at the end",
+     "readonly": false
+    },
+    {
+     "name": "decision",
+     "attribute": "decision",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The id of the decision on show – unset shows the first",
+     "readonly": false
+    },
+    {
+     "name": "onChoose",
+     "attribute": null,
+     "type": "((decision: TreeDecision, choice: TreeDecisionChoice) => string | void | Promise<string | void>) | undefined",
+     "default": "undefined",
+     "description": "A branch was picked or an instruction written – return the agent's short answer to an instruction (or a promise\nof it). A promise holds the picked path until it settles; a rejection lets go of the pick and says so",
+     "readonly": false
+    },
+    {
+     "name": "allowOther",
+     "attribute": "allow-other",
+     "type": "boolean",
+     "default": "true",
+     "description": "Shows the \"Other…\" branch; allow-other=\"false\" hides it",
+     "readonly": false
+    },
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Decisions\"",
+     "description": "The heading",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-decision-change",
+     "detail": "",
+     "description": "The decision on show changes (paging, or the shown one was decided); detail `{ decision: string }`. Cancelable: prevent it to control `decision`",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [
+    {
+     "name": "choose",
+     "params": "i: number",
+     "returns": "void",
+     "description": "Picks the n-th option – or, after a pick, the n-th option of its follow-up; the index after the last option opens \"Other…\""
+    },
+    {
+     "name": "send",
+     "params": "",
+     "returns": "void",
+     "description": "Sends the \"Other…\" field"
+    },
+    {
+     "name": "hover",
+     "params": "index: number | null",
+     "returns": "void",
+     "description": "Lights up the n-th branch (or, after a pick, the n-th option of its follow-up) as if pointed at – null lets go"
+    },
+    {
+     "name": "setOther",
+     "params": "text: string",
+     "returns": "void",
+     "description": "Fills the \"Other…\" field"
+    },
+    {
+     "name": "next",
+     "params": "",
+     "returns": "void",
+     "description": "Shows the next decision"
+    },
+    {
+     "name": "previous",
+     "params": "",
+     "returns": "void",
+     "description": "Shows the previous decision"
+    },
+    {
+     "name": "peek",
+     "params": "index: number | null",
+     "returns": "void",
+     "description": "Shows the note of the n-th flagged part – null hides it"
+    }
+   ],
+   "ui": "dct",
+   "cssProperties": [
+    {
+     "name": "--tc-decision-tree-link-pick",
+     "value": "light-dark(rgba(0, 96, 226, 0.42), rgba(91, 154, 255, 0.5))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-decision-tree-link-pick-hot",
+     "value": "light-dark(rgba(0, 96, 226, 0.6), rgba(112, 170, 255, 0.7))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-decision-tree-option-shadow-picked",
+     "value": "0 0 0 0.5px light-dark(rgba(0, 96, 226, 0.24), rgba(91, 154, 255, 0.34)), 0 3px 8px -4px light-dark(rgba(0, 96, 226, 0.14), rgba(40, 100, 220, 0.24)), 0 1px 2px 0 light-dark(rgba(0, 60, 140, 0.05), rgba(0, 0, 0, 0.4))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-decision-tree-option-shadow-picked-hover",
+     "value": "0 0 0 0.5px light-dark(rgba(0, 96, 226, 0.42), rgba(112, 170, 255, 0.55)), 0 8px 22px -6px light-dark(rgba(0, 96, 226, 0.34), rgba(60, 130, 255, 0.5)), 0 2px 4px -1px light-dark(rgba(0, 96, 226, 0.16), rgba(60, 130, 255, 0.25))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-decision-tree-link-hot",
+     "value": "light-dark(rgba(0, 0, 0, 0.38), rgba(255, 255, 255, 0.36))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-decision-tree-flag-bg",
+     "value": "light-dark(rgba(255, 166, 0, 0.16), rgba(255, 170, 40, 0.16))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-decision-tree-flag-edge",
+     "value": "light-dark(rgba(214, 130, 0, 0.55), rgba(255, 180, 70, 0.55))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-decision-tree-flag-hot",
+     "value": "light-dark(rgba(255, 166, 0, 0.28), rgba(255, 170, 40, 0.28))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-decision-tree-flag-ink",
+     "value": "light-dark(#8a4600, #ffcf8a)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-decision-tree-height",
+     "value": "400px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-decision-tree-typing",
+     "value": "1100ms",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-decision-tree-step-xs",
+     "value": "calc(var(--tc-duration-slow) / 8)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-decision-tree-step-sm",
+     "value": "calc(var(--tc-duration-quick) / 2)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-decision-tree-step",
+     "value": "calc(var(--tc-duration-slow) / 4)",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-avatar-radius-agent",
+    "--tc-border-default",
+    "--tc-border-strong",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-h-sm",
+    "--tc-control-radius-sm",
+    "--tc-decision-tree-risk-bg",
+    "--tc-decision-tree-risk-fg",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-instant",
+    "--tc-duration-moderate",
+    "--tc-duration-quick",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-duration-slowest",
+    "--tc-ease-in-out",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-eyebrow-font-size",
+    "--tc-eyebrow-font-weight",
+    "--tc-eyebrow-line-height",
+    "--tc-eyebrow-tracking",
+    "--tc-eyebrow-transform",
+    "--tc-field-bg",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-fill-default",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-lg-plus",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-kbd-bg",
+    "--tc-kbd-fg",
+    "--tc-kbd-font-size",
+    "--tc-kbd-font-weight",
+    "--tc-kbd-h",
+    "--tc-kbd-px",
+    "--tc-kbd-radius",
+    "--tc-kbd-shadow",
+    "--tc-line-height-none",
+    "--tc-line-height-normal",
+    "--tc-line-height-relaxed",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-menu-radius",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-2xs",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-radius-xl",
+    "--tc-radius-xs",
+    "--tc-shadow-overlay",
+    "--tc-shadow-raised",
+    "--tc-shadow-raised-hover",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-10",
+    "--tc-space-12",
+    "--tc-space-14",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-4-5",
+    "--tc-space-5",
+    "--tc-space-6",
+    "--tc-space-7",
+    "--tc-space-8",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-border",
+    "--tc-status-success-fg",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-overlay",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-placeholder",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "react": [
+  {
+   "component": "DecisionTree",
+   "exported": true,
+   "props": [
+    {
+     "name": "decisions",
+     "type": "Decision[]",
+     "optional": false,
+     "description": "Everything waiting for a call – decided ones leave on their own, new ids join at the end"
+    },
+    {
+     "name": "decision",
+     "type": "string",
+     "optional": true,
+     "description": "The id of the decision on show. Controlled when defined – pair it with `onDecisionChange`"
+    },
+    {
+     "name": "defaultDecision",
+     "type": "string",
+     "optional": true,
+     "description": "The decision shown first when `decision` isn't controlled – defaults to the first one"
+    },
+    {
+     "name": "onDecisionChange",
+     "type": "(id: string) => void",
+     "optional": true,
+     "description": "Called with the id of the decision on show whenever it changes (paging, or the shown one was decided)"
+    },
+    {
+     "name": "onChoose",
+     "type": "(decision: Decision, choice: DecisionChoice) => string | void | Promise<string | void>",
+     "optional": true,
+     "description": "A branch was picked or an instruction written – return the agent's short answer to an instruction (or a promise\nof it). A promise holds the picked path until it settles; a rejection lets go of the pick and says so, to try again"
+    },
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "ref",
+     "type": "React.Ref<DecisionTreeHandle>",
+     "optional": true,
+     "description": "The imperative handle (the root element isn't exposed)"
+    }
+   ],
+   "hides": [
+    "ref",
+    "decisions",
+    "decision",
+    "onChoose",
+    "heading"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 62580,
+  "gzip": 16396
+ }
+}

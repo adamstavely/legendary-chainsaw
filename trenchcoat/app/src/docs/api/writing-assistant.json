@@ -1,0 +1,283 @@
+{
+ "elements": [
+  {
+   "tag": "tc-writing-assistant",
+   "className": "TcWritingAssistant",
+   "description": "A compact AI chat card with suggestions, a growing prompt field and dictation.",
+   "properties": [
+    {
+     "name": "name",
+     "attribute": "name",
+     "type": "string",
+     "default": "\"Quill\"",
+     "description": "The assistant's name, in the header",
+     "readonly": false
+    },
+    {
+     "name": "tagline",
+     "attribute": "tagline",
+     "type": "string",
+     "default": "\"Your writing companion.\"",
+     "description": "",
+     "readonly": false
+    },
+    {
+     "name": "greeting",
+     "attribute": "greeting",
+     "type": "string",
+     "default": "\"What should we write?\"",
+     "description": "Big line on the welcome screen",
+     "readonly": false
+    },
+    {
+     "name": "suggestions",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[\"Polish my email\", \"Make it shorter\", \"Fix the tone\", \"Draft a reply\"]",
+     "description": "",
+     "readonly": false
+    },
+    {
+     "name": "placeholder",
+     "attribute": "placeholder",
+     "type": "string",
+     "default": "\"Ask anything…\"",
+     "description": "",
+     "readonly": false
+    },
+    {
+     "name": "respond",
+     "attribute": null,
+     "type": "WritingAssistantRespond | undefined",
+     "default": "undefined",
+     "description": "Your answer for a message – return text or a promise of text. A rejected promise shows an error and lets the\nmessage be sent again. `signal` aborts when the chat is reset or the element is removed. Without it a sample\nwriter answers (and warns once, unless `demo` is set). `history` is the conversation so far, ending with this message",
+     "readonly": false
+    },
+    {
+     "name": "messages",
+     "attribute": null,
+     "type": "ChatMessage[]",
+     "default": "[]",
+     "description": "The conversation. Changed by the element unless a tc-messages-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "draft",
+     "attribute": "draft",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Text in the prompt field. Changed by the element unless a tc-draft-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "speech",
+     "attribute": "speech",
+     "type": "\"auto\" | \"simulate\"",
+     "default": "\"auto\"",
+     "description": "\"auto\" uses real speech recognition when the browser has it and shows an error otherwise (or plays the sample\ntake with `demo`); \"simulate\" always plays a sample take",
+     "readonly": false
+    },
+    {
+     "name": "demo",
+     "attribute": "demo",
+     "type": "boolean",
+     "default": "false",
+     "description": "Demo mode: the sample writer answers without a warning, and dictation plays the sample take where the browser\nhas no speech recognition",
+     "readonly": false
+    },
+    {
+     "name": "dictation",
+     "attribute": "dictation",
+     "type": "string",
+     "default": "\"Write a friendly reminder that the report is due on Friday\"",
+     "description": "Sample sentence for simulated dictation",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-messages-change",
+     "detail": "",
+     "description": "A message was added or the chat was reset ({ messages }: ChatMessagesChange, the whole conversation); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-draft-change",
+     "detail": "",
+     "description": "The text in the prompt field changed ({ draft }: ChatDraftChange); cancelable",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "wa",
+   "cssProperties": [
+    {
+     "name": "--tc-writing-assistant-field-bg",
+     "value": "light-dark(#ffffff, #2a2a2d)",
+     "looks": [
+      "standard"
+     ]
+    },
+    {
+     "name": "--tc-writing-assistant-bubble-bg",
+     "value": "light-dark(rgba(255, 255, 255, 0.85), rgba(42, 42, 45, 0.85))",
+     "looks": [
+      "standard"
+     ]
+    },
+    {
+     "name": "--tc-writing-assistant-glow",
+     "value": "0.14",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-writing-assistant-shadow",
+     "value": "0 1px 2px light-dark(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.4)), 0 12px 32px light-dark(rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.3))",
+     "looks": [
+      "standard"
+     ]
+    },
+    {
+     "name": "--tc-writing-assistant-shimmer",
+     "value": "light-dark(rgba(255, 255, 255, 0.82), #ffffff)",
+     "looks": [
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-writing-assistant-pulse",
+     "value": "light-dark(rgba(0, 96, 226, 0.22), rgba(77, 141, 255, 0.3))",
+     "looks": [
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-border-default",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-shimmer",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-duration-slowest",
+    "--tc-ease-decelerate",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-field-shadow-focus",
+    "--tc-fill-default",
+    "--tc-fill-hover",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-2xl",
+    "--tc-font-size-3xl",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-icon-muted",
+    "--tc-line-height-loose",
+    "--tc-line-height-normal",
+    "--tc-line-height-tight",
+    "--tc-radius-2xs",
+    "--tc-radius-full",
+    "--tc-radius-lg",
+    "--tc-radius-sm",
+    "--tc-shadow-raised",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-4-5",
+    "--tc-space-5",
+    "--tc-status-danger-fg",
+    "--tc-surface-inverse",
+    "--tc-surface-raised",
+    "--tc-text-muted",
+    "--tc-text-on-inverse",
+    "--tc-text-placeholder",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tone-pink-solid",
+    "--tc-tone-violet-solid"
+   ]
+  }
+ ],
+ "react": [
+  {
+   "component": "WritingAssistant",
+   "exported": true,
+   "props": [
+    {
+     "name": "messages",
+     "type": "ChatMessage[]",
+     "optional": true,
+     "description": "The conversation (controlled) – read it, seed it or restore it; new messages are asked for through `onMessagesChange`"
+    },
+    {
+     "name": "defaultMessages",
+     "type": "ChatMessage[]",
+     "optional": true,
+     "description": "Starting conversation when `messages` isn't controlled"
+    },
+    {
+     "name": "onMessagesChange",
+     "type": "(messages: ChatMessage[]) => void",
+     "optional": true,
+     "description": "Called with the whole conversation whenever a message is added or the chat is reset"
+    },
+    {
+     "name": "draft",
+     "type": "string",
+     "optional": true,
+     "description": "Text in the prompt field (controlled)"
+    },
+    {
+     "name": "defaultDraft",
+     "type": "string",
+     "optional": true,
+     "description": "Starting text in the prompt field when `draft` isn't controlled"
+    },
+    {
+     "name": "onDraftChange",
+     "type": "(draft: string) => void",
+     "optional": true,
+     "description": ""
+    }
+   ],
+   "hides": [
+    "messages",
+    "draft"
+   ]
+  }
+ ],
+ "changelog": [
+  "writing-assistant: dictation fills the field and no longer sends by itself."
+ ],
+ "size": {
+  "min": 49017,
+  "gzip": 12291
+ }
+}

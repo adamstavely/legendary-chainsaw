@@ -1,0 +1,389 @@
+{
+ "elements": [
+  {
+   "tag": "tc-usage-meter",
+   "className": "TcUsageMeter",
+   "description": "A usage card: a credits meter split into categories, a daily sparkline, plan limits and an upgrade button.",
+   "properties": [
+    {
+     "name": "layout",
+     "attribute": "layout",
+     "type": "\"stacked\" | \"wide\"",
+     "default": "\"stacked\"",
+     "description": "\"stacked\" (default): one column at most 460px wide · \"wide\": full width, two columns from 640px",
+     "readonly": false
+    },
+    {
+     "name": "total",
+     "attribute": "total",
+     "type": "number",
+     "default": "0",
+     "description": "Credits included in the plan",
+     "readonly": false
+    },
+    {
+     "name": "used",
+     "attribute": null,
+     "type": "UsageItem[]",
+     "default": "[]",
+     "description": "What the credits were spent on in the shown period",
+     "readonly": false
+    },
+    {
+     "name": "limits",
+     "attribute": null,
+     "type": "UsageLimit[]",
+     "default": "[]",
+     "description": "Thin meters below, e.g. seats, storage, projects",
+     "readonly": false
+    },
+    {
+     "name": "periods",
+     "attribute": null,
+     "type": "UsagePeriod[] | undefined",
+     "default": "undefined",
+     "description": "Options of the period switch – no switch when left out",
+     "readonly": false
+    },
+    {
+     "name": "period",
+     "attribute": "period",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The chosen period id – unset is the first of `periods`",
+     "readonly": false
+    },
+    {
+     "name": "resetAt",
+     "attribute": "reset-at",
+     "type": "Date | string | number | undefined",
+     "default": "undefined",
+     "description": "When the credits reset – shown as \"Resets in 9 days\"",
+     "readonly": false
+    },
+    {
+     "name": "now",
+     "attribute": "now",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The current time in epoch ms, for \"Resets in …\" – unset reads the clock after the element connects",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string",
+     "default": "\"en-US\"",
+     "description": "Locale for numbers and dates",
+     "readonly": false
+    },
+    {
+     "name": "daily",
+     "attribute": null,
+     "type": "UsageDay[] | undefined",
+     "default": "undefined",
+     "description": "Usage per day for the sparkline under the meter",
+     "readonly": false
+    },
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Usage\"",
+     "description": "The heading, and the region's name",
+     "readonly": false
+    },
+    {
+     "name": "plan",
+     "attribute": "plan",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Plan name next to the reset date, e.g. \"Pro plan\"",
+     "readonly": false
+    },
+    {
+     "name": "unit",
+     "attribute": "unit",
+     "type": "string",
+     "default": "\"credits\"",
+     "description": "Unit of the credits",
+     "readonly": false
+    },
+    {
+     "name": "warnAt",
+     "attribute": "warn-at",
+     "type": "number",
+     "default": "0.8",
+     "description": "Share from which the meter warns (0–1)",
+     "readonly": false
+    },
+    {
+     "name": "upgradeLabel",
+     "attribute": "upgrade-label",
+     "type": "string",
+     "default": "\"Upgrade\"",
+     "description": "Button text while there is room left",
+     "readonly": false
+    },
+    {
+     "name": "topUpLabel",
+     "attribute": "top-up-label",
+     "type": "string",
+     "default": "\"Add credits\"",
+     "description": "Button text near and at the limit",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-period-change",
+     "detail": "",
+     "description": "A period is picked in the switch; detail `{ period: string }`. Cancelable: prevent it to control `period`",
+     "cancelable": true
+    },
+    {
+     "name": "tc-upgrade",
+     "detail": "",
+     "description": "The button is pressed; detail `{ state: \"ok\" | \"warn\" | \"limit\" }`",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "um",
+   "cssProperties": [
+    {
+     "name": "--tc-usage-meter-series-1",
+     "value": "light-dark(rgba(0, 96, 226, 0.765), #4d8dff)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-usage-meter-series-2",
+     "value": "light-dark(rgba(0, 96, 226, 0.5), rgba(77, 141, 255, 0.62))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-usage-meter-series-3",
+     "value": "light-dark(rgba(0, 96, 226, 0.3), rgba(77, 141, 255, 0.4))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-usage-meter-series-4",
+     "value": "light-dark(rgba(0, 96, 226, 0.16), rgba(77, 141, 255, 0.22))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-usage-meter-series-5",
+     "value": "light-dark(rgba(0, 0, 0, 0.14), rgba(255, 255, 255, 0.16))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-usage-meter-spark",
+     "value": "var(--tc-fill-strong)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-active",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-lg",
+    "--tc-control-h-md",
+    "--tc-control-px-md",
+    "--tc-control-radius-lg",
+    "--tc-control-radius-md",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-instant",
+    "--tc-duration-moderate",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-duration-slowest",
+    "--tc-ease-move",
+    "--tc-ease-spring",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-hover",
+    "--tc-fill-strong",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-3xl",
+    "--tc-font-size-4xl",
+    "--tc-font-size-lg",
+    "--tc-font-size-lg-plus",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-line-height-display",
+    "--tc-line-height-loose",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-meter-fill",
+    "--tc-meter-h",
+    "--tc-meter-h-hero",
+    "--tc-meter-radius",
+    "--tc-meter-track",
+    "--tc-pill-font-size-lg",
+    "--tc-pill-font-weight",
+    "--tc-pill-h-lg",
+    "--tc-pill-px-lg",
+    "--tc-pill-radius",
+    "--tc-radius-2xs",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-radius-xs",
+    "--tc-seg-pad",
+    "--tc-seg-thumb-bg",
+    "--tc-seg-thumb-shadow",
+    "--tc-seg-track-bg",
+    "--tc-seg-track-radius",
+    "--tc-shadow-overlay",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-10",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-4-5",
+    "--tc-space-5",
+    "--tc-space-6",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-danger-solid",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-status-warning-solid",
+    "--tc-surface-overlay",
+    "--tc-surface-raised",
+    "--tc-surface-sunken",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tracking-snug",
+    "--tc-tracking-tight",
+    "--tc-tray-inset",
+    "--tc-tray-radius",
+    "--tc-usage-meter-tip-x"
+   ]
+  }
+ ],
+ "react": [
+  {
+   "component": "UsageMeter",
+   "exported": true,
+   "props": [
+    {
+     "name": "total",
+     "type": "number",
+     "optional": false,
+     "description": "Credits included in the plan"
+    },
+    {
+     "name": "used",
+     "type": "NonNullable<RawUsageMeterProps[\"used\"]>",
+     "optional": false,
+     "description": "What the credits were spent on in the shown period"
+    },
+    {
+     "name": "period",
+     "type": "string",
+     "optional": true,
+     "description": "The chosen period id. Controlled when defined; otherwise the meter keeps its own, starting at `defaultPeriod`"
+    },
+    {
+     "name": "defaultPeriod",
+     "type": "string",
+     "optional": true,
+     "description": "First period when uncontrolled – defaults to the first of `periods`"
+    },
+    {
+     "name": "onPeriodChange",
+     "type": "(id: string) => void",
+     "optional": true,
+     "description": "Called with the new period id – pass the matching `used`, `limits` and `daily` back in"
+    },
+    {
+     "name": "onUpgrade",
+     "type": "(state: UsageState) => void",
+     "optional": true,
+     "description": "Called by the button, with the current state"
+    },
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": ""
+    }
+   ],
+   "hides": [
+    "heading",
+    "period",
+    "total",
+    "used"
+   ]
+  }
+ ],
+ "changelog": [
+  "usage-meter: the `--tc-usage-meter-track`, `-fill` and `-action-bg-hover` custom properties are gone; it uses the meter and action tokens."
+ ],
+ "size": {
+  "min": 52082,
+  "gzip": 13690
+ }
+}

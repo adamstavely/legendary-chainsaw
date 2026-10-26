@@ -1,0 +1,213 @@
+{
+ "elements": [
+  {
+   "tag": "tc-answer-arena",
+   "className": "TcAnswerArena",
+   "description": "Two models' answers to the same prompt side by side, with a vote: A is better, B is better or a tie, and a reason.",
+   "properties": [
+    {
+     "name": "prompt",
+     "attribute": "prompt",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The prompt both models answered",
+     "readonly": false
+    },
+    {
+     "name": "answers",
+     "attribute": null,
+     "type": "ArenaAnswer[]",
+     "default": "[]",
+     "description": "The two answers: A first, then B",
+     "readonly": false
+    },
+    {
+     "name": "value",
+     "attribute": null,
+     "type": "ArenaVote | null",
+     "default": "null",
+     "description": "The vote (null: none yet). Changed by the element unless a tc-value-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "blind",
+     "attribute": "blind",
+     "type": "boolean",
+     "default": "false",
+     "description": "Hide the model names until there's a vote",
+     "readonly": false
+    },
+    {
+     "name": "question",
+     "attribute": "question",
+     "type": "string",
+     "default": "\"Which answer is better?\"",
+     "description": "The question over the vote",
+     "readonly": false
+    },
+    {
+     "name": "reasons",
+     "attribute": null,
+     "type": "array",
+     "default": "[\"More accurate\", \"Easier to follow\", \"More complete\", \"Better tone\"]",
+     "description": "Reasons offered after A or B wins",
+     "readonly": false
+    },
+    {
+     "name": "tieReasons",
+     "attribute": null,
+     "type": "array",
+     "default": "[\"Both good\", \"Both wrong\", \"Too close to call\"]",
+     "description": "Reasons offered after a tie",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-value-change",
+     "detail": "",
+     "description": "The vote changed (`{ value: ArenaVote | null }`); cancelable – prevent it to keep `value` (controlled use)",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "arena",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-avatar-font-weight",
+    "--tc-avatar-radius-agent",
+    "--tc-border-default",
+    "--tc-border-selected",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-lg",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-md",
+    "--tc-control-px-sm",
+    "--tc-control-radius-md",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-reveal-slow",
+    "--tc-duration-slow",
+    "--tc-duration-slowest",
+    "--tc-ease-in-out",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-selected",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-2xs",
+    "--tc-font-size-lg",
+    "--tc-font-size-lg-plus",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-hairline",
+    "--tc-line-height-none",
+    "--tc-line-height-normal",
+    "--tc-line-height-relaxed",
+    "--tc-line-height-tight",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-2xs",
+    "--tc-radius-sm",
+    "--tc-shadow-raised",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-5",
+    "--tc-surface-control",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "react": [
+  {
+   "component": "AnswerArena",
+   "exported": true,
+   "props": [
+    {
+     "name": "answers",
+     "type": "ArenaAnswer[]",
+     "optional": false,
+     "description": "The two answers: A first, then B"
+    },
+    {
+     "name": "value",
+     "type": "ArenaVote | null",
+     "optional": true,
+     "description": "The vote – controlled when defined (null: none yet)"
+    },
+    {
+     "name": "defaultValue",
+     "type": "ArenaVote | null",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "onChange",
+     "type": "(vote: ArenaVote | null) => void",
+     "optional": true,
+     "description": "Every change of the vote: a side or a tie, then a reason"
+    }
+   ],
+   "hides": []
+  }
+ ],
+ "changelog": [
+  "`tc-answer-arena` – two models' answers streamed side by side, then A / B / tie with a reason; blind mode reveals the names after the vote. `tc-value-change` (cancelable)."
+ ],
+ "size": {
+  "min": 28311,
+  "gzip": 8299
+ }
+}

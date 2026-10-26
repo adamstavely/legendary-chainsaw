@@ -1,0 +1,331 @@
+{
+ "elements": [
+  {
+   "tag": "tc-agent-lanes",
+   "className": "TcAgentLanes",
+   "description": "Every agent as a lane on a live timeline, with decisions in place.",
+   "properties": [
+    {
+     "name": "agents",
+     "attribute": null,
+     "type": "LaneAgent[]",
+     "default": "[]",
+     "description": "",
+     "readonly": false
+    },
+    {
+     "name": "tasks",
+     "attribute": null,
+     "type": "LaneTask[]",
+     "default": "[]",
+     "description": "The tasks – always the source of truth. After Approve or Reject the block shows the result right away; as soon as\nyou pass that task with a new status, start or end, your version wins",
+     "readonly": false
+    },
+    {
+     "name": "span",
+     "attribute": "span",
+     "type": "",
+     "default": null,
+     "description": "How much time the lanes show, in ms (default 30 minutes)",
+     "readonly": false
+    },
+    {
+     "name": "now",
+     "attribute": "now",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "A clock you control, in epoch ms. Without it the lanes follow real time",
+     "readonly": false
+    },
+    {
+     "name": "rate",
+     "attribute": "rate",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "How fast the clock runs, in clock ms per real ms: on from `now` when set (default 0), from real time otherwise\n(default 1)",
+     "readonly": false
+    },
+    {
+     "name": "onApprove",
+     "attribute": null,
+     "type": "LaneTaskHandler | undefined",
+     "default": "undefined",
+     "description": "Called on Approve – may return a promise the decision waits for",
+     "readonly": false
+    },
+    {
+     "name": "onReject",
+     "attribute": null,
+     "type": "LaneTaskHandler | undefined",
+     "default": "undefined",
+     "description": "Called on Reject – may return a promise the decision waits for",
+     "readonly": false
+    },
+    {
+     "name": "openable",
+     "attribute": "openable",
+     "type": "boolean",
+     "default": "false",
+     "description": "Shows \"Open\" in a block's details; pressing it fires tc-open",
+     "readonly": false
+    },
+    {
+     "name": "paused",
+     "attribute": "paused",
+     "type": "boolean",
+     "default": "false",
+     "description": "Whether the timeline is held still. Changed by the Pause button unless a tc-paused-change listener calls\npreventDefault(). The lanes also hold still while the pointer or focus is on them (WCAG 2.2.2)",
+     "readonly": false
+    },
+    {
+     "name": "expanded",
+     "attribute": null,
+     "type": "string | null",
+     "default": "null",
+     "description": "The id of the block whose decision or details are open (null: none). Changed by the user unless a\ntc-expanded-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Agents\"",
+     "description": "The title on the summary bar",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-expanded-change",
+     "detail": "",
+     "description": "A block's decision or details open or close ({ expanded: string | null }); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-paused-change",
+     "detail": "",
+     "description": "The Pause button holds or resumes the timeline ({ paused: boolean }); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-open",
+     "detail": "",
+     "description": "\"Open\" in a block's details was pressed ({ task: LaneTask }); shown when `openable` is set",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "al",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-active",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-agent-lanes-rail",
+    "--tc-agent-lanes-row",
+    "--tc-agent-lanes-run-bg",
+    "--tc-agent-lanes-run-edge",
+    "--tc-agent-lanes-run-fg",
+    "--tc-agent-lanes-tip-soft",
+    "--tc-avatar-font-size",
+    "--tc-avatar-font-weight",
+    "--tc-avatar-md",
+    "--tc-avatar-radius-agent",
+    "--tc-border-default",
+    "--tc-border-selected",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-md",
+    "--tc-control-radius-md",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-instant",
+    "--tc-duration-moderate",
+    "--tc-duration-reveal-slow",
+    "--tc-duration-shimmer",
+    "--tc-duration-slow",
+    "--tc-ease-in-out",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-selected",
+    "--tc-focus-outline",
+    "--tc-font-sans",
+    "--tc-font-size-2xs",
+    "--tc-font-size-lg",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-hairline",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-menu-bg",
+    "--tc-menu-radius",
+    "--tc-menu-shadow",
+    "--tc-pill-font-size",
+    "--tc-pill-font-size-lg",
+    "--tc-pill-font-weight",
+    "--tc-pill-h-lg",
+    "--tc-pill-px-lg",
+    "--tc-pill-radius",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-radius-xs",
+    "--tc-shadow-overlay",
+    "--tc-shadow-raised",
+    "--tc-shimmer",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-surface-raised",
+    "--tc-surface-sunken",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tooltip-bg",
+    "--tc-tooltip-fg",
+    "--tc-tooltip-font-size",
+    "--tc-tooltip-px",
+    "--tc-tooltip-py",
+    "--tc-tooltip-radius",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "react": [
+  {
+   "component": "AgentLanes",
+   "exported": true,
+   "props": [
+    {
+     "name": "agents",
+     "type": "LaneAgent[]",
+     "optional": false,
+     "description": ""
+    },
+    {
+     "name": "tasks",
+     "type": "LaneTask[]",
+     "optional": false,
+     "description": "The tasks – always the source of truth. After Approve or Reject the block shows the result right away; as soon\nas you pass that task with a new status, start or end, your version wins"
+    },
+    {
+     "name": "onApprove",
+     "type": "LaneTaskHandler",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "onReject",
+     "type": "LaneTaskHandler",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "onOpen",
+     "type": "(task: LaneTask) => void",
+     "optional": true,
+     "description": "Shows \"Open\" in a block's tooltip"
+    },
+    {
+     "name": "paused",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether the timeline is held still (controlled)"
+    },
+    {
+     "name": "defaultPaused",
+     "type": "boolean",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "onPausedChange",
+     "type": "(paused: boolean) => void",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "expanded",
+     "type": "string | null",
+     "optional": true,
+     "description": "The id of the block whose decision or tooltip is open. Controlled when defined (null = none)"
+    },
+    {
+     "name": "defaultExpanded",
+     "type": "string | null",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "onExpandedChange",
+     "type": "(id: string | null) => void",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": ""
+    }
+   ],
+   "hides": [
+    "agents",
+    "tasks",
+    "heading",
+    "openable",
+    "paused",
+    "expanded",
+    "onApprove",
+    "onReject"
+   ]
+  }
+ ],
+ "changelog": [
+  "agent-lanes `rate`: how fast its clock runs, in clock ms per real ms (0 with `now`, 1 without – as before)."
+ ],
+ "size": {
+  "min": 42352,
+  "gzip": 12519
+ }
+}

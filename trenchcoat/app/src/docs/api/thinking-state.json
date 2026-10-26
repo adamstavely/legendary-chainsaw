@@ -1,0 +1,226 @@
+{
+ "elements": [
+  {
+   "tag": "tc-thinking-state",
+   "className": "TcThinkingState",
+   "description": "The \"working…\" panel of an AI chat: steps and searches appear one by one, then \"Worked for …\".",
+   "properties": [
+    {
+     "name": "steps",
+     "attribute": null,
+     "type": "ThinkingStep[]",
+     "default": "[]",
+     "description": "",
+     "readonly": false
+    },
+    {
+     "name": "doneLabel",
+     "attribute": "done-label",
+     "type": "string",
+     "default": "\"Finished thinking\"",
+     "description": "Label of the final row",
+     "readonly": false
+    },
+    {
+     "name": "stepMs",
+     "attribute": "step-ms",
+     "type": "number",
+     "default": "1300",
+     "description": "Pause between two steps, in ms (the timeline that runs when `progress` and `done` are unset)",
+     "readonly": false
+    },
+    {
+     "name": "progress",
+     "attribute": "progress",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "How many steps have appeared; unset, the timeline reveals them",
+     "readonly": false
+    },
+    {
+     "name": "done",
+     "attribute": null,
+     "type": "boolean | undefined",
+     "default": "undefined",
+     "description": "Finished; unset, the timeline decides (when `progress` is unset too)",
+     "readonly": false
+    },
+    {
+     "name": "loop",
+     "attribute": "loop",
+     "type": "boolean",
+     "default": "false",
+     "description": "Start over after a pause once finished – only while the timeline runs everything. Stops after a few runs, and\nas soon as the pointer or focus is inside (WCAG 2.2.2)",
+     "readonly": false
+    },
+    {
+     "name": "open",
+     "attribute": "open",
+     "type": "boolean",
+     "default": "true",
+     "description": "Whether the steps are unfolded",
+     "readonly": false
+    },
+    {
+     "name": "startedAt",
+     "attribute": "started-at",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "When the work started, in epoch ms – the header's timer counts from here. Defaults to when the run started",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-progress-change",
+     "detail": "",
+     "description": "The timeline revealed a step; detail `{ progress: number }`, how many steps show",
+     "cancelable": false
+    },
+    {
+     "name": "tc-done",
+     "detail": "",
+     "description": "It finished (by the timeline or by `done`); detail `{ seconds: number }`, how long it worked",
+     "cancelable": false
+    },
+    {
+     "name": "tc-open-change",
+     "detail": "",
+     "description": "The header was clicked, or a new run unfolded the steps; detail `{ open: boolean }`. Cancelable: preventDefault() keeps `open` as it is (controlled use)",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "think",
+   "cssProperties": [
+    {
+     "name": "--tc-thinking-state-shimmer",
+     "value": "light-dark(rgba(255, 255, 255, 0.82), #ffffff)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent",
+    "--tc-border-default",
+    "--tc-border-strong",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-shimmer",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-duration-slowest",
+    "--tc-ease-move",
+    "--tc-ease-spring",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-hover",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-lg-plus",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-line-height-tight",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-radius-xs",
+    "--tc-shadow-overlay",
+    "--tc-shadow-raised",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-surface-raised",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tooltip-bg",
+    "--tc-tooltip-fg",
+    "--tc-tooltip-font-size",
+    "--tc-tooltip-px",
+    "--tc-tooltip-py",
+    "--tc-tooltip-radius"
+   ]
+  }
+ ],
+ "react": [
+  {
+   "component": "ThinkingState",
+   "exported": true,
+   "props": [
+    {
+     "name": "steps",
+     "type": "ThinkingStep[]",
+     "optional": false,
+     "description": ""
+    },
+    {
+     "name": "onProgressChange",
+     "type": "(progress: number) => void",
+     "optional": true,
+     "description": "Reports each step the timeline reveals"
+    },
+    {
+     "name": "onDone",
+     "type": "(seconds: number) => void",
+     "optional": true,
+     "description": "Called once it's finished – by the timeline or by `done` – with the seconds it worked"
+    },
+    {
+     "name": "open",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether the steps are unfolded (controlled when defined)"
+    },
+    {
+     "name": "defaultOpen",
+     "type": "boolean",
+     "optional": true,
+     "description": ""
+    },
+    {
+     "name": "onOpenChange",
+     "type": "(open: boolean) => void",
+     "optional": true,
+     "description": ""
+    }
+   ],
+   "hides": [
+    "steps",
+    "open"
+   ]
+  }
+ ],
+ "changelog": [
+  "thinking-state no longer reports `onOpenChange(true)` on mount when `open` is held false; date-range-picker doesn't flash its \"Last 30 days\" stand-in before reading today; memory-panel with `undoFor={Infinity}` keeps a failure message instead of clearing it at once; dropzone keeps focus on a row while another row folds away (the React version lost it in real browsers)."
+ ],
+ "size": {
+  "min": 37663,
+  "gzip": 9689
+ }
+}
