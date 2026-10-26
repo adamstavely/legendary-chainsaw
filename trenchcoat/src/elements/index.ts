@@ -32,6 +32,7 @@ export * from "./compact-breakdown";
 export * from "./context-map";
 export * from "./context-tray";
 export * from "./context-window";
+export * from "./conversation-branches";
 export * from "./cover-flow";
 export * from "./date-range-picker";
 export * from "./decision-inbox";
