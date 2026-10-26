@@ -62,6 +62,7 @@ export * from "./lead-sourcing";
 export * from "./live-view";
 export * from "./logo-cluster";
 export * from "./memory-panel";
+export * from "./mention-picker";
 export * from "./message-actions";
 export * from "./model-picker";
 export * from "./model-wheel";

@@ -73,6 +73,7 @@ export * from "./react/lead-sourcing";
 export * from "./react/live-view";
 export * from "./react/logo-cluster";
 export * from "./react/memory-panel";
+export * from "./react/mention-picker";
 export * from "./react/message-actions";
 export * from "./react/model-picker";
 export * from "./react/model-wheel";
