@@ -31,3 +31,4 @@ examples/html/dist-shake
 
 # Conflict copies a sync service (iCloud Documents) leaves beside a file: "name 2.json"
 * [2-9].*
+.docs-check*

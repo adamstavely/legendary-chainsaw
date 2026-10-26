@@ -533,17 +533,32 @@ function LiveExample({ entry, anatomy, children }: { entry: Entry; anatomy: Anat
       setPins([]);
       return;
     }
+    /** Shown, not just laid out: no ancestor up to the stage is transparent or hidden */
+    const visible = (el: Element, stage: Element) => {
+      for (let n: Element | null = el; n && n !== stage; n = n.parentElement) {
+        const cs = getComputedStyle(n);
+        if (cs.visibility === "hidden" || cs.display === "none" || Number(cs.opacity) === 0) return false;
+      }
+      return true;
+    };
     const place = () => {
       const box = wrap.current;
-      const stage = box?.querySelector(".stage");
-      if (!box || !stage) return;
+      if (!box) return;
+      const stages = [...box.querySelectorAll(".stage")];
       const origin = box.getBoundingClientRect();
       setPins(
         anatomy.flatMap((p) => {
-          const el = stage.querySelector(p.selector);
-          if (!el) return [];
-          const r = el.getBoundingClientRect();
-          return r.width || r.height ? [{ n: p.n, x: r.left - origin.left, y: r.top - origin.top, w: r.width, h: r.height }] : [];
+          // The first stage where the part is on screen – a part only one look draws is pinned in that look
+          for (const stage of stages) {
+            const el = [...stage.querySelectorAll(p.selector)].find((x) => {
+              const r = x.getBoundingClientRect();
+              return (r.width || r.height) && visible(x, stage);
+            });
+            if (!el) continue;
+            const r = el.getBoundingClientRect();
+            return [{ n: p.n, x: r.left - origin.left, y: r.top - origin.top, w: r.width, h: r.height }];
+          }
+          return [];
         }),
       );
     };

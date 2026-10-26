@@ -66,7 +66,8 @@ for (const slug of slugs) {
 
 // Type-check the React examples against the package's own sources
 if (examples.length) {
-  const dir = ".docs-check";
+  // Its own folder per run, so parallel checks don't collide
+  const dir = `.docs-check-${process.pid}`;
   rmSync(dir, { recursive: true, force: true });
   mkdirSync(dir);
   for (const [slug, tsx] of examples) writeFileSync(join(dir, `${slug}.tsx`), `// From app/src/docs/${slug}.md\n${tsx}`);
