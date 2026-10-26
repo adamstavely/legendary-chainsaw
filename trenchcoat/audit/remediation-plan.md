@@ -2,12 +2,15 @@
 
 2026-10-25 · Covers what is still open from [design-review/README.md](design-review/README.md) and
 [bundle-and-performance-audit.md](bundle-and-performance-audit.md), checked against the code at `5244f1b`.
-Planning only – nothing here has been started.
+Planning only – nothing here has been started. Every decision is made (see "Decisions"); nothing is open
+before or during the work.
 
-**Direction.** Trenchcoat ships as an npm package that apps install and import, and apps in other frameworks will
-use it too, so the components move to **Lit 3 web components** ([lit-port-plan.md](lit-port-plan.md)). `src/`
-becomes the only source; the generated `components/` folder and its `-clean` copies go away, and the look is
-chosen with the `look` property.
+**Direction.** Trenchcoat is built as a package (not published to npm) for apps in React and other frameworks, so
+everything – components, blocks, screens, illustrations and motion – moves to **Lit 3 web components**
+([lit-port-plan.md](lit-port-plan.md)). `src/` becomes the only source; the generated `components/` folder and its
+`-clean` copies go away, and the look is chosen with the `look` property. How real apps receive the package is
+decided after this plan is done (the build and the `examples/` apps install the packed tarball locally); nothing in
+the plan depends on it.
 
 **Order.** The work splits in two:
 
@@ -65,7 +68,18 @@ components (Part 2).
 
 ## Plan
 
-Each step is one commit (or a few), with `npm run ci` green before the next starts.
+Each step is one commit (or a few), with `npm run ci` green before the next starts. Each part is one pull request
+into `main`: Part 1 on `trenchcoat-remediation-plan` (which already carries the trenchcoat files), Part 2 on a
+branch from `main` after Part 1 is merged.
+
+### Step 0 – Working copy
+
+- Work in `~/Documents/GitHub/legendary-chainsaw` (this session needs access to that folder granted once), on
+  `trenchcoat-remediation-plan`, pulled up to date.
+- Retire the separate `trenchcoat/.git` in `~/Lockin/legendary-chainsaw`: save its history as a bundle
+  (`git bundle create trenchcoat-history.bundle --all`, kept outside the repo), then stop using that copy. From here
+  on commits go straight to legendary-chainsaw instead of being copied over.
+- `npm ci` and `npm run ci` in `trenchcoat/` to confirm the clone is green before Part 1.
 
 ## Part 1 – Work that carries over to Lit unchanged
 
@@ -147,8 +161,8 @@ instance. React render budgets without demo timers are dropped (Lit has its own 
 - Gallery: `app/src/registry.ts` reads `src/components/`; the components README moves to `src/components/README.md`
   with one entry per component.
 - Tests run each spec against the one source in both looks instead of loading `<slug>.tsx` and `<slug>-clean.tsx`.
-- Delete `components/`, `scripts/build-lib.mjs`, `check:lib` and its CI step. CHANGELOG: breaking – the `-clean`
-  files are gone.
+- Delete `components/`, `scripts/build-lib.mjs`, `check:lib` and its CI step. No app uses Trenchcoat yet, so
+  breaking changes need no deprecation period; CHANGELOG records them, and the package starts at 0.1.0.
 
 Done first, so the React components in `src/components/` and the Lit elements in `src/elements/` sit side by side
 while the port runs, with one copy of each.
@@ -156,12 +170,12 @@ while the port runs, with one copy of each.
 ### 2.3 Toolchain and pilot components
 
 The first steps of [lit-port-plan.md](lit-port-plan.md): set up Lit 3, TypeScript standard decorators,
-ts-lit-plugin, lit-analyzer, the Lit ESLint rules and the manifest analyzer in `npm run ci`; then port Button,
-Combobox and Data Table for real into `src/elements/`, with the `examples/` apps for React, Vue, Angular, Svelte,
-plain HTML, Next.js and Nuxt. The pilot settles the patterns the rest of the port follows – shadow or light DOM,
-content projection, forms, styles and looks, framework use, server rendering, windowing, value properties, the test
-harness – and records them, with code samples and the measured time per component, in `audit/lit-patterns.md`.
-About 7 days.
+ts-lit-plugin, lit-analyzer, the Lit ESLint rules, the manifest analyzer and Vitest browser mode in `npm run ci`;
+then port Button, Combobox and Data Table for real into `src/elements/`, with the `examples/` apps for React and
+Next.js, Vue and Nuxt, Angular, Svelte and plain HTML. The pilot proves the decided patterns (light DOM, slot-marked
+child content, `tc-value-change`, form association, one adopted stylesheet per element, `@lit/react` wrappers, no
+SSR in v1, the row-window controller) against the acceptance checks in that plan, and records them – with code
+samples and the measured time per component – in `audit/lit-patterns.md`. About 7 days.
 
 ### 2.4 Foundations
 
@@ -171,10 +185,12 @@ About 7 days.
 - The CI checks (ratchet, tokens, prefixes, contrast) read CSS from Lit's `` css`…` `` templates as well as the
   React `/* css */` strings, so they hold during the port and after it.
 - **The package build:** Vite library mode, one module per element, type declarations, `custom-elements.json`, the
-  React integration settled by the pilot (native elements or `@lit/react`), `tokens.css` as the one stylesheet apps
-  import. package.json: drop `private`, `exports` for the components, blocks, screens, illustrations, motion and
-  `tokens.css`, `"sideEffects": ["*.css"]`, a `files` list. A CI step builds the gallery and the `examples/` apps
-  against the package, so a broken export fails before publishing.
+  generated `@lit/react` wrappers as a `react` entry, `tokens.css` as the one stylesheet apps import. package.json
+  keeps `"private": true` (so it can't be published by accident), `"license": "UNLICENSED"` (proprietary),
+  `"version": "0.1.0"`, `exports` for the elements, the React wrappers, blocks, screens, illustrations, motion and
+  `tokens.css`, `"sideEffects": ["*.css"]`, a `files` list; Lit is a dependency and React a peer dependency of the
+  `react` entry only. CI runs `npm pack`, keeps the tarball as a build artifact, and builds the gallery and the
+  `examples/` apps against it, so a broken export fails in CI.
 
 ### 2.5 Gallery look switch
 
@@ -188,16 +204,14 @@ The other 61 components, simplest first, then menus and fields, then the large a
 patterns. With each component: its tests rewritten for the new harness, its demo moved to the element, the axe
 scan, a screenshot diff against the React version, and then the React component deleted. Folded into the port:
 
-- **filter-menu windowing** – written in Lit with the windowing approach the pilot settled (`@lit-labs/virtualizer`
-  or the row-window controller), above ~300 options.
+- **filter-menu windowing** – the row-window controller from the pilot, above ~300 options.
 - **glass-folder `open` property** (illustrations) – app-shell and assistant-home use it instead of copying its
   hover classes.
 
 ### 2.7 Blocks, screens, illustrations and motion; demos; measurements
 
-- Decide whether blocks and screens become web components or stay React on top of the elements (they're app-level
-  layouts, so React-only may be acceptable); port illustrations and motion, or keep them React if they stay
-  app-level only.
+- Port blocks, screens, illustrations and motion to Lit elements, so every framework gets all of Trenchcoat.
+  Screens switch from `lucide-react` to `lucide`; blocks and screens compose the component elements.
 - **Demo paths for the unseen states** (stepper-form review/success, ai-workspace projects, client-context
   empty/create, decision-tree sub-questions), then a runtime "selector never matched" pass across all demos and
   delete what stays unmatched.
@@ -207,22 +221,29 @@ scan, a screenshot diff against the React version, and then the React component 
 ### 2.8 Verification
 
 - Axe in light and dark, both looks, every element, in Chromium, Firefox and WebKit.
-- Forced colours re-checked on the elements (the 1.8 rules, now inside shadow roots where the pilot chose shadow
-  DOM).
-- Screen readers: VoiceOver (Safari) and NVDA (Firefox) on the components with live regions and custom keyboard
-  patterns – toaster, combobox, command-menu, data-table, date-range-picker, agent-tree, review-center.
+- Forced colours re-checked on the elements (the 1.8 rules apply unchanged in light DOM).
+- VoiceOver (Safari), run by Claude, on the components with live regions and custom keyboard patterns – toaster,
+  combobox, command-menu, data-table, date-range-picker, agent-tree, review-center. NVDA isn't tested (a known gap; the WCAG
+  audit's status line is updated to say so).
 - The perf bench in Firefox and WebKit and with 4× CPU throttling; INP for combobox open, command-menu typing,
   data-table sort.
-- The `examples/` apps on every element: tree-shaking, `tokens.css`, server rendering, types and events, with
-  webpack and Vite builds.
+- The `examples/` apps (React and Next.js, Vue and Nuxt, Angular, Svelte, plain HTML) on every element:
+  tree-shaking, `tokens.css`, client-only loading in Next.js and Nuxt, types and events, with webpack and Vite
+  builds.
 
 ## Decisions (2026-10-25)
 
 | | Question | Decision |
 |---|---|---|
 | A | How do the looks ship? | **Revised: one npm package, one module per component carrying both looks, chosen with the `look` property.** `src/` is the only source; `components/` and the `-clean` copies are deleted; the gallery gets a look switch. (Was: single-look files – that suited copy-paste files, not a package.) |
-| D | What is the component layer? | **Lit 3 web components**, in TypeScript with standard decorators, ts-lit-plugin in the editor and lit-analyzer in CI. Committed – no spike; three pilot components (step 2.3) settle the patterns. Stencil was compared and dropped. |
+| D | What is the component layer? | **Lit 3 web components**, in TypeScript with standard decorators, ts-lit-plugin in the editor and lit-analyzer in CI. Committed – no spike; three pilot components (step 2.3) prove the patterns. Stencil was compared and dropped. The element patterns (light DOM, content, values, forms, React wrappers, no SSR in v1, windowing, tests, `tc-` tags) are decisions L1–L16 in [lit-port-plan.md](lit-port-plan.md). |
 | E | In what order? | **Carry-over work first (Part 1), then the shift to Lit (Part 2)**, which absorbs everything whose form changes with Lit. |
+| F | What moves to Lit? | **Everything:** components, blocks, screens, illustrations and motion. The gallery stays React. |
+| G | Distribution | **Not published to npm.** The package is built and packed (`"private": true`); how apps receive it is decided after the plan is done. |
+| H | License and version | **Proprietary** (`"license": "UNLICENSED"`), starting at **0.1.0**. No app uses Trenchcoat yet, so breaking changes need no deprecation period. |
+| I | Working copy and PRs | **`~/Documents/GitHub/legendary-chainsaw`**, with trenchcoat's separate `.git` retired (step 0). **One pull request per part.** |
+| J | Frameworks | React 19 and Next.js, Vue 3 and Nuxt, Angular, Svelte 5 and plain HTML, each with an `examples/` app |
+| K | Screen readers | **VoiceOver only, run by Claude.** NVDA isn't tested – a known gap. |
 | B | Which way do the half-step font sizes fold? | **Round down:** 11.5 → 11, 12.5 → 12, 13.5 → 13 px, in both looks |
 | C | The judgement calls in item 15 | **As recommended:** fix breakdown-chart's palette, the fan-out-grid and agent-queue targets and the date-range band; keep context-map's tiles as they are (name and kind are in the hover/focus card) |
 
@@ -230,7 +251,8 @@ scan, a screenshot diff against the React version, and then the React component 
 
 | Step | Depends on | Effort |
 |---|---|---|
-| **Part 1** | | |
+| 0 Working copy | – | 0.5 day |
+| **Part 1** | 0 | |
 | 1.1 Type scale | – | 0.5 day |
 | 1.2 Spacing | 1.1 (same files, same screenshots) | 2 days |
 | 1.3 Remaining literals | 1.1 | 1 day |
@@ -239,16 +261,16 @@ scan, a screenshot diff against the React version, and then the React component 
 | 1.6 Myers diff | – | 1 day |
 | 1.7 Illustration size | – | 0.5 day |
 | 1.8 Forced colours | 1.4 | 1 day |
-| **Part 2** | Part 1 | |
+| **Part 2** | Part 1 merged | |
 | 2.1 Baseline | – | 0.5 day |
 | 2.2 One source | – | 1 day |
 | 2.3 Toolchain and pilot | 2.2 | 7 days |
 | 2.4 Foundations | 2.3 | 3–4 days |
 | 2.5 Look switch | 2.4 | 0.5 day |
 | 2.6 Port components | 2.4 | 5–7 weeks, with tests |
-| 2.7 Blocks, demos, measurements | 2.6 | 1–2 weeks |
+| 2.7 Blocks, screens, illustrations, motion; demos; measurements | 2.6 | 2–3 weeks |
 | 2.8 Verification | 2.6, 2.7 | 3–5 days, partly manual |
 
 Part 1 is about 7–8 days; 1.4–1.7 touch different files from 1.1–1.3 and can run alongside them. 2.1 can run during
-Part 1 (it only measures). Part 2 is about 6–10 weeks for one developer; the pilot's measured time per component
+Part 1 (it only measures). Part 2 is about 7–11 weeks for one developer; the pilot's measured time per component
 refines it.
