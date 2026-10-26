@@ -333,6 +333,15 @@ Agents first, in the order of the tables, starting with the ones that build on p
 `tc-mention-picker` and `tc-context-tray` first, since chat-composer uses them. `tc-code-block` comes before
 `tc-artifact-panel`, which uses it. Each component is one commit with its tests, demo and CHANGELOG entry.
 
+*Done differently (2026-10-26):* built by 9 agents in parallel from `audit/new-component-brief.md` (pairs, with
+code-block before artifact-panel in one agent), each one screenshotted in both looks and themes and at 320 px
+against the components it builds on; committed one per component in the order above. chat-composer embeds
+mention-picker and context-tray as opt-ins (`mentions`, `context`), so its default rendering – and its parity with
+the React version blocks and screens still use – is unchanged. Verified like Part 2: axe on every gallery entry
+in three engines and the forced-colours script (112 entries, 1,031 controls). Not done: VoiceOver (as in 2.8), and
+the tokens the agents asked for (a syntax palette, `--tc-surface-well`, a solid accent, a popover z-index) – listed
+in the PR.
+
 ## Decisions (2026-10-25)
 
 | | Question | Decision |

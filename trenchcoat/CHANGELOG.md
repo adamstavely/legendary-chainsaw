@@ -1,5 +1,39 @@
 # Changelog
 
+## Unreleased – remediation Part 3 (new components)
+
+See `audit/remediation-plan.md`, Part 3. Each is a Lit element with both looks, a React wrapper in `trenchcoat/react`,
+browser tests in Chromium, Firefox and WebKit, and a gallery demo.
+
+### Added
+
+- `tc-run-checkpoints` – a run's restore points as a list and a timeline: what each point captured, what going back discards (steps, file changes, tokens, cost), a note for the retry, and `restorer` that may return a promise. Listbox keyboard; `tc-selected-change`, `tc-restore`.
+- `tc-budget-guard` – spend and token caps for a live run: a big meter and thin ones, the pace to the cap, a warning with Raise to buttons at `warnAt`, and a hard stop with an alert. `tc-limits-change` (cancelable), `tc-cap-reach` once per cap, `tc-stop`.
+- `tc-handoff` – the agent hands the task to a person: what it did, why it stopped, what it needs; Take over turns the needs into a checklist with a note, Hand back folds it to one line. ⌘/Ctrl+Enter; `tc-status-change`, `tc-checked-change`, `tc-note-change`, `tc-return`.
+- `tc-live-view` – the agent's screen (frames, a live video or canvas, or your own content) with its pointer, clicks, typing and keys drawn on top, a step caption, and Pause / Take over; your clicks are reported in frame pixels while you have control.
+- `tc-sandbox-log` – sandbox command output: a block per step with command, exit code and time; ANSI colours (16, 256 and true colour) mapped to tokens, never parsed as HTML; incremental parsing while it streams; copy and search; windowed (50,000 lines render under 400 rows).
+- `tc-code-block` – a streaming code block: a small tokenizer per language (TS/JS, Python, JSON, HTML, CSS, shell) re-highlighting only changed lines, Copy, Apply, and a line diff against `current` with folded unchanged runs. Toolbar keyboard; `tc-view-change`, `tc-copy`, `tc-apply`.
+- `tc-artifact-panel` – what a run produced: a list, a preview per kind (Markdown text, code through `tc-code-block`, images, tables from CSV), versions with a diff against the one before, and download (a Blob by default, cancelable).
+- `tc-run-compare` – two runs or prompt versions side by side: outputs and prompts word-diffed with inline-diff's Myers diff, steps aligned and marked Added / Dropped / Changed, cost, time and tokens marked better or worse. Tabs; `tc-view-change`, `tc-pick`.
+- `tc-tool-permissions` – a grid of agents × tool scopes, allow / ask / deny per cell (a destructive scope never offers allow), presets, a Custom state, and a summary of changes against `saved`. WAI-ARIA grid; `tc-value-change` with the cause, `tc-save`.
+- `tc-trigger-builder` – an event or a schedule, an active window, conditions with all/any, a plain-language summary and the next run times; form-associated (JSON under `name`, validity, reset). Built from combobox, date-range-picker and segmented-control.
+- `tc-mention-picker` – the / and @ picker for a textarea, input or contenteditable: grouped, scored results, the field keeps focus (aria-activedescendant), ↵ / Tab insert a token or a chip, and the composer's Enter-to-send never sees that ↵. `search` may be async.
+- `tc-context-tray` – what's in context as chips with token weights, a meter against the window with a reserved share, pin, remove with undo (⌘/Ctrl+Z), and a warning near the limit. Toolbar keyboard; `tc-items-change` (cancelable).
+- `tc-conversation-branches` – edit a past message to fork the conversation; a 2 / 3 switcher on the edited message, each branch's replies (with `tc-message-actions`) below, and `tc-edit` answered with the new replies or a promise of them.
+- `tc-chat-history` – conversations grouped by Pinned, folders, Today … month: search, rename in place (F2), pin, move, delete with undo, a context menu; the WAI-ARIA tree pattern, windowed (10,000 chats render under 120 rows).
+- `tc-voice-mode` – a voice conversation: `tc-voice-orb` for the state, live captions that announce finished turns once, and Mute / Captions / Interrupt / End in a toolbar; Esc interrupts. The audio stays the app's.
+- `tc-answer-arena` – two models' answers streamed side by side, then A / B / tie with a reason; blind mode reveals the names after the vote. `tc-value-change` (cancelable).
+- `tc-image-grid` – generated images as a grid: pending, done and failed tiles, regenerate, upscale, download (saves by default), compare two with a keyboard slider, and required, editable alt text. WAI-ARIA grid.
+- chat-composer (the Lit element and `trenchcoat/react`): opt-in `mentions` (a `tc-mention-picker` on the message)
+  and `context` / `context-limit` (a `tc-context-tray` above it). Without them it renders as before.
+
+### Checks
+
+- The ratchet counts any reference to `Date.now`, not only calls – an alias (`const read = Date.now`) or
+  `Date.now.call(Date)` used to get past it. chat-history and trigger-builder read the clock once when they connect
+  (the default for `now`), recorded in the baseline.
+- The gallery's spacing between its own sections no longer reaches sections inside a component's stage.
+
 ## Unreleased – remediation Part 2 (the shift to Lit)
 
 See `audit/remediation-plan.md`, Part 2, and `audit/lit-port-plan.md`.
