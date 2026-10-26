@@ -92,3 +92,25 @@ touches only its own files.
 
 Per component: done or not; parity per case; test count; API differences from the React component (there should
 be none on the wrapper); shared-file changes you needed; anything left undone or uncertain. Keep it short.
+
+## Illustrations and motion (step 2.7)
+
+The same recipe, with these differences:
+
+- Sources are `illustrations/<slug>.tsx` and `motion/<slug>.tsx`; the element still goes in
+  `src/elements/<slug>.ts` (no slug clashes with the components), tag `tc-<slug>`, wrapper in
+  `src/elements/react/<slug>.ts`. They have one look: extend TcElement as usual, ignore `look`.
+- Read "What the other 61 ports added" in `audit/lit-patterns.md` first – especially `useControlled` (fixed in
+  `react/internal.ts`: use it, no local copies), member names that shadow `Element`, cloned-SVG ids and axe after
+  animations.
+- Parity: `node scripts/compare-lit.mjs illustrations/<slug>` or `motion/<slug>`.
+- Tests to port: `tests/contract/{illustrations,motion}/<slug>.contract.tsx`,
+  `tests/regressions/{illustrations,motion}-<slug>.test.tsx` (and `glow-keyboard.test.tsx` for glow-keyboard), and
+  your component's case in `tests/regressions/illustrations-i1-theme.test.tsx` (dark mode follows `light-dark()` and
+  `data-tc-theme`; decorative loops are finite).
+- Smoke: `npx vitest run --project react tests/smoke.test.tsx -t "<illustrations|motion>/<slug>"`.
+- Motion pieces wrap other content (text, cards): the wrapped content is the caller's children and stays where the
+  framework put them; text the piece animates itself (text-reveal, gradient-text, number-ticker) is a property.
+  Keep `prefers-reduced-motion` behaviour and the off-screen pause.
+- **Don't retire anything** this round – no deletions, no demo edits: the shared i1-theme test imports ten
+  illustrations at once, so retiring happens in one pass after all ports land.

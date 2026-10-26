@@ -59,15 +59,17 @@ const cases: Case[] = [
   },
 ];
 
-const demos = import.meta.glob<{ default: ComponentType<{ ui: unknown }> }>("./demos/*.tsx");
-const reactModules = import.meta.glob("../../src/components/*.tsx");
+const demos = import.meta.glob<{ default: ComponentType<{ ui: unknown }> }>(["./demos/*.tsx", "./demos/{illustrations,motion}/*.tsx"]);
+const reactModules = import.meta.glob(["../../src/components/*.tsx", "../../{illustrations,motion}/*.tsx"]);
+/** "<slug>" for a component, "illustrations/<slug>" or "motion/<slug>" for the single-look libraries */
+const reactPath = (id: string) => (id.includes("/") ? `../../${id}.tsx` : `../../src/components/${id}.tsx`);
 const demoSlugs = new URLSearchParams(location.search).get("demo")?.split(",").filter(Boolean) ?? [];
 
 /** The demo on the React component and on the wrappers, once both modules have loaded */
 function demoCase(slug: string, loaded: Record<string, { Demo: ComponentType<{ ui: unknown }>; standard: unknown; clean: unknown; lit: unknown }>): Case {
   const m = loaded[slug];
   return {
-    id: slug,
+    id: slug.replace("/", "-"),
     react: (look) => (m ? <m.Demo ui={look === "clean" ? m.clean : m.standard} /> : null),
     lit: (look) => (m ? <LookProvider look={look}><m.Demo ui={m.lit} /></LookProvider> : null),
   };
@@ -80,8 +82,8 @@ function Page() {
       demoSlugs.map(async (slug) => {
         const [demo, standard, clean, lit] = await Promise.all([
           demos[`./demos/${slug}.tsx`]!(),
-          reactModules[`../../src/components/${slug}.tsx`]!(),
-          cleanTwins[slug] ? cleanTwins[slug]() : reactModules[`../../src/components/${slug}.tsx`]!(),
+          reactModules[reactPath(slug)]!(),
+          cleanTwins[slug] ? cleanTwins[slug]() : reactModules[reactPath(slug)]!(),
           import("../../src/elements/react"),
         ]);
         return [slug, { Demo: demo.default, standard, clean, lit }] as const;

@@ -59,5 +59,9 @@ await server.close();
 
 console.log("| Case | Changed pixels | Size (React / Lit) |\n|---|---|---|");
 for (const r of rows) console.log(`| ${r.id} | ${r.pct.toFixed(2)} % | ${r.size}${r.sameSize ? "" : " ⚠"} |`);
+if (!rows.length) {
+  console.error("parity: nothing rendered – is the slug right, and does trenchcoat/react export the demo's component?");
+  process.exit(1);
+}
 const worst = Math.max(...rows.map((r) => r.pct));
 console.log(worst < 1 ? "parity ok: every case under 1 %" : `parity: worst ${worst.toFixed(2)} % – see ${OUT}`);
