@@ -65,6 +65,7 @@ export * from "./react/gradient-floor";
 export * from "./react/gradient-text";
 export * from "./react/grid-background";
 export * from "./react/handoff";
+export * from "./react/image-grid";
 export * from "./react/inline-diff";
 export * from "./react/integration-beam";
 export * from "./react/integration-flow";
