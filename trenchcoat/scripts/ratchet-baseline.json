@@ -86,12 +86,14 @@
   "components/agent-tree-clean.tsx": {
     "unexplained eslint-disable": 1,
     "clock/environment read": 4,
-    "literal spacing": 13
+    "literal spacing": 13,
+    "background-position animation": 1
   },
   "components/agent-tree.tsx": {
     "unexplained eslint-disable": 1,
     "clock/environment read": 4,
-    "literal spacing": 13
+    "literal spacing": 13,
+    "background-position animation": 1
   },
   "components/ai-answer-clean.tsx": {
     "unexplained eslint-disable": 1,
@@ -170,12 +172,14 @@
   "components/comment-thread-clean.tsx": {
     "clock/environment read": 3,
     "literal line-height": 1,
-    "literal spacing": 3
+    "literal spacing": 3,
+    "background-position animation": 1
   },
   "components/comment-thread.tsx": {
     "clock/environment read": 3,
     "literal line-height": 1,
-    "literal spacing": 3
+    "literal spacing": 3,
+    "background-position animation": 1
   },
   "components/comments-panel-clean.tsx": {
     "clock/environment read": 2,
@@ -197,25 +201,29 @@
     "literal duration": 2,
     "literal line-height": 8,
     "literal border-radius": 10,
-    "literal spacing": 17
+    "literal spacing": 17,
+    "background-position animation": 1
   },
   "components/context-map.tsx": {
     "literal duration": 2,
     "literal line-height": 8,
     "literal border-radius": 10,
-    "literal spacing": 17
+    "literal spacing": 17,
+    "background-position animation": 1
   },
   "components/context-window-clean.tsx": {
     "clock/environment read": 1,
     "literal duration": 3,
     "literal border-radius": 1,
-    "literal spacing": 6
+    "literal spacing": 6,
+    "background-position animation": 1
   },
   "components/context-window.tsx": {
     "clock/environment read": 1,
     "literal duration": 3,
     "literal border-radius": 1,
-    "literal spacing": 6
+    "literal spacing": 6,
+    "background-position animation": 1
   },
   "components/data-table-clean.tsx": {
     "clock/environment read": 1,
@@ -266,7 +274,8 @@
     "literal line-height": 1,
     "literal border-radius": 2,
     "literal blurred shadow": 1,
-    "literal spacing": 7
+    "literal spacing": 7,
+    "background-position animation": 1
   },
   "components/dropzone.tsx": {
     "unexplained eslint-disable": 1,
@@ -277,7 +286,8 @@
     "literal line-height": 1,
     "literal border-radius": 2,
     "literal blurred shadow": 1,
-    "literal spacing": 7
+    "literal spacing": 7,
+    "background-position animation": 1
   },
   "components/email-draft-clean.tsx": {
     "literal spacing": 10
@@ -481,7 +491,8 @@
     "literal easing": 3,
     "literal line-height": 1,
     "literal border-radius": 3,
-    "literal spacing": 5
+    "literal spacing": 5,
+    "background-position animation": 1
   },
   "components/thinking-state.tsx": {
     "clock/environment read": 3,
@@ -489,7 +500,8 @@
     "literal easing": 3,
     "literal line-height": 1,
     "literal border-radius": 3,
-    "literal spacing": 5
+    "literal spacing": 5,
+    "background-position animation": 1
   },
   "components/toaster-clean.tsx": {
     "unexplained eslint-disable": 4,
@@ -508,14 +520,16 @@
     "literal duration": 3,
     "literal line-height": 3,
     "literal border-radius": 5,
-    "literal spacing": 8
+    "literal spacing": 8,
+    "background-position animation": 1
   },
   "components/tool-call-card.tsx": {
     "clock/environment read": 2,
     "literal duration": 3,
     "literal line-height": 3,
     "literal border-radius": 5,
-    "literal spacing": 8
+    "literal spacing": 8,
+    "background-position animation": 1
   },
   "components/trace-waterfall-clean.tsx": {
     "clock/environment read": 3,
@@ -541,7 +555,8 @@
     "literal line-height": 5,
     "literal border-radius": 6,
     "literal blurred shadow": 4,
-    "literal spacing": 4
+    "literal spacing": 4,
+    "background-position animation": 1
   },
   "components/writing-assistant.tsx": {
     "literal duration": 10,
@@ -549,7 +564,8 @@
     "literal line-height": 5,
     "literal border-radius": 6,
     "literal blurred shadow": 4,
-    "literal spacing": 4
+    "literal spacing": 4,
+    "background-position animation": 1
   },
   "blocks/agent-gallery.tsx": {
     "literal spacing": 57
@@ -707,6 +723,9 @@
   },
   "illustrations/world-map.tsx": {
     "literal spacing": 4
+  },
+  "motion/gradient-text.tsx": {
+    "background-position animation": 1
   },
   "motion/number-ticker.tsx": {
     "literal spacing": 1

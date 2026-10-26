@@ -144,6 +144,12 @@ The 8 remaining `background-position` sweeps (agent-tree, comment-thread, contex
 thinking-state, tool-call-card, writing-assistant) → the `transform: translateX` pseudo-element used in
 fan-out-grid. Add a ratchet count for `background-position` in keyframes so it stays at 0.
 
+*Done differently (2026-10-25):* all 8 shine across text (`background-clip: text`), which a moving pseudo-element
+can't reproduce without changing how they look. Each is one label, runs 3 cycles and pauses off-screen, so the cost
+the perf audit measured (hundreds of per-item box sweeps, now on `transform`) doesn't apply. context-window's sweep
+was the one that ran forever; it now runs 3 cycles. The ratchet counts `background-position` animations (17 today: the 8
+components in both looks, plus motion's gradient-text), so no new ones are added.
+
 ### 1.6 inline-diff: Myers diff
 
 Replace the capped LCS table with Myers O(ND), so long texts stay word-by-word and the diff is cheaper at 1,000

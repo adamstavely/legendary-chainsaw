@@ -13,6 +13,9 @@
 //   literal blurred shadow a box-shadow layer with a blur > 0 written by hand – use --tc-shadow-* / pattern tokens
 //   literal spacing        a non-zero px length in padding / margin / gap – use --tc-space-* (1 px, fractions,
 //                          negatives and values 2 px or more off the scale may stay; they're counted here)
+//   background-position animation  a @keyframes that moves background-position – not composited, so it costs a
+//                          style recalc and paint every frame; sweep a pseudo-element with transform instead. The
+//                          ones left shine across text (background-clip: text), which transform can't do.
 //   dark-scoped colour rule a rule under .dark / [data-theme="dark"] / [data-tc-theme="dark"] that sets a colour – use light-dark() in the light rule (it also works with OS / system dark)
 
 /** Replace every var(--tc-…[, fallback]) with VAR, balancing parentheses */
@@ -88,6 +91,19 @@ export const TOKEN_RULES = {
     }, 0),
   "literal spacing": (s) =>
     values(blankTokens(s), both(SPACING)).reduce((n, v) => n + [...v.matchAll(/(?<![\w.#])-?(\d*\.?\d+)px\b/g)].filter((m) => +m[1] !== 0).length, 0),
+  "background-position animation": (s) => {
+    let n = 0;
+    for (const m of s.matchAll(/@keyframes\s+[\w-]+\s*\{/g)) {
+      let depth = 1;
+      let i = m.index + m[0].length;
+      for (; i < s.length && depth; i++) {
+        if (s[i] === "{") depth++;
+        else if (s[i] === "}") depth--;
+      }
+      if (/background-position/.test(s.slice(m.index, i))) n++;
+    }
+    return n;
+  },
   "dark-scoped colour rule": (s) =>
     [...s.matchAll(/([^{}]*)\{([^{}]*)\}/g)].filter(
       ([, selector, body]) => /\.dark\b|\[data-(?:tc-)?theme=["']?dark/.test(selector) && COLOUR.test(body.replace(/color-scheme\s*:[^;]*;?/g, "")),

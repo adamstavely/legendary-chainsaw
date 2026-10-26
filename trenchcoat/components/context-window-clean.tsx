@@ -1399,7 +1399,7 @@ const css = /* css */ `
   background: linear-gradient(90deg, transparent 38%, var(--tc-shimmer, var(--_tc-shimmer)) 50%, transparent 62%) 100% 0 / 300% 100% no-repeat;
   -webkit-background-clip: text;
   background-clip: text;
-  animation: ui-cw-sweep var(--tc-duration-shimmer, var(--_tc-duration-shimmer)) linear infinite;
+  animation: ui-cw-sweep var(--tc-duration-shimmer, var(--_tc-duration-shimmer)) linear 3;
   pointer-events: none;
 }
 @keyframes ui-cw-leave { to { opacity: 0; filter: blur(3px); transform: scale(0.92); } }
