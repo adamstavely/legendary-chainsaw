@@ -12,13 +12,15 @@ chosen with the `look` property. How real apps receive the package is
 decided after this plan is done (the build and the `examples/` apps install the packed tarball locally); nothing in
 the plan depends on it.
 
-**Order.** The work splits in two:
+**Order.** The work splits in three:
 
 - **Part 1 – work that carries over to Lit unchanged** (CSS, tokens, data and plain TypeScript), done first on the
   current React source, so the port starts from the finished design.
 - **Part 2 – the shift to Lit**, which also absorbs everything whose form changes with Lit (the package build,
   the gallery look switch, the CI checks, the demos, the measurements and the verification), so none of it is
   done twice.
+- **Part 3 – new components**, 17 of them for agents and AI chat, built directly as Lit elements once Part 2's
+  foundations exist, so none is written twice.
 
 **Not in this plan: blocks and screens.** They get their own phase after Parts 1 and 2 are done, planned then. Until
 that phase they're left as they are – React, in `blocks/` and `screens/`, on the React components – and every step
@@ -274,6 +276,48 @@ until the later phase moves blocks and screens off them. Folded into the port:
   tree-shaking, `tokens.css`, client-only loading in Next.js and Nuxt, types and events, with webpack and Vite
   builds.
 
+## Part 3 – New components
+
+Built directly as Lit elements, after Part 2 – they use its toolchain, controllers, patterns (decisions L1–L16 in
+[lit-port-plan.md](lit-port-plan.md)), test harness and package build. Each one gets what every ported component
+has: both looks, light / dark / system, the pattern tokens and scales, keyboard support and ARIA from the WAI-ARIA
+patterns, forced-colours support, `prefers-reduced-motion`, the value-property and event conventions, contract
+tests, a gallery demo, the axe scan, an entry in `custom-elements.json` and a React wrapper. Part 3 is one pull
+request, like the other parts.
+
+### 3.1 Agents
+
+| Component | What it is | Builds on |
+|---|---|---|
+| `tc-run-checkpoints` | A timeline of an agent run with restore points – "go back to step 4 and try again" – showing what each point captured and what restoring discards | agent-plan's step list, trace-waterfall's timeline |
+| `tc-budget-guard` | Spend and token limits for a live run: progress against the cap, a warning as it nears it, a hard stop at it, and raising the cap from the warning | usage-meter covers plan usage, not live runs |
+| `tc-handoff` | The agent hands control to a person mid-task with the context it has (what it did, why it stopped, what it needs), and takes it back when they're done | approval-card, permission-request |
+| `tc-live-view` | A stream of the agent's screen (browser or computer use) with its clicks and typing drawn on top, a step caption, and Pause / Take over | agent-cursors' pointer and typing overlays |
+| `tc-sandbox-log` | Command output from an agent's sandbox: one collapsible block per step with the command, exit code and duration, streaming text, ANSI colours mapped to tokens, copy and search; windowed for long logs | tool-call-card, the row-window controller |
+| `tc-artifact-panel` | The files, code and documents a run produced: a list, a preview per type (text, code, image, table), versions with a diff between them, download | inline-diff, the streaming code block (3.2) |
+| `tc-run-compare` | Two runs, or two prompt versions, side by side – outputs, steps, cost and time – with the differences highlighted | inline-diff; screens/evals does this as a screen |
+| `tc-tool-permissions` | A matrix of which agent may use which tools and scopes (allow / ask / deny per cell), with presets and a summary of what changed | permission-request covers asking at run time, not setup |
+| `tc-trigger-builder` | "Run when X happens, or every Monday at 9": event or schedule, conditions, a plain-language summary and the next run times | date-range-picker, combobox, filter-menu |
+
+### 3.2 AI & chat
+
+| Component | What it is | Builds on |
+|---|---|---|
+| `tc-context-tray` | Chips for the files, @-mentions and sources in context, each with its token weight; remove, pin, and a total against the window | context-window shows totals, not individual attachments |
+| `tc-mention-picker` | The slash-command and @-mention picker inside the composer: grouped results, keyboard navigation, inserts a chip | command-menu, combobox; used by chat-composer |
+| `tc-conversation-branches` | Edit a past message and switch between the forks: "2 / 3" switcher on the edited message, the branch's messages below | message-actions |
+| `tc-chat-history` | The conversation list: search, pinning, folders, rename and delete with undo, grouped by date; windowed | filter-menu, the row-window controller |
+| `tc-voice-mode` | The voice conversation controller: live transcript, speaking / listening state, interrupt, mute, end; captions for every turn | writing-assistant's dictation; voice-orb is only the visual |
+| `tc-answer-arena` | Two models' answers to the same prompt side by side, streamed together, with "A is better / B is better / tie" and a reason | ai-answer, model-picker |
+| `tc-code-block` | A streaming code block: syntax colours from tokens, Copy, Apply, and a diff against the current file before applying | inline-diff |
+| `tc-image-grid` | Generated images: a grid of variations, upscale, regenerate one tile, compare, download; alt text for each | dropzone's preview |
+
+### 3.3 Order
+
+Agents first, in the order of the tables, starting with the ones that build on ported pieces; within 3.2,
+`tc-mention-picker` and `tc-context-tray` first, since chat-composer uses them. `tc-code-block` comes before
+`tc-artifact-panel`, which uses it. Each component is one commit with its tests, demo and CHANGELOG entry.
+
 ## Decisions (2026-10-25)
 
 | | Question | Decision |
@@ -287,6 +331,7 @@ until the later phase moves blocks and screens off them. Folded into the port:
 | I | Working copy and PRs | **`~/Documents/GitHub/legendary-chainsaw`**, with trenchcoat's separate `.git` retired (step 0). **One pull request per part.** `icon-composer/` in the same repo is never touched. |
 | J | Frameworks | React 19 and Next.js, Vue 3 and Nuxt, Angular, Svelte 5 and plain HTML, each with an `examples/` app |
 | K | Screen readers | **VoiceOver only, run by Claude.** NVDA isn't tested – a known gap. |
+| L | New components | **17 new components** (9 for agents, 8 for AI & chat), built as Lit elements in Part 3, after Part 2 (2026-10-26). |
 | B | Which way do the half-step font sizes fold? | **Round down:** 11.5 → 11, 12.5 → 12, 13.5 → 13 px, in both looks |
 | C | The judgement calls in item 15 | **As recommended:** fix breakdown-chart's palette, the fan-out-grid and agent-queue targets and the date-range band; keep context-map's tiles as they are (name and kind are in the hover/focus card) |
 
@@ -314,14 +359,18 @@ until the later phase moves blocks and screens off them. Folded into the port:
 | 2.6 Port components | 2.4 | 5–7 weeks, with tests |
 | 2.7 Illustrations and motion; demos; measurements | 2.6 | 1 week |
 | 2.8 Verification | 2.6, 2.7 | 3–5 days, partly manual |
+| **Part 3** | Part 2 merged | |
+| 3.1 Agents (9) | 2.4 | 3–4 weeks |
+| 3.2 AI & chat (8) | 2.4 | 3–4 weeks |
 
 Part 1 is about 7 days; 1.4–1.7 touch different files from 1.1–1.3 and can run alongside them. 2.1 can run during
 Part 1 (it only measures). Part 2 is about 6–9 weeks for one developer; the pilot's measured time per component
-refines it.
+refines it. Part 3 is about 6–8 weeks (17 components at 1.5–3 days each, with tests and demos); 3.1 and 3.2 touch
+different files and can run in parallel.
 
 ## Later: blocks and screens
 
-Planned when Parts 1 and 2 are done. Recorded here so nothing is lost:
+Planned when Parts 1, 2 and 3 are done. Recorded here so nothing is lost:
 
 - Part 1's CSS work on blocks and screens: the type scale (then removing the three deprecated `-plus` font tokens),
   spacing and the remaining literals.
