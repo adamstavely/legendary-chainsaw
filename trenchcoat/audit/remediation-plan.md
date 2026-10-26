@@ -5,7 +5,7 @@
 Planning only – nothing here has been started.
 
 **Direction.** Trenchcoat ships as an npm package that apps install and import, and apps in other frameworks will
-use it too, so the components move to **Lit 3 web components** ([lit-spike-plan.md](lit-spike-plan.md)). `src/`
+use it too, so the components move to **Lit 3 web components** ([lit-port-plan.md](lit-port-plan.md)). `src/`
 becomes the only source; the generated `components/` folder and its `-clean` copies go away, and the look is
 chosen with the `look` property.
 
@@ -127,25 +127,18 @@ in 2.8.
 
 ## Part 2 – The shift to Lit
 
-Details of the toolchain (Lit 3, TypeScript with standard decorators, ts-lit-plugin in the editor, lit-analyzer in
-CI) and of the spike are in [lit-spike-plan.md](lit-spike-plan.md). Everything whose form changes with Lit is done
-here.
+The toolchain (Lit 3, TypeScript with standard decorators, ts-lit-plugin in the editor, lit-analyzer in CI), the
+pilot components and the questions they settle are in [lit-port-plan.md](lit-port-plan.md). Everything whose form
+changes with Lit is done here.
 
 ### 2.1 React baseline measurements
 
 Move the perf bench from the session scratchpad into `scripts/perf/` (it will otherwise be lost) and record the
-React numbers the spike and the port are compared against: per-component size, data-table at 10,000 rows, combobox
-at 5,000 options, fan-out-grid and trace-waterfall CPU at 1,000 / 5,000 items, off-screen animation count, mount
-time per instance. This replaces the earlier draft's re-measurement step; React render budgets without demo timers are
-dropped (Lit has its own update cycle – see 2.7).
+React numbers the port is compared against: per-component size, data-table at 10,000 rows, combobox at 5,000
+options, fan-out-grid and trace-waterfall CPU at 1,000 / 5,000 items, off-screen animation count, mount time per
+instance. React render budgets without demo timers are dropped (Lit has its own update cycle – see 2.7).
 
-### 2.2 The spike
-
-Port Button, Combobox and Data Table and answer the 12 questions in the spike plan (shadow or light DOM, content
-projection, forms, styles and looks, framework use, server rendering, performance, size, value properties,
-testing, typed templates, porting effort). 5 days. Its results set the decisions the rest of Part 2 follows.
-
-### 2.3 One source, no `components/`
+### 2.2 One source, no `components/`
 
 - Move the one component that exists only in `components/` – `components/plan-vs-actual-clean.tsx`, hand-written
   and Clean only – to `src/components/plan-vs-actual.tsx`.
@@ -157,22 +150,31 @@ testing, typed templates, porting effort). 5 days. Its results set the decisions
 - Delete `components/`, `scripts/build-lib.mjs`, `check:lib` and its CI step. CHANGELOG: breaking – the `-clean`
   files are gone.
 
-Done at the start of the port, so React and Lit components can sit side by side in `src/` while the port runs.
+Done first, so the React components in `src/components/` and the Lit elements in `src/elements/` sit side by side
+while the port runs, with one copy of each.
+
+### 2.3 Toolchain and pilot components
+
+The first steps of [lit-port-plan.md](lit-port-plan.md): set up Lit 3, TypeScript standard decorators,
+ts-lit-plugin, lit-analyzer, the Lit ESLint rules and the manifest analyzer in `npm run ci`; then port Button,
+Combobox and Data Table for real into `src/elements/`, with the `examples/` apps for React, Vue, Angular, Svelte,
+plain HTML, Next.js and Nuxt. The pilot settles the patterns the rest of the port follows – shadow or light DOM,
+content projection, forms, styles and looks, framework use, server rendering, windowing, value properties, the test
+harness – and records them, with code samples and the measured time per component, in `audit/lit-patterns.md`.
+About 7 days.
 
 ### 2.4 Foundations
 
-- The toolchain from the spike: Lit 3, TypeScript standard decorators, ts-lit-plugin, lit-analyzer and the Lit
-  ESLint rules in `npm run ci`, `@custom-elements-manifest/analyzer`.
-- The `src/internal` helpers as reactive controllers (value properties, root ref, hotkeys, on-screen, focus rescue,
-  smooth height, the row window).
+- The remaining `src/internal` helpers as reactive controllers (root ref, hotkeys, on-screen, focus rescue, smooth
+  height, the row window; the value-property controller comes from the pilot).
 - An app-wide default look with `@lit/context` (in place of the planned React provider).
 - The CI checks (ratchet, tokens, prefixes, contrast) read CSS from Lit's `` css`…` `` templates as well as the
   React `/* css */` strings, so they hold during the port and after it.
 - **The package build:** Vite library mode, one module per element, type declarations, `custom-elements.json`, the
-  React integration chosen in the spike (native elements or `@lit/react`), `tokens.css` as the one stylesheet apps
+  React integration settled by the pilot (native elements or `@lit/react`), `tokens.css` as the one stylesheet apps
   import. package.json: drop `private`, `exports` for the components, blocks, screens, illustrations, motion and
-  `tokens.css`, `"sideEffects": ["*.css"]`, a `files` list. A CI step builds the gallery against the package so a
-  broken export fails before publishing.
+  `tokens.css`, `"sideEffects": ["*.css"]`, a `files` list. A CI step builds the gallery and the `examples/` apps
+  against the package, so a broken export fails before publishing.
 
 ### 2.5 Gallery look switch
 
@@ -182,19 +184,20 @@ entries with both looks, and a deep link can carry `?look=clean`. The overview l
 
 ### 2.6 Port the components
 
-The 64 components, simplest first, then menus and fields, then the large agent views. With each component: its
-tests rewritten for the new harness, its demo moved to the element, the axe scan, and a screenshot diff against the
-React version. Folded into the port:
+The other 61 components, simplest first, then menus and fields, then the large agent views, following the pilot's
+patterns. With each component: its tests rewritten for the new harness, its demo moved to the element, the axe
+scan, a screenshot diff against the React version, and then the React component deleted. Folded into the port:
 
-- **filter-menu windowing** – written in Lit with the windowing approach the spike picked (`@lit-labs/virtualizer`
+- **filter-menu windowing** – written in Lit with the windowing approach the pilot settled (`@lit-labs/virtualizer`
   or the row-window controller), above ~300 options.
 - **glass-folder `open` property** (illustrations) – app-shell and assistant-home use it instead of copying its
   hover classes.
 
 ### 2.7 Blocks, screens, illustrations and motion; demos; measurements
 
-- Decide (from the spike) whether blocks and screens become web components or stay React on top of the elements;
-  port illustrations and motion either way, or keep them React if they stay app-level only.
+- Decide whether blocks and screens become web components or stay React on top of the elements (they're app-level
+  layouts, so React-only may be acceptable); port illustrations and motion, or keep them React if they stay
+  app-level only.
 - **Demo paths for the unseen states** (stepper-form review/success, ai-workspace projects, client-context
   empty/create, decision-tree sub-questions), then a runtime "selector never matched" pass across all demos and
   delete what stays unmatched.
@@ -204,20 +207,21 @@ React version. Folded into the port:
 ### 2.8 Verification
 
 - Axe in light and dark, both looks, every element, in Chromium, Firefox and WebKit.
-- Forced colours re-checked on the elements (the 1.8 rules, now inside shadow roots if the spike chose them).
+- Forced colours re-checked on the elements (the 1.8 rules, now inside shadow roots where the pilot chose shadow
+  DOM).
 - Screen readers: VoiceOver (Safari) and NVDA (Firefox) on the components with live regions and custom keyboard
   patterns – toaster, combobox, command-menu, data-table, date-range-picker, agent-tree, review-center.
 - The perf bench in Firefox and WebKit and with 4× CPU throttling; INP for combobox open, command-menu typing,
   data-table sort.
-- `npm pack` into sample apps – React 19, Vue 3, Angular, Svelte 5, plain HTML, Next.js and Nuxt (webpack and Vite
-  builds): tree-shaking, `tokens.css`, server rendering, types and events.
+- The `examples/` apps on every element: tree-shaking, `tokens.css`, server rendering, types and events, with
+  webpack and Vite builds.
 
 ## Decisions (2026-10-25)
 
 | | Question | Decision |
 |---|---|---|
 | A | How do the looks ship? | **Revised: one npm package, one module per component carrying both looks, chosen with the `look` property.** `src/` is the only source; `components/` and the `-clean` copies are deleted; the gallery gets a look switch. (Was: single-look files – that suited copy-paste files, not a package.) |
-| D | What is the component layer? | **Lit 3 web components**, in TypeScript with standard decorators, ts-lit-plugin in the editor and lit-analyzer in CI, subject to the spike (Part 2.2). Stencil was compared and dropped. |
+| D | What is the component layer? | **Lit 3 web components**, in TypeScript with standard decorators, ts-lit-plugin in the editor and lit-analyzer in CI. Committed – no spike; three pilot components (step 2.3) settle the patterns. Stencil was compared and dropped. |
 | E | In what order? | **Carry-over work first (Part 1), then the shift to Lit (Part 2)**, which absorbs everything whose form changes with Lit. |
 | B | Which way do the half-step font sizes fold? | **Round down:** 11.5 → 11, 12.5 → 12, 13.5 → 13 px, in both looks |
 | C | The judgement calls in item 15 | **As recommended:** fix breakdown-chart's palette, the fan-out-grid and agent-queue targets and the date-range band; keep context-map's tiles as they are (name and kind are in the hover/focus card) |
@@ -237,15 +241,14 @@ React version. Folded into the port:
 | 1.8 Forced colours | 1.4 | 1 day |
 | **Part 2** | Part 1 | |
 | 2.1 Baseline | – | 0.5 day |
-| 2.2 Spike | 2.1 | 5 days |
-| 2.3 One source | 2.2 (go) | 1 day |
-| 2.4 Foundations | 2.2, 2.3 | 3–4 days |
+| 2.2 One source | – | 1 day |
+| 2.3 Toolchain and pilot | 2.2 | 7 days |
+| 2.4 Foundations | 2.3 | 3–4 days |
 | 2.5 Look switch | 2.4 | 0.5 day |
 | 2.6 Port components | 2.4 | 5–7 weeks, with tests |
 | 2.7 Blocks, demos, measurements | 2.6 | 1–2 weeks |
 | 2.8 Verification | 2.6, 2.7 | 3–5 days, partly manual |
 
 Part 1 is about 7–8 days; 1.4–1.7 touch different files from 1.1–1.3 and can run alongside them. 2.1 can run during
-Part 1 (it only measures). Part 2 is the 6–10 weeks estimated in the spike plan, refined by the spike. If the spike
-is a no-go, Part 2 becomes the React package plan instead (2.3 and 2.5 as written, a React package build in place of
-2.4, and 2.6 dropped).
+Part 1 (it only measures). Part 2 is about 6–10 weeks for one developer; the pilot's measured time per component
+refines it.
