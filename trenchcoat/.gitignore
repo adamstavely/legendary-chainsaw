@@ -5,3 +5,9 @@ coverage/
 *.log
 .DS_Store
 .visual/
+
+# Perf bench output (scripts/perf) and its generated harness files
+.perf/
+scripts/perf/bench/entries.gen.ts
+scripts/perf/bench/out.js
+scripts/perf/bench/index.html

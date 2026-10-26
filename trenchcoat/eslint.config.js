@@ -2,7 +2,7 @@ import tseslint from "typescript-eslint";
 import hooks from "eslint-plugin-react-hooks";
 
 export default tseslint.config(
-  { ignores: ["node_modules", "dist", "coverage", ".visual"] },
+  { ignores: ["node_modules", "dist", "coverage", ".visual", ".perf", "scripts/perf"] },
   {
     files: ["**/*.{ts,tsx}"],
     extends: [tseslint.configs.recommended],
