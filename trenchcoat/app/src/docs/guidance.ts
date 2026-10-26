@@ -5,7 +5,8 @@
 //   status: stable                    stable · new · react-twin (a frozen React version still exists)
 //   related: command-menu, filter-menu
 //   ---
-//   ## Overview · ## When to use · ## When not to use · ## Anatomy · ## Looks · ## Keyboard · ## Screen readers ·
+//   ## Overview · ## When to use · ## When not to use · ## Anatomy · ## Looks (or ## Theme, for single-look pieces) ·
+//   ## Keyboard · ## Screen readers ·
 //   ## Content · ## Do · ## Don't · ## Example
 //
 // Anatomy items name a part and the selector that finds it in the demo, so the page can number it on the live stage:

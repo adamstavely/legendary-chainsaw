@@ -15,6 +15,7 @@ const SECTIONS: [string, string][] = [
   ["overview", "Overview"],
   ["anatomy", "Anatomy"],
   ["looks", "Looks"],
+  ["theme", "Theme"],
   ["usage", "Usage"],
   ["api", "API"],
   ["react", "React"],
@@ -26,6 +27,8 @@ const SECTIONS: [string, string][] = [
 ];
 
 const md = (text: string) => ({ __html: marked.parse(text, { async: false }) as string });
+/** A JSDoc description with its inline code and emphasis rendered */
+const Inline = ({ text }: { text: string }) => <span dangerouslySetInnerHTML={{ __html: marked.parseInline(text, { async: false }) as string }} />;
 const kb = (n: number) => `${(n / 1024).toFixed(1)} KB`;
 const FRAMEWORKS: [Framework, string, string][] = [
   ["html", "HTML", "html"],
@@ -169,6 +172,12 @@ export function DocsPage({ entry, section, example }: { entry: Entry; section: s
           </Section>
         )}
 
+        {guide?.sections.Theme && (
+          <Section id="theme" title="Theme" anchorOf={entry.id}>
+            <div className="docs-md" dangerouslySetInnerHTML={md(guide.sections.Theme)} />
+          </Section>
+        )}
+
         {main && (
           <Section id="usage" title="Usage" anchorOf={entry.id}>
             <Usage slug={entry.slug} el={main} guide={guide} api={api!} />
@@ -196,7 +205,7 @@ export function DocsPage({ entry, section, example }: { entry: Entry; section: s
                   {api.react.filter((x) => x.exported).length > 1 && <h3 className="docs-sub">{r.component}</h3>}
                   <Table
                     head={["Prop", "Type", "Description"]}
-                    rows={r.props.map((p) => [<code key="n">{p.name + (p.optional ? "" : "")}</code>, <code key="t" className="docs-type">{p.type}</code>, p.description || <span className="muted">–</span>])}
+                    rows={r.props.map((p) => [<code key="n">{p.name + (p.optional ? "" : "")}</code>, <code key="t" className="docs-type">{p.type}</code>, p.description ? <Inline key="d" text={p.description} /> : <span className="muted">–</span>])}
                   />
                   {r.hides.length > 0 && (
                     <p className="docs-hint muted">
@@ -312,6 +321,8 @@ function has(id: string, guide: Guidance | undefined, api: ApiPage | null) {
       return !!guide?.anatomy.length;
     case "looks":
       return !!s.Looks;
+    case "theme":
+      return !!s.Theme;
     case "usage":
     case "api":
       return !!api?.elements.length;
@@ -401,7 +412,7 @@ function ElementApi({ el, several }: { el: ApiElement; several: boolean }) {
           p.attribute ? <code key="a">{p.attribute}</code> : dash,
           <code key="t" className="docs-type">{p.type}</code>,
           p.default ? <code key="d">{p.default}</code> : dash,
-          p.description || dash,
+          p.description ? <Inline key="d" text={p.description} /> : dash,
         ])}
       />
       {el.events.length > 0 && (
@@ -409,14 +420,14 @@ function ElementApi({ el, several }: { el: ApiElement; several: boolean }) {
           <h4>Events</h4>
           <Table
             head={["Event", "Detail", "Cancelable", "Description"]}
-            rows={el.events.map((e) => [<code key="n">{e.name}</code>, e.detail ? <code key="d" className="docs-type">{e.detail}</code> : dash, e.cancelable ? "Yes" : "No", e.description || dash])}
+            rows={el.events.map((e) => [<code key="n">{e.name}</code>, e.detail ? <code key="d" className="docs-type">{e.detail}</code> : dash, e.cancelable ? "Yes" : "No", e.description ? <Inline key="d" text={e.description} /> : dash])}
           />
         </>
       )}
       {el.slots.length > 0 && (
         <>
           <h4>Slots</h4>
-          <Table head={["Slot", "Description"]} rows={el.slots.map((s) => [<code key="n">{s.name}</code>, s.description || dash])} />
+          <Table head={["Slot", "Description"]} rows={el.slots.map((s) => [<code key="n">{s.name}</code>, s.description ? <Inline key="d" text={s.description} /> : dash])} />
         </>
       )}
       {el.methods.length > 0 && (
@@ -424,7 +435,7 @@ function ElementApi({ el, several }: { el: ApiElement; several: boolean }) {
           <h4>Methods</h4>
           <Table
             head={["Method", "Returns", "Description"]}
-            rows={el.methods.map((m) => [<code key="n">{`${m.name}(${m.params})`}</code>, <code key="r" className="docs-type">{m.returns}</code>, m.description || dash])}
+            rows={el.methods.map((m) => [<code key="n">{`${m.name}(${m.params})`}</code>, <code key="r" className="docs-type">{m.returns}</code>, m.description ? <Inline key="d" text={m.description} /> : dash])}
           />
         </>
       )}
@@ -498,6 +509,12 @@ function Usage({ slug, el, guide, api }: { slug: string; el: ApiElement; guide?:
   );
 }
 
+const stopPresses = (el: HTMLElement | null) => {
+  if (!el || el.dataset.stops) return;
+  el.dataset.stops = "1";
+  for (const type of ["pointerdown", "mousedown", "touchstart"]) el.addEventListener(type, (e) => e.stopPropagation());
+};
+
 /** The live example, with width presets and the anatomy overlay */
 function LiveExample({ entry, anatomy, children }: { entry: Entry; anatomy: AnatomyPart[]; children: ReactNode }) {
   const [width, setWidth] = useState<"320" | "480" | "full">("full");
@@ -537,7 +554,8 @@ function LiveExample({ entry, anatomy, children }: { entry: Entry; anatomy: Anat
 
   return (
     <div className="docs-example">
-      <div className="docs-example-bar">
+      {/* The bar's presses don't reach the page, so a demo's open popup doesn't take them for an outside click */}
+      <div className="docs-example-bar" ref={stopPresses}>
         <div className="seg" role="radiogroup" aria-label="Preview width">
           {(["320", "480", "full"] as const).map((w) => (
             <button key={w} role="radio" aria-checked={width === w} className={width === w ? "on" : ""} onClick={() => setWidth(w)}>
