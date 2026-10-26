@@ -436,7 +436,7 @@ const css = /* css */ `
   --tc-voice-orb-blink: 1.2s;
   display: inline-grid;
   justify-items: center;
-  gap: 2px;
+  gap: var(--tc-space-0-5, 2px);
   margin: 0;
   padding: 0;
   border: 0;
@@ -454,7 +454,7 @@ button.ui-vo:active .ui-vo__canvas { transform: scale(0.97); }
 .ui-vo__label { height: 20px; overflow: hidden; font-size: var(--tc-font-size-md, 13px); font-weight: var(--tc-font-weight-medium, 500); line-height: var(--tc-line-height-normal, 20px); color: var(--tc-text-muted, light-dark(#646464, #9a9aa1)); white-space: nowrap; }
 .ui-vo__label > span { display: inline-flex; align-items: baseline; gap: 1px; animation: ui-vo-in var(--tc-duration-slow, 320ms) var(--tc-ease-emphasized, cubic-bezier(0.32, 0.72, 0.24, 1)) both; }
 .ui-vo[data-state="listening"] .ui-vo__label, .ui-vo[data-state="speaking"] .ui-vo__label { color: var(--tc-text-primary, light-dark(#171717, #ededed)); }
-.ui-vo__dots { display: inline-flex; gap: 2px; margin-left: 2px; }
+.ui-vo__dots { display: inline-flex; gap: var(--tc-space-0-5, 2px); margin-left: var(--tc-space-0-5, 2px); }
 .ui-vo__dots i { width: 2.5px; height: 2.5px; border-radius: 50%; background: currentColor; animation: ui-vo-blink var(--tc-voice-orb-blink) var(--tc-ease-standard, ease) 4; }
 .ui-vo__dots i:nth-child(2) { animation-delay: var(--tc-duration-fast, 150ms); }
 .ui-vo__dots i:nth-child(3) { animation-delay: var(--tc-duration-slow, 320ms); }

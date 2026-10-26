@@ -701,7 +701,7 @@ const css = /* css */ `
   min-width: 0;
   color: var(--tc-text-muted);
   font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  font-size: var(--tc-font-size-md-plus);
+  font-size: var(--tc-font-size-md);
   line-height: 1.4;
   letter-spacing: -0.006em;
   -webkit-font-smoothing: antialiased;
@@ -755,10 +755,10 @@ const css = /* css */ `
   box-sizing: border-box;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--tc-space-2-5);
   width: 100%;
   min-height: 44px;
-  padding: 8px 10px 8px 9px;
+  padding: var(--tc-space-2) var(--tc-space-2-5) var(--tc-space-2) var(--tc-space-2);
   border-radius: var(--tc-radius-xl);
   cursor: pointer;
   transition: background-color var(--tc-duration-fast) var(--tc-ease-standard);
@@ -786,7 +786,7 @@ const css = /* css */ `
   flex: none;
   width: 26px;
   height: 26px;
-  border-radius: 7px;
+  border-radius: var(--tc-radius-sm);
   background: var(--tc-tool-call-card-tc-tile);
   box-shadow: inset 0 0 0 1px var(--tc-border-default);
   color: var(--tc-text-primary);
@@ -798,10 +798,10 @@ const css = /* css */ `
   box-sizing: border-box;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--tc-space-2-5);
   width: 100%;
   min-height: 44px;
-  padding: 0 14px;
+  padding: 0 var(--tc-space-3-5);
   border-radius: var(--tc-radius-lg);
   cursor: pointer;
   transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), border-radius 0ms linear var(--tc-duration-slower);
@@ -830,7 +830,7 @@ const css = /* css */ `
 .ui-tc__main {
   display: flex;
   align-items: baseline;
-  gap: 8px;
+  gap: var(--tc-space-2);
   flex: 1;
   min-width: 0;
 }
@@ -840,7 +840,7 @@ const css = /* css */ `
   overflow: hidden;
   color: var(--tc-text-primary);
   font-family: var(--tc-font-mono);
-  font-size: var(--tc-font-size-sm-plus);
+  font-size: var(--tc-font-size-sm);
   font-weight: var(--tc-font-weight-medium);
   letter-spacing: 0;
   text-overflow: ellipsis;
@@ -857,10 +857,10 @@ const css = /* css */ `
 :where([data-look="standard"], [data-look="standard"] *).ui-tc__status {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--tc-space-1-5);
   flex: none;
   color: var(--tc-text-muted);
-  font-size: var(--tc-font-size-sm-plus);
+  font-size: var(--tc-font-size-sm);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
   animation: ui-tc-in var(--tc-duration-slow) var(--tc-ease-move) both;
@@ -889,7 +889,7 @@ const css = /* css */ `
 :where([data-look="clean"], [data-look="clean"] *).ui-tc__status {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--tc-space-1-5);
   flex: none;
   color: var(--tc-text-muted);
   font-size: var(--tc-font-size-sm);
@@ -953,26 +953,26 @@ const css = /* css */ `
 .ui-tc__clip { min-height: 0; overflow: hidden; }
 :where([data-look="standard"], [data-look="standard"] *).ui-tc__sections {
   display: grid;
-  gap: 12px;
-  padding: 12px;
+  gap: var(--tc-space-3);
+  padding: var(--tc-space-3);
   border-top: 1px solid var(--tc-border-default);
 }
 :where([data-look="clean"], [data-look="clean"] *).ui-tc__sections {
   display: grid;
-  gap: 14px;
-  padding: 12px 14px 14px;
+  gap: var(--tc-space-3-5);
+  padding: var(--tc-space-3) var(--tc-space-3-5) var(--tc-space-3-5);
   border-top: 0.5px solid var(--tc-border-default);
 }
-.ui-tc__section { display: grid; gap: 6px; min-width: 0; }
+.ui-tc__section { display: grid; gap: var(--tc-space-1-5); min-width: 0; }
 :where([data-look="standard"], [data-look="standard"] *).ui-tc__section-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: var(--tc-space-2);
   min-height: 24px;
 }
 :where([data-look="standard"], [data-look="standard"] *).ui-tc__label { color: var(--tc-text-muted); font-size: var(--tc-font-size-sm); font-weight: var(--tc-font-weight-medium); }
-:where([data-look="standard"], [data-look="standard"] *).ui-tc__pending { margin: 0; color: var(--tc-text-muted); font-size: var(--tc-font-size-sm-plus); }
+:where([data-look="standard"], [data-look="standard"] *).ui-tc__pending { margin: 0; color: var(--tc-text-muted); font-size: var(--tc-font-size-sm); }
 :where([data-look="standard"], [data-look="standard"] *).ui-tc__copy {
   all: unset;
   position: relative;
@@ -1000,7 +1000,7 @@ const css = /* css */ `
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: var(--tc-space-2);
   min-height: 28px;
 }
 /* Tiny uppercase labels: "ARGUMENTS", "RESULT" */
@@ -1049,7 +1049,7 @@ const css = /* css */ `
 :where([data-look="standard"], [data-look="standard"] *).ui-tc__code {
   position: relative;
   margin: 0;
-  padding: 10px 12px;
+  padding: var(--tc-space-2-5) var(--tc-space-3);
   overflow: hidden;
   border-radius: var(--tc-radius-md);
   background: var(--tc-tool-call-card-code-bg);
@@ -1067,7 +1067,7 @@ const css = /* css */ `
 :where([data-look="clean"], [data-look="clean"] *).ui-tc__code {
   position: relative;
   margin: 0;
-  padding: 10px 12px;
+  padding: var(--tc-space-2-5) var(--tc-space-3);
   overflow: hidden;
   border-radius: var(--tc-radius-md);
   background: var(--tc-tool-call-card-code-bg);
@@ -1089,7 +1089,7 @@ const css = /* css */ `
   right: 1px;
   bottom: 1px;
   height: 56px;
-  border-radius: 0 0 7px 7px;
+  border-radius: 0 0 var(--tc-radius-sm) var(--tc-radius-sm);
   background: linear-gradient(to bottom, transparent, var(--tc-tool-call-card-code-bg));
   opacity: 0;
   transition: opacity var(--tc-duration-moderate) var(--tc-ease-standard);
@@ -1116,11 +1116,11 @@ const css = /* css */ `
 :where([data-look="standard"], [data-look="standard"] *).ui-tc__more {
   all: unset;
   justify-self: start;
-  padding: 2px 4px;
+  padding: var(--tc-space-0-5) var(--tc-space-1);
   margin-left: -4px;
-  border-radius: 5px;
+  border-radius: var(--tc-radius-xs);
   color: var(--tc-text-muted);
-  font-size: var(--tc-font-size-sm-plus);
+  font-size: var(--tc-font-size-sm);
   font-weight: var(--tc-font-weight-medium);
   cursor: pointer;
   transition: color var(--tc-duration-fast) var(--tc-ease-standard);
@@ -1129,13 +1129,13 @@ const css = /* css */ `
 :where([data-look="standard"], [data-look="standard"] *).ui-tc__error {
   display: flex;
   align-items: flex-start;
-  gap: 8px;
-  padding: 9px 10px 9px 11px;
+  gap: var(--tc-space-2);
+  padding: var(--tc-space-2) var(--tc-space-2-5) var(--tc-space-2) var(--tc-space-3);
   border-radius: var(--tc-radius-md);
   background: var(--tc-tool-call-card-error-bg);
   box-shadow: inset 0 0 0 1px var(--tc-status-danger-border);
 }
-:where([data-look="standard"], [data-look="standard"] *).ui-tc__error > .ui-tc__err { flex: none; width: 14px; height: 14px; margin-top: 2px; fill: none; stroke-linecap: round; }
+:where([data-look="standard"], [data-look="standard"] *).ui-tc__error > .ui-tc__err { flex: none; width: 14px; height: 14px; margin-top: var(--tc-space-0-5); fill: none; stroke-linecap: round; }
 :where([data-look="standard"], [data-look="standard"] *).ui-tc__error-text {
   flex: 1;
   min-width: 0;
@@ -1150,7 +1150,7 @@ const css = /* css */ `
   box-sizing: border-box;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--tc-space-1-5);
   flex: none;
   height: var(--tc-control-h-sm);
   padding: 0 var(--tc-control-px-sm) 0 calc(var(--tc-control-px-sm) - 2px);
@@ -1170,7 +1170,7 @@ const css = /* css */ `
 :where([data-look="clean"], [data-look="clean"] *).ui-tc__more {
   all: unset;
   justify-self: start;
-  padding: 2px 4px;
+  padding: var(--tc-space-0-5) var(--tc-space-1);
   margin-left: -4px;
   border-radius: var(--tc-radius-sm);
   color: var(--tc-text-secondary);
@@ -1184,14 +1184,14 @@ const css = /* css */ `
 :where([data-look="clean"], [data-look="clean"] *).ui-tc__error {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--tc-space-2);
   min-height: 44px;
-  padding: 8px 8px 8px 12px;
+  padding: var(--tc-space-2) var(--tc-space-2) var(--tc-space-2) var(--tc-space-3);
   border-radius: var(--tc-radius-md);
   background: var(--tc-tool-call-card-error-bg);
   box-shadow: inset 0 0 0 0.5px var(--tc-status-danger-border);
 }
-:where([data-look="clean"], [data-look="clean"] *).ui-tc__error > .ui-tc__err { flex: none; align-self: flex-start; width: 16px; height: 16px; margin-top: 6px; }
+:where([data-look="clean"], [data-look="clean"] *).ui-tc__error > .ui-tc__err { flex: none; align-self: flex-start; width: 16px; height: 16px; margin-top: var(--tc-space-1-5); }
 :where([data-look="clean"], [data-look="clean"] *).ui-tc__error-text {
   flex: 1;
   min-width: 0;
@@ -1210,11 +1210,11 @@ const css = /* css */ `
   box-sizing: border-box;
   display: flex;
   align-items: center;
-  gap: 9px;
+  gap: var(--tc-space-2);
   justify-self: start;
   max-width: 100%;
   min-height: 36px;
-  padding: 4px 10px 4px 5px;
+  padding: var(--tc-space-1) var(--tc-space-2-5) var(--tc-space-1) var(--tc-space-1);
   border-radius: var(--tc-radius-lg);
   color: var(--tc-text-muted);
   cursor: pointer;
@@ -1224,7 +1224,7 @@ const css = /* css */ `
 :where([data-look="standard"], [data-look="standard"] *).ui-tc-group__stack .ui-tc__icon {
   width: 24px;
   height: 24px;
-  border-radius: 7px;
+  border-radius: var(--tc-radius-sm);
   box-shadow: inset 0 0 0 1px var(--tc-border-default), 0 0 0 2px var(--tc-surface-raised);
   animation: ui-tc-pop var(--tc-duration-slower) var(--tc-ease-move) both;
 }
@@ -1233,7 +1233,7 @@ const css = /* css */ `
 :where([data-look="standard"], [data-look="standard"] *).ui-tc-group__title {
   display: flex;
   align-items: baseline;
-  gap: 5px;
+  gap: var(--tc-space-1);
   min-width: 0;
   white-space: nowrap;
   animation: ui-tc-in var(--tc-duration-slow) var(--tc-ease-move) both;
@@ -1243,12 +1243,12 @@ const css = /* css */ `
   box-sizing: border-box;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--tc-space-2);
   justify-self: start;
   max-width: 100%;
   min-height: 32px;
   margin-left: -6px;
-  padding: 4px 10px 4px 6px;
+  padding: var(--tc-space-1) var(--tc-space-2-5) var(--tc-space-1) var(--tc-space-1-5);
   border-radius: var(--tc-radius-md);
   color: var(--tc-text-primary);
   cursor: pointer;
@@ -1268,7 +1268,7 @@ const css = /* css */ `
 :where([data-look="clean"], [data-look="clean"] *).ui-tc-group__title {
   display: flex;
   align-items: baseline;
-  gap: 6px;
+  gap: var(--tc-space-1-5);
   min-width: 0;
   white-space: nowrap;
   animation: ui-tc-in var(--tc-duration-slow) var(--tc-ease-move) both;
@@ -1284,8 +1284,8 @@ const css = /* css */ `
 :where([data-look="clean"], [data-look="clean"] *).ui-tc-group__label.ui-tc__shine { color: var(--tc-text-muted); }
 .ui-tc-group__failed { flex: none; color: var(--tc-status-danger-fg); }
 .ui-tc-group__time { flex: none; color: var(--tc-text-muted); font-variant-numeric: tabular-nums; }
-:where([data-look="standard"], [data-look="standard"] *).ui-tc-group__list { display: grid; gap: 8px; padding-top: 8px; }
-:where([data-look="clean"], [data-look="clean"] *).ui-tc-group__list { display: grid; gap: 8px; padding: 6px 0 2px; }
+:where([data-look="standard"], [data-look="standard"] *).ui-tc-group__list { display: grid; gap: var(--tc-space-2); padding-top: var(--tc-space-2); }
+:where([data-look="clean"], [data-look="clean"] *).ui-tc-group__list { display: grid; gap: var(--tc-space-2); padding: var(--tc-space-1-5) 0 var(--tc-space-0-5); }
 /* A soft light sweeping over "Using tools…" */
 .ui-tc__shine::after {
   content: attr(data-text);
@@ -1316,8 +1316,8 @@ const css = /* css */ `
 }
 /* Narrow (phones): a little less padding, the summary gives way first */
 @container (max-width: 360px) {
-:where([data-look="clean"], [data-look="clean"] *).ui-tc__head { gap: 8px; padding: 0 12px; }
-:where([data-look="clean"], [data-look="clean"] *).ui-tc__sections { padding: 12px 12px 12px; }
+:where([data-look="clean"], [data-look="clean"] *).ui-tc__head { gap: var(--tc-space-2); padding: 0 var(--tc-space-3); }
+:where([data-look="clean"], [data-look="clean"] *).ui-tc__sections { padding: var(--tc-space-3) var(--tc-space-3) var(--tc-space-3); }
 }
 /* Touch screens: bigger tap targets */
 @media (pointer: coarse) {

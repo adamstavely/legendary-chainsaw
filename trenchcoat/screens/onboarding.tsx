@@ -1120,12 +1120,12 @@ input.ui-ob-input { width: 100%; padding: 0 var(--tc-field-px, 12px); }
   border: 0;
   outline: none;
   font: inherit;
-  font-size: var(--tc-field-font-size, 13.5px);
+  font-size: var(--tc-field-font-size, 13px);
   color: var(--tc-text-primary, light-dark(#171717, #ededed));
 }
 .ui-ob-input input, .ui-ob-chips input { flex: 1; min-width: 0; height: calc(var(--tc-field-h, 36px) - 2px); padding: 0 var(--tc-field-px, 12px) 0 0; background: none; }
 .ui-ob-input::placeholder, .ui-ob-input input::placeholder, .ui-ob-chips input::placeholder { color: var(--tc-text-placeholder, light-dark(#646464, #8e8e95)); }
-.ui-ob-prefix { padding: 0 1px 0 var(--tc-field-px, 12px); font-size: var(--tc-field-font-size, 13.5px); color: var(--tc-text-muted, light-dark(#646464, #9a9aa1)); white-space: nowrap; }
+.ui-ob-prefix { padding: 0 1px 0 var(--tc-field-px, 12px); font-size: var(--tc-field-font-size, 13px); color: var(--tc-text-muted, light-dark(#646464, #9a9aa1)); white-space: nowrap; }
 
 /* Tools: a list of rows, each with a switch */
 .ui-ob-tools { display: grid; margin: -6px -10px 0; padding: 0; list-style: none; }

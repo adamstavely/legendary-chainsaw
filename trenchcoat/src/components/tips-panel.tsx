@@ -220,8 +220,8 @@ const css = /* css */ `
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  gap: 12px;
-  padding: 13px 20px 12px;
+  gap: var(--tc-space-3);
+  padding: var(--tc-space-3) var(--tc-space-5) var(--tc-space-3);
 }
 :where([data-look="standard"], [data-look="standard"] *).ui-tp__title {
   margin: 0;
@@ -247,9 +247,9 @@ const css = /* css */ `
 :where([data-look="standard"], [data-look="standard"] *).ui-tp__grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
+  gap: var(--tc-space-3);
   margin: 0;
-  padding: 14px;
+  padding: var(--tc-space-3-5);
   list-style: none;
 }
 :where([data-look="clean"], [data-look="clean"] *):where(.ui-tp) button { margin: 0; padding: 0; border: 0; background: none; font: inherit; color: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
@@ -261,8 +261,8 @@ const css = /* css */ `
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  padding: 12px 16px;
+  gap: var(--tc-space-3);
+  padding: var(--tc-space-3) var(--tc-space-4);
   border-bottom: var(--tc-hairline) solid var(--tc-divider);
 }
 :where([data-look="clean"], [data-look="clean"] *).ui-tp__title {
@@ -289,9 +289,9 @@ const css = /* css */ `
 :where([data-look="clean"], [data-look="clean"] *).ui-tp__grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
+  gap: var(--tc-space-2);
   margin: 0;
-  padding: 12px;
+  padding: var(--tc-space-3);
   list-style: none;
 }
 @container (max-width: 560px) { .ui-tp__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
@@ -300,7 +300,7 @@ const css = /* css */ `
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 16px 16px 14px;
+  padding: var(--tc-space-4) var(--tc-space-4) var(--tc-space-3-5);
   border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-radius-xl);
   animation: ui-tp-in var(--tc-duration-slower) var(--tc-ease-move) both;
@@ -315,7 +315,7 @@ const css = /* css */ `
 }
 :where([data-look="standard"], [data-look="standard"] *).ui-tp__tip-text {
   flex: 1;
-  margin: 6px 0 14px;
+  margin: var(--tc-space-1-5) 0 var(--tc-space-3-5);
   font-size: var(--tc-font-size-md);
   line-height: var(--tc-line-height-normal);
   color: var(--tc-text-muted);
@@ -325,7 +325,7 @@ const css = /* css */ `
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 12px;
+  padding: var(--tc-space-3);
   border-radius: var(--tc-radius-md);
   box-shadow: inset 0 0 0 var(--tc-hairline) var(--tc-border-default);
   animation: ui-tp-in var(--tc-duration-slower) var(--tc-ease-move) both;
@@ -341,7 +341,7 @@ const css = /* css */ `
 }
 :where([data-look="clean"], [data-look="clean"] *).ui-tp__tip-text {
   flex: 1;
-  margin: 2px 0 12px;
+  margin: var(--tc-space-0-5) 0 var(--tc-space-3);
   font-size: var(--tc-font-size-md);
   line-height: var(--tc-line-height-normal);
   color: var(--tc-text-secondary);
@@ -394,20 +394,20 @@ const css = /* css */ `
 :where([data-look="standard"], [data-look="standard"] *).ui-tp__done {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--tc-space-1-5);
   height: var(--tc-control-h-md);
   font-size: var(--tc-font-size-md);
   font-weight: var(--tc-font-weight-medium);
   color: var(--tc-accent-text);
   animation: ui-tp-pop var(--tc-duration-slow) var(--tc-ease-move);
 }
-:where([data-look="standard"], [data-look="standard"] *).ui-tp__foot { padding: 8px 10px 10px; }
-:where([data-look="standard"], [data-look="standard"] *).ui-tp:not(:has(.ui-tp__foot)) { padding-bottom: 8px; }
+:where([data-look="standard"], [data-look="standard"] *).ui-tp__foot { padding: var(--tc-space-2) var(--tc-space-2-5) var(--tc-space-2-5); }
+:where([data-look="standard"], [data-look="standard"] *).ui-tp:not(:has(.ui-tp__foot)) { padding-bottom: var(--tc-space-2); }
 /* Primary: the dark chip */
 :where([data-look="clean"], [data-look="clean"] *).ui-tp__done {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--tc-space-1-5);
   height: var(--tc-control-h-md);
   font-size: var(--tc-font-size-md);
   font-weight: var(--tc-font-weight-medium);
@@ -419,7 +419,7 @@ const css = /* css */ `
 :where([data-look="clean"], [data-look="clean"] *).ui-tp__foot {
   display: flex;
   justify-content: flex-end;
-  padding: 8px;
+  padding: var(--tc-space-2);
   border-top: var(--tc-hairline) solid var(--tc-divider);
 }
 @keyframes ui-tp-in {

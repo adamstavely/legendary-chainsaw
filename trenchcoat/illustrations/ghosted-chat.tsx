@@ -200,7 +200,7 @@ const css = /* css */ `
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 14px;
+  gap: var(--tc-space-3-5, 14px);
 }
 /* A touch smaller than the frame, so the chat has room to breathe */
 .ui-gc-content {
@@ -210,7 +210,7 @@ const css = /* css */ `
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 14px;
+  gap: var(--tc-space-3-5, 14px);
   transform: scale(0.86);
   transform-origin: 50% 45%;
 }
@@ -251,22 +251,22 @@ const css = /* css */ `
 }
 .ui-gc-bubbles {
   width: 100%;
-  padding-right: 14px;
+  padding-right: var(--tc-space-3-5, 14px);
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 5px;
+  gap: var(--tc-space-1, 4px);
   transition: transform var(--tc-duration-slower, 420ms) var(--tc-ease-move, cubic-bezier(0.22, 1, 0.36, 1));
 }
 .ui-gc-bubble {
   max-width: min(68%, 26ch);
   width: fit-content;
-  padding: 7px 12px;
+  padding: var(--tc-space-2, 8px) var(--tc-space-3, 12px);
   background: var(--tc-surface-overlay, light-dark(#ffffff, #232326));
   border: 1px solid var(--tc-border-default, light-dark(#ececec, #2a2a2e));
-  border-radius: 14px 14px 4px 14px;
+  border-radius: 14px 14px var(--tc-radius-xs, 4px) 14px;
   box-shadow: var(--tc-ghosted-chat-bubble-shadow);
-  font-size: var(--tc-font-size-sm-plus, 12.5px);
+  font-size: var(--tc-font-size-sm, 12px);
   line-height: 1.3;
   font-weight: var(--tc-font-weight-medium, 500);
   color: var(--tc-text-secondary, light-dark(#404040, #c8c8cc));
@@ -315,8 +315,8 @@ const css = /* css */ `
 .ui-gc-bubble-last {
   position: relative;
   isolation: isolate;
-  padding: 6px 11px;
-  margin-bottom: 6px;
+  padding: var(--tc-space-1-5, 6px) var(--tc-space-3, 12px);
+  margin-bottom: var(--tc-space-1-5, 6px);
   /* The surface moves to ::before so the glow can sit behind it */
   background: transparent;
   border-color: transparent;
@@ -350,7 +350,7 @@ const css = /* css */ `
   font-size: 10.5px;
   line-height: 1.4;
   color: var(--tc-text-muted, light-dark(#646464, #9a9aa1));
-  margin-top: 2px;
+  margin-top: var(--tc-space-0-5, 2px);
   transition: color var(--tc-duration-slow, 320ms) var(--tc-ease-standard, ease);
 }
 
@@ -361,10 +361,10 @@ const css = /* css */ `
   bottom: 68px;
   max-width: none;
   width: auto;
-  padding: 6px 12px;
+  padding: var(--tc-space-1-5, 6px) var(--tc-space-3, 12px);
   background: #155EEF;
   border: 1px solid #155EEF;
-  border-radius: 14px 14px 14px 4px;
+  border-radius: 14px 14px 14px var(--tc-radius-xs, 4px);
   color: #FFFFFF;
   font-size: 15px;
   line-height: 1.1;

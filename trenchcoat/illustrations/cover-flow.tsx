@@ -616,7 +616,7 @@ const css = /* css */ `
   --tc-cover-flow-edge: light-dark(rgba(0, 0, 0, 0.08), rgba(255, 255, 255, 0.1));
   --tc-cover-flow-tick: light-dark(rgba(0, 0, 0, 0.16), rgba(255, 255, 255, 0.2));
   display: grid;
-  gap: 4px;
+  gap: var(--tc-space-1, 4px);
   width: 100%;
   min-width: 0;
   font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -725,7 +725,7 @@ const css = /* css */ `
   left: 0;
   width: 100%;
   height: 32%;
-  margin-top: 2px;
+  margin-top: var(--tc-space-0-5, 2px);
   overflow: hidden;
   pointer-events: none;
   -webkit-mask-image: linear-gradient(to bottom, var(--tc-cover-flow-reflect-mask), transparent 85%);
@@ -749,21 +749,21 @@ const css = /* css */ `
   z-index: 1;
   display: grid;
   justify-items: center;
-  gap: 14px;
+  gap: var(--tc-space-3-5, 14px);
   margin-top: calc(var(--tc-cover-flow-h) * -0.04);
 }
-.ui-cf:not([data-reflection]) .ui-cf__footer { margin-top: 12px; }
+.ui-cf:not([data-reflection]) .ui-cf__footer { margin-top: var(--tc-space-3, 12px); }
 .ui-cf__row {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 20px;
+  gap: var(--tc-space-5, 20px);
   min-height: 44px;
 }
 .ui-cf__ticks {
   display: flex;
   align-items: center;
-  gap: 2px;
+  gap: var(--tc-space-0-5, 2px);
 }
 .ui-cf__tick {
   display: grid;

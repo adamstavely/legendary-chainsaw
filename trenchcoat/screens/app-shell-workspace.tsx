@@ -126,7 +126,7 @@ const css = /* css */ `
   outline: 0;
   background: transparent;
   font: inherit;
-  font-size: var(--tc-field-font-size, 13.5px);
+  font-size: var(--tc-field-font-size, 13px);
   color: var(--tc-text-primary, light-dark(#171717, #ededed));
 }
 .ui-asw__address input::placeholder { color: var(--tc-text-placeholder, light-dark(#646464, #8e8e95)); }

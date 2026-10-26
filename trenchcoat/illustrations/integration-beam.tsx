@@ -705,7 +705,7 @@ const css = /* css */ `
   grid-template-columns: auto minmax(40px, 1fr) auto minmax(40px, 1fr) auto;
   grid-template-areas: "in . hub . out";
   align-items: center;
-  padding: 6px 0;
+  padding: var(--tc-space-1-5, 6px) 0;
 }
 .ui-ib__group { display: flex; flex-direction: column; gap: 26px; }
 .ui-ib__group--in { grid-area: in; }
@@ -760,7 +760,7 @@ const css = /* css */ `
   z-index: 3;
   top: 50%;
   left: calc(100% + 10px);
-  padding: 5px 9px;
+  padding: var(--tc-space-1, 4px) var(--tc-space-2, 8px);
   border-radius: var(--tc-radius-md, 8px);
   background: var(--tc-surface-inverse, light-dark(#171717, #ededed));
   color: var(--tc-text-on-inverse, light-dark(#ffffff, #111113));
@@ -812,10 +812,10 @@ const css = /* css */ `
 .ui-ib__chip-inner {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: var(--tc-space-2, 8px);
   width: max-content;
   height: 26px;
-  padding: 0 11px 0 10px;
+  padding: 0 var(--tc-space-3, 12px) 0 var(--tc-space-2-5, 10px);
   font-size: var(--tc-font-size-sm, 12px);
   font-weight: var(--tc-font-weight-medium, 500);
   color: var(--tc-text-secondary, light-dark(#404040, #c8c8cc));
@@ -853,10 +853,10 @@ const css = /* css */ `
     grid-template-areas: "in" "hub" "out";
     justify-items: center;
     row-gap: 78px;
-    padding: 0 0 4px;
+    padding: 0 0 var(--tc-space-1, 4px);
   }
   .ui-ib__group { flex-direction: row; gap: clamp(14px, 7cqw, 34px); }
-  .ui-ib__tool { width: 56px; height: 56px; border-radius: 17px; }
+  .ui-ib__tool { width: 56px; height: 56px; border-radius: var(--tc-radius-2xl, 16px); }
   .ui-ib__center { width: 76px; height: 76px; border-radius: 23px; }
   /* Tooltips sit between the rows; the outer tools align theirs to their edge */
   .ui-ib__tip,

@@ -328,6 +328,15 @@ const css = /* css */ `
   --_tc-radius-sm: 6px;
   --_tc-radius-xl: 12px;
   --_tc-shadow-control: 0 1px 2px light-dark(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.4));
+  --_tc-space-0-5: 2px;
+  --_tc-space-1: 4px;
+  --_tc-space-1-5: 6px;
+  --_tc-space-2: 8px;
+  --_tc-space-2-5: 10px;
+  --_tc-space-3: 12px;
+  --_tc-space-3-5: 14px;
+  --_tc-space-4: 16px;
+  --_tc-space-4-5: 18px;
   --_tc-surface-on-tray: light-dark(#ffffff, #232326);
   --_tc-surface-tray: light-dark(#f0f0f0, #19191b);
   --_tc-text-muted: light-dark(#646464, #9a9aa1);
@@ -390,6 +399,15 @@ const css = /* css */ `
   --_tc-radius-sm: 6px;
   --_tc-radius-xl: 12px;
   --_tc-shadow-control: 0 0 0 0.5px light-dark(rgba(0, 0, 0, 0.06), rgba(255, 255, 255, 0.08)), 0 1px 1px -1px light-dark(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.4)), 0 1px 2px 0 light-dark(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.4));
+  --_tc-space-0-5: 2px;
+  --_tc-space-1: 4px;
+  --_tc-space-1-5: 6px;
+  --_tc-space-2: 8px;
+  --_tc-space-2-5: 10px;
+  --_tc-space-3: 12px;
+  --_tc-space-3-5: 14px;
+  --_tc-space-4: 16px;
+  --_tc-space-4-5: 18px;
   --_tc-surface-on-tray: light-dark(#ffffff, #1c1c1e);
   --_tc-surface-tray: light-dark(#f7f7f7, #161618);
   --_tc-text-muted: light-dark(rgba(0, 0, 0, 0.56), rgba(255, 255, 255, 0.52));
@@ -404,6 +422,16 @@ const css = /* css */ `
 :where([data-tc-theme="system"]) { color-scheme: light dark; }
 :where([data-theme="light"], [data-tc-theme="light"]) { color-scheme: light; }
 :where(.dark, [data-theme="dark"], [data-tc-theme="dark"]) { color-scheme: dark; }
+@media (forced-colors: active) {
+  :where([data-look], [data-look] *):not(#tc-fc):is(button, [role="button"], [role="switch"], [role="combobox"], [role="checkbox"], [role="radio"], input:not([type="hidden"]), select, textarea):not([role="option"], [role="menuitem"], [role="menuitemradio"], [role="menuitemcheckbox"], [role="tab"], [role="treeitem"], [role="gridcell"], [role="row"]) { border: 1px solid ButtonText !important; }
+  :where([data-look], [data-look] *):not(#tc-fc):is(input, select, textarea) { border-color: FieldText !important; }
+  :where([data-look], [data-look] *):not(#tc-fc):is([role="listbox"], [role="menu"], [role="dialog"], [role="tooltip"], [role="tablist"], [role="radiogroup"]) { outline: 1px solid CanvasText; }
+  :where([data-look], [data-look] *):not(#tc-fc):is([aria-selected="true"], [aria-pressed="true"], [aria-checked="true"], [aria-current]:not([aria-current="false"])) { forced-color-adjust: none; background: Highlight !important; color: HighlightText !important; }
+  :where([data-look], [data-look] *):not(#tc-fc):is([aria-selected="true"], [aria-pressed="true"], [aria-checked="true"], [aria-current]:not([aria-current="false"])) * { color: HighlightText !important; background: none !important; }
+  :where([data-look], [data-look] *):not(#tc-fc)[role="switch"] span:empty { background: ButtonText !important; }
+  :where([data-look], [data-look] *):not(#tc-fc)[role="switch"][aria-checked="true"] span:empty { background: HighlightText !important; }
+  :where([data-look], [data-look] *):not(#tc-fc):is(:disabled, [aria-disabled="true"]) { color: GrayText !important; border-color: GrayText !important; }
+}
 
 :where([data-look="standard"], [data-look="standard"] *).ui-pm {
   /* Stroke width of the menu icons */
@@ -438,7 +466,7 @@ const css = /* css */ `
 }
 .ui-pm *, .ui-pm *::before, .ui-pm *::after { box-sizing: border-box; }
 :where([data-look="standard"], [data-look="standard"] *).ui-pm__card {
-  padding: 16px 8px 8px;
+  padding: var(--tc-space-4, var(--_tc-space-4)) var(--tc-space-2, var(--_tc-space-2)) var(--tc-space-2, var(--_tc-space-2));
   background: var(--tc-surface-on-tray, var(--_tc-surface-on-tray));
   border: 1px solid var(--tc-border-default, var(--_tc-border-default));
   border-radius: var(--tc-card-radius, var(--_tc-card-radius));
@@ -447,8 +475,8 @@ const css = /* css */ `
 :where([data-look="standard"], [data-look="standard"] *).ui-pm__user {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 0 10px 12px;
+  gap: var(--tc-space-3-5, var(--_tc-space-3-5));
+  padding: 0 var(--tc-space-2-5, var(--_tc-space-2-5)) var(--tc-space-3, var(--_tc-space-3));
 }
 :where([data-look="standard"], [data-look="standard"] *).ui-pm__avatar {
   flex: none;
@@ -470,9 +498,9 @@ const css = /* css */ `
 :where([data-look="clean"], [data-look="clean"] *).ui-pm__user {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin: 0 -4px 4px;
-  padding: 8px 12px 10px;
+  gap: var(--tc-space-2-5, var(--_tc-space-2-5));
+  margin: 0 -4px var(--tc-space-1, var(--_tc-space-1));
+  padding: var(--tc-space-2, var(--_tc-space-2)) var(--tc-space-3, var(--_tc-space-3)) var(--tc-space-2-5, var(--_tc-space-2-5));
   border-bottom: var(--tc-hairline, var(--_tc-hairline)) solid var(--tc-divider, var(--_tc-divider));
 }
 :where([data-look="clean"], [data-look="clean"] *).ui-pm__avatar {
@@ -506,16 +534,16 @@ const css = /* css */ `
 }
 :where([data-look="standard"], [data-look="standard"] *).ui-pm__items {
   display: grid;
-  gap: 2px;
+  gap: var(--tc-space-0-5, var(--_tc-space-0-5));
 }
 :where([data-look="standard"], [data-look="standard"] *).ui-pm__item {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--tc-space-3, var(--_tc-space-3));
   width: 100%;
   min-height: 36px;
   margin: 0;
-  padding: 0 12px;
+  padding: 0 var(--tc-space-3, var(--_tc-space-3));
   border: 0;
   border-radius: var(--tc-radius-xl, var(--_tc-radius-xl));
   background: transparent;
@@ -556,7 +584,7 @@ const css = /* css */ `
 :where([data-look="clean"], [data-look="clean"] *).ui-pm__item {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--tc-space-2-5, var(--_tc-space-2-5));
   width: 100%;
   min-height: var(--tc-menu-item-h, var(--_tc-menu-item-h));
   padding: 0 var(--tc-menu-item-px, var(--_tc-menu-item-px));
@@ -608,7 +636,7 @@ const css = /* css */ `
 }
 /* Profile setup in the gray extension – kept to two short lines and a bar */
 :where([data-look="standard"], [data-look="standard"] *).ui-pm__setup {
-  padding: 10px 18px 12px;
+  padding: var(--tc-space-2-5, var(--_tc-space-2-5)) var(--tc-space-4-5, var(--_tc-space-4-5)) var(--tc-space-3, var(--_tc-space-3));
 }
 :where([data-look="standard"], [data-look="standard"] *).ui-pm__setup-head {
   display: flex;
@@ -619,16 +647,16 @@ const css = /* css */ `
 }
 /* Profile setup: the last row of the card, under a hairline */
 :where([data-look="clean"], [data-look="clean"] *).ui-pm__setup {
-  margin: 4px -4px -4px;
-  padding: 10px 12px 12px;
+  margin: var(--tc-space-1, var(--_tc-space-1)) -4px -4px;
+  padding: var(--tc-space-2-5, var(--_tc-space-2-5)) var(--tc-space-3, var(--_tc-space-3)) var(--tc-space-3, var(--_tc-space-3));
   border-top: var(--tc-hairline, var(--_tc-hairline)) solid var(--tc-divider, var(--_tc-divider));
 }
-:where([data-look="clean"], [data-look="clean"] *).ui-pm__setup:has(.ui-pm__next) { padding-bottom: 6px; }
+:where([data-look="clean"], [data-look="clean"] *).ui-pm__setup:has(.ui-pm__next) { padding-bottom: var(--tc-space-1-5, var(--_tc-space-1-5)); }
 :where([data-look="clean"], [data-look="clean"] *).ui-pm__setup-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: var(--tc-space-2, var(--_tc-space-2));
   font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm));
   line-height: var(--tc-line-height-tight, var(--_tc-line-height-tight));
 }
@@ -644,8 +672,8 @@ const css = /* css */ `
   border-radius: var(--tc-meter-radius, var(--_tc-meter-radius));
   background: var(--tc-meter-track, var(--_tc-meter-track));
 }
-:where([data-look="standard"], [data-look="standard"] *).ui-pm__track { margin-top: 7px; }
-:where([data-look="clean"], [data-look="clean"] *).ui-pm__track { margin-top: 8px; }
+:where([data-look="standard"], [data-look="standard"] *).ui-pm__track { margin-top: var(--tc-space-2, var(--_tc-space-2)); }
+:where([data-look="clean"], [data-look="clean"] *).ui-pm__track { margin-top: var(--tc-space-2, var(--_tc-space-2)); }
 .ui-pm__fill {
   display: block;
   height: 100%;
@@ -659,16 +687,16 @@ const css = /* css */ `
 .ui-pm__next {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--tc-space-2, var(--_tc-space-2));
   width: calc(100% + 16px);
-  margin: 6px -8px 0;
-  padding: 0 8px;
+  margin: var(--tc-space-1-5, var(--_tc-space-1-5)) -8px 0;
+  padding: 0 var(--tc-space-2, var(--_tc-space-2));
   color: var(--tc-text-primary, var(--_tc-text-primary));
   transition: background-color var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-standard, var(--_tc-ease-standard));
 }
 :where([data-look="standard"], [data-look="standard"] *).ui-pm__next {
   min-height: 26px;
-  padding-block: 3px;
+  padding-block: var(--tc-space-1, var(--_tc-space-1));
   border: 0;
   border-radius: var(--tc-radius-md, var(--_tc-radius-md));
   background: transparent;

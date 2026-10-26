@@ -1,6 +1,6 @@
 /*
- * illustrations (agent-team, cover-flow, empty-calendar, enrichment-orbit, frost-cloud, ghosted-chat, glass-folder,
- * glow-cloud, glow-keyboard, integration-beam, integration-flow, integration-grid): dark mode only worked with a .dark
+ * illustrations (agent-team, cover-flow, empty-calendar, enrichment-orbit, ghosted-chat, glass-folder,
+ * glow-keyboard, integration-beam, integration-flow, integration-grid): dark mode only worked with a .dark
  * class – their dark colours were .dark-scoped overrides, so data-tc-theme="dark", "system" and the OS setting kept
  * the light art (audit/design-review/themes-and-widths.md H1). Now every colour is light-dark() and each file sets
  * color-scheme for the whole selector list. Also: their decorative loops ran forever; now they're finite.
@@ -12,10 +12,8 @@ import { AgentTeam } from "@illustrations/agent-team";
 import { CoverFlow } from "@illustrations/cover-flow";
 import { EmptyCalendar } from "@illustrations/empty-calendar";
 import { EnrichmentOrbit } from "@illustrations/enrichment-orbit";
-import { FrostCloud } from "@illustrations/frost-cloud";
 import { GhostedChat } from "@illustrations/ghosted-chat";
 import { GlassFolder } from "@illustrations/glass-folder";
-import { GlowCloud } from "@illustrations/glow-cloud";
 import { GlowKeyboard } from "@illustrations/glow-keyboard";
 import { IntegrationBeam } from "@illustrations/integration-beam";
 import { IntegrationFlow } from "@illustrations/integration-flow";
@@ -27,10 +25,8 @@ const cases: [string, () => ReactElement][] = [
   ["cover-flow", () => <CoverFlow items={[{ id: 1, title: "One" }, { id: 2, title: "Two" }]} />],
   ["empty-calendar", () => <EmptyCalendar />],
   ["enrichment-orbit", () => <EnrichmentOrbit />],
-  ["frost-cloud", () => <FrostCloud />],
   ["ghosted-chat", () => <GhostedChat />],
   ["glass-folder", () => <GlassFolder />],
-  ["glow-cloud", () => <GlowCloud />],
   ["glow-keyboard", () => <GlowKeyboard />],
   ["integration-beam", () => <IntegrationBeam />],
   ["integration-flow", () => <IntegrationFlow />],

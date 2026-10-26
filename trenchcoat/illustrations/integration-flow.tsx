@@ -750,13 +750,13 @@ const css = /* css */ `
   position: absolute;
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: var(--tc-space-5, 20px);
   border-radius: 3600px;
   -webkit-backdrop-filter: blur(26.55px);
   backdrop-filter: blur(26.55px);
 }
-.ui-if-card--icon-left { padding: 20px 80px 20px 20px; }
-.ui-if-hub { left: 137px; top: 520.6797px; padding: 20px 20px 20px 60px; }
+.ui-if-card--icon-left { padding: var(--tc-space-5, 20px) 80px var(--tc-space-5, 20px) var(--tc-space-5, 20px); }
+.ui-if-hub { left: 137px; top: 520.6797px; padding: var(--tc-space-5, 20px) var(--tc-space-5, 20px) var(--tc-space-5, 20px) 60px; }
 /* The hub and the centre pill: frosted white (frosted graphite in dark) */
 .ui-if-card--light,
 .ui-if-bg--light {
@@ -819,7 +819,7 @@ const css = /* css */ `
   z-index: 1;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--tc-space-2, 8px);
   align-items: flex-start;
   flex: 0 0 auto;
   white-space: nowrap;

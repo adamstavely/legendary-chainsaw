@@ -875,7 +875,7 @@ const css = /* css */ `
 }
 /* ---------- Pending ---------- */
 .ui-ap__pending > .ui-ap__card {
-  padding: 16px;
+  padding: var(--tc-space-4);
 }
 .ui-ap__pending[data-leaving] {
   position: absolute;
@@ -895,7 +895,7 @@ const css = /* css */ `
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: start;
-  gap: 12px;
+  gap: var(--tc-space-3);
 }
 .ui-ap__icon {
   display: grid;
@@ -946,7 +946,7 @@ const css = /* css */ `
 .ui-ap__risk {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--tc-space-1-5);
   height: var(--tc-pill-h-lg);
   margin-top: 1px;
   padding: 0 var(--tc-pill-px-lg);
@@ -978,9 +978,9 @@ const css = /* css */ `
 /* Preview: custom content and key-value rows in one soft panel */
 :where([data-look="standard"], [data-look="standard"] *).ui-ap__preview {
   display: grid;
-  gap: 12px;
-  margin-top: 14px;
-  padding: 12px;
+  gap: var(--tc-space-3);
+  margin-top: var(--tc-space-3-5);
+  padding: var(--tc-space-3);
   border-radius: var(--tc-radius-lg);
   background: var(--tc-fill-subtle);
   box-shadow: inset 0 0 0 var(--tc-hairline) var(--tc-border-default);
@@ -988,25 +988,25 @@ const css = /* css */ `
 /* Preview: custom content and key-value rows, plain on the card under one hairline – no second gray panel */
 :where([data-look="clean"], [data-look="clean"] *).ui-ap__preview {
   display: grid;
-  gap: 12px;
-  margin-top: 14px;
-  padding-top: 14px;
+  gap: var(--tc-space-3);
+  margin-top: var(--tc-space-3-5);
+  padding-top: var(--tc-space-3-5);
   border-top: var(--tc-hairline) solid var(--tc-divider);
 }
 .ui-ap__custom {
   min-width: 0;
 }
 :where([data-look="standard"], [data-look="standard"] *).ui-ap__custom + .ui-ap__details {
-  padding-top: 12px;
+  padding-top: var(--tc-space-3);
   border-top: var(--tc-hairline) solid var(--tc-divider);
 }
 :where([data-look="clean"], [data-look="clean"] *).ui-ap__custom + .ui-ap__details {
-  padding-top: 2px;
+  padding-top: var(--tc-space-0-5);
 }
 .ui-ap__details {
   display: grid;
   grid-template-columns: max-content minmax(0, 1fr);
-  gap: 6px 16px;
+  gap: var(--tc-space-1-5) var(--tc-space-4);
   margin: 0;
 }
 .ui-ap__detail {
@@ -1028,9 +1028,9 @@ const css = /* css */ `
   display: flex;
   width: fit-content;
   max-width: 100%;
-  margin-top: 14px;
+  margin-top: var(--tc-space-3-5);
   align-items: center;
-  gap: 8px;
+  gap: var(--tc-space-2);
   min-width: 0;
   cursor: pointer;
   user-select: none;
@@ -1093,9 +1093,9 @@ const css = /* css */ `
 /* Optional label on the gray tray above the card */
 .ui-ap__label {
   overflow: hidden;
-  padding: 6px 8px 4px;
+  padding: var(--tc-space-1-5) var(--tc-space-2) var(--tc-space-1);
   color: var(--tc-text-muted);
-  font-size: var(--tc-font-size-sm-plus);
+  font-size: var(--tc-font-size-sm);
   line-height: var(--tc-line-height-tight);
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -1103,37 +1103,37 @@ const css = /* css */ `
 /* The leaving request is laid over the resolved row – below the label when there is one */
 .ui-ap[data-label] .ui-ap__pending[data-leaving] { top: 30px; }
 /* actions="card": the buttons close the white card instead of sitting on the tray */
-:where([data-look="standard"], [data-look="standard"] *).ui-ap__card > .ui-ap__foot { min-height: 0; margin-top: 14px; padding: 0; }
+:where([data-look="standard"], [data-look="standard"] *).ui-ap__card > .ui-ap__foot { min-height: 0; margin-top: var(--tc-space-3-5); padding: 0; }
 /* actions="card" (the default): one clean white card – no gray tray around it, the decision is its last row */
 :where([data-look="clean"], [data-look="clean"] *).ui-ap[data-actions="card"] { padding: 0; border-radius: var(--tc-card-radius); background: transparent; }
 :where([data-look="clean"], [data-look="clean"] *).ui-ap[data-actions="card"] .ui-ap__card { background: var(--tc-surface-raised); }
 :where([data-look="clean"], [data-look="clean"] *).ui-ap[data-actions="card"] .ui-ap__pending[data-leaving] { top: 0; left: 0; right: 0; }
 :where([data-look="clean"], [data-look="clean"] *).ui-ap[data-actions="card"][data-label] .ui-ap__pending[data-leaving] { top: 26px; }
-:where([data-look="clean"], [data-look="clean"] *).ui-ap[data-actions="card"] .ui-ap__label { padding-left: 2px; }
-:where([data-look="clean"], [data-look="clean"] *).ui-ap__card > .ui-ap__foot { min-height: 0; margin-top: 16px; padding: 14px 0 0; border-top: var(--tc-hairline) solid var(--tc-divider); }
+:where([data-look="clean"], [data-look="clean"] *).ui-ap[data-actions="card"] .ui-ap__label { padding-left: var(--tc-space-0-5); }
+:where([data-look="clean"], [data-look="clean"] *).ui-ap__card > .ui-ap__foot { min-height: 0; margin-top: var(--tc-space-4); padding: var(--tc-space-3-5) 0 0; border-top: var(--tc-hairline) solid var(--tc-divider); }
 :where([data-look="clean"], [data-look="clean"] *).ui-ap__card > .ui-ap__foot .ui-ap__always { margin-top: 0; }
 /* The tray below the card: countdown on the left, buttons on the right */
 .ui-ap__foot {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 6px 12px;
+  gap: var(--tc-space-1-5) var(--tc-space-3);
   min-height: 44px;
-  padding: 6px 2px 2px 10px;
+  padding: var(--tc-space-1-5) var(--tc-space-0-5) var(--tc-space-0-5) var(--tc-space-2-5);
 }
 .ui-ap__timer {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--tc-space-1);
   min-width: 0;
 }
 .ui-ap__expires {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--tc-space-1-5);
   min-width: 0;
   color: var(--tc-text-muted);
-  font-size: var(--tc-font-size-sm-plus);
+  font-size: var(--tc-font-size-sm);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
   transition: color var(--tc-duration-slow) var(--tc-ease-standard);
@@ -1156,12 +1156,12 @@ const css = /* css */ `
   order: 1;
   margin: 0;
   color: var(--tc-status-danger-fg);
-  font-size: var(--tc-font-size-sm-plus);
+  font-size: var(--tc-font-size-sm);
 }
 .ui-ap__actions {
   display: flex;
   flex: 0 0 auto;
-  gap: 4px;
+  gap: var(--tc-space-1);
   margin-left: auto;
 }
 /* Buttons: the control pattern, primary/secondary/ghost exactly like Button */
@@ -1169,7 +1169,7 @@ const css = /* css */ `
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: var(--tc-space-2);
   height: var(--tc-control-h-md);
   padding: 0 var(--tc-control-px-md);
   border: 0;
@@ -1191,7 +1191,7 @@ const css = /* css */ `
   outline-offset: var(--tc-focus-ring-offset);
 }
 .ui-ap__btn--primary {
-  padding-right: 8px;
+  padding-right: var(--tc-space-2);
   background: var(--tc-action-primary-bg);
   color: var(--tc-action-primary-fg);
   box-shadow: var(--tc-action-primary-shadow);
@@ -1204,7 +1204,7 @@ const css = /* css */ `
 }
 /* Deny – Standard: quiet on the tray, a soft fill on hover; Clean: the secondary button */
 .ui-ap__btn--quiet {
-  padding-right: 8px;
+  padding-right: var(--tc-space-2);
   background: transparent;
   color: var(--tc-text-primary);
 }
@@ -1231,9 +1231,9 @@ const css = /* css */ `
 /* "Stop": a small ghost button next to the countdown */
 .ui-ap__stop {
   height: var(--tc-control-h-sm);
-  padding: 0 6px;
+  padding: 0 var(--tc-space-1-5);
   border-radius: var(--tc-control-radius-sm);
-  font-size: var(--tc-font-size-sm-plus);
+  font-size: var(--tc-font-size-sm);
 }
 .ui-ap[data-busy] .ui-ap__btn:not(.ui-ap__approve),
 .ui-ap[data-busy] .ui-ap__always {
@@ -1277,9 +1277,9 @@ const css = /* css */ `
 .ui-ap__resolved {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--tc-space-2-5);
   min-height: 48px;
-  padding: 12px 14px;
+  padding: var(--tc-space-3) var(--tc-space-3-5);
   animation: ui-ap-in var(--tc-duration-slower) var(--tc-ease-move) var(--tc-duration-quick) both;
 }
 .ui-ap__resolved:focus-visible {
@@ -1320,7 +1320,7 @@ const css = /* css */ `
   min-width: 0;
   overflow: hidden;
   color: var(--tc-text-primary);
-  font-size: var(--tc-font-size-md-plus);
+  font-size: var(--tc-font-size-md);
   font-weight: var(--tc-font-weight-medium);
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -1348,26 +1348,26 @@ const css = /* css */ `
     margin-left: 0;
   }
   .ui-ap__foot {
-    padding-left: 2px;
+    padding-left: var(--tc-space-0-5);
   }
   .ui-ap__timer {
-    padding-left: 8px;
+    padding-left: var(--tc-space-2);
   }
   .ui-ap__actions .ui-ap__btn {
     flex: 1 1 0;
     min-width: 0;
-    padding: 0 10px;
+    padding: 0 var(--tc-space-2-5);
   }
   .ui-ap__kbd {
     display: none;
   }
 }
 @container (max-width: 340px) {
-  .ui-ap__pending > .ui-ap__card { padding: 14px; }
-  .ui-ap__head { gap: 10px; }
+  .ui-ap__pending > .ui-ap__card { padding: var(--tc-space-3-5); }
+  .ui-ap__head { gap: var(--tc-space-2-5); }
   .ui-ap__risk-word { display: none; }
   .ui-ap__row-time { display: none; }
-  .ui-ap__details { column-gap: 12px; }
+  .ui-ap__details { column-gap: var(--tc-space-3); }
 }
 /* Touch screens have no shortcuts */
 @media (hover: none) {

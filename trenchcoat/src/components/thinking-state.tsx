@@ -528,9 +528,9 @@ const css = /* css */ `
 :where([data-look="standard"], [data-look="standard"] *).ui-think__head {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--tc-space-2-5);
   margin: 0 0 0 -4px;
-  padding: 4px 8px 4px 4px;
+  padding: var(--tc-space-1) var(--tc-space-2) var(--tc-space-1) var(--tc-space-1);
   border: 0;
   border-radius: var(--tc-radius-md);
   background: none;
@@ -560,7 +560,7 @@ const css = /* css */ `
 }
 :where([data-look="standard"], [data-look="standard"] *).ui-think__title {
   display: inline-flex;
-  gap: 8px;
+  gap: var(--tc-space-2);
   animation: ui-think-in var(--tc-duration-slower) var(--tc-ease-move) both;
 }
 :where([data-look="standard"], [data-look="standard"] *).ui-think__time {
@@ -584,7 +584,7 @@ const css = /* css */ `
   /* clips only while collapsed, so tooltips can reach out when open */
   overflow: visible;
   margin: 0;
-  padding: 10px 0 0;
+  padding: var(--tc-space-2-5) 0 0;
   list-style: none;
 }
 /* Timeline: icon column with a line growing down to the next node */
@@ -592,8 +592,8 @@ const css = /* css */ `
   position: relative;
   display: grid;
   grid-template-columns: 20px minmax(0, 1fr);
-  gap: 12px;
-  padding-bottom: 12px;
+  gap: var(--tc-space-3);
+  padding-bottom: var(--tc-space-3);
   animation: ui-think-in var(--tc-duration-slowest) var(--tc-ease-move) both;
 }
 :where([data-look="standard"], [data-look="standard"] *).ui-think__item:not(:last-child)::before {
@@ -650,10 +650,10 @@ const css = /* css */ `
 :where([data-look="clean"], [data-look="clean"] *).ui-think__head {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--tc-space-2-5);
   width: 100%;
   height: 44px;
-  padding: 0 12px 0 16px;
+  padding: 0 var(--tc-space-3) 0 var(--tc-space-4);
   border-radius: var(--tc-radius-lg);
   text-align: left;
   transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), border-radius 0ms linear var(--tc-duration-slow);
@@ -686,7 +686,7 @@ const css = /* css */ `
   display: inline-flex;
   flex: 1;
   min-width: 0;
-  gap: 8px;
+  gap: var(--tc-space-2);
   font-weight: var(--tc-font-weight-medium);
   white-space: nowrap;
   color: var(--tc-text-primary);
@@ -749,7 +749,7 @@ const css = /* css */ `
 }
 :where([data-look="clean"], [data-look="clean"] *).ui-think__list {
   margin: 0;
-  padding: 14px 16px 4px;
+  padding: var(--tc-space-3-5) var(--tc-space-4) var(--tc-space-1);
   list-style: none;
 }
 /* Timeline: icon column with a thin rail growing down to the next node */
@@ -757,8 +757,8 @@ const css = /* css */ `
   position: relative;
   display: grid;
   grid-template-columns: 16px minmax(0, 1fr);
-  gap: 10px;
-  padding-bottom: 12px;
+  gap: var(--tc-space-2-5);
+  padding-bottom: var(--tc-space-3);
   animation: ui-think-in var(--tc-duration-slowest) var(--tc-ease-move) both;
 }
 :where([data-look="clean"], [data-look="clean"] *).ui-think__item:not(:last-child)::before {
@@ -837,16 +837,16 @@ const css = /* css */ `
 :where([data-look="standard"], [data-look="standard"] *).ui-think__sources {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 8px;
+  gap: var(--tc-space-1-5);
+  margin-top: var(--tc-space-2);
 }
 :where([data-look="standard"], [data-look="standard"] *).ui-think__source {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--tc-space-1-5);
   max-width: 100%;
   height: 28px;
-  padding: 0 10px 0 6px;
+  padding: 0 var(--tc-space-2-5) 0 var(--tc-space-1-5);
   border-radius: var(--tc-radius-md);
   background: var(--tc-fill-default);
   font-size: var(--tc-font-size-md);
@@ -867,7 +867,7 @@ a.ui-think__source:where([data-look="standard"], [data-look="standard"] *):hover
   background: var(--tc-fill-hover);
 }
 :where([data-look="standard"], [data-look="standard"] *).ui-think__more {
-  padding: 0 10px;
+  padding: 0 var(--tc-space-2-5);
   background: none;
   color: var(--tc-text-muted);
 }
@@ -928,17 +928,17 @@ a.ui-think__source:where([data-look="standard"], [data-look="standard"] *):hover
 :where([data-look="clean"], [data-look="clean"] *).ui-think__sources {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 8px;
-  padding: 1px 0 2px;
+  gap: var(--tc-space-1-5);
+  margin-top: var(--tc-space-2);
+  padding: 1px 0 var(--tc-space-0-5);
 }
 :where([data-look="clean"], [data-look="clean"] *).ui-think__source {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--tc-space-1-5);
   max-width: 100%;
   height: 26px;
-  padding: 0 8px 0 6px;
+  padding: 0 var(--tc-space-2) 0 var(--tc-space-1-5);
   border-radius: var(--tc-radius-sm);
   background: var(--tc-surface-raised);
   box-shadow: var(--tc-shadow-raised);
@@ -959,7 +959,7 @@ a.ui-think__source:where([data-look="clean"], [data-look="clean"] *):hover {
 }
 /* "+3 more" – the quiet chip with an inner hairline */
 :where([data-look="clean"], [data-look="clean"] *).ui-think .ui-think__more {
-  padding: 0 8px;
+  padding: 0 var(--tc-space-2);
   background: none;
   box-shadow: inset 0 0 0 0.5px var(--tc-border-default);
   font-size: var(--tc-font-size-sm);
@@ -982,12 +982,12 @@ a.ui-think__source:where([data-look="clean"], [data-look="clean"] *):hover {
   transition-delay: var(--tc-duration-moderate);
 }
 :where([data-look="standard"], [data-look="standard"] *).ui-think__source[data-count] {
-  padding: 0 10px;
+  padding: 0 var(--tc-space-2-5);
   background: none;
   color: var(--tc-text-muted);
 }
 :where([data-look="clean"], [data-look="clean"] *).ui-think__source[data-count] {
-  padding: 0 8px;
+  padding: 0 var(--tc-space-2);
   background: none;
   box-shadow: inset 0 0 0 0.5px var(--tc-border-default);
   color: var(--tc-text-secondary);
@@ -1003,7 +1003,7 @@ a.ui-think__source:where([data-look="clean"], [data-look="clean"] *):hover {
   flex: none;
   width: 18px;
   height: 18px;
-  border-radius: 5px;
+  border-radius: var(--tc-radius-xs);
   overflow: hidden;
 }
 :where([data-look="clean"], [data-look="clean"] *).ui-think__favicon {
@@ -1079,8 +1079,8 @@ a.ui-think__source:where([data-look="clean"], [data-look="clean"] *):hover {
 .ui-think__source[data-tip-off] .ui-think__tip { opacity: 0; pointer-events: none; }
 /* Narrow (phones) */
 @container (max-width: 360px) {
-:where([data-look="clean"], [data-look="clean"] *).ui-think__head { padding: 0 10px 0 14px; }
-:where([data-look="clean"], [data-look="clean"] *).ui-think__list { padding: 12px 14px 2px; }
+:where([data-look="clean"], [data-look="clean"] *).ui-think__head { padding: 0 var(--tc-space-2-5) 0 var(--tc-space-3-5); }
+:where([data-look="clean"], [data-look="clean"] *).ui-think__list { padding: var(--tc-space-3) var(--tc-space-3-5) var(--tc-space-0-5); }
 }
 /* Touch screens: bigger tap targets */
 @media (pointer: coarse) {

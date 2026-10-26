@@ -1,5 +1,52 @@
 # Changelog
 
+## Unreleased – remediation Part 1 (design work that carries over to Lit)
+
+See `audit/remediation-plan.md`, Part 1.
+
+### Visible changes
+
+- Type scale (decision B): text at 11.5, 12.5 and 13.5 px is now 11, 12 and 13 px in every component and
+  illustration, and fields (`--tc-field-font-size`) are 13 px. `--tc-font-size-xs-plus`, `-sm-plus` and `-md-plus`
+  are deprecated – only blocks and screens still use them – and check-tokens rejects new uses elsewhere.
+- Spacing on the scale: padding, margin and gap in every component, illustration and motion piece use
+  `--tc-space-*` (3,389 values that were already on the scale, 322 that were 1 px off it and moved by 1 px). What
+  stays literal – 1 px, fractions, negatives and values 2 px or more off the scale – is counted by the ratchet's
+  new "literal spacing" rule (448 in these libraries; blocks and screens are untouched).
+- Line heights and radii on the scale (`scripts/apply-scales.mjs`): 12 values already on it and 56 that were 1 px off
+  now use `--tc-line-height-*` / `--tc-radius-*` (in Clean-only rules, 5 px radii use Clean's
+  `--tc-radius-badge`); memory-panel's cards use `--tc-shadow-raised`. Ratchet totals: line-height 151 → 109,
+  radius 176 → 101, blurred shadow 50 → 46. Unitless line heights, illustration art shadows and values 2 px or more
+  off the scale stay literal.
+
+- Decision C: breakdown-chart's default palettes (and the gallery demo's colours) are at least 3:1 against the
+  surface in both themes, with a 2 px gap between segments; date-range-picker's picked range is a 3:1 band
+  (`--tc-date-range-picker-band`) with the day numbers still at 4.5:1 or more.
+- fan-out-grid cells and agent-queue backlog squares stay 12 px but sit 24 px apart, and each takes clicks across
+  24 px (WCAG 2.5.8) – the grids show fewer items per row.
+
+- Smaller illustrations: region-dach's US, China, India, Brazil and Japan outlines are simplified
+  (Ramer–Douglas–Peucker; the faded neighbours much more than the land), 167 → 82 KB of source, with a few islets
+  under 2.5 units dropped from the neighbours; project-flow's four avatars are WebP instead of PNG, 137 → 90 KB.
+
+- Forced colours (Windows High Contrast): every component carries one shared block (`scripts/tokens.mjs`
+  `FORCED_RULES`, also in tokens.css section 3b) that gives buttons, fields, switches and comboboxes a system-colour
+  edge (forced colours drop the box-shadows they used), outlines listboxes, menus, dialogs and tablists, shows
+  selected / pressed / checked / current items in Highlight, draws switch knobs, and greys disabled controls. Only
+  active under `@media (forced-colors: active)`; the normal looks don't change.
+
+### Behaviour changes
+
+- context-window: Clean's "Compacting…" shine runs 3 times and rests, like every other shimmer (it ran endlessly).
+- inline-diff: `diffWords` uses Myers' O(ND) diff instead of a capped LCS table. Long texts stay word by word (a
+  3,000-word text with 150 edits gives 150 changes, where anything over ~1,500 words used to become one
+  replacement), and the work grows with the edits, not the length squared. Its third argument is now a work budget
+  (tokens × edits); past it the middle is still one replacement.
+
+### Removed
+
+- illustrations/frost-cloud and illustrations/glow-cloud, with their demos and tests.
+
 ## Unreleased – accessibility and design pass, blocks, screens, illustrations, motion
 
 All 187 published files now pass axe (WCAG 2.0–2.2 A/AA) in light and dark in a real browser, and every library

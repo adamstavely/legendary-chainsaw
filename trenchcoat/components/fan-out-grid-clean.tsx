@@ -19,7 +19,7 @@
  */
 // Generated from src/components/fan-out-grid.tsx by scripts/build-lib.mjs – edit the source, not this file.
 
-import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState, type CSSProperties, type ComponentPropsWithoutRef, type KeyboardEvent, type ReactNode, type Ref, type RefObject } from "react";
+import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState, type CSSProperties, type ComponentPropsWithoutRef, type KeyboardEvent, type MouseEvent as ReactMouseEvent, type ReactNode, type Ref, type RefObject } from "react";
 
 export type Look = "standard" | "clean";
 const DEFAULT_LOOK: Look = "clean";
@@ -247,6 +247,17 @@ export function FanoutGrid({
     setPinned(next);
     onSelect?.(next ? t! : null);
   };
+  // Cells are 12px squares 24px apart (WCAG 2.5.8): a click in the gap picks the cell within 12px, so each square
+  // takes clicks across a 24px box
+  const pickNearest = (e: ReactMouseEvent<HTMLDivElement>) => {
+    if ((e.target as Element).closest(".ui-fog__cell")) return;
+    const i = cellEls.current.findIndex((el) => {
+      if (!el) return false;
+      const r = el.getBoundingClientRect();
+      return Math.abs(e.clientX - (r.left + r.width / 2)) <= 12 && Math.abs(e.clientY - (r.top + r.height / 2)) <= 12;
+    });
+    if (i >= 0) pick(i);
+  };
   const retry = async () => {
     if (!onRetry || retrying) return;
     setRetryFailed(false);
@@ -427,6 +438,7 @@ export function FanoutGrid({
           tabIndex={0}
           onKeyDown={onKeyDown}
           onMouseLeave={leaveSoon}
+          onClick={pickNearest}
           onFocus={(e) => {
             // Focus moves in on the kept task, else the first one, so the details show on focus as on hover
             if (e.target === e.currentTarget && active === null && total) setActive(pinnedIndex >= 0 ? pinnedIndex : 0);
@@ -696,7 +708,6 @@ const css = /* css */ `
   --_tc-font-size-lg: 14px;
   --_tc-font-size-md: 13px;
   --_tc-font-size-sm: 12px;
-  --_tc-font-size-sm-plus: 12.5px;
   --_tc-font-weight-medium: 500;
   --_tc-font-weight-regular: 400;
   --_tc-font-weight-semibold: 600;
@@ -719,6 +730,15 @@ const css = /* css */ `
   --_tc-radius-xs: 4px;
   --_tc-shadow-raised: 0 0 0 1px light-dark(#ececec, #2a2a2e), 0 1px 2px light-dark(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.4));
   --_tc-shimmer: light-dark(rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.28));
+  --_tc-space-0-5: 2px;
+  --_tc-space-1: 4px;
+  --_tc-space-1-5: 6px;
+  --_tc-space-2: 8px;
+  --_tc-space-2-5: 10px;
+  --_tc-space-3: 12px;
+  --_tc-space-3-5: 14px;
+  --_tc-space-4: 16px;
+  --_tc-space-4-5: 18px;
   --_tc-status-danger-bg: light-dark(#fdecea, #3b1714);
   --_tc-status-danger-fg: light-dark(#c2331f, #ff977d);
   --_tc-status-danger-solid: light-dark(#e5484d, #ff6369);
@@ -777,7 +797,6 @@ const css = /* css */ `
   --_tc-font-size-lg: 14px;
   --_tc-font-size-md: 13px;
   --_tc-font-size-sm: 12px;
-  --_tc-font-size-sm-plus: 12.5px;
   --_tc-font-weight-medium: 500;
   --_tc-font-weight-regular: 400;
   --_tc-font-weight-semibold: 600;
@@ -800,6 +819,15 @@ const css = /* css */ `
   --_tc-radius-xs: 4px;
   --_tc-shadow-raised: 0 0 0 0.5px light-dark(rgba(0, 0, 0, 0.06), rgba(255, 255, 255, 0.08)), 0 1px 1px -1px light-dark(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.4)), 0 1px 2px 0 light-dark(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.4));
   --_tc-shimmer: light-dark(rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.3));
+  --_tc-space-0-5: 2px;
+  --_tc-space-1: 4px;
+  --_tc-space-1-5: 6px;
+  --_tc-space-2: 8px;
+  --_tc-space-2-5: 10px;
+  --_tc-space-3: 12px;
+  --_tc-space-3-5: 14px;
+  --_tc-space-4: 16px;
+  --_tc-space-4-5: 18px;
   --_tc-status-danger-bg: light-dark(rgba(245, 43, 0, 0.094), rgba(255, 53, 35, 0.17));
   --_tc-status-danger-fg: light-dark(#c2331f, #ff977d);
   --_tc-status-danger-solid: light-dark(#e5484d, #ff6369);
@@ -825,11 +853,22 @@ const css = /* css */ `
 :where([data-tc-theme="system"]) { color-scheme: light dark; }
 :where([data-theme="light"], [data-tc-theme="light"]) { color-scheme: light; }
 :where(.dark, [data-theme="dark"], [data-tc-theme="dark"]) { color-scheme: dark; }
+@media (forced-colors: active) {
+  :where([data-look], [data-look] *):not(#tc-fc):is(button, [role="button"], [role="switch"], [role="combobox"], [role="checkbox"], [role="radio"], input:not([type="hidden"]), select, textarea):not([role="option"], [role="menuitem"], [role="menuitemradio"], [role="menuitemcheckbox"], [role="tab"], [role="treeitem"], [role="gridcell"], [role="row"]) { border: 1px solid ButtonText !important; }
+  :where([data-look], [data-look] *):not(#tc-fc):is(input, select, textarea) { border-color: FieldText !important; }
+  :where([data-look], [data-look] *):not(#tc-fc):is([role="listbox"], [role="menu"], [role="dialog"], [role="tooltip"], [role="tablist"], [role="radiogroup"]) { outline: 1px solid CanvasText; }
+  :where([data-look], [data-look] *):not(#tc-fc):is([aria-selected="true"], [aria-pressed="true"], [aria-checked="true"], [aria-current]:not([aria-current="false"])) { forced-color-adjust: none; background: Highlight !important; color: HighlightText !important; }
+  :where([data-look], [data-look] *):not(#tc-fc):is([aria-selected="true"], [aria-pressed="true"], [aria-checked="true"], [aria-current]:not([aria-current="false"])) * { color: HighlightText !important; background: none !important; }
+  :where([data-look], [data-look] *):not(#tc-fc)[role="switch"] span:empty { background: ButtonText !important; }
+  :where([data-look], [data-look] *):not(#tc-fc)[role="switch"][aria-checked="true"] span:empty { background: HighlightText !important; }
+  :where([data-look], [data-look] *):not(#tc-fc):is(:disabled, [aria-disabled="true"]) { color: GrayText !important; border-color: GrayText !important; }
+}
 
 /* Colors, sizes and motion as variables – override them on .ui-fog */
 .ui-fog {
   --tc-fan-out-grid-cell: 12px;
-  --tc-fan-out-grid-gap: 4px;
+  /* 12px squares 24px apart: the spacing that WCAG 2.5.8 asks of targets under 24px */
+  --tc-fan-out-grid-gap: 12px;
   position: relative;
   box-sizing: border-box;
   width: 100%;
@@ -858,15 +897,15 @@ const css = /* css */ `
 .ui-fog__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .ui-fog__n { font-variant-numeric: tabular-nums; }
 /* ----- The bar: what runs, and how far it is ----- */
-.ui-fog__bar { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; min-width: 0; }
-:where([data-look="standard"], [data-look="standard"] *).ui-fog__bar { padding: 8px 12px 12px; }
-:where([data-look="clean"], [data-look="clean"] *).ui-fog__bar { margin-bottom: 16px; }
+.ui-fog__bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-1, var(--_tc-space-1)) var(--tc-space-2, var(--_tc-space-2)); min-width: 0; }
+:where([data-look="standard"], [data-look="standard"] *).ui-fog__bar { padding: var(--tc-space-2, var(--_tc-space-2)) var(--tc-space-3, var(--_tc-space-3)) var(--tc-space-3, var(--_tc-space-3)); }
+:where([data-look="clean"], [data-look="clean"] *).ui-fog__bar { margin-bottom: var(--tc-space-4, var(--_tc-space-4)); }
 .ui-fog__mark { display: grid; flex: none; place-items: center; width: 16px; color: var(--tc-accent-text, var(--_tc-accent-text)); }
 .ui-fog__mark > svg { width: 16px; height: 16px; }
 .ui-fog__title { flex: none; font-weight: var(--tc-font-weight-strong, var(--_tc-font-weight-strong)); color: var(--tc-text-strong, var(--_tc-text-strong)); }
 .ui-fog__job { min-width: 0; overflow: hidden; color: var(--tc-text-muted, var(--_tc-text-muted)); white-space: nowrap; text-overflow: ellipsis; }
 :where([data-look="standard"], [data-look="standard"] *).ui-fog__job { font-size: var(--tc-font-size-md, var(--_tc-font-size-md)); }
-.ui-fog__sum { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 14px; margin-left: auto; color: var(--tc-text-muted, var(--_tc-text-muted)); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ui-fog__sum { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-0-5, var(--_tc-space-0-5)) var(--tc-space-3-5, var(--_tc-space-3-5)); margin-left: auto; color: var(--tc-text-muted, var(--_tc-text-muted)); font-variant-numeric: tabular-nums; white-space: nowrap; }
 :where([data-look="standard"], [data-look="standard"] *).ui-fog__sum { font-size: var(--tc-font-size-md, var(--_tc-font-size-md)); line-height: var(--tc-line-height-snug, var(--_tc-line-height-snug)); }
 :where([data-look="clean"], [data-look="clean"] *).ui-fog__sum { font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); line-height: var(--tc-line-height-tight, var(--_tc-line-height-tight)); }
 .ui-fog__sum b { font-weight: var(--tc-font-weight-strong, var(--_tc-font-weight-strong)); color: var(--tc-text-primary, var(--_tc-text-primary)); }
@@ -874,16 +913,16 @@ const css = /* css */ `
 :where([data-look="standard"], [data-look="standard"] *).ui-fog__time[data-done] { font-weight: var(--tc-font-weight-medium, var(--_tc-font-weight-medium)); }
 /* ----- The card with the grid ----- */
 .ui-fog__panel { position: relative; display: grid; border-radius: var(--tc-card-radius, var(--_tc-card-radius)); box-shadow: var(--tc-card-shadow, var(--_tc-card-shadow)); }
-:where([data-look="standard"], [data-look="standard"] *).ui-fog__panel { padding: 18px; background: var(--tc-surface-on-tray, var(--_tc-surface-on-tray)); }
-:where([data-look="clean"], [data-look="clean"] *).ui-fog__panel { gap: 14px; padding: 16px 16px 14px; background: var(--tc-surface-raised, var(--_tc-surface-raised)); }
+:where([data-look="standard"], [data-look="standard"] *).ui-fog__panel { padding: var(--tc-space-4-5, var(--_tc-space-4-5)); background: var(--tc-surface-on-tray, var(--_tc-surface-on-tray)); }
+:where([data-look="clean"], [data-look="clean"] *).ui-fog__panel { gap: var(--tc-space-3-5, var(--_tc-space-3-5)); padding: var(--tc-space-4, var(--_tc-space-4)) var(--tc-space-4, var(--_tc-space-4)) var(--tc-space-3-5, var(--_tc-space-3-5)); background: var(--tc-surface-raised, var(--_tc-surface-raised)); }
 /* ----- A swatch and a count per state – each one a filter – and Retry: on the tray (Standard), in the panel (Clean) ----- */
-.ui-fog__foot { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; min-width: 0; }
-:where([data-look="standard"], [data-look="standard"] *).ui-fog__foot { padding: 8px 6px 4px 8px; }
-.ui-fog__legend { display: flex; flex-wrap: wrap; gap: 0 2px; }
+.ui-fog__foot { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-1, var(--_tc-space-1)) var(--tc-space-3, var(--_tc-space-3)); min-width: 0; }
+:where([data-look="standard"], [data-look="standard"] *).ui-fog__foot { padding: var(--tc-space-2, var(--_tc-space-2)) var(--tc-space-1-5, var(--_tc-space-1-5)) var(--tc-space-1, var(--_tc-space-1)) var(--tc-space-2, var(--_tc-space-2)); }
+.ui-fog__legend { display: flex; flex-wrap: wrap; gap: 0 var(--tc-space-0-5, var(--_tc-space-0-5)); }
 :where([data-look="clean"], [data-look="clean"] *).ui-fog__legend { margin: -3px -6px; }
 .ui-fog__key { display: inline-flex; align-items: center; height: var(--tc-control-h-sm, var(--_tc-control-h-sm)); color: var(--tc-text-muted, var(--_tc-text-muted)); transition: background-color var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-standard, var(--_tc-ease-standard)), color var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-standard, var(--_tc-ease-standard)), box-shadow var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-standard, var(--_tc-ease-standard)); }
-:where([data-look="standard"], [data-look="standard"] *).ui-fog__key { gap: 7px; padding: 0 9px; border-radius: var(--tc-radius-full, var(--_tc-radius-full)); font-size: var(--tc-font-size-md, var(--_tc-font-size-md)); line-height: var(--tc-line-height-snug, var(--_tc-line-height-snug)); }
-:where([data-look="clean"], [data-look="clean"] *).ui-fog__key { gap: 6px; padding: 0 6px; border-radius: var(--tc-control-radius-sm, var(--_tc-control-radius-sm)); font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); line-height: var(--tc-line-height-tight, var(--_tc-line-height-tight)); }
+:where([data-look="standard"], [data-look="standard"] *).ui-fog__key { gap: var(--tc-space-2, var(--_tc-space-2)); padding: 0 var(--tc-space-2, var(--_tc-space-2)); border-radius: var(--tc-radius-full, var(--_tc-radius-full)); font-size: var(--tc-font-size-md, var(--_tc-font-size-md)); line-height: var(--tc-line-height-snug, var(--_tc-line-height-snug)); }
+:where([data-look="clean"], [data-look="clean"] *).ui-fog__key { gap: var(--tc-space-1-5, var(--_tc-space-1-5)); padding: 0 var(--tc-space-1-5, var(--_tc-space-1-5)); border-radius: var(--tc-control-radius-sm, var(--_tc-control-radius-sm)); font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); line-height: var(--tc-line-height-tight, var(--_tc-line-height-tight)); }
 :where([data-look="standard"], [data-look="standard"] *).ui-fog__key:hover { background: var(--tc-fill-default, var(--_tc-fill-default)); color: var(--tc-text-primary, var(--_tc-text-primary)); }
 :where([data-look="clean"], [data-look="clean"] *).ui-fog__key:hover { background: var(--tc-fill-default, var(--_tc-fill-default)); color: var(--tc-text-primary, var(--_tc-text-primary)); }
 /* The picked state: a lifted chip with a ≥3:1 edge, not a fill alone (WCAG 1.4.11) */
@@ -902,9 +941,9 @@ const css = /* css */ `
 :where([data-look="clean"], [data-look="clean"] *).ui-fog__swatch { width: 8px; height: 8px; }
 /* Retry looks like Button: secondary in Standard, ghost in Clean – in the danger colour */
 .ui-fog__retry { display: inline-flex; align-items: center; margin-left: auto; font-size: var(--tc-control-font-size, var(--_tc-control-font-size)); font-weight: var(--tc-control-font-weight, var(--_tc-control-font-weight)); color: var(--tc-status-danger-fg, var(--_tc-status-danger-fg)); animation: ui-fog-in var(--tc-duration-moderate, var(--_tc-duration-moderate)) var(--tc-ease-move, var(--_tc-ease-move)) both; }
-:where([data-look="standard"], [data-look="standard"] *).ui-fog__retry { gap: 6px; height: var(--tc-control-h-md, var(--_tc-control-h-md)); padding: 0 var(--tc-control-px-md, var(--_tc-control-px-md)) 0 10px; border-radius: var(--tc-control-radius-md, var(--_tc-control-radius-md)); background: var(--tc-action-secondary-bg, var(--_tc-action-secondary-bg)); box-shadow: var(--tc-action-secondary-shadow, var(--_tc-action-secondary-shadow)); transition: box-shadow var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-standard, var(--_tc-ease-standard)); }
+:where([data-look="standard"], [data-look="standard"] *).ui-fog__retry { gap: var(--tc-space-1-5, var(--_tc-space-1-5)); height: var(--tc-control-h-md, var(--_tc-control-h-md)); padding: 0 var(--tc-control-px-md, var(--_tc-control-px-md)) 0 10px; border-radius: var(--tc-control-radius-md, var(--_tc-control-radius-md)); background: var(--tc-action-secondary-bg, var(--_tc-action-secondary-bg)); box-shadow: var(--tc-action-secondary-shadow, var(--_tc-action-secondary-shadow)); transition: box-shadow var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-standard, var(--_tc-ease-standard)); }
 :where([data-look="standard"], [data-look="standard"] *).ui-fog__retry:hover { box-shadow: var(--tc-action-secondary-shadow-hover, var(--_tc-action-secondary-shadow-hover)); }
-:where([data-look="clean"], [data-look="clean"] *).ui-fog__retry { gap: 5px; height: var(--tc-control-h-sm, var(--_tc-control-h-sm)); margin: -3px -6px -3px auto; padding: 0 6px; border-radius: var(--tc-control-radius-sm, var(--_tc-control-radius-sm)); font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); transition: background-color var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-standard, var(--_tc-ease-standard)); }
+:where([data-look="clean"], [data-look="clean"] *).ui-fog__retry { gap: var(--tc-space-1, var(--_tc-space-1)); height: var(--tc-control-h-sm, var(--_tc-control-h-sm)); margin: -3px -6px -3px auto; padding: 0 var(--tc-space-1-5, var(--_tc-space-1-5)); border-radius: var(--tc-control-radius-sm, var(--_tc-control-radius-sm)); font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); transition: background-color var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-standard, var(--_tc-ease-standard)); }
 :where([data-look="clean"], [data-look="clean"] *).ui-fog__retry:hover { background: var(--tc-status-danger-bg, var(--_tc-status-danger-bg)); }
 :where([data-look="clean"], [data-look="clean"] *).ui-fog__retry > svg { width: 13px; height: 13px; }
 /*
@@ -928,7 +967,7 @@ const css = /* css */ `
   inset: 22%;
 }
 /* ----- The grid: one cell per task ----- */
-.ui-fog__grid { display: grid; grid-template-columns: repeat(auto-fill, var(--tc-fan-out-grid-cell)); gap: var(--tc-fan-out-grid-gap); justify-content: space-between; padding: 2px; margin: -2px; border-radius: var(--tc-radius-sm, var(--_tc-radius-sm)); }
+.ui-fog__grid { display: grid; grid-template-columns: repeat(auto-fill, var(--tc-fan-out-grid-cell)); gap: var(--tc-fan-out-grid-gap); justify-content: space-between; padding: var(--tc-space-0-5, var(--_tc-space-0-5)); margin: -2px; border-radius: var(--tc-radius-sm, var(--_tc-radius-sm)); }
 .ui-fog__grid:focus { outline: none; }
 .ui-fog__grid:focus-visible { outline: var(--tc-focus-outline, var(--_tc-focus-outline)); outline-offset: var(--tc-focus-ring-offset, var(--_tc-focus-ring-offset)); }
 .ui-fog__cell { position: relative; width: var(--tc-fan-out-grid-cell); height: var(--tc-fan-out-grid-cell); background: var(--tc-fan-out-grid-status-fill); box-shadow: inset 0 0 0 1px var(--tc-fan-out-grid-status-edge); overflow: hidden; cursor: pointer; transition: background-color var(--tc-duration-slow, var(--_tc-duration-slow)) var(--tc-ease-standard, var(--_tc-ease-standard)), box-shadow var(--tc-duration-base, var(--_tc-duration-base)) var(--tc-ease-standard, var(--_tc-ease-standard)), opacity var(--tc-duration-base, var(--_tc-duration-base)) var(--tc-ease-standard, var(--_tc-ease-standard)), transform var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-move, var(--_tc-ease-move)); animation: ui-fog-cell-in var(--tc-duration-slower, var(--_tc-duration-slower)) var(--tc-ease-move, var(--_tc-ease-move)) calc(var(--i, 0) * 0.01 * var(--tc-duration-base, var(--_tc-duration-base))) backwards; }
@@ -950,27 +989,27 @@ const css = /* css */ `
 :where([data-look="standard"], [data-look="standard"] *).ui-fog__cell[data-dim] { opacity: 0.2; }
 :where([data-look="clean"], [data-look="clean"] *).ui-fog__cell[data-dim] { opacity: 0.18; }
 /* ----- The window over a cell: can be hovered, closes with Escape ----- */
-.ui-fog__tip { position: absolute; top: 0; left: 0; z-index: 5; display: grid; gap: 3px; width: max-content; border-radius: var(--tc-menu-radius, var(--_tc-menu-radius)); background: var(--tc-menu-bg, var(--_tc-menu-bg)); box-shadow: var(--tc-menu-shadow, var(--_tc-menu-shadow)); transform-origin: var(--x, 50%) bottom; animation: ui-fog-tip var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-move, var(--_tc-ease-move)) both; }
-:where([data-look="standard"], [data-look="standard"] *).ui-fog__tip { max-width: min(290px, calc(100% - 16px)); padding: 10px 14px 11px; }
-:where([data-look="clean"], [data-look="clean"] *).ui-fog__tip { max-width: min(280px, calc(100% - 16px)); padding: 9px 12px 10px; }
+.ui-fog__tip { position: absolute; top: 0; left: 0; z-index: 5; display: grid; gap: var(--tc-space-1, var(--_tc-space-1)); width: max-content; border-radius: var(--tc-menu-radius, var(--_tc-menu-radius)); background: var(--tc-menu-bg, var(--_tc-menu-bg)); box-shadow: var(--tc-menu-shadow, var(--_tc-menu-shadow)); transform-origin: var(--x, 50%) bottom; animation: ui-fog-tip var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-move, var(--_tc-ease-move)) both; }
+:where([data-look="standard"], [data-look="standard"] *).ui-fog__tip { max-width: min(290px, calc(100% - 16px)); padding: var(--tc-space-2-5, var(--_tc-space-2-5)) var(--tc-space-3-5, var(--_tc-space-3-5)) var(--tc-space-3, var(--_tc-space-3)); }
+:where([data-look="clean"], [data-look="clean"] *).ui-fog__tip { max-width: min(280px, calc(100% - 16px)); padding: var(--tc-space-2, var(--_tc-space-2)) var(--tc-space-3, var(--_tc-space-3)) var(--tc-space-2-5, var(--_tc-space-2-5)); }
 .ui-fog__tip[data-side="below"] { transform-origin: var(--x, 50%) top; }
-.ui-fog__tip-head { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.ui-fog__tip-head { display: flex; align-items: center; gap: var(--tc-space-2, var(--_tc-space-2)); min-width: 0; }
 .ui-fog__tip-label { min-width: 0; overflow: hidden; font-weight: var(--tc-font-weight-strong, var(--_tc-font-weight-strong)); color: var(--tc-text-primary, var(--_tc-text-primary)); white-space: nowrap; text-overflow: ellipsis; }
 .ui-fog__pill { flex: none; height: var(--tc-pill-h, var(--_tc-pill-h)); margin-left: auto; padding: 0 var(--tc-pill-px, var(--_tc-pill-px)); border-radius: var(--tc-pill-radius, var(--_tc-pill-radius)); background: var(--tc-fan-out-grid-status-bg); font-size: var(--tc-pill-font-size, var(--_tc-pill-font-size)); font-weight: var(--tc-pill-font-weight, var(--_tc-pill-font-weight)); line-height: var(--tc-pill-h, var(--_tc-pill-h)); color: var(--tc-fan-out-grid-status-ink); }
 .ui-fog__tip-meta { color: var(--tc-text-muted, var(--_tc-text-muted)); font-variant-numeric: tabular-nums; }
-:where([data-look="standard"], [data-look="standard"] *).ui-fog__tip-meta { font-size: var(--tc-font-size-sm-plus, var(--_tc-font-size-sm-plus)); line-height: var(--tc-line-height-snug, var(--_tc-line-height-snug)); }
+:where([data-look="standard"], [data-look="standard"] *).ui-fog__tip-meta { font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); line-height: var(--tc-line-height-snug, var(--_tc-line-height-snug)); }
 :where([data-look="clean"], [data-look="clean"] *).ui-fog__tip-meta { font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); line-height: var(--tc-line-height-tight, var(--_tc-line-height-tight)); }
 :where([data-look="standard"], [data-look="standard"] *) :is(.ui-fog__tip-result, .ui-fog__tip-error) { font-size: var(--tc-font-size-md, var(--_tc-font-size-md)); line-height: var(--tc-line-height-normal, var(--_tc-line-height-normal)); }
-:where([data-look="clean"], [data-look="clean"] *) :is(.ui-fog__tip-result, .ui-fog__tip-error) { font-size: var(--tc-font-size-sm-plus, var(--_tc-font-size-sm-plus)); line-height: var(--tc-line-height-snug, var(--_tc-line-height-snug)); }
+:where([data-look="clean"], [data-look="clean"] *) :is(.ui-fog__tip-result, .ui-fog__tip-error) { font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); line-height: var(--tc-line-height-snug, var(--_tc-line-height-snug)); }
 :where([data-look="standard"], [data-look="standard"] *).ui-fog__tip-result { color: var(--tc-text-muted, var(--_tc-text-muted)); }
 :where([data-look="clean"], [data-look="clean"] *).ui-fog__tip-result { color: var(--tc-text-secondary, var(--_tc-text-secondary)); }
 .ui-fog__tip-error { color: var(--tc-status-danger-fg, var(--_tc-status-danger-fg)); }
 /* ----- Narrow: smaller cells, the numbers on a line of their own ----- */
 @container ui-fog (max-width: 520px) {
   /* Set on the card – a container query can't style the container itself */
-  .ui-fog__panel { --tc-fan-out-grid-cell: 10px; --tc-fan-out-grid-gap: 3px; }
-  :where([data-look="standard"], [data-look="standard"] *).ui-fog__panel { padding: 14px; }
-  :where([data-look="clean"], [data-look="clean"] *).ui-fog__panel { padding: 12px; }
+  .ui-fog__panel { --tc-fan-out-grid-cell: 10px; --tc-fan-out-grid-gap: 14px; }
+  :where([data-look="standard"], [data-look="standard"] *).ui-fog__panel { padding: var(--tc-space-3-5, var(--_tc-space-3-5)); }
+  :where([data-look="clean"], [data-look="clean"] *).ui-fog__panel { padding: var(--tc-space-3, var(--_tc-space-3)); }
   .ui-fog__sum { flex-basis: 100%; justify-content: space-between; margin-left: 0; }
   /* The counts in a fixed two-by-two grid, Retry beside it – nothing moves when a state shows up or Retry appears */
   .ui-fog__foot { flex-wrap: nowrap; align-items: center; }

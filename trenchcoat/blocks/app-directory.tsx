@@ -754,7 +754,7 @@ const css = /* css */ `
   outline: none;
   background: transparent;
   font: inherit;
-  font-size: var(--tc-field-font-size, 13.5px);
+  font-size: var(--tc-field-font-size, 13px);
   color: var(--tc-text-primary, light-dark(#171717, #ededed));
 }
 .ui-adir__search input::placeholder { color: var(--tc-text-placeholder, light-dark(#646464, #8e8e95)); }

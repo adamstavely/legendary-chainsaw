@@ -413,7 +413,7 @@ const css = /* css */ `
 :where([data-look="standard"], [data-look="standard"] *).ui-sr button { margin: 0; font: inherit; color: inherit; cursor: pointer; }
 .ui-sr button:focus-visible { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
 :where([data-look="standard"], [data-look="standard"] *).ui-sr__card {
-  padding: 6px 8px 8px;
+  padding: var(--tc-space-1-5) var(--tc-space-2) var(--tc-space-2);
   /* The card on the tray */
   background: var(--tc-surface-on-tray);
   border-radius: var(--tc-card-radius);
@@ -422,10 +422,10 @@ const css = /* css */ `
 :where([data-look="standard"], [data-look="standard"] *).ui-sr__head {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--tc-space-2-5);
   width: 100%;
   height: 40px;
-  padding: 0 10px;
+  padding: 0 var(--tc-space-2-5);
   border: 0;
   border-radius: var(--tc-radius-xl);
   background: transparent;
@@ -453,10 +453,10 @@ const css = /* css */ `
 :where([data-look="clean"], [data-look="clean"] *).ui-sr__head {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--tc-space-2);
   width: 100%;
   height: 44px;
-  padding: 0 12px 0 16px;
+  padding: 0 var(--tc-space-3) 0 var(--tc-space-4);
   border-radius: var(--tc-radius-lg) var(--tc-radius-lg) 0 0;
   text-align: left;
   transition: background-color var(--tc-duration-fast) var(--tc-ease-standard);
@@ -501,24 +501,24 @@ const css = /* css */ `
   min-height: 0;
   overflow: hidden;
   margin: 0;
-  padding: 0 10px;
+  padding: 0 var(--tc-space-2-5);
   font-size: var(--tc-font-size-lg);
-  line-height: 21px;
+  line-height: var(--tc-line-height-normal);
   color: var(--tc-text-secondary);
   animation: ui-sr-swap var(--tc-duration-slow) var(--tc-ease-move);
 }
-:where([data-look="standard"], [data-look="standard"] *).ui-sr__body[data-open] .ui-sr__reason { padding-bottom: 8px; }
+:where([data-look="standard"], [data-look="standard"] *).ui-sr__body[data-open] .ui-sr__reason { padding-bottom: var(--tc-space-2); }
 :where([data-look="clean"], [data-look="clean"] *).ui-sr__reason {
   min-height: 0;
   overflow: hidden;
   margin: 0;
-  padding: 0 16px;
+  padding: 0 var(--tc-space-4);
   font-size: var(--tc-font-size-md);
   line-height: var(--tc-line-height-normal);
   color: var(--tc-text-secondary);
   animation: ui-sr-swap var(--tc-duration-slow) var(--tc-ease-move);
 }
-:where([data-look="clean"], [data-look="clean"] *).ui-sr__body[data-open] .ui-sr__reason { padding-bottom: 14px; }
+:where([data-look="clean"], [data-look="clean"] *).ui-sr__body[data-open] .ui-sr__reason { padding-bottom: var(--tc-space-3-5); }
 .ui-sr__reason strong { font-weight: var(--tc-font-weight-medium); color: var(--tc-text-primary); }
 :where([data-look="standard"], [data-look="standard"] *).ui-sr__foot {
   display: flex;
@@ -526,14 +526,14 @@ const css = /* css */ `
   /* Narrow containers: the actions move below the signal instead of running out of the tray */
   flex-wrap: wrap;
   justify-content: space-between;
-  gap: 8px 10px;
+  gap: var(--tc-space-2) var(--tc-space-2-5);
   min-height: 50px;
-  padding: 8px 8px 8px 16px;
+  padding: var(--tc-space-2) var(--tc-space-2) var(--tc-space-2) var(--tc-space-4);
 }
 :where([data-look="standard"], [data-look="standard"] *).ui-sr__signal {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--tc-space-2);
   font-size: var(--tc-font-size-md);
   white-space: nowrap;
   color: var(--tc-text-muted);
@@ -545,15 +545,15 @@ const css = /* css */ `
   /* Narrow cards: the actions move below the signal instead of running out of the card */
   flex-wrap: wrap;
   justify-content: space-between;
-  gap: 8px 10px;
+  gap: var(--tc-space-2) var(--tc-space-2-5);
   min-height: 48px;
-  padding: 10px 10px 10px 16px;
+  padding: var(--tc-space-2-5) var(--tc-space-2-5) var(--tc-space-2-5) var(--tc-space-4);
   border-top: var(--tc-hairline) solid var(--tc-divider);
 }
 :where([data-look="clean"], [data-look="clean"] *).ui-sr__signal {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--tc-space-2);
   font-size: var(--tc-font-size-sm);
   line-height: var(--tc-line-height-tight);
   white-space: nowrap;
@@ -561,7 +561,7 @@ const css = /* css */ `
 }
 /* A failed accept or undo takes the signal's place until the next try */
 .ui-sr__signal.ui-sr__error { color: var(--tc-status-danger-fg); white-space: normal; }
-.ui-sr__bars, .ui-sr__mini { display: inline-flex; align-items: flex-end; gap: 2px; }
+.ui-sr__bars, .ui-sr__mini { display: inline-flex; align-items: flex-end; gap: var(--tc-space-0-5); }
 :where([data-look="standard"], [data-look="standard"] *).ui-sr__bars span,
 :where([data-look="standard"], [data-look="standard"] *).ui-sr__mini span {
   width: 3px;
@@ -580,7 +580,7 @@ const css = /* css */ `
 :where([data-look="standard"], [data-look="standard"] *) [data-level="3"] > span[data-on] { background: var(--tc-status-success-solid); }
 :where([data-look="standard"], [data-look="standard"] *).ui-sr__signal[data-level="0"] .ui-sr__bars span:first-child { background: var(--tc-icon-muted); }
 /* The actions wrap and shrink instead of running out of the card at 320px */
-.ui-sr__actions { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: 6px; min-width: 0; max-width: 100%; margin-left: auto; }
+.ui-sr__actions { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: var(--tc-space-1-5); min-width: 0; max-width: 100%; margin-left: auto; }
 /* Secondary and primary: exactly like Button – the control geometry, flat ink for the primary (decision 1) */
 :where([data-look="standard"], [data-look="standard"] *).ui-sr__btn {
   max-width: 100%;
@@ -610,8 +610,8 @@ const css = /* css */ `
 :where([data-look="standard"], [data-look="standard"] *).ui-sr__done {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding-right: 4px;
+  gap: var(--tc-space-1-5);
+  padding-right: var(--tc-space-1);
   font-size: var(--tc-font-size-md);
   font-weight: var(--tc-font-weight-medium);
   color: var(--tc-status-success-fg);
@@ -634,13 +634,13 @@ const css = /* css */ `
 :where([data-look="clean"], [data-look="clean"] *).ui-sr [data-level="2"] > span[data-on] { background: var(--tc-accent); }
 :where([data-look="clean"], [data-look="clean"] *).ui-sr [data-level="3"] > span[data-on] { background: var(--tc-status-success-solid); }
 :where([data-look="clean"], [data-look="clean"] *).ui-sr [data-level="0"] > span:first-child { background: var(--tc-text-disabled); }
-:where([data-look="clean"], [data-look="clean"] *).ui-sr__actions { gap: 8px; }
+:where([data-look="clean"], [data-look="clean"] *).ui-sr__actions { gap: var(--tc-space-2); }
 /* Secondary: white with the card's hairline shadow */
 :where([data-look="clean"], [data-look="clean"] *).ui-sr__btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: var(--tc-space-1-5);
   max-width: 100%;
   height: var(--tc-control-h-md);
   padding: 0 var(--tc-control-px-md);
@@ -654,7 +654,7 @@ const css = /* css */ `
   transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), box-shadow var(--tc-duration-fast) var(--tc-ease-standard), transform var(--tc-duration-fast) var(--tc-ease-move);
 }
 :where(.ui-sr) :where([data-look="clean"], [data-look="clean"] *).ui-sr__btn { background: var(--tc-action-secondary-bg); box-shadow: var(--tc-action-secondary-shadow); color: var(--tc-action-secondary-fg); }
-:where([data-look="clean"], [data-look="clean"] *).ui-sr__btn--icon { padding: 0 10px 0 8px; }
+:where([data-look="clean"], [data-look="clean"] *).ui-sr__btn--icon { padding: 0 var(--tc-space-2-5) 0 var(--tc-space-2); }
 :where([data-look="clean"], [data-look="clean"] *).ui-sr__btn--icon svg { color: var(--tc-icon-muted); }
 :where([data-look="clean"], [data-look="clean"] *).ui-sr__btn[aria-expanded="true"] { background: var(--tc-fill-subtle); }
 :where([data-look="clean"], [data-look="clean"] *).ui-sr__btn:active { transform: scale(0.97); }
@@ -664,10 +664,10 @@ const css = /* css */ `
 :where([data-look="clean"], [data-look="clean"] *).ui-sr__done {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--tc-space-1-5);
   min-width: 0;
   height: 28px;
-  padding: 0 10px 0 8px;
+  padding: 0 var(--tc-space-2-5) 0 var(--tc-space-2);
   border-radius: var(--tc-radius-sm);
   background: var(--tc-status-success-bg);
   font-size: var(--tc-font-size-md);
@@ -685,7 +685,7 @@ const css = /* css */ `
   right: 0;
   z-index: var(--tc-z-dropdown);
   display: grid;
-  gap: 2px;
+  gap: var(--tc-space-0-5);
   width: 260px;
   padding: var(--tc-menu-padding);
   border-radius: var(--tc-menu-radius);
@@ -703,7 +703,7 @@ const css = /* css */ `
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
+  gap: var(--tc-space-2-5);
   min-height: var(--tc-menu-item-h);
   padding: 0 var(--tc-menu-item-px);
   border: 0;
@@ -719,7 +719,7 @@ const css = /* css */ `
 .ui-sr__option[aria-checked="true"] .ui-sr__check { opacity: 1; }
 .ui-sr__option:focus-visible { outline-offset: calc(var(--tc-focus-ring-width) * -1) !important; }
 .ui-sr__sr, .ui-sr__mini > .ui-sr__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; background: none; }
-:where([data-look="standard"], [data-look="standard"] *).ui-sr__option-label { display: inline-flex; align-items: center; gap: 6px; }
+:where([data-look="standard"], [data-look="standard"] *).ui-sr__option-label { display: inline-flex; align-items: center; gap: var(--tc-space-1-5); }
 :where([data-look="standard"], [data-look="standard"] *).ui-sr__tag { padding: 0 var(--tc-pill-px); border-radius: var(--tc-pill-radius); background: var(--tc-accent-subtle); font-size: var(--tc-pill-font-size); font-weight: var(--tc-pill-font-weight); line-height: var(--tc-line-height-tight); color: var(--tc-accent-text); }
 :where([data-look="clean"], [data-look="clean"] *).ui-sr__menu { bottom: calc(100% + 6px); width: 248px; }
 /* Narrow: the actions sit on their own row – the menu lines up with its right edge so it stays inside */
@@ -732,7 +732,7 @@ const css = /* css */ `
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
+  gap: var(--tc-space-2-5);
   height: var(--tc-menu-item-h);
   padding: 0 var(--tc-menu-item-px);
   border-radius: var(--tc-menu-item-radius);
@@ -744,11 +744,11 @@ const css = /* css */ `
 }
 :where([data-look="clean"], [data-look="clean"] *).ui-sr__option[aria-checked="true"] { color: var(--tc-menu-item-selected-fg); }
 :where([data-look="clean"], [data-look="clean"] *).ui-sr button.ui-sr__option:focus-visible { outline-offset: -2px; }
-:where([data-look="clean"], [data-look="clean"] *).ui-sr__option-label { display: inline-flex; align-items: center; gap: 6px; min-width: 0; }
+:where([data-look="clean"], [data-look="clean"] *).ui-sr__option-label { display: inline-flex; align-items: center; gap: var(--tc-space-1-5); min-width: 0; }
 :where([data-look="clean"], [data-look="clean"] *).ui-sr__option-name { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 :where([data-look="clean"], [data-look="clean"] *).ui-sr__tag {
   flex: none;
-  padding: 0 5px;
+  padding: 0 var(--tc-space-1);
   border-radius: var(--tc-pill-radius);
   background: var(--tc-accent-subtle);
   font-size: var(--tc-pill-font-size);
@@ -767,18 +767,18 @@ const css = /* css */ `
 }
 /* Narrow cards (phones) */
 @container (max-width: 340px) {
-:where([data-look="clean"], [data-look="clean"] *).ui-sr__head { padding: 0 10px 0 14px; }
-:where([data-look="clean"], [data-look="clean"] *).ui-sr__reason { padding: 0 14px; }
-:where([data-look="clean"], [data-look="clean"] *).ui-sr__foot { padding: 10px 10px 10px 14px; }
+:where([data-look="clean"], [data-look="clean"] *).ui-sr__head { padding: 0 var(--tc-space-2-5) 0 var(--tc-space-3-5); }
+:where([data-look="clean"], [data-look="clean"] *).ui-sr__reason { padding: 0 var(--tc-space-3-5); }
+:where([data-look="clean"], [data-look="clean"] *).ui-sr__foot { padding: var(--tc-space-2-5) var(--tc-space-2-5) var(--tc-space-2-5) var(--tc-space-3-5); }
 }
 /* Touch screens: bigger tap targets */
 @media (pointer: coarse) {
 :where([data-look="clean"], [data-look="clean"] *).ui-sr__head { height: 48px; }
 :where([data-look="clean"], [data-look="clean"] *).ui-sr__btn,
 :where([data-look="clean"], [data-look="clean"] *).ui-sr__done { height: 36px; }
-:where([data-look="clean"], [data-look="clean"] *).ui-sr__btn { padding: 0 14px; }
+:where([data-look="clean"], [data-look="clean"] *).ui-sr__btn { padding: 0 var(--tc-space-3-5); }
 :where([data-look="clean"], [data-look="clean"] *).ui-sr__btn--icon,
-:where([data-look="clean"], [data-look="clean"] *).ui-sr__done { padding: 0 14px 0 12px; }
+:where([data-look="clean"], [data-look="clean"] *).ui-sr__done { padding: 0 var(--tc-space-3-5) 0 var(--tc-space-3); }
 :where([data-look="clean"], [data-look="clean"] *).ui-sr__option { height: 40px; }
 }
 @media (prefers-reduced-motion: reduce) {
