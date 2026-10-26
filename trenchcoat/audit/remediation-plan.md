@@ -95,6 +95,14 @@ into `src/`, `illustrations/` and `motion/` and are rebuilt into `components/` w
 today; the CI checks are unchanged (their counts for blocks and screens stay where they are). Everything here is
 CSS, tokens, data or plain TypeScript, so it moves to Lit as is.
 
+### 1.0 Delete frost-cloud and glow-cloud
+
+The two cloud illustrations are dropped rather than reworked or ported. Delete `illustrations/frost-cloud.tsx` and
+`illustrations/glow-cloud.tsx`, their gallery demos (`app/src/demos/illustrations/`), their contract specs and
+regression tests, their entries in `tests/regressions/illustrations-i1-theme.test.tsx`, `tests/render-budgets.json`
+and `illustrations/README.md`, and lower the ratchet baseline if it counted them. Nothing else imports them.
+CHANGELOG: removed. Done first, so no later step spends time on them; the audits keep their historical mentions.
+
 ### 1.1 Type scale (decision B: round down)
 
 Fold 11.5 → 11, 12.5 → 12 and 13.5 → 13 px in both looks. Blocks and screens still use `--tc-font-size-xs-plus`,
@@ -223,7 +231,7 @@ until the later phase moves blocks and screens off them. Folded into the port:
 
 ### 2.7 Illustrations and motion; demos; measurements
 
-- Port the 24 illustrations and the 8 motion pieces to Lit elements, with the **glass-folder `open` property**
+- Port the 22 illustrations and the 8 motion pieces to Lit elements, with the **glass-folder `open` property**
   (illustrations) added as part of its port. glass-folder's React version stays frozen, like the 14 components in
   2.6, because three screens import it.
 - **Demo paths for the unseen states** (stepper-form review/success, decision-tree sub-questions), then a runtime
@@ -252,7 +260,7 @@ until the later phase moves blocks and screens off them. Folded into the port:
 | A | How do the looks ship? | **Revised: one npm package, one module per component carrying both looks, chosen with the `look` property.** `src/` is the only source; `components/` and the `-clean` copies are deleted; the gallery gets a look switch. (Was: single-look files – that suited copy-paste files, not a package.) |
 | D | What is the component layer? | **Lit 3 web components**, in TypeScript with standard decorators, ts-lit-plugin in the editor and lit-analyzer in CI. Committed – no spike; three pilot components (step 2.3) prove the patterns. Stencil was compared and dropped. The element patterns (light DOM, content, values, forms, React wrappers, no SSR in v1, windowing, tests, `tc-` tags) are decisions L1–L16 in [lit-port-plan.md](lit-port-plan.md). |
 | E | In what order? | **Carry-over work first (Part 1), then the shift to Lit (Part 2)**, which absorbs everything whose form changes with Lit. |
-| F | What moves to Lit? | **In this plan:** the 64 components, the 24 illustrations and the 8 motion pieces. **Blocks and screens** are out of this plan and get their own phase afterwards. The gallery stays React. |
+| F | What moves to Lit? | **In this plan:** the 64 components, the 22 illustrations and the 8 motion pieces. frost-cloud and glow-cloud are deleted, not ported (step 1.0). **Blocks and screens** are out of this plan and get their own phase afterwards. The gallery stays React. |
 | G | Distribution | **Not published to npm.** The package is built and packed (`"private": true`); how apps receive it is decided after the plan is done. |
 | H | License and version | **Proprietary** (`"license": "UNLICENSED"`), starting at **0.1.0**. No app uses Trenchcoat yet, so breaking changes need no deprecation period. |
 | I | Working copy and PRs | **`~/Documents/GitHub/legendary-chainsaw`**, with trenchcoat's separate `.git` retired (step 0). **One pull request per part.** |
@@ -267,6 +275,7 @@ until the later phase moves blocks and screens off them. Folded into the port:
 |---|---|---|
 | 0 Working copy | – | 0.5 day |
 | **Part 1** | 0 | |
+| 1.0 Delete the clouds | – | 0.5 hour |
 | 1.1 Type scale | – | 0.5 day |
 | 1.2 Spacing | 1.1 (same files, same screenshots) | 2 days |
 | 1.3 Remaining literals | 1.1 | 1 day |

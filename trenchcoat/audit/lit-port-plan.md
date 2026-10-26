@@ -16,7 +16,7 @@ The React code is large and React-specific, so the port is a rewrite:
 | | Size |
 |---|---|
 | Component source (`src/components/`) | 71,000 lines, 64 components |
-| Illustrations and motion | 24 illustrations (12,500 lines) and 8 motion pieces (2,000 lines) |
+| Illustrations and motion | 22 illustrations (24 today; frost-cloud and glow-cloud are deleted in remediation step 1.0) and 8 motion pieces (2,000 lines) |
 | Not in this plan | Blocks (11 files) and screens (15 files) – their own phase after this one; they stay React on the React components until then |
 | Shared helpers (`src/internal/`) | 300 lines: value props, root ref, hotkeys, on-screen, focus rescue, smooth height |
 | React APIs in use | `useState` / `useEffect` / `useRef` in ~62 components, `useId` in 51, the value-prop helper in 54, React 19 `<style href precedence>` in all 64, 182 props typed `ReactNode` |
@@ -44,7 +44,7 @@ the real-browser tools (`scripts/a11y.mjs`, `scripts/visual.mjs`), which test th
 | L11 | Windowing | data-table's `useRowWindow` ported as a reactive controller (it keeps its `aria-rowindex` and keyboard behaviour); combobox, trace-waterfall and filter-menu use the same controller |
 | L12 | Tests | Vitest browser mode with the Playwright provider, in Chromium, Firefox and WebKit – the repo keeps Vitest; `scripts/a11y.mjs` scans every element |
 | L13 | Tag names | `tc-` prefix: `<tc-button>`, `<tc-combobox>`, `<tc-data-table>` |
-| L14 | Scope | **Ported to Lit:** the 64 components, the 24 illustrations and the 8 motion pieces. **Not in this plan:** blocks and screens, which get their own phase afterwards and stay React until then. The 14 components and glass-folder that blocks and screens import keep a frozen React version until that phase. The gallery stays a React app. |
+| L14 | Scope | **Ported to Lit:** the 64 components, the 22 illustrations and the 8 motion pieces. **Not in this plan:** blocks and screens, which get their own phase afterwards and stay React until then. The 14 components and glass-folder that blocks and screens import keep a frozen React version until that phase. The gallery stays a React app. |
 | L15 | Frameworks | `examples/` apps for React 19 (Vite) and Next.js, Vue 3 (Vite) and Nuxt, Angular (`CUSTOM_ELEMENTS_SCHEMA`), Svelte 5, and plain HTML |
 | L16 | Screen readers | VoiceOver, run by Claude on this Mac, at the end of the pilot and in the final verification. NVDA isn't tested – a known gap. |
 
