@@ -1,5 +1,6 @@
 // Screenshot parity between each React component and its Lit port (lit-port-plan.md acceptance check 4).
-//   node scripts/compare-lit.mjs     writes .visual/lit-compare/<case>-<look>-<theme>-{react,lit,diff}.png and a table
+//   node scripts/compare-lit.mjs                    the pilot's cases; writes .visual/lit-compare/<case>-<look>-<theme>-{react,lit,diff}.png and a table
+//   node scripts/compare-lit.mjs <slug> [<slug>…]   each component's gallery demo, React vs the wrappers
 // Same props, both looks, both themes, reduced motion. The diff counts pixels pixelmatch flags at its default
 // threshold; under 1 % is a match (antialiasing and subpixel text differ between any two renders).
 import { chromium } from "@playwright/test";
@@ -11,12 +12,23 @@ import pixelmatch from "pixelmatch";
 
 const OUT = ".visual/lit-compare";
 mkdirSync(OUT, { recursive: true });
-const server = await createServer({ configFile: "vite.config.ts", server: { port: 5320, strictPort: true }, logLevel: "error" });
+const server = await createServer({ configFile: "vite.config.ts", server: { port: 5320 + Math.floor(Math.random() * 400), strictPort: false }, logLevel: "error" });
 await server.listen();
+const base = server.resolvedUrls.local[0].replace(/\/$/, "");
 const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: 1100, height: 900 }, reducedMotion: "reduce", deviceScaleFactor: 1 });
-await page.goto("http://localhost:5320/compare.html");
-await page.waitForSelector("tc-data-table[data-ui=dt] table");
+const slugs = process.argv.slice(2);
+if (slugs.length) {
+  // Demos start on a fixed clock, so both sides show the same moment
+  await page.clock.install({ time: new Date("2026-10-24T12:00:00Z") });
+  await page.goto(`${base}/compare.html?demo=${slugs.join(",")}`);
+  await page.waitForSelector("body[data-ready=true]");
+  await page.clock.runFor(1500);
+  await page.clock.pauseAt(new Date("2026-10-24T12:00:05Z"));
+} else {
+  await page.goto(`${base}/compare.html`);
+  await page.waitForSelector("tc-data-table[data-ui=dt] table");
+}
 await page.waitForTimeout(800);
 
 const rows = [];

@@ -1,6 +1,7 @@
 // The package build (remediation plan 2.4, started with the pilot): ES modules, one per element, into dist/elements.
 // Lit stays external – apps get one copy – and so does React, which only the react entry uses.
 import { defineConfig } from "vite";
+import { readdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
 const here = (p: string) => fileURLToPath(new URL(p, import.meta.url));
@@ -17,13 +18,10 @@ export default defineConfig({
     sourcemap: true,
     lib: {
       formats: ["es"],
+      // Every element module (src/elements/<slug>.ts) is an entry, with the index, the React wrappers and the provider
       entry: {
-        index: here("src/elements/index.ts"),
-        button: here("src/elements/button.ts"),
-        combobox: here("src/elements/combobox.ts"),
-        "data-table": here("src/elements/data-table.ts"),
+        ...Object.fromEntries(readdirSync(here("src/elements")).filter((f) => f.endsWith(".ts")).map((f) => [f.slice(0, -3), here(`src/elements/${f}`)])),
         "look-provider": here("src/elements/internal/look.ts"),
-        react: here("src/elements/react.ts"),
       },
     },
     rollupOptions: {

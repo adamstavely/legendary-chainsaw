@@ -4,7 +4,7 @@ import { customElementSveltePlugin } from "custom-element-svelte-integration";
 // `custom-elements.json` – the element metadata that drives framework types, editor completion and the wrappers
 export default {
   globs: ["src/elements/**/*.ts"],
-  exclude: ["src/elements/react.ts", "src/elements/index.ts"],
+  exclude: ["src/elements/react.ts", "src/elements/react/**", "src/elements/index.ts"],
   outdir: ".",
   litelement: true,
   plugins: [

@@ -1,12 +1,15 @@
 // Dev-only page for scripts/compare-lit.mjs (lit-port-plan.md acceptance check 4): every React component that has
 // a Lit port, next to the element, with the same props, in both looks and both themes. Each side is screenshotted
-// and diffed.
+// and diffed. With ?demo=<slug>[,<slug>…] the page shows each component's gallery demo instead: the React module
+// (the Clean twin for Clean) next to the same demo on the React wrappers inside a look provider.
+import { useEffect, useState, type ComponentType } from "react";
 import { createRoot } from "react-dom/client";
+import cleanTwins from "virtual:tc-clean";
 import "../../tokens/tokens.css";
 import { Button as ReactButton } from "../../src/components/button";
 import { Combobox as ReactCombobox } from "../../src/components/combobox";
 import { DataTable as ReactDataTable } from "../../src/components/data-table";
-import { Button, Combobox, DataTable } from "../../src/elements/react";
+import { Button, Combobox, DataTable, LookProvider } from "../../src/elements/react";
 
 const people = [
   { value: "ana", label: "Ana Lima", group: "People", hint: "Design" },
@@ -56,10 +59,42 @@ const cases: Case[] = [
   },
 ];
 
+const demos = import.meta.glob<{ default: ComponentType<{ ui: unknown }> }>("./demos/*.tsx");
+const reactModules = import.meta.glob("../../src/components/*.tsx");
+const demoSlugs = new URLSearchParams(location.search).get("demo")?.split(",").filter(Boolean) ?? [];
+
+/** The demo on the React component and on the wrappers, once both modules have loaded */
+function demoCase(slug: string, loaded: Record<string, { Demo: ComponentType<{ ui: unknown }>; standard: unknown; clean: unknown; lit: unknown }>): Case {
+  const m = loaded[slug];
+  return {
+    id: slug,
+    react: (look) => (m ? <m.Demo ui={look === "clean" ? m.clean : m.standard} /> : null),
+    lit: (look) => (m ? <LookProvider look={look}><m.Demo ui={m.lit} /></LookProvider> : null),
+  };
+}
+
 function Page() {
+  const [loaded, setLoaded] = useState<Parameters<typeof demoCase>[1]>({});
+  useEffect(() => {
+    void Promise.all(
+      demoSlugs.map(async (slug) => {
+        const [demo, standard, clean, lit] = await Promise.all([
+          demos[`./demos/${slug}.tsx`]!(),
+          reactModules[`../../src/components/${slug}.tsx`]!(),
+          cleanTwins[slug] ? cleanTwins[slug]() : reactModules[`../../src/components/${slug}.tsx`]!(),
+          import("../../src/elements/react"),
+        ]);
+        return [slug, { Demo: demo.default, standard, clean, lit }] as const;
+      }),
+    ).then((list) => {
+      setLoaded(Object.fromEntries(list));
+      document.body.dataset.ready = "true";
+    });
+  }, []);
+  const shown = demoSlugs.length ? demoSlugs.map((s) => demoCase(s, loaded)) : cases;
   return (
     <>
-      {cases.flatMap((c) =>
+      {shown.flatMap((c) =>
         (["standard", "clean"] as const).flatMap((look) =>
           (["light", "dark"] as const).map((theme) => (
             <div key={`${c.id}-${look}-${theme}`} className="pair" data-theme={theme} data-tc-theme={theme} id={`${c.id}-${look}-${theme}`}>

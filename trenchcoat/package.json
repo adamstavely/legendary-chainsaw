@@ -10,18 +10,6 @@
       "types": "./dist/types/elements/index.d.ts",
       "import": "./dist/index.js"
     },
-    "./button": {
-      "types": "./dist/types/elements/button.d.ts",
-      "import": "./dist/button.js"
-    },
-    "./combobox": {
-      "types": "./dist/types/elements/combobox.d.ts",
-      "import": "./dist/combobox.js"
-    },
-    "./data-table": {
-      "types": "./dist/types/elements/data-table.d.ts",
-      "import": "./dist/data-table.js"
-    },
     "./look-provider": {
       "types": "./dist/types/elements/internal/look.d.ts",
       "import": "./dist/look-provider.js"
@@ -37,7 +25,11 @@
       "types": "./dist/types/svelte.d.ts"
     },
     "./tokens.css": "./tokens/tokens.css",
-    "./custom-elements.json": "./custom-elements.json"
+    "./custom-elements.json": "./custom-elements.json",
+    "./*": {
+      "types": "./dist/types/elements/*.d.ts",
+      "import": "./dist/*.js"
+    }
   },
   "types": "./dist/types/elements/index.d.ts",
   "customElements": "custom-elements.json",
@@ -50,11 +42,7 @@
   ],
   "sideEffects": [
     "*.css",
-    "./dist/index.js",
-    "./dist/button.js",
-    "./dist/combobox.js",
-    "./dist/data-table.js",
-    "./dist/look-provider.js",
+    "./dist/*.js",
     "./dist/elements/*.js"
   ],
   "scripts": {
@@ -65,13 +53,14 @@
     "test": "vitest run",
     "check:prefixes": "node scripts/check-prefixes.mjs",
     "check:ratchet": "node scripts/check-ratchet.mjs",
-    "ci": "npm run typecheck && npm run lint && npm run check:prefixes && npm run check:ratchet && npm run check:tokens && npm run check:contrast && npm run check:lit && npm test",
+    "ci": "npm run typecheck && npm run lint && npm run check:prefixes && npm run check:ratchet && npm run check:tokens && npm run check:contrast && node scripts/gen-elements.mjs --check && npm run check:lit && npm test",
     "check:tokens": "node scripts/tokens.mjs --check && node scripts/check-tokens.mjs",
     "check:contrast": "node scripts/contrast.mjs",
     "check:lit": "lit-analyzer src/elements --strict --maxWarnings 0",
     "visual": "node scripts/visual.mjs",
     "build:package": "vite build -c vite.package.config.ts && tsc -p tsconfig.package.json && cem analyze --config custom-elements-manifest.config.mjs",
-    "examples": "node scripts/examples.mjs"
+    "examples": "node scripts/examples.mjs",
+    "gen:elements": "node scripts/gen-elements.mjs"
   },
   "dependencies": {
     "@lit/context": "1.1.6",
