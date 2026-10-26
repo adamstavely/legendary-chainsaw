@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased – remediation Part 4 (a design-system page for every component)
+
+See `audit/remediation-plan.md`, Part 4.
+
+### Added
+
+- A design-system page for every component, illustration and motion piece in the gallery: overview, when to use and when not, anatomy pinned on the live demo, looks, usage for HTML, React, Vue, Angular and Svelte, the full API (generated), the React props, accessibility with the keyboard table, content guidance, do and don't, related components and the changelog. Foundations pages: getting started, looks, themes, tokens, patterns, accessibility.
+- `npm run check:docs`: every public property, event, slot and React prop has a description, every page has its guidance, and every React example type-checks.
+
+### Fixed
+
+- data-table and agent-lanes: a look selector left in front of a comment turned two rules into descendant selectors, so Clean lost data-table's coloured tag pills and agent-lanes' Reject / Approve button styles.
+- agent-lanes says "1 task needs you" (was "1 task need you").
+
 ## Unreleased – remediation Part 3 (new components)
 
 See `audit/remediation-plan.md`, Part 3. Each is a Lit element with both looks, a React wrapper in `trenchcoat/react`,

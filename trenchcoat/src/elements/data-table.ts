@@ -125,6 +125,7 @@ export class TcDataTable extends TcElement {
   @property() accessor heading = "";
   /** An icon element in front of the heading (cloned) */
   @property({ attribute: false }) accessor icon: Element | undefined = undefined;
+  /** The columns, left to right: each one's key, label, type, width and whether it can be edited */
   @property({ attribute: false }) accessor columns: DataColumn[] = [];
   /** The rows. Edits change them unless a tc-rows-change listener calls preventDefault() */
   @property({ attribute: false }) accessor rows: DataRow[] = [];
@@ -1254,7 +1255,7 @@ export class TcDataTable extends TcElement {
 .ui-dt__check[aria-checked="true"] svg,
 .ui-dt__check[aria-checked="mixed"] svg { opacity: 1; transform: none; }
 /* Tags: soft fill with a hairline in the same hue */
-:where([data-look="standard"], [data-look="standard"] *)/* Tags: the pill pattern (large size, for table text) in the status / tone colours – every fg ≥ 4.5:1 on its tint */
+/* Tags: the pill pattern (large size, for table text) in the status / tone colours – every fg ≥ 4.5:1 on its tint */
 .ui-dt__tag {
   display: inline-block;
   max-width: 100%;

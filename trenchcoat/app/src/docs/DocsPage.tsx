@@ -28,7 +28,9 @@ const SECTIONS: [string, string][] = [
 
 const md = (text: string) => ({ __html: marked.parse(text, { async: false }) as string });
 /** A JSDoc description with its inline code and emphasis rendered */
-const Inline = ({ text }: { text: string }) => <span dangerouslySetInnerHTML={{ __html: marked.parseInline(text, { async: false }) as string }} />;
+const Inline = ({ text }: { text: string }) => <span dangerouslySetInnerHTML={{ __html: marked.parseInline(escapeTags(text), { async: false }) as string }} />;
+/** Tag names in JSDoc prose ("<tc-look-provider>") are text, not HTML – escaped outside code spans */
+const escapeTags = (text: string) => text.split(/(`[^`]*`)/).map((part, i) => (i % 2 ? part : part.replace(/</g, "&lt;"))).join("");
 const kb = (n: number) => `${(n / 1024).toFixed(1)} KB`;
 const FRAMEWORKS: [Framework, string, string][] = [
   ["html", "HTML", "html"],

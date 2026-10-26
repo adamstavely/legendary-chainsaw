@@ -111,6 +111,7 @@ let instances = 0;
 export class TcAgentLanes extends TcElement {
   static override ui = "al";
 
+  /** The agents, one lane each from top to bottom – name, model and an optional avatar */
   @property({ attribute: false }) accessor agents: LaneAgent[] = [];
   /** The tasks – always the source of truth. After Approve or Reject the block shows the result right away; as soon as
    *  you pass that task with a new status, start or end, your version wins */
@@ -578,7 +579,7 @@ export class TcAgentLanes extends TcElement {
           </div>
         </div>
       </div>
-      <span class="ui-al__sr" aria-live="polite">${needs > 0 ? `${needs} task${needs === 1 ? "" : "s"} need you` : `${running} running`}</span>
+      <span class="ui-al__sr" aria-live="polite">${needs > 0 ? `${needs} task${needs === 1 ? " needs" : "s need"} you` : `${running} running`}</span>
     `;
   }
 
@@ -738,7 +739,7 @@ export class TcAgentLanes extends TcElement {
 .ui-al__ask-actions { display: flex; justify-content: flex-end; gap: var(--tc-space-1-5); margin-top: var(--tc-space-2); }
 .ui-al__ask-actions[aria-busy] .ui-al__btn { opacity: 0.6; cursor: progress; }
 .ui-al__error { display: block; margin-top: var(--tc-space-1-5); font-size: var(--tc-font-size-sm); color: var(--tc-status-danger-fg); }
-:where([data-look="standard"], [data-look="standard"] *)/* Reject / Approve: secondary and primary actions, exactly like Button */
+/* Reject / Approve: secondary and primary actions, exactly like Button */
 .ui-al__btn { display: inline-flex; align-items: center; height: var(--tc-control-h-md); padding: 0 var(--tc-control-px-md); border-radius: var(--tc-control-radius-md); background: var(--tc-action-secondary-bg); box-shadow: var(--tc-action-secondary-shadow); font-size: var(--tc-control-font-size); font-weight: var(--tc-control-font-weight); color: var(--tc-action-secondary-fg); transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), box-shadow var(--tc-duration-fast) var(--tc-ease-standard); }
 .ui-al__btn:hover { box-shadow: var(--tc-action-secondary-shadow-hover); }
 .ui-al__btn--primary { background: var(--tc-action-primary-bg); box-shadow: var(--tc-action-primary-shadow); color: var(--tc-action-primary-fg); }
