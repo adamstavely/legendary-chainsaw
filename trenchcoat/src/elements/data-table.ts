@@ -105,6 +105,13 @@ export const dateColumnIcon = (look?: Look) => columnIcon("M3 4.5h10v9H3zM3 7.5h
 
 const clone = (n: Element | undefined) => (n ? n.cloneNode(true) : nothing);
 
+/**
+ * A database-style table that works like a small spreadsheet.
+ * @tag tc-data-table
+ * @fires tc-rows-change - Rows were edited, pasted, cleared, added, deleted, undone or redone ({ rows }); cancelable
+ * @fires tc-selection-change - Rows were checked or unchecked ({ selection }); cancelable
+ * @fires tc-sort-change - The sort changed ({ sort }); cancelable
+ */
 export class TcDataTable extends TcElement {
   static override ui = "dt";
 

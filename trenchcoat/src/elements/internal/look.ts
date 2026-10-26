@@ -11,6 +11,7 @@ export const lookContext = createContext<Look | undefined>(Symbol("tc-look"));
 /**
  * Sets the default look for every Trenchcoat element inside it. Renders nothing of its own (display: contents).
  *   <tc-look-provider look="clean"> … </tc-look-provider>
+ * @tag tc-look-provider
  */
 export class TcLookProvider extends LitElement {
   @provide({ context: lookContext })

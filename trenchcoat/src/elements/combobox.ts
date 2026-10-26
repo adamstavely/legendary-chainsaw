@@ -90,6 +90,12 @@ function visual(o: ComboboxOption) {
 const keepFocus = (e: Event) => e.preventDefault();
 let instances = 0;
 
+/**
+ * Pick one or many options from a searchable, grouped list; picked options show as chips.
+ * @tag tc-combobox
+ * @fires tc-value-change - The user picked or removed values ({ value, options }); cancelable
+ * @fires tc-open-change - The list opens or closes ({ open }); cancelable
+ */
 export class TcCombobox extends TcElement {
   static override ui = "cbx";
   static formAssociated = true;

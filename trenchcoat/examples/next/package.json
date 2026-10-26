@@ -1,0 +1,7 @@
+{
+  "name": "trenchcoat-example-next",
+  "private": true,
+  "scripts": { "build": "next build", "serve": "next start -p" },
+  "dependencies": { "next": "16.4.3", "react": "19.3.1", "react-dom": "19.3.1", "trenchcoat": "file:../.packed/trenchcoat.tgz" },
+  "devDependencies": { "@types/node": "22.15.0", "@types/react": "19.3.0", "@types/react-dom": "19.3.0", "typescript": "5.8.3" }
+}

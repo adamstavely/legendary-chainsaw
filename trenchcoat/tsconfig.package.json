@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "allowImportingTsExtensions": false,
+    "outDir": "dist/types",
+    "rootDir": "src",
+    "types": [],
+    "plugins": []
+  },
+  "include": ["src/elements/**/*.ts"],
+  "exclude": []
+}

@@ -22,6 +22,12 @@ import { AriaForwardController, OffScreenController } from "./internal/controlle
  * text children: React and Vue set textContent on an element whose only child is text, which would erase what the
  * element renders. ARIA attributes set on the host (aria-label, aria-expanded …) move to the inner button.
  */
+/**
+ * A button: primary, secondary, ghost or destructive, in three sizes, with a loading state.
+ * @tag tc-button
+ * @slot icon - An icon before the label
+ * @slot icon-right - An icon after the label
+ */
 export class TcButton extends TcElement {
   static override ui = "button";
 
@@ -36,7 +42,7 @@ export class TcButton extends TcElement {
   /** Shows a shimmer over the label, blocks clicks and adds "loading" to the accessible name */
   @property({ type: Boolean, reflect: true }) accessor loading = false;
   @property({ type: Boolean, reflect: true }) accessor disabled = false;
-  @property() accessor type: "button" | "submit" | "reset" = "button";
+  @property({ reflect: true }) accessor type: "button" | "submit" | "reset" = "button";
   /** Submitted with the form when this is its submit button */
   @property() accessor name = "";
   @property() accessor value = "";

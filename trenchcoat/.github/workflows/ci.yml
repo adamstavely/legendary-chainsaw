@@ -30,3 +30,5 @@ jobs:
         run: npx playwright install --with-deps chromium firefox webkit
       - name: Tests
         run: npm test
+      - name: Framework examples (React, Next.js, Vue, Nuxt, Angular, Svelte, HTML)
+        run: npm run examples

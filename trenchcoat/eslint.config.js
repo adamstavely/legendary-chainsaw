@@ -4,7 +4,7 @@ import lit from "eslint-plugin-lit";
 import wc from "eslint-plugin-wc";
 
 export default tseslint.config(
-  { ignores: ["node_modules", "dist", "coverage", ".visual", ".perf", "scripts/perf"] },
+  { ignores: ["node_modules", "dist", "dist-gallery", "coverage", ".visual", ".perf", "scripts/perf", "examples", "custom-elements-manifest.config.mjs"] },
   {
     files: ["**/*.{ts,tsx}"],
     extends: [tseslint.configs.recommended],

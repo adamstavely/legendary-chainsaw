@@ -72,7 +72,7 @@ export default defineConfig({
   plugins: [cleanTwins(), uiAlias(), react()],
   resolve: { alias: LIBS },
   server: { port: 5199, fs: { allow: [here(".")] } },
-  build: { outDir: here("dist"), emptyOutDir: true },
+  build: { outDir: here("dist-gallery"), emptyOutDir: true },
   test: {
     root: here("."),
     testTimeout: 30_000,
