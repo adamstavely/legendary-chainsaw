@@ -123,7 +123,7 @@ tree-shake by importing one element's entry (`trenchcoat/button`), not by named 
 | 2 | Content: icons and custom cells from React, Vue, Angular, Svelte and HTML | **Pass**, with the refinement above (children stay in place, text as a property) |
 | 3 | Forms: submit, reset, `required`, `FormData`, 3 browsers | **Pass** |
 | 4 | Screenshots match React, both looks and themes | **Pass: 12 of 12 cases pixel-identical (0.00 %)** – `node scripts/compare-lit.mjs` |
-| 5 | Every example app, typed props and events | **Pass: all 7** (`npm run examples`); the React example type-checks the wrappers (it caught a duplicate `onChange` type). Vue, Svelte and Angular use the elements untyped for now – typed bindings from `custom-elements.json` come with the package work in 2.4 |
+| 5 | Every example app, typed props and events | **Pass: all 7** (`npm run examples`); the React example type-checks the wrappers (it caught a duplicate `onChange` type). Vue type-checks its template against `trenchcoat/vue` (vue-tsc; a seeded wrong prop type is rejected); `trenchcoat/svelte` is generated the same way but not yet checked with svelte-check; Angular uses `CUSTOM_ELEMENTS_SCHEMA`, which is untyped |
 | 6 | Next.js and Nuxt: no hydration errors or layout shift | **Pass** (client-only, sized placeholders) |
 | 7 | Performance within 20 % of React | **Pass** – `node scripts/measure-lit.mjs`, Chromium, median of 5: data-table 10k mount 16.8 ms (React 31.7), scroll worst frame 18.1 ms (18.3); combobox 5k open 16.7 ms (16.1, +4 %); button 0.2 ms per instance (0.2) |
 | 8 | Size against React | Recorded: Lit runtime 9.3 KB gz once; tc-button 6.0 KB gz (React file 4.8), tc-combobox 13.3 (12.9), tc-data-table 14.6 (15.6). All three with the runtime: 37.0 KB gz |
@@ -136,5 +136,6 @@ tree-shake by importing one element's entry (`trenchcoat/button`), not by named 
 
 - **VoiceOver.** Needs a person (or a session with full control of Safari). The automated checks cover what
   VoiceOver reads – roles, names, `aria-activedescendant` targets, live regions – but not what it announces.
-- **Typed bindings for Vue, Svelte and Angular** from `custom-elements.json` (step 2.4).
+- **Typed Angular templates** – `CUSTOM_ELEMENTS_SCHEMA` accepts any binding; Svelte's generated types aren't
+  checked yet.
 - **Angular 22** needs Node 24.15+; the example uses Angular 21 on this machine's Node 24.4.

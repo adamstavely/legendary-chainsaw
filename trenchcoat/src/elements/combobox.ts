@@ -44,6 +44,9 @@ export type ComboboxOption = {
 };
 
 export type ComboboxValueChange = { value: string[]; options: ComboboxOption[] };
+export type ComboboxValueChangeEvent = CustomEvent<ComboboxValueChange>;
+export type OpenChange = { open: boolean };
+export type OpenChangeEvent = CustomEvent<OpenChange>;
 
 type Chip = { value: string; leaving?: boolean };
 type Group = { name: string; options: ComboboxOption[] };
@@ -93,8 +96,8 @@ let instances = 0;
 /**
  * Pick one or many options from a searchable, grouped list; picked options show as chips.
  * @tag tc-combobox
- * @fires tc-value-change - The user picked or removed values ({ value, options }); cancelable
- * @fires tc-open-change - The list opens or closes ({ open }); cancelable
+ * @fires {ComboboxValueChange} tc-value-change - The user picked or removed values ({ value, options }); cancelable
+ * @fires {OpenChange} tc-open-change - The list opens or closes ({ open }); cancelable
  */
 export class TcCombobox extends TcElement {
   static override ui = "cbx";

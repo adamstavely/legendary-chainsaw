@@ -30,6 +30,12 @@
       "types": "./dist/types/elements/react.d.ts",
       "import": "./dist/react.js"
     },
+    "./vue": {
+      "types": "./dist/types/vue.d.ts"
+    },
+    "./svelte": {
+      "types": "./dist/types/svelte.d.ts"
+    },
     "./tokens.css": "./tokens/tokens.css",
     "./custom-elements.json": "./custom-elements.json"
   },
@@ -86,6 +92,8 @@
     "@vitest/browser": "5.0.5",
     "@vitest/browser-playwright": "5.0.5",
     "axe-core": "4.14.0",
+    "custom-element-svelte-integration": "1.2.0",
+    "custom-element-vuejs-integration": "1.4.0",
     "eslint": "9.30.1",
     "eslint-plugin-lit": "2.3.1",
     "eslint-plugin-react-hooks": "5.2.0",
@@ -95,6 +103,7 @@
     "lucide-react": "1.55.0",
     "pixelmatch": "^8.0.0",
     "pngjs": "^7.0.0",
+    "prettier": "3.6.2",
     "react": "19.3.1",
     "react-dom": "19.3.1",
     "ts-lit-plugin": "2.0.2",

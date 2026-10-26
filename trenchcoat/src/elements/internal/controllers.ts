@@ -252,3 +252,175 @@ export class SmoothHeightController implements ReactiveController {
     cancelAnimationFrame(this.frame);
   }
 }
+
+/* ---------- Hotkeys (port of useHotkey) ---------- */
+
+type Combo = { key: string; mod: boolean; ctrl: boolean; meta: boolean; shift: boolean; alt: boolean };
+/** "mod+k", "ctrl+shift+p", "F8" – mod is ⌘ on Apple devices and Ctrl elsewhere */
+const parseCombo = (combo: string): Combo => {
+  const parts = combo.toLowerCase().split("+").map((p) => p.trim());
+  const key = parts.pop() || "+";
+  const has = (m: string) => parts.includes(m);
+  return { key, mod: has("mod"), ctrl: has("ctrl") || has("control"), meta: has("meta") || has("cmd"), shift: has("shift"), alt: has("alt") || has("option") };
+};
+const comboMatches = (e: KeyboardEvent, c: Combo) => {
+  if (e.key.toLowerCase() !== c.key && e.code.toLowerCase() !== c.key) return false;
+  if (c.mod ? !(e.metaKey || e.ctrlKey) : (c.ctrl && !e.ctrlKey) || (c.meta && !e.metaKey)) return false;
+  if (!c.mod && !c.ctrl && !c.meta && (e.ctrlKey || e.metaKey)) return false;
+  return (!c.shift || e.shiftKey) && (!c.alt || e.altKey);
+};
+type HotkeyHandler = () => boolean | void;
+type HotkeyEntry = { handlers: HotkeyHandler[]; listener: (e: KeyboardEvent) => void };
+// The same registry the React useHotkey uses (Symbol.for), so React and Lit components on one page share listeners
+const hotkeys = ((globalThis as { [k: symbol]: Map<string, HotkeyEntry> })[Symbol.for("trenchcoat.hotkeys")] ??= new Map<string, HotkeyEntry>());
+
+/**
+ * Runs `run` when `combo()` is pressed anywhere on the page, while the host is connected. One window listener per
+ * combination however many elements use it; the newest wins, and a handler returning false passes to the next.
+ * `false` registers nothing.
+ */
+export class HotkeyController implements ReactiveController {
+  private name: string | null = null;
+  private handler: HotkeyHandler = () => this.run();
+
+  constructor(
+    host: Host,
+    private combo: () => string | false | null | undefined,
+    private run: HotkeyHandler,
+  ) {
+    host.addController(this);
+  }
+
+  private bind() {
+    const combo = this.combo();
+    const name = combo ? combo.toLowerCase().replace(/\s+/g, "") : null;
+    if (name === this.name) return;
+    this.unbind();
+    if (!name) return;
+    let entry = hotkeys.get(name);
+    if (!entry) {
+      const parsed = parseCombo(name);
+      const handlers: HotkeyHandler[] = [];
+      const listener = (e: KeyboardEvent) => {
+        if (e.defaultPrevented || e.isComposing || !comboMatches(e, parsed)) return;
+        for (let i = handlers.length - 1; i >= 0; i--) {
+          if (handlers[i]() !== false) {
+            e.preventDefault();
+            return;
+          }
+        }
+      };
+      window.addEventListener("keydown", listener);
+      hotkeys.set(name, (entry = { handlers, listener }));
+    }
+    entry.handlers.push(this.handler);
+    this.name = name;
+  }
+
+  private unbind() {
+    if (!this.name) return;
+    const entry = hotkeys.get(this.name);
+    if (entry) {
+      entry.handlers.splice(entry.handlers.indexOf(this.handler), 1);
+      if (!entry.handlers.length) {
+        window.removeEventListener("keydown", entry.listener);
+        hotkeys.delete(this.name);
+      }
+    }
+    this.name = null;
+  }
+
+  hostConnected() {
+    this.bind();
+  }
+  hostUpdated() {
+    this.bind();
+  }
+  hostDisconnected() {
+    this.unbind();
+  }
+}
+
+/* ---------- On screen (port of useOnScreen) ---------- */
+
+/** `onScreen` is true while the host intersects the viewport and its tab is visible; the host updates on a change */
+export class OnScreenController implements ReactiveController {
+  onScreen = true;
+  private inView = true;
+  private io?: IntersectionObserver;
+  private update = () => {
+    const next = this.inView && document.visibilityState !== "hidden";
+    if (next === this.onScreen) return;
+    this.onScreen = next;
+    this.host.requestUpdate();
+  };
+
+  constructor(private host: Host) {
+    host.addController(this);
+  }
+
+  hostConnected() {
+    if (typeof IntersectionObserver === "function") {
+      this.io = new IntersectionObserver((entries) => {
+        this.inView = entries[entries.length - 1].isIntersecting;
+        this.update();
+      });
+      this.io.observe(this.host);
+    }
+    document.addEventListener("visibilitychange", this.update);
+  }
+  hostDisconnected() {
+    this.io?.disconnect();
+    document.removeEventListener("visibilitychange", this.update);
+  }
+}
+
+/* ---------- Rolling numbers (port of useRolling) ---------- */
+
+const easeOutQuart = (t: number) => 1 - Math.pow(1 - t, 4);
+const reduced = () => typeof window !== "undefined" && !!window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+
+/** `shown` rolls a set of named numbers from where they are to `target()`'s values over `duration` ms */
+export class RollingController implements ReactiveController {
+  shown: Record<string, number>;
+  private signature: string;
+  private frame = 0;
+
+  constructor(
+    private host: Host,
+    private target: () => Record<string, number>,
+    private duration: number,
+  ) {
+    this.shown = { ...target() };
+    this.signature = JSON.stringify(this.shown);
+    host.addController(this);
+  }
+
+  hostUpdate() {
+    const to = this.target();
+    const signature = JSON.stringify(to);
+    if (signature === this.signature) return;
+    this.signature = signature;
+    cancelAnimationFrame(this.frame);
+    const from = { ...this.shown };
+    if (reduced() || Object.keys(to).every((k) => from[k] === to[k])) {
+      this.shown = { ...to };
+      return;
+    }
+    const start = performance.now();
+    const step = (now: number) => {
+      const t = Math.min(1, (now - start) / this.duration);
+      const e = easeOutQuart(t);
+      const next: Record<string, number> = {};
+      for (const k in to) next[k] = (from[k] ?? to[k]) + (to[k] - (from[k] ?? to[k])) * e;
+      this.shown = next;
+      this.host.requestUpdate();
+      if (t < 1) this.frame = requestAnimationFrame(step);
+    };
+    this.frame = requestAnimationFrame(step);
+  }
+
+  hostDisconnected() {
+    cancelAnimationFrame(this.frame);
+  }
+}

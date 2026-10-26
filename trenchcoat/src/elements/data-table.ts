@@ -47,6 +47,12 @@ export type DataRow = {
 export type TagTone = "blue" | "violet" | "pink" | "green" | "amber" | "gray";
 /** Sorted column and direction, or null for the rows' own order */
 export type DataSort = { key: string; dir: "asc" | "desc" } | null;
+export type RowsChange = { rows: DataRow[] };
+export type SelectionChange = { selection: string[] };
+export type SortChange = { sort: DataSort };
+export type RowsChangeEvent = CustomEvent<RowsChange>;
+export type SelectionChangeEvent = CustomEvent<SelectionChange>;
+export type SortChangeEvent = CustomEvent<SortChange>;
 
 type Cell = { r: number; c: number };
 type Range = { r1: number; r2: number; c1: number; c2: number };
@@ -108,9 +114,9 @@ const clone = (n: Element | undefined) => (n ? n.cloneNode(true) : nothing);
 /**
  * A database-style table that works like a small spreadsheet.
  * @tag tc-data-table
- * @fires tc-rows-change - Rows were edited, pasted, cleared, added, deleted, undone or redone ({ rows }); cancelable
- * @fires tc-selection-change - Rows were checked or unchecked ({ selection }); cancelable
- * @fires tc-sort-change - The sort changed ({ sort }); cancelable
+ * @fires {RowsChange} tc-rows-change - Rows were edited, pasted, cleared, added, deleted, undone or redone ({ rows }); cancelable
+ * @fires {SelectionChange} tc-selection-change - Rows were checked or unchecked ({ selection }); cancelable
+ * @fires {SortChange} tc-sort-change - The sort changed ({ sort }); cancelable
  */
 export class TcDataTable extends TcElement {
   static override ui = "dt";

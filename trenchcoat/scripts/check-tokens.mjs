@@ -11,11 +11,12 @@ import { readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { fallbacks } from "./tokens.mjs";
 
-const LIBRARIES = ["src/components", "blocks", "screens", "illustrations", "motion"];
+// src/elements: the Lit ports – their CSS sits in the same /* css */ template strings
+const LIBRARIES = ["src/components", "src/elements", "blocks", "screens", "illustrations", "motion"];
 const FB = fallbacks();
 const FIX = process.argv.includes("--fix");
 const named = process.argv.slice(2).filter((a) => !a.startsWith("--"));
-const files = named.length ? named : LIBRARIES.flatMap((lib) => readdirSync(lib).filter((f) => f.endsWith(".tsx")).map((f) => join(lib, f)));
+const files = named.length ? named : LIBRARIES.flatMap((lib) => readdirSync(lib).filter((f) => /\.tsx?$/.test(f) && f !== "index.ts" && f !== "react.ts").map((f) => join(lib, f)));
 
 /** var(--tc-x, …) with its fallback, balancing nested parentheses */
 function* references(source) {

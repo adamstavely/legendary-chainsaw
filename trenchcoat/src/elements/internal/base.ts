@@ -25,9 +25,11 @@ export abstract class TcElement extends LitElement {
   @property({ reflect: true })
   accessor look: Look | undefined = undefined;
 
+  /** @internal The look from the nearest <tc-look-provider> */
   @consume({ context: lookContext, subscribe: true })
   accessor contextLook: Look | undefined = undefined;
 
+  /** @internal The look in use: `look`, else the provider's, else "standard" */
   get resolvedLook(): Look {
     return this.look ?? this.contextLook ?? "standard";
   }

@@ -276,6 +276,14 @@
     "literal spacing": 4,
     "background-position animation": 1
   },
+  "src/elements/combobox.ts": {
+    "hard-coded id": 1,
+    "literal spacing": 7
+  },
+  "src/elements/data-table.ts": {
+    "clock/environment read": 1,
+    "literal spacing": 1
+  },
   "blocks/agent-gallery.tsx": {
     "literal spacing": 57
   },

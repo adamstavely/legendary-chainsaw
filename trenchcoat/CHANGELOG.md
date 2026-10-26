@@ -4,6 +4,17 @@
 
 See `audit/remediation-plan.md`, Part 2, and `audit/lit-port-plan.md`.
 
+### Added
+
+- Lit 3 web components: `tc-button`, `tc-combobox` and `tc-data-table` (the pilot), `tc-look-provider` for an
+  app-wide default look, the shared controllers (row window, focus rescue, smooth height, off-screen, on-screen,
+  ARIA forwarding, hotkeys, rolling numbers). Pixel-identical to the React components in both looks and themes.
+- The package build (`npm run build:package`): ES modules per element, TypeScript declarations,
+  `custom-elements.json`, React wrappers (`trenchcoat/react`, same API as the React components) and typed bindings
+  for Vue (`trenchcoat/vue`) and Svelte (`trenchcoat/svelte`). Still private, 0.1.0, UNLICENSED.
+- `examples/`: React, Next.js, Vue, Nuxt, Angular, Svelte and plain-HTML apps that install the packed package;
+  `npm run examples` checks all seven.
+
 ### Breaking
 
 - `components/` is gone: no more generated single-file components and no `-clean` copies. Each component is

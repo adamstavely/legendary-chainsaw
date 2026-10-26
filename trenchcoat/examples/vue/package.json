@@ -2,7 +2,18 @@
   "name": "trenchcoat-example-vue",
   "private": true,
   "type": "module",
-  "scripts": { "build": "vite build", "serve": "vite preview --strictPort --port" },
-  "dependencies": { "trenchcoat": "file:../.packed/trenchcoat.tgz", "vue": "3.5.44" },
-  "devDependencies": { "@vitejs/plugin-vue": "5.2.4", "typescript": "5.8.3", "vite": "6.4.5" }
+  "scripts": {
+    "build": "vue-tsc --noEmit && vite build",
+    "serve": "vite preview --strictPort --port"
+  },
+  "dependencies": {
+    "trenchcoat": "file:../.packed/trenchcoat.tgz",
+    "vue": "3.5.44"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "5.2.4",
+    "typescript": "5.8.3",
+    "vite": "6.4.5",
+    "vue-tsc": "3.3.13"
+  }
 }

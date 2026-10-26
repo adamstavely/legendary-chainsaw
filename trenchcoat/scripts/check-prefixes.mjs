@@ -4,7 +4,8 @@
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 
-const LIBRARIES = ["src/components", "blocks", "screens", "illustrations", "motion"];
+// src/elements: the Lit ports – their CSS sits in the same /* css */ template strings
+const LIBRARIES = ["src/components", "src/elements", "blocks", "screens", "illustrations", "motion"];
 
 // Prefixes deliberately rendered by several files
 const SHARED = {
@@ -16,7 +17,7 @@ const KNOWN = {};
 
 const owners = new Map();
 for (const lib of LIBRARIES) {
-  for (const name of readdirSync(lib).filter((f) => f.endsWith(".tsx"))) {
+  for (const name of readdirSync(lib).filter((f) => /\.tsx?$/.test(f) && f !== "index.ts" && f !== "react.ts")) {
     const file = join(lib, name);
     const source = readFileSync(file, "utf8");
     const classAttrs = [...source.matchAll(/className=(?:"([^"]*)"|\{`([^`]*)`|\{\[([^\]]*)\])/g)].map((m) => m.slice(1).join(" "));
