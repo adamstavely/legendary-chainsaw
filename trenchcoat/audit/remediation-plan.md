@@ -3,6 +3,10 @@
 2026-10-25 · Covers what is still open from [design-review/README.md](design-review/README.md) and
 [bundle-and-performance-audit.md](bundle-and-performance-audit.md), checked against the code at `5244f1b`.
 
+**Distribution: an npm package.** Trenchcoat ships as a package that apps install and import, not as files to
+copy. `src/` becomes the only source of the components; the generated `components/` folder and its `-clean` copies
+go away, and the look is chosen with the `look` prop (Phase 3).
+
 ## Already done
 
 These were fixed in the code-quality phases and the accessibility/design passes (see CHANGELOG.md):
@@ -33,9 +37,9 @@ These were fixed in the code-quality phases and the accessibility/design passes 
 | 3 | 8 components still sweep with `background-position` (finite now, but not composited) | Perf #1, #16 | agent-tree, comment-thread, context-window, context-map, dropzone, thinking-state, tool-call-card, writing-assistant | S |
 | 4 | inline-diff caps at 4 M cells and silently becomes one replacement | Perf #13 | Texts over ~1,500 words | M |
 | 5 | Render budgets mix demo timers with component behaviour | Perf #15 | Component regressions can hide behind demo traffic | S |
-| 6 | Every file ships both looks; `-clean.tsx` differs from the Standard file in 4 lines | Perf #4 | 35 % of each file's minified bytes (−1.0 MB / −116 KB gz across 64 components) | S + breaking note |
-| 7 | Token fallback blocks in every file | Perf #5 | 16 % min / 10 % gz per file | S |
-| 8 | CSS strings not minified | Perf #14 | 11 % min / 9.5 % gz | S |
+| 6 | Not packaged: package.json is `private`, with no `exports`, build or type declarations; `components/` holds a generated copy-paste build with a `-clean` twin per component (4 lines different) | Perf #4 | Two published files per component, each with both looks | M |
+| 7 | Token fallback blocks and inlined helpers in every published file | Perf #5 | 16 % min / 10 % gz per file, plus a copy of `src/internal` in each | Goes away with item 6 |
+| 8 | CSS strings not minified | Perf #14 | 11 % min / 9.5 % gz | Left to the app's bundler; no build change |
 | 9 | Heavy inline data in illustrations | Perf #10 | region-dach 167 KB source, 6 regions shipped for 1 shown; project-flow 4 base64 PNGs | S |
 | 10 | Spacing isn't on a scale | Design (scales) | 2,338 literal padding/gap/margin declarations; `--tc-space-*` used 13 times | L |
 | 11 | Type scale has half-steps (11.5, 12.5, 13.5 px) | Design (scales) | Three extra sizes that exist because old literals were matched, not designed | S |
@@ -68,16 +72,57 @@ This comes first because every later phase claims a gain, and right now nothing 
 3. inline-diff: replace the capped LCS table with Myers O(ND), or at minimum show "Too long to compare word by word"
    when the cap is hit. Myers is preferred; it also takes the diff out of render cost at 1,000 words.
 
-### Phase 3 – Bundle size (decision A: yes)
+### Phase 3 – npm package (decision A, revised)
 
-1. **Single-look files** (decision A): `button.tsx` carries only Standard CSS, `button-clean.tsx` only Clean.
-   build-lib already scopes every rule by `data-look`, so this is a filter at build time. The `look` prop is then
-   documented as "the file's look", or removed. −35 % per file. Breaking: note it in CHANGELOG, and update the
-   gallery and contract tests that render a file in the other look.
-2. **Opt-in lean output**: a second build target (`dist/lean/`) without fallback blocks (consumer loads
-   `tokens.css`, 3.6 KB gz) and with minified CSS. Keeps the readable copy-paste files as the default. −27 % gz on top.
-3. **Illustrations**: region-dach one module per region (loaded on demand) plus simplified neighbour outlines
-   (−60–80 %); project-flow's PNG avatars and logo → inline SVG or separate files (~−35 KB gz).
+Steps 1–3 move everything onto `src/` while `components/` still exists, so CI stays green; step 4 deletes it.
+
+1. **Repoint at `src/`.**
+   - First move the one component that exists only in `components/`: `components/plan-vs-actual-clean.tsx` has no
+     source in `src/components/` (it is hand-written, Clean only). It becomes `src/components/plan-vs-actual.tsx`,
+     a single-look component like the blocks, so the gallery's look switch is hidden for it.
+   - `@components/*` (vite.config.ts `LIBS`, tsconfig.json `paths`) → `src/components/*`. This covers the 65 demo
+     files and 66 test files that import from it.
+   - The `@/components/ui/*` resolver (vite.config.ts `uiAlias`, used by 26 block, screen and illustration files)
+     looks in `src/components/` first, then the hand-written libraries.
+   - Gallery: `app/src/registry.ts` globs `../../src/components/*.tsx` and reads the components README from its
+     new place (`src/components/README.md`, one entry per component, the "(Clean)" entries removed).
+   - tests/contract.test.tsx runs each spec twice against the one source (`look="standard"`, `look="clean"`)
+     instead of loading `<slug>.tsx` and `<slug>-clean.tsx`; the a11y, smoke and regression tests do the same.
+   - render-budgets.json and ratchet-baseline.json are re-keyed from `components/<slug>[-clean].tsx` to
+     `src/components/<slug>.tsx`; check-prefixes, check-ratchet and check-tokens scan `src/components` in place of
+     `components`.
+2. **Gallery look switch.** A Standard / Clean control next to the Light / Dark / System switch. It sets the `look`
+   prop on the demo (demos already receive `DemoProps`), is remembered per viewer, and appears only on library
+   entries that have both looks (components; blocks, screens, illustrations and motion have one). The overview lists
+   each component once; a deep link can carry `?look=clean`.
+3. **Package build.**
+   - A library build (Vite library mode or tsup) of `src/components`, blocks, screens, illustrations and motion to
+     `dist/`: ES modules with one module per component (`preserveModules`), `src/internal` shared rather than
+     inlined, `.d.ts` declarations. `dist/` is built at publish time, not committed.
+   - Blocks and screens import components through the package's own modules, not `@/components/ui/*`, in the
+     build output.
+   - package.json: drop `private`; `exports` for `trenchcoat` (components), `trenchcoat/blocks`,
+     `trenchcoat/screens`, `trenchcoat/illustrations`, `trenchcoat/motion` and `trenchcoat/tokens.css`; React and
+     react-dom move to `peerDependencies` (lucide-react stays a dependency for the screens);
+     `"sideEffects": ["*.css"]`; a `files` list.
+   - **Styles:** components keep injecting their CSS with React 19 `<style href precedence>` (deduplicated per
+     page, so apps need no CSS loader). Apps import `trenchcoat/tokens.css` once; there are no fallback blocks. The
+     theme selectors that build-lib adds today (`.dark`, `data-theme`, `data-tc-theme`, system) move into the
+     source or tokens.css so the package keeps them.
+   - **Looks:** both looks ship in each component's CSS and the `look` prop switches them (35 % of each
+     component's CSS, ~18 % gzipped, is the look an app doesn't use). A `<TrenchcoatProvider look>` sets the default
+     for a whole app. If size becomes a problem later, a `trenchcoat/clean` entry can carry Clean-only CSS.
+   - The gallery imports the built package (`import { Button } from "trenchcoat"`) in a CI build step, so a broken
+     export fails before publishing.
+4. **Delete `components/`.** Remove the folder, `scripts/build-lib.mjs`, `check:lib` and its CI step
+   ("Published components are built from src/"); `npm run ci` adds `build:package` plus a check that every
+   component in `src/components` is exported. CHANGELOG: breaking – `-clean` files are gone, import from the
+   package and set `look="clean"` (or the provider).
+5. **Illustrations**: region-dach one module per region (loaded on demand) plus simplified neighbour outlines
+   (−60–80 %); project-flow's PNG avatars and logo → inline SVG or separate files (~−35 KB gz). With per-module
+   output these are the size wins left for apps.
+6. Re-run the bundle part of the perf bench (Phase 1) against `dist/`: per-component size with and without
+   tokens.css, and the 1 / 5 / 10 / 64-component sets from the audit.
 
 ### Phase 4 – Finish the scales (decision B: round down)
 
@@ -116,13 +161,15 @@ This comes first because every later phase claims a gain, and right now nothing 
    patterns – toaster, combobox, command-menu, data-table, date-range-picker, agent-tree, review-center.
 3. Run the perf bench in Firefox and WebKit through Playwright, and with 4× CPU throttling; record INP for the
    heavy interactions (combobox open, command-menu typing, data-table sort).
-4. Build a sample app with webpack and Next.js to confirm tree-shaking and the production warning strip.
+4. Install the packed package (`npm pack`) into sample apps built with Vite, webpack and Next.js (App Router,
+   server components importing client components): confirm tree-shaking (one import pulls in one component),
+   `tokens.css` loading, the `<style>` injection under SSR, the types, and the production warning strip.
 
 ## Decisions (2026-10-25)
 
 | | Question | Decision |
 |---|---|---|
-| A | Ship single-look files (breaking: `look="clean"` on a Standard file stops working)? | **Yes.** Each file carries only its own look's CSS; CHANGELOG gets a breaking-change note |
+| A | How do the looks ship? | **Revised: one npm package, one module per component carrying both looks, chosen with the `look` prop.** `src/` is the only source; `components/` and the `-clean` copies are deleted; the gallery gets a look switch. (Was: single-look files – that suited copy-paste files, not a package.) |
 | B | Which way do the half-step font sizes fold? | **Round down:** 11.5 → 11, 12.5 → 12, 13.5 → 13 px, in both looks |
 | C | The judgement calls in item 15 | **As recommended:** fix breakdown-chart's palette, the fan-out-grid and agent-queue targets and the date-range band; keep context-map's tiles as they are (name and kind are in the hover/focus card) |
 
@@ -132,9 +179,11 @@ This comes first because every later phase claims a gain, and right now nothing 
 |---|---|---|
 | 1 Measurements | – | 0.5 day |
 | 2 Runtime | 1 (to confirm gains) | 1 day |
-| 3 Bundle | 1 | 1 day |
+| 3 npm package | 1 (for the before numbers) | 2 days |
 | 4 Scales | – | 2–3 days (spacing is most of it) |
 | 5 Follow-ups | – | 1 day |
 | 6 Verification | 2–5 | 1–2 days, partly manual |
 
-Phases 2 and 3 can run in parallel; so can 4 and 5 (different files except the screens).
+Phase 3 goes before 2, 4 and 5 touch many files: it moves the tests, budgets and ratchet keys, so later phases
+edit `src/` without also rebuilding `components/`. After it, 2 and 4–5 can run in parallel (different files except
+the screens).
