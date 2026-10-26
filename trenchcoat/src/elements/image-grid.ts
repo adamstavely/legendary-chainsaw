@@ -768,7 +768,7 @@ export class TcImageGrid extends TcElement {
 /* Colors and motion as variables – override them on [data-ui="igrid"] */
 :where([data-look="standard"], [data-look="standard"] *)[data-ui="igrid"] {
   /* The empty and pending tiles: a faint well */
-  --tc-image-grid-well: light-dark(#f4f4f5, #222225);
+  --tc-image-grid-well: var(--tc-surface-well);
   box-sizing: border-box;
   container-type: inline-size;
   display: grid;

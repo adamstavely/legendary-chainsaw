@@ -84,6 +84,12 @@
   --tc-green-500: #1f8a4c;
   --tc-green-600: #18794e;
   --tc-green-950: #12301f;
+  --tc-teal-50: #e3f6f4;
+  --tc-teal-300: #4fd1c5;
+  --tc-teal-400: #2bb3a6;
+  --tc-teal-500: #0e8a80;
+  --tc-teal-600: #0b6f67;
+  --tc-teal-950: #0f2e2b;
 
   --tc-amber-50: #fff3e0;
   --tc-amber-300: #ffa057;
@@ -214,6 +220,8 @@
   /* Stacking layers. 0–6 stay literal for local stacking inside an isolation: isolate root. */
   --tc-z-sticky: 10;
   --tc-z-dropdown: 30;
+  /* A popover above a dropdown (a picker opened from inside a menu) */
+  --tc-z-popover: 35;
   --tc-z-drawer-scrim: 40;
   --tc-z-drawer: 50;
   --tc-z-modal-scrim: 60;
@@ -311,6 +319,41 @@
   --tc-tone-rose-bg: light-dark(var(--tc-rose-50), rgba(251, 113, 133, 0.16));
   --tc-tone-rose-solid: light-dark(var(--tc-rose-500), var(--tc-rose-400));
   --tc-tone-rose-border: color-mix(in srgb, var(--tc-tone-rose-solid) 40%, transparent);
+  --tc-tone-teal-fg: light-dark(var(--tc-teal-600), var(--tc-teal-300));
+  --tc-tone-teal-bg: light-dark(var(--tc-teal-50), rgba(79, 209, 197, 0.14));
+  --tc-tone-teal-solid: light-dark(var(--tc-teal-500), var(--tc-teal-400));
+  --tc-tone-teal-border: color-mix(in srgb, var(--tc-tone-teal-solid) 40%, transparent);
+  /* An accent you can fill a mark with (a step marker, a picked dot) – Clean's is a touch lighter than its text */
+  --tc-accent-solid: var(--tc-accent);
+  /* A recessed well inside a card: token chips, an image's backdrop */
+  --tc-surface-well: light-dark(#f4f4f5, #222225);
+  /* Where a claim came from (Trust & calibration): a retrieved source, the model's own knowledge, an inference */
+  --tc-source-grounded-fg: var(--tc-status-success-fg);
+  --tc-source-grounded-bg: var(--tc-status-success-bg);
+  --tc-source-model-fg: var(--tc-tone-violet-fg);
+  --tc-source-model-bg: var(--tc-tone-violet-bg);
+  --tc-source-inferred-fg: var(--tc-tone-amber-fg);
+  --tc-source-inferred-bg: var(--tc-tone-amber-bg);
+  /* Evidence freshness bands: high, good, aging, stale */
+  --tc-validity-high-fg: var(--tc-status-success-fg);
+  --tc-validity-high-bg: var(--tc-status-success-bg);
+  --tc-validity-good-fg: var(--tc-status-info-fg);
+  --tc-validity-good-bg: var(--tc-status-info-bg);
+  --tc-validity-aging-fg: var(--tc-status-warning-fg);
+  --tc-validity-aging-bg: var(--tc-status-warning-bg);
+  --tc-validity-stale-fg: var(--tc-status-danger-fg);
+  --tc-validity-stale-bg: var(--tc-status-danger-bg);
+  /* Syntax colours for code (code-block, tool-call-card, structured output) – every one ≥ 4.5:1 on the surfaces */
+  --tc-syntax-keyword: var(--tc-tone-violet-fg);
+  --tc-syntax-string: var(--tc-status-success-fg);
+  --tc-syntax-number: var(--tc-tone-amber-fg);
+  --tc-syntax-comment: var(--tc-text-muted);
+  --tc-syntax-function: var(--tc-status-info-fg);
+  --tc-syntax-type: var(--tc-tone-pink-fg);
+  --tc-syntax-property: var(--tc-tone-rose-fg);
+  --tc-syntax-tag: var(--tc-tone-pink-fg);
+  --tc-syntax-punctuation: var(--tc-text-muted);
+  --tc-syntax-text: var(--tc-text-primary);
   /* Data vis */
   --tc-chart-1: light-dark(var(--tc-blue-500), var(--tc-blue-400));
   --tc-chart-2: light-dark(var(--tc-violet-500), var(--tc-violet-400));
@@ -545,6 +588,41 @@
   --tc-tone-rose-bg: light-dark(rgba(225, 29, 72, 0.07), rgba(251, 113, 133, 0.14));
   --tc-tone-rose-solid: light-dark(var(--tc-rose-500), var(--tc-rose-400));
   --tc-tone-rose-border: color-mix(in srgb, var(--tc-tone-rose-solid) 40%, transparent);
+  --tc-tone-teal-fg: light-dark(var(--tc-teal-600), var(--tc-teal-300));
+  --tc-tone-teal-bg: light-dark(var(--tc-teal-50), rgba(79, 209, 197, 0.14));
+  --tc-tone-teal-solid: light-dark(var(--tc-teal-500), var(--tc-teal-400));
+  --tc-tone-teal-border: color-mix(in srgb, var(--tc-tone-teal-solid) 40%, transparent);
+  /* An accent you can fill a mark with (a step marker, a picked dot) – Clean's is a touch lighter than its text */
+  --tc-accent-solid: light-dark(rgba(0, 96, 226, 0.765), #4d8dff);
+  /* A recessed well inside a card: token chips, an image's backdrop */
+  --tc-surface-well: light-dark(#f4f4f5, #222225);
+  /* Where a claim came from (Trust & calibration): a retrieved source, the model's own knowledge, an inference */
+  --tc-source-grounded-fg: var(--tc-status-success-fg);
+  --tc-source-grounded-bg: var(--tc-status-success-bg);
+  --tc-source-model-fg: var(--tc-tone-violet-fg);
+  --tc-source-model-bg: var(--tc-tone-violet-bg);
+  --tc-source-inferred-fg: var(--tc-tone-amber-fg);
+  --tc-source-inferred-bg: var(--tc-tone-amber-bg);
+  /* Evidence freshness bands: high, good, aging, stale */
+  --tc-validity-high-fg: var(--tc-status-success-fg);
+  --tc-validity-high-bg: var(--tc-status-success-bg);
+  --tc-validity-good-fg: var(--tc-status-info-fg);
+  --tc-validity-good-bg: var(--tc-status-info-bg);
+  --tc-validity-aging-fg: var(--tc-status-warning-fg);
+  --tc-validity-aging-bg: var(--tc-status-warning-bg);
+  --tc-validity-stale-fg: var(--tc-status-danger-fg);
+  --tc-validity-stale-bg: var(--tc-status-danger-bg);
+  /* Syntax colours for code (code-block, tool-call-card, structured output) – every one ≥ 4.5:1 on the surfaces */
+  --tc-syntax-keyword: var(--tc-tone-violet-fg);
+  --tc-syntax-string: var(--tc-status-success-fg);
+  --tc-syntax-number: var(--tc-tone-amber-fg);
+  --tc-syntax-comment: var(--tc-text-muted);
+  --tc-syntax-function: var(--tc-status-info-fg);
+  --tc-syntax-type: var(--tc-tone-pink-fg);
+  --tc-syntax-property: var(--tc-tone-rose-fg);
+  --tc-syntax-tag: var(--tc-tone-pink-fg);
+  --tc-syntax-punctuation: var(--tc-text-muted);
+  --tc-syntax-text: var(--tc-text-primary);
   /* Data vis */
   --tc-chart-1: light-dark(rgba(0, 96, 226, 0.77), var(--tc-cobalt-400));
   --tc-chart-2: light-dark(#5b5bd6, #8585f0);
@@ -777,6 +855,10 @@
     --tc-tone-rose-fg: var(--tc-rose-600);
     --tc-tone-rose-bg: var(--tc-rose-50);
     --tc-tone-rose-solid: var(--tc-rose-500);
+    --tc-tone-teal-fg: var(--tc-teal-600);
+    --tc-tone-teal-bg: var(--tc-teal-50);
+    --tc-tone-teal-solid: var(--tc-teal-500);
+    --tc-surface-well: #f4f4f5;
     --tc-chart-1: var(--tc-blue-500);
     --tc-chart-2: var(--tc-violet-500);
     --tc-chart-3: var(--tc-pink-500);
@@ -850,6 +932,11 @@
     --tc-tone-rose-fg: var(--tc-rose-600);
     --tc-tone-rose-bg: rgba(225, 29, 72, 0.07);
     --tc-tone-rose-solid: var(--tc-rose-500);
+    --tc-tone-teal-fg: var(--tc-teal-600);
+    --tc-tone-teal-bg: var(--tc-teal-50);
+    --tc-tone-teal-solid: var(--tc-teal-500);
+    --tc-accent-solid: rgba(0, 96, 226, 0.765);
+    --tc-surface-well: #f4f4f5;
     --tc-chart-1: rgba(0, 96, 226, 0.77);
     --tc-chart-2: #5b5bd6;
     --tc-chart-3: rgba(0, 96, 226, 0.5);
@@ -924,6 +1011,10 @@
     --tc-tone-rose-fg: var(--tc-rose-300);
     --tc-tone-rose-bg: rgba(251, 113, 133, 0.16);
     --tc-tone-rose-solid: var(--tc-rose-400);
+    --tc-tone-teal-fg: var(--tc-teal-300);
+    --tc-tone-teal-bg: rgba(79, 209, 197, 0.14);
+    --tc-tone-teal-solid: var(--tc-teal-400);
+    --tc-surface-well: #222225;
     --tc-chart-1: var(--tc-blue-400);
     --tc-chart-2: var(--tc-violet-400);
     --tc-chart-3: var(--tc-pink-400);
@@ -999,6 +1090,11 @@
     --tc-tone-rose-fg: var(--tc-rose-300);
     --tc-tone-rose-bg: rgba(251, 113, 133, 0.14);
     --tc-tone-rose-solid: var(--tc-rose-400);
+    --tc-tone-teal-fg: var(--tc-teal-300);
+    --tc-tone-teal-bg: rgba(79, 209, 197, 0.14);
+    --tc-tone-teal-solid: var(--tc-teal-400);
+    --tc-accent-solid: #4d8dff;
+    --tc-surface-well: #222225;
     --tc-chart-1: var(--tc-cobalt-400);
     --tc-chart-2: #8585f0;
     --tc-chart-3: rgba(77, 141, 255, 0.62);
@@ -1073,6 +1169,10 @@
     --tc-tone-rose-fg: var(--tc-rose-600);
     --tc-tone-rose-bg: var(--tc-rose-50);
     --tc-tone-rose-solid: var(--tc-rose-500);
+    --tc-tone-teal-fg: var(--tc-teal-600);
+    --tc-tone-teal-bg: var(--tc-teal-50);
+    --tc-tone-teal-solid: var(--tc-teal-500);
+    --tc-surface-well: #f4f4f5;
     --tc-chart-1: var(--tc-blue-500);
     --tc-chart-2: var(--tc-violet-500);
     --tc-chart-3: var(--tc-pink-500);
@@ -1148,6 +1248,11 @@
     --tc-tone-rose-fg: var(--tc-rose-600);
     --tc-tone-rose-bg: rgba(225, 29, 72, 0.07);
     --tc-tone-rose-solid: var(--tc-rose-500);
+    --tc-tone-teal-fg: var(--tc-teal-600);
+    --tc-tone-teal-bg: var(--tc-teal-50);
+    --tc-tone-teal-solid: var(--tc-teal-500);
+    --tc-accent-solid: rgba(0, 96, 226, 0.765);
+    --tc-surface-well: #f4f4f5;
     --tc-chart-1: rgba(0, 96, 226, 0.77);
     --tc-chart-2: #5b5bd6;
     --tc-chart-3: rgba(0, 96, 226, 0.5);
@@ -1221,6 +1326,10 @@
     --tc-tone-rose-fg: var(--tc-rose-300);
     --tc-tone-rose-bg: rgba(251, 113, 133, 0.16);
     --tc-tone-rose-solid: var(--tc-rose-400);
+    --tc-tone-teal-fg: var(--tc-teal-300);
+    --tc-tone-teal-bg: rgba(79, 209, 197, 0.14);
+    --tc-tone-teal-solid: var(--tc-teal-400);
+    --tc-surface-well: #222225;
     --tc-chart-1: var(--tc-blue-400);
     --tc-chart-2: var(--tc-violet-400);
     --tc-chart-3: var(--tc-pink-400);
@@ -1296,6 +1405,11 @@
     --tc-tone-rose-fg: var(--tc-rose-300);
     --tc-tone-rose-bg: rgba(251, 113, 133, 0.14);
     --tc-tone-rose-solid: var(--tc-rose-400);
+    --tc-tone-teal-fg: var(--tc-teal-300);
+    --tc-tone-teal-bg: rgba(79, 209, 197, 0.14);
+    --tc-tone-teal-solid: var(--tc-teal-400);
+    --tc-accent-solid: #4d8dff;
+    --tc-surface-well: #222225;
     --tc-chart-1: var(--tc-cobalt-400);
     --tc-chart-2: #8585f0;
     --tc-chart-3: rgba(77, 141, 255, 0.62);

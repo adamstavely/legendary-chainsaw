@@ -533,7 +533,7 @@ export class TcRunCheckpoints extends TcElement {
   -webkit-font-smoothing: antialiased;
 }
 :where([data-look="clean"], [data-look="clean"] *)[data-ui="rcp"] {
-  --tc-run-checkpoints-accent: light-dark(rgba(0, 96, 226, 0.765), #4d8dff);
+  --tc-run-checkpoints-accent: var(--tc-accent-solid);
   --tc-run-checkpoints-on-accent: var(--tc-text-on-accent);
   --tc-run-checkpoints-drop: light-dark(rgba(196, 50, 50, 0.26), rgba(255, 110, 110, 0.3));
   --tc-run-checkpoints-inset: var(--tc-space-2-5);

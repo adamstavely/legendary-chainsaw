@@ -733,9 +733,9 @@ export class TcSandboxLog extends TcElement {
   --tc-sandbox-log-code-bg: light-dark(#fafafa, #1d1d20);
   /* One turn of the running spinner */
   --tc-sandbox-log-spin: 800ms;
-  /* ANSI cyan: the library has no teal tone yet */
-  --tc-sandbox-log-cyan: light-dark(#0f7b6c, #5fd4b8);
-  --tc-sandbox-log-cyan-bg: light-dark(rgba(15, 123, 108, 0.1), rgba(95, 212, 184, 0.14));
+  /* ANSI cyan: the teal tone */
+  --tc-sandbox-log-cyan: var(--tc-tone-teal-fg);
+  --tc-sandbox-log-cyan-bg: var(--tc-tone-teal-bg);
   --tc-sandbox-log-hit: light-dark(rgba(245, 165, 36, 0.28), rgba(245, 165, 36, 0.3));
   --tc-sandbox-log-hit-current: light-dark(rgba(245, 165, 36, 0.62), rgba(245, 165, 36, 0.62));
   box-sizing: border-box;

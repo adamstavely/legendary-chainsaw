@@ -107,7 +107,7 @@ const ratio = (a, b) => {
 /* ---------- the checks ---------- */
 const SURFACES = ["surface-base", "surface-raised", "surface-overlay", "surface-sunken", "surface-tray", "surface-on-tray", "surface-control"];
 const short = (s) => s.replace("surface-", "");
-const TONES = ["status-success", "status-warning", "status-danger", "status-info", "tone-violet", "tone-pink", "tone-amber", "tone-rose"];
+const TONES = ["status-success", "status-warning", "status-danger", "status-info", "tone-violet", "tone-pink", "tone-amber", "tone-rose", "tone-teal"];
 
 /** Each check: label, minimum, fg token (or token stack), bg stack (bottom-up token names) */
 const checks = [];

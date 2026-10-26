@@ -904,16 +904,16 @@ export class TcCodeBlock extends TcElement {
   static override css = /* css */ `
 /* Syntax colours: existing tokens, so they follow both looks and both themes. Override them on [data-ui="cblk"] */
 [data-ui="cblk"] {
-  --tc-code-block-keyword: var(--tc-tone-violet-fg);
-  --tc-code-block-string: var(--tc-status-success-fg);
-  --tc-code-block-number: var(--tc-tone-amber-fg);
-  --tc-code-block-comment: var(--tc-text-muted);
-  --tc-code-block-function: var(--tc-status-info-fg);
-  --tc-code-block-type: var(--tc-tone-pink-fg);
-  --tc-code-block-property: var(--tc-tone-rose-fg);
-  --tc-code-block-tag: var(--tc-tone-pink-fg);
-  --tc-code-block-punctuation: var(--tc-text-muted);
-  --tc-code-block-text: var(--tc-text-primary);
+  --tc-code-block-keyword: var(--tc-syntax-keyword);
+  --tc-code-block-string: var(--tc-syntax-string);
+  --tc-code-block-number: var(--tc-syntax-number);
+  --tc-code-block-comment: var(--tc-syntax-comment);
+  --tc-code-block-function: var(--tc-syntax-function);
+  --tc-code-block-type: var(--tc-syntax-type);
+  --tc-code-block-property: var(--tc-syntax-property);
+  --tc-code-block-tag: var(--tc-syntax-tag);
+  --tc-code-block-punctuation: var(--tc-syntax-punctuation);
+  --tc-code-block-text: var(--tc-syntax-text);
   position: relative;
   box-sizing: border-box;
   container-type: inline-size;

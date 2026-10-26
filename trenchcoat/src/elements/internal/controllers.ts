@@ -425,3 +425,79 @@ export class RollingController implements ReactiveController {
     cancelAnimationFrame(this.frame);
   }
 }
+
+/* ---------- Toolbar (WAI-ARIA toolbar: one tab stop, arrows move) ---------- */
+
+export type ToolbarOptions = {
+  /** The toolbar's buttons, in order (disabled ones are skipped) */
+  items: () => HTMLElement[];
+  /** "horizontal" (← →, the default) or "vertical" (↑ ↓) */
+  orientation?: "horizontal" | "vertical";
+  /** Wrap from the last item to the first and back (default true) */
+  wrap?: boolean;
+};
+
+/**
+ * Roving tabindex for a toolbar: Tab reaches it once, on the item last used; ← → (or ↑ ↓) Home End move. Call
+ * `onKeyDown` and `onFocusIn` from the toolbar's own listeners; the controller sets every item's tabindex after each
+ * update, so the host's template doesn't bind it.
+ *   new ToolbarController(this, { items: () => [...this.querySelectorAll(".ui-x__tool")] })
+ */
+export class ToolbarController implements ReactiveController {
+  /** The item Tab lands on */
+  index = 0;
+
+  constructor(
+    private host: Host,
+    private options: ToolbarOptions,
+  ) {
+    host.addController(this);
+  }
+
+  private enabled() {
+    return this.options.items().filter((el) => !(el as HTMLButtonElement).disabled && el.getAttribute("aria-disabled") !== "true");
+  }
+
+  hostUpdated() {
+    const items = this.options.items();
+    const enabled = this.enabled();
+    if (!enabled.length) return;
+    const current = items[this.index];
+    const target = current && enabled.includes(current) ? current : enabled[0];
+    this.index = items.indexOf(target);
+    for (const el of items) el.tabIndex = el === target ? 0 : -1;
+  }
+
+  onKeyDown = (e: KeyboardEvent) => {
+    const enabled = this.enabled();
+    const at = enabled.indexOf(e.target as HTMLElement);
+    if (at < 0) return;
+    const vertical = this.options.orientation === "vertical";
+    const wrap = this.options.wrap !== false;
+    const next = vertical ? "ArrowDown" : "ArrowRight";
+    const prev = vertical ? "ArrowUp" : "ArrowLeft";
+    const last = enabled.length - 1;
+    const to =
+      e.key === next ? (at === last ? (wrap ? 0 : last) : at + 1)
+      : e.key === prev ? (at === 0 ? (wrap ? last : 0) : at - 1)
+      : e.key === "Home" ? 0
+      : e.key === "End" ? last
+      : -1;
+    if (to < 0) return;
+    e.preventDefault();
+    this.focus(enabled[to]);
+  };
+
+  onFocusIn = (e: FocusEvent) => {
+    const items = this.options.items();
+    const at = items.indexOf(e.target as HTMLElement);
+    if (at >= 0 && at !== this.index) this.focus(items[at], false);
+  };
+
+  private focus(el: HTMLElement, move = true) {
+    const items = this.options.items();
+    this.index = items.indexOf(el);
+    for (const item of items) item.tabIndex = item === el ? 0 : -1;
+    if (move) el.focus();
+  }
+}

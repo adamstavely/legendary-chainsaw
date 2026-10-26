@@ -818,7 +818,7 @@ export class TcAgentPlan extends TcElement {
   /* Strokes are shadows: a 0.5px hairline plus a soft lift */
   --tc-agent-plan-rail: light-dark(rgba(0, 0, 0, 0.08), rgba(255, 255, 255, 0.1));
   --tc-agent-plan-shine: light-dark(rgba(255, 255, 255, 0.82), #ffffff);
-  --tc-agent-plan-accent: light-dark(rgba(0, 96, 226, 0.765), #4d8dff);
+  --tc-agent-plan-accent: var(--tc-accent-solid);
   --tc-agent-plan-edit-glow: light-dark(rgba(0, 96, 226, 0.1), rgba(77, 141, 255, 0.14));
   --tc-agent-plan-inset: 30px;
 

@@ -596,7 +596,7 @@ export class TcPromptLibrary extends TcElement {
   static override css = /* css */ `
 :where([data-look="standard"], [data-look="standard"] *)[data-ui="pli"] {
   /* insets and hover fills: a light grey on the card, lighter than the card in dark mode */
-  --tc-prompt-library-well: light-dark(#f4f4f5, #222225);
+  --tc-prompt-library-well: var(--tc-surface-well);
   /* the flash on a filled-in or inserted value: stronger than --tc-accent-subtle */
   --tc-prompt-library-flash: light-dark(rgba(47, 107, 255, 0.24), rgba(79, 130, 255, 0.36));
   box-sizing: border-box;
