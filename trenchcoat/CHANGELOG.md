@@ -55,6 +55,9 @@ See `audit/remediation-plan.md`, Part 2, and `audit/lit-port-plan.md`.
 
 ### Behaviour changes
 
+- trace-waterfall rows show an outline when focused in forced-colours mode (their ring was a box-shadow, which
+  forced colours removes). data-table sorts only when its rows, sort or columns change – scrolling 10,000 sorted
+  rows was 72 ms per step.
 - thinking-state no longer reports `onOpenChange(true)` on mount when `open` is held false; date-range-picker
   doesn't flash its "Last 30 days" stand-in before reading today; memory-panel with `undoFor={Infinity}` keeps a
   failure message instead of clearing it at once; dropzone keeps focus on a row while another row folds away (the

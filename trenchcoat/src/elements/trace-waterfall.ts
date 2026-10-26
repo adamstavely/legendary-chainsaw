@@ -930,6 +930,8 @@ export class TcTraceWaterfall extends TcElement {
 /* Open: the fill plus a bar on the left edge, so it doesn't rest on color alone */
 .ui-tw__row[data-open] { background: var(--tc-fill-selected); box-shadow: inset var(--tc-focus-ring-width) 0 0 var(--tc-border-selected); }
 .ui-tw__row:focus-visible { box-shadow: inset 0 0 0 var(--tc-focus-ring-width) var(--tc-focus-ring); }
+/* Forced colours drop box-shadow: an outline instead */
+@media (forced-colors: active) { .ui-tw__row:focus-visible { outline: 2px solid Highlight; outline-offset: -2px; } }
 /* Folded away or leaving: the row closes to no height */
 .ui-tw__row:is([data-hidden], [data-leaving]) { height: 0; opacity: 0; pointer-events: none; }
 .ui-tw__row[data-leaving] { animation: ui-tw-leave var(--tc-duration-moderate) var(--tc-ease-move) both; }

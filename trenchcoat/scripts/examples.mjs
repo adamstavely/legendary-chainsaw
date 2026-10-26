@@ -1,10 +1,12 @@
 // Builds the package, installs the packed tarball into every app in examples/, builds and serves each app, and
 // checks the shared contract in Chromium (examples/README.md; audit/lit-port-plan.md acceptance checks 2, 5, 6, 9).
+// The html app also mounts every element (all.html) and checks that importing one element tree-shakes the rest;
+// Next builds with webpack, the others with Vite (Angular with esbuild).
 //   node scripts/examples.mjs [name…]        all apps, or the named ones (react next vue nuxt angular svelte html)
 //   node scripts/examples.mjs --no-pack …    reuse examples/.packed/trenchcoat.tgz
 import { chromium } from "@playwright/test";
 import { execSync, spawn } from "node:child_process";
-import { existsSync, mkdirSync, readdirSync, renameSync, rmSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, readdirSync, renameSync, rmSync } from "node:fs";
 import { join } from "node:path";
 
 const ROOT = new URL("..", import.meta.url).pathname;
@@ -37,6 +39,26 @@ const wait = async (port, ms = 60_000) => {
   }
   throw new Error(`nothing on port ${port}`);
 };
+
+/** html: every tag in custom-elements.json, created with no props, upgrades without errors */
+async function everyElement(page, port) {
+  await page.goto(`http://localhost:${port}/all.html`);
+  await page.waitForSelector("body[data-tags]");
+  await page.waitForTimeout(500);
+  const { tags, missing } = await page.evaluate(() => ({
+    tags: Number(document.body.dataset.tags),
+    // Upgraded: defined, and rendered (every element but the look provider marks its root with data-ui)
+    missing: [...document.querySelectorAll("#all > *")].filter((el) => !el.matches(":defined") || (el.localName !== "tc-look-provider" && !el.hasAttribute("data-ui"))).map((el) => el.localName),
+  }));
+  return [tags < 100 && `all elements: only ${tags} tags in the manifest`, ...missing.map((t) => `all elements: ${t} didn't upgrade`)].filter(Boolean);
+}
+
+/** html: a build that imports trenchcoat/button holds the button and none of the other elements */
+function treeShaking(dir) {
+  const js = readFileSync(join(dir, "dist-shake", "shake.js"), "utf8");
+  const others = ["tc-combobox", "tc-data-table", "tc-agent-plan", "tc-world-map"].filter((t) => js.includes(`"${t}"`));
+  return [!js.includes('"tc-button"') && "tree-shaking: tc-button missing", ...others.map((t) => `tree-shaking: trenchcoat/button pulled in ${t}`)].filter(Boolean);
+}
 
 /** The shared contract, on a served app */
 async function check(page) {
@@ -101,6 +123,7 @@ for (const app of apps) {
     page.on("console", (m) => m.type() === "error" && errors.push(m.text()));
     await page.goto(`http://localhost:${port}/`);
     const problems = await check(page);
+    if (app === "html") problems.push(...(await everyElement(page, port)), ...treeShaking(dir));
     // Hydration and runtime errors (a missing favicon is not one)
     problems.push(...errors.filter((e) => !/favicon|404/.test(e)).map((e) => `console: ${e.slice(0, 200)}`));
     await page.close();

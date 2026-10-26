@@ -5,7 +5,14 @@
 **Status (2026-10-25): fixed.** All 187 published files (components in both looks, blocks, screens, illustrations,
 motion) pass axe in light and dark in a real browser, the critical keyboard blockers below are fixed, and each fix has
 regression tests; `tests/a11y.test.tsx` and `scripts/a11y.mjs` keep it that way. The judgement calls left are listed
-in `audit/design-review/README.md` (Follow-ups). Not yet done: testing with real screen readers and forced-colors mode.
+in `audit/design-review/README.md` (Follow-ups).
+
+**Status (2026-10-26, Lit elements): re-verified** – remediation step 2.8, `audit/verification-part2.md`. Every gallery
+entry passes axe in light and dark, both looks, in Chromium, Firefox and WebKit; forced-colors mode is checked on
+every control (borders, Highlight, focus outlines). **Not tested with a screen reader:** VoiceOver couldn't be run –
+the automated session can only read browser windows, not operate them – and NVDA and JAWS are out of scope. That is
+a known gap: the automated checks cover roles, names, `aria-activedescendant` targets and live regions, not what a
+screen reader announces.
 
 **Verdict (as audited): no component conforms to WCAG 2.2 AA as shipped.** Every component fails at least 1.4.11/2.4.7 (focus indicator) and almost every one fails 1.4.3 (text contrast) — both come from shared token values, so they are cheap to fix centrally. Beyond those, 4 components have **critical keyboard blockers**, and the most common structural defect is **focus being lost when the focused control is removed**.
 

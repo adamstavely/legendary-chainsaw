@@ -24,3 +24,7 @@ examples/*/next-env.d.ts
 examples/*/.nuxt/
 examples/*/.output/
 examples/*/.angular/
+
+# Lockfiles: the example runner reinstalls the packed tarball each run
+examples/*/package-lock*.json
+examples/html/dist-shake

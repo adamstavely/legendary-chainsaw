@@ -2,7 +2,14 @@
   "name": "trenchcoat-example-html",
   "private": true,
   "type": "module",
-  "scripts": { "build": "vite build", "serve": "vite preview --strictPort --port" },
-  "dependencies": { "trenchcoat": "file:../.packed/trenchcoat.tgz" },
-  "devDependencies": { "vite": "6.4.5" }
+  "scripts": {
+    "build": "vite build && vite build --config vite.shake.config.js",
+    "serve": "vite preview --strictPort --port"
+  },
+  "dependencies": {
+    "trenchcoat": "file:../.packed/trenchcoat.tgz"
+  },
+  "devDependencies": {
+    "vite": "6.4.5"
+  }
 }
