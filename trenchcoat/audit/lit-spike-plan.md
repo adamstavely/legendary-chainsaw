@@ -7,7 +7,7 @@ dropped.) This spike ports three components to settle how – shadow DOM, conten
 rendering – before the full port starts, and to measure what the full port costs. It ends in a set of decisions and
 an estimate, not in shipped code.
 
-Related: [remediation-plan.md](remediation-plan.md) (the npm package is Phase 3 there),
+Related: [remediation-plan.md](remediation-plan.md) (this spike is its step 2.2),
 [WCAG-2.2-AA-audit.md](WCAG-2.2-AA-audit.md), [bundle-and-performance-audit.md](bundle-and-performance-audit.md).
 
 ## What's at stake
@@ -38,7 +38,7 @@ the real-browser tools (`scripts/a11y.mjs`, `scripts/visual.mjs`), which test th
 | Template checking in CI | **lit-analyzer** CLI (the same rules as ts-lit-plugin) | TypeScript plugins only run in editors, not in `tsc`, so `npm run ci` adds `lit-analyzer --strict src/**/*.ts`. |
 | Linting | `eslint-plugin-lit` and `eslint-plugin-wc` on top of the existing typescript-eslint setup | `react-hooks` rules go once the React code is gone |
 | Element metadata | `@custom-elements-manifest/analyzer` | Generates `custom-elements.json`, which drives framework types, editor completion and the React wrappers |
-| Build | Vite library mode, one module per element | Replaces the React package build planned in remediation Phase 3 |
+| Build | Vite library mode, one module per element | The package build in remediation step 2.4 |
 | React integration | Native custom elements in React 19 or `@lit/react` wrappers – decided by question 5 | |
 | Helpers | Lit reactive controllers; `@lit/context` for an app-wide default look; `@lit/task` where async state is needed | |
 | Windowing | `@lit-labs/virtualizer` vs a port of data-table's `useRowWindow` – decided by question 7 | |
@@ -67,7 +67,7 @@ Each has a pass bar. A miss on 1 or 2 without a workaround of known cost stops t
 | 6 | **Server rendering.** Next.js (App Router) renders the React components on the server today. | Pages using the three components render on the server in Next.js and Nuxt with `@lit-labs/ssr` without a hydration error or layout shift; if not, the fallback (client-only rendering with a placeholder) and what it costs |
 | 7 | **Performance.** | data-table at 10,000 rows mounts and scrolls within 20 % of the React numbers in the perf audit (4.5 ms mount, 5.2 ms max scroll task); combobox opens 5,000 options within 20 % (windowed). Button mount per instance no slower than React. Compare `@lit-labs/virtualizer` with a ported `useRowWindow` |
 | 8 | **Size.** | Lit runtime once plus each component, for 1 and 3 components, compared with the React package build of the same set |
-| 9 | **Value props.** `value` + `onValueChange` stay in control (Phase 3 contract), while custom elements usually own their state and fire events. | A documented pattern that keeps controlled use working from React and Vue (`v-model`) without the element and the app fighting over the value |
+| 9 | **Value props.** `value` + `onValueChange` stay in control (the code-quality Phase 3 contract), while custom elements usually own their state and fire events. | A documented pattern that keeps controlled use working from React and Vue (`v-model`) without the element and the app fighting over the value |
 | 10 | **Testing.** | The existing contract specs for the three components are rewritten for the new harness (Playwright component tests or `@web/test-runner`), and `scripts/a11y.mjs` scans them; the time per spec sets the estimate for the other 182 files |
 | 11 | **Typed templates.** | ts-lit-plugin in the editor and lit-analyzer in CI catch a wrong property binding, a misspelled element name, a wrong event type and a missing import in the three components (seed one of each and confirm it's reported); no false positives left unexplained |
 | 12 | **Porting effort.** | Hours per component, and how much of the React source (markup, CSS, logic) was reused unchanged |
@@ -135,12 +135,11 @@ the fallbacks in order of cost: publish `tokens.css` and the CSS recipes on thei
 native elements to match; or wrap selected React components as custom elements (React inside a custom element) for
 the few that are needed.
 
-## Effect on the remediation plan
+## Where this sits in the remediation plan
 
-- Remediation Phase 3, steps 1, 2 and 4 (repoint everything at `src/`, the gallery look switch, delete
-  `components/`) are needed either way and don't depend on the spike.
-- Step 3 (the package build) becomes the Lit package build described above, once the spike has settled its open
-  questions.
-- Phases 2, 4 and 5 (runtime fixes, scales, design follow-ups) are CSS and logic that would be ported anyway; doing
-  them first means the port starts from the finished design. The type-scale and spacing passes (Phase 4) change the
-  CSS the spike reuses, so either run the spike first or re-take its screenshots after Phase 4.
+The spike is step 2.2 of [remediation-plan.md](remediation-plan.md). It runs after Part 1 – the work that carries
+over to Lit unchanged (type scale, spacing, remaining literals, decision C, shimmers, the Myers diff, illustration
+size, forced colours) – so it reuses the finished CSS, and after 2.1, which records the React baseline it's
+measured against. The full port above is steps 2.3–2.8 there, and those steps also take on everything whose form
+changes with Lit: the package build, the gallery look switch, the CI checks, filter-menu windowing, the
+glass-folder `open` property, the demos, the measurements and the verification.
