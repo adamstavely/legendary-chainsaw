@@ -25,6 +25,7 @@ export * from "./react/agent-steering";
 export * from "./react/agent-team";
 export * from "./react/agent-tree";
 export * from "./react/ai-answer";
+export * from "./react/answer-arena";
 export * from "./react/approval-card";
 export * from "./react/artifact-panel";
 export * from "./react/autonomy-dial";

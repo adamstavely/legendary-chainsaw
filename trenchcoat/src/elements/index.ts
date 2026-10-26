@@ -14,6 +14,7 @@ export * from "./agent-steering";
 export * from "./agent-team";
 export * from "./agent-tree";
 export * from "./ai-answer";
+export * from "./answer-arena";
 export * from "./approval-card";
 export * from "./artifact-panel";
 export * from "./autonomy-dial";
