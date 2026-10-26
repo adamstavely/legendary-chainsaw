@@ -1,6 +1,7 @@
 import { Component, createContext, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { LookProvider } from "../../src/elements/react";
 import { DocsPage } from "./docs/DocsPage";
+import { FOUNDATIONS, Foundations } from "./docs/Foundations";
 import { GUIDANCE } from "./docs/guidance";
 import { CATEGORIES, ENTRIES, LIBRARY_INFO, type Entry, type LibraryInfo, type Variant } from "./registry";
 
@@ -85,6 +86,7 @@ export function App() {
   const focused = ENTRIES.filter((e) => route === e.id || route.startsWith(`${e.id}/`)).sort((a, b) => b.id.length - a.id.length)[0];
   const section = focused && route.length > focused.id.length ? route.slice(focused.id.length + 1) : "";
   const library = LIBRARY_INFO.find((l) => route === `library/${l.key}`);
+  const foundation = route.startsWith("foundations/") ? route.slice("foundations/".length) : null;
 
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -132,6 +134,16 @@ export function App() {
         <a href="#/" className={`navtop ${route === "" ? "active" : ""}`}>
           Overview
         </a>
+        <div className="navlib">
+          <div className="navlibhead">Foundations</div>
+          <div className="navgroup">
+            {FOUNDATIONS.map(([id, title]) => (
+              <a key={id} href={`#/foundations/${id}`} className={foundation === id ? "active" : ""}>
+                {title}
+              </a>
+            ))}
+          </div>
+        </div>
         {LIBRARY_INFO.map((lib) => {
           const groups = grouped(entriesOf(lib.key));
           return (
@@ -159,6 +171,8 @@ export function App() {
         <ThemeContext.Provider value={theme}>
         {results ? (
           <Results list={results} query={query} mode={mode} />
+        ) : foundation ? (
+          <Foundations key={foundation} page={foundation} />
         ) : focused ? (
           <FocusView entry={focused} mode={mode} section={section} />
         ) : library ? (
