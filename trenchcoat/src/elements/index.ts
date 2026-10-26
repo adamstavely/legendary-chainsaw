@@ -57,6 +57,7 @@ export * from "./integration-settings";
 export * from "./kpi-chart";
 export * from "./layer-stack";
 export * from "./lead-sourcing";
+export * from "./live-view";
 export * from "./logo-cluster";
 export * from "./memory-panel";
 export * from "./message-actions";

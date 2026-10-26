@@ -68,6 +68,7 @@ export * from "./react/integration-settings";
 export * from "./react/kpi-chart";
 export * from "./react/layer-stack";
 export * from "./react/lead-sourcing";
+export * from "./react/live-view";
 export * from "./react/logo-cluster";
 export * from "./react/memory-panel";
 export * from "./react/message-actions";
