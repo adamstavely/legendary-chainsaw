@@ -252,6 +252,12 @@ until the later phase moves blocks and screens off them. Folded into the port:
 
 - **filter-menu windowing** – the row-window controller from the pilot, above ~300 options.
 
+*Done differently (2026-10-26):* ported by 12 agents in parallel from `audit/port-brief.md`, after change-summary
+was done by hand as the worked example; the shared lists (index, React wrappers, package entries) are generated
+from the folder so ports never edit a shared file. combobox stays in React too (the pilot's comparison pages use
+it), so 15 React components remain. filter-menu windows groups over 60 options, like data-table. The ports found
+a bug in the pilot's wrapper helper (uncontrolled values reset on every parent render), fixed for all.
+
 ### 2.7 Illustrations and motion; demos; measurements
 
 - Port the 22 illustrations and the 8 motion pieces to Lit elements, with the **glass-folder `open` property**
@@ -262,6 +268,11 @@ until the later phase moves blocks and screens off them. Folded into the port:
   unmatched.
 - Re-run the perf bench against the Lit package and compare with the 2.1 baseline; add a Lit update-count budget
   per component (static props, no demo timers) in place of the React render budgets.
+
+*Done differently (2026-10-26):* the dead-CSS pass is static, not runtime – a rule is dead when nothing (element,
+wrapper or a runtime-built class) can render its class; a state a demo doesn't reach still counts as live
+(`scripts/dead-css.mjs`, in CI). Update budgets count idle updates of every element mounted without props
+(`tests/elements/update-budgets.test.ts`). Results: `audit/perf-lit.md`.
 
 ### 2.8 Verification
 
@@ -275,6 +286,10 @@ until the later phase moves blocks and screens off them. Folded into the port:
 - The `examples/` apps (React and Next.js, Vue and Nuxt, Angular, Svelte, plain HTML) on every element:
   tree-shaking, `tokens.css`, client-only loading in Next.js and Nuxt, types and events, with webpack and Vite
   builds.
+
+*Done differently (2026-10-26):* VoiceOver wasn't run – the session can read browser windows but not operate them –
+so it needs a person; the WCAG audit says so. Forced colours are checked by a script over every control
+(`scripts/forced-colors.mjs`) rather than by eye. Results: `audit/verification-part2.md`.
 
 ## Part 3 – New components
 
