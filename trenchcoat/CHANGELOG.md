@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased – remediation Part 3 (new components)
+
+See `audit/remediation-plan.md`, Part 3. Each is a Lit element with both looks, a React wrapper in `trenchcoat/react`,
+browser tests in Chromium, Firefox and WebKit, and a gallery demo.
+
+### Added
+- `tc-run-checkpoints` – a run's restore points as a list and a timeline: what each point captured, what going back discards (steps, file changes, tokens, cost), a note for the retry, and `restorer` that may return a promise. Listbox keyboard; `tc-selected-change`, `tc-restore`.
+
 ## Unreleased – remediation Part 2 (the shift to Lit)
 
 See `audit/remediation-plan.md`, Part 2, and `audit/lit-port-plan.md`.

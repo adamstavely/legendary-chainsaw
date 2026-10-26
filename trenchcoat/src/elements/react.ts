@@ -86,6 +86,7 @@ export * from "./react/prompt-library";
 export * from "./react/reaction-bar";
 export * from "./react/region-dach";
 export * from "./react/review-center";
+export * from "./react/run-checkpoints";
 export * from "./react/segmented-control";
 export * from "./react/setup-guide";
 export * from "./react/shimmer-loader";
