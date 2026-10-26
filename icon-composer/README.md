@@ -4,10 +4,13 @@ A Vue 3 editor packaged as a native `<icon-composer>` web component. Runs in an 
 
 Includes Lucide search, layers, transforms, transparent clear-space/cutout masks, previews, undo/redo, JSON import/export, SVG, PNG and Vue SFC exports.
 
+Start with the [design-system integration handoff](docs/INTEGRATION.md), including app screenshots and a Vue wrapper example.
+
 ## Develop and build
 
 ```sh
-npm install
+cd icon-composer
+npm ci
 npm run dev
 npm test
 npm run build
@@ -137,7 +140,7 @@ The Toolbox opens on **Create from scratch**, with path drawing, shapes, and tex
 
 The canvas supports 25–400% view zoom using +/−, Alt + wheel, and Fit to reset zoom and pan. Alt-drag or middle-drag pans the view. Zoom/pan are view-only and do not affect exports. The canvas toolbar’s Background control sets a separate preview color for light and dark modes. It changes both the artboard and surrounding canvas, supports exact hex entry and Reset to theme, and never adds an export background. If storage-key is supplied, these view preferences persist separately from the composition. Small-size previews sit at the bottom of the center pane.
 
-The inspector has **Edit**, **Style**, and **Transform** tabs. Modifiers, Create, layers, and inspector tabs grow to fit their content without internal scrolling. Both catalogs use pagination with 24, 48, or 96 icons per page, selected with Icons per page. Their grids keep a fixed height and scroll internally without visible scrollbar tracks; increasing density does not extend the page. Modifiers include 104 curated symbols across seven categories.
+The inspector has **Edit**, **Style**, and **Transform** tabs. Create, layers, and inspector tabs grow to fit their content without internal scrolling. Both catalogs use pagination with 24, 48, or 96 icons per page, selected with Icons per page. Their grids keep a fixed height and scroll internally without visible scrollbar tracks; increasing density does not extend the page. Modifiers include 104 curated symbols across seven categories.
 
 - Text supports up to 12 Latin letters (including bundled Latin-1 accented glyphs), digits, and punctuation. Choose Roboto or Roboto Mono, regular or bold, size, alignment, and letter spacing. Text remains editable in JSON and becomes vector paths in SVG/PNG/Vue exports; no external fonts are required.
 - Shapes include rectangles (with corner radius), ellipses, triangles, diamonds, and lines. Width and height support decimal values from 0.1 to 48 canvas units, plus layer scale; the canvas/export viewBox remains 24 × 24.

@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Icon Composer documentation preview</title></head>
+<body>
+<icon-composer chrome></icon-composer>
+<script type="module">
+import { registerIconComposer } from '/src/element.ts';
+import '/src/theme.css';
+import '/src/demo.css';
+registerIconComposer();
+// Isolated screenshot fixture: no storage key, uploads or automatic downloads.
+const editor = document.querySelector('icon-composer');
+editor.composition = {
+  version: 1, name: 'file-pdf', stroke: 1.75,
+  layers: [
+    { id: 'file', icon: 'file', x: 0, y: 0, scale: 1, rotation: 0, gap: 1, mode: 'overlay', visible: true, flip: false },
+    { id: 'label', kind: 'text', icon: '', text: 'PDF', font: 'sans-700', fontSize: 4.5, spacing: 0, align: 'center', x: 0, y: 2, scale: 1, rotation: 0, gap: .75, mode: 'space', visible: true, flip: false }
+  ]
+};
+</script>
+</body></html>
