@@ -266,7 +266,7 @@ const css = /* css */ `
   border: 1px solid var(--tc-border-default, light-dark(#ececec, #2a2a2e));
   border-radius: 14px 14px 4px 14px;
   box-shadow: var(--tc-ghosted-chat-bubble-shadow);
-  font-size: var(--tc-font-size-sm-plus, 12.5px);
+  font-size: var(--tc-font-size-sm, 12px);
   line-height: 1.3;
   font-weight: var(--tc-font-weight-medium, 500);
   color: var(--tc-text-secondary, light-dark(#404040, #c8c8cc));

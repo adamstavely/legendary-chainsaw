@@ -951,7 +951,6 @@ const css = /* css */ `
   --_tc-font-size-lg-plus: 15px;
   --_tc-font-size-md: 13px;
   --_tc-font-size-sm: 12px;
-  --_tc-font-size-sm-plus: 12.5px;
   --_tc-font-size-xs: 11px;
   --_tc-font-weight-medium: 500;
   --_tc-font-weight-regular: 400;
@@ -1051,7 +1050,6 @@ const css = /* css */ `
   --_tc-font-size-lg-plus: 15px;
   --_tc-font-size-md: 13px;
   --_tc-font-size-sm: 12px;
-  --_tc-font-size-sm-plus: 12.5px;
   --_tc-font-size-xs: 11px;
   --_tc-font-weight-medium: 500;
   --_tc-font-weight-regular: 400;
@@ -1365,7 +1363,7 @@ const css = /* css */ `
   color: var(--tc-accent-text, var(--_tc-accent-text));
 }
 :where([data-look="standard"], [data-look="standard"] *).ui-cp__name { font-size: var(--tc-font-size-lg, var(--_tc-font-size-lg)); font-weight: var(--tc-font-weight-medium, var(--_tc-font-weight-medium)); line-height: var(--tc-line-height-normal, var(--_tc-line-height-normal)); }
-:where([data-look="standard"], [data-look="standard"] *).ui-cp__time { margin-left: auto; font-size: var(--tc-font-size-sm-plus, var(--_tc-font-size-sm-plus)); font-variant-numeric: tabular-nums; color: var(--tc-text-muted, var(--_tc-text-muted)); }
+:where([data-look="standard"], [data-look="standard"] *).ui-cp__time { margin-left: auto; font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); font-variant-numeric: tabular-nums; color: var(--tc-text-muted, var(--_tc-text-muted)); }
 :where([data-look="standard"], [data-look="standard"] *).ui-cp__resolve {
   display: grid;
   place-items: center;

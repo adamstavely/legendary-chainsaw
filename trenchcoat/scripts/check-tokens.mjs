@@ -56,6 +56,10 @@ for (const file of files) {
     writeFileSync(file, source);
   }
   for (const m of source.matchAll(/--ui-[\w-]+/g)) problems.push(`${file}:${lineOf(source, m.index)} legacy token ${m[0]}`);
+  // Deprecated half-step sizes (decision B) – only blocks and screens may still use them, until they move
+  if (!/^(blocks|screens)\//.test(file))
+    for (const m of source.matchAll(/--tc-font-size-(?:xs|sm|md)-plus\b/g))
+      problems.push(`${file}:${lineOf(source, m.index)} deprecated ${m[0]} – use ${m[0].replace("-plus", "")}`);
   // Files built from src/ carry their fallbacks as private variables on the root (both looks, see
   // scripts/build-lib.mjs), so each reference falls back to var(--_tc-…); build-lib --check keeps them current
   const built = source.includes("by scripts/build-lib.mjs – edit the source");

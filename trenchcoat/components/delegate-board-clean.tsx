@@ -1038,7 +1038,6 @@ const css = /* css */ `
   --_tc-font-sans: "Inter", "InterVariable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --_tc-font-size-2xs: 10px;
   --_tc-font-size-md: 13px;
-  --_tc-font-size-md-plus: 13.5px;
   --_tc-font-size-sm: 12px;
   --_tc-font-size-xs: 11px;
   --_tc-font-weight-medium: 500;
@@ -1123,7 +1122,6 @@ const css = /* css */ `
   --_tc-font-sans: "Inter", "InterVariable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --_tc-font-size-2xs: 10px;
   --_tc-font-size-md: 13px;
-  --_tc-font-size-md-plus: 13.5px;
   --_tc-font-size-sm: 12px;
   --_tc-font-size-xs: 11px;
   --_tc-font-weight-medium: 500;
@@ -1200,7 +1198,7 @@ const css = /* css */ `
   container-type: inline-size;
   font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   letter-spacing: -0.006em;
-  font-size: var(--tc-font-size-md-plus, var(--_tc-font-size-md-plus));
+  font-size: var(--tc-font-size-md, var(--_tc-font-size-md));
   font-weight: var(--tc-font-weight-regular, var(--_tc-font-weight-regular));
   line-height: var(--tc-line-height-normal, var(--_tc-line-height-normal));
   color: var(--tc-text-muted, var(--_tc-text-muted));

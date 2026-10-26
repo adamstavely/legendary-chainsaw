@@ -763,7 +763,6 @@ const css = /* css */ `
   --_tc-font-sans: "Inter", "InterVariable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --_tc-font-size-lg: 14px;
   --_tc-font-size-md: 13px;
-  --_tc-font-size-md-plus: 13.5px;
   --_tc-font-size-sm: 12px;
   --_tc-font-size-xl: 16px;
   --_tc-font-weight-medium: 500;
@@ -815,7 +814,6 @@ const css = /* css */ `
   --_tc-font-sans: "Inter", "InterVariable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --_tc-font-size-lg: 14px;
   --_tc-font-size-md: 13px;
-  --_tc-font-size-md-plus: 13.5px;
   --_tc-font-size-sm: 12px;
   --_tc-font-size-xl: 16px;
   --_tc-font-weight-medium: 500;
@@ -856,7 +854,7 @@ const css = /* css */ `
   justify-self: stretch; /* it sizes the boxes from its own width, so it must never shrink to fit them */
   width: 100%;
   font-family: var(--tc-font-sans, var(--_tc-font-sans));
-  font-size: var(--tc-font-size-md-plus, var(--_tc-font-size-md-plus));
+  font-size: var(--tc-font-size-md, var(--_tc-font-size-md));
   line-height: var(--tc-line-height-normal, var(--_tc-line-height-normal));
   color: var(--tc-text-secondary, var(--_tc-text-secondary));
   -webkit-font-smoothing: antialiased;

@@ -681,7 +681,7 @@ const css = /* css */ `
   --_tc-ease-move: cubic-bezier(0.22, 1, 0.36, 1);
   --_tc-ease-standard: ease;
   --_tc-field-bg: light-dark(#ffffff, #232326);
-  --_tc-field-font-size: 13.5px;
+  --_tc-field-font-size: 13px;
   --_tc-field-h: 36px;
   --_tc-field-px: 12px;
   --_tc-field-radius: 10px;
@@ -697,7 +697,6 @@ const css = /* css */ `
   --_tc-font-size-lg-plus: 15px;
   --_tc-font-size-md: 13px;
   --_tc-font-size-sm: 12px;
-  --_tc-font-size-sm-plus: 12.5px;
   --_tc-font-size-xs: 11px;
   --_tc-font-weight-medium: 500;
   --_tc-font-weight-regular: 400;
@@ -777,7 +776,6 @@ const css = /* css */ `
   --_tc-font-size-lg-plus: 15px;
   --_tc-font-size-md: 13px;
   --_tc-font-size-sm: 12px;
-  --_tc-font-size-sm-plus: 12.5px;
   --_tc-font-size-xs: 11px;
   --_tc-font-weight-medium: 500;
   --_tc-font-weight-regular: 400;
@@ -1076,7 +1074,7 @@ const css = /* css */ `
   white-space: nowrap;
   transition: background-color var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-standard, var(--_tc-ease-standard)), color var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-standard, var(--_tc-ease-standard));
 }
-:where([data-look="standard"], [data-look="standard"] *).ui-bc__chip { padding: 0 9px; font-size: var(--tc-font-size-sm-plus, var(--_tc-font-size-sm-plus)); }
+:where([data-look="standard"], [data-look="standard"] *).ui-bc__chip { padding: 0 9px; font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); }
 :where([data-look="clean"], [data-look="clean"] *).ui-bc__chip { flex: none; padding: 0 8px; font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); line-height: var(--tc-line-height-tight, var(--_tc-line-height-tight)); font-weight: var(--tc-font-weight-medium, var(--_tc-font-weight-medium)); }
 .ui-bc__chip:hover { background: var(--tc-fill-subtle, var(--_tc-fill-subtle)); }
 :where([data-look="clean"], [data-look="clean"] *).ui-bc__chip:hover { color: var(--tc-text-primary, var(--_tc-text-primary)); }
@@ -1086,7 +1084,7 @@ const css = /* css */ `
 .ui-bc__chip[aria-pressed="false"] { color: var(--tc-text-muted, var(--_tc-text-muted)); text-decoration: line-through; }
 .ui-bc__chip[aria-pressed="false"] .ui-bc__swatch { opacity: 0.35; }
 .ui-bc__hint { padding-left: 8px; color: var(--tc-text-muted, var(--_tc-text-muted)); }
-:where([data-look="standard"], [data-look="standard"] *).ui-bc__hint { font-size: var(--tc-font-size-sm-plus, var(--_tc-font-size-sm-plus)); }
+:where([data-look="standard"], [data-look="standard"] *).ui-bc__hint { font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); }
 :where([data-look="clean"], [data-look="clean"] *).ui-bc__hint { font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); line-height: var(--tc-line-height-tight, var(--_tc-line-height-tight)); }
 .ui-bc__reset {
   flex: none;
@@ -1096,7 +1094,7 @@ const css = /* css */ `
   font-weight: var(--tc-font-weight-medium, var(--_tc-font-weight-medium));
   transition: background-color var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-standard, var(--_tc-ease-standard));
 }
-:where([data-look="standard"], [data-look="standard"] *).ui-bc__reset { font-size: var(--tc-font-size-sm-plus, var(--_tc-font-size-sm-plus)); color: var(--tc-accent-text, var(--_tc-accent-text)); }
+:where([data-look="standard"], [data-look="standard"] *).ui-bc__reset { font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); color: var(--tc-accent-text, var(--_tc-accent-text)); }
 :where([data-look="standard"], [data-look="standard"] *).ui-bc__reset:hover { background: var(--tc-accent-subtle, var(--_tc-accent-subtle)); }
 :where([data-look="clean"], [data-look="clean"] *).ui-bc__reset { font-size: var(--tc-font-size-md, var(--_tc-font-size-md)); line-height: var(--tc-line-height-normal, var(--_tc-line-height-normal)); color: var(--tc-text-primary, var(--_tc-text-primary)); animation: ui-bc-pop var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-standard, var(--_tc-ease-standard)); }
 :where([data-look="clean"], [data-look="clean"] *).ui-bc__reset:hover { background: var(--tc-fill-subtle, var(--_tc-fill-subtle)); }

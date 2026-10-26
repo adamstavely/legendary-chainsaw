@@ -763,7 +763,7 @@ const css = /* css */ `
   margin: 0;
   padding: 0;
   font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  font-size: var(--tc-font-size-md-plus);
+  font-size: var(--tc-font-size-md);
   line-height: var(--tc-line-height-normal);
   color: var(--tc-text-secondary);
   -webkit-font-smoothing: antialiased;

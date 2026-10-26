@@ -807,9 +807,7 @@ const css = /* css */ `
   --_tc-focus-ring-offset: 2px;
   --_tc-font-sans: "Inter", "InterVariable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --_tc-font-size-md: 13px;
-  --_tc-font-size-md-plus: 13.5px;
   --_tc-font-size-sm: 12px;
-  --_tc-font-size-sm-plus: 12.5px;
   --_tc-font-size-xs: 11px;
   --_tc-font-weight-medium: 500;
   --_tc-font-weight-regular: 400;
@@ -898,9 +896,7 @@ const css = /* css */ `
   --_tc-focus-ring-offset: 1px;
   --_tc-font-sans: "Inter", "InterVariable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --_tc-font-size-md: 13px;
-  --_tc-font-size-md-plus: 13.5px;
   --_tc-font-size-sm: 12px;
-  --_tc-font-size-sm-plus: 12.5px;
   --_tc-font-size-xs: 11px;
   --_tc-font-weight-medium: 500;
   --_tc-font-weight-regular: 400;
@@ -1035,7 +1031,7 @@ const css = /* css */ `
 .ui-xc__col[data-dim] { opacity: 0.3; }
 .ui-xc__col[data-passed]:not([data-hot]) { opacity: 0.35; }
 .ui-xc__titles { display: grid; grid-template-columns: minmax(0, 1fr); flex: 1; min-width: 0; }
-:where([data-look="standard"], [data-look="standard"] *).ui-xc__name { overflow: hidden; font-size: var(--tc-font-size-md-plus, var(--_tc-font-size-md-plus)); font-weight: var(--tc-font-weight-semibold, var(--_tc-font-weight-semibold)); color: var(--tc-text-primary, var(--_tc-text-primary)); white-space: nowrap; text-overflow: ellipsis; }
+:where([data-look="standard"], [data-look="standard"] *).ui-xc__name { overflow: hidden; font-size: var(--tc-font-size-md, var(--_tc-font-size-md)); font-weight: var(--tc-font-weight-semibold, var(--_tc-font-weight-semibold)); color: var(--tc-text-primary, var(--_tc-text-primary)); white-space: nowrap; text-overflow: ellipsis; }
 :where([data-look="standard"], [data-look="standard"] *).ui-xc__sub { display: flex; align-items: center; gap: 6px; min-width: 0; min-height: 20px; margin-top: 1px; overflow: hidden; font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); line-height: var(--tc-line-height-normal, var(--_tc-line-height-normal)); color: var(--tc-text-muted, var(--_tc-text-muted)); white-space: nowrap; }
 /* Status tag, lift and leader chips: the pill pattern */
 .ui-xc__tag { display: inline-flex; flex: none; align-items: center; gap: 4px; height: var(--tc-pill-h, var(--_tc-pill-h)); padding: 0 var(--tc-pill-px, var(--_tc-pill-px)) 0 calc(var(--tc-pill-px, var(--_tc-pill-px)) - 2px); border-radius: var(--tc-pill-radius, var(--_tc-pill-radius)); background: var(--tc-experiment-card-tag-bg); font-size: var(--tc-pill-font-size, var(--_tc-pill-font-size)); font-weight: var(--tc-pill-font-weight, var(--_tc-pill-font-weight)); color: var(--tc-experiment-card-tag-fg); }
@@ -1082,7 +1078,7 @@ const css = /* css */ `
 .ui-xc__bar { display: block; width: 100%; height: 100%; border-radius: var(--tc-radius-2xs, var(--_tc-radius-2xs)); background: var(--tc-experiment-card-color); transform-origin: 0 50%; transition: transform var(--tc-duration-slowest, var(--_tc-duration-slowest)) var(--tc-ease-move, var(--_tc-ease-move)); }
 /* ----- Tray ----- */
 :where([data-look="standard"], [data-look="standard"] *).ui-xc__foot { display: flex; align-items: center; gap: 8px; height: 38px; padding: 4px 4px 0 10px; }
-:where([data-look="standard"], [data-look="standard"] *).ui-xc__caption { flex: 1; min-width: 0; overflow: hidden; font-size: var(--tc-font-size-sm-plus, var(--_tc-font-size-sm-plus)); color: var(--tc-text-muted, var(--_tc-text-muted)); white-space: nowrap; text-overflow: ellipsis; font-variant-numeric: tabular-nums; }
+:where([data-look="standard"], [data-look="standard"] *).ui-xc__caption { flex: 1; min-width: 0; overflow: hidden; font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); color: var(--tc-text-muted, var(--_tc-text-muted)); white-space: nowrap; text-overflow: ellipsis; font-variant-numeric: tabular-nums; }
 .ui-xc__caption > span { display: inline-block; animation: ui-xc-in var(--tc-duration-moderate, var(--_tc-duration-moderate)) var(--tc-ease-move, var(--_tc-ease-move)) both; }
 /* The action: the primary button – flat ink, the control geometry */
 :where([data-look="standard"], [data-look="standard"] *).ui-xc__action { display: inline-flex; align-items: center; gap: 4px; flex: none; height: var(--tc-control-h-sm, var(--_tc-control-h-sm)); padding: 0 calc(var(--tc-control-px-sm, var(--_tc-control-px-sm)) - 3px) 0 var(--tc-control-px-sm, var(--_tc-control-px-sm)); border-radius: var(--tc-control-radius-sm, var(--_tc-control-radius-sm)); background: var(--tc-action-primary-bg, var(--_tc-action-primary-bg)); box-shadow: var(--tc-action-primary-shadow, var(--_tc-action-primary-shadow)); font-size: var(--tc-control-font-size, var(--_tc-control-font-size)); font-weight: var(--tc-control-font-weight, var(--_tc-control-font-weight)); color: var(--tc-action-primary-fg, var(--_tc-action-primary-fg)); white-space: nowrap; animation: ui-xc-pop var(--tc-duration-slow, var(--_tc-duration-slow)) var(--tc-ease-move, var(--_tc-ease-move)) both; transition: background-color var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-standard, var(--_tc-ease-standard)), opacity var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-standard, var(--_tc-ease-standard)); }

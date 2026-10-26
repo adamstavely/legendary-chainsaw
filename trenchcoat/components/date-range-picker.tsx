@@ -982,7 +982,6 @@ const css = /* css */ `
   --_tc-font-size-2xs: 10px;
   --_tc-font-size-md: 13px;
   --_tc-font-size-sm: 12px;
-  --_tc-font-size-sm-plus: 12.5px;
   --_tc-font-size-xs: 11px;
   --_tc-font-weight-medium: 500;
   --_tc-font-weight-regular: 400;
@@ -1056,7 +1055,6 @@ const css = /* css */ `
   --_tc-font-size-2xs: 10px;
   --_tc-font-size-md: 13px;
   --_tc-font-size-sm: 12px;
-  --_tc-font-size-sm-plus: 12.5px;
   --_tc-font-size-xs: 11px;
   --_tc-font-weight-medium: 500;
   --_tc-font-weight-regular: 400;
@@ -1301,7 +1299,7 @@ button:where([data-look="clean"], [data-look="clean"] *).ui-drp__preset:hover:no
 :where([data-look="standard"], [data-look="standard"] *).ui-drp__day button {
   position: relative;
   border-radius: 9px;
-  font-size: var(--tc-font-size-sm-plus, var(--_tc-font-size-sm-plus));
+  font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm));
   font-variant-numeric: tabular-nums;
   color: var(--tc-text-primary, var(--_tc-text-primary));
   transition: background-color var(--tc-duration-base, var(--_tc-duration-base)) var(--tc-ease-standard, var(--_tc-ease-standard)), color var(--tc-duration-base, var(--_tc-duration-base)) var(--tc-ease-standard, var(--_tc-ease-standard)), box-shadow var(--tc-duration-base, var(--_tc-duration-base)) var(--tc-ease-standard, var(--_tc-ease-standard)), transform var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-move, var(--_tc-ease-move));

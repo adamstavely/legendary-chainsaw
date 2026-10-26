@@ -1015,7 +1015,7 @@ const css = /* css */ `
 }
 .ui-aw__search:hover { box-shadow: var(--tc-field-shadow-hover, inset 0 0 0 1px light-dark(#646464, #9a9aa1), 0 1px 2px light-dark(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.4))); }
 .ui-aw__search:focus-within { background: var(--tc-field-bg, light-dark(#ffffff, #232326)); box-shadow: var(--tc-field-shadow-focus, inset 0 0 0 1px light-dark(#2f68ff, #6b95ff), 0 0 0 3px color-mix(in srgb, light-dark(#2f68ff, #6b95ff) 24%, transparent)); }
-.ui-aw__search input { flex: 1; min-width: 0; border: 0; outline: none; background: transparent; font: inherit; font-size: var(--tc-field-font-size, 13.5px); color: var(--tc-text-primary, light-dark(#171717, #ededed)); }
+.ui-aw__search input { flex: 1; min-width: 0; border: 0; outline: none; background: transparent; font: inherit; font-size: var(--tc-field-font-size, 13px); color: var(--tc-text-primary, light-dark(#171717, #ededed)); }
 .ui-aw__search input::placeholder { color: var(--tc-text-placeholder, light-dark(#646464, #8e8e95)); }
 .ui-aw__search input::-webkit-search-cancel-button { display: none; }
 .ui-aw__nav { display: grid; gap: 1px; }
@@ -1287,7 +1287,7 @@ const css = /* css */ `
   background: var(--tc-field-bg, light-dark(#ffffff, #232326));
   box-shadow: var(--tc-field-shadow, inset 0 0 0 1px light-dark(#858585, #7c7c82), 0 1px 2px light-dark(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.4)));
   font: inherit;
-  font-size: var(--tc-field-font-size, 13.5px);
+  font-size: var(--tc-field-font-size, 13px);
   color: var(--tc-text-primary, light-dark(#171717, #ededed));
 }
 .ui-aw__field::placeholder { color: var(--tc-text-placeholder, light-dark(#646464, #8e8e95)); }

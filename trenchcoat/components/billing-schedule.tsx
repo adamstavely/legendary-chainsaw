@@ -903,7 +903,7 @@ const css = /* css */ `
   --_tc-ease-move: cubic-bezier(0.22, 1, 0.36, 1);
   --_tc-ease-standard: ease;
   --_tc-field-bg: light-dark(#ffffff, #232326);
-  --_tc-field-font-size: 13.5px;
+  --_tc-field-font-size: 13px;
   --_tc-field-h: 36px;
   --_tc-field-px: 12px;
   --_tc-field-radius: 10px;

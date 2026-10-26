@@ -1199,9 +1199,7 @@ const css = /* css */ `
   --_tc-font-size-lg-plus: 15px;
   --_tc-font-size-md: 13px;
   --_tc-font-size-sm: 12px;
-  --_tc-font-size-sm-plus: 12.5px;
   --_tc-font-size-xs: 11px;
-  --_tc-font-size-xs-plus: 11.5px;
   --_tc-font-weight-medium: 500;
   --_tc-font-weight-regular: 400;
   --_tc-font-weight-semibold: 600;
@@ -1296,9 +1294,7 @@ const css = /* css */ `
   --_tc-font-size-lg-plus: 15px;
   --_tc-font-size-md: 13px;
   --_tc-font-size-sm: 12px;
-  --_tc-font-size-sm-plus: 12.5px;
   --_tc-font-size-xs: 11px;
-  --_tc-font-size-xs-plus: 11.5px;
   --_tc-font-weight-medium: 500;
   --_tc-font-weight-regular: 400;
   --_tc-font-weight-semibold: 600;
@@ -1495,7 +1491,7 @@ a:where([data-look="clean"], [data-look="clean"] *).ui-ans__source:hover { backg
   overflow: hidden;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
-  font-size: var(--tc-font-size-sm-plus, var(--_tc-font-size-sm-plus));
+  font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm));
   line-height: 1.4;
   color: var(--tc-text-primary, var(--_tc-text-primary));
 }
@@ -1607,7 +1603,7 @@ a:where([data-look="clean"], [data-look="clean"] *).ui-ans__source:hover { backg
   padding: 0 7px;
   border-radius: var(--tc-radius-sm, var(--_tc-radius-sm));
   background: var(--tc-fill-default, var(--_tc-fill-default));
-  font-size: var(--tc-font-size-xs-plus, var(--_tc-font-size-xs-plus));
+  font-size: var(--tc-font-size-xs, var(--_tc-font-size-xs));
   font-weight: var(--tc-font-weight-medium, var(--_tc-font-weight-medium));
   line-height: 1;
   color: var(--tc-text-muted, var(--_tc-text-muted));
@@ -1672,7 +1668,7 @@ a:where([data-look="clean"], [data-look="clean"] *).ui-ans__source:hover { backg
   overflow: hidden;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
-  font-size: var(--tc-font-size-sm-plus, var(--_tc-font-size-sm-plus));
+  font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm));
   line-height: 1.5;
   color: var(--tc-text-muted, var(--_tc-text-muted));
 }
@@ -1790,7 +1786,7 @@ a:where([data-look="clean"], [data-look="clean"] *).ui-ans__source:hover { backg
 .ui-ans__down .ui-ans__glyph { transform: scaleY(-1); }
 .ui-ans__redo:active .ui-ans__glyph { transform: rotate(120deg); transition: transform var(--tc-duration-slow, var(--_tc-duration-slow)) var(--tc-ease-move, var(--_tc-ease-move)); }
 :where([data-look="standard"], [data-look="standard"] *).ui-ans__ok { stroke: var(--tc-status-success-solid, var(--_tc-status-success-solid)) !important; stroke-width: 2.2 !important; animation: ui-ans-chip var(--tc-duration-moderate, var(--_tc-duration-moderate)) var(--tc-ease-move, var(--_tc-ease-move)) both; }
-:where([data-look="standard"], [data-look="standard"] *).ui-ans__status { font-size: var(--tc-font-size-sm-plus, var(--_tc-font-size-sm-plus)); white-space: nowrap; color: var(--tc-text-muted, var(--_tc-text-muted)); animation: ui-ans-fade var(--tc-duration-moderate, var(--_tc-duration-moderate)) var(--tc-ease-move, var(--_tc-ease-move)) both; }
+:where([data-look="standard"], [data-look="standard"] *).ui-ans__status { font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); white-space: nowrap; color: var(--tc-text-muted, var(--_tc-text-muted)); animation: ui-ans-fade var(--tc-duration-moderate, var(--_tc-duration-moderate)) var(--tc-ease-move, var(--_tc-ease-move)) both; }
 :where([data-look="clean"], [data-look="clean"] *).ui-ans__ok { color: var(--tc-status-success-fg, var(--_tc-status-success-fg)); animation: ui-ans-chip var(--tc-duration-moderate, var(--_tc-duration-moderate)) var(--tc-ease-move, var(--_tc-ease-move)) both; }
 :where([data-look="clean"], [data-look="clean"] *).ui-ans__action:has(.ui-ans__ok) { color: var(--tc-status-success-fg, var(--_tc-status-success-fg)); }
 :where([data-look="clean"], [data-look="clean"] *).ui-ans__status { font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); line-height: var(--tc-line-height-tight, var(--_tc-line-height-tight)); white-space: nowrap; color: var(--tc-text-muted, var(--_tc-text-muted)); animation: ui-ans-fade var(--tc-duration-moderate, var(--_tc-duration-moderate)) var(--tc-ease-move, var(--_tc-ease-move)) both; }
@@ -1841,7 +1837,7 @@ a:where([data-look="clean"], [data-look="clean"] *).ui-ans__source:hover { backg
   border-radius: var(--tc-control-radius-sm, var(--_tc-control-radius-sm));
   background: var(--tc-action-secondary-bg, var(--_tc-action-secondary-bg));
   box-shadow: var(--tc-action-secondary-shadow, var(--_tc-action-secondary-shadow));
-  font-size: var(--tc-font-size-sm-plus, var(--_tc-font-size-sm-plus));
+  font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm));
   color: var(--tc-text-secondary, var(--_tc-text-secondary));
   transition: color var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-standard, var(--_tc-ease-standard)), box-shadow var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-standard, var(--_tc-ease-standard));
 }

@@ -1103,7 +1103,7 @@ const css = /* css */ `
   border: 0;
   border-radius: var(--tc-radius-md);
   background: none;
-  font-size: var(--tc-font-size-sm-plus);
+  font-size: var(--tc-font-size-sm);
   color: var(--tc-text-muted) !important;
   transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard);
 }

@@ -480,7 +480,7 @@ const css = /* css */ `
   /* Size: md – the segmented pattern: track --tc-seg-*, options as tall as a control */
   --tc-segmented-control-h: var(--tc-control-h-md);
   --tc-segmented-control-px: var(--tc-control-px-md);
-  --tc-segmented-control-fs: var(--tc-font-size-md-plus);
+  --tc-segmented-control-fs: var(--tc-font-size-md);
   --tc-segmented-control-radius: var(--tc-seg-track-radius);
   --tc-segmented-control-pad: var(--tc-seg-pad);
   --tc-segmented-control-icon: 15px;
@@ -498,7 +498,7 @@ const css = /* css */ `
   color: var(--tc-text-muted);
   -webkit-font-smoothing: antialiased;
 }
-:where([data-look="standard"], [data-look="standard"] *).ui-seg[data-size="sm"] { --tc-segmented-control-h: 26px; --tc-segmented-control-px: var(--tc-control-px-sm); --tc-segmented-control-fs: var(--tc-font-size-sm-plus); --tc-segmented-control-icon: 14px; --tc-segmented-control-gap: 16px; }
+:where([data-look="standard"], [data-look="standard"] *).ui-seg[data-size="sm"] { --tc-segmented-control-h: 26px; --tc-segmented-control-px: var(--tc-control-px-sm); --tc-segmented-control-fs: var(--tc-font-size-sm); --tc-segmented-control-icon: 14px; --tc-segmented-control-gap: 16px; }
 :where([data-look="standard"], [data-look="standard"] *).ui-seg[data-size="lg"] { --tc-segmented-control-h: var(--tc-control-h-lg); --tc-segmented-control-px: var(--tc-control-px-lg); --tc-segmented-control-fs: var(--tc-font-size-lg); --tc-segmented-control-icon: 16px; --tc-segmented-control-gap: 24px; }
 :where([data-look="clean"], [data-look="clean"] *).ui-seg {
   /* Size: md – control-height chips */

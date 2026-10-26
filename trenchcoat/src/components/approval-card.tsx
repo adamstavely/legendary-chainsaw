@@ -1095,7 +1095,7 @@ const css = /* css */ `
   overflow: hidden;
   padding: 6px 8px 4px;
   color: var(--tc-text-muted);
-  font-size: var(--tc-font-size-sm-plus);
+  font-size: var(--tc-font-size-sm);
   line-height: var(--tc-line-height-tight);
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -1133,7 +1133,7 @@ const css = /* css */ `
   gap: 6px;
   min-width: 0;
   color: var(--tc-text-muted);
-  font-size: var(--tc-font-size-sm-plus);
+  font-size: var(--tc-font-size-sm);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
   transition: color var(--tc-duration-slow) var(--tc-ease-standard);
@@ -1156,7 +1156,7 @@ const css = /* css */ `
   order: 1;
   margin: 0;
   color: var(--tc-status-danger-fg);
-  font-size: var(--tc-font-size-sm-plus);
+  font-size: var(--tc-font-size-sm);
 }
 .ui-ap__actions {
   display: flex;
@@ -1233,7 +1233,7 @@ const css = /* css */ `
   height: var(--tc-control-h-sm);
   padding: 0 6px;
   border-radius: var(--tc-control-radius-sm);
-  font-size: var(--tc-font-size-sm-plus);
+  font-size: var(--tc-font-size-sm);
 }
 .ui-ap[data-busy] .ui-ap__btn:not(.ui-ap__approve),
 .ui-ap[data-busy] .ui-ap__always {
@@ -1320,7 +1320,7 @@ const css = /* css */ `
   min-width: 0;
   overflow: hidden;
   color: var(--tc-text-primary);
-  font-size: var(--tc-font-size-md-plus);
+  font-size: var(--tc-font-size-md);
   font-weight: var(--tc-font-weight-medium);
   white-space: nowrap;
   text-overflow: ellipsis;

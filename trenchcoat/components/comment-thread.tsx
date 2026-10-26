@@ -578,7 +578,6 @@ const css = /* css */ `
   --_tc-font-size-lg-plus: 15px;
   --_tc-font-size-md: 13px;
   --_tc-font-size-sm: 12px;
-  --_tc-font-size-sm-plus: 12.5px;
   --_tc-font-weight-medium: 500;
   --_tc-font-weight-regular: 400;
   --_tc-hairline: 1px;
@@ -649,7 +648,6 @@ const css = /* css */ `
   --_tc-font-size-lg-plus: 15px;
   --_tc-font-size-md: 13px;
   --_tc-font-size-sm: 12px;
-  --_tc-font-size-sm-plus: 12.5px;
   --_tc-font-weight-medium: 500;
   --_tc-font-weight-regular: 400;
   --_tc-hairline: 0.5px;
@@ -729,7 +727,7 @@ const css = /* css */ `
 :where([data-look="clean"], [data-look="clean"] *).ui-ct__head { gap: 8px; min-height: 48px; padding: 10px 10px 10px 16px; border-bottom: var(--tc-hairline, var(--_tc-hairline)) solid var(--tc-divider, var(--_tc-divider)); }
 .ui-ct__title { margin: 0; font-size: var(--tc-font-size-lg-plus, var(--_tc-font-size-lg-plus)); font-weight: var(--tc-font-weight-medium, var(--_tc-font-weight-medium)); line-height: var(--tc-line-height-relaxed, var(--_tc-line-height-relaxed)); }
 :where([data-look="clean"], [data-look="clean"] *).ui-ct__title { font-size: var(--tc-font-size-md, var(--_tc-font-size-md)); line-height: var(--tc-line-height-normal, var(--_tc-line-height-normal)); color: var(--tc-text-strong, var(--_tc-text-strong)); }
-.ui-ct__count { margin-right: auto; font-size: var(--tc-font-size-sm-plus, var(--_tc-font-size-sm-plus)); color: var(--tc-text-muted, var(--_tc-text-muted)); font-variant-numeric: tabular-nums; }
+.ui-ct__count { margin-right: auto; font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); color: var(--tc-text-muted, var(--_tc-text-muted)); font-variant-numeric: tabular-nums; }
 :where([data-look="clean"], [data-look="clean"] *).ui-ct__count { font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); line-height: var(--tc-line-height-tight, var(--_tc-line-height-tight)); }
 /* Close: a ghost icon button */
 .ui-ct__icon-btn { display: grid; place-items: center; flex: none; width: var(--tc-control-h-sm, var(--_tc-control-h-sm)); height: var(--tc-control-h-sm, var(--_tc-control-h-sm)); border-radius: var(--tc-control-radius-sm, var(--_tc-control-radius-sm)); color: var(--tc-icon-muted, var(--_tc-icon-muted)); transition: background-color var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-standard, var(--_tc-ease-standard)), color var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-standard, var(--_tc-ease-standard)); }
@@ -773,7 +771,7 @@ img.ui-ct__avatar { box-shadow: 0 0 0 var(--tc-hairline, var(--_tc-hairline)) va
 :where([data-look="clean"], [data-look="clean"] *).ui-ct__avatar--initials { background: var(--tc-fill-default, var(--_tc-fill-default)); color: var(--tc-text-secondary, var(--_tc-text-secondary)); }
 .ui-ct__name { min-width: 0; overflow: hidden; font-size: var(--tc-font-size-lg, var(--_tc-font-size-lg)); font-weight: var(--tc-font-weight-medium, var(--_tc-font-weight-medium)); line-height: var(--tc-line-height-normal, var(--_tc-line-height-normal)); white-space: nowrap; text-overflow: ellipsis; }
 :where([data-look="clean"], [data-look="clean"] *).ui-ct__name { font-size: var(--tc-font-size-md, var(--_tc-font-size-md)); color: var(--tc-text-strong, var(--_tc-text-strong)); }
-.ui-ct__time { flex: none; margin-left: auto; font-size: var(--tc-font-size-sm-plus, var(--_tc-font-size-sm-plus)); white-space: nowrap; color: var(--tc-text-muted, var(--_tc-text-muted)); font-variant-numeric: tabular-nums; }
+.ui-ct__time { flex: none; margin-left: auto; font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); white-space: nowrap; color: var(--tc-text-muted, var(--_tc-text-muted)); font-variant-numeric: tabular-nums; }
 :where([data-look="clean"], [data-look="clean"] *).ui-ct__time { font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); line-height: var(--tc-line-height-tight, var(--_tc-line-height-tight)); }
 .ui-ct__text { margin: 8px 0 0; font-size: var(--tc-font-size-lg, var(--_tc-font-size-lg)); line-height: 21px; overflow-wrap: break-word; color: var(--tc-text-secondary, var(--_tc-text-secondary)); }
 /* Clean: text and status line up with the name, not the avatar */

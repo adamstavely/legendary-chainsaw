@@ -1029,9 +1029,7 @@ const css = /* css */ `
   --_tc-font-size-2xs: 10px;
   --_tc-font-size-lg: 14px;
   --_tc-font-size-md: 13px;
-  --_tc-font-size-md-plus: 13.5px;
   --_tc-font-size-sm: 12px;
-  --_tc-font-size-sm-plus: 12.5px;
   --_tc-font-size-xs: 11px;
   --_tc-font-weight-medium: 500;
   --_tc-font-weight-regular: 400;
@@ -1127,9 +1125,7 @@ const css = /* css */ `
   --_tc-font-size-2xs: 10px;
   --_tc-font-size-lg: 14px;
   --_tc-font-size-md: 13px;
-  --_tc-font-size-md-plus: 13.5px;
   --_tc-font-size-sm: 12px;
-  --_tc-font-size-sm-plus: 12.5px;
   --_tc-font-size-xs: 11px;
   --_tc-font-weight-medium: 500;
   --_tc-font-weight-regular: 400;
@@ -1244,7 +1240,7 @@ const css = /* css */ `
 :where([data-look="clean"], [data-look="clean"] *).ui-pr__title { color: var(--tc-text-secondary, var(--_tc-text-secondary)); }
 :where([data-look="clean"], [data-look="clean"] *).ui-pr__title b { color: var(--tc-text-strong, var(--_tc-text-strong)); }
 .ui-pr__sub { display: flex; align-items: center; gap: 5px; min-width: 0; overflow: hidden; color: var(--tc-text-muted, var(--_tc-text-muted)); white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="standard"], [data-look="standard"] *).ui-pr__sub { font-size: var(--tc-font-size-sm-plus, var(--_tc-font-size-sm-plus)); line-height: var(--tc-line-height-snug, var(--_tc-line-height-snug)); }
+:where([data-look="standard"], [data-look="standard"] *).ui-pr__sub { font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); line-height: var(--tc-line-height-snug, var(--_tc-line-height-snug)); }
 :where([data-look="clean"], [data-look="clean"] *).ui-pr__sub { font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); line-height: var(--tc-line-height-tight, var(--_tc-line-height-tight)); }
 .ui-pr__tool { display: grid; flex: none; place-items: center; width: 12px; height: 12px; }
 .ui-pr__tool > svg { width: 12px; height: 12px; }
@@ -1260,7 +1256,7 @@ const css = /* css */ `
 :where([data-look="standard"], [data-look="standard"] *).ui-pr__preview { padding: 12px 8px 6px; }
 :where([data-look="clean"], [data-look="clean"] *).ui-pr__preview { padding: 12px 10px 4px; }
 .ui-pr__label { display: flex; align-items: center; gap: 6px; color: var(--tc-text-muted, var(--_tc-text-muted)); }
-:where([data-look="standard"], [data-look="standard"] *).ui-pr__label { margin: 0 8px 4px !important; font-size: var(--tc-font-size-sm-plus, var(--_tc-font-size-sm-plus)); font-weight: var(--tc-font-weight-medium, var(--_tc-font-weight-medium)); line-height: var(--tc-line-height-snug, var(--_tc-line-height-snug)); }
+:where([data-look="standard"], [data-look="standard"] *).ui-pr__label { margin: 0 8px 4px !important; font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); font-weight: var(--tc-font-weight-medium, var(--_tc-font-weight-medium)); line-height: var(--tc-line-height-snug, var(--_tc-line-height-snug)); }
 :where([data-look="clean"], [data-look="clean"] *).ui-pr__label { margin: 0 6px 4px !important; font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); font-weight: var(--tc-font-weight-regular, var(--_tc-font-weight-regular)); line-height: var(--tc-line-height-tight, var(--_tc-line-height-tight)); }
 /* The count: a badge */
 .ui-pr__count { display: grid; place-items: center; border-radius: var(--tc-radius-badge, var(--_tc-radius-badge)); font-variant-numeric: tabular-nums; }
@@ -1274,12 +1270,12 @@ const css = /* css */ `
 :where([data-look="standard"], [data-look="standard"] *).ui-pr__item-icon { color: var(--tc-text-muted, var(--_tc-text-muted)); }
 .ui-pr__item-icon > svg { width: 16px; height: 16px; }
 .ui-pr__item-label { flex: 1; min-width: 0; overflow: hidden; color: var(--tc-text-primary, var(--_tc-text-primary)); white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="standard"], [data-look="standard"] *).ui-pr__item-label { font-size: var(--tc-font-size-md-plus, var(--_tc-font-size-md-plus)); }
+:where([data-look="standard"], [data-look="standard"] *).ui-pr__item-label { font-size: var(--tc-font-size-md, var(--_tc-font-size-md)); }
 .ui-pr__item-meta { flex: none; color: var(--tc-text-muted, var(--_tc-text-muted)); white-space: nowrap; font-variant-numeric: tabular-nums; }
-:where([data-look="standard"], [data-look="standard"] *).ui-pr__item-meta { font-size: var(--tc-font-size-sm-plus, var(--_tc-font-size-sm-plus)); }
+:where([data-look="standard"], [data-look="standard"] *).ui-pr__item-meta { font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); }
 :where([data-look="clean"], [data-look="clean"] *).ui-pr__item-meta { font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); }
 .ui-pr__more { padding: 2px 0; color: var(--tc-text-muted, var(--_tc-text-muted)); transition: color var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-standard, var(--_tc-ease-standard)); }
-:where([data-look="standard"], [data-look="standard"] *).ui-pr__more { margin: 0 0 6px 34px; font-size: var(--tc-font-size-sm-plus, var(--_tc-font-size-sm-plus)); font-weight: var(--tc-font-weight-medium, var(--_tc-font-weight-medium)); line-height: var(--tc-line-height-snug, var(--_tc-line-height-snug)); }
+:where([data-look="standard"], [data-look="standard"] *).ui-pr__more { margin: 0 0 6px 34px; font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); font-weight: var(--tc-font-weight-medium, var(--_tc-font-weight-medium)); line-height: var(--tc-line-height-snug, var(--_tc-line-height-snug)); }
 :where([data-look="clean"], [data-look="clean"] *).ui-pr__more { margin: 0 0 4px 32px; font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); line-height: var(--tc-line-height-tight, var(--_tc-line-height-tight)); }
 .ui-pr__more:hover { color: var(--tc-text-primary, var(--_tc-text-primary)); }
 :where([data-look="standard"], [data-look="standard"] *).ui-pr__body:not(:has(.ui-pr__preview)) { padding-bottom: 16px; }
@@ -1337,7 +1333,7 @@ const css = /* css */ `
 :where([data-look="clean"], [data-look="clean"] *).ui-pr__result-head { color: var(--tc-text-strong, var(--_tc-text-strong)); }
 .ui-pr__result-action { font-weight: var(--tc-font-weight-regular, var(--_tc-font-weight-regular)); color: var(--tc-text-muted, var(--_tc-text-muted)); }
 .ui-pr__result-note { overflow: hidden; color: var(--tc-text-muted, var(--_tc-text-muted)); white-space: nowrap; text-overflow: ellipsis; font-variant-numeric: tabular-nums; }
-:where([data-look="standard"], [data-look="standard"] *).ui-pr__result-note { font-size: var(--tc-font-size-sm-plus, var(--_tc-font-size-sm-plus)); line-height: var(--tc-line-height-snug, var(--_tc-line-height-snug)); }
+:where([data-look="standard"], [data-look="standard"] *).ui-pr__result-note { font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); line-height: var(--tc-line-height-snug, var(--_tc-line-height-snug)); }
 :where([data-look="clean"], [data-look="clean"] *).ui-pr__result-note { font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); line-height: var(--tc-line-height-tight, var(--_tc-line-height-tight)); }
 /* Revoke / Change: Standard's secondary button, Clean's ghost button */
 .ui-pr__ghost { flex: none; height: var(--tc-control-h-md, var(--_tc-control-h-md)); padding: 0 var(--tc-control-px-md, var(--_tc-control-px-md)); border-radius: var(--tc-control-radius-md, var(--_tc-control-radius-md)); font-size: var(--tc-control-font-size, var(--_tc-control-font-size)); font-weight: var(--tc-control-font-weight, var(--_tc-control-font-weight)); transition: background-color var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-standard, var(--_tc-ease-standard)), box-shadow var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-standard, var(--_tc-ease-standard)), color var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-standard, var(--_tc-ease-standard)); }
@@ -1358,7 +1354,7 @@ const css = /* css */ `
 /* Narrow containers: the reason loses its indent, no keyboard hints */
 @container (max-width: 360px) {
 :where([data-look="standard"], [data-look="standard"] *).ui-pr__why { margin-left: 16px !important; }
-:where([data-look="standard"], [data-look="standard"] *).ui-pr__scope { padding: 0 6px; font-size: var(--tc-font-size-sm-plus, var(--_tc-font-size-sm-plus)); }
+:where([data-look="standard"], [data-look="standard"] *).ui-pr__scope { padding: 0 6px; font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); }
 :where([data-look="standard"], [data-look="standard"] *).ui-pr__kbd { display: none; }
 }
 /* Narrow containers: the reason loses its indent, the buttons share the width */

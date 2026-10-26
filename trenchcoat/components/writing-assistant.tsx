@@ -744,9 +744,7 @@ const css = /* css */ `
   --_tc-font-size-2xl: 20px;
   --_tc-font-size-3xl: 24px;
   --_tc-font-size-md: 13px;
-  --_tc-font-size-md-plus: 13.5px;
   --_tc-font-size-sm: 12px;
-  --_tc-font-size-sm-plus: 12.5px;
   --_tc-font-weight-medium: 500;
   --_tc-font-weight-regular: 400;
   --_tc-icon-muted: light-dark(#858585, #7c7c82);
@@ -796,9 +794,7 @@ const css = /* css */ `
   --_tc-font-size-2xl: 20px;
   --_tc-font-size-3xl: 24px;
   --_tc-font-size-md: 13px;
-  --_tc-font-size-md-plus: 13.5px;
   --_tc-font-size-sm: 12px;
-  --_tc-font-size-sm-plus: 12.5px;
   --_tc-font-weight-medium: 500;
   --_tc-font-weight-regular: 400;
   --_tc-icon-muted: light-dark(rgba(0, 0, 0, 0.45), rgba(255, 255, 255, 0.46));
@@ -1070,7 +1066,7 @@ const css = /* css */ `
   max-width: 86%;
   margin: 0;
   padding: 9px 13px;
-  font-size: var(--tc-font-size-md-plus, var(--_tc-font-size-md-plus));
+  font-size: var(--tc-font-size-md, var(--_tc-font-size-md));
   line-height: 1.45;
   white-space: pre-wrap;
   animation: ui-wa-in var(--tc-duration-slow, var(--_tc-duration-slow)) var(--tc-ease-move, var(--_tc-ease-move)) both;
@@ -1096,7 +1092,7 @@ const css = /* css */ `
 /* ---------- Prompt row ---------- */
 :where([data-look="standard"], [data-look="standard"] *).ui-wa__row { display: flex; align-items: flex-end; gap: 8px; }
 /* A failed reply or dictation, said plainly above the prompt */
-:where([data-look="standard"], [data-look="standard"] *).ui-wa__error { position: relative; margin: -10px 6px 0; font-size: var(--tc-font-size-sm-plus, var(--_tc-font-size-sm-plus)); line-height: 1.4; color: var(--tc-status-danger-fg, var(--_tc-status-danger-fg)); }
+:where([data-look="standard"], [data-look="standard"] *).ui-wa__error { position: relative; margin: -10px 6px 0; font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); line-height: 1.4; color: var(--tc-status-danger-fg, var(--_tc-status-danger-fg)); }
 /* Text wraps; the field grows up to four lines and the buttons stay at the bottom */
 :where([data-look="standard"], [data-look="standard"] *).ui-wa__field {
   position: relative;

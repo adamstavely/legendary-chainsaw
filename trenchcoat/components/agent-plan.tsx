@@ -1379,7 +1379,6 @@ const css = /* css */ `
   --_tc-font-size-lg: 14px;
   --_tc-font-size-md: 13px;
   --_tc-font-size-sm: 12px;
-  --_tc-font-size-sm-plus: 12.5px;
   --_tc-font-size-xs: 11px;
   --_tc-font-weight-medium: 500;
   --_tc-font-weight-regular: 400;
@@ -1458,7 +1457,6 @@ const css = /* css */ `
   --_tc-font-size-lg: 14px;
   --_tc-font-size-md: 13px;
   --_tc-font-size-sm: 12px;
-  --_tc-font-size-sm-plus: 12.5px;
   --_tc-font-size-xs: 11px;
   --_tc-font-weight-medium: 500;
   --_tc-font-weight-regular: 400;
@@ -1613,7 +1611,7 @@ const css = /* css */ `
   align-items: center;
   gap: 10px;
   min-height: 18px;
-  font-size: var(--tc-font-size-sm-plus, var(--_tc-font-size-sm-plus));
+  font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm));
   line-height: var(--tc-line-height-snug, var(--_tc-line-height-snug));
   color: var(--tc-text-muted, var(--_tc-text-muted));
 }
@@ -2025,7 +2023,7 @@ const css = /* css */ `
   gap: 3px 8px;
   min-width: 0;
   color: var(--tc-text-muted, var(--_tc-text-muted));
-  font-size: var(--tc-font-size-sm-plus, var(--_tc-font-size-sm-plus));
+  font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm));
   line-height: var(--tc-line-height-snug, var(--_tc-line-height-snug));
 }
 :where([data-look="clean"], [data-look="clean"] *).ui-pl__sub {
@@ -2104,7 +2102,7 @@ const css = /* css */ `
 }
 :where([data-look="standard"], [data-look="standard"] *).ui-pl__error {
   color: var(--tc-status-danger-fg, var(--_tc-status-danger-fg));
-  font-size: var(--tc-font-size-sm-plus, var(--_tc-font-size-sm-plus));
+  font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm));
   line-height: var(--tc-line-height-snug, var(--_tc-line-height-snug));
   overflow-wrap: anywhere;
 }
@@ -2118,7 +2116,7 @@ const css = /* css */ `
   background: var(--tc-agent-plan-raise-bg);
   box-shadow: inset 0 0 0 1px var(--tc-border-default, var(--_tc-border-default)), var(--tc-shadow-control, var(--_tc-shadow-control));
   color: var(--tc-text-primary, var(--_tc-text-primary));
-  font-size: var(--tc-font-size-sm-plus, var(--_tc-font-size-sm-plus));
+  font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm));
   font-weight: var(--tc-font-weight-medium, var(--_tc-font-weight-medium));
   transition: background-color var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-standard, var(--_tc-ease-standard)), transform var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-move, var(--_tc-ease-move));
 }
@@ -2143,7 +2141,7 @@ const css = /* css */ `
   align-items: center;
   min-height: 20px;
   color: var(--tc-text-muted, var(--_tc-text-muted));
-  font-size: var(--tc-font-size-sm-plus, var(--_tc-font-size-sm-plus));
+  font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm));
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
@@ -2486,7 +2484,7 @@ const css = /* css */ `
   gap: 12px;
   min-height: 46px;
   padding: 0 6px 0 12px;
-  font-size: var(--tc-font-size-sm-plus, var(--_tc-font-size-sm-plus));
+  font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm));
   color: var(--tc-text-muted, var(--_tc-text-muted));
   animation: ui-pl-fade var(--tc-duration-slow, var(--_tc-duration-slow)) var(--tc-ease-move, var(--_tc-ease-move)) both;
 }

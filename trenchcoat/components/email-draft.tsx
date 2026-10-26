@@ -907,7 +907,6 @@ const css = /* css */ `
   --_tc-font-size-lg-plus: 15px;
   --_tc-font-size-md: 13px;
   --_tc-font-size-sm: 12px;
-  --_tc-font-size-sm-plus: 12.5px;
   --_tc-font-weight-medium: 500;
   --_tc-font-weight-regular: 400;
   --_tc-font-weight-semibold: 600;
@@ -1007,7 +1006,6 @@ const css = /* css */ `
   --_tc-font-size-lg-plus: 15px;
   --_tc-font-size-md: 13px;
   --_tc-font-size-sm: 12px;
-  --_tc-font-size-sm-plus: 12.5px;
   --_tc-font-weight-medium: 500;
   --_tc-font-weight-regular: 400;
   --_tc-font-weight-semibold: 600;
@@ -1457,7 +1455,7 @@ const css = /* css */ `
   border: 0;
   border-radius: var(--tc-radius-md, var(--_tc-radius-md));
   background: none;
-  font-size: var(--tc-font-size-sm-plus, var(--_tc-font-size-sm-plus));
+  font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm));
   color: var(--tc-text-muted, var(--_tc-text-muted)) !important;
   transition: background-color var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-standard, var(--_tc-ease-standard)), color var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-standard, var(--_tc-ease-standard));
 }

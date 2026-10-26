@@ -686,7 +686,7 @@ button.ui-iv__ref:hover { text-decoration: underline; }
 .ui-iv__amount:hover:not([data-disabled]) { box-shadow: var(--tc-field-shadow-hover, inset 0 0 0 1px light-dark(#646464, #9a9aa1), 0 1px 2px light-dark(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.4))); }
 .ui-iv__amount:focus-within { box-shadow: var(--tc-field-shadow-focus, inset 0 0 0 1px light-dark(#2f68ff, #6b95ff), 0 0 0 3px color-mix(in srgb, light-dark(#2f68ff, #6b95ff) 24%, transparent)); }
 .ui-iv__amount span { color: var(--tc-text-muted, light-dark(#646464, #9a9aa1)); }
-.ui-iv__amount input { flex: 1; min-width: 0; border: 0; background: none; outline: none; text-align: right; font-size: var(--tc-field-font-size, 13.5px); font-variant-numeric: tabular-nums; color: var(--tc-text-primary, light-dark(#171717, #ededed)); }
+.ui-iv__amount input { flex: 1; min-width: 0; border: 0; background: none; outline: none; text-align: right; font-size: var(--tc-field-font-size, 13px); font-variant-numeric: tabular-nums; color: var(--tc-text-primary, light-dark(#171717, #ededed)); }
 .ui-iv__amount[data-disabled] { opacity: 0.5; }
 
 .ui-iv__issue { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 12px; margin-top: 24px; }

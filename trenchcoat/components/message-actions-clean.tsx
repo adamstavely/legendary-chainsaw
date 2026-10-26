@@ -1105,7 +1105,7 @@ const css = /* css */ `
   --_tc-ease-move: cubic-bezier(0.22, 1, 0.36, 1);
   --_tc-ease-standard: ease;
   --_tc-field-bg: light-dark(#ffffff, #232326);
-  --_tc-field-font-size: 13.5px;
+  --_tc-field-font-size: 13px;
   --_tc-field-h: 36px;
   --_tc-field-px: 12px;
   --_tc-field-radius: 10px;
@@ -1122,8 +1122,7 @@ const css = /* css */ `
   --_tc-font-sans: "Inter", "InterVariable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --_tc-font-size-md: 13px;
   --_tc-font-size-sm: 12px;
-  --_tc-font-size-sm-plus: 12.5px;
-  --_tc-font-size-xs-plus: 11.5px;
+  --_tc-font-size-xs: 11px;
   --_tc-font-weight-medium: 500;
   --_tc-font-weight-regular: 400;
   --_tc-icon-muted: light-dark(#858585, #7c7c82);
@@ -1196,8 +1195,7 @@ const css = /* css */ `
   --_tc-font-sans: "Inter", "InterVariable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --_tc-font-size-md: 13px;
   --_tc-font-size-sm: 12px;
-  --_tc-font-size-sm-plus: 12.5px;
-  --_tc-font-size-xs-plus: 11.5px;
+  --_tc-font-size-xs: 11px;
   --_tc-font-weight-medium: 500;
   --_tc-font-weight-regular: 400;
   --_tc-icon-muted: light-dark(rgba(0, 0, 0, 0.45), rgba(255, 255, 255, 0.46));
@@ -1314,7 +1312,7 @@ const css = /* css */ `
 .ui-ma__eq[data-on] i:nth-child(3) { animation-delay: -520ms; animation-duration: var(--tc-duration-reveal-slow, var(--_tc-duration-reveal-slow)); }
 .ui-ma__eq[data-on] i:nth-child(4) { animation-delay: -140ms; animation-duration: var(--tc-duration-reveal-slow, var(--_tc-duration-reveal-slow)); }
 /* ----- Tooltips: above the button, on hover after a beat, on keyboard focus, and briefly after Copy ----- */
-:where([data-look="standard"], [data-look="standard"] *).ui-ma__tip { position: absolute; bottom: calc(100% + 6px); left: 50%; z-index: 3; display: block; width: max-content; padding: 3px 7px; border-radius: var(--tc-tooltip-radius, var(--_tc-tooltip-radius)); background: var(--tc-tooltip-bg, var(--_tc-tooltip-bg)); font-size: var(--tc-font-size-xs-plus, var(--_tc-font-size-xs-plus)); font-weight: var(--tc-font-weight-medium, var(--_tc-font-weight-medium)); line-height: var(--tc-line-height-tight, var(--_tc-line-height-tight)); color: var(--tc-tooltip-fg, var(--_tc-tooltip-fg)); white-space: nowrap; visibility: hidden; opacity: 0; transform: translate(-50%, 3px); transition: opacity var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-standard, var(--_tc-ease-standard)), transform var(--tc-duration-base, var(--_tc-duration-base)) var(--tc-ease-move, var(--_tc-ease-move)), visibility 0s linear var(--tc-duration-base, var(--_tc-duration-base)); }
+:where([data-look="standard"], [data-look="standard"] *).ui-ma__tip { position: absolute; bottom: calc(100% + 6px); left: 50%; z-index: 3; display: block; width: max-content; padding: 3px 7px; border-radius: var(--tc-tooltip-radius, var(--_tc-tooltip-radius)); background: var(--tc-tooltip-bg, var(--_tc-tooltip-bg)); font-size: var(--tc-font-size-xs, var(--_tc-font-size-xs)); font-weight: var(--tc-font-weight-medium, var(--_tc-font-weight-medium)); line-height: var(--tc-line-height-tight, var(--_tc-line-height-tight)); color: var(--tc-tooltip-fg, var(--_tc-tooltip-fg)); white-space: nowrap; visibility: hidden; opacity: 0; transform: translate(-50%, 3px); transition: opacity var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-standard, var(--_tc-ease-standard)), transform var(--tc-duration-base, var(--_tc-duration-base)) var(--tc-ease-move, var(--_tc-ease-move)), visibility 0s linear var(--tc-duration-base, var(--_tc-duration-base)); }
 /* ----- Tooltips: a small white popover above the button – on hover after a beat, on keyboard focus, and briefly after Copy ----- */
 :where([data-look="clean"], [data-look="clean"] *).ui-ma__tip { position: absolute; bottom: calc(100% + 6px); left: 50%; z-index: 3; display: block; width: max-content; padding: 2px 8px; border-radius: var(--tc-tooltip-radius, var(--_tc-tooltip-radius)); background: var(--tc-surface-overlay, var(--_tc-surface-overlay)); box-shadow: var(--tc-shadow-overlay, var(--_tc-shadow-overlay)); font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); font-weight: var(--tc-font-weight-medium, var(--_tc-font-weight-medium)); line-height: var(--tc-line-height-normal, var(--_tc-line-height-normal)); color: var(--tc-text-primary, var(--_tc-text-primary)); white-space: nowrap; visibility: hidden; opacity: 0; transform: translate(-50%, 3px); transition: opacity var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-standard, var(--_tc-ease-standard)), transform var(--tc-duration-base, var(--_tc-duration-base)) var(--tc-ease-move, var(--_tc-ease-move)), visibility 0s linear var(--tc-duration-base, var(--_tc-duration-base)); }
 .ui-ma__btn:focus-visible + .ui-ma__tip,
@@ -1353,7 +1351,7 @@ const css = /* css */ `
 /* Clean: no card of its own – the row sits in the card the bar sits in */
 :where([data-look="clean"], [data-look="clean"] *).ui-ma__panel { padding: 10px 8px 8px; }
 .ui-ma__panel-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 24px; }
-:where([data-look="standard"], [data-look="standard"] *).ui-ma__ask { font-size: var(--tc-font-size-sm-plus, var(--_tc-font-size-sm-plus)); font-weight: var(--tc-font-weight-medium, var(--_tc-font-weight-medium)); color: var(--tc-text-primary, var(--_tc-text-primary)); }
+:where([data-look="standard"], [data-look="standard"] *).ui-ma__ask { font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); font-weight: var(--tc-font-weight-medium, var(--_tc-font-weight-medium)); color: var(--tc-text-primary, var(--_tc-text-primary)); }
 :where([data-look="standard"], [data-look="standard"] *).ui-ma__close { display: grid; flex: none; place-items: center; width: 24px; height: 24px; margin-right: -4px; border-radius: var(--tc-control-radius-sm, var(--_tc-control-radius-sm)); color: var(--tc-text-muted, var(--_tc-text-muted)); transition: background-color var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-standard, var(--_tc-ease-standard)), color var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-standard, var(--_tc-ease-standard)); }
 :where([data-look="standard"], [data-look="standard"] *).ui-ma__close .ui-ma__glyph { width: 14px; height: 14px; }
 :where([data-look="standard"], [data-look="standard"] *).ui-ma__close:hover { background: var(--tc-fill-hover, var(--_tc-fill-hover)); color: var(--tc-text-primary, var(--_tc-text-primary)); }

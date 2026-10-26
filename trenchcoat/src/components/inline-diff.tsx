@@ -925,7 +925,7 @@ const css = /* css */ `
   min-width: 0;
   padding: 6px 8px 4px;
   color: var(--tc-text-muted);
-  font-size: var(--tc-font-size-sm-plus);
+  font-size: var(--tc-font-size-sm);
   line-height: var(--tc-line-height-tight);
   letter-spacing: -0.003em;
 }
@@ -1344,7 +1344,7 @@ const css = /* css */ `
   background: transparent;
   color: inherit;
   font: inherit;
-  font-size: var(--tc-font-size-sm-plus);
+  font-size: var(--tc-font-size-sm);
   font-weight: var(--tc-font-weight-medium);
   line-height: var(--tc-line-height-none);
   white-space: nowrap;

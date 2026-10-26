@@ -839,7 +839,7 @@ const css = /* css */ `
   --_tc-ease-standard: ease;
   --_tc-field-bg: light-dark(#ffffff, #232326);
   --_tc-field-bg-sunken: light-dark(rgba(0, 0, 0, 0.05), rgba(255, 255, 255, 0.07));
-  --_tc-field-font-size: 13.5px;
+  --_tc-field-font-size: 13px;
   --_tc-field-h: 36px;
   --_tc-field-px: 12px;
   --_tc-field-radius: 10px;
@@ -861,7 +861,6 @@ const css = /* css */ `
   --_tc-font-size-lg-plus: 15px;
   --_tc-font-size-md: 13px;
   --_tc-font-size-sm: 12px;
-  --_tc-font-size-sm-plus: 12.5px;
   --_tc-font-size-xl: 16px;
   --_tc-font-weight-medium: 500;
   --_tc-font-weight-regular: 400;
@@ -978,7 +977,6 @@ const css = /* css */ `
   --_tc-font-size-lg-plus: 15px;
   --_tc-font-size-md: 13px;
   --_tc-font-size-sm: 12px;
-  --_tc-font-size-sm-plus: 12.5px;
   --_tc-font-size-xl: 16px;
   --_tc-font-weight-medium: 500;
   --_tc-font-weight-regular: 400;
@@ -1220,7 +1218,7 @@ const css = /* css */ `
   min-width: 0;
   overflow: hidden;
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: var(--tc-font-size-sm-plus, var(--_tc-font-size-sm-plus));
+  font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm));
   white-space: nowrap;
   text-overflow: ellipsis;
   color: var(--tc-text-secondary, var(--_tc-text-secondary));
@@ -1260,7 +1258,7 @@ const css = /* css */ `
 }
 .ui-is__regen:hover:not([aria-disabled="true"]) { box-shadow: var(--tc-action-secondary-shadow-hover, var(--_tc-action-secondary-shadow-hover)); }
 .ui-is__regen[aria-disabled="true"] { cursor: progress; }
-:where([data-look="standard"], [data-look="standard"] *).ui-is__note { margin: 8px 0 0; font-size: var(--tc-font-size-sm-plus, var(--_tc-font-size-sm-plus)); color: var(--tc-status-success-fg, var(--_tc-status-success-fg)); }
+:where([data-look="standard"], [data-look="standard"] *).ui-is__note { margin: 8px 0 0; font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); color: var(--tc-status-success-fg, var(--_tc-status-success-fg)); }
 :where([data-look="standard"], [data-look="standard"] *).ui-is__note[data-error] { color: var(--tc-status-danger-fg, var(--_tc-status-danger-fg)); }
 :where([data-look="standard"], [data-look="standard"] *).ui-is__save-error { color: var(--tc-status-danger-fg, var(--_tc-status-danger-fg)); }
 /* The key: a field-like row with ghost buttons; a fresh key gets a light green fill */

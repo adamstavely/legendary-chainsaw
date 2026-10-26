@@ -931,10 +931,8 @@ const css = /* css */ `
   --_tc-font-sans: "Inter", "InterVariable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --_tc-font-size-lg-plus: 15px;
   --_tc-font-size-md: 13px;
-  --_tc-font-size-md-plus: 13.5px;
   --_tc-font-size-sm: 12px;
-  --_tc-font-size-sm-plus: 12.5px;
-  --_tc-font-size-xs-plus: 11.5px;
+  --_tc-font-size-xs: 11px;
   --_tc-font-weight-medium: 500;
   --_tc-font-weight-regular: 400;
   --_tc-hairline: 1px;
@@ -1001,10 +999,8 @@ const css = /* css */ `
   --_tc-font-sans: "Inter", "InterVariable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --_tc-font-size-lg-plus: 15px;
   --_tc-font-size-md: 13px;
-  --_tc-font-size-md-plus: 13.5px;
   --_tc-font-size-sm: 12px;
-  --_tc-font-size-sm-plus: 12.5px;
-  --_tc-font-size-xs-plus: 11.5px;
+  --_tc-font-size-xs: 11px;
   --_tc-font-weight-medium: 500;
   --_tc-font-weight-regular: 400;
   --_tc-hairline: 0.5px;
@@ -1056,7 +1052,7 @@ const css = /* css */ `
   border-radius: var(--tc-tray-radius, var(--_tc-tray-radius));
   background: var(--tc-surface-tray, var(--_tc-surface-tray));
   font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  font-size: var(--tc-font-size-md-plus, var(--_tc-font-size-md-plus));
+  font-size: var(--tc-font-size-md, var(--_tc-font-size-md));
   color: var(--tc-text-secondary, var(--_tc-text-secondary));
   -webkit-font-smoothing: antialiased;
 }
@@ -1093,7 +1089,7 @@ const css = /* css */ `
 .ui-cm__search input::placeholder { color: var(--tc-text-muted, var(--_tc-text-muted)); }
 /* The field's focus ring goes round the whole panel (the search field is its first row); the input itself draws none */
 .ui-cm__card:has(input:focus-visible) { outline: var(--tc-focus-outline, var(--_tc-focus-outline)); outline-offset: var(--tc-focus-ring-offset, var(--_tc-focus-ring-offset)); }
-:where([data-look="standard"], [data-look="standard"] *).ui-cm__enter { display: inline-flex; align-items: center; gap: 4px; font-size: var(--tc-font-size-xs-plus, var(--_tc-font-size-xs-plus)); font-weight: var(--tc-font-weight-medium, var(--_tc-font-weight-medium)); letter-spacing: 0.04em; text-transform: uppercase; color: var(--tc-text-muted, var(--_tc-text-muted)); }
+:where([data-look="standard"], [data-look="standard"] *).ui-cm__enter { display: inline-flex; align-items: center; gap: 4px; font-size: var(--tc-font-size-xs, var(--_tc-font-size-xs)); font-weight: var(--tc-font-weight-medium, var(--_tc-font-weight-medium)); letter-spacing: 0.04em; text-transform: uppercase; color: var(--tc-text-muted, var(--_tc-text-muted)); }
 :where([data-look="standard"], [data-look="standard"] *).ui-cm__enter svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 :where([data-look="standard"], [data-look="standard"] *).ui-cm__list { position: relative; max-height: 340px; padding: 4px 6px 8px; overflow-y: auto; scrollbar-width: thin; transition: height var(--tc-duration-slow, var(--_tc-duration-slow)) var(--tc-ease-move, var(--_tc-ease-move)); }
 :where([data-look="clean"], [data-look="clean"] *).ui-cm__enter svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 1.1; stroke-linecap: round; stroke-linejoin: round; }
@@ -1189,7 +1185,7 @@ const css = /* css */ `
 .ui-cm__item[data-ran] { animation: ui-cm-ran var(--tc-duration-slowest, var(--_tc-duration-slowest)) var(--tc-ease-move, var(--_tc-ease-move)); }
 @keyframes ui-cm-ran { 30% { transform: scale(0.985); } }
 /* The tray below the card */
-:where([data-look="standard"], [data-look="standard"] *).ui-cm__foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 38px; padding: 0 12px; font-size: var(--tc-font-size-sm-plus, var(--_tc-font-size-sm-plus)); color: var(--tc-text-muted, var(--_tc-text-muted)); }
+:where([data-look="standard"], [data-look="standard"] *).ui-cm__foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 38px; padding: 0 12px; font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); color: var(--tc-text-muted, var(--_tc-text-muted)); }
 :where([data-look="standard"], [data-look="standard"] *).ui-cm__foot > span { display: inline-flex; align-items: center; gap: 6px; }
 /* The last row of the panel */
 :where([data-look="clean"], [data-look="clean"] *).ui-cm__foot {

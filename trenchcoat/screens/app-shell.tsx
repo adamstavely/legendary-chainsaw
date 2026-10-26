@@ -1798,7 +1798,7 @@ a.ui-as-side__item { text-decoration: none; cursor: pointer; }
   border: 0;
   background: transparent;
   font: inherit;
-  font-size: var(--tc-field-font-size, 13.5px);
+  font-size: var(--tc-field-font-size, 13px);
   color: var(--tc-text-primary, light-dark(#171717, #ededed));
 }
 .ui-as-search input::placeholder { color: var(--tc-text-placeholder, light-dark(#646464, #8e8e95)); }

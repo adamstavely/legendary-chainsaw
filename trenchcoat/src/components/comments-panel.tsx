@@ -1010,7 +1010,7 @@ const css = /* css */ `
   color: var(--tc-accent-text);
 }
 :where([data-look="standard"], [data-look="standard"] *).ui-cp__name { font-size: var(--tc-font-size-lg); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-normal); }
-:where([data-look="standard"], [data-look="standard"] *).ui-cp__time { margin-left: auto; font-size: var(--tc-font-size-sm-plus); font-variant-numeric: tabular-nums; color: var(--tc-text-muted); }
+:where([data-look="standard"], [data-look="standard"] *).ui-cp__time { margin-left: auto; font-size: var(--tc-font-size-sm); font-variant-numeric: tabular-nums; color: var(--tc-text-muted); }
 :where([data-look="standard"], [data-look="standard"] *).ui-cp__resolve {
   display: grid;
   place-items: center;

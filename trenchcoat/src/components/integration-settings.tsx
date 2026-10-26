@@ -887,7 +887,7 @@ const css = /* css */ `
   min-width: 0;
   overflow: hidden;
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-  font-size: var(--tc-font-size-sm-plus);
+  font-size: var(--tc-font-size-sm);
   white-space: nowrap;
   text-overflow: ellipsis;
   color: var(--tc-text-secondary);
@@ -927,7 +927,7 @@ const css = /* css */ `
 }
 .ui-is__regen:hover:not([aria-disabled="true"]) { box-shadow: var(--tc-action-secondary-shadow-hover); }
 .ui-is__regen[aria-disabled="true"] { cursor: progress; }
-:where([data-look="standard"], [data-look="standard"] *).ui-is__note { margin: 8px 0 0; font-size: var(--tc-font-size-sm-plus); color: var(--tc-status-success-fg); }
+:where([data-look="standard"], [data-look="standard"] *).ui-is__note { margin: 8px 0 0; font-size: var(--tc-font-size-sm); color: var(--tc-status-success-fg); }
 :where([data-look="standard"], [data-look="standard"] *).ui-is__note[data-error] { color: var(--tc-status-danger-fg); }
 :where([data-look="standard"], [data-look="standard"] *).ui-is__save-error { color: var(--tc-status-danger-fg); }
 /* The key: a field-like row with ghost buttons; a fresh key gets a light green fill */

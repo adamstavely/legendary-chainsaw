@@ -1216,7 +1216,7 @@ const css = /* css */ `
   --_tc-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   --_tc-ease-standard: ease;
   --_tc-field-bg: light-dark(#ffffff, #232326);
-  --_tc-field-font-size: 13.5px;
+  --_tc-field-font-size: 13px;
   --_tc-field-h: 36px;
   --_tc-field-radius: 10px;
   --_tc-field-shadow: inset 0 0 0 1px light-dark(#858585, #7c7c82), 0 1px 2px light-dark(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.4));
@@ -1229,9 +1229,7 @@ const css = /* css */ `
   --_tc-focus-ring-width: 2px;
   --_tc-font-sans: "Inter", "InterVariable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --_tc-font-size-md: 13px;
-  --_tc-font-size-md-plus: 13.5px;
   --_tc-font-size-sm: 12px;
-  --_tc-font-size-sm-plus: 12.5px;
   --_tc-font-size-xl: 16px;
   --_tc-font-weight-medium: 500;
   --_tc-font-weight-regular: 400;
@@ -1314,9 +1312,7 @@ const css = /* css */ `
   --_tc-focus-ring-width: 2px;
   --_tc-font-sans: "Inter", "InterVariable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --_tc-font-size-md: 13px;
-  --_tc-font-size-md-plus: 13.5px;
   --_tc-font-size-sm: 12px;
-  --_tc-font-size-sm-plus: 12.5px;
   --_tc-font-size-xl: 16px;
   --_tc-font-weight-medium: 500;
   --_tc-font-weight-regular: 400;
@@ -1375,7 +1371,7 @@ const css = /* css */ `
 :where([data-look="standard"], [data-look="standard"] *).ui-cbx {
   /* The chip a second Backspace will remove */
   --tc-combobox-chip-border-armed: light-dark(#b5b5b5, #5c5c63);
-  font-size: var(--tc-font-size-md-plus, var(--_tc-font-size-md-plus));
+  font-size: var(--tc-font-size-md, var(--_tc-font-size-md));
   color: var(--tc-text-secondary, var(--_tc-text-secondary));
 }
 :where([data-look="clean"], [data-look="clean"] *).ui-cbx {
@@ -1563,7 +1559,7 @@ const css = /* css */ `
 /* The name wins over the hint when space runs out */
 .ui-cbx__name { flex: 0 0 auto; max-width: 100%; min-width: 0; overflow: hidden; color: var(--tc-text-primary, var(--_tc-text-primary)); white-space: nowrap; text-overflow: ellipsis; }
 .ui-cbx__hint { flex: 0 100 auto; min-width: 0; overflow: hidden; color: var(--tc-text-muted, var(--_tc-text-muted)); white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="standard"], [data-look="standard"] *).ui-cbx__hint { font-size: var(--tc-font-size-sm-plus, var(--_tc-font-size-sm-plus)); }
+:where([data-look="standard"], [data-look="standard"] *).ui-cbx__hint { font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); }
 :where([data-look="clean"], [data-look="clean"] *).ui-cbx__hint { font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); line-height: var(--tc-line-height-tight, var(--_tc-line-height-tight)); }
 .ui-cbx mark { border-radius: var(--tc-radius-2xs, var(--_tc-radius-2xs)); background: var(--tc-accent-highlight, var(--_tc-accent-highlight)); color: inherit; }
 /* Picked: the check in the menu's selected colour. It pops in with a small spring and fades out quickly */

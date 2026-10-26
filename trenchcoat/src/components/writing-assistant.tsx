@@ -909,7 +909,7 @@ const css = /* css */ `
   max-width: 86%;
   margin: 0;
   padding: 9px 13px;
-  font-size: var(--tc-font-size-md-plus);
+  font-size: var(--tc-font-size-md);
   line-height: 1.45;
   white-space: pre-wrap;
   animation: ui-wa-in var(--tc-duration-slow) var(--tc-ease-move) both;
@@ -935,7 +935,7 @@ const css = /* css */ `
 /* ---------- Prompt row ---------- */
 :where([data-look="standard"], [data-look="standard"] *).ui-wa__row { display: flex; align-items: flex-end; gap: 8px; }
 /* A failed reply or dictation, said plainly above the prompt */
-:where([data-look="standard"], [data-look="standard"] *).ui-wa__error { position: relative; margin: -10px 6px 0; font-size: var(--tc-font-size-sm-plus); line-height: 1.4; color: var(--tc-status-danger-fg); }
+:where([data-look="standard"], [data-look="standard"] *).ui-wa__error { position: relative; margin: -10px 6px 0; font-size: var(--tc-font-size-sm); line-height: 1.4; color: var(--tc-status-danger-fg); }
 /* Text wraps; the field grows up to four lines and the buttons stay at the bottom */
 :where([data-look="standard"], [data-look="standard"] *).ui-wa__field {
   position: relative;

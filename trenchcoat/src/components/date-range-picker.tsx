@@ -1090,7 +1090,7 @@ button:where([data-look="clean"], [data-look="clean"] *).ui-drp__preset:hover:no
 :where([data-look="standard"], [data-look="standard"] *).ui-drp__day button {
   position: relative;
   border-radius: 9px;
-  font-size: var(--tc-font-size-sm-plus);
+  font-size: var(--tc-font-size-sm);
   font-variant-numeric: tabular-nums;
   color: var(--tc-text-primary);
   transition: background-color var(--tc-duration-base) var(--tc-ease-standard), color var(--tc-duration-base) var(--tc-ease-standard), box-shadow var(--tc-duration-base) var(--tc-ease-standard), transform var(--tc-duration-fast) var(--tc-ease-move);

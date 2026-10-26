@@ -467,7 +467,7 @@ const css = /* css */ `
 :where([data-look="standard"], [data-look="standard"] *).ui-ad__title { color: var(--tc-text-primary); }
 :where([data-look="clean"], [data-look="clean"] *).ui-ad__title { color: var(--tc-text-strong); }
 .ui-ad__sub { overflow: hidden; color: var(--tc-text-muted); white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="standard"], [data-look="standard"] *).ui-ad__sub { font-size: var(--tc-font-size-sm-plus); line-height: var(--tc-line-height-snug); }
+:where([data-look="standard"], [data-look="standard"] *).ui-ad__sub { font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-snug); }
 :where([data-look="clean"], [data-look="clean"] *).ui-ad__sub { font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); }
 /* ----- Standard levels: the segmented-control recipe – a track, a raised thumb glides to the chosen one ----- */
 :where([data-look="standard"], [data-look="standard"] *).ui-ad__levels { padding: 14px 16px 16px; }
@@ -480,7 +480,7 @@ const css = /* css */ `
 /* ----- On the tray: the two groups ----- */
 :where([data-look="standard"], [data-look="standard"] *).ui-ad__groups { display: grid; gap: 14px; padding: 14px 4px 4px; }
 .ui-ad__group-head { display: flex; align-items: center; gap: 6px; color: var(--tc-text-muted); }
-:where([data-look="standard"], [data-look="standard"] *).ui-ad__group-head { margin: 0 8px 8px !important; font-size: var(--tc-font-size-sm-plus); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-snug); }
+:where([data-look="standard"], [data-look="standard"] *).ui-ad__group-head { margin: 0 8px 8px !important; font-size: var(--tc-font-size-sm); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-snug); }
 /* The count: a small badge with a soft lift – no taller than the heading */
 .ui-ad__count { display: grid; place-items: center; overflow: hidden; border-radius: var(--tc-radius-badge); background: var(--tc-surface-raised); box-shadow: var(--tc-shadow-raised); font-variant-numeric: tabular-nums; }
 :where([data-look="standard"], [data-look="standard"] *).ui-ad__count { min-width: 18px; height: 18px; padding: 0 5px; font-size: var(--tc-font-size-xs); color: var(--tc-text-muted); }
@@ -510,7 +510,7 @@ const css = /* css */ `
 /* The name and its risk tag wrap onto two lines rather than the tag cutting the name off */
 .ui-ad__line { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 8px; min-width: 0; }
 .ui-ad__label { min-width: 0; max-width: 100%; overflow: hidden; color: var(--tc-text-primary); white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="standard"], [data-look="standard"] *).ui-ad__label { font-size: var(--tc-font-size-md-plus); font-weight: var(--tc-font-weight-medium); }
+:where([data-look="standard"], [data-look="standard"] *).ui-ad__label { font-size: var(--tc-font-size-md); font-weight: var(--tc-font-weight-medium); }
 .ui-ad__detail { overflow: hidden; font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); color: var(--tc-text-muted); white-space: nowrap; text-overflow: ellipsis; }
 /* Risk: a small pill right after the name – glyph and word; safe actions carry nothing */
 .ui-ad__risk { display: inline-flex; flex: none; align-items: center; gap: 3px; height: var(--tc-pill-h); padding: 0 var(--tc-pill-px) 0 calc(var(--tc-pill-px) - 2px); border-radius: var(--tc-pill-radius); background: var(--tc-status-warning-bg); font-size: var(--tc-pill-font-size); font-weight: var(--tc-pill-font-weight); line-height: var(--tc-line-height-tight); color: var(--tc-status-warning-fg); }
@@ -524,7 +524,7 @@ const css = /* css */ `
 .ui-ad__pin[aria-pressed="true"] { color: var(--tc-text-secondary); }
 /* Empty group: one quiet tag across the whole width */
 .ui-ad__empty { display: flex; align-items: center; justify-content: center; background: var(--tc-fill-subtle); color: var(--tc-text-muted); text-align: center; }
-:where([data-look="standard"], [data-look="standard"] *).ui-ad__empty { min-height: 42px; padding: 8px 12px; border-radius: var(--tc-radius-xl); font-size: var(--tc-font-size-sm-plus); line-height: var(--tc-line-height-snug); }
+:where([data-look="standard"], [data-look="standard"] *).ui-ad__empty { min-height: 42px; padding: 8px 12px; border-radius: var(--tc-radius-xl); font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-snug); }
 :where([data-look="clean"], [data-look="clean"] *).ui-ad__empty { min-height: 30px; margin: 2px 0; padding: 6px 10px; border-radius: var(--tc-radius-sm); font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); }
 @keyframes ui-ad-roll-up { from { opacity: 0; transform: translateY(70%); } }
 @keyframes ui-ad-roll-down { from { opacity: 0; transform: translateY(-70%); } }

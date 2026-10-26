@@ -823,9 +823,7 @@ const css = /* css */ `
   --_tc-font-size-2xs: 10px;
   --_tc-font-size-md: 13px;
   --_tc-font-size-sm: 12px;
-  --_tc-font-size-sm-plus: 12.5px;
   --_tc-font-size-xs: 11px;
-  --_tc-font-size-xs-plus: 11.5px;
   --_tc-font-weight-medium: 500;
   --_tc-font-weight-regular: 400;
   --_tc-font-weight-strong: 600;
@@ -919,9 +917,7 @@ const css = /* css */ `
   --_tc-font-size-2xs: 10px;
   --_tc-font-size-md: 13px;
   --_tc-font-size-sm: 12px;
-  --_tc-font-size-sm-plus: 12.5px;
   --_tc-font-size-xs: 11px;
-  --_tc-font-size-xs-plus: 11.5px;
   --_tc-font-weight-medium: 500;
   --_tc-font-weight-regular: 400;
   --_tc-font-weight-strong: 500;
@@ -1088,7 +1084,7 @@ const css = /* css */ `
 :where([data-look="standard"], [data-look="standard"] *).ui-mdp__option[data-lit] .ui-mdp__seg[data-on] { background: var(--tc-text-primary, var(--_tc-text-primary)); }
 :where([data-look="clean"], [data-look="clean"] *).ui-mdp__option[data-lit] .ui-mdp__seg[data-on] { background: var(--tc-accent, var(--_tc-accent)); }
 .ui-mdp__varies { flex: none; color: var(--tc-text-muted, var(--_tc-text-muted)); text-align: center; }
-:where([data-look="standard"], [data-look="standard"] *).ui-mdp__varies { width: 118px; font-size: var(--tc-font-size-xs-plus, var(--_tc-font-size-xs-plus)); }
+:where([data-look="standard"], [data-look="standard"] *).ui-mdp__varies { width: 118px; font-size: var(--tc-font-size-xs, var(--_tc-font-size-xs)); }
 :where([data-look="clean"], [data-look="clean"] *).ui-mdp__varies { width: 136px; font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); line-height: var(--tc-line-height-tight, var(--_tc-line-height-tight)); }
 /* ----- Switches and effort ----- */
 .ui-mdp__settings { border-top: var(--tc-hairline, var(--_tc-hairline)) solid var(--tc-divider, var(--_tc-divider)); }
@@ -1115,7 +1111,7 @@ const css = /* css */ `
 :where([data-look="standard"], [data-look="standard"] *).ui-mdp__effort { padding: 2px 10px 6px 42px; }
 :where([data-look="clean"], [data-look="clean"] *).ui-mdp__effort { padding: 2px 8px 6px 38px; }
 .ui-mdp__effort-label { flex: 1; min-width: 0; }
-:where([data-look="standard"], [data-look="standard"] *).ui-mdp__effort-label { font-size: var(--tc-font-size-sm-plus, var(--_tc-font-size-sm-plus)); color: var(--tc-text-muted, var(--_tc-text-muted)); }
+:where([data-look="standard"], [data-look="standard"] *).ui-mdp__effort-label { font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); color: var(--tc-text-muted, var(--_tc-text-muted)); }
 :where([data-look="clean"], [data-look="clean"] *).ui-mdp__effort-label { color: var(--tc-text-secondary, var(--_tc-text-secondary)); }
 /* Effort – Standard: a segmented track with a sliding thumb; Clean: each level as wide as its word, the measured fill
    glides from one to the next. The chosen level carries a ring in the selected colour, not only a fill */
@@ -1135,7 +1131,7 @@ const css = /* css */ `
 :where([data-look="standard"], [data-look="standard"] *).ui-mdp__foot { height: 38px; padding: 4px 8px 0 12px; }
 :where([data-look="clean"], [data-look="clean"] *).ui-mdp__foot { height: 36px; padding: 0 8px 0 12px; border-top: var(--tc-hairline, var(--_tc-hairline)) solid var(--tc-divider, var(--_tc-divider)); }
 .ui-mdp__caption { flex: 1; min-width: 0; overflow: hidden; color: var(--tc-text-muted, var(--_tc-text-muted)); white-space: nowrap; font-variant-numeric: tabular-nums; }
-:where([data-look="standard"], [data-look="standard"] *).ui-mdp__caption { font-size: var(--tc-font-size-sm-plus, var(--_tc-font-size-sm-plus)); }
+:where([data-look="standard"], [data-look="standard"] *).ui-mdp__caption { font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); }
 :where([data-look="clean"], [data-look="clean"] *).ui-mdp__caption { font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); line-height: var(--tc-line-height-tight, var(--_tc-line-height-tight)); }
 :where([data-look="standard"], [data-look="standard"] *).ui-mdp__dot { color: var(--tc-text-muted, var(--_tc-text-muted)); }
 :where([data-look="clean"], [data-look="clean"] *).ui-mdp__dot { color: var(--tc-text-disabled, var(--_tc-text-disabled)); }

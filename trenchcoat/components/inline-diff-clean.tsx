@@ -903,7 +903,6 @@ const css = /* css */ `
   --_tc-font-size-lg-plus: 15px;
   --_tc-font-size-md: 13px;
   --_tc-font-size-sm: 12px;
-  --_tc-font-size-sm-plus: 12.5px;
   --_tc-font-weight-medium: 500;
   --_tc-font-weight-regular: 400;
   --_tc-font-weight-strong: 600;
@@ -981,7 +980,6 @@ const css = /* css */ `
   --_tc-font-size-lg-plus: 15px;
   --_tc-font-size-md: 13px;
   --_tc-font-size-sm: 12px;
-  --_tc-font-size-sm-plus: 12.5px;
   --_tc-font-weight-medium: 500;
   --_tc-font-weight-regular: 400;
   --_tc-font-weight-strong: 500;
@@ -1075,7 +1073,7 @@ const css = /* css */ `
   min-width: 0;
   padding: 6px 8px 4px;
   color: var(--tc-text-muted, var(--_tc-text-muted));
-  font-size: var(--tc-font-size-sm-plus, var(--_tc-font-size-sm-plus));
+  font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm));
   line-height: var(--tc-line-height-tight, var(--_tc-line-height-tight));
   letter-spacing: -0.003em;
 }
@@ -1494,7 +1492,7 @@ const css = /* css */ `
   background: transparent;
   color: inherit;
   font: inherit;
-  font-size: var(--tc-font-size-sm-plus, var(--_tc-font-size-sm-plus));
+  font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm));
   font-weight: var(--tc-font-weight-medium, var(--_tc-font-weight-medium));
   line-height: var(--tc-line-height-none, var(--_tc-line-height-none));
   white-space: nowrap;

@@ -4,6 +4,12 @@
 
 See `audit/remediation-plan.md`, Part 1.
 
+### Visible changes
+
+- Type scale (decision B): text at 11.5, 12.5 and 13.5 px is now 11, 12 and 13 px in every component and
+  illustration, and fields (`--tc-field-font-size`) are 13 px. `--tc-font-size-xs-plus`, `-sm-plus` and `-md-plus`
+  are deprecated – only blocks and screens still use them – and check-tokens rejects new uses elsewhere.
+
 ### Removed
 
 - illustrations/frost-cloud and illustrations/glow-cloud, with their demos and tests.

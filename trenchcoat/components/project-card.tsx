@@ -857,10 +857,8 @@ const css = /* css */ `
   --_tc-focus-ring-offset: 2px;
   --_tc-font-sans: "Inter", "InterVariable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --_tc-font-size-md: 13px;
-  --_tc-font-size-md-plus: 13.5px;
   --_tc-font-size-sm: 12px;
-  --_tc-font-size-sm-plus: 12.5px;
-  --_tc-font-size-xs-plus: 11.5px;
+  --_tc-font-size-xs: 11px;
   --_tc-font-weight-medium: 500;
   --_tc-font-weight-regular: 400;
   --_tc-font-weight-strong: 600;
@@ -943,10 +941,8 @@ const css = /* css */ `
   --_tc-focus-ring-offset: 1px;
   --_tc-font-sans: "Inter", "InterVariable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --_tc-font-size-md: 13px;
-  --_tc-font-size-md-plus: 13.5px;
   --_tc-font-size-sm: 12px;
-  --_tc-font-size-sm-plus: 12.5px;
-  --_tc-font-size-xs-plus: 11.5px;
+  --_tc-font-size-xs: 11px;
   --_tc-font-weight-medium: 500;
   --_tc-font-weight-regular: 400;
   --_tc-font-weight-strong: 500;
@@ -1062,10 +1058,10 @@ const css = /* css */ `
 :where([data-look="clean"], [data-look="clean"] *).ui-pc__seg[data-done][data-hot] { stroke: var(--tc-accent, var(--_tc-accent)); }
 .ui-pc__seg[data-dim] { opacity: 0.3; }
 .ui-pc__num { font-weight: var(--tc-font-weight-strong, var(--_tc-font-weight-strong)); line-height: var(--tc-line-height-none, var(--_tc-line-height-none)); font-variant-numeric: tabular-nums; pointer-events: none; animation: ui-pc-num var(--tc-duration-slow, var(--_tc-duration-slow)) var(--tc-ease-emphasized, var(--_tc-ease-emphasized)) both; }
-:where([data-look="standard"], [data-look="standard"] *).ui-pc__num { font-size: var(--tc-font-size-xs-plus, var(--_tc-font-size-xs-plus)); color: var(--tc-text-primary, var(--_tc-text-primary)); }
+:where([data-look="standard"], [data-look="standard"] *).ui-pc__num { font-size: var(--tc-font-size-xs, var(--_tc-font-size-xs)); color: var(--tc-text-primary, var(--_tc-text-primary)); }
 :where([data-look="clean"], [data-look="clean"] *).ui-pc__num { font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); color: var(--tc-text-strong, var(--_tc-text-strong)); }
 .ui-pc__titles { display: grid; grid-template-columns: minmax(0, 1fr); flex: 1; min-width: 0; }
-:where([data-look="standard"], [data-look="standard"] *).ui-pc__name { overflow: hidden; font-size: var(--tc-font-size-md-plus, var(--_tc-font-size-md-plus)); font-weight: var(--tc-font-weight-strong, var(--_tc-font-weight-strong)); color: var(--tc-text-primary, var(--_tc-text-primary)); white-space: nowrap; text-overflow: ellipsis; }
+:where([data-look="standard"], [data-look="standard"] *).ui-pc__name { overflow: hidden; font-size: var(--tc-font-size-md, var(--_tc-font-size-md)); font-weight: var(--tc-font-weight-strong, var(--_tc-font-weight-strong)); color: var(--tc-text-primary, var(--_tc-text-primary)); white-space: nowrap; text-overflow: ellipsis; }
 :where([data-look="clean"], [data-look="clean"] *).ui-pc__name { overflow: hidden; font-size: var(--tc-font-size-md, var(--_tc-font-size-md)); line-height: var(--tc-line-height-normal, var(--_tc-line-height-normal)); font-weight: var(--tc-font-weight-strong, var(--_tc-font-weight-strong)); color: var(--tc-text-strong, var(--_tc-text-strong)); white-space: nowrap; text-overflow: ellipsis; }
 /* The sub line keeps its 20px; the status button inside reaches 2px above and below it (a 24px target) */
 .ui-pc__sub { display: flex; align-items: center; gap: 6px; min-width: 0; height: 24px; overflow: hidden; font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); color: var(--tc-text-muted, var(--_tc-text-muted)); white-space: nowrap; }
@@ -1156,7 +1152,7 @@ const css = /* css */ `
 .ui-pc__task[aria-checked="true"] { color: var(--tc-text-muted, var(--_tc-text-muted)); }
 /* ----- Tray ----- */
 :where([data-look="standard"], [data-look="standard"] *).ui-pc__foot { display: flex; align-items: center; gap: 8px; height: 38px; padding: 4px 4px 0 10px; }
-:where([data-look="standard"], [data-look="standard"] *).ui-pc__caption { flex: 1; min-width: 0; overflow: hidden; font-size: var(--tc-font-size-sm-plus, var(--_tc-font-size-sm-plus)); color: var(--tc-text-muted, var(--_tc-text-muted)); white-space: nowrap; text-overflow: ellipsis; }
+:where([data-look="standard"], [data-look="standard"] *).ui-pc__caption { flex: 1; min-width: 0; overflow: hidden; font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); color: var(--tc-text-muted, var(--_tc-text-muted)); white-space: nowrap; text-overflow: ellipsis; }
 .ui-pc__caption > span { display: inline-block; animation: ui-pc-in var(--tc-duration-moderate, var(--_tc-duration-moderate)) var(--tc-ease-emphasized, var(--_tc-ease-emphasized)) both; }
 /* Standard: a ghost button on the tray, like Button's ghost */
 :where([data-look="standard"], [data-look="standard"] *).ui-pc__action { display: inline-flex; align-items: center; gap: 4px; flex: none; height: var(--tc-control-h-sm, var(--_tc-control-h-sm)); padding: 0 calc(var(--tc-control-px-sm, var(--_tc-control-px-sm)) - 2px) 0 var(--tc-control-px-sm, var(--_tc-control-px-sm)); border-radius: var(--tc-control-radius-sm, var(--_tc-control-radius-sm)); font-size: var(--tc-control-font-size, var(--_tc-control-font-size)); font-weight: var(--tc-control-font-weight, var(--_tc-control-font-weight)); color: var(--tc-action-ghost-fg, var(--_tc-action-ghost-fg)); white-space: nowrap; transition: background-color var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-standard, var(--_tc-ease-standard)), color var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-standard, var(--_tc-ease-standard)); }

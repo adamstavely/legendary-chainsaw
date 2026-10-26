@@ -995,7 +995,6 @@ const css = /* css */ `
   --_tc-font-size-lg: 14px;
   --_tc-font-size-md: 13px;
   --_tc-font-size-sm: 12px;
-  --_tc-font-size-sm-plus: 12.5px;
   --_tc-font-weight-medium: 500;
   --_tc-font-weight-regular: 400;
   --_tc-font-weight-strong: 600;
@@ -1097,7 +1096,6 @@ const css = /* css */ `
   --_tc-font-size-lg: 14px;
   --_tc-font-size-md: 13px;
   --_tc-font-size-sm: 12px;
-  --_tc-font-size-sm-plus: 12.5px;
   --_tc-font-weight-medium: 500;
   --_tc-font-weight-regular: 400;
   --_tc-font-weight-strong: 500;
@@ -1201,7 +1199,7 @@ const css = /* css */ `
 .ui-st[data-status="done"] .ui-st__spark { color: var(--tc-status-success-solid, var(--_tc-status-success-solid)); }
 .ui-st__heading { display: grid; flex: 1; min-width: 0; }
 :where([data-look="standard"], [data-look="standard"] *).ui-st__title { overflow: hidden; font-weight: var(--tc-font-weight-strong, var(--_tc-font-weight-strong)); color: var(--tc-text-primary, var(--_tc-text-primary)); white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="standard"], [data-look="standard"] *).ui-st__sub { overflow: hidden; font-size: var(--tc-font-size-sm-plus, var(--_tc-font-size-sm-plus)); line-height: var(--tc-line-height-snug, var(--_tc-line-height-snug)); color: var(--tc-text-muted, var(--_tc-text-muted)); white-space: nowrap; text-overflow: ellipsis; }
+:where([data-look="standard"], [data-look="standard"] *).ui-st__sub { overflow: hidden; font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); line-height: var(--tc-line-height-snug, var(--_tc-line-height-snug)); color: var(--tc-text-muted, var(--_tc-text-muted)); white-space: nowrap; text-overflow: ellipsis; }
 :where([data-look="clean"], [data-look="clean"] *).ui-st__title { overflow: hidden; font-weight: var(--tc-font-weight-strong, var(--_tc-font-weight-strong)); color: var(--tc-text-strong, var(--_tc-text-strong)); white-space: nowrap; text-overflow: ellipsis; }
 :where([data-look="clean"], [data-look="clean"] *).ui-st__sub { overflow: hidden; font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); line-height: var(--tc-line-height-tight, var(--_tc-line-height-tight)); color: var(--tc-text-muted, var(--_tc-text-muted)); white-space: nowrap; text-overflow: ellipsis; }
 .ui-st__dot { margin: 0 6px; color: var(--tc-text-disabled, var(--_tc-text-disabled)); }
@@ -1249,7 +1247,7 @@ const css = /* css */ `
 .ui-st[data-offscreen] .ui-st__shine, .ui-st[data-offscreen] .ui-st__shine > span { animation-play-state: paused; }
 @keyframes ui-st-shine { from { transform: translateX(-100%); } to { transform: translateX(500%); } }
 @keyframes ui-st-shine-copy { from { transform: translateX(20%); } to { transform: translateX(-100%); } }
-:where([data-look="standard"], [data-look="standard"] *).ui-st__step-time { flex: none; font-size: var(--tc-font-size-sm-plus, var(--_tc-font-size-sm-plus)); color: var(--tc-text-muted, var(--_tc-text-muted)); font-variant-numeric: tabular-nums; }
+:where([data-look="standard"], [data-look="standard"] *).ui-st__step-time { flex: none; font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); color: var(--tc-text-muted, var(--_tc-text-muted)); font-variant-numeric: tabular-nums; }
 :where([data-look="clean"], [data-look="clean"] *).ui-st__step-time { flex: none; font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); color: var(--tc-text-muted, var(--_tc-text-muted)); font-variant-numeric: tabular-nums; }
 /* A note the agent took in – attached to its step */
 :where([data-look="standard"], [data-look="standard"] *).ui-st__note { display: flex; align-items: flex-start; gap: 6px; margin: 6px 0 2px 28px; padding: 6px 10px 6px 8px; border-radius: var(--tc-radius-lg, var(--_tc-radius-lg)); background: var(--tc-fill-default, var(--_tc-fill-default)); font-size: var(--tc-font-size-md, var(--_tc-font-size-md)); line-height: var(--tc-line-height-snug, var(--_tc-line-height-snug)); color: var(--tc-text-primary, var(--_tc-text-primary)); }
@@ -1277,7 +1275,7 @@ const css = /* css */ `
 :where([data-look="standard"], [data-look="standard"] *).ui-st__chip-text { flex: 1; min-width: 0; font-size: var(--tc-font-size-md, var(--_tc-font-size-md)); line-height: var(--tc-line-height-snug, var(--_tc-line-height-snug)); }
 :where([data-look="clean"], [data-look="clean"] *).ui-st__chip { position: relative; display: flex; align-items: center; gap: 6px; min-height: 32px; padding: 4px 4px 4px 10px; border-radius: var(--tc-radius-md, var(--_tc-radius-md)); background: var(--tc-surface-raised, var(--_tc-surface-raised)); box-shadow: var(--tc-shadow-raised, var(--_tc-shadow-raised)); color: var(--tc-text-primary, var(--_tc-text-primary)); }
 :where([data-look="clean"], [data-look="clean"] *).ui-st__chip::before { content: ""; position: absolute; top: 8px; bottom: 8px; left: 0; width: 2px; border-radius: 0 var(--tc-radius-2xs, var(--_tc-radius-2xs)) var(--tc-radius-2xs, var(--_tc-radius-2xs)) 0; background: var(--tc-agent-steering-accent); }
-:where([data-look="clean"], [data-look="clean"] *).ui-st__chip-text { flex: 1; min-width: 0; font-size: var(--tc-font-size-sm-plus, var(--_tc-font-size-sm-plus)); line-height: var(--tc-line-height-snug, var(--_tc-line-height-snug)); }
+:where([data-look="clean"], [data-look="clean"] *).ui-st__chip-text { flex: 1; min-width: 0; font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); line-height: var(--tc-line-height-snug, var(--_tc-line-height-snug)); }
 /* Now and ✕: small ghost buttons */
 .ui-st__chip-btn { display: inline-flex; flex: none; align-items: center; gap: 4px; height: var(--tc-control-h-sm, var(--_tc-control-h-sm)); padding: 0 var(--tc-control-px-sm, var(--_tc-control-px-sm)) 0 calc(var(--tc-control-px-sm, var(--_tc-control-px-sm)) - 2px); border-radius: var(--tc-control-radius-sm, var(--_tc-control-radius-sm)); font-size: var(--tc-control-font-size, var(--_tc-control-font-size)); font-weight: var(--tc-control-font-weight, var(--_tc-control-font-weight)); color: var(--tc-action-ghost-fg, var(--_tc-action-ghost-fg)); transition: background-color var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-standard, var(--_tc-ease-standard)), color var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-standard, var(--_tc-ease-standard)); }
 .ui-st__chip-btn:hover { background: var(--tc-accent-subtle, var(--_tc-accent-subtle)); color: var(--tc-accent-text, var(--_tc-accent-text)); }

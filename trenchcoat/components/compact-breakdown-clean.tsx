@@ -484,9 +484,7 @@ const css = /* css */ `
   --_tc-font-size-3xl: 24px;
   --_tc-font-size-lg-plus: 15px;
   --_tc-font-size-md: 13px;
-  --_tc-font-size-md-plus: 13.5px;
   --_tc-font-size-sm: 12px;
-  --_tc-font-size-sm-plus: 12.5px;
   --_tc-font-weight-medium: 500;
   --_tc-font-weight-regular: 400;
   --_tc-font-weight-semibold: 600;
@@ -554,9 +552,7 @@ const css = /* css */ `
   --_tc-font-size-3xl: 24px;
   --_tc-font-size-lg-plus: 15px;
   --_tc-font-size-md: 13px;
-  --_tc-font-size-md-plus: 13.5px;
   --_tc-font-size-sm: 12px;
-  --_tc-font-size-sm-plus: 12.5px;
   --_tc-font-weight-medium: 500;
   --_tc-font-weight-regular: 400;
   --_tc-font-weight-semibold: 600;
@@ -658,7 +654,7 @@ const css = /* css */ `
 :where([data-look="standard"], [data-look="standard"] *).ui-cb__card { border-radius: var(--tc-card-radius, var(--_tc-card-radius)); background: var(--tc-surface-on-tray, var(--_tc-surface-on-tray)); box-shadow: var(--tc-card-shadow, var(--_tc-card-shadow)); padding: 12px 14px 8px; }
 /* Head: title, the period switch on the right */
 :where([data-look="standard"], [data-look="standard"] *).ui-cb__head { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 30px; }
-:where([data-look="standard"], [data-look="standard"] *).ui-cb__title { overflow: hidden; font-size: var(--tc-font-size-md-plus, var(--_tc-font-size-md-plus)); font-weight: var(--tc-font-weight-semibold, var(--_tc-font-weight-semibold)); line-height: var(--tc-line-height-normal, var(--_tc-line-height-normal)); color: var(--tc-text-primary, var(--_tc-text-primary)); white-space: nowrap; text-overflow: ellipsis; }
+:where([data-look="standard"], [data-look="standard"] *).ui-cb__title { overflow: hidden; font-size: var(--tc-font-size-md, var(--_tc-font-size-md)); font-weight: var(--tc-font-weight-semibold, var(--_tc-font-weight-semibold)); line-height: var(--tc-line-height-normal, var(--_tc-line-height-normal)); color: var(--tc-text-primary, var(--_tc-text-primary)); white-space: nowrap; text-overflow: ellipsis; }
 /* The period switch: the segmented-control recipe – a track with a raised thumb that slides to the chosen option */
 :where([data-look="standard"], [data-look="standard"] *).ui-cb__switch { position: relative; display: grid; grid-auto-columns: auto; grid-auto-flow: column; flex: none; padding: var(--tc-seg-pad, var(--_tc-seg-pad)); border-radius: var(--tc-seg-track-radius, var(--_tc-seg-track-radius)); background: var(--tc-seg-track-bg, var(--_tc-seg-track-bg)); }
 :where([data-look="standard"], [data-look="standard"] *).ui-cb__pill {
@@ -740,7 +736,7 @@ const css = /* css */ `
 :where([data-look="clean"], [data-look="clean"] *).ui-cb__delta svg { stroke-width: 1.3; }
 /* The caption under the big number: a minimum height, so larger text grows it instead of being clipped */
 .ui-cb__caption { overflow: hidden; color: var(--tc-text-muted, var(--_tc-text-muted)); font-variant-numeric: tabular-nums; }
-:where([data-look="standard"], [data-look="standard"] *).ui-cb__caption { min-height: 18px; font-size: var(--tc-font-size-sm-plus, var(--_tc-font-size-sm-plus)); line-height: var(--tc-line-height-snug, var(--_tc-line-height-snug)); }
+:where([data-look="standard"], [data-look="standard"] *).ui-cb__caption { min-height: 18px; font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); line-height: var(--tc-line-height-snug, var(--_tc-line-height-snug)); }
 .ui-cb__caption-in { display: inline-flex; align-items: center; gap: 6px; }
 :where([data-look="standard"], [data-look="standard"] *).ui-cb__caption-in { animation: ui-cb-in var(--tc-duration-moderate, var(--_tc-duration-moderate)) var(--tc-ease-move, var(--_tc-ease-move)) both; }
 /* The stacked bar – parts keep their place and color, only the widths glide */
@@ -788,7 +784,7 @@ const css = /* css */ `
 .ui-cb__value { color: var(--tc-text-primary, var(--_tc-text-primary)); font-weight: var(--tc-font-weight-medium, var(--_tc-font-weight-medium)); font-variant-numeric: tabular-nums; }
 .ui-cb__share { width: 34px; text-align: right; color: var(--tc-text-muted, var(--_tc-text-muted)); font-variant-numeric: tabular-nums; }
 /* The line on the gray tray */
-:where([data-look="standard"], [data-look="standard"] *).ui-cb__foot { display: flex; align-items: center; min-height: 34px; padding: 4px 10px 0; overflow: hidden; font-size: var(--tc-font-size-sm-plus, var(--_tc-font-size-sm-plus)); color: var(--tc-text-muted, var(--_tc-text-muted)); white-space: nowrap; }
+:where([data-look="standard"], [data-look="standard"] *).ui-cb__foot { display: flex; align-items: center; min-height: 34px; padding: 4px 10px 0; overflow: hidden; font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); color: var(--tc-text-muted, var(--_tc-text-muted)); white-space: nowrap; }
 .ui-cb__foot-in { overflow: hidden; text-overflow: ellipsis; }
 :where([data-look="standard"], [data-look="standard"] *).ui-cb__foot-in { animation: ui-cb-in var(--tc-duration-slow, var(--_tc-duration-slow)) var(--tc-ease-move, var(--_tc-ease-move)) both; }
 @keyframes ui-cb-in {

@@ -844,9 +844,7 @@ const css = /* css */ `
   --_tc-font-sans: "Inter", "InterVariable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --_tc-font-size-2xs: 10px;
   --_tc-font-size-md: 13px;
-  --_tc-font-size-md-plus: 13.5px;
   --_tc-font-size-sm: 12px;
-  --_tc-font-size-sm-plus: 12.5px;
   --_tc-font-weight-medium: 500;
   --_tc-font-weight-regular: 400;
   --_tc-icon-muted: light-dark(#858585, #7c7c82);
@@ -897,9 +895,7 @@ const css = /* css */ `
   --_tc-font-sans: "Inter", "InterVariable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --_tc-font-size-2xs: 10px;
   --_tc-font-size-md: 13px;
-  --_tc-font-size-md-plus: 13.5px;
   --_tc-font-size-sm: 12px;
-  --_tc-font-size-sm-plus: 12.5px;
   --_tc-font-weight-medium: 500;
   --_tc-font-weight-regular: 400;
   --_tc-icon-muted: light-dark(rgba(0, 0, 0, 0.45), rgba(255, 255, 255, 0.46));
@@ -935,7 +931,7 @@ const css = /* css */ `
   min-width: 0;
   color: var(--tc-text-muted, var(--_tc-text-muted));
   font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  font-size: var(--tc-font-size-md-plus, var(--_tc-font-size-md-plus));
+  font-size: var(--tc-font-size-md, var(--_tc-font-size-md));
   line-height: 1.4;
   letter-spacing: -0.006em;
   -webkit-font-smoothing: antialiased;
@@ -1074,7 +1070,7 @@ const css = /* css */ `
   overflow: hidden;
   color: var(--tc-text-primary, var(--_tc-text-primary));
   font-family: var(--tc-font-mono, var(--_tc-font-mono));
-  font-size: var(--tc-font-size-sm-plus, var(--_tc-font-size-sm-plus));
+  font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm));
   font-weight: var(--tc-font-weight-medium, var(--_tc-font-weight-medium));
   letter-spacing: 0;
   text-overflow: ellipsis;
@@ -1094,7 +1090,7 @@ const css = /* css */ `
   gap: 6px;
   flex: none;
   color: var(--tc-text-muted, var(--_tc-text-muted));
-  font-size: var(--tc-font-size-sm-plus, var(--_tc-font-size-sm-plus));
+  font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm));
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
   animation: ui-tc-in var(--tc-duration-slow, var(--_tc-duration-slow)) var(--tc-ease-move, var(--_tc-ease-move)) both;
@@ -1206,7 +1202,7 @@ const css = /* css */ `
   min-height: 24px;
 }
 :where([data-look="standard"], [data-look="standard"] *).ui-tc__label { color: var(--tc-text-muted, var(--_tc-text-muted)); font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); font-weight: var(--tc-font-weight-medium, var(--_tc-font-weight-medium)); }
-:where([data-look="standard"], [data-look="standard"] *).ui-tc__pending { margin: 0; color: var(--tc-text-muted, var(--_tc-text-muted)); font-size: var(--tc-font-size-sm-plus, var(--_tc-font-size-sm-plus)); }
+:where([data-look="standard"], [data-look="standard"] *).ui-tc__pending { margin: 0; color: var(--tc-text-muted, var(--_tc-text-muted)); font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); }
 :where([data-look="standard"], [data-look="standard"] *).ui-tc__copy {
   all: unset;
   position: relative;
@@ -1354,7 +1350,7 @@ const css = /* css */ `
   margin-left: -4px;
   border-radius: 5px;
   color: var(--tc-text-muted, var(--_tc-text-muted));
-  font-size: var(--tc-font-size-sm-plus, var(--_tc-font-size-sm-plus));
+  font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm));
   font-weight: var(--tc-font-weight-medium, var(--_tc-font-weight-medium));
   cursor: pointer;
   transition: color var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-standard, var(--_tc-ease-standard));

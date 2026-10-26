@@ -947,7 +947,7 @@ const css = /* css */ `
 :where([data-look="standard"], [data-look="standard"] *).ui-um__title { font-size: var(--tc-font-size-lg); line-height: var(--tc-line-height-normal); color: var(--tc-text-primary); }
 :where([data-look="clean"], [data-look="clean"] *).ui-um__title { font-size: var(--tc-font-size-lg-plus); line-height: var(--tc-line-height-loose); color: var(--tc-text-strong); }
 .ui-um__sub { overflow: hidden; color: var(--tc-text-muted); white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="standard"], [data-look="standard"] *).ui-um__sub { font-size: var(--tc-font-size-sm-plus); }
+:where([data-look="standard"], [data-look="standard"] *).ui-um__sub { font-size: var(--tc-font-size-sm); }
 :where([data-look="clean"], [data-look="clean"] *).ui-um__sub { font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); }
 .ui-um__sep { margin: 0 6px; color: var(--tc-text-disabled); }
 /* The period switch: a segmented control – the thumb glides to the chosen period */
@@ -1096,7 +1096,7 @@ const css = /* css */ `
 .ui-um__thin[data-unlimited] { background: repeating-linear-gradient(-45deg, var(--tc-meter-track) 0 3px, transparent 3px 6px); }
 /* Standard: the tray below the card · Clean: the last row of the card, under a hairline */
 .ui-um__foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 44px; color: var(--tc-text-muted); }
-:where([data-look="standard"], [data-look="standard"] *).ui-um__foot { padding: 6px 2px 2px 12px; font-size: var(--tc-font-size-sm-plus); }
+:where([data-look="standard"], [data-look="standard"] *).ui-um__foot { padding: 6px 2px 2px 12px; font-size: var(--tc-font-size-sm); }
 :where([data-look="clean"], [data-look="clean"] *).ui-um__foot { padding: 0 8px 0 16px; border-top: var(--tc-hairline) solid var(--tc-divider); font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); }
 .ui-um__status { display: flex; align-items: center; min-width: 0; overflow: hidden; white-space: nowrap; font-variant-numeric: tabular-nums; animation: ui-um-in var(--tc-duration-moderate) var(--tc-ease-move) both; }
 :where([data-look="standard"], [data-look="standard"] *).ui-um__status { gap: 7px; }
@@ -1156,7 +1156,7 @@ const css = /* css */ `
   :where([data-look="standard"], [data-look="standard"] *).ui-um__big { font-size: var(--tc-font-size-3xl); }
   .ui-um__limits { grid-template-columns: minmax(0, 1fr); gap: 12px; }
   .ui-um__limit { grid-template-columns: minmax(0, 1fr) auto; column-gap: 12px; }
-  :where([data-look="standard"], [data-look="standard"] *).ui-um__limit-value { font-size: var(--tc-font-size-sm-plus); }
+  :where([data-look="standard"], [data-look="standard"] *).ui-um__limit-value { font-size: var(--tc-font-size-sm); }
   :where([data-look="clean"], [data-look="clean"] *).ui-um__limit-value { font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); }
   .ui-um__thin { grid-column: 1 / -1; margin-top: 6px; }
 }

@@ -478,7 +478,7 @@ const css = /* css */ `
 :where([data-look="clean"], [data-look="clean"] *).ui-ct__head { gap: 8px; min-height: 48px; padding: 10px 10px 10px 16px; border-bottom: var(--tc-hairline) solid var(--tc-divider); }
 .ui-ct__title { margin: 0; font-size: var(--tc-font-size-lg-plus); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-relaxed); }
 :where([data-look="clean"], [data-look="clean"] *).ui-ct__title { font-size: var(--tc-font-size-md); line-height: var(--tc-line-height-normal); color: var(--tc-text-strong); }
-.ui-ct__count { margin-right: auto; font-size: var(--tc-font-size-sm-plus); color: var(--tc-text-muted); font-variant-numeric: tabular-nums; }
+.ui-ct__count { margin-right: auto; font-size: var(--tc-font-size-sm); color: var(--tc-text-muted); font-variant-numeric: tabular-nums; }
 :where([data-look="clean"], [data-look="clean"] *).ui-ct__count { font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); }
 /* Close: a ghost icon button */
 .ui-ct__icon-btn { display: grid; place-items: center; flex: none; width: var(--tc-control-h-sm); height: var(--tc-control-h-sm); border-radius: var(--tc-control-radius-sm); color: var(--tc-icon-muted); transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard); }
@@ -522,7 +522,7 @@ img.ui-ct__avatar { box-shadow: 0 0 0 var(--tc-hairline) var(--tc-comment-thread
 :where([data-look="clean"], [data-look="clean"] *).ui-ct__avatar--initials { background: var(--tc-fill-default); color: var(--tc-text-secondary); }
 .ui-ct__name { min-width: 0; overflow: hidden; font-size: var(--tc-font-size-lg); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-normal); white-space: nowrap; text-overflow: ellipsis; }
 :where([data-look="clean"], [data-look="clean"] *).ui-ct__name { font-size: var(--tc-font-size-md); color: var(--tc-text-strong); }
-.ui-ct__time { flex: none; margin-left: auto; font-size: var(--tc-font-size-sm-plus); white-space: nowrap; color: var(--tc-text-muted); font-variant-numeric: tabular-nums; }
+.ui-ct__time { flex: none; margin-left: auto; font-size: var(--tc-font-size-sm); white-space: nowrap; color: var(--tc-text-muted); font-variant-numeric: tabular-nums; }
 :where([data-look="clean"], [data-look="clean"] *).ui-ct__time { font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); }
 .ui-ct__text { margin: 8px 0 0; font-size: var(--tc-font-size-lg); line-height: 21px; overflow-wrap: break-word; color: var(--tc-text-secondary); }
 /* Clean: text and status line up with the name, not the avatar */

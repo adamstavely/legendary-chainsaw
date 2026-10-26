@@ -566,7 +566,7 @@ const css = /* css */ `
   border-radius: inherit;
   background: none;
   font: inherit;
-  font-size: var(--tc-field-font-size, 13.5px);
+  font-size: var(--tc-field-font-size, 13px);
   color: var(--tc-text-primary, light-dark(#171717, #ededed));
   outline: none;
 }

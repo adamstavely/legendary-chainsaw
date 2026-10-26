@@ -894,7 +894,7 @@ const css = /* css */ `
   container-type: inline-size;
   font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   letter-spacing: -0.006em;
-  font-size: var(--tc-font-size-md-plus);
+  font-size: var(--tc-font-size-md);
   font-weight: var(--tc-font-weight-regular);
   line-height: var(--tc-line-height-normal);
   color: var(--tc-text-muted);

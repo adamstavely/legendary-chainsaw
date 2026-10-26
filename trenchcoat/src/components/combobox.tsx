@@ -1146,7 +1146,7 @@ const css = /* css */ `
 :where([data-look="standard"], [data-look="standard"] *).ui-cbx {
   /* The chip a second Backspace will remove */
   --tc-combobox-chip-border-armed: light-dark(#b5b5b5, #5c5c63);
-  font-size: var(--tc-font-size-md-plus);
+  font-size: var(--tc-font-size-md);
   color: var(--tc-text-secondary);
 }
 :where([data-look="clean"], [data-look="clean"] *).ui-cbx {
@@ -1334,7 +1334,7 @@ const css = /* css */ `
 /* The name wins over the hint when space runs out */
 .ui-cbx__name { flex: 0 0 auto; max-width: 100%; min-width: 0; overflow: hidden; color: var(--tc-text-primary); white-space: nowrap; text-overflow: ellipsis; }
 .ui-cbx__hint { flex: 0 100 auto; min-width: 0; overflow: hidden; color: var(--tc-text-muted); white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="standard"], [data-look="standard"] *).ui-cbx__hint { font-size: var(--tc-font-size-sm-plus); }
+:where([data-look="standard"], [data-look="standard"] *).ui-cbx__hint { font-size: var(--tc-font-size-sm); }
 :where([data-look="clean"], [data-look="clean"] *).ui-cbx__hint { font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); }
 .ui-cbx mark { border-radius: var(--tc-radius-2xs); background: var(--tc-accent-highlight); color: inherit; }
 /* Picked: the check in the menu's selected colour. It pops in with a small spring and fades out quickly */
