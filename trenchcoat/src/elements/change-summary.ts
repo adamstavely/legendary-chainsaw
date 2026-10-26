@@ -1,18 +1,20 @@
-"use client";
-
-import type { ComponentPropsWithoutRef, ReactNode, Ref } from "react";
+import { html, nothing, svg } from "lit";
+import { property } from "lit/decorators.js";
+import { styleMap } from "lit/directives/style-map.js";
+import { TcElement } from "./internal/base";
+import type { Look } from "./internal/look";
 
 /*
- * Change Summary – what moved since last time, one metric per row, in a gray tray with a white card, in a single self-contained file.
- * The styles are injected below, so no extra files are needed.
+ * <tc-change-summary> – the Lit port of src/components/change-summary.tsx: what moved since last time, one metric per
+ * row. Standard sits in a gray tray with a white card; Clean is one white card with hairline shadows, the heading as
+ * its first row and thinner icons.
  *
- * Two looks, picked with the `look` prop (Standard by default). Clean has no tray – one white card with hairline shadows. The heading is the
- * first row of the card, each metric sits under a 0.5px line with a small tinted trend mark and quiet gray text,
- * and the icons are drawn with thinner lines.
+ *   <tc-change-summary period="This week" .changes=${[{ label: "Active users", change: "Up 6.1%", tone: "good" }]}>
+ *   </tc-change-summary>
+ *
+ * The host is the region (role="region", named by the title). Good and bad changes are said in words as well as
+ * colour ("Good change: …"); labels and changes that may be cut off keep their full text in a title.
  */
-export type Look = "standard" | "clean";
-const DEFAULT_LOOK: Look = "standard";
-const ROOT_CLASS = "ui-cs";
 
 export type MetricChange = {
   label: string;
@@ -24,95 +26,73 @@ export type MetricChange = {
   direction?: "up" | "down";
 };
 
-type OwnProps = {
-  /** Visual style: "standard" (the default) or "clean" */
-  look?: Look;
-  title?: string;
+// Clean: thinner lines
+const changesIcon = (look: Look) =>
+  html`<svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width=${look === "clean" ? 1.1 : 1.5} stroke-linecap="round" aria-hidden="true">${svg`<path d="M2.5 4h4M2.5 8h8M6.5 12h7M9.5 4h1"></path>`}</svg>`;
+const arrowIcon = (look: Look, down: boolean) =>
+  html`<svg viewBox="0 0 12 12" width="12" height="12" fill="none" stroke="currentColor" stroke-width=${look === "clean" ? 1.25 : 1.6} stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${down ? svg`<path d="M6 2.5v7M3 6.5l3 3 3-3"></path>` : svg`<path d="M6 9.5v-7M3 5.5l3-3 3 3"></path>`}</svg>`;
+const dashIcon = (look: Look) =>
+  html`<svg viewBox="0 0 12 12" width="12" height="12" fill="none" stroke="currentColor" stroke-width=${look === "clean" ? 1.25 : 1.6} stroke-linecap="round" aria-hidden="true">${svg`<path d="M3 6h6"></path>`}</svg>`;
+
+/**
+ * What changed since last time, one metric per row, each with a trend mark.
+ * @tag tc-change-summary
+ */
+export class TcChangeSummary extends TcElement {
+  static override ui = "cs";
+
+  /** The heading, and the region's name */
+  @property() accessor heading = "What's changed";
   /** Small text on the right of the heading, e.g. "This week" */
-  period?: string;
-  icon?: ReactNode;
-  changes: MetricChange[];
-  className?: string;
-  ref?: Ref<HTMLElement>;
-};
+  @property() accessor period = "";
+  /** An icon element in front of the heading (cloned); unset shows the default */
+  @property({ attribute: false }) accessor icon: Element | undefined = undefined;
+  @property({ attribute: false }) accessor changes: MetricChange[] = [];
 
-export type ChangeSummaryProps = Omit<ComponentPropsWithoutRef<"section">, keyof OwnProps> & OwnProps;
+  /** The page named the region itself (aria-label or aria-labelledby on the host) */
+  private ownName = false;
 
-export function ChangeSummary({ look, title = "What's changed", period, icon, changes, className, ref, ...rest }: ChangeSummaryProps) {
-  const resolvedLook = look ?? DEFAULT_LOOK;
-  const clean = resolvedLook === "clean";
-  const headIcon = icon ?? <ChangesIcon look={resolvedLook} />;
-  return (
-    <>
-      <style href="ui-change-summary" precedence="default">
-        {css}
-      </style>
-      <section aria-label={title} {...rest} ref={ref} className={[ROOT_CLASS, className].filter(Boolean).join(" ")} data-look={resolvedLook}>
-        <header className="ui-cs__head">
-          <span className="ui-cs__title">
-            {/* Clean centres the icon in a fixed 16px box */}
-            {clean ? <span className="ui-cs__icon">{headIcon}</span> : headIcon}
-            {clean ? (
-              <span className="ui-cs__title-text" title={title}>
-                {title}
-              </span>
-            ) : (
-              title
-            )}
-          </span>
-          {period && <span className="ui-cs__period">{period}</span>}
-        </header>
-        <dl className={clean ? "ui-cs__list" : "ui-cs__card"}>
-          {changes.map((c, i) => {
-            const tone = c.tone ?? "neutral";
-            const direction = c.direction ?? (tone === "bad" ? "down" : "up");
-            return (
-              <div key={c.label} className="ui-cs__row" style={{ animationDelay: `${120 + i * 70}ms` }}>
-                <dt className="ui-cs__label" title={c.label}>
-                  {c.label}
-                </dt>
-                <dd className="ui-cs__change">
-                  <span className="ui-cs__trend" data-tone={tone} aria-hidden="true">
-                    {tone === "neutral" ? <DashIcon look={resolvedLook} /> : <ArrowIcon look={resolvedLook} down={direction === "down"} />}
-                  </span>
-                  {tone !== "neutral" && <span className="ui-cs__sr">{tone === "good" ? "Good change: " : "Bad change: "}</span>}
-                  <span className="ui-cs__text" title={c.change}>
-                    {c.change}
-                  </span>
-                </dd>
-              </div>
-            );
-          })}
-        </dl>
-      </section>
-    </>
-  );
-}
+  override connectedCallback() {
+    super.connectedCallback();
+    if (!this.hasAttribute("role")) this.setAttribute("role", "region");
+    this.ownName ||= (this.hasAttribute("aria-label") && this.getAttribute("aria-label") !== this.heading) || this.hasAttribute("aria-labelledby");
+  }
 
-/* ---------- Icons (Clean: thinner lines) ---------- */
+  protected override updated() {
+    // The heading names the region unless the page gave it a name of its own
+    if (!this.ownName) this.setAttribute("aria-label", this.heading);
+  }
 
-const ChangesIcon = ({ look }: { look: Look }) => (
-  <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" strokeWidth={look === "clean" ? 1.1 : 1.5} strokeLinecap="round" aria-hidden="true">
-    <path d="M2.5 4h4M2.5 8h8M6.5 12h7M9.5 4h1" />
-  </svg>
-);
+  protected override render() {
+    const look = this.resolvedLook;
+    const clean = look === "clean";
+    const headIcon = this.icon ? this.icon.cloneNode(true) : changesIcon(look);
+    return html`
+      <header class="ui-cs__head">
+        <span class="ui-cs__title">
+          ${clean ? html`<span class="ui-cs__icon">${headIcon}</span><span class="ui-cs__title-text" title=${this.heading}>${this.heading}</span>` : html`${headIcon}${this.heading}`}
+        </span>
+        ${this.period ? html`<span class="ui-cs__period">${this.period}</span>` : nothing}
+      </header>
+      <dl class=${clean ? "ui-cs__list" : "ui-cs__card"}>
+        ${this.changes.map((c, i) => {
+          const tone = c.tone ?? "neutral";
+          const direction = c.direction ?? (tone === "bad" ? "down" : "up");
+          return html`<div class="ui-cs__row" style=${styleMap({ animationDelay: `${120 + i * 70}ms` })}>
+            <dt class="ui-cs__label" title=${c.label}>${c.label}</dt>
+            <dd class="ui-cs__change">
+              <span class="ui-cs__trend" data-tone=${tone} aria-hidden="true">${tone === "neutral" ? dashIcon(look) : arrowIcon(look, direction === "down")}</span>
+              ${tone !== "neutral" ? html`<span class="ui-cs__sr">${tone === "good" ? "Good change: " : "Bad change: "}</span>` : nothing}
+              <span class="ui-cs__text" title=${c.change}>${c.change}</span>
+            </dd>
+          </div>`;
+        })}
+      </dl>
+    `;
+  }
 
-const ArrowIcon = ({ look, down }: { look: Look; down?: boolean }) => (
-  <svg viewBox="0 0 12 12" width="12" height="12" fill="none" stroke="currentColor" strokeWidth={look === "clean" ? 1.25 : 1.6} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-    {down ? <path d="M6 2.5v7M3 6.5l3 3 3-3" /> : <path d="M6 9.5v-7M3 5.5l3-3 3 3" />}
-  </svg>
-);
-
-const DashIcon = ({ look }: { look: Look }) => (
-  <svg viewBox="0 0 12 12" width="12" height="12" fill="none" stroke="currentColor" strokeWidth={look === "clean" ? 1.25 : 1.6} strokeLinecap="round" aria-hidden="true">
-    <path d="M3 6h6" />
-  </svg>
-);
-
-/* ---------- Styles ---------- */
-
-const css = /* css */ `
-:where([data-look="standard"], [data-look="standard"] *).ui-cs {
+  static override css = /* css */ `
+:where([data-look="standard"], [data-look="standard"] *)[data-ui="cs"] {
   box-sizing: border-box;
   width: 100%;
   max-width: 480px;
@@ -126,8 +106,8 @@ const css = /* css */ `
   color: var(--tc-text-primary);
   -webkit-font-smoothing: antialiased;
 }
-/* Colors and motion as variables – override them on .ui-cs */
-:where([data-look="clean"], [data-look="clean"] *).ui-cs {
+/* Colors and motion as variables – override them on [data-ui="cs"] */
+:where([data-look="clean"], [data-look="clean"] *)[data-ui="cs"] {
   /* Strokes are shadows: a 0.5px hairline plus a soft lift */
   box-sizing: border-box;
   width: 100%;
@@ -144,7 +124,7 @@ const css = /* css */ `
   color: var(--tc-text-primary);
   -webkit-font-smoothing: antialiased;
 }
-.ui-cs *, .ui-cs *::before, .ui-cs *::after { box-sizing: border-box; }
+[data-ui="cs"] *, [data-ui="cs"] *::before, [data-ui="cs"] *::after { box-sizing: border-box; }
 :where([data-look="standard"], [data-look="standard"] *).ui-cs__head {
   display: flex;
   align-items: center;
@@ -199,7 +179,7 @@ const css = /* css */ `
   line-height: var(--tc-line-height-normal);
   color: var(--tc-text-muted);
 }
-:where(.ui-cs[data-look="clean"]) svg { display: block; flex: none; }
+:where([data-ui="cs"][data-look="clean"]) svg { display: block; flex: none; }
 /* Heading row: icon + title, the period on the right */
 :where([data-look="clean"], [data-look="clean"] *).ui-cs__head {
   display: flex;
@@ -304,3 +284,12 @@ const css = /* css */ `
 :where([data-look="clean"], [data-look="clean"] *).ui-cs__row { animation: none; transition: none; }
 }
 `;
+}
+
+if (!customElements.get("tc-change-summary")) customElements.define("tc-change-summary", TcChangeSummary);
+
+declare global {
+  interface HTMLElementTagNameMap {
+    "tc-change-summary": TcChangeSummary;
+  }
+}

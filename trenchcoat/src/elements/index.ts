@@ -3,4 +3,5 @@
 export * from "./button";
 export * from "./combobox";
 export * from "./data-table";
+export * from "./change-summary";
 export { TcLookProvider, lookContext, type Look } from "./internal/look";

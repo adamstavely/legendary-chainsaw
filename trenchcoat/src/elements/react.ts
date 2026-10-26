@@ -14,3 +14,4 @@ export * from "./react/look-provider";
 export * from "./react/button";
 export * from "./react/combobox";
 export * from "./react/data-table";
+export * from "./react/change-summary";

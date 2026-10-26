@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import type * as UI from "@components/change-summary";
-import type { MetricChange } from "@components/change-summary";
+import type * as UI from "../../../src/elements/react";
+import type { MetricChange } from "../../../src/elements/react";
 
 const PERIODS: { period: string; changes: MetricChange[] }[] = [
   {
