@@ -135,6 +135,9 @@
     "literal border-radius": 6,
     "literal spacing": 4
   },
+  "src/elements/chat-history.ts": {
+    "clock/environment read": 1
+  },
   "src/elements/cited-answer.ts": {
     "literal spacing": 13
   },
@@ -380,6 +383,9 @@
   "src/elements/trace-waterfall.ts": {
     "clock/environment read": 2,
     "literal spacing": 5
+  },
+  "src/elements/trigger-builder.ts": {
+    "clock/environment read": 1
   },
   "src/elements/usage-meter.ts": {
     "clock/environment read": 1,

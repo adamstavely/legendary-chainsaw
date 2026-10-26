@@ -6,6 +6,7 @@ See `audit/remediation-plan.md`, Part 3. Each is a Lit element with both looks, 
 browser tests in Chromium, Firefox and WebKit, and a gallery demo.
 
 ### Added
+
 - `tc-run-checkpoints` – a run's restore points as a list and a timeline: what each point captured, what going back discards (steps, file changes, tokens, cost), a note for the retry, and `restorer` that may return a promise. Listbox keyboard; `tc-selected-change`, `tc-restore`.
 - `tc-budget-guard` – spend and token caps for a live run: a big meter and thin ones, the pace to the cap, a warning with Raise to buttons at `warnAt`, and a hard stop with an alert. `tc-limits-change` (cancelable), `tc-cap-reach` once per cap, `tc-stop`.
 - `tc-handoff` – the agent hands the task to a person: what it did, why it stopped, what it needs; Take over turns the needs into a checklist with a note, Hand back folds it to one line. ⌘/Ctrl+Enter; `tc-status-change`, `tc-checked-change`, `tc-note-change`, `tc-return`.
@@ -23,6 +24,15 @@ browser tests in Chromium, Firefox and WebKit, and a gallery demo.
 - `tc-voice-mode` – a voice conversation: `tc-voice-orb` for the state, live captions that announce finished turns once, and Mute / Captions / Interrupt / End in a toolbar; Esc interrupts. The audio stays the app's.
 - `tc-answer-arena` – two models' answers streamed side by side, then A / B / tie with a reason; blind mode reveals the names after the vote. `tc-value-change` (cancelable).
 - `tc-image-grid` – generated images as a grid: pending, done and failed tiles, regenerate, upscale, download (saves by default), compare two with a keyboard slider, and required, editable alt text. WAI-ARIA grid.
+- chat-composer (the Lit element and `trenchcoat/react`): opt-in `mentions` (a `tc-mention-picker` on the message)
+  and `context` / `context-limit` (a `tc-context-tray` above it). Without them it renders as before.
+
+### Checks
+
+- The ratchet counts any reference to `Date.now`, not only calls – an alias (`const read = Date.now`) or
+  `Date.now.call(Date)` used to get past it. chat-history and trigger-builder read the clock once when they connect
+  (the default for `now`), recorded in the baseline.
+- The gallery's spacing between its own sections no longer reaches sections inside a component's stage.
 
 ## Unreleased – remediation Part 2 (the shift to Lit)
 

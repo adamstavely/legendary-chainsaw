@@ -4,7 +4,11 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { keyed } from "lit/directives/keyed.js";
 import { live } from "lit/directives/live.js";
 import { styleMap } from "lit/directives/style-map.js";
+import "./context-tray";
+import type { ContextTrayItem } from "./context-tray";
 import { TcElement } from "./internal/base";
+import "./mention-picker";
+import type { MentionPickerTrigger } from "./mention-picker";
 import { FocusRescueController, rescueFocus } from "./internal/controllers";
 import type { Look } from "./internal/look";
 
@@ -178,6 +182,13 @@ export class TcChatComposer extends TcElement {
   /** Requests unrestricted access – resolves, rejects and is simulated like onConnectApps */
   @property({ attribute: false }) accessor onRequestApproval: (() => void | Promise<unknown>) | undefined = undefined;
 
+  /** Opt-in: the / and @ picker on the message (tc-mention-picker). Its tc-pick bubbles from the composer */
+  @property({ attribute: false }) accessor mentions: MentionPickerTrigger[] | undefined = undefined;
+  /** Opt-in: what's in context, as chips above the composer (tc-context-tray). Changes come as tc-items-change; the
+   *  composer keeps the new list unless a listener prevents it */
+  @property({ attribute: false }) accessor context: ContextTrayItem[] | undefined = undefined;
+  /** The context window the tray measures against, in tokens */
+  @property({ type: Number, attribute: "context-limit" }) accessor contextLimit = 0;
   /** @internal */ @state() accessor sending = false;
   /** @internal */ @state() accessor menuOpen = false;
   /** @internal */ @state() accessor status = "";
@@ -491,6 +502,8 @@ export class TcChatComposer extends TcElement {
   /* ---------- Lifecycle ---------- */
 
   protected override firstUpdated() {
+    // The picker attaches to the message, which exists only after the first render
+    if (this.mentions?.length) this.requestUpdate();
     // The model button's width is kept current, so it's only measured when the model changes
     const el = this.modelButton;
     if (!el) return;
@@ -791,6 +804,15 @@ export class TcChatComposer extends TcElement {
     const i = iconsFor(clean);
     const heard = this.heard;
     return html`
+      ${this.context
+        ? html`<tc-context-tray
+            class="ui-chat-composer__context"
+            look=${this.resolvedLook}
+            .items=${this.context}
+            limit=${this.contextLimit}
+            @tc-items-change=${this.onContextChange}
+          ></tc-context-tray>`
+        : nothing}
       <section
         class="ui-chat-composer__body"
         data-apps=${this.apps}
@@ -806,8 +828,18 @@ export class TcChatComposer extends TcElement {
       ${this.error ? html`<p class="ui-chat-composer__error" role="alert">${this.error}</p>` : nothing}
       <p class="ui-chat-composer__sr-only" aria-live="polite">${this.status}</p>
       <span id=${`${this.uid}-heard`} hidden>${heard ? `Heard so far: ${heard}` : "Nothing heard yet."}</span>
+      ${this.mentions?.length
+        ? html`<tc-mention-picker look=${this.resolvedLook} .target=${this.textarea} .triggers=${this.mentions}></tc-mention-picker>`
+        : nothing}
     `;
   }
+
+  /** The tray's change reaches the page first (it bubbles); the composer keeps it unless the page prevented it */
+  private onContextChange = (e: CustomEvent<{ items: ContextTrayItem[] }>) => {
+    queueMicrotask(() => {
+      if (!e.defaultPrevented) this.context = e.detail.items;
+    });
+  };
 
   static override css = /* css */ `
 
@@ -826,6 +858,8 @@ export class TcChatComposer extends TcElement {
   width: 100%;
   max-width: 680px;
 }
+/* The opt-in context tray sits above the composer */
+.ui-chat-composer__context { margin-bottom: var(--tc-space-2); }
 :where([data-look="standard"], [data-look="standard"] *).ui-chat-composer__body {
   /* 1 unit grows with the width up to 0.27px, so a wider composer keeps compact controls. It never drops below the
      size where the smallest (59.428-unit) labels are 13px (the type floor; the send button is then 24px), and both ends are in

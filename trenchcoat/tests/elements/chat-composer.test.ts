@@ -367,3 +367,53 @@ test("axe: no violations in either look", async () => {
   const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
   expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
 });
+
+describe("tc-chat-composer: the opt-in mention picker and context tray (Part 3)", () => {
+  const triggers = [{ char: "@", groups: [{ id: "people", label: "People", items: [{ id: "ana", label: "Ana Lima" }, { id: "ben", label: "Ben Ito" }] }] }];
+  const items = [
+    { id: "f", label: "billing.md", tokens: 1200, kind: "file" },
+    { id: "m", label: "@Ana", tokens: 300, kind: "mention" },
+  ];
+
+  test("neither is there unless asked for", async () => {
+    const el = await fixture<TcChatComposer>(html`<tc-chat-composer load-ms="40"></tc-chat-composer>`);
+    expect(el.querySelector("tc-mention-picker")).toBeNull();
+    expect(el.querySelector("tc-context-tray")).toBeNull();
+  });
+
+  test("mentions: the picker attaches to the message; @ opens it and a pick lands in the text", async () => {
+    const el = await fixture<TcChatComposer>(html`<tc-chat-composer load-ms="40" .mentions=${triggers}></tc-chat-composer>`);
+    await settle();
+    const picker = el.querySelector("tc-mention-picker") as HTMLElement & { open: boolean; target: Element | null };
+    expect(picker.target).toBe(message(el));
+    const picked = vi.fn();
+    el.addEventListener("tc-pick", (e) => picked((e as CustomEvent).detail.item.id));
+    const t = message(el);
+    t.focus();
+    t.value = "Ask @";
+    t.setSelectionRange(5, 5);
+    t.dispatchEvent(new InputEvent("input", { bubbles: true, inputType: "insertText", data: "@" }));
+    await settle();
+    expect(picker.open).toBe(true);
+    key(t, "Enter");
+    await settle();
+    expect(picked).toHaveBeenCalledWith("ana");
+    expect(el.value).toContain("Ana Lima");
+  });
+
+  test("context: the tray shows the items; a removal is kept unless the page prevents it", async () => {
+    const el = await fixture<TcChatComposer>(html`<tc-chat-composer load-ms="40" context-limit="200000" .context=${items}></tc-chat-composer>`);
+    const tray = el.querySelector("tc-context-tray")!;
+    expect(tray.textContent).toContain("billing.md");
+    button(tray, "Remove billing.md")!.click();
+    await settle();
+    await sleep(0);
+    expect(el.context!.map((i) => i.id)).toEqual(["m"]);
+    // Controlled: the page prevents, and the list stays as it gave it
+    el.addEventListener("tc-items-change", (e) => e.preventDefault());
+    button(tray, "Remove @Ana")!.click();
+    await settle();
+    await sleep(0);
+    expect(el.context!.map((i) => i.id)).toEqual(["m"]);
+  });
+});

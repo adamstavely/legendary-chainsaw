@@ -16,7 +16,7 @@ const PATTERNS = {
   // Fixed ids collide when a component appears twice on a page – use useId()
   "hard-coded id": /\b(?:id|htmlFor|aria-labelledby|aria-controls|aria-describedby)="[^"{}]+"/g,
   // Clock and environment reads; at render time they break SSR hydration and StrictMode
-  "clock/environment read": /\bDate\.now\(|\bnew Date\(\)|\bperformance\.now\(|\bnavigator\.platform\b/g,
+  "clock/environment read": /\bDate\.now\b|\bnew Date\(\)|\bperformance\.now\(|\bnavigator\.platform\b/g,
   "any": /:\s*any(?=\s*[;,)\]>|=])|\bas any\b/g,
   "dangerouslySetInnerHTML": /dangerouslySetInnerHTML/g,
   // Token guard rails – see css-literals.mjs for exactly what each one counts

@@ -171,6 +171,24 @@ Step 2.7 (illustrations and motion) added three things to the base and the tooli
 - `node scripts/dead-css.mjs` (in CI) fails on rules for classes nothing renders – element, wrapper or
   runtime-built (`ui-x--${n}`) – and `--fix` removes them.
 
+Part 3 (17 new components, built by 9 agents from [new-component-brief.md](new-component-brief.md)) added:
+
+- **Nested elements share event names.** artifact-panel stops its inner code-block's `tc-view-change` at the
+  block, so the panel's own listeners only hear the panel. An element that contains another of the same family
+  stops the inner one's events or renames them.
+- **Windowing inside a scrolling container** (chat-history, sandbox-log): keep the two spacers as fixed elements and
+  set `overflow-anchor: none` – WebKit reset the scroll to the top when a spacer was replaced, and Chromium's scroll
+  anchoring chased the spacers. Page-scrolled windows (data-table, filter-menu) don't have the problem.
+- **A `now` property, read once on connect**, for anything relative to today (chat-history's date groups,
+  trigger-builder's next runs) – never at render. It is the one clock read the ratchet allows a new file.
+- **A textarea can't be a combobox** (ARIA in HTML): mention-picker leaves its role alone and adds
+  `aria-autocomplete`, `aria-controls` and `aria-activedescendant`.
+- **The gallery-wide axe scan catches what fixture tests don't**: demo states (a muted hint with a highlighted match,
+  a long code block, a tile without alt text) failed in the scan after passing the elements' own axe tests.
+- Shared helpers several new elements carry their own copy of, to move into `internal/` next: a roving-tabindex
+  toolbar controller (voice-mode, answer-arena, code-block, live-view, context-tray), `initials()`, `copyText()`,
+  a token-to-milliseconds reader, a caret-geometry helper, and the fold-away-on-removal ghost.
+
 Known issues carried over from the React components (step 2.8): decision-tree's folded "N options" text fails
 contrast in the narrow layout, and its follow-up option buttons fail `label-content-name-mismatch`.
 
