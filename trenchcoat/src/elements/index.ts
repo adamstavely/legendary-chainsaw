@@ -23,6 +23,7 @@ export * from "./budget-guard";
 export * from "./change-summary";
 export * from "./chat-composer";
 export * from "./cited-answer";
+export * from "./code-block";
 export * from "./command-menu";
 export * from "./comment-thread";
 export * from "./comments-panel";
