@@ -331,7 +331,7 @@ const css = /* css */ `
   box-sizing: border-box;
   width: 100%;
   max-width: 320px;
-  padding: 16px 8px 8px;
+  padding: var(--tc-space-4) var(--tc-space-2) var(--tc-space-2);
   /* The card pattern – its ring is the shadow */
   background: var(--tc-surface-raised);
   border-radius: var(--tc-card-radius);
@@ -374,8 +374,8 @@ const css = /* css */ `
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  padding: 0 8px;
+  gap: var(--tc-space-3);
+  padding: 0 var(--tc-space-2);
 }
 :where([data-look="standard"], [data-look="standard"] *).ui-sg__title {
   margin: 0;
@@ -386,11 +386,11 @@ const css = /* css */ `
 :where([data-look="standard"], [data-look="standard"] *).ui-sg__actions {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--tc-space-1);
   margin-right: -4px;
 }
 :where([data-look="standard"], [data-look="standard"] *).ui-sg__edit {
-  padding: 2px 6px;
+  padding: var(--tc-space-0-5) var(--tc-space-1-5);
   border-radius: var(--tc-radius-sm);
   font-size: var(--tc-font-size-lg);
   line-height: var(--tc-line-height-normal);
@@ -416,8 +416,8 @@ const css = /* css */ `
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  padding: 12px 10px 0 16px;
+  gap: var(--tc-space-3);
+  padding: var(--tc-space-3) var(--tc-space-2-5) 0 var(--tc-space-4);
 }
 :where([data-look="clean"], [data-look="clean"] *).ui-sg__title {
   overflow: hidden;
@@ -430,7 +430,7 @@ const css = /* css */ `
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-:where([data-look="clean"], [data-look="clean"] *).ui-sg__actions { display: flex; flex: none; align-items: center; gap: 2px; }
+:where([data-look="clean"], [data-look="clean"] *).ui-sg__actions { display: flex; flex: none; align-items: center; gap: var(--tc-space-0-5); }
 :where([data-look="clean"], [data-look="clean"] *).ui-sg__edit {
   height: var(--tc-control-h-md);
   padding: 0 var(--tc-control-px-sm);
@@ -457,7 +457,7 @@ const css = /* css */ `
 :where([data-look="standard"], [data-look="standard"] *).ui-sg__track {
   display: block;
   height: var(--tc-meter-h);
-  margin: 10px 8px 8px;
+  margin: var(--tc-space-2-5) var(--tc-space-2) var(--tc-space-2);
   overflow: hidden;
   border-radius: var(--tc-meter-radius);
   background: var(--tc-meter-track);
@@ -466,8 +466,8 @@ const css = /* css */ `
 :where([data-look="clean"], [data-look="clean"] *).ui-sg__progress {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 8px 16px 12px;
+  gap: var(--tc-space-2-5);
+  padding: var(--tc-space-2) var(--tc-space-4) var(--tc-space-3);
 }
 :where([data-look="clean"], [data-look="clean"] *).ui-sg__track {
   display: block;
@@ -509,9 +509,9 @@ const css = /* css */ `
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: var(--tc-space-3);
   width: 100%;
-  padding: 11px 12px;
+  padding: var(--tc-space-3) var(--tc-space-3);
   border-radius: var(--tc-radius-xl);
   text-align: left;
 }
@@ -538,10 +538,10 @@ const css = /* css */ `
 }
 :where([data-look="clean"], [data-look="clean"] *).ui-sg__groups {
   display: grid;
-  gap: 2px;
+  gap: var(--tc-space-0-5);
   min-height: 0;
   overflow: hidden;
-  padding: 0 4px;
+  padding: 0 var(--tc-space-1);
   border-top: var(--tc-hairline) solid var(--tc-divider);
 }
 /* Inner padding as a spacer, so focus rings aren't cut and the fold can still close to 0 */
@@ -556,9 +556,9 @@ const css = /* css */ `
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: var(--tc-space-3);
   width: 100%;
-  padding: 8px 8px 8px 12px;
+  padding: var(--tc-space-2) var(--tc-space-2) var(--tc-space-2) var(--tc-space-3);
   border-radius: var(--tc-radius-md);
   text-align: left;
   transition: background-color var(--tc-duration-instant) var(--tc-ease-standard);
@@ -617,13 +617,13 @@ const css = /* css */ `
   padding: 0;
   list-style: none;
 }
-:where([data-look="standard"], [data-look="standard"] *).ui-sg__tasks li:last-child { padding-bottom: 8px; }
+:where([data-look="standard"], [data-look="standard"] *).ui-sg__tasks li:last-child { padding-bottom: var(--tc-space-2); }
 :where([data-look="standard"], [data-look="standard"] *).ui-sg__task {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
+  gap: var(--tc-space-3);
   width: 100%;
-  padding: 7px 12px;
+  padding: var(--tc-space-2) var(--tc-space-3);
   border-radius: var(--tc-radius-lg);
   text-align: left;
   opacity: 0;
@@ -635,16 +635,16 @@ const css = /* css */ `
   min-height: 0;
   overflow: hidden;
   margin: 0;
-  padding: 0 4px;
+  padding: 0 var(--tc-space-1);
   list-style: none;
 }
-:where([data-look="clean"], [data-look="clean"] *).ui-sg__tasks li:last-child { padding-bottom: 6px; }
+:where([data-look="clean"], [data-look="clean"] *).ui-sg__tasks li:last-child { padding-bottom: var(--tc-space-1-5); }
 :where([data-look="clean"], [data-look="clean"] *).ui-sg__task {
   display: flex;
   align-items: flex-start;
-  gap: 10px;
+  gap: var(--tc-space-2-5);
   width: 100%;
-  padding: 6px 8px;
+  padding: var(--tc-space-1-5) var(--tc-space-2);
   border-radius: var(--tc-radius-sm);
   text-align: left;
   opacity: 0;
@@ -663,7 +663,7 @@ const css = /* css */ `
   flex: none;
   width: 16px;
   height: 16px;
-  margin-top: 2px;
+  margin-top: var(--tc-space-0-5);
   border-radius: 50%;
   transition: background-color var(--tc-duration-base) var(--tc-ease-standard);
 }
@@ -676,7 +676,7 @@ const css = /* css */ `
   flex: none;
   width: 16px;
   height: 16px;
-  margin-top: 2px;
+  margin-top: var(--tc-space-0-5);
   border-radius: 50%;
   transition: box-shadow var(--tc-duration-fast) var(--tc-ease-standard);
 }
@@ -719,16 +719,16 @@ const css = /* css */ `
 }
 /* Narrow: a little less side padding */
 @container (max-width: 300px) {
-:where([data-look="clean"], [data-look="clean"] *).ui-sg__head { padding-left: 12px; }
-:where([data-look="clean"], [data-look="clean"] *).ui-sg__progress { padding-inline: 12px; }
-:where([data-look="clean"], [data-look="clean"] *).ui-sg__group-head { padding-left: 10px; }
+:where([data-look="clean"], [data-look="clean"] *).ui-sg__head { padding-left: var(--tc-space-3); }
+:where([data-look="clean"], [data-look="clean"] *).ui-sg__progress { padding-inline: var(--tc-space-3); }
+:where([data-look="clean"], [data-look="clean"] *).ui-sg__group-head { padding-left: var(--tc-space-2-5); }
 }
 /* Touch: taller targets */
 @media (pointer: coarse) {
 :where([data-look="clean"], [data-look="clean"] *).ui-sg__icon-btn { width: 36px; height: 36px; }
 :where([data-look="clean"], [data-look="clean"] *).ui-sg__edit { height: 36px; }
-:where([data-look="clean"], [data-look="clean"] *).ui-sg__group-head { padding-block: 12px; }
-:where([data-look="clean"], [data-look="clean"] *).ui-sg__task { padding-block: 9px; }
+:where([data-look="clean"], [data-look="clean"] *).ui-sg__group-head { padding-block: var(--tc-space-3); }
+:where([data-look="clean"], [data-look="clean"] *).ui-sg__task { padding-block: var(--tc-space-2); }
 }
 @media (prefers-reduced-motion: reduce) {
 :where([data-look="clean"], [data-look="clean"] *).ui-sg__fill,

@@ -771,15 +771,15 @@ const css = /* css */ `
 .ui-al__card { border-radius: var(--tc-card-radius); background: var(--tc-surface-raised); box-shadow: var(--tc-card-shadow); }
 /* ----- Bar ----- */
 /* ----- On the tray: what is going on ----- */
-:where([data-look="standard"], [data-look="standard"] *).ui-al__bar { display: flex; align-items: center; gap: 10px; min-width: 0; padding: 10px 10px 12px 14px; }
+:where([data-look="standard"], [data-look="standard"] *).ui-al__bar { display: flex; align-items: center; gap: var(--tc-space-2-5); min-width: 0; padding: var(--tc-space-2-5) var(--tc-space-2-5) var(--tc-space-3) var(--tc-space-3-5); }
 /* One white card – the edge is a shadow, not a border */
 /* ----- Bar ----- */
-:where([data-look="clean"], [data-look="clean"] *).ui-al__bar { display: flex; align-items: center; gap: 10px; min-width: 0; padding: 14px 16px; border-bottom: var(--tc-hairline) solid var(--tc-divider); }
+:where([data-look="clean"], [data-look="clean"] *).ui-al__bar { display: flex; align-items: center; gap: var(--tc-space-2-5); min-width: 0; padding: var(--tc-space-3-5) var(--tc-space-4); border-bottom: var(--tc-hairline) solid var(--tc-divider); }
 .ui-al__spark { display: grid; flex: none; place-items: center; width: 16px; color: var(--tc-accent); }
 :where([data-look="standard"], [data-look="standard"] *).ui-al__title { font-weight: var(--tc-font-weight-semibold); color: var(--tc-text-strong); white-space: nowrap; }
 :where([data-look="clean"], [data-look="clean"] *).ui-al__title { font-weight: var(--tc-font-weight-medium); color: var(--tc-text-strong); white-space: nowrap; }
-.ui-al__summary { display: flex; flex: 1; gap: 12px; min-width: 0; overflow: hidden; font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); color: var(--tc-text-muted); white-space: nowrap; }
-.ui-al__summary span { display: inline-flex; align-items: center; gap: 6px; }
+.ui-al__summary { display: flex; flex: 1; gap: var(--tc-space-3); min-width: 0; overflow: hidden; font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); color: var(--tc-text-muted); white-space: nowrap; }
+.ui-al__summary span { display: inline-flex; align-items: center; gap: var(--tc-space-1-5); }
 .ui-al__summary span::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--tc-agent-lanes-run-fg); }
 .ui-al__summary [data-kind="needs"] { color: var(--tc-status-warning-fg); }
 .ui-al__summary [data-kind="needs"]::before { background: var(--tc-status-warning-fg); animation: ui-al-pulse var(--tc-duration-shimmer) var(--tc-ease-in-out) infinite; }
@@ -790,9 +790,9 @@ const css = /* css */ `
 .ui-al__pause:hover { background: var(--tc-action-ghost-bg-hover); color: var(--tc-text-primary); }
 .ui-al__pause[aria-pressed="true"] { background: var(--tc-fill-selected); box-shadow: inset 0 0 0 1px var(--tc-border-selected); color: var(--tc-accent-text); }
 /* ----- Lanes ----- */
-.ui-al__body { display: grid; grid-template-columns: 168px minmax(0, 1fr); padding: 26px 16px 12px 0; }
+.ui-al__body { display: grid; grid-template-columns: 168px minmax(0, 1fr); padding: 26px var(--tc-space-4) var(--tc-space-3) 0; }
 .ui-al__agents { display: grid; grid-auto-rows: var(--tc-agent-lanes-row); }
-.ui-al__agent { display: flex; align-items: center; gap: 10px; min-width: 0; padding: 0 12px 0 16px; }
+.ui-al__agent { display: flex; align-items: center; gap: var(--tc-space-2-5); min-width: 0; padding: 0 var(--tc-space-3) 0 var(--tc-space-4); }
 :where([data-look="standard"], [data-look="standard"] *).ui-al__avatar { color: var(--tc-text-muted); }
 :where([data-look="clean"], [data-look="clean"] *).ui-al__avatar { color: var(--tc-text-secondary); }
 /* Agents are rounded squares (people would be circles) – the avatar pattern */
@@ -807,17 +807,17 @@ const css = /* css */ `
 .ui-al__model-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 /* The state tag: collapses to nothing while the agent works, fades in when it is free or waits */
 .ui-al__state { display: inline-grid; flex: none; grid-template-columns: 0fr; margin-left: 0; opacity: 0; transition: grid-template-columns var(--tc-duration-slow) var(--tc-ease-standard), margin-left var(--tc-duration-slow) var(--tc-ease-standard), opacity var(--tc-duration-base) var(--tc-ease-standard); }
-.ui-al__state[data-show] { grid-template-columns: 1fr; margin-left: 6px; opacity: 1; transition: grid-template-columns var(--tc-duration-slow) var(--tc-ease-standard), margin-left var(--tc-duration-slow) var(--tc-ease-standard), opacity var(--tc-duration-moderate) var(--tc-ease-standard) var(--tc-duration-instant); }
+.ui-al__state[data-show] { grid-template-columns: 1fr; margin-left: var(--tc-space-1-5); opacity: 1; transition: grid-template-columns var(--tc-duration-slow) var(--tc-ease-standard), margin-left var(--tc-duration-slow) var(--tc-ease-standard), opacity var(--tc-duration-moderate) var(--tc-ease-standard) var(--tc-duration-instant); }
 :where([data-look="standard"], [data-look="standard"] *).ui-al__state > span { color: var(--tc-text-muted); }
 :where([data-look="clean"], [data-look="clean"] *).ui-al__state > span { color: var(--tc-text-secondary); }
-.ui-al__state > span { min-width: 0; overflow: hidden; padding: 0 5px; border-radius: var(--tc-pill-radius); background: var(--tc-fill-default); font-size: var(--tc-pill-font-size); font-weight: var(--tc-pill-font-weight); line-height: var(--tc-line-height-tight); white-space: nowrap; }
+.ui-al__state > span { min-width: 0; overflow: hidden; padding: 0 var(--tc-space-1); border-radius: var(--tc-pill-radius); background: var(--tc-fill-default); font-size: var(--tc-pill-font-size); font-weight: var(--tc-pill-font-weight); line-height: var(--tc-line-height-tight); white-space: nowrap; }
 .ui-al__who[data-state="waiting"] .ui-al__state > span { background: var(--tc-status-warning-bg); color: var(--tc-status-warning-fg); }
 .ui-al__track { position: relative; height: calc(var(--rows) * var(--tc-agent-lanes-row)); }
 /* Quiet lane separators and time ticks */
 .ui-al__track::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(to bottom, transparent 0, transparent calc(var(--tc-agent-lanes-row) - 0.5px), var(--tc-border-default) calc(var(--tc-agent-lanes-row) - 0.5px), var(--tc-border-default) var(--tc-agent-lanes-row)); pointer-events: none; }
 .ui-al__grid { position: absolute; inset: 0; pointer-events: none; }
 .ui-al__tick { position: absolute; top: 0; bottom: 0; width: 0; border-left: 0.5px dashed var(--tc-border-default); }
-.ui-al__tick > span { position: absolute; bottom: 100%; left: 0; margin-bottom: 6px; font-size: var(--tc-font-size-xs); line-height: 14px; color: var(--tc-text-muted); white-space: nowrap; transform: translateX(-50%); font-variant-numeric: tabular-nums; }
+.ui-al__tick > span { position: absolute; bottom: 100%; left: 0; margin-bottom: var(--tc-space-1-5); font-size: var(--tc-font-size-xs); line-height: 14px; color: var(--tc-text-muted); white-space: nowrap; transform: translateX(-50%); font-variant-numeric: tabular-nums; }
 .ui-al__clip { position: absolute; inset: 0; overflow: hidden; -webkit-mask-image: linear-gradient(to right, transparent 0, #000 40px); mask-image: linear-gradient(to right, transparent 0, #000 40px); }
 .ui-al__layer { position: absolute; inset: 0; transform: translateX(calc(var(--t, 0) * -1%)); will-change: transform; }
 .ui-al__curves { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
@@ -828,12 +828,12 @@ const css = /* css */ `
 .ui-al__slot { position: absolute; top: 10px; bottom: 10px; min-width: 24px; }
 /* Running and waiting blocks grow out of "now" from nothing, so they never poke past it */
 .ui-al__slot:is([data-status="running"], [data-status="waiting"]), .ui-al__slot:is([data-status="running"], [data-status="waiting"]) .ui-al__block { min-width: 0; }
-:where([data-look="standard"], [data-look="standard"] *).ui-al__block { display: flex; align-items: center; width: 100%; height: 100%; min-width: 24px; padding: 0 10px; overflow: hidden; border-radius: var(--tc-radius-md); background: var(--tc-fill-default); font-size: var(--tc-font-size-sm); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-tight); color: var(--tc-text-muted); white-space: nowrap; transition: background-color var(--tc-duration-slow) var(--tc-ease-standard), color var(--tc-duration-slow) var(--tc-ease-standard); }
-:where([data-look="clean"], [data-look="clean"] *).ui-al__block { display: flex; align-items: center; width: 100%; height: 100%; min-width: 24px; padding: 0 8px; overflow: hidden; border-radius: var(--tc-radius-sm); background: var(--tc-fill-default); font-size: var(--tc-font-size-sm); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-tight); color: var(--tc-text-secondary); white-space: nowrap; transition: background-color var(--tc-duration-slow) var(--tc-ease-standard), color var(--tc-duration-slow) var(--tc-ease-standard); }
+:where([data-look="standard"], [data-look="standard"] *).ui-al__block { display: flex; align-items: center; width: 100%; height: 100%; min-width: 24px; padding: 0 var(--tc-space-2-5); overflow: hidden; border-radius: var(--tc-radius-md); background: var(--tc-fill-default); font-size: var(--tc-font-size-sm); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-tight); color: var(--tc-text-muted); white-space: nowrap; transition: background-color var(--tc-duration-slow) var(--tc-ease-standard), color var(--tc-duration-slow) var(--tc-ease-standard); }
+:where([data-look="clean"], [data-look="clean"] *).ui-al__block { display: flex; align-items: center; width: 100%; height: 100%; min-width: 24px; padding: 0 var(--tc-space-2); overflow: hidden; border-radius: var(--tc-radius-sm); background: var(--tc-fill-default); font-size: var(--tc-font-size-sm); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-tight); color: var(--tc-text-secondary); white-space: nowrap; transition: background-color var(--tc-duration-slow) var(--tc-ease-standard), color var(--tc-duration-slow) var(--tc-ease-standard); }
 .ui-al__label { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
-.ui-al__mark { display: grid; flex: none; place-items: center; margin-right: 4px; }
+.ui-al__mark { display: grid; flex: none; place-items: center; margin-right: var(--tc-space-1); }
 /* Tools: the plain logos side by side, before the title */
-.ui-al__tools { display: flex; flex: none; gap: 4px; margin-right: 6px; }
+.ui-al__tools { display: flex; flex: none; gap: var(--tc-space-1); margin-right: var(--tc-space-1-5); }
 .ui-al__tool { display: grid; place-items: center; width: 12px; height: 12px; }
 .ui-al__tool > svg { width: 12px; height: 12px; }
 .ui-al__block:hover { background: var(--tc-fill-default); }
@@ -844,28 +844,28 @@ const css = /* css */ `
 .ui-al__block[data-status="failed"] { background: var(--tc-status-danger-bg); color: var(--tc-status-danger-fg); }
 .ui-al__block[data-open] { filter: brightness(0.97); }
 /* Needs you: a small flag inside the block's end, where it meets "now" */
-.ui-al__flag { position: absolute; top: 50%; right: 4px; display: inline-flex; align-items: center; gap: 4px; padding: 0 6px; border-radius: var(--tc-radius-xs); background: var(--tc-surface-raised); box-shadow: var(--tc-shadow-raised); font-size: var(--tc-font-size-xs); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-snug); color: var(--tc-status-warning-fg); white-space: nowrap; transform: translateY(-50%); pointer-events: none; animation: ui-al-pulse var(--tc-duration-shimmer) var(--tc-ease-in-out) infinite; }
+.ui-al__flag { position: absolute; top: 50%; right: 4px; display: inline-flex; align-items: center; gap: var(--tc-space-1); padding: 0 var(--tc-space-1-5); border-radius: var(--tc-radius-xs); background: var(--tc-surface-raised); box-shadow: var(--tc-shadow-raised); font-size: var(--tc-font-size-xs); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-snug); color: var(--tc-status-warning-fg); white-space: nowrap; transform: translateY(-50%); pointer-events: none; animation: ui-al-pulse var(--tc-duration-shimmer) var(--tc-ease-in-out) infinite; }
 .ui-al__slot:has(.ui-al__block[data-status="waiting"]) { z-index: 2; }
 .ui-al__pop { position: absolute; z-index: 5; animation: ui-al-in var(--tc-duration-base) var(--tc-ease-standard) both; }
 .ui-al__pop[data-up] { transform: translateY(-100%); animation-name: ui-al-in-up; }
 /* Decide in place */
-:where([data-look="standard"], [data-look="standard"] *).ui-al__ask { display: grid; gap: 2px; width: 290px; padding: 14px; border-radius: var(--tc-menu-radius); background: var(--tc-menu-bg); box-shadow: var(--tc-menu-shadow); }
+:where([data-look="standard"], [data-look="standard"] *).ui-al__ask { display: grid; gap: var(--tc-space-0-5); width: 290px; padding: var(--tc-space-3-5); border-radius: var(--tc-menu-radius); background: var(--tc-menu-bg); box-shadow: var(--tc-menu-shadow); }
 /* Decide in place */
-:where([data-look="clean"], [data-look="clean"] *).ui-al__ask { display: grid; gap: 2px; width: 280px; padding: 12px; border-radius: var(--tc-menu-radius); background: var(--tc-menu-bg); box-shadow: var(--tc-menu-shadow); }
+:where([data-look="clean"], [data-look="clean"] *).ui-al__ask { display: grid; gap: var(--tc-space-0-5); width: 280px; padding: var(--tc-space-3); border-radius: var(--tc-menu-radius); background: var(--tc-menu-bg); box-shadow: var(--tc-menu-shadow); }
 /* What got done: the tooltip pattern – ink in light, light in dark, from the tokens */
-.ui-al__tip { --tc-agent-lanes-tip-soft: color-mix(in srgb, var(--tc-tooltip-fg) 68%, transparent); display: grid; gap: 4px; width: max-content; max-width: 230px; padding: calc(var(--tc-tooltip-py) * 2) calc(var(--tc-tooltip-px) + 2px); border-radius: var(--tc-tooltip-radius); background: var(--tc-tooltip-bg); box-shadow: var(--tc-shadow-overlay); font-size: var(--tc-tooltip-font-size); line-height: var(--tc-line-height-tight); color: var(--tc-tooltip-fg); translate: -50% 0; }
+.ui-al__tip { --tc-agent-lanes-tip-soft: color-mix(in srgb, var(--tc-tooltip-fg) 68%, transparent); display: grid; gap: var(--tc-space-1); width: max-content; max-width: 230px; padding: calc(var(--tc-tooltip-py) * 2) calc(var(--tc-tooltip-px) + 2px); border-radius: var(--tc-tooltip-radius); background: var(--tc-tooltip-bg); box-shadow: var(--tc-shadow-overlay); font-size: var(--tc-tooltip-font-size); line-height: var(--tc-line-height-tight); color: var(--tc-tooltip-fg); translate: -50% 0; }
 .ui-al__tip-head { font-size: var(--tc-font-size-xs); color: var(--tc-agent-lanes-tip-soft); white-space: nowrap; }
 .ui-al__tip-title { color: var(--tc-tooltip-fg); }
-.ui-al__tip-list { display: grid; gap: 2px; }
-.ui-al__tip-list li { position: relative; padding-left: 10px; }
+.ui-al__tip-list { display: grid; gap: var(--tc-space-0-5); }
+.ui-al__tip-list li { position: relative; padding-left: var(--tc-space-2-5); }
 :where([data-look="standard"], [data-look="standard"] *).ui-al__tip-list li::before { content: ""; position: absolute; top: 7px; left: 1px; width: 3px; height: 3px; border-radius: 50%; background: var(--tc-agent-lanes-tip-soft); }
-.ui-al__tip-open { justify-self: start; min-height: 24px; margin-top: 2px; font-size: var(--tc-tooltip-font-size); font-weight: var(--tc-font-weight-medium); color: var(--tc-tooltip-fg); text-decoration: underline; text-decoration-color: var(--tc-agent-lanes-tip-soft); text-underline-offset: 2px; }
+.ui-al__tip-open { justify-self: start; min-height: 24px; margin-top: var(--tc-space-0-5); font-size: var(--tc-tooltip-font-size); font-weight: var(--tc-font-weight-medium); color: var(--tc-tooltip-fg); text-decoration: underline; text-decoration-color: var(--tc-agent-lanes-tip-soft); text-underline-offset: 2px; }
 .ui-al__ask-title { font-weight: var(--tc-font-weight-medium); color: var(--tc-text-strong); }
 :where([data-look="standard"], [data-look="standard"] *).ui-al__ask-text { font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); color: var(--tc-text-muted); }
 :where([data-look="clean"], [data-look="clean"] *).ui-al__ask-text { font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); color: var(--tc-text-secondary); }
-.ui-al__ask-actions { display: flex; justify-content: flex-end; gap: 6px; margin-top: 8px; }
+.ui-al__ask-actions { display: flex; justify-content: flex-end; gap: var(--tc-space-1-5); margin-top: var(--tc-space-2); }
 .ui-al__ask-actions[aria-busy] .ui-al__btn { opacity: 0.6; cursor: progress; }
-.ui-al__error { display: block; margin-top: 6px; font-size: var(--tc-font-size-sm); color: var(--tc-status-danger-fg); }
+.ui-al__error { display: block; margin-top: var(--tc-space-1-5); font-size: var(--tc-font-size-sm); color: var(--tc-status-danger-fg); }
 :where([data-look="standard"], [data-look="standard"] *)/* Reject / Approve: secondary and primary actions, exactly like Button */
 .ui-al__btn { display: inline-flex; align-items: center; height: var(--tc-control-h-md); padding: 0 var(--tc-control-px-md); border-radius: var(--tc-control-radius-md); background: var(--tc-action-secondary-bg); box-shadow: var(--tc-action-secondary-shadow); font-size: var(--tc-control-font-size); font-weight: var(--tc-control-font-weight); color: var(--tc-action-secondary-fg); transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), box-shadow var(--tc-duration-fast) var(--tc-ease-standard); }
 .ui-al__btn:hover { box-shadow: var(--tc-action-secondary-shadow-hover); }
@@ -874,7 +874,7 @@ const css = /* css */ `
 .ui-al__btn--primary:active { background: var(--tc-action-primary-bg-active); }
 /* Now: a small label over the right edge, where running work meets the clock */
 .ui-al__now { position: absolute; top: -6px; right: 0; width: 0; pointer-events: none; }
-.ui-al__now > span { position: absolute; bottom: 100%; right: 0; padding: 0 5px; border-radius: var(--tc-radius-xs); background: var(--tc-agent-lanes-run-bg); font-size: var(--tc-font-size-2xs); font-weight: var(--tc-font-weight-medium); line-height: 14px; color: var(--tc-agent-lanes-run-fg); }
+.ui-al__now > span { position: absolute; bottom: 100%; right: 0; padding: 0 var(--tc-space-1); border-radius: var(--tc-radius-xs); background: var(--tc-agent-lanes-run-bg); font-size: var(--tc-font-size-2xs); font-weight: var(--tc-font-weight-medium); line-height: 14px; color: var(--tc-agent-lanes-run-fg); }
 @keyframes ui-al-pulse { 50% { opacity: 0.55; } }
 @keyframes ui-al-shimmer { from { transform: translateX(-100%); } to { transform: translateX(200%); } }
 /* Held still (paused, hovered, focused, off screen): every loop rests too */

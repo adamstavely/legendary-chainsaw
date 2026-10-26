@@ -339,6 +339,13 @@ const css = /* css */ `
   --_tc-meter-track: light-dark(rgba(0, 0, 0, 0.05), rgba(255, 255, 255, 0.07));
   --_tc-radius-sm: 6px;
   --_tc-radius-xl: 12px;
+  --_tc-space-0-5: 2px;
+  --_tc-space-1-5: 6px;
+  --_tc-space-2: 8px;
+  --_tc-space-2-5: 10px;
+  --_tc-space-3: 12px;
+  --_tc-space-3-5: 14px;
+  --_tc-space-4: 16px;
   --_tc-surface-inverse: light-dark(#171717, #ededed);
   --_tc-surface-raised: light-dark(#ffffff, #19191b);
   --_tc-text-disabled: light-dark(#a3a3a3, #5c5c63);
@@ -394,6 +401,13 @@ const css = /* css */ `
   --_tc-meter-track: light-dark(rgba(0, 0, 0, 0.06), rgba(255, 255, 255, 0.08));
   --_tc-radius-sm: 6px;
   --_tc-radius-xl: 12px;
+  --_tc-space-0-5: 2px;
+  --_tc-space-1-5: 6px;
+  --_tc-space-2: 8px;
+  --_tc-space-2-5: 10px;
+  --_tc-space-3: 12px;
+  --_tc-space-3-5: 14px;
+  --_tc-space-4: 16px;
   --_tc-surface-inverse: light-dark(rgba(0, 0, 0, 0.88), rgba(255, 255, 255, 0.92));
   --_tc-surface-raised: light-dark(#ffffff, #1c1c1e);
   --_tc-text-disabled: light-dark(rgba(0, 0, 0, 0.27), rgba(255, 255, 255, 0.3));
@@ -423,14 +437,14 @@ const css = /* css */ `
   /* The sweep of light over the dark (light, in the dark theme) bar */
   --tc-progress-tracker-shine: light-dark(rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.7));
   max-width: 360px;
-  padding: 22px 16px 14px;
+  padding: 22px var(--tc-space-4, var(--_tc-space-4)) var(--tc-space-3-5, var(--_tc-space-3-5));
 }
 :where([data-look="clean"], [data-look="clean"] *).ui-progress {
   /* The light band over the blue bar is pure white in the dark theme */
   --tc-progress-tracker-shine: light-dark(rgba(255, 255, 255, 0.82), #ffffff);
   container-type: inline-size;
   max-width: 340px;
-  padding: 14px 6px 6px;
+  padding: var(--tc-space-3-5, var(--_tc-space-3-5)) var(--tc-space-1-5, var(--_tc-space-1-5)) var(--tc-space-1-5, var(--_tc-space-1-5));
   font-size: var(--tc-font-size-md, var(--_tc-font-size-md));
   font-weight: var(--tc-font-weight-regular, var(--_tc-font-weight-regular));
   line-height: var(--tc-line-height-normal, var(--_tc-line-height-normal));
@@ -456,10 +470,10 @@ const css = /* css */ `
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  gap: 12px;
+  gap: var(--tc-space-3, var(--_tc-space-3));
 }
-:where([data-look="standard"], [data-look="standard"] *).ui-progress__head { padding: 0 6px; }
-:where([data-look="clean"], [data-look="clean"] *).ui-progress__head { padding: 0 10px; }
+:where([data-look="standard"], [data-look="standard"] *).ui-progress__head { padding: 0 var(--tc-space-1-5, var(--_tc-space-1-5)); }
+:where([data-look="clean"], [data-look="clean"] *).ui-progress__head { padding: 0 var(--tc-space-2-5, var(--_tc-space-2-5)); }
 .ui-progress__title { margin: 0; font-weight: var(--tc-font-weight-medium, var(--_tc-font-weight-medium)); }
 :where([data-look="standard"], [data-look="standard"] *).ui-progress__title {
   font-size: var(--tc-font-size-xl, var(--_tc-font-size-xl));
@@ -511,8 +525,8 @@ const css = /* css */ `
   background: var(--tc-meter-track, var(--_tc-meter-track));
   overflow: hidden;
 }
-:where([data-look="standard"], [data-look="standard"] *).ui-progress__bar { height: var(--tc-meter-h-hero, var(--_tc-meter-h-hero)); margin: 16px 6px 12px; }
-:where([data-look="clean"], [data-look="clean"] *).ui-progress__bar { height: var(--tc-meter-h, var(--_tc-meter-h)); margin: 10px 10px 8px; }
+:where([data-look="standard"], [data-look="standard"] *).ui-progress__bar { height: var(--tc-meter-h-hero, var(--_tc-meter-h-hero)); margin: var(--tc-space-4, var(--_tc-space-4)) var(--tc-space-1-5, var(--_tc-space-1-5)) var(--tc-space-3, var(--_tc-space-3)); }
+:where([data-look="clean"], [data-look="clean"] *).ui-progress__bar { height: var(--tc-meter-h, var(--_tc-meter-h)); margin: var(--tc-space-2-5, var(--_tc-space-2-5)) var(--tc-space-2-5, var(--_tc-space-2-5)) var(--tc-space-2, var(--_tc-space-2)); }
 .ui-progress__fill {
   position: absolute;
   inset: 0;
@@ -537,7 +551,7 @@ const css = /* css */ `
   padding: 0;
   list-style: none;
 }
-:where([data-look="standard"], [data-look="standard"] *).ui-progress__list { gap: 2px; }
+:where([data-look="standard"], [data-look="standard"] *).ui-progress__list { gap: var(--tc-space-0-5, var(--_tc-space-0-5)); }
 /* On mount the card settles in, then the rows fade up one after another */
 .ui-progress__list > li {
   position: relative;
@@ -551,16 +565,16 @@ const css = /* css */ `
   text-align: left;
 }
 :where([data-look="standard"], [data-look="standard"] *).ui-progress__step {
-  gap: 12px;
-  padding: 9px 6px;
+  gap: var(--tc-space-3, var(--_tc-space-3));
+  padding: var(--tc-space-2, var(--_tc-space-2)) var(--tc-space-1-5, var(--_tc-space-1-5));
   border-radius: var(--tc-radius-xl, var(--_tc-radius-xl));
   font-size: var(--tc-font-size-lg-plus, var(--_tc-font-size-lg-plus));
   line-height: var(--tc-line-height-relaxed, var(--_tc-line-height-relaxed));
   transition: background-color var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-standard, var(--_tc-ease-standard));
 }
 :where([data-look="clean"], [data-look="clean"] *).ui-progress__step {
-  gap: 10px;
-  padding: 6px 10px;
+  gap: var(--tc-space-2-5, var(--_tc-space-2-5));
+  padding: var(--tc-space-1-5, var(--_tc-space-1-5)) var(--tc-space-2-5, var(--_tc-space-2-5));
   border-radius: var(--tc-radius-sm, var(--_tc-radius-sm));
   font-size: var(--tc-font-size-md, var(--_tc-font-size-md));
   line-height: var(--tc-line-height-normal, var(--_tc-line-height-normal));
@@ -666,15 +680,15 @@ const css = /* css */ `
 /* Touch screens: taller rows */
 @media (pointer: coarse) {
 :where([data-look="clean"], [data-look="clean"] *).ui-progress__step {
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding-top: var(--tc-space-2-5, var(--_tc-space-2-5));
+    padding-bottom: var(--tc-space-2-5, var(--_tc-space-2-5));
 }
 }
 /* Narrow cards: a little less inset */
 @container (max-width: 300px) {
-:where([data-look="clean"], [data-look="clean"] *).ui-progress__head { padding: 0 8px; }
-:where([data-look="clean"], [data-look="clean"] *).ui-progress__bar { margin-left: 8px; margin-right: 8px; }
-:where([data-look="clean"], [data-look="clean"] *).ui-progress__step { padding-left: 8px; padding-right: 8px; }
+:where([data-look="clean"], [data-look="clean"] *).ui-progress__head { padding: 0 var(--tc-space-2, var(--_tc-space-2)); }
+:where([data-look="clean"], [data-look="clean"] *).ui-progress__bar { margin-left: var(--tc-space-2, var(--_tc-space-2)); margin-right: var(--tc-space-2, var(--_tc-space-2)); }
+:where([data-look="clean"], [data-look="clean"] *).ui-progress__step { padding-left: var(--tc-space-2, var(--_tc-space-2)); padding-right: var(--tc-space-2, var(--_tc-space-2)); }
 }
 @keyframes ui-progress-pop-clean {
   0% { transform: scale(0.9); }

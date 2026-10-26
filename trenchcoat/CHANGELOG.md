@@ -9,6 +9,10 @@ See `audit/remediation-plan.md`, Part 1.
 - Type scale (decision B): text at 11.5, 12.5 and 13.5 px is now 11, 12 and 13 px in every component and
   illustration, and fields (`--tc-field-font-size`) are 13 px. `--tc-font-size-xs-plus`, `-sm-plus` and `-md-plus`
   are deprecated – only blocks and screens still use them – and check-tokens rejects new uses elsewhere.
+- Spacing on the scale: padding, margin and gap in every component, illustration and motion piece use
+  `--tc-space-*` (3,389 values that were already on the scale, 322 that were 1 px off it and moved by 1 px). What
+  stays literal – 1 px, fractions, negatives and values 2 px or more off the scale – is counted by the ratchet's
+  new "literal spacing" rule (448 in these libraries; blocks and screens are untouched).
 
 ### Behaviour changes
 

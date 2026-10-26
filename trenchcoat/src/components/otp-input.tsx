@@ -716,7 +716,7 @@ const css = /* css */ `
 .ui-otp[data-align="center"] { justify-items: center; text-align: center; }
 .ui-otp[data-disabled] { opacity: 0.55; }
 :where([data-look="standard"], [data-look="standard"] *).ui-otp__field { display: flex; min-width: 0; }
-:where([data-look="clean"], [data-look="clean"] *).ui-otp__field { display: flex; min-width: 0; padding: 3px 0; }
+:where([data-look="clean"], [data-look="clean"] *).ui-otp__field { display: flex; min-width: 0; padding: var(--tc-space-1) 0; }
 .ui-otp[data-align="center"] .ui-otp__field { justify-content: center; }
 /* The boxes scale down to fit their container (phones at 320px), up to --tc-otp-input-box-size */
 :where([data-look="standard"], [data-look="standard"] *).ui-otp__slots {
@@ -873,8 +873,8 @@ const css = /* css */ `
 :where([data-look="standard"], [data-look="standard"] *).ui-otp__pill-inner {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 0 15px 0 12px;
+  gap: var(--tc-space-1-5);
+  padding: 0 var(--tc-space-4) 0 var(--tc-space-3);
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-medium);
   line-height: var(--tc-line-height-normal);
@@ -908,8 +908,8 @@ const css = /* css */ `
 :where([data-look="clean"], [data-look="clean"] *).ui-otp__pill-inner {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 0 14px 0 12px;
+  gap: var(--tc-space-1-5);
+  padding: 0 var(--tc-space-3-5) 0 var(--tc-space-3);
   font-size: var(--tc-font-size-md);
   line-height: var(--tc-line-height-normal);
   font-weight: var(--tc-font-weight-medium);
@@ -946,7 +946,7 @@ const css = /* css */ `
 .ui-otp__msg-inner { min-height: 0; overflow: hidden; }
 :where([data-look="standard"], [data-look="standard"] *).ui-otp__msg-text {
   margin: 0;
-  padding-top: 10px;
+  padding-top: var(--tc-space-2-5);
   font-size: var(--tc-font-size-md);
   text-wrap: balance;
   color: var(--tc-text-secondary);
@@ -956,7 +956,7 @@ const css = /* css */ `
 }
 :where([data-look="clean"], [data-look="clean"] *).ui-otp__msg-text {
   margin: 0;
-  padding-top: 8px;
+  padding-top: var(--tc-space-2);
   font-size: var(--tc-font-size-sm);
   line-height: var(--tc-line-height-tight);
   text-wrap: balance;
@@ -967,19 +967,19 @@ const css = /* css */ `
 }
 .ui-otp__msg[data-show] .ui-otp__msg-text { opacity: 1; transform: none; transition-delay: 60ms; }
 /* The icon sits inline, so a wrapped message stays centered with it */
-:where([data-look="standard"], [data-look="standard"] *).ui-otp__alert { display: inline-block; width: 15px; height: 15px; margin-right: 6px; vertical-align: -3px; fill: none; stroke: var(--tc-status-danger-solid); stroke-width: 2; stroke-linecap: round; }
+:where([data-look="standard"], [data-look="standard"] *).ui-otp__alert { display: inline-block; width: 15px; height: 15px; margin-right: var(--tc-space-1-5); vertical-align: -3px; fill: none; stroke: var(--tc-status-danger-solid); stroke-width: 2; stroke-linecap: round; }
 /* Resend: a countdown that turns into a button */
-:where([data-look="standard"], [data-look="standard"] *).ui-otp__resend { margin-top: 14px; font-size: var(--tc-font-size-md); font-variant-numeric: tabular-nums; color: var(--tc-text-muted); transition: opacity var(--tc-duration-base) var(--tc-ease-standard); }
+:where([data-look="standard"], [data-look="standard"] *).ui-otp__resend { margin-top: var(--tc-space-3-5); font-size: var(--tc-font-size-md); font-variant-numeric: tabular-nums; color: var(--tc-text-muted); transition: opacity var(--tc-duration-base) var(--tc-ease-standard); }
 /* The icon sits inline, so a wrapped message stays centered with it */
-:where([data-look="clean"], [data-look="clean"] *).ui-otp__alert { display: inline-block; width: 14px; height: 14px; margin-right: 6px; vertical-align: -3px; fill: none; stroke: var(--tc-status-danger-fg); stroke-width: 1.7; stroke-linecap: round; }
+:where([data-look="clean"], [data-look="clean"] *).ui-otp__alert { display: inline-block; width: 14px; height: 14px; margin-right: var(--tc-space-1-5); vertical-align: -3px; fill: none; stroke: var(--tc-status-danger-fg); stroke-width: 1.7; stroke-linecap: round; }
 /* Resend: a countdown that turns into a tab-style button */
 :where([data-look="clean"], [data-look="clean"] *).ui-otp__resend {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 4px 8px;
+  gap: var(--tc-space-1) var(--tc-space-2);
   min-height: 28px;
-  margin-top: 12px;
+  margin-top: var(--tc-space-3);
   font-size: var(--tc-font-size-sm);
   line-height: var(--tc-line-height-tight);
   font-variant-numeric: tabular-nums;
@@ -1009,7 +1009,7 @@ const css = /* css */ `
 :where([data-look="clean"], [data-look="clean"] *).ui-otp__time { display: inline-block; min-width: 3.4ch; text-align: left; color: var(--tc-text-primary); }
 :where([data-look="clean"], [data-look="clean"] *).ui-otp__resend-btn {
   position: relative;
-  padding: 4px 10px;
+  padding: var(--tc-space-1) var(--tc-space-2-5);
   border-radius: var(--tc-radius-sm);
   box-shadow: inset 0 0 0 0.5px var(--tc-border-default);
   font-size: var(--tc-font-size-md);
@@ -1045,7 +1045,7 @@ const css = /* css */ `
 }
 /* Touch screens: a taller Resend button */
 @media (hover: none) and (pointer: coarse) {
-:where([data-look="clean"], [data-look="clean"] *).ui-otp__resend-btn { padding: 7px 12px; }
+:where([data-look="clean"], [data-look="clean"] *).ui-otp__resend-btn { padding: var(--tc-space-2) var(--tc-space-3); }
 }
 @media (prefers-reduced-motion: reduce) {
   .ui-otp *, .ui-otp *::before, .ui-otp *::after { animation: none !important; transition: none !important; }

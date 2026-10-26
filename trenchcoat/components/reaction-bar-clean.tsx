@@ -237,6 +237,11 @@ const css = /* css */ `
   --_tc-radius-full: 999px;
   --_tc-radius-sm: 6px;
   --_tc-shadow-raised: 0 0 0 1px light-dark(#ececec, #2a2a2e), 0 1px 2px light-dark(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.4));
+  --_tc-space-0-5: 2px;
+  --_tc-space-1: 4px;
+  --_tc-space-1-5: 6px;
+  --_tc-space-2: 8px;
+  --_tc-space-2-5: 10px;
   --_tc-status-info-solid: light-dark(#2f68ff, #6b95ff);
   --_tc-surface-overlay: light-dark(#ffffff, #232326);
   --_tc-text-primary: light-dark(#171717, #ededed);
@@ -271,6 +276,11 @@ const css = /* css */ `
   --_tc-radius-full: 999px;
   --_tc-radius-sm: 6px;
   --_tc-shadow-raised: 0 0 0 0.5px light-dark(rgba(0, 0, 0, 0.06), rgba(255, 255, 255, 0.08)), 0 1px 1px -1px light-dark(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.4)), 0 1px 2px 0 light-dark(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.4));
+  --_tc-space-0-5: 2px;
+  --_tc-space-1: 4px;
+  --_tc-space-1-5: 6px;
+  --_tc-space-2: 8px;
+  --_tc-space-2-5: 10px;
   --_tc-status-info-solid: light-dark(#0060e2, #5b9aff);
   --_tc-surface-overlay: light-dark(#ffffff, #252527);
   --_tc-text-primary: light-dark(rgba(0, 0, 0, 0.88), rgba(255, 255, 255, 0.9));
@@ -286,8 +296,8 @@ const css = /* css */ `
   --tc-reaction-bar-ease: cubic-bezier(0.85, 0, 0.15, 1);
   display: inline-flex;
   align-items: center;
-  gap: 2px;
-  padding: 4px 10px;
+  gap: var(--tc-space-0-5, var(--_tc-space-0-5));
+  padding: var(--tc-space-1, var(--_tc-space-1)) var(--tc-space-2-5, var(--_tc-space-2-5));
   border-radius: var(--tc-radius-full, var(--_tc-radius-full));
   background: var(--tc-surface-overlay, var(--_tc-surface-overlay));
   box-shadow: var(--tc-shadow-raised, var(--_tc-shadow-raised));
@@ -299,7 +309,7 @@ const css = /* css */ `
   --tc-reaction-bar-h: 28px;
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--tc-space-1, var(--_tc-space-1));
   max-width: 100%;
   font-family: var(--tc-font-sans, var(--_tc-font-sans));
   font-size: var(--tc-font-size-md, var(--_tc-font-size-md));
@@ -316,7 +326,7 @@ const css = /* css */ `
   min-width: 42px;
   height: 42px;
   margin: 0;
-  padding: 0 10px;
+  padding: 0 var(--tc-space-2-5, var(--_tc-space-2-5));
   border: 0;
   border-radius: var(--tc-radius-full, var(--_tc-radius-full));
   background: transparent;
@@ -346,7 +356,7 @@ const css = /* css */ `
   flex: none;
   align-items: center;
   height: var(--tc-reaction-bar-h);
-  padding: 0 8px;
+  padding: 0 var(--tc-space-2, var(--_tc-space-2));
   border-radius: var(--tc-radius-sm, var(--_tc-radius-sm));
   box-shadow: inset 0 0 0 var(--tc-hairline, var(--_tc-hairline)) var(--tc-border-default, var(--_tc-border-default));
   color: var(--tc-text-secondary, var(--_tc-text-secondary));
@@ -381,7 +391,7 @@ const css = /* css */ `
 .ui-rb__count[data-smooth] { transition: width var(--tc-duration-slower, var(--_tc-duration-slower)) var(--tc-reaction-bar-ease); }
 :where([data-look="standard"], [data-look="standard"] *).ui-rb__digits {
   display: inline-flex;
-  padding-left: 6px;
+  padding-left: var(--tc-space-1-5, var(--_tc-space-1-5));
   font-size: var(--tc-font-size-lg, var(--_tc-font-size-lg));
   font-weight: var(--tc-font-weight-medium, var(--_tc-font-weight-medium));
   line-height: var(--tc-line-height-normal, var(--_tc-line-height-normal));
@@ -391,7 +401,7 @@ const css = /* css */ `
 :where([data-look="standard"], [data-look="standard"] *).ui-rb__digits:empty { padding-left: 0; }
 :where([data-look="clean"], [data-look="clean"] *).ui-rb__digits {
   display: inline-flex;
-  padding: 0 2px 0 6px;
+  padding: 0 var(--tc-space-0-5, var(--_tc-space-0-5)) 0 var(--tc-space-1-5, var(--_tc-space-1-5));
   line-height: var(--tc-line-height-normal, var(--_tc-line-height-normal));
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
@@ -409,8 +419,8 @@ const css = /* css */ `
 }
 /* Touch screens: taller chips */
 @media (hover: none) and (pointer: coarse) {
-:where([data-look="clean"], [data-look="clean"] *).ui-rb { --tc-reaction-bar-h: 36px; gap: 6px; }
-:where([data-look="clean"], [data-look="clean"] *).ui-rb__btn { padding: 0 10px; }
+:where([data-look="clean"], [data-look="clean"] *).ui-rb { --tc-reaction-bar-h: 36px; gap: var(--tc-space-1-5, var(--_tc-space-1-5)); }
+:where([data-look="clean"], [data-look="clean"] *).ui-rb__btn { padding: 0 var(--tc-space-2-5, var(--_tc-space-2-5)); }
 }
 @media (prefers-reduced-motion: reduce) {
   .ui-rb__icon[data-pop], .ui-rb__digit { animation: none; }

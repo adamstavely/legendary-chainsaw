@@ -211,8 +211,8 @@ const css = /* css */ `
   --tc-reaction-bar-ease: cubic-bezier(0.85, 0, 0.15, 1);
   display: inline-flex;
   align-items: center;
-  gap: 2px;
-  padding: 4px 10px;
+  gap: var(--tc-space-0-5);
+  padding: var(--tc-space-1) var(--tc-space-2-5);
   border-radius: var(--tc-radius-full);
   background: var(--tc-surface-overlay);
   box-shadow: var(--tc-shadow-raised);
@@ -224,7 +224,7 @@ const css = /* css */ `
   --tc-reaction-bar-h: 28px;
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--tc-space-1);
   max-width: 100%;
   font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-md);
@@ -241,7 +241,7 @@ const css = /* css */ `
   min-width: 42px;
   height: 42px;
   margin: 0;
-  padding: 0 10px;
+  padding: 0 var(--tc-space-2-5);
   border: 0;
   border-radius: var(--tc-radius-full);
   background: transparent;
@@ -271,7 +271,7 @@ const css = /* css */ `
   flex: none;
   align-items: center;
   height: var(--tc-reaction-bar-h);
-  padding: 0 8px;
+  padding: 0 var(--tc-space-2);
   border-radius: var(--tc-radius-sm);
   box-shadow: inset 0 0 0 var(--tc-hairline) var(--tc-border-default);
   color: var(--tc-text-secondary);
@@ -306,7 +306,7 @@ const css = /* css */ `
 .ui-rb__count[data-smooth] { transition: width var(--tc-duration-slower) var(--tc-reaction-bar-ease); }
 :where([data-look="standard"], [data-look="standard"] *).ui-rb__digits {
   display: inline-flex;
-  padding-left: 6px;
+  padding-left: var(--tc-space-1-5);
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-medium);
   line-height: var(--tc-line-height-normal);
@@ -316,7 +316,7 @@ const css = /* css */ `
 :where([data-look="standard"], [data-look="standard"] *).ui-rb__digits:empty { padding-left: 0; }
 :where([data-look="clean"], [data-look="clean"] *).ui-rb__digits {
   display: inline-flex;
-  padding: 0 2px 0 6px;
+  padding: 0 var(--tc-space-0-5) 0 var(--tc-space-1-5);
   line-height: var(--tc-line-height-normal);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
@@ -334,8 +334,8 @@ const css = /* css */ `
 }
 /* Touch screens: taller chips */
 @media (hover: none) and (pointer: coarse) {
-:where([data-look="clean"], [data-look="clean"] *).ui-rb { --tc-reaction-bar-h: 36px; gap: 6px; }
-:where([data-look="clean"], [data-look="clean"] *).ui-rb__btn { padding: 0 10px; }
+:where([data-look="clean"], [data-look="clean"] *).ui-rb { --tc-reaction-bar-h: 36px; gap: var(--tc-space-1-5); }
+:where([data-look="clean"], [data-look="clean"] *).ui-rb__btn { padding: 0 var(--tc-space-2-5); }
 }
 @media (prefers-reduced-motion: reduce) {
   .ui-rb__icon[data-pop], .ui-rb__digit { animation: none; }

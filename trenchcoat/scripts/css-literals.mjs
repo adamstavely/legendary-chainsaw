@@ -11,6 +11,8 @@
 //   literal border-radius  a radius other than 0 / 50% / 100% (also in --tc-<comp>-…radius… tokens) – use
 //                          --tc-radius-* or a pattern token (calc() of tokens is fine)
 //   literal blurred shadow a box-shadow layer with a blur > 0 written by hand – use --tc-shadow-* / pattern tokens
+//   literal spacing        a non-zero px length in padding / margin / gap – use --tc-space-* (1 px, fractions,
+//                          negatives and values 2 px or more off the scale may stay; they're counted here)
 //   dark-scoped colour rule a rule under .dark / [data-theme="dark"] / [data-tc-theme="dark"] that sets a colour – use light-dark() in the light rule (it also works with OS / system dark)
 
 /** Replace every var(--tc-…[, fallback]) with VAR, balancing parentheses */
@@ -39,6 +41,8 @@ function values(source, props) {
 const camel = (p) => p.replace(/-([a-z])/g, (_, c) => c.toUpperCase());
 const both = (props) => [...props, ...props.map(camel)];
 
+const SIDES = ["", "-top", "-right", "-bottom", "-left", "-inline", "-inline-start", "-inline-end", "-block", "-block-start", "-block-end"];
+const SPACING = [...SIDES.map((x) => `padding${x}`), ...SIDES.map((x) => `margin${x}`), "gap", "row-gap", "column-gap"];
 const MOTION = both(["transition", "transition-duration", "transition-delay", "transition-timing-function", "animation", "animation-duration", "animation-delay", "animation-timing-function"]);
 
 function splitTop(value) {
@@ -82,6 +86,8 @@ export const TOKEN_RULES = {
       }
       return n;
     }, 0),
+  "literal spacing": (s) =>
+    values(blankTokens(s), both(SPACING)).reduce((n, v) => n + [...v.matchAll(/(?<![\w.#])-?(\d*\.?\d+)px\b/g)].filter((m) => +m[1] !== 0).length, 0),
   "dark-scoped colour rule": (s) =>
     [...s.matchAll(/([^{}]*)\{([^{}]*)\}/g)].filter(
       ([, selector, body]) => /\.dark\b|\[data-(?:tc-)?theme=["']?dark/.test(selector) && COLOUR.test(body.replace(/color-scheme\s*:[^;]*;?/g, "")),

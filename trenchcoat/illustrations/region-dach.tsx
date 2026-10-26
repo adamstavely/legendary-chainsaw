@@ -676,7 +676,7 @@ const css = /* css */ `
   top: 0;
   left: 0;
   z-index: 1;
-  padding: 12px;
+  padding: var(--tc-space-3, 12px);
   transform: scale(var(--tc-region-dach-s, 1));
   transform-origin: 0 0;
   font-family: inherit;
@@ -685,7 +685,7 @@ const css = /* css */ `
 .ui-rd-trigger {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--tc-space-1, 4px);
   height: var(--tc-control-h-sm, 28px);
   margin: 0;
   padding: 0 8px 0 var(--tc-control-px-md, 12px);
@@ -789,7 +789,7 @@ const css = /* css */ `
   position: relative;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--tc-space-2, 8px);
   padding: 7px 8px 7px var(--tc-menu-item-px, 10px);
   border-radius: var(--tc-menu-item-radius, 8px);
   color: var(--tc-text-primary, light-dark(#171717, #ededed));

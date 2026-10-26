@@ -114,7 +114,7 @@ function usePillLayout({ root, scroller, track, pill, variant, fullWidth, size, 
     const els = optionEls(track.current);
     if (!els.length || !track.current) return;
     const cs = getComputedStyle(els[0]);
-    const pad = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight);
+    const pad = (parseFloat(cs.paddingLeft) || 0) + (parseFloat(cs.paddingRight) || 0);
     const widths = els.map((b) => (b.firstElementChild as HTMLElement).offsetWidth + pad);
     if (fullWidth) {
       track.current.style.setProperty("--tc-segmented-control-min", `${Math.max(...widths)}px`);
@@ -511,6 +511,8 @@ const css = /* css */ `
   --_tc-seg-thumb-shadow: 0 1px 2px light-dark(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.4));
   --_tc-seg-track-bg: light-dark(rgba(0, 0, 0, 0.05), rgba(255, 255, 255, 0.07));
   --_tc-seg-track-radius: 10px;
+  --_tc-space-1: 4px;
+  --_tc-space-1-5: 6px;
   --_tc-surface-raised: light-dark(#ffffff, #19191b);
   --_tc-text-muted: light-dark(#646464, #9a9aa1);
   --_tc-text-primary: light-dark(#171717, #ededed);
@@ -565,6 +567,8 @@ const css = /* css */ `
   --_tc-seg-thumb-shadow: 0 0 0 0.5px light-dark(rgba(0, 0, 0, 0.06), rgba(255, 255, 255, 0.08)), 0 1px 1px -1px light-dark(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.4)), 0 1px 2px 0 light-dark(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.4));
   --_tc-seg-track-bg: light-dark(rgba(0, 0, 0, 0.06), rgba(255, 255, 255, 0.08));
   --_tc-seg-track-radius: 8px;
+  --_tc-space-1: 4px;
+  --_tc-space-1-5: 6px;
   --_tc-surface-raised: light-dark(#ffffff, #1c1c1e);
   --_tc-text-muted: light-dark(rgba(0, 0, 0, 0.56), rgba(255, 255, 255, 0.52));
   --_tc-text-primary: light-dark(rgba(0, 0, 0, 0.88), rgba(255, 255, 255, 0.9));
@@ -724,9 +728,9 @@ const css = /* css */ `
 @media (hover: hover) {
 :where([data-look="clean"], [data-look="clean"] *).ui-seg__opt:not([data-active]):not(:disabled):hover { background-color: var(--tc-fill-subtle, var(--_tc-fill-subtle)); }
 }
-.ui-seg__content { display: inline-flex; flex: none; align-items: center; gap: 6px; }
+.ui-seg__content { display: inline-flex; flex: none; align-items: center; gap: var(--tc-space-1-5, var(--_tc-space-1-5)); }
 :where([data-look="standard"], [data-look="standard"] *).ui-seg__icon { display: grid; place-items: center; width: var(--tc-segmented-control-icon); height: var(--tc-segmented-control-icon); }
-:where([data-look="clean"], [data-look="clean"] *).ui-seg[data-size="sm"] .ui-seg__content { gap: 5px; }
+:where([data-look="clean"], [data-look="clean"] *).ui-seg[data-size="sm"] .ui-seg__content { gap: var(--tc-space-1, var(--_tc-space-1)); }
 :where([data-look="clean"], [data-look="clean"] *).ui-seg__icon { display: grid; place-items: center; width: var(--tc-segmented-control-icon); height: var(--tc-segmented-control-icon); color: var(--tc-icon-muted, var(--_tc-icon-muted)); transition: color var(--tc-duration-instant, var(--_tc-duration-instant)) var(--tc-ease-standard, var(--_tc-ease-standard)); }
 :where([data-look="clean"], [data-look="clean"] *).ui-seg__opt[data-active] .ui-seg__icon { color: var(--tc-text-primary, var(--_tc-text-primary)); }
 .ui-seg__icon svg { width: 100%; height: 100%; }
@@ -741,7 +745,7 @@ const css = /* css */ `
   place-items: center;
   min-width: 18px;
   height: 18px;
-  padding: 0 5px;
+  padding: 0 var(--tc-space-1, var(--_tc-space-1));
   border-radius: var(--tc-pill-radius, var(--_tc-pill-radius));
   background: var(--tc-fill-default, var(--_tc-fill-default));
   font-size: var(--tc-pill-font-size, var(--_tc-pill-font-size));
@@ -750,12 +754,12 @@ const css = /* css */ `
   color: var(--tc-text-secondary, var(--_tc-text-secondary));
   animation: ui-seg-in var(--tc-duration-moderate, var(--_tc-duration-moderate)) var(--tc-ease-move, var(--_tc-ease-move)) both;
 }
-:where([data-look="standard"], [data-look="standard"] *).ui-seg[data-size="sm"] .ui-seg__count { min-width: 16px; height: 16px; padding: 0 4px; font-size: var(--tc-font-size-2xs, var(--_tc-font-size-2xs)); }
+:where([data-look="standard"], [data-look="standard"] *).ui-seg[data-size="sm"] .ui-seg__count { min-width: 16px; height: 16px; padding: 0 var(--tc-space-1, var(--_tc-space-1)); font-size: var(--tc-font-size-2xs, var(--_tc-font-size-2xs)); }
 :where([data-look="standard"], [data-look="standard"] *).ui-seg__badge {
   display: inline-flex;
   align-items: center;
   height: 18px;
-  padding: 0 6px;
+  padding: 0 var(--tc-space-1-5, var(--_tc-space-1-5));
   border-radius: var(--tc-pill-radius, var(--_tc-pill-radius));
   background: var(--tc-accent-subtle, var(--_tc-accent-subtle));
   font-size: var(--tc-pill-font-size, var(--_tc-pill-font-size));
@@ -785,7 +789,7 @@ const css = /* css */ `
   place-items: center;
   min-width: 16px;
   height: 16px;
-  padding: 0 4px;
+  padding: 0 var(--tc-space-1, var(--_tc-space-1));
   border-radius: var(--tc-pill-radius, var(--_tc-pill-radius));
   background: var(--tc-fill-default, var(--_tc-fill-default));
   font-size: var(--tc-pill-font-size, var(--_tc-pill-font-size));
@@ -796,12 +800,12 @@ const css = /* css */ `
   animation: ui-seg-in-clean var(--tc-duration-base, var(--_tc-duration-base)) var(--tc-ease-move, var(--_tc-ease-move)) both;
 }
 :where([data-look="clean"], [data-look="clean"] *).ui-seg__opt[data-active] .ui-seg__count { background: var(--tc-surface-raised, var(--_tc-surface-raised)); box-shadow: 0 0 0 0.5px var(--tc-border-default, var(--_tc-border-default)); color: var(--tc-text-primary, var(--_tc-text-primary)); }
-:where([data-look="clean"], [data-look="clean"] *).ui-seg[data-size="sm"] .ui-seg__count { min-width: 14px; height: 14px; padding: 0 3px; font-size: var(--tc-font-size-2xs, var(--_tc-font-size-2xs)); line-height: 14px; }
+:where([data-look="clean"], [data-look="clean"] *).ui-seg[data-size="sm"] .ui-seg__count { min-width: 14px; height: 14px; padding: 0 var(--tc-space-1, var(--_tc-space-1)); font-size: var(--tc-font-size-2xs, var(--_tc-font-size-2xs)); line-height: 14px; }
 :where([data-look="clean"], [data-look="clean"] *).ui-seg__badge {
   display: inline-flex;
   align-items: center;
   height: 18px;
-  padding: 0 6px;
+  padding: 0 var(--tc-space-1-5, var(--_tc-space-1-5));
   border-radius: var(--tc-pill-radius, var(--_tc-pill-radius));
   background: var(--tc-accent-subtle, var(--_tc-accent-subtle));
   font-size: var(--tc-font-size-xs, var(--_tc-font-size-xs));
@@ -809,7 +813,7 @@ const css = /* css */ `
   font-weight: var(--tc-font-weight-medium, var(--_tc-font-weight-medium));
   color: var(--tc-accent-text, var(--_tc-accent-text));
 }
-:where([data-look="clean"], [data-look="clean"] *).ui-seg[data-size="sm"] .ui-seg__badge { height: 16px; padding: 0 5px; font-size: var(--tc-font-size-2xs, var(--_tc-font-size-2xs)); }
+:where([data-look="clean"], [data-look="clean"] *).ui-seg[data-size="sm"] .ui-seg__badge { height: 16px; padding: 0 var(--tc-space-1, var(--_tc-space-1)); font-size: var(--tc-font-size-2xs, var(--_tc-font-size-2xs)); }
 /* The indicator: left and right edges slide separately – the one facing the target leads a touch. Short and crisp */
 :where([data-look="clean"], [data-look="clean"] *).ui-seg__pill {
   position: absolute;

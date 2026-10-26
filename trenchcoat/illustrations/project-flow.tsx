@@ -312,7 +312,7 @@ const css = /* css */ `
 .ui-pf .pf-tech-row {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--tc-space-2, 8px);
   }
 .ui-pf .pf-tile img { position: absolute; }
 .ui-pf .pf-tile.pf-slack { background: #4B144B; }
@@ -469,7 +469,7 @@ const css = /* css */ `
 .ui-pf[data-scene="light"] .pf-icon-row {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: var(--tc-space-4, 16px);
   }
 .ui-pf[data-scene="light"] .pf-icon {
     position: relative;
@@ -502,7 +502,7 @@ const css = /* css */ `
     pointer-events: none;
   }
 .ui-pf[data-scene="light"] .pf-ring.pf-grad {
-    padding: 6px;
+    padding: var(--tc-space-1-5, 6px);
     opacity: 0.1;
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask-composite: xor;
@@ -524,7 +524,7 @@ const css = /* css */ `
 .ui-pf[data-scene="dark"] .pf-icon-row {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--tc-space-2, 8px);
   }
 .ui-pf[data-scene="dark"] .pf-icon {
     position: relative;
@@ -670,7 +670,7 @@ const scenes = {
     <div class="pf-card pf-shadow-sq9" style="left:0; top:0; width:702px; height:340px;"></div>
     <p class="pf-abs pf-t-title" style="left:43.66px; top:50px;">Subtasks: List Below</p>
     <p class="pf-abs pf-t-sub" style="left:44px; top:103.87px;">Assigned to&nbsp;</p>
-    <div class="pf-abs" style="left:194.71px; top:92.1px; display:flex; align-items:center; gap:6px;">
+    <div class="pf-abs" style="left:194.71px; top:92.1px; display:flex; align-items:center; gap:var(--tc-space-1-5, 6px);">
       <div class="pf-avatar pf-bg-yellow"><img src="__A_male_memoji_2__" alt=""></div>
       <div class="pf-avatar pf-bg-purple"><img src="__A_male_memoji_1__" alt=""></div>
       <div class="pf-avatar pf-bg-pink"><img src="__A_male_memoji_3__" alt=""></div>
@@ -733,7 +733,7 @@ const scenes = {
   <div class="pf-card pf-shadow-sm-card" style="left:807px; top:152px; width:652px; height:138px;"></div>
   <div class="pf-vline" style="left:1158px; top:191px;"></div>
   <p class="pf-abs pf-t-sub" style="left:1181px; top:208px;">Onboarded: 25 Jun</p>
-  <div class="pf-abs" style="left:850.66px; top:189px; display:flex; align-items:center; gap:10px;">
+  <div class="pf-abs" style="left:850.66px; top:189px; display:flex; align-items:center; gap:var(--tc-space-2-5, 10px);">
     <p class="pf-t-title">Client:</p>
     <div class="pf-client-icon">
       <div class="pf-backdrop"></div>
@@ -930,7 +930,7 @@ const scenes = {
     <div class="pf-card pf-shadow-sq9" style="left:0; top:0; width:702px; height:340px;"></div>
     <p class="pf-abs pf-t-title" style="left:43.66px; top:50px;">Subtasks: List Below</p>
     <p class="pf-abs pf-t-sub" style="left:44px; top:103.87px;">Assigned to&nbsp;</p>
-    <div class="pf-abs" style="left:194.71px; top:92.1px; display:flex; align-items:center; gap:6px;">
+    <div class="pf-abs" style="left:194.71px; top:92.1px; display:flex; align-items:center; gap:var(--tc-space-1-5, 6px);">
       <div class="pf-avatar pf-bg-yellow"><img src="__A_male_memoji_2__" alt=""></div>
       <div class="pf-avatar pf-bg-purple"><img src="__A_male_memoji_1__" alt=""></div>
       <div class="pf-avatar pf-bg-pink"><img src="__A_male_memoji_3__" alt=""></div>
@@ -993,7 +993,7 @@ const scenes = {
   <div class="pf-card pf-shadow-sm-card" style="left:807px; top:152px; width:652px; height:138px;"></div>
   <div class="pf-vline" style="left:1158px; top:191px;"></div>
   <p class="pf-abs pf-t-sub" style="left:1181px; top:208px;">Onboarded: 25 Jun</p>
-  <div class="pf-abs" style="left:850.66px; top:189px; display:flex; align-items:center; gap:10px;">
+  <div class="pf-abs" style="left:850.66px; top:189px; display:flex; align-items:center; gap:var(--tc-space-2-5, 10px);">
     <p class="pf-t-title">Client:</p>
     <div class="pf-client-icon">
       <div class="pf-backdrop"></div>

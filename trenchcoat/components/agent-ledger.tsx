@@ -488,6 +488,13 @@ const css = /* css */ `
   --_tc-radius-md: 8px;
   --_tc-radius-sm: 6px;
   --_tc-shadow-raised: 0 0 0 1px light-dark(#ececec, #2a2a2e), 0 1px 2px light-dark(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.4));
+  --_tc-space-1: 4px;
+  --_tc-space-1-5: 6px;
+  --_tc-space-2: 8px;
+  --_tc-space-2-5: 10px;
+  --_tc-space-3: 12px;
+  --_tc-space-3-5: 14px;
+  --_tc-space-4: 16px;
   --_tc-status-danger-fg: light-dark(#c2331f, #ff977d);
   --_tc-status-warning-bg: light-dark(#fff3e0, #3a2410);
   --_tc-status-warning-fg: light-dark(#a35200, #ffa057);
@@ -555,6 +562,13 @@ const css = /* css */ `
   --_tc-radius-md: 8px;
   --_tc-radius-sm: 6px;
   --_tc-shadow-raised: 0 0 0 0.5px light-dark(rgba(0, 0, 0, 0.06), rgba(255, 255, 255, 0.08)), 0 1px 1px -1px light-dark(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.4)), 0 1px 2px 0 light-dark(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.4));
+  --_tc-space-1: 4px;
+  --_tc-space-1-5: 6px;
+  --_tc-space-2: 8px;
+  --_tc-space-2-5: 10px;
+  --_tc-space-3: 12px;
+  --_tc-space-3-5: 14px;
+  --_tc-space-4: 16px;
   --_tc-status-danger-fg: light-dark(#c2331f, #ff977d);
   --_tc-status-warning-bg: light-dark(rgba(255, 156, 0, 0.16), rgba(251, 106, 0, 0.15));
   --_tc-status-warning-fg: light-dark(#a35200, #ffa057);
@@ -632,29 +646,29 @@ const css = /* css */ `
 .ui-alg__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .ui-alg svg { display: block; flex: none; }
 /* ----- On the tray: whose changes, how many ----- */
-:where([data-look="standard"], [data-look="standard"] *).ui-alg__bar { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; min-width: 0; padding: 8px 12px 12px; }
+:where([data-look="standard"], [data-look="standard"] *).ui-alg__bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-1, var(--_tc-space-1)) var(--tc-space-2, var(--_tc-space-2)); min-width: 0; padding: var(--tc-space-2, var(--_tc-space-2)) var(--tc-space-3, var(--_tc-space-3)) var(--tc-space-3, var(--_tc-space-3)); }
 /* ----- The bar: whose changes, how many ----- */
-:where([data-look="clean"], [data-look="clean"] *).ui-alg__bar { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; min-width: 0; margin-bottom: 16px; }
+:where([data-look="clean"], [data-look="clean"] *).ui-alg__bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-1, var(--_tc-space-1)) var(--tc-space-2, var(--_tc-space-2)); min-width: 0; margin-bottom: var(--tc-space-4, var(--_tc-space-4)); }
 .ui-alg__mark { display: grid; flex: none; place-items: center; width: 16px; color: var(--tc-accent-text, var(--_tc-accent-text)); }
 :where([data-look="standard"], [data-look="standard"] *).ui-alg__title { flex: none; font-weight: var(--tc-font-weight-semibold, var(--_tc-font-weight-semibold)); color: var(--tc-text-strong, var(--_tc-text-strong)); }
 :where([data-look="standard"], [data-look="standard"] *).ui-alg__agent { min-width: 0; overflow: hidden; font-size: var(--tc-font-size-md, var(--_tc-font-size-md)); color: var(--tc-text-muted, var(--_tc-text-muted)); white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="standard"], [data-look="standard"] *).ui-alg__sum { display: flex; align-items: center; gap: 14px; margin-left: auto; font-size: var(--tc-font-size-md, var(--_tc-font-size-md)); line-height: var(--tc-line-height-snug, var(--_tc-line-height-snug)); color: var(--tc-text-muted, var(--_tc-text-muted)); font-variant-numeric: tabular-nums; white-space: nowrap; }
+:where([data-look="standard"], [data-look="standard"] *).ui-alg__sum { display: flex; align-items: center; gap: var(--tc-space-3-5, var(--_tc-space-3-5)); margin-left: auto; font-size: var(--tc-font-size-md, var(--_tc-font-size-md)); line-height: var(--tc-line-height-snug, var(--_tc-line-height-snug)); color: var(--tc-text-muted, var(--_tc-text-muted)); font-variant-numeric: tabular-nums; white-space: nowrap; }
 :where([data-look="standard"], [data-look="standard"] *).ui-alg__sum b { font-weight: var(--tc-font-weight-semibold, var(--_tc-font-weight-semibold)); color: var(--tc-text-primary, var(--_tc-text-primary)); }
 :where([data-look="clean"], [data-look="clean"] *).ui-alg__title { flex: none; font-weight: var(--tc-font-weight-medium, var(--_tc-font-weight-medium)); color: var(--tc-text-strong, var(--_tc-text-strong)); }
 :where([data-look="clean"], [data-look="clean"] *).ui-alg__agent { min-width: 0; overflow: hidden; color: var(--tc-text-muted, var(--_tc-text-muted)); white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="clean"], [data-look="clean"] *).ui-alg__sum { display: flex; align-items: center; gap: 14px; margin-left: auto; font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); line-height: var(--tc-line-height-tight, var(--_tc-line-height-tight)); color: var(--tc-text-muted, var(--_tc-text-muted)); font-variant-numeric: tabular-nums; white-space: nowrap; }
+:where([data-look="clean"], [data-look="clean"] *).ui-alg__sum { display: flex; align-items: center; gap: var(--tc-space-3-5, var(--_tc-space-3-5)); margin-left: auto; font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); line-height: var(--tc-line-height-tight, var(--_tc-line-height-tight)); color: var(--tc-text-muted, var(--_tc-text-muted)); font-variant-numeric: tabular-nums; white-space: nowrap; }
 :where([data-look="clean"], [data-look="clean"] *).ui-alg__sum b { font-weight: var(--tc-font-weight-medium, var(--_tc-font-weight-medium)); color: var(--tc-text-primary, var(--_tc-text-primary)); }
 .ui-alg__sum-undone { animation: ui-alg-fade var(--tc-duration-moderate, var(--_tc-duration-moderate)) var(--tc-ease-standard, var(--_tc-ease-standard)) both; }
 .ui-alg__error { color: var(--tc-status-danger-fg, var(--_tc-status-danger-fg)); animation: ui-alg-fade var(--tc-duration-moderate, var(--_tc-duration-moderate)) var(--tc-ease-standard, var(--_tc-ease-standard)) both; }
 .ui-alg__row[data-pending] .ui-alg__act { cursor: progress; opacity: 0.6; }
 /* ----- The white card: one row per change, newest first ----- */
-:where([data-look="standard"], [data-look="standard"] *).ui-alg__panel { display: grid; margin: 0; padding: 6px; overflow: hidden; border-radius: var(--tc-card-radius, var(--_tc-card-radius)); background: var(--tc-agent-ledger-panel-bg); box-shadow: var(--tc-card-shadow, var(--_tc-card-shadow)); list-style: none; }
-:where([data-look="standard"], [data-look="standard"] *).ui-alg__row { position: relative; display: grid; grid-template-columns: 32px minmax(0, 1fr) auto; align-items: center; column-gap: 12px; min-height: var(--tc-agent-ledger-row); padding: 10px 12px 10px 10px; border-radius: var(--tc-radius-lg, var(--_tc-radius-lg)); transition: background-color var(--tc-duration-base, var(--_tc-duration-base)) var(--tc-ease-standard, var(--_tc-ease-standard)); animation: ui-alg-grow var(--tc-duration-slowest, var(--_tc-duration-slowest)) var(--tc-ease-move, var(--_tc-ease-move)) backwards; }
+:where([data-look="standard"], [data-look="standard"] *).ui-alg__panel { display: grid; margin: 0; padding: var(--tc-space-1-5, var(--_tc-space-1-5)); overflow: hidden; border-radius: var(--tc-card-radius, var(--_tc-card-radius)); background: var(--tc-agent-ledger-panel-bg); box-shadow: var(--tc-card-shadow, var(--_tc-card-shadow)); list-style: none; }
+:where([data-look="standard"], [data-look="standard"] *).ui-alg__row { position: relative; display: grid; grid-template-columns: 32px minmax(0, 1fr) auto; align-items: center; column-gap: var(--tc-space-3, var(--_tc-space-3)); min-height: var(--tc-agent-ledger-row); padding: var(--tc-space-2-5, var(--_tc-space-2-5)) var(--tc-space-3, var(--_tc-space-3)) var(--tc-space-2-5, var(--_tc-space-2-5)) var(--tc-space-2-5, var(--_tc-space-2-5)); border-radius: var(--tc-radius-lg, var(--_tc-radius-lg)); transition: background-color var(--tc-duration-base, var(--_tc-duration-base)) var(--tc-ease-standard, var(--_tc-ease-standard)); animation: ui-alg-grow var(--tc-duration-slowest, var(--_tc-duration-slowest)) var(--tc-ease-move, var(--_tc-ease-move)) backwards; }
 /* A new change opens its row – the card grows smoothly instead of jumping – and then fades in */
 :where([data-look="standard"], [data-look="standard"] *).ui-alg__row > * { animation: ui-alg-in var(--tc-duration-slower, var(--_tc-duration-slower)) var(--tc-ease-move, var(--_tc-ease-move)) var(--tc-duration-fast, var(--_tc-duration-fast)) backwards; }
 /* ----- The white panel: one row per change, newest first ----- */
-:where([data-look="clean"], [data-look="clean"] *).ui-alg__panel { display: grid; margin: 0; padding: 4px; overflow: hidden; border-radius: var(--tc-card-radius, var(--_tc-card-radius)); background: var(--tc-surface-raised, var(--_tc-surface-raised)); box-shadow: var(--tc-card-shadow, var(--_tc-card-shadow)); list-style: none; }
-:where([data-look="clean"], [data-look="clean"] *).ui-alg__row { position: relative; display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; align-items: center; column-gap: 12px; min-height: var(--tc-agent-ledger-row); padding: 9px 12px 9px 10px; border-radius: var(--tc-radius-sm, var(--_tc-radius-sm)); transition: background-color var(--tc-duration-base, var(--_tc-duration-base)) var(--tc-ease-standard, var(--_tc-ease-standard)); animation: ui-alg-grow var(--tc-duration-slowest, var(--_tc-duration-slowest)) var(--tc-ease-move, var(--_tc-ease-move)) backwards; }
+:where([data-look="clean"], [data-look="clean"] *).ui-alg__panel { display: grid; margin: 0; padding: var(--tc-space-1, var(--_tc-space-1)); overflow: hidden; border-radius: var(--tc-card-radius, var(--_tc-card-radius)); background: var(--tc-surface-raised, var(--_tc-surface-raised)); box-shadow: var(--tc-card-shadow, var(--_tc-card-shadow)); list-style: none; }
+:where([data-look="clean"], [data-look="clean"] *).ui-alg__row { position: relative; display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; align-items: center; column-gap: var(--tc-space-3, var(--_tc-space-3)); min-height: var(--tc-agent-ledger-row); padding: var(--tc-space-2, var(--_tc-space-2)) var(--tc-space-3, var(--_tc-space-3)) var(--tc-space-2, var(--_tc-space-2)) var(--tc-space-2-5, var(--_tc-space-2-5)); border-radius: var(--tc-radius-sm, var(--_tc-radius-sm)); transition: background-color var(--tc-duration-base, var(--_tc-duration-base)) var(--tc-ease-standard, var(--_tc-ease-standard)); animation: ui-alg-grow var(--tc-duration-slowest, var(--_tc-duration-slowest)) var(--tc-ease-move, var(--_tc-ease-move)) backwards; }
 /* A new change opens its row – the panel grows smoothly instead of jumping – and then fades in */
 :where([data-look="clean"], [data-look="clean"] *).ui-alg__row > * { animation: ui-alg-in var(--tc-duration-slower, var(--_tc-duration-slower)) var(--tc-ease-move, var(--_tc-ease-move)) var(--tc-duration-fast, var(--_tc-duration-fast)) backwards; }
 .ui-alg__row[data-initial], .ui-alg__row[data-initial] > * { animation: none; }
@@ -673,13 +687,13 @@ const css = /* css */ `
 :where([data-look="clean"], [data-look="clean"] *).ui-alg__icon > svg { width: 14px; height: 14px; }
 /* Two lines: what was done to what – then before → after */
 .ui-alg__main { position: relative; display: grid; min-width: 0; }
-.ui-alg__what { position: relative; display: flex; align-items: baseline; gap: 6px; justify-self: start; min-width: 0; max-width: 100%; white-space: nowrap; }
+.ui-alg__what { position: relative; display: flex; align-items: baseline; gap: var(--tc-space-1-5, var(--_tc-space-1-5)); justify-self: start; min-width: 0; max-width: 100%; white-space: nowrap; }
 :where([data-look="standard"], [data-look="standard"] *).ui-alg__action { flex: none; font-weight: var(--tc-font-weight-semibold, var(--_tc-font-weight-semibold)); color: var(--tc-text-primary, var(--_tc-text-primary)); transition: color var(--tc-duration-slow, var(--_tc-duration-slow)) var(--tc-ease-standard, var(--_tc-ease-standard)); }
 :where([data-look="standard"], [data-look="standard"] *).ui-alg__target { min-width: 0; overflow: hidden; color: var(--tc-text-muted, var(--_tc-text-muted)); text-overflow: ellipsis; transition: color var(--tc-duration-slow, var(--_tc-duration-slow)) var(--tc-ease-standard, var(--_tc-ease-standard)); }
-:where([data-look="standard"], [data-look="standard"] *).ui-alg__change { display: flex; align-items: baseline; gap: 6px; min-width: 0; overflow: hidden; font-size: var(--tc-font-size-md, var(--_tc-font-size-md)); line-height: var(--tc-line-height-snug, var(--_tc-line-height-snug)); color: var(--tc-text-muted, var(--_tc-text-muted)); white-space: nowrap; }
+:where([data-look="standard"], [data-look="standard"] *).ui-alg__change { display: flex; align-items: baseline; gap: var(--tc-space-1-5, var(--_tc-space-1-5)); min-width: 0; overflow: hidden; font-size: var(--tc-font-size-md, var(--_tc-font-size-md)); line-height: var(--tc-line-height-snug, var(--_tc-line-height-snug)); color: var(--tc-text-muted, var(--_tc-text-muted)); white-space: nowrap; }
 :where([data-look="clean"], [data-look="clean"] *).ui-alg__action { flex: none; font-weight: var(--tc-font-weight-medium, var(--_tc-font-weight-medium)); color: var(--tc-text-primary, var(--_tc-text-primary)); transition: color var(--tc-duration-slow, var(--_tc-duration-slow)) var(--tc-ease-standard, var(--_tc-ease-standard)); }
 :where([data-look="clean"], [data-look="clean"] *).ui-alg__target { min-width: 0; overflow: hidden; color: var(--tc-text-secondary, var(--_tc-text-secondary)); text-overflow: ellipsis; transition: color var(--tc-duration-slow, var(--_tc-duration-slow)) var(--tc-ease-standard, var(--_tc-ease-standard)); }
-:where([data-look="clean"], [data-look="clean"] *).ui-alg__change { display: flex; align-items: baseline; gap: 6px; min-width: 0; overflow: hidden; font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); line-height: var(--tc-line-height-tight, var(--_tc-line-height-tight)); color: var(--tc-text-muted, var(--_tc-text-muted)); white-space: nowrap; text-overflow: ellipsis; }
+:where([data-look="clean"], [data-look="clean"] *).ui-alg__change { display: flex; align-items: baseline; gap: var(--tc-space-1-5, var(--_tc-space-1-5)); min-width: 0; overflow: hidden; font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); line-height: var(--tc-line-height-tight, var(--_tc-line-height-tight)); color: var(--tc-text-muted, var(--_tc-text-muted)); white-space: nowrap; text-overflow: ellipsis; }
 .ui-alg__before { flex: none; text-decoration: line-through; text-decoration-color: var(--tc-text-disabled, var(--_tc-text-disabled)); }
 .ui-alg__arrow { flex: none; color: var(--tc-icon-muted, var(--_tc-icon-muted)); }
 .ui-alg__detail { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
@@ -703,8 +717,8 @@ const css = /* css */ `
 .ui-alg__row[data-undone] .ui-alg__time { color: var(--tc-text-muted, var(--_tc-text-muted)); }
 /* Undo / Redo: Button's secondary recipe (Standard) and its ghost recipe (Clean), small size */
 .ui-alg__act { position: relative; z-index: 1; grid-area: 1 / 1; display: inline-flex; align-items: center; min-height: var(--tc-control-h-sm, var(--_tc-control-h-sm)); border-radius: var(--tc-control-radius-sm, var(--_tc-control-radius-sm)); font-weight: var(--tc-control-font-weight, var(--_tc-control-font-weight)); white-space: nowrap; opacity: 0; }
-:where([data-look="standard"], [data-look="standard"] *).ui-alg__act { gap: 6px; margin-right: -4px; padding: 0 var(--tc-control-px-sm, var(--_tc-control-px-sm)) 0 calc(var(--tc-control-px-sm, var(--_tc-control-px-sm)) - 2px); background: var(--tc-action-secondary-bg, var(--_tc-action-secondary-bg)); box-shadow: var(--tc-action-secondary-shadow, var(--_tc-action-secondary-shadow)); font-size: var(--tc-control-font-size, var(--_tc-control-font-size)); color: var(--tc-action-secondary-fg, var(--_tc-action-secondary-fg)); transition: opacity var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-standard, var(--_tc-ease-standard)), box-shadow var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-standard, var(--_tc-ease-standard)); }
-:where([data-look="clean"], [data-look="clean"] *).ui-alg__act { gap: 5px; margin-right: -6px; padding: 0 var(--tc-control-px-sm, var(--_tc-control-px-sm)); font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); color: var(--tc-action-ghost-fg, var(--_tc-action-ghost-fg)); transition: opacity var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-standard, var(--_tc-ease-standard)), background-color var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-standard, var(--_tc-ease-standard)); }
+:where([data-look="standard"], [data-look="standard"] *).ui-alg__act { gap: var(--tc-space-1-5, var(--_tc-space-1-5)); margin-right: -4px; padding: 0 var(--tc-control-px-sm, var(--_tc-control-px-sm)) 0 calc(var(--tc-control-px-sm, var(--_tc-control-px-sm)) - 2px); background: var(--tc-action-secondary-bg, var(--_tc-action-secondary-bg)); box-shadow: var(--tc-action-secondary-shadow, var(--_tc-action-secondary-shadow)); font-size: var(--tc-control-font-size, var(--_tc-control-font-size)); color: var(--tc-action-secondary-fg, var(--_tc-action-secondary-fg)); transition: opacity var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-standard, var(--_tc-ease-standard)), box-shadow var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-standard, var(--_tc-ease-standard)); }
+:where([data-look="clean"], [data-look="clean"] *).ui-alg__act { gap: var(--tc-space-1, var(--_tc-space-1)); margin-right: -6px; padding: 0 var(--tc-control-px-sm, var(--_tc-control-px-sm)); font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); color: var(--tc-action-ghost-fg, var(--_tc-action-ghost-fg)); transition: opacity var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-standard, var(--_tc-ease-standard)), background-color var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-standard, var(--_tc-ease-standard)); }
 :where([data-look="clean"], [data-look="clean"] *).ui-alg__row:is(:hover, :focus-within) .ui-alg__time[data-hide] { opacity: 0; }
 .ui-alg__row:is(:hover, :focus-within, [data-preview]) .ui-alg__act { opacity: 1; }
 :where([data-look="standard"], [data-look="standard"] *).ui-alg__row:is(:hover, :focus-within) .ui-alg__time[data-hide],
@@ -712,13 +726,13 @@ const css = /* css */ `
 :where([data-look="standard"], [data-look="standard"] *).ui-alg__act:hover { box-shadow: var(--tc-action-secondary-shadow-hover, var(--_tc-action-secondary-shadow-hover)); }
 :where([data-look="standard"], [data-look="standard"] *).ui-alg__row[data-preview] .ui-alg__act { color: var(--tc-accent-text, var(--_tc-accent-text)); }
 /* What an undo does to this row: a status pill (header size) */
-.ui-alg__flag { grid-area: 1 / 1; display: inline-flex; align-items: center; gap: 5px; min-height: var(--tc-pill-h-lg, var(--_tc-pill-h-lg)); padding: 0 var(--tc-pill-px-lg, var(--_tc-pill-px-lg)); border-radius: var(--tc-pill-radius, var(--_tc-pill-radius)); font-size: var(--tc-pill-font-size-lg, var(--_tc-pill-font-size-lg)); font-weight: var(--tc-pill-font-weight, var(--_tc-pill-font-weight)); line-height: var(--tc-line-height-tight, var(--_tc-line-height-tight)); white-space: nowrap; animation: ui-alg-fade var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-standard, var(--_tc-ease-standard)) both; }
+.ui-alg__flag { grid-area: 1 / 1; display: inline-flex; align-items: center; gap: var(--tc-space-1, var(--_tc-space-1)); min-height: var(--tc-pill-h-lg, var(--_tc-pill-h-lg)); padding: 0 var(--tc-pill-px-lg, var(--_tc-pill-px-lg)); border-radius: var(--tc-pill-radius, var(--_tc-pill-radius)); font-size: var(--tc-pill-font-size-lg, var(--_tc-pill-font-size-lg)); font-weight: var(--tc-pill-font-weight, var(--_tc-pill-font-weight)); line-height: var(--tc-line-height-tight, var(--_tc-line-height-tight)); white-space: nowrap; animation: ui-alg-fade var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-standard, var(--_tc-ease-standard)) both; }
 .ui-alg__flag[data-kind="also"] { background: var(--tc-agent-ledger-also-chip-bg); color: var(--tc-accent-text, var(--_tc-accent-text)); }
 .ui-alg__flag[data-kind="kept"] { background: var(--tc-status-warning-bg, var(--_tc-status-warning-bg)); color: var(--tc-status-warning-fg, var(--_tc-status-warning-fg)); }
 /* ----- Narrow: smaller gaps, the time stands alone ----- */
 @container ui-alg (max-width: 480px) {
 :where([data-look="standard"], [data-look="standard"] *).ui-alg__sum { flex-basis: 100%; justify-content: space-between; margin-left: 0; }
-:where([data-look="standard"], [data-look="standard"] *).ui-alg__row { column-gap: 10px; padding: 10px 8px 10px 8px; }
+:where([data-look="standard"], [data-look="standard"] *).ui-alg__row { column-gap: var(--tc-space-2-5, var(--_tc-space-2-5)); padding: var(--tc-space-2-5, var(--_tc-space-2-5)) var(--tc-space-2, var(--_tc-space-2)) var(--tc-space-2-5, var(--_tc-space-2-5)) var(--tc-space-2, var(--_tc-space-2)); }
 :where([data-look="standard"], [data-look="standard"] *).ui-alg__row + .ui-alg__row::before { left: 50px; right: 8px; }
 :where([data-look="standard"], [data-look="standard"] *).ui-alg__end { min-width: 76px; }
   /* The logo already says where – the time stands alone */
@@ -733,7 +747,7 @@ const css = /* css */ `
 /* ----- Narrow: smaller gaps, the system's name drops from the time ----- */
 @container ui-alg (max-width: 480px) {
 :where([data-look="clean"], [data-look="clean"] *).ui-alg__sum { flex-basis: 100%; justify-content: space-between; margin-left: 0; }
-:where([data-look="clean"], [data-look="clean"] *).ui-alg__row { column-gap: 10px; padding: 9px 8px 9px 8px; }
+:where([data-look="clean"], [data-look="clean"] *).ui-alg__row { column-gap: var(--tc-space-2-5, var(--_tc-space-2-5)); padding: var(--tc-space-2, var(--_tc-space-2)) var(--tc-space-2, var(--_tc-space-2)) var(--tc-space-2, var(--_tc-space-2)) var(--tc-space-2, var(--_tc-space-2)); }
 :where([data-look="clean"], [data-look="clean"] *).ui-alg__row + .ui-alg__row::before { left: 46px; right: 8px; }
 :where([data-look="clean"], [data-look="clean"] *).ui-alg__end { min-width: 64px; }
   /* The logo already says where – the time stands alone */

@@ -962,9 +962,9 @@ const css = /* css */ `
 :where([data-look="standard"], [data-look="standard"] *).ui-df__label {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--tc-space-1-5);
   min-width: 0;
-  padding: 6px 8px 4px;
+  padding: var(--tc-space-1-5) var(--tc-space-2) var(--tc-space-1);
   color: var(--tc-text-muted);
   font-size: var(--tc-font-size-sm);
   line-height: var(--tc-line-height-tight);
@@ -995,9 +995,9 @@ const css = /* css */ `
 :where([data-look="clean"], [data-look="clean"] *).ui-df__label {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--tc-space-1-5);
   min-width: 0;
-  margin: 0 0 8px;
+  margin: 0 0 var(--tc-space-2);
   color: var(--tc-text-secondary);
   font-size: var(--tc-font-size-sm);
   line-height: var(--tc-line-height-tight);
@@ -1005,12 +1005,12 @@ const css = /* css */ `
 .ui-df__label span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 :where([data-look="standard"], [data-look="standard"] *).ui-df__label svg { flex: none; width: 13px; height: 13px; fill: currentColor; }
 :where([data-look="standard"], [data-look="standard"] *).ui-df__head {
-  padding: 10px 10px 10px 16px;
+  padding: var(--tc-space-2-5) var(--tc-space-2-5) var(--tc-space-2-5) var(--tc-space-4);
   border-bottom: 1px solid var(--tc-border-default);
 }
 :where([data-look="clean"], [data-look="clean"] *).ui-df__label svg { width: 16px; height: 16px; fill: var(--tc-accent); }
 /* The prose */
-:where([data-look="clean"], [data-look="clean"] *).ui-df__body { padding: 16px 16px 18px; }
+:where([data-look="clean"], [data-look="clean"] *).ui-df__body { padding: var(--tc-space-4) var(--tc-space-4) var(--tc-space-4-5); }
 :where([data-look="clean"], [data-look="clean"] *).ui-df__text {
   margin: 0;
   color: var(--tc-text-primary);
@@ -1023,7 +1023,7 @@ const css = /* css */ `
 :where([data-look="clean"], [data-look="clean"] *).ui-df__chg:not([data-state="pending"]) { cursor: auto; }
 :where([data-look="clean"], [data-look="clean"] *).ui-df__del,
 :where([data-look="clean"], [data-look="clean"] *).ui-df__ins {
-  padding: 1px 2px;
+  padding: 1px var(--tc-space-0-5);
   border-radius: var(--tc-radius-xs);
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
@@ -1050,7 +1050,7 @@ const css = /* css */ `
   background: var(--tc-status-success-bg);
   color: var(--tc-text-primary);
 }
-:where([data-look="clean"], [data-look="clean"] *).ui-df__del + .ui-df__ins { margin-left: 3px; }
+:where([data-look="clean"], [data-look="clean"] *).ui-df__del + .ui-df__ins { margin-left: var(--tc-space-1); }
 :where([data-look="clean"], [data-look="clean"] *).ui-df__chg[data-active] .ui-df__del { background: var(--tc-inline-diff-del-bg-active); }
 :where([data-look="clean"], [data-look="clean"] *).ui-df__chg[data-active] .ui-df__ins { background: var(--tc-inline-diff-ins-bg-active); }
 /* Accepted: the old words shrink away, the new ones settle into the text */
@@ -1074,7 +1074,7 @@ const css = /* css */ `
   display: grid;
   align-items: center;
   min-height: 44px;
-  padding: 8px 8px 8px 16px;
+  padding: var(--tc-space-2) var(--tc-space-2) var(--tc-space-2) var(--tc-space-4);
   border-top: 0.5px solid var(--tc-border-default);
 }
 /* The two toolbars share one cell and cross-fade */
@@ -1085,7 +1085,7 @@ const css = /* css */ `
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: var(--tc-space-2);
   min-width: 0;
   opacity: 0;
   visibility: hidden;
@@ -1107,7 +1107,7 @@ const css = /* css */ `
 :where([data-look="standard"], [data-look="standard"] *).ui-df__count {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  gap: var(--tc-space-2);
   color: var(--tc-text-primary);
   font-size: var(--tc-font-size-md);
   font-weight: var(--tc-font-weight-medium);
@@ -1121,7 +1121,7 @@ const css = /* css */ `
   place-items: center;
   min-width: 20px;
   height: 20px;
-  padding: 0 6px;
+  padding: 0 var(--tc-space-1-5);
   border-radius: var(--tc-radius-badge);
   font-size: var(--tc-pill-font-size);
   font-weight: var(--tc-font-weight-strong);
@@ -1142,13 +1142,13 @@ const css = /* css */ `
 :where([data-look="clean"], [data-look="clean"] *).ui-df__count {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--tc-space-2);
   color: var(--tc-text-secondary);
   font-size: var(--tc-font-size-md);
   line-height: var(--tc-line-height-normal);
   white-space: nowrap;
 }
-:where([data-look="clean"], [data-look="clean"] *).ui-df__count--done { gap: 6px; color: var(--tc-text-primary); font-weight: var(--tc-font-weight-medium); }
+:where([data-look="clean"], [data-look="clean"] *).ui-df__count--done { gap: var(--tc-space-1-5); color: var(--tc-text-primary); font-weight: var(--tc-font-weight-medium); }
 :where([data-look="clean"], [data-look="clean"] *).ui-df__num { background: var(--tc-fill-default); color: var(--tc-text-primary); font-size: var(--tc-font-size-sm); }
 :where([data-look="clean"], [data-look="clean"] *).ui-df__ok {
   width: 16px;
@@ -1162,8 +1162,8 @@ const css = /* css */ `
   stroke-dashoffset: 1;
 }
 .ui-df[data-done] .ui-df__ok { animation: ui-df-draw var(--tc-duration-slower) var(--tc-ease-move) var(--tc-duration-base) forwards; }
-:where([data-look="standard"], [data-look="standard"] *).ui-df__actions { display: inline-flex; align-items: center; gap: 6px; margin-left: auto; }
-:where([data-look="standard"], [data-look="standard"] *).ui-df__nav { display: inline-flex; gap: 2px; margin-right: 2px; }
+:where([data-look="standard"], [data-look="standard"] *).ui-df__actions { display: inline-flex; align-items: center; gap: var(--tc-space-1-5); margin-left: auto; }
+:where([data-look="standard"], [data-look="standard"] *).ui-df__nav { display: inline-flex; gap: var(--tc-space-0-5); margin-right: var(--tc-space-0-5); }
 /* Toolbar buttons: Button's recipe – Reject all / Undo secondary, Accept all primary (flat ink), arrows ghost */
 .ui-df__btn,
 .ui-df__icon {
@@ -1171,7 +1171,7 @@ const css = /* css */ `
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: var(--tc-space-1-5);
   margin: 0;
   border: 0;
   border-radius: var(--tc-control-radius-sm);
@@ -1188,7 +1188,7 @@ const css = /* css */ `
 :where([data-look="standard"], [data-look="standard"] *).ui-df__btn, :where([data-look="standard"], [data-look="standard"] *).ui-df__icon { height: var(--tc-control-h-sm); }
 :where([data-look="clean"], [data-look="clean"] *).ui-df__btn, :where([data-look="clean"], [data-look="clean"] *).ui-df__icon { height: var(--tc-control-h-md); }
 .ui-df__btn { padding: 0 var(--tc-control-px-sm); background: var(--tc-action-secondary-bg); box-shadow: var(--tc-action-secondary-shadow); color: var(--tc-action-secondary-fg); }
-.ui-df__btn:has(svg) { padding-left: 8px; }
+.ui-df__btn:has(svg) { padding-left: var(--tc-space-2); }
 .ui-df__btn:hover:not(:disabled) { box-shadow: var(--tc-action-secondary-shadow-hover); }
 :where([data-look="standard"], [data-look="standard"] *).ui-df__icon { width: var(--tc-control-h-sm); }
 :where([data-look="clean"], [data-look="clean"] *).ui-df__icon { width: var(--tc-control-h-md); }
@@ -1204,8 +1204,8 @@ const css = /* css */ `
   stroke-linecap: round;
   stroke-linejoin: round;
 }
-:where([data-look="clean"], [data-look="clean"] *).ui-df__actions { display: inline-flex; align-items: center; gap: 8px; margin-left: auto; }
-:where([data-look="clean"], [data-look="clean"] *).ui-df__nav { display: inline-flex; gap: 2px; }
+:where([data-look="clean"], [data-look="clean"] *).ui-df__actions { display: inline-flex; align-items: center; gap: var(--tc-space-2); margin-left: auto; }
+:where([data-look="clean"], [data-look="clean"] *).ui-df__nav { display: inline-flex; gap: var(--tc-space-0-5); }
 :where([data-look="clean"], [data-look="clean"] *).ui-df__btn svg,
 :where([data-look="clean"], [data-look="clean"] *).ui-df__icon svg,
 :where([data-look="clean"], [data-look="clean"] *).ui-df__pbtn svg {
@@ -1229,7 +1229,7 @@ const css = /* css */ `
 .ui-df__btn:focus-visible,
 .ui-df__icon:focus-visible { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
 /* The prose */
-:where([data-look="standard"], [data-look="standard"] *).ui-df__body { padding: 16px 18px 18px; }
+:where([data-look="standard"], [data-look="standard"] *).ui-df__body { padding: var(--tc-space-4) var(--tc-space-4-5) var(--tc-space-4-5); }
 :where([data-look="standard"], [data-look="standard"] *).ui-df__text {
   margin: 0;
   color: var(--tc-text-secondary);
@@ -1244,7 +1244,7 @@ const css = /* css */ `
 .ui-df__chg:focus-visible { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
 :where([data-look="standard"], [data-look="standard"] *).ui-df__del,
 :where([data-look="standard"], [data-look="standard"] *).ui-df__ins {
-  padding: 1px 2px;
+  padding: 1px var(--tc-space-0-5);
   border-radius: var(--tc-radius-xs);
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
@@ -1276,7 +1276,7 @@ const css = /* css */ `
   text-decoration-thickness: 1px;
   text-underline-offset: 3px;
 }
-:where([data-look="standard"], [data-look="standard"] *).ui-df__del + .ui-df__ins { margin-left: 3px; }
+:where([data-look="standard"], [data-look="standard"] *).ui-df__del + .ui-df__ins { margin-left: var(--tc-space-1); }
 :where([data-look="standard"], [data-look="standard"] *).ui-df__chg[data-active] .ui-df__del { background: var(--tc-inline-diff-del-bg-active); }
 :where([data-look="standard"], [data-look="standard"] *).ui-df__chg[data-active] .ui-df__ins { background: var(--tc-inline-diff-ins-bg-active); }
 /* Accepted: the old words shrink away, the new ones settle into the text */
@@ -1303,8 +1303,8 @@ const css = /* css */ `
   z-index: 2;
   display: flex;
   align-items: center;
-  gap: 2px;
-  padding: 3px;
+  gap: var(--tc-space-0-5);
+  padding: var(--tc-space-1);
   border-radius: var(--tc-radius-lg);
   background: var(--tc-surface-inverse);
   color: var(--tc-text-on-inverse);
@@ -1341,8 +1341,8 @@ const css = /* css */ `
   z-index: 2;
   display: flex;
   align-items: center;
-  gap: 4px;
-  padding: 4px;
+  gap: var(--tc-space-1);
+  padding: var(--tc-space-1);
   border-radius: var(--tc-radius-lg);
   background: var(--tc-surface-overlay);
   box-shadow: var(--tc-shadow-overlay);
@@ -1376,10 +1376,10 @@ const css = /* css */ `
   appearance: none;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--tc-space-1-5);
   height: 28px;
   margin: 0;
-  padding: 0 8px 0 7px;
+  padding: 0 var(--tc-space-2) 0 var(--tc-space-2);
   border: 0;
   border-radius: var(--tc-radius-sm);
   background: transparent;
@@ -1420,9 +1420,9 @@ const css = /* css */ `
 :where([data-look="clean"], [data-look="clean"] *).ui-df__pbtn {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--tc-space-1-5);
   height: var(--tc-control-h-md);
-  padding: 0 6px 0 8px;
+  padding: 0 var(--tc-space-1-5) 0 var(--tc-space-2);
   border-radius: var(--tc-control-radius-md);
   background: var(--tc-action-secondary-bg);
   box-shadow: var(--tc-action-secondary-shadow);
@@ -1459,26 +1459,26 @@ const css = /* css */ `
 /* Narrow cards: the arrows stay as 24px icon buttons (they used to disappear – 1.4.10) */
 @container ui-df-card (max-width: 400px) {
 :where([data-look="standard"], [data-look="standard"] *).ui-df__icon { width: 24px; height: 24px; }
-:where([data-look="standard"], [data-look="standard"] *).ui-df__head { padding-left: 14px; }
-:where([data-look="standard"], [data-look="standard"] *).ui-df__body { padding: 14px 14px 16px; }
+:where([data-look="standard"], [data-look="standard"] *).ui-df__head { padding-left: var(--tc-space-3-5); }
+:where([data-look="standard"], [data-look="standard"] *).ui-df__body { padding: var(--tc-space-3-5) var(--tc-space-3-5) var(--tc-space-4); }
 }
 @container (max-width: 400px) {
-:where([data-look="standard"], [data-look="standard"] *).ui-df__label { padding-left: 6px; }
+:where([data-look="standard"], [data-look="standard"] *).ui-df__label { padding-left: var(--tc-space-1-5); }
 }
 @media (hover: none) and (pointer: coarse) {
 :where([data-look="standard"], [data-look="standard"] *).ui-df__pbtn kbd { display: none; }
-:where([data-look="standard"], [data-look="standard"] *).ui-df__pbtn { height: 34px; padding: 0 11px 0 9px; }
+:where([data-look="standard"], [data-look="standard"] *).ui-df__pbtn { height: 34px; padding: 0 var(--tc-space-3) 0 var(--tc-space-2); }
 }
 @container ui-df-card (max-width: 360px) {
 :where([data-look="clean"], [data-look="clean"] *).ui-df__icon { width: 24px; height: 24px; }
-:where([data-look="clean"], [data-look="clean"] *).ui-df__actions { gap: 6px; }
-:where([data-look="clean"], [data-look="clean"] *).ui-df__body { padding: 14px 14px 16px; }
-:where([data-look="clean"], [data-look="clean"] *).ui-df__foot { padding-left: 14px; }
+:where([data-look="clean"], [data-look="clean"] *).ui-df__actions { gap: var(--tc-space-1-5); }
+:where([data-look="clean"], [data-look="clean"] *).ui-df__body { padding: var(--tc-space-3-5) var(--tc-space-3-5) var(--tc-space-4); }
+:where([data-look="clean"], [data-look="clean"] *).ui-df__foot { padding-left: var(--tc-space-3-5); }
 }
 /* Touch screens: taller targets, no key hints */
 @media (hover: none) and (pointer: coarse) {
 :where([data-look="clean"], [data-look="clean"] *).ui-df__pbtn kbd { display: none; }
-:where([data-look="clean"], [data-look="clean"] *).ui-df__pbtn { height: 34px; padding: 0 12px 0 10px; }
+:where([data-look="clean"], [data-look="clean"] *).ui-df__pbtn { height: 34px; padding: 0 var(--tc-space-3) 0 var(--tc-space-2-5); }
 :where([data-look="clean"], [data-look="clean"] *).ui-df__btn { height: 34px; }
 :where([data-look="clean"], [data-look="clean"] *).ui-df__icon { width: 34px; height: 34px; }
 :where([data-look="clean"], [data-look="clean"] *).ui-df__foot { min-height: 52px; }

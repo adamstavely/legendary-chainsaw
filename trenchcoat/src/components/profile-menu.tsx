@@ -289,7 +289,7 @@ const css = /* css */ `
 }
 .ui-pm *, .ui-pm *::before, .ui-pm *::after { box-sizing: border-box; }
 :where([data-look="standard"], [data-look="standard"] *).ui-pm__card {
-  padding: 16px 8px 8px;
+  padding: var(--tc-space-4) var(--tc-space-2) var(--tc-space-2);
   background: var(--tc-surface-on-tray);
   border: 1px solid var(--tc-border-default);
   border-radius: var(--tc-card-radius);
@@ -298,8 +298,8 @@ const css = /* css */ `
 :where([data-look="standard"], [data-look="standard"] *).ui-pm__user {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 0 10px 12px;
+  gap: var(--tc-space-3-5);
+  padding: 0 var(--tc-space-2-5) var(--tc-space-3);
 }
 :where([data-look="standard"], [data-look="standard"] *).ui-pm__avatar {
   flex: none;
@@ -321,9 +321,9 @@ const css = /* css */ `
 :where([data-look="clean"], [data-look="clean"] *).ui-pm__user {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin: 0 -4px 4px;
-  padding: 8px 12px 10px;
+  gap: var(--tc-space-2-5);
+  margin: 0 -4px var(--tc-space-1);
+  padding: var(--tc-space-2) var(--tc-space-3) var(--tc-space-2-5);
   border-bottom: var(--tc-hairline) solid var(--tc-divider);
 }
 :where([data-look="clean"], [data-look="clean"] *).ui-pm__avatar {
@@ -357,16 +357,16 @@ const css = /* css */ `
 }
 :where([data-look="standard"], [data-look="standard"] *).ui-pm__items {
   display: grid;
-  gap: 2px;
+  gap: var(--tc-space-0-5);
 }
 :where([data-look="standard"], [data-look="standard"] *).ui-pm__item {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--tc-space-3);
   width: 100%;
   min-height: 36px;
   margin: 0;
-  padding: 0 12px;
+  padding: 0 var(--tc-space-3);
   border: 0;
   border-radius: var(--tc-radius-xl);
   background: transparent;
@@ -407,7 +407,7 @@ const css = /* css */ `
 :where([data-look="clean"], [data-look="clean"] *).ui-pm__item {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: var(--tc-space-2-5);
   width: 100%;
   min-height: var(--tc-menu-item-h);
   padding: 0 var(--tc-menu-item-px);
@@ -459,7 +459,7 @@ const css = /* css */ `
 }
 /* Profile setup in the gray extension – kept to two short lines and a bar */
 :where([data-look="standard"], [data-look="standard"] *).ui-pm__setup {
-  padding: 10px 18px 12px;
+  padding: var(--tc-space-2-5) var(--tc-space-4-5) var(--tc-space-3);
 }
 :where([data-look="standard"], [data-look="standard"] *).ui-pm__setup-head {
   display: flex;
@@ -470,16 +470,16 @@ const css = /* css */ `
 }
 /* Profile setup: the last row of the card, under a hairline */
 :where([data-look="clean"], [data-look="clean"] *).ui-pm__setup {
-  margin: 4px -4px -4px;
-  padding: 10px 12px 12px;
+  margin: var(--tc-space-1) -4px -4px;
+  padding: var(--tc-space-2-5) var(--tc-space-3) var(--tc-space-3);
   border-top: var(--tc-hairline) solid var(--tc-divider);
 }
-:where([data-look="clean"], [data-look="clean"] *).ui-pm__setup:has(.ui-pm__next) { padding-bottom: 6px; }
+:where([data-look="clean"], [data-look="clean"] *).ui-pm__setup:has(.ui-pm__next) { padding-bottom: var(--tc-space-1-5); }
 :where([data-look="clean"], [data-look="clean"] *).ui-pm__setup-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
+  gap: var(--tc-space-2);
   font-size: var(--tc-font-size-sm);
   line-height: var(--tc-line-height-tight);
 }
@@ -495,8 +495,8 @@ const css = /* css */ `
   border-radius: var(--tc-meter-radius);
   background: var(--tc-meter-track);
 }
-:where([data-look="standard"], [data-look="standard"] *).ui-pm__track { margin-top: 7px; }
-:where([data-look="clean"], [data-look="clean"] *).ui-pm__track { margin-top: 8px; }
+:where([data-look="standard"], [data-look="standard"] *).ui-pm__track { margin-top: var(--tc-space-2); }
+:where([data-look="clean"], [data-look="clean"] *).ui-pm__track { margin-top: var(--tc-space-2); }
 .ui-pm__fill {
   display: block;
   height: 100%;
@@ -510,16 +510,16 @@ const css = /* css */ `
 .ui-pm__next {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--tc-space-2);
   width: calc(100% + 16px);
-  margin: 6px -8px 0;
-  padding: 0 8px;
+  margin: var(--tc-space-1-5) -8px 0;
+  padding: 0 var(--tc-space-2);
   color: var(--tc-text-primary);
   transition: background-color var(--tc-duration-fast) var(--tc-ease-standard);
 }
 :where([data-look="standard"], [data-look="standard"] *).ui-pm__next {
   min-height: 26px;
-  padding-block: 3px;
+  padding-block: var(--tc-space-1);
   border: 0;
   border-radius: var(--tc-radius-md);
   background: transparent;

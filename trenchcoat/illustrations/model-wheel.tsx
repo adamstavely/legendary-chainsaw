@@ -344,7 +344,7 @@ const css = /* css */ `
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: var(--tc-space-2-5, 10px);
   height: ${ROW}px;
   margin-top: ${-ROW / 2}px;
   backface-visibility: hidden;
@@ -355,7 +355,7 @@ const css = /* css */ `
   will-change: transform, opacity;
 }
 .ui-mw[data-dragging] { cursor: grabbing; }
-.ui-mw-label { display: inline-flex; align-items: center; gap: 10px; }
+.ui-mw-label { display: inline-flex; align-items: center; gap: var(--tc-space-2-5, 10px); }
 .ui-mw-row svg { flex: none; width: 18px; height: 18px; color: var(--tc-text-primary, light-dark(#171717, #ededed)); }
 .ui-mw-row[data-active] { font-weight: var(--tc-font-weight-medium, 500); color: var(--tc-text-primary, light-dark(#171717, #ededed)); }
 @media (prefers-reduced-motion: reduce) {

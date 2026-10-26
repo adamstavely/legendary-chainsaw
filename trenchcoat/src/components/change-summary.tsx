@@ -150,15 +150,15 @@ const css = /* css */ `
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  padding: 11px 18px 10px;
+  gap: var(--tc-space-3);
+  padding: var(--tc-space-3) var(--tc-space-4-5) var(--tc-space-2-5);
   font-size: var(--tc-font-size-lg);
   line-height: var(--tc-line-height-normal);
 }
 :where([data-look="standard"], [data-look="standard"] *).ui-cs__title {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--tc-space-2);
   font-weight: var(--tc-font-weight-medium);
   color: var(--tc-accent-text);
 }
@@ -174,9 +174,9 @@ const css = /* css */ `
   display: grid;
   grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
   align-items: center;
-  gap: 16px;
+  gap: var(--tc-space-4);
   min-height: 52px;
-  padding: 0 20px;
+  padding: 0 var(--tc-space-5);
   animation: ui-cs-in var(--tc-duration-slowest) var(--tc-ease-move) both;
   transition: background-color var(--tc-duration-fast) var(--tc-ease-standard);
 }
@@ -193,7 +193,7 @@ const css = /* css */ `
 :where([data-look="standard"], [data-look="standard"] *).ui-cs__change {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--tc-space-2);
   min-width: 0;
   margin: 0;
   font-size: var(--tc-font-size-lg);
@@ -206,14 +206,14 @@ const css = /* css */ `
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: var(--tc-space-3);
   height: 44px;
-  padding: 0 16px;
+  padding: 0 var(--tc-space-4);
 }
 :where([data-look="clean"], [data-look="clean"] *).ui-cs__title {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--tc-space-2);
   min-width: 0;
   font-weight: var(--tc-font-weight-medium);
   white-space: nowrap;
@@ -228,9 +228,9 @@ const css = /* css */ `
   display: grid;
   grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
   align-items: center;
-  gap: 16px;
+  gap: var(--tc-space-4);
   min-height: 48px;
-  padding: 0 16px;
+  padding: 0 var(--tc-space-4);
   border-top: var(--tc-hairline) solid var(--tc-divider);
   animation: ui-cs-in var(--tc-duration-slowest) var(--tc-ease-move) both;
   transition: background-color var(--tc-duration-fast) var(--tc-ease-standard);
@@ -246,7 +246,7 @@ const css = /* css */ `
 :where([data-look="clean"], [data-look="clean"] *).ui-cs__change {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--tc-space-2);
   min-width: 0;
   margin: 0;
   color: var(--tc-text-secondary);
@@ -254,7 +254,7 @@ const css = /* css */ `
 .ui-cs__text { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 /* Narrow: each metric stacks above its change, so the text wraps instead of being cut off */
 @container (max-width: 400px) {
-:where([data-look="standard"], [data-look="standard"] *).ui-cs__row { grid-template-columns: minmax(0, 1fr); gap: 4px; padding: 11px 16px; }
+:where([data-look="standard"], [data-look="standard"] *).ui-cs__row { grid-template-columns: minmax(0, 1fr); gap: var(--tc-space-1); padding: var(--tc-space-3) var(--tc-space-4); }
 :where([data-look="standard"], [data-look="standard"] *).ui-cs__label,
 :where([data-look="standard"], [data-look="standard"] *).ui-cs__text { white-space: normal; }
 :where([data-look="standard"], [data-look="standard"] *).ui-cs__change { align-items: flex-start; }
@@ -285,8 +285,8 @@ const css = /* css */ `
 :where([data-look="clean"], [data-look="clean"] *).ui-cs__trend[data-tone="neutral"] { background: var(--tc-fill-subtle); color: var(--tc-icon-muted); }
 /* Narrow: each metric stacks above its change, so the text wraps instead of being cut off */
 @container (max-width: 400px) {
-:where([data-look="clean"], [data-look="clean"] *).ui-cs__head { padding: 0 14px; }
-:where([data-look="clean"], [data-look="clean"] *).ui-cs__row { grid-template-columns: minmax(0, 1fr); gap: 4px; padding: 10px 14px; }
+:where([data-look="clean"], [data-look="clean"] *).ui-cs__head { padding: 0 var(--tc-space-3-5); }
+:where([data-look="clean"], [data-look="clean"] *).ui-cs__row { grid-template-columns: minmax(0, 1fr); gap: var(--tc-space-1); padding: var(--tc-space-2-5) var(--tc-space-3-5); }
 :where([data-look="clean"], [data-look="clean"] *).ui-cs__label,
 :where([data-look="clean"], [data-look="clean"] *).ui-cs__text { white-space: normal; }
 :where([data-look="clean"], [data-look="clean"] *).ui-cs__change { align-items: flex-start; }
