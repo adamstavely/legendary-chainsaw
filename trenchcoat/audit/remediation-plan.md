@@ -79,10 +79,14 @@ branch from `main` after Part 1 is merged.
 
 ### Step 0 – Working copy
 
-- Work in `~/Documents/GitHub/legendary-chainsaw` (access granted 2026-10-25), on `trenchcoat-remediation-plan`,
-  pulled up to date. That clone has an untracked Vue project ("Icon Composer": `package.json`, `src/`, `tests/`,
-  `dist/`, … at the repo root) that isn't part of this work: it's left untouched, and switching branches doesn't
-  affect it because the branch only adds `trenchcoat/`.
+- Work in `~/Documents/GitHub/legendary-chainsaw` (access granted 2026-10-25). `main` there already has
+  `trenchcoat/` (pull request #2 merged the planning branch) and, beside it, `icon-composer/`.
+- **Never touch `icon-composer/`.** It's a separate project in the same repo: no edits, moves, deletes, formatting,
+  lint fixes or commits under it. Every command, search-and-replace, formatter, linter and `git add` is scoped to
+  `trenchcoat/` (no `git add -A` at the repo root); when `main` is merged into a working branch, `icon-composer/`
+  changes come along as they are.
+- Bring `trenchcoat-remediation-plan` up to date with `main` (it has two plan commits `main` doesn't), and do Part 1
+  on it.
 - Retire the separate `trenchcoat/.git` in `~/Lockin/legendary-chainsaw`: save its history as a bundle
   (`git bundle create trenchcoat-history.bundle --all`, kept outside the repo), then stop using that copy. From here
   on commits go straight to legendary-chainsaw instead of being copied over.
@@ -263,7 +267,7 @@ until the later phase moves blocks and screens off them. Folded into the port:
 | F | What moves to Lit? | **In this plan:** the 64 components, the 22 illustrations and the 8 motion pieces. frost-cloud and glow-cloud are deleted, not ported (step 1.0). **Blocks and screens** are out of this plan and get their own phase afterwards. The gallery stays React. |
 | G | Distribution | **Not published to npm.** The package is built and packed (`"private": true`); how apps receive it is decided after the plan is done. |
 | H | License and version | **Proprietary** (`"license": "UNLICENSED"`), starting at **0.1.0**. No app uses Trenchcoat yet, so breaking changes need no deprecation period. |
-| I | Working copy and PRs | **`~/Documents/GitHub/legendary-chainsaw`**, with trenchcoat's separate `.git` retired (step 0). **One pull request per part.** |
+| I | Working copy and PRs | **`~/Documents/GitHub/legendary-chainsaw`**, with trenchcoat's separate `.git` retired (step 0). **One pull request per part.** `icon-composer/` in the same repo is never touched. |
 | J | Frameworks | React 19 and Next.js, Vue 3 and Nuxt, Angular, Svelte 5 and plain HTML, each with an `examples/` app |
 | K | Screen readers | **VoiceOver only, run by Claude.** NVDA isn't tested – a known gap. |
 | B | Which way do the half-step font sizes fold? | **Round down:** 11.5 → 11, 12.5 → 12, 13.5 → 13 px, in both looks |
