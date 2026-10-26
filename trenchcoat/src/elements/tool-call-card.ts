@@ -1173,8 +1173,10 @@ export class TcToolCallGroup extends TcElement {
 
   // The header renders before the page's children, so the body follows it
   protected override createRenderRoot() {
+    // Before the page's first child, not the base's end marker: the header comes first
+    const first = this.firstChild;
     const root = super.createRenderRoot();
-    this.renderOptions.renderBefore ??= this.firstChild;
+    if (first) this.renderOptions.renderBefore = first;
     return root;
   }
 

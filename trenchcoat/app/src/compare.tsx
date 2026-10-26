@@ -1,7 +1,8 @@
 // Dev-only page for scripts/compare-lit.mjs (lit-port-plan.md acceptance check 4): every React component that has
 // a Lit port, next to the element, with the same props, in both looks and both themes. Each side is screenshotted
 // and diffed. With ?demo=<slug>[,<slug>…] the page shows each component's gallery demo instead: the React module
-// (the Clean twin for Clean) next to the same demo on the React wrappers inside a look provider.
+// (the Clean twin for Clean) next to the same demo on the React wrappers inside a look provider; &side=react|lit
+// renders one side only.
 import { useEffect, useState, type ComponentType } from "react";
 import { createRoot } from "react-dom/client";
 import cleanTwins from "virtual:tc-clean";
@@ -63,7 +64,10 @@ const demos = import.meta.glob<{ default: ComponentType<{ ui: unknown }> }>(["./
 const reactModules = import.meta.glob(["../../src/components/*.tsx", "../../{illustrations,motion}/*.tsx"]);
 /** "<slug>" for a component, "illustrations/<slug>" or "motion/<slug>" for the single-look libraries */
 const reactPath = (id: string) => (id.includes("/") ? `../../${id}.tsx` : `../../src/components/${id}.tsx`);
-const demoSlugs = new URLSearchParams(location.search).get("demo")?.split(",").filter(Boolean) ?? [];
+const params = new URLSearchParams(location.search);
+const demoSlugs = params.get("demo")?.split(",").filter(Boolean) ?? [];
+/** "react" or "lit": show one side only, so the two versions' stylesheets never share a page */
+const only = params.get("side");
 
 /** The demo on the React component and on the wrappers, once both modules have loaded */
 function demoCase(slug: string, loaded: Record<string, { Demo: ComponentType<{ ui: unknown }>; standard: unknown; clean: unknown; lit: unknown }>): Case {
@@ -100,8 +104,8 @@ function Page() {
         (["standard", "clean"] as const).flatMap((look) =>
           (["light", "dark"] as const).map((theme) => (
             <div key={`${c.id}-${look}-${theme}`} className="pair" data-theme={theme} data-tc-theme={theme} id={`${c.id}-${look}-${theme}`}>
-              <div className="side" data-side="react">{c.react(look)}</div>
-              <div className="side" data-side="lit">{c.lit(look)}</div>
+              <div className="side" data-side="react">{only !== "lit" && c.react(look)}</div>
+              <div className="side" data-side="lit">{only !== "react" && c.lit(look)}</div>
             </div>
           )),
         ),

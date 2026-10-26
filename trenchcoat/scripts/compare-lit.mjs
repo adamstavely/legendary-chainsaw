@@ -16,27 +16,40 @@ const server = await createServer({ configFile: "vite.config.ts", server: { port
 await server.listen();
 const base = server.resolvedUrls.local[0].replace(/\/$/, "");
 const browser = await chromium.launch();
-const page = await browser.newPage({ viewport: { width: 1100, height: 900 }, reducedMotion: "reduce", deviceScaleFactor: 1 });
-const slugs = process.argv.slice(2);
-if (slugs.length) {
+const open = async (query) => {
+  const page = await browser.newPage({ viewport: { width: 1100, height: 900 }, reducedMotion: "reduce", deviceScaleFactor: 1 });
+  // The same pseudo-random sequence on every page, so demos that use Math.random show the same data on both sides
+  await page.addInitScript(() => {
+    let seed = 42;
+    Math.random = () => ((seed = (seed * 16807) % 2147483647) - 1) / 2147483646;
+  });
   // Demos start on a fixed clock, so both sides show the same moment
   await page.clock.install({ time: new Date("2026-10-24T12:00:00Z") });
-  await page.goto(`${base}/compare.html?demo=${slugs.join(",")}`);
-  await page.waitForSelector("body[data-ready=true]");
-  await page.clock.runFor(1500);
-  await page.clock.pauseAt(new Date("2026-10-24T12:00:05Z"));
+  await page.goto(`${base}/compare.html${query}`);
+  return page;
+};
+const slugs = process.argv.slice(2);
+// Demo mode: each side on its own page, so neither side's stylesheet can restyle the other
+const pages = {};
+if (slugs.length) {
+  for (const side of ["react", "lit"]) {
+    const page = (pages[side] = await open(`?demo=${slugs.join(",")}&side=${side}`));
+    await page.waitForSelector("body[data-ready=true]");
+    await page.clock.runFor(1500);
+    await page.clock.pauseAt(new Date("2026-10-24T12:00:05Z"));
+  }
 } else {
-  await page.goto(`${base}/compare.html`);
-  await page.waitForSelector("tc-data-table[data-ui=dt] table");
+  pages.react = pages.lit = await open("");
+  await pages.react.waitForSelector("tc-data-table[data-ui=dt] table");
 }
-await page.waitForTimeout(800);
+await pages.react.waitForTimeout(800);
 
 const rows = [];
-for (const pair of await page.$$(".pair")) {
+for (const pair of await pages.react.$$(".pair")) {
   const id = await pair.getAttribute("id");
   const shots = {};
   for (const side of ["react", "lit"]) {
-    const el = await pair.$(`[data-side=${side}]`);
+    const el = await pages[side].$(`#${id} [data-side=${side}]`);
     shots[side] = PNG.sync.read(await el.screenshot({ path: join(OUT, `${id}-${side}.png`), animations: "disabled" }));
   }
   const w = Math.max(shots.react.width, shots.lit.width);

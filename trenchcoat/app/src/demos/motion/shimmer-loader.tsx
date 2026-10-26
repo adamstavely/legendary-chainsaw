@@ -1,4 +1,4 @@
-import type * as UI from "@motion/shimmer-loader";
+import type * as UI from "../../../../src/elements/react";
 
 export default function Demo({ ui }: { ui: typeof UI }) {
   const { Skeleton, ShimmerText } = ui;

@@ -18,6 +18,11 @@ See `audit/remediation-plan.md`, Part 2, and `audit/lit-port-plan.md`.
   name and props in `trenchcoat/react`, browser tests in Chromium, Firefox and WebKit, and its gallery demo diffed
   against React in both looks and themes (all under 1 %; the remaining differences are demos that use
   `Math.random()` or a running clock). Import one element with `trenchcoat/<slug>`.
+- The 22 illustrations and 8 motion pieces as elements (step 2.7), 105 tags in all; shimmer-loader is two
+  (`tc-skeleton`, `tc-shimmer-text`). Same React names and props through `trenchcoat/react`; parity with the React
+  versions at 0.00 % except voice-orb's canvas particles (timing) and tilt-card, which drops 3 px of line space
+  under its inline-block root.
+- glass-folder has an `open` property: the look its hover gives, on demand.
 - filter-menu renders only the rows near the viewport in groups over 60 options (tested with 5,000).
 - otp-input, dropzone and stepper-form's tags and choices are form controls (ElementInternals): they submit under
   `name`, honour `required`, reset and a disabled fieldset, and are named by a page `<label for>`.
@@ -32,6 +37,8 @@ See `audit/remediation-plan.md`, Part 2, and `audit/lit-port-plan.md`.
 - The React components are retired except the ones blocks and screens still import (agent-plan, approval-card,
   button, chat-composer, combobox, data-table, filter-menu, inline-diff, kpi-chart, segmented-control, setup-guide,
   thinking-loader, thinking-state, tool-call-card, usage-meter). Use `trenchcoat/react`: same names and props.
+- The React illustrations and motion pieces are retired except glass-folder (three screens import it).
+- model-wheel's `defaultModels` is `modelWheelDefaults` (chat-composer's wrapper exports `defaultModels`).
 - Renamed types, so the package index can export every element's types: decision-inbox `Decision` →
   `InboxDecision`, plan-vs-actual `PlanStep` → `PlanVsActualStep`, agent-plan `PlanStep` / `PlanStepStatus` →
   `AgentPlanStep` / `AgentPlanStepStatus`. decision-tree keeps `Decision` on the wrapper.

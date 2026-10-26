@@ -4,33 +4,15 @@
  * class – their dark colours were .dark-scoped overrides, so data-tc-theme="dark", "system" and the OS setting kept
  * the light art (audit/design-review/themes-and-widths.md H1). Now every colour is light-dark() and each file sets
  * color-scheme for the whole selector list. Also: their decorative loops ran forever; now they're finite.
+ * Only glass-folder is still a React file (screens import it); the others' checks moved to tests/elements/.
  */
 import type { ReactElement } from "react";
 import { render } from "@testing-library/react";
 import { describe, expect, test } from "vitest";
-import { AgentTeam } from "@illustrations/agent-team";
-import { CoverFlow } from "@illustrations/cover-flow";
-import { EmptyCalendar } from "@illustrations/empty-calendar";
-import { EnrichmentOrbit } from "@illustrations/enrichment-orbit";
-import { GhostedChat } from "@illustrations/ghosted-chat";
 import { GlassFolder } from "@illustrations/glass-folder";
-import { GlowKeyboard } from "@illustrations/glow-keyboard";
-import { IntegrationBeam } from "@illustrations/integration-beam";
-import { IntegrationFlow } from "@illustrations/integration-flow";
-import { IntegrationGrid } from "@illustrations/integration-grid";
 
-const face = "data:image/gif;base64,R0lGODlhAQABAAAAACw=";
 const cases: [string, () => ReactElement][] = [
-  ["agent-team", () => <AgentTeam members={[{ role: "A", avatar: face }, { role: "B", avatar: face }, { role: "C", avatar: face }]} />],
-  ["cover-flow", () => <CoverFlow items={[{ id: 1, title: "One" }, { id: 2, title: "Two" }]} />],
-  ["empty-calendar", () => <EmptyCalendar />],
-  ["enrichment-orbit", () => <EnrichmentOrbit />],
-  ["ghosted-chat", () => <GhostedChat />],
   ["glass-folder", () => <GlassFolder />],
-  ["glow-keyboard", () => <GlowKeyboard />],
-  ["integration-beam", () => <IntegrationBeam />],
-  ["integration-flow", () => <IntegrationFlow />],
-  ["integration-grid", () => <IntegrationGrid />],
 ];
 
 /** The component's own stylesheet (React hoists it into <head>) */

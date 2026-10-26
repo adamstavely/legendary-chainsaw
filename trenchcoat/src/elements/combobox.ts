@@ -1097,8 +1097,7 @@ export class TcCombobox extends TcElement {
 }
 .ui-cbx__keys > span { margin: 0 var(--tc-space-1-5) 0 var(--tc-space-0-5); }
 .ui-cbx__keys > span:last-child { margin-right: 0; }
-.ui-cbx__live, .ui-cbx__proxy { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-.ui-cbx__proxy { bottom: 0; left: 50%; padding: 0; border: 0; opacity: 0; pointer-events: none; }
+.ui-cbx__live { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 [data-ui="cbx"][data-disabled] .ui-cbx__field { opacity: 0.55; cursor: not-allowed; }
 [data-ui="cbx"][data-disabled] .ui-cbx__field * { cursor: not-allowed; }
 @keyframes ui-cbx-open { from { opacity: 0; transform: translateY(-4px) scale(0.98); } to { opacity: 1; transform: none; } }

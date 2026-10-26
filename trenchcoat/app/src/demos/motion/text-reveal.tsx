@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type * as UI from "@motion/text-reveal";
+import type * as UI from "../../../../src/elements/react";
 
 export default function Demo({ ui }: { ui: typeof UI }) {
   const { TextReveal } = ui;

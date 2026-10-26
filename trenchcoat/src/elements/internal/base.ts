@@ -20,6 +20,9 @@ export abstract class TcElement extends LitElement {
   static ui = "";
   /** The element type's CSS, keyed on [data-ui="<name>"] */
   static css = "";
+  /** Single-look pieces (illustrations, motion) set this false: no data-look on the host, so the page's tokens reach
+   *  the caller's content as they did around the React versions */
+  static looks = true;
 
   /** Visual style: "standard" or "clean"; unset follows <tc-look-provider>, else "standard" */
   @property({ reflect: true })
@@ -35,6 +38,14 @@ export abstract class TcElement extends LitElement {
   }
 
   protected override createRenderRoot() {
+    // Lit's range otherwise runs to the end of the host, and a template that changes shape clears the children a
+    // framework appended after the first render. An end marker keeps them outside it: Lit renders up to the marker,
+    // later children go after it.
+    if (!this.renderOptions.renderBefore) {
+      const end = document.createComment("tc-end");
+      this.append(end);
+      this.renderOptions.renderBefore = end;
+    }
     return this;
   }
 
@@ -50,7 +61,8 @@ export abstract class TcElement extends LitElement {
 
   protected override willUpdate(changed: PropertyValues) {
     super.willUpdate(changed);
-    if (this.dataset.look !== this.resolvedLook) this.dataset.look = this.resolvedLook;
+    if (!(this.constructor as typeof TcElement).looks) delete this.dataset.look;
+    else if (this.dataset.look !== this.resolvedLook) this.dataset.look = this.resolvedLook;
   }
 
   /** Dispatches a bubbling, composed event; returns false when a listener called preventDefault() */

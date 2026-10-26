@@ -1,9 +1,9 @@
 // Dead CSS in the elements (remediation step 2.7): rules whose selectors name a class the element never renders.
-//   node scripts/dead-css.mjs            lists them per file
+//   node scripts/dead-css.mjs            lists them per file; fails when there are any (CI)
 //   node scripts/dead-css.mjs --fix      deletes those rules (a rule with several selectors loses only the dead ones)
 // A class counts as rendered when it appears in the file outside its CSS string – in a template, a classMap or a
 // string the code builds – or in the element's React wrapper (which renders some structure around children).
-// Classes built from pieces (`ui-x__${part}`) are matched by their prefix. Rules for states a demo doesn't reach
+// Classes built from pieces (`ui-x__${part}`, `ui-x--${n}`) are matched by their prefix. Rules for states a demo doesn't reach
 // still count as live: this only finds classes nothing can produce.
 import { existsSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
@@ -24,7 +24,7 @@ for (const name of readdirSync(DIR).filter((f) => f.endsWith(".ts") && f !== "in
   if (existsSync(wrapper)) code += readFileSync(wrapper, "utf8");
   const used = new Set(code.match(/\bui-[a-z0-9-]+(?:__[a-z0-9-]+)?/g) ?? []);
   // Pieces like `ui-x__${…}` or "ui-x__" + … make every class with that prefix possible
-  const prefixes = [...code.matchAll(/\b(ui-[a-z0-9-]+__[a-z0-9-]*)\$\{|\b(ui-[a-z0-9-]+__[a-z0-9-]*)["'`]\s*\+/g)].map((m) => m[1] ?? m[2]);
+  const prefixes = [...code.matchAll(/\b(ui-[a-z0-9_-]+)\$\{|\b(ui-[a-z0-9_-]+)["'`]\s*\+/g)].map((m) => m[1] ?? m[2]);
   const live = (cls) => used.has(cls) || prefixes.some((p) => cls.startsWith(p));
   const dead = (selector) => (selector.match(/\.(ui-[a-z0-9-]+(?:__[a-z0-9-]+)?)/g) ?? []).some((c) => !live(c.slice(1)));
 
@@ -34,12 +34,13 @@ for (const name of readdirSync(DIR).filter((f) => f.endsWith(".ts") && f !== "in
     const css = m[1];
     // Walk the rules: a selector list followed by a { … } block without nested braces (at-rule bodies are walked
     // because their inner rules match the same pattern)
-    const next = css.replace(/(^|[;{}]\s*)([^{}@;]+?)\s*\{([^{}]*)\}/g, (whole, lead, selectors, body) => {
+    // (a lookbehind for the previous rule's end, so consecutive rules are all visited)
+    const next = css.replace(/(?<=^|[;{}])(\s*)([^{}@;]+?)\s*\{([^{}]*)\}/g, (whole, lead, selectors, body) => {
       const list = selectors.split(/,(?![^(]*\))/).map((s) => s.trim());
       const keep = list.filter((s) => !dead(s));
       if (keep.length === list.length) return whole;
       for (const s of list.filter((x) => dead(x))) found.push(s.replace(/\s+/g, " "));
-      return keep.length ? `${lead}${keep.join(",\n")} {${body}}` : lead;
+      return keep.length ? `${lead}${keep.join(", ")} {${body}}` : "";
     });
     // At-rules left empty by the deletions go too
     const tidy = next.replace(/@(media|container|supports)[^{]*\{\s*\}/g, "");
@@ -51,4 +52,5 @@ for (const name of readdirSync(DIR).filter((f) => f.endsWith(".ts") && f !== "in
   for (const s of found) console.log(`  ${s}`);
   if (fix) writeFileSync(file, out);
 }
-console.log(total ? `${total} dead selector${total === 1 ? "" : "s"}${fix ? " removed" : ""}` : "no dead selectors");
+console.log(total ? `${total} dead selector${total === 1 ? "" : "s"}${fix ? " removed" : " – node scripts/dead-css.mjs --fix removes them"}` : "no dead selectors");
+if (total && !fix) process.exit(1);

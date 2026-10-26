@@ -1,4 +1,4 @@
-import type * as UI from "@illustrations/lead-sourcing";
+import type * as UI from "../../../../src/elements/react";
 
 export default function Demo({ ui }: { ui: typeof UI }) {
   return <ui.LeadSourcing />;

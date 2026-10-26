@@ -99,6 +99,12 @@
     "clock/environment read": 3,
     "literal spacing": 2
   },
+  "src/elements/agent-team.ts": {
+    "literal duration": 2,
+    "literal line-height": 1,
+    "literal border-radius": 1,
+    "literal blurred shadow": 1
+  },
   "src/elements/agent-tree.ts": {
     "clock/environment read": 4,
     "literal spacing": 13,
@@ -165,6 +171,10 @@
     "literal spacing": 6,
     "background-position animation": 1
   },
+  "src/elements/cover-flow.ts": {
+    "clock/environment read": 3,
+    "literal line-height": 2
+  },
   "src/elements/data-table.ts": {
     "clock/environment read": 1,
     "literal spacing": 1
@@ -209,8 +219,39 @@
     "literal duration": 1,
     "literal spacing": 7
   },
+  "src/elements/ghosted-chat.ts": {
+    "literal line-height": 4,
+    "literal border-radius": 2,
+    "literal spacing": 2
+  },
+  "src/elements/glass-folder.ts": {
+    "literal border-radius": 2
+  },
+  "src/elements/glow-keyboard.ts": {
+    "clock/environment read": 3,
+    "literal line-height": 1
+  },
+  "src/elements/gradient-text.ts": {
+    "background-position animation": 1
+  },
   "src/elements/inline-diff.ts": {
     "literal spacing": 3
+  },
+  "src/elements/integration-beam.ts": {
+    "clock/environment read": 2,
+    "literal border-radius": 3,
+    "literal blurred shadow": 2,
+    "literal spacing": 4
+  },
+  "src/elements/integration-flow.ts": {
+    "literal font-weight": 2,
+    "literal line-height": 2,
+    "literal border-radius": 2,
+    "literal blurred shadow": 1,
+    "literal spacing": 2
+  },
+  "src/elements/integration-grid.ts": {
+    "literal border-radius": 2
   },
   "src/elements/integration-picker.ts": {
     "literal border-radius": 1,
@@ -221,6 +262,10 @@
   },
   "src/elements/kpi-chart.ts": {
     "literal spacing": 8
+  },
+  "src/elements/layer-stack.ts": {
+    "literal line-height": 2,
+    "literal border-radius": 3
   },
   "src/elements/memory-panel.ts": {
     "clock/environment read": 3,
@@ -238,8 +283,15 @@
     "literal border-radius": 1,
     "literal spacing": 11
   },
+  "src/elements/model-wheel.ts": {
+    "clock/environment read": 3,
+    "literal font-weight": 1
+  },
   "src/elements/notification-stack.ts": {
     "literal spacing": 6
+  },
+  "src/elements/number-ticker.ts": {
+    "literal spacing": 1
   },
   "src/elements/otp-input.ts": {
     "literal duration": 6,
@@ -264,12 +316,26 @@
     "literal duration": 1,
     "literal spacing": 11
   },
+  "src/elements/project-flow.ts": {
+    "hard-coded id": 2,
+    "literal duration": 66,
+    "literal easing": 19,
+    "z-index ≥ 7": 2,
+    "literal font-weight": 4,
+    "literal line-height": 5,
+    "literal border-radius": 16,
+    "literal blurred shadow": 12,
+    "literal spacing": 4
+  },
   "src/elements/prompt-library.ts": {
     "clock/environment read": 1,
     "literal duration": 6,
     "literal line-height": 5,
     "literal border-radius": 1,
     "literal spacing": 6
+  },
+  "src/elements/region-dach.ts": {
+    "literal spacing": 4
   },
   "src/elements/review-center.ts": {
     "clock/environment read": 4,
@@ -283,6 +349,9 @@
   },
   "src/elements/stepper-form.ts": {
     "literal spacing": 14
+  },
+  "src/elements/text-reveal.ts": {
+    "literal spacing": 1
   },
   "src/elements/thinking-loader.ts": {
     "clock/environment read": 3
@@ -315,6 +384,14 @@
   "src/elements/usage-meter.ts": {
     "clock/environment read": 1,
     "literal spacing": 2
+  },
+  "src/elements/voice-orb.ts": {
+    "clock/environment read": 3,
+    "literal border-radius": 1,
+    "literal spacing": 1
+  },
+  "src/elements/world-map.ts": {
+    "literal spacing": 4
   },
   "src/elements/writing-assistant.ts": {
     "literal duration": 10,
@@ -413,82 +490,7 @@
   "screens/settings-billing.tsx": {
     "literal spacing": 79
   },
-  "illustrations/agent-team.tsx": {
-    "literal duration": 2,
-    "literal line-height": 1,
-    "literal border-radius": 1,
-    "literal blurred shadow": 1
-  },
-  "illustrations/cover-flow.tsx": {
-    "clock/environment read": 3,
-    "literal line-height": 2
-  },
-  "illustrations/ghosted-chat.tsx": {
-    "literal line-height": 4,
-    "literal border-radius": 2,
-    "literal spacing": 2
-  },
   "illustrations/glass-folder.tsx": {
     "literal border-radius": 2
-  },
-  "illustrations/glow-keyboard.tsx": {
-    "clock/environment read": 3,
-    "literal line-height": 1
-  },
-  "illustrations/integration-beam.tsx": {
-    "clock/environment read": 2,
-    "literal border-radius": 3,
-    "literal blurred shadow": 2,
-    "literal spacing": 4
-  },
-  "illustrations/integration-flow.tsx": {
-    "literal font-weight": 2,
-    "literal line-height": 2,
-    "literal border-radius": 2,
-    "literal blurred shadow": 1,
-    "literal spacing": 2
-  },
-  "illustrations/integration-grid.tsx": {
-    "literal border-radius": 2
-  },
-  "illustrations/layer-stack.tsx": {
-    "literal line-height": 2,
-    "literal border-radius": 3
-  },
-  "illustrations/model-wheel.tsx": {
-    "clock/environment read": 3,
-    "literal font-weight": 1
-  },
-  "illustrations/project-flow.tsx": {
-    "hard-coded id": 2,
-    "dangerouslySetInnerHTML": 1,
-    "literal duration": 66,
-    "literal easing": 19,
-    "z-index ≥ 7": 2,
-    "literal font-weight": 4,
-    "literal line-height": 5,
-    "literal border-radius": 16,
-    "literal blurred shadow": 12,
-    "literal spacing": 4
-  },
-  "illustrations/region-dach.tsx": {
-    "literal spacing": 4
-  },
-  "illustrations/voice-orb.tsx": {
-    "clock/environment read": 3,
-    "literal border-radius": 1,
-    "literal spacing": 1
-  },
-  "illustrations/world-map.tsx": {
-    "literal spacing": 4
-  },
-  "motion/gradient-text.tsx": {
-    "background-position animation": 1
-  },
-  "motion/number-ticker.tsx": {
-    "literal spacing": 1
-  },
-  "motion/text-reveal.tsx": {
-    "literal spacing": 1
   }
 }

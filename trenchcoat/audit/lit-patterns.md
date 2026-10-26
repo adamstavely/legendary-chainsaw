@@ -159,6 +159,18 @@ React and on the wrappers. What they found:
 - **Light-DOM groups**: ToolCallGroup can't wrap the cards a framework renders into it, so outside React it takes
   its list as a `slot="list"` child (the wrapper draws it).
 
+Step 2.7 (illustrations and motion) added three things to the base and the tooling:
+
+- **An end marker in every element.** Lit's range otherwise runs to the end of the host, and a template that
+  changes shape (nothing → something) clears children a framework appended after the first render. TcElement
+  renders before a `<!--tc-end-->` comment; later children go after it.
+- **`static looks = false`** for single-look pieces: no `data-look` on the host, so a Clean look provider doesn't
+  restyle the caller's content (the React illustrations and motion pieces had no look).
+- **Parity on separate pages** with a seeded `Math.random`: both versions' stylesheets on one page restyled each
+  other (decision-inbox 0.38 %, ghosted-chat 1.43 %, both 0 % isolated), and random demos now draw the same data.
+- `node scripts/dead-css.mjs` (in CI) fails on rules for classes nothing renders – element, wrapper or
+  runtime-built (`ui-x--${n}`) – and `--fix` removes them.
+
 Known issues carried over from the React components (step 2.8): decision-tree's folded "N options" text fails
 contrast in the narrow layout, and its follow-up option buttons fail `label-content-name-mismatch`.
 

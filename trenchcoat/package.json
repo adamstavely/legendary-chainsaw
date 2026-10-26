@@ -53,14 +53,15 @@
     "test": "vitest run",
     "check:prefixes": "node scripts/check-prefixes.mjs",
     "check:ratchet": "node scripts/check-ratchet.mjs",
-    "ci": "npm run typecheck && npm run lint && npm run check:prefixes && npm run check:ratchet && npm run check:tokens && npm run check:contrast && node scripts/gen-elements.mjs --check && npm run check:lit && npm test",
+    "ci": "npm run typecheck && npm run lint && npm run check:prefixes && npm run check:ratchet && npm run check:tokens && npm run check:contrast && node scripts/gen-elements.mjs --check && npm run check:dead-css && npm run check:lit && npm test",
     "check:tokens": "node scripts/tokens.mjs --check && node scripts/check-tokens.mjs",
     "check:contrast": "node scripts/contrast.mjs",
     "check:lit": "lit-analyzer src/elements --strict --maxWarnings 0",
     "visual": "node scripts/visual.mjs",
     "build:package": "vite build -c vite.package.config.ts && tsc -p tsconfig.package.json && cem analyze --config custom-elements-manifest.config.mjs",
     "examples": "node scripts/examples.mjs",
-    "gen:elements": "node scripts/gen-elements.mjs"
+    "gen:elements": "node scripts/gen-elements.mjs",
+    "check:dead-css": "node scripts/dead-css.mjs"
   },
   "dependencies": {
     "@lit/context": "1.1.6",
