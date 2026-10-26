@@ -173,6 +173,11 @@ Button, fields, menus, switches, segmented control, focus rings – then the res
 borders, state or focus disappear. These rules are CSS and move to Lit unchanged; the Lit components are re-checked
 in 2.8.
 
+*Done as (2026-10-26):* one shared rule block instead of per-component rules, checked with Chromium's
+forced-colours emulation on all 64 components: buttons, fields, switches and comboboxes get a system-colour edge,
+popups and tablists an outline, selected / pressed / checked / current items Highlight (opting out of the text
+backplate), switch knobs ButtonText. Still not tested on real Windows High Contrast themes.
+
 ## Part 2 – The shift to Lit
 
 The toolchain (Lit 3, TypeScript with standard decorators, ts-lit-plugin in the editor, lit-analyzer in CI), the

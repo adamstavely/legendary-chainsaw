@@ -8,7 +8,7 @@
 //     dictionary – so without tokens.css a lone file still renders either look, in light and dark
 //   · the theme rules are tokens.css's selector list (scripts/tokens.mjs THEME_RULES): .dark, [data-theme="dark"]
 //     and [data-tc-theme="dark"] force dark, [data-theme|data-tc-theme="light"] force light, [data-tc-theme="system"]
-//     follows the OS
+//     follows the OS; the forced-colours rules (scripts/tokens.mjs FORCED_RULES) follow them
 //   · `const DEFAULT_LOOK = …` is set per output; the component renders data-look={look ?? DEFAULT_LOOK} on its
 //     root (and on any portal container, which also carries the class <root>__portal)
 //   node scripts/build-lib.mjs [slug…]          build (all when no slug)
@@ -16,7 +16,7 @@
 import { existsSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { THEME_RULES, fallbacks } from "./tokens.mjs";
+import { FORCED_RULES, THEME_RULES, fallbacks } from "./tokens.mjs";
 
 const ROOT = fileURLToPath(new URL("..", import.meta.url));
 const SRC = join(ROOT, "src/components");
@@ -171,6 +171,7 @@ function addFallbacks(source, slug) {
   const block = `/* Fallbacks so this file works without tokens.css – tokens.css, when loaded, takes precedence */
 ${LOOKS.map((look) => `${roots.map((r) => `.${r}:where([data-look="${look}"])`).join(",\n")} {\n${lines(look)}\n}`).join("\n")}
 ${THEME_RULES}
+${FORCED_RULES}
 `;
   return { source: out, block };
 }

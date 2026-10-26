@@ -29,6 +29,12 @@ See `audit/remediation-plan.md`, Part 1.
   (Ramer–Douglas–Peucker; the faded neighbours much more than the land), 167 → 82 KB of source, with a few islets
   under 2.5 units dropped from the neighbours; project-flow's four avatars are WebP instead of PNG, 137 → 90 KB.
 
+- Forced colours (Windows High Contrast): every component carries one shared block (`scripts/tokens.mjs`
+  `FORCED_RULES`, also in tokens.css section 3b) that gives buttons, fields, switches and comboboxes a system-colour
+  edge (forced colours drop the box-shadows they used), outlines listboxes, menus, dialogs and tablists, shows
+  selected / pressed / checked / current items in Highlight, draws switch knobs, and greys disabled controls. Only
+  active under `@media (forced-colors: active)`; the normal looks don't change.
+
 ### Behaviour changes
 
 - context-window: Clean's "Compacting…" shine runs 3 times and rests, like every other shimmer (it ran endlessly).

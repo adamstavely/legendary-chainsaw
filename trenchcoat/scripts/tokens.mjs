@@ -20,6 +20,26 @@ export const THEME_RULES = `:where(${SYSTEM}) { color-scheme: light dark; }
 :where(${LIGHT}) { color-scheme: light; }
 :where(${DARK}) { color-scheme: dark; }`;
 
+/**
+ * Forced colours (Windows High Contrast, forced-colors: active) drop box-shadows and replace author colours, so
+ * edges drawn with box-shadow and states shown by a fill disappear. These rules give every control in a component
+ * (any element inside a [data-look] root) a system-colour edge, show selected / pressed / checked / current states
+ * with Highlight, and draw switch knobs. :not(#tc-fc) matches everything but lifts the rules to id specificity, so
+ * they win over a component's own (even !important) colour rules. Selected items opt out of forced colours
+ * (forced-color-adjust: none) because the text backplate would otherwise paint Canvas behind HighlightText. Shared by tokens.css (section 3b) and every published file
+ * (scripts/build-lib.mjs); tokens.mjs --check keeps tokens.css in step.
+ */
+export const FORCED_RULES = `@media (forced-colors: active) {
+  :where([data-look], [data-look] *):not(#tc-fc):is(button, [role="button"], [role="switch"], [role="combobox"], [role="checkbox"], [role="radio"], input:not([type="hidden"]), select, textarea):not([role="option"], [role="menuitem"], [role="menuitemradio"], [role="menuitemcheckbox"], [role="tab"], [role="treeitem"], [role="gridcell"], [role="row"]) { border: 1px solid ButtonText !important; }
+  :where([data-look], [data-look] *):not(#tc-fc):is(input, select, textarea) { border-color: FieldText !important; }
+  :where([data-look], [data-look] *):not(#tc-fc):is([role="listbox"], [role="menu"], [role="dialog"], [role="tooltip"], [role="tablist"], [role="radiogroup"]) { outline: 1px solid CanvasText; }
+  :where([data-look], [data-look] *):not(#tc-fc):is([aria-selected="true"], [aria-pressed="true"], [aria-checked="true"], [aria-current]:not([aria-current="false"])) { forced-color-adjust: none; background: Highlight !important; color: HighlightText !important; }
+  :where([data-look], [data-look] *):not(#tc-fc):is([aria-selected="true"], [aria-pressed="true"], [aria-checked="true"], [aria-current]:not([aria-current="false"])) * { color: HighlightText !important; background: none !important; }
+  :where([data-look], [data-look] *):not(#tc-fc)[role="switch"] span:empty { background: ButtonText !important; }
+  :where([data-look], [data-look] *):not(#tc-fc)[role="switch"][aria-checked="true"] span:empty { background: HighlightText !important; }
+  :where([data-look], [data-look] *):not(#tc-fc):is(:disabled, [aria-disabled="true"]) { color: GrayText !important; border-color: GrayText !important; }
+}`;
+
 const CLEAN = ':where([data-tc-look="clean"], [data-look="clean"])';
 
 /** Declarations of the first top-level block whose selector starts with `selectorStart` */
@@ -136,7 +156,11 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
     try {
       current = readFileSync(FALLBACKS, "utf8");
     } catch {}
-    const stale = [source !== css && "tokens/tokens.css section 4", current !== json && "tokens/fallbacks.json"].filter(Boolean);
+    const stale = [
+      source !== css && "tokens/tokens.css section 4",
+      !source.includes(FORCED_RULES) && "tokens/tokens.css section 3b (copy FORCED_RULES from scripts/tokens.mjs)",
+      current !== json && "tokens/fallbacks.json",
+    ].filter(Boolean);
     if (stale.length) {
       console.error(`out of date: ${stale.join(", ")} – run node scripts/tokens.mjs`);
       process.exit(1);
