@@ -92,6 +92,7 @@ export * from "./react/reaction-bar";
 export * from "./react/region-dach";
 export * from "./react/review-center";
 export * from "./react/run-checkpoints";
+export * from "./react/run-compare";
 export * from "./react/sandbox-log";
 export * from "./react/segmented-control";
 export * from "./react/setup-guide";
