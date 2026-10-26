@@ -1,0 +1,53 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "allowImportingTsExtensions": true,
+    "types": [
+      "vite/client",
+      "node"
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@components/*": [
+        "components/*"
+      ],
+      "@blocks/*": [
+        "blocks/*"
+      ],
+      "@screens/*": [
+        "screens/*"
+      ],
+      "@illustrations/*": [
+        "illustrations/*"
+      ],
+      "@motion/*": [
+        "motion/*"
+      ],
+      "@/components/ui/*": [
+        "components/*",
+        "screens/*",
+        "blocks/*",
+        "illustrations/*",
+        "motion/*"
+      ]
+    }
+  },
+  "include": [
+    "app/src",
+    "tests",
+    "vite.config.ts",
+    "src"
+  ]
+}
