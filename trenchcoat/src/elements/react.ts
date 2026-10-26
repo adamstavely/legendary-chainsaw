@@ -109,6 +109,7 @@ export * from "./react/tilt-card";
 export * from "./react/tips-panel";
 export * from "./react/toaster";
 export * from "./react/tool-call-card";
+export * from "./react/tool-permissions";
 export * from "./react/trace-waterfall";
 export * from "./react/usage-meter";
 export * from "./react/voice-orb";

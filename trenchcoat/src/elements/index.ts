@@ -98,6 +98,7 @@ export * from "./tilt-card";
 export * from "./tips-panel";
 export * from "./toaster";
 export * from "./tool-call-card";
+export * from "./tool-permissions";
 export * from "./trace-waterfall";
 export * from "./usage-meter";
 export * from "./voice-orb";
