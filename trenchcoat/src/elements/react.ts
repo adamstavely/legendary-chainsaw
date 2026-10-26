@@ -117,6 +117,7 @@ export * from "./react/tool-permissions";
 export * from "./react/trace-waterfall";
 export * from "./react/trigger-builder";
 export * from "./react/usage-meter";
+export * from "./react/voice-mode";
 export * from "./react/voice-orb";
 export * from "./react/world-map";
 export * from "./react/writing-assistant";

@@ -106,6 +106,7 @@ export * from "./tool-permissions";
 export * from "./trace-waterfall";
 export * from "./trigger-builder";
 export * from "./usage-meter";
+export * from "./voice-mode";
 export * from "./voice-orb";
 export * from "./world-map";
 export * from "./writing-assistant";
