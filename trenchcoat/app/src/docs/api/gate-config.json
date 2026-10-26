@@ -1,0 +1,261 @@
+{
+ "elements": [
+  {
+   "tag": "tc-gate-config",
+   "className": "TcGateConfig",
+   "description": "When a person decides: the conditions that pause a run, who reviews, what they see, what they may do and why.",
+   "properties": [
+    {
+     "name": "value",
+     "attribute": null,
+     "type": "GateConfigValue",
+     "default": "{ triggers: [\"low-confidence\", \"irreversible\"], reviewer: \"lead\", view: \"evidence\", actions: [\"approve\", \"send-back\", \"reject\"], reason: \"\" }",
+     "description": "The gate's config. Changed by the user unless a tc-value-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "conditions",
+     "attribute": null,
+     "type": "GateCondition[]",
+     "default": "[ { id: \"low-confidence\", label: \"Confidence is low\", description: \"The agent rates its own answer under the threshold\" }, { id: \"no-source\", label: \"A claim has no source\", description: \"Something in the output isn't backed by a retrieved source\" }, { id: \"irreversible\", label: \"The next action can't be undone\", description: \"Sending, paying, deleting or publishing\" }, { id: \"personal-data\", label: \"It touches personal data\", description: \"Names, contact details or records about a person\" }, { id: \"new-version\", label: \"The playbook just changed\", description: \"The first ten runs after a new version\" }, ]",
+     "description": "The conditions that can pause a run, each shown as a switch",
+     "readonly": false
+    },
+    {
+     "name": "reviewers",
+     "attribute": null,
+     "type": "GateReviewer[]",
+     "default": "[ { id: \"owner\", label: \"Whoever started the run\" }, { id: \"lead\", label: \"A team lead\" }, { id: \"on-call\", label: \"The on-call reviewer\" }, { id: \"named\", label: \"A named approver\" }, ]",
+     "description": "Who can review, offered in the Reviewer select",
+     "readonly": false
+    },
+    {
+     "name": "views",
+     "attribute": null,
+     "type": "GateView[]",
+     "default": "[ { id: \"output\", label: \"Output\", phrase: \"the output\", description: \"The result only, as it would go out\" }, { id: \"evidence\", label: \"With evidence\", phrase: \"the output with its evidence\", description: \"The result, the sources behind it and the agent's confidence\" }, { id: \"trace\", label: \"Full trace\", phrase: \"the full trace\", description: \"Every step, tool call and source of the run\" }, ]",
+     "description": "What a reviewer can be shown, offered as a segmented control – two to four work best",
+     "readonly": false
+    },
+    {
+     "name": "actions",
+     "attribute": null,
+     "type": "GateActionOption[]",
+     "default": "[ { id: \"approve\", label: \"Approve\", description: \"The run carries on as it is\" }, { id: \"edit\", label: \"Edit and approve\", description: \"Change the output, then carry on\" }, { id: \"send-back\", label: \"Send back\", description: \"The agent tries again with the reviewer's note\" }, { id: \"escalate\", label: \"Escalate\", description: \"Hand the decision to someone more senior\" }, { id: \"reject\", label: \"Reject\", description: \"The run stops here\" }, ]",
+     "description": "The actions a reviewer may be allowed, shown as checkboxes",
+     "readonly": false
+    },
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Review gate\"",
+     "description": "Names the group, shown at the top",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string",
+     "default": "\"\"",
+     "description": "A quieter line under the heading, e.g. which step the gate guards",
+     "readonly": false
+    },
+    {
+     "name": "placeholder",
+     "attribute": "placeholder",
+     "type": "string",
+     "default": "\"Why a person decides here – the reviewer reads this first\"",
+     "description": "Placeholder for the note",
+     "readonly": false
+    },
+    {
+     "name": "flat",
+     "attribute": "flat",
+     "type": "boolean",
+     "default": "false",
+     "description": "Drops the tray and the card, for a gate inside another card",
+     "readonly": false
+    },
+    {
+     "name": "name",
+     "attribute": "name",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Submitted with the form: the config as JSON",
+     "readonly": false
+    },
+    {
+     "name": "disabled",
+     "attribute": "disabled",
+     "type": "boolean",
+     "default": "false",
+     "description": "Turns every control off and leaves the config out of the form; a disabled fieldset does the same",
+     "readonly": false
+    },
+    {
+     "name": "summary",
+     "attribute": null,
+     "type": "string",
+     "default": null,
+     "description": "The config in one sentence",
+     "readonly": true
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-value-change",
+     "detail": "",
+     "description": "The config changed ({ value: GateConfigValue }); cancelable – prevent it to control `value`",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "gc",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-avatar-radius-agent",
+    "--tc-border-control",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-h-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-font-size",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-field-shadow-hover",
+    "--tc-fill-default",
+    "--tc-fill-hover",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-lg-plus",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-line-height-relaxed",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-radius-xs",
+    "--tc-shadow-control",
+    "--tc-shadow-raised",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-7",
+    "--tc-status-danger-fg",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-surface-control",
+    "--tc-surface-inverse",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-switch-h",
+    "--tc-switch-knob",
+    "--tc-switch-knob-bg",
+    "--tc-switch-off",
+    "--tc-switch-on",
+    "--tc-switch-radius",
+    "--tc-switch-w",
+    "--tc-text-muted",
+    "--tc-text-on-accent",
+    "--tc-text-on-inverse",
+    "--tc-text-placeholder",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "describeGate",
+   "signature": "describeGate(value: GateConfigValue, o: { conditions?: GateCondition[]; reviewers?: GateReviewer[]; views?: GateView[]; actions?: GateActionOption[] }): string",
+   "description": "The gate in plain words: \"Pauses when confidence is low or a claim has no source, for a team lead to review the\noutput with its evidence. They may approve, send back or reject.\""
+  }
+ ],
+ "react": [
+  {
+   "component": "GateConfig",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "Shown at the top; names the group"
+    },
+    {
+     "name": "value",
+     "type": "GateConfigValue",
+     "optional": true,
+     "description": "The gate's config (controlled)"
+    },
+    {
+     "name": "defaultValue",
+     "type": "GateConfigValue",
+     "optional": true,
+     "description": "The config to start with when uncontrolled"
+    },
+    {
+     "name": "onChange",
+     "type": "(value: GateConfigValue) => void",
+     "optional": true,
+     "description": "Called with the whole config after every change"
+    }
+   ],
+   "hides": [
+    "value",
+    "defaultValue",
+    "heading",
+    "onChange"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 30165,
+  "gzip": 9157
+ }
+}

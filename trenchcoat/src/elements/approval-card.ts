@@ -1,6 +1,7 @@
 import { html, nothing, svg, type PropertyValues } from "lit";
 import { property, state } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
+import { live } from "lit/directives/live.js";
 import { TcElement } from "./internal/base";
 import { FocusRescueController, rescueFocus } from "./internal/controllers";
 
@@ -16,17 +17,39 @@ import { FocusRescueController, rescueFocus } from "./internal/controllers";
  * The host is the group (role="group"), named by the heading (by the resolved row once decided). Clean is one white
  * card: a risk tag, the preview as plain rows under a hairline, and – by default (actions="card") – a last row holding
  * "Always allow this action" and Deny / Approve; with actions="tray" the buttons sit on a gray tray below the card.
+ *
+ * Optional decision detail (all off unless set, so the card is unchanged without them): `why` – "Why you're seeing
+ * this", one line; `consequences` – "If you approve / If you deny"; `editableDetails` – an "Edit arguments" mode that
+ * turns the text details into fields (each change fires a cancelable tc-details-change); `evidence` – chips that open
+ * the sources the request rests on.
  */
 
 export type ApprovalStatus = "pending" | "approved" | "denied";
 export type ApprovalRisk = "low" | "medium" | "high";
 /** A key-value row of the preview: the value is text or an element (cloned) */
-export type ApprovalDetail = { label: string; value: string | Element };
+export type ApprovalDetail = {
+  label: string;
+  value: string | Element;
+  /** With `editableDetails`: false keeps this row read-only. Element values are always read-only */
+  editable?: boolean;
+};
 export type DenyReason = "user" | "timeout";
+/** What happens either way, one sentence each */
+export type ApprovalConsequences = { approve?: string; deny?: string };
+/** A source the request rests on, shown as a chip: a link with `href`, else a button that fires tc-evidence-select */
+export type ApprovalEvidence = {
+  label: string;
+  /** A quiet second part, e.g. "p. 4" or "2 h ago" */
+  detail?: string;
+  /** Opens in a new tab */
+  href?: string;
+};
 
 /** Details of the events */
 export type ApprovalStatusChange = { status: ApprovalStatus };
 export type ApprovalDeny = { reason: DenyReason };
+export type ApprovalDetailsChange = { details: ApprovalDetail[]; index: number; label: string; value: string };
+export type ApprovalEvidenceSelect = { evidence: ApprovalEvidence; index: number };
 
 const RISK_LABEL: Record<ApprovalRisk, string> = { low: "Low", medium: "Medium", high: "High" };
 /** The countdown announces itself once, this long before it runs out */
@@ -52,6 +75,15 @@ const onByDefault = { fromAttribute: (v: string | null) => v !== "false" };
 const clockIcon = (hidden: boolean) =>
   html`<svg viewBox="0 0 16 16" aria-hidden=${ifDefined(hidden ? "true" : undefined)}>${svg`<circle cx="8" cy="8" r="6"></circle><path d="M8 5v3.2l2 1.3"></path>`}</svg>`;
 
+/* Pencil, check, x, info and file-text: Lucide (ISC, lucide.dev) */
+const smallIcon = (body: ReturnType<typeof svg>) =>
+  html`<svg class="ui-ap__mini" viewBox="0 0 24 24" aria-hidden="true">${body}</svg>`;
+const pencilIcon = smallIcon(svg`<path d="M21.17 6.81a1 1 0 0 0-3.99-3.99L3.84 16.17a2 2 0 0 0-.5.83l-1.32 4.35a.5.5 0 0 0 .62.62l4.35-1.32a2 2 0 0 0 .83-.5z"></path><path d="m15 5 4 4"></path>`);
+const checkIcon = smallIcon(svg`<path d="M20 6 9 17l-5-5"></path>`);
+const crossIcon = smallIcon(svg`<path d="M18 6 6 18"></path><path d="m6 6 12 12"></path>`);
+const infoIcon = smallIcon(svg`<circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path>`);
+const fileIcon = smallIcon(svg`<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 13H8"></path><path d="M16 17H8"></path>`);
+
 let uid = 0;
 
 /**
@@ -61,6 +93,8 @@ let uid = 0;
  * @fires tc-deny - Denied by the user or by the countdown; detail `{ reason: "user" | "timeout" }`
  * @fires tc-expire - The countdown ran out (tc-deny fires too)
  * @fires tc-edit - Edit was pressed (shown with `editable`)
+ * @fires tc-details-change - An argument was edited in "Edit arguments" mode; detail `{ details, index, label, value }`. Cancelable: preventDefault() keeps the rows (controlled use)
+ * @fires tc-evidence-select - An evidence chip without `href` was pressed; detail `{ evidence, index }`
  */
 export class TcApprovalCard extends TcElement {
   static override ui = "ap";
@@ -110,6 +144,26 @@ export class TcApprovalCard extends TcElement {
   @property({ attribute: false }) accessor label: string | Element | undefined = undefined;
   /** Where the buttons sit: on the gray tray below the card or inside the white card. Default: "tray" in the Standard look, "card" in the Clean look */
   @property() accessor actions: "tray" | "card" | undefined = undefined;
+  /** "Why you're seeing this": one line on what made the agent ask, e.g. the rule or threshold it met */
+  @property() accessor why: string | undefined = undefined;
+  /** The heading of the `why` line */
+  @property({ attribute: "why-label" }) accessor whyLabel = "Why you're seeing this";
+  /** What happens if the person approves, and if they deny – one sentence each */
+  @property({ attribute: false }) accessor consequences: ApprovalConsequences | undefined = undefined;
+  /** The heading of the approve consequence */
+  @property({ attribute: "if-approve-label" }) accessor ifApproveLabel = "If you approve";
+  /** The heading of the deny consequence */
+  @property({ attribute: "if-deny-label" }) accessor ifDenyLabel = "If you deny";
+  /** Shows "Edit arguments", which turns the text details into fields; each change fires tc-details-change */
+  @property({ type: Boolean, attribute: "editable-details" }) accessor editableDetails = false;
+  /** The "Edit arguments" button's label */
+  @property({ attribute: "edit-details-label" }) accessor editDetailsLabel = "Edit arguments";
+  /** The button's label while editing */
+  @property({ attribute: "done-details-label" }) accessor doneDetailsLabel = "Done";
+  /** Sources the request rests on, shown as chips */
+  @property({ attribute: false }) accessor evidence: ApprovalEvidence[] | undefined = undefined;
+  /** The heading of the evidence chips */
+  @property({ attribute: "evidence-label" }) accessor evidenceLabel = "Evidence";
 
   /** @internal */ @state() accessor always = false;
   /** @internal */ @state() accessor busy = false;
@@ -130,6 +184,10 @@ export class TcApprovalCard extends TcElement {
   @state() accessor left = 0;
   /** @internal The countdown's one warning */
   @state() accessor warn = "";
+  /** @internal "Edit arguments" mode */
+  @state() accessor editingDetails = false;
+  /** @internal The detail values when editing first opened for this request – edited rows are marked against them */
+  @state() accessor detailsBefore: (string | Element)[] | null = null;
 
   private readonly uid = `tc-ap-${++uid}`;
   private prevStatus: ApprovalStatus | undefined = undefined;
@@ -276,6 +334,32 @@ export class TcApprovalCard extends TcElement {
     this.setStatus("denied");
   }
 
+  /** A detail row that "Edit arguments" turns into a field */
+  private canEdit(d: ApprovalDetail) {
+    return typeof d.value === "string" && d.editable !== false;
+  }
+
+  private toggleDetails() {
+    if (this.busy) return;
+    if (!this.editingDetails && !this.detailsBefore) this.detailsBefore = (this.details ?? []).map((d) => d.value);
+    this.editingDetails = !this.editingDetails;
+    if (this.editingDetails) void this.updateComplete.then(() => this.querySelector<HTMLInputElement>(".ui-ap__arg")?.focus());
+  }
+
+  private editDetail(index: number, field: HTMLInputElement) {
+    const rows = this.details ?? [];
+    const row = rows[index];
+    if (!row) return;
+    const value = field.value;
+    const details = rows.map((d, i) => (i === index ? { ...d, value } : d));
+    if (!this.emit<ApprovalDetailsChange>("tc-details-change", { details, index, label: row.label, value }, { cancelable: true })) {
+      // Controlled: the field shows the row's value until the app passes the new rows back
+      field.value = typeof row.value === "string" ? row.value : "";
+      return;
+    }
+    this.details = details;
+  }
+
   private stopTimer() {
     // The button goes away with the countdown – focus moves on to Approve first
     rescueFocus(this.querySelector(".ui-ap__stop"), [this.approveBtn]);
@@ -289,6 +373,8 @@ export class TcApprovalCard extends TcElement {
       this.left = this.total;
     } else if (this.prevStatus !== status) {
       if (status === "pending") {
+        this.editingDetails = false;
+        this.detailsBefore = null;
         this.leaving = false;
         this.entering = true;
         this.always = false;
@@ -316,7 +402,7 @@ export class TcApprovalCard extends TcElement {
 
     const actions = this.actions ?? (this.resolvedLook === "clean" ? "card" : "tray");
     const total = this.total;
-    const describedBy = [this.ownDescribedBy, this.description ? `${this.uid}-desc` : null, total && !this.resolved && !this.timerOff ? `${this.uid}-timer` : null].filter(Boolean).join(" ");
+    const describedBy = [this.ownDescribedBy, this.description ? `${this.uid}-desc` : null, this.why && !this.resolved ? `${this.uid}-why` : null, total && !this.resolved && !this.timerOff ? `${this.uid}-timer` : null].filter(Boolean).join(" ");
     this.setAttribute("aria-labelledby", this.resolved ? `${this.uid}-row` : `${this.uid}-title`);
     if (describedBy) this.setAttribute("aria-describedby", describedBy);
     else this.removeAttribute("aria-describedby");
@@ -487,16 +573,22 @@ export class TcApprovalCard extends TcElement {
             : nothing}
         </div>
 
+        ${this.why
+          ? html`<div class="ui-ap__why">
+              <span class="ui-ap__why-label">${infoIcon}${this.whyLabel}</span>
+              <p class="ui-ap__why-text" id=${ifDefined(leaving ? undefined : `${id}-why`)}>${this.why}</p>
+            </div>`
+          : nothing}
+
         ${body || details?.length
           ? html`<div class="ui-ap__preview">
               ${body ? html`<div class="ui-ap__custom">${content(body)}</div>` : nothing}
-              ${details?.length
-                ? html`<dl class="ui-ap__details">
-                    ${details.map((d) => html`<div class="ui-ap__detail"><dt>${d.label}</dt><dd>${content(d.value)}</dd></div>`)}
-                  </dl>`
-                : nothing}
+              ${details?.length ? this.renderDetails(details, leaving) : nothing}
             </div>`
           : nothing}
+
+        ${this.renderConsequences()}
+        ${this.renderEvidence()}
 
         ${alwaysBox}
         ${actions === "card" ? foot : nothing}
@@ -507,6 +599,76 @@ export class TcApprovalCard extends TcElement {
       ${total > 0 && !this.timerOff
         ? html`<span class="ui-ap__sr" id=${ifDefined(leaving ? undefined : `${id}-timer`)}>${timerText(Math.max(0, Math.ceil(this.left / 1000)))}</span>`
         : nothing}
+    </div>`;
+  }
+
+  private renderDetails(details: ApprovalDetail[], leaving: boolean) {
+    const editable = this.editableDetails && details.some((d) => this.canEdit(d));
+    const editing = editable && this.editingDetails;
+    const before = this.detailsBefore;
+    const toggle = editable
+      ? html`<button
+          type="button"
+          class="ui-ap__btn ui-ap__btn--ghost ui-ap__args-toggle"
+          aria-disabled=${ifDefined(this.busy ? "true" : undefined)}
+          aria-controls=${ifDefined(leaving ? undefined : `${this.uid}-args`)}
+          @click=${() => this.toggleDetails()}
+        >${editing ? checkIcon : pencilIcon}${editing ? this.doneDetailsLabel : this.editDetailsLabel}</button>`
+      : nothing;
+    return html`<dl class="ui-ap__details" id=${ifDefined(editable && !leaving ? `${this.uid}-args` : undefined)} ?data-editing=${editing}>
+        ${details.map((d, i) => {
+          const edited = !!before && i < before.length && before[i] !== d.value;
+          return html`<div class="ui-ap__detail" ?data-edited=${edited}><dt>${d.label}</dt><dd>${editing && this.canEdit(d)
+              ? html`<input
+                  class="ui-ap__arg"
+                  type="text"
+                  spellcheck="false"
+                  autocomplete="off"
+                  aria-label=${d.label}
+                  .value=${live(d.value as string)}
+                  ?disabled=${this.busy}
+                  @input=${(e: Event) => this.editDetail(i, e.target as HTMLInputElement)}
+                  @keydown=${(e: KeyboardEvent) => {
+                    if (e.key !== "Escape" || e.isComposing) return;
+                    // Escape leaves the mode, keeping the edits – it never denies from inside a field
+                    e.preventDefault();
+                    this.editingDetails = false;
+                    void this.updateComplete.then(() => this.querySelector<HTMLElement>(".ui-ap__args-toggle")?.focus());
+                  }}
+                />`
+              : content(d.value)}${edited ? html`<span class="ui-ap__edited">Edited</span>` : nothing}</dd></div>`;
+        })}
+      </dl>
+      ${toggle}`;
+  }
+
+  private renderConsequences() {
+    const c = this.consequences;
+    if (!c?.approve && !c?.deny) return nothing;
+    return html`<div class="ui-ap__outcomes">
+      ${c.approve
+        ? html`<div class="ui-ap__outcome" data-kind="approve"><span class="ui-ap__outcome-label">${checkIcon}${this.ifApproveLabel}</span><p class="ui-ap__outcome-text">${c.approve}</p></div>`
+        : nothing}
+      ${c.deny
+        ? html`<div class="ui-ap__outcome" data-kind="deny"><span class="ui-ap__outcome-label">${crossIcon}${this.ifDenyLabel}</span><p class="ui-ap__outcome-text">${c.deny}</p></div>`
+        : nothing}
+    </div>`;
+  }
+
+  private renderEvidence() {
+    const items = this.evidence;
+    if (!items?.length) return nothing;
+    const id = `${this.uid}-evidence`;
+    return html`<div class="ui-ap__evidence">
+      <span class="ui-ap__evidence-label" id=${id}>${this.evidenceLabel}</span>
+      <ul class="ui-ap__chips" aria-labelledby=${id}>
+        ${items.map((ev, index) => {
+          const inner = html`${fileIcon}<span class="ui-ap__chip-label">${ev.label}</span>${ev.detail ? html`<span class="ui-ap__chip-detail">${ev.detail}</span>` : nothing}`;
+          return html`<li>${ev.href
+            ? html`<a class="ui-ap__chip" href=${ev.href} target="_blank" rel="noopener noreferrer">${inner}</a>`
+            : html`<button type="button" class="ui-ap__chip" @click=${() => this.emit<ApprovalEvidenceSelect>("tc-evidence-select", { evidence: ev, index })}>${inner}</button>`}</li>`;
+        })}
+      </ul>
     </div>`;
   }
 
@@ -1061,6 +1223,150 @@ export class TcApprovalCard extends TcElement {
   clip: rect(0 0 0 0);
   white-space: nowrap;
   border: 0;
+}
+/* ---------- Decision detail (optional): why, consequences, editable arguments, evidence ---------- */
+.ui-ap__mini {
+  width: 14px;
+  height: 14px;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+:where([data-look="clean"], [data-look="clean"] *).ui-ap__mini { stroke-width: 1.5; }
+.ui-ap__why,
+.ui-ap__evidence {
+  display: grid;
+  gap: var(--tc-space-1-5);
+  margin-top: var(--tc-space-3-5);
+}
+.ui-ap__why-label,
+.ui-ap__evidence-label,
+.ui-ap__outcome-label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tc-space-1-5);
+  color: var(--tc-text-muted);
+  font-size: var(--tc-font-size-sm);
+  line-height: var(--tc-line-height-tight);
+}
+:where([data-look="standard"], [data-look="standard"] *):is(.ui-ap__why-label, .ui-ap__evidence-label, .ui-ap__outcome-label) { font-weight: var(--tc-font-weight-medium); }
+.ui-ap__why-label > svg { color: var(--tc-icon-muted); }
+.ui-ap__why-text {
+  margin: 0;
+  color: var(--tc-text-primary);
+  line-height: var(--tc-line-height-snug);
+}
+/* If you approve / If you deny: two quiet panels side by side */
+.ui-ap__outcomes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+  gap: var(--tc-space-2);
+  margin-top: var(--tc-space-3-5);
+}
+.ui-ap__outcome {
+  display: grid;
+  align-content: start;
+  gap: var(--tc-space-1);
+  min-width: 0;
+  padding: var(--tc-space-2-5) var(--tc-space-3);
+  border-radius: var(--tc-radius-lg);
+  box-shadow: inset 0 0 0 var(--tc-hairline) var(--tc-border-default);
+}
+:where([data-look="standard"], [data-look="standard"] *).ui-ap__outcome { background: var(--tc-fill-subtle); }
+.ui-ap__outcome[data-kind="approve"] .ui-ap__outcome-label > svg { color: var(--tc-status-success-fg); }
+.ui-ap__outcome[data-kind="deny"] .ui-ap__outcome-label > svg { color: var(--tc-status-danger-fg); }
+.ui-ap__outcome-text {
+  margin: 0;
+  color: var(--tc-text-primary);
+  line-height: var(--tc-line-height-snug);
+}
+/* Edit arguments: the text details become fields */
+.ui-ap__args-toggle {
+  justify-self: start;
+  height: var(--tc-control-h-sm);
+  margin-left: calc(-1 * var(--tc-space-2));
+  padding: 0 var(--tc-space-2);
+  border-radius: var(--tc-control-radius-sm);
+  font-size: var(--tc-font-size-sm);
+  gap: var(--tc-space-1-5);
+}
+.ui-ap__details[data-editing] { align-items: center; }
+.ui-ap__details[data-editing] dd { overflow: visible; }
+.ui-ap__arg {
+  width: 100%;
+  min-width: 0;
+  height: var(--tc-control-h-sm);
+  margin: 0;
+  padding: 0 var(--tc-space-2);
+  border: 0;
+  border-radius: var(--tc-control-radius-sm);
+  outline: 0;
+  background: var(--tc-field-bg);
+  box-shadow: var(--tc-field-shadow);
+  color: var(--tc-text-primary);
+  font: inherit;
+  transition: box-shadow var(--tc-duration-fast) var(--tc-ease-standard);
+}
+.ui-ap__arg:hover { box-shadow: var(--tc-field-shadow-hover); }
+.ui-ap__arg:focus { box-shadow: var(--tc-field-shadow-focus); }
+.ui-ap__detail[data-edited] dd {
+  display: flex;
+  align-items: center;
+  gap: var(--tc-space-2);
+}
+.ui-ap__edited {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  height: var(--tc-pill-h);
+  padding: 0 var(--tc-pill-px);
+  border-radius: var(--tc-pill-radius);
+  background: var(--tc-accent-subtle);
+  color: var(--tc-accent-text);
+  font-size: var(--tc-pill-font-size);
+  font-weight: var(--tc-pill-font-weight);
+  line-height: var(--tc-line-height-tight);
+}
+/* Evidence: chips that open the sources */
+.ui-ap__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--tc-space-1-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ui-ap__chips > li { display: flex; min-width: 0; max-width: 100%; }
+.ui-ap__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--tc-space-1-5);
+  min-width: 0;
+  max-width: 100%;
+  height: var(--tc-control-h-sm);
+  padding: 0 var(--tc-space-2-5) 0 var(--tc-space-2);
+  border: 0;
+  border-radius: var(--tc-control-radius-sm);
+  background: var(--tc-fill-default);
+  color: var(--tc-text-secondary);
+  font: inherit;
+  font-size: var(--tc-font-size-sm);
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard);
+}
+.ui-ap__chip:hover { background: var(--tc-fill-strong); color: var(--tc-text-primary); }
+.ui-ap__chip:focus-visible { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
+.ui-ap__chip > svg { color: var(--tc-icon-muted); }
+.ui-ap__chip-label { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.ui-ap__chip-detail { flex: none; color: var(--tc-text-muted); }
+/* Narrow: an edited row is marked with a dot, so its field keeps the width (the word stays for screen readers) */
+@container (max-width: 400px) {
+  .ui-ap__edited { width: 6px; height: 6px; padding: 0; overflow: hidden; border-radius: 50%; background: var(--tc-accent); color: transparent; font-size: 0; }
 }
 /* Narrow cards: buttons share the full width, the hints go */
 @container (max-width: 400px) {

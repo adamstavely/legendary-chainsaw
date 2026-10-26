@@ -1,0 +1,326 @@
+{
+ "elements": [
+  {
+   "tag": "tc-reflection-gate",
+   "className": "TcReflectionGate",
+   "description": "A pause before relying on an answer: intent, prior, reformulate or checkpoint prompts, submitted through a\ncancelable event.",
+   "properties": [
+    {
+     "name": "mode",
+     "attribute": "mode",
+     "type": "ReflectionMode",
+     "default": "\"intent\"",
+     "description": "Which prompt to show: intent, prior, reformulate or checkpoint",
+     "readonly": false
+    },
+    {
+     "name": "phase",
+     "attribute": "phase",
+     "type": "ReflectionPhase",
+     "default": "\"open\"",
+     "description": "Where the gate is: open, compare (reformulate's second step), done or skipped – set it to restore one",
+     "readonly": false
+    },
+    {
+     "name": "value",
+     "attribute": null,
+     "type": "ReflectionGateValue",
+     "default": "{}",
+     "description": "What the person wrote or picked, by field",
+     "readonly": false
+    },
+    {
+     "name": "answer",
+     "attribute": "answer",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The answer – hidden in prior mode until the prior is in, shown to restate in reformulate mode",
+     "readonly": false
+    },
+    {
+     "name": "claims",
+     "attribute": null,
+     "type": "ReflectionClaim[]",
+     "default": "[]",
+     "description": "The claims to pick from in checkpoint mode; without them the person types the claim",
+     "readonly": false
+    },
+    {
+     "name": "allowSkip",
+     "attribute": "allow-skip",
+     "type": "boolean",
+     "default": "false",
+     "description": "Shows Skip – only where your product lets people go on without reflecting",
+     "readonly": false
+    },
+    {
+     "name": "minWords",
+     "attribute": "min-words",
+     "type": "number",
+     "default": "5",
+     "description": "The fewest words a restatement may have",
+     "readonly": false
+    },
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The heading – defaults to the mode's",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The line under the heading – defaults to the mode's",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "Partial<ReflectionGateLabels>",
+     "default": "{}",
+     "description": "Any of the gate's texts, to change the wording or the language",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-value-change",
+     "detail": "",
+     "description": "The person edited a field; detail `{ value }`: ReflectionGateValueChange. Cancelable.",
+     "cancelable": true
+    },
+    {
+     "name": "tc-submit",
+     "detail": "",
+     "description": "The mode's fields passed their checks; detail `{ mode, value }`: ReflectionGateSubmission. Cancelable: preventDefault() keeps the gate open.",
+     "cancelable": true
+    },
+    {
+     "name": "tc-skip",
+     "detail": "",
+     "description": "Skip was pressed (only with `allow-skip`); detail `{ mode }`: ReflectionGateSkip. Cancelable.",
+     "cancelable": true
+    },
+    {
+     "name": "tc-phase-change",
+     "detail": "",
+     "description": "The gate moves on – to compare, done, skipped, or back to open; detail `{ phase }`: ReflectionGatePhaseChange. Cancelable.",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "rg",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-active",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-border-control",
+    "--tc-border-control-hover",
+    "--tc-border-default",
+    "--tc-border-subtle",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-lg",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-md",
+    "--tc-control-px-sm",
+    "--tc-control-radius-md",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-instant",
+    "--tc-duration-moderate",
+    "--tc-duration-quick",
+    "--tc-duration-slow",
+    "--tc-ease-move",
+    "--tc-ease-spring",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-font-size",
+    "--tc-field-h",
+    "--tc-field-px",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-field-shadow-hover",
+    "--tc-field-shadow-invalid",
+    "--tc-fill-default",
+    "--tc-fill-strong",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-hairline",
+    "--tc-line-height-normal",
+    "--tc-line-height-relaxed",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-radius-full",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-radius-xl",
+    "--tc-radius-xs",
+    "--tc-seg-pad",
+    "--tc-seg-thumb-bg",
+    "--tc-seg-thumb-shadow",
+    "--tc-seg-track-bg",
+    "--tc-seg-track-radius",
+    "--tc-shadow-raised",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-5",
+    "--tc-status-danger-border",
+    "--tc-status-danger-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-surface-well",
+    "--tc-text-muted",
+    "--tc-text-placeholder",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "missingTerms",
+   "signature": "missingTerms(answer: string, restatement: string): string[]",
+   "description": "The answer's key terms that a restatement doesn't mention: numbers, amounts and dates, and longer words that\naren't filler – lower-cased, once each, in the answer's order."
+  }
+ ],
+ "react": [
+  {
+   "component": "ReflectionGate",
+   "exported": true,
+   "props": [
+    {
+     "name": "mode",
+     "type": "ReflectionMode",
+     "optional": true,
+     "description": "Which prompt to show: intent, prior, reformulate or checkpoint"
+    },
+    {
+     "name": "value",
+     "type": "ReflectionGateValue",
+     "optional": true,
+     "description": "What the person wrote or picked (controlled). Leave it undefined to let the gate keep it, starting at `defaultValue`"
+    },
+    {
+     "name": "defaultValue",
+     "type": "ReflectionGateValue",
+     "optional": true,
+     "description": "What the fields hold at first when uncontrolled"
+    },
+    {
+     "name": "onChange",
+     "type": "(value: ReflectionGateValue) => void",
+     "optional": true,
+     "description": "Called with every edit, controlled or not"
+    },
+    {
+     "name": "phase",
+     "type": "ReflectionPhase",
+     "optional": true,
+     "description": "Where the gate is (controlled): open, compare, done or skipped. Leave it undefined to let the gate move on its own"
+    },
+    {
+     "name": "defaultPhase",
+     "type": "ReflectionPhase",
+     "optional": true,
+     "description": "The phase at first when uncontrolled – e.g. \"done\" for a reflection already on record"
+    },
+    {
+     "name": "onPhaseChange",
+     "type": "(phase: ReflectionPhase) => void",
+     "optional": true,
+     "description": "Called whenever the gate moves on, controlled or not"
+    },
+    {
+     "name": "onSubmit",
+     "type": "(submission: ReflectionGateSubmission) => boolean | void",
+     "optional": true,
+     "description": "Called with the mode's fields once they pass their checks; return false to keep the gate open"
+    },
+    {
+     "name": "onSkip",
+     "type": "(mode: ReflectionMode) => boolean | void",
+     "optional": true,
+     "description": "Shows Skip and is called when it's pressed; return false to keep the gate open. Leave it out where skipping isn't allowed"
+    },
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading – defaults to the mode's"
+    }
+   ],
+   "hides": [
+    "mode",
+    "value",
+    "defaultValue",
+    "phase",
+    "heading",
+    "allowSkip",
+    "onChange",
+    "onSubmit"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 38540,
+  "gzip": 11182
+ }
+}

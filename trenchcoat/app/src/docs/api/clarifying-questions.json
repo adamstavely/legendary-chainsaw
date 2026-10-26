@@ -1,0 +1,336 @@
+{
+ "elements": [
+  {
+   "tag": "tc-clarifying-questions",
+   "className": "TcClarifyingQuestions",
+   "description": "The agent asks before it starts: two or three questions – choices, a short answer, \"You decide\" – sent back as one reply.",
+   "properties": [
+    {
+     "name": "questions",
+     "attribute": null,
+     "type": "ClarifyingQuestion[]",
+     "default": "[]",
+     "description": "The questions, in the order they're asked",
+     "readonly": false
+    },
+    {
+     "name": "value",
+     "attribute": null,
+     "type": "ClarifyingAnswers",
+     "default": "{}",
+     "description": "The answers so far, by question id – the value",
+     "readonly": false
+    },
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"A few questions before I start\"",
+     "description": "Names the questions, as the agent says it",
+     "readonly": false
+    },
+    {
+     "name": "intro",
+     "attribute": "intro",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "What the agent will do once it knows, in a sentence under the heading",
+     "readonly": false
+    },
+    {
+     "name": "sent",
+     "attribute": "sent",
+     "type": "boolean",
+     "default": "false",
+     "description": "The answers have been sent: the card shows them as the reply",
+     "readonly": false
+    },
+    {
+     "name": "sendLabel",
+     "attribute": "send-label",
+     "type": "string",
+     "default": "\"Send answers\"",
+     "description": "The send button's label",
+     "readonly": false
+    },
+    {
+     "name": "decideLabel",
+     "attribute": "decide-label",
+     "type": "string",
+     "default": "\"You decide\"",
+     "description": "The label of the answer that leaves a question to the agent",
+     "readonly": false
+    },
+    {
+     "name": "skipLabel",
+     "attribute": "skip-label",
+     "type": "string",
+     "default": "\"Skip, you decide\"",
+     "description": "The label of the button that leaves every question to the agent",
+     "readonly": false
+    },
+    {
+     "name": "skippable",
+     "attribute": "skippable",
+     "type": "boolean",
+     "default": "true",
+     "description": "Offers the skip button; set it to false when the agent can't go on without answers",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-value-change",
+     "detail": "",
+     "description": "An answer changed. Cancelable. Detail: ClarifyingAnswersChange ({ value })",
+     "cancelable": true
+    },
+    {
+     "name": "tc-send",
+     "detail": "",
+     "description": "Send, Enter on the last question, or Skip – every answer in one reply. Cancelable: unless prevented the card shows as sent. Detail: ClarifyingAnswersChange ({ value })",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "clq",
+   "cssProperties": [
+    {
+     "name": "--tc-clarifying-questions-num",
+     "value": "20px",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-clarifying-questions-icon",
+     "value": "24px",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-solid",
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-active",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-border-control",
+    "--tc-border-selected",
+    "--tc-border-strong",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-md",
+    "--tc-control-px-sm",
+    "--tc-control-radius-md",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-quick",
+    "--tc-ease-move",
+    "--tc-ease-spring",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-font-size",
+    "--tc-field-px",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-field-shadow-hover",
+    "--tc-field-shadow-invalid",
+    "--tc-fill-default",
+    "--tc-fill-strong",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-kbd-font-size",
+    "--tc-kbd-font-weight",
+    "--tc-kbd-h",
+    "--tc-kbd-on-inverse-bg",
+    "--tc-kbd-px",
+    "--tc-kbd-radius",
+    "--tc-line-height-none",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-2xs",
+    "--tc-radius-full",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-shadow-raised",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-status-danger-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-on-accent",
+    "--tc-text-placeholder",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "ClarifyingQuestionsOwn",
+   "exported": false,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "Names the questions, as the agent says it"
+    },
+    {
+     "name": "value",
+     "type": "ClarifyingAnswers",
+     "optional": true,
+     "description": "The answers, by question id. Controlled when defined – pass back what onChange reports"
+    },
+    {
+     "name": "defaultValue",
+     "type": "ClarifyingAnswers",
+     "optional": true,
+     "description": "Starting answers when uncontrolled"
+    },
+    {
+     "name": "onChange",
+     "type": "(value: ClarifyingAnswers) => void",
+     "optional": true,
+     "description": "An answer changed: every answer so far"
+    },
+    {
+     "name": "sent",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether the answers have been sent. Controlled when defined – set it after onSend"
+    },
+    {
+     "name": "defaultSent",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether it starts as sent when uncontrolled"
+    },
+    {
+     "name": "onSend",
+     "type": "(value: ClarifyingAnswers, event: Event) => void",
+     "optional": true,
+     "description": "Send, Enter on the last question, or Skip: every answer in one reply. Call event.preventDefault() to keep the questions open"
+    }
+   ],
+   "hides": []
+  },
+  {
+   "component": "ClarifyingQuestions",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "Names the questions, as the agent says it"
+    },
+    {
+     "name": "value",
+     "type": "ClarifyingAnswers",
+     "optional": true,
+     "description": "The answers, by question id. Controlled when defined – pass back what onChange reports"
+    },
+    {
+     "name": "defaultValue",
+     "type": "ClarifyingAnswers",
+     "optional": true,
+     "description": "Starting answers when uncontrolled"
+    },
+    {
+     "name": "onChange",
+     "type": "(value: ClarifyingAnswers) => void",
+     "optional": true,
+     "description": "An answer changed: every answer so far"
+    },
+    {
+     "name": "sent",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether the answers have been sent. Controlled when defined – set it after onSend"
+    },
+    {
+     "name": "defaultSent",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether it starts as sent when uncontrolled"
+    },
+    {
+     "name": "onSend",
+     "type": "(value: ClarifyingAnswers, event: Event) => void",
+     "optional": true,
+     "description": "Send, Enter on the last question, or Skip: every answer in one reply. Call event.preventDefault() to keep the questions open"
+    }
+   ],
+   "hides": [
+    "heading"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 33399,
+  "gzip": 9379
+ }
+}

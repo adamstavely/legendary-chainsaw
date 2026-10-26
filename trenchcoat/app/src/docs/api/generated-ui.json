@@ -1,0 +1,111 @@
+{
+ "elements": [
+  {
+   "tag": "tc-generated-ui",
+   "className": "TcGeneratedUi",
+   "description": "Renders a model's UI spec – tables, charts, metrics, forms, callouts, text – as the library's own elements, with\ntext for anything it can't draw.",
+   "properties": [
+    {
+     "name": "spec",
+     "attribute": null,
+     "type": "GeneratedUiSpec | string | null | undefined",
+     "default": "undefined",
+     "description": "The spec: { blocks }, a list of blocks or one block – or the model's JSON text, which may still be arriving",
+     "readonly": false
+    },
+    {
+     "name": "streaming",
+     "attribute": "streaming",
+     "type": "boolean",
+     "default": "false",
+     "description": "The spec text is still arriving: blocks show as they close, the one being written is a placeholder",
+     "readonly": false
+    },
+    {
+     "name": "showIssues",
+     "attribute": "show-issues",
+     "type": "boolean",
+     "default": "false",
+     "description": "Show why a block fell back to text, under it – for development and evaluation, not for end users",
+     "readonly": false
+    },
+    {
+     "name": "headingLevel",
+     "attribute": "heading-level",
+     "type": "number",
+     "default": "3",
+     "description": "The heading level of text headings, group and form titles (2–6); the tables' own titles stay h3",
+     "readonly": false
+    },
+    {
+     "name": "issues",
+     "attribute": null,
+     "type": "GeneratedUiIssue[]",
+     "default": null,
+     "description": "What fell back to text, and why, by JSON Pointer path",
+     "readonly": true
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-action",
+     "detail": "",
+     "description": "A form was submitted or an action pressed ({ kind: \"submit\" | \"action\", action, block, values? })",
+     "cancelable": false
+    },
+    {
+     "name": "tc-spec-check",
+     "detail": "",
+     "description": "The spec settled (not streaming) and what fell back to text changed ({ issues })",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "gui",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-line-height-normal",
+    "--tc-space-3",
+    "--tc-text-primary"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "GeneratedUi",
+   "exported": true,
+   "props": [
+    {
+     "name": "onAction",
+     "type": "(action: GeneratedUiActionDetail) => void",
+     "optional": true,
+     "description": "Called when a form is submitted (with its values) or an action button is pressed"
+    },
+    {
+     "name": "onSpecCheck",
+     "type": "(issues: GeneratedUiSpecCheck[\"issues\"]) => void",
+     "optional": true,
+     "description": "Called once the spec settles with the blocks that fell back to text, and why"
+    }
+   ],
+   "hides": []
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 69314,
+  "gzip": 20592
+ }
+}

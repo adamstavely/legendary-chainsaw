@@ -1,0 +1,329 @@
+{
+ "elements": [
+  {
+   "tag": "tc-verification-queue",
+   "className": "TcVerificationQueue",
+   "description": "The claims collected across a session, each marked verified externally, can't verify, incorrect or dismissed\nwith its source passage beside it, and an export that stays blocked until they're reviewed.",
+   "properties": [
+    {
+     "name": "claims",
+     "attribute": null,
+     "type": "VerificationClaim[]",
+     "default": "[]",
+     "description": "The claims in the queue, in the order they arrived; each one's `status` says where it stands",
+     "readonly": false
+    },
+    {
+     "name": "sources",
+     "attribute": null,
+     "type": "ClaimSource[]",
+     "default": "[]",
+     "description": "The passages the claims rest on, looked up by id",
+     "readonly": false
+    },
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Verification queue\"",
+     "description": "The heading, and the region's name",
+     "readonly": false
+    },
+    {
+     "name": "allowUnreviewed",
+     "attribute": "allow-unreviewed",
+     "type": "number",
+     "default": "0",
+     "description": "How many claims may be left to review with the export still allowed (default 0: every claim)",
+     "readonly": false
+    },
+    {
+     "name": "exportLabel",
+     "attribute": "export-label",
+     "type": "string",
+     "default": "\"Export\"",
+     "description": "The export button",
+     "readonly": false
+    },
+    {
+     "name": "shortcuts",
+     "attribute": "shortcuts",
+     "type": "boolean",
+     "default": "true",
+     "description": "Single-key marks on the list (V C X D U); false turns them off",
+     "readonly": false
+    },
+    {
+     "name": "maxHeight",
+     "attribute": "max-height",
+     "type": "number",
+     "default": "320",
+     "description": "The tallest the list grows, in px, before it scrolls",
+     "readonly": false
+    },
+    {
+     "name": "now",
+     "attribute": "now",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The moment source freshness is counted to (epoch ms), passed to every validity badge",
+     "readonly": false
+    },
+    {
+     "name": "statusLabels",
+     "attribute": null,
+     "type": "Partial<Record<VerificationStatus, string>>",
+     "default": "{}",
+     "description": "The names of the statuses – in place of To review, Verified externally, Can't verify, Incorrect and Dismissed",
+     "readonly": false
+    },
+    {
+     "name": "actionLabels",
+     "attribute": null,
+     "type": "Partial<Record<Exclude<VerificationStatus, \"pending\">, string>>",
+     "default": "{}",
+     "description": "The short labels on the toolbar's buttons – in place of Verified, Can't verify, Incorrect and Dismiss",
+     "readonly": false
+    },
+    {
+     "name": "sourceLabels",
+     "attribute": null,
+     "type": "Partial<Record<ClaimSourceType, string>>",
+     "default": "{}",
+     "description": "The names of the source types, as tc-claim-answer's `sourceLabels`",
+     "readonly": false
+    },
+    {
+     "name": "filter",
+     "attribute": "filter",
+     "type": "VerificationFilter",
+     "default": "\"open\"",
+     "description": "What the list shows: the claims still to review, the reviewed ones, or all",
+     "readonly": false
+    },
+    {
+     "name": "counts",
+     "attribute": null,
+     "type": "VerificationCounts",
+     "default": null,
+     "description": "How many claims there are in each status",
+     "readonly": true
+    },
+    {
+     "name": "exportReady",
+     "attribute": null,
+     "type": "",
+     "default": null,
+     "description": "The export is allowed: no more than `allowUnreviewed` claims are left to review",
+     "readonly": true
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-claims-change",
+     "detail": "",
+     "description": "A claim was marked; detail `{ claims, claim, status }` (VerificationClaimsChange) – the whole list after the change. Cancelable.",
+     "cancelable": true
+    },
+    {
+     "name": "tc-review",
+     "detail": "",
+     "description": "A claim was marked (after tc-claims-change, whether or not that was prevented); detail `{ claim, status, previous }` (VerificationReviewDetail)",
+     "cancelable": false
+    },
+    {
+     "name": "tc-filter-change",
+     "detail": "",
+     "description": "A filter button was pressed; detail `{ filter }` (VerificationFilterChange). Cancelable.",
+     "cancelable": true
+    },
+    {
+     "name": "tc-export",
+     "detail": "",
+     "description": "Export was pressed with the gate open; detail `{ claims, counts }` (VerificationExportDetail)",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "vq",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-text",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-border-default",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-md",
+    "--tc-control-radius-md",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-duration-slow",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-strong",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-sans",
+    "--tc-font-size-2xs",
+    "--tc-font-size-lg",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-hairline",
+    "--tc-line-height-none",
+    "--tc-line-height-normal",
+    "--tc-line-height-relaxed",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-full",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-radius-xs",
+    "--tc-shadow-raised",
+    "--tc-source-grounded-bg",
+    "--tc-source-grounded-fg",
+    "--tc-source-inferred-bg",
+    "--tc-source-inferred-fg",
+    "--tc-source-model-bg",
+    "--tc-source-model-fg",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-4-5",
+    "--tc-space-6",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-surface-well",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tray-inset",
+    "--tc-tray-radius",
+    "--tc-verification-queue-bg",
+    "--tc-verification-queue-fg",
+    "--tc-verification-queue-line",
+    "--tc-verification-queue-max",
+    "--tc-verification-queue-src",
+    "--tc-verification-queue-src-bg"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "VerificationQueue",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading, and the region's name"
+    },
+    {
+     "name": "claims",
+     "type": "VerificationClaim[]",
+     "optional": true,
+     "description": "The claims in the queue with their statuses – controlled when defined; pair it with `onClaimsChange`"
+    },
+    {
+     "name": "defaultClaims",
+     "type": "VerificationClaim[]",
+     "optional": true,
+     "description": "The claims at first, when `claims` isn't controlled – the element keeps the marks"
+    },
+    {
+     "name": "onClaimsChange",
+     "type": "(claims: VerificationClaim[]) => void",
+     "optional": true,
+     "description": "Called with the whole list after every mark"
+    },
+    {
+     "name": "onReview",
+     "type": "(claim: VerificationClaim, status: VerificationStatus, previous: VerificationStatus) => void",
+     "optional": true,
+     "description": "Called when a claim is marked, with its new and previous status – for apps that save one claim at a time"
+    },
+    {
+     "name": "filter",
+     "type": "VerificationFilter",
+     "optional": true,
+     "description": "What the list shows – controlled when defined"
+    },
+    {
+     "name": "defaultFilter",
+     "type": "VerificationFilter",
+     "optional": true,
+     "description": "What the list shows at first (default \"open\": the claims still to review)"
+    },
+    {
+     "name": "onFilterChange",
+     "type": "(filter: VerificationFilter) => void",
+     "optional": true,
+     "description": "Called when a filter button is pressed"
+    },
+    {
+     "name": "onExport",
+     "type": "(detail: VerificationExportDetail) => void",
+     "optional": true,
+     "description": "Called by Export once the gate is open, with every claim and the count per status"
+    }
+   ],
+   "hides": [
+    "claims",
+    "filter",
+    "heading"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 37843,
+  "gzip": 11267
+ }
+}

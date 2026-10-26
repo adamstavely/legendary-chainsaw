@@ -1,0 +1,276 @@
+{
+ "elements": [
+  {
+   "tag": "tc-disagreement-banner",
+   "className": "TcDisagreementBanner",
+   "description": "Today's answer and an earlier answer to the same question side by side, the difference highlighted, with dismiss\nand open-the-earlier-session.",
+   "properties": [
+    {
+     "name": "earlier",
+     "attribute": null,
+     "type": "DisagreementAnswer | undefined",
+     "default": "undefined",
+     "description": "The earlier answer – on the left",
+     "readonly": false
+    },
+    {
+     "name": "current",
+     "attribute": null,
+     "type": "DisagreementAnswer | undefined",
+     "default": "undefined",
+     "description": "Today's answer – on the right",
+     "readonly": false
+    },
+    {
+     "name": "question",
+     "attribute": "question",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The question both answers were given to, shown under the heading",
+     "readonly": false
+    },
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"This answer differs from an earlier one\"",
+     "description": "The heading",
+     "readonly": false
+    },
+    {
+     "name": "summary",
+     "attribute": "summary",
+     "type": "string",
+     "default": "\"\"",
+     "description": "A line from your product on what changed, e.g. \"The notice period went from 30 to 60 days\"",
+     "readonly": false
+    },
+    {
+     "name": "expanded",
+     "attribute": "expanded",
+     "type": "boolean",
+     "default": "false",
+     "description": "Shows both answers in full; unset, long answers show only the changes and the words around them",
+     "readonly": false
+    },
+    {
+     "name": "context",
+     "attribute": "context",
+     "type": "number",
+     "default": "8",
+     "description": "How many shared words to keep either side of a change while not expanded",
+     "readonly": false
+    },
+    {
+     "name": "dismissible",
+     "attribute": "dismissible",
+     "type": "boolean",
+     "default": "false",
+     "description": "Shows Dismiss (fires tc-dismiss)",
+     "readonly": false
+    },
+    {
+     "name": "canOpen",
+     "attribute": "can-open",
+     "type": "boolean",
+     "default": "false",
+     "description": "Shows \"Open earlier session\" (fires tc-open-session)",
+     "readonly": false
+    },
+    {
+     "name": "dismissed",
+     "attribute": "dismissed",
+     "type": "boolean",
+     "default": "false",
+     "description": "Dismissed: the banner shows nothing",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-expanded-change",
+     "detail": "",
+     "description": "\"Show full answers\" or \"Show changes only\" was pressed; detail `{ expanded }`: DisagreementExpandedChange. Cancelable.",
+     "cancelable": true
+    },
+    {
+     "name": "tc-dismiss",
+     "detail": "",
+     "description": "Dismiss was pressed (with `dismissible`); detail `null`. Cancelable: preventDefault() keeps the banner.",
+     "cancelable": true
+    },
+    {
+     "name": "tc-open-session",
+     "detail": "",
+     "description": "\"Open earlier session\" was pressed (with `can-open`); detail `{ sessionId, answer }`: DisagreementOpenSession.",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "dsb",
+   "cssProperties": [
+    {
+     "name": "--tc-disagreement-banner-strike",
+     "value": "light-dark(rgba(229, 72, 77, 0.6), rgba(255, 120, 120, 0.7))",
+     "looks": [
+      "both",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-disagreement-banner-del-hot",
+     "value": "light-dark(rgba(220, 60, 60, 0.2), rgba(240, 90, 90, 0.28))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-disagreement-banner-ins-hot",
+     "value": "light-dark(rgba(34, 160, 90, 0.22), rgba(60, 200, 120, 0.28))",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-border-default",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-slow",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-line-height-relaxed",
+    "--tc-line-height-snug",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-2xs",
+    "--tc-radius-full",
+    "--tc-radius-sm",
+    "--tc-radius-xs",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-danger-solid",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-success-solid",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "DisagreementBanner",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading"
+    },
+    {
+     "name": "expanded",
+     "type": "boolean",
+     "optional": true,
+     "description": "Shows both answers in full (controlled). Leave it undefined to let the banner keep it, starting at `defaultExpanded`"
+    },
+    {
+     "name": "defaultExpanded",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether both answers show in full at first when uncontrolled"
+    },
+    {
+     "name": "onExpandedChange",
+     "type": "(expanded: boolean) => void",
+     "optional": true,
+     "description": "Called when \"Show full answers\" or \"Show changes only\" is pressed, controlled or not"
+    },
+    {
+     "name": "onDismiss",
+     "type": "() => boolean | void",
+     "optional": true,
+     "description": "Shows Dismiss and is called when it's pressed; return false to keep the banner"
+    },
+    {
+     "name": "onOpenEarlier",
+     "type": "(sessionId: string | undefined, answer: DisagreementAnswer) => void",
+     "optional": true,
+     "description": "Shows \"Open earlier session\" and is called with the earlier answer's session id when it's pressed"
+    }
+   ],
+   "hides": [
+    "heading",
+    "expanded",
+    "dismissible",
+    "canOpen",
+    "dismissed"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 66331,
+  "gzip": 16500
+ }
+}

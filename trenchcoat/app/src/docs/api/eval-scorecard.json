@@ -1,0 +1,316 @@
+{
+ "elements": [
+  {
+   "tag": "tc-eval-scorecard",
+   "className": "TcEvalScorecard",
+   "description": "Test cases run against prompt or model versions – pass or fail per case per version, the pass rate across versions,\nfilters by tag, and a case opened beside its expected answer.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Evals\"",
+     "description": "The heading – the eval set's name",
+     "readonly": false
+    },
+    {
+     "name": "versions",
+     "attribute": null,
+     "type": "EvalVersion[]",
+     "default": "[]",
+     "description": "The versions in the order they were made – the last one is judged by the Failing and Regressed filters",
+     "readonly": false
+    },
+    {
+     "name": "cases",
+     "attribute": null,
+     "type": "EvalCase[]",
+     "default": "[]",
+     "description": "The test cases, each with its results per version",
+     "readonly": false
+    },
+    {
+     "name": "tags",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[]",
+     "description": "The picked tags – a case with any of them shows; none picked shows every case",
+     "readonly": false
+    },
+    {
+     "name": "show",
+     "attribute": "show",
+     "type": "EvalScorecardShow",
+     "default": "\"all\"",
+     "description": "Which cases show: \"all\", \"failing\" (on the latest version) or \"regressed\" (passed on the one before, fails now)",
+     "readonly": false
+    },
+    {
+     "name": "open",
+     "attribute": null,
+     "type": "EvalScorecardOpen | null",
+     "default": "null",
+     "description": "The open case and version, or null for none",
+     "readonly": false
+    },
+    {
+     "name": "maxHeight",
+     "attribute": "max-height",
+     "type": "number",
+     "default": "360",
+     "description": "The grid's height before it scrolls, in px",
+     "readonly": false
+    },
+    {
+     "name": "formatRate",
+     "attribute": null,
+     "type": "(rate: number) => string",
+     "default": "percent",
+     "description": "Formats a pass rate (0–1) – defaults to a whole percentage, e.g. \"86%\"",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-tags-change",
+     "detail": "",
+     "description": "The picked tags changed ({ tags }: EvalScorecardTagsChange); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-show-change",
+     "detail": "",
+     "description": "All, Failing or Regressed was picked ({ show }: EvalScorecardShowChange); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-open-change",
+     "detail": "",
+     "description": "A case was opened, switched to another version or closed ({ open }: EvalScorecardOpenChange); cancelable",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "evs",
+   "cssProperties": [
+    {
+     "name": "--tc-eval-scorecard-col",
+     "value": "48px",
+     "looks": [
+      "both",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-eval-scorecard-row",
+     "value": "34px",
+     "looks": [
+      "both",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-eval-scorecard-line",
+     "value": "var(--tc-accent)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-eval-scorecard-side",
+     "value": "400px",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
+    "--tc-border-default",
+    "--tc-border-selected",
+    "--tc-border-subtle",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-ease-standard",
+    "--tc-eval-scorecard-versions",
+    "--tc-fill-hover",
+    "--tc-fill-selected",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-lg-plus",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xl",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-line-height-relaxed",
+    "--tc-line-height-snug",
+    "--tc-pill-font-size",
+    "--tc-pill-font-size-lg",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-h-lg",
+    "--tc-pill-px",
+    "--tc-pill-px-lg",
+    "--tc-pill-radius",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-radius-xs",
+    "--tc-seg-pad",
+    "--tc-seg-thumb-bg",
+    "--tc-seg-thumb-shadow",
+    "--tc-seg-track-bg",
+    "--tc-seg-track-radius",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-5",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-danger-solid",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-surface-well",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "evalStats",
+   "signature": "evalStats(versions: EvalVersion[], cases: readonly EvalCase[]): EvalVersionStats[]",
+   "description": "Pass rate per version over a set of cases: passes over everything that finished; null when nothing has"
+  },
+  {
+   "name": "evalRegressed",
+   "signature": "evalRegressed(c: EvalCase, versions: EvalVersion[]): void",
+   "description": "Whether a case failed on the latest version after passing on the one before"
+  }
+ ],
+ "react": [
+  {
+   "component": "EvalScorecard",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading – the eval set's name"
+    },
+    {
+     "name": "tags",
+     "type": "string[]",
+     "optional": true,
+     "description": "The picked tags. Controlled when defined; otherwise the component keeps them, starting from `defaultTags`"
+    },
+    {
+     "name": "defaultTags",
+     "type": "string[]",
+     "optional": true,
+     "description": "The tags picked at first when `tags` isn't controlled"
+    },
+    {
+     "name": "onTagsChange",
+     "type": "(tags: string[]) => void",
+     "optional": true,
+     "description": "Called with the picked tags after a tag is toggled or cleared, controlled or not"
+    },
+    {
+     "name": "show",
+     "type": "EvalScorecardShow",
+     "optional": true,
+     "description": "Which cases show – \"all\", \"failing\" or \"regressed\". Controlled when defined"
+    },
+    {
+     "name": "defaultShow",
+     "type": "EvalScorecardShow",
+     "optional": true,
+     "description": "Which cases show at first when `show` isn't controlled"
+    },
+    {
+     "name": "onShowChange",
+     "type": "(show: EvalScorecardShow) => void",
+     "optional": true,
+     "description": "Called with the outcome filter the user picked, controlled or not"
+    },
+    {
+     "name": "open",
+     "type": "EvalScorecardOpen | null",
+     "optional": true,
+     "description": "The open case and version, or null. Controlled when defined"
+    },
+    {
+     "name": "defaultOpen",
+     "type": "EvalScorecardOpen | null",
+     "optional": true,
+     "description": "The case open at first when `open` isn't controlled"
+    },
+    {
+     "name": "onOpenChange",
+     "type": "(open: EvalScorecardOpen | null) => void",
+     "optional": true,
+     "description": "Called when a case is opened, switched to another version or closed, controlled or not"
+    }
+   ],
+   "hides": [
+    "heading",
+    "tags",
+    "show",
+    "open"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 86525,
+  "gzip": 21573
+ }
+}

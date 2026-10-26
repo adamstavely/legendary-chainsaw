@@ -174,6 +174,86 @@
      "readonly": false
     },
     {
+     "name": "why",
+     "attribute": "why",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "\"Why you're seeing this\": one line on what made the agent ask, e.g. the rule or threshold it met",
+     "readonly": false
+    },
+    {
+     "name": "whyLabel",
+     "attribute": "why-label",
+     "type": "string",
+     "default": "\"Why you're seeing this\"",
+     "description": "The heading of the `why` line",
+     "readonly": false
+    },
+    {
+     "name": "consequences",
+     "attribute": null,
+     "type": "ApprovalConsequences | undefined",
+     "default": "undefined",
+     "description": "What happens if the person approves, and if they deny – one sentence each",
+     "readonly": false
+    },
+    {
+     "name": "ifApproveLabel",
+     "attribute": "if-approve-label",
+     "type": "string",
+     "default": "\"If you approve\"",
+     "description": "The heading of the approve consequence",
+     "readonly": false
+    },
+    {
+     "name": "ifDenyLabel",
+     "attribute": "if-deny-label",
+     "type": "string",
+     "default": "\"If you deny\"",
+     "description": "The heading of the deny consequence",
+     "readonly": false
+    },
+    {
+     "name": "editableDetails",
+     "attribute": "editable-details",
+     "type": "boolean",
+     "default": "false",
+     "description": "Shows \"Edit arguments\", which turns the text details into fields; each change fires tc-details-change",
+     "readonly": false
+    },
+    {
+     "name": "editDetailsLabel",
+     "attribute": "edit-details-label",
+     "type": "string",
+     "default": "\"Edit arguments\"",
+     "description": "The \"Edit arguments\" button's label",
+     "readonly": false
+    },
+    {
+     "name": "doneDetailsLabel",
+     "attribute": "done-details-label",
+     "type": "string",
+     "default": "\"Done\"",
+     "description": "The button's label while editing",
+     "readonly": false
+    },
+    {
+     "name": "evidence",
+     "attribute": null,
+     "type": "ApprovalEvidence[] | undefined",
+     "default": "undefined",
+     "description": "Sources the request rests on, shown as chips",
+     "readonly": false
+    },
+    {
+     "name": "evidenceLabel",
+     "attribute": "evidence-label",
+     "type": "string",
+     "default": "\"Evidence\"",
+     "description": "The heading of the evidence chips",
+     "readonly": false
+    },
+    {
      "name": "look",
      "attribute": "look",
      "type": "Look | undefined",
@@ -206,6 +286,18 @@
      "detail": "",
      "description": "Edit was pressed (shown with `editable`)",
      "cancelable": false
+    },
+    {
+     "name": "tc-details-change",
+     "detail": "",
+     "description": "An argument was edited in \"Edit arguments\" mode; detail `{ details, index, label, value }`. Cancelable: preventDefault() keeps the rows (controlled use)",
+     "cancelable": true
+    },
+    {
+     "name": "tc-evidence-select",
+     "detail": "",
+     "description": "An evidence chip without `href` was pressed; detail `{ evidence, index }`",
+     "cancelable": false
     }
    ],
    "slots": [],
@@ -235,6 +327,9 @@
     }
    ],
    "tokens": [
+    "--tc-accent",
+    "--tc-accent-subtle",
+    "--tc-accent-text",
     "--tc-action-ghost-bg-hover",
     "--tc-action-ghost-fg",
     "--tc-action-primary-bg",
@@ -269,7 +364,12 @@
     "--tc-duration-slowest",
     "--tc-ease-move",
     "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-field-shadow-hover",
     "--tc-fill-default",
+    "--tc-fill-strong",
     "--tc-fill-subtle",
     "--tc-focus-outline",
     "--tc-focus-ring-offset",
@@ -280,6 +380,7 @@
     "--tc-font-weight-medium",
     "--tc-font-weight-strong",
     "--tc-hairline",
+    "--tc-icon-muted",
     "--tc-kbd-bg",
     "--tc-kbd-fg",
     "--tc-kbd-font-size",
@@ -293,9 +394,12 @@
     "--tc-line-height-normal",
     "--tc-line-height-snug",
     "--tc-line-height-tight",
+    "--tc-pill-font-size",
     "--tc-pill-font-size-lg",
     "--tc-pill-font-weight",
+    "--tc-pill-h",
     "--tc-pill-h-lg",
+    "--tc-pill-px",
     "--tc-pill-px-lg",
     "--tc-pill-radius",
     "--tc-radius-lg",
@@ -322,6 +426,7 @@
     "--tc-text-muted",
     "--tc-text-on-inverse",
     "--tc-text-primary",
+    "--tc-text-secondary",
     "--tc-tray-inset",
     "--tc-tray-radius"
    ]
@@ -410,6 +515,18 @@
      "type": "() => void",
      "optional": true,
      "description": "Called when the countdown runs out (onDeny is called too)"
+    },
+    {
+     "name": "onDetailsChange",
+     "type": "(details: ApprovalDetail[], change: { index: number; label: string; value: string }) => void",
+     "optional": true,
+     "description": "With `editableDetails`, called with the rows after an argument is edited. Given, the rows are controlled – pass\nthem back as `details`; without it the card keeps the edits itself"
+    },
+    {
+     "name": "onEvidenceSelect",
+     "type": "(evidence: ApprovalEvidence, index: number) => void",
+     "optional": true,
+     "description": "Called when an evidence chip without `href` is pressed"
     }
    ],
    "hides": [
@@ -419,7 +536,7 @@
  ],
  "changelog": [],
  "size": {
-  "min": 39278,
-  "gzip": 11411
+  "min": 49893,
+  "gzip": 13805
  }
 }

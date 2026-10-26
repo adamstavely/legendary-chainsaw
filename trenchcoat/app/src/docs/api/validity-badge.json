@@ -1,0 +1,268 @@
+{
+ "elements": [
+  {
+   "tag": "tc-validity-badge",
+   "className": "TcValidityBadge",
+   "description": "Evidence freshness as a band that decays with age, plus contested and superseded marks – a badge, or a margin\nstrip for a document's paragraphs.",
+   "properties": [
+    {
+     "name": "mode",
+     "attribute": "mode",
+     "type": "\"badge\" | \"strip\"",
+     "default": "\"badge\"",
+     "description": "\"badge\" – the mark and the band in words; \"strip\" – one bar per paragraph down a document's margin",
+     "readonly": false
+    },
+    {
+     "name": "observed",
+     "attribute": "observed",
+     "type": "ValidityTime | undefined",
+     "default": "undefined",
+     "description": "When the evidence was observed or published: epoch ms, an ISO date string or a Date",
+     "readonly": false
+    },
+    {
+     "name": "profile",
+     "attribute": "profile",
+     "type": "ValidityProfileName | ValidityProfile",
+     "default": "\"standard\"",
+     "description": "How fast it decays: \"fast\", \"standard\", \"slow\", \"lasting\", or your own band boundaries in days",
+     "readonly": false
+    },
+    {
+     "name": "band",
+     "attribute": "band",
+     "type": "ValidityBand | undefined",
+     "default": "undefined",
+     "description": "The band, set outright – `observed` and the profile are then ignored",
+     "readonly": false
+    },
+    {
+     "name": "contested",
+     "attribute": "contested",
+     "type": "boolean",
+     "default": "false",
+     "description": "Other evidence disputes it: a dashed ring round the mark and the word \"Contested\"",
+     "readonly": false
+    },
+    {
+     "name": "superseded",
+     "attribute": "superseded",
+     "type": "boolean",
+     "default": "false",
+     "description": "Something newer replaces it: the mark turns gray and the badge says \"Superseded\" first",
+     "readonly": false
+    },
+    {
+     "name": "now",
+     "attribute": "now",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The moment the age is counted to, in epoch ms – defaults to when the element connected",
+     "readonly": false
+    },
+    {
+     "name": "compact",
+     "attribute": "compact",
+     "type": "boolean",
+     "default": "false",
+     "description": "Badge: only the mark, with its words in a tooltip and for screen readers",
+     "readonly": false
+    },
+    {
+     "name": "hideAge",
+     "attribute": "hide-age",
+     "type": "boolean",
+     "default": "false",
+     "description": "Badge: leave out the age (\"8 mo. ago\")",
+     "readonly": false
+    },
+    {
+     "name": "bandLabels",
+     "attribute": null,
+     "type": "Partial<Record<ValidityBand, string>>",
+     "default": "{}",
+     "description": "The words for the bands – your own vocabulary in place of High, Good, Aging and Stale",
+     "readonly": false
+    },
+    {
+     "name": "contestedLabel",
+     "attribute": "contested-label",
+     "type": "string",
+     "default": "\"Contested\"",
+     "description": "The word for a contested piece of evidence",
+     "readonly": false
+    },
+    {
+     "name": "supersededLabel",
+     "attribute": "superseded-label",
+     "type": "string",
+     "default": "\"Superseded\"",
+     "description": "The word for a superseded piece of evidence",
+     "readonly": false
+    },
+    {
+     "name": "subjectLabel",
+     "attribute": "subject-label",
+     "type": "string",
+     "default": "\"evidence\"",
+     "description": "What screen readers call the evidence: \"Aging evidence, observed 8 months ago\"",
+     "readonly": false
+    },
+    {
+     "name": "items",
+     "attribute": null,
+     "type": "ValidityInfo[]",
+     "default": "[]",
+     "description": "Strip: one entry per paragraph, in document order",
+     "readonly": false
+    },
+    {
+     "name": "for",
+     "attribute": "for",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Strip: the id of the document whose paragraphs the bars line up with; unset stacks the bars on their own",
+     "readonly": false
+    },
+    {
+     "name": "selector",
+     "attribute": "selector",
+     "type": "string",
+     "default": "\":scope > *\"",
+     "description": "Strip: which children of the `for` document count as paragraphs (a selector, default every child element)",
+     "readonly": false
+    },
+    {
+     "name": "stripLabel",
+     "attribute": "strip-label",
+     "type": "string",
+     "default": "\"Evidence freshness\"",
+     "description": "Strip: the name of the list of bars",
+     "readonly": false
+    },
+    {
+     "name": "paragraphLabel",
+     "attribute": "paragraph-label",
+     "type": "string",
+     "default": "\"Paragraph\"",
+     "description": "Strip: what an item without a `label` is called, before its number",
+     "readonly": false
+    },
+    {
+     "name": "currentBand",
+     "attribute": null,
+     "type": "ValidityBand",
+     "default": null,
+     "description": "The band as shown: `band`, else worked out from `observed`, the profile and `now`",
+     "readonly": true
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-locate",
+     "detail": "",
+     "description": "Strip: a segment was clicked, or Enter / Space was pressed on it; detail `{ index, item, target }` (ValidityLocateDetail) – the paragraph it stands for, when `for` names a document",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "vb",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-duration-fast",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-sm",
+    "--tc-font-weight-medium",
+    "--tc-line-height-tight",
+    "--tc-radius-badge",
+    "--tc-radius-full",
+    "--tc-radius-sm",
+    "--tc-radius-xs",
+    "--tc-shadow-overlay",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tooltip-bg",
+    "--tc-tooltip-fg",
+    "--tc-tooltip-font-size",
+    "--tc-tooltip-px",
+    "--tc-tooltip-radius",
+    "--tc-validity-aging-bg",
+    "--tc-validity-aging-fg",
+    "--tc-validity-badge-bg",
+    "--tc-validity-badge-fg",
+    "--tc-validity-good-bg",
+    "--tc-validity-good-fg",
+    "--tc-validity-high-bg",
+    "--tc-validity-high-fg",
+    "--tc-validity-stale-bg",
+    "--tc-validity-stale-fg",
+    "--tc-z-popover"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "validityTime",
+   "signature": "validityTime(t: ValidityTime | undefined): number",
+   "description": "A moment as epoch ms; NaN when it can't be read"
+  },
+  {
+   "name": "validityBand",
+   "signature": "validityBand(observed: number, now: number, profile: ValidityProfileName | ValidityProfile): ValidityBand",
+   "description": "The band of evidence observed at `observed`, as of `now` (both epoch ms), under a decay profile"
+  },
+  {
+   "name": "validityAge",
+   "signature": "validityAge(ms: number, style: \"short\" | \"long\", locale?: string): void",
+   "description": "An age as words in the page's language: short (\"8 mo. ago\") for the badge, long (\"8 months ago\") for screen readers"
+  }
+ ],
+ "react": [
+  {
+   "component": "ValidityBadge",
+   "exported": true,
+   "props": [
+    {
+     "name": "htmlFor",
+     "type": "string",
+     "optional": true,
+     "description": "Strip: the id of the document whose paragraphs the bars line up with (the element's `for`)"
+    },
+    {
+     "name": "onLocate",
+     "type": "(detail: ValidityLocateDetail) => void",
+     "optional": true,
+     "description": "Strip: called when a bar is clicked or activated from the keyboard, with the paragraph it stands for"
+    }
+   ],
+   "hides": [
+    "for"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 21303,
+  "gzip": 7602
+ }
+}

@@ -1,0 +1,381 @@
+{
+ "elements": [
+  {
+   "tag": "tc-guardrail-notice",
+   "className": "TcGuardrailNotice",
+   "description": "Content a policy blocked, redacted or rewrote: which policy, why, what changed – personal data masked – and Request review.",
+   "properties": [
+    {
+     "name": "action",
+     "attribute": "action",
+     "type": "GuardrailAction",
+     "default": "\"blocked\"",
+     "description": "What the policy did: blocked the content, redacted parts of it or rewrote it – sets the icon, tone and wording",
+     "readonly": false
+    },
+    {
+     "name": "layout",
+     "attribute": "layout",
+     "type": "GuardrailLayout",
+     "default": "\"inline\"",
+     "description": "Where it sits: \"inline\" in a thread, where the content would have been, or \"banner\" across the top of a view",
+     "readonly": false
+    },
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The heading – \"Blocked by policy\", \"Redacted by policy\" or \"Rewritten by policy\" by default",
+     "readonly": false
+    },
+    {
+     "name": "policy",
+     "attribute": "policy",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The policy that acted, by the name people know it by, e.g. \"Personal data\"",
+     "readonly": false
+    },
+    {
+     "name": "policyHref",
+     "attribute": "policy-href",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "A link to the policy itself; the policy name becomes the link",
+     "readonly": false
+    },
+    {
+     "name": "reason",
+     "attribute": "reason",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "Why the policy acted, in a sentence",
+     "readonly": false
+    },
+    {
+     "name": "original",
+     "attribute": null,
+     "type": "GuardrailText | undefined",
+     "default": "undefined",
+     "description": "The content as it was, with personal data already masked by the app – text, or segments",
+     "readonly": false
+    },
+    {
+     "name": "revised",
+     "attribute": null,
+     "type": "GuardrailText | undefined",
+     "default": "undefined",
+     "description": "The content as it went out – text, or segments; leave it out when nothing went out",
+     "readonly": false
+    },
+    {
+     "name": "originalLabel",
+     "attribute": "original-label",
+     "type": "string",
+     "default": "\"Original\"",
+     "description": "The label over the original",
+     "readonly": false
+    },
+    {
+     "name": "revisedLabel",
+     "attribute": "revised-label",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The label over what went out – \"Shown instead\", \"After redaction\" or \"Rewritten\" by default",
+     "readonly": false
+    },
+    {
+     "name": "open",
+     "attribute": "open",
+     "type": "boolean",
+     "default": "false",
+     "description": "Whether the before / after is showing",
+     "readonly": false
+    },
+    {
+     "name": "reviewable",
+     "attribute": "reviewable",
+     "type": "boolean",
+     "default": "true",
+     "description": "Offers Request review; set it to false where there is no one to review",
+     "readonly": false
+    },
+    {
+     "name": "requested",
+     "attribute": "requested",
+     "type": "boolean",
+     "default": "false",
+     "description": "A review has been requested: the button shows \"Review requested\" and is off",
+     "readonly": false
+    },
+    {
+     "name": "reviewLabel",
+     "attribute": "review-label",
+     "type": "string",
+     "default": "\"Request review\"",
+     "description": "The label of the review button",
+     "readonly": false
+    },
+    {
+     "name": "requestedLabel",
+     "attribute": "requested-label",
+     "type": "string",
+     "default": "\"Review requested\"",
+     "description": "What the button says once a review is requested",
+     "readonly": false
+    },
+    {
+     "name": "dismissible",
+     "attribute": "dismissible",
+     "type": "boolean",
+     "default": "false",
+     "description": "Shows a close button that fires tc-dismiss",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-open-change",
+     "detail": "",
+     "description": "\"Show what changed\" opened or closed the before / after. Cancelable. Detail: GuardrailOpenChange ({ open })",
+     "cancelable": true
+    },
+    {
+     "name": "tc-review-request",
+     "detail": "",
+     "description": "Request review was pressed. Cancelable: unless prevented, the button turns into \"Review requested\". Detail: GuardrailReviewRequest ({ action, policy })",
+     "cancelable": true
+    },
+    {
+     "name": "tc-dismiss",
+     "detail": "",
+     "description": "The close button of a dismissible notice was pressed; remove the notice in answer",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "grn",
+   "cssProperties": [
+    {
+     "name": "--tc-guardrail-notice-icon",
+     "value": "24px",
+     "looks": [
+      "both",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-guardrail-notice-fg",
+     "value": "var(--tc-status-danger-fg)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-guardrail-notice-bg",
+     "value": "var(--tc-status-danger-bg)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-guardrail-notice-border",
+     "value": "var(--tc-status-danger-border)",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-border-strong",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-sm",
+    "--tc-control-px-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-mono",
+    "--tc-font-sans",
+    "--tc-font-size-2xs",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-line-height-normal",
+    "--tc-line-height-relaxed",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-2xs",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-radius-xl",
+    "--tc-shadow-raised",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-border",
+    "--tc-status-danger-fg",
+    "--tc-status-info-bg",
+    "--tc-status-info-border",
+    "--tc-status-info-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-border",
+    "--tc-status-warning-fg",
+    "--tc-surface-inverse",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-surface-well",
+    "--tc-text-muted",
+    "--tc-text-on-inverse",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tracking-caps",
+    "--tc-tracking-snug",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "GuardrailNoticeOwn",
+   "exported": false,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading – \"Blocked by policy\", \"Redacted by policy\" or \"Rewritten by policy\" by default"
+    },
+    {
+     "name": "open",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether the before / after is showing. Controlled when defined"
+    },
+    {
+     "name": "defaultOpen",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether it shows at first when uncontrolled – closed by default"
+    },
+    {
+     "name": "onOpenChange",
+     "type": "(open: boolean) => void",
+     "optional": true,
+     "description": "\"Show what changed\" opened or closed the before / after"
+    },
+    {
+     "name": "onRequestReview",
+     "type": "(detail: GuardrailReviewRequest, event: Event) => void",
+     "optional": true,
+     "description": "Request review was pressed; call event.preventDefault() to keep the button as it is (set `requested` yourself)"
+    },
+    {
+     "name": "onDismiss",
+     "type": "() => void",
+     "optional": true,
+     "description": "Shows a close button; called when it's pressed – remove the notice in answer"
+    }
+   ],
+   "hides": []
+  },
+  {
+   "component": "GuardrailNotice",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading – \"Blocked by policy\", \"Redacted by policy\" or \"Rewritten by policy\" by default"
+    },
+    {
+     "name": "open",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether the before / after is showing. Controlled when defined"
+    },
+    {
+     "name": "defaultOpen",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether it shows at first when uncontrolled – closed by default"
+    },
+    {
+     "name": "onOpenChange",
+     "type": "(open: boolean) => void",
+     "optional": true,
+     "description": "\"Show what changed\" opened or closed the before / after"
+    },
+    {
+     "name": "onRequestReview",
+     "type": "(detail: GuardrailReviewRequest, event: Event) => void",
+     "optional": true,
+     "description": "Request review was pressed; call event.preventDefault() to keep the button as it is (set `requested` yourself)"
+    },
+    {
+     "name": "onDismiss",
+     "type": "() => void",
+     "optional": true,
+     "description": "Shows a close button; called when it's pressed – remove the notice in answer"
+    }
+   ],
+   "hides": [
+    "heading",
+    "dismissible"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 28048,
+  "gzip": 8196
+ }
+}

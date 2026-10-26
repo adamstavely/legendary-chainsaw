@@ -1,0 +1,314 @@
+{
+ "elements": [
+  {
+   "tag": "tc-lineage-graph",
+   "className": "TcLineageGraph",
+   "description": "Where an output came from: run, turns, queries and tools, source chunks, claims and artifacts in columns, every\nnode's record a click away.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Lineage\"",
+     "description": "The heading in the bar, and the graph's name",
+     "readonly": false
+    },
+    {
+     "name": "columns",
+     "attribute": null,
+     "type": "LineageColumn[]",
+     "default": "[ { id: \"run\", label: \"Run\", tone: \"neutral\" }, { id: \"turn\", label: \"Turns\", tone: \"blue\" }, { id: \"query\", label: \"Queries & tools\", tone: \"amber\" }, { id: \"chunk\", label: \"Source chunks\", tone: \"teal\" }, { id: \"claim\", label: \"Claims\", tone: \"violet\" }, { id: \"artifact\", label: \"Artifacts\", tone: \"rose\" }, ]",
+     "description": "The columns, cause to effect – a node sits in the column its `column` names; columns without nodes don't show",
+     "readonly": false
+    },
+    {
+     "name": "nodes",
+     "attribute": null,
+     "type": "LineageNode[]",
+     "default": "[]",
+     "description": "Everything in the lineage: the run, turns, queries and tools, source chunks, claims, artifacts",
+     "readonly": false
+    },
+    {
+     "name": "edges",
+     "attribute": null,
+     "type": "LineageEdge[]",
+     "default": "[]",
+     "description": "The links, from what came first to what it fed",
+     "readonly": false
+    },
+    {
+     "name": "selected",
+     "attribute": "selected",
+     "type": "string | null",
+     "default": "null",
+     "description": "The node whose record is open (null = none). Changed by the user unless a tc-selected-change listener calls\npreventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "view",
+     "attribute": "view",
+     "type": "LineageView",
+     "default": "\"graph\"",
+     "description": "\"graph\" or \"chain\" (the event chain). Changed by the user unless a tc-view-change listener calls\npreventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "weakLabel",
+     "attribute": "weak-label",
+     "type": "string",
+     "default": "\"Truncated context\"",
+     "description": "What a weak link means – in the legend, and in a node's links when the link has no note of its own",
+     "readonly": false
+    },
+    {
+     "name": "emptyText",
+     "attribute": "empty-text",
+     "type": "string",
+     "default": "\"No lineage recorded yet\"",
+     "description": "Shown when there are no nodes",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-selected-change",
+     "detail": "",
+     "description": "A node's record was opened or closed ({ selected, node }: LineageSelectedChange; selected is null when closed); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-view-change",
+     "detail": "",
+     "description": "The Graph or Event chain tab was picked ({ view }: LineageViewChange); cancelable",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "lng",
+   "cssProperties": [
+    {
+     "name": "--tc-lineage-graph-tray-bg",
+     "value": "var(--tc-surface-tray)",
+     "looks": [
+      "standard"
+     ]
+    },
+    {
+     "name": "--tc-lineage-graph-panel-bg",
+     "value": "var(--tc-surface-raised)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-lineage-graph-node-bg",
+     "value": "var(--tc-surface-raised)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-lineage-graph-edge",
+     "value": "var(--tc-border-strong)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-lineage-graph-edge-lit",
+     "value": "var(--tc-accent-text)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
+    "--tc-border-default",
+    "--tc-border-selected",
+    "--tc-border-strong",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-selected",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-lg-plus",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-line-height-relaxed",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-lineage-graph-tone",
+    "--tc-lineage-graph-tone-bg",
+    "--tc-lineage-graph-tone-fg",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-radius-xs",
+    "--tc-seg-pad",
+    "--tc-seg-thumb-bg",
+    "--tc-seg-thumb-shadow",
+    "--tc-seg-track-bg",
+    "--tc-seg-track-radius",
+    "--tc-shadow-raised",
+    "--tc-shadow-raised-hover",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-8",
+    "--tc-status-info-bg",
+    "--tc-status-info-fg",
+    "--tc-status-info-solid",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-success-solid",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-surface-well",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tone-amber-bg",
+    "--tc-tone-amber-fg",
+    "--tc-tone-amber-solid",
+    "--tc-tone-pink-bg",
+    "--tc-tone-pink-fg",
+    "--tc-tone-pink-solid",
+    "--tc-tone-rose-bg",
+    "--tc-tone-rose-fg",
+    "--tc-tone-rose-solid",
+    "--tc-tone-teal-bg",
+    "--tc-tone-teal-fg",
+    "--tc-tone-teal-solid",
+    "--tc-tone-violet-bg",
+    "--tc-tone-violet-fg",
+    "--tc-tone-violet-solid",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "LINEAGE_COLUMNS",
+   "signature": "LINEAGE_COLUMNS: LineageColumn[]",
+   "description": "The columns of an AI output's lineage, cause to effect"
+  }
+ ],
+ "react": [
+  {
+   "component": "LineageGraph",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading in the bar, and the graph's name"
+    },
+    {
+     "name": "selected",
+     "type": "string | null",
+     "optional": true,
+     "description": "The id of the node whose record is open. Controlled when defined (null = none); otherwise the component keeps\nit, starting at `defaultSelected`"
+    },
+    {
+     "name": "defaultSelected",
+     "type": "string | null",
+     "optional": true,
+     "description": "The open record when uncontrolled"
+    },
+    {
+     "name": "onSelectedChange",
+     "type": "(id: string | null, node?: LineageNode) => void",
+     "optional": true,
+     "description": "Called with the node whose record opened, or null when it closed"
+    },
+    {
+     "name": "view",
+     "type": "LineageView",
+     "optional": true,
+     "description": "\"graph\" or \"chain\" (the event chain). Controlled when defined; otherwise the component keeps it"
+    },
+    {
+     "name": "defaultView",
+     "type": "LineageView",
+     "optional": true,
+     "description": "The first view when uncontrolled"
+    },
+    {
+     "name": "onViewChange",
+     "type": "(view: LineageView) => void",
+     "optional": true,
+     "description": "Called when the Graph or Event chain tab is picked"
+    }
+   ],
+   "hides": []
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 46880,
+  "gzip": 12684
+ }
+}

@@ -1,0 +1,232 @@
+{
+ "elements": [
+  {
+   "tag": "tc-synthesis-notes",
+   "className": "TcSynthesisNotes",
+   "description": "The person's own conclusions, assumptions and things to verify – editable, reorderable from the keyboard,\nremovable with Undo, and exported with provenance.",
+   "properties": [
+    {
+     "name": "notes",
+     "attribute": null,
+     "type": "SynthesisNote[]",
+     "default": "[]",
+     "description": "The notes, each in the list its `kind` names",
+     "readonly": false
+    },
+    {
+     "name": "sections",
+     "attribute": null,
+     "type": "SynthesisSection[]",
+     "default": "[ { id: \"conclusions\", label: \"Conclusions\", addLabel: \"Add a conclusion\", empty: \"No conclusions yet\" }, { id: \"assumptions\", label: \"Assumptions\", addLabel: \"Add an assumption\", empty: \"No assumptions yet\" }, { id: \"verify\", label: \"Still to verify\", addLabel: \"Add something to verify\", empty: \"Nothing to verify yet\" }, ]",
+     "description": "The lists, in order – by default Conclusions, Assumptions and Still to verify",
+     "readonly": false
+    },
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Your notes\"",
+     "description": "The heading, and the group's name",
+     "readonly": false
+    },
+    {
+     "name": "ownLabel",
+     "attribute": "own-label",
+     "type": "string",
+     "default": "\"Written by you\"",
+     "description": "The tag that sets the notes apart from the model's output",
+     "readonly": false
+    },
+    {
+     "name": "sessionId",
+     "attribute": "session-id",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The session the notes belong to – shown on the tray and exported with them",
+     "readonly": false
+    },
+    {
+     "name": "author",
+     "attribute": "author",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Who wrote the notes – shown on the tray and exported with them",
+     "readonly": false
+    },
+    {
+     "name": "undoFor",
+     "attribute": "undo-for",
+     "type": "number",
+     "default": "5000",
+     "description": "How long Undo stays after a removal, in ms; it waits while the pointer or focus is on it. `Infinity` keeps it until the next removal",
+     "readonly": false
+    },
+    {
+     "name": "noExport",
+     "attribute": "no-export",
+     "type": "boolean",
+     "default": "false",
+     "description": "Hides Export",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-notes-change",
+     "detail": "",
+     "description": "A note was added, edited, moved, removed or brought back; detail `{ notes }`: SynthesisNotesChange. Cancelable: preventDefault() keeps the change out until the app passes the list back.",
+     "cancelable": true
+    },
+    {
+     "name": "tc-export",
+     "detail": "",
+     "description": "Export was pressed; detail `{ notes, sections, sessionId, author, heading, markdown }`: SynthesisExport.",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "syn",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-sm",
+    "--tc-control-px-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-instant",
+    "--tc-duration-moderate",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-shadow-focus",
+    "--tc-fill-default",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-full",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-placeholder",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tone-amber-solid",
+    "--tc-tone-teal-solid",
+    "--tc-tone-violet-solid",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "synthesisMarkdown",
+   "signature": "synthesisMarkdown(notes: SynthesisNote[], sections: SynthesisSection[], meta: { heading?: string; sessionId?: string; author?: string }): void",
+   "description": "The notes as Markdown: a heading, the provenance line, one list per section (empty ones left out)"
+  }
+ ],
+ "react": [
+  {
+   "component": "SynthesisNotes",
+   "exported": true,
+   "props": [
+    {
+     "name": "notes",
+     "type": "SynthesisNote[]",
+     "optional": true,
+     "description": "The notes (controlled): the lists show exactly these and ask for changes through onChange. Leave it undefined to let the element keep them, starting at `defaultNotes`"
+    },
+    {
+     "name": "defaultNotes",
+     "type": "SynthesisNote[]",
+     "optional": true,
+     "description": "The notes to start with when uncontrolled"
+    },
+    {
+     "name": "onChange",
+     "type": "(notes: SynthesisNote[]) => void",
+     "optional": true,
+     "description": "Called with the whole list after any change, controlled or not"
+    },
+    {
+     "name": "onExport",
+     "type": "(data: SynthesisExport) => void",
+     "optional": true,
+     "description": "Shows Export and is called with the notes, their provenance and a Markdown copy when it's pressed"
+    },
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading, and the group's name"
+    }
+   ],
+   "hides": [
+    "notes",
+    "heading",
+    "noExport",
+    "onChange"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 31102,
+  "gzip": 9415
+ }
+}

@@ -1,0 +1,353 @@
+{
+ "elements": [
+  {
+   "tag": "tc-playbook-canvas",
+   "className": "TcPlaybookCanvas",
+   "description": "An agent workflow by phase: steps you add, remove, reorder and set up, review gates, versions and a dry run.",
+   "properties": [
+    {
+     "name": "value",
+     "attribute": null,
+     "type": "Playbook",
+     "default": "{ steps: [] }",
+     "description": "The playbook: its steps, in order within each phase. Changed by the user unless a tc-value-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "phases",
+     "attribute": null,
+     "type": "PlaybookPhase[]",
+     "default": "[ { id: \"trigger\", label: \"Trigger\", description: \"What starts a run\", defaultType: \"event\" }, { id: \"intake\", label: \"Intake\", description: \"What comes in, and how it's checked\", defaultType: \"tool\" }, { id: \"context\", label: \"Context\", description: \"What the agent looks up first\", defaultType: \"retrieve\" }, { id: \"analysis\", label: \"Analysis\", description: \"What the agent works out\", defaultType: \"agent\" }, { id: \"review\", label: \"Review\", description: \"Who signs off before anything leaves\", defaultType: \"review\" }, ]",
+     "description": "The phases, in order – the board's columns",
+     "readonly": false
+    },
+    {
+     "name": "stepTypes",
+     "attribute": null,
+     "type": "PlaybookStepType[]",
+     "default": "[ { id: \"event\", label: \"When an event happens\", phases: [\"trigger\"] }, { id: \"schedule\", label: \"On a schedule\", phases: [\"trigger\"] }, { id: \"manual\", label: \"Started by hand\", phases: [\"trigger\"] }, { id: \"agent\", label: \"Agent task\" }, { id: \"tool\", label: \"Tool call\" }, { id: \"retrieve\", label: \"Look up sources\" }, { id: \"review\", label: \"Human review\", review: true }, ]",
+     "description": "The kinds of step people can add",
+     "readonly": false
+    },
+    {
+     "name": "selected",
+     "attribute": "selected",
+     "type": "string | null",
+     "default": "null",
+     "description": "The id of the step being set up. Picks apply unless a tc-selected-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Playbook\"",
+     "description": "Names the playbook, shown at the top",
+     "readonly": false
+    },
+    {
+     "name": "versions",
+     "attribute": null,
+     "type": "PlaybookVersion[]",
+     "default": "[]",
+     "description": "The saved versions, newest first",
+     "readonly": false
+    },
+    {
+     "name": "currentVersion",
+     "attribute": "current-version",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The id of the version the board shows",
+     "readonly": false
+    },
+    {
+     "name": "dryRun",
+     "attribute": null,
+     "type": "PlaybookDryRun | null",
+     "default": "null",
+     "description": "The app's answer to the last tc-dry-run: which steps run, are skipped or pause; null clears it",
+     "readonly": false
+    },
+    {
+     "name": "gateConditions",
+     "attribute": null,
+     "type": "GateCondition[] | undefined",
+     "default": "undefined",
+     "description": "Conditions offered by review steps' gates; unset: the gate's defaults",
+     "readonly": false
+    },
+    {
+     "name": "gateReviewers",
+     "attribute": null,
+     "type": "GateReviewer[] | undefined",
+     "default": "undefined",
+     "description": "Reviewers offered by review steps' gates; unset: the gate's defaults",
+     "readonly": false
+    },
+    {
+     "name": "gateViews",
+     "attribute": null,
+     "type": "GateView[] | undefined",
+     "default": "undefined",
+     "description": "What a reviewer can see, offered by review steps' gates; unset: the gate's defaults",
+     "readonly": false
+    },
+    {
+     "name": "gateActions",
+     "attribute": null,
+     "type": "GateActionOption[] | undefined",
+     "default": "undefined",
+     "description": "Actions offered by review steps' gates; unset: the gate's defaults",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-value-change",
+     "detail": "",
+     "description": "The playbook changed: a step added, removed, moved or edited ({ value: Playbook }); cancelable – prevent it to control `value`",
+     "cancelable": true
+    },
+    {
+     "name": "tc-selected-change",
+     "detail": "",
+     "description": "A step was picked, or the pick cleared ({ selected: string | null, step?: PlaybookStep }); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-dry-run",
+     "detail": "",
+     "description": "\"Dry run\" was pressed ({ value: Playbook }) – answer by setting `dryRun`",
+     "cancelable": false
+    },
+    {
+     "name": "tc-dry-run-clear",
+     "detail": "",
+     "description": "The dry run's result was cleared ({})",
+     "cancelable": false
+    },
+    {
+     "name": "tc-version-open",
+     "detail": "",
+     "description": "\"Open\" was pressed on a version that isn't current ({ id: string })",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "pb",
+   "cssProperties": [
+    {
+     "name": "--tc-playbook-canvas-rail",
+     "value": "var(--tc-border-default)",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-border-default",
+    "--tc-border-selected",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-sm",
+    "--tc-control-px-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-font-size",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-field-shadow-hover",
+    "--tc-fill-default",
+    "--tc-fill-hover",
+    "--tc-fill-selected",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-sans",
+    "--tc-font-size-lg-plus",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-kbd-bg",
+    "--tc-kbd-fg",
+    "--tc-kbd-font-size",
+    "--tc-kbd-font-weight",
+    "--tc-kbd-h",
+    "--tc-kbd-px",
+    "--tc-kbd-radius",
+    "--tc-kbd-shadow",
+    "--tc-line-height-none",
+    "--tc-line-height-normal",
+    "--tc-line-height-relaxed",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-menu-shadow",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-playbook-canvas-phases",
+    "--tc-radius-full",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-radius-xl",
+    "--tc-shadow-raised",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-5",
+    "--tc-space-7",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-surface-well",
+    "--tc-text-muted",
+    "--tc-text-placeholder",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "PlaybookCanvas",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "Shown at the top; names the playbook"
+    },
+    {
+     "name": "stepTypes",
+     "type": "PlaybookStepTypeNode[]",
+     "optional": true,
+     "description": "The kinds of step people can add; icons may be React nodes"
+    },
+    {
+     "name": "value",
+     "type": "Playbook",
+     "optional": true,
+     "description": "The playbook (controlled)"
+    },
+    {
+     "name": "defaultValue",
+     "type": "Playbook",
+     "optional": true,
+     "description": "The playbook to start with when uncontrolled"
+    },
+    {
+     "name": "onChange",
+     "type": "(value: Playbook) => void",
+     "optional": true,
+     "description": "Called with the whole playbook after every add, remove, move or edit"
+    },
+    {
+     "name": "selected",
+     "type": "string | null",
+     "optional": true,
+     "description": "The id of the step being set up (controlled); null for none"
+    },
+    {
+     "name": "defaultSelected",
+     "type": "string | null",
+     "optional": true,
+     "description": "The step to start with when uncontrolled"
+    },
+    {
+     "name": "onSelectedChange",
+     "type": "(selected: string | null) => void",
+     "optional": true,
+     "description": "Called when a step is picked, or the pick cleared"
+    },
+    {
+     "name": "onDryRun",
+     "type": "(value: Playbook) => void",
+     "optional": true,
+     "description": "\"Dry run\" was pressed – answer by setting `dryRun`"
+    },
+    {
+     "name": "onDryRunClear",
+     "type": "() => void",
+     "optional": true,
+     "description": "The dry run's result was cleared – set `dryRun` to null"
+    },
+    {
+     "name": "onVersionOpen",
+     "type": "(id: string) => void",
+     "optional": true,
+     "description": "\"Open\" was pressed on a version that isn't current"
+    }
+   ],
+   "hides": [
+    "value",
+    "defaultValue",
+    "selected",
+    "stepTypes",
+    "heading",
+    "onChange"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 79869,
+  "gzip": 21360
+ }
+}
