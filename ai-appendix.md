@@ -1,0 +1,7 @@
+1. Tool Name (and version, if known)
+2. Prompts Used (paste each prompt)
+3. AI Output (paste what the tool returned)
+4. Explanation of Use (what you kept, changed, or rejected, and why)
+5. Fact-Checking (how you verified accuracy)
+6. Anti-Bias Measures (how you checked for bias)
+7. Privacy Considerations (what information you did or did not share)
