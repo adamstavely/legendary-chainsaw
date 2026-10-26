@@ -19,6 +19,7 @@ export * from "./autonomy-dial";
 export * from "./billing-schedule";
 export * from "./blur-crossfade";
 export * from "./breakdown-chart";
+export * from "./budget-guard";
 export * from "./change-summary";
 export * from "./chat-composer";
 export * from "./cited-answer";

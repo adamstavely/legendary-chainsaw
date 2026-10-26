@@ -30,6 +30,7 @@ export * from "./react/autonomy-dial";
 export * from "./react/billing-schedule";
 export * from "./react/blur-crossfade";
 export * from "./react/breakdown-chart";
+export * from "./react/budget-guard";
 export * from "./react/change-summary";
 export * from "./react/chat-composer";
 export * from "./react/cited-answer";
