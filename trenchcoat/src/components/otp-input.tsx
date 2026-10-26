@@ -26,8 +26,7 @@ import { useRootRef } from "../internal/use-root-ref";
  * a right one folds the boxes into a single "Verified" pill. A resend link counts down below.
  * The styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop (the default comes from the file: otp-input.tsx is Standard,
- * otp-input-clean.tsx is Clean). Clean has white cells with hairline shadows, a thin blue focus outline and caret,
+ * Two looks, picked with the `look` prop (Standard by default). Clean has white cells with hairline shadows, a thin blue focus outline and caret,
  * quiet gray helper text, a tab-style "Resend code" button, and folds into a faintly green "Verified" chip.
  */
 export type Look = "standard" | "clean";
@@ -76,7 +75,7 @@ export type OtpInputOwnProps = {
   label?: string;
   /** Id of a visible label (a heading or <label>) that names the field – preferred over `label` (WCAG 2.5.3, 3.3.2) */
   labelledBy?: string;
-  /** Visual style. Defaults to the file's look: Standard in otp-input.tsx, Clean in otp-input-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   className?: string;
   /** The root element */

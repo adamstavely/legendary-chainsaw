@@ -28,8 +28,7 @@ import { useRootRef } from "../internal/use-root-ref";
  *   · the line on the gray tray always says what you are pointing at: visitors and confidence
  * The styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop (the default comes from the file: experiment-card.tsx is Standard,
- * experiment-card-clean.tsx is Clean). Clean has no tray – one white card with hairline shadows, quiet gray type,
+ * Two looks, picked with the `look` prop (Standard by default). Clean has no tray – one white card with hairline shadows, quiet gray type,
  * tinted chips, thinner icons, a status dot in a soft ring, and the caption and action as the card's last row
  * instead of on the gray tray.
  */
@@ -65,7 +64,7 @@ export type ExperimentVariant = {
 };
 
 type OwnProps = {
-  /** Visual style. Defaults to the file's look: Standard in experiment-card.tsx, Clean in experiment-card-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   title: string;
   variants: ExperimentVariant[];

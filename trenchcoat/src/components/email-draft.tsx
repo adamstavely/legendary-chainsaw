@@ -27,8 +27,7 @@ import { useSmoothHeight } from "../internal/use-smooth-height";
  * when defined, otherwise uncontrolled from `defaultRecipient` / `defaultTone`; changes are always reported.
  * Other DOM props and `ref` go to the root.
  * The styles are injected below, so no extra files are needed.
- * Two looks, picked with the `look` prop (the default comes from the file: email-draft.tsx is Standard,
- * email-draft-clean.tsx is Clean). Clean has no tray – one white card with hairline shadows: the record heads the
+ * Two looks, picked with the `look` prop (Standard by default). Clean has no tray – one white card with hairline shadows: the record heads the
  * card, then the email, and the last row holds who wrote it, its state, Discard and Send (the "⌘ Enter" hint moves
  * next to the tones). Only the content above that row glides to its new height.
  */
@@ -42,7 +41,7 @@ export type DraftContact = { name: string; email: string };
 export type DraftTone = { id: string; label: string; body: (contact: DraftContact) => string };
 
 type EmailDraftOwnProps = {
-  /** Visual style. Defaults to the file's look: Standard in email-draft.tsx, Clean in email-draft-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   /** Reference of the record, e.g. a subscription or invoice number */
   reference?: string;

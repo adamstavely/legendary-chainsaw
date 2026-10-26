@@ -10,8 +10,7 @@ import { useRootRef } from "../internal/use-root-ref";
  * the next one moves up – one notice at a time.
  * The styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop (the default comes from the file: notification-stack.tsx is Standard,
- * notification-stack-clean.tsx is Clean). Clean draws one white card per notice with hairline shadows instead of
+ * Two looks, picked with the `look` prop (Standard by default). Clean draws one white card per notice with hairline shadows instead of
  * borders, Inter at 13/15px, quiet line art and thinner icons.
  */
 export type Look = "standard" | "clean";
@@ -41,7 +40,7 @@ type NotificationStackOwnProps = {
   /** Called after a notice was dismissed */
   onDismiss?: (notice: Notice) => void;
   className?: string;
-  /** Visual style. Defaults to the file's look: Standard in notification-stack.tsx, Clean in notification-stack-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   ref?: Ref<HTMLElement>;
 };

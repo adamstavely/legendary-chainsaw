@@ -34,8 +34,7 @@ import { rescueFocus, useFocusRescue } from "../internal/use-focus-rescue";
  *   · "Other…" opens a field that grows with what you write – your own instruction, Enter sends it
  * Narrow containers draw the tree top to bottom. The styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop (the default comes from the file: decision-tree.tsx is Standard,
- * decision-tree-clean.tsx is Clean). Clean is one quiet white card with hairlines: the risk tag sits above the agent
+ * Two looks, picked with the `look` prop (Standard by default). Clean is one quiet white card with hairlines: the risk tag sits above the agent
  * instead of beside its name, and the answer to your own "Other…" instruction appears beside it rather than under it.
  * Follow-up questions, option icons and app logos work in both looks.
  */
@@ -106,7 +105,7 @@ export type DecisionTreeHandle = {
 };
 
 type DecisionTreeOwnProps = {
-  /** Visual style. Defaults to the file's look: Standard in decision-tree.tsx, Clean in decision-tree-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   /** Everything waiting for a call – decided ones leave on their own, new ids join at the end */
   decisions: Decision[];

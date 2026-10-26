@@ -25,8 +25,7 @@ import { useHotkey } from "../internal/use-hotkey";
  * ⌘/ (Ctrl / on Windows) jumps into the search from anywhere – change it or turn it off with `hotkey`.
  * The styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop (the default comes from the file: integration-picker.tsx is Standard,
- * integration-picker-clean.tsx is Clean). Clean has no tray – one white card with hairline shadows. Its search row
+ * Two looks, picked with the `look` prop (Standard by default). Clean has no tray – one white card with hairline shadows. Its search row
  * on top holds back, where you are and the field; a last row under a hairline says how many are connected and shows
  * the keys. The highlight steps to the picked row, icons are finer and a connected service says so by its domain.
  * Switching a service on or off is announced in a small status region; the switch keeps its name ("Connect X") and
@@ -89,7 +88,7 @@ export type IntegrationPickerOwnProps = {
   onBack?: () => void;
   /** Runs on Esc in an empty search */
   onClose?: () => void;
-  /** Visual style. Defaults to the file's look: Standard in integration-picker.tsx, Clean in integration-picker-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   className?: string;
   /** The root element */

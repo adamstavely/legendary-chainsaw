@@ -20,8 +20,11 @@
     ],
     "baseUrl": ".",
     "paths": {
+      "@components/*-clean": [
+        "src/components/*"
+      ],
       "@components/*": [
-        "components/*"
+        "src/components/*"
       ],
       "@blocks/*": [
         "blocks/*"
@@ -36,7 +39,7 @@
         "motion/*"
       ],
       "@/components/ui/*": [
-        "components/*",
+        "src/components/*",
         "screens/*",
         "blocks/*",
         "illustrations/*",

@@ -25,8 +25,7 @@ import { useSmoothHeight } from "../internal/use-smooth-height";
  * New answers and a failed reply are announced once, in a small status region – the conversation itself isn't live,
  * so the "5min ago" times can tick without being read out again.
  * The styles are injected below, so no extra files are needed.
- * Two looks, picked with the `look` prop (the default comes from the file: comment-thread.tsx is Standard,
- * comment-thread-clean.tsx is Clean). Clean has no tray – one white card with hairline shadows: the heading on top,
+ * Two looks, picked with the `look` prop (Standard by default). Clean has no tray – one white card with hairline shadows: the heading on top,
  * the conversation in the middle and the reply field lying right in the card as its last row. Its icons are 16px
  * with thin lines, the avatars 20px, and the thinking state shimmers.
  */
@@ -48,7 +47,7 @@ export type ThreadMessage = {
 };
 
 type CommentThreadOwnProps = {
-  /** Visual style. Defaults to the file's look: Standard in comment-thread.tsx, Clean in comment-thread-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   title?: string;
   messages: ThreadMessage[];

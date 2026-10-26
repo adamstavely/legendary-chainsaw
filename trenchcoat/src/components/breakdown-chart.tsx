@@ -9,8 +9,7 @@ import { useSmoothHeight } from "../internal/use-smooth-height";
  * Pick what to measure, how to slice the bars and how to segment them; hover a bar or a row to see its breakdown,
  * click legend entries to hide segments. The styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop (the default comes from the file: breakdown-chart.tsx is Standard,
- * breakdown-chart-clean.tsx is Clean). Clean has no tray – one white card with the title and total on top, quiet
+ * Two looks, picked with the `look` prop (Standard by default). Clean has no tray – one white card with the title and total on top, quiet
  * white pickers, hairline gridlines, blue-family bars, small white popovers for the menus and the hover breakdown,
  * and the legend as the card's last row. Its icons are a touch larger and thinner.
  * The hover breakdown also opens when a bar has focus, stays while the pointer moves onto it and closes with Esc; the
@@ -43,7 +42,7 @@ export type Measure = {
 export type BreakdownRecord = Record<string, string | number>;
 
 type OwnProps = {
-  /** Visual style. Defaults to the file's look: Standard in breakdown-chart.tsx, Clean in breakdown-chart-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   records: BreakdownRecord[];
   dimensions: Dimension[];
@@ -539,7 +538,7 @@ export const StatusIcon = ({
 }: {
   kind: "backlog" | "todo" | "progress" | "review" | "done" | "canceled";
   color?: string;
-  /** Visual style. Defaults to the file's look: Standard in breakdown-chart.tsx, Clean in breakdown-chart-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
 }) => (
   <svg

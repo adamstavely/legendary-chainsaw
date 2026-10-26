@@ -35,8 +35,7 @@ import { useRootRef } from "../internal/use-root-ref";
  * `collapsed` and `openId` are controlled when defined, otherwise uncontrolled from their defaults; changes are
  * always reported. Other DOM props and `ref` go to the root.
  * Narrow containers stack the name above its bar. The styles are injected below, so no extra files are needed.
- * Two looks, picked with the `look` prop (the default comes from the file: trace-waterfall.tsx is Standard,
- * trace-waterfall-clean.tsx is Clean). Clean is one quiet white card with hairlines instead of the gray tray, agents
+ * Two looks, picked with the `look` prop (Standard by default). Clean is one quiet white card with hairlines instead of the gray tray, agents
  * in a quiet gray and LLM calls in indigo, with smaller radii and type.
  */
 
@@ -75,7 +74,7 @@ export type TraceSpan = {
 };
 
 type TraceWaterfallOwnProps = {
-  /** Visual style. Defaults to the file's look: Standard in trace-waterfall.tsx, Clean in trace-waterfall-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   root: TraceSpan;
   /** The clock, in ms from the start of the run – e.g. a faster one for a demo */

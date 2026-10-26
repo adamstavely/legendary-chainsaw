@@ -24,8 +24,7 @@ import { useHotkey } from "../internal/use-hotkey";
  * ⌘K (Ctrl K on Windows) focuses the field from anywhere – change it or turn it off with `hotkey`. Tab is left to the browser, so focus can leave the menu.
  * The styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop (the default comes from the file: command-menu.tsx is Standard,
- * command-menu-clean.tsx is Clean). Clean has no tray – one white panel with hairline shadows, small uppercase
+ * Two looks, picked with the `look` prop (Standard by default). Clean has no tray – one white panel with hairline shadows, small uppercase
  * group labels, quiet key chips, finer icons and a last row with hints under a hairline; the row highlight fades
  * out while the pointer is outside the list.
  */
@@ -71,7 +70,7 @@ export type CommandMenuOwnProps = {
   /** Most rows rendered at once (default 200) – with more matches the menu shows the first ones and asks to keep
    *  typing, so very long lists stay fast */
   maxRows?: number;
-  /** Visual style. Defaults to the file's look: Standard in command-menu.tsx, Clean in command-menu-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   className?: string;
   /** The root element */

@@ -31,8 +31,7 @@ import { useFocusRescue } from "../internal/use-focus-rescue";
  *   · failed tasks can be sent again with "Retry failed"
  * The styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop (the default comes from the file: fan-out-grid.tsx is Standard,
- * fan-out-grid-clean.tsx is Clean). Clean drops the tray: a bar on top, one white panel with the grid, and the
+ * Two looks, picked with the `look` prop (Standard by default). Clean drops the tray: a bar on top, one white panel with the grid, and the
  * counts per state – still a filter, with Retry – as a quiet line inside the panel, under the grid.
  */
 export type Look = "standard" | "clean";
@@ -61,7 +60,7 @@ export type FanoutTask = {
 };
 
 type FanoutGridOwnProps = {
-  /** Visual style. Defaults to the file's look: Standard in fan-out-grid.tsx, Clean in fan-out-grid-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   tasks: FanoutTask[];
   /** What the whole job does – e.g. "Enrich 240 leads" */

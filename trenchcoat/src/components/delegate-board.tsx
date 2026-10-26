@@ -31,8 +31,7 @@ import { useRootRef } from "../internal/use-root-ref";
  * Enter; a queued chip can go back to "Unassigned" the same way, or with Delete. 1–9 sends it to that agent at once.
  * The styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop (the default comes from the file: delegate-board.tsx is Standard,
- * delegate-board-clean.tsx is Clean). Clean is one white card: the bar with the title and the Auto switch is the
+ * Two looks, picked with the `look` prop (Standard by default). Clean is one white card: the bar with the title and the Auto switch is the
  * card's first row instead of sitting on a gray tray above it.
  */
 export type Look = "standard" | "clean";
@@ -66,7 +65,7 @@ export type DelegateTask = {
 export type DelegateMode = "auto" | "manual";
 
 type DelegateBoardOwnProps = {
-  /** Visual style. Defaults to the file's look: Standard in delegate-board.tsx, Clean in delegate-board-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   agents: DelegateAgent[];
   tasks: DelegateTask[];

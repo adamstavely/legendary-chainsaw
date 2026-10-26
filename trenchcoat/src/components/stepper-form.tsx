@@ -33,8 +33,7 @@ import { useRootRef } from "../internal/use-root-ref";
  * StepperChoices (selectable cards), StepperReview (a summary with Edit links) and StepperSuccess.
  * The styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop on <StepperForm> (the default comes from the file: stepper-form.tsx is
- * Standard, stepper-form-clean.tsx is Clean); the building blocks follow the form they sit in. Clean is one white
+ * Two looks, picked with the `look` prop on <StepperForm> (Standard by default); the building blocks follow the form they sit in. Clean is one white
  * card with hairline shadows: on top a thin progress bar per step with small uppercase labels and plain numbers,
  * finished steps get a blue check, and Back and Continue sit in the card's last row. In Clean the email field stays
  * one line – chips scroll sideways, and a new one scrolls into view next to the text.
@@ -100,7 +99,7 @@ type StepperFormOwnProps<V extends Record<string, unknown>> = {
   /** What shows once onComplete is done – defaults to a short "All set" */
   success?: (values: V, reset: () => void) => ReactNode;
   className?: string;
-  /** Visual style. Defaults to the file's look: Standard in stepper-form.tsx, Clean in stepper-form-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   ref?: Ref<HTMLDivElement>;
 };

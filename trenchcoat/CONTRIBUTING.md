@@ -1,9 +1,10 @@
 # Contributing
 
-Each component has one source, `src/components/<slug>.tsx`. `node scripts/build-lib.mjs <slug>` generates the two
-published files, `components/<slug>.tsx` (Standard) and `components/<slug>-clean.tsx` (Clean). Never edit the
-generated files; `npm run ci` fails if they're out of date. Shared helpers live in `src/internal/` and are inlined
-by the build, so every published file stays self-contained (React only).
+Each component has one source, `src/components/<slug>.tsx`, with both looks; the `look` prop picks one (Standard by
+default). There is no build step: the gallery and the tests load the source. Shared helpers live in `src/internal/`,
+and components read their values from `tokens/tokens.css`. While the components are ported to Lit
+(`audit/lit-port-plan.md`), tests that need the Clean look by default import `@components/<slug>-clean` – an
+in-memory twin made by `vite.config.ts`, not a file.
 
 ## The component contract
 
@@ -107,7 +108,7 @@ token defined once (`--tc-<comp>-x: light-dark(…)`). Dark is then the same whe
 
 - `node scripts/tokens.mjs --check` – `tokens/fallbacks.json` and the generated fallback section of `tokens.css` are
   current. After editing `tokens/tokens.css`, run `node scripts/tokens.mjs`, then `node scripts/check-tokens.mjs --fix`
-  (rewrites the literal fallbacks in blocks/screens/illustrations/motion) and `node scripts/build-lib.mjs`.
+  (rewrites the literal fallbacks in blocks/screens/illustrations/motion).
 - `node scripts/contrast.mjs` – every required token pair meets its minimum in both looks and themes;
   `--write` regenerates `audit/design-tokens/contrast.md`.
 - `node scripts/check-ratchet.mjs` – per-file counts that may only go down: literal durations, literal easings,

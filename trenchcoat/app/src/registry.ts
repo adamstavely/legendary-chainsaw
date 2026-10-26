@@ -1,5 +1,6 @@
 import type { ComponentType } from "react";
-import componentsReadme from "../../components/README.md?raw";
+import componentsReadme from "../../src/components/README.md?raw";
+import cleanTwins from "virtual:tc-clean";
 import blocksReadme from "../../blocks/README.md?raw";
 import screensReadme from "../../screens/README.md?raw";
 import illustrationsReadme from "../../illustrations/README.md?raw";
@@ -53,7 +54,7 @@ const LIBRARIES: Library[] = [
     about: "Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs and feedback. Each one ships in a Standard and a Clean style with the same props. Start here when you need a single control or widget.",
     label: "Components",
     readme: componentsReadme,
-    modules: import.meta.glob("../../components/*.tsx"),
+    modules: import.meta.glob("../../src/components/*.tsx"),
     demos: import.meta.glob<{ default: ComponentType<DemoProps> }>("./demos/*.tsx", { eager: true }),
     layout: "card",
     categories: [
@@ -115,18 +116,20 @@ function build(lib: Library): Entry[] {
   const categoryOf = new Map(lib.categories?.flatMap(([c, slugs]) => slugs.map((s) => [s, c] as const)));
   const moduleFor = (file: string) => Object.entries(lib.modules).find(([path]) => path.endsWith(`/${file}.tsx`))?.[1];
   const bySlug = new Map<string, Entry>();
-  // README lines look like: - **Name (Clean)** (`name-clean.tsx`) – description
+  // README lines look like: - **Name** (`name.tsx`) – description. Components have one source with both looks
+  // ("(Clean only)" for a single-look one); the Clean stage loads its in-memory twin (vite.config.ts)
   for (const line of lib.readme.split("\n")) {
     const m = line.match(/^- \*\*(.+?)\*\* \(`(.+?)\.tsx`\) – (.*)$/);
     if (!m) continue;
     const [, label, file, description] = m;
-    const variant: Variant = file.endsWith("-clean") ? "clean" : "standard";
+    const cleanOnly = label.endsWith(" (Clean only)");
+    const variant: Variant = file.endsWith("-clean") || cleanOnly ? "clean" : "standard";
     const slug = file.replace(/-clean$/, "");
     const entry = bySlug.get(slug) ?? {
       id: lib.key === "components" ? slug : `${lib.key}/${slug}`,
       slug,
       library: lib.key,
-      name: label.replace(/ \(Clean\)$/, ""),
+      name: label.replace(/ \((?:Clean|Clean only)\)$/, ""),
       description,
       category: categoryOf.get(slug) ?? (lib.categories ? "Other" : lib.label),
       layout: lib.layout,
@@ -136,6 +139,10 @@ function build(lib: Library): Entry[] {
     };
     entry.files[variant] = `${file}.tsx`;
     entry.load[variant] = moduleFor(file);
+    if (lib.key === "components" && !cleanOnly && cleanTwins[slug]) {
+      entry.files.clean = `${file}.tsx · look="clean"`;
+      entry.load.clean = cleanTwins[slug];
+    }
     bySlug.set(slug, entry);
   }
   return [...bySlug.values()];

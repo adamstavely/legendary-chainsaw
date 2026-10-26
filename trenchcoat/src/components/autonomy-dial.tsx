@@ -27,8 +27,7 @@ import { useFocusRescue } from "../internal/use-focus-rescue";
  * Click a level or use the arrow keys. Controlled or uncontrolled for both the level and the pins.
  * The styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop (the default comes from the file: autonomy-dial.tsx is Standard,
- * autonomy-dial-clean.tsx is Clean). Clean is one quiet white card: the chosen level is marked without a gliding
+ * Two looks, picked with the `look` prop (Standard by default). Clean is one quiet white card: the chosen level is marked without a gliding
  * pill, and the two groups of actions sit inside the card, below the levels, instead of on a tray.
  */
 export type Look = "standard" | "clean";
@@ -49,7 +48,7 @@ export type AgentAction = {
 };
 
 type AutonomyDialOwnProps = {
-  /** Visual style. Defaults to the file's look: Standard in autonomy-dial.tsx, Clean in autonomy-dial-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   actions: AgentAction[];
   /** 0 Ask every time · 1 Ask before risky actions · 2 Full auto. Controlled when defined */

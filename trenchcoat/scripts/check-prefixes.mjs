@@ -4,7 +4,7 @@
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 
-const LIBRARIES = ["components", "blocks", "screens", "illustrations", "motion"];
+const LIBRARIES = ["src/components", "blocks", "screens", "illustrations", "motion"];
 
 // Prefixes deliberately rendered by several files
 const SHARED = {

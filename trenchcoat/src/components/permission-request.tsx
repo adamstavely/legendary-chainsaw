@@ -28,8 +28,7 @@ import { useRootRef } from "../internal/use-root-ref";
  * "still waiting"), otherwise they start from `defaultDecision` / `defaultScope`; changes are always reported.
  * When a timed right runs out, `onExpire` fires once for that decision. Other DOM props and `ref` go to the root.
  * The styles are injected below, so no extra files are needed.
- * Two looks, picked with the `look` prop (the default comes from the file: permission-request.tsx is Standard,
- * permission-request-clean.tsx is Clean). Clean drops the gray tray for one quiet white card with a soft shadow,
+ * Two looks, picked with the `look` prop (Standard by default). Clean drops the gray tray for one quiet white card with a soft shadow,
  * and is smaller and lighter throughout – 28px avatar, tighter type, square-ish chips.
  */
 
@@ -59,7 +58,7 @@ export type PermissionPreviewItem = {
 };
 
 type PermissionRequestOwnProps = {
-  /** Visual style. Defaults to the file's look: Standard in permission-request.tsx, Clean in permission-request-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   /** Who asks: { name, model?, avatar? } */
   agent: { name: string; model?: string; avatar?: ReactNode };

@@ -24,8 +24,7 @@ import { useRootRef } from "../internal/use-root-ref";
  * Without `onUpload` the uploads are simulated – pass `demo` for a preview, or it warns once that nothing is uploaded.
  * The styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop (the default comes from the file: dropzone.tsx is Standard,
- * dropzone-clean.tsx is Clean). Clean has no tray – one white card with hairline shadows, a dashed drop area,
+ * Two looks, picked with the `look` prop (Standard by default). Clean has no tray – one white card with hairline shadows, a dashed drop area,
  * quiet list rows with 16px type-tinted file icons and thin blue progress bars, solid status icons, and the
  * summary as the card's last row, where "Uploading …" shimmers while files are on their way.
  */
@@ -79,7 +78,7 @@ export type DropzoneOwnProps = {
   autoplay?: boolean;
   /** Demo mode: files dropped without onUpload are simulated silently. For galleries and prototypes */
   demo?: boolean;
-  /** Visual style. Defaults to the file's look: Standard in dropzone.tsx, Clean in dropzone-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   className?: string;
   /** The root element */

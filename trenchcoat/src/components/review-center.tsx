@@ -37,8 +37,7 @@ import { useOnScreen } from "../internal/use-on-screen";
  * `items`; an id that leaves `items` and comes back later is a fresh item. `filter` is controlled when defined.
  * Other DOM props go to the root; `ref` is the imperative handle below.
  * Narrow containers stack the queue above the item. The styles are injected below, so no extra files are needed.
- * Two looks, picked with the `look` prop (the default comes from the file: review-center.tsx is Standard,
- * review-center-clean.tsx is Clean). Clean is one quiet white card with hairlines instead of the gray tray, with
+ * Two looks, picked with the `look` prop (Standard by default). Clean is one quiet white card with hairlines instead of the gray tray, with
  * smaller radii and type, 0.5px edges and the emphasized easing.
  */
 
@@ -139,7 +138,7 @@ export type ReviewCenterHandle = {
 };
 
 type ReviewCenterOwnProps = {
-  /** Visual style. Defaults to the file's look: Standard in review-center.tsx, Clean in review-center-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   /** Everything waiting for review – decided items hide themselves, new ids slide in */
   items: ReviewItem[];

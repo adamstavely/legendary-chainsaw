@@ -27,8 +27,7 @@ import { useRootRef } from "../internal/use-root-ref";
  * Chat Composer – a single self-contained file.
  * Icons are inline SVGs and the styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop (the default comes from the file: chat-composer.tsx is Standard,
- * chat-composer-clean.tsx is Clean). Standard is a white card on a gray tray that holds "Connect apps" /
+ * Two looks, picked with the `look` prop (Standard by default). Standard is a white card on a gray tray that holds "Connect apps" /
  * "Select a project" above it, and scales with its width (calc(n * --u)); the message shows one line and grows to
  * two. Clean is one white card with hairline shadows and fixed px sizes: the message on top (growing up to four
  * lines), the tools in a row below it, and a quiet last row that connects apps and then lets you pick a project;
@@ -103,7 +102,7 @@ type ChatComposerOwnProps = {
   /** Requests unrestricted access – resolves, rejects and is simulated like onConnectApps */
   onRequestApproval?: () => void | Promise<unknown>;
   onSelectProject?: () => void;
-  /** Visual style. Defaults to the file's look: Standard in chat-composer.tsx, Clean in chat-composer-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
 };
 

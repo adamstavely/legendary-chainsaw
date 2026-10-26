@@ -10,8 +10,7 @@ import { useRootRef } from "../internal/use-root-ref";
  * self-contained file. Fold it away, pick an alternative instead, accept and undo.
  * The styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop (the default comes from the file: smart-recommendation.tsx is Standard,
- * smart-recommendation-clean.tsx is Clean). Clean drops the tray: one white card with hairline shadows and quiet
+ * Two looks, picked with the `look` prop (Standard by default). Clean drops the tray: one white card with hairline shadows and quiet
  * gray type, a solid blue sparkle as the mark, the signal and the actions in the card's last row, and thin icons on
  * the Alternatives and Undo buttons.
  */
@@ -57,7 +56,7 @@ type SmartRecommendationOwnProps = {
   open?: boolean;
   defaultOpen?: boolean;
   onOpenChange?: (open: boolean) => void;
-  /** Visual style. Defaults to the file's look: Standard in smart-recommendation.tsx, Clean in smart-recommendation-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   className?: string;
 };

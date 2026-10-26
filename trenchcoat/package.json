@@ -10,12 +10,10 @@
     "test": "vitest run",
     "check:prefixes": "node scripts/check-prefixes.mjs",
     "check:ratchet": "node scripts/check-ratchet.mjs",
-    "ci": "npm run typecheck && npm run lint && npm run check:prefixes && npm run check:ratchet && npm run check:tokens && npm run check:contrast && npm run check:lib && npm test",
+    "ci": "npm run typecheck && npm run lint && npm run check:prefixes && npm run check:ratchet && npm run check:tokens && npm run check:contrast && npm test",
     "check:tokens": "node scripts/tokens.mjs --check && node scripts/check-tokens.mjs",
     "check:contrast": "node scripts/contrast.mjs",
-    "visual": "node scripts/visual.mjs",
-    "build:lib": "node scripts/build-lib.mjs",
-    "check:lib": "node scripts/build-lib.mjs --check"
+    "visual": "node scripts/visual.mjs"
   },
   "dependencies": {
     "lucide-react": "1.55.0",

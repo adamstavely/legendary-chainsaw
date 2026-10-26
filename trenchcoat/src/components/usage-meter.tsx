@@ -27,8 +27,7 @@ import { useRootRef } from "../internal/use-root-ref";
  * bars glide to their new widths. From 80% a small amber dot warns, at 100% it says "Limit reached".
  * The styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop (the default comes from the file: usage-meter.tsx is Standard,
- * usage-meter-clean.tsx is Clean). Clean is one white card with hairline shadows; what's left and the button sit
+ * Two looks, picked with the `look` prop (Standard by default). Clean is one white card with hairline shadows; what's left and the button sit
  * in its last row, under a hairline, instead of in a tray below the card.
  */
 export type Look = "standard" | "clean";
@@ -65,7 +64,7 @@ export type UsagePeriod = { id: string; label: string };
 export type UsageState = "ok" | "warn" | "limit";
 
 export type UsageMeterOwnProps = {
-  /** Visual style. Defaults to the file's look: Standard in usage-meter.tsx, Clean in usage-meter-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   /**
    * How the card is laid out. "stacked" (default): one column at most 460px wide. "wide": the card takes its

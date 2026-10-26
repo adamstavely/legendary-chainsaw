@@ -16,8 +16,7 @@ import { useRootRef } from "../internal/use-root-ref";
  * The tasks are yours: pass them with start and end times (no end while running) – the component draws and moves them.
  * The styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop (the default comes from the file: agent-lanes.tsx is Standard,
- * agent-lanes-clean.tsx is Clean). Clean is one white card with the summary bar inside it, above a hairline,
+ * Two looks, picked with the `look` prop (Standard by default). Clean is one white card with the summary bar inside it, above a hairline,
  * instead of the bar sitting on a soft gray tray above the card.
  */
 
@@ -59,7 +58,7 @@ export type LaneTask = {
 export type LaneTaskHandler = (task: LaneTask) => void | Promise<unknown>;
 
 type AgentLanesOwnProps = {
-  /** Visual style. Defaults to the file's look: Standard in agent-lanes.tsx, Clean in agent-lanes-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   agents: LaneAgent[];
   /** The tasks – always the source of truth. After Approve or Reject the block shows the result right away; as soon

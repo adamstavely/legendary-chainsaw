@@ -7,8 +7,7 @@ import { useControllable } from "../internal/use-controllable";
  * KPI Chart – a metric card with a multi-line chart and a hover tooltip, in a single self-contained file.
  * The styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop (the default comes from the file: kpi-chart.tsx is Standard,
- * kpi-chart-clean.tsx is Clean). Clean is one white card with hairline shadows; the title, value and chart sit in
+ * Two looks, picked with the `look` prop (Standard by default). Clean is one white card with hairline shadows; the title, value and chart sit in
  * its body and the footer in the card's last row.
  */
 export type Look = "standard" | "clean";
@@ -24,7 +23,7 @@ export type KpiSeries = {
 };
 
 type OwnProps = {
-  /** Visual style. Defaults to the file's look: Standard in kpi-chart.tsx, Clean in kpi-chart-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   title: string;
   /** Headline value, already formatted, e.g. "$96.4k" */

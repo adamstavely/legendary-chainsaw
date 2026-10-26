@@ -6,8 +6,7 @@ import type { ComponentPropsWithoutRef, ReactNode, Ref } from "react";
  * Change Summary – what moved since last time, one metric per row, in a gray tray with a white card, in a single self-contained file.
  * The styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop (the default comes from the file: change-summary.tsx is Standard,
- * change-summary-clean.tsx is Clean). Clean has no tray – one white card with hairline shadows. The heading is the
+ * Two looks, picked with the `look` prop (Standard by default). Clean has no tray – one white card with hairline shadows. The heading is the
  * first row of the card, each metric sits under a 0.5px line with a small tinted trend mark and quiet gray text,
  * and the icons are drawn with thinner lines.
  */
@@ -26,7 +25,7 @@ export type MetricChange = {
 };
 
 type OwnProps = {
-  /** Visual style. Defaults to the file's look: Standard in change-summary.tsx, Clean in change-summary-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   title?: string;
   /** Small text on the right of the heading, e.g. "This week" */

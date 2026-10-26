@@ -27,8 +27,7 @@ import { useSmoothHeight } from "../internal/use-smooth-height";
  * error and its text back in the field. `resolved` and `filter` are controlled when defined, otherwise uncontrolled
  * from their defaults; changes are always reported. Other DOM props and `ref` go to the root <section>.
  * The styles are injected below, so no extra files are needed.
- * Two looks, picked with the `look` prop (the default comes from the file: comments-panel.tsx is Standard,
- * comments-panel-clean.tsx is Clean). Clean has no tray – one white card with hairline shadows: heading, filter tabs,
+ * Two looks, picked with the `look` prop (Standard by default). Clean has no tray – one white card with hairline shadows: heading, filter tabs,
  * the feed and the composer are rows of that card. Quiet gray type, thin 16px icons (solid for the applied check and
  * Run edit's play), the edit count in the tab as a chip, and a shimmering "Running…".
  */
@@ -50,7 +49,7 @@ export type PanelComment = {
 export type CommentsFilter = "all" | "questions" | "edits";
 
 type CommentsPanelOwnProps = {
-  /** Visual style. Defaults to the file's look: Standard in comments-panel.tsx, Clean in comments-panel-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   comments: PanelComment[];
   /** Who writes new comments */

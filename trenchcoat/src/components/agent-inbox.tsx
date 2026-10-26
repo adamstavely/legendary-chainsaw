@@ -17,8 +17,7 @@ import { useRootRef } from "../internal/use-root-ref";
  *   · Board / List switches the layout; narrow containers always get the list
  * The styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop (the default comes from the file: agent-inbox.tsx is Standard,
- * agent-inbox-clean.tsx is Clean). Clean drops the gray tray: the columns themselves are soft gray, the bar sits
+ * Two looks, picked with the `look` prop (Standard by default). Clean drops the gray tray: the columns themselves are soft gray, the bar sits
  * above them without a background, and the bar has no action button (`action` is Standard only).
  */
 
@@ -61,7 +60,7 @@ export type AgentInboxView = "board" | "list";
 export type AgentTaskHandler = (task: AgentTask) => void | Promise<unknown>;
 
 type AgentInboxOwnProps = {
-  /** Visual style. Defaults to the file's look: Standard in agent-inbox.tsx, Clean in agent-inbox-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   /** The tasks – always the source of truth. After Approve, Reject or Retry the card shows the result right away;
    *  as soon as you pass that task with a new status (or steps, start or elapsed time), your version wins */

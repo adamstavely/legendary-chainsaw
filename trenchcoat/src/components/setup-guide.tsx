@@ -10,8 +10,7 @@ import { useRootRef } from "../internal/use-root-ref";
  * Tasks unlock one after another; finished tasks and groups are struck through.
  * The styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop (the default comes from the file: setup-guide.tsx is Standard,
- * setup-guide-clean.tsx is Clean). Clean is one white card with hairline shadows, quiet gray type, a thin blue
+ * Two looks, picked with the `look` prop (Standard by default). Clean is one white card with hairline shadows, quiet gray type, a thin blue
  * progress line with a count next to it, flat group rows with a soft wash on the open one, blue checks and
  * thinner 16px icons.
  */
@@ -58,7 +57,7 @@ type SetupGuideOwnProps = {
   /** Shows a close button in the header */
   onClose?: () => void;
   className?: string;
-  /** Visual style. Defaults to the file's look: Standard in setup-guide.tsx, Clean in setup-guide-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   ref?: Ref<HTMLElement>;
 };

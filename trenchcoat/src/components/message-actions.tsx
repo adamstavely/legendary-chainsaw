@@ -26,8 +26,7 @@ import { useRootRef } from "../internal/use-root-ref";
  * MessageText (also exported) crossfades the message itself when the version changes.
  * The styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop (the default comes from the file: message-actions.tsx is Standard,
- * message-actions-clean.tsx is Clean). Clean uses ghost icon buttons with thin or solid 16px glyphs (Copy turns into
+ * Two looks, picked with the `look` prop (Standard by default). Clean uses ghost icon buttons with thin or solid 16px glyphs (Copy turns into
  * a green check), a pressed action takes the selected-tab look, the feedback reasons are tab buttons and Send is the
  * dark chip – made to sit as the last row of a white card.
  */
@@ -35,8 +34,6 @@ import { useRootRef } from "../internal/use-root-ref";
 export type Look = "standard" | "clean";
 const DEFAULT_LOOK: Look = "standard";
 const ROOT_CLASS = "ui-ma";
-/** Other exported components render their own root, which also carries the token fallbacks */
-const EXTRA_ROOT_CLASSES = ["ui-ma-text"];
 
 export type MessageActionKey = "copy" | "regenerate" | "feedback" | "speak";
 export type FeedbackKind = "up" | "down";
@@ -90,7 +87,7 @@ type MessageActionsOwnProps = {
   quiet?: boolean;
   /** Accessible name of the bar */
   label?: string;
-  /** Visual style. Defaults to the file's look: Standard in message-actions.tsx, Clean in message-actions-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   className?: string;
 };
@@ -104,7 +101,7 @@ export type MessageActionsProps = Omit<ComponentPropsWithoutRef<"div">, keyof Me
 export type MessageTextProps = Omit<ComponentPropsWithoutRef<"div">, "children"> & {
   version: string | number;
   children: ReactNode;
-  /** Visual style. Defaults to the file's look: Standard in message-actions.tsx, Clean in message-actions-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   className?: string;
   /** The root element */

@@ -22,8 +22,7 @@ import { useRootRef } from "../internal/use-root-ref";
  * On narrow screens the presets become a row of chips and one month is shown.
  * The styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop (the default comes from the file: date-range-picker.tsx is Standard,
- * date-range-picker-clean.tsx is Clean). Clean has no tray – a white one-line field with a hairline shadow opens
+ * Two looks, picked with the `look` prop (Standard by default). Clean has no tray – a white one-line field with a hairline shadow opens
  * one white popover; the picked ends are dark chips with a light gray band between them, today carries a small
  * blue dot, and Cancel / Apply sit in a last row under a hairline. Only the calendars clip while the popover
  * glides to its height, and the active preset and compare option are marked without a gliding highlight.
@@ -72,7 +71,7 @@ export type DateRangePickerOwnProps = {
   defaultOpen?: boolean;
   /** "Today" for the presets – defaults to the real today, read after mount (so server and client render alike) */
   today?: Date;
-  /** Visual style. Defaults to the file's look: Standard in date-range-picker.tsx, Clean in date-range-picker-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   className?: string;
   /** The root element */

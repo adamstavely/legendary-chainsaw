@@ -21,8 +21,7 @@ import { useRootRef } from "../internal/use-root-ref";
  * The positions are measured from the page itself, so any width, font or zoom works.
  * The styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop (the default comes from the file: agent-cursors.tsx is Standard,
- * agent-cursors-clean.tsx is Clean). Clean has no tray – one white page with the header inside it – and draws
+ * Two looks, picked with the `look` prop (Standard by default). Clean has no tray – one white page with the header inside it – and draws
  * hairlines as shadows, with Inter 400/500, small radii and quieter tables. The markup and behaviour are the same.
  */
 
@@ -123,7 +122,7 @@ export type AgentCursor = {
 };
 
 type AgentCursorsOwnProps = {
-  /** Visual style. Defaults to the file's look: Standard in agent-cursors.tsx, Clean in agent-cursors-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   agents: CursorAgent[];
   blocks: DocBlock[];

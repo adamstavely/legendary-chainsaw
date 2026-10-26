@@ -12,10 +12,13 @@
 import { createRef, type ComponentType } from "react";
 import { act, render } from "@testing-library/react";
 import { describe, expect, test } from "vitest";
+import cleanTwins from "virtual:tc-clean";
 
 export type ContractSpec = {
   /** Export name of the component in the published file */
   component: string;
+  /** A single-look component: the one look it has (no look prop, no other-look check) */
+  only?: "standard" | "clean";
   /** Minimal props that render the component */
   props: Record<string, unknown>;
   /** Selector for the root element, when it isn't the first element the component renders */
@@ -33,7 +36,7 @@ export type ContractSpec = {
 
 const specs = import.meta.glob<{ spec: ContractSpec }>("./contract/*.contract.tsx", { eager: true });
 const libSpecs = import.meta.glob<{ spec: ContractSpec }>("./contract/{blocks,screens,illustrations,motion}/*.contract.tsx", { eager: true });
-const modules = import.meta.glob<Record<string, unknown>>("../{components,blocks,screens,illustrations,motion}/*.tsx");
+const modules = import.meta.glob<Record<string, unknown>>("../{src/components,blocks,screens,illustrations,motion}/*.tsx");
 
 const cases = Object.entries(specs).map(([path, mod]) => ({ slug: path.match(/contract\/(.+)\.contract\.tsx$/)![1], spec: mod.spec }));
 const libCases = Object.entries(libSpecs).map(([path, mod]) => ({ slug: path.match(/contract\/(.+)\.contract\.tsx$/)![1], spec: mod.spec }));
@@ -53,7 +56,9 @@ describe("contract", () => {
 
   for (const { slug, spec } of cases) {
     for (const look of ["standard", "clean"] as const) {
-      describe(`${slug} (${look})`, () => checks(spec, look === "standard" ? `../components/${slug}.tsx` : `../components/${slug}-clean.tsx`, look));
+      if (spec.only && spec.only !== look) continue;
+      // The Clean case loads the in-memory twin (vite.config.ts) – the same source with Clean as its default
+      describe(`${slug} (${look})`, () => checks(spec, look === "standard" || spec.only ? `../src/components/${slug}.tsx` : `clean:${slug}`, spec.only ? undefined : look));
     }
   }
   for (const { slug, spec } of libCases) describe(slug, () => checks(spec, `../${slug}.tsx`));
@@ -62,7 +67,7 @@ describe("contract", () => {
 /** The checks for one published file – `look` is the file's default look, absent for single-look libraries */
 function checks(spec: ContractSpec, file: string, look?: "standard" | "clean") {
   const load = async () => {
-    const mod = await modules[file]!();
+    const mod = file.startsWith("clean:") ? await cleanTwins[file.slice(6)]!() : await modules[file]!();
     return mod[spec.component] as ComponentType<Record<string, unknown>>;
   };
   const rootOf = (container: HTMLElement) =>

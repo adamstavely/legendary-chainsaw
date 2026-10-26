@@ -13,8 +13,7 @@ import { useSmoothHeight } from "../internal/use-smooth-height";
  * The phase summary and the totals update as you go; rows glide in and out.
  * The styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop (the default comes from the file: billing-schedule.tsx is Standard,
- * billing-schedule-clean.tsx is Clean). Clean has no tray – one white card with hairline shadows and quiet gray
+ * Two looks, picked with the `look` prop (Standard by default). Clean has no tray – one white card with hairline shadows and quiet gray
  * type. The title and the phase summary head the card, the lines sit in a table with hairline rows, the add
  * buttons follow right under it and the totals close the card as a last row under a hairline.
  */
@@ -38,7 +37,7 @@ export type Schedule = { phase: string; start: string; duration: string; lines: 
 export type Duration = "milestone" | "1m" | "3m" | "6m" | "12m";
 
 type OwnProps = {
-  /** Visual style. Defaults to the file's look: Standard in billing-schedule.tsx, Clean in billing-schedule-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   title?: string;
   /** Phase name (controlled). Leave undefined and use `defaultPhase` to let the component keep it */

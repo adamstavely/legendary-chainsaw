@@ -16,8 +16,7 @@ import { useRootRef } from "../internal/use-root-ref";
  *     another – point at a finished row and "Use this one" takes the place of its time and cost
  * The styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop (the default comes from the file: parallel-attempts.tsx is Standard,
- * parallel-attempts-clean.tsx is Clean). Clean drops the gray tray: every attempt is a quiet card of its own, with
+ * Two looks, picked with the `look` prop (Standard by default). Clean drops the gray tray: every attempt is a quiet card of its own, with
  * hairline shadows. Behaviour is the same.
  */
 export type Look = "standard" | "clean";
@@ -54,7 +53,7 @@ export type Attempt = {
 export type AttemptPickReason = { auto: boolean };
 
 type ParallelAttemptsOwnProps = {
-  /** Visual style. Defaults to the file's look: Standard in parallel-attempts.tsx, Clean in parallel-attempts-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   attempts: Attempt[];
   /** What all of them try to do – e.g. "Fix the flaky checkout test" */

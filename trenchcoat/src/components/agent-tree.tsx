@@ -22,8 +22,7 @@ import { useRootRef } from "../internal/use-root-ref";
  * Wide containers lay the first level out side by side, deeper levels hang below their parent;
  * narrow ones indent every level. The styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop (the default comes from the file: agent-tree.tsx is Standard,
- * agent-tree-clean.tsx is Clean). Clean draws each agent as one small card – no white card on a gray layer, so
+ * Two looks, picked with the `look` prop (Standard by default). Clean draws each agent as one small card – no white card on a gray layer, so
  * who and what sit directly on it, next to the cost, time and folding.
  */
 
@@ -57,7 +56,7 @@ export type TreeAgent = {
 };
 
 type AgentTreeOwnProps = {
-  /** Visual style. Defaults to the file's look: Standard in agent-tree.tsx, Clean in agent-tree-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   root: TreeAgent;
   /** Ids of folded branches. Controlled when defined; otherwise the component keeps them, starting from

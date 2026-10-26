@@ -10,7 +10,7 @@ import { fileURLToPath } from "node:url";
 const DICTIONARY = fileURLToPath(new URL("../tokens/tokens.css", import.meta.url));
 const FALLBACKS = fileURLToPath(new URL("../tokens/fallbacks.json", import.meta.url));
 
-/** The theme selector list, shared by tokens.css (section 3) and every published file (scripts/build-lib.mjs) */
+/** The theme selector list – tokens.css section 3 */
 export const DARK = '.dark, [data-theme="dark"], [data-tc-theme="dark"]';
 export const LIGHT = '[data-theme="light"], [data-tc-theme="light"]';
 export const SYSTEM = '[data-tc-theme="system"]';
@@ -24,10 +24,10 @@ export const THEME_RULES = `:where(${SYSTEM}) { color-scheme: light dark; }
  * Forced colours (Windows High Contrast, forced-colors: active) drop box-shadows and replace author colours, so
  * edges drawn with box-shadow and states shown by a fill disappear. These rules give every control in a component
  * (any element inside a [data-look] root) a system-colour edge, show selected / pressed / checked / current states
- * with Highlight, and draw switch knobs. :not(#tc-fc) matches everything but lifts the rules to id specificity, so
+ * with Highlight, and draw switch knobs. They live in tokens.css (section 3b), which components rely on. :not(#tc-fc) matches everything but lifts the rules to id specificity, so
  * they win over a component's own (even !important) colour rules. Selected items opt out of forced colours
- * (forced-color-adjust: none) because the text backplate would otherwise paint Canvas behind HighlightText. Shared by tokens.css (section 3b) and every published file
- * (scripts/build-lib.mjs); tokens.mjs --check keeps tokens.css in step.
+ * (forced-color-adjust: none) because the text backplate would otherwise paint Canvas behind HighlightText. tokens.mjs --check keeps tokens.css section 3b in
+ * step.
  */
 export const FORCED_RULES = `@media (forced-colors: active) {
   :where([data-look], [data-look] *):not(#tc-fc):is(button, [role="button"], [role="switch"], [role="combobox"], [role="checkbox"], [role="radio"], input:not([type="hidden"]), select, textarea):not([role="option"], [role="menuitem"], [role="menuitemradio"], [role="menuitemcheckbox"], [role="tab"], [role="treeitem"], [role="gridcell"], [role="row"]) { border: 1px solid ButtonText !important; }

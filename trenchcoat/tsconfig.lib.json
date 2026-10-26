@@ -6,5 +6,5 @@
     "noFallthroughCasesInSwitch": true,
     "types": []
   },
-  "include": ["components", "blocks", "screens", "illustrations", "motion"]
+  "include": ["src/components", "blocks", "screens", "illustrations", "motion"]
 }

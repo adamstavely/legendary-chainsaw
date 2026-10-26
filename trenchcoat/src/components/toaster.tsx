@@ -31,8 +31,7 @@ import { rescueFocus, useFocusRescue } from "../internal/use-focus-rescue";
  * stay until they're dismissed (WCAG 2.2.1) unless you give them a duration or set `actionDuration`.
  * The styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop on <Toaster> (the default comes from the file: toaster.tsx is Standard,
- * toaster-clean.tsx is Clean). Clean draws one white card per toast with hairline shadows instead of borders,
+ * Two looks, picked with the `look` prop on <Toaster> (Standard by default). Clean draws one white card per toast with hairline shadows instead of borders,
  * Inter at 13px and 16px status icons; the markup, the API and the motion are the same. The look belongs to the
  * stack – each file keeps its own toast() store, as before.
  */
@@ -105,7 +104,7 @@ type ToasterOwnProps = {
   /** Name of the region for screen readers */
   label?: string;
   className?: string;
-  /** Visual style. Defaults to the file's look: Standard in toaster.tsx, Clean in toaster-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   ref?: Ref<HTMLElement>;
 };

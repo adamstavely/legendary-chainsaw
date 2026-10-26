@@ -27,8 +27,7 @@ import { useRootRef } from "../internal/use-root-ref";
  *   · the percentage turns amber before the window is full, and the gray tray says how much is left
  * The styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop (the default comes from the file: context-window.tsx is Standard,
- * context-window-clean.tsx is Clean). Clean is one white card with hairline shadows: the caption and the action sit
+ * Two looks, picked with the `look` prop (Standard by default). Clean is one white card with hairline shadows: the caption and the action sit
  * in its last row instead of on a gray tray, the percentage is a tag, the icons are 16px with finer strokes, and
  * "Compacting…" shimmers.
  */
@@ -54,7 +53,7 @@ export type ContextPart = {
 };
 
 type ContextWindowOwnProps = {
-  /** Visual style. Defaults to the file's look: Standard in context-window.tsx, Clean in context-window-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   parts: ContextPart[];
   /** Size of the context window in tokens */

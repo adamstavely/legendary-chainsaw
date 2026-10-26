@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased – remediation Part 2 (the shift to Lit)
+
+See `audit/remediation-plan.md`, Part 2, and `audit/lit-port-plan.md`.
+
+### Breaking
+
+- `components/` is gone: no more generated single-file components and no `-clean` copies. Each component is
+  `src/components/<slug>.tsx` with both looks – set `look="clean"` for Clean. Components no longer carry token
+  fallbacks or inlined helpers: load `tokens/tokens.css` (it also holds the theme and forced-colours rules they used
+  to inline). `npm run build:lib` and `check:lib` are removed. plan-vs-actual (Clean only) is now
+  `src/components/plan-vs-actual.tsx`. No app uses Trenchcoat yet, so there is no deprecation period.
+
 ## Unreleased – remediation Part 1 (design work that carries over to Lit)
 
 See `audit/remediation-plan.md`, Part 1.

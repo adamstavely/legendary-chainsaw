@@ -28,8 +28,7 @@ import { useRootRef } from "../internal/use-root-ref";
  * The open preview is controlled when `preview` is defined (null: closed), otherwise uncontrolled from
  * `defaultPreview`; changes are always reported through onPreviewChange. Other DOM props and `ref` go to the root.
  * The styles are injected below, so no extra files are needed.
- * Two looks, picked with the `look` prop (the default comes from the file: cited-answer.tsx is Standard,
- * cited-answer-clean.tsx is Clean). Clean has no tray – one white card with hairline shadows and quiet gray type; the
+ * Two looks, picked with the `look` prop (Standard by default). Clean has no tray – one white card with hairline shadows and quiet gray type; the
  * sources sit inside it, below the answer, as one row of gray tab chips (whatever doesn't fit goes into "+N", which
  * shows them all), and its icons are 16px with thin lines.
  */
@@ -65,7 +64,7 @@ export type CitedSource = {
 };
 
 type CitedAnswerOwnProps = {
-  /** Visual style. Defaults to the file's look: Standard in cited-answer.tsx, Clean in cited-answer-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   segments: CitedSegment[];
   sources: CitedSource[];

@@ -17,8 +17,7 @@ import { useFocusRescue } from "../internal/use-focus-rescue";
  *     any undone change they build on
  * The styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop (the default comes from the file: agent-ledger.tsx is Standard,
- * agent-ledger-clean.tsx is Clean). Clean drops the gray tray for a plain bar above one quiet white panel:
+ * Two looks, picked with the `look` prop (Standard by default). Clean drops the gray tray for a plain bar above one quiet white panel:
  * smaller logo tiles, medium weights, 0.5px dividers, and Undo / Redo as flat text buttons instead of raised pills.
  */
 
@@ -48,7 +47,7 @@ export type LedgerEntry = {
 };
 
 type AgentLedgerOwnProps = {
-  /** Visual style. Defaults to the file's look: Standard in agent-ledger.tsx, Clean in agent-ledger-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   entries: LedgerEntry[];
   /** Who made the changes – e.g. "Launch agent" */

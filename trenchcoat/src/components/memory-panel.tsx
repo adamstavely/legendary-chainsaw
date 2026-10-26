@@ -29,8 +29,7 @@ import { useRootRef } from "../internal/use-root-ref";
  *   · the tray line counts memories and paused ones with rolling numbers and says what you are pointing at
  * The styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop (the default comes from the file: memory-panel.tsx is Standard,
- * memory-panel-clean.tsx is Clean). Clean drops the tray: one white card with hairline shadows whose last row holds
+ * Two looks, picked with the `look` prop (Standard by default). Clean drops the tray: one white card with hairline shadows whose last row holds
  * the counts and Undo; head, filters, list and New memory are rows of that card, with quiet gray type, thin 16px
  * icons, states as soft tinted fills, and chip rows that fade at the edge only while more chips hide past it.
  */
@@ -92,7 +91,7 @@ type MemoryPanelOwnProps = {
   addedSource?: string;
   /** A button on the tray, e.g. { label: "Manage", onClick } – Undo takes its place for a moment */
   action?: { label: string; onClick: () => void };
-  /** Visual style. Defaults to the file's look: Standard in memory-panel.tsx, Clean in memory-panel-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   className?: string;
 };

@@ -39,8 +39,7 @@ import { rescueFocus, useFocusRescue } from "../internal/use-focus-rescue";
  * The layout is computed from the width (measured with a ResizeObserver): narrow containers get tighter orbits,
  * smaller nodes and short labels. The styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop (the default comes from the file: agent-graph.tsx is Standard,
- * agent-graph-clean.tsx is Clean). Clean is quiet: one white panel, white rounded squares with 0.5px hairlines,
+ * Two looks, picked with the `look` prop (Standard by default). Clean is quiet: one white panel, white rounded squares with 0.5px hairlines,
  * Inter 400/500. Every link is the same light gray line – no thicker busy links – and a call is a short line that
  * fades out behind (blue out, green back with the answer) instead of a dot with a tail; a failed call flashes only the
  * link, and waiting and failed nodes get a light amber or red fill with a shine and a thin stroke running around.
@@ -90,7 +89,7 @@ export type GraphCall = {
 };
 
 type AgentGraphOwnProps = {
-  /** Visual style. Defaults to the file's look: Standard in agent-graph.tsx, Clean in agent-graph-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   nodes: GraphNode[];
   /** Recent calls, newest last – every new id sends a pulse. Calls also draw the links they need */

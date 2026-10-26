@@ -25,8 +25,7 @@ import { useRootRef } from "../internal/use-root-ref";
  *   · the line on the gray tray always says what you are pointing at
  * The styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop (the default comes from the file: project-card.tsx is Standard,
- * project-card-clean.tsx is Clean). Clean has no tray – one white card with hairline shadows, quiet gray type,
+ * Two looks, picked with the `look` prop (Standard by default). Clean has no tray – one white card with hairline shadows, quiet gray type,
  * tinted tags, a plain colored dot in front of each status option, thinner status icons, and the caption and
  * action as the card's last row instead of on the gray tray.
  */
@@ -57,7 +56,7 @@ export type ProjectOption = {
 };
 
 type OwnProps = {
-  /** Visual style. Defaults to the file's look: Standard in project-card.tsx, Clean in project-card-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   title: string;
   /**

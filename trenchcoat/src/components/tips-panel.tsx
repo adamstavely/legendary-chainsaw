@@ -10,8 +10,7 @@ import { useRootRef } from "../internal/use-root-ref";
  * Taking an action marks the tip as done; the list scrolls inside the white card, framed by the gray tray.
  * The styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop (the default comes from the file: tips-panel.tsx is Standard,
- * tips-panel-clean.tsx is Clean). Clean drops the gray tray: one white card with a hairline shadow, the heading
+ * Two looks, picked with the `look` prop (Standard by default). Clean drops the gray tray: one white card with a hairline shadow, the heading
  * and the Close row separated by hairlines, quieter tip tiles, smaller buttons and a green done check. Only the
  * tip list scrolls – the heading and the Close row stay in place.
  */
@@ -46,7 +45,7 @@ type TipsPanelOwnProps = {
   onClose?: () => void;
   closeLabel?: string;
   className?: string;
-  /** Visual style. Defaults to the file's look: Standard in tips-panel.tsx, Clean in tips-panel-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   ref?: Ref<HTMLElement>;
 };

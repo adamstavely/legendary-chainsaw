@@ -9,8 +9,7 @@ import { useRootRef } from "../internal/use-root-ref";
  * Switch it on and off, generate and copy an API key, set the site address with validation and pick a time zone.
  * Changes collect in a save bar. The styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop (the default comes from the file: integration-settings.tsx is Standard,
- * integration-settings-clean.tsx is Clean). Clean is one white card: the header with the switch on top, the settings
+ * Two looks, picked with the `look` prop (Standard by default). Clean is one white card: the header with the switch on top, the settings
  * (with an "API key" label) in hairline-separated sections below, and the save bar as the card's last row; icons are
  * finer, the time zone search carries a magnifier and "Generating…" shimmers instead of showing a spinner.
  */
@@ -52,7 +51,7 @@ export type IntegrationSettingsOwnProps = {
   /** Called when the switch flips. May return a promise: the switch shows that it's working and flips when it
    *  resolves; a rejection leaves it as it was and shows an error */
   onToggle?: (enabled: boolean, options: { signal: AbortSignal }) => void | Promise<unknown>;
-  /** Visual style. Defaults to the file's look: Standard in integration-settings.tsx, Clean in integration-settings-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   className?: string;
   /** The root <section> */

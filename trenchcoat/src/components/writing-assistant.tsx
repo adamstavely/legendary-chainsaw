@@ -11,8 +11,7 @@ import { useControllable } from "../internal/use-controllable";
  * Dictation uses the browser's speech recognition where available; with `demo` a short simulated take stands in.
  * The styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop (the default comes from the file: writing-assistant.tsx is Standard,
- * writing-assistant-clean.tsx is Clean). Clean is one white card: a header with the assistant's name, a welcome
+ * Two looks, picked with the `look` prop (Standard by default). Clean is one white card: a header with the assistant's name, a welcome
  * line with suggestion chips, and the prompt row as the last row with a mic and a send button next to it. The
  * pink-violet-blue of Standard stays as a small accent – a gradient sparkle next to the name and a faint glow
  * behind the welcome line – and "Writing…" shimmers where Standard shows typing dots.
@@ -25,7 +24,7 @@ const ROOT_CLASS = "ui-wa";
 export type ChatMessage = { id: string; role: "user" | "assistant"; text: string };
 
 type OwnProps = {
-  /** Visual style. Defaults to the file's look: Standard in writing-assistant.tsx, Clean in writing-assistant-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   name?: string;
   tagline?: string;

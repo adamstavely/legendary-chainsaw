@@ -30,8 +30,7 @@ import { useOnScreen } from "../internal/use-on-screen";
  *   · a status in the bar – e.g. "Compacting" – while the agent squeezes old turns into a summary
  * The styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop (the default comes from the file: context-map.tsx is Standard,
- * context-map-clean.tsx is Clean). Clean drops the tray: a bar on top with the model and how full it is, one area
+ * Two looks, picked with the `look` prop (Standard by default). Clean drops the tray: a bar on top with the model and how full it is, one area
  * below, and tiles tinted with the Trace Waterfall recipe – a light tint and a hairline edge. Behaviour is the same.
  */
 export type Look = "standard" | "clean";
@@ -81,7 +80,7 @@ export type ContextAgent = {
 };
 
 type ContextMapOwnProps = {
-  /** Visual style. Defaults to the file's look: Standard in context-map.tsx, Clean in context-map-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   /** In the order they should sit – the free space always comes last */
   blocks: ContextBlock[];

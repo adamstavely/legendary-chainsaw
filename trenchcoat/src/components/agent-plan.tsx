@@ -26,8 +26,7 @@ import { rescueFocus, useFocusRescue } from "../internal/use-focus-rescue";
  * and a thin line on the left fills as the plan moves along. All in a single self-contained file.
  * The styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop (the default comes from the file: agent-plan.tsx is Standard,
- * agent-plan-clean.tsx is Clean). Clean has no tray – one white card with hairline shadows; the actions and the
+ * Two looks, picked with the `look` prop (Standard by default). Clean has no tray – one white card with hairline shadows; the actions and the
  * run's status sit in the card's last row, quiet gray type with a shimmer while running, a blue progress line and
  * blue checks.
  */
@@ -53,7 +52,7 @@ export type PlanStep = {
 };
 
 type AgentPlanOwnProps = {
-  /** Visual style. Defaults to the file's look: Standard in agent-plan.tsx, Clean in agent-plan-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   /** The steps. Controlled when defined – pair with onChange; otherwise the component keeps them, starting from
    *  `defaultSteps`. Edits are reported to onChange either way */

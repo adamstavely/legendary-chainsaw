@@ -20,8 +20,7 @@ import { reducedMotion } from "../internal/reduced-motion";
  * decides when a note is taken in (move it from `queue` to a step's `notes`, the glide happens by itself).
  * The styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop (the default comes from the file: agent-steering.tsx is Standard,
- * agent-steering-clean.tsx is Clean). Clean is one white card: the queued notes and the field sit inside it, at the
+ * Two looks, picked with the `look` prop (Standard by default). Clean is one white card: the queued notes and the field sit inside it, at the
  * bottom, instead of on the gray tray under the card – and the whole card grows and shrinks as notes come and go.
  */
 
@@ -53,7 +52,7 @@ export type SteerStep = {
 export type SteerRunStatus = "running" | "paused" | "done";
 
 type AgentSteeringOwnProps = {
-  /** Visual style. Defaults to the file's look: Standard in agent-steering.tsx, Clean in agent-steering-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   /** What the agent is working on, e.g. "Migrate users table" */
   title: string;

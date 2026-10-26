@@ -6,7 +6,7 @@ import { existsSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { TOKEN_RULES } from "./css-literals.mjs";
 
-const LIBRARIES = ["components", "blocks", "screens", "illustrations", "motion"];
+const LIBRARIES = ["src/components", "blocks", "screens", "illustrations", "motion"];
 const BASELINE = "scripts/ratchet-baseline.json";
 
 const PATTERNS = {

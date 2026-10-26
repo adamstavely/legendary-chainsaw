@@ -19,8 +19,7 @@ import { useControllable } from "../internal/use-controllable";
  * appear one after another; at the end a check, and the header turns into "Worked for …".
  * The styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop (the default comes from the file: thinking-state.tsx is Standard,
- * thinking-state-clean.tsx is Clean). Clean is one white card with hairline shadows: the header row holds a 3×3
+ * Two looks, picked with the `look` prop (Standard by default). Clean is one white card with hairline shadows: the header row holds a 3×3
  * pixel mark that twinkles while it thinks, the live timer and the chevron; only the steps below a hairline fold
  * away. Clean shows the first step right away, so the panel never opens empty; Standard reveals it after a short
  * pause.
@@ -78,7 +77,7 @@ type ThinkingStateOwnProps = {
   onOpenChange?: (open: boolean) => void;
   /** When the work started, in epoch ms – the header's timer counts from here. Defaults to when the run started */
   startedAt?: number;
-  /** Visual style. Defaults to the file's look: Standard in thinking-state.tsx, Clean in thinking-state-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   className?: string;
 };

@@ -9,8 +9,7 @@ import { useFocusRescue } from "../internal/use-focus-rescue";
  * Answering a decision confirms it briefly, then folds it away and the count goes down.
  * The styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop (the default comes from the file: decision-inbox.tsx is Standard,
- * decision-inbox-clean.tsx is Clean). Clean is one white card: a heading row with the count at the top, every
+ * Two looks, picked with the `look` prop (Standard by default). Clean is one white card: a heading row with the count at the top, every
  * decision a row under a hairline, and solid glyphs whose cut-out mark takes the card color.
  */
 export type Look = "standard" | "clean";
@@ -33,7 +32,7 @@ export type Decision = {
 export type DecisionAnswer = "primary" | "secondary";
 
 type DecisionInboxOwnProps = {
-  /** Visual style. Defaults to the file's look: Standard in decision-inbox.tsx, Clean in decision-inbox-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   /** The decisions to show – new ones join as they're passed, answered ones fold away */
   decisions: Decision[];

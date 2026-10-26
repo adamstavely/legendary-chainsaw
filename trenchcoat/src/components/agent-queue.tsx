@@ -22,8 +22,7 @@ import { useRootRef } from "../internal/use-root-ref";
  * below, so no extra files are needed. All motion is CSS transitions plus one requestAnimationFrame loop for the numbers
  * (it sleeps while nothing moves and while the queue is off-screen).
  *
- * Two looks, picked with the `look` prop (the default comes from the file: agent-queue.tsx is Standard,
- * agent-queue-clean.tsx is Clean). Clean is one quiet white card with 0.5px hairlines and Inter 400/500 instead of
+ * Two looks, picked with the `look` prop (Standard by default). Clean is one quiet white card with 0.5px hairlines and Inter 400/500 instead of
  * the white card on a soft gray tray; the flow, the chart and the motion are the same.
  */
 
@@ -82,7 +81,7 @@ export type QueueRateLimit = {
 };
 
 type AgentQueueOwnProps = {
-  /** Visual style. Defaults to the file's look: Standard in agent-queue.tsx, Clean in agent-queue-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   /** Waiting and running jobs, plus finished ones for as long as the chart should count them */
   jobs: QueueJob[];

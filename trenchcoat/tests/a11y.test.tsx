@@ -11,16 +11,20 @@ import { writeFileSync } from "node:fs";
 import { afterAll, describe, expect, test } from "vitest";
 import type { ContractSpec } from "./contract.test";
 import { KNOWN } from "./a11y-known";
+import cleanTwins from "virtual:tc-clean";
 
 const specs = import.meta.glob<{ spec: ContractSpec }>("./contract/**/*.contract.tsx", { eager: true });
-const modules = import.meta.glob<Record<string, unknown>>("../{components,blocks,screens,illustrations,motion}/*.tsx");
+const modules = import.meta.glob<Record<string, unknown>>("../{src/components,blocks,screens,illustrations,motion}/*.tsx");
 
 // Rules jsdom can't evaluate (layout, colour) or that only make sense for a whole page
 const OFF = ["color-contrast", "css-orientation-lock", "target-size", "region", "landmark-one-main", "page-has-heading-one", "bypass", "document-title", "html-has-lang", "scrollable-region-focusable"];
 
 const files = Object.entries(specs).flatMap(([path, { spec }]) => {
   const slug = path.match(/contract\/(.+)\.contract\.tsx$/)![1];
-  return slug.includes("/") ? [{ name: slug, file: `../${slug}.tsx`, spec }] : [{ name: slug, file: `../components/${slug}.tsx`, spec }, { name: `${slug}-clean`, file: `../components/${slug}-clean.tsx`, spec }];
+  if (slug.includes("/")) return [{ name: slug, file: `../${slug}.tsx`, spec }];
+  if (spec.only) return [{ name: slug, file: `../src/components/${slug}.tsx`, spec }];
+  // The Clean case loads the in-memory twin (vite.config.ts) – the same source with Clean as its default
+  return [{ name: slug, file: `../src/components/${slug}.tsx`, spec }, { name: `${slug}-clean`, file: `clean:${slug}`, spec }];
 });
 
 // A11Y_DUMP=<file> records what fails now instead of checking – to (re)write tests/a11y-known.ts
@@ -33,7 +37,7 @@ afterAll(() => {
 describe("a11y (axe, structure rules)", () => {
   for (const { name, file, spec } of files) {
     test(name, async () => {
-      const mod = await modules[file]!();
+      const mod = file.startsWith("clean:") ? await cleanTwins[file.slice(6)]!() : await modules[file]!();
       const C = mod[spec.component] as ComponentType<Record<string, unknown>>;
       const before = new Set(document.head.children);
       const { container } = render(<C {...spec.props} />);

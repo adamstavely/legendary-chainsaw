@@ -9,8 +9,7 @@ import { reducedMotion } from "../internal/reduced-motion";
  * Progress Tracker – a checklist with a progress bar, in a single self-contained file.
  * The styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop (the default comes from the file: progress-tracker.tsx is Standard,
- * progress-tracker-clean.tsx is Clean). Clean is one white card with hairline shadows, quiet gray type, a thin
+ * Two looks, picked with the `look` prop (Standard by default). Clean is one white card with hairline shadows, quiet gray type, a thin
  * blue bar and blue checks; the markup and behaviour are the same.
  */
 export type Look = "standard" | "clean";
@@ -44,7 +43,7 @@ type ProgressTrackerOwnProps = {
   /** Called with every step and its new `done` flag whenever a step is ticked or cleared */
   onChange?: (steps: ProgressStep[]) => void;
   className?: string;
-  /** Visual style. Defaults to the file's look: Standard in progress-tracker.tsx, Clean in progress-tracker-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   ref?: Ref<HTMLDivElement>;
 };

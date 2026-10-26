@@ -694,7 +694,7 @@
 }
 
 /* ---------------------------------------------------------------- 3. Theme selection
- * The one selector list – the same rules are inlined into every published file by scripts/build-lib.mjs.
+ * The one selector list (scripts/tokens.mjs THEME_RULES).
  * No attribute follows the OS; the explicit selectors come later, so they win on the same element.
  */
 :where(:root, [data-tc-theme="system"]) { color-scheme: light dark; }
@@ -702,7 +702,7 @@
 :where(.dark, [data-theme="dark"], [data-tc-theme="dark"]) { color-scheme: dark; }
 
 /* ---------------------------------------------------------------- 3b. Forced colours
- * The same rules are inlined into every published file by scripts/build-lib.mjs (scripts/tokens.mjs FORCED_RULES).
+ * scripts/tokens.mjs FORCED_RULES, checked by tokens.mjs --check.
  */
 @media (forced-colors: active) {
   :where([data-look], [data-look] *):not(#tc-fc):is(button, [role="button"], [role="switch"], [role="combobox"], [role="checkbox"], [role="radio"], input:not([type="hidden"]), select, textarea):not([role="option"], [role="menuitem"], [role="menuitemradio"], [role="menuitemcheckbox"], [role="tab"], [role="treeitem"], [role="gridcell"], [role="row"]) { border: 1px solid ButtonText !important; }

@@ -12,8 +12,7 @@ import { reducedMotion } from "../internal/reduced-motion";
  * bar or the list) dims the rest and rolls the big number to that part's value; leaving rolls it back.
  * The styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop (the default comes from the file: compact-breakdown.tsx is Standard,
- * compact-breakdown-clean.tsx is Clean). Standard sets a white card on a gray tray that holds the footer line;
+ * Two looks, picked with the `look` prop (Standard by default). Standard sets a white card on a gray tray that holds the footer line;
  * Clean is one white card with hairline shadows, the footer as its last row, and a period switch whose light fill
  * slides short and crisp.
  */
@@ -33,7 +32,7 @@ export type BreakdownItem = {
 export type BreakdownPeriod = { id: string; label: string };
 
 type OwnProps = {
-  /** Visual style. Defaults to the file's look: Standard in compact-breakdown.tsx, Clean in compact-breakdown-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   title?: string;
   /** The parts of the shown period – the list ranks them by value */

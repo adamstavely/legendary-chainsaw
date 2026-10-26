@@ -7,8 +7,7 @@ import { useLayoutEffect, useRef, useState, type ComponentPropsWithoutRef, type 
  * Tapping an action colors its icon with a small pop, and its count rolls in digit by digit while the pill
  * glides to its new width. The styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop (the default comes from the file: reaction-bar.tsx is Standard,
- * reaction-bar-clean.tsx is Clean). Clean is a row of quiet chips with smaller icons: a taken action marks its chip
+ * Two looks, picked with the `look` prop (Standard by default). Clean is a row of quiet chips with smaller icons: a taken action marks its chip
  * with a light blue tint instead of coloring the icon per action.
  */
 export type Look = "standard" | "clean";
@@ -30,7 +29,7 @@ type ReactionBarOwnProps = {
   /** Hide actions you don't need – the list may change after mount */
   actions?: ReactionKey[];
   className?: string;
-  /** Visual style. Defaults to the file's look: Standard in reaction-bar.tsx, Clean in reaction-bar-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   ref?: Ref<HTMLDivElement>;
 };

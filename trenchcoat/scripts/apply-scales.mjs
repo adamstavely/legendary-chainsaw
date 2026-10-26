@@ -10,7 +10,7 @@
 //     var(--tc-radius-badge).
 //   · Everything else stays literal and is counted by the ratchet: 1 px, fractions, %, values 2 px or more off the
 //     scale, and anything inside calc(), var() or ${}.
-// Hand-written libraries (illustrations, motion) get the dictionary fallback; src/ files get none.
+// Hand-written libraries (illustrations, motion) get the dictionary fallback; src/ files get none (tokens.css).
 import { readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 

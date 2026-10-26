@@ -38,7 +38,8 @@ function useHash() {
   return hash;
 }
 
-const fileCount = (list: Entry[]) => list.reduce((n, e) => n + Object.keys(e.files).length, 0);
+// Source files, not stages: a component's Clean stage is the same file with look="clean"
+const fileCount = (list: Entry[]) => list.reduce((n, e) => n + new Set(Object.values(e.files).map((f) => f.split(" ")[0])).size, 0);
 const entriesOf = (library: string) => ENTRIES.filter((e) => e.library === library);
 
 /** Entries grouped by category, in sidebar order, empty groups dropped */
@@ -203,8 +204,8 @@ function Home() {
       <section className="hero">
         <h1>Trenchcoat</h1>
         <p className="lede">
-          A UI kit for AI-native products. Every piece is a single, self-contained React file – copy it into your app and import it. No
-          package to install and no stylesheet to wire up: React 19 is the only dependency (Screens also use Lucide icons).
+          A UI kit for AI-native products. Components, illustrations and motion are moving to Lit web components that any framework
+          can use, packaged with one stylesheet, <code>tokens.css</code>. Blocks and Screens are single React files you can copy.
         </p>
         <div className="stats">
           {LIBRARY_INFO.map((lib) => (
@@ -257,8 +258,8 @@ function Home() {
       <section>
         <h2 className="cathead">Standard and Clean</h2>
         <p className="intro">
-          Every component comes in two styles – <code>button.tsx</code> and <code>button-clean.tsx</code>. They are two design languages,
-          not two weights of one theme: pick one per product. Props and behaviour are the same, so you can swap one import for the other.
+          Every component comes in two styles, picked with its <code>look</code> prop: <code>"standard"</code> (the default) or <code>"clean"</code>.
+          They are two design languages, not two weights of one theme: pick one per product. Props and behaviour are the same.
           Blocks, Screens, Illustrations and Motion come in a single style.
         </p>
         <table className="compare">
@@ -322,15 +323,20 @@ function Home() {
         <h2 className="cathead">Using a file</h2>
         <ol className="steps">
           <li>
-            Copy the file into your project, e.g. <code>components/ui/</code>, and import it from there.
+            Components need <code>tokens/tokens.css</code> on the page – it holds every value they use. While they're ported to Lit, copy{" "}
+            <code>src/components/&lt;name&gt;.tsx</code> together with <code>src/internal/</code>.
+          </li>
+          <li>
+            Blocks, Screens, Illustrations and Motion are self-contained: copy the file into your project, e.g. <code>components/ui/</code>, and
+            import it from there.
           </li>
           <li>
             If it imports another piece as <code>@/components/ui/&lt;name&gt;</code>, copy that file alongside – Screens build on App Shell,
             Blocks on components like Button and Kpi Chart.
           </li>
           <li>
-            The styles are injected by the file itself. Theme it by overriding <code>--tc-</code> tokens – or include the optional{" "}
-            <code>tokens/tokens.css</code> dictionary to theme everything in one place. Dark mode: <code>data-tc-theme="dark"</code> (or{" "}
+            The styles are injected by the file itself. Theme it by overriding <code>--tc-</code> tokens in <code>tokens/tokens.css</code> or
+            on any ancestor. Dark mode: <code>data-tc-theme="dark"</code> (or{" "}
             <code>.dark</code>) on an ancestor, <code>data-tc-theme="system"</code> to follow the OS. Reduced motion is respected automatically.
           </li>
           <li>Open any item here to see its file name, and use Replay to restart its animations.</li>

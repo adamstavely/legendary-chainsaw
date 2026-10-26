@@ -26,8 +26,7 @@ import { useRootRef } from "../internal/use-root-ref";
  *   · arrows move, Enter picks, Tab reaches the switches, Esc or a click outside closes
  * The styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop (the default comes from the file: model-picker.tsx is Standard,
- * model-picker-clean.tsx is Clean). Clean drops the gray tray: one white popover with hairline shadows, Inter 13px
+ * Two looks, picked with the `look` prop (Standard by default). Clean drops the gray tray: one white popover with hairline shadows, Inter 13px
  * and a blue accent, whose last row holds the cost line; its icons are a size larger with thinner lines, and the
  * Effort fill is measured to sit under its level, since the levels are as wide as their words.
  */
@@ -82,7 +81,7 @@ type ModelPickerOwnProps = {
   align?: "start" | "end";
   /** Whether the menu opens below or above the trigger – above suits a composer at the bottom of the screen */
   side?: "bottom" | "top";
-  /** Visual style. Defaults to the file's look: Standard in model-picker.tsx, Clean in model-picker-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   className?: string;
 };

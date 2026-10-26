@@ -7,8 +7,7 @@ import { useRootRef } from "../internal/use-root-ref";
  * Profile Menu – an account card with the signed-in user, menu actions and profile setup progress, in a single self-contained file.
  * The styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop (the default comes from the file: profile-menu.tsx is Standard,
- * profile-menu-clean.tsx is Clean). Clean has no tray – one white menu card with hairline shadows, smaller
+ * Two looks, picked with the `look` prop (Standard by default). Clean has no tray – one white menu card with hairline shadows, smaller
  * rows and thinner icons; the setup progress is its last row under a hairline instead of sitting in the tray.
  */
 export type Look = "standard" | "clean";
@@ -42,7 +41,7 @@ type ProfileMenuOwnProps = {
   /** Profile setup progress under the actions – leave empty to hide */
   setup?: ProfileSetup;
   className?: string;
-  /** Visual style. Defaults to the file's look: Standard in profile-menu.tsx, Clean in profile-menu-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   ref?: Ref<HTMLElement>;
 };
