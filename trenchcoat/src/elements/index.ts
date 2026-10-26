@@ -15,6 +15,7 @@ export * from "./agent-team";
 export * from "./agent-tree";
 export * from "./ai-answer";
 export * from "./approval-card";
+export * from "./artifact-panel";
 export * from "./autonomy-dial";
 export * from "./billing-schedule";
 export * from "./blur-crossfade";

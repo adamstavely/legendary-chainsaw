@@ -26,6 +26,7 @@ export * from "./react/agent-team";
 export * from "./react/agent-tree";
 export * from "./react/ai-answer";
 export * from "./react/approval-card";
+export * from "./react/artifact-panel";
 export * from "./react/autonomy-dial";
 export * from "./react/billing-schedule";
 export * from "./react/blur-crossfade";
