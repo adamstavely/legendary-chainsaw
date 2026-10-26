@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Icon Composer integration checks</title>
+  <link rel="stylesheet" href="/dist/elements/theme.css">
+  <style>
+    body { font-family: system-ui; margin: 1rem; }
+    button { background: rgb(220, 30, 40); color: white; font-size: 21px; }
+    .host-controls { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
+    .editors { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 1rem; }
+    #second { --ic-accent: #7650bc; --ic-accent-hover: #55308e; --ic-accent-subtle: #f1ebfa; --ic-radius-md: 0; --ic-surface: #faf7ff; }
+    icon-composer::part(header) { min-height: 3rem; }
+    output { display: block; margin-block: .5rem; }
+    @media(max-width: 800px) { .editors { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <h1>Host integration checks</h1>
+  <div class="host-controls">
+    <label>Host input <input id="outside" value="Host keyboard shortcuts stay here"></label>
+    <button id="load">Load host composition</button>
+    <button id="invalid">Send invalid composition</button>
+    <button id="feedback">Enable controlled feedback</button>
+  </div>
+  <output id="changes">No changes</output><output id="exports">No exports</output><output id="errors">No errors</output>
+  <div class="editors">
+    <icon-composer id="first"><strong slot="brand">Host library</strong><span slot="toolbar">Host toolbar slot</span></icon-composer>
+    <icon-composer id="second"><strong slot="brand">Alternate theme</strong></icon-composer>
+  </div>
+  <script type="module">
+    const { registerIconComposer } = await import('/dist/elements/icon-composer.js?qa=' + Date.now());
+    registerIconComposer(); registerIconComposer();
+    const first=document.querySelector('#first');
+    const base={version:1,name:'host-file',stroke:2,layers:[{id:'host-layer',icon:'file',x:0,y:0,scale:1,rotation:0,gap:1,mode:'overlay',visible:true,flip:false}]};
+    let feedback=false, changes=0;
+    document.querySelector('#load').onclick=()=>first.composition=structuredClone(base);
+    document.querySelector('#invalid').onclick=()=>first.composition={...base,layers:[{...base.layers[0],scale:0}]};
+    document.querySelector('#feedback').onclick=()=>{feedback=true;document.querySelector('#feedback').textContent='Controlled feedback enabled';};
+    first.addEventListener('composition-change',event=>{
+      const data=event.detail[0]; document.querySelector('#changes').textContent=`Changes: ${++changes}; name: ${data.name}; layers: ${data.layers.length}`;
+      if(feedback)first.composition=data;
+    });
+    first.addEventListener('icon-export',async event=>{
+      const {blob,format,filename}=event.detail[0];
+      const valid=format==='png'?blob.size>0:(await blob.text()).length>0;
+      document.querySelector('#exports').textContent=`Export: ${format}; ${filename}; nonempty: ${valid}`;
+    });
+    first.addEventListener('composer-error',event=>{document.querySelector('#errors').textContent=event.detail[0].message;});
+  </script>
+</body>
+</html>

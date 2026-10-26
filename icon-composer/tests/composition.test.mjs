@@ -1,0 +1,10 @@
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
+import { renderLayers, svgDocument, validComposition } from '../src/composition.mjs';
+const icons={folder:'<path d="M2 4h20v16H2z"/>',check:'<path d="m5 12 4 4 10-10"/>'};
+const base={id:'base',icon:'folder',x:0,y:0,scale:1,rotation:0,gap:1,mode:'overlay',visible:true,flip:false};
+test('clear space masks earlier layers and retains the badge',()=>{const out=renderLayers([base,{...base,id:'badge',icon:'check',scale:.5,mode:'space'}],icons);assert.match(out,/<mask/);assert.match(out,/stroke="black" stroke-width="8"/);assert.match(out,/stroke="currentColor" stroke-width="4"/);assert.match(out,/mask="url/);});
+test('cutout does not draw the cutting shape',()=>{const out=renderLayers([base,{...base,icon:'check',mode:'cutout'}],icons);assert.equal((out.match(/m5 12/g)||[]).length,1);});
+test('hidden layers are excluded and names are escaped',()=>{const out=svgDocument([{...base,visible:false}],icons,2,'<hello>"');assert.ok(!out.includes('<path'));assert.match(out,/&lt;hello&gt;&quot;/);});
+test('mask IDs are isolated for multiple rendered instances',()=>{assert.match(renderLayers([{...base,mode:'space'}],icons,2,'unique'),/id="unique-mask-0"/);});
+test('imports reject unknown icons and invalid transforms',()=>{const data={version:1,name:'test',stroke:2,layers:[base]};assert.ok(validComposition(data,icons));assert.ok(!validComposition({...data,layers:[{...base,icon:'unknown'}]},icons));assert.ok(!validComposition({...data,layers:[{...base,scale:0}]},icons));});
