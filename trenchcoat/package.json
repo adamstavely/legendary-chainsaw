@@ -1,0 +1,45 @@
+{
+  "name": "trenchcoat",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 5199",
+    "build": "vite build",
+    "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.lib.json",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "check:prefixes": "node scripts/check-prefixes.mjs",
+    "check:ratchet": "node scripts/check-ratchet.mjs",
+    "ci": "npm run typecheck && npm run lint && npm run check:prefixes && npm run check:ratchet && npm run check:tokens && npm run check:contrast && npm run check:lib && npm test",
+    "check:tokens": "node scripts/tokens.mjs --check && node scripts/check-tokens.mjs",
+    "check:contrast": "node scripts/contrast.mjs",
+    "visual": "node scripts/visual.mjs",
+    "build:lib": "node scripts/build-lib.mjs",
+    "check:lib": "node scripts/build-lib.mjs --check"
+  },
+  "dependencies": {
+    "lucide-react": "1.55.0",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.64.0",
+    "@testing-library/dom": "10.4.2",
+    "@testing-library/react": "16.3.3",
+    "@types/node": "22.15.0",
+    "@types/pngjs": "^6.0.5",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitejs/plugin-react": "4.7.0",
+    "axe-core": "4.14.0",
+    "eslint": "9.30.1",
+    "eslint-plugin-react-hooks": "5.2.0",
+    "jsdom": "26.1.0",
+    "pixelmatch": "^8.0.0",
+    "pngjs": "^7.0.0",
+    "typescript": "5.8.3",
+    "typescript-eslint": "8.35.1",
+    "vite": "6.4.5",
+    "vitest": "5.0.3"
+  }
+}

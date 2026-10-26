@@ -1,0 +1,1297 @@
+/*
+ * Trenchcoat design tokens – the shared dictionary (see audit/design-tokens/proposal.md)
+ *
+ * Three layers:
+ *   1. Primitives  --tc-gray-*, --tc-blue-*, --tc-radius-*, --tc-space-*, --tc-duration-*, --tc-ease-*, --tc-font-*,
+ *      --tc-line-height-*, --tc-tracking-*, --tc-z-*. Raw values, theme- and look-independent.
+ *      Components should not use colour primitives directly.
+ *   2. Semantic    --tc-text-*, --tc-surface-*, --tc-fill-*, --tc-border-*, --tc-focus-*, --tc-accent*,
+ *      --tc-status-*, --tc-tone-*, --tc-chart-*, --tc-shadow-*, plus the look-level scale choices
+ *      (--tc-hairline, --tc-font-weight-strong, --tc-ease-move, --tc-radius-badge …).
+ *   3. Patterns    --tc-control-*, --tc-action-*, --tc-field-*, --tc-menu-*, --tc-pill-*, --tc-kbd-*, --tc-switch-*,
+ *      --tc-seg-*, --tc-card-*, --tc-tray-*, --tc-avatar-*, --tc-caption-*, --tc-eyebrow-*, --tc-meter-*,
+ *      --tc-tooltip-*. One recipe per UI pattern, valued per look. Which to use where: CONTRIBUTING.md.
+ *
+ * Selection:
+ *   look  = nearest [data-tc-look="standard|clean"] (page) or [data-look="..."] (a component's look prop).
+ *           No attribute = standard.
+ *   theme = color-scheme. Every colour token is light-dark(LIGHT, DARK), so it resolves where it is used,
+ *           and look and theme nest independently (a clean card inside a dark standard page just works).
+ *           .dark / [data-theme="dark"] / [data-tc-theme="dark"]   force dark
+ *           [data-theme="light"] / [data-tc-theme="light"]          force light
+ *           [data-tc-theme="system"] or no attribute                follow the OS (color-scheme: light dark)
+ *
+ * Contrast (scripts/contrast.mjs, table in audit/design-tokens/contrast.md – CI fails below the minimum):
+ *   text-* (except disabled), accent-text, status/tone fg  ≥ 4.5 on every surface and on their own tint
+ *   border-control, border-selected, focus-ring, icon-muted, accent, status solids  ≥ 3 on every surface
+ *   text-disabled and border-subtle/default/strong are decorative: never the only cue, never meaningful text.
+ *
+ * Everything is wrapped in :where() (specificity 0), so an app overrides any token with a plain
+ * :root { --tc-accent: ... } or .my-scope { ... } regardless of load order.
+ */
+
+/* ---------------------------------------------------------------- 1. Primitives */
+:where(:root) {
+  --tc-gray-0: #ffffff;
+  --tc-gray-25: #fafafa;
+  --tc-gray-50: #f5f5f5;
+  --tc-gray-100: #f0f0f0;
+  --tc-gray-150: #ececec;
+  --tc-gray-200: #e5e5e5;
+  --tc-gray-250: #dedede;
+  --tc-gray-300: #d4d4d4;
+  --tc-gray-400: #a3a3a3;
+  --tc-gray-450: #858585;
+  --tc-gray-500: #646464;
+  --tc-gray-600: #525252;
+  --tc-gray-700: #404040;
+  --tc-gray-800: #262626;
+  --tc-gray-900: #171717;
+  --tc-gray-950: #0a0a0a;
+
+  --tc-zinc-50: #f5f5f5;
+  --tc-zinc-100: #ededed;
+  --tc-zinc-300: #c8c8cc;
+  --tc-zinc-450: #9a9aa1;
+  --tc-zinc-475: #8e8e95;
+  --tc-zinc-500: #7c7c82;
+  --tc-zinc-600: #5c5c63;
+  --tc-zinc-700: #3a3a40;
+  --tc-zinc-750: #34343a;
+  --tc-zinc-800: #2a2a2e;
+  --tc-zinc-850: #232326;
+  --tc-zinc-875: #1c1c1e;
+  --tc-zinc-900: #19191b;
+  --tc-zinc-925: #161618;
+  --tc-zinc-950: #111113;
+
+  --tc-blue-50: #eaf1ff;
+  --tc-blue-300: #8ab4ff;
+  --tc-blue-400: #6b95ff;
+  --tc-blue-500: #2f68ff;
+  --tc-blue-600: #2456d6;
+  --tc-blue-950: #16243f;
+
+  --tc-cobalt-300: #70b8ff;
+  --tc-cobalt-400: #5b9aff;
+  --tc-cobalt-450: #1a6cf0;
+  --tc-cobalt-500: #0060e2;
+  --tc-cobalt-600: #0058cf;
+
+  --tc-green-50: #e6f6ec;
+  --tc-green-300: #3dd68c;
+  --tc-green-400: #3ec27a;
+  --tc-green-500: #1f8a4c;
+  --tc-green-600: #18794e;
+  --tc-green-950: #12301f;
+
+  --tc-amber-50: #fff3e0;
+  --tc-amber-300: #ffa057;
+  --tc-amber-400: #f5a524;
+  --tc-amber-500: #c2710c;
+  --tc-amber-600: #a35200;
+  --tc-amber-950: #3a2410;
+
+  --tc-red-50: #fdecea;
+  --tc-red-300: #ff977d;
+  --tc-red-400: #ff6369;
+  --tc-red-500: #e5484d;
+  --tc-red-600: #c2331f;
+  --tc-red-950: #3b1714;
+
+  --tc-rose-50: #fff0f3;
+  --tc-rose-300: #fda4af;
+  --tc-rose-400: #fb7185;
+  --tc-rose-500: #e11d48;
+  --tc-rose-600: #be123c;
+  --tc-rose-950: #3f1320;
+
+  --tc-violet-50: #f0ecf9;
+  --tc-violet-300: #b9a2f5;
+  --tc-violet-400: #a78bfa;
+  --tc-violet-500: #8b5cf6;
+  --tc-violet-600: #6941c6;
+  --tc-violet-950: #261d3f;
+
+  --tc-pink-50: #fdedf5;
+  --tc-pink-300: #f9a8d4;
+  --tc-pink-400: #f472b6;
+  --tc-pink-500: #ec4899;
+  --tc-pink-600: #be185d;
+  --tc-pink-950: #3a1428;
+
+  /* Radius: 2xs for bars, ticks and cells; nested radii are calc(outer - inset), never a new literal */
+  --tc-radius-2xs: 2px;
+  --tc-radius-xs: 4px;
+  --tc-radius-sm: 6px;
+  --tc-radius-md: 8px;
+  --tc-radius-lg: 10px;
+  --tc-radius-xl: 12px;
+  --tc-radius-2xl: 16px;
+  --tc-radius-3xl: 20px;
+  --tc-radius-full: 999px;
+
+  --tc-space-0-5: 2px;
+  --tc-space-1: 4px;
+  --tc-space-1-5: 6px;
+  --tc-space-2: 8px;
+  --tc-space-2-5: 10px;
+  --tc-space-3: 12px;
+  --tc-space-3-5: 14px;
+  --tc-space-4: 16px;
+  --tc-space-4-5: 18px;
+  --tc-space-5: 20px;
+  --tc-space-6: 24px;
+  --tc-space-7: 28px;
+  --tc-space-8: 32px;
+  --tc-space-10: 40px;
+  --tc-space-12: 48px;
+  --tc-space-14: 56px;
+  --tc-space-16: 64px;
+
+  /* Motion: a 10-step ladder (snap a literal to the nearest step in log space); loops ≥ 1s are component tokens */
+  --tc-duration-instant: 90ms;
+  --tc-duration-quick: 120ms;
+  --tc-duration-fast: 150ms;
+  --tc-duration-base: 200ms;
+  --tc-duration-moderate: 260ms;
+  --tc-duration-slow: 320ms;
+  --tc-duration-slower: 420ms;
+  --tc-duration-slowest: 560ms;
+  --tc-duration-reveal: 700ms;
+  --tc-duration-reveal-slow: 900ms;
+  --tc-duration-shimmer: 1600ms;
+
+  /* Easing. --tc-ease-out is the expressive (expo-like) curve; the CSS keyword `ease-out` is a different, softer
+     curve – write it as --tc-ease-decelerate. Colour/opacity fades use --tc-ease-standard (= `ease`);
+     movement uses the per-look --tc-ease-move. */
+  --tc-ease-standard: ease;
+  --tc-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --tc-ease-decelerate: cubic-bezier(0, 0, 0.58, 1);
+  --tc-ease-emphasized: cubic-bezier(0.32, 0.72, 0.24, 1);
+  --tc-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --tc-ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --tc-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --tc-font-sans: "Inter", "InterVariable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --tc-font-mono: ui-monospace, "SF Mono", SFMono-Regular, "JetBrains Mono", Menlo, Consolas, monospace;
+  --tc-font-size-2xs: 10px;
+  --tc-font-size-xs: 11px;
+  --tc-font-size-xs-plus: 11.5px;
+  --tc-font-size-sm: 12px;
+  --tc-font-size-sm-plus: 12.5px;
+  --tc-font-size-md: 13px;
+  --tc-font-size-md-plus: 13.5px;
+  --tc-font-size-lg: 14px;
+  --tc-font-size-lg-plus: 15px;
+  --tc-font-size-xl: 16px;
+  --tc-font-size-2xl: 20px;
+  --tc-font-size-3xl: 24px;
+  --tc-font-size-4xl: 28px;
+
+  --tc-font-weight-regular: 400;
+  --tc-font-weight-medium: 500;
+  --tc-font-weight-semibold: 600;
+
+  /* Line height, paired with font size: 10–12px → tight, 12.5 → snug, 13–14 → normal,
+     15 → relaxed (Standard) / loose (Clean), 16 → loose, 20 → display-sm, 24–28 → display */
+  --tc-line-height-none: 1;
+  --tc-line-height-tight: 16px;
+  --tc-line-height-snug: 18px;
+  --tc-line-height-normal: 20px;
+  --tc-line-height-relaxed: 22px;
+  --tc-line-height-loose: 24px;
+  --tc-line-height-display-sm: 28px;
+  --tc-line-height-display: 32px;
+
+  --tc-tracking-tight: -0.02em;
+  --tc-tracking-snug: -0.01em;
+  --tc-tracking-normal: 0;
+  --tc-tracking-caps: 0.05em;
+
+  /* Stacking layers. 0–6 stay literal for local stacking inside an isolation: isolate root. */
+  --tc-z-sticky: 10;
+  --tc-z-dropdown: 30;
+  --tc-z-drawer-scrim: 40;
+  --tc-z-drawer: 50;
+  --tc-z-modal-scrim: 60;
+  --tc-z-modal: 70;
+  --tc-z-toast: 80;
+  --tc-z-drag: 90;
+
+  --tc-focus-halo-width: 3px;
+}
+
+/* ---------------------------------------------------------------- 2a. Standard look (default) */
+:where(:root, [data-tc-look="standard"], [data-look="standard"]) {
+  /* Text – never put meaningful text in text-disabled (decorative or disabled only) */
+  --tc-text-strong: light-dark(var(--tc-gray-900), var(--tc-zinc-50));
+  --tc-text-primary: light-dark(var(--tc-gray-900), var(--tc-zinc-100));
+  --tc-text-secondary: light-dark(var(--tc-gray-700), var(--tc-zinc-300));
+  --tc-text-muted: light-dark(var(--tc-gray-500), var(--tc-zinc-450));
+  --tc-text-disabled: light-dark(var(--tc-gray-400), var(--tc-zinc-600));
+  --tc-text-placeholder: light-dark(var(--tc-gray-500), var(--tc-zinc-475));
+  --tc-text-on-accent: #ffffff;
+  --tc-text-on-inverse: light-dark(#ffffff, var(--tc-zinc-950));
+  /* Icons */
+  --tc-icon-muted: light-dark(var(--tc-gray-450), var(--tc-zinc-500));
+  /* Surfaces */
+  --tc-surface-base: light-dark(var(--tc-gray-0), var(--tc-zinc-950));
+  --tc-surface-raised: light-dark(var(--tc-gray-0), var(--tc-zinc-900));
+  --tc-surface-overlay: light-dark(var(--tc-gray-0), var(--tc-zinc-850));
+  --tc-surface-sunken: light-dark(var(--tc-gray-100), var(--tc-zinc-950));
+  /* A tray that cards sit on (lighter than the page in dark, so it stays visible), and the card on it */
+  --tc-surface-tray: light-dark(var(--tc-gray-100), var(--tc-zinc-900));
+  --tc-surface-on-tray: light-dark(#ffffff, var(--tc-zinc-850));
+  /* Inputs and secondary buttons (zinc-800 #2a2a2e is a border colour – never a surface) */
+  --tc-surface-control: light-dark(#ffffff, var(--tc-zinc-850));
+  /* The inverted (ink) surface: Standard primary buttons, inverted pills, tooltips */
+  --tc-surface-inverse: light-dark(var(--tc-gray-900), var(--tc-zinc-100));
+  --tc-surface-inverse-hover: light-dark(var(--tc-gray-800), #ffffff);
+  --tc-surface-inverse-active: light-dark(var(--tc-gray-950), var(--tc-zinc-300));
+  /* Fills (translucent; layer on any surface) */
+  --tc-fill-subtle: light-dark(rgba(0, 0, 0, 0.03), rgba(255, 255, 255, 0.04));
+  --tc-fill-default: light-dark(rgba(0, 0, 0, 0.05), rgba(255, 255, 255, 0.07));
+  --tc-fill-strong: light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.12));
+  --tc-fill-hover: light-dark(rgba(0, 0, 0, 0.04), rgba(255, 255, 255, 0.05));
+  --tc-fill-selected: light-dark(rgba(47, 107, 255, 0.08), rgba(91, 154, 255, 0.14));
+  /* Borders – subtle/default/strong are decorative (< 3:1); a control whose edge is its only cue uses
+     border-control (≥ 3:1), a selected state pairs fill-selected with border-selected (≥ 3:1) or a mark */
+  --tc-border-subtle: light-dark(var(--tc-gray-100), rgba(255, 255, 255, 0.06));
+  --tc-border-default: light-dark(var(--tc-gray-150), var(--tc-zinc-800));
+  --tc-border-strong: light-dark(var(--tc-gray-250), var(--tc-zinc-700));
+  --tc-border-control: light-dark(var(--tc-gray-450), var(--tc-zinc-500));
+  --tc-border-control-hover: light-dark(var(--tc-gray-500), var(--tc-zinc-450));
+  --tc-border-selected: light-dark(var(--tc-blue-500), var(--tc-blue-400));
+  /* Focus: outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset) */
+  --tc-focus-ring: light-dark(var(--tc-blue-500), var(--tc-blue-400));
+  --tc-focus-ring-width: 2px;
+  --tc-focus-ring-offset: 2px;
+  --tc-focus-outline: var(--tc-focus-ring-width) solid var(--tc-focus-ring);
+  --tc-focus-halo: color-mix(in srgb, var(--tc-focus-ring) 24%, transparent);
+  /* Accent – marks state (selected, on, progress); the primary action is ink (--tc-action-primary-*) */
+  --tc-accent: var(--tc-blue-500);
+  --tc-accent-hover: var(--tc-blue-600);
+  --tc-accent-text: light-dark(var(--tc-blue-600), var(--tc-blue-300));
+  --tc-accent-subtle: light-dark(rgba(47, 107, 255, 0.08), rgba(79, 130, 255, 0.16));
+  --tc-accent-highlight: light-dark(rgba(47, 107, 255, 0.16), rgba(109, 139, 255, 0.26));
+  /* Status */
+  --tc-status-success-fg: light-dark(var(--tc-green-600), var(--tc-green-300));
+  --tc-status-success-bg: light-dark(var(--tc-green-50), var(--tc-green-950));
+  --tc-status-success-solid: light-dark(var(--tc-green-500), var(--tc-green-400));
+  --tc-status-success-border: color-mix(in srgb, var(--tc-status-success-solid) 40%, transparent);
+  --tc-status-warning-fg: light-dark(var(--tc-amber-600), var(--tc-amber-300));
+  --tc-status-warning-bg: light-dark(var(--tc-amber-50), var(--tc-amber-950));
+  --tc-status-warning-solid: light-dark(var(--tc-amber-500), var(--tc-amber-400));
+  --tc-status-warning-border: color-mix(in srgb, var(--tc-status-warning-solid) 40%, transparent);
+  --tc-status-danger-fg: light-dark(var(--tc-red-600), var(--tc-red-300));
+  --tc-status-danger-bg: light-dark(var(--tc-red-50), var(--tc-red-950));
+  --tc-status-danger-solid: light-dark(var(--tc-red-500), var(--tc-red-400));
+  --tc-status-danger-border: color-mix(in srgb, var(--tc-status-danger-solid) 40%, transparent);
+  --tc-status-info-fg: light-dark(var(--tc-blue-600), var(--tc-blue-300));
+  --tc-status-info-bg: light-dark(var(--tc-blue-50), var(--tc-blue-950));
+  --tc-status-info-solid: light-dark(var(--tc-blue-500), var(--tc-blue-400));
+  --tc-status-info-border: color-mix(in srgb, var(--tc-status-info-solid) 40%, transparent);
+  /* Categorical tones */
+  --tc-tone-violet-fg: light-dark(var(--tc-violet-600), var(--tc-violet-300));
+  --tc-tone-violet-bg: light-dark(rgba(105, 65, 198, 0.1), rgba(150, 110, 240, 0.16));
+  --tc-tone-violet-solid: light-dark(var(--tc-violet-500), var(--tc-violet-400));
+  --tc-tone-violet-border: color-mix(in srgb, var(--tc-tone-violet-solid) 40%, transparent);
+  --tc-tone-pink-fg: light-dark(var(--tc-pink-600), var(--tc-pink-300));
+  --tc-tone-pink-bg: light-dark(rgba(236, 72, 153, 0.1), rgba(244, 114, 182, 0.16));
+  --tc-tone-pink-solid: light-dark(var(--tc-pink-500), var(--tc-pink-400));
+  --tc-tone-pink-border: color-mix(in srgb, var(--tc-tone-pink-solid) 40%, transparent);
+  --tc-tone-amber-fg: light-dark(var(--tc-amber-600), var(--tc-amber-300));
+  --tc-tone-amber-bg: light-dark(rgba(245, 165, 36, 0.12), rgba(245, 165, 36, 0.14));
+  --tc-tone-amber-solid: light-dark(var(--tc-amber-500), var(--tc-amber-400));
+  --tc-tone-amber-border: color-mix(in srgb, var(--tc-tone-amber-solid) 40%, transparent);
+  --tc-tone-rose-fg: light-dark(var(--tc-rose-600), var(--tc-rose-300));
+  --tc-tone-rose-bg: light-dark(var(--tc-rose-50), rgba(251, 113, 133, 0.16));
+  --tc-tone-rose-solid: light-dark(var(--tc-rose-500), var(--tc-rose-400));
+  --tc-tone-rose-border: color-mix(in srgb, var(--tc-tone-rose-solid) 40%, transparent);
+  /* Data vis */
+  --tc-chart-1: light-dark(var(--tc-blue-500), var(--tc-blue-400));
+  --tc-chart-2: light-dark(var(--tc-violet-500), var(--tc-violet-400));
+  --tc-chart-3: light-dark(var(--tc-pink-500), var(--tc-pink-400));
+  --tc-chart-4: light-dark(#7aa2ff, #4d82ff);
+  --tc-chart-5: light-dark(#c4b5fd, #7c6bd6);
+  --tc-chart-6: light-dark(#f9a8d4, #c25a93);
+  --tc-chart-neutral: light-dark(var(--tc-gray-400), var(--tc-zinc-600));
+  /* Elevation colours */
+  --tc-shadow-color: light-dark(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.4));
+  --tc-shadow-color-strong: light-dark(rgba(0, 0, 0, 0.22), rgba(0, 0, 0, 0.6));
+  /* Effects */
+  --tc-shimmer: light-dark(rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.28));
+  --tc-scrim: light-dark(rgba(0, 0, 0, 0.32), rgba(0, 0, 0, 0.6));
+  /* Elevation (geometry per look, colours follow the theme) */
+  --tc-shadow-control: 0 1px 2px var(--tc-shadow-color);
+  --tc-shadow-raised: 0 0 0 1px var(--tc-border-default), 0 1px 2px var(--tc-shadow-color);
+  --tc-shadow-raised-hover: 0 0 0 1px var(--tc-border-strong), 0 6px 16px -8px var(--tc-shadow-color-strong);
+  --tc-shadow-overlay: 0 0 0 1px var(--tc-border-default), 0 16px 36px -12px var(--tc-shadow-color-strong);
+  --tc-shadow-sunken: inset 0 0 0 1px var(--tc-border-subtle);
+
+  /* Look-level scale choices */
+  --tc-hairline: 1px;
+  --tc-font-weight-strong: var(--tc-font-weight-semibold);
+  --tc-ease-move: var(--tc-ease-out);
+  --tc-radius-badge: var(--tc-radius-full);
+
+  /* Patterns – controls (buttons, icon buttons, toggles share these heights) */
+  --tc-control-h-sm: 28px;
+  --tc-control-h-md: 32px;
+  --tc-control-h-lg: 40px;
+  --tc-control-radius-sm: var(--tc-radius-md);
+  --tc-control-radius-md: var(--tc-radius-lg);
+  --tc-control-radius-lg: var(--tc-radius-xl);
+  --tc-control-px-sm: 10px;
+  --tc-control-px-md: 12px;
+  --tc-control-px-lg: 16px;
+  --tc-control-font-size: var(--tc-font-size-md);
+  --tc-control-font-weight: var(--tc-font-weight-medium);
+  /* Patterns – actions (decision 1: the Standard primary is flat ink) */
+  --tc-action-primary-bg: var(--tc-surface-inverse);
+  --tc-action-primary-bg-hover: var(--tc-surface-inverse-hover);
+  --tc-action-primary-bg-active: var(--tc-surface-inverse-active);
+  --tc-action-primary-fg: var(--tc-text-on-inverse);
+  --tc-action-primary-shadow: var(--tc-shadow-control);
+  --tc-action-secondary-bg: var(--tc-surface-control);
+  --tc-action-secondary-fg: var(--tc-text-primary);
+  --tc-action-secondary-shadow: var(--tc-shadow-raised);
+  --tc-action-secondary-shadow-hover: var(--tc-shadow-raised-hover);
+  --tc-action-ghost-fg: var(--tc-text-secondary);
+  --tc-action-ghost-bg-hover: var(--tc-fill-default);
+  /* Patterns – fields (text inputs, selects, search) */
+  --tc-field-h: 36px;
+  --tc-field-radius: var(--tc-radius-lg);
+  --tc-field-px: 12px;
+  --tc-field-font-size: var(--tc-font-size-md-plus);
+  --tc-field-bg: var(--tc-surface-control);
+  --tc-field-bg-sunken: var(--tc-fill-default);
+  --tc-field-shadow: inset 0 0 0 1px var(--tc-border-control), var(--tc-shadow-control);
+  --tc-field-shadow-hover: inset 0 0 0 1px var(--tc-border-control-hover), var(--tc-shadow-control);
+  --tc-field-shadow-focus: inset 0 0 0 1px var(--tc-focus-ring), 0 0 0 var(--tc-focus-halo-width) var(--tc-focus-halo);
+  --tc-field-shadow-invalid: inset 0 0 0 1px var(--tc-status-danger-solid);
+  /* Patterns – menus, listboxes, popovers */
+  --tc-menu-bg: var(--tc-surface-overlay);
+  --tc-menu-radius: var(--tc-radius-xl);
+  --tc-menu-padding: var(--tc-space-1);
+  --tc-menu-shadow: var(--tc-shadow-overlay);
+  --tc-menu-item-h: 32px;
+  --tc-menu-item-radius: var(--tc-radius-md);
+  --tc-menu-item-px: 10px;
+  --tc-menu-item-font-size: var(--tc-font-size-md);
+  --tc-menu-item-hover: var(--tc-fill-hover);
+  --tc-menu-item-selected-fg: var(--tc-accent-text);
+  /* Patterns – pills, badges, counts, tags */
+  --tc-pill-h: 20px;
+  --tc-pill-px: 8px;
+  --tc-pill-radius: var(--tc-radius-badge);
+  --tc-pill-font-size: var(--tc-font-size-xs);
+  --tc-pill-font-weight: var(--tc-font-weight-medium);
+  --tc-pill-h-lg: 22px;
+  --tc-pill-px-lg: 10px;
+  --tc-pill-font-size-lg: var(--tc-font-size-sm);
+  /* Patterns – key chips */
+  --tc-kbd-h: 18px;
+  --tc-kbd-px: 4px;
+  --tc-kbd-radius: 5px;
+  --tc-kbd-font-size: 10.5px;
+  --tc-kbd-font-weight: var(--tc-font-weight-medium);
+  --tc-kbd-fg: var(--tc-text-secondary);
+  --tc-kbd-bg: var(--tc-surface-raised);
+  --tc-kbd-shadow: inset 0 0 0 1px var(--tc-border-strong), 0 1px 0 var(--tc-border-default);
+  --tc-kbd-on-inverse-bg: light-dark(rgba(255, 255, 255, 0.16), rgba(0, 0, 0, 0.1));
+  /* Patterns – switches (the off track is a ≥ 3:1 control boundary) */
+  --tc-switch-w: 32px;
+  --tc-switch-h: 20px;
+  --tc-switch-knob: 16px;
+  --tc-switch-radius: var(--tc-radius-full);
+  --tc-switch-on: var(--tc-accent);
+  --tc-switch-off: var(--tc-border-control);
+  --tc-switch-knob-bg: #ffffff;
+  /* Patterns – segmented controls */
+  --tc-seg-track-bg: var(--tc-fill-default);
+  --tc-seg-track-radius: var(--tc-radius-lg);
+  --tc-seg-pad: 2px;
+  --tc-seg-thumb-bg: light-dark(#ffffff, var(--tc-zinc-750));
+  --tc-seg-thumb-shadow: var(--tc-shadow-control);
+  /* Patterns – cards and trays (tray radius is concentric with the card inside it) */
+  --tc-card-radius: var(--tc-radius-2xl);
+  --tc-card-shadow: var(--tc-shadow-raised);
+  --tc-card-shadow-hover: var(--tc-shadow-raised-hover);
+  --tc-tray-inset: 4px;
+  --tc-tray-radius: calc(var(--tc-card-radius) + var(--tc-tray-inset));
+  /* Patterns – avatars (people are circles, agents and tools rounded squares) */
+  --tc-avatar-sm: 20px;
+  --tc-avatar-md: 24px;
+  --tc-avatar-font-size: 9px;
+  --tc-avatar-font-weight: var(--tc-font-weight-semibold);
+  --tc-avatar-radius-agent: var(--tc-radius-sm);
+  /* Patterns – section captions (group labels) and eyebrows (uppercase kicker above a title) */
+  --tc-caption-font-size: var(--tc-font-size-sm);
+  --tc-caption-font-weight: var(--tc-font-weight-medium);
+  --tc-caption-line-height: var(--tc-line-height-tight);
+  --tc-caption-tracking: var(--tc-tracking-normal);
+  --tc-caption-transform: none;
+  --tc-caption-color: var(--tc-text-muted);
+  --tc-eyebrow-font-size: var(--tc-font-size-xs);
+  --tc-eyebrow-font-weight: var(--tc-font-weight-medium);
+  --tc-eyebrow-line-height: var(--tc-line-height-tight);
+  --tc-eyebrow-tracking: 0.04em;
+  --tc-eyebrow-transform: uppercase;
+  --tc-eyebrow-color: var(--tc-text-muted);
+  /* Patterns – meters and progress bars */
+  --tc-meter-h: 4px;
+  --tc-meter-h-hero: 8px;
+  --tc-meter-radius: var(--tc-radius-full);
+  --tc-meter-track: var(--tc-fill-default);
+  --tc-meter-fill: var(--tc-accent);
+  /* Patterns – tooltips (always inverse, both looks) */
+  --tc-tooltip-bg: var(--tc-surface-inverse);
+  --tc-tooltip-fg: var(--tc-text-on-inverse);
+  --tc-tooltip-radius: var(--tc-radius-sm);
+  --tc-tooltip-font-size: var(--tc-font-size-sm);
+  --tc-tooltip-px: 8px;
+  --tc-tooltip-py: 4px;
+  /* Patterns – dividers: border-top: var(--tc-hairline) solid var(--tc-divider) */
+  --tc-divider: var(--tc-border-default);
+}
+
+/* ---------------------------------------------------------------- 2b. Clean look */
+:where([data-tc-look="clean"], [data-look="clean"]) {
+  /* Text – never put meaningful text in text-disabled (decorative or disabled only) */
+  --tc-text-strong: light-dark(#000000, #ffffff);
+  --tc-text-primary: light-dark(rgba(0, 0, 0, 0.88), rgba(255, 255, 255, 0.9));
+  --tc-text-secondary: light-dark(rgba(0, 0, 0, 0.68), rgba(255, 255, 255, 0.66));
+  --tc-text-muted: light-dark(rgba(0, 0, 0, 0.56), rgba(255, 255, 255, 0.52));
+  --tc-text-disabled: light-dark(rgba(0, 0, 0, 0.27), rgba(255, 255, 255, 0.3));
+  --tc-text-placeholder: light-dark(rgba(0, 0, 0, 0.56), rgba(255, 255, 255, 0.5));
+  --tc-text-on-accent: #ffffff;
+  --tc-text-on-inverse: light-dark(#fcfcfc, #161618);
+  /* Icons */
+  --tc-icon-muted: light-dark(rgba(0, 0, 0, 0.45), rgba(255, 255, 255, 0.46));
+  /* Surfaces */
+  --tc-surface-base: light-dark(#ffffff, #141416);
+  --tc-surface-raised: light-dark(#ffffff, var(--tc-zinc-875));
+  --tc-surface-overlay: light-dark(#ffffff, #252527);
+  --tc-surface-sunken: light-dark(#f7f7f7, var(--tc-zinc-925));
+  /* A tray that cards sit on (lighter than the page in dark, so it stays visible), and the card on it */
+  --tc-surface-tray: light-dark(#f7f7f7, var(--tc-zinc-925));
+  --tc-surface-on-tray: light-dark(#ffffff, var(--tc-zinc-875));
+  /* Inputs and secondary buttons */
+  --tc-surface-control: light-dark(#ffffff, #252527);
+  /* The inverted (ink) surface: primary buttons, inverted pills, tooltips */
+  --tc-surface-inverse: light-dark(rgba(0, 0, 0, 0.88), rgba(255, 255, 255, 0.92));
+  --tc-surface-inverse-hover: light-dark(rgba(0, 0, 0, 0.8), rgba(255, 255, 255, 0.82));
+  --tc-surface-inverse-active: light-dark(rgba(0, 0, 0, 0.94), rgba(255, 255, 255, 0.74));
+  /* Fills (translucent; layer on any surface) */
+  --tc-fill-subtle: light-dark(rgba(0, 0, 0, 0.03), rgba(255, 255, 255, 0.04));
+  --tc-fill-default: light-dark(rgba(0, 0, 0, 0.06), rgba(255, 255, 255, 0.08));
+  --tc-fill-strong: light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.14));
+  --tc-fill-hover: light-dark(rgba(0, 0, 0, 0.03), rgba(255, 255, 255, 0.04));
+  --tc-fill-selected: light-dark(rgba(0, 96, 226, 0.06), rgba(77, 141, 255, 0.14));
+  /* Borders – hairlines (subtle/default/strong) are decorative; controls use border-control (≥ 3:1) */
+  --tc-border-subtle: light-dark(rgba(0, 0, 0, 0.045), rgba(255, 255, 255, 0.05));
+  --tc-border-default: light-dark(rgba(0, 0, 0, 0.06), rgba(255, 255, 255, 0.08));
+  --tc-border-strong: light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.14));
+  --tc-border-control: light-dark(rgba(0, 0, 0, 0.48), rgba(255, 255, 255, 0.4));
+  --tc-border-control-hover: light-dark(rgba(0, 0, 0, 0.6), rgba(255, 255, 255, 0.52));
+  --tc-border-selected: light-dark(var(--tc-cobalt-500), var(--tc-cobalt-400));
+  /* Focus: outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset) */
+  --tc-focus-ring: light-dark(var(--tc-cobalt-500), var(--tc-cobalt-400));
+  --tc-focus-ring-width: 2px;
+  --tc-focus-ring-offset: 1px;
+  --tc-focus-outline: var(--tc-focus-ring-width) solid var(--tc-focus-ring);
+  --tc-focus-halo: color-mix(in srgb, var(--tc-focus-ring) 24%, transparent);
+  /* Accent – marks state (selected, on, progress); the primary action is inverse */
+  --tc-accent: light-dark(var(--tc-cobalt-500), var(--tc-cobalt-450));
+  --tc-accent-hover: var(--tc-cobalt-600);
+  --tc-accent-text: light-dark(var(--tc-cobalt-600), var(--tc-cobalt-300));
+  --tc-accent-subtle: light-dark(rgba(0, 96, 226, 0.06), rgba(77, 141, 255, 0.14));
+  --tc-accent-highlight: light-dark(rgba(0, 96, 226, 0.12), rgba(77, 141, 255, 0.24));
+  /* Status */
+  --tc-status-success-fg: light-dark(var(--tc-green-600), var(--tc-green-300));
+  --tc-status-success-bg: light-dark(rgba(0, 164, 51, 0.1), rgba(0, 240, 74, 0.12));
+  --tc-status-success-solid: light-dark(var(--tc-green-500), var(--tc-green-400));
+  --tc-status-success-border: color-mix(in srgb, var(--tc-status-success-solid) 40%, transparent);
+  --tc-status-warning-fg: light-dark(var(--tc-amber-600), var(--tc-amber-300));
+  --tc-status-warning-bg: light-dark(rgba(255, 156, 0, 0.16), rgba(251, 106, 0, 0.15));
+  --tc-status-warning-solid: light-dark(var(--tc-amber-500), var(--tc-amber-400));
+  --tc-status-warning-border: color-mix(in srgb, var(--tc-status-warning-solid) 40%, transparent);
+  --tc-status-danger-fg: light-dark(var(--tc-red-600), var(--tc-red-300));
+  --tc-status-danger-bg: light-dark(rgba(245, 43, 0, 0.094), rgba(255, 53, 35, 0.17));
+  --tc-status-danger-solid: light-dark(var(--tc-red-500), var(--tc-red-400));
+  --tc-status-danger-border: color-mix(in srgb, var(--tc-status-danger-solid) 40%, transparent);
+  --tc-status-info-fg: light-dark(var(--tc-cobalt-600), var(--tc-cobalt-300));
+  --tc-status-info-bg: light-dark(rgba(0, 143, 245, 0.1), rgba(0, 119, 255, 0.23));
+  --tc-status-info-solid: light-dark(var(--tc-cobalt-500), var(--tc-cobalt-400));
+  --tc-status-info-border: color-mix(in srgb, var(--tc-status-info-solid) 40%, transparent);
+  /* Categorical tones */
+  --tc-tone-violet-fg: light-dark(#5b45b8, #b7a6f5);
+  --tc-tone-violet-bg: light-dark(rgba(91, 91, 214, 0.08), rgba(130, 120, 240, 0.15));
+  --tc-tone-violet-solid: light-dark(var(--tc-violet-500), var(--tc-violet-400));
+  --tc-tone-violet-border: color-mix(in srgb, var(--tc-tone-violet-solid) 40%, transparent);
+  --tc-tone-pink-fg: light-dark(var(--tc-pink-600), var(--tc-pink-300));
+  --tc-tone-pink-bg: light-dark(rgba(236, 72, 153, 0.08), rgba(244, 114, 182, 0.14));
+  --tc-tone-pink-solid: light-dark(var(--tc-pink-500), var(--tc-pink-400));
+  --tc-tone-pink-border: color-mix(in srgb, var(--tc-tone-pink-solid) 40%, transparent);
+  --tc-tone-amber-fg: light-dark(var(--tc-amber-600), var(--tc-amber-300));
+  --tc-tone-amber-bg: light-dark(rgba(245, 165, 36, 0.12), rgba(245, 165, 36, 0.13));
+  --tc-tone-amber-solid: light-dark(var(--tc-amber-500), var(--tc-amber-400));
+  --tc-tone-amber-border: color-mix(in srgb, var(--tc-tone-amber-solid) 40%, transparent);
+  --tc-tone-rose-fg: light-dark(var(--tc-rose-600), var(--tc-rose-300));
+  --tc-tone-rose-bg: light-dark(rgba(225, 29, 72, 0.07), rgba(251, 113, 133, 0.14));
+  --tc-tone-rose-solid: light-dark(var(--tc-rose-500), var(--tc-rose-400));
+  --tc-tone-rose-border: color-mix(in srgb, var(--tc-tone-rose-solid) 40%, transparent);
+  /* Data vis */
+  --tc-chart-1: light-dark(rgba(0, 96, 226, 0.77), var(--tc-cobalt-400));
+  --tc-chart-2: light-dark(#5b5bd6, #8585f0);
+  --tc-chart-3: light-dark(rgba(0, 96, 226, 0.5), rgba(77, 141, 255, 0.62));
+  --tc-chart-4: light-dark(rgba(0, 96, 226, 0.3), rgba(77, 141, 255, 0.4));
+  --tc-chart-5: light-dark(var(--tc-green-500), var(--tc-green-400));
+  --tc-chart-6: light-dark(#e8a20c, #f0b43a);
+  --tc-chart-neutral: light-dark(rgba(0, 0, 0, 0.14), rgba(255, 255, 255, 0.16));
+  /* Elevation colours */
+  --tc-shadow-color: light-dark(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.4));
+  --tc-shadow-color-strong: light-dark(rgba(0, 0, 0, 0.16), rgba(0, 0, 0, 0.6));
+  /* Effects */
+  --tc-shimmer: light-dark(rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.3));
+  --tc-scrim: light-dark(rgba(0, 0, 0, 0.24), rgba(0, 0, 0, 0.6));
+  /* Elevation (geometry per look, colours follow the theme) */
+  --tc-shadow-control: 0 0 0 0.5px var(--tc-border-default), 0 1px 1px -1px var(--tc-shadow-color), 0 1px 2px 0 var(--tc-shadow-color);
+  --tc-shadow-raised: 0 0 0 0.5px var(--tc-border-default), 0 1px 1px -1px var(--tc-shadow-color), 0 1px 2px 0 var(--tc-shadow-color);
+  --tc-shadow-raised-hover: 0 0 0 0.5px var(--tc-border-strong), 0 1px 1px -1px var(--tc-shadow-color), 0 1px 3px 0 var(--tc-shadow-color);
+  --tc-shadow-overlay: 0 0 0 0.5px var(--tc-border-strong), 0 12px 28px -10px var(--tc-shadow-color-strong), 0 1px 2px 0 var(--tc-shadow-color);
+  --tc-shadow-sunken: inset 0 0 0 0.5px var(--tc-border-default);
+
+  /* Look-level scale choices */
+  --tc-hairline: 0.5px;
+  --tc-font-weight-strong: var(--tc-font-weight-medium);
+  --tc-ease-move: var(--tc-ease-emphasized);
+  --tc-radius-badge: 5px;
+
+  /* Patterns – controls */
+  --tc-control-h-sm: 24px;
+  --tc-control-h-md: 28px;
+  --tc-control-h-lg: 32px;
+  --tc-control-radius-sm: var(--tc-radius-sm);
+  --tc-control-radius-md: var(--tc-radius-sm);
+  --tc-control-radius-lg: var(--tc-radius-sm);
+  --tc-control-px-sm: 8px;
+  --tc-control-px-md: 10px;
+  --tc-control-px-lg: 12px;
+  --tc-control-font-size: var(--tc-font-size-md);
+  --tc-control-font-weight: var(--tc-font-weight-medium);
+  /* Patterns – actions */
+  --tc-action-primary-bg: var(--tc-surface-inverse);
+  --tc-action-primary-bg-hover: var(--tc-surface-inverse-hover);
+  --tc-action-primary-bg-active: var(--tc-surface-inverse-active);
+  --tc-action-primary-fg: var(--tc-text-on-inverse);
+  --tc-action-primary-shadow: none;
+  --tc-action-secondary-bg: var(--tc-surface-control);
+  --tc-action-secondary-fg: var(--tc-text-primary);
+  --tc-action-secondary-shadow: var(--tc-shadow-raised);
+  --tc-action-secondary-shadow-hover: var(--tc-shadow-raised-hover);
+  --tc-action-ghost-fg: var(--tc-text-secondary);
+  --tc-action-ghost-bg-hover: var(--tc-fill-subtle);
+  /* Patterns – fields */
+  --tc-field-h: 32px;
+  --tc-field-radius: var(--tc-radius-md);
+  --tc-field-px: 10px;
+  --tc-field-font-size: var(--tc-font-size-md);
+  --tc-field-bg: var(--tc-surface-control);
+  --tc-field-bg-sunken: var(--tc-fill-default);
+  --tc-field-shadow: inset 0 0 0 1px var(--tc-border-control);
+  --tc-field-shadow-hover: inset 0 0 0 1px var(--tc-border-control-hover);
+  --tc-field-shadow-focus: inset 0 0 0 1px var(--tc-focus-ring), 0 0 0 var(--tc-focus-halo-width) var(--tc-focus-halo);
+  --tc-field-shadow-invalid: inset 0 0 0 1px var(--tc-status-danger-solid);
+  /* Patterns – menus, listboxes, popovers */
+  --tc-menu-bg: var(--tc-surface-overlay);
+  --tc-menu-radius: var(--tc-radius-lg);
+  --tc-menu-padding: var(--tc-space-1);
+  --tc-menu-shadow: var(--tc-shadow-overlay);
+  --tc-menu-item-h: 32px;
+  --tc-menu-item-radius: var(--tc-radius-sm);
+  --tc-menu-item-px: 8px;
+  --tc-menu-item-font-size: var(--tc-font-size-md);
+  --tc-menu-item-hover: var(--tc-fill-hover);
+  --tc-menu-item-selected-fg: var(--tc-accent-text);
+  /* Patterns – pills, badges, counts, tags */
+  --tc-pill-h: 18px;
+  --tc-pill-px: 6px;
+  --tc-pill-radius: var(--tc-radius-badge);
+  --tc-pill-font-size: var(--tc-font-size-xs);
+  --tc-pill-font-weight: var(--tc-font-weight-medium);
+  --tc-pill-h-lg: 20px;
+  --tc-pill-px-lg: 8px;
+  --tc-pill-font-size-lg: var(--tc-font-size-sm);
+  /* Patterns – key chips */
+  --tc-kbd-h: 16px;
+  --tc-kbd-px: 4px;
+  --tc-kbd-radius: var(--tc-radius-xs);
+  --tc-kbd-font-size: var(--tc-font-size-2xs);
+  --tc-kbd-font-weight: var(--tc-font-weight-medium);
+  --tc-kbd-fg: var(--tc-text-secondary);
+  --tc-kbd-bg: var(--tc-surface-raised);
+  --tc-kbd-shadow: var(--tc-shadow-raised);
+  --tc-kbd-on-inverse-bg: light-dark(rgba(255, 255, 255, 0.16), rgba(0, 0, 0, 0.1));
+  /* Patterns – switches (Clean: rounded-rect track, the majority of Clean switches) */
+  --tc-switch-w: 28px;
+  --tc-switch-h: 16px;
+  --tc-switch-knob: 12px;
+  --tc-switch-radius: var(--tc-radius-badge);
+  --tc-switch-on: var(--tc-accent);
+  --tc-switch-off: var(--tc-border-control);
+  --tc-switch-knob-bg: #ffffff;
+  /* Patterns – segmented controls */
+  --tc-seg-track-bg: var(--tc-fill-default);
+  --tc-seg-track-radius: var(--tc-radius-md);
+  --tc-seg-pad: 2px;
+  --tc-seg-thumb-bg: light-dark(#ffffff, var(--tc-zinc-750));
+  --tc-seg-thumb-shadow: var(--tc-shadow-raised);
+  /* Patterns – cards and trays (Clean rarely draws a tray: cards sit directly on the page) */
+  --tc-card-radius: var(--tc-radius-lg);
+  --tc-card-shadow: var(--tc-shadow-raised);
+  --tc-card-shadow-hover: var(--tc-shadow-raised-hover);
+  --tc-tray-inset: 4px;
+  --tc-tray-radius: calc(var(--tc-card-radius) + var(--tc-tray-inset));
+  /* Patterns – avatars */
+  --tc-avatar-sm: 20px;
+  --tc-avatar-md: 24px;
+  --tc-avatar-font-size: 9px;
+  --tc-avatar-font-weight: var(--tc-font-weight-medium);
+  --tc-avatar-radius-agent: var(--tc-radius-sm);
+  /* Patterns – section captions and eyebrows (Clean: the same uppercase 10/500/0.5px style) */
+  --tc-caption-font-size: var(--tc-font-size-2xs);
+  --tc-caption-font-weight: var(--tc-font-weight-medium);
+  --tc-caption-line-height: var(--tc-line-height-tight);
+  --tc-caption-tracking: var(--tc-tracking-caps);
+  --tc-caption-transform: uppercase;
+  --tc-caption-color: var(--tc-text-muted);
+  --tc-eyebrow-font-size: var(--tc-font-size-2xs);
+  --tc-eyebrow-font-weight: var(--tc-font-weight-medium);
+  --tc-eyebrow-line-height: var(--tc-line-height-tight);
+  --tc-eyebrow-tracking: var(--tc-tracking-caps);
+  --tc-eyebrow-transform: uppercase;
+  --tc-eyebrow-color: var(--tc-text-muted);
+  /* Patterns – meters and progress bars */
+  --tc-meter-h: 4px;
+  --tc-meter-h-hero: 8px;
+  --tc-meter-radius: var(--tc-radius-full);
+  --tc-meter-track: var(--tc-fill-default);
+  --tc-meter-fill: var(--tc-accent);
+  /* Patterns – tooltips */
+  --tc-tooltip-bg: var(--tc-surface-inverse);
+  --tc-tooltip-fg: var(--tc-text-on-inverse);
+  --tc-tooltip-radius: var(--tc-radius-sm);
+  --tc-tooltip-font-size: var(--tc-font-size-sm);
+  --tc-tooltip-px: 8px;
+  --tc-tooltip-py: 4px;
+  /* Patterns – dividers */
+  --tc-divider: var(--tc-border-default);
+}
+
+/* ---------------------------------------------------------------- 3. Theme selection
+ * The one selector list – the same rules are inlined into every published file by scripts/build-lib.mjs.
+ * No attribute follows the OS; the explicit selectors come later, so they win on the same element.
+ */
+:where(:root, [data-tc-theme="system"]) { color-scheme: light dark; }
+:where([data-theme="light"], [data-tc-theme="light"]) { color-scheme: light; }
+:where(.dark, [data-theme="dark"], [data-tc-theme="dark"]) { color-scheme: dark; }
+
+/* ---------------------------------------------------------------- 4. Fallback for browsers without light-dark()
+ * GENERATED by `node scripts/tokens.mjs` from sections 2a/2b – do not edit by hand.
+ */
+@supports not (color: light-dark(#000, #fff)) {
+  :where(:root, [data-tc-look="standard"], [data-look="standard"]) {
+    --tc-text-strong: var(--tc-gray-900);
+    --tc-text-primary: var(--tc-gray-900);
+    --tc-text-secondary: var(--tc-gray-700);
+    --tc-text-muted: var(--tc-gray-500);
+    --tc-text-disabled: var(--tc-gray-400);
+    --tc-text-placeholder: var(--tc-gray-500);
+    --tc-text-on-inverse: #ffffff;
+    --tc-icon-muted: var(--tc-gray-450);
+    --tc-surface-base: var(--tc-gray-0);
+    --tc-surface-raised: var(--tc-gray-0);
+    --tc-surface-overlay: var(--tc-gray-0);
+    --tc-surface-sunken: var(--tc-gray-100);
+    --tc-surface-tray: var(--tc-gray-100);
+    --tc-surface-on-tray: #ffffff;
+    --tc-surface-control: #ffffff;
+    --tc-surface-inverse: var(--tc-gray-900);
+    --tc-surface-inverse-hover: var(--tc-gray-800);
+    --tc-surface-inverse-active: var(--tc-gray-950);
+    --tc-fill-subtle: rgba(0, 0, 0, 0.03);
+    --tc-fill-default: rgba(0, 0, 0, 0.05);
+    --tc-fill-strong: rgba(0, 0, 0, 0.1);
+    --tc-fill-hover: rgba(0, 0, 0, 0.04);
+    --tc-fill-selected: rgba(47, 107, 255, 0.08);
+    --tc-border-subtle: var(--tc-gray-100);
+    --tc-border-default: var(--tc-gray-150);
+    --tc-border-strong: var(--tc-gray-250);
+    --tc-border-control: var(--tc-gray-450);
+    --tc-border-control-hover: var(--tc-gray-500);
+    --tc-border-selected: var(--tc-blue-500);
+    --tc-focus-ring: var(--tc-blue-500);
+    --tc-accent-text: var(--tc-blue-600);
+    --tc-accent-subtle: rgba(47, 107, 255, 0.08);
+    --tc-accent-highlight: rgba(47, 107, 255, 0.16);
+    --tc-status-success-fg: var(--tc-green-600);
+    --tc-status-success-bg: var(--tc-green-50);
+    --tc-status-success-solid: var(--tc-green-500);
+    --tc-status-warning-fg: var(--tc-amber-600);
+    --tc-status-warning-bg: var(--tc-amber-50);
+    --tc-status-warning-solid: var(--tc-amber-500);
+    --tc-status-danger-fg: var(--tc-red-600);
+    --tc-status-danger-bg: var(--tc-red-50);
+    --tc-status-danger-solid: var(--tc-red-500);
+    --tc-status-info-fg: var(--tc-blue-600);
+    --tc-status-info-bg: var(--tc-blue-50);
+    --tc-status-info-solid: var(--tc-blue-500);
+    --tc-tone-violet-fg: var(--tc-violet-600);
+    --tc-tone-violet-bg: rgba(105, 65, 198, 0.1);
+    --tc-tone-violet-solid: var(--tc-violet-500);
+    --tc-tone-pink-fg: var(--tc-pink-600);
+    --tc-tone-pink-bg: rgba(236, 72, 153, 0.1);
+    --tc-tone-pink-solid: var(--tc-pink-500);
+    --tc-tone-amber-fg: var(--tc-amber-600);
+    --tc-tone-amber-bg: rgba(245, 165, 36, 0.12);
+    --tc-tone-amber-solid: var(--tc-amber-500);
+    --tc-tone-rose-fg: var(--tc-rose-600);
+    --tc-tone-rose-bg: var(--tc-rose-50);
+    --tc-tone-rose-solid: var(--tc-rose-500);
+    --tc-chart-1: var(--tc-blue-500);
+    --tc-chart-2: var(--tc-violet-500);
+    --tc-chart-3: var(--tc-pink-500);
+    --tc-chart-4: #7aa2ff;
+    --tc-chart-5: #c4b5fd;
+    --tc-chart-6: #f9a8d4;
+    --tc-chart-neutral: var(--tc-gray-400);
+    --tc-shadow-color: rgba(0, 0, 0, 0.05);
+    --tc-shadow-color-strong: rgba(0, 0, 0, 0.22);
+    --tc-shimmer: rgba(255, 255, 255, 0.82);
+    --tc-scrim: rgba(0, 0, 0, 0.32);
+    --tc-kbd-on-inverse-bg: rgba(255, 255, 255, 0.16);
+    --tc-seg-thumb-bg: #ffffff;
+  }
+  :where([data-tc-look="clean"], [data-look="clean"]) {
+    --tc-text-strong: #000000;
+    --tc-text-primary: rgba(0, 0, 0, 0.88);
+    --tc-text-secondary: rgba(0, 0, 0, 0.68);
+    --tc-text-muted: rgba(0, 0, 0, 0.56);
+    --tc-text-disabled: rgba(0, 0, 0, 0.27);
+    --tc-text-placeholder: rgba(0, 0, 0, 0.56);
+    --tc-text-on-inverse: #fcfcfc;
+    --tc-icon-muted: rgba(0, 0, 0, 0.45);
+    --tc-surface-base: #ffffff;
+    --tc-surface-raised: #ffffff;
+    --tc-surface-overlay: #ffffff;
+    --tc-surface-sunken: #f7f7f7;
+    --tc-surface-tray: #f7f7f7;
+    --tc-surface-on-tray: #ffffff;
+    --tc-surface-control: #ffffff;
+    --tc-surface-inverse: rgba(0, 0, 0, 0.88);
+    --tc-surface-inverse-hover: rgba(0, 0, 0, 0.8);
+    --tc-surface-inverse-active: rgba(0, 0, 0, 0.94);
+    --tc-fill-subtle: rgba(0, 0, 0, 0.03);
+    --tc-fill-default: rgba(0, 0, 0, 0.06);
+    --tc-fill-strong: rgba(0, 0, 0, 0.1);
+    --tc-fill-hover: rgba(0, 0, 0, 0.03);
+    --tc-fill-selected: rgba(0, 96, 226, 0.06);
+    --tc-border-subtle: rgba(0, 0, 0, 0.045);
+    --tc-border-default: rgba(0, 0, 0, 0.06);
+    --tc-border-strong: rgba(0, 0, 0, 0.1);
+    --tc-border-control: rgba(0, 0, 0, 0.48);
+    --tc-border-control-hover: rgba(0, 0, 0, 0.6);
+    --tc-border-selected: var(--tc-cobalt-500);
+    --tc-focus-ring: var(--tc-cobalt-500);
+    --tc-accent: var(--tc-cobalt-500);
+    --tc-accent-text: var(--tc-cobalt-600);
+    --tc-accent-subtle: rgba(0, 96, 226, 0.06);
+    --tc-accent-highlight: rgba(0, 96, 226, 0.12);
+    --tc-status-success-fg: var(--tc-green-600);
+    --tc-status-success-bg: rgba(0, 164, 51, 0.1);
+    --tc-status-success-solid: var(--tc-green-500);
+    --tc-status-warning-fg: var(--tc-amber-600);
+    --tc-status-warning-bg: rgba(255, 156, 0, 0.16);
+    --tc-status-warning-solid: var(--tc-amber-500);
+    --tc-status-danger-fg: var(--tc-red-600);
+    --tc-status-danger-bg: rgba(245, 43, 0, 0.094);
+    --tc-status-danger-solid: var(--tc-red-500);
+    --tc-status-info-fg: var(--tc-cobalt-600);
+    --tc-status-info-bg: rgba(0, 143, 245, 0.1);
+    --tc-status-info-solid: var(--tc-cobalt-500);
+    --tc-tone-violet-fg: #5b45b8;
+    --tc-tone-violet-bg: rgba(91, 91, 214, 0.08);
+    --tc-tone-violet-solid: var(--tc-violet-500);
+    --tc-tone-pink-fg: var(--tc-pink-600);
+    --tc-tone-pink-bg: rgba(236, 72, 153, 0.08);
+    --tc-tone-pink-solid: var(--tc-pink-500);
+    --tc-tone-amber-fg: var(--tc-amber-600);
+    --tc-tone-amber-bg: rgba(245, 165, 36, 0.12);
+    --tc-tone-amber-solid: var(--tc-amber-500);
+    --tc-tone-rose-fg: var(--tc-rose-600);
+    --tc-tone-rose-bg: rgba(225, 29, 72, 0.07);
+    --tc-tone-rose-solid: var(--tc-rose-500);
+    --tc-chart-1: rgba(0, 96, 226, 0.77);
+    --tc-chart-2: #5b5bd6;
+    --tc-chart-3: rgba(0, 96, 226, 0.5);
+    --tc-chart-4: rgba(0, 96, 226, 0.3);
+    --tc-chart-5: var(--tc-green-500);
+    --tc-chart-6: #e8a20c;
+    --tc-chart-neutral: rgba(0, 0, 0, 0.14);
+    --tc-shadow-color: rgba(0, 0, 0, 0.05);
+    --tc-shadow-color-strong: rgba(0, 0, 0, 0.16);
+    --tc-shimmer: rgba(255, 255, 255, 0.82);
+    --tc-scrim: rgba(0, 0, 0, 0.24);
+    --tc-kbd-on-inverse-bg: rgba(255, 255, 255, 0.16);
+    --tc-seg-thumb-bg: #ffffff;
+  }
+  @media (prefers-color-scheme: dark) {
+  :where(:root:not([data-theme="light"], [data-tc-theme="light"]), [data-tc-theme="system"]),
+  :where(:root:not([data-theme="light"], [data-tc-theme="light"]), [data-tc-theme="system"]) :where([data-tc-look="standard"], [data-look="standard"]) {
+    --tc-text-strong: var(--tc-zinc-50);
+    --tc-text-primary: var(--tc-zinc-100);
+    --tc-text-secondary: var(--tc-zinc-300);
+    --tc-text-muted: var(--tc-zinc-450);
+    --tc-text-disabled: var(--tc-zinc-600);
+    --tc-text-placeholder: var(--tc-zinc-475);
+    --tc-text-on-inverse: var(--tc-zinc-950);
+    --tc-icon-muted: var(--tc-zinc-500);
+    --tc-surface-base: var(--tc-zinc-950);
+    --tc-surface-raised: var(--tc-zinc-900);
+    --tc-surface-overlay: var(--tc-zinc-850);
+    --tc-surface-sunken: var(--tc-zinc-950);
+    --tc-surface-tray: var(--tc-zinc-900);
+    --tc-surface-on-tray: var(--tc-zinc-850);
+    --tc-surface-control: var(--tc-zinc-850);
+    --tc-surface-inverse: var(--tc-zinc-100);
+    --tc-surface-inverse-hover: #ffffff;
+    --tc-surface-inverse-active: var(--tc-zinc-300);
+    --tc-fill-subtle: rgba(255, 255, 255, 0.04);
+    --tc-fill-default: rgba(255, 255, 255, 0.07);
+    --tc-fill-strong: rgba(255, 255, 255, 0.12);
+    --tc-fill-hover: rgba(255, 255, 255, 0.05);
+    --tc-fill-selected: rgba(91, 154, 255, 0.14);
+    --tc-border-subtle: rgba(255, 255, 255, 0.06);
+    --tc-border-default: var(--tc-zinc-800);
+    --tc-border-strong: var(--tc-zinc-700);
+    --tc-border-control: var(--tc-zinc-500);
+    --tc-border-control-hover: var(--tc-zinc-450);
+    --tc-border-selected: var(--tc-blue-400);
+    --tc-focus-ring: var(--tc-blue-400);
+    --tc-accent-text: var(--tc-blue-300);
+    --tc-accent-subtle: rgba(79, 130, 255, 0.16);
+    --tc-accent-highlight: rgba(109, 139, 255, 0.26);
+    --tc-status-success-fg: var(--tc-green-300);
+    --tc-status-success-bg: var(--tc-green-950);
+    --tc-status-success-solid: var(--tc-green-400);
+    --tc-status-warning-fg: var(--tc-amber-300);
+    --tc-status-warning-bg: var(--tc-amber-950);
+    --tc-status-warning-solid: var(--tc-amber-400);
+    --tc-status-danger-fg: var(--tc-red-300);
+    --tc-status-danger-bg: var(--tc-red-950);
+    --tc-status-danger-solid: var(--tc-red-400);
+    --tc-status-info-fg: var(--tc-blue-300);
+    --tc-status-info-bg: var(--tc-blue-950);
+    --tc-status-info-solid: var(--tc-blue-400);
+    --tc-tone-violet-fg: var(--tc-violet-300);
+    --tc-tone-violet-bg: rgba(150, 110, 240, 0.16);
+    --tc-tone-violet-solid: var(--tc-violet-400);
+    --tc-tone-pink-fg: var(--tc-pink-300);
+    --tc-tone-pink-bg: rgba(244, 114, 182, 0.16);
+    --tc-tone-pink-solid: var(--tc-pink-400);
+    --tc-tone-amber-fg: var(--tc-amber-300);
+    --tc-tone-amber-bg: rgba(245, 165, 36, 0.14);
+    --tc-tone-amber-solid: var(--tc-amber-400);
+    --tc-tone-rose-fg: var(--tc-rose-300);
+    --tc-tone-rose-bg: rgba(251, 113, 133, 0.16);
+    --tc-tone-rose-solid: var(--tc-rose-400);
+    --tc-chart-1: var(--tc-blue-400);
+    --tc-chart-2: var(--tc-violet-400);
+    --tc-chart-3: var(--tc-pink-400);
+    --tc-chart-4: #4d82ff;
+    --tc-chart-5: #7c6bd6;
+    --tc-chart-6: #c25a93;
+    --tc-chart-neutral: var(--tc-zinc-600);
+    --tc-shadow-color: rgba(0, 0, 0, 0.4);
+    --tc-shadow-color-strong: rgba(0, 0, 0, 0.6);
+    --tc-shimmer: rgba(255, 255, 255, 0.28);
+    --tc-scrim: rgba(0, 0, 0, 0.6);
+    --tc-kbd-on-inverse-bg: rgba(0, 0, 0, 0.1);
+    --tc-seg-thumb-bg: var(--tc-zinc-750);
+  }
+  :where(:root:not([data-theme="light"], [data-tc-theme="light"]), [data-tc-theme="system"]) :where([data-tc-look="clean"], [data-look="clean"]),
+  :where([data-tc-look="clean"], [data-look="clean"]):where(:root:not([data-theme="light"], [data-tc-theme="light"]), [data-tc-theme="system"]),
+  :where([data-tc-look="clean"]) :where(:root:not([data-theme="light"], [data-tc-theme="light"]), [data-tc-theme="system"]) {
+    --tc-text-strong: #ffffff;
+    --tc-text-primary: rgba(255, 255, 255, 0.9);
+    --tc-text-secondary: rgba(255, 255, 255, 0.66);
+    --tc-text-muted: rgba(255, 255, 255, 0.52);
+    --tc-text-disabled: rgba(255, 255, 255, 0.3);
+    --tc-text-placeholder: rgba(255, 255, 255, 0.5);
+    --tc-text-on-inverse: #161618;
+    --tc-icon-muted: rgba(255, 255, 255, 0.46);
+    --tc-surface-base: #141416;
+    --tc-surface-raised: var(--tc-zinc-875);
+    --tc-surface-overlay: #252527;
+    --tc-surface-sunken: var(--tc-zinc-925);
+    --tc-surface-tray: var(--tc-zinc-925);
+    --tc-surface-on-tray: var(--tc-zinc-875);
+    --tc-surface-control: #252527;
+    --tc-surface-inverse: rgba(255, 255, 255, 0.92);
+    --tc-surface-inverse-hover: rgba(255, 255, 255, 0.82);
+    --tc-surface-inverse-active: rgba(255, 255, 255, 0.74);
+    --tc-fill-subtle: rgba(255, 255, 255, 0.04);
+    --tc-fill-default: rgba(255, 255, 255, 0.08);
+    --tc-fill-strong: rgba(255, 255, 255, 0.14);
+    --tc-fill-hover: rgba(255, 255, 255, 0.04);
+    --tc-fill-selected: rgba(77, 141, 255, 0.14);
+    --tc-border-subtle: rgba(255, 255, 255, 0.05);
+    --tc-border-default: rgba(255, 255, 255, 0.08);
+    --tc-border-strong: rgba(255, 255, 255, 0.14);
+    --tc-border-control: rgba(255, 255, 255, 0.4);
+    --tc-border-control-hover: rgba(255, 255, 255, 0.52);
+    --tc-border-selected: var(--tc-cobalt-400);
+    --tc-focus-ring: var(--tc-cobalt-400);
+    --tc-accent: var(--tc-cobalt-450);
+    --tc-accent-text: var(--tc-cobalt-300);
+    --tc-accent-subtle: rgba(77, 141, 255, 0.14);
+    --tc-accent-highlight: rgba(77, 141, 255, 0.24);
+    --tc-status-success-fg: var(--tc-green-300);
+    --tc-status-success-bg: rgba(0, 240, 74, 0.12);
+    --tc-status-success-solid: var(--tc-green-400);
+    --tc-status-warning-fg: var(--tc-amber-300);
+    --tc-status-warning-bg: rgba(251, 106, 0, 0.15);
+    --tc-status-warning-solid: var(--tc-amber-400);
+    --tc-status-danger-fg: var(--tc-red-300);
+    --tc-status-danger-bg: rgba(255, 53, 35, 0.17);
+    --tc-status-danger-solid: var(--tc-red-400);
+    --tc-status-info-fg: var(--tc-cobalt-300);
+    --tc-status-info-bg: rgba(0, 119, 255, 0.23);
+    --tc-status-info-solid: var(--tc-cobalt-400);
+    --tc-tone-violet-fg: #b7a6f5;
+    --tc-tone-violet-bg: rgba(130, 120, 240, 0.15);
+    --tc-tone-violet-solid: var(--tc-violet-400);
+    --tc-tone-pink-fg: var(--tc-pink-300);
+    --tc-tone-pink-bg: rgba(244, 114, 182, 0.14);
+    --tc-tone-pink-solid: var(--tc-pink-400);
+    --tc-tone-amber-fg: var(--tc-amber-300);
+    --tc-tone-amber-bg: rgba(245, 165, 36, 0.13);
+    --tc-tone-amber-solid: var(--tc-amber-400);
+    --tc-tone-rose-fg: var(--tc-rose-300);
+    --tc-tone-rose-bg: rgba(251, 113, 133, 0.14);
+    --tc-tone-rose-solid: var(--tc-rose-400);
+    --tc-chart-1: var(--tc-cobalt-400);
+    --tc-chart-2: #8585f0;
+    --tc-chart-3: rgba(77, 141, 255, 0.62);
+    --tc-chart-4: rgba(77, 141, 255, 0.4);
+    --tc-chart-5: var(--tc-green-400);
+    --tc-chart-6: #f0b43a;
+    --tc-chart-neutral: rgba(255, 255, 255, 0.16);
+    --tc-shadow-color: rgba(0, 0, 0, 0.4);
+    --tc-shadow-color-strong: rgba(0, 0, 0, 0.6);
+    --tc-shimmer: rgba(255, 255, 255, 0.3);
+    --tc-scrim: rgba(0, 0, 0, 0.6);
+    --tc-kbd-on-inverse-bg: rgba(0, 0, 0, 0.1);
+    --tc-seg-thumb-bg: var(--tc-zinc-750);
+  }
+  }
+  :where([data-theme="light"], [data-tc-theme="light"]),
+  :where([data-theme="light"], [data-tc-theme="light"]) :where([data-tc-look="standard"], [data-look="standard"]) {
+    --tc-text-strong: var(--tc-gray-900);
+    --tc-text-primary: var(--tc-gray-900);
+    --tc-text-secondary: var(--tc-gray-700);
+    --tc-text-muted: var(--tc-gray-500);
+    --tc-text-disabled: var(--tc-gray-400);
+    --tc-text-placeholder: var(--tc-gray-500);
+    --tc-text-on-inverse: #ffffff;
+    --tc-icon-muted: var(--tc-gray-450);
+    --tc-surface-base: var(--tc-gray-0);
+    --tc-surface-raised: var(--tc-gray-0);
+    --tc-surface-overlay: var(--tc-gray-0);
+    --tc-surface-sunken: var(--tc-gray-100);
+    --tc-surface-tray: var(--tc-gray-100);
+    --tc-surface-on-tray: #ffffff;
+    --tc-surface-control: #ffffff;
+    --tc-surface-inverse: var(--tc-gray-900);
+    --tc-surface-inverse-hover: var(--tc-gray-800);
+    --tc-surface-inverse-active: var(--tc-gray-950);
+    --tc-fill-subtle: rgba(0, 0, 0, 0.03);
+    --tc-fill-default: rgba(0, 0, 0, 0.05);
+    --tc-fill-strong: rgba(0, 0, 0, 0.1);
+    --tc-fill-hover: rgba(0, 0, 0, 0.04);
+    --tc-fill-selected: rgba(47, 107, 255, 0.08);
+    --tc-border-subtle: var(--tc-gray-100);
+    --tc-border-default: var(--tc-gray-150);
+    --tc-border-strong: var(--tc-gray-250);
+    --tc-border-control: var(--tc-gray-450);
+    --tc-border-control-hover: var(--tc-gray-500);
+    --tc-border-selected: var(--tc-blue-500);
+    --tc-focus-ring: var(--tc-blue-500);
+    --tc-accent-text: var(--tc-blue-600);
+    --tc-accent-subtle: rgba(47, 107, 255, 0.08);
+    --tc-accent-highlight: rgba(47, 107, 255, 0.16);
+    --tc-status-success-fg: var(--tc-green-600);
+    --tc-status-success-bg: var(--tc-green-50);
+    --tc-status-success-solid: var(--tc-green-500);
+    --tc-status-warning-fg: var(--tc-amber-600);
+    --tc-status-warning-bg: var(--tc-amber-50);
+    --tc-status-warning-solid: var(--tc-amber-500);
+    --tc-status-danger-fg: var(--tc-red-600);
+    --tc-status-danger-bg: var(--tc-red-50);
+    --tc-status-danger-solid: var(--tc-red-500);
+    --tc-status-info-fg: var(--tc-blue-600);
+    --tc-status-info-bg: var(--tc-blue-50);
+    --tc-status-info-solid: var(--tc-blue-500);
+    --tc-tone-violet-fg: var(--tc-violet-600);
+    --tc-tone-violet-bg: rgba(105, 65, 198, 0.1);
+    --tc-tone-violet-solid: var(--tc-violet-500);
+    --tc-tone-pink-fg: var(--tc-pink-600);
+    --tc-tone-pink-bg: rgba(236, 72, 153, 0.1);
+    --tc-tone-pink-solid: var(--tc-pink-500);
+    --tc-tone-amber-fg: var(--tc-amber-600);
+    --tc-tone-amber-bg: rgba(245, 165, 36, 0.12);
+    --tc-tone-amber-solid: var(--tc-amber-500);
+    --tc-tone-rose-fg: var(--tc-rose-600);
+    --tc-tone-rose-bg: var(--tc-rose-50);
+    --tc-tone-rose-solid: var(--tc-rose-500);
+    --tc-chart-1: var(--tc-blue-500);
+    --tc-chart-2: var(--tc-violet-500);
+    --tc-chart-3: var(--tc-pink-500);
+    --tc-chart-4: #7aa2ff;
+    --tc-chart-5: #c4b5fd;
+    --tc-chart-6: #f9a8d4;
+    --tc-chart-neutral: var(--tc-gray-400);
+    --tc-shadow-color: rgba(0, 0, 0, 0.05);
+    --tc-shadow-color-strong: rgba(0, 0, 0, 0.22);
+    --tc-shimmer: rgba(255, 255, 255, 0.82);
+    --tc-scrim: rgba(0, 0, 0, 0.32);
+    --tc-kbd-on-inverse-bg: rgba(255, 255, 255, 0.16);
+    --tc-seg-thumb-bg: #ffffff;
+  }
+  :where([data-theme="light"], [data-tc-theme="light"]) :where([data-tc-look="clean"], [data-look="clean"]),
+  :where([data-tc-look="clean"], [data-look="clean"]):where([data-theme="light"], [data-tc-theme="light"]),
+  :where([data-tc-look="clean"]) :where([data-theme="light"], [data-tc-theme="light"]) {
+    --tc-text-strong: #000000;
+    --tc-text-primary: rgba(0, 0, 0, 0.88);
+    --tc-text-secondary: rgba(0, 0, 0, 0.68);
+    --tc-text-muted: rgba(0, 0, 0, 0.56);
+    --tc-text-disabled: rgba(0, 0, 0, 0.27);
+    --tc-text-placeholder: rgba(0, 0, 0, 0.56);
+    --tc-text-on-inverse: #fcfcfc;
+    --tc-icon-muted: rgba(0, 0, 0, 0.45);
+    --tc-surface-base: #ffffff;
+    --tc-surface-raised: #ffffff;
+    --tc-surface-overlay: #ffffff;
+    --tc-surface-sunken: #f7f7f7;
+    --tc-surface-tray: #f7f7f7;
+    --tc-surface-on-tray: #ffffff;
+    --tc-surface-control: #ffffff;
+    --tc-surface-inverse: rgba(0, 0, 0, 0.88);
+    --tc-surface-inverse-hover: rgba(0, 0, 0, 0.8);
+    --tc-surface-inverse-active: rgba(0, 0, 0, 0.94);
+    --tc-fill-subtle: rgba(0, 0, 0, 0.03);
+    --tc-fill-default: rgba(0, 0, 0, 0.06);
+    --tc-fill-strong: rgba(0, 0, 0, 0.1);
+    --tc-fill-hover: rgba(0, 0, 0, 0.03);
+    --tc-fill-selected: rgba(0, 96, 226, 0.06);
+    --tc-border-subtle: rgba(0, 0, 0, 0.045);
+    --tc-border-default: rgba(0, 0, 0, 0.06);
+    --tc-border-strong: rgba(0, 0, 0, 0.1);
+    --tc-border-control: rgba(0, 0, 0, 0.48);
+    --tc-border-control-hover: rgba(0, 0, 0, 0.6);
+    --tc-border-selected: var(--tc-cobalt-500);
+    --tc-focus-ring: var(--tc-cobalt-500);
+    --tc-accent: var(--tc-cobalt-500);
+    --tc-accent-text: var(--tc-cobalt-600);
+    --tc-accent-subtle: rgba(0, 96, 226, 0.06);
+    --tc-accent-highlight: rgba(0, 96, 226, 0.12);
+    --tc-status-success-fg: var(--tc-green-600);
+    --tc-status-success-bg: rgba(0, 164, 51, 0.1);
+    --tc-status-success-solid: var(--tc-green-500);
+    --tc-status-warning-fg: var(--tc-amber-600);
+    --tc-status-warning-bg: rgba(255, 156, 0, 0.16);
+    --tc-status-warning-solid: var(--tc-amber-500);
+    --tc-status-danger-fg: var(--tc-red-600);
+    --tc-status-danger-bg: rgba(245, 43, 0, 0.094);
+    --tc-status-danger-solid: var(--tc-red-500);
+    --tc-status-info-fg: var(--tc-cobalt-600);
+    --tc-status-info-bg: rgba(0, 143, 245, 0.1);
+    --tc-status-info-solid: var(--tc-cobalt-500);
+    --tc-tone-violet-fg: #5b45b8;
+    --tc-tone-violet-bg: rgba(91, 91, 214, 0.08);
+    --tc-tone-violet-solid: var(--tc-violet-500);
+    --tc-tone-pink-fg: var(--tc-pink-600);
+    --tc-tone-pink-bg: rgba(236, 72, 153, 0.08);
+    --tc-tone-pink-solid: var(--tc-pink-500);
+    --tc-tone-amber-fg: var(--tc-amber-600);
+    --tc-tone-amber-bg: rgba(245, 165, 36, 0.12);
+    --tc-tone-amber-solid: var(--tc-amber-500);
+    --tc-tone-rose-fg: var(--tc-rose-600);
+    --tc-tone-rose-bg: rgba(225, 29, 72, 0.07);
+    --tc-tone-rose-solid: var(--tc-rose-500);
+    --tc-chart-1: rgba(0, 96, 226, 0.77);
+    --tc-chart-2: #5b5bd6;
+    --tc-chart-3: rgba(0, 96, 226, 0.5);
+    --tc-chart-4: rgba(0, 96, 226, 0.3);
+    --tc-chart-5: var(--tc-green-500);
+    --tc-chart-6: #e8a20c;
+    --tc-chart-neutral: rgba(0, 0, 0, 0.14);
+    --tc-shadow-color: rgba(0, 0, 0, 0.05);
+    --tc-shadow-color-strong: rgba(0, 0, 0, 0.16);
+    --tc-shimmer: rgba(255, 255, 255, 0.82);
+    --tc-scrim: rgba(0, 0, 0, 0.24);
+    --tc-kbd-on-inverse-bg: rgba(255, 255, 255, 0.16);
+    --tc-seg-thumb-bg: #ffffff;
+  }
+  :where(.dark, [data-theme="dark"], [data-tc-theme="dark"]),
+  :where(.dark, [data-theme="dark"], [data-tc-theme="dark"]) :where([data-tc-look="standard"], [data-look="standard"]) {
+    --tc-text-strong: var(--tc-zinc-50);
+    --tc-text-primary: var(--tc-zinc-100);
+    --tc-text-secondary: var(--tc-zinc-300);
+    --tc-text-muted: var(--tc-zinc-450);
+    --tc-text-disabled: var(--tc-zinc-600);
+    --tc-text-placeholder: var(--tc-zinc-475);
+    --tc-text-on-inverse: var(--tc-zinc-950);
+    --tc-icon-muted: var(--tc-zinc-500);
+    --tc-surface-base: var(--tc-zinc-950);
+    --tc-surface-raised: var(--tc-zinc-900);
+    --tc-surface-overlay: var(--tc-zinc-850);
+    --tc-surface-sunken: var(--tc-zinc-950);
+    --tc-surface-tray: var(--tc-zinc-900);
+    --tc-surface-on-tray: var(--tc-zinc-850);
+    --tc-surface-control: var(--tc-zinc-850);
+    --tc-surface-inverse: var(--tc-zinc-100);
+    --tc-surface-inverse-hover: #ffffff;
+    --tc-surface-inverse-active: var(--tc-zinc-300);
+    --tc-fill-subtle: rgba(255, 255, 255, 0.04);
+    --tc-fill-default: rgba(255, 255, 255, 0.07);
+    --tc-fill-strong: rgba(255, 255, 255, 0.12);
+    --tc-fill-hover: rgba(255, 255, 255, 0.05);
+    --tc-fill-selected: rgba(91, 154, 255, 0.14);
+    --tc-border-subtle: rgba(255, 255, 255, 0.06);
+    --tc-border-default: var(--tc-zinc-800);
+    --tc-border-strong: var(--tc-zinc-700);
+    --tc-border-control: var(--tc-zinc-500);
+    --tc-border-control-hover: var(--tc-zinc-450);
+    --tc-border-selected: var(--tc-blue-400);
+    --tc-focus-ring: var(--tc-blue-400);
+    --tc-accent-text: var(--tc-blue-300);
+    --tc-accent-subtle: rgba(79, 130, 255, 0.16);
+    --tc-accent-highlight: rgba(109, 139, 255, 0.26);
+    --tc-status-success-fg: var(--tc-green-300);
+    --tc-status-success-bg: var(--tc-green-950);
+    --tc-status-success-solid: var(--tc-green-400);
+    --tc-status-warning-fg: var(--tc-amber-300);
+    --tc-status-warning-bg: var(--tc-amber-950);
+    --tc-status-warning-solid: var(--tc-amber-400);
+    --tc-status-danger-fg: var(--tc-red-300);
+    --tc-status-danger-bg: var(--tc-red-950);
+    --tc-status-danger-solid: var(--tc-red-400);
+    --tc-status-info-fg: var(--tc-blue-300);
+    --tc-status-info-bg: var(--tc-blue-950);
+    --tc-status-info-solid: var(--tc-blue-400);
+    --tc-tone-violet-fg: var(--tc-violet-300);
+    --tc-tone-violet-bg: rgba(150, 110, 240, 0.16);
+    --tc-tone-violet-solid: var(--tc-violet-400);
+    --tc-tone-pink-fg: var(--tc-pink-300);
+    --tc-tone-pink-bg: rgba(244, 114, 182, 0.16);
+    --tc-tone-pink-solid: var(--tc-pink-400);
+    --tc-tone-amber-fg: var(--tc-amber-300);
+    --tc-tone-amber-bg: rgba(245, 165, 36, 0.14);
+    --tc-tone-amber-solid: var(--tc-amber-400);
+    --tc-tone-rose-fg: var(--tc-rose-300);
+    --tc-tone-rose-bg: rgba(251, 113, 133, 0.16);
+    --tc-tone-rose-solid: var(--tc-rose-400);
+    --tc-chart-1: var(--tc-blue-400);
+    --tc-chart-2: var(--tc-violet-400);
+    --tc-chart-3: var(--tc-pink-400);
+    --tc-chart-4: #4d82ff;
+    --tc-chart-5: #7c6bd6;
+    --tc-chart-6: #c25a93;
+    --tc-chart-neutral: var(--tc-zinc-600);
+    --tc-shadow-color: rgba(0, 0, 0, 0.4);
+    --tc-shadow-color-strong: rgba(0, 0, 0, 0.6);
+    --tc-shimmer: rgba(255, 255, 255, 0.28);
+    --tc-scrim: rgba(0, 0, 0, 0.6);
+    --tc-kbd-on-inverse-bg: rgba(0, 0, 0, 0.1);
+    --tc-seg-thumb-bg: var(--tc-zinc-750);
+  }
+  :where(.dark, [data-theme="dark"], [data-tc-theme="dark"]) :where([data-tc-look="clean"], [data-look="clean"]),
+  :where([data-tc-look="clean"], [data-look="clean"]):where(.dark, [data-theme="dark"], [data-tc-theme="dark"]),
+  :where([data-tc-look="clean"]) :where(.dark, [data-theme="dark"], [data-tc-theme="dark"]) {
+    --tc-text-strong: #ffffff;
+    --tc-text-primary: rgba(255, 255, 255, 0.9);
+    --tc-text-secondary: rgba(255, 255, 255, 0.66);
+    --tc-text-muted: rgba(255, 255, 255, 0.52);
+    --tc-text-disabled: rgba(255, 255, 255, 0.3);
+    --tc-text-placeholder: rgba(255, 255, 255, 0.5);
+    --tc-text-on-inverse: #161618;
+    --tc-icon-muted: rgba(255, 255, 255, 0.46);
+    --tc-surface-base: #141416;
+    --tc-surface-raised: var(--tc-zinc-875);
+    --tc-surface-overlay: #252527;
+    --tc-surface-sunken: var(--tc-zinc-925);
+    --tc-surface-tray: var(--tc-zinc-925);
+    --tc-surface-on-tray: var(--tc-zinc-875);
+    --tc-surface-control: #252527;
+    --tc-surface-inverse: rgba(255, 255, 255, 0.92);
+    --tc-surface-inverse-hover: rgba(255, 255, 255, 0.82);
+    --tc-surface-inverse-active: rgba(255, 255, 255, 0.74);
+    --tc-fill-subtle: rgba(255, 255, 255, 0.04);
+    --tc-fill-default: rgba(255, 255, 255, 0.08);
+    --tc-fill-strong: rgba(255, 255, 255, 0.14);
+    --tc-fill-hover: rgba(255, 255, 255, 0.04);
+    --tc-fill-selected: rgba(77, 141, 255, 0.14);
+    --tc-border-subtle: rgba(255, 255, 255, 0.05);
+    --tc-border-default: rgba(255, 255, 255, 0.08);
+    --tc-border-strong: rgba(255, 255, 255, 0.14);
+    --tc-border-control: rgba(255, 255, 255, 0.4);
+    --tc-border-control-hover: rgba(255, 255, 255, 0.52);
+    --tc-border-selected: var(--tc-cobalt-400);
+    --tc-focus-ring: var(--tc-cobalt-400);
+    --tc-accent: var(--tc-cobalt-450);
+    --tc-accent-text: var(--tc-cobalt-300);
+    --tc-accent-subtle: rgba(77, 141, 255, 0.14);
+    --tc-accent-highlight: rgba(77, 141, 255, 0.24);
+    --tc-status-success-fg: var(--tc-green-300);
+    --tc-status-success-bg: rgba(0, 240, 74, 0.12);
+    --tc-status-success-solid: var(--tc-green-400);
+    --tc-status-warning-fg: var(--tc-amber-300);
+    --tc-status-warning-bg: rgba(251, 106, 0, 0.15);
+    --tc-status-warning-solid: var(--tc-amber-400);
+    --tc-status-danger-fg: var(--tc-red-300);
+    --tc-status-danger-bg: rgba(255, 53, 35, 0.17);
+    --tc-status-danger-solid: var(--tc-red-400);
+    --tc-status-info-fg: var(--tc-cobalt-300);
+    --tc-status-info-bg: rgba(0, 119, 255, 0.23);
+    --tc-status-info-solid: var(--tc-cobalt-400);
+    --tc-tone-violet-fg: #b7a6f5;
+    --tc-tone-violet-bg: rgba(130, 120, 240, 0.15);
+    --tc-tone-violet-solid: var(--tc-violet-400);
+    --tc-tone-pink-fg: var(--tc-pink-300);
+    --tc-tone-pink-bg: rgba(244, 114, 182, 0.14);
+    --tc-tone-pink-solid: var(--tc-pink-400);
+    --tc-tone-amber-fg: var(--tc-amber-300);
+    --tc-tone-amber-bg: rgba(245, 165, 36, 0.13);
+    --tc-tone-amber-solid: var(--tc-amber-400);
+    --tc-tone-rose-fg: var(--tc-rose-300);
+    --tc-tone-rose-bg: rgba(251, 113, 133, 0.14);
+    --tc-tone-rose-solid: var(--tc-rose-400);
+    --tc-chart-1: var(--tc-cobalt-400);
+    --tc-chart-2: #8585f0;
+    --tc-chart-3: rgba(77, 141, 255, 0.62);
+    --tc-chart-4: rgba(77, 141, 255, 0.4);
+    --tc-chart-5: var(--tc-green-400);
+    --tc-chart-6: #f0b43a;
+    --tc-chart-neutral: rgba(255, 255, 255, 0.16);
+    --tc-shadow-color: rgba(0, 0, 0, 0.4);
+    --tc-shadow-color-strong: rgba(0, 0, 0, 0.6);
+    --tc-shimmer: rgba(255, 255, 255, 0.3);
+    --tc-scrim: rgba(0, 0, 0, 0.6);
+    --tc-kbd-on-inverse-bg: rgba(0, 0, 0, 0.1);
+    --tc-seg-thumb-bg: var(--tc-zinc-750);
+  }
+}

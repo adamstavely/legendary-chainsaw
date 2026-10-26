@@ -1,0 +1,474 @@
+{
+  "components/agent-cursors-clean.tsx": {
+    "clock/environment read": 2,
+    "literal line-height": 6,
+    "literal border-radius": 2,
+    "literal blurred shadow": 7
+  },
+  "components/agent-cursors.tsx": {
+    "clock/environment read": 2,
+    "literal line-height": 6,
+    "literal border-radius": 2,
+    "literal blurred shadow": 7
+  },
+  "components/agent-graph-clean.tsx": {
+    "unexplained eslint-disable": 2,
+    "clock/environment read": 6,
+    "literal line-height": 8,
+    "literal blurred shadow": 2
+  },
+  "components/agent-graph.tsx": {
+    "unexplained eslint-disable": 2,
+    "clock/environment read": 6,
+    "literal line-height": 8,
+    "literal blurred shadow": 2
+  },
+  "components/agent-inbox-clean.tsx": {
+    "clock/environment read": 1,
+    "literal line-height": 2
+  },
+  "components/agent-inbox.tsx": {
+    "clock/environment read": 1,
+    "literal line-height": 2
+  },
+  "components/agent-lanes-clean.tsx": {
+    "clock/environment read": 1,
+    "literal line-height": 2
+  },
+  "components/agent-lanes.tsx": {
+    "clock/environment read": 1,
+    "literal line-height": 2
+  },
+  "components/agent-ledger-clean.tsx": {
+    "clock/environment read": 2
+  },
+  "components/agent-ledger.tsx": {
+    "clock/environment read": 2
+  },
+  "components/agent-plan-clean.tsx": {
+    "clock/environment read": 6
+  },
+  "components/agent-plan.tsx": {
+    "clock/environment read": 6
+  },
+  "components/agent-queue-clean.tsx": {
+    "clock/environment read": 3,
+    "literal line-height": 8
+  },
+  "components/agent-queue.tsx": {
+    "clock/environment read": 3,
+    "literal line-height": 8
+  },
+  "components/agent-steering-clean.tsx": {
+    "unexplained eslint-disable": 1,
+    "clock/environment read": 3
+  },
+  "components/agent-steering.tsx": {
+    "unexplained eslint-disable": 1,
+    "clock/environment read": 3
+  },
+  "components/agent-tree-clean.tsx": {
+    "unexplained eslint-disable": 1,
+    "clock/environment read": 4
+  },
+  "components/agent-tree.tsx": {
+    "unexplained eslint-disable": 1,
+    "clock/environment read": 4
+  },
+  "components/ai-answer-clean.tsx": {
+    "unexplained eslint-disable": 1,
+    "clock/environment read": 4,
+    "literal duration": 4,
+    "literal easing": 7,
+    "literal line-height": 8,
+    "literal border-radius": 1
+  },
+  "components/ai-answer.tsx": {
+    "unexplained eslint-disable": 1,
+    "clock/environment read": 4,
+    "literal duration": 4,
+    "literal easing": 7,
+    "literal line-height": 8,
+    "literal border-radius": 1
+  },
+  "components/approval-card-clean.tsx": {
+    "clock/environment read": 1
+  },
+  "components/approval-card.tsx": {
+    "clock/environment read": 1
+  },
+  "components/billing-schedule-clean.tsx": {
+    "literal border-radius": 6
+  },
+  "components/billing-schedule.tsx": {
+    "literal border-radius": 6
+  },
+  "components/chat-composer-clean.tsx": {
+    "literal border-radius": 6
+  },
+  "components/chat-composer.tsx": {
+    "literal border-radius": 6
+  },
+  "components/combobox-clean.tsx": {
+    "unexplained eslint-disable": 1
+  },
+  "components/combobox.tsx": {
+    "unexplained eslint-disable": 1
+  },
+  "components/comment-thread-clean.tsx": {
+    "clock/environment read": 3,
+    "literal line-height": 1
+  },
+  "components/comment-thread.tsx": {
+    "clock/environment read": 3,
+    "literal line-height": 1
+  },
+  "components/comments-panel-clean.tsx": {
+    "clock/environment read": 2
+  },
+  "components/comments-panel.tsx": {
+    "clock/environment read": 2
+  },
+  "components/compact-breakdown-clean.tsx": {
+    "literal line-height": 1
+  },
+  "components/compact-breakdown.tsx": {
+    "literal line-height": 1
+  },
+  "components/context-map-clean.tsx": {
+    "literal duration": 2,
+    "literal line-height": 8,
+    "literal border-radius": 10
+  },
+  "components/context-map.tsx": {
+    "literal duration": 2,
+    "literal line-height": 8,
+    "literal border-radius": 10
+  },
+  "components/context-window-clean.tsx": {
+    "clock/environment read": 1,
+    "literal duration": 3,
+    "literal border-radius": 1
+  },
+  "components/context-window.tsx": {
+    "clock/environment read": 1,
+    "literal duration": 3,
+    "literal border-radius": 1
+  },
+  "components/data-table-clean.tsx": {
+    "clock/environment read": 1
+  },
+  "components/data-table.tsx": {
+    "clock/environment read": 1
+  },
+  "components/date-range-picker-clean.tsx": {
+    "clock/environment read": 1,
+    "literal line-height": 3,
+    "literal border-radius": 10
+  },
+  "components/date-range-picker.tsx": {
+    "clock/environment read": 1,
+    "literal line-height": 3,
+    "literal border-radius": 10
+  },
+  "components/delegate-board-clean.tsx": {
+    "clock/environment read": 1,
+    "literal border-radius": 1
+  },
+  "components/delegate-board.tsx": {
+    "clock/environment read": 1,
+    "literal border-radius": 1
+  },
+  "components/dropzone-clean.tsx": {
+    "unexplained eslint-disable": 1,
+    "clock/environment read": 1,
+    "literal duration": 1,
+    "literal easing": 1,
+    "literal font-weight": 1,
+    "literal line-height": 1,
+    "literal border-radius": 2,
+    "literal blurred shadow": 1
+  },
+  "components/dropzone.tsx": {
+    "unexplained eslint-disable": 1,
+    "clock/environment read": 1,
+    "literal duration": 1,
+    "literal easing": 1,
+    "literal font-weight": 1,
+    "literal line-height": 1,
+    "literal border-radius": 2,
+    "literal blurred shadow": 1
+  },
+  "components/fan-out-grid-clean.tsx": {
+    "clock/environment read": 1
+  },
+  "components/fan-out-grid.tsx": {
+    "clock/environment read": 1
+  },
+  "components/filter-menu-clean.tsx": {
+    "literal duration": 1
+  },
+  "components/filter-menu.tsx": {
+    "literal duration": 1
+  },
+  "components/integration-picker-clean.tsx": {
+    "literal border-radius": 1
+  },
+  "components/integration-picker.tsx": {
+    "literal border-radius": 1
+  },
+  "components/memory-panel-clean.tsx": {
+    "clock/environment read": 3,
+    "literal duration": 1,
+    "literal border-radius": 5,
+    "literal blurred shadow": 2
+  },
+  "components/memory-panel.tsx": {
+    "clock/environment read": 3,
+    "literal duration": 1,
+    "literal border-radius": 5,
+    "literal blurred shadow": 2
+  },
+  "components/message-actions-clean.tsx": {
+    "unexplained eslint-disable": 1,
+    "literal duration": 1
+  },
+  "components/message-actions.tsx": {
+    "unexplained eslint-disable": 1,
+    "literal duration": 1
+  },
+  "components/model-picker-clean.tsx": {
+    "clock/environment read": 1,
+    "literal duration": 6,
+    "literal line-height": 2,
+    "literal border-radius": 1
+  },
+  "components/model-picker.tsx": {
+    "clock/environment read": 1,
+    "literal duration": 6,
+    "literal line-height": 2,
+    "literal border-radius": 1
+  },
+  "components/otp-input-clean.tsx": {
+    "unexplained eslint-disable": 1,
+    "literal duration": 6,
+    "literal border-radius": 6
+  },
+  "components/otp-input.tsx": {
+    "unexplained eslint-disable": 1,
+    "literal duration": 6,
+    "literal border-radius": 6
+  },
+  "components/permission-request-clean.tsx": {
+    "clock/environment read": 1,
+    "literal line-height": 1
+  },
+  "components/permission-request.tsx": {
+    "clock/environment read": 1,
+    "literal line-height": 1
+  },
+  "components/plan-vs-actual-clean.tsx": {
+    "clock/environment read": 1
+  },
+  "components/project-card-clean.tsx": {
+    "literal duration": 1
+  },
+  "components/project-card.tsx": {
+    "literal duration": 1
+  },
+  "components/prompt-library-clean.tsx": {
+    "clock/environment read": 1,
+    "literal duration": 6,
+    "literal line-height": 5,
+    "literal border-radius": 4
+  },
+  "components/prompt-library.tsx": {
+    "clock/environment read": 1,
+    "literal duration": 6,
+    "literal line-height": 5,
+    "literal border-radius": 4
+  },
+  "components/review-center-clean.tsx": {
+    "clock/environment read": 4
+  },
+  "components/review-center.tsx": {
+    "clock/environment read": 4
+  },
+  "components/segmented-control-clean.tsx": {
+    "literal line-height": 1
+  },
+  "components/segmented-control.tsx": {
+    "literal line-height": 1
+  },
+  "components/smart-recommendation-clean.tsx": {
+    "literal line-height": 1
+  },
+  "components/smart-recommendation.tsx": {
+    "literal line-height": 1
+  },
+  "components/stepper-form-clean.tsx": {
+    "unexplained eslint-disable": 1
+  },
+  "components/stepper-form.tsx": {
+    "unexplained eslint-disable": 1
+  },
+  "components/thinking-loader-clean.tsx": {
+    "clock/environment read": 3
+  },
+  "components/thinking-loader.tsx": {
+    "clock/environment read": 3
+  },
+  "components/thinking-state-clean.tsx": {
+    "clock/environment read": 3,
+    "literal duration": 3,
+    "literal easing": 3,
+    "literal line-height": 1,
+    "literal border-radius": 3
+  },
+  "components/thinking-state.tsx": {
+    "clock/environment read": 3,
+    "literal duration": 3,
+    "literal easing": 3,
+    "literal line-height": 1,
+    "literal border-radius": 3
+  },
+  "components/toaster-clean.tsx": {
+    "unexplained eslint-disable": 4,
+    "hard-coded id": 1,
+    "clock/environment read": 1
+  },
+  "components/toaster.tsx": {
+    "unexplained eslint-disable": 4,
+    "hard-coded id": 1,
+    "clock/environment read": 1
+  },
+  "components/tool-call-card-clean.tsx": {
+    "clock/environment read": 2,
+    "literal duration": 3,
+    "literal line-height": 3,
+    "literal border-radius": 5
+  },
+  "components/tool-call-card.tsx": {
+    "clock/environment read": 2,
+    "literal duration": 3,
+    "literal line-height": 3,
+    "literal border-radius": 5
+  },
+  "components/trace-waterfall-clean.tsx": {
+    "clock/environment read": 3
+  },
+  "components/trace-waterfall.tsx": {
+    "clock/environment read": 3
+  },
+  "components/usage-meter-clean.tsx": {
+    "unexplained eslint-disable": 2,
+    "clock/environment read": 1
+  },
+  "components/usage-meter.tsx": {
+    "unexplained eslint-disable": 2,
+    "clock/environment read": 1
+  },
+  "components/writing-assistant-clean.tsx": {
+    "literal duration": 10,
+    "literal easing": 5,
+    "literal line-height": 5,
+    "literal border-radius": 6,
+    "literal blurred shadow": 4
+  },
+  "components/writing-assistant.tsx": {
+    "literal duration": 10,
+    "literal easing": 5,
+    "literal line-height": 5,
+    "literal border-radius": 6,
+    "literal blurred shadow": 4
+  },
+  "blocks/ai-workspace.tsx": {
+    "clock/environment read": 1
+  },
+  "blocks/client-context.tsx": {
+    "clock/environment read": 4,
+    "literal duration": 3,
+    "literal border-radius": 1
+  },
+  "blocks/kpi-board.tsx": {
+    "clock/environment read": 1
+  },
+  "blocks/metrics-dashboard.tsx": {
+    "clock/environment read": 2
+  },
+  "blocks/task-board.tsx": {
+    "clock/environment read": 1
+  },
+  "screens/agent-run.tsx": {
+    "clock/environment read": 6
+  },
+  "screens/app-shell.tsx": {
+    "literal border-radius": 1,
+    "literal blurred shadow": 2
+  },
+  "screens/assistant-home.tsx": {
+    "clock/environment read": 1,
+    "literal border-radius": 1
+  },
+  "screens/onboarding.tsx": {
+    "literal duration": 4
+  },
+  "illustrations/agent-team.tsx": {
+    "literal duration": 2,
+    "literal line-height": 1,
+    "literal border-radius": 1,
+    "literal blurred shadow": 1
+  },
+  "illustrations/cover-flow.tsx": {
+    "clock/environment read": 3,
+    "literal line-height": 2
+  },
+  "illustrations/ghosted-chat.tsx": {
+    "literal line-height": 4,
+    "literal border-radius": 2
+  },
+  "illustrations/glass-folder.tsx": {
+    "literal border-radius": 2
+  },
+  "illustrations/glow-keyboard.tsx": {
+    "clock/environment read": 3,
+    "literal line-height": 1
+  },
+  "illustrations/integration-beam.tsx": {
+    "clock/environment read": 2,
+    "literal border-radius": 4,
+    "literal blurred shadow": 2
+  },
+  "illustrations/integration-flow.tsx": {
+    "literal font-weight": 2,
+    "literal line-height": 2,
+    "literal border-radius": 2,
+    "literal blurred shadow": 1
+  },
+  "illustrations/integration-grid.tsx": {
+    "literal border-radius": 2
+  },
+  "illustrations/layer-stack.tsx": {
+    "literal line-height": 2,
+    "literal border-radius": 3
+  },
+  "illustrations/model-wheel.tsx": {
+    "clock/environment read": 3,
+    "literal font-weight": 1
+  },
+  "illustrations/project-flow.tsx": {
+    "hard-coded id": 2,
+    "dangerouslySetInnerHTML": 1,
+    "literal duration": 66,
+    "literal easing": 19,
+    "z-index ≥ 7": 2,
+    "literal font-weight": 4,
+    "literal line-height": 5,
+    "literal border-radius": 16,
+    "literal blurred shadow": 12
+  },
+  "illustrations/voice-orb.tsx": {
+    "clock/environment read": 3,
+    "literal border-radius": 1
+  }
+}
