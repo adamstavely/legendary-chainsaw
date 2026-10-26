@@ -10,6 +10,13 @@ See `audit/remediation-plan.md`, Part 1.
   illustration, and fields (`--tc-field-font-size`) are 13 px. `--tc-font-size-xs-plus`, `-sm-plus` and `-md-plus`
   are deprecated – only blocks and screens still use them – and check-tokens rejects new uses elsewhere.
 
+### Behaviour changes
+
+- inline-diff: `diffWords` uses Myers' O(ND) diff instead of a capped LCS table. Long texts stay word by word (a
+  3,000-word text with 150 edits gives 150 changes, where anything over ~1,500 words used to become one
+  replacement), and the work grows with the edits, not the length squared. Its third argument is now a work budget
+  (tokens × edits); past it the middle is still one replacement.
+
 ### Removed
 
 - illustrations/frost-cloud and illustrations/glow-cloud, with their demos and tests.

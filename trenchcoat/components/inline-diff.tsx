@@ -93,17 +93,74 @@ const NO_DECISIONS: InlineDiffDecisions = {};
 const TOKEN = /\s+|[\p{L}\p{N}_'’]+|[^\s\p{L}\p{N}_]/gu;
 const isSpace = (s: string) => /^\s+$/.test(s);
 
-/** The largest LCS table (cells) for a settled diff – bigger middles become one replacement */
-const MAX_CELLS = 4_000_000;
-/** The largest table while the text is still streaming in – the full diff runs once it has been quiet for a moment */
+/** The most work for a settled diff – (tokens in the middle) × (edits); past it the middle becomes one replacement */
+const MAX_CELLS = 20_000_000;
+/** The most work while the text is still streaming in – the full diff runs once it has been quiet for a moment */
 const STREAMING_CELLS = 250_000;
+/** The most edits Myers' search looks for, whatever the budget – keeps its trace (about edits² numbers) small */
+const MAX_EDITS = 2_000;
 /** Text that changes again within this many ms counts as streaming */
 const QUIET_MS = 250;
 
+type Op = { t: 0 | 1 | 2; s: string }; // 0 equal, 1 removed, 2 inserted
+
+/** Myers' O(ND) shortest edit script from x to y, or null when it needs more than maxD edits */
+function editScript(x: string[], y: string[], maxD: number): Op[] | null {
+  const n = x.length;
+  const m = y.length;
+  const off = maxD + 1;
+  // v[off + k]: how far along x the furthest path on diagonal k (= i − j) reaches; trace[d] keeps it after d edits
+  const v = new Int32Array(2 * maxD + 3);
+  const trace: Int32Array[] = [];
+  for (let d = 0; d <= maxD; d++) {
+    for (let k = -d; k <= d; k += 2) {
+      let i = k === -d || (k !== d && v[off + k - 1] < v[off + k + 1]) ? v[off + k + 1] : v[off + k - 1] + 1;
+      let j = i - k;
+      while (i < n && j < m && x[i] === y[j]) {
+        i++;
+        j++;
+      }
+      v[off + k] = i;
+      if (i >= n && j >= m) {
+        trace.push(v.slice(off - d, off + d + 1));
+        return backtrack(x, y, trace);
+      }
+    }
+    trace.push(v.slice(off - d, off + d + 1));
+  }
+  return null;
+}
+
+/** Walks the trace back from the end, emitting the edit script in order */
+function backtrack(x: string[], y: string[], trace: Int32Array[]): Op[] {
+  const out: Op[] = [];
+  let i = x.length;
+  let j = y.length;
+  for (let d = trace.length - 1; d > 0; d--) {
+    const prev = trace[d - 1]; // diagonals −(d−1)…d−1, at index k + d − 1
+    const k = i - j;
+    const down = k === -d || (k !== d && prev[k - 1 + d - 1] < prev[k + 1 + d - 1]);
+    const pk = down ? k + 1 : k - 1;
+    const pi = prev[pk + d - 1];
+    const pj = pi - pk;
+    while (i > pi && j > pj) {
+      out.push({ t: 0, s: x[--i] });
+      j--;
+    }
+    if (down) out.push({ t: 2, s: y[--j] });
+    else out.push({ t: 1, s: x[--i] });
+  }
+  while (i > 0 && j > 0) {
+    out.push({ t: 0, s: x[--i] });
+    j--;
+  }
+  return out.reverse();
+}
+
 /**
- * Word-level diff of two texts (LCS over word and whitespace tokens), grouped into equal runs and changes.
- * `maxCells` caps the table (rows × columns of the part between the common start and end); past it the middle
- * becomes one replacement.
+ * Word-level diff of two texts (Myers' shortest edit script over word and whitespace tokens), grouped into equal
+ * runs and changes. `maxCells` caps the work – tokens in the part between the common start and end, times the
+ * edits needed; past it the middle becomes one replacement.
  */
 export function diffWords(original: string, suggested: string, maxCells: number = MAX_CELLS): DiffSegment[] {
   const a = original.match(TOKEN) ?? [];
@@ -119,31 +176,15 @@ export function diffWords(original: string, suggested: string, maxCells: number 
   const n = x.length;
   const m = y.length;
 
-  type Op = { t: 0 | 1 | 2; s: string }; // 0 equal, 1 removed, 2 inserted
   const ops: Op[] = a.slice(0, pre).map((s) => ({ t: 0, s }));
 
-  if (n * m > maxCells) {
-    // Huge texts: one replacement instead of a slow table
+  const maxD = Math.min(n + m, MAX_EDITS, Math.floor(maxCells / Math.max(1, n + m)));
+  const script = editScript(x, y, maxD);
+  if (script) ops.push(...script);
+  else {
+    // Too many edits for the budget: one replacement instead of a slow search
     x.forEach((s) => ops.push({ t: 1, s }));
     y.forEach((s) => ops.push({ t: 2, s }));
-  } else {
-    const w = m + 1;
-    const L = new Uint16Array((n + 1) * w);
-    for (let i = n - 1; i >= 0; i--)
-      for (let j = m - 1; j >= 0; j--)
-        L[i * w + j] = x[i] === y[j] ? L[(i + 1) * w + j + 1] + 1 : Math.max(L[(i + 1) * w + j], L[i * w + j + 1]);
-    let i = 0;
-    let j = 0;
-    while (i < n && j < m) {
-      if (x[i] === y[j]) {
-        ops.push({ t: 0, s: x[i] });
-        i++;
-        j++;
-      } else if (L[(i + 1) * w + j] >= L[i * w + j + 1]) ops.push({ t: 1, s: x[i++] });
-      else ops.push({ t: 2, s: y[j++] });
-    }
-    while (i < n) ops.push({ t: 1, s: x[i++] });
-    while (j < m) ops.push({ t: 2, s: y[j++] });
   }
   a.slice(a.length - suf).forEach((s) => ops.push({ t: 0, s }));
 
