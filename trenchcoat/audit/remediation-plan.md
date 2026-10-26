@@ -162,6 +162,10 @@ words. It's a plain function (`diffWords`), so it moves to Lit unchanged; its re
 region-dach: one module per region (loaded on demand) plus simplified neighbour outlines (−60–80 %). project-flow:
 the 4 base64 PNG avatars and the logo → inline SVG or separate files (~−35 KB gz).
 
+*Done as (2026-10-26):* region-dach's paths simplified rather than split into modules – splitting would break the
+single-file illustration, and simplification alone takes the file from 167 to 82 KB (path data 130 → 45 KB);
+project-flow's avatars re-encoded as WebP (58.5 → 12.3 KB of base64), which keeps it one file; 137 → 90 KB.
+
 ### 1.8 Forced colours
 
 Test `forced-colors: active` (Windows High Contrast, or Chromium's emulation) on the pattern components first –

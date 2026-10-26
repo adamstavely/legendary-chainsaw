@@ -25,6 +25,10 @@ See `audit/remediation-plan.md`, Part 1.
 - fan-out-grid cells and agent-queue backlog squares stay 12 px but sit 24 px apart, and each takes clicks across
   24 px (WCAG 2.5.8) – the grids show fewer items per row.
 
+- Smaller illustrations: region-dach's US, China, India, Brazil and Japan outlines are simplified
+  (Ramer–Douglas–Peucker; the faded neighbours much more than the land), 167 → 82 KB of source, with a few islets
+  under 2.5 units dropped from the neighbours; project-flow's four avatars are WebP instead of PNG, 137 → 90 KB.
+
 ### Behaviour changes
 
 - context-window: Clean's "Compacting…" shine runs 3 times and rests, like every other shimmer (it ran endlessly).
