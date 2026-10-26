@@ -6,7 +6,7 @@
 **Distribution: an npm package.** Trenchcoat ships as a package that apps install and import, not as files to
 copy. `src/` becomes the only source of the components; the generated `components/` folder and its `-clean` copies
 go away, and the look is chosen with the `look` prop (Phase 3). Other frameworks will use it too, so
-[web-components-spike-plan.md](web-components-spike-plan.md) compares Lit and Stencil as the component layer; Phase 3 step 3 (the package
+[lit-spike-plan.md](lit-spike-plan.md) plans the move to Lit 3 web components; Phase 3 step 3 (the package
 build) waits for its decision.
 
 ## Already done
