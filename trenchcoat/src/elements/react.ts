@@ -34,6 +34,7 @@ export * from "./react/breakdown-chart";
 export * from "./react/budget-guard";
 export * from "./react/change-summary";
 export * from "./react/chat-composer";
+export * from "./react/chat-history";
 export * from "./react/cited-answer";
 export * from "./react/code-block";
 export * from "./react/command-menu";
