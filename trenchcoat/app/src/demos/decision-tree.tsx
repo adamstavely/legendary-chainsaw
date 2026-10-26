@@ -40,7 +40,18 @@ const DECISIONS: Decision[] = [
     risk: "medium",
     options: [
       { label: "Run it now", effects: [["Writes paused ", { text: "about 40 seconds", note: "Estimated from a dry run on the staging snapshot (2.1M rows).", source: "staging · dry-run log" }]], pick: true },
-      { label: "Wait for 02:00 UTC", effects: ["Release ships ~9 hours later"] },
+      {
+        label: "Wait for 02:00 UTC",
+        effects: ["Release ships ~9 hours later"],
+        // A follow-up question – the tree's sub-question state
+        next: {
+          question: "Ship the rest of the release now, or hold it all for 02:00?",
+          options: [
+            { label: "Ship the rest now", effects: ["Migration runs alone at 02:00", "Feature flag stays off until then"], pick: true },
+            { label: "Hold everything", effects: ["One deploy at 02:00 UTC"] },
+          ],
+        },
+      },
       { label: "Use online migration", effects: ["No lock · takes ~25 min", "Needs extra disk (6 GB)"] },
     ],
   },
