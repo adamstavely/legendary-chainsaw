@@ -17,7 +17,8 @@ export type ApiElement = {
   tokens: string[];
 };
 export type ApiReact = { component: string; exported: boolean; props: { name: string; type: string; optional: boolean; description: string }[]; hides: string[] };
-export type ApiPage = { elements: ApiElement[]; react: ApiReact[]; changelog: string[]; size?: { min: number; gzip: number } };
+export type ApiFunction = { name: string; signature: string; description: string };
+export type ApiPage = { elements: ApiElement[]; functions?: ApiFunction[]; react: ApiReact[]; changelog: string[]; size?: { min: number; gzip: number } };
 
 export type Framework = "html" | "react" | "vue" | "angular" | "svelte";
 

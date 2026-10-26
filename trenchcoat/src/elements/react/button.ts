@@ -8,6 +8,7 @@ type RawButtonProps = React.ComponentProps<typeof RawButton>;
 export type ButtonProps = Omit<RawButtonProps, "children" | "label"> & {
   /** The label – a string (or set `label`) */
   children?: React.ReactNode;
+  /** The button's text and accessible name; wins over string children */
   label?: string;
   /** Icon before the label */
   icon?: React.ReactNode;

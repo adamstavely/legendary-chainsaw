@@ -10,7 +10,7 @@
      "attribute": null,
      "type": "CitedSegment[]",
      "default": "[]",
-     "description": "",
+     "description": "The answer as text segments, each naming the sources it relies on – a numbered marker ends each cited one",
      "readonly": false
     },
     {
@@ -18,7 +18,7 @@
      "attribute": null,
      "type": "CitedSource[]",
      "default": "[]",
-     "description": "",
+     "description": "The sources, numbered in this order – chips under the answer and the passages their previews quote",
      "readonly": false
     },
     {
@@ -178,6 +178,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "CitedAnswer",
@@ -187,7 +188,7 @@
      "name": "sources",
      "type": "CitedSource[]",
      "optional": false,
-     "description": ""
+     "description": "The sources, numbered in this order – chips under the answer and the passages their previews quote"
     },
     {
      "name": "preview",
@@ -205,7 +206,7 @@
      "name": "defaultOpen",
      "type": "string",
      "optional": true,
-     "description": ""
+     "description": "The old name of `defaultPreview`, still read when that's unset"
     },
     {
      "name": "onOpenSource",

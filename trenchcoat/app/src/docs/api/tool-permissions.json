@@ -82,7 +82,7 @@
      "attribute": "save-label",
      "type": "string",
      "default": "\"Save\"",
-     "description": "",
+     "description": "The Save button's text; the number of changes is shown beside it",
      "readonly": false
     },
     {
@@ -90,7 +90,7 @@
      "attribute": "reset-label",
      "type": "string",
      "default": "\"Reset\"",
-     "description": "",
+     "description": "The text of the button that puts back what was last saved",
      "readonly": false
     },
     {
@@ -221,6 +221,13 @@
    ]
   }
  ],
+ "functions": [
+  {
+   "name": "defaultToolPermissionPresets",
+   "signature": "defaultToolPermissionPresets: ToolPermissionPreset[]",
+   "description": "The presets used when the page gives none: they read each scope's risk"
+  }
+ ],
  "react": [
   {
    "component": "ToolPermissions",
@@ -236,13 +243,13 @@
      "name": "agents",
      "type": "ToolPermissionAgent[]",
      "optional": false,
-     "description": ""
+     "description": "The columns: one per agent, with an optional avatar node and model name"
     },
     {
      "name": "tools",
      "type": "ToolPermissionTool[]",
      "optional": false,
-     "description": ""
+     "description": "The rows: each tool's scopes, grouped under the tool"
     },
     {
      "name": "value",
@@ -254,7 +261,7 @@
      "name": "defaultValue",
      "type": "ToolPermissionMatrix",
      "optional": true,
-     "description": ""
+     "description": "The matrix on mount when `value` isn't controlled – a missing cell is `defaultLevel`"
     },
     {
      "name": "onChange",

@@ -10,7 +10,7 @@
      "attribute": null,
      "type": "FilterGroup[]",
      "default": "[]",
-     "description": "",
+     "description": "The filter groups, in order – each a collapsible list of options that become chips when picked",
      "readonly": false
     },
     {
@@ -50,7 +50,7 @@
      "attribute": "heading",
      "type": "string",
      "default": "\"Filters\"",
-     "description": "The heading",
+     "description": "The heading, next to Clear all",
      "readonly": false
     },
     {
@@ -166,6 +166,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "FilterMenu",
@@ -175,7 +176,7 @@
      "name": "groups",
      "type": "FilterGroup[]",
      "optional": false,
-     "description": ""
+     "description": "The filter groups, in order – each a collapsible list of options that become chips when picked"
     },
     {
      "name": "value",
@@ -193,7 +194,7 @@
      "name": "onChange",
      "type": "(value: FilterValue) => void",
      "optional": true,
-     "description": ""
+     "description": "Called with the new value whenever an option is picked or removed, or all are cleared"
     },
     {
      "name": "open",
@@ -211,13 +212,13 @@
      "name": "onOpenChange",
      "type": "(open: string[]) => void",
      "optional": true,
-     "description": ""
+     "description": "Called with the ids of the open groups whenever a group opens or folds"
     },
     {
      "name": "title",
      "type": "string",
      "optional": true,
-     "description": ""
+     "description": "The heading, next to Clear all – \"Filters\" by default"
     }
    ],
    "hides": [

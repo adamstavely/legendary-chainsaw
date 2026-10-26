@@ -179,6 +179,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "ConversationBranches",
@@ -194,7 +195,7 @@
      "name": "defaultMessages",
      "type": "BranchMessage[]",
      "optional": true,
-     "description": ""
+     "description": "The messages at first when uncontrolled"
     },
     {
      "name": "onMessagesChange",
@@ -212,7 +213,7 @@
      "name": "defaultSelected",
      "type": "BranchSelection",
      "optional": true,
-     "description": ""
+     "description": "The picked branches at first when uncontrolled – unset shows the newest child at every fork"
     },
     {
      "name": "onSelectedChange",

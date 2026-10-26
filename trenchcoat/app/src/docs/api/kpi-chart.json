@@ -50,7 +50,7 @@
      "attribute": null,
      "type": "KpiSeries[]",
      "default": "[]",
-     "description": "",
+     "description": "The lines, each with a label, a colour and one value per label – every line also gets its own stroke pattern",
      "readonly": false
     },
     {
@@ -185,6 +185,13 @@
    ]
   }
  ],
+ "functions": [
+  {
+   "name": "niceRange",
+   "signature": "niceRange(values: number[]): [min: number, max: number]",
+   "description": "Picks an axis range that halves cleanly and always includes 0: 30 → 15 → 0, $8k → $4k → $0, 10 → 0 → −10.\nEmpty or non-finite data falls back to 0–2 instead of NaN."
+  }
+ ],
  "react": [
   {
    "component": "KpiChart",
@@ -194,7 +201,7 @@
      "name": "title",
      "type": "string",
      "optional": false,
-     "description": ""
+     "description": "The card's title – it also names the chart for screen readers"
     },
     {
      "name": "value",

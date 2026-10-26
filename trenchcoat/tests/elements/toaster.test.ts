@@ -201,7 +201,7 @@ describe("tc-toaster", () => {
         toast.success("Invoice sent", { description: "INV-2041" });
         await updated();
         await updated();
-        expect(el.querySelector('[role="status"]')!.textContent).toBe("Invoice sentINV-2041");
+        expect(el.querySelector('[role="status"]')!.textContent).toBe("Invoice sent. INV-2041");
         toast.error("Upload failed");
         await updated();
         await updated();

@@ -22,6 +22,7 @@ type RawCardProps = React.ComponentProps<typeof RawToolCallCard>;
 export type ToolCallCardProps = Omit<RawCardProps, "summary" | "icon" | "open" | "onTcOpenChange" | "name" | "status"> & {
   /** Tool name as the agent calls it, shown in mono – e.g. "search_web" */
   name: string;
+  /** "running" shows a spinner and a live timer, "success" a check and the duration, "error" "Failed" and the message */
   status: TcToolCallCard["status"];
   /** Short human summary – e.g. "Searched the web for 'CRM pricing 2026'" */
   summary?: React.ReactNode;
@@ -31,6 +32,7 @@ export type ToolCallCardProps = Omit<RawCardProps, "summary" | "icon" | "open" |
   defaultOpen?: boolean;
   /** Expanded state (controlled) */
   open?: boolean;
+  /** Called when the card opens or closes – by a click, or on its own when the call fails */
   onOpenChange?: (open: boolean) => void;
 };
 export function ToolCallCard({ summary, icon, defaultOpen = false, open, onOpenChange, openOnError = true, ...props }: ToolCallCardProps) {
@@ -55,8 +57,11 @@ type RawGroupProps = React.ComponentProps<typeof RawToolCallGroup>;
 export type ToolCallGroupProps = Omit<RawGroupProps, "open" | "onTcOpenChange" | "children"> & {
   /** ToolCallCard elements – the group reads their name, icon, status and duration */
   children: React.ReactNode;
+  /** Start expanded (uncontrolled) */
   defaultOpen?: boolean;
+  /** Expanded state (controlled) */
   open?: boolean;
+  /** Called when the group opens or closes */
   onOpenChange?: (open: boolean) => void;
 };
 export function ToolCallGroup({ children, defaultOpen = false, open, onOpenChange, ...props }: ToolCallGroupProps) {

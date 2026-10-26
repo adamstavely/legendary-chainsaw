@@ -26,7 +26,7 @@
      "attribute": null,
      "type": "SandboxLogStep[]",
      "default": "[]",
-     "description": "",
+     "description": "The commands in the order they ran – one collapsible block each, with their output so far",
      "readonly": false
     },
     {
@@ -244,6 +244,13 @@
    ]
   }
  ],
+ "functions": [
+  {
+   "name": "sandboxLogPlainText",
+   "signature": "sandboxLogPlainText(output: string): string",
+   "description": "The output of a step as plain text – what Copy takes"
+  }
+ ],
  "react": [
   {
    "component": "SandboxLog",
@@ -253,7 +260,7 @@
      "name": "steps",
      "type": "TcSandboxLog[\"steps\"]",
      "optional": false,
-     "description": ""
+     "description": "The commands in the order they ran – one collapsible block each, with their output so far"
     },
     {
      "name": "title",
@@ -271,13 +278,13 @@
      "name": "defaultOpen",
      "type": "string[]",
      "optional": true,
-     "description": ""
+     "description": "Ids of the steps open at first (uncontrolled) – unset opens the running and failed ones"
     },
     {
      "name": "onOpenChange",
      "type": "(open: string[]) => void",
      "optional": true,
-     "description": ""
+     "description": "Called with the ids of the open steps whenever a step opens or closes"
     },
     {
      "name": "query",
@@ -289,13 +296,13 @@
      "name": "defaultQuery",
      "type": "string",
      "optional": true,
-     "description": ""
+     "description": "The search text at first (uncontrolled)"
     },
     {
      "name": "onQueryChange",
      "type": "(query: string) => void",
      "optional": true,
-     "description": ""
+     "description": "Called with the search text whenever it changes"
     },
     {
      "name": "onCopy",
@@ -308,7 +315,8 @@
     "open",
     "query",
     "heading",
-    "steps"
+    "steps",
+    "onCopy"
    ]
   }
  ],

@@ -18,7 +18,7 @@
      "attribute": null,
      "type": "BreakdownRecord[]",
      "default": "[]",
-     "description": "",
+     "description": "The rows to chart – one object per item, with a value for each dimension key and each measure field",
      "readonly": false
     },
     {
@@ -26,7 +26,7 @@
      "attribute": null,
      "type": "BreakdownDimension[]",
      "default": "[]",
-     "description": "",
+     "description": "The fields people can slice and segment by, with their values in display order",
      "readonly": false
     },
     {
@@ -34,7 +34,7 @@
      "attribute": null,
      "type": "BreakdownMeasure[]",
      "default": "[]",
-     "description": "",
+     "description": "What the bars can measure – a count of records, or the sum of a field",
      "readonly": false
     },
     {
@@ -200,6 +200,13 @@
    ]
   }
  ],
+ "functions": [
+  {
+   "name": "breakdownStatusIcon",
+   "signature": "breakdownStatusIcon({ kind, color = \"currentColor\", look }: { kind: BreakdownStatusKind; color?: string; look?: Look }): SVGSVGElement",
+   "description": "A small status icon element, for a dimension's `icons`. Without `look` it takes the chart's look"
+  }
+ ],
  "react": [
   {
    "component": "BreakdownChart",
@@ -209,25 +216,25 @@
      "name": "records",
      "type": "TcBreakdownChart[\"records\"]",
      "optional": false,
-     "description": ""
+     "description": "The rows to chart – one object per item, with a value for each dimension key and each measure field"
     },
     {
      "name": "dimensions",
      "type": "Dimension[]",
      "optional": false,
-     "description": ""
+     "description": "The fields people can slice and segment by; `icons` takes React nodes"
     },
     {
      "name": "measures",
      "type": "Measure[]",
      "optional": false,
-     "description": ""
+     "description": "What the bars can measure – a count of records, or the sum of a field"
     },
     {
      "name": "title",
      "type": "string",
      "optional": true,
-     "description": ""
+     "description": "The heading, and the region's name (default \"Workload\")"
     },
     {
      "name": "measure",
@@ -239,13 +246,13 @@
      "name": "defaultMeasure",
      "type": "string",
      "optional": true,
-     "description": ""
+     "description": "The measure picked at first, when `measure` is not controlled – defaults to the first"
     },
     {
      "name": "onMeasureChange",
      "type": "(measure: string) => void",
      "optional": true,
-     "description": ""
+     "description": "Called when another measure is picked"
     },
     {
      "name": "slice",
@@ -257,13 +264,13 @@
      "name": "defaultSlice",
      "type": "string",
      "optional": true,
-     "description": ""
+     "description": "The slice picked at first, when `slice` is not controlled – defaults to the first dimension"
     },
     {
      "name": "onSliceChange",
      "type": "(slice: string) => void",
      "optional": true,
-     "description": ""
+     "description": "Called when another slice is picked"
     },
     {
      "name": "segment",
@@ -275,13 +282,13 @@
      "name": "defaultSegment",
      "type": "string",
      "optional": true,
-     "description": ""
+     "description": "The segment picked at first, when `segment` is not controlled – defaults to the second dimension"
     },
     {
      "name": "onSegmentChange",
      "type": "(segment: string) => void",
      "optional": true,
-     "description": ""
+     "description": "Called when another segment is picked"
     },
     {
      "name": "hidden",
@@ -293,13 +300,13 @@
      "name": "defaultHidden",
      "type": "string[]",
      "optional": true,
-     "description": ""
+     "description": "The segment values hidden at first, when `hidden` is not controlled"
     },
     {
      "name": "onHiddenChange",
      "type": "(hidden: string[]) => void",
      "optional": true,
-     "description": ""
+     "description": "Called when legend chips hide or show segment values, or Show all is pressed"
     }
    ],
    "hides": [

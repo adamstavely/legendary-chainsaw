@@ -107,6 +107,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "SkeletonOwn",
@@ -140,13 +141,13 @@
      "name": "className",
      "type": "string",
      "optional": true,
-     "description": ""
+     "description": "Classes on the element"
     },
     {
      "name": "style",
      "type": "React.CSSProperties",
      "optional": true,
-     "description": ""
+     "description": "Inline styles on the element – width and height size the block"
     },
     {
      "name": "ref",
@@ -160,7 +161,50 @@
   {
    "component": "Skeleton",
    "exported": true,
-   "props": [],
+   "props": [
+    {
+     "name": "width",
+     "type": "number | string",
+     "optional": true,
+     "description": "Width – a number is px, a string any CSS length; defaults to 100%"
+    },
+    {
+     "name": "height",
+     "type": "number | string",
+     "optional": true,
+     "description": "Height – a number is px, a string any CSS length; defaults to 12px"
+    },
+    {
+     "name": "radius",
+     "type": "number | string",
+     "optional": true,
+     "description": "Corner radius; defaults to 6px"
+    },
+    {
+     "name": "circle",
+     "type": "boolean",
+     "optional": true,
+     "description": "Round shape, e.g. for avatars – uses width for both sides"
+    },
+    {
+     "name": "className",
+     "type": "string",
+     "optional": true,
+     "description": "Classes on the element"
+    },
+    {
+     "name": "style",
+     "type": "React.CSSProperties",
+     "optional": true,
+     "description": "Inline styles on the element – width and height size the block"
+    },
+    {
+     "name": "ref",
+     "type": "React.Ref<TcSkeleton>",
+     "optional": true,
+     "description": "The placeholder element"
+    }
+   ],
    "hides": []
   },
   {
@@ -171,7 +215,7 @@
      "name": "children",
      "type": "React.ReactNode",
      "optional": false,
-     "description": ""
+     "description": "The text that shimmers – a string, or React nodes the element clones"
     },
     {
      "name": "duration",
@@ -183,7 +227,7 @@
      "name": "className",
      "type": "string",
      "optional": true,
-     "description": ""
+     "description": "Classes on the element"
     },
     {
      "name": "ref",
@@ -197,7 +241,32 @@
   {
    "component": "ShimmerText",
    "exported": true,
-   "props": [],
+   "props": [
+    {
+     "name": "children",
+     "type": "React.ReactNode",
+     "optional": false,
+     "description": "The text that shimmers – a string, or React nodes the element clones"
+    },
+    {
+     "name": "duration",
+     "type": "number",
+     "optional": true,
+     "description": "Seconds for one pass of the highlight"
+    },
+    {
+     "name": "className",
+     "type": "string",
+     "optional": true,
+     "description": "Classes on the element"
+    },
+    {
+     "name": "ref",
+     "type": "React.Ref<TcShimmerText>",
+     "optional": true,
+     "description": "The text element"
+    }
+   ],
    "hides": [
     "text",
     "content"

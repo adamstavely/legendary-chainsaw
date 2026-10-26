@@ -26,11 +26,13 @@ export type ConversationEdit = Omit<BranchEditDetail, "respondWith">;
 export type ConversationBranchesProps = Omit<RawProps, "messages" | "selected" | "onTcSelectedChange" | "onTcMessagesChange" | "onTcEdit" | "onChange"> & {
   /** Every message of every branch. Controlled when defined; otherwise the element keeps them, starting at `defaultMessages` */
   messages?: BranchMessage[];
+  /** The messages at first when uncontrolled */
   defaultMessages?: BranchMessage[];
   /** Called with the whole list when messages are added (a new branch, its replies) */
   onMessagesChange?: (messages: BranchMessage[]) => void;
   /** The picked child per parent id ("" for the first messages). Controlled when defined */
   selected?: BranchSelection;
+  /** The picked branches at first when uncontrolled – unset shows the newest child at every fork */
   defaultSelected?: BranchSelection;
   /** Called when a branch is picked, or a new branch was made */
   onSelectedChange?: (selected: BranchSelection, change: { messageId: string; index: number; count: number }) => void;

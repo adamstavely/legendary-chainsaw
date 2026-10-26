@@ -124,6 +124,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "VoiceOrb",

@@ -109,9 +109,13 @@ export class TcHandoff extends TcElement {
   @property() accessor note = "";
   /** Done steps shown before "N more" */
   @property({ type: Number, attribute: "done-limit" }) accessor doneLimit = 3;
+  /** Heading of the list of what the agent did */
   @property({ attribute: "done-title" }) accessor doneTitle = "What I did";
+  /** Heading of the list of what the agent needs – the checklist once you have control */
   @property({ attribute: "needs-title" }) accessor needsTitle = "What I need from you";
+  /** Label of the note field shown while you have control */
   @property({ attribute: "note-label" }) accessor noteLabel = "Note for the agent";
+  /** Placeholder of the note field */
   @property({ attribute: "note-placeholder" }) accessor notePlaceholder = "Anything it should know before it carries on";
   /** Show ⌘↵ hints on the main button (the shortcut works either way). Default true */
   @property({ converter: { fromAttribute: (v: string | null) => v !== "false" } }) accessor shortcuts = true;

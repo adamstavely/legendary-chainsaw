@@ -10,7 +10,7 @@
      "attribute": null,
      "type": "Memory[]",
      "default": "[]",
-     "description": "",
+     "description": "The memories shown, grouped by their category",
      "readonly": false
     },
     {
@@ -233,6 +233,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "MemoryPanel",
@@ -266,19 +267,19 @@
      "name": "defaultEnabled",
      "type": "boolean",
      "optional": true,
-     "description": ""
+     "description": "The master switch to start with when uncontrolled"
     },
     {
      "name": "onEnabledChange",
      "type": "(enabled: boolean) => void",
      "optional": true,
-     "description": ""
+     "description": "Called when the master switch is flipped – in both modes"
     },
     {
      "name": "title",
      "type": "string",
      "optional": true,
-     "description": ""
+     "description": "The heading, and the group's name"
     },
     {
      "name": "action",

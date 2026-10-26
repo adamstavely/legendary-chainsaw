@@ -48,6 +48,7 @@ export class TcThinkingLoader extends TcElement {
   @property({ type: Boolean }) accessor done = false;
   /** Label once done – a string, or a function that gets the seconds since the loader started */
   @property({ attribute: false }) accessor doneLabel: string | ((seconds: number) => string) = (s) => `Thought for ${s}s`;
+  /** "md" is the default pill; "sm" is smaller, e.g. inside a chat bubble */
   @property({ reflect: true }) accessor size: "sm" | "md" = "md";
   /** "pill" = bordered capsule, "plain" = just the spinner and the label, e.g. inside a chat bubble */
   @property({ reflect: true }) accessor variant: "pill" | "plain" = "pill";

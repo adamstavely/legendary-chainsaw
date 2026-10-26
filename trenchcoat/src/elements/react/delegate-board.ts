@@ -26,7 +26,9 @@ const RawDelegateBoard = createComponent({
 });
 type RawDelegateBoardProps = React.ComponentProps<typeof RawDelegateBoard>;
 export type DelegateBoardProps = Omit<RawDelegateBoardProps, "agents" | "tasks" | "mode" | "heading" | "onTcAssign" | "onTcModeChange"> & {
+  /** The agents work can go to, in the order they're listed (number keys 1–9 pick them) */
   agents: DelegateAgent[];
+  /** Every task – without an `agentId` it waits under "Unassigned"; the first in each agent's queue is the running one */
   tasks: DelegateTask[];
   /**
    * A drop, a keyboard pick or Auto. The board moves the task at once and keeps it there until `tasks` gives that task
@@ -39,6 +41,7 @@ export type DelegateBoardProps = Omit<RawDelegateBoardProps, "agents" | "tasks" 
   defaultMode?: DelegateMode;
   /** Called with the new mode, controlled or not */
   onModeChange?: (mode: DelegateMode) => void;
+  /** The heading in the bar */
   title?: string;
 };
 

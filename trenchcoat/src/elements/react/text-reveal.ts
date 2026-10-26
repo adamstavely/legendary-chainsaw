@@ -21,6 +21,7 @@ export type TextRevealOwnProps = {
   as?: "p" | "h1" | "h2" | "h3" | "span";
   /** Reveal only the first time; otherwise it plays again each time it enters the view */
   once?: boolean;
+  /** Class names for the root element */
   className?: string;
   /** The root element */
   ref?: React.Ref<TcTextReveal>;

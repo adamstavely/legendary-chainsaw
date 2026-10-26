@@ -31,8 +31,11 @@ export type MemoryPanelProps = Omit<
   onChange?: (memories: Memory[]) => void;
   /** The master switch – controlled when defined */
   enabled?: boolean;
+  /** The master switch to start with when uncontrolled */
   defaultEnabled?: boolean;
+  /** Called when the master switch is flipped – in both modes */
   onEnabledChange?: (enabled: boolean) => void;
+  /** The heading, and the group's name */
   title?: string;
   /** A button on the tray, e.g. { label: "Manage", onClick } – Undo takes its place for a moment */
   action?: { label: string; onClick: () => void };

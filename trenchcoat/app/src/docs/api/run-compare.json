@@ -204,6 +204,13 @@
    ]
   }
  ],
+ "functions": [
+  {
+   "name": "alignRunSteps",
+   "signature": "alignRunSteps(a: RunCompareStep[], b: RunCompareStep[]): RunCompareStepRow[]",
+   "description": "Lines up two runs' steps: matched by name in order (longest common subsequence), the rest added or dropped"
+  }
+ ],
  "react": [
   {
    "component": "RunCompare",
@@ -225,13 +232,13 @@
      "name": "defaultView",
      "type": "RunCompareView",
      "optional": true,
-     "description": ""
+     "description": "The tab open at first when `view` isn't controlled"
     },
     {
      "name": "onViewChange",
      "type": "(view: RunCompareView) => void",
      "optional": true,
-     "description": ""
+     "description": "Called with the tab the user picked, controlled or not"
     },
     {
      "name": "onPick",

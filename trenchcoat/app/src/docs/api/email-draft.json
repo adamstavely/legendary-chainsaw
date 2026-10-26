@@ -50,7 +50,7 @@
      "attribute": null,
      "type": "DraftContact[]",
      "default": "[ { name: \"Jonas Weber\", email: \"jonas@northwind.io\" }, { name: \"Lena Hart\", email: \"lena@northwind.io\" }, { name: \"Finance team\", email: \"billing@northwind.io\" }, ]",
-     "description": "",
+     "description": "The people the email can go to – the recipient list offers them; the first is picked unless `recipient` says otherwise",
      "readonly": false
     },
     {
@@ -272,6 +272,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "EmailDraft",
@@ -293,7 +294,7 @@
      "name": "onRecipientChange",
      "type": "(email: string, contact: DraftContact) => void",
      "optional": true,
-     "description": ""
+     "description": "Called with the email and contact the user picked, controlled or not"
     },
     {
      "name": "tone",
@@ -305,19 +306,19 @@
      "name": "defaultTone",
      "type": "string",
      "optional": true,
-     "description": ""
+     "description": "The id of the tone shown at first – defaults to the first tone"
     },
     {
      "name": "onToneChange",
      "type": "(id: string) => void",
      "optional": true,
-     "description": ""
+     "description": "Called with the id of the tone the user picked, controlled or not"
     },
     {
      "name": "onDiscard",
      "type": "() => void",
      "optional": true,
-     "description": ""
+     "description": "Called when the draft is discarded"
     },
     {
      "name": "onUndo",

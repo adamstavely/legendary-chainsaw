@@ -121,6 +121,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "NotificationStack",

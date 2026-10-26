@@ -68,6 +68,7 @@ const chevronClean = html`<svg viewBox="0 0 16 16">${svg`<path d="M4.5 6.25 8 9.
 export class TcThinkingState extends TcElement {
   static override ui = "think";
 
+  /** The steps and searches to show, in order – `progress` (or the timeline) decides how many have appeared */
   @property({ attribute: false }) accessor steps: ThinkingStep[] = [];
   /** Label of the final row */
   @property({ attribute: "done-label" }) accessor doneLabel = "Finished thinking";

@@ -10,7 +10,7 @@
      "attribute": null,
      "type": "CoverFlowItem[]",
      "default": "[]",
-     "description": "",
+     "description": "The covers, in order: an image or your own content each, with a title and subtitle for the caption",
      "readonly": false
     },
     {
@@ -34,7 +34,7 @@
      "attribute": "item-height",
      "type": "number",
      "default": "280",
-     "description": "",
+     "description": "Cover height in px – scales down with the width",
      "readonly": false
     },
     {
@@ -228,6 +228,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "CoverFlow",
@@ -237,7 +238,7 @@
      "name": "items",
      "type": "CoverFlowItem[]",
      "optional": false,
-     "description": ""
+     "description": "The covers, in order: an image or your own content each, with a title and subtitle for the caption"
     },
     {
      "name": "index",

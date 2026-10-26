@@ -257,6 +257,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "RunCheckpoints",

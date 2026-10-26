@@ -75,6 +75,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "BlurCrossfadeOwn",
@@ -90,7 +91,7 @@
      "name": "children",
      "type": "React.ReactNode",
      "optional": true,
-     "description": ""
+     "description": "The content on show – it swaps whenever `id` changes"
     },
     {
      "name": "duration",
@@ -120,13 +121,13 @@
      "name": "className",
      "type": "string",
      "optional": true,
-     "description": ""
+     "description": "Classes on the root element"
     },
     {
      "name": "style",
      "type": "React.CSSProperties",
      "optional": true,
-     "description": ""
+     "description": "Inline styles on the root element"
     },
     {
      "name": "ref",
@@ -140,7 +141,62 @@
   {
    "component": "BlurCrossfade",
    "exported": true,
-   "props": [],
+   "props": [
+    {
+     "name": "id",
+     "type": "string | number",
+     "optional": false,
+     "description": "Change this to swap – the children of the old id fade out, the new ones fade in"
+    },
+    {
+     "name": "children",
+     "type": "React.ReactNode",
+     "optional": true,
+     "description": "The content on show – it swaps whenever `id` changes"
+    },
+    {
+     "name": "duration",
+     "type": "number",
+     "optional": true,
+     "description": "Length of the swap in ms"
+    },
+    {
+     "name": "blur",
+     "type": "number",
+     "optional": true,
+     "description": "Blur in px at the start and end of the fade"
+    },
+    {
+     "name": "morph",
+     "type": "\"height\" | \"both\" | \"none\"",
+     "optional": true,
+     "description": "Which sides glide to the new size; \"both\" sizes the box to its content"
+    },
+    {
+     "name": "as",
+     "type": "\"div\" | \"span\"",
+     "optional": true,
+     "description": "The layer element – use span inside buttons and other inline content"
+    },
+    {
+     "name": "className",
+     "type": "string",
+     "optional": true,
+     "description": "Classes on the root element"
+    },
+    {
+     "name": "style",
+     "type": "React.CSSProperties",
+     "optional": true,
+     "description": "Inline styles on the root element"
+    },
+    {
+     "name": "ref",
+     "type": "React.Ref<TcBlurCrossfade>",
+     "optional": true,
+     "description": "The root element"
+    }
+   ],
    "hides": [
     "swapKey",
     "blurAmount"

@@ -140,6 +140,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "GhostedChat",

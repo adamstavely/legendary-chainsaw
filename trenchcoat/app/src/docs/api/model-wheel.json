@@ -66,6 +66,13 @@
    ]
   }
  ],
+ "functions": [
+  {
+   "name": "modelWheelDefaults",
+   "signature": "modelWheelDefaults: WheelModel[]",
+   "description": "Brand marks: Simple Icons (CC0) and the OpenAI mark from the Trenchcoat Chat Composer"
+  }
+ ],
  "react": [
   {
    "component": "ModelWheel",

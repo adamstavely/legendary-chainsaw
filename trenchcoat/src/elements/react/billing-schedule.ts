@@ -35,22 +35,31 @@ const RawBillingSchedule = createComponent({
 });
 type RawBillingScheduleProps = React.ComponentProps<typeof RawBillingSchedule>;
 type OwnProps = {
+  /** The heading */
   title?: string;
   /** Phase name (controlled). Leave undefined and use `defaultPhase` to let the component keep it */
   phase?: string;
+  /** Phase name on mount when `phase` isn't controlled */
   defaultPhase?: string;
+  /** Called with the new phase name as it's typed */
   onPhaseChange?: (phase: string) => void;
   /** Schedule lines (controlled) */
   lines?: ScheduleLine[];
+  /** Lines on mount when `lines` isn't controlled */
   defaultLines?: ScheduleLine[];
+  /** Called with every line after a product, discount or minimum is added, edited or removed */
   onLinesChange?: (lines: ScheduleLine[]) => void;
   /** Start date, yyyy-mm-dd (controlled) */
   start?: string;
+  /** Start date on mount when `start` isn't controlled */
   defaultStart?: string;
+  /** Called with the new start date, yyyy-mm-dd */
   onStartChange?: (start: string) => void;
   /** Phase length (controlled) */
   duration?: Duration;
+  /** Phase length on mount when `duration` isn't controlled */
   defaultDuration?: Duration;
+  /** Called with the new phase length */
   onDurationChange?: (duration: Duration) => void;
   /** Called with the full schedule after every change the user makes (not on mount) */
   onChange?: (schedule: Schedule) => void;

@@ -112,6 +112,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "EmptyCalendar",

@@ -323,6 +323,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "UsageMeter",
@@ -368,7 +369,7 @@
      "name": "title",
      "type": "string",
      "optional": true,
-     "description": ""
+     "description": "The heading, and the region's name – \"Usage\" by default"
     }
    ],
    "hides": [

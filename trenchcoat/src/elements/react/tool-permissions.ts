@@ -40,10 +40,13 @@ type Owned = "heading" | "agents" | "tools" | "value" | "saved" | "onTcValueChan
 export type ToolPermissionsProps = Omit<RawProps, Owned> & {
   /** The heading, and the grid's name */
   title?: string;
+  /** The columns: one per agent, with an optional avatar node and model name */
   agents: ToolPermissionAgent[];
+  /** The rows: each tool's scopes, grouped under the tool */
   tools: ToolPermissionTool[];
   /** The matrix – controlled when given */
   value?: ToolPermissionMatrix;
+  /** The matrix on mount when `value` isn't controlled – a missing cell is `defaultLevel` */
   defaultValue?: ToolPermissionMatrix;
   /** A cell, a preset or Reset changed the matrix; `detail` says which and lists the changes since the last save */
   onChange?: (value: ToolPermissionMatrix, detail: Omit<ToolPermissionValueChange, "value">) => void;

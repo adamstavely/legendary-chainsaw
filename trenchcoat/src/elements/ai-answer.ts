@@ -238,6 +238,7 @@ export class TcAiAnswer extends TcElement {
 
   /** The question above the answer */
   @property() accessor question = "";
+  /** The sources the answer cites, numbered from 1 in the order given – [1] in the answer is the first */
   @property({ attribute: false }) accessor sources: AnswerSource[] = [];
   /** The answer text – may grow while `streaming` is set */
   @property() accessor answer = "";
@@ -247,6 +248,7 @@ export class TcAiAnswer extends TcElement {
   @property({ attribute: false }) accessor animated = true;
   /** Words per second while streaming in */
   @property({ type: Number }) accessor speed = 38;
+  /** Follow-up questions offered under the finished answer */
   @property({ attribute: false }) accessor followUps: string[] = [];
   /** The verdict shown (null: none) */
   @property({ attribute: false }) accessor feedback: AnswerFeedback | null = null;

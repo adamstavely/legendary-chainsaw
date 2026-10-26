@@ -292,6 +292,23 @@
    ]
   }
  ],
+ "functions": [
+  {
+   "name": "codeBlockLanguageLabel",
+   "signature": "codeBlockLanguageLabel(language: string): void",
+   "description": "The language's display name: \"ts\" → \"TypeScript\"; unknown ones as given, empty → \"Text\""
+  },
+  {
+   "name": "codeBlockTokens",
+   "signature": "codeBlockTokens(code: string, language: unknown): CodeBlockToken[][]",
+   "description": "The code as lines of coloured tokens – what the element renders, for tests and other renderers"
+  },
+  {
+   "name": "codeBlockDiff",
+   "signature": "codeBlockDiff(before: string, after: string): CodeBlockDiffLine[]",
+   "description": "A line diff of two texts: inline-diff's Myers diff (diffWords) run over one token per distinct line, read back as\nrows. Within a change, the removed lines come first, then the added ones."
+  }
+ ],
  "react": [
   {
    "component": "CodeBlock",
@@ -313,7 +330,7 @@
      "name": "onViewChange",
      "type": "(view: CodeBlockView) => void",
      "optional": true,
-     "description": ""
+     "description": "Called with \"code\" or \"diff\" when the Diff button is toggled"
     },
     {
      "name": "onCopy",

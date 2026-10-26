@@ -10,7 +10,7 @@
      "attribute": null,
      "type": "ParallelAttempt[]",
      "default": "[]",
-     "description": "",
+     "description": "The attempts, one row each – name, approach, status and, once done, a score",
      "readonly": false
     },
     {
@@ -182,6 +182,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "ParallelAttempts",
@@ -191,7 +192,7 @@
      "name": "attempts",
      "type": "Attempt[]",
      "optional": false,
-     "description": ""
+     "description": "The attempts, one row each; icons can be React nodes"
     },
     {
      "name": "picked",
@@ -215,7 +216,7 @@
      "name": "title",
      "type": "string",
      "optional": true,
-     "description": ""
+     "description": "The heading – \"Best of <n>\" when unset"
     }
    ],
    "hides": [

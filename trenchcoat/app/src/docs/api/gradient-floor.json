@@ -64,6 +64,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "GradientFloorOwn",
@@ -97,7 +98,7 @@
      "name": "className",
      "type": "string",
      "optional": true,
-     "description": ""
+     "description": "Classes on the element"
     },
     {
      "name": "ref",
@@ -111,7 +112,44 @@
   {
    "component": "GradientFloor",
    "exported": true,
-   "props": [],
+   "props": [
+    {
+     "name": "children",
+     "type": "React.ReactNode",
+     "optional": true,
+     "description": "Content rendered above the floor"
+    },
+    {
+     "name": "colors",
+     "type": "[string, string, string]",
+     "optional": true,
+     "description": "Gradient from the crest down: [top, middle, bottom]"
+    },
+    {
+     "name": "speed",
+     "type": "number",
+     "optional": true,
+     "description": "Seconds per morph loop; 0 keeps the shape still (the sideways drift keeps going)"
+    },
+    {
+     "name": "playFor",
+     "type": "number",
+     "optional": true,
+     "description": "Seconds of motion before the floor slows down and rests (rounded to whole drift loops of 2.5 s); Infinity never\nstops – then give users a way to pause it (WCAG 2.2.2)"
+    },
+    {
+     "name": "className",
+     "type": "string",
+     "optional": true,
+     "description": "Classes on the element"
+    },
+    {
+     "name": "ref",
+     "type": "React.Ref<TcGradientFloor>",
+     "optional": true,
+     "description": "The root element"
+    }
+   ],
    "hides": []
   }
  ],

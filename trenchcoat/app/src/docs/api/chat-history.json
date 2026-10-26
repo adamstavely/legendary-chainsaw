@@ -240,6 +240,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "ChatHistory",
@@ -255,7 +256,7 @@
      "name": "defaultConversations",
      "type": "ChatConversation[]",
      "optional": true,
-     "description": ""
+     "description": "The starting list when `conversations` is not controlled"
     },
     {
      "name": "onConversationsChange",
@@ -273,7 +274,7 @@
      "name": "defaultValue",
      "type": "string | null",
      "optional": true,
-     "description": ""
+     "description": "The chat open at first, when `value` is not controlled"
     },
     {
      "name": "onChange",
@@ -285,25 +286,25 @@
      "name": "title",
      "type": "string",
      "optional": true,
-     "description": ""
+     "description": "The heading above the list, and the tree's name (default \"Chats\")"
     },
     {
      "name": "onRename",
      "type": "(id: string, title: string) => void",
      "optional": true,
-     "description": ""
+     "description": "Called when a chat is renamed in place, with its new title"
     },
     {
      "name": "onPin",
      "type": "(id: string, pinned: boolean) => void",
      "optional": true,
-     "description": ""
+     "description": "Called when a chat is pinned or unpinned"
     },
     {
      "name": "onMove",
      "type": "(id: string, folder: string | null) => void",
      "optional": true,
-     "description": ""
+     "description": "Called when a chat is moved to a folder, or out of one (null)"
     },
     {
      "name": "onDelete",
@@ -315,13 +316,13 @@
      "name": "onRestore",
      "type": "(id: string, conversation: ChatConversation) => void",
      "optional": true,
-     "description": ""
+     "description": "Called when Undo brings a deleted chat back"
     },
     {
      "name": "onNewChat",
      "type": "() => void",
      "optional": true,
-     "description": ""
+     "description": "Called when New chat is pressed"
     }
    ],
    "hides": [

@@ -18,7 +18,7 @@
      "attribute": null,
      "type": "RangePreset[]",
      "default": "[ { id: \"today\", label: \"Today\", range: (t) => ({ start: t, end: t }) }, { id: \"yesterday\", label: \"Yesterday\", range: (t) => ({ start: addDays(t, -1), end: addDays(t, -1) }) }, { id: \"7d\", label: \"Last 7 days\", range: (t) => ({ start: addDays(t, -6), end: t }) }, { id: \"30d\", label: \"Last 30 days\", range: (t) => ({ start: addDays(t, -29), end: t }) }, { id: \"90d\", label: \"Last 90 days\", range: (t) => ({ start: addDays(t, -89), end: t }) }, { id: \"month\", label: \"This month\", range: (t) => ({ start: startOfMonth(t), end: t }) }, { id: \"last-month\", label: \"Last month\", range: (t) => ({ start: addMonths(t, -1), end: endOfMonth(addMonths(t, -1)) }) }, { id: \"quarter\", label: \"This quarter\", range: (t) => ({ start: quarterStart(t), end: t }) }, { id: \"ytd\", label: \"Year to date\", range: (t) => ({ start: new Date(t.getFullYear(), 0, 1), end: t }) }, ]",
-     "description": "",
+     "description": "The quick picks on the left, each building its range from today – defaults to Today through Year to date",
      "readonly": false
     },
     {
@@ -82,7 +82,7 @@
      "attribute": null,
      "type": "Date | undefined",
      "default": "undefined",
-     "description": "",
+     "description": "Days before this can't be picked – unset, there is no lower limit",
      "readonly": false
     },
     {
@@ -235,6 +235,18 @@
    ]
   }
  ],
+ "functions": [
+  {
+   "name": "formatDateRange",
+   "signature": "formatDateRange({ start, end }: DateRange): void",
+   "description": "\"Sep 9 – Oct 8, 2026\", \"Dec 20, 2025 – Jan 5, 2026\", \"Oct 8, 2026\""
+  },
+  {
+   "name": "compareDateRange",
+   "signature": "compareDateRange(range: DateRange, mode: CompareMode): DateRange | null",
+   "description": "The comparison range for a mode: the period before, or the same days a year back"
+  }
+ ],
  "react": [
   {
    "component": "DateRangePicker",
@@ -268,7 +280,7 @@
      "name": "defaultCompare",
      "type": "CompareMode",
      "optional": true,
-     "description": ""
+     "description": "The comparison applied at first when `compareMode` isn't controlled – defaults to \"previous\""
     },
     {
      "name": "open",
@@ -286,7 +298,7 @@
      "name": "onOpenChange",
      "type": "(open: boolean) => void",
      "optional": true,
-     "description": ""
+     "description": "Called whenever the panel opens or closes, controlled or not"
     }
    ],
    "hides": [

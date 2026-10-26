@@ -26,22 +26,30 @@ export type AgentLanesProps = Omit<
   RawAgentLanesProps,
   "agents" | "tasks" | "heading" | "openable" | "paused" | "expanded" | "onApprove" | "onReject" | "onTcExpandedChange" | "onTcPausedChange" | "onTcOpen"
 > & {
+  /** The agents, one lane each from top to bottom; avatars can be React nodes */
   agents: LaneAgent[];
   /** The tasks – always the source of truth. After Approve or Reject the block shows the result right away; as soon
    *  as you pass that task with a new status, start or end, your version wins */
   tasks: LaneTask[];
+  /** Called on Approve in a waiting task's decision – may return a promise the decision waits for */
   onApprove?: LaneTaskHandler;
+  /** Called on Reject in a waiting task's decision – may return a promise the decision waits for */
   onReject?: LaneTaskHandler;
   /** Shows "Open" in a block's tooltip */
   onOpen?: (task: LaneTask) => void;
   /** Whether the timeline is held still (controlled) */
   paused?: boolean;
+  /** Whether the timeline starts held still, when `paused` isn't set */
   defaultPaused?: boolean;
+  /** Called when the Pause button is pressed, with the new paused state */
   onPausedChange?: (paused: boolean) => void;
   /** The id of the block whose decision or tooltip is open. Controlled when defined (null = none) */
   expanded?: string | null;
+  /** The block open at first, when `expanded` isn't set */
   defaultExpanded?: string | null;
+  /** Called with a block's id when its decision or details open, and null when they close */
   onExpandedChange?: (id: string | null) => void;
+  /** The title on the summary bar – "Agents" by default */
   title?: string;
 };
 export function AgentLanes({ agents, tasks, onApprove, onReject, onOpen, paused, defaultPaused = false, onPausedChange, expanded, defaultExpanded = null, onExpandedChange, title = "Agents", ...props }: AgentLanesProps) {

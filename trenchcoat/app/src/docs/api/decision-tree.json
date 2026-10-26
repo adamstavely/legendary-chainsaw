@@ -42,7 +42,7 @@
      "attribute": "heading",
      "type": "string",
      "default": "\"Decisions\"",
-     "description": "The heading",
+     "description": "The heading in the bar, before how many decisions wait",
      "readonly": false
     },
     {
@@ -330,6 +330,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "DecisionTree",
@@ -369,7 +370,7 @@
      "name": "title",
      "type": "string",
      "optional": true,
-     "description": ""
+     "description": "The heading in the bar – \"Decisions\" by default"
     },
     {
      "name": "ref",

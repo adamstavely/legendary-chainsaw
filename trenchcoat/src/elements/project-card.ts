@@ -112,6 +112,7 @@ export class TcProjectCard extends TcElement {
   @property() accessor status: string | undefined = undefined;
   /** Ready-to-show due date, e.g. "Oct 24" */
   @property() accessor due = "";
+  /** The people on the project – avatars in the head that filter the subtasks to theirs */
   @property({ attribute: false }) accessor members: ProjectMember[] = [];
   /** A button on the tray of the open card (Clean: in its last row); it fires tc-action */
   @property({ attribute: "action-label" }) accessor actionLabel = "";
@@ -119,6 +120,7 @@ export class TcProjectCard extends TcElement {
   @property({ attribute: false }) accessor hint: string | Element | undefined = undefined;
   /** "hover" opens under the pointer (taps and the keyboard still toggle), "click" only on click */
   @property() accessor trigger: "hover" | "click" = "hover";
+  /** Whether the card is unfolded, showing the subtasks, the people filter and the tray */
   @property({ type: Boolean, reflect: true }) accessor open = false;
 
   /** @internal The subtask under the pointer (row or ring segment) */

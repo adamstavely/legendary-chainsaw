@@ -74,7 +74,7 @@
      "attribute": "size",
      "type": "\"sm\" | \"md\"",
      "default": "\"md\"",
-     "description": "",
+     "description": "\"md\" is the default pill; \"sm\" is smaller, e.g. inside a chat bubble",
      "readonly": false
     },
     {
@@ -186,6 +186,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "ThinkingLoader",

@@ -18,8 +18,11 @@ const RawCommentThread = createComponent({
 });
 type RawCommentThreadProps = React.ComponentProps<typeof RawCommentThread>;
 export type CommentThreadProps = Omit<RawCommentThreadProps, "heading" | "messages" | "currentUser" | "assistant" | "onReply" | "closable" | "onTcMessagesChange" | "onTcClose"> & {
+  /** The heading, and the region's name (default "Comment") */
   title?: string;
+  /** The comment and its replies, oldest first – the source of truth, followed by id */
   messages: ThreadMessage[];
+  /** Who is replying here: the author of replies posted from the field */
   currentUser: ThreadAuthor;
   /** The assistant that answers – used for the thinking state */
   assistant?: ThreadAuthor;
@@ -30,6 +33,7 @@ export type CommentThreadProps = Omit<RawCommentThreadProps, "heading" | "messag
   onReply?: (text: string) => ThreadMessage | Promise<ThreadMessage | void> | void;
   /** The whole thread after a reply was posted here, or the assistant answered – store it and pass it back */
   onMessagesChange?: (messages: ThreadMessage[]) => void;
+  /** Shows a close button and runs when it's pressed */
   onClose?: () => void;
 };
 

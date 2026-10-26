@@ -34,7 +34,7 @@
      "attribute": null,
      "type": "MetricChange[]",
      "default": "[]",
-     "description": "",
+     "description": "The metrics, one row each, in the order given",
      "readonly": false
     },
     {
@@ -101,6 +101,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "ChangeSummary",

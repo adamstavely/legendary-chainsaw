@@ -10,7 +10,7 @@
      "attribute": "look",
      "type": "Look | undefined",
      "default": "undefined",
-     "description": "",
+     "description": "The look every Trenchcoat element inside takes unless it sets its own: \"standard\" or \"clean\"",
      "readonly": false
     }
    ],
@@ -20,6 +20,13 @@
    "ui": "",
    "cssProperties": [],
    "tokens": []
+  }
+ ],
+ "functions": [
+  {
+   "name": "lookContext",
+   "signature": "lookContext: object",
+   "description": "The app-wide default look, set with <tc-look-provider look=\"clean\"> (decision L6); an element's own `look` wins"
   }
  ],
  "react": [],

@@ -33,17 +33,21 @@ const RawFilterMenu = createComponent({
 });
 type RawFilterMenuProps = React.ComponentProps<typeof RawFilterMenu>;
 export type FilterMenuProps = Omit<RawFilterMenuProps, "heading" | "groups" | "value" | "defaultValue" | "open" | "onTcValueChange" | "onTcOpenChange" | "onChange"> & {
+  /** The filter groups, in order – each a collapsible list of options that become chips when picked */
   groups: FilterGroup[];
   /** The picked options. Controlled when defined; otherwise the menu keeps its own, starting at `defaultValue` */
   value?: FilterValue;
   /** Starting value when uncontrolled */
   defaultValue?: FilterValue;
+  /** Called with the new value whenever an option is picked or removed, or all are cleared */
   onChange?: (value: FilterValue) => void;
   /** Ids of the open groups. Controlled when defined; otherwise starts at `defaultOpen` */
   open?: string[];
   /** Groups that start open – by default the first one */
   defaultOpen?: string[];
+  /** Called with the ids of the open groups whenever a group opens or folds */
   onOpenChange?: (open: string[]) => void;
+  /** The heading, next to Clear all – "Filters" by default */
   title?: string;
 };
 export function FilterMenu({ title = "Filters", value, defaultValue = NONE, onChange, open, defaultOpen, onOpenChange, groups, ...props }: FilterMenuProps) {

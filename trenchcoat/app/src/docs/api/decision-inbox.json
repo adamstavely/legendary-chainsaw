@@ -117,6 +117,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "DecisionInbox",

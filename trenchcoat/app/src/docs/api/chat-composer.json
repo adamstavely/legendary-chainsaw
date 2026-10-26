@@ -10,7 +10,7 @@
      "attribute": "placeholder",
      "type": "string",
      "default": "\"Start by typing...\"",
-     "description": "",
+     "description": "Placeholder of the message field",
      "readonly": false
     },
     {
@@ -302,6 +302,13 @@
    ]
   }
  ],
+ "functions": [
+  {
+   "name": "defaultChatModels",
+   "signature": "defaultChatModels: ChatModel[]",
+   "description": "The models the composer offers when none are given"
+  }
+ ],
  "react": [
   {
    "component": "ChatComposer",
@@ -359,7 +366,7 @@
      "name": "onSelectProject",
      "type": "() => void",
      "optional": true,
-     "description": ""
+     "description": "\"Select a project\" was pressed – open your own project picker here"
     },
     {
      "name": "context",
@@ -371,7 +378,7 @@
      "name": "defaultContext",
      "type": "ContextTrayItem[]",
      "optional": true,
-     "description": ""
+     "description": "The context chips to start with when uncontrolled"
     },
     {
      "name": "onContextChange",

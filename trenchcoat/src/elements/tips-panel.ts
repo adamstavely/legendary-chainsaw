@@ -49,11 +49,13 @@ export class TcTipsPanel extends TcElement {
 
   /** The heading, and the region's name */
   @property() accessor heading = "Tips";
+  /** The tips, in order – each with a title, a short description and one action */
   @property({ attribute: false }) accessor tips: TipsPanelTip[] = [];
   /** Ids of the tips whose action was taken */
   @property({ attribute: false }) accessor done: string[] = [];
   /** Shows the Close button in the footer */
   @property({ type: Boolean }) accessor closable = false;
+  /** Text of the Close button */
   @property({ attribute: "close-label" }) accessor closeLabel = "Close";
 
   /** @internal One persistent status line: which tip was done and the new count */

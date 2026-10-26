@@ -34,6 +34,7 @@ export class TcButton extends TcElement {
   /** primary: dark and filled · secondary: white with an outline (Clean: a hairline shadow) · ghost: text only ·
    *  destructive: red, for deleting */
   @property({ reflect: true }) accessor variant: "primary" | "secondary" | "ghost" | "destructive" = "primary";
+  /** Height and padding: sm, md or lg (Standard 28 · 32 · 40 px, Clean 24 · 28 · 32 px) */
   @property({ reflect: true }) accessor size: "sm" | "md" | "lg" = "md";
   /** The button's text (and its accessible name) */
   @property() accessor label = "";
@@ -41,10 +42,13 @@ export class TcButton extends TcElement {
   @property({ type: Boolean, attribute: "hide-label" }) accessor hideLabel = false;
   /** Shows a shimmer over the label, blocks clicks and adds "loading" to the accessible name */
   @property({ type: Boolean, reflect: true }) accessor loading = false;
+  /** Dims the button and disables the native button inside it, so it can't be focused or clicked */
   @property({ type: Boolean, reflect: true }) accessor disabled = false;
+  /** The inner native button's type: "button" does nothing in a form, "submit" submits it, "reset" resets it */
   @property({ reflect: true }) accessor type: "button" | "submit" | "reset" = "button";
   /** Submitted with the form when this is its submit button */
   @property() accessor name = "";
+  /** Submitted as `name`'s value when this button submits its form */
   @property() accessor value = "";
 
   private ready = false;

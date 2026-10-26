@@ -218,6 +218,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "ContextTrayOwn",
@@ -239,7 +240,7 @@
      "name": "defaultItems",
      "type": "ContextTrayEntry[]",
      "optional": true,
-     "description": ""
+     "description": "The starting chips when `items` isn't given"
     },
     {
      "name": "onChange",
@@ -253,7 +254,32 @@
   {
    "component": "ContextTray",
    "exported": true,
-   "props": [],
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading, and the group's name (default \"In context\")"
+    },
+    {
+     "name": "items",
+     "type": "ContextTrayEntry[]",
+     "optional": true,
+     "description": "The chips. Controlled when given; otherwise the tray keeps its own, starting at `defaultItems`"
+    },
+    {
+     "name": "defaultItems",
+     "type": "ContextTrayEntry[]",
+     "optional": true,
+     "description": "The starting chips when `items` isn't given"
+    },
+    {
+     "name": "onChange",
+     "type": "(items: ContextTrayEntry[], change: ContextTrayChange) => void",
+     "optional": true,
+     "description": "Every remove, undo (restore), pin and unpin, with the items after it"
+    }
+   ],
    "hides": [
     "heading",
     "onChange"

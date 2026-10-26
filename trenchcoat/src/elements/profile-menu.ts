@@ -81,7 +81,9 @@ const arrowIcon = (look: Look) =>
 export class TcProfileMenu extends TcElement {
   static override ui = "pm";
 
+  /** The signed-in person's name, at the top of the card */
   @property() accessor name = "";
+  /** The signed-in person's email address, under the name */
   @property() accessor email = "";
   /** Replaces the default avatar (cloned) */
   @property({ attribute: false }) accessor avatar: Element | undefined = undefined;

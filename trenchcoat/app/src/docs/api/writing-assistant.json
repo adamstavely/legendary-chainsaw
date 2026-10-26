@@ -18,7 +18,7 @@
      "attribute": "tagline",
      "type": "string",
      "default": "\"Your writing companion.\"",
-     "description": "",
+     "description": "Short line under the name",
      "readonly": false
     },
     {
@@ -34,7 +34,7 @@
      "attribute": null,
      "type": "string[]",
      "default": "[\"Polish my email\", \"Make it shorter\", \"Fix the tone\", \"Draft a reply\"]",
-     "description": "",
+     "description": "Chips on the welcome screen; picking one sends it as a message",
      "readonly": false
     },
     {
@@ -42,7 +42,7 @@
      "attribute": "placeholder",
      "type": "string",
      "default": "\"Ask anything…\"",
-     "description": "",
+     "description": "Text in the empty prompt field",
      "readonly": false
     },
     {
@@ -225,6 +225,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "WritingAssistant",
@@ -264,7 +265,7 @@
      "name": "onDraftChange",
      "type": "(draft: string) => void",
      "optional": true,
-     "description": ""
+     "description": "Called with the field's new text whenever it changes – typing, dictation, or clearing after a send"
     }
    ],
    "hides": [

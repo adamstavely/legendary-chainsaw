@@ -200,6 +200,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "DropzoneOwn",
@@ -283,7 +284,80 @@
   {
    "component": "Dropzone",
    "exported": true,
-   "props": [],
+   "props": [
+    {
+     "name": "accept",
+     "type": "string[]",
+     "optional": true,
+     "description": "Allowed types: extensions (\".pdf\"), MIME types (\"application/pdf\") or wildcards (\"image/*\") – any file when\nleft out"
+    },
+    {
+     "name": "maxSize",
+     "type": "number",
+     "optional": true,
+     "description": "Largest file in bytes"
+    },
+    {
+     "name": "onUpload",
+     "type": "DropzoneUpload",
+     "optional": true,
+     "description": "Upload a file and report its progress (0–1); throw to mark it as failed. `signal` aborts when the row is\nremoved or the dropzone unmounts – stop the upload then. Simulated when left out (and warns once, unless\n`demo` is set)"
+    },
+    {
+     "name": "value",
+     "type": "UploadItem[]",
+     "optional": true,
+     "description": "The list of files. Controlled when defined – pass back what onChange reports (progress included), preload\nfiles that are already uploaded, or clear it with []. Otherwise the dropzone keeps its own list"
+    },
+    {
+     "name": "defaultValue",
+     "type": "UploadItem[]",
+     "optional": true,
+     "description": "Starting list when uncontrolled"
+    },
+    {
+     "name": "onChange",
+     "type": "(items: UploadItem[]) => void",
+     "optional": true,
+     "description": "Called whenever the list changes"
+    },
+    {
+     "name": "name",
+     "type": "string",
+     "optional": true,
+     "description": "Name for native form submission: the added files (not the rejected ones) are submitted under it"
+    },
+    {
+     "name": "required",
+     "type": "boolean",
+     "optional": true,
+     "description": "A native form needs at least one file that isn't rejected"
+    },
+    {
+     "name": "disabled",
+     "type": "boolean",
+     "optional": true,
+     "description": "No files can be added, retried or removed"
+    },
+    {
+     "name": "hint",
+     "type": "string",
+     "optional": true,
+     "description": "Text under the title – defaults to the accepted types and size"
+    },
+    {
+     "name": "autoplay",
+     "type": "boolean",
+     "optional": true,
+     "description": "Plays a sample drop on its own – nice for previews"
+    },
+    {
+     "name": "demo",
+     "type": "boolean",
+     "optional": true,
+     "description": "Demo mode: files dropped without onUpload are simulated silently. For galleries and prototypes"
+    }
+   ],
    "hides": []
   }
  ],
@@ -291,7 +365,7 @@
   "dropzone reports progress through `onChange` at most once a second (status changes are still reported at once)."
  ],
  "size": {
-  "min": 52329,
-  "gzip": 14276
+  "min": 52497,
+  "gzip": 14328
  }
 }

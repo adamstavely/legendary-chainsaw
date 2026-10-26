@@ -10,7 +10,7 @@
      "attribute": null,
      "type": "CursorAgent[]",
      "default": "[]",
-     "description": "",
+     "description": "The agents in the document – each one's name, colour, mark and cost; their faces show in the header",
      "readonly": false
     },
     {
@@ -18,7 +18,7 @@
      "attribute": null,
      "type": "DocBlock[]",
      "default": "[]",
-     "description": "",
+     "description": "The document, block by block – title, headings, paragraphs, list items, code, images and tables",
      "readonly": false
     },
     {
@@ -26,7 +26,7 @@
      "attribute": null,
      "type": "DocSuggestion[]",
      "default": "[]",
-     "description": "",
+     "description": "Suggested changes, shown inline in the text in the suggesting agent's colour",
      "readonly": false
     },
     {
@@ -406,6 +406,13 @@
    ]
   }
  ],
+ "functions": [
+  {
+   "name": "acceptSuggestion",
+   "signature": "acceptSuggestion(blocks: DocBlock[], suggestions: DocSuggestion[], id: string): void",
+   "description": "Accepts a suggestion: writes it into the text and moves the other suggestions in that block along"
+  }
+ ],
  "react": [
   {
    "component": "AgentCursors",
@@ -415,7 +422,7 @@
      "name": "agents",
      "type": "CursorAgent[]",
      "optional": false,
-     "description": ""
+     "description": "The agents in the document; `avatar` takes a React node"
     },
     {
      "name": "onResolveComment",
@@ -427,19 +434,19 @@
      "name": "onAccept",
      "type": "(suggestion: DocSuggestion) => void",
      "optional": true,
-     "description": ""
+     "description": "Accepts a suggestion – shows Accept in its window; write the change in with `acceptSuggestion`"
     },
     {
      "name": "onReject",
      "type": "(suggestion: DocSuggestion) => void",
      "optional": true,
-     "description": ""
+     "description": "Rejects a suggestion – shows Reject in its window"
     },
     {
      "name": "onAcceptAll",
      "type": "() => void",
      "optional": true,
-     "description": "Shows \"Accept all\" in the header when there is more than one suggestion"
+     "description": "Shows \"Accept all\" in the header; it is disabled while there are no suggestions"
     },
     {
      "name": "following",
@@ -451,13 +458,13 @@
      "name": "defaultFollowing",
      "type": "string | null",
      "optional": true,
-     "description": ""
+     "description": "The agent followed at first, when `following` is not controlled"
     },
     {
      "name": "onFollowingChange",
      "type": "(agent: string | null) => void",
      "optional": true,
-     "description": ""
+     "description": "Called when a face is clicked to follow an agent, or to stop (null)"
     },
     {
      "name": "tab",
@@ -469,19 +476,19 @@
      "name": "defaultTab",
      "type": "string",
      "optional": true,
-     "description": ""
+     "description": "The tab open at first, when `tab` is not controlled – defaults to the first"
     },
     {
      "name": "onTabChange",
      "type": "(tab: string) => void",
      "optional": true,
-     "description": ""
+     "description": "Called when another tab is picked"
     },
     {
      "name": "title",
      "type": "string",
      "optional": true,
-     "description": ""
+     "description": "The document's title in the header (default \"Untitled\")"
     }
    ],
    "hides": [

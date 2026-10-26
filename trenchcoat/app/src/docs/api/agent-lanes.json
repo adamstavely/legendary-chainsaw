@@ -10,7 +10,7 @@
      "attribute": null,
      "type": "LaneAgent[]",
      "default": "[]",
-     "description": "",
+     "description": "The agents, one lane each from top to bottom – name, model and an optional avatar",
      "readonly": false
     },
     {
@@ -231,6 +231,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "AgentLanes",
@@ -240,7 +241,7 @@
      "name": "agents",
      "type": "LaneAgent[]",
      "optional": false,
-     "description": ""
+     "description": "The agents, one lane each from top to bottom; avatars can be React nodes"
     },
     {
      "name": "tasks",
@@ -252,13 +253,13 @@
      "name": "onApprove",
      "type": "LaneTaskHandler",
      "optional": true,
-     "description": ""
+     "description": "Called on Approve in a waiting task's decision – may return a promise the decision waits for"
     },
     {
      "name": "onReject",
      "type": "LaneTaskHandler",
      "optional": true,
-     "description": ""
+     "description": "Called on Reject in a waiting task's decision – may return a promise the decision waits for"
     },
     {
      "name": "onOpen",
@@ -276,13 +277,13 @@
      "name": "defaultPaused",
      "type": "boolean",
      "optional": true,
-     "description": ""
+     "description": "Whether the timeline starts held still, when `paused` isn't set"
     },
     {
      "name": "onPausedChange",
      "type": "(paused: boolean) => void",
      "optional": true,
-     "description": ""
+     "description": "Called when the Pause button is pressed, with the new paused state"
     },
     {
      "name": "expanded",
@@ -294,19 +295,19 @@
      "name": "defaultExpanded",
      "type": "string | null",
      "optional": true,
-     "description": ""
+     "description": "The block open at first, when `expanded` isn't set"
     },
     {
      "name": "onExpandedChange",
      "type": "(id: string | null) => void",
      "optional": true,
-     "description": ""
+     "description": "Called with a block's id when its decision or details open, and null when they close"
     },
     {
      "name": "title",
      "type": "string",
      "optional": true,
-     "description": ""
+     "description": "The title on the summary bar – \"Agents\" by default"
     }
    ],
    "hides": [
@@ -322,10 +323,11 @@
   }
  ],
  "changelog": [
+  "agent-lanes says \"1 task needs you\" (was \"1 task need you\").",
   "agent-lanes `rate`: how fast its clock runs, in clock ms per real ms (0 with `now`, 1 without – as before)."
  ],
  "size": {
-  "min": 42352,
-  "gzip": 12519
+  "min": 42302,
+  "gzip": 12521
  }
 }

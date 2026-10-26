@@ -106,7 +106,7 @@
      "attribute": "disabled",
      "type": "boolean",
      "default": "false",
-     "description": "",
+     "description": "Turns the field off: no typing or resending, and the code isn't submitted with the form",
      "readonly": false
     },
     {
@@ -259,6 +259,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "OtpInput",
@@ -280,7 +281,7 @@
      "name": "onChange",
      "type": "(code: string) => void",
      "optional": true,
-     "description": ""
+     "description": "Called with the new code each time the user types, pastes or deletes"
     },
     {
      "name": "errorMessage",

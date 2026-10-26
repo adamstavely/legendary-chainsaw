@@ -145,8 +145,11 @@ export class TcBreakdownChart extends TcElement {
 
   /** The heading, and the region's name */
   @property() accessor heading = "Workload";
+  /** The rows to chart – one object per item, with a value for each dimension key and each measure field */
   @property({ attribute: false }) accessor records: BreakdownRecord[] = [];
+  /** The fields people can slice and segment by, with their values in display order */
   @property({ attribute: false }) accessor dimensions: BreakdownDimension[] = [];
+  /** What the bars can measure – a count of records, or the sum of a field */
   @property({ attribute: false }) accessor measures: BreakdownMeasure[] = [];
   /** Measure key; unset is the first measure */
   @property() accessor measure: string | undefined = undefined;

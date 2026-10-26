@@ -269,6 +269,13 @@
    ]
   }
  ],
+ "functions": [
+  {
+   "name": "diffWords",
+   "signature": "diffWords(original: string, suggested: string, maxCells: number): DiffSegment[]",
+   "description": "Word-level diff of two texts (Myers' shortest edit script over word and whitespace tokens), grouped into equal\nruns and changes. `maxCells` caps the work – tokens in the part between the common start and end, times the\nedits needed; past it the middle becomes one replacement."
+  }
+ ],
  "react": [
   {
    "component": "InlineDiff",

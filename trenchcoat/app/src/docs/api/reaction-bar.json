@@ -99,6 +99,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "ReactionBar",

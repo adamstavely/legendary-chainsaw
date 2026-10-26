@@ -297,6 +297,7 @@ export class TcSandboxLog extends TcElement {
   @property() accessor heading = "Sandbox";
   /** Small text next to the heading – the machine, image or working directory */
   @property() accessor environment = "";
+  /** The commands in the order they ran – one collapsible block each, with their output so far */
   @property({ attribute: false }) accessor steps: SandboxLogStep[] = [];
   /** Ids of the open steps – unset opens the steps that are running or failed */
   @property({ attribute: false }) accessor open: string[] | undefined = undefined;

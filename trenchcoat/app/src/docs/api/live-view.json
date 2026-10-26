@@ -307,6 +307,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "LiveView",
@@ -334,13 +335,13 @@
      "name": "defaultPaused",
      "type": "boolean",
      "optional": true,
-     "description": ""
+     "description": "Whether the agent starts paused, when `paused` isn't controlled"
     },
     {
      "name": "onPausedChange",
      "type": "(paused: boolean) => void",
      "optional": true,
-     "description": ""
+     "description": "Pause or Resume was pressed"
     },
     {
      "name": "control",
@@ -352,13 +353,13 @@
      "name": "defaultControl",
      "type": "LiveViewControl",
      "optional": true,
-     "description": ""
+     "description": "Who drives the screen at first, when `control` isn't controlled"
     },
     {
      "name": "onControlChange",
      "type": "(control: LiveViewControl) => void",
      "optional": true,
-     "description": ""
+     "description": "Take over or Hand back was pressed"
     },
     {
      "name": "onScreenClick",

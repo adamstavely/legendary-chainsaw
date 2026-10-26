@@ -18,7 +18,7 @@
      "attribute": null,
      "type": "PlanVsActualStep[]",
      "default": "[]",
-     "description": "",
+     "description": "The plan's steps, in order – each with its planned time, what it waits for, and its real start and end so far",
      "readonly": false
     },
     {
@@ -301,6 +301,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "PlanVsActual",
@@ -310,13 +311,13 @@
      "name": "steps",
      "type": "PlanVsActualStep[]",
      "optional": false,
-     "description": ""
+     "description": "The plan's steps, in order – each with its planned time, what it waits for, and its real start and end so far; `icon` takes a React node"
     },
     {
      "name": "title",
      "type": "string",
      "optional": true,
-     "description": ""
+     "description": "The heading, and the list's name (default \"Plan vs actual\")"
     }
    ],
    "hides": [

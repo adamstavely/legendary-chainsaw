@@ -268,6 +268,7 @@ export class TcReviewCenter extends TcElement implements ReviewCenterHandle {
   @property({ attribute: false }) accessor reasons: string[] = REASONS;
   /** "risk" (default): high risk first, then oldest · "oldest" · "given": as passed */
   @property() accessor order: "risk" | "oldest" | "given" = "risk";
+  /** Which items the queue shows: "all", "high" (high risk only) or "unsure" (below `lowConfidence`). Changed by the user unless a tc-filter-change listener calls preventDefault() */
   @property() accessor filter: ReviewFilter = "all";
   /** The heading */
   @property() accessor heading = "Review center";

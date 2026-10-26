@@ -58,7 +58,7 @@
      "attribute": null,
      "type": "string[]",
      "default": "[ \"(GMT −08:00) Los Angeles\", \"(GMT −05:00) New York\", \"(GMT −03:00) São Paulo\", \"(GMT +00:00) London\", \"(GMT +01:00) Berlin\", \"(GMT +01:00) Amsterdam\", \"(GMT +01:00) Warsaw\", \"(GMT +02:00) Athens\", \"(GMT +04:00) Dubai\", \"(GMT +05:30) Mumbai\", \"(GMT +08:00) Singapore\", \"(GMT +09:00) Tokyo\", \"(GMT +10:00) Sydney\", ]",
-     "description": "",
+     "description": "The time zones the picker offers, as labels like \"(GMT +01:00) Berlin\" – the first is the default",
      "readonly": false
     },
     {
@@ -239,6 +239,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "IntegrationSettingsOwn",
@@ -254,7 +255,7 @@
      "name": "logo",
      "type": "React.ReactNode",
      "optional": false,
-     "description": ""
+     "description": "The service's logo, shown beside its name"
     },
     {
      "name": "count",
@@ -296,7 +297,7 @@
      "name": "timeZones",
      "type": "string[]",
      "optional": true,
-     "description": ""
+     "description": "The time zones the picker offers, as labels like \"(GMT +01:00) Berlin\" – the first is the default"
     },
     {
      "name": "onGenerateKey",
@@ -328,7 +329,86 @@
   {
    "component": "IntegrationSettings",
    "exported": true,
-   "props": [],
+   "props": [
+    {
+     "name": "name",
+     "type": "string",
+     "optional": false,
+     "description": "The service's name, e.g. \"Shopify\""
+    },
+    {
+     "name": "logo",
+     "type": "React.ReactNode",
+     "optional": false,
+     "description": "The service's logo, shown beside its name"
+    },
+    {
+     "name": "count",
+     "type": "number",
+     "optional": true,
+     "description": "Small number next to the name, e.g. synced orders"
+    },
+    {
+     "name": "meta",
+     "type": "string",
+     "optional": true,
+     "description": "Line under the name, e.g. when it was connected"
+    },
+    {
+     "name": "values",
+     "type": "Partial<IntegrationValues>",
+     "optional": true,
+     "description": "The saved values. Controlled when defined: the card shows them, edits collect in the save bar, and saved changes\n(Save, the switch) are reported through onValuesChange. Fields that weren't edited follow new values right away"
+    },
+    {
+     "name": "defaultValues",
+     "type": "Partial<IntegrationValues>",
+     "optional": true,
+     "description": "Saved values when uncontrolled. Read again when they change (e.g. once they've loaded) – fields that weren't\nedited follow"
+    },
+    {
+     "name": "onValuesChange",
+     "type": "(values: IntegrationValues) => void",
+     "optional": true,
+     "description": "Called with all values whenever the saved values change: after a save, or when the switch flips"
+    },
+    {
+     "name": "siteHint",
+     "type": "string",
+     "optional": true,
+     "description": "Helper text under the address field"
+    },
+    {
+     "name": "timeZones",
+     "type": "string[]",
+     "optional": true,
+     "description": "The time zones the picker offers, as labels like \"(GMT +01:00) Berlin\" – the first is the default"
+    },
+    {
+     "name": "onGenerateKey",
+     "type": "(options: { signal: AbortSignal }) => string | Promise<string>",
+     "optional": true,
+     "description": "Creates a key – return it, or a promise of it; a rejection shows an error and keeps the old key. Without it a\nrandom `sk_demo_…` key is made up (and warns once, unless `demo` is set)"
+    },
+    {
+     "name": "onSave",
+     "type": "(values: IntegrationValues, options: { signal: AbortSignal }) => void | Promise<void>",
+     "optional": true,
+     "description": "Called with all values when Save is pressed. A rejection keeps the changes unsaved and shows an error.\nThe signal aborts when the card unmounts"
+    },
+    {
+     "name": "demo",
+     "type": "boolean",
+     "optional": true,
+     "description": "Demo mode: keys are made up silently when onGenerateKey is missing. For galleries and prototypes"
+    },
+    {
+     "name": "onToggle",
+     "type": "(enabled: boolean, options: { signal: AbortSignal }) => void | Promise<unknown>",
+     "optional": true,
+     "description": "Called when the switch flips. May return a promise: the switch shows that it's working and flips when it\nresolves; a rejection leaves it as it was and shows an error"
+    }
+   ],
    "hides": [
     "generateKey",
     "saveValues",

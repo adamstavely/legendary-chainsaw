@@ -31,6 +31,7 @@ export type ApprovalCardProps = Omit<RawApprovalCardProps, Nodes | "onTcStatusCh
   details?: ApprovalDetail[];
   /** Anything to show above the details, e.g. a recipient list – children work too */
   preview?: React.ReactNode;
+  /** The preview, when `preview` isn't given */
   children?: React.ReactNode;
   /** Small label on the gray tray above the card */
   label?: React.ReactNode;
@@ -40,6 +41,7 @@ export type ApprovalCardProps = Omit<RawApprovalCardProps, Nodes | "onTcStatusCh
   defaultStatus?: ApprovalStatus;
   /** Called with the new status whenever the card is approved, denied or expires (controlled or not) */
   onStatusChange?: (status: ApprovalStatus) => void;
+  /** Called when the card is denied, by the user or by the countdown (`reason: "timeout"`) */
   onDeny?: (decision: { reason: DenyReason }) => void;
   /** Shows an "Edit" button */
   onEdit?: () => void;

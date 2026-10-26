@@ -121,6 +121,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "GradientTextOwn",
@@ -130,7 +131,7 @@
      "name": "children",
      "type": "React.ReactNode",
      "optional": false,
-     "description": ""
+     "description": "The text – a string, or rich content that is cloned for the text and its gradient copy"
     },
     {
      "name": "colors",
@@ -166,7 +167,7 @@
      "name": "className",
      "type": "string",
      "optional": true,
-     "description": ""
+     "description": "Classes for the root element"
     },
     {
      "name": "ref",
@@ -180,7 +181,56 @@
   {
    "component": "GradientText",
    "exported": true,
-   "props": [],
+   "props": [
+    {
+     "name": "children",
+     "type": "React.ReactNode",
+     "optional": false,
+     "description": "The text – a string, or rich content that is cloned for the text and its gradient copy"
+    },
+    {
+     "name": "colors",
+     "type": "string[]",
+     "optional": true,
+     "description": "Gradient start, end and up to two blob colors: [start, end, blob, blob]"
+    },
+    {
+     "name": "speed",
+     "type": "number",
+     "optional": true,
+     "description": "Seconds per flow cycle"
+    },
+    {
+     "name": "playFor",
+     "type": "number",
+     "optional": true,
+     "description": "Seconds the flow runs before it rests (on the nearest quarter cycle below); Infinity never stops – then give\nusers a way to pause it (WCAG 2.2.2)"
+    },
+    {
+     "name": "sweep",
+     "type": "boolean",
+     "optional": true,
+     "description": "Sweep the color in from left to right when the text scrolls into view"
+    },
+    {
+     "name": "as",
+     "type": "\"span\" | \"h1\" | \"h2\" | \"p\"",
+     "optional": true,
+     "description": "What the text is: inline text, a paragraph or a heading"
+    },
+    {
+     "name": "className",
+     "type": "string",
+     "optional": true,
+     "description": "Classes for the root element"
+    },
+    {
+     "name": "ref",
+     "type": "React.Ref<TcGradientText>",
+     "optional": true,
+     "description": "The root element"
+    }
+   ],
    "hides": [
     "text",
     "content"

@@ -74,7 +74,7 @@
      "attribute": "disabled",
      "type": "boolean",
      "default": "false",
-     "description": "",
+     "description": "Turns every control off and leaves the definition out of the form; a disabled fieldset does the same",
      "readonly": false
     },
     {
@@ -184,6 +184,18 @@
    ]
   }
  ],
+ "functions": [
+  {
+   "name": "nextTriggerRuns",
+   "signature": "nextTriggerRuns(schedule: TriggerSchedule, now: number, count: unknown, active?: TriggerActive | null): number[]",
+   "description": "The next `count` run times (ms) of a schedule after `now`, inside `active` when given"
+  },
+  {
+   "name": "describeTrigger",
+   "signature": "describeTrigger(value: TriggerValue, events: TriggerEvent[], fields?: TriggerField[]): string",
+   "description": "The trigger as one sentence: \"Runs every Monday at 9:00 AM, only if Stage is Won.\""
+  }
+ ],
  "react": [
   {
    "component": "TriggerBuilder",
@@ -211,13 +223,13 @@
      "name": "defaultValue",
      "type": "TriggerValue",
      "optional": true,
-     "description": ""
+     "description": "The trigger definition to start with when uncontrolled"
     },
     {
      "name": "onChange",
      "type": "(value: TriggerValue) => void",
      "optional": true,
-     "description": ""
+     "description": "Called with the whole definition after every change"
     }
    ],
    "hides": [

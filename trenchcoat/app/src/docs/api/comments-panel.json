@@ -18,7 +18,7 @@
      "attribute": null,
      "type": "PanelComment[]",
      "default": "[]",
-     "description": "",
+     "description": "The feed, keyed by id – comments added here show first until they appear in it",
      "readonly": false
     },
     {
@@ -257,6 +257,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "CommentsPanel",
@@ -266,7 +267,7 @@
      "name": "title",
      "type": "string",
      "optional": true,
-     "description": ""
+     "description": "The heading, and the region's name"
     },
     {
      "name": "onCommentsChange",
@@ -284,13 +285,13 @@
      "name": "defaultResolved",
      "type": "string[]",
      "optional": true,
-     "description": ""
+     "description": "Resolved ids to start with when uncontrolled"
     },
     {
      "name": "onResolvedChange",
      "type": "(resolved: string[]) => void",
      "optional": true,
-     "description": ""
+     "description": "Called with every resolved id after a comment is resolved or reopened"
     },
     {
      "name": "filter",
@@ -302,13 +303,13 @@
      "name": "defaultFilter",
      "type": "CommentsFilter",
      "optional": true,
-     "description": ""
+     "description": "The filter tab to start with when uncontrolled"
     },
     {
      "name": "onFilterChange",
      "type": "(filter: CommentsFilter) => void",
      "optional": true,
-     "description": ""
+     "description": "Called when another filter is picked"
     },
     {
      "name": "onClose",

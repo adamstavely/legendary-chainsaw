@@ -209,6 +209,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "MentionPickerOwn",
@@ -230,7 +231,7 @@
      "name": "triggers",
      "type": "MentionTrigger[]",
      "optional": false,
-     "description": ""
+     "description": "The trigger characters and what each one offers – icons may be React nodes"
     },
     {
      "name": "onPick",
@@ -242,13 +243,13 @@
      "name": "onOpenChange",
      "type": "(open: boolean, trigger: string | null) => void",
      "optional": true,
-     "description": ""
+     "description": "Called when the list opens or closes, with the trigger character it opened for (null when closed)"
     },
     {
      "name": "onQueryChange",
      "type": "(query: string, trigger: string) => void",
      "optional": true,
-     "description": ""
+     "description": "Called when the text typed after the trigger changes while the list is open"
     }
    ],
    "hides": []
@@ -256,7 +257,44 @@
   {
    "component": "MentionPicker",
    "exported": true,
-   "props": [],
+   "props": [
+    {
+     "name": "target",
+     "type": "HTMLElement | React.RefObject<HTMLElement | null> | null",
+     "optional": true,
+     "description": "The field to attach to: an element or a ref to one (a <textarea>, an <input> or a contenteditable element)"
+    },
+    {
+     "name": "htmlFor",
+     "type": "string",
+     "optional": true,
+     "description": "…or its id"
+    },
+    {
+     "name": "triggers",
+     "type": "MentionTrigger[]",
+     "optional": false,
+     "description": "The trigger characters and what each one offers – icons may be React nodes"
+    },
+    {
+     "name": "onPick",
+     "type": "(pick: MentionPickerPick, event: Event) => void",
+     "optional": true,
+     "description": "Called with the pick. The picker then puts a token (textarea, input) or a chip (contenteditable) in place of the\ntyped query – call `event.preventDefault()` to insert it yourself instead"
+    },
+    {
+     "name": "onOpenChange",
+     "type": "(open: boolean, trigger: string | null) => void",
+     "optional": true,
+     "description": "Called when the list opens or closes, with the trigger character it opened for (null when closed)"
+    },
+    {
+     "name": "onQueryChange",
+     "type": "(query: string, trigger: string) => void",
+     "optional": true,
+     "description": "Called when the text typed after the trigger changes while the list is open"
+    }
+   ],
    "hides": []
   }
  ],

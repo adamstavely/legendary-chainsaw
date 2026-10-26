@@ -22,6 +22,7 @@ export type CodeBlockProps = Omit<RawCodeBlockProps, "view" | "applyable" | "onT
   view?: CodeBlockView;
   /** The view to start with when uncontrolled */
   defaultView?: CodeBlockView;
+  /** Called with "code" or "diff" when the Diff button is toggled */
   onViewChange?: (view: CodeBlockView) => void;
   /** Called with the code after Copy put it on the clipboard */
   onCopy?: (text: string) => void;

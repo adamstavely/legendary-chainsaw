@@ -181,6 +181,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "SetupGuide",
@@ -220,7 +221,7 @@
      "name": "onChange",
      "type": "(done: string[]) => void",
      "optional": true,
-     "description": ""
+     "description": "Called with the ids of all finished tasks, like `onDoneChange`"
     },
     {
      "name": "openGroup",
@@ -250,13 +251,13 @@
      "name": "defaultMinimized",
      "type": "boolean",
      "optional": true,
-     "description": ""
+     "description": "Whether the body starts collapsed when `minimized` isn't controlled"
     },
     {
      "name": "onMinimizedChange",
      "type": "(minimized: boolean) => void",
      "optional": true,
-     "description": ""
+     "description": "Called when the body is collapsed or expanded"
     },
     {
      "name": "onEdit",

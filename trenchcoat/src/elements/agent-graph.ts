@@ -586,6 +586,7 @@ let instances = 0;
 export class TcAgentGraph extends TcElement {
   static override ui = "agg";
 
+  /** The agents, tools and people in the graph – the lead agent in the middle, the other agents around it, the rest outside */
   @property({ attribute: false }) accessor nodes: GraphNode[] = [];
   /** Recent calls, newest last – every new id sends a pulse. Calls also draw the links they need */
   @property({ attribute: false }) accessor calls: GraphCall[] = [];

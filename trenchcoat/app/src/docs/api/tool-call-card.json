@@ -34,7 +34,7 @@
      "attribute": "status",
      "type": "ToolCallStatus",
      "default": "\"success\"",
-     "description": "",
+     "description": "\"running\" shows a spinner and a live timer, \"success\" a check and the duration, \"error\" \"Failed\" and the message",
      "readonly": false
     },
     {
@@ -412,6 +412,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "ToolCallCard",
@@ -427,7 +428,7 @@
      "name": "status",
      "type": "TcToolCallCard[\"status\"]",
      "optional": false,
-     "description": ""
+     "description": "\"running\" shows a spinner and a live timer, \"success\" a check and the duration, \"error\" \"Failed\" and the message"
     },
     {
      "name": "summary",
@@ -457,7 +458,7 @@
      "name": "onOpenChange",
      "type": "(open: boolean) => void",
      "optional": true,
-     "description": ""
+     "description": "Called when the card opens or closes – by a click, or on its own when the call fails"
     }
    ],
    "hides": [
@@ -482,19 +483,19 @@
      "name": "defaultOpen",
      "type": "boolean",
      "optional": true,
-     "description": ""
+     "description": "Start expanded (uncontrolled)"
     },
     {
      "name": "open",
      "type": "boolean",
      "optional": true,
-     "description": ""
+     "description": "Expanded state (controlled)"
     },
     {
      "name": "onOpenChange",
      "type": "(open: boolean) => void",
      "optional": true,
-     "description": ""
+     "description": "Called when the group opens or closes"
     }
    ],
    "hides": [

@@ -84,7 +84,9 @@ export function DocsPage({ entry, section, example }: { entry: Entry; section: s
             {status !== "stable" && <span className={`docs-status ${status}`}>{status === "new" ? "New" : "Also in React"}</span>}
           </div>
           <h1>{entry.name}</h1>
-          <p className="docs-lede">{entry.description}</p>
+          <p className="docs-lede">
+            <Inline text={entry.description} />
+          </p>
           {main && (
             <dl className="docs-meta">
               <div>
@@ -189,8 +191,15 @@ export function DocsPage({ entry, section, example }: { entry: Entry; section: s
         {api && (
           <Section id="api" title="API" anchorOf={entry.id}>
             {api.elements.map((el) => (
-              <ElementApi key={el.tag} el={el} several={api.elements.length > 1} />
+              <ElementApi key={el.tag} el={el} several={api.elements.length > 1} singleLook={entry.library !== "components"} />
             ))}
+            {api.functions && api.functions.length > 0 && (
+              <div className="docs-api">
+                <h4>Functions</h4>
+                <p className="docs-hint muted">Exported from the module next to the element.</p>
+                <Table head={["Function", "Description"]} rows={api.functions.map((f) => [<code key="s" className="docs-type">{f.signature}</code>, <Inline key="d" text={f.description} />])} />
+              </div>
+            )}
           </Section>
         )}
 
@@ -238,9 +247,9 @@ export function DocsPage({ entry, section, example }: { entry: Entry; section: s
                 <div className="docs-md" dangerouslySetInnerHTML={md(guide.sections["Screen readers"])} />
               </>
             )}
-            <h3 className="docs-sub">Every component</h3>
+            <h3 className="docs-sub">{entry.library === "components" ? "Every component" : "Every piece"}</h3>
             <ul className="docs-guarantees">
-              <li>Passes axe (WCAG 2.2 A and AA) in both looks, light and dark, in Chromium, Firefox and WebKit.</li>
+              <li>Passes axe (WCAG 2.2 A and AA){entry.library === "components" ? " in both looks," : ""} light and dark, in Chromium, Firefox and WebKit.</li>
               <li>Forced colours (Windows High Contrast): controls keep a system-colour border, selection is Highlight, focus shows an outline.</li>
               <li>Reduced motion: animations stop or shorten under <code>prefers-reduced-motion</code>.</li>
               <li>Not yet tested with a screen reader by a person (VoiceOver, NVDA).</li>
@@ -396,7 +405,7 @@ function Table({ head, rows }: { head: string[]; rows: ReactNode[][] }) {
 
 const dash = <span className="muted">–</span>;
 
-function ElementApi({ el, several }: { el: ApiElement; several: boolean }) {
+function ElementApi({ el, several, singleLook }: { el: ApiElement; several: boolean; singleLook: boolean }) {
   const [showTokens, setShowTokens] = useState(false);
   return (
     <div className="docs-api">
@@ -409,7 +418,7 @@ function ElementApi({ el, several }: { el: ApiElement; several: boolean }) {
       <h4>Properties and attributes</h4>
       <Table
         head={["Property", "Attribute", "Type", "Default", "Description"]}
-        rows={el.properties.map((p) => [
+        rows={el.properties.filter((p) => !(singleLook && p.name === "look")).map((p) => [
           <code key="n">{p.name}</code>,
           p.attribute ? <code key="a">{p.attribute}</code> : dash,
           <code key="t" className="docs-type">{p.type}</code>,
@@ -498,7 +507,7 @@ function Usage({ slug, el, guide, api }: { slug: string; el: ApiElement; guide?:
         ))}
       </div>
       <div role="tabpanel" aria-label={`${FRAMEWORKS.find(([f]) => f === fw)![1]} example`}>
-        <CodeBlock key={fw} code={code[fw]} language={lang} look="clean" lineNumbers={false} />
+        <CodeBlock key={fw} code={code[fw]} language={lang} look="clean" lineNumbers={false} wrap />
       </div>
       {(fw === "vue" || fw === "angular" || fw === "svelte") && (
         <p className="docs-hint muted">

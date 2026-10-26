@@ -82,7 +82,7 @@
      "attribute": "filter",
      "type": "ReviewFilter",
      "default": "\"all\"",
-     "description": "",
+     "description": "Which items the queue shows: \"all\", \"high\" (high risk only) or \"unsure\" (below `lowConfidence`). Changed by the user unless a tc-filter-change listener calls preventDefault()",
      "readonly": false
     },
     {
@@ -528,11 +528,67 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "ReviewCenter",
    "exported": true,
-   "props": [],
+   "props": [
+    {
+     "name": "items",
+     "type": "ReviewItem[]",
+     "optional": false,
+     "description": "Everything waiting for review – decided items hide themselves, new ids slide in"
+    },
+    {
+     "name": "onDecide",
+     "type": "(item: ReviewItem, result: ReviewResult) => void | Promise<unknown>",
+     "optional": true,
+     "description": "May return a promise – while it runs the decision shows as saving; a rejection puts the item back with the error"
+    },
+    {
+     "name": "onUndo",
+     "type": "(item: ReviewItem, result: ReviewResult) => void",
+     "optional": true,
+     "description": "A decision was taken back – put the item back if you dropped it from `items`"
+    },
+    {
+     "name": "onSkip",
+     "type": "(item: ReviewItem) => void",
+     "optional": true,
+     "description": "An item was skipped – it stays in the queue, marked “skipped”, and the next one opens"
+    },
+    {
+     "name": "filter",
+     "type": "ReviewFilter",
+     "optional": true,
+     "description": "Which items the queue shows (controlled): \"all\", \"high\" or \"unsure\""
+    },
+    {
+     "name": "defaultFilter",
+     "type": "ReviewFilter",
+     "optional": true,
+     "description": "The filter to start with when `filter` isn't given"
+    },
+    {
+     "name": "onFilterChange",
+     "type": "(filter: ReviewFilter) => void",
+     "optional": true,
+     "description": "Called with the filter the user picked"
+    },
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading (default \"Review center\")"
+    },
+    {
+     "name": "ref",
+     "type": "React.Ref<ReviewCenterHandle>",
+     "optional": true,
+     "description": "The imperative handle (the element itself)"
+    }
+   ],
    "hides": [
     "heading"
    ]

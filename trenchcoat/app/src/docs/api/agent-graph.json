@@ -10,7 +10,7 @@
      "attribute": null,
      "type": "GraphNode[]",
      "default": "[]",
-     "description": "",
+     "description": "The agents, tools and people in the graph – the lead agent in the middle, the other agents around it, the rest outside",
      "readonly": false
     },
     {
@@ -339,6 +339,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "AgentGraph",
@@ -348,7 +349,7 @@
      "name": "nodes",
      "type": "GraphNode[]",
      "optional": false,
-     "description": ""
+     "description": "The agents, tools and people in the graph; icons can be React nodes"
     },
     {
      "name": "onSelect",
@@ -366,13 +367,13 @@
      "name": "defaultSelected",
      "type": "string | null",
      "optional": true,
-     "description": ""
+     "description": "The node whose card is open at first, when `selected` isn't set"
     },
     {
      "name": "onSelectedChange",
      "type": "(id: string | null) => void",
      "optional": true,
-     "description": ""
+     "description": "Called with the node id when a card opens, and null when it closes"
     },
     {
      "name": "paused",
@@ -384,19 +385,19 @@
      "name": "defaultPaused",
      "type": "boolean",
      "optional": true,
-     "description": ""
+     "description": "Whether the motion starts paused, when `paused` isn't set"
     },
     {
      "name": "onPausedChange",
      "type": "(paused: boolean) => void",
      "optional": true,
-     "description": ""
+     "description": "Called when the Pause button is pressed, with the new paused state"
     },
     {
      "name": "title",
      "type": "string",
      "optional": true,
-     "description": ""
+     "description": "The heading in the bar, and the start of the graph's accessible name – \"Agent graph\" by default"
     }
    ],
    "hides": [

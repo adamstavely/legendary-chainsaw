@@ -18,7 +18,7 @@
      "attribute": null,
      "type": "TreeAgent",
      "default": "{ id: \"\", name: \"\", task: \"\", status: \"queued\" }",
-     "description": "",
+     "description": "The orchestrator, with its sub-agents nested in `children` – the whole run as one tree",
      "readonly": false
     },
     {
@@ -256,6 +256,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "AgentTree",
@@ -265,7 +266,7 @@
      "name": "root",
      "type": "TreeAgent",
      "optional": false,
-     "description": ""
+     "description": "The orchestrator, with its sub-agents nested in `children` – the whole run as one tree"
     },
     {
      "name": "collapsed",
@@ -277,13 +278,13 @@
      "name": "defaultCollapsed",
      "type": "string[]",
      "optional": true,
-     "description": ""
+     "description": "Ids of the branches folded at first when `collapsed` isn't controlled"
     },
     {
      "name": "onCollapsedChange",
      "type": "(collapsed: string[]) => void",
      "optional": true,
-     "description": ""
+     "description": "Called with every folded branch's id after a branch is folded or unfolded"
     },
     {
      "name": "onResolve",
@@ -301,7 +302,7 @@
      "name": "title",
      "type": "string",
      "optional": true,
-     "description": ""
+     "description": "The heading, and the tree list's name (default \"Agents\")"
     }
    ],
    "hides": [
@@ -309,7 +310,8 @@
     "heading",
     "collapsed",
     "resolver",
-    "selectable"
+    "selectable",
+    "onSelect"
    ]
   }
  ],

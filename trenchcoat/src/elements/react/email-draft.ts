@@ -40,11 +40,15 @@ export type EmailDraftProps = Omit<
   recipient?: string;
   /** The email of the contact picked at first – defaults to the first contact */
   defaultRecipient?: string;
+  /** Called with the email and contact the user picked, controlled or not */
   onRecipientChange?: (email: string, contact: DraftContact) => void;
   /** The id of the tone shown – controlled when defined; one not in `tones` falls back to the first */
   tone?: string;
+  /** The id of the tone shown at first – defaults to the first tone */
   defaultTone?: string;
+  /** Called with the id of the tone the user picked, controlled or not */
   onToneChange?: (id: string) => void;
+  /** Called when the draft is discarded */
   onDiscard?: () => void;
   /**
    * Takes back a send or a discard that already reached you through onSend / onDiscard. Without it the receipt

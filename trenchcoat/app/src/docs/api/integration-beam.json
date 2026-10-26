@@ -96,6 +96,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "IntegrationBeam",

@@ -26,7 +26,7 @@
      "attribute": null,
      "type": "LedgerEntry[]",
      "default": "[]",
-     "description": "",
+     "description": "The changes the agent made, in any order – the ledger lists them newest first",
      "readonly": false
     },
     {
@@ -232,6 +232,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "AgentLedger",
@@ -241,7 +242,7 @@
      "name": "entries",
      "type": "LedgerEntry[]",
      "optional": false,
-     "description": ""
+     "description": "The changes the agent made, in any order – listed newest first; `icon` may be a React node"
     },
     {
      "name": "now",
@@ -259,7 +260,7 @@
      "name": "defaultUndone",
      "type": "string[]",
      "optional": true,
-     "description": ""
+     "description": "Ids undone at first when uncontrolled"
     },
     {
      "name": "onUndoneChange",
@@ -277,7 +278,7 @@
      "name": "onRedo",
      "type": "(ids: string[]) => void | Promise<unknown>",
      "optional": true,
-     "description": ""
+     "description": "Called with the ids a Redo brings back; a returned promise holds the rows until it settles, a rejection reverts them"
     },
     {
      "name": "pointAt",
@@ -289,7 +290,7 @@
      "name": "title",
      "type": "string",
      "optional": true,
-     "description": ""
+     "description": "The heading, and the list's name – \"Ledger\" by default"
     }
    ],
    "hides": [

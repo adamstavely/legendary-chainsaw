@@ -18,7 +18,7 @@
      "attribute": null,
      "type": "ContextPart[]",
      "default": "[]",
-     "description": "",
+     "description": "What fills the window, in order – each part takes the next run of cells",
      "readonly": false
     },
     {
@@ -74,7 +74,7 @@
      "attribute": "columns",
      "type": "number",
      "default": "36",
-     "description": "",
+     "description": "How many cells sit in one row (two thirds of it, at least 8, in a narrow container)",
      "readonly": false
     },
     {
@@ -258,6 +258,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "ContextWindow",
@@ -267,7 +268,7 @@
      "name": "parts",
      "type": "ContextPart[]",
      "optional": false,
-     "description": ""
+     "description": "What fills the window, in order – each part takes the next run of cells"
     },
     {
      "name": "limit",
@@ -279,7 +280,7 @@
      "name": "title",
      "type": "string",
      "optional": true,
-     "description": ""
+     "description": "The heading, and the group's name"
     },
     {
      "name": "modelIcon",

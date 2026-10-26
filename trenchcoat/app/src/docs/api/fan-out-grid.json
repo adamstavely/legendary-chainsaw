@@ -10,7 +10,7 @@
      "attribute": null,
      "type": "FanoutTask[]",
      "default": "[]",
-     "description": "",
+     "description": "Every task in the job, one cell each, in order – its label, state, worker, times, cost, result or error",
      "readonly": false
     },
     {
@@ -243,6 +243,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "FanoutGrid",
@@ -252,7 +253,7 @@
      "name": "tasks",
      "type": "FanoutTask[]",
      "optional": false,
-     "description": ""
+     "description": "Every task in the job, one cell each, in order – its label, state, worker, times, cost, result or error"
     },
     {
      "name": "job",
@@ -306,7 +307,7 @@
      "name": "title",
      "type": "string",
      "optional": true,
-     "description": ""
+     "description": "The title on the bar (default \"Fan-out\")"
     },
     {
      "name": "icon",

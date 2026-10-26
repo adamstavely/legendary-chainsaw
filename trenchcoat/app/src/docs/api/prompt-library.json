@@ -10,7 +10,7 @@
      "attribute": null,
      "type": "PromptTemplate[]",
      "default": "[]",
-     "description": "",
+     "description": "The saved templates, in list order – each with a title, an optional category and a body with {variables}",
      "readonly": false
     },
     {
@@ -207,6 +207,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "PromptLibrary",
@@ -228,7 +229,7 @@
      "name": "onSelect",
      "type": "(id: string) => void",
      "optional": true,
-     "description": ""
+     "description": "Called with the template's id when another template is chosen"
     },
     {
      "name": "values",
@@ -258,7 +259,7 @@
      "name": "title",
      "type": "string",
      "optional": true,
-     "description": ""
+     "description": "The heading over the list, and the group's accessible name – \"Prompts\" by default"
     }
    ],
    "hides": [

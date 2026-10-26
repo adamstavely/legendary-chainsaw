@@ -66,7 +66,7 @@
      "attribute": "min-concurrency",
      "type": "number",
      "default": "1",
-     "description": "",
+     "description": "The fewest workers the stepper allows – its – button is disabled at this number",
      "readonly": false
     },
     {
@@ -74,7 +74,7 @@
      "attribute": "max-concurrency",
      "type": "number",
      "default": "8",
-     "description": "",
+     "description": "The most workers the stepper allows – its + button is disabled at this number",
      "readonly": false
     },
     {
@@ -130,7 +130,7 @@
      "attribute": "heading",
      "type": "string",
      "default": "\"Queue\"",
-     "description": "",
+     "description": "The heading at the top of the card",
      "readonly": false
     },
     {
@@ -483,6 +483,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "AgentQueue",
@@ -510,7 +511,7 @@
      "name": "defaultPaused",
      "type": "boolean",
      "optional": true,
-     "description": ""
+     "description": "Whether the queue starts paused when `paused` isn't controlled"
     },
     {
      "name": "onPausedChange",
@@ -540,13 +541,13 @@
      "name": "defaultOpenId",
      "type": "string | null",
      "optional": true,
-     "description": ""
+     "description": "The job whose card starts pinned when `openId` isn't controlled"
     },
     {
      "name": "onOpenChange",
      "type": "(id: string | null, job?: QueueJob) => void",
      "optional": true,
-     "description": ""
+     "description": "Called when a job's card is pinned or closed, with its id (null when closed) and the job"
     },
     {
      "name": "onPromote",
@@ -564,7 +565,7 @@
      "name": "title",
      "type": "string",
      "optional": true,
-     "description": ""
+     "description": "The heading at the top of the card (the element's `heading`)"
     }
    ],
    "hides": [

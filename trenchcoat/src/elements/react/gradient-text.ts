@@ -7,6 +7,7 @@ const RawGradientText = createComponent({ tagName: "tc-gradient-text", elementCl
 type RawGradientTextProps = React.ComponentProps<typeof RawGradientText>;
 
 export type GradientTextOwnProps = {
+  /** The text – a string, or rich content that is cloned for the text and its gradient copy */
   children: React.ReactNode;
   /** Gradient start, end and up to two blob colors: [start, end, blob, blob] */
   colors?: string[];
@@ -19,6 +20,7 @@ export type GradientTextOwnProps = {
   sweep?: boolean;
   /** What the text is: inline text, a paragraph or a heading */
   as?: "span" | "h1" | "h2" | "p";
+  /** Classes for the root element */
   className?: string;
   /** The root element */
   ref?: React.Ref<TcGradientText>;

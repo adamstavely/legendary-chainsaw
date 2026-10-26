@@ -10,7 +10,7 @@
      "attribute": null,
      "type": "DelegateAgent[]",
      "default": "[]",
-     "description": "",
+     "description": "The agents work can go to, in the order they're listed (number keys 1–9 pick them)",
      "readonly": false
     },
     {
@@ -18,7 +18,7 @@
      "attribute": null,
      "type": "DelegateTask[]",
      "default": "[]",
-     "description": "",
+     "description": "Every task – without an `agentId` it waits under \"Unassigned\"; the first in each agent's queue is the running one",
      "readonly": false
     },
     {
@@ -190,6 +190,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "DelegateBoard",
@@ -199,13 +200,13 @@
      "name": "agents",
      "type": "DelegateAgent[]",
      "optional": false,
-     "description": ""
+     "description": "The agents work can go to, in the order they're listed (number keys 1–9 pick them)"
     },
     {
      "name": "tasks",
      "type": "DelegateTask[]",
      "optional": false,
-     "description": ""
+     "description": "Every task – without an `agentId` it waits under \"Unassigned\"; the first in each agent's queue is the running one"
     },
     {
      "name": "onAssign",
@@ -235,7 +236,7 @@
      "name": "title",
      "type": "string",
      "optional": true,
-     "description": ""
+     "description": "The heading in the bar"
     }
    ],
    "hides": [

@@ -122,6 +122,7 @@ export class TcCommentsPanel extends TcElement {
 
   /** The heading, and the region's name */
   @property() accessor heading = "Comments";
+  /** The feed, keyed by id – comments added here show first until they appear in it */
   @property({ attribute: false }) accessor comments: PanelComment[] = [];
   /** Who writes new comments */
   @property({ attribute: false }) accessor currentUser: CommentAuthor = { name: "You" };

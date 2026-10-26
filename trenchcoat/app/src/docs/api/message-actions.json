@@ -376,6 +376,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "MessageActions",
@@ -412,13 +413,13 @@
      "name": "version",
      "type": "string | number",
      "optional": false,
-     "description": ""
+     "description": "Which version is shown – a change crossfades to the new children"
     },
     {
      "name": "children",
      "type": "React.ReactNode",
      "optional": false,
-     "description": ""
+     "description": "The message: text or any React content"
     }
    ],
    "hides": [

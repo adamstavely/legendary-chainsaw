@@ -256,6 +256,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "AgentPlan",

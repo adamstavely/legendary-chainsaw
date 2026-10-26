@@ -26,7 +26,7 @@
      "attribute": null,
      "type": "SteerStep[]",
      "default": "[]",
-     "description": "",
+     "description": "The plan: done steps, the active one and the steps still to come, in order",
      "readonly": false
     },
     {
@@ -42,7 +42,7 @@
      "attribute": "status",
      "type": "SteerRunStatus",
      "default": "\"running\"",
-     "description": "",
+     "description": "Where the run is: \"running\", \"paused\" or \"done\" – done disables the field",
      "readonly": false
     },
     {
@@ -66,7 +66,7 @@
      "attribute": "placeholder",
      "type": "string",
      "default": "\"Steer the agent…\"",
-     "description": "",
+     "description": "Placeholder of the field while the run is open",
      "readonly": false
     },
     {
@@ -275,6 +275,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "AgentSteering",
@@ -302,13 +303,13 @@
      "name": "defaultDraft",
      "type": "string",
      "optional": true,
-     "description": ""
+     "description": "The text in the field at first when uncontrolled"
     },
     {
      "name": "onDraftChange",
      "type": "(text: string) => void",
      "optional": true,
-     "description": ""
+     "description": "Called with the field's new text as it changes"
     },
     {
      "name": "onRemove",
@@ -320,13 +321,13 @@
      "name": "onPause",
      "type": "() => void",
      "optional": true,
-     "description": "Shows Pause / Resume in the header"
+     "description": "Called by Pause in the header while the run is running; passing it shows the button"
     },
     {
      "name": "onResume",
      "type": "() => void",
      "optional": true,
-     "description": ""
+     "description": "Called by Resume in the header while the run is paused; passing it shows the button"
     }
    ],
    "hides": [

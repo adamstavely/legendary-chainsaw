@@ -126,6 +126,7 @@ export class TcPlanVsActual extends TcElement {
     return "clean";
   }
 
+  /** The plan's steps, in order – each with its planned time, what it waits for, and its real start and end so far */
   @property({ attribute: false }) accessor steps: PlanVsActualStep[] = [];
   /** The clock, in epoch ms – without it (and without `elapsed`) the chart reads the clock after it connects and ticks
    *  while the run goes on */

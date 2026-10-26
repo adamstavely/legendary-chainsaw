@@ -189,6 +189,23 @@
    ]
   }
  ],
+ "functions": [
+  {
+   "name": "artifactTableToCsv",
+   "signature": "artifactTableToCsv(t: ArtifactTable): void",
+   "description": "A table as CSV text, with a header row"
+  },
+  {
+   "name": "artifactTableFromCsv",
+   "signature": "artifactTableFromCsv(text: string): ArtifactTable",
+   "description": "CSV text (first row: the columns) as a table"
+  },
+  {
+   "name": "saveArtifact",
+   "signature": "saveArtifact(artifact: Artifact, version: ArtifactVersion): void",
+   "description": "Saves a version as a file: a Blob for text, code and tables, the image's own URL for images"
+  }
+ ],
  "react": [
   {
    "component": "ArtifactPanel",
@@ -210,13 +227,13 @@
      "name": "defaultSelected",
      "type": "string",
      "optional": true,
-     "description": ""
+     "description": "The artifact shown first when `selected` isn't given"
     },
     {
      "name": "onSelectedChange",
      "type": "(id: string) => void",
      "optional": true,
-     "description": ""
+     "description": "Called with the artifact's id when the user picks one in the list"
     },
     {
      "name": "version",
@@ -228,7 +245,7 @@
      "name": "defaultVersion",
      "type": "string",
      "optional": true,
-     "description": ""
+     "description": "The version shown first when `version` isn't given; empty shows the latest"
     },
     {
      "name": "onVersionChange",
@@ -246,13 +263,13 @@
      "name": "defaultView",
      "type": "ArtifactPanelView",
      "optional": true,
-     "description": ""
+     "description": "The view to start in when `view` isn't given"
     },
     {
      "name": "onViewChange",
      "type": "(view: ArtifactPanelView) => void",
      "optional": true,
-     "description": ""
+     "description": "Called when the user turns Compare on (\"diff\") or off (\"preview\")"
     },
     {
      "name": "onDownload",

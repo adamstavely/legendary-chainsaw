@@ -55,7 +55,9 @@ export type ContextMapProps = Omit<
   defaultView?: ContextMapView;
   /** Called with the new side on every switch, controlled or not */
   onViewChange?: (view: ContextMapView) => void;
+  /** Called when a tile is clicked, with the block as you passed it – null for the free space */
   onSelect?: (block: ContextBlock | null) => void;
+  /** The title in the bar, and the map's accessible name – "Context" by default */
   title?: string;
 };
 

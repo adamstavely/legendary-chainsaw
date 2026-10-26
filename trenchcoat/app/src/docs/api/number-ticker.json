@@ -73,6 +73,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "NumberTickerOwn",
@@ -112,7 +113,7 @@
      "name": "className",
      "type": "string",
      "optional": true,
-     "description": ""
+     "description": "Class names for the root element"
     },
     {
      "name": "ref",
@@ -126,7 +127,50 @@
   {
    "component": "NumberTicker",
    "exported": true,
-   "props": [],
+   "props": [
+    {
+     "name": "value",
+     "type": "number",
+     "optional": false,
+     "description": "The number to show"
+    },
+    {
+     "name": "format",
+     "type": "Intl.NumberFormatOptions",
+     "optional": true,
+     "description": "Intl.NumberFormat options, e.g. { style: \"currency\", currency: \"USD\" }"
+    },
+    {
+     "name": "locale",
+     "type": "string",
+     "optional": true,
+     "description": "Locale for formatting, e.g. \"en-US\" – defaults to the browser's"
+    },
+    {
+     "name": "duration",
+     "type": "number",
+     "optional": true,
+     "description": "Length of a roll in ms"
+    },
+    {
+     "name": "delay",
+     "type": "number",
+     "optional": true,
+     "description": "Wait before the first count-in, in ms"
+    },
+    {
+     "name": "className",
+     "type": "string",
+     "optional": true,
+     "description": "Class names for the root element"
+    },
+    {
+     "name": "ref",
+     "type": "React.Ref<TcNumberTicker>",
+     "optional": true,
+     "description": "The root element"
+    }
+   ],
    "hides": []
   }
  ],

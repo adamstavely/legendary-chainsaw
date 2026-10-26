@@ -96,7 +96,21 @@ function reactOf(file) {
   src.forEachChild((n) => {
     if (!ts.isTypeAliasDeclaration(n) || !/Props$/.test(n.name.text) || !n.modifiers?.some((m) => m.kind === ts.SyntaxKind.ExportKeyword)) return;
     const component = n.name.text.replace(/Props$/, "");
-    const parts = ts.isIntersectionTypeNode(n.type) ? n.type.types : [n.type];
+    // Local aliases (`type OwnProps = { … }`) are followed, so props declared apart from the exported type count too
+    const aliases = new Map();
+    // (a statement body: forEachChild stops at the first callback that returns something truthy)
+    src.forEachChild((x) => {
+      if (ts.isTypeAliasDeclaration(x)) aliases.set(x.name.text, x.type);
+    });
+    const flatten = (t, seen = new Set()) => {
+      if (ts.isIntersectionTypeNode(t)) return t.types.flatMap((x) => flatten(x, seen));
+      if (ts.isTypeReferenceNode(t) && aliases.has(t.typeName.getText(src)) && !seen.has(t.typeName.getText(src))) {
+        seen.add(t.typeName.getText(src));
+        return flatten(aliases.get(t.typeName.getText(src)), seen);
+      }
+      return [t];
+    };
+    const parts = flatten(n.type);
     const props = [];
     const hides = [];
     for (const part of parts) {
@@ -127,8 +141,18 @@ for (const mod of manifest.modules) {
     return { ...api(d), ui, ...cssOf(source, ui) };
   });
   const names = new Set([slug, ...elements.map((e) => e.tag)]);
+  // Module-level functions and objects (toaster's toast(), resetToasts()): exported, documented, not classes
+  const exported = new Set((mod.exports ?? []).filter((e) => e.kind === "js").map((e) => e.name));
+  const functions = (mod.declarations ?? [])
+    .filter((d) => (d.kind === "function" || d.kind === "variable") && exported.has(d.name) && d.description)
+    .map((d) => ({
+      name: d.name,
+      signature: d.kind === "function" ? `${d.name}(${(d.parameters ?? []).map((p) => `${p.name}${p.optional ? "?" : ""}: ${text(p.type) ?? "unknown"}`).join(", ")}): ${text(d.return?.type) ?? "void"}` : `${d.name}: ${text(d.type) ?? "object"}`,
+      description: d.description,
+    }));
   pieces[slug] = {
     elements,
+    functions,
     react: reactOf(join("src/elements/react", `${slug}.ts`)),
     // Entries that name the element by tag, or start with its name ("- data-table sorts only when …")
     changelog: changelog.filter((l) => /^- /.test(l) && [...names].some((n) => l.includes(`\`${n}\``) || new RegExp(`^- \\**${n}\\b`).test(l))).map((l) => l.slice(2)),
@@ -147,8 +171,11 @@ for (const [slug, piece] of Object.entries(pieces)) {
 const files = Object.fromEntries(Object.entries(pieces).map(([slug, piece]) => [`${slug}.json`, JSON.stringify(piece, null, 1) + "\n"]));
 
 if (check) {
-  const have = existsSync(OUT) ? readdirSync(OUT).filter((f) => f.endsWith(".json")) : [];
-  const stale = [...Object.keys(files).filter((f) => !existsSync(join(OUT, f)) || readFileSync(join(OUT, f), "utf8") !== files[f]), ...have.filter((f) => !(f in files))];
+  // Only page files: a sync service's conflict copies ("name 2.json", gitignored) aren't ours
+  const have = existsSync(OUT) ? readdirSync(OUT).filter((f) => /^[a-z0-9-]+\.json$/.test(f)) : [];
+  // Sizes vary by a few bytes with the environment esbuild runs in (npm run vs node): compared without them
+  const bare = (json) => JSON.stringify({ ...JSON.parse(json), size: undefined });
+  const stale = [...Object.keys(files).filter((f) => !existsSync(join(OUT, f)) || bare(readFileSync(join(OUT, f), "utf8")) !== bare(files[f])), ...have.filter((f) => !(f in files))];
   if (stale.length) {
     console.error(`docs api out of date (${stale.slice(0, 5).join(", ")}${stale.length > 5 ? " …" : ""}) – run node scripts/gen-docs.mjs`);
     process.exit(1);

@@ -125,7 +125,9 @@ export class TcToolPermissions extends TcElement {
   @property({ attribute: false }) accessor presets: ToolPermissionPreset[] = defaultToolPermissionPresets;
   /** Changes listed before "N more" */
   @property({ type: Number, attribute: "changes-limit" }) accessor changesLimit = 4;
+  /** The Save button's text; the number of changes is shown beside it */
   @property({ attribute: "save-label" }) accessor saveLabel = "Save";
+  /** The text of the button that puts back what was last saved */
   @property({ attribute: "reset-label" }) accessor resetLabel = "Reset";
 
   @state() private accessor active = { r: 0, c: 0 };

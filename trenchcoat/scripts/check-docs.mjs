@@ -31,7 +31,10 @@ const REQUIRED = {
   components: ["Overview", "When to use", "When not to use", "Keyboard", "Screen readers", "Content", "Do", "Don't", "Example"],
   illustrations: ["Overview", "When to use", "When not to use", "Example"],
   motion: ["Overview", "When to use", "When not to use", "Example"],
+  utilities: ["Overview", "When to use", "When not to use", "Example"],
 };
+// Pieces that aren't components to operate, though the README lists them with the components
+const UTILITIES = new Set(["look-provider"]);
 
 const examples = [];
 for (const slug of slugs) {
@@ -50,7 +53,7 @@ for (const slug of slugs) {
   }
   const source = readFileSync(file, "utf8");
   const sections = new Set([...source.matchAll(/^## (.+)$/gm)].map((m) => m[1].trim()));
-  for (const s of REQUIRED[library.get(slug)]) if (!sections.has(s)) add(slug, `guidance has no "## ${s}"`);
+  for (const s of REQUIRED[UTILITIES.has(slug) ? "utilities" : library.get(slug)]) if (!sections.has(s)) add(slug, `guidance has no "## ${s}"`);
   const meta = Object.fromEntries([...(source.match(/^---\n([\s\S]*?)\n---/)?.[1] ?? "").matchAll(/^(\w[\w-]*):\s*(.*)$/gm)].map((m) => [m[1], m[2].trim()]));
   for (const r of (meta.related ?? "").split(",").map((x) => x.trim()).filter(Boolean)) if (!library.has(r)) add(slug, `related "${r}" isn't a component`);
 
@@ -60,7 +63,7 @@ for (const slug of slugs) {
     for (const cls of m[1].match(/\.([\w-]+)/g) ?? []) if (!code.includes(cls.slice(1))) add(slug, `anatomy selector ${m[1]} names ${cls}, which the element never renders`);
 
   const tsx = source.match(/## Example[\s\S]*?```tsx\n([\s\S]*?)```/)?.[1];
-  if (library.get(slug) === "components" && !tsx) add(slug, "the Example has no ```tsx block");
+  if (library.get(slug) === "components" && !UTILITIES.has(slug) && !tsx) add(slug, "the Example has no ```tsx block");
   if (tsx) examples.push([slug, tsx]);
 }
 

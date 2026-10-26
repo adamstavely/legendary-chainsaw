@@ -292,8 +292,11 @@ let instances = 0;
 export class TcAgentCursors extends TcElement {
   static override ui = "agc";
 
+  /** The agents in the document – each one's name, colour, mark and cost; their faces show in the header */
   @property({ attribute: false }) accessor agents: CursorAgent[] = [];
+  /** The document, block by block – title, headings, paragraphs, list items, code, images and tables */
   @property({ attribute: false }) accessor blocks: DocBlock[] = [];
+  /** Suggested changes, shown inline in the text in the suggesting agent's colour */
   @property({ attribute: false }) accessor suggestions: DocSuggestion[] = [];
   /** Comment pins on the page */
   @property({ attribute: false }) accessor comments: DocComment[] = [];

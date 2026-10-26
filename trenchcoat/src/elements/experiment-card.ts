@@ -107,7 +107,9 @@ export class TcExperimentCard extends TcElement {
 
   /** The test's name */
   @property() accessor heading = "";
+  /** The variants under test, the control first (or marked `control`) – one row and one chart column each */
   @property({ attribute: false }) accessor variants: ExperimentVariant[] = [];
+  /** The metrics to compare on; with more than one, a switch picks which one the card shows */
   @property({ attribute: false }) accessor metrics: ExperimentMetric[] = [];
   /** The metric id shown; unset shows the first metric */
   @property() accessor metric: string | undefined = undefined;
@@ -123,6 +125,7 @@ export class TcExperimentCard extends TcElement {
   @property() accessor hint: string | Element | undefined = undefined;
   /** "hover" opens under the pointer (taps and the keyboard still toggle), "click" only on click */
   @property() accessor trigger: "hover" | "click" = "hover";
+  /** Whether the card is unfolded, showing the metric switch, the variants and the tray */
   @property({ type: Boolean, reflect: false }) accessor open = false;
 
   /** The variant under the pointer (row or column) */

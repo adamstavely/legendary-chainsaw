@@ -157,6 +157,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "RegionDach",

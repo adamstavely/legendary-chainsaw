@@ -97,6 +97,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "GridBackgroundOwn",
@@ -154,7 +155,7 @@
      "name": "className",
      "type": "string",
      "optional": true,
-     "description": ""
+     "description": "Class names for the root element"
     },
     {
      "name": "ref",
@@ -168,7 +169,68 @@
   {
    "component": "GridBackground",
    "exported": true,
-   "props": [],
+   "props": [
+    {
+     "name": "children",
+     "type": "React.ReactNode",
+     "optional": true,
+     "description": "Content rendered above the grid"
+    },
+    {
+     "name": "size",
+     "type": "number",
+     "optional": true,
+     "description": "Cell size in px"
+    },
+    {
+     "name": "color",
+     "type": "string",
+     "optional": true,
+     "description": "Line color – defaults to a faint black, or a faint white in dark mode"
+    },
+    {
+     "name": "speed",
+     "type": "number",
+     "optional": true,
+     "description": "Seconds per cell; 0 keeps the grid still"
+    },
+    {
+     "name": "playFor",
+     "type": "number",
+     "optional": true,
+     "description": "Seconds the grid drifts before it rests; Infinity never stops – then give users a way to pause it (WCAG 2.2.2)"
+    },
+    {
+     "name": "direction",
+     "type": "GridDirection",
+     "optional": true,
+     "description": "Drift direction; \"diagonal\" runs from top right to bottom left"
+    },
+    {
+     "name": "reveal",
+     "type": "boolean",
+     "optional": true,
+     "description": "Uncover the grid with a growing circle when it first comes into view"
+    },
+    {
+     "name": "fade",
+     "type": "number",
+     "optional": true,
+     "description": "Radius of the edge fade, in % of the distance to the corners"
+    },
+    {
+     "name": "className",
+     "type": "string",
+     "optional": true,
+     "description": "Class names for the root element"
+    },
+    {
+     "name": "ref",
+     "type": "React.Ref<TcGridBackground>",
+     "optional": true,
+     "description": "The root element"
+    }
+   ],
    "hides": []
   }
  ],

@@ -18,7 +18,7 @@
      "attribute": null,
      "type": "AnswerSource[]",
      "default": "[]",
-     "description": "",
+     "description": "The sources the answer cites, numbered from 1 in the order given – [1] in the answer is the first",
      "readonly": false
     },
     {
@@ -58,7 +58,7 @@
      "attribute": null,
      "type": "string[]",
      "default": "[]",
-     "description": "",
+     "description": "Follow-up questions offered under the finished answer",
      "readonly": false
     },
     {
@@ -255,6 +255,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "AIAnswer",
@@ -264,7 +265,7 @@
      "name": "sources",
      "type": "AnswerSource[]",
      "optional": false,
-     "description": ""
+     "description": "The sources the answer cites, numbered from 1 in the order given – [1] in the answer is the first"
     },
     {
      "name": "animate",
@@ -282,13 +283,13 @@
      "name": "onFollowUp",
      "type": "(question: string) => void",
      "optional": true,
-     "description": ""
+     "description": "Called with the follow-up question that was picked"
     },
     {
      "name": "onStop",
      "type": "() => void",
      "optional": true,
-     "description": ""
+     "description": "Stop was pressed while the answer was being written"
     },
     {
      "name": "onFeedback",
@@ -306,7 +307,7 @@
      "name": "defaultFeedback",
      "type": "AnswerFeedback | null",
      "optional": true,
-     "description": ""
+     "description": "The verdict on mount when `feedback` isn't controlled"
     },
     {
      "name": "onFeedbackChange",
@@ -318,7 +319,7 @@
      "name": "onCopy",
      "type": "(text: string) => void",
      "optional": true,
-     "description": ""
+     "description": "Called with the copied text once the answer is on the clipboard"
     }
    ],
    "hides": [

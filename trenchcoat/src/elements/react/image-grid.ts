@@ -33,11 +33,15 @@ export type ImageGridOwnProps = {
   onTilesChange?: (tiles: ImageGridTile[]) => void;
   /** The two tile ids side by side, or null for the grid. Controlled when defined */
   compare?: [string, string] | null;
+  /** The compared pair at first when uncontrolled – null, the grid, by default */
   defaultCompare?: [string, string] | null;
+  /** Two tiles went side by side, or the comparison closed (null) */
   onCompareChange?: (compare: [string, string] | null) => void;
   /** Where the compare divider is, 0–100. Controlled when defined */
   split?: number;
+  /** Where the divider starts when uncontrolled – 50 by default */
   defaultSplit?: number;
+  /** The compare divider moved: its new place, 0–100 */
   onSplitChange?: (split: number) => void;
   /** Regenerate (or Try again) on a tile – answer by updating the tile: pending, then done with the new src */
   onRegenerate?: (tile: ImageGridTile, index: number) => void;

@@ -43,6 +43,7 @@ export type UsageMeterProps = Omit<RawUsageMeterProps, "heading" | "period" | "t
   onPeriodChange?: (id: string) => void;
   /** Called by the button, with the current state */
   onUpgrade?: (state: UsageState) => void;
+  /** The heading, and the region's name – "Usage" by default */
   title?: string;
 };
 export function UsageMeter({ title = "Usage", period, defaultPeriod, onPeriodChange, onUpgrade, ...props }: UsageMeterProps) {

@@ -10,7 +10,7 @@
      "attribute": null,
      "type": "AgentAction[]",
      "default": "[]",
-     "description": "",
+     "description": "The agent's actions; each sorts into \"Runs on its own\" or \"Asks you first\" by its risk, the level and the pins",
      "readonly": false
     },
     {
@@ -145,6 +145,13 @@
    ]
   }
  ],
+ "functions": [
+  {
+   "name": "asksFirst",
+   "signature": "asksFirst(action: Pick<AgentAction, \"id\" | \"risk\">, level: AutonomyLevel, pinned: string[]): void",
+   "description": "Does the agent have to ask before this action?"
+  }
+ ],
  "react": [
   {
    "component": "AutonomyDial",
@@ -154,7 +161,7 @@
      "name": "actions",
      "type": "AgentAction[]",
      "optional": false,
-     "description": ""
+     "description": "The agent's actions; each sorts into \"Runs on its own\" or \"Asks you first\" – `icon` takes a React node"
     },
     {
      "name": "level",

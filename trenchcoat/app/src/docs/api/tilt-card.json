@@ -130,6 +130,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "TiltCardOwn",
@@ -169,7 +170,7 @@
      "name": "className",
      "type": "string",
      "optional": true,
-     "description": ""
+     "description": "Classes on the root, the untransformed wrapper"
     },
     {
      "name": "ref",
@@ -183,7 +184,50 @@
   {
    "component": "TiltCard",
    "exported": true,
-   "props": [],
+   "props": [
+    {
+     "name": "children",
+     "type": "React.ReactNode",
+     "optional": true,
+     "description": "The card's content – it fills the tilting surface"
+    },
+    {
+     "name": "maxTilt",
+     "type": "number",
+     "optional": true,
+     "description": "Maximum tilt in degrees"
+    },
+    {
+     "name": "glare",
+     "type": "boolean",
+     "optional": true,
+     "description": "Show a soft glare that follows the pointer"
+    },
+    {
+     "name": "scale",
+     "type": "number",
+     "optional": true,
+     "description": "Scale while the pointer is over the card"
+    },
+    {
+     "name": "perspective",
+     "type": "number",
+     "optional": true,
+     "description": "Perspective distance in px – smaller is more dramatic"
+    },
+    {
+     "name": "className",
+     "type": "string",
+     "optional": true,
+     "description": "Classes on the root, the untransformed wrapper"
+    },
+    {
+     "name": "ref",
+     "type": "React.Ref<TcTiltCard>",
+     "optional": true,
+     "description": "The root (the untransformed wrapper)"
+    }
+   ],
    "hides": []
   }
  ],

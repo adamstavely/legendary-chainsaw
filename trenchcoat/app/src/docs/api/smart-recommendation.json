@@ -193,6 +193,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "SmartRecommendation",
@@ -202,7 +203,7 @@
      "name": "title",
      "type": "string",
      "optional": true,
-     "description": ""
+     "description": "The heading, and the region's name – \"Smart recommendation\" by default"
     },
     {
      "name": "options",
@@ -238,7 +239,7 @@
      "name": "defaultAccepted",
      "type": "string | null",
      "optional": true,
-     "description": ""
+     "description": "The accepted option at first when uncontrolled – null by default"
     },
     {
      "name": "onAccept",
@@ -262,13 +263,13 @@
      "name": "defaultOpen",
      "type": "boolean",
      "optional": true,
-     "description": ""
+     "description": "Whether the reason starts unfolded when uncontrolled – true by default"
     },
     {
      "name": "onOpenChange",
      "type": "(open: boolean) => void",
      "optional": true,
-     "description": ""
+     "description": "Called when the reason is folded or unfolded"
     }
    ],
    "hides": [
@@ -285,7 +286,7 @@
  ],
  "changelog": [],
  "size": {
-  "min": 37643,
-  "gzip": 9234
+  "min": 37685,
+  "gzip": 9251
  }
 }

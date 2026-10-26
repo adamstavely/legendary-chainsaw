@@ -92,6 +92,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "GlowKeyboard",

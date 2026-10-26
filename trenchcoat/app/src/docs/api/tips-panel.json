@@ -18,7 +18,7 @@
      "attribute": null,
      "type": "TipsPanelTip[]",
      "default": "[]",
-     "description": "",
+     "description": "The tips, in order – each with a title, a short description and one action",
      "readonly": false
     },
     {
@@ -42,7 +42,7 @@
      "attribute": "close-label",
      "type": "string",
      "default": "\"Close\"",
-     "description": "",
+     "description": "Text of the Close button",
      "readonly": false
     },
     {
@@ -163,6 +163,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "TipsPanel",
@@ -172,13 +173,13 @@
      "name": "title",
      "type": "string",
      "optional": true,
-     "description": ""
+     "description": "The heading, and the region's name – \"Tips\" by default"
     },
     {
      "name": "tips",
      "type": "Tip[]",
      "optional": false,
-     "description": ""
+     "description": "The tips, in order; descriptions can be React nodes, and `onAction` runs when the tip's action is taken"
     },
     {
      "name": "done",

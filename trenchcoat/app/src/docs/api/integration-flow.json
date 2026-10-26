@@ -10,7 +10,7 @@
      "attribute": "label",
      "type": "string | undefined",
      "default": "undefined",
-     "description": "Accessible description of the scene – defaults to one naming the first integrations",
+     "description": "The scene's accessible name (it is an image) – defaults to one naming the first integrations",
      "readonly": false
     },
     {
@@ -190,6 +190,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "IntegrationFlow",

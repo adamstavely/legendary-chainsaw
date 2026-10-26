@@ -48,6 +48,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "SideFolder",

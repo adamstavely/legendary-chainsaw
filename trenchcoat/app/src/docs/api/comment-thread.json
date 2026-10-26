@@ -18,7 +18,7 @@
      "attribute": null,
      "type": "ThreadMessage[]",
      "default": "[]",
-     "description": "",
+     "description": "The comment and its replies, oldest first – the source of truth, followed by id",
      "readonly": false
     },
     {
@@ -26,7 +26,7 @@
      "attribute": null,
      "type": "ThreadAuthor",
      "default": "{ name: \"You\" }",
-     "description": "",
+     "description": "Who is replying here: the author of replies posted from the field",
      "readonly": false
     },
     {
@@ -186,6 +186,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "CommentThread",
@@ -195,19 +196,19 @@
      "name": "title",
      "type": "string",
      "optional": true,
-     "description": ""
+     "description": "The heading, and the region's name (default \"Comment\")"
     },
     {
      "name": "messages",
      "type": "ThreadMessage[]",
      "optional": false,
-     "description": ""
+     "description": "The comment and its replies, oldest first – the source of truth, followed by id"
     },
     {
      "name": "currentUser",
      "type": "ThreadAuthor",
      "optional": false,
-     "description": ""
+     "description": "Who is replying here: the author of replies posted from the field"
     },
     {
      "name": "assistant",
@@ -231,7 +232,7 @@
      "name": "onClose",
      "type": "() => void",
      "optional": true,
-     "description": ""
+     "description": "Shows a close button and runs when it's pressed"
     }
    ],
    "hides": [

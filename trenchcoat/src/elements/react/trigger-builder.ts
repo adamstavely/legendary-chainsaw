@@ -25,7 +25,9 @@ export type TriggerBuilderProps = Omit<RawProps, "value" | "defaultValue" | "eve
   title?: string;
   /** The trigger definition (controlled) */
   value?: TriggerValue;
+  /** The trigger definition to start with when uncontrolled */
   defaultValue?: TriggerValue;
+  /** Called with the whole definition after every change */
   onChange?: (value: TriggerValue) => void;
 };
 

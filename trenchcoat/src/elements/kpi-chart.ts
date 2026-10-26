@@ -81,6 +81,7 @@ export class TcKpiChart extends TcElement {
   @property({ attribute: false }) accessor labels: string[] = [];
   /** Longer labels for the tooltip header, e.g. "Tue, Mar 4" – falls back to `labels` */
   @property({ attribute: false }) accessor tooltipLabels: string[] | undefined = undefined;
+  /** The lines, each with a label, a colour and one value per label – every line also gets its own stroke pattern */
   @property({ attribute: false }) accessor series: KpiSeries[] = [];
   /** Formats the axis, tooltip and delta values */
   @property({ attribute: false }) accessor format: (n: number) => string = compact;

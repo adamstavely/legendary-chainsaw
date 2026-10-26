@@ -26,7 +26,7 @@
      "attribute": null,
      "type": "DataColumn[]",
      "default": "[]",
-     "description": "",
+     "description": "The columns, left to right: each one's key, label, type, width and whether it can be edited",
      "readonly": false
     },
     {
@@ -234,6 +234,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "DataTable",
@@ -261,61 +262,61 @@
      "name": "columns",
      "type": "DataColumn[]",
      "optional": false,
-     "description": ""
+     "description": "The columns, left to right: each one's key, label, type, width and whether it can be edited"
     },
     {
      "name": "rows",
      "type": "DataRow[]",
      "optional": true,
-     "description": ""
+     "description": "The rows (controlled) – pair it with `onRowsChange`"
     },
     {
      "name": "defaultRows",
      "type": "DataRow[]",
      "optional": true,
-     "description": ""
+     "description": "The rows to start with when `rows` isn't controlled"
     },
     {
      "name": "onRowsChange",
      "type": "(rows: DataRow[]) => void",
      "optional": true,
-     "description": ""
+     "description": "Called with every row after an edit, paste, clear, add, delete, undo or redo"
     },
     {
      "name": "selection",
      "type": "string[]",
      "optional": true,
-     "description": ""
+     "description": "Ids of the checked rows (controlled) – pair it with `onSelectionChange`"
     },
     {
      "name": "defaultSelection",
      "type": "string[]",
      "optional": true,
-     "description": ""
+     "description": "The checked rows to start with when `selection` isn't controlled"
     },
     {
      "name": "onSelectionChange",
      "type": "(ids: string[]) => void",
      "optional": true,
-     "description": ""
+     "description": "Called with the ids of the checked rows whenever a row is checked or unchecked"
     },
     {
      "name": "sort",
      "type": "DataSort",
      "optional": true,
-     "description": ""
+     "description": "The sorted column and direction, or null for the rows' own order (controlled)"
     },
     {
      "name": "defaultSort",
      "type": "DataSort",
      "optional": true,
-     "description": ""
+     "description": "The sort to start with when `sort` isn't controlled"
     },
     {
      "name": "onSortChange",
      "type": "(sort: DataSort) => void",
      "optional": true,
-     "description": ""
+     "description": "Called when a column header changes the sort"
     },
     {
      "name": "editable",
@@ -337,12 +338,13 @@
   }
  ],
  "changelog": [
+  "data-table and agent-lanes: a look selector left in front of a comment turned two rules into descendant selectors, so Clean lost data-table's coloured tag pills and agent-lanes' Reject / Approve button styles.",
   "Lit 3 web components: `tc-button`, `tc-combobox` and `tc-data-table` (the pilot), `tc-look-provider` for an app-wide default look, the shared controllers (row window, focus rescue, smooth height, off-screen, on-screen, ARIA forwarding, hotkeys, rolling numbers). Pixel-identical to the React components in both looks and themes.",
   "data-table renders only the rows in view above 60 rows (was 200); combobox windows options above 300 matches; command-menu shows at most `maxRows` (default 200) results.",
   "data-table renders only the rows in view above 200 rows (spacer rows keep the scroll height; `aria-rowcount` and `aria-rowindex` are set on every row)."
  ],
  "size": {
-  "min": 60446,
-  "gzip": 15383
+  "min": 60390,
+  "gzip": 15378
  }
 }

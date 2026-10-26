@@ -10,7 +10,7 @@
      "attribute": null,
      "type": "StepperFormStep[]",
      "default": "[]",
-     "description": "",
+     "description": "The steps in order: id, title, content and the check Continue runs",
      "readonly": false
     },
     {
@@ -273,7 +273,7 @@
      "attribute": "label",
      "type": "string",
      "default": "\"\"",
-     "description": "",
+     "description": "The field's label, tied to its control",
      "readonly": false
     },
     {
@@ -289,7 +289,7 @@
      "attribute": "optional",
      "type": "boolean",
      "default": "false",
-     "description": "",
+     "description": "Shows “Optional” after the label",
      "readonly": false
     },
     {
@@ -609,7 +609,7 @@
      "attribute": null,
      "type": "string[]",
      "default": "[]",
-     "description": "",
+     "description": "The entries added so far",
      "readonly": false
     },
     {
@@ -617,7 +617,7 @@
      "attribute": "placeholder",
      "type": "string",
      "default": "\"name@company.com\"",
-     "description": "",
+     "description": "Placeholder while there are no entries – then it reads “Add another”",
      "readonly": false
     },
     {
@@ -649,7 +649,7 @@
      "attribute": "disabled",
      "type": "boolean",
      "default": "false",
-     "description": "",
+     "description": "Turns off typing and removing entries",
      "readonly": false
     },
     {
@@ -820,7 +820,7 @@
      "attribute": "value",
      "type": "string",
      "default": "\"\"",
-     "description": "",
+     "description": "The chosen option's value; empty when none is chosen",
      "readonly": false
     },
     {
@@ -828,7 +828,7 @@
      "attribute": null,
      "type": "StepperChoice[]",
      "default": "[]",
-     "description": "",
+     "description": "The cards to choose from",
      "readonly": false
     },
     {
@@ -852,7 +852,7 @@
      "attribute": "disabled",
      "type": "boolean",
      "default": "false",
-     "description": "",
+     "description": "Turns off choosing",
      "readonly": false
     },
     {
@@ -1015,7 +1015,7 @@
      "attribute": null,
      "type": "StepperReviewRow[]",
      "default": "[]",
-     "description": "",
+     "description": "The rows: a label, the value entered and the step that sets it",
      "readonly": false
     },
     {
@@ -1178,7 +1178,7 @@
      "attribute": "heading",
      "type": "string",
      "default": "\"\"",
-     "description": "",
+     "description": "The success heading, e.g. “All set”",
      "readonly": false
     },
     {
@@ -1325,11 +1325,97 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "StepperForm",
    "exported": true,
-   "props": [],
+   "props": [
+    {
+     "name": "steps",
+     "type": "Step<V>[]",
+     "optional": false,
+     "description": "The steps in order: id, title, the content to render and the check Continue runs"
+    },
+    {
+     "name": "values",
+     "type": "V",
+     "optional": true,
+     "description": "The values of every step. Controlled when defined – pair it with `onValuesChange`"
+    },
+    {
+     "name": "defaultValues",
+     "type": "V",
+     "optional": true,
+     "description": "Starting values when `values` isn't controlled"
+    },
+    {
+     "name": "initialValues",
+     "type": "V",
+     "optional": true,
+     "description": "Starting values when `values` isn't controlled – the old name of `defaultValues`"
+    },
+    {
+     "name": "onValuesChange",
+     "type": "(values: V) => void",
+     "optional": true,
+     "description": "Called with all values whenever a step changes them"
+    },
+    {
+     "name": "onComplete",
+     "type": "(values: V, options: { signal: AbortSignal }) => void | Promise<void>",
+     "optional": true,
+     "description": "Called with all values on the last step; return a promise to show \"Creating…\" until it settles (throw to show an\nerror that can be retried). The signal aborts when the form unmounts mid-way."
+    },
+    {
+     "name": "step",
+     "type": "number",
+     "optional": true,
+     "description": "Controlled step index – pair it with onStepChange"
+    },
+    {
+     "name": "defaultStep",
+     "type": "number",
+     "optional": true,
+     "description": "Index of the first step shown when `step` isn't controlled"
+    },
+    {
+     "name": "initialStep",
+     "type": "number",
+     "optional": true,
+     "description": "Index of the first step shown when `step` isn't controlled – the old name of `defaultStep`"
+    },
+    {
+     "name": "onStepChange",
+     "type": "(step: number) => void",
+     "optional": true,
+     "description": "Called with the index of the step that opens"
+    },
+    {
+     "name": "submitLabel",
+     "type": "string",
+     "optional": true,
+     "description": "Label of the last button"
+    },
+    {
+     "name": "submittingLabel",
+     "type": "string",
+     "optional": true,
+     "description": "Label while onComplete runs"
+    },
+    {
+     "name": "success",
+     "type": "(values: V, reset: () => void) => React.ReactNode",
+     "optional": true,
+     "description": "What shows once onComplete is done – defaults to a short \"All set\""
+    },
+    {
+     "name": "ref",
+     "type": "React.Ref<TcStepperForm>",
+     "optional": true,
+     "description": "The element, for `next()`, `goTo()` and `reset()`"
+    }
+   ],
    "hides": []
   },
   {
@@ -1346,25 +1432,25 @@
      "name": "label",
      "type": "string",
      "optional": false,
-     "description": ""
+     "description": "The field's label, tied to its control"
     },
     {
      "name": "hint",
      "type": "React.ReactNode",
      "optional": true,
-     "description": ""
+     "description": "A hint under the control, replaced by the message while there is one"
     },
     {
      "name": "optional",
      "type": "boolean",
      "optional": true,
-     "description": ""
+     "description": "Shows “Optional” after the label"
     },
     {
      "name": "children",
      "type": "React.ReactNode",
      "optional": false,
-     "description": ""
+     "description": "The control: a StepperInput, StepperTags or StepperChoices"
     }
    ],
    "hides": []
@@ -1389,7 +1475,7 @@
      "name": "ref",
      "type": "React.Ref<HTMLInputElement>",
      "optional": true,
-     "description": ""
+     "description": "The native <input>"
     }
    ],
    "hides": [
@@ -1404,19 +1490,19 @@
      "name": "value",
      "type": "string[]",
      "optional": false,
-     "description": ""
+     "description": "The entries added so far"
     },
     {
      "name": "onChange",
      "type": "(next: string[]) => void",
      "optional": false,
-     "description": ""
+     "description": "Called with the new list when entries are added or removed"
     },
     {
      "name": "placeholder",
      "type": "string",
      "optional": true,
-     "description": ""
+     "description": "Placeholder while there are no entries – then it reads “Add another”"
     },
     {
      "name": "validate",
@@ -1440,7 +1526,7 @@
      "name": "disabled",
      "type": "boolean",
      "optional": true,
-     "description": ""
+     "description": "Turns off typing and removing entries"
     },
     {
      "name": "required",
@@ -1465,19 +1551,19 @@
      "name": "value",
      "type": "string",
      "optional": false,
-     "description": ""
+     "description": "The chosen option's value; empty when none is chosen"
     },
     {
      "name": "onChange",
      "type": "(value: string) => void",
      "optional": false,
-     "description": ""
+     "description": "Called with the value of the card chosen"
     },
     {
      "name": "options",
      "type": "StepperChoice[]",
      "optional": false,
-     "description": ""
+     "description": "The cards to choose from"
     },
     {
      "name": "label",
@@ -1495,7 +1581,7 @@
      "name": "disabled",
      "type": "boolean",
      "optional": true,
-     "description": ""
+     "description": "Turns off choosing"
     },
     {
      "name": "required",

@@ -226,6 +226,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "ImageGridOwn",
@@ -271,13 +272,13 @@
      "name": "defaultCompare",
      "type": "[string, string] | null",
      "optional": true,
-     "description": ""
+     "description": "The compared pair at first when uncontrolled – null, the grid, by default"
     },
     {
      "name": "onCompareChange",
      "type": "(compare: [string, string] | null) => void",
      "optional": true,
-     "description": ""
+     "description": "Two tiles went side by side, or the comparison closed (null)"
     },
     {
      "name": "split",
@@ -289,13 +290,13 @@
      "name": "defaultSplit",
      "type": "number",
      "optional": true,
-     "description": ""
+     "description": "Where the divider starts when uncontrolled – 50 by default"
     },
     {
      "name": "onSplitChange",
      "type": "(split: number) => void",
      "optional": true,
-     "description": ""
+     "description": "The compare divider moved: its new place, 0–100"
     },
     {
      "name": "onRegenerate",
@@ -321,7 +322,92 @@
   {
    "component": "ImageGrid",
    "exported": true,
-   "props": [],
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "Names the grid – the heading over the images"
+    },
+    {
+     "name": "prompt",
+     "type": "string",
+     "optional": true,
+     "description": "The prompt the images came from, shown under the title"
+    },
+    {
+     "name": "tiles",
+     "type": "ImageGridTile[]",
+     "optional": true,
+     "description": "The images. Controlled when defined – pass back what onTilesChange reports (alt-text edits)"
+    },
+    {
+     "name": "defaultTiles",
+     "type": "ImageGridTile[]",
+     "optional": true,
+     "description": "Starting images when uncontrolled"
+    },
+    {
+     "name": "onTilesChange",
+     "type": "(tiles: ImageGridTile[]) => void",
+     "optional": true,
+     "description": "An alt text was edited: the whole list with the change"
+    },
+    {
+     "name": "compare",
+     "type": "[string, string] | null",
+     "optional": true,
+     "description": "The two tile ids side by side, or null for the grid. Controlled when defined"
+    },
+    {
+     "name": "defaultCompare",
+     "type": "[string, string] | null",
+     "optional": true,
+     "description": "The compared pair at first when uncontrolled – null, the grid, by default"
+    },
+    {
+     "name": "onCompareChange",
+     "type": "(compare: [string, string] | null) => void",
+     "optional": true,
+     "description": "Two tiles went side by side, or the comparison closed (null)"
+    },
+    {
+     "name": "split",
+     "type": "number",
+     "optional": true,
+     "description": "Where the compare divider is, 0–100. Controlled when defined"
+    },
+    {
+     "name": "defaultSplit",
+     "type": "number",
+     "optional": true,
+     "description": "Where the divider starts when uncontrolled – 50 by default"
+    },
+    {
+     "name": "onSplitChange",
+     "type": "(split: number) => void",
+     "optional": true,
+     "description": "The compare divider moved: its new place, 0–100"
+    },
+    {
+     "name": "onRegenerate",
+     "type": "(tile: ImageGridTile, index: number) => void",
+     "optional": true,
+     "description": "Regenerate (or Try again) on a tile – answer by updating the tile: pending, then done with the new src"
+    },
+    {
+     "name": "onUpscale",
+     "type": "(tile: ImageGridTile, index: number) => void",
+     "optional": true,
+     "description": "Upscale on a tile – answer by updating the tile"
+    },
+    {
+     "name": "onDownload",
+     "type": "(tile: ImageGridTile, index: number, event: Event) => void",
+     "optional": true,
+     "description": "Download on a tile; the image is saved unless you call event.preventDefault()"
+    }
+   ],
    "hides": [
     "heading"
    ]

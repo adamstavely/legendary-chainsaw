@@ -194,6 +194,18 @@
    ]
   }
  ],
+ "functions": [
+  {
+   "name": "resetToasts",
+   "signature": "resetToasts(): void",
+   "description": "Empties the store at once – no exit animation, no onDismiss – and cancels pending exits. Meant for tests\n(e.g. in afterEach), since the store lives at module level and would otherwise carry toasts between them"
+  },
+  {
+   "name": "toast",
+   "signature": "toast: object",
+   "description": "toast(\"Saved\"), toast.success(…), toast.error(…), toast.info(…), toast.loading(…), toast.promise(…), toast.dismiss(id?)"
+  }
+ ],
  "react": [
   {
    "component": "Toaster",
@@ -217,7 +229,7 @@
   "toaster: when several toasters share the hotkey, the newest one with a toast takes it; Ctrl/⌘ + the key no longer triggers it."
  ],
  "size": {
-  "min": 39550,
-  "gzip": 12223
+  "min": 39707,
+  "gzip": 12315
  }
 }

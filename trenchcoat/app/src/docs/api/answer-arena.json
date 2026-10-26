@@ -170,6 +170,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "AnswerArena",
@@ -191,7 +192,7 @@
      "name": "defaultValue",
      "type": "ArenaVote | null",
      "optional": true,
-     "description": ""
+     "description": "The vote at first when uncontrolled – null by default"
     },
     {
      "name": "onChange",

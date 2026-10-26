@@ -212,6 +212,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "VoiceMode",
@@ -233,13 +234,13 @@
      "name": "defaultMuted",
      "type": "boolean",
      "optional": true,
-     "description": ""
+     "description": "Whether the microphone starts muted, when `muted` isn't set"
     },
     {
      "name": "onMutedChange",
      "type": "(muted: boolean) => void",
      "optional": true,
-     "description": ""
+     "description": "Called when Mute is pressed, with the new muted state"
     },
     {
      "name": "captions",
@@ -251,13 +252,13 @@
      "name": "defaultCaptions",
      "type": "boolean",
      "optional": true,
-     "description": ""
+     "description": "Whether the captions start shown, when `captions` isn't set – true by default"
     },
     {
      "name": "onCaptionsChange",
      "type": "(captions: boolean) => void",
      "optional": true,
-     "description": ""
+     "description": "Called when Captions is pressed, with whether they are now shown"
     },
     {
      "name": "onInterrupt",

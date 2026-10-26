@@ -146,6 +146,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "ProgressTracker",
@@ -155,7 +156,7 @@
      "name": "title",
      "type": "string",
      "optional": true,
-     "description": ""
+     "description": "The heading, and the progress bar's name"
     },
     {
      "name": "steps",

@@ -42,7 +42,7 @@
      "attribute": "risk",
      "type": "PermissionRisk",
      "default": "\"risky\"",
-     "description": "",
+     "description": "How much harm the action can do: safe shows no pill, risky a warning, destructive a danger pill and no \"always\"",
      "readonly": false
     },
     {
@@ -66,7 +66,7 @@
      "attribute": "preview-title",
      "type": "string",
      "default": "\"What will happen\"",
-     "description": "",
+     "description": "The heading over the preview list, e.g. \"5 files will change\"",
      "readonly": false
     },
     {
@@ -256,6 +256,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "PermissionRequest",
@@ -289,13 +290,13 @@
      "name": "defaultScope",
      "type": "PermissionScope",
      "optional": true,
-     "description": ""
+     "description": "The starting choice of how long, when `scope` isn't controlled"
     },
     {
      "name": "onScopeChange",
      "type": "(scope: PermissionScope) => void",
      "optional": true,
-     "description": ""
+     "description": "The user picked how long"
     },
     {
      "name": "decision",
@@ -307,7 +308,7 @@
      "name": "defaultDecision",
      "type": "PermissionDecision | null",
      "optional": true,
-     "description": ""
+     "description": "The starting decision, when `decision` isn't controlled"
     },
     {
      "name": "onDecisionChange",

@@ -22,27 +22,37 @@ const RawModelPicker = createComponent({
 type RawModelPickerProps = React.ComponentProps<typeof RawModelPicker>;
 type Own = "models" | "value" | "onChange" | "thinking" | "webSearch" | "effort" | "open" | "onTcValueChange" | "onTcThinkingChange" | "onTcWebSearchChange" | "onTcEffortChange" | "onTcOpenChange";
 export type ModelPickerProps = Omit<RawModelPickerProps, Own> & {
+  /** The models to choose from, in menu order; `icon` may be a React node */
   models: PickerModel[];
   /** Id of the chosen model (controlled when defined) */
   value?: string;
   /** The model chosen at first when uncontrolled – defaults to the first one */
   defaultValue?: string;
+  /** Called with the id of the model that was picked */
   onChange?: (id: string) => void;
   /** Extended thinking switch */
   thinking?: boolean;
+  /** Extended thinking at first when uncontrolled – off by default */
   defaultThinking?: boolean;
+  /** Called when extended thinking is switched on or off */
   onThinkingChange?: (on: boolean) => void;
   /** Web search switch */
   webSearch?: boolean;
+  /** Web search at first when uncontrolled – off by default */
   defaultWebSearch?: boolean;
+  /** Called when web search is switched on or off */
   onWebSearchChange?: (on: boolean) => void;
   /** How hard the model thinks – only shown while extended thinking is on */
   effort?: ModelEffort;
+  /** Effort at first when uncontrolled – "medium" by default */
   defaultEffort?: ModelEffort;
+  /** Called with the new effort level */
   onEffortChange?: (effort: ModelEffort) => void;
   /** Controlled open state of the menu */
   open?: boolean;
+  /** Whether the menu starts open when uncontrolled */
   defaultOpen?: boolean;
+  /** Called when the menu opens or closes */
   onOpenChange?: (open: boolean) => void;
 };
 

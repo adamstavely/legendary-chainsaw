@@ -211,6 +211,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "AgentInbox",
@@ -220,7 +221,7 @@
      "name": "tasks",
      "type": "AgentTask[]",
      "optional": false,
-     "description": ""
+     "description": "The tasks – always the source of truth; a decision shows at once, and your next version of the task wins"
     },
     {
      "name": "title",
@@ -244,13 +245,13 @@
      "name": "defaultView",
      "type": "AgentInboxView",
      "optional": true,
-     "description": ""
+     "description": "The layout at first when `view` isn't controlled"
     },
     {
      "name": "onViewChange",
      "type": "(view: AgentInboxView) => void",
      "optional": true,
-     "description": ""
+     "description": "Called with the layout the user picked, controlled or not"
     },
     {
      "name": "expanded",
@@ -262,13 +263,13 @@
      "name": "defaultExpanded",
      "type": "string | null",
      "optional": true,
-     "description": ""
+     "description": "The card unfolded at first when `expanded` isn't controlled"
     },
     {
      "name": "onExpandedChange",
      "type": "(id: string | null) => void",
      "optional": true,
-     "description": ""
+     "description": "Called with the id of the card the user unfolded, or null when they folded it"
     }
    ],
    "hides": [

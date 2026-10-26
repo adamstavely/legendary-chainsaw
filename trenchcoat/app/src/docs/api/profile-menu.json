@@ -10,7 +10,7 @@
      "attribute": "name",
      "type": "string",
      "default": "\"\"",
-     "description": "",
+     "description": "The signed-in person's name, at the top of the card",
      "readonly": false
     },
     {
@@ -18,7 +18,7 @@
      "attribute": "email",
      "type": "string",
      "default": "\"\"",
-     "description": "",
+     "description": "The signed-in person's email address, under the name",
      "readonly": false
     },
     {
@@ -153,6 +153,18 @@
    ]
   }
  ],
+ "functions": [
+  {
+   "name": "profileMenuIcon",
+   "signature": "profileMenuIcon(name: ProfileMenuIconName): Element",
+   "description": "One of the menu's icons as an element, to put in `items`"
+  },
+  {
+   "name": "profileMenuDefaultItems",
+   "signature": "profileMenuDefaultItems(): ProfileMenuItem[]",
+   "description": "The actions when `items` is unset"
+  }
+ ],
  "react": [
   {
    "component": "ProfileMenu",
@@ -162,13 +174,13 @@
      "name": "name",
      "type": "string",
      "optional": false,
-     "description": ""
+     "description": "The signed-in person's name, at the top of the card"
     },
     {
      "name": "email",
      "type": "string",
      "optional": false,
-     "description": ""
+     "description": "The signed-in person's email address, under the name"
     },
     {
      "name": "avatar",
@@ -180,7 +192,7 @@
      "name": "items",
      "type": "ProfileMenuItem[]",
      "optional": true,
-     "description": ""
+     "description": "The actions; unset shows Settings, Docs, Apps and Logout"
     },
     {
      "name": "setup",

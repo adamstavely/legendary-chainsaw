@@ -18,7 +18,7 @@
      "attribute": null,
      "type": "ExperimentVariant[]",
      "default": "[]",
-     "description": "",
+     "description": "The variants under test, the control first (or marked `control`) – one row and one chart column each",
      "readonly": false
     },
     {
@@ -26,7 +26,7 @@
      "attribute": null,
      "type": "ExperimentMetric[]",
      "default": "[]",
-     "description": "",
+     "description": "The metrics to compare on; with more than one, a switch picks which one the card shows",
      "readonly": false
     },
     {
@@ -90,7 +90,7 @@
      "attribute": "open",
      "type": "boolean",
      "default": "false",
-     "description": "",
+     "description": "Whether the card is unfolded, showing the metric switch, the variants and the tray",
      "readonly": false
     },
     {
@@ -267,6 +267,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "ExperimentCard",
@@ -276,19 +277,19 @@
      "name": "title",
      "type": "string",
      "optional": false,
-     "description": ""
+     "description": "The test's name"
     },
     {
      "name": "variants",
      "type": "ExperimentVariant[]",
      "optional": false,
-     "description": ""
+     "description": "The variants under test, the control first (or marked `control`) – one row and one chart column each"
     },
     {
      "name": "metrics",
      "type": "ExperimentMetric[]",
      "optional": false,
-     "description": ""
+     "description": "The metrics to compare on; with more than one, a switch picks which one the card shows"
     },
     {
      "name": "metric",
@@ -300,13 +301,13 @@
      "name": "defaultMetric",
      "type": "string",
      "optional": true,
-     "description": ""
+     "description": "Starting metric id when `metric` isn't controlled – defaults to the first metric"
     },
     {
      "name": "onMetricChange",
      "type": "(id: string) => void",
      "optional": true,
-     "description": ""
+     "description": "Called with the id of the metric picked"
     },
     {
      "name": "winner",
@@ -318,13 +319,13 @@
      "name": "defaultWinner",
      "type": "string | null",
      "optional": true,
-     "description": ""
+     "description": "Starting winner when `winner` isn't controlled – defaults to none"
     },
     {
      "name": "onWinnerChange",
      "type": "(id: string | null) => void",
      "optional": true,
-     "description": ""
+     "description": "Called with the id of the variant picked as the winner, or null when the pick is cleared"
     },
     {
      "name": "status",
@@ -366,13 +367,13 @@
      "name": "defaultOpen",
      "type": "boolean",
      "optional": true,
-     "description": ""
+     "description": "Whether the card starts unfolded when `open` isn't controlled"
     },
     {
      "name": "onOpenChange",
      "type": "(open: boolean) => void",
      "optional": true,
-     "description": ""
+     "description": "Called when the card opens or closes"
     }
    ],
    "hides": [

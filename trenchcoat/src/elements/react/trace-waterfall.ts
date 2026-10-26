@@ -18,15 +18,21 @@ const RawTraceWaterfall = createComponent({
 });
 type RawTraceWaterfallProps = React.ComponentProps<typeof RawTraceWaterfall>;
 export type TraceWaterfallProps = Omit<RawTraceWaterfallProps, "root" | "heading" | "collapsed" | "openId" | "onTcCollapsedChange" | "onTcOpenChange"> & {
+  /** The run: its root span, with the others as children */
   root: TraceSpan;
+  /** The heading, and the tree's name */
   title?: string;
   /** Controlled ids of folded spans */
   collapsed?: string[];
+  /** Ids of the spans folded on mount when `collapsed` isn't controlled */
   defaultCollapsed?: string[];
+  /** Called with the ids of every folded span after a fold or an unfold */
   onCollapsedChange?: (collapsed: string[]) => void;
   /** Controlled id of the span whose details are open */
   openId?: string | null;
+  /** Id of the span whose details are open on mount when `openId` isn't controlled */
   defaultOpenId?: string | null;
+  /** Called when a span's details open (with the span) or close (null) */
   onOpenChange?: (id: string | null, span?: TraceSpan) => void;
 };
 

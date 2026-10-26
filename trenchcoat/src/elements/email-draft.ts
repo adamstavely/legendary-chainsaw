@@ -109,6 +109,7 @@ export class TcEmailDraft extends TcElement {
   @property() accessor status = "Renews in 5 days";
   /** Who wrote the draft */
   @property() accessor agent = "Renewal agent";
+  /** The people the email can go to – the recipient list offers them; the first is picked unless `recipient` says otherwise */
   @property({ attribute: false }) accessor contacts: DraftContact[] = defaultContacts;
   /** The email of the contact it goes to – unset is the first contact; one not in `contacts` falls back to the first */
   @property() accessor recipient: string | undefined = undefined;

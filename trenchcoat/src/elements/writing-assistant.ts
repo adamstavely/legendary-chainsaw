@@ -91,10 +91,13 @@ export class TcWritingAssistant extends TcElement {
 
   /** The assistant's name, in the header */
   @property() accessor name = "Quill";
+  /** Short line under the name */
   @property() accessor tagline = "Your writing companion.";
   /** Big line on the welcome screen */
   @property() accessor greeting = "What should we write?";
+  /** Chips on the welcome screen; picking one sends it as a message */
   @property({ attribute: false }) accessor suggestions: string[] = ["Polish my email", "Make it shorter", "Fix the tone", "Draft a reply"];
+  /** Text in the empty prompt field */
   @property() accessor placeholder = "Ask anything…";
   /**
    * Your answer for a message – return text or a promise of text. A rejected promise shows an error and lets the

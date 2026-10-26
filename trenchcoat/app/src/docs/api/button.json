@@ -18,7 +18,7 @@
      "attribute": "size",
      "type": "\"sm\" | \"md\" | \"lg\"",
      "default": "\"md\"",
-     "description": "",
+     "description": "Height and padding: sm, md or lg (Standard 28 · 32 · 40 px, Clean 24 · 28 · 32 px)",
      "readonly": false
     },
     {
@@ -50,7 +50,7 @@
      "attribute": "disabled",
      "type": "boolean",
      "default": "false",
-     "description": "",
+     "description": "Dims the button and disables the native button inside it, so it can't be focused or clicked",
      "readonly": false
     },
     {
@@ -58,7 +58,7 @@
      "attribute": "type",
      "type": "\"button\" | \"submit\" | \"reset\"",
      "default": "\"button\"",
-     "description": "",
+     "description": "The inner native button's type: \"button\" does nothing in a form, \"submit\" submits it, \"reset\" resets it",
      "readonly": false
     },
     {
@@ -74,7 +74,7 @@
      "attribute": "value",
      "type": "string",
      "default": "\"\"",
-     "description": "",
+     "description": "Submitted as `name`'s value when this button submits its form",
      "readonly": false
     },
     {
@@ -199,6 +199,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "Button",
@@ -214,7 +215,7 @@
      "name": "label",
      "type": "string",
      "optional": true,
-     "description": ""
+     "description": "The button's text and accessible name; wins over string children"
     },
     {
      "name": "icon",

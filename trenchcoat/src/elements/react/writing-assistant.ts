@@ -28,6 +28,7 @@ export type WritingAssistantProps = Omit<RawWritingAssistantProps, "messages" | 
   draft?: string;
   /** Starting text in the prompt field when `draft` isn't controlled */
   defaultDraft?: string;
+  /** Called with the field's new text whenever it changes – typing, dictation, or clearing after a send */
   onDraftChange?: (draft: string) => void;
 };
 

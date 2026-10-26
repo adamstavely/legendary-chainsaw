@@ -24,11 +24,15 @@ export type LiveViewProps = Omit<RawLiveViewProps, "heading" | "paused" | "contr
   screen?: React.ReactNode;
   /** The agent is paused. Controlled when defined; otherwise the component keeps it, starting from `defaultPaused` */
   paused?: boolean;
+  /** Whether the agent starts paused, when `paused` isn't controlled */
   defaultPaused?: boolean;
+  /** Pause or Resume was pressed */
   onPausedChange?: (paused: boolean) => void;
   /** Who drives the screen. Controlled when defined; otherwise kept by the component, from `defaultControl` */
   control?: LiveViewControl;
+  /** Who drives the screen at first, when `control` isn't controlled */
   defaultControl?: LiveViewControl;
+  /** Take over or Hand back was pressed */
   onControlChange?: (control: LiveViewControl) => void;
   /** While you have control: a click on the screen, in frame pixels – forward it to the agent's browser */
   onScreenClick?: (point: LiveViewScreenClick) => void;

@@ -415,6 +415,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "TraceWaterfall",
@@ -424,13 +425,13 @@
      "name": "root",
      "type": "TraceSpan",
      "optional": false,
-     "description": ""
+     "description": "The run: its root span, with the others as children"
     },
     {
      "name": "title",
      "type": "string",
      "optional": true,
-     "description": ""
+     "description": "The heading, and the tree's name"
     },
     {
      "name": "collapsed",
@@ -442,13 +443,13 @@
      "name": "defaultCollapsed",
      "type": "string[]",
      "optional": true,
-     "description": ""
+     "description": "Ids of the spans folded on mount when `collapsed` isn't controlled"
     },
     {
      "name": "onCollapsedChange",
      "type": "(collapsed: string[]) => void",
      "optional": true,
-     "description": ""
+     "description": "Called with the ids of every folded span after a fold or an unfold"
     },
     {
      "name": "openId",
@@ -460,13 +461,13 @@
      "name": "defaultOpenId",
      "type": "string | null",
      "optional": true,
-     "description": ""
+     "description": "Id of the span whose details are open on mount when `openId` isn't controlled"
     },
     {
      "name": "onOpenChange",
      "type": "(id: string | null, span?: TraceSpan) => void",
      "optional": true,
-     "description": ""
+     "description": "Called when a span's details open (with the span) or close (null)"
     }
    ],
    "hides": [

@@ -45,7 +45,9 @@ export function MessageActions({ version, onVersionChange, onCopy, onSpeak, ...p
 const RawMessageText = createComponent({ tagName: "tc-message-text", elementClass: TcMessageText, react: React });
 type RawMessageTextProps = React.ComponentProps<typeof RawMessageText>;
 export type MessageTextProps = Omit<RawMessageTextProps, "content" | "children" | "version"> & {
+  /** Which version is shown – a change crossfades to the new children */
   version: string | number;
+  /** The message: text or any React content */
   children: React.ReactNode;
 };
 /** The message itself, crossfading when `version` changes */

@@ -10,7 +10,7 @@
      "attribute": null,
      "type": "SegmentOption[]",
      "default": "[]",
-     "description": "",
+     "description": "The options to switch between, in order – two to six read best",
      "readonly": false
     },
     {
@@ -26,7 +26,7 @@
      "attribute": "size",
      "type": "\"sm\" | \"md\" | \"lg\"",
      "default": "\"md\"",
-     "description": "",
+     "description": "Height and text size of the control: \"sm\", \"md\" or \"lg\"",
      "readonly": false
     },
     {
@@ -58,7 +58,7 @@
      "attribute": "disabled",
      "type": "boolean",
      "default": "false",
-     "description": "",
+     "description": "Turns every option off; the hidden form input is disabled too",
      "readonly": false
     },
     {
@@ -228,6 +228,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "SegmentedControl",
@@ -237,7 +238,7 @@
      "name": "options",
      "type": "SegmentOption<T>[]",
      "optional": false,
-     "description": ""
+     "description": "The options to switch between, in order – two to six read best"
     },
     {
      "name": "value",
@@ -255,7 +256,7 @@
      "name": "onChange",
      "type": "(value: T) => void",
      "optional": true,
-     "description": ""
+     "description": "Called with the picked value each time the user picks an option"
     }
    ],
    "hides": [

@@ -106,7 +106,7 @@
      "attribute": "done-title",
      "type": "string",
      "default": "\"What I did\"",
-     "description": "",
+     "description": "Heading of the list of what the agent did",
      "readonly": false
     },
     {
@@ -114,7 +114,7 @@
      "attribute": "needs-title",
      "type": "string",
      "default": "\"What I need from you\"",
-     "description": "",
+     "description": "Heading of the list of what the agent needs – the checklist once you have control",
      "readonly": false
     },
     {
@@ -122,7 +122,7 @@
      "attribute": "note-label",
      "type": "string",
      "default": "\"Note for the agent\"",
-     "description": "",
+     "description": "Label of the note field shown while you have control",
      "readonly": false
     },
     {
@@ -130,7 +130,7 @@
      "attribute": "note-placeholder",
      "type": "string",
      "default": "\"Anything it should know before it carries on\"",
-     "description": "",
+     "description": "Placeholder of the note field",
      "readonly": false
     },
     {
@@ -291,6 +291,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "Handoff",
@@ -312,7 +313,7 @@
      "name": "defaultStatus",
      "type": "HandoffStatus",
      "optional": true,
-     "description": ""
+     "description": "Who has control at first, when `status` isn't set – \"waiting\" by default"
     },
     {
      "name": "onStatusChange",
@@ -330,13 +331,13 @@
      "name": "defaultChecked",
      "type": "string[]",
      "optional": true,
-     "description": ""
+     "description": "The needs ticked off at first, when `checked` isn't set"
     },
     {
      "name": "onCheckedChange",
      "type": "(checked: string[]) => void",
      "optional": true,
-     "description": ""
+     "description": "Called with the ids of the ticked needs, in the needs' order, whenever one is ticked or unticked"
     },
     {
      "name": "note",
@@ -348,13 +349,13 @@
      "name": "defaultNote",
      "type": "string",
      "optional": true,
-     "description": ""
+     "description": "The note at first, when `note` isn't set"
     },
     {
      "name": "onNoteChange",
      "type": "(note: string) => void",
      "optional": true,
-     "description": ""
+     "description": "Called with the note as it is typed"
     },
     {
      "name": "onReturn",

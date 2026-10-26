@@ -47,6 +47,7 @@ export class TcChangeSummary extends TcElement {
   @property() accessor period = "";
   /** An icon element in front of the heading (cloned); unset shows the default */
   @property({ attribute: false }) accessor icon: Element | undefined = undefined;
+  /** The metrics, one row each, in the order given */
   @property({ attribute: false }) accessor changes: MetricChange[] = [];
 
   /** The page named the region itself (aria-label or aria-labelledby on the host) */

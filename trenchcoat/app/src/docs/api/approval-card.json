@@ -122,7 +122,7 @@
      "attribute": "always-label",
      "type": "string",
      "default": "\"Always allow this action\"",
-     "description": "",
+     "description": "The \"Always allow\" checkbox's label",
      "readonly": false
     },
     {
@@ -130,7 +130,7 @@
      "attribute": "approve-label",
      "type": "string",
      "default": "\"Approve\"",
-     "description": "",
+     "description": "The Approve button's label",
      "readonly": false
     },
     {
@@ -138,7 +138,7 @@
      "attribute": "deny-label",
      "type": "string",
      "default": "\"Deny\"",
-     "description": "",
+     "description": "The Deny button's label",
      "readonly": false
     },
     {
@@ -146,7 +146,7 @@
      "attribute": "edit-label",
      "type": "string",
      "default": "\"Edit\"",
-     "description": "",
+     "description": "The Edit button's label (shown with `editable`)",
      "readonly": false
     },
     {
@@ -327,6 +327,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "ApprovalCard",
@@ -366,7 +367,7 @@
      "name": "children",
      "type": "React.ReactNode",
      "optional": true,
-     "description": ""
+     "description": "The preview, when `preview` isn't given"
     },
     {
      "name": "label",
@@ -396,7 +397,7 @@
      "name": "onDeny",
      "type": "(decision: { reason: DenyReason }) => void",
      "optional": true,
-     "description": ""
+     "description": "Called when the card is denied, by the user or by the countdown (`reason: \"timeout\"`)"
     },
     {
      "name": "onEdit",

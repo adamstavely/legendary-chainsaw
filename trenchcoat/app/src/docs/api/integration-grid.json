@@ -114,6 +114,13 @@
    ]
   }
  ],
+ "functions": [
+  {
+   "name": "integrationGridDefaults",
+   "signature": "integrationGridDefaults: IntegrationGridLogo[]",
+   "description": "The default logos: brand marks from simple-icons (CC0), 24 × 24"
+  }
+ ],
  "react": [
   {
    "component": "IntegrationGrid",

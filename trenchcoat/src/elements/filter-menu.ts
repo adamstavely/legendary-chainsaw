@@ -74,6 +74,7 @@ const hintsRow = (clean: boolean) =>
 export class TcFilterMenu extends TcElement {
   static override ui = "fm";
 
+  /** The filter groups, in order – each a collapsible list of options that become chips when picked */
   @property({ attribute: false }) accessor groups: FilterGroup[] = [];
   /** The picked options, per group id */
   @property({ attribute: false }) accessor value: FilterValue = {};
@@ -83,7 +84,7 @@ export class TcFilterMenu extends TcElement {
   @property() accessor name = "";
   /** Nothing can be picked, removed or cleared, and the hidden inputs are left out of the form */
   @property({ type: Boolean, reflect: true }) accessor disabled = false;
-  /** The heading */
+  /** The heading, next to Clear all */
   @property() accessor heading = "Filters";
   /** Show the keyboard hints at the bottom (Clean: as the last row of the card); hints="false" hides them */
   @property({ converter: { fromAttribute: (v: string | null) => v !== "false" } }) accessor hints = true;

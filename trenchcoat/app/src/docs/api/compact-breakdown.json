@@ -208,6 +208,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "CompactBreakdown",
@@ -217,7 +218,7 @@
      "name": "title",
      "type": "string",
      "optional": true,
-     "description": ""
+     "description": "The heading, and the group's accessible name (the element's `heading`)"
     },
     {
      "name": "items",
@@ -235,7 +236,7 @@
      "name": "defaultPeriod",
      "type": "string",
      "optional": true,
-     "description": ""
+     "description": "The period chosen on mount when `period` isn't controlled – defaults to the first period"
     },
     {
      "name": "onPeriodChange",

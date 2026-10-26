@@ -10,7 +10,7 @@
      "attribute": null,
      "type": "ThinkingStep[]",
      "default": "[]",
-     "description": "",
+     "description": "The steps and searches to show, in order – `progress` (or the timeline) decides how many have appeared",
      "readonly": false
     },
     {
@@ -168,6 +168,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "ThinkingState",
@@ -177,7 +178,7 @@
      "name": "steps",
      "type": "ThinkingStep[]",
      "optional": false,
-     "description": ""
+     "description": "The steps and searches to show, in order; a source's icon may be a React node"
     },
     {
      "name": "onProgressChange",
@@ -201,13 +202,13 @@
      "name": "defaultOpen",
      "type": "boolean",
      "optional": true,
-     "description": ""
+     "description": "Whether the steps start unfolded when `open` isn't controlled"
     },
     {
      "name": "onOpenChange",
      "type": "(open: boolean) => void",
      "optional": true,
-     "description": ""
+     "description": "Called when the header is clicked, or a new run unfolds the steps, with the new state"
     }
    ],
    "hides": [

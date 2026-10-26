@@ -16,9 +16,11 @@ const RawContextWindow = createComponent({
 });
 type RawContextWindowProps = React.ComponentProps<typeof RawContextWindow>;
 export type ContextWindowProps = Omit<RawContextWindowProps, "heading" | "modelIcon" | "actionLabel" | "onTcRemoveItem" | "onTcAction" | "limit" | "parts"> & {
+  /** What fills the window, in order – each part takes the next run of cells */
   parts: ContextPart[];
   /** Size of the context window in tokens */
   limit: number;
+  /** The heading, and the group's name */
   title?: string;
   /** Logo in front of the model name – any node, sized to 12px */
   modelIcon?: React.ReactNode;

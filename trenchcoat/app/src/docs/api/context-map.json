@@ -374,6 +374,7 @@
    ]
   }
  ],
+ "functions": [],
  "react": [
   {
    "component": "ContextMap",
@@ -449,13 +450,13 @@
      "name": "onSelect",
      "type": "(block: ContextBlock | null) => void",
      "optional": true,
-     "description": ""
+     "description": "Called when a tile is clicked, with the block as you passed it – null for the free space"
     },
     {
      "name": "title",
      "type": "string",
      "optional": true,
-     "description": ""
+     "description": "The title in the bar, and the map's accessible name – \"Context\" by default"
     }
    ],
    "hides": [

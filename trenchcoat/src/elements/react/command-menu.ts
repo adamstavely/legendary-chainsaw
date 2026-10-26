@@ -20,13 +20,17 @@ const RawCommandMenu = createComponent({
 });
 type RawCommandMenuProps = React.ComponentProps<typeof RawCommandMenu>;
 export type CommandMenuOwnProps = {
+  /** The commands, in titled groups; a group with the id "suggestions" gets ⌘1–⌘5. Defaults to the sample `defaultGroups` */
   groups?: CommandGroup[];
+  /** Placeholder text in the search field */
   placeholder?: string;
   /** Called with the command id; for the assistant fallback with "ask" and the typed text. May return a promise */
   onRun?: CommandMenuRun;
   /** The search text. Controlled when defined; otherwise the menu keeps its own, starting at `defaultQuery` */
   query?: string;
+  /** The search text to start with when `query` isn't set */
   defaultQuery?: string;
+  /** Called with the new search text as people type or clear it */
   onQueryChange?: (query: string) => void;
   /** Window shortcut that focuses the field – "mod+k" by default, or false for none */
   hotkey?: string | false;

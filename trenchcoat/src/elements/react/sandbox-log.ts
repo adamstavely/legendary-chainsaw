@@ -17,17 +17,22 @@ const RawSandboxLog = createComponent({
 });
 
 type RawProps = React.ComponentProps<typeof RawSandboxLog>;
-export type SandboxLogProps = Omit<RawProps, "open" | "query" | "heading" | "onTcOpenChange" | "onTcQueryChange" | "onTcCopy" | "steps"> & {
+export type SandboxLogProps = Omit<RawProps, "open" | "query" | "heading" | "onTcOpenChange" | "onTcQueryChange" | "onTcCopy" | "steps" | "onCopy"> & {
+  /** The commands in the order they ran – one collapsible block each, with their output so far */
   steps: TcSandboxLog["steps"];
   /** Shown at the top; names the region */
   title?: string;
   /** Ids of the open steps (controlled) – unset opens the running and failed ones */
   open?: string[];
+  /** Ids of the steps open at first (uncontrolled) – unset opens the running and failed ones */
   defaultOpen?: string[];
+  /** Called with the ids of the open steps whenever a step opens or closes */
   onOpenChange?: (open: string[]) => void;
   /** The search text (controlled) */
   query?: string;
+  /** The search text at first (uncontrolled) */
   defaultQuery?: string;
+  /** Called with the search text whenever it changes */
   onQueryChange?: (query: string) => void;
   /** After a copy: the step's id (null for the whole log) and the text */
   onCopy?: (stepId: string | null, text: string) => void;

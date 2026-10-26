@@ -16,11 +16,13 @@ const RawAgentLedger = createComponent({
 });
 type RawAgentLedgerProps = React.ComponentProps<typeof RawAgentLedger>;
 export type AgentLedgerProps = Omit<RawAgentLedgerProps, "heading" | "entries" | "undone" | "now" | "pointAt" | "onUndo" | "onRedo" | "onTcUndoneChange"> & {
+  /** The changes the agent made, in any order – listed newest first; `icon` may be a React node */
   entries: LedgerEntry[];
   /** The clock for "2m ago", in epoch ms – defaults to an internal clock */
   now?: number;
   /** Ids of undone changes. Controlled when defined; otherwise the component keeps them, starting from `defaultUndone` */
   undone?: string[];
+  /** Ids undone at first when uncontrolled */
   defaultUndone?: string[];
   /** Every change to the undone ids, as the whole new list */
   onUndoneChange?: (ids: string[]) => void;
@@ -28,9 +30,11 @@ export type AgentLedgerProps = Omit<RawAgentLedgerProps, "heading" | "entries" |
    *  builds on. Either may return a promise: the rows show the result at once and wait; if it rejects they go back
    *  and the bar says so */
   onUndo?: (ids: string[]) => void | Promise<unknown>;
+  /** Called with the ids a Redo brings back; a returned promise holds the rows until it settles, a rejection reverts them */
   onRedo?: (ids: string[]) => void | Promise<unknown>;
   /** Lights up a change and what builds on it, as if its Undo were pointed at – e.g. for a walkthrough */
   pointAt?: string | null;
+  /** The heading, and the list's name – "Ledger" by default */
   title?: string;
 };
 
