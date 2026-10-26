@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import type * as UI from "@components/trace-waterfall";
-import type { TraceSpan } from "@components/trace-waterfall";
+import type * as UI from "../../../src/elements/react";
+import type { TraceSpan } from "../../../src/elements/react";
 
 const S = 1000;
 

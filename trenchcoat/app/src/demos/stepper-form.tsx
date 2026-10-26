@@ -1,4 +1,4 @@
-import type * as UI from "@components/stepper-form";
+import type * as UI from "../../../src/elements/react";
 import { button } from "../demo-kit";
 
 type Values = {

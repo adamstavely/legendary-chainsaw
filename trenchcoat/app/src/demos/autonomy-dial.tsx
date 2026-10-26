@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import type * as UI from "@components/autonomy-dial";
-import type { AgentAction, AutonomyLevel } from "@components/autonomy-dial";
+import type * as UI from "../../../src/elements/react";
+import type { AgentAction, AutonomyLevel } from "../../../src/elements/react";
 
 /* The dial steps through its three levels on its own so the actions glide between the groups; as soon as you
    click a level or a lock, it's yours. "Issue refund" starts pinned to Asks you first. */

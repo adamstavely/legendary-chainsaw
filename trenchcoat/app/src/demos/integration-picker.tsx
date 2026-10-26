@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type * as UI from "@components/integration-picker";
+import type * as UI from "../../../src/elements/react";
 
 export default function Demo({ ui }: { ui: typeof UI }) {
   const { IntegrationPicker, defaultIntegrations } = ui;

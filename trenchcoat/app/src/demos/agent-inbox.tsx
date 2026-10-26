@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import type * as UI from "@components/agent-inbox";
-import type { AgentTask } from "@components/agent-inbox";
+import type * as UI from "../../../src/elements/react";
+import type { AgentTask } from "../../../src/elements/react";
 
 /* Background tasks that move on their own: running tasks gather steps and tool calls, one finishes,
    another stops to ask you. Approve / Reject / Retry update the list, and "New task" adds one. */

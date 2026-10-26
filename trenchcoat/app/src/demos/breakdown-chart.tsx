@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import type * as UI from "@components/breakdown-chart";
-import type { BreakdownRecord, Dimension, Measure } from "@components/breakdown-chart";
+import type * as UI from "../../../src/elements/react";
+import type { BreakdownRecord, Dimension, Measure } from "../../../src/elements/react";
 
 const STATUSES = ["backlog", "todo", "progress", "review", "done", "canceled"] as const;
 const STATUS_LABELS: Record<(typeof STATUSES)[number], string> = {

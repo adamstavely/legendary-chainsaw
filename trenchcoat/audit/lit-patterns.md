@@ -132,6 +132,36 @@ tree-shake by importing one element's entry (`trenchcoat/button`), not by named 
 | 11 | ts-lit-plugin / lit-analyzer catch a wrong binding, a misspelled tag, a wrong event type, a missing import | **Pass** (seeded file: all four reported) |
 | 12 | Porting effort | The CSS carried over unchanged apart from the root selector; the markup kept its structure; the logic was restructured from hooks into properties, state and controllers. Combobox and Data Table each took one working session including their tests; the tests are the larger share. That puts the remaining 61 components at roughly the plan's 5–7 weeks |
 
+## What the other 61 ports added (step 2.6)
+
+Ported by 12 agents in parallel from [port-brief.md](port-brief.md), one file set per component; the shared lists
+(`src/elements/index.ts`, `react.ts`, package entries and exports) are generated from the folder
+(`scripts/gen-elements.mjs`, checked in CI). Parity: `node scripts/compare-lit.mjs <slug>` diffs each gallery demo on
+React and on the wrappers. What they found:
+
+- **Uncontrolled wrapper values were reset on every parent render.** `@lit/react` sets every prop on every render,
+  so passing the starting value back undid the user's change. `useControlled` now keeps the element's own value in
+  React state (`tests/elements/react-wrappers.test.ts`, which fails on the old helper). Several ports carry a local
+  copy of the same fix (`useOwned` / `useValue`); they can move to the shared helper.
+- **Callbacks whose presence showed a control** (`onClose`, `onRemove`, `onOpen`…) become a boolean plus an event
+  (`closable` + `tc-close`); the wrapper sets the boolean when the callback is given. **Callbacks that return
+  something** (a promise, a render) stay function properties under their React names.
+- **Member names that shadow `Element`/`LitElement`** break the element or its decorator types: `remove`, `before`,
+  `animate`, `hidden`, `dir`, `renderOptions`. Renamed in each port (`removeStep`, `animated`, `hiddenSegments`…).
+- **Form controls:** `name` must reflect (FormData reads the attribute), and `formDisabledCallback` runs while
+  `disabled` is reflected inside an update, where Lit drops a property change – set it in a microtask.
+- **HotkeyController** no longer binds again when an update lands after the host left the page (a leaked window
+  listener).
+- **Event names are shared, detail types aren't**: `tc-value-change` and `tc-open-change` carry different details
+  on different elements, so no element declares them in `HTMLElementEventMap`; each module exports its detail types.
+- **Element ids in cloned SVG** (gradients) get a fresh suffix per clone, or copies point at each other's defs.
+- **axe on animated content**: finish entry animations before axe runs, or it measures text mid fade-in.
+- **Light-DOM groups**: ToolCallGroup can't wrap the cards a framework renders into it, so outside React it takes
+  its list as a `slot="list"` child (the wrapper draws it).
+
+Known issues carried over from the React components (step 2.8): decision-tree's folded "N options" text fails
+contrast in the narrow layout, and its follow-up option buttons fail `label-content-name-mismatch`.
+
 ## Not done
 
 - **VoiceOver.** Needs a person (or a session with full control of Safari). The automated checks cover what

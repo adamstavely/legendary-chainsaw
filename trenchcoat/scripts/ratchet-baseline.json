@@ -1,153 +1,23 @@
 {
-  "src/components/agent-cursors.tsx": {
-    "clock/environment read": 2,
-    "literal line-height": 3,
-    "literal border-radius": 1,
-    "literal blurred shadow": 7,
-    "literal spacing": 18
-  },
-  "src/components/agent-graph.tsx": {
-    "unexplained eslint-disable": 2,
-    "clock/environment read": 6,
-    "literal line-height": 4,
-    "literal blurred shadow": 2,
-    "literal spacing": 12
-  },
-  "src/components/agent-inbox.tsx": {
-    "clock/environment read": 1,
-    "literal spacing": 5
-  },
-  "src/components/agent-lanes.tsx": {
-    "clock/environment read": 1,
-    "literal line-height": 2,
-    "literal spacing": 3
-  },
-  "src/components/agent-ledger.tsx": {
-    "clock/environment read": 2,
-    "literal spacing": 3
-  },
   "src/components/agent-plan.tsx": {
     "clock/environment read": 6,
     "literal spacing": 30
-  },
-  "src/components/agent-queue.tsx": {
-    "clock/environment read": 3,
-    "literal line-height": 7,
-    "literal spacing": 11
-  },
-  "src/components/agent-steering.tsx": {
-    "unexplained eslint-disable": 1,
-    "clock/environment read": 3,
-    "literal spacing": 2
-  },
-  "src/components/agent-tree.tsx": {
-    "unexplained eslint-disable": 1,
-    "clock/environment read": 4,
-    "literal spacing": 13,
-    "background-position animation": 1
-  },
-  "src/components/ai-answer.tsx": {
-    "unexplained eslint-disable": 1,
-    "clock/environment read": 4,
-    "literal duration": 4,
-    "literal easing": 7,
-    "literal line-height": 8,
-    "literal border-radius": 1,
-    "literal spacing": 13
   },
   "src/components/approval-card.tsx": {
     "clock/environment read": 1,
     "literal spacing": 4
   },
-  "src/components/autonomy-dial.tsx": {
-    "literal spacing": 1
-  },
-  "src/components/billing-schedule.tsx": {
-    "literal spacing": 19
-  },
-  "src/components/breakdown-chart.tsx": {
-    "literal spacing": 7
-  },
   "src/components/chat-composer.tsx": {
     "literal border-radius": 6,
     "literal spacing": 4
-  },
-  "src/components/cited-answer.tsx": {
-    "literal spacing": 13
   },
   "src/components/combobox.tsx": {
     "unexplained eslint-disable": 1,
     "literal spacing": 7
   },
-  "src/components/command-menu.tsx": {
-    "literal spacing": 1
-  },
-  "src/components/comment-thread.tsx": {
-    "clock/environment read": 3,
-    "literal spacing": 3,
-    "background-position animation": 1
-  },
-  "src/components/comments-panel.tsx": {
-    "clock/environment read": 2,
-    "literal spacing": 9
-  },
-  "src/components/compact-breakdown.tsx": {
-    "literal line-height": 1,
-    "literal spacing": 1
-  },
-  "src/components/context-map.tsx": {
-    "literal duration": 2,
-    "literal border-radius": 3,
-    "literal spacing": 17,
-    "background-position animation": 1
-  },
-  "src/components/context-window.tsx": {
-    "clock/environment read": 1,
-    "literal duration": 3,
-    "literal border-radius": 1,
-    "literal spacing": 6,
-    "background-position animation": 1
-  },
   "src/components/data-table.tsx": {
     "clock/environment read": 1,
     "literal spacing": 1
-  },
-  "src/components/date-range-picker.tsx": {
-    "clock/environment read": 1,
-    "literal line-height": 3,
-    "literal spacing": 5
-  },
-  "src/components/decision-inbox.tsx": {
-    "literal spacing": 2
-  },
-  "src/components/decision-tree.tsx": {
-    "literal spacing": 18
-  },
-  "src/components/delegate-board.tsx": {
-    "clock/environment read": 1,
-    "literal border-radius": 1
-  },
-  "src/components/dropzone.tsx": {
-    "unexplained eslint-disable": 1,
-    "clock/environment read": 1,
-    "literal duration": 1,
-    "literal easing": 1,
-    "literal font-weight": 1,
-    "literal line-height": 1,
-    "literal border-radius": 1,
-    "literal blurred shadow": 1,
-    "literal spacing": 7,
-    "background-position animation": 1
-  },
-  "src/components/email-draft.tsx": {
-    "literal spacing": 10
-  },
-  "src/components/experiment-card.tsx": {
-    "literal spacing": 8
-  },
-  "src/components/fan-out-grid.tsx": {
-    "clock/environment read": 1,
-    "literal spacing": 7
   },
   "src/components/filter-menu.tsx": {
     "literal duration": 1,
@@ -156,81 +26,14 @@
   "src/components/inline-diff.tsx": {
     "literal spacing": 3
   },
-  "src/components/integration-picker.tsx": {
-    "literal border-radius": 1,
-    "literal spacing": 3
-  },
-  "src/components/integration-settings.tsx": {
-    "literal spacing": 2
-  },
   "src/components/kpi-chart.tsx": {
     "literal spacing": 8
-  },
-  "src/components/memory-panel.tsx": {
-    "clock/environment read": 3,
-    "literal duration": 1,
-    "literal border-radius": 1,
-    "literal spacing": 13
-  },
-  "src/components/message-actions.tsx": {
-    "unexplained eslint-disable": 1,
-    "literal duration": 1,
-    "literal spacing": 5
-  },
-  "src/components/model-picker.tsx": {
-    "clock/environment read": 1,
-    "literal duration": 6,
-    "literal line-height": 2,
-    "literal border-radius": 1,
-    "literal spacing": 11
-  },
-  "src/components/notification-stack.tsx": {
-    "literal spacing": 6
-  },
-  "src/components/otp-input.tsx": {
-    "unexplained eslint-disable": 1,
-    "literal duration": 6,
-    "literal border-radius": 6
-  },
-  "src/components/permission-request.tsx": {
-    "clock/environment read": 1,
-    "literal line-height": 1,
-    "literal spacing": 9
-  },
-  "src/components/plan-vs-actual.tsx": {
-    "clock/environment read": 1,
-    "literal spacing": 21
-  },
-  "src/components/profile-menu.tsx": {
-    "literal spacing": 4
-  },
-  "src/components/progress-tracker.tsx": {
-    "literal spacing": 1
-  },
-  "src/components/project-card.tsx": {
-    "literal duration": 1,
-    "literal spacing": 11
-  },
-  "src/components/prompt-library.tsx": {
-    "clock/environment read": 1,
-    "literal duration": 6,
-    "literal line-height": 5,
-    "literal border-radius": 1,
-    "literal spacing": 6
-  },
-  "src/components/review-center.tsx": {
-    "clock/environment read": 4,
-    "literal spacing": 31
   },
   "src/components/segmented-control.tsx": {
     "literal line-height": 1
   },
   "src/components/setup-guide.tsx": {
     "literal spacing": 1
-  },
-  "src/components/stepper-form.tsx": {
-    "unexplained eslint-disable": 1,
-    "literal spacing": 14
   },
   "src/components/thinking-loader.tsx": {
     "clock/environment read": 3
@@ -244,12 +47,6 @@
     "literal spacing": 5,
     "background-position animation": 1
   },
-  "src/components/toaster.tsx": {
-    "unexplained eslint-disable": 4,
-    "hard-coded id": 1,
-    "clock/environment read": 1,
-    "literal spacing": 5
-  },
   "src/components/tool-call-card.tsx": {
     "clock/environment read": 2,
     "literal duration": 3,
@@ -258,16 +55,268 @@
     "literal spacing": 8,
     "background-position animation": 1
   },
-  "src/components/trace-waterfall.tsx": {
-    "clock/environment read": 3,
-    "literal spacing": 5
-  },
   "src/components/usage-meter.tsx": {
     "unexplained eslint-disable": 2,
     "clock/environment read": 1,
     "literal spacing": 2
   },
-  "src/components/writing-assistant.tsx": {
+  "src/elements/agent-cursors.ts": {
+    "clock/environment read": 2,
+    "literal line-height": 3,
+    "literal border-radius": 1,
+    "literal blurred shadow": 7,
+    "literal spacing": 18
+  },
+  "src/elements/agent-graph.ts": {
+    "clock/environment read": 6,
+    "literal line-height": 4,
+    "literal blurred shadow": 2,
+    "literal spacing": 12
+  },
+  "src/elements/agent-inbox.ts": {
+    "clock/environment read": 1,
+    "literal spacing": 5
+  },
+  "src/elements/agent-lanes.ts": {
+    "clock/environment read": 1,
+    "literal line-height": 2,
+    "literal spacing": 3
+  },
+  "src/elements/agent-ledger.ts": {
+    "clock/environment read": 1,
+    "literal spacing": 3
+  },
+  "src/elements/agent-plan.ts": {
+    "clock/environment read": 5,
+    "literal spacing": 30
+  },
+  "src/elements/agent-queue.ts": {
+    "clock/environment read": 2,
+    "literal line-height": 7,
+    "literal spacing": 11
+  },
+  "src/elements/agent-steering.ts": {
+    "clock/environment read": 3,
+    "literal spacing": 2
+  },
+  "src/elements/agent-tree.ts": {
+    "clock/environment read": 4,
+    "literal spacing": 13,
+    "background-position animation": 1
+  },
+  "src/elements/ai-answer.ts": {
+    "clock/environment read": 4,
+    "literal duration": 4,
+    "literal easing": 7,
+    "literal line-height": 8,
+    "literal border-radius": 1,
+    "literal spacing": 13
+  },
+  "src/elements/approval-card.ts": {
+    "clock/environment read": 1,
+    "literal spacing": 4
+  },
+  "src/elements/autonomy-dial.ts": {
+    "literal spacing": 1
+  },
+  "src/elements/billing-schedule.ts": {
+    "literal spacing": 19
+  },
+  "src/elements/breakdown-chart.ts": {
+    "literal spacing": 7
+  },
+  "src/elements/chat-composer.ts": {
+    "literal border-radius": 6,
+    "literal spacing": 4
+  },
+  "src/elements/cited-answer.ts": {
+    "literal spacing": 13
+  },
+  "src/elements/combobox.ts": {
+    "hard-coded id": 1,
+    "literal spacing": 7
+  },
+  "src/elements/command-menu.ts": {
+    "literal spacing": 1
+  },
+  "src/elements/comment-thread.ts": {
+    "clock/environment read": 3,
+    "literal spacing": 3,
+    "background-position animation": 1
+  },
+  "src/elements/comments-panel.ts": {
+    "clock/environment read": 2,
+    "literal spacing": 9
+  },
+  "src/elements/compact-breakdown.ts": {
+    "literal line-height": 1,
+    "literal spacing": 1
+  },
+  "src/elements/context-map.ts": {
+    "literal duration": 2,
+    "literal border-radius": 3,
+    "literal spacing": 17,
+    "background-position animation": 1
+  },
+  "src/elements/context-window.ts": {
+    "clock/environment read": 1,
+    "literal duration": 3,
+    "literal border-radius": 1,
+    "literal spacing": 6,
+    "background-position animation": 1
+  },
+  "src/elements/data-table.ts": {
+    "clock/environment read": 1,
+    "literal spacing": 1
+  },
+  "src/elements/date-range-picker.ts": {
+    "clock/environment read": 1,
+    "literal line-height": 3,
+    "literal spacing": 5
+  },
+  "src/elements/decision-inbox.ts": {
+    "literal spacing": 2
+  },
+  "src/elements/decision-tree.ts": {
+    "literal spacing": 18
+  },
+  "src/elements/delegate-board.ts": {
+    "clock/environment read": 1,
+    "literal border-radius": 1
+  },
+  "src/elements/dropzone.ts": {
+    "clock/environment read": 1,
+    "literal duration": 1,
+    "literal easing": 1,
+    "literal font-weight": 1,
+    "literal line-height": 1,
+    "literal border-radius": 1,
+    "literal blurred shadow": 1,
+    "literal spacing": 7,
+    "background-position animation": 1
+  },
+  "src/elements/email-draft.ts": {
+    "literal spacing": 10
+  },
+  "src/elements/experiment-card.ts": {
+    "literal spacing": 8
+  },
+  "src/elements/fan-out-grid.ts": {
+    "clock/environment read": 1,
+    "literal spacing": 7
+  },
+  "src/elements/filter-menu.ts": {
+    "literal duration": 1,
+    "literal spacing": 7
+  },
+  "src/elements/inline-diff.ts": {
+    "literal spacing": 3
+  },
+  "src/elements/integration-picker.ts": {
+    "literal border-radius": 1,
+    "literal spacing": 3
+  },
+  "src/elements/integration-settings.ts": {
+    "literal spacing": 2
+  },
+  "src/elements/kpi-chart.ts": {
+    "literal spacing": 8
+  },
+  "src/elements/memory-panel.ts": {
+    "clock/environment read": 3,
+    "literal duration": 1,
+    "literal border-radius": 1,
+    "literal spacing": 13
+  },
+  "src/elements/message-actions.ts": {
+    "literal duration": 1,
+    "literal spacing": 5
+  },
+  "src/elements/model-picker.ts": {
+    "literal duration": 6,
+    "literal line-height": 2,
+    "literal border-radius": 1,
+    "literal spacing": 11
+  },
+  "src/elements/notification-stack.ts": {
+    "literal spacing": 6
+  },
+  "src/elements/otp-input.ts": {
+    "literal duration": 6,
+    "literal border-radius": 6
+  },
+  "src/elements/permission-request.ts": {
+    "clock/environment read": 1,
+    "literal line-height": 1,
+    "literal spacing": 9
+  },
+  "src/elements/plan-vs-actual.ts": {
+    "clock/environment read": 1,
+    "literal spacing": 21
+  },
+  "src/elements/profile-menu.ts": {
+    "literal spacing": 4
+  },
+  "src/elements/progress-tracker.ts": {
+    "literal spacing": 1
+  },
+  "src/elements/project-card.ts": {
+    "literal duration": 1,
+    "literal spacing": 11
+  },
+  "src/elements/prompt-library.ts": {
+    "clock/environment read": 1,
+    "literal duration": 6,
+    "literal line-height": 5,
+    "literal border-radius": 1,
+    "literal spacing": 6
+  },
+  "src/elements/review-center.ts": {
+    "clock/environment read": 4,
+    "literal spacing": 31
+  },
+  "src/elements/segmented-control.ts": {
+    "literal line-height": 1
+  },
+  "src/elements/setup-guide.ts": {
+    "literal spacing": 1
+  },
+  "src/elements/stepper-form.ts": {
+    "literal spacing": 14
+  },
+  "src/elements/thinking-loader.ts": {
+    "clock/environment read": 3
+  },
+  "src/elements/thinking-state.ts": {
+    "clock/environment read": 3,
+    "literal duration": 3,
+    "literal easing": 3,
+    "literal line-height": 1,
+    "literal border-radius": 2,
+    "literal spacing": 5,
+    "background-position animation": 1
+  },
+  "src/elements/toaster.ts": {
+    "clock/environment read": 1,
+    "literal spacing": 5
+  },
+  "src/elements/tool-call-card.ts": {
+    "clock/environment read": 1,
+    "literal duration": 3,
+    "literal line-height": 3,
+    "literal border-radius": 1,
+    "literal spacing": 8,
+    "background-position animation": 1
+  },
+  "src/elements/trace-waterfall.ts": {
+    "clock/environment read": 2,
+    "literal spacing": 5
+  },
+  "src/elements/usage-meter.ts": {
+    "clock/environment read": 1,
+    "literal spacing": 2
+  },
+  "src/elements/writing-assistant.ts": {
     "literal duration": 10,
     "literal easing": 5,
     "literal line-height": 4,
@@ -275,14 +324,6 @@
     "literal blurred shadow": 4,
     "literal spacing": 4,
     "background-position animation": 1
-  },
-  "src/elements/combobox.ts": {
-    "hard-coded id": 1,
-    "literal spacing": 7
-  },
-  "src/elements/data-table.ts": {
-    "clock/environment read": 1,
-    "literal spacing": 1
   },
   "blocks/agent-gallery.tsx": {
     "literal spacing": 57

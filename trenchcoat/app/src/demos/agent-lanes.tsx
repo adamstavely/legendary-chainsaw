@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import type * as UI from "@components/agent-lanes";
-import type { LaneTask } from "@components/agent-lanes";
+import type * as UI from "../../../src/elements/react";
+import type { LaneTask } from "../../../src/elements/react";
 
 /* A fast clock (1 real second = 20 demo seconds) drives the lanes, so you can watch tasks grow into "now",
    finish, hand off to the next agent and stop for an approval. The script loops every ~2.5 real minutes. */

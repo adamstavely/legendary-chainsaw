@@ -284,7 +284,7 @@ export class HotkeyController implements ReactiveController {
   private handler: HotkeyHandler = () => this.run();
 
   constructor(
-    host: Host,
+    private host: Host,
     private combo: () => string | false | null | undefined,
     private run: HotkeyHandler,
   ) {
@@ -334,7 +334,8 @@ export class HotkeyController implements ReactiveController {
     this.bind();
   }
   hostUpdated() {
-    this.bind();
+    // An update can still run after the host left the page; binding then would leak the window listener
+    if (this.host.isConnected) this.bind();
   }
   hostDisconnected() {
     this.unbind();

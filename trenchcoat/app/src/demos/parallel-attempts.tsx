@@ -1,6 +1,6 @@
 import { useEffect, useState, type ReactNode } from "react";
-import type * as UI from "@components/parallel-attempts";
-import type { Attempt } from "@components/parallel-attempts";
+import type * as UI from "../../../src/elements/react";
+import type { Attempt } from "../../../src/elements/react";
 
 const Star = ({ c }: { c: string }) => (
   <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">

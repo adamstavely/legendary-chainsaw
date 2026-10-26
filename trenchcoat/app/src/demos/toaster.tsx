@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import type * as UI from "@components/toaster";
+import type * as UI from "../../../src/elements/react";
 import { button, buttonSm } from "../demo-kit";
 
 export default function Demo({ ui }: { ui: typeof UI }) {

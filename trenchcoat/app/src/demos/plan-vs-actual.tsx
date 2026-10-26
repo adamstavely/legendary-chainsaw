@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import type * as UI from "@components/plan-vs-actual-clean";
-import type { PlanStep } from "@components/plan-vs-actual-clean";
+import type * as UI from "../../../src/elements/react";
+import type { PlanVsActualStep as PlanStep } from "../../../src/elements/react";
 
 const S = 1000;
 

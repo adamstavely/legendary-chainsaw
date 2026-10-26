@@ -1,6 +1,6 @@
 import { useState } from "react";
-import type * as UI from "@components/comment-thread";
-import type { ThreadAuthor, ThreadMessage } from "@components/comment-thread";
+import type * as UI from "../../../src/elements/react";
+import type { ThreadAuthor, ThreadMessage } from "../../../src/elements/react";
 
 const MIN = 60_000;
 

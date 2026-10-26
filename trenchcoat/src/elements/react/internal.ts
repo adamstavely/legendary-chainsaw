@@ -13,6 +13,8 @@ export const h = React.createElement;
 export function useStaged(nodes: [string, React.ReactNode][]) {
   const box = React.useRef<HTMLDivElement>(null);
   const [els, setEls] = React.useState<Record<string, Element | undefined>>({});
+  // Runs after every render: staged nodes can change without a prop changing; it only sets state when they differ
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- no deps on purpose, see above
   React.useLayoutEffect(() => {
     const next: Record<string, Element | undefined> = {};
     box.current?.querySelectorAll<HTMLElement>(":scope > [data-k]").forEach((s) => (next[s.dataset.k!] = s.firstElementChild ?? undefined));
@@ -25,14 +27,17 @@ export const isNode = (v: unknown) => v != null && typeof v === "object" && !(v 
 
 /** A value that's controlled when `value` is given, else kept by the element from `defaultValue` */
 export function useControlled<T>(value: T | undefined, defaultValue: T, onChange: ((next: T) => void) | undefined) {
-  const [initial] = React.useState(defaultValue);
+  // Uncontrolled, the element's own changes are kept here: @lit/react sets every prop on every render, so passing
+  // the starting value back would undo them whenever the parent re-renders
+  const [own, setOwn] = React.useState(defaultValue);
   const controlled = value !== undefined;
   const handler = React.useCallback(
     (next: T, event: Event) => {
       if (controlled) event.preventDefault();
+      else setOwn(next);
       onChange?.(next);
     },
     [controlled, onChange],
   );
-  return { value: controlled ? value : initial, handler, controlled };
+  return { value: controlled ? value : own, handler, controlled };
 }

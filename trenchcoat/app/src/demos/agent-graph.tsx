@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import type * as UI from "@components/agent-graph";
-import type { GraphCall, GraphNode } from "@components/agent-graph";
+import type * as UI from "../../../src/elements/react";
+import type { GraphCall, GraphNode } from "../../../src/elements/react";
 import { caption } from "../demo-kit";
 
 /* A research crew at work: the lead hands work to three agents, each calling its own tools.

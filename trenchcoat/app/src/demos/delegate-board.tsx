@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import type * as UI from "@components/delegate-board";
-import type { DelegateAgent, DelegateTask } from "@components/delegate-board";
+import type * as UI from "../../../src/elements/react";
+import type { DelegateAgent, DelegateTask } from "../../../src/elements/react";
 
 const Logo = ({ bg, children }: { bg: string; children: string }) => (
   <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">

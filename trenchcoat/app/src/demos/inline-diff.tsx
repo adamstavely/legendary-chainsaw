@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
-import type * as UI from "@components/inline-diff";
-import type { InlineDiffHandle } from "@components/inline-diff";
+import type * as UI from "../../../src/elements/react";
+import type { InlineDiffHandle } from "../../../src/elements/react";
 import { buttonSm, caption } from "../demo-kit";
 
 const original =

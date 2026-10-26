@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import type * as UI from "@components/fan-out-grid";
-import type { FanoutTask } from "@components/fan-out-grid";
+import type * as UI from "../../../src/elements/react";
+import type { FanoutTask } from "../../../src/elements/react";
 
 const TOTAL = 140;
 const WORKERS = 10;

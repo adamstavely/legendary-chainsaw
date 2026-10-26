@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import type * as UI from "@components/ai-answer";
-import type { AnswerSource } from "@components/ai-answer";
+import type * as UI from "../../../src/elements/react";
+import type { AnswerSource } from "../../../src/elements/react";
 import { caption } from "../demo-kit";
 
 const Tile = ({ bg, ch }: { bg: string; ch: string }) => (

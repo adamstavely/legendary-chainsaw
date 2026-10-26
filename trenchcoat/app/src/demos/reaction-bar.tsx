@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type * as UI from "@components/reaction-bar";
+import type * as UI from "../../../src/elements/react";
 import { surface } from "../demo-kit";
 
 export default function Demo({ ui }: { ui: typeof UI }) {

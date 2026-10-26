@@ -1,6 +1,6 @@
 import { useState } from "react";
-import type * as UI from "@components/memory-panel";
-import type { Memory } from "@components/memory-panel";
+import type * as UI from "../../../src/elements/react";
+import type { Memory } from "../../../src/elements/react";
 
 const initial: Memory[] = [
   { id: "w1", category: "Work", text: "Product designer at a fintech startup in Berlin", source: "From chat", date: "Sep 28" },

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type * as UI from "@components/integration-settings";
+import type * as UI from "../../../src/elements/react";
 
 const StoreLogo = () => (
   <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">

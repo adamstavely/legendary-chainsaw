@@ -1,6 +1,6 @@
 import { useState } from "react";
-import type * as UI from "@components/comments-panel";
-import type { CommentAuthor, PanelComment } from "@components/comments-panel";
+import type * as UI from "../../../src/elements/react";
+import type { CommentAuthor, PanelComment } from "../../../src/elements/react";
 
 const MIN = 60_000;
 

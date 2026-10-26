@@ -19,7 +19,9 @@ const RawDataTable = createComponent({
   },
 });
 type RawDataTableProps = React.ComponentProps<typeof RawDataTable>;
-export type DataTableProps = Omit<RawDataTableProps, "rows" | "selection" | "sort" | "heading" | "readonly" | "onTcRowsChange" | "onTcSelectionChange" | "onTcSortChange" | "columns" | "icon"> & {
+export type DataTableProps = Omit<RawDataTableProps, "rows" | "selection" | "sort" | "heading" | "readonly" | "onTcRowsChange" | "onTcSelectionChange" | "onTcSortChange" | "columns" | "icon" | "renderCell"> & {
+  /** Draws a cell itself: a DOM node or a string; undefined leaves the cell to the table. Gets the row as the app gave it */
+  renderCell?: (row: DataRow, column: DataColumn) => Node | string | undefined;
   /** The table's heading and the grid's name */
   title: string;
   /** Icon in front of the title */
@@ -37,7 +39,7 @@ export type DataTableProps = Omit<RawDataTableProps, "rows" | "selection" | "sor
   /** false turns the table read only */
   editable?: boolean;
 };
-export function DataTable({ title, icon, columns, rows, defaultRows = [], onRowsChange, selection, defaultSelection = [], onSelectionChange, sort, defaultSort = null, onSortChange, editable = true, ...props }: DataTableProps) {
+export function DataTable({ title, icon, renderCell, columns, rows, defaultRows = [], onRowsChange, selection, defaultSelection = [], onSelectionChange, sort, defaultSort = null, onSortChange, editable = true, ...props }: DataTableProps) {
   const r = useControlled(rows, defaultRows, onRowsChange);
   // Icons and logos given as React nodes render in the staging box; the element gets their DOM nodes
   const nodes: [string, React.ReactNode][] = [];
@@ -51,10 +53,18 @@ export function DataTable({ title, icon, columns, rows, defaultRows = [], onRows
   const o = useControlled(sort, defaultSort, onSortChange);
   // Edits come back with the element's rows; logos are put back as the React nodes the app gave
   const byId = new Map(r.value.map((row) => [row.id, row]));
+  const latest = React.useRef({ renderCell, byId, columns });
+  latest.current = { renderCell, byId, columns };
+  // One stable function, so the table doesn't redraw every render; it hands the app its own row and column objects
+  const draw = React.useCallback((row: ElementRow, column: ElementColumn) => {
+    const { renderCell: fn, byId: rows, columns: cols } = latest.current;
+    return fn?.(rows.get(row.id) ?? (row as DataRow), cols.find((c) => c.key === column.key) ?? (column as DataColumn));
+  }, []);
   const fromElementRows = (list: ElementRow[]) => list.map((row) => (byId.has(row.id) && isNode(byId.get(row.id)!.logo) ? { ...row, logo: byId.get(row.id)!.logo } : row)) as DataRow[];
   return h(React.Fragment, null, stage, h(RawDataTable, {
     ...props,
     heading: title,
+    renderCell: renderCell ? draw : undefined,
     icon: isNode(icon) ? els.icon : (icon as Element | undefined),
     columns: cols,
     readonly: !editable,

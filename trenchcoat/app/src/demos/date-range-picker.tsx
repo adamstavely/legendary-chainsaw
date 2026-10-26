@@ -1,6 +1,6 @@
 import { useState, type CSSProperties } from "react";
-import type * as UI from "@components/date-range-picker";
-import type { CompareMode, DateRange } from "@components/date-range-picker";
+import type * as UI from "../../../src/elements/react";
+import type { CompareMode, DateRange } from "../../../src/elements/react";
 
 const today = new Date();
 const startOfDay = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate());

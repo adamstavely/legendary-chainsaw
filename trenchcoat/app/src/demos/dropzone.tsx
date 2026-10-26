@@ -1,6 +1,6 @@
 import { useState } from "react";
-import type * as UI from "@components/dropzone";
-import type { UploadItem } from "@components/dropzone";
+import type * as UI from "../../../src/elements/react";
+import type { UploadItem } from "../../../src/elements/react";
 import { textButton } from "../demo-kit";
 
 export default function Demo({ ui }: { ui: typeof UI }) {

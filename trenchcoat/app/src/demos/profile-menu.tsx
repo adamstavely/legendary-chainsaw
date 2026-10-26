@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type * as UI from "@components/profile-menu";
+import type * as UI from "../../../src/elements/react";
 import { textButton } from "../demo-kit";
 
 const STEPS = ["Add a profile photo", "Verify your email", "Connect your calendar", "Invite a teammate", "Set your working hours"];

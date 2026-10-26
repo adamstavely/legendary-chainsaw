@@ -1,6 +1,6 @@
 import { useState } from "react";
-import type * as UI from "@components/decision-tree";
-import type { Decision } from "@components/decision-tree";
+import type * as UI from "../../../src/elements/react";
+import type { Decision } from "../../../src/elements/react";
 import { buttonSm } from "../demo-kit";
 
 const Mark = ({ c }: { c: string }) => (

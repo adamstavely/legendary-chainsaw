@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import type * as UI from "@components/compact-breakdown";
-import type { BreakdownItem, BreakdownPeriod } from "@components/compact-breakdown";
+import type * as UI from "../../../src/elements/react";
+import type { BreakdownItem, BreakdownPeriod } from "../../../src/elements/react";
 
 const PERIODS: BreakdownPeriod[] = [
   { id: "7d", label: "7D" },

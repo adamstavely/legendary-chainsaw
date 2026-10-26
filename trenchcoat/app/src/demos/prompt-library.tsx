@@ -1,6 +1,6 @@
 import { useState } from "react";
-import type * as UI from "@components/prompt-library";
-import type { PromptTemplate } from "@components/prompt-library";
+import type * as UI from "../../../src/elements/react";
+import type { PromptTemplate } from "../../../src/elements/react";
 import { caption } from "../demo-kit";
 
 const templates: PromptTemplate[] = [

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import type * as UI from "@components/experiment-card";
-import type { ExperimentMetric, ExperimentVariant } from "@components/experiment-card";
+import type * as UI from "../../../src/elements/react";
+import type { ExperimentMetric, ExperimentVariant } from "../../../src/elements/react";
 
 const METRICS: ExperimentMetric[] = [
   { id: "conversion", label: "Conversion", format: (n) => `${n.toFixed(2)}%` },

@@ -294,7 +294,8 @@ export class TcCombobox extends TcElement {
     this.query = "";
   }
   formDisabledCallback(disabled: boolean) {
-    this.formDisabled = disabled;
+    // Also called while `disabled` is reflected during an update, where a property change would be dropped – so after it
+    queueMicrotask(() => (this.formDisabled = disabled));
   }
 
   protected override willUpdate(changed: PropertyValues) {
@@ -1135,9 +1136,5 @@ if (!customElements.get("tc-combobox")) customElements.define("tc-combobox", TcC
 declare global {
   interface HTMLElementTagNameMap {
     "tc-combobox": TcCombobox;
-  }
-  interface HTMLElementEventMap {
-    "tc-value-change": CustomEvent<ComboboxValueChange>;
-    "tc-open-change": CustomEvent<{ open: boolean }>;
   }
 }
