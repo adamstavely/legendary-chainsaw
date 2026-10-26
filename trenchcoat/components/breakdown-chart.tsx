@@ -25,7 +25,7 @@ export type Dimension = {
   label: string;
   /** Values in display order */
   values: string[];
-  /** Colors per value, used when this dimension segments the bars */
+  /** Colors per value, used when this dimension segments the bars – keep each at 3:1 or more against the surface in both themes (the default palettes do) */
   colors?: Record<string, string>;
   /** Small icon per value, shown under the bars and in the table */
   icons?: Record<string, ReactNode>;
@@ -72,10 +72,14 @@ type OwnProps = {
 
 export type BreakdownChartProps = Omit<ComponentPropsWithoutRef<"section">, keyof OwnProps> & OwnProps;
 
-/** Segment colors per look – Clean: the accent blue (rgba(0, 96, 226, .765) on white) and its lighter tints, then the status colors */
+/**
+ * Segment colors per look. Every one is at least 3:1 against both the light and the dark surface (WCAG 1.4.11), so
+ * one palette serves both themes; neighbouring segments are told apart by hue and by the 2px gap between them, and
+ * the table under the chart carries every value.
+ */
 const palettes: Record<Look, string[]> = {
-  standard: ["#2f6bff", "#8b5cf6", "#ec4899", "#7aa2ff", "#c4b5fd", "#a3a3a3", "#f9a8d4"],
-  clean: ["#3c85e9", "#5b5bd6", "#80b0f1", "#1a9a52", "#e8a20c", "#e5484d", "#b3cff6"],
+  standard: ["#2f6bff", "#8b5cf6", "#db2777", "#0d9488", "#c2700a", "#737373", "#c026d3"],
+  clean: ["#2f74e0", "#5b5bd6", "#0e7fa8", "#1a8a4a", "#b7791f", "#d93d42", "#8a63d2"],
 };
 /** Single-color bars (no segment) */
 const unsegmentedColor: Record<Look, string> = { standard: "#2f6bff", clean: palettes.clean[0] };
@@ -973,7 +977,7 @@ const css = /* css */ `
 :where([data-look="standard"], [data-look="standard"] *).ui-bc__rest { width: 10px; margin-left: -5px; background: var(--tc-fill-default, var(--_tc-fill-default)); }
 :where([data-look="clean"], [data-look="clean"] *).ui-bc__rest { width: 12px; margin-left: -6px; border-radius: var(--tc-radius-2xs, var(--_tc-radius-2xs)) var(--tc-radius-2xs, var(--_tc-radius-2xs)) 0 0; background: var(--tc-fill-subtle, var(--_tc-fill-subtle)); }
 .ui-bc__col[data-active] .ui-bc__rest { opacity: 1; }
-.ui-bc__bar { position: relative; display: flex; flex-direction: column-reverse; gap: 1px; min-height: 0; overflow: hidden; transition: height var(--tc-duration-slowest, var(--_tc-duration-slowest)) var(--tc-ease-move, var(--_tc-ease-move)); }
+.ui-bc__bar { position: relative; display: flex; flex-direction: column-reverse; gap: var(--tc-space-0-5, var(--_tc-space-0-5)); min-height: 0; overflow: hidden; transition: height var(--tc-duration-slowest, var(--_tc-duration-slowest)) var(--tc-ease-move, var(--_tc-ease-move)); }
 :where([data-look="standard"], [data-look="standard"] *).ui-bc__bar { width: 10px; }
 :where([data-look="clean"], [data-look="clean"] *).ui-bc__bar { width: 12px; border-radius: var(--tc-radius-2xs, var(--_tc-radius-2xs)) var(--tc-radius-2xs, var(--_tc-radius-2xs)) 0 0; }
 .ui-bc__seg { flex-basis: 0; min-height: 2px; transition: flex-grow var(--tc-duration-slowest, var(--_tc-duration-slowest)) var(--tc-ease-move, var(--_tc-ease-move)), background-color var(--tc-duration-slow, var(--_tc-duration-slow)) var(--tc-ease-standard, var(--_tc-ease-standard)); }

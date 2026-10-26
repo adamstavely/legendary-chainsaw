@@ -132,10 +132,10 @@
     "literal spacing": 19
   },
   "components/breakdown-chart-clean.tsx": {
-    "literal spacing": 8
+    "literal spacing": 7
   },
   "components/breakdown-chart.tsx": {
-    "literal spacing": 8
+    "literal spacing": 7
   },
   "components/chat-composer-clean.tsx": {
     "literal border-radius": 6,

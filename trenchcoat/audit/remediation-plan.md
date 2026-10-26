@@ -132,7 +132,9 @@ radii, the 50 blurred shadows onto `shadow-raised` / `shadow-overlay`. Lower the
 - breakdown-chart: a segment palette at ≥ 3:1 against the background in both themes, with pattern fills or
   separators so neighbouring segments don't rely on colour alone;
 - fan-out-grid cells and agent-queue backlog squares: 24 px hit areas (padding or a pseudo-element; the visible
-  square stays 12 px);
+  square stays 12 px); *done as (2026-10-26, user's choice): squares 24 px apart, since overlapping 24 px areas
+  wouldn't meet 2.5.8 – agent-queue's squares get a 24 px pseudo-element, fan-out-grid's grid picks the cell within
+  12 px of a click in the gap;*
 - date-range-picker: an in-range band at ≥ 3:1 against the calendar background in both looks and themes;
 - context-map: no change.
 

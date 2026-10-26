@@ -206,8 +206,9 @@ type Layout = {
   done: Box;
   failed: Box;
 };
+/** Backlog squares: 12px, 24px apart, each taking clicks across a 24px box (WCAG 2.5.8) */
 const SQ = 12;
-const STEP = 16;
+const STEP = 24;
 const CHIP = 28;
 const SLOT = 40;
 const GAP = 6;
@@ -1827,6 +1828,7 @@ const css = /* css */ `
 :where([data-look="standard"], [data-look="standard"] *).ui-agq__job[data-shape="square"] { border-radius: var(--tc-radius-2xs); background: var(--k-sq); box-shadow: inset 0 0 0 1px var(--k-edge); }
 :where([data-look="clean"], [data-look="clean"] *).ui-agq__job[data-flash] { background: var(--k-bg); box-shadow: 0 0 0 0.5px var(--k-edge); animation: ui-agq-drop var(--tc-duration-slowest) var(--tc-ease-move) backwards, ui-agq-shake var(--tc-duration-slower) var(--tc-ease-standard); }
 :where([data-look="clean"], [data-look="clean"] *).ui-agq__job[data-shape="square"] { border-radius: var(--tc-radius-2xs); background: var(--k-sq); box-shadow: inset 0 0 0 var(--tc-hairline) var(--k-edge); }
+.ui-agq__job[data-shape="square"]::before { content: ""; position: absolute; inset: -6px; }
 .ui-agq__job[data-shape="square"][data-priority="high"] { box-shadow: inset 0 0 0 1.5px var(--tc-status-warning-solid); }
 :where([data-look="standard"], [data-look="standard"] *).ui-agq__job[data-shape="square"]:hover { box-shadow: inset 0 0 0 1.5px var(--k-ink); }
 :where([data-look="clean"], [data-look="clean"] *).ui-agq__job[data-shape="square"]:hover { box-shadow: inset 0 0 0 1px var(--k-ink); }

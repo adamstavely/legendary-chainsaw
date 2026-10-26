@@ -50,13 +50,14 @@ export default function Demo({ ui }: { ui: typeof UI }) {
   const { BreakdownChart, StatusIcon } = ui;
   const records = useMemo(makeRecords, []);
 
+  // Every colour is at least 3:1 against the light and the dark surface (WCAG 1.4.11)
   const statusColors: Record<string, string> = {
-    Backlog: "#a3a3a3",
+    Backlog: "#8c8c8c",
     Todo: "#737373",
-    "In progress": "#f59e0b",
+    "In progress": "#c2700a",
     "In review": "#8b5cf6",
     Done: "#2f6bff",
-    Canceled: "#d4d4d4",
+    Canceled: "#94877a",
   };
 
   const dimensions: Dimension[] = [
@@ -73,7 +74,7 @@ export default function Demo({ ui }: { ui: typeof UI }) {
       key: "priority",
       label: "Priority",
       values: PRIORITIES,
-      colors: { Urgent: "#ef4444", High: "#f97316", Medium: "#2f6bff", Low: "#a3a3a3" },
+      colors: { Urgent: "#dc2626", High: "#d9600b", Medium: "#2f6bff", Low: "#8c8c8c" },
     },
     { key: "assignee", label: "Assignee", values: ASSIGNEES },
     { key: "team", label: "Team", values: TEAMS },

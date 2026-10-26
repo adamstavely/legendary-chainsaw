@@ -19,7 +19,7 @@
  */
 // Generated from src/components/fan-out-grid.tsx by scripts/build-lib.mjs – edit the source, not this file.
 
-import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState, type CSSProperties, type ComponentPropsWithoutRef, type KeyboardEvent, type ReactNode, type Ref, type RefObject } from "react";
+import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState, type CSSProperties, type ComponentPropsWithoutRef, type KeyboardEvent, type MouseEvent as ReactMouseEvent, type ReactNode, type Ref, type RefObject } from "react";
 
 export type Look = "standard" | "clean";
 const DEFAULT_LOOK: Look = "clean";
@@ -247,6 +247,17 @@ export function FanoutGrid({
     setPinned(next);
     onSelect?.(next ? t! : null);
   };
+  // Cells are 12px squares 24px apart (WCAG 2.5.8): a click in the gap picks the cell within 12px, so each square
+  // takes clicks across a 24px box
+  const pickNearest = (e: ReactMouseEvent<HTMLDivElement>) => {
+    if ((e.target as Element).closest(".ui-fog__cell")) return;
+    const i = cellEls.current.findIndex((el) => {
+      if (!el) return false;
+      const r = el.getBoundingClientRect();
+      return Math.abs(e.clientX - (r.left + r.width / 2)) <= 12 && Math.abs(e.clientY - (r.top + r.height / 2)) <= 12;
+    });
+    if (i >= 0) pick(i);
+  };
   const retry = async () => {
     if (!onRetry || retrying) return;
     setRetryFailed(false);
@@ -427,6 +438,7 @@ export function FanoutGrid({
           tabIndex={0}
           onKeyDown={onKeyDown}
           onMouseLeave={leaveSoon}
+          onClick={pickNearest}
           onFocus={(e) => {
             // Focus moves in on the kept task, else the first one, so the details show on focus as on hover
             if (e.target === e.currentTarget && active === null && total) setActive(pinnedIndex >= 0 ? pinnedIndex : 0);
@@ -845,7 +857,8 @@ const css = /* css */ `
 /* Colors, sizes and motion as variables – override them on .ui-fog */
 .ui-fog {
   --tc-fan-out-grid-cell: 12px;
-  --tc-fan-out-grid-gap: 4px;
+  /* 12px squares 24px apart: the spacing that WCAG 2.5.8 asks of targets under 24px */
+  --tc-fan-out-grid-gap: 12px;
   position: relative;
   box-sizing: border-box;
   width: 100%;
@@ -984,7 +997,7 @@ const css = /* css */ `
 /* ----- Narrow: smaller cells, the numbers on a line of their own ----- */
 @container ui-fog (max-width: 520px) {
   /* Set on the card – a container query can't style the container itself */
-  .ui-fog__panel { --tc-fan-out-grid-cell: 10px; --tc-fan-out-grid-gap: 3px; }
+  .ui-fog__panel { --tc-fan-out-grid-cell: 10px; --tc-fan-out-grid-gap: 14px; }
   :where([data-look="standard"], [data-look="standard"] *).ui-fog__panel { padding: var(--tc-space-3-5, var(--_tc-space-3-5)); }
   :where([data-look="clean"], [data-look="clean"] *).ui-fog__panel { padding: var(--tc-space-3, var(--_tc-space-3)); }
   .ui-fog__sum { flex-basis: 100%; justify-content: space-between; margin-left: 0; }

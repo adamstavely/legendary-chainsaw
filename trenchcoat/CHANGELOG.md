@@ -19,6 +19,12 @@ See `audit/remediation-plan.md`, Part 1.
   radius 176 → 101, blurred shadow 50 → 46. Unitless line heights, illustration art shadows and values 2 px or more
   off the scale stay literal.
 
+- Decision C: breakdown-chart's default palettes (and the gallery demo's colours) are at least 3:1 against the
+  surface in both themes, with a 2 px gap between segments; date-range-picker's picked range is a 3:1 band
+  (`--tc-date-range-picker-band`) with the day numbers still at 4.5:1 or more.
+- fan-out-grid cells and agent-queue backlog squares stay 12 px but sit 24 px apart, and each takes clicks across
+  24 px (WCAG 2.5.8) – the grids show fewer items per row.
+
 ### Behaviour changes
 
 - context-window: Clean's "Compacting…" shine runs 3 times and rests, like every other shimmer (it ran endlessly).

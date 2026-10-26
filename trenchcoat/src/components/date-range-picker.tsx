@@ -879,6 +879,8 @@ export function DateRangePicker({
 const css = /* css */ `
 /* Colors and motion as variables – override them on .ui-drp */
 :where([data-look="standard"], [data-look="standard"] *).ui-drp {
+  /* The picked range: at least 3:1 against the calendar (WCAG 1.4.11), with the day numbers still at 4.5:1 */
+  --tc-date-range-picker-band: light-dark(#658fff, #4a63a4);
   --tc-date-range-picker-compare-bg: light-dark(#ececee, #26262a);
   --tc-date-range-picker-compare-border: light-dark(#b9b9be, #4a4a50);
   position: relative;
@@ -894,6 +896,8 @@ const css = /* css */ `
 :where([data-look="clean"], [data-look="clean"] *).ui-drp {
   /* The comparison period: a grey band with hairline ends – the accent is for the range itself */
   --tc-date-range-picker-compare-bg: light-dark(rgba(0, 0, 0, 0.06), rgba(255, 255, 255, 0.1));
+  /* The picked range: at least 3:1 against the calendar (WCAG 1.4.11), with the day numbers still at 4.5:1 */
+  --tc-date-range-picker-band: light-dark(#5796ec, #3364bf);
   --tc-date-range-picker-compare-border: light-dark(rgba(0, 0, 0, 0.32), rgba(255, 255, 255, 0.36));
   /* Strokes are shadows: a 0.5px hairline plus a soft lift */
   position: relative;
@@ -1075,10 +1079,10 @@ button:where([data-look="clean"], [data-look="clean"] *).ui-drp__preset:hover:no
 /* A day: the band sits behind the number and runs on into its neighbours */
 .ui-drp__day { position: relative; display: grid; height: 32px; }
 :where([data-look="standard"], [data-look="standard"] *).ui-drp__day::before { content: ""; position: absolute; inset: 2px 0; transition: background-color var(--tc-duration-base) var(--tc-ease-standard), border-radius var(--tc-duration-base) var(--tc-ease-move), left var(--tc-duration-base) var(--tc-ease-move), right var(--tc-duration-base) var(--tc-ease-move); }
-:where([data-look="standard"], [data-look="standard"] *).ui-drp__day[data-range]::before { background: var(--tc-accent-subtle); }
+:where([data-look="standard"], [data-look="standard"] *).ui-drp__day[data-range]::before { background: var(--tc-date-range-picker-band); }
 :where([data-look="standard"], [data-look="standard"] *).ui-drp__day[data-preview]::before { background: var(--tc-accent-subtle); }
 :where([data-look="clean"], [data-look="clean"] *).ui-drp__day::before { content: ""; position: absolute; inset: 2px 0; transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), border-radius var(--tc-duration-base) var(--tc-ease-move), left var(--tc-duration-base) var(--tc-ease-move), right var(--tc-duration-base) var(--tc-ease-move); }
-:where([data-look="clean"], [data-look="clean"] *).ui-drp__day[data-range]::before { background: var(--tc-accent-subtle); }
+:where([data-look="clean"], [data-look="clean"] *).ui-drp__day[data-range]::before { background: var(--tc-date-range-picker-band); }
 :where([data-look="clean"], [data-look="clean"] *).ui-drp__day[data-preview]::before { background: var(--tc-accent-subtle); }
 .ui-drp__day[data-compare]::before { background: var(--tc-date-range-picker-compare-bg); }
 :where([data-look="standard"], [data-look="standard"] *).ui-drp__day[data-start]::before,
@@ -1096,7 +1100,7 @@ button:where([data-look="clean"], [data-look="clean"] *).ui-drp__preset:hover:no
   transition: background-color var(--tc-duration-base) var(--tc-ease-standard), color var(--tc-duration-base) var(--tc-ease-standard), box-shadow var(--tc-duration-base) var(--tc-ease-standard), transform var(--tc-duration-fast) var(--tc-ease-move);
 }
 :where([data-look="standard"], [data-look="standard"] *).ui-drp__day button:hover:not(:disabled) { background: var(--tc-fill-hover); }
-:where([data-look="standard"], [data-look="standard"] *).ui-drp__day[data-range] button:hover:not(:disabled) { background: transparent; box-shadow: inset 0 0 0 1px var(--tc-accent); }
+:where([data-look="standard"], [data-look="standard"] *).ui-drp__day[data-range] button:hover:not(:disabled) { background: transparent; box-shadow: inset 0 0 0 1px var(--tc-text-primary); }
 :where([data-look="clean"], [data-look="clean"] *).ui-drp__day[data-start]::before,
 :where([data-look="clean"], [data-look="clean"] *).ui-drp__day[data-compare-start]::before,
 :where([data-look="clean"], [data-look="clean"] *).ui-drp__day[data-row-start]::before { left: 2px; border-top-left-radius: var(--tc-radius-sm); border-bottom-left-radius: var(--tc-radius-sm); }
