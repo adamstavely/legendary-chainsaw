@@ -70,6 +70,8 @@ function cleanTwins(): Plugin {
 export default defineConfig({
   root: here("app"),
   plugins: [cleanTwins(), uiAlias(), react()],
+  // The Lit elements use standard decorators, which no browser ships yet: esbuild lowers them
+  esbuild: { target: "es2022" },
   resolve: { alias: LIBS },
   server: { port: 5199, fs: { allow: [here(".")] } },
   build: { outDir: here("dist-gallery"), emptyOutDir: true },

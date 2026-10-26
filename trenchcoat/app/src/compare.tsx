@@ -1,0 +1,76 @@
+// Dev-only page for scripts/compare-lit.mjs (lit-port-plan.md acceptance check 4): every React component that has
+// a Lit port, next to the element, with the same props, in both looks and both themes. Each side is screenshotted
+// and diffed.
+import { createRoot } from "react-dom/client";
+import "../../tokens/tokens.css";
+import { Button as ReactButton } from "../../src/components/button";
+import { Combobox as ReactCombobox } from "../../src/components/combobox";
+import { DataTable as ReactDataTable } from "../../src/components/data-table";
+import { Button, Combobox, DataTable } from "../../src/elements/react";
+
+const people = [
+  { value: "ana", label: "Ana Lima", group: "People", hint: "Design" },
+  { value: "ben", label: "Ben Ito", group: "People" },
+  { value: "bug", label: "Bug", group: "Labels", color: "#d93d42" },
+];
+const columns = [
+  { key: "name", label: "Company", type: "title" as const },
+  { key: "stage", label: "Stage", type: "tag" as const },
+  { key: "arr", label: "ARR", type: "number" as const },
+];
+const rows = [
+  { id: "a", name: "Acme", stage: "Lead", arr: 1200 },
+  { id: "b", name: "Bolt", stage: "Won", arr: 800 },
+];
+
+type Case = { id: string; react: (look: "standard" | "clean") => React.ReactNode; lit: (look: "standard" | "clean") => React.ReactNode };
+const cases: Case[] = [
+  {
+    id: "button",
+    react: (look) => (
+      <div style={{ display: "flex", gap: 8 }}>
+        <ReactButton look={look}>Save</ReactButton>
+        <ReactButton look={look} variant="secondary">Copy</ReactButton>
+        <ReactButton look={look} variant="ghost" size="sm">Ghost</ReactButton>
+        <ReactButton look={look} variant="destructive" size="lg">Delete</ReactButton>
+      </div>
+    ),
+    lit: (look) => (
+      <div style={{ display: "flex", gap: 8 }}>
+        <Button look={look}>Save</Button>
+        <Button look={look} variant="secondary">Copy</Button>
+        <Button look={look} variant="ghost" size="sm">Ghost</Button>
+        <Button look={look} variant="destructive" size="lg">Delete</Button>
+      </div>
+    ),
+  },
+  {
+    id: "combobox",
+    react: (look) => <ReactCombobox look={look} label="Assignees" options={people} defaultValue={["ana", "bug"]} />,
+    lit: (look) => <Combobox look={look} label="Assignees" options={people} defaultValue={["ana", "bug"]} />,
+  },
+  {
+    id: "data-table",
+    react: (look) => <ReactDataTable look={look} title="Accounts" columns={columns} defaultRows={rows} />,
+    lit: (look) => <DataTable look={look} title="Accounts" columns={columns} defaultRows={rows} />,
+  },
+];
+
+function Page() {
+  return (
+    <>
+      {cases.flatMap((c) =>
+        (["standard", "clean"] as const).flatMap((look) =>
+          (["light", "dark"] as const).map((theme) => (
+            <div key={`${c.id}-${look}-${theme}`} className="pair" data-theme={theme} data-tc-theme={theme} id={`${c.id}-${look}-${theme}`}>
+              <div className="side" data-side="react">{c.react(look)}</div>
+              <div className="side" data-side="lit">{c.lit(look)}</div>
+            </div>
+          )),
+        ),
+      )}
+    </>
+  );
+}
+
+createRoot(document.getElementById("root")!).render(<Page />);

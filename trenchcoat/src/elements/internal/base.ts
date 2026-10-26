@@ -38,6 +38,9 @@ export abstract class TcElement extends LitElement {
 
   override connectedCallback() {
     const type = this.constructor as typeof TcElement;
+    // Custom elements are inline by default; the React roots were block elements (div, section) – an element's own
+    // CSS overrides this zero-specificity default (Button is inline-flex)
+    adoptStyles("tc-base", ":where([data-ui]) { display: block; }", this.ownerDocument);
     adoptStyles(`ui-${type.ui}`, type.css, this.ownerDocument);
     this.dataset.ui = type.ui;
     super.connectedCallback();
