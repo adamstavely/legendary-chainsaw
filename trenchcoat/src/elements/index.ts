@@ -47,6 +47,7 @@ export * from "./glow-keyboard";
 export * from "./gradient-floor";
 export * from "./gradient-text";
 export * from "./grid-background";
+export * from "./handoff";
 export * from "./inline-diff";
 export * from "./integration-beam";
 export * from "./integration-flow";
