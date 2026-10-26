@@ -1,0 +1,296 @@
+{
+ "elements": [
+  {
+   "tag": "tc-artifact-panel",
+   "className": "TcArtifactPanel",
+   "description": "The files, code and documents a run produced: a list, a preview per type, versions with a diff, download.",
+   "properties": [
+    {
+     "name": "artifacts",
+     "attribute": null,
+     "type": "Artifact[]",
+     "default": "[]",
+     "description": "What the run produced",
+     "readonly": false
+    },
+    {
+     "name": "selected",
+     "attribute": "selected",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The id of the artifact shown; empty shows the first. Changed by the user unless a tc-selected-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "version",
+     "attribute": "version",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The id of the version shown; empty shows the latest. Changed by the user unless a tc-version-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "view",
+     "attribute": "view",
+     "type": "ArtifactPanelView",
+     "default": "\"preview\"",
+     "description": "\"preview\", or \"diff\" to compare the version with the one before. Changed by the user unless a tc-view-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Artifacts\"",
+     "description": "The heading, and the region's name",
+     "readonly": false
+    },
+    {
+     "name": "emptyLabel",
+     "attribute": "empty-label",
+     "type": "string",
+     "default": "\"Nothing produced yet\"",
+     "description": "Shown when there is nothing yet",
+     "readonly": false
+    },
+    {
+     "name": "previewHeight",
+     "attribute": "preview-height",
+     "type": "number",
+     "default": "360",
+     "description": "The preview's height cap in px; longer content scrolls",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-selected-change",
+     "detail": "",
+     "description": "An artifact was picked in the list ({ id: string }); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-version-change",
+     "detail": "",
+     "description": "A version was picked, or picking another artifact went back to its latest ({ artifact: string, version: string }); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-view-change",
+     "detail": "",
+     "description": "Compare was turned on or off ({ view: \"preview\" | \"diff\" }); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-download",
+     "detail": "",
+     "description": "Download was pressed ({ artifact: Artifact, version: ArtifactVersion }); cancelable – unless prevented, the element saves the file",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "artp",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-accent",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-artifact-panel-preview-h",
+    "--tc-border-default",
+    "--tc-border-strong",
+    "--tc-border-subtle",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-sm",
+    "--tc-control-px-sm",
+    "--tc-control-radius-sm",
+    "--tc-duration-fast",
+    "--tc-duration-shimmer",
+    "--tc-ease-in-out",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-hover",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-lg-plus",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xl",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-loose",
+    "--tc-line-height-normal",
+    "--tc-line-height-relaxed",
+    "--tc-line-height-tight",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-radius-badge",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-radius-xs",
+    "--tc-seg-pad",
+    "--tc-seg-thumb-bg",
+    "--tc-seg-thumb-shadow",
+    "--tc-seg-track-bg",
+    "--tc-seg-track-radius",
+    "--tc-shadow-raised",
+    "--tc-shadow-sunken",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-4-5",
+    "--tc-space-6",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-success-solid",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-sunken",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tone-pink-fg",
+    "--tc-tone-violet-fg",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "artifactTableToCsv",
+   "signature": "artifactTableToCsv(t: ArtifactTable): void",
+   "description": "A table as CSV text, with a header row"
+  },
+  {
+   "name": "artifactTableFromCsv",
+   "signature": "artifactTableFromCsv(text: string): ArtifactTable",
+   "description": "CSV text (first row: the columns) as a table"
+  },
+  {
+   "name": "saveArtifact",
+   "signature": "saveArtifact(artifact: Artifact, version: ArtifactVersion): void",
+   "description": "Saves a version as a file: a Blob for text, code and tables, the image's own URL for images"
+  }
+ ],
+ "react": [
+  {
+   "component": "ArtifactPanel",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading, and the region's name"
+    },
+    {
+     "name": "selected",
+     "type": "string",
+     "optional": true,
+     "description": "The id of the artifact shown (controlled); empty shows the first"
+    },
+    {
+     "name": "defaultSelected",
+     "type": "string",
+     "optional": true,
+     "description": "The artifact shown first when `selected` isn't given"
+    },
+    {
+     "name": "onSelectedChange",
+     "type": "(id: string) => void",
+     "optional": true,
+     "description": "Called with the artifact's id when the user picks one in the list"
+    },
+    {
+     "name": "version",
+     "type": "string",
+     "optional": true,
+     "description": "The id of the version shown (controlled); empty shows the latest"
+    },
+    {
+     "name": "defaultVersion",
+     "type": "string",
+     "optional": true,
+     "description": "The version shown first when `version` isn't given; empty shows the latest"
+    },
+    {
+     "name": "onVersionChange",
+     "type": "(version: string, artifactId: string) => void",
+     "optional": true,
+     "description": "A version was picked; picking another artifact goes back to its latest (\"\")"
+    },
+    {
+     "name": "view",
+     "type": "ArtifactPanelView",
+     "optional": true,
+     "description": "\"preview\", or \"diff\" to compare with the version before (controlled)"
+    },
+    {
+     "name": "defaultView",
+     "type": "ArtifactPanelView",
+     "optional": true,
+     "description": "The view to start in when `view` isn't given"
+    },
+    {
+     "name": "onViewChange",
+     "type": "(view: ArtifactPanelView) => void",
+     "optional": true,
+     "description": "Called when the user turns Compare on (\"diff\") or off (\"preview\")"
+    },
+    {
+     "name": "onDownload",
+     "type": "(artifact: Artifact, version: ArtifactVersion, event: Event) => void",
+     "optional": true,
+     "description": "Download was pressed. The panel saves the file itself unless you call event.preventDefault()"
+    }
+   ],
+   "hides": [
+    "heading",
+    "selected",
+    "version",
+    "view"
+   ]
+  }
+ ],
+ "changelog": [
+  "`tc-artifact-panel` – what a run produced: a list, a preview per kind (Markdown text, code through `tc-code-block`, images, tables from CSV), versions with a diff against the one before, and download (a Blob by default, cancelable)."
+ ],
+ "size": {
+  "min": 115131,
+  "gzip": 29309
+ }
+}

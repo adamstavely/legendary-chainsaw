@@ -77,7 +77,9 @@ components (Part 2).
 
 Each step is one commit (or a few), with `npm run ci` green before the next starts. Each part is one pull request
 into `main`: Part 1 on `trenchcoat-remediation-plan` (which already carries the trenchcoat files), Part 2 on a
-branch from `main` after Part 1 is merged.
+branch from `main` after Part 1 is merged, and so on – Part 3 (17 new components), Part 4 (a design-system page for
+every component) and Part 5 (27 more components, including Trust & calibration) each on a branch from `main` after
+the part before is merged.
 
 ### Step 0 – Working copy
 
@@ -342,6 +344,216 @@ in three engines and the forced-colours script (112 entries, 1,031 controls). No
 the tokens the agents asked for (a syntax palette, `--tc-surface-well`, a solid accent, a popover z-index) – listed
 in the PR.
 
+## Part 4 – A design-system page for every component
+
+Each gallery page (`#/<slug>`) today is the live demo, a name and one line. Part 4 turns it into a design-system
+page – what the component is, when to use it and when not to, how it's built, its API, how to use it in each
+framework, its accessibility – for all 122 elements (64 + 17 components, 30 illustrations and motion pieces, and the
+sub-elements some components need). It comes before Part 5, so the 27 new components ship with pages from the
+start. The gallery stays React (decision F).
+
+**Most of a page is generated, so it can't drift from the code.** The API comes from `custom-elements.json` (built
+from the elements' JSDoc), the React props from the wrappers' TypeScript types, the tokens from the element CSS,
+and the examples are checked by the type checker and the example apps. Only the guidance – when to use, do and
+don't, content, keyboard notes – is written by hand, in one file per component next to its demo.
+
+### 4.1 Complete the manifest, and keep it complete
+
+- Describe the 100 public properties that have no JSDoc description yet; mark internal members `@internal`.
+- Document each element's component tokens (`--tc-<slug>-*`) with `@cssprop`, its `@slot`s and its public
+  methods, so the manifest lists them (it lists no CSS properties today).
+- Generate the React wrapper props: a small script reads `src/elements/react/*.ts` with the TypeScript compiler
+  API and writes `dist/types/react-props.json` (name, type, default, description, controlled pairs such as
+  `value` / `defaultValue` / `onChange`).
+- **`npm run check:docs`** in CI: fails on a public property, attribute, event, slot or token without a description,
+  on a component without a guidance file (4.3) or a demo, and on a guidance file that names a property the
+  element doesn't have.
+
+### 4.2 The page
+
+One route per entry, in this order:
+
+| Section | What it shows | Source |
+|---|---|---|
+| Header | Name, category, the one-line description, tag (`<tc-…>`), import line (`trenchcoat/<slug>`), React name, size (min + gzip), status (stable / new / frozen React twin) | registry, manifest, `scripts/perf` sizes |
+| Live example | The demo with the look switch (Standard / Clean / both), theme (light / dark / system), width presets (320 / 480 / full) and Replay | today's demo |
+| Overview | What it is and the problem it solves; **when to use**; **when not to use**, with the component to use instead | guidance file |
+| Anatomy | The demo's parts labelled – an overlay of numbered callouts drawn from `data-anatomy` markers and the guidance file's list | guidance file + demo |
+| Looks | Standard and Clean side by side, with what differs | both stages |
+| Usage | Code for HTML, React, Vue, Angular and Svelte, in tabs with copy: the import, the element with its common properties, a controlled-value example where it has one, and handling its events | generated from the manifest; one hand-written example per component, type-checked |
+| API | Properties and attributes (name, attribute, type, default, description, reflects), events (name, detail type, cancelable, when), slots, methods, CSS custom properties and the design tokens it reads | manifest |
+| React | The wrapper's props, controlled and uncontrolled pairs, callbacks | `react-props.json` |
+| Accessibility | The WAI-ARIA pattern, the keyboard table (key → action), focus behaviour, screen-reader announcements, forced colours, reduced motion | guidance file; pattern links |
+| Content | Writing guidance: labels, empty and error text, tone | guidance file |
+| Do / Don't | Two to four paired examples – live, small renders where they help | guidance file |
+| Related | Components it builds on, uses, or is often used with | guidance file + the plan's "Builds on" |
+| Changelog | Its entries in `CHANGELOG.md` | changelog, by tag |
+
+A right-hand "On this page" index, deep links to every section (`#/<slug>/api`), and search that indexes page text.
+Illustrations and motion get the same page with the sections that apply (no anatomy or keyboard where there's
+nothing to operate).
+
+### 4.3 Guidance files
+
+`app/src/docs/<slug>.md` – Markdown with a small front matter (`pattern`, `related`, `anatomy`, `status`) and the
+headings the page expects: Overview, When to use, When not to use, Keyboard, Screen readers, Content, Do, Don't.
+Written for all 122 elements by parallel agents from a brief, each one checked against its element (the keyboard
+table against the element's key handling and tests; "when not to use" pointing at a real alternative), with the
+house voice of the README. The element header comments already hold much of this.
+
+### 4.4 Foundations pages
+
+Beside the component pages: Getting started (install, `tokens.css`, the look provider, frameworks), Looks, Themes,
+Tokens (every token with its value in both looks and themes, contrast where it applies), Accessibility (what every
+component guarantees, what isn't tested – VoiceOver), Patterns (values and events, forms, React wrappers, no SSR),
+and the changelog.
+
+### 4.5 Verification
+
+`check:docs` green; every page renders in the smoke test; axe on the docs pages in three engines; the usage
+examples type-checked (React, Vue) and run in the HTML example; a screenshot of every page in both themes reviewed
+for layout.
+
+*Done differently (2026-10-26):*
+- **How it was built:** the page, the generator and the check were built first, with combobox as the reference
+  page. Ten agents then wrote the other 112 guidance files from `audit/docs-brief.md`. 113 pages in all, including
+  one for the look provider.
+- **What documenting found:** reading every component against its README, comments and demo found six bugs, all
+  fixed, and a list of mismatches to fix later, in `audit/docs-findings.md`.
+- **Checks:** axe on every docs page in three engines; every page rendered in a test; the React examples
+  type-checked by `check:docs`.
+- **Not done:** a person reviewing the screenshots of every page. Pages were reviewed by the agents that wrote them,
+  plus a spot check.
+
+## Part 5 – More AI components, and trust & calibration
+
+27 new components and one enhancement, built the way Part 3 was: Lit elements on Part 2's toolchain and patterns,
+each with both looks, light / dark / system, the pattern tokens and scales, the WAI-ARIA keyboard pattern that fits,
+forced colours, `prefers-reduced-motion`, cancelable `tc-*-change` events, browser tests in three engines, a gallery
+demo, its docs page (Part 4: documented properties, events and tokens, plus its guidance file), the axe scan, a
+`custom-elements.json` entry and a React wrapper. Built by parallel agents from
+[new-component-brief.md](new-component-brief.md), one commit per component; one pull request for the part.
+
+Sources: the gaps listed after Part 3 (quality, retrieval, safety, structured output, conversation), and the THEMIS
+platform (`refactored-palm-tree/themis`: the ATHENA analysis interface, the THEMIS console screens and the service
+specs). The THEMIS components form their own gallery category, **Trust & calibration** (5.6). They are built
+domain-neutral (decision M): THEMIS's legal and intelligence vocabulary becomes defaults and labels, not
+assumptions.
+
+### 5.0 Foundations first
+
+What Part 3 left for later, and what Part 5 needs from the start:
+
+- **Shared helpers** into `src/elements/internal/`, replacing the copies in Part 3's elements: a roving-tabindex
+  `ToolbarController` (voice-mode, answer-arena, code-block, live-view, context-tray), `copyText()`, `initials()`, a
+  caret-geometry helper (mention-picker), the fold-away-on-removal ghost (context-window, combobox, context-tray), a
+  token-to-milliseconds reader, and `internal/format.ts` for durations and money (parallel-attempts, run-compare).
+- **Tokens** in `tokens.css` (both looks, light and dark, contrast-checked): a syntax palette `--tc-syntax-*`
+  (code-block now, tool-call-card and structured-output next), `--tc-surface-well`, `--tc-accent-solid`,
+  `--tc-z-popover`, a teal tone (ANSI cyan), the **source-type colours** `--tc-source-grounded / -model /
+  -inferred` (5.6), and the **validity bands** `--tc-validity-high / -good / -aging / -stale` (5.6).
+- **A layered-graph layout helper** (columns, edge routing, weak links dashed) for lineage-graph, shared with
+  playbook-canvas.
+- **Gallery:** a "Trust & calibration" category in `app/src/registry.ts`, and the README lines for all 27, added
+  before the agents start (as in Part 3).
+
+### 5.1 Quality & evaluation
+
+| Component | What it is | Builds on |
+|---|---|---|
+| `tc-eval-scorecard` | A set of test cases run against prompt or model versions: pass / fail per case, the score trend across versions, filters by tag, and a failing case opened side by side with its expected answer | run-compare, data-table, kpi-chart |
+| `tc-feedback-rubric` | Structured rating of an answer: rubric criteria with scales, the failure type (hallucination, missing context, wrong tone…), a correction editor for the ideal answer, and what gets sent – training and eval data, not a thumb | message-actions, segmented-control |
+
+### 5.2 Retrieval & documents
+
+| Component | What it is | Builds on |
+|---|---|---|
+| `tc-retrieval-inspector` | The chunks retrieved for an answer: score, source document and position, freshness (`tc-validity-badge`), which chunks the answer actually used, and misses the app reports; per-query, for debugging retrieval | cited-answer, trace-waterfall |
+| `tc-extraction-review` | Fields extracted from a PDF or image, each linked to a highlighted box on the page, with a confidence per field and accept / correct / reject; keyboard moves field by field and the page follows | dropzone's preview, image-grid's compare, data-table |
+
+### 5.3 Safety
+
+| Component | What it is | Builds on |
+|---|---|---|
+| `tc-guardrail-notice` | Content blocked, redacted or rewritten by a policy: which policy, why, what changed (with personal data masked), and "Request review" – inline in a thread or as a banner | approval-card, permission-request |
+
+### 5.4 Structured & generated output
+
+| Component | What it is | Builds on |
+|---|---|---|
+| `tc-structured-output` | Streaming JSON as a collapsible, typed tree, validated against a JSON Schema as it arrives: missing and invalid fields flagged, copy as JSON or as code | code-block (syntax tokens), agent-tree's tree keyboard |
+| `tc-generated-ui` | Renders a model's UI spec – tables, charts, metric tiles, forms, callouts – as the library's own elements, validating the spec and falling back to text for anything unknown; actions come back as events | data-table, kpi-chart, change-summary, stepper-form |
+
+### 5.5 Conversation
+
+| Component | What it is | Builds on |
+|---|---|---|
+| `tc-clarifying-questions` | The agent asks before it starts: two or three structured questions (choices, short text, "you decide"), answered in place and sent as one reply | stepper-form's choices, segmented-control |
+| `tc-prompt-starters` | The empty-state suggestions and the follow-ups after an answer, personalised from context, as a keyboard-friendly list that fills or sends | chat-composer, mention-picker |
+| `tc-model-settings` | The model's settings outside the model picker: analysis posture (persona), knowledge source (training only, retrieval, documents only), sampling with presets (Precise / Balanced / Exploratory) and the active instruction | model-picker, segmented-control; ATHENA's configuration panel |
+
+### 5.6 Trust & calibration
+
+From THEMIS. Components that keep people's reliance on AI matched to how well it actually performs, make every
+output traceable to its evidence, and put policy and human review where they can be seen and tested. Built
+domain-neutral (decision M).
+
+**Calibrated reliance**
+
+| Component | What it is | Builds on |
+|---|---|---|
+| `tc-claim-answer` | An answer marked up claim by claim: each claim's source type – grounded in a retrieved source, model knowledge, or inferred – its confidence and optional uncertainty kind (the world hasn't decided / we lack evidence / beyond the model), and a counter-position for every substantive answer; claims can be sent to the verification queue | cited-answer, ai-answer; ATHENA's message bubble, CVS/VERITAS, UCS/TYCHE |
+| `tc-verification-queue` | The claims collected across a session, each marked verified externally, can't verify, incorrect or dismissed, with its source passage; an export stays blocked until the claims are reviewed | review-center, decision-inbox; ATHENA's queue and export gate |
+| `tc-reflection-gate` | Prompts that make a person think before relying on an answer, in four modes: **intent** (the task, the decision it supports, the cost of being wrong), **prior** (what you believe and what would change your mind), **reformulate** (restate the answer in your own words and compare), **checkpoint** (name one claim you'll verify) | stepper-form's fields; ATHENA's gates |
+| `tc-reliance-gauge` | Whether trust in the AI matches its performance: a reliance–accuracy dial with its trend, signals against spot-check and mandatory thresholds, overtrust and undertrust episodes, and the recommended review level | usage-meter, kpi-chart; THEMIS trust calibration (TCS/MIMIR) |
+| `tc-disagreement-banner` | Today's answer contradicts an earlier answer on the same question: the two side by side with the difference highlighted, and dismiss or open the earlier session | run-compare's diff, inline-diff |
+| `tc-synthesis-notes` | The person's own conclusions, assumptions and things still to verify, written apart from the model's output and exported with provenance | writing-assistant, memory-panel |
+
+**Provenance & evidence**
+
+| Component | What it is | Builds on |
+|---|---|---|
+| `tc-lineage-graph` | Where an output came from, as columns – run, turn, queries and tools, source chunks, claims, artifacts – with a node's record on click and weak links (a truncated context) dashed; a graph or an event-chain view | agent-graph, the layered-graph helper (5.0); THEMIS lineage (MOIRAI) |
+| `tc-validity-badge` | Evidence freshness as a band (high, good, aging, stale) that decays over time, plus contested and superseded states – a badge, and a margin strip for a document's paragraphs | the validity tokens (5.0); THEMIS temporal validity (TVS/KAIROS) |
+| `tc-provenance-summary` | What a document is made of: the share from sources, AI synthesis and original writing, per section and in total, with links into the lineage | breakdown-chart, compact-breakdown |
+| `tc-correction-propagation` | A correction's reach: the other artifacts and released packages that cite the corrected claim, each with Review or Mark superseded – nothing rewritten automatically | agent-ledger, approval-card; THEMIS feedback (FGTS/ALETHEIA) |
+| `tc-attestation-check` | Verify a signed evidence package by hash or file, locally: signature, chain integrity, what it covers, and a clear valid / invalid result | dropzone; THEMIS attestation verifier |
+| `tc-run-manifest` | A run's reproducibility record: model, settings, instruction hash, corpus, intent and the verification summary, with export | context-window; ATHENA's session manifest |
+
+**Governance & oversight**
+
+| Component | What it is | Builds on |
+|---|---|---|
+| `tc-policy-simulator` | Dry-run an action against the policy set: the decision (allow, require approval, deny, hard stop), the rule that matched, the reason and a step-by-step rule trace; nothing executes | tool-permissions, trace-waterfall; THEMIS policy (PGS/NOMOS) |
+| `tc-gate-config` | When a person decides: trigger conditions as switches, who reviews, what the reviewer sees, which actions they may take (approve, edit and approve, send back, escalate, reject), and why the gate is there | permission-request, segmented-control |
+| `tc-coverage-matrix` | A heatmap of checks × components marking covered, partial and gap, with totals and a cell's detail – adversarial test coverage, controls, policies | tool-permissions' grid |
+| `tc-kill-switch` | System posture and the emergency stop: the current state, active stops, a confirmed Stop that names what it halts, and resume | approval-card; THEMIS incidents |
+| `tc-playbook-canvas` | An agent workflow by phase – trigger, intake, context, analysis, review – as steps you add, reorder and configure, with a gate step (`tc-gate-config`), versions and a dry run; the largest piece, built last (decision N) | run-checkpoints, delegate-board, the layered-graph helper |
+
+**Enhancement:** approval-card gains THEMIS's decision detail – "Why you're seeing this", "If you approve / If
+you deny", editable arguments and evidence chips – as optional properties. Its React version stays as blocks and
+screens use it; the element and the wrapper change.
+
+### 5.7 Order
+
+1. **5.0 Foundations** – helpers, tokens, the graph helper, the gallery category and README lines.
+2. **Calibrated reliance** – `tc-claim-answer` first (the queue, the banner and the gauge build on its claim model),
+   then `tc-verification-queue`, `tc-reflection-gate`, `tc-disagreement-banner`, `tc-reliance-gauge`,
+   `tc-synthesis-notes`.
+3. **Provenance & evidence** – `tc-validity-badge` first (claim-answer and retrieval-inspector use it), then
+   `tc-lineage-graph`, `tc-provenance-summary`, `tc-correction-propagation`, `tc-run-manifest`,
+   `tc-attestation-check`.
+4. **5.1–5.5**, alongside 2 and 3 – they touch different files. `tc-structured-output` before `tc-generated-ui`.
+5. **Governance & oversight** – `tc-policy-simulator`, `tc-gate-config`, `tc-coverage-matrix`, `tc-kill-switch`, the
+   approval-card enhancement, then `tc-playbook-canvas`.
+
+### 5.8 Verification
+
+As in 2.8 and Part 3, plus each component's docs page (Part 4): axe on every gallery entry in Chromium, Firefox and
+WebKit; the forced-colours script; update budgets; every element in the examples' all-elements page; tree-shaking.
+Windowed lists tested at 10,000 rows (verification-queue, retrieval-inspector, eval-scorecard). VoiceOver remains
+for a person, with claim-answer, verification-queue, lineage-graph and playbook-canvas added to the list.
+
 ## Decisions (2026-10-25)
 
 | | Question | Decision |
@@ -357,6 +569,8 @@ in the PR.
 | K | Screen readers | **VoiceOver only, run by Claude.** NVDA isn't tested – a known gap. |
 | L | New components | **17 new components** (9 for agents, 8 for AI & chat), built as Lit elements in Part 3, after Part 2 (2026-10-26). |
 | B | Which way do the half-step font sizes fold? | **Round down:** 11.5 → 11, 12.5 → 12, 13.5 → 13 px, in both looks |
+| M | THEMIS vocabulary | **Domain-neutral.** Source types default to Sourced / Model knowledge / Inferred (THEMIS's GRND / PARAM / SYNTH as an option), the reliance index and thresholds are properties, and legal or intelligence terms are demo data only (2026-10-26) |
+| N | Playbook canvas scope | **A component, built last** in Part 5 – an editor of phases and steps, not a free-form canvas; if it outgrows a component it moves to the blocks phase (2026-10-26) |
 | C | The judgement calls in item 15 | **As recommended:** fix breakdown-chart's palette, the fan-out-grid and agent-queue targets and the date-range band; keep context-map's tiles as they are (name and kind are in the hover/focus card) |
 
 ## Order and rough size
@@ -386,11 +600,20 @@ in the PR.
 | **Part 3** | Part 2 merged | |
 | 3.1 Agents (9) | 2.4 | 3–4 weeks |
 | 3.2 AI & chat (8) | 2.4 | 3–4 weeks |
+| **Part 4** | Part 3 merged | |
+| 4.0 Foundations (helpers, tokens, graph helper, gallery) | – | 3–4 days |
+| 4.1–4.5 Quality, retrieval, safety, structured output, conversation (10) | 4.0 | 3–4 weeks |
+| 4.6 Trust & calibration (17) | 4.0 | 5–7 weeks |
+| Approval-card enhancement | 4.6 governance | 1 day |
+| 4.8 Verification | 4.1–4.6 | 3–4 days |
 
 Part 1 is about 7 days; 1.4–1.7 touch different files from 1.1–1.3 and can run alongside them. 2.1 can run during
 Part 1 (it only measures). Part 2 is about 6–9 weeks for one developer; the pilot's measured time per component
 refines it. Part 3 is about 6–8 weeks (17 components at 1.5–3 days each, with tests and demos); 3.1 and 3.2 touch
-different files and can run in parallel.
+different files and can run in parallel. Part 4 is about 4–5 weeks for one developer, most of it the guidance files.
+Part 5 is about 8–11 weeks of component work for one developer (27 components; lineage-graph, generated-ui,
+extraction-review and playbook-canvas are the large ones at 4–6 days); run as Part 3 was, with parallel agents, the
+elapsed time is a fraction of that.
 
 ## Later: blocks and screens
 

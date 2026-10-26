@@ -19,19 +19,25 @@ const RawAgentGraph = createComponent({
 });
 type RawAgentGraphProps = React.ComponentProps<typeof RawAgentGraph>;
 export type AgentGraphProps = Omit<RawAgentGraphProps, "nodes" | "selected" | "paused" | "heading" | "onTcSelectedChange" | "onTcSelect" | "onTcPausedChange" | "onSelect"> & {
+  /** The agents, tools and people in the graph; icons can be React nodes */
   nodes: GraphNode[];
   /** A click on a node – it also opens its card; null when the card closes */
   onSelect?: (node: GraphNode | null) => void;
   /** The node whose card is open. Controlled when defined (null = none); otherwise the component keeps it, starting
    *  from `defaultSelected`. Changes are reported to `onSelectedChange` (and `onSelect`, with the node) */
   selected?: string | null;
+  /** The node whose card is open at first, when `selected` isn't set */
   defaultSelected?: string | null;
+  /** Called with the node id when a card opens, and null when it closes */
   onSelectedChange?: (id: string | null) => void;
   /** Stops the moving parts – pulses, ripples, floating and the breathing rings – as the bar's Pause button does.
    *  Controlled when defined; otherwise the component keeps it, starting from `defaultPaused` */
   paused?: boolean;
+  /** Whether the motion starts paused, when `paused` isn't set */
   defaultPaused?: boolean;
+  /** Called when the Pause button is pressed, with the new paused state */
   onPausedChange?: (paused: boolean) => void;
+  /** The heading in the bar, and the start of the graph's accessible name – "Agent graph" by default */
   title?: string;
 };
 

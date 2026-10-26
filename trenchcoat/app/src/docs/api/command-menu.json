@@ -1,0 +1,316 @@
+{
+ "elements": [
+  {
+   "tag": "tc-command-menu",
+   "className": "TcCommandMenu",
+   "description": "Search and run anything from one field.",
+   "properties": [
+    {
+     "name": "groups",
+     "attribute": null,
+     "type": "CommandMenuGroup[]",
+     "default": "[ { id: \"suggestions\", label: \"Suggestions\", commands: [ { id: \"email\", label: \"Write an email\", hint: \"Gmail\", logo: svgEl(GMAIL), keywords: \"mail send compose\" }, { id: \"ask\", label: \"Ask assistant\", hint: \"Summaries, drafts, answers\", logo: svgEl(SPARK), keywords: \"ai chat question\" }, { id: \"task\", label: \"Create a task\", hint: \"ClickUp\", logo: svgEl(CLICKUP), keywords: \"todo issue\" }, { id: \"crm\", label: \"Add contact to CRM\", hint: \"HubSpot\", logo: svgEl(HUBSPOT), keywords: \"lead deal company\" }, { id: \"meet\", label: \"Schedule a meeting\", hint: \"Google Calendar\", logo: svgEl(CALENDAR), keywords: \"call invite event\" }, ], }, { id: \"share\", label: \"Share\", commands: [ { id: \"slack\", label: \"Post an update\", hint: \"#team-updates\", logo: svgEl(SLACK), keywords: \"message channel\" }, { id: \"notion\", label: \"Save as page\", hint: \"Notion · Meeting notes\", logo: svgEl(NOTION), keywords: \"doc wiki\" }, ], }, { id: \"general\", label: \"General\", commands: [ { id: \"new-doc\", label: \"New document\", icon: glyph(icons.doc), keys: [\"N\"] }, { id: \"invite\", label: \"Invite teammates\", icon: glyph(icons.person), keys: [\"I\"] }, { id: \"upload\", label: \"Upload files\", icon: glyph(icons.upload), keys: [\"U\"] }, { id: \"theme\", label: \"Switch to dark mode\", icon: glyph(icons.moon), keywords: \"theme appearance light\", keys: [\"⇧\", \"D\"] }, ], }, { id: \"go\", label: \"Go to\", commands: [ { id: \"home\", label: \"Home\", icon: glyph(icons.home), keys: [\"G\", \"H\"] }, { id: \"inbox\", label: \"Inbox\", icon: glyph(icons.inbox), keys: [\"G\", \"I\"] }, { id: \"reports\", label: \"Reports\", icon: glyph(icons.chart), keys: [\"G\", \"R\"] }, { id: \"settings\", label: \"Settings\", icon: glyph(icons.gear), keys: [\"G\", \"S\"] }, { id: \"help\", label: \"Help & feedback\", icon: glyph(icons.help), keys: [\"?\"] }, ], }, ]",
+     "description": "The commands, in titled groups; a group with the id \"suggestions\" gets ⌘1–⌘5",
+     "readonly": false
+    },
+    {
+     "name": "placeholder",
+     "attribute": "placeholder",
+     "type": "string",
+     "default": "\"Type a command or search…\"",
+     "description": "Placeholder text in the search field",
+     "readonly": false
+    },
+    {
+     "name": "query",
+     "attribute": "query",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The search text",
+     "readonly": false
+    },
+    {
+     "name": "onRun",
+     "attribute": null,
+     "type": "CommandMenuRun | undefined",
+     "default": "undefined",
+     "description": "Runs a command (see CommandMenuRun); may return a promise",
+     "readonly": false
+    },
+    {
+     "name": "hotkey",
+     "attribute": null,
+     "type": "string | false",
+     "default": "\"mod+k\"",
+     "description": "Window shortcut that focuses the field: \"mod+k\" (⌘K on Apple devices, Ctrl K elsewhere), any other combination\nlike \"ctrl+shift+p\", or false for none. The most recently connected menu takes it",
+     "readonly": false
+    },
+    {
+     "name": "autoFocus",
+     "attribute": "autofocus",
+     "type": "boolean",
+     "default": "false",
+     "description": "Focus the field when the menu appears",
+     "readonly": false
+    },
+    {
+     "name": "maxRows",
+     "attribute": "max-rows",
+     "type": "number",
+     "default": "200",
+     "description": "Most rows rendered at once – with more matches the menu shows the first ones and asks to keep typing",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-query-change",
+     "detail": "",
+     "description": "The search text changes; detail `{ query }`. Cancelable: preventDefault() keeps the current text (controlled use)",
+     "cancelable": true
+    },
+    {
+     "name": "tc-close",
+     "detail": "",
+     "description": "Esc in an empty search",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "cm",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-highlight",
+    "--tc-border-default",
+    "--tc-border-selected",
+    "--tc-border-strong",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-instant",
+    "--tc-duration-moderate",
+    "--tc-duration-slow",
+    "--tc-duration-slowest",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-lg-plus",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-kbd-bg",
+    "--tc-kbd-fg",
+    "--tc-kbd-font-size",
+    "--tc-kbd-font-weight",
+    "--tc-kbd-h",
+    "--tc-kbd-px",
+    "--tc-kbd-radius",
+    "--tc-kbd-shadow",
+    "--tc-line-height-none",
+    "--tc-line-height-normal",
+    "--tc-line-height-tight",
+    "--tc-radius-2xs",
+    "--tc-radius-lg",
+    "--tc-radius-sm",
+    "--tc-radius-xl",
+    "--tc-radius-xs",
+    "--tc-shadow-control",
+    "--tc-shadow-overlay",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-status-danger-fg",
+    "--tc-status-danger-solid",
+    "--tc-status-success-solid",
+    "--tc-surface-on-tray",
+    "--tc-surface-overlay",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "defaultCommandGroups",
+   "signature": "defaultCommandGroups: CommandMenuGroup[]",
+   "description": "Sample commands – replace with your own"
+  }
+ ],
+ "react": [
+  {
+   "component": "CommandMenuOwn",
+   "exported": false,
+   "props": [
+    {
+     "name": "groups",
+     "type": "CommandGroup[]",
+     "optional": true,
+     "description": "The commands, in titled groups; a group with the id \"suggestions\" gets ⌘1–⌘5. Defaults to the sample `defaultGroups`"
+    },
+    {
+     "name": "placeholder",
+     "type": "string",
+     "optional": true,
+     "description": "Placeholder text in the search field"
+    },
+    {
+     "name": "onRun",
+     "type": "CommandMenuRun",
+     "optional": true,
+     "description": "Called with the command id; for the assistant fallback with \"ask\" and the typed text. May return a promise"
+    },
+    {
+     "name": "query",
+     "type": "string",
+     "optional": true,
+     "description": "The search text. Controlled when defined; otherwise the menu keeps its own, starting at `defaultQuery`"
+    },
+    {
+     "name": "defaultQuery",
+     "type": "string",
+     "optional": true,
+     "description": "The search text to start with when `query` isn't set"
+    },
+    {
+     "name": "onQueryChange",
+     "type": "(query: string) => void",
+     "optional": true,
+     "description": "Called with the new search text as people type or clear it"
+    },
+    {
+     "name": "hotkey",
+     "type": "string | false",
+     "optional": true,
+     "description": "Window shortcut that focuses the field – \"mod+k\" by default, or false for none"
+    },
+    {
+     "name": "onClose",
+     "type": "() => void",
+     "optional": true,
+     "description": "Runs on Esc in an empty search"
+    },
+    {
+     "name": "autoFocus",
+     "type": "boolean",
+     "optional": true,
+     "description": "Focus the field when the menu appears"
+    },
+    {
+     "name": "maxRows",
+     "type": "number",
+     "optional": true,
+     "description": "Most rows rendered at once (default 200)"
+    }
+   ],
+   "hides": []
+  },
+  {
+   "component": "CommandMenu",
+   "exported": true,
+   "props": [
+    {
+     "name": "groups",
+     "type": "CommandGroup[]",
+     "optional": true,
+     "description": "The commands, in titled groups; a group with the id \"suggestions\" gets ⌘1–⌘5. Defaults to the sample `defaultGroups`"
+    },
+    {
+     "name": "placeholder",
+     "type": "string",
+     "optional": true,
+     "description": "Placeholder text in the search field"
+    },
+    {
+     "name": "onRun",
+     "type": "CommandMenuRun",
+     "optional": true,
+     "description": "Called with the command id; for the assistant fallback with \"ask\" and the typed text. May return a promise"
+    },
+    {
+     "name": "query",
+     "type": "string",
+     "optional": true,
+     "description": "The search text. Controlled when defined; otherwise the menu keeps its own, starting at `defaultQuery`"
+    },
+    {
+     "name": "defaultQuery",
+     "type": "string",
+     "optional": true,
+     "description": "The search text to start with when `query` isn't set"
+    },
+    {
+     "name": "onQueryChange",
+     "type": "(query: string) => void",
+     "optional": true,
+     "description": "Called with the new search text as people type or clear it"
+    },
+    {
+     "name": "hotkey",
+     "type": "string | false",
+     "optional": true,
+     "description": "Window shortcut that focuses the field – \"mod+k\" by default, or false for none"
+    },
+    {
+     "name": "onClose",
+     "type": "() => void",
+     "optional": true,
+     "description": "Runs on Esc in an empty search"
+    },
+    {
+     "name": "autoFocus",
+     "type": "boolean",
+     "optional": true,
+     "description": "Focus the field when the menu appears"
+    },
+    {
+     "name": "maxRows",
+     "type": "number",
+     "optional": true,
+     "description": "Most rows rendered at once (default 200)"
+    }
+   ],
+   "hides": []
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 42670,
+  "gzip": 14129
+ }
+}

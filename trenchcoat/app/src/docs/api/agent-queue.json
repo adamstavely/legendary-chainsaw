@@ -1,0 +1,590 @@
+{
+ "elements": [
+  {
+   "tag": "tc-agent-queue",
+   "className": "TcAgentQueue",
+   "description": "The work waiting for your agents, and how fast it moves: the queue, the workers, Done and Failed, and a depth chart.",
+   "properties": [
+    {
+     "name": "jobs",
+     "attribute": null,
+     "type": "QueueJob[]",
+     "default": "[]",
+     "description": "Waiting and running jobs, plus finished ones for as long as the chart should count them",
+     "readonly": false
+    },
+    {
+     "name": "workers",
+     "attribute": null,
+     "type": "QueueWorker[]",
+     "default": "[]",
+     "description": "The worker slots – their number is the concurrency",
+     "readonly": false
+    },
+    {
+     "name": "now",
+     "attribute": "now",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The clock in epoch ms – unset, the element keeps its own while there is work",
+     "readonly": false
+    },
+    {
+     "name": "rateLimits",
+     "attribute": null,
+     "type": "QueueRateLimit[]",
+     "default": "[]",
+     "description": "Stretches when the provider rate-limits – while one is active the workers show as paused",
+     "readonly": false
+    },
+    {
+     "name": "paused",
+     "attribute": "paused",
+     "type": "boolean",
+     "default": "false",
+     "description": "The queue is paused – no new jobs start",
+     "readonly": false
+    },
+    {
+     "name": "pausable",
+     "attribute": "pausable",
+     "type": "boolean",
+     "default": "false",
+     "description": "Shows a Pause/Resume button",
+     "readonly": false
+    },
+    {
+     "name": "stepper",
+     "attribute": "stepper",
+     "type": "boolean",
+     "default": "false",
+     "description": "Shows a – N + stepper for the number of workers",
+     "readonly": false
+    },
+    {
+     "name": "minConcurrency",
+     "attribute": "min-concurrency",
+     "type": "number",
+     "default": "1",
+     "description": "The fewest workers the stepper allows – its – button is disabled at this number",
+     "readonly": false
+    },
+    {
+     "name": "maxConcurrency",
+     "attribute": "max-concurrency",
+     "type": "number",
+     "default": "8",
+     "description": "The most workers the stepper allows – its + button is disabled at this number",
+     "readonly": false
+    },
+    {
+     "name": "backpressure",
+     "attribute": "backpressure",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "A depth that means trouble – drawn as a dashed line on the chart; above it Waiting turns amber",
+     "readonly": false
+    },
+    {
+     "name": "range",
+     "attribute": "range",
+     "type": "",
+     "default": null,
+     "description": "How far back the chart looks, in ms",
+     "readonly": false
+    },
+    {
+     "name": "totals",
+     "attribute": null,
+     "type": "{ done?: number; failed?: number } | undefined",
+     "default": "undefined",
+     "description": "Counts since the start, when `jobs` only holds the recent ones",
+     "readonly": false
+    },
+    {
+     "name": "openId",
+     "attribute": null,
+     "type": "string | null",
+     "default": "null",
+     "description": "The id of the job whose card is pinned, or null",
+     "readonly": false
+    },
+    {
+     "name": "promotable",
+     "attribute": "promotable",
+     "type": "boolean",
+     "default": "false",
+     "description": "Shows \"Move to front\" in a waiting job's card",
+     "readonly": false
+    },
+    {
+     "name": "cancellable",
+     "attribute": "cancellable",
+     "type": "boolean",
+     "default": "false",
+     "description": "Shows \"Cancel\" in a waiting or running job's card",
+     "readonly": false
+    },
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Queue\"",
+     "description": "The heading at the top of the card",
+     "readonly": false
+    },
+    {
+     "name": "name",
+     "attribute": "name",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The queue's name, muted next to the heading",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-paused-change",
+     "detail": "",
+     "description": "Pause or Resume was pressed ({ paused: boolean }); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-concurrency-change",
+     "detail": "",
+     "description": "The worker stepper asked for more or fewer workers ({ workers: number })",
+     "cancelable": false
+    },
+    {
+     "name": "tc-open-change",
+     "detail": "",
+     "description": "A job's card was pinned or closed ({ id: string | null, job?: QueueJob }); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-promote",
+     "detail": "",
+     "description": "Move to front was pressed in a waiting job's card ({ job: QueueJob })",
+     "cancelable": false
+    },
+    {
+     "name": "tc-cancel",
+     "detail": "",
+     "description": "Cancel was pressed in a job's card ({ job: QueueJob })",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "agq",
+   "cssProperties": [
+    {
+     "name": "--tc-agent-queue-agent-bg",
+     "value": "light-dark(#eef0f3, #2c2f35)",
+     "looks": [
+      "standard"
+     ]
+    },
+    {
+     "name": "--tc-agent-queue-agent-edge",
+     "value": "light-dark(#d3d8e0, #41464f)",
+     "looks": [
+      "standard"
+     ]
+    },
+    {
+     "name": "--tc-agent-queue-agent-ink",
+     "value": "light-dark(#4b5363, #b8c0cc)",
+     "looks": [
+      "standard"
+     ]
+    },
+    {
+     "name": "--tc-agent-queue-agent-sq",
+     "value": "light-dark(#d9dde4, #3a3e46)",
+     "looks": [
+      "standard"
+     ]
+    },
+    {
+     "name": "--tc-agent-queue-llm-bg",
+     "value": "light-dark(rgba(91, 91, 214, 0.1), rgba(130, 130, 255, 0.16))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-agent-queue-llm-edge",
+     "value": "light-dark(rgba(91, 91, 214, 0.3), rgba(130, 130, 255, 0.38))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-agent-queue-llm-ink",
+     "value": "light-dark(#4a4ac2, #b1a9ff)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-agent-queue-llm-sq",
+     "value": "light-dark(rgba(91, 91, 214, 0.22), rgba(130, 130, 255, 0.34))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-agent-queue-tool-bg",
+     "value": "light-dark(rgba(0, 123, 172, 0.085), rgba(0, 170, 220, 0.13))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-agent-queue-tool-edge",
+     "value": "light-dark(rgba(0, 123, 172, 0.28), rgba(0, 170, 220, 0.34))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-agent-queue-tool-ink",
+     "value": "light-dark(#006a94, #4ccce6)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-agent-queue-tool-sq",
+     "value": "light-dark(rgba(0, 123, 172, 0.2), rgba(0, 170, 220, 0.3))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-agent-queue-human-bg",
+     "value": "light-dark(rgba(0, 96, 226, 0.08), rgba(60, 140, 255, 0.14))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-agent-queue-human-edge",
+     "value": "light-dark(rgba(0, 96, 226, 0.26), rgba(60, 140, 255, 0.36))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-agent-queue-human-ink",
+     "value": "light-dark(#0055c8, #70b8ff)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-agent-queue-human-sq",
+     "value": "light-dark(rgba(0, 96, 226, 0.18), rgba(60, 140, 255, 0.3))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-agent-queue-tray-bg",
+     "value": "var(--tc-surface-tray)",
+     "looks": [
+      "standard"
+     ]
+    },
+    {
+     "name": "--tc-agent-queue-card-bg",
+     "value": "var(--tc-surface-on-tray)",
+     "looks": [
+      "standard"
+     ]
+    },
+    {
+     "name": "--tc-agent-queue-well-bg",
+     "value": "light-dark(#fafafa, #1f1f22)",
+     "looks": [
+      "standard"
+     ]
+    },
+    {
+     "name": "--tc-agent-queue-depth",
+     "value": "light-dark(rgba(91, 91, 214, 0.9), rgba(150, 150, 255, 0.95))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-agent-queue-depth-fill",
+     "value": "light-dark(rgba(91, 91, 214, 0.14), rgba(130, 130, 255, 0.22))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-agent-queue-depth-fade",
+     "value": "light-dark(rgba(91, 91, 214, 0), rgba(130, 130, 255, 0))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-agent-queue-rail-stripe",
+     "value": "light-dark(rgba(0, 0, 0, 0.022), rgba(255, 255, 255, 0.025))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-agent-queue-sheen",
+    "--tc-agent-queue-ymax",
+    "--tc-avatar-md",
+    "--tc-avatar-radius-agent",
+    "--tc-border-default",
+    "--tc-border-strong",
+    "--tc-border-subtle",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-md",
+    "--tc-control-px-sm",
+    "--tc-control-radius-md",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-quick",
+    "--tc-duration-reveal",
+    "--tc-duration-reveal-slow",
+    "--tc-duration-shimmer",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-duration-slowest",
+    "--tc-ease-decelerate",
+    "--tc-ease-emphasized",
+    "--tc-ease-in-out",
+    "--tc-ease-move",
+    "--tc-ease-out",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-strong",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-2xl",
+    "--tc-font-size-2xs",
+    "--tc-font-size-lg",
+    "--tc-font-size-lg-plus",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xl",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-display-sm",
+    "--tc-line-height-loose",
+    "--tc-line-height-normal",
+    "--tc-line-height-relaxed",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-menu-bg",
+    "--tc-menu-radius",
+    "--tc-menu-shadow",
+    "--tc-pill-font-size",
+    "--tc-pill-font-size-lg",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-h-lg",
+    "--tc-pill-px",
+    "--tc-pill-px-lg",
+    "--tc-pill-radius",
+    "--tc-radius-2xs",
+    "--tc-radius-badge",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-radius-xl",
+    "--tc-radius-xs",
+    "--tc-shadow-control",
+    "--tc-shadow-raised",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-border",
+    "--tc-status-danger-fg",
+    "--tc-status-info-bg",
+    "--tc-status-success-bg",
+    "--tc-status-success-border",
+    "--tc-status-success-fg",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-border",
+    "--tc-status-warning-fg",
+    "--tc-status-warning-solid",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-sunken",
+    "--tc-surface-tray",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "AgentQueue",
+   "exported": true,
+   "props": [
+    {
+     "name": "jobs",
+     "type": "QueueJob[]",
+     "optional": false,
+     "description": "Waiting and running jobs, plus finished ones for as long as the chart should count them"
+    },
+    {
+     "name": "workers",
+     "type": "QueueWorker[]",
+     "optional": false,
+     "description": "The worker slots – their number is the concurrency"
+    },
+    {
+     "name": "paused",
+     "type": "boolean",
+     "optional": true,
+     "description": "The queue is paused – no new jobs start. Controlled when defined; otherwise the component keeps it, starting\nfrom `defaultPaused`"
+    },
+    {
+     "name": "defaultPaused",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether the queue starts paused when `paused` isn't controlled"
+    },
+    {
+     "name": "onPausedChange",
+     "type": "(paused: boolean) => void",
+     "optional": true,
+     "description": "Shows a Pause/Resume button, and hears every change"
+    },
+    {
+     "name": "onConcurrencyChange",
+     "type": "(workers: number) => void",
+     "optional": true,
+     "description": "Shows a – N + stepper for the number of workers"
+    },
+    {
+     "name": "window",
+     "type": "number",
+     "optional": true,
+     "description": "How far back the chart looks, in ms (default 2 minutes)"
+    },
+    {
+     "name": "openId",
+     "type": "string | null",
+     "optional": true,
+     "description": "The id of the job whose card is pinned. Controlled when defined (null = none); otherwise the component keeps it,\nstarting from `defaultOpenId`"
+    },
+    {
+     "name": "defaultOpenId",
+     "type": "string | null",
+     "optional": true,
+     "description": "The job whose card starts pinned when `openId` isn't controlled"
+    },
+    {
+     "name": "onOpenChange",
+     "type": "(id: string | null, job?: QueueJob) => void",
+     "optional": true,
+     "description": "Called when a job's card is pinned or closed, with its id (null when closed) and the job"
+    },
+    {
+     "name": "onPromote",
+     "type": "(job: QueueJob) => void",
+     "optional": true,
+     "description": "Shows \"Move to front\" in a waiting job's card"
+    },
+    {
+     "name": "onCancel",
+     "type": "(job: QueueJob) => void",
+     "optional": true,
+     "description": "Shows \"Cancel\" in a waiting or running job's card"
+    },
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading at the top of the card (the element's `heading`)"
+    }
+   ],
+   "hides": [
+    "jobs",
+    "workers",
+    "paused",
+    "pausable",
+    "stepper",
+    "openId",
+    "promotable",
+    "cancellable",
+    "heading",
+    "range"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 98139,
+  "gzip": 22346
+ }
+}

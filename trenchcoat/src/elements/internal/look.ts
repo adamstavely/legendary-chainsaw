@@ -14,6 +14,7 @@ export const lookContext = createContext<Look | undefined>(Symbol("tc-look"));
  * @tag tc-look-provider
  */
 export class TcLookProvider extends LitElement {
+  /** The look every Trenchcoat element inside takes unless it sets its own: "standard" or "clean" */
   @provide({ context: lookContext })
   @property({ reflect: true })
   accessor look: Look | undefined = undefined;

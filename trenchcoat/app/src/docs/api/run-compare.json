@@ -1,0 +1,264 @@
+{
+ "elements": [
+  {
+   "tag": "tc-run-compare",
+   "className": "TcRunCompare",
+   "description": "Two runs or two prompt versions side by side – outputs, steps, cost and time – with every difference highlighted.",
+   "properties": [
+    {
+     "name": "baseline",
+     "attribute": null,
+     "type": "RunCompareRun | undefined",
+     "default": "undefined",
+     "description": "The run to compare against – on the left",
+     "readonly": false
+    },
+    {
+     "name": "candidate",
+     "attribute": null,
+     "type": "RunCompareRun | undefined",
+     "default": "undefined",
+     "description": "The run being judged – on the right; its numbers carry the change against the baseline",
+     "readonly": false
+    },
+    {
+     "name": "view",
+     "attribute": "view",
+     "type": "RunCompareView",
+     "default": "\"output\"",
+     "description": "The open tab",
+     "readonly": false
+    },
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Compare runs\"",
+     "description": "The heading – e.g. the task both runs did",
+     "readonly": false
+    },
+    {
+     "name": "canPick",
+     "attribute": "can-pick",
+     "type": "boolean",
+     "default": "false",
+     "description": "Shows \"Use this\" on each finished run (fires tc-pick)",
+     "readonly": false
+    },
+    {
+     "name": "formatCost",
+     "attribute": null,
+     "type": "(amount: number) => string",
+     "default": "dollars",
+     "description": "Formats every cost – defaults to dollars, e.g. \"$0.03\"",
+     "readonly": false
+    },
+    {
+     "name": "formatDuration",
+     "attribute": null,
+     "type": "(ms: number) => string",
+     "default": "took",
+     "description": "Formats every duration in ms – defaults to e.g. \"4.2s\"",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-view-change",
+     "detail": "",
+     "description": "Another tab was picked ({ view }: RunCompareViewChange); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-pick",
+     "detail": "",
+     "description": "\"Use this\" was pressed on a run ({ run, side }: RunComparePick)",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "rc",
+   "cssProperties": [
+    {
+     "name": "--tc-run-compare-strike",
+     "value": "light-dark(rgba(229, 72, 77, 0.6), rgba(255, 120, 120, 0.7))",
+     "looks": [
+      "both",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-run-compare-del-hot",
+     "value": "light-dark(rgba(220, 60, 60, 0.2), rgba(240, 90, 90, 0.28))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-run-compare-ins-hot",
+     "value": "light-dark(rgba(34, 160, 90, 0.22), rgba(60, 200, 120, 0.28))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-run-compare-blink",
+     "value": "1100ms",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-avatar-radius-agent",
+    "--tc-border-default",
+    "--tc-border-strong",
+    "--tc-border-subtle",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-mono",
+    "--tc-font-sans",
+    "--tc-font-size-2xs",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-hairline",
+    "--tc-line-height-normal",
+    "--tc-line-height-relaxed",
+    "--tc-line-height-snug",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-2xs",
+    "--tc-radius-badge",
+    "--tc-radius-sm",
+    "--tc-radius-xs",
+    "--tc-seg-pad",
+    "--tc-seg-thumb-bg",
+    "--tc-seg-thumb-shadow",
+    "--tc-seg-track-bg",
+    "--tc-seg-track-radius",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-5",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-border",
+    "--tc-status-danger-fg",
+    "--tc-status-info-bg",
+    "--tc-status-info-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-border",
+    "--tc-status-success-fg",
+    "--tc-status-success-solid",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "alignRunSteps",
+   "signature": "alignRunSteps(a: RunCompareStep[], b: RunCompareStep[]): RunCompareStepRow[]",
+   "description": "Lines up two runs' steps: matched by name in order (longest common subsequence), the rest added or dropped"
+  }
+ ],
+ "react": [
+  {
+   "component": "RunCompare",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading – e.g. the task both runs did"
+    },
+    {
+     "name": "view",
+     "type": "RunCompareView",
+     "optional": true,
+     "description": "The open tab. Controlled when defined; otherwise the component keeps it, starting from `defaultView`"
+    },
+    {
+     "name": "defaultView",
+     "type": "RunCompareView",
+     "optional": true,
+     "description": "The tab open at first when `view` isn't controlled"
+    },
+    {
+     "name": "onViewChange",
+     "type": "(view: RunCompareView) => void",
+     "optional": true,
+     "description": "Called with the tab the user picked, controlled or not"
+    },
+    {
+     "name": "onPick",
+     "type": "(pick: RunComparePick) => void",
+     "optional": true,
+     "description": "Shows \"Use this\" on each finished run"
+    }
+   ],
+   "hides": [
+    "heading",
+    "view",
+    "canPick"
+   ]
+  }
+ ],
+ "changelog": [
+  "`tc-run-compare` – two runs or prompt versions side by side: outputs and prompts word-diffed with inline-diff's Myers diff, steps aligned and marked Added / Dropped / Changed, cost, time and tokens marked better or worse. Tabs; `tc-view-change`, `tc-pick`."
+ ],
+ "size": {
+  "min": 76510,
+  "gzip": 19176
+ }
+}

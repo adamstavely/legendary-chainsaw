@@ -81,6 +81,7 @@ let instances = 0;
 export class TcFanOutGrid extends TcElement {
   static override ui = "fog";
 
+  /** Every task in the job, one cell each, in order – its label, state, worker, times, cost, result or error */
   @property({ attribute: false }) accessor tasks: FanoutTask[] = [];
   /** What the whole job does – e.g. "Enrich 240 leads" */
   @property() accessor job = "";

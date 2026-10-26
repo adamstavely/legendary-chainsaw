@@ -165,6 +165,7 @@ export class TcAgentTree extends TcElement {
 
   /** The heading, and the tree list's name */
   @property() accessor heading = "Agents";
+  /** The orchestrator, with its sub-agents nested in `children` – the whole run as one tree */
   @property({ attribute: false }) accessor root: TreeAgent = { id: "", name: "", task: "", status: "queued" };
   /** Ids of folded branches. Changed by the fold buttons unless tc-collapsed-change is prevented */
   @property({ attribute: false }) accessor collapsed: string[] = [];

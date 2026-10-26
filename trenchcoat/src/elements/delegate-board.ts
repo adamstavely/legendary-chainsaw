@@ -107,7 +107,9 @@ let instances = 0;
 export class TcDelegateBoard extends TcElement {
   static override ui = "db";
 
+  /** The agents work can go to, in the order they're listed (number keys 1–9 pick them) */
   @property({ attribute: false }) accessor agents: DelegateAgent[] = [];
+  /** Every task – without an `agentId` it waits under "Unassigned"; the first in each agent's queue is the running one */
   @property({ attribute: false }) accessor tasks: DelegateTask[] = [];
   /** The clock for the "Busy until" times, in epoch ms – without it the board reads the clock while connected */
   @property({ type: Number }) accessor now: number | undefined = undefined;

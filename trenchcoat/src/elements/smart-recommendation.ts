@@ -492,9 +492,9 @@ export class TcSmartRecommendation extends TcElement {
 :where([data-look="standard"], [data-look="standard"] *).ui-sr__mini span:nth-child(2) { height: 9px; }
 :where([data-look="standard"], [data-look="standard"] *).ui-sr__bars span:nth-child(3),
 :where([data-look="standard"], [data-look="standard"] *).ui-sr__mini span:nth-child(3) { height: 12px; }
-:where([data-look="standard"], [data-look="standard"] *) [data-level="1"] > span[data-on] { background: var(--tc-status-warning-solid); }
-:where([data-look="standard"], [data-look="standard"] *) [data-level="2"] > span[data-on] { background: var(--tc-accent); }
-:where([data-look="standard"], [data-look="standard"] *) [data-level="3"] > span[data-on] { background: var(--tc-status-success-solid); }
+:where([data-look="standard"], [data-look="standard"] *) [data-level="1"] span[data-on] { background: var(--tc-status-warning-solid); }
+:where([data-look="standard"], [data-look="standard"] *) [data-level="2"] span[data-on] { background: var(--tc-accent); }
+:where([data-look="standard"], [data-look="standard"] *) [data-level="3"] span[data-on] { background: var(--tc-status-success-solid); }
 :where([data-look="standard"], [data-look="standard"] *).ui-sr__signal[data-level="0"] .ui-sr__bars span:first-child { background: var(--tc-icon-muted); }
 /* The actions wrap and shrink instead of running out of the card at 320px */
 .ui-sr__actions { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: var(--tc-space-1-5); min-width: 0; max-width: 100%; margin-left: auto; }
@@ -547,10 +547,10 @@ export class TcSmartRecommendation extends TcElement {
 :where([data-look="clean"], [data-look="clean"] *).ui-sr__mini span:nth-child(2) { height: 8px; }
 :where([data-look="clean"], [data-look="clean"] *).ui-sr__bars span:nth-child(3),
 :where([data-look="clean"], [data-look="clean"] *).ui-sr__mini span:nth-child(3) { height: 11px; }
-:where([data-look="clean"], [data-look="clean"] *)[data-ui="sr"] [data-level="1"] > span[data-on] { background: var(--tc-status-warning-solid); }
-:where([data-look="clean"], [data-look="clean"] *)[data-ui="sr"] [data-level="2"] > span[data-on] { background: var(--tc-accent); }
-:where([data-look="clean"], [data-look="clean"] *)[data-ui="sr"] [data-level="3"] > span[data-on] { background: var(--tc-status-success-solid); }
-:where([data-look="clean"], [data-look="clean"] *)[data-ui="sr"] [data-level="0"] > span:first-child { background: var(--tc-text-disabled); }
+:where([data-look="clean"], [data-look="clean"] *)[data-ui="sr"] [data-level="1"] span[data-on] { background: var(--tc-status-warning-solid); }
+:where([data-look="clean"], [data-look="clean"] *)[data-ui="sr"] [data-level="2"] span[data-on] { background: var(--tc-accent); }
+:where([data-look="clean"], [data-look="clean"] *)[data-ui="sr"] [data-level="3"] span[data-on] { background: var(--tc-status-success-solid); }
+:where([data-look="clean"], [data-look="clean"] *)[data-ui="sr"] :is([data-level="0"], [data-level="0"] .ui-sr__bars) > span:first-child:not(.ui-sr__bars) { background: var(--tc-text-disabled); }
 :where([data-look="clean"], [data-look="clean"] *).ui-sr__actions { gap: var(--tc-space-2); }
 /* Secondary: white with the card's hairline shadow */
 :where([data-look="clean"], [data-look="clean"] *).ui-sr__btn {

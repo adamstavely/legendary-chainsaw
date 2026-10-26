@@ -1,0 +1,152 @@
+{
+ "elements": [
+  {
+   "tag": "tc-voice-orb",
+   "className": "TcVoiceOrb",
+   "description": "A voice assistant's dot sphere that shows whether it's idle, listening, thinking or speaking.",
+   "properties": [
+    {
+     "name": "state",
+     "attribute": "state",
+     "type": "VoiceOrbState",
+     "default": "\"idle\"",
+     "description": "idle · listening · thinking · speaking",
+     "readonly": false
+    },
+    {
+     "name": "level",
+     "attribute": "level",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "Input or output loudness from 0 to 1 – unset, the orb fakes a natural level",
+     "readonly": false
+    },
+    {
+     "name": "size",
+     "attribute": "size",
+     "type": "number",
+     "default": "220",
+     "description": "Edge length in px",
+     "readonly": false
+    },
+    {
+     "name": "dots",
+     "attribute": "dots",
+     "type": "number",
+     "default": "520",
+     "description": "Number of dots – more is denser and costs a little more",
+     "readonly": false
+    },
+    {
+     "name": "accent",
+     "attribute": "accent",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "Colour the moving dots take on – any CSS colour. The resting dots use the text colour",
+     "readonly": false
+    },
+    {
+     "name": "label",
+     "attribute": null,
+     "type": "boolean | Partial<Record<VoiceOrbState, string>>",
+     "default": "true",
+     "description": "The line under the orb; false hides it, an object replaces single texts",
+     "readonly": false
+    },
+    {
+     "name": "interactive",
+     "attribute": null,
+     "type": "boolean",
+     "default": "true",
+     "description": "Dots give way to the pointer",
+     "readonly": false
+    },
+    {
+     "name": "pressable",
+     "attribute": "pressable",
+     "type": "boolean",
+     "default": "false",
+     "description": "Makes the orb a button (a native one inside) that fires tc-press",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-press",
+     "detail": "",
+     "description": "The orb was pressed (only when `pressable`); detail: undefined",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "vo",
+   "cssProperties": [
+    {
+     "name": "--tc-voice-orb-accent",
+     "value": "light-dark(#2f6bff, #6f9bff)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-voice-orb-blink",
+     "value": "1.2s",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-duration-fast",
+    "--tc-duration-slow",
+    "--tc-duration-slowest",
+    "--tc-ease-emphasized",
+    "--tc-ease-standard",
+    "--tc-focus-ring",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-size-md",
+    "--tc-font-weight-medium",
+    "--tc-line-height-normal",
+    "--tc-space-0-5",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-voice-orb-size"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "VoiceOrb",
+   "exported": true,
+   "props": [
+    {
+     "name": "onPress",
+     "type": "() => void",
+     "optional": true,
+     "description": "Makes the orb a button, e.g. to start and stop listening"
+    }
+   ],
+   "hides": [
+    "pressable"
+   ]
+  }
+ ],
+ "changelog": [
+  "`tc-voice-mode` – a voice conversation: `tc-voice-orb` for the state, live captions that announce finished turns once, and Mute / Captions / Interrupt / End in a toolbar; Esc interrupts. The audio stays the app's."
+ ],
+ "size": {
+  "min": 16484,
+  "gzip": 6939
+ }
+}

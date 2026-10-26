@@ -570,7 +570,7 @@ export class TcIntegrationFlow extends TcElement {
   static override looks = false;
   static override css = css;
 
-  /** Accessible description of the scene – defaults to one naming the first integrations */
+  /** The scene's accessible name (it is an image) – defaults to one naming the first integrations */
   @property() accessor label: string | undefined = undefined;
   /** Integrations that rotate through the pills (5 or more look best); unset or empty shows a default set */
   @property({ attribute: false }) accessor items: IntegrationFlowItem[] | undefined = undefined;

@@ -38,25 +38,37 @@ export type BreakdownChartProps = Omit<
   RawBreakdownChartProps,
   "heading" | "dimensions" | "records" | "measures" | "hiddenSegments" | Controlled | "onTcMeasureChange" | "onTcSliceChange" | "onTcSegmentChange" | "onTcHiddenChange"
 > & {
+  /** The rows to chart – one object per item, with a value for each dimension key and each measure field */
   records: TcBreakdownChart["records"];
+  /** The fields people can slice and segment by; `icons` takes React nodes */
   dimensions: Dimension[];
+  /** What the bars can measure – a count of records, or the sum of a field */
   measures: Measure[];
+  /** The heading, and the region's name (default "Workload") */
   title?: string;
   /** Measure key (controlled). Leave undefined and use `defaultMeasure` to let the chart keep it */
   measure?: string;
+  /** The measure picked at first, when `measure` is not controlled – defaults to the first */
   defaultMeasure?: string;
+  /** Called when another measure is picked */
   onMeasureChange?: (measure: string) => void;
   /** Dimension key the bars are sliced by (controlled) */
   slice?: string;
+  /** The slice picked at first, when `slice` is not controlled – defaults to the first dimension */
   defaultSlice?: string;
+  /** Called when another slice is picked */
   onSliceChange?: (slice: string) => void;
   /** Dimension key the bars are segmented by, or "none" for single-color bars (controlled) */
   segment?: string;
+  /** The segment picked at first, when `segment` is not controlled – defaults to the second dimension */
   defaultSegment?: string;
+  /** Called when another segment is picked */
   onSegmentChange?: (segment: string) => void;
   /** Segment values hidden from the bars and totals (controlled); picking another segment clears it */
   hidden?: string[];
+  /** The segment values hidden at first, when `hidden` is not controlled */
   defaultHidden?: string[];
+  /** Called when legend chips hide or show segment values, or Show all is pressed */
   onHiddenChange?: (hidden: string[]) => void;
 };
 

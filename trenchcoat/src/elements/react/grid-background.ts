@@ -25,6 +25,7 @@ export type GridBackgroundOwnProps = {
   reveal?: boolean;
   /** Radius of the edge fade, in % of the distance to the corners */
   fade?: number;
+  /** Class names for the root element */
   className?: string;
   /** The root element */
   ref?: React.Ref<TcGridBackground>;

@@ -94,14 +94,17 @@ export class TcAgentSteering extends TcElement {
   @property() accessor heading = "";
   /** Name of the agent or model, e.g. "Opus 5.5" */
   @property() accessor agent = "";
+  /** The plan: done steps, the active one and the steps still to come, in order */
   @property({ attribute: false }) accessor steps: SteerStep[] = [];
   /** Notes waiting for the next step, oldest first */
   @property({ attribute: false }) accessor queue: SteerNote[] = [];
+  /** Where the run is: "running", "paused" or "done" – done disables the field */
   @property() accessor status: SteerRunStatus = "running";
   /** When the run started (epoch ms or a Date) – the clock in the header ticks from here */
   @property({ attribute: false }) accessor startedAt: number | Date | undefined = undefined;
   /** The text in the field */
   @property() accessor draft = "";
+  /** Placeholder of the field while the run is open */
   @property() accessor placeholder = "Steer the agent…";
   /** ↵ in the field: queue this note for the next step. May return a promise (see SteerSend) */
   @property({ attribute: false }) accessor onQueue: SteerSend | undefined = undefined;

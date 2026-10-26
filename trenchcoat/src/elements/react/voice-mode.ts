@@ -23,11 +23,15 @@ export type VoiceModeProps = Omit<RawVoiceModeProps, Own> & {
   title?: string;
   /** The microphone is muted (controlled when defined) */
   muted?: boolean;
+  /** Whether the microphone starts muted, when `muted` isn't set */
   defaultMuted?: boolean;
+  /** Called when Mute is pressed, with the new muted state */
   onMutedChange?: (muted: boolean) => void;
   /** The captions are shown (controlled when defined) */
   captions?: boolean;
+  /** Whether the captions start shown, when `captions` isn't set – true by default */
   defaultCaptions?: boolean;
+  /** Called when Captions is pressed, with whether they are now shown */
   onCaptionsChange?: (captions: boolean) => void;
   /** Interrupt was pressed (or Esc) while the assistant thinks or speaks */
   onInterrupt?: () => void;

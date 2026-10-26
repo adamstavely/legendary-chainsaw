@@ -16,6 +16,7 @@ export type GradientFloorOwnProps = {
   /** Seconds of motion before the floor slows down and rests (rounded to whole drift loops of 2.5 s); Infinity never
    * stops – then give users a way to pause it (WCAG 2.2.2) */
   playFor?: number;
+  /** Classes on the element */
   className?: string;
   /** The root element */
   ref?: React.Ref<TcGradientFloor>;

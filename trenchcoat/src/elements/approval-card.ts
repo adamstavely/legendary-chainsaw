@@ -96,9 +96,13 @@ export class TcApprovalCard extends TcElement {
   @property({ attribute: "stop-timer-label" }) accessor stopTimerLabel = "Stop";
   /** Show the "Always allow this action" checkbox. Default true */
   @property({ attribute: "allow-always", converter: onByDefault }) accessor allowAlways = true;
+  /** The "Always allow" checkbox's label */
   @property({ attribute: "always-label" }) accessor alwaysLabel = "Always allow this action";
+  /** The Approve button's label */
   @property({ attribute: "approve-label" }) accessor approveLabel = "Approve";
+  /** The Deny button's label */
   @property({ attribute: "deny-label" }) accessor denyLabel = "Deny";
+  /** The Edit button's label (shown with `editable`) */
   @property({ attribute: "edit-label" }) accessor editLabel = "Edit";
   /** Show ⌘↵ / Esc hints on the buttons (the shortcuts work either way). Default true */
   @property({ converter: onByDefault }) accessor shortcuts = true;

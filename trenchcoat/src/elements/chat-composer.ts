@@ -153,6 +153,7 @@ let uid = 0;
 export class TcChatComposer extends TcElement {
   static override ui = "chat-composer";
 
+  /** Placeholder of the message field */
   @property() accessor placeholder = "Start by typing...";
   /** The message */
   @property() accessor value = "";

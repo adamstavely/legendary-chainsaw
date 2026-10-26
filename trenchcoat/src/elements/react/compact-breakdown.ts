@@ -13,11 +13,13 @@ const RawCompactBreakdown = createComponent({
 });
 type RawCompactBreakdownProps = React.ComponentProps<typeof RawCompactBreakdown>;
 export type CompactBreakdownProps = Omit<RawCompactBreakdownProps, "heading" | "footer" | "period" | "onTcPeriodChange" | "items"> & {
+  /** The heading, and the group's accessible name (the element's `heading`) */
   title?: string;
   /** The parts of the shown period – the list ranks them by value */
   items: TcCompactBreakdown["items"];
   /** Controlled period id */
   period?: string;
+  /** The period chosen on mount when `period` isn't controlled – defaults to the first period */
   defaultPeriod?: string;
   /** Called with the new period id – pass the matching `items` and `delta` back in */
   onPeriodChange?: (id: string) => void;

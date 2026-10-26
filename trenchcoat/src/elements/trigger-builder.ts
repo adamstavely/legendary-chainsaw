@@ -270,6 +270,7 @@ export class TcTriggerBuilder extends TcElement {
   @property({ attribute: "time-zone" }) accessor timeZone = "";
   /** Submitted with the form: the definition as JSON */
   @property({ reflect: true }) accessor name = "";
+  /** Turns every control off and leaves the definition out of the form; a disabled fieldset does the same */
   @property({ type: Boolean, reflect: true }) accessor disabled = false;
 
   @state() private accessor formDisabled = false;

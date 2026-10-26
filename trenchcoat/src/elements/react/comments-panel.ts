@@ -21,16 +21,21 @@ export type CommentsPanelProps = Omit<
   RawCommentsPanelProps,
   "heading" | "resolved" | "filter" | "closable" | "onTcCommentsChange" | "onTcResolvedChange" | "onTcFilterChange" | "onTcClose"
 > & {
+  /** The heading, and the region's name */
   title?: string;
   /** The whole feed after a comment was added here (or taken out again when onAdd failed) */
   onCommentsChange?: (comments: PanelComment[]) => void;
   /** Ids of resolved comments – controlled when defined */
   resolved?: string[];
+  /** Resolved ids to start with when uncontrolled */
   defaultResolved?: string[];
+  /** Called with every resolved id after a comment is resolved or reopened */
   onResolvedChange?: (resolved: string[]) => void;
   /** The filter tab – controlled when defined */
   filter?: CommentsFilter;
+  /** The filter tab to start with when uncontrolled */
   defaultFilter?: CommentsFilter;
+  /** Called when another filter is picked */
   onFilterChange?: (filter: CommentsFilter) => void;
   /** Shows a close button in the header */
   onClose?: () => void;

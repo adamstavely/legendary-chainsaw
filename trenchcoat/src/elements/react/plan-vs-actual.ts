@@ -9,7 +9,9 @@ export type PlanVsActualStep = Omit<ElementPlanStep, "icon"> & { icon?: React.Re
 const RawPlanVsActual = createComponent({ tagName: "tc-plan-vs-actual", elementClass: TcPlanVsActual, react: React });
 type RawPlanVsActualProps = React.ComponentProps<typeof RawPlanVsActual>;
 export type PlanVsActualProps = Omit<RawPlanVsActualProps, "steps" | "heading" | "look"> & {
+  /** The plan's steps, in order – each with its planned time, what it waits for, and its real start and end so far; `icon` takes a React node */
   steps: PlanVsActualStep[];
+  /** The heading, and the list's name (default "Plan vs actual") */
   title?: string;
 };
 export function PlanVsActual({ steps, title = "Plan vs actual", ...props }: PlanVsActualProps) {

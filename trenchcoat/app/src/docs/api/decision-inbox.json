@@ -1,0 +1,162 @@
+{
+ "elements": [
+  {
+   "tag": "tc-decision-inbox",
+   "className": "TcDecisionInbox",
+   "description": "Open decisions with two quick answers each; answered ones confirm, then fold away.",
+   "properties": [
+    {
+     "name": "decisions",
+     "attribute": null,
+     "type": "InboxDecision[]",
+     "default": "[]",
+     "description": "The decisions to show – new ones join as they're passed, answered ones fold away",
+     "readonly": false
+    },
+    {
+     "name": "answers",
+     "attribute": null,
+     "type": "Record<string, DecisionAnswer>",
+     "default": "{}",
+     "description": "The answers given so far, by decision id. Answers present on first render start folded away. Changed by the\nuser unless a tc-answers-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "decide",
+     "attribute": null,
+     "type": "((decision: InboxDecision, answer: DecisionAnswer) => void | Promise<unknown>) | undefined",
+     "default": "undefined",
+     "description": "Called with the decision and the chosen answer. Return a promise to hold the row until it settles",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-answers-change",
+     "detail": "",
+     "description": "An answer was given ({ answers }: DecisionAnswersChange, every answer by decision id); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-decide",
+     "detail": "",
+     "description": "A decision was answered ({ decision, answer }), after `decide` settled",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "di",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-active",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-px-md",
+    "--tc-control-radius-md",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-hairline",
+    "--tc-line-height-normal",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-4-5",
+    "--tc-space-5",
+    "--tc-status-danger-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-warning-fg",
+    "--tc-status-warning-solid",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "DecisionInbox",
+   "exported": true,
+   "props": [
+    {
+     "name": "answers",
+     "type": "Record<string, DecisionAnswer>",
+     "optional": true,
+     "description": "The answers given so far, by decision id. Controlled when defined – pair it with `onAnswersChange`"
+    },
+    {
+     "name": "defaultAnswers",
+     "type": "Record<string, DecisionAnswer>",
+     "optional": true,
+     "description": "Answers already given on mount when `answers` isn't controlled – those rows start folded away"
+    },
+    {
+     "name": "onAnswersChange",
+     "type": "(answers: Record<string, DecisionAnswer>) => void",
+     "optional": true,
+     "description": "Called with every answer, controlled or not"
+    },
+    {
+     "name": "onDecide",
+     "type": "(decision: InboxDecision, answer: DecisionAnswer) => void | Promise<unknown>",
+     "optional": true,
+     "description": "Called with the decision and the chosen answer. Return a promise to hold the row until it settles: it answers on\nsuccess, and on a rejection says so and offers both buttons again"
+    }
+   ],
+   "hides": [
+    "answers",
+    "decide"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 24072,
+  "gzip": 7033
+ }
+}

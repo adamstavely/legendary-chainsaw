@@ -34,13 +34,16 @@ export type MentionPickerOwnProps = {
   target?: HTMLElement | React.RefObject<HTMLElement | null> | null;
   /** …or its id */
   htmlFor?: string;
+  /** The trigger characters and what each one offers – icons may be React nodes */
   triggers: MentionTrigger[];
   /**
    * Called with the pick. The picker then puts a token (textarea, input) or a chip (contenteditable) in place of the
    * typed query – call `event.preventDefault()` to insert it yourself instead
    */
   onPick?: (pick: MentionPickerPick, event: Event) => void;
+  /** Called when the list opens or closes, with the trigger character it opened for (null when closed) */
   onOpenChange?: (open: boolean, trigger: string | null) => void;
+  /** Called when the text typed after the trigger changes while the list is open */
   onQueryChange?: (query: string, trigger: string) => void;
 };
 export type MentionPickerProps = Omit<RawMentionPickerProps, keyof MentionPickerOwnProps | "onTcPick" | "onTcOpenChange" | "onTcQueryChange"> & MentionPickerOwnProps;

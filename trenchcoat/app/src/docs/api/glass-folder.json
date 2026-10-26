@@ -1,0 +1,159 @@
+{
+ "elements": [
+  {
+   "tag": "tc-glass-folder",
+   "className": "TcGlassFolder",
+   "description": "A glassy folder with documents; it opens on hover, or on demand with `open`.",
+   "properties": [
+    {
+     "name": "label",
+     "attribute": "label",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Accessible description – when set, the folder is announced as an image; otherwise it is decorative",
+     "readonly": false
+    },
+    {
+     "name": "open",
+     "attribute": "open",
+     "type": "boolean",
+     "default": "false",
+     "description": "Show the open state (the hover look: pocket tipped forward, documents shifted) without a pointer over it",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [],
+   "slots": [],
+   "methods": [],
+   "ui": "fd",
+   "cssProperties": [
+    {
+     "name": "--tc-glass-folder-back",
+     "value": "light-dark(#5bb7ea, #3d8fc6)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-glass-folder-paper-top",
+     "value": "light-dark(#ffffff, #34363c)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-glass-folder-paper-bottom",
+     "value": "light-dark(#eaf2f8, #26292f)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-glass-folder-ink",
+     "value": "light-dark(rgba(0, 0, 0, 0.12), rgba(255, 255, 255, 0.1))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-glass-folder-line",
+     "value": "light-dark(rgba(0, 0, 0, 0.12), rgba(255, 255, 255, 0.16))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-glass-folder-shadow-1",
+     "value": "light-dark(rgba(60, 130, 180, 0.28), rgba(0, 0, 0, 0.45))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-glass-folder-shadow-2",
+     "value": "light-dark(rgba(60, 130, 180, 0.16), rgba(0, 0, 0, 0.3))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-glass-folder-shadow-3",
+     "value": "light-dark(rgba(60, 130, 180, 0.1), transparent)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-glass-folder-doc-shadow",
+     "value": "light-dark(rgba(0, 30, 60, 0.18), rgba(0, 0, 0, 0.45))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-glass-folder-pocket-shade",
+     "value": "light-dark(rgba(0, 40, 75, 0.28), rgba(0, 20, 40, 0.4))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-glass-folder-pocket-top",
+     "value": "light-dark(rgba(132, 214, 248, 0.45), rgba(100, 190, 235, 0.42))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-glass-folder-pocket-bottom",
+     "value": "light-dark(rgba(69, 170, 220, 0.45), rgba(45, 130, 190, 0.5))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-glass-folder-pocket-rim",
+     "value": "light-dark(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.14))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-glass-folder-pocket-lip",
+     "value": "light-dark(rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.3))",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-duration-slowest",
+    "--tc-ease-emphasized"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "GlassFolder",
+   "exported": false,
+   "props": [],
+   "hides": []
+  }
+ ],
+ "changelog": [
+  "glass-folder has an `open` property: the look its hover gives, on demand."
+ ],
+ "size": {
+  "min": 12427,
+  "gzip": 4645
+ }
+}

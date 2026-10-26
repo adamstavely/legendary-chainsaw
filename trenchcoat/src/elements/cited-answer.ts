@@ -120,7 +120,9 @@ let uidCount = 0;
 export class TcCitedAnswer extends TcElement {
   static override ui = "ca";
 
+  /** The answer as text segments, each naming the sources it relies on – a numbered marker ends each cited one */
   @property({ attribute: false }) accessor segments: CitedSegment[] = [];
+  /** The sources, numbered in this order – chips under the answer and the passages their previews quote */
   @property({ attribute: false }) accessor sources: CitedSource[] = [];
   /** Pages the model read while searching – shown in the head next to the source count */
   @property({ type: Number, attribute: "pages-read" }) accessor pagesRead: number | undefined = undefined;

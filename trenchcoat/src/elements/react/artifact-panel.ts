@@ -35,16 +35,21 @@ export type ArtifactPanelProps = Omit<
   title?: string;
   /** The id of the artifact shown (controlled); empty shows the first */
   selected?: string;
+  /** The artifact shown first when `selected` isn't given */
   defaultSelected?: string;
+  /** Called with the artifact's id when the user picks one in the list */
   onSelectedChange?: (id: string) => void;
   /** The id of the version shown (controlled); empty shows the latest */
   version?: string;
+  /** The version shown first when `version` isn't given; empty shows the latest */
   defaultVersion?: string;
   /** A version was picked; picking another artifact goes back to its latest ("") */
   onVersionChange?: (version: string, artifactId: string) => void;
   /** "preview", or "diff" to compare with the version before (controlled) */
   view?: ArtifactPanelView;
+  /** The view to start in when `view` isn't given */
   defaultView?: ArtifactPanelView;
+  /** Called when the user turns Compare on ("diff") or off ("preview") */
   onViewChange?: (view: ArtifactPanelView) => void;
   /** Download was pressed. The panel saves the file itself unless you call event.preventDefault() */
   onDownload?: (artifact: Artifact, version: ArtifactVersion, event: Event) => void;

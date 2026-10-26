@@ -1,0 +1,386 @@
+{
+ "elements": [
+  {
+   "tag": "tc-live-view",
+   "className": "TcLiveView",
+   "description": "The agent's screen, live: its clicks and typing drawn on top, a caption per step, and Pause / Take over.",
+   "properties": [
+    {
+     "name": "actions",
+     "attribute": null,
+     "type": "LiveViewAction[]",
+     "default": "[]",
+     "description": "What the agent did, oldest first, in the frame's pixels – the last one is where the pointer is now",
+     "readonly": false
+    },
+    {
+     "name": "src",
+     "attribute": "src",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The latest frame as an image URL",
+     "readonly": false
+    },
+    {
+     "name": "alt",
+     "attribute": "alt",
+     "type": "string",
+     "default": "\"The agent's screen\"",
+     "description": "The frame's text alternative, for `src`",
+     "readonly": false
+    },
+    {
+     "name": "source",
+     "attribute": null,
+     "type": "| HTMLVideoElement | HTMLCanvasElement | HTMLImageElement | undefined",
+     "default": "undefined",
+     "description": "A live element to show instead – a <video>, <canvas> or <img> the app keeps drawing into (it is moved here)",
+     "readonly": false
+    },
+    {
+     "name": "frameWidth",
+     "attribute": "frame-width",
+     "type": "| number | undefined",
+     "default": "undefined",
+     "description": "The frame's width in its own pixels – the actions' coordinate space. Unset: the image's, video's or canvas's own.\nThe screen takes the frame's shape and the overlays follow it; give a stream of the same shape (a different one\nis letterboxed inside the frame, and actions land on the frame, not on the picture)",
+     "readonly": false
+    },
+    {
+     "name": "frameHeight",
+     "attribute": "frame-height",
+     "type": "| number | undefined",
+     "default": "undefined",
+     "description": "The frame's height in its own pixels",
+     "readonly": false
+    },
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"\"",
+     "description": "What the agent is doing overall – e.g. \"Booking a table for four\"",
+     "readonly": false
+    },
+    {
+     "name": "caption",
+     "attribute": "caption",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The step's caption – unset uses the latest action's `caption`",
+     "readonly": false
+    },
+    {
+     "name": "step",
+     "attribute": "step",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The step's number, from 1",
+     "readonly": false
+    },
+    {
+     "name": "steps",
+     "attribute": "steps",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "How many steps there are, when known",
+     "readonly": false
+    },
+    {
+     "name": "agent",
+     "attribute": "agent",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The name on the pointer's flag – e.g. \"Operator\"; unset shows the flag only for typing, keys and scrolls",
+     "readonly": false
+    },
+    {
+     "name": "color",
+     "attribute": "color",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The pointer's color – defaults to the accent",
+     "readonly": false
+    },
+    {
+     "name": "paused",
+     "attribute": "paused",
+     "type": "boolean",
+     "default": "false",
+     "description": "The agent is paused – the screen dims and says so",
+     "readonly": false
+    },
+    {
+     "name": "control",
+     "attribute": "control",
+     "type": "LiveViewControl",
+     "default": "\"agent\"",
+     "description": "Who drives the screen; \"user\" after Take over",
+     "readonly": false
+    },
+    {
+     "name": "ended",
+     "attribute": "ended",
+     "type": "boolean",
+     "default": "false",
+     "description": "The run is over: Finished, no pointer, no Pause or Take over",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-paused-change",
+     "detail": "",
+     "description": "Pause or Resume was pressed ({ paused }: LiveViewPausedChange); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-control-change",
+     "detail": "",
+     "description": "Take over or Hand back was pressed ({ control }: LiveViewControlChange); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-screen-click",
+     "detail": "",
+     "description": "While you have control, a click on the screen ({ x, y }: LiveViewScreenClick, frame pixels)",
+     "cancelable": false
+    }
+   ],
+   "slots": [
+    {
+     "name": "screen",
+     "description": "Your own stream (an element with `slot=\"screen\"`) – it fills the screen, under the overlays"
+    }
+   ],
+   "methods": [],
+   "ui": "lv",
+   "cssProperties": [
+    {
+     "name": "--tc-live-view-c",
+     "value": "var(--tc-accent)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-live-view-outline",
+     "value": "#ffffff",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-live-view-glide",
+     "value": "var(--tc-duration-slower)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-live-view-blink",
+     "value": "1100ms",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-live-view-wash",
+     "value": "light-dark(rgba(255, 255, 255, 0.45), rgba(0, 0, 0, 0.45))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-live-view-inset",
+     "value": "var(--tc-space-2)",
+     "looks": [
+      "both",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-live-view-screen-radius",
+     "value": "var(--tc-radius-sm)",
+     "looks": [
+      "both",
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-active",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-border-default",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-sm",
+    "--tc-control-radius-md",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-reveal",
+    "--tc-duration-shimmer",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-ease-in-out",
+    "--tc-ease-move",
+    "--tc-ease-out",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-mono",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-kbd-on-inverse-bg",
+    "--tc-kbd-radius",
+    "--tc-line-height-normal",
+    "--tc-line-height-tight",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-full",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-shadow-overlay",
+    "--tc-shimmer",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-info-bg",
+    "--tc-status-info-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-surface-inverse",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-sunken",
+    "--tc-surface-tray",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-on-accent",
+    "--tc-text-on-inverse",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tooltip-font-size",
+    "--tc-tooltip-px",
+    "--tc-tooltip-py",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "LiveView",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "What the agent is doing overall – the header's title"
+    },
+    {
+     "name": "screen",
+     "type": "React.ReactNode",
+     "optional": true,
+     "description": "Your own stream – a <video>, <canvas>, <img>, <svg> or any content – drawn under the overlays"
+    },
+    {
+     "name": "paused",
+     "type": "boolean",
+     "optional": true,
+     "description": "The agent is paused. Controlled when defined; otherwise the component keeps it, starting from `defaultPaused`"
+    },
+    {
+     "name": "defaultPaused",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether the agent starts paused, when `paused` isn't controlled"
+    },
+    {
+     "name": "onPausedChange",
+     "type": "(paused: boolean) => void",
+     "optional": true,
+     "description": "Pause or Resume was pressed"
+    },
+    {
+     "name": "control",
+     "type": "LiveViewControl",
+     "optional": true,
+     "description": "Who drives the screen. Controlled when defined; otherwise kept by the component, from `defaultControl`"
+    },
+    {
+     "name": "defaultControl",
+     "type": "LiveViewControl",
+     "optional": true,
+     "description": "Who drives the screen at first, when `control` isn't controlled"
+    },
+    {
+     "name": "onControlChange",
+     "type": "(control: LiveViewControl) => void",
+     "optional": true,
+     "description": "Take over or Hand back was pressed"
+    },
+    {
+     "name": "onScreenClick",
+     "type": "(point: LiveViewScreenClick) => void",
+     "optional": true,
+     "description": "While you have control: a click on the screen, in frame pixels – forward it to the agent's browser"
+    }
+   ],
+   "hides": [
+    "heading",
+    "paused",
+    "control",
+    "children"
+   ]
+  }
+ ],
+ "changelog": [
+  "`tc-live-view` – the agent's screen (frames, a live video or canvas, or your own content) with its pointer, clicks, typing and keys drawn on top, a step caption, and Pause / Take over; your clicks are reported in frame pixels while you have control."
+ ],
+ "size": {
+  "min": 32725,
+  "gzip": 10492
+ }
+}

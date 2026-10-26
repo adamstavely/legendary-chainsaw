@@ -53,6 +53,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Integration Settings** (`integration-settings.tsx`) – Settings card for a connected service – on/off switch, API key, validated site address, time zone and a save bar
 - **KPI Chart** (`kpi-chart.tsx`) – Metric card with a multi-line chart and a tooltip that follows the pointer
 - **Live View** (`live-view.tsx`) – Watch the agent's screen as it works – its clicks and typing drawn on top, a caption for each step, and Pause or Take over at any moment
+- **Look Provider** (`look-provider.tsx`) – Sets the look, Standard or Clean, for every Trenchcoat element inside it – one wrapper for a whole app, with any element still free to choose its own
 - **Memory Panel** (`memory-panel.tsx`) – What the assistant remembers about you, grouped and editable – a master switch, category filters, and on every memory edit in place, pause or forget with Undo on the tray
 - **Mention Picker** (`mention-picker.tsx`) – The / and @ picker inside a composer – grouped results, arrow keys and Enter, and the pick lands as a chip
 - **Message Actions** (`message-actions.tsx`) – The quiet bar under an AI message – copy turns into a check, regenerate spins and unfolds a version switcher, thumbs pop and ask why, read aloud becomes a tiny equalizer

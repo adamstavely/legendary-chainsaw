@@ -7,6 +7,7 @@ import { h, useControlled, useStaged } from "./internal";
 export type Tip = Omit<TipsPanelTip, "description"> & {
   /** Short explanation – may contain a <Kbd> */
   description: React.ReactNode;
+  /** Called when this tip's action is taken */
   onAction?: () => void;
 };
 
@@ -22,7 +23,9 @@ const RawTipsPanel = createComponent({
 });
 type RawTipsPanelProps = React.ComponentProps<typeof RawTipsPanel>;
 export type TipsPanelProps = Omit<RawTipsPanelProps, "heading" | "tips" | "done" | "closable" | "onTcDoneChange" | "onTcTipAction" | "onTcClose"> & {
+  /** The heading, and the region's name – "Tips" by default */
   title?: string;
+  /** The tips, in order; descriptions can be React nodes, and `onAction` runs when the tip's action is taken */
   tips: Tip[];
   /** Ids of the tips whose action was taken. Controlled when defined – pair it with `onDoneChange` */
   done?: string[];

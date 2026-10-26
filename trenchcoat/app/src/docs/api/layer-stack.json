@@ -1,0 +1,204 @@
+{
+ "elements": [
+  {
+   "tag": "tc-layer-stack",
+   "className": "TcLayerStack",
+   "description": "An isometric stack of layers beside a list; the chosen entry lifts its layer. Steps through them on its own.",
+   "properties": [
+    {
+     "name": "items",
+     "attribute": null,
+     "type": "LayerStackItem[]",
+     "default": "[ { title: \"Triggered by events\", hint: \"Webhooks\", icon: \"bolt\" }, { title: \"Grounded in your data\", hint: \"Context\", icon: \"database\" }, { title: \"Connected to your apps\", hint: \"APIs\", icon: \"plug\" }, { title: \"Works with any model\", hint: \"Routing\", icon: \"spark\" }, { title: \"Traced at every step\", hint: \"Logs\", icon: \"pulse\" }, ]",
+     "description": "Up to five entries, top layer first",
+     "readonly": false
+    },
+    {
+     "name": "index",
+     "attribute": "index",
+     "type": "number",
+     "default": "0",
+     "description": "The chosen entry",
+     "readonly": false
+    },
+    {
+     "name": "interval",
+     "attribute": "interval",
+     "type": "number",
+     "default": "2600",
+     "description": "Time per entry while it plays on its own, in ms",
+     "readonly": false
+    },
+    {
+     "name": "rounds",
+     "attribute": "rounds",
+     "type": "number",
+     "default": "2",
+     "description": "How many times it steps through all entries on its own before it rests (default 2; Infinity keeps going, 0 never steps)",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-index-change",
+     "detail": "",
+     "description": "Cancelable, before the chosen entry changes; detail: LayerStackIndexChange ({ index, user })",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "lyr",
+   "cssProperties": [
+    {
+     "name": "--tc-layer-stack-u",
+     "value": "calc(100cqw / 600)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-layer-stack-row",
+     "value": "calc(52 * var(--tc-layer-stack-u))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-layer-stack-accent",
+     "value": "light-dark(#2f6bff, #6b95ff)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-layer-stack-accent-deep",
+     "value": "light-dark(#2557d9, #2f6bff)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-layer-stack-tint",
+     "value": "light-dark(#e9f0ff, #1f2c4d)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-layer-stack-glow",
+     "value": "light-dark(rgba(47, 107, 255, 0.28), rgba(47, 107, 255, 0.3))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-layer-stack-face",
+     "value": "light-dark(rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.04))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-layer-stack-edge",
+     "value": "light-dark(rgba(10, 10, 10, 0.11), rgba(255, 255, 255, 0.13))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-layer-stack-side",
+     "value": "light-dark(#ececef, #26262a)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-layer-stack-face-above",
+     "value": "light-dark(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.025))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-layer-stack-side-above",
+     "value": "light-dark(rgba(236, 236, 239, 0.55), rgba(38, 38, 42, 0.5))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-layer-stack-panel",
+     "value": "light-dark(#f5f5f5, #161618)",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent-text",
+    "--tc-duration-quick",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-duration-slowest",
+    "--tc-ease-in-out",
+    "--tc-ease-standard",
+    "--tc-font-weight-medium",
+    "--tc-shadow-raised",
+    "--tc-surface-overlay",
+    "--tc-text-muted",
+    "--tc-text-primary"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "LayerStack",
+   "exported": true,
+   "props": [
+    {
+     "name": "index",
+     "type": "number",
+     "optional": true,
+     "description": "The chosen entry (controlled when defined: it doesn't step on its own then)"
+    },
+    {
+     "name": "defaultIndex",
+     "type": "number",
+     "optional": true,
+     "description": "Entry to start on when uncontrolled"
+    },
+    {
+     "name": "onIndexChange",
+     "type": "(index: number) => void",
+     "optional": true,
+     "description": "Reports every change of the chosen entry – picked by the user or stepped to on its own"
+    },
+    {
+     "name": "onChange",
+     "type": "(index: number) => void",
+     "optional": true,
+     "description": "Called when an entry is picked by the user"
+    }
+   ],
+   "hides": [
+    "index",
+    "onChange"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 16645,
+  "gzip": 6158
+ }
+}

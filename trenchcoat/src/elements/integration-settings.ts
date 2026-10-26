@@ -97,6 +97,7 @@ export class TcIntegrationSettings extends TcElement {
   @property({ attribute: false }) accessor values: Partial<IntegrationValues> = {};
   /** Helper text under the address field */
   @property({ attribute: "site-hint" }) accessor siteHint = "Your store's primary domain, without https://";
+  /** The time zones the picker offers, as labels like "(GMT +01:00) Berlin" – the first is the default */
   @property({ attribute: false }) accessor timeZones: string[] = defaultZones;
   /** Creates a key; without it a random `sk_demo_…` key is made up (and warns once, unless `demo` is set) */
   @property({ attribute: false }) accessor generateKey: IntegrationKeyGenerator | undefined = undefined;

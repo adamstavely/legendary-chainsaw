@@ -1,0 +1,218 @@
+{
+ "elements": [
+  {
+   "tag": "tc-profile-menu",
+   "className": "TcProfileMenu",
+   "description": "An account card: the signed-in user, actions and profile setup progress.",
+   "properties": [
+    {
+     "name": "name",
+     "attribute": "name",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The signed-in person's name, at the top of the card",
+     "readonly": false
+    },
+    {
+     "name": "email",
+     "attribute": "email",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The signed-in person's email address, under the name",
+     "readonly": false
+    },
+    {
+     "name": "avatar",
+     "attribute": null,
+     "type": "Element | undefined",
+     "default": "undefined",
+     "description": "Replaces the default avatar (cloned)",
+     "readonly": false
+    },
+    {
+     "name": "items",
+     "attribute": null,
+     "type": "ProfileMenuItem[] | undefined",
+     "default": "undefined",
+     "description": "The actions; unset shows Settings, Docs, Apps and Logout",
+     "readonly": false
+    },
+    {
+     "name": "setup",
+     "attribute": null,
+     "type": "ProfileSetup | undefined",
+     "default": "undefined",
+     "description": "Profile setup progress under the actions – leave unset to hide",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-item-select",
+     "detail": "",
+     "description": "An action was picked; detail `{ id: string }`.",
+     "cancelable": false
+    },
+    {
+     "name": "tc-setup-continue",
+     "detail": "",
+     "description": "The setup's next step was picked; detail `{ next: string }`.",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "pm",
+   "cssProperties": [
+    {
+     "name": "--tc-profile-menu-icon-stroke",
+     "value": "1.1",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent",
+    "--tc-border-default",
+    "--tc-card-radius",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-instant",
+    "--tc-duration-reveal-slow",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-strong",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-lg-plus",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-line-height-relaxed",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-menu-bg",
+    "--tc-menu-item-h",
+    "--tc-menu-item-hover",
+    "--tc-menu-item-px",
+    "--tc-menu-item-radius",
+    "--tc-menu-padding",
+    "--tc-menu-radius",
+    "--tc-menu-shadow",
+    "--tc-meter-fill",
+    "--tc-meter-h",
+    "--tc-meter-radius",
+    "--tc-meter-track",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-full",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-radius-xl",
+    "--tc-shadow-control",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-4-5",
+    "--tc-surface-on-tray",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tone-rose-bg",
+    "--tc-tone-rose-fg",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "profileMenuIcon",
+   "signature": "profileMenuIcon(name: ProfileMenuIconName): Element",
+   "description": "One of the menu's icons as an element, to put in `items`"
+  },
+  {
+   "name": "profileMenuDefaultItems",
+   "signature": "profileMenuDefaultItems(): ProfileMenuItem[]",
+   "description": "The actions when `items` is unset"
+  }
+ ],
+ "react": [
+  {
+   "component": "ProfileMenu",
+   "exported": true,
+   "props": [
+    {
+     "name": "name",
+     "type": "string",
+     "optional": false,
+     "description": "The signed-in person's name, at the top of the card"
+    },
+    {
+     "name": "email",
+     "type": "string",
+     "optional": false,
+     "description": "The signed-in person's email address, under the name"
+    },
+    {
+     "name": "avatar",
+     "type": "React.ReactNode",
+     "optional": true,
+     "description": "Replaces the default avatar"
+    },
+    {
+     "name": "items",
+     "type": "ProfileMenuItem[]",
+     "optional": true,
+     "description": "The actions; unset shows Settings, Docs, Apps and Logout"
+    },
+    {
+     "name": "setup",
+     "type": "ProfileSetup",
+     "optional": true,
+     "description": "Profile setup progress under the actions – leave empty to hide"
+    }
+   ],
+   "hides": [
+    "avatar",
+    "items",
+    "setup",
+    "name",
+    "email"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 22645,
+  "gzip": 6658
+ }
+}

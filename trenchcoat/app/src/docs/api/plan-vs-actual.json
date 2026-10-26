@@ -1,0 +1,335 @@
+{
+ "elements": [
+  {
+   "tag": "tc-plan-vs-actual",
+   "className": "TcPlanVsActual",
+   "description": "An agent's plan against what really happens, as a live Gantt chart. Clean look only.",
+   "properties": [
+    {
+     "name": "resolvedLook",
+     "attribute": null,
+     "type": "Look",
+     "default": null,
+     "description": "One look only: always Clean",
+     "readonly": true
+    },
+    {
+     "name": "steps",
+     "attribute": null,
+     "type": "PlanVsActualStep[]",
+     "default": "[]",
+     "description": "The plan's steps, in order – each with its planned time, what it waits for, and its real start and end so far",
+     "readonly": false
+    },
+    {
+     "name": "now",
+     "attribute": null,
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The clock, in epoch ms – without it (and without `elapsed`) the chart reads the clock after it connects and ticks\nwhile the run goes on",
+     "readonly": false
+    },
+    {
+     "name": "startedAt",
+     "attribute": null,
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "When the run started, in epoch ms – defaults to the earliest step start",
+     "readonly": false
+    },
+    {
+     "name": "elapsed",
+     "attribute": null,
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "Where the run is now as ms from its start; step start/end are then run-relative too. Takes precedence over `now`",
+     "readonly": false
+    },
+    {
+     "name": "task",
+     "attribute": "task",
+     "type": "string",
+     "default": "\"\"",
+     "description": "What the run is for – e.g. \"Ship the pricing page\"",
+     "readonly": false
+    },
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Plan vs actual\"",
+     "description": "The heading, and the list's name",
+     "readonly": false
+    },
+    {
+     "name": "formatTime",
+     "attribute": null,
+     "type": "(ms: number) => string",
+     "default": "clock",
+     "description": "Formats a time – defaults to 0:42 / 1:05",
+     "readonly": false
+    },
+    {
+     "name": "formatCost",
+     "attribute": null,
+     "type": "(amount: number) => string",
+     "default": "dollars",
+     "description": "Formats a cost – defaults to dollars",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [],
+   "slots": [],
+   "methods": [],
+   "ui": "pvac",
+   "cssProperties": [
+    {
+     "name": "--tc-plan-vs-actual-ghost",
+     "value": "light-dark(rgba(0, 0, 0, 0.26), rgba(255, 255, 255, 0.3))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-plan-vs-actual-link",
+     "value": "light-dark(rgba(0, 0, 0, 0.5), rgba(255, 255, 255, 0.55))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-plan-vs-actual-actual-bg",
+     "value": "light-dark(rgba(91, 91, 214, 0.1), rgba(130, 130, 255, 0.16))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-plan-vs-actual-actual-edge",
+     "value": "light-dark(rgba(91, 91, 214, 0.3), rgba(130, 130, 255, 0.38))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-plan-vs-actual-actual-mark",
+     "value": "light-dark(rgba(91, 91, 214, 0.72), rgba(140, 140, 255, 0.8))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-plan-vs-actual-forecast-bg",
+     "value": "light-dark(rgba(0, 0, 0, 0.035), rgba(255, 255, 255, 0.05))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-plan-vs-actual-forecast-edge",
+     "value": "light-dark(rgba(0, 0, 0, 0.07), rgba(255, 255, 255, 0.09))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-plan-vs-actual-gap-late-bg",
+     "value": "light-dark(rgba(255, 140, 0, 0.07), rgba(255, 140, 30, 0.07))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-plan-vs-actual-gap-early-bg",
+     "value": "light-dark(rgba(0, 164, 51, 0.06), rgba(40, 200, 110, 0.06))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-plan-vs-actual-now",
+     "value": "light-dark(rgba(0, 96, 226, 0.4), rgba(91, 154, 255, 0.55))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-plan-vs-actual-chip",
+     "value": "light-dark(rgba(0, 0, 0, 0.045), rgba(255, 255, 255, 0.07))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-plan-vs-actual-spin",
+     "value": "900ms",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-plan-vs-actual-glow",
+     "value": "1100ms",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-plan-vs-actual-row",
+     "value": "32px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-plan-vs-actual-bar",
+     "value": "14px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-plan-vs-actual-axis",
+     "value": "30px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-plan-vs-actual-foot",
+     "value": "40px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-plan-vs-actual-name",
+     "value": "188px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-plan-vs-actual-pad",
+     "value": "16px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-plan-vs-actual-gap",
+     "value": "14px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-plan-vs-actual-end",
+     "value": "16px",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent-text",
+    "--tc-avatar-radius-agent",
+    "--tc-border-subtle",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-reveal",
+    "--tc-duration-shimmer",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-ease-in-out",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-hover",
+    "--tc-focus-outline",
+    "--tc-focus-ring-width",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-line-height-tight",
+    "--tc-pill-font-size-lg",
+    "--tc-pill-font-weight",
+    "--tc-pill-h-lg",
+    "--tc-pill-px-lg",
+    "--tc-pill-radius",
+    "--tc-plan-vs-actual-kind-bg",
+    "--tc-plan-vs-actual-kind-edge",
+    "--tc-plan-vs-actual-range",
+    "--tc-plan-vs-actual-x0",
+    "--tc-radius-2xs",
+    "--tc-radius-badge",
+    "--tc-radius-xs",
+    "--tc-shadow-raised",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-border",
+    "--tc-status-warning-fg",
+    "--tc-surface-raised",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "PlanVsActual",
+   "exported": true,
+   "props": [
+    {
+     "name": "steps",
+     "type": "PlanVsActualStep[]",
+     "optional": false,
+     "description": "The plan's steps, in order – each with its planned time, what it waits for, and its real start and end so far; `icon` takes a React node"
+    },
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading, and the list's name (default \"Plan vs actual\")"
+    }
+   ],
+   "hides": [
+    "steps",
+    "heading",
+    "look"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 41818,
+  "gzip": 11677
+ }
+}

@@ -120,6 +120,7 @@ let instances = 0;
 export class TcPromptLibrary extends TcElement {
   static override ui = "pli";
 
+  /** The saved templates, in list order – each with a title, an optional category and a body with {variables} */
   @property({ attribute: false }) accessor templates: PromptTemplate[] = [];
   /** Id of the chosen template – unset or unknown shows the first. Changed by the user unless a tc-value-change
    *  listener calls preventDefault() */

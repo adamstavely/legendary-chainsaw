@@ -1,0 +1,285 @@
+{
+ "elements": [
+  {
+   "tag": "tc-setup-guide",
+   "className": "TcSetupGuide",
+   "description": "An onboarding panel: a progress bar and collapsible groups of tasks that unlock one after another.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Setup guide\"",
+     "description": "The heading, and the region's name",
+     "readonly": false
+    },
+    {
+     "name": "groups",
+     "attribute": null,
+     "type": "SetupGroup[]",
+     "default": "[]",
+     "description": "The task groups. Each task's `done` flag is where it starts; when the flags change, the guide follows them",
+     "readonly": false
+    },
+    {
+     "name": "done",
+     "attribute": null,
+     "type": "string[] | undefined",
+     "default": "undefined",
+     "description": "Ids of the finished tasks; unset follows the tasks' flags. Changed by a tick unless tc-done-change is prevented",
+     "readonly": false
+    },
+    {
+     "name": "openGroup",
+     "attribute": null,
+     "type": "string | null | undefined",
+     "default": "undefined",
+     "description": "Id of the unfolded group, null for none; unset unfolds the first unfinished group",
+     "readonly": false
+    },
+    {
+     "name": "minimized",
+     "attribute": "minimized",
+     "type": "boolean",
+     "default": "false",
+     "description": "The body is collapsed to the header",
+     "readonly": false
+    },
+    {
+     "name": "editable",
+     "attribute": "editable",
+     "type": "boolean",
+     "default": "false",
+     "description": "Shows an \"Edit\" link in the header (fires tc-edit)",
+     "readonly": false
+    },
+    {
+     "name": "closable",
+     "attribute": "closable",
+     "type": "boolean",
+     "default": "false",
+     "description": "Shows a close button in the header (fires tc-close)",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-done-change",
+     "detail": "",
+     "description": "A task was ticked or cleared (detail: { done: string[] }, the ids of all finished tasks); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-open-group-change",
+     "detail": "",
+     "description": "A group unfolded or folded, also when a finished group folds away on its own (detail: { openGroup: string | null }); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-minimized-change",
+     "detail": "",
+     "description": "The body was collapsed or expanded (detail: { minimized: boolean }); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-edit",
+     "detail": "",
+     "description": "The Edit link was pressed (shown with `editable`)",
+     "cancelable": false
+    },
+    {
+     "name": "tc-close",
+     "detail": "",
+     "description": "The close button was pressed (shown with `closable`)",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "sg",
+   "cssProperties": [
+    {
+     "name": "--tc-setup-guide-mark-bg-hover",
+     "value": "light-dark(#d3d7de, #4a4a50)",
+     "looks": [
+      "standard"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-border-control",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-sm",
+    "--tc-control-radius-md",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-instant",
+    "--tc-duration-moderate",
+    "--tc-duration-reveal",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-lg-plus",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-loose",
+    "--tc-line-height-normal",
+    "--tc-line-height-relaxed",
+    "--tc-line-height-tight",
+    "--tc-meter-fill",
+    "--tc-meter-h",
+    "--tc-meter-radius",
+    "--tc-meter-track",
+    "--tc-radius-2xs",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-radius-xl",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-surface-raised",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-strong"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "SetupGuide",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading, and the region's name"
+    },
+    {
+     "name": "groups",
+     "type": "SetupGroup[]",
+     "optional": false,
+     "description": "The task groups. Each task's `done` flag is where it starts; when the flags change, the guide follows them"
+    },
+    {
+     "name": "done",
+     "type": "string[]",
+     "optional": true,
+     "description": "Ids of the finished tasks. Controlled when defined – pair it with `onDoneChange`"
+    },
+    {
+     "name": "defaultDone",
+     "type": "string[]",
+     "optional": true,
+     "description": "Ids finished on mount when `done` isn't controlled – defaults to the tasks marked `done`"
+    },
+    {
+     "name": "onDoneChange",
+     "type": "(done: string[]) => void",
+     "optional": true,
+     "description": "Called with the ids of all finished tasks whenever a task is ticked or cleared"
+    },
+    {
+     "name": "onChange",
+     "type": "(done: string[]) => void",
+     "optional": true,
+     "description": "Called with the ids of all finished tasks, like `onDoneChange`"
+    },
+    {
+     "name": "openGroup",
+     "type": "string | null",
+     "optional": true,
+     "description": "Id of the unfolded group, `null` for none. Controlled when defined – pair it with `onOpenGroupChange`"
+    },
+    {
+     "name": "defaultOpenGroup",
+     "type": "string | null",
+     "optional": true,
+     "description": "Group unfolded on mount when `openGroup` isn't controlled – defaults to the first unfinished group"
+    },
+    {
+     "name": "onOpenGroupChange",
+     "type": "(id: string | null) => void",
+     "optional": true,
+     "description": "Called when a group unfolds or folds – also when a finished group folds away on its own"
+    },
+    {
+     "name": "minimized",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether the body is collapsed to the header. Controlled when defined – pair it with `onMinimizedChange`"
+    },
+    {
+     "name": "defaultMinimized",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether the body starts collapsed when `minimized` isn't controlled"
+    },
+    {
+     "name": "onMinimizedChange",
+     "type": "(minimized: boolean) => void",
+     "optional": true,
+     "description": "Called when the body is collapsed or expanded"
+    },
+    {
+     "name": "onEdit",
+     "type": "() => void",
+     "optional": true,
+     "description": "Shows an \"Edit\" link in the header"
+    },
+    {
+     "name": "onClose",
+     "type": "() => void",
+     "optional": true,
+     "description": "Shows a close button in the header"
+    }
+   ],
+   "hides": []
+  }
+ ],
+ "changelog": [
+  "setup-guide `onChange` → `onDoneChange` (same arguments)"
+ ],
+ "size": {
+  "min": 32914,
+  "gzip": 8118
+ }
+}

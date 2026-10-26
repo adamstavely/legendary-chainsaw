@@ -256,14 +256,20 @@ export class TcDropzone extends TcElement {
       this.io.observe(this);
     }
     document.addEventListener("visibilitychange", this.paint);
-    // The sample: files are dragged over, then dropped
-    if (this.autoplay) {
-      this.later(() => (this.dragging = SAMPLE.length), 700);
-      this.later(() => {
-        this.dragging = 0;
-        SAMPLE.forEach((s, n) => this.later(() => this.start(s), n * 140));
-      }, 1900);
-    }
+    if (this.autoplay) this.playSample();
+  }
+
+  /** The sample: files are dragged over, then dropped – once per connection, also when `autoplay` is set after it
+   *  (frameworks such as React set properties after the element is in the page) */
+  private sampled = false;
+  private playSample() {
+    if (this.sampled) return;
+    this.sampled = true;
+    this.later(() => (this.dragging = SAMPLE.length), 700);
+    this.later(() => {
+      this.dragging = 0;
+      SAMPLE.forEach((s, n) => this.later(() => this.start(s), n * 140));
+    }, 1900);
   }
 
   override disconnectedCallback() {
@@ -282,6 +288,8 @@ export class TcDropzone extends TcElement {
     clearInterval(this.ticker);
     clearInterval(this.painter);
     this.frame = this.flushTimer = this.ticker = this.painter = 0;
+    // Back in the page: the sample may play again
+    this.sampled = false;
   }
 
   formResetCallback() {
@@ -499,6 +507,7 @@ export class TcDropzone extends TcElement {
   protected override willUpdate(changed: PropertyValues<this>) {
     super.willUpdate(changed);
     this.latest = this.value;
+    if (changed.has("autoplay") && this.autoplay && this.isConnected) this.playSample();
   }
 
   protected override updated() {

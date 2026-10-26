@@ -29,6 +29,7 @@ const RawKpiChart = createComponent({
 });
 type RawKpiChartProps = React.ComponentProps<typeof RawKpiChart>;
 export type KpiChartProps = Omit<RawKpiChartProps, "heading" | "index" | "defaultIndex" | "onTcIndexChange" | "value"> & {
+  /** The card's title – it also names the chart for screen readers */
   title: string;
   /** Headline value, already formatted, e.g. "$96.4k" */
   value: string;

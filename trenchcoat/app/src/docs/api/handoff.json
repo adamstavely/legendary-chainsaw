@@ -1,0 +1,377 @@
+{
+ "elements": [
+  {
+   "tag": "tc-handoff",
+   "className": "TcHandoff",
+   "description": "The agent hands control to a person mid-task with what it did, why it stopped and what it needs – and takes it back.",
+   "properties": [
+    {
+     "name": "agent",
+     "attribute": null,
+     "type": "HandoffAgent",
+     "default": "{ name: \"\" }",
+     "description": "Who hands over",
+     "readonly": false
+    },
+    {
+     "name": "ask",
+     "attribute": "ask",
+     "type": "string",
+     "default": "\"\"",
+     "description": "What it needs you to do, lower case after \"needs you to\", e.g. \"sign in to Stripe\"",
+     "readonly": false
+    },
+    {
+     "name": "task",
+     "attribute": "task",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The run it belongs to, e.g. \"Book flights to Lisbon\" – shown under the heading",
+     "readonly": false
+    },
+    {
+     "name": "step",
+     "attribute": "step",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "Where in the run, e.g. \"Step 4 of 7\"",
+     "readonly": false
+    },
+    {
+     "name": "blocker",
+     "attribute": "blocker",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "Why it stopped, in a pill: \"Sign-in required\", \"Needs a decision\"",
+     "readonly": false
+    },
+    {
+     "name": "reason",
+     "attribute": "reason",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The agent's own words on why it stopped",
+     "readonly": false
+    },
+    {
+     "name": "done",
+     "attribute": null,
+     "type": "HandoffItem[]",
+     "default": "[]",
+     "description": "What it did so far",
+     "readonly": false
+    },
+    {
+     "name": "needs",
+     "attribute": null,
+     "type": "HandoffItem[]",
+     "default": "[]",
+     "description": "What it needs from you – a checklist once you have control",
+     "readonly": false
+    },
+    {
+     "name": "status",
+     "attribute": "status",
+     "type": "HandoffStatus",
+     "default": "\"waiting\"",
+     "description": "Who has control",
+     "readonly": false
+    },
+    {
+     "name": "checked",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[]",
+     "description": "Ids of the needs ticked off",
+     "readonly": false
+    },
+    {
+     "name": "note",
+     "attribute": "note",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Your note for the agent, passed on when you hand back",
+     "readonly": false
+    },
+    {
+     "name": "doneLimit",
+     "attribute": "done-limit",
+     "type": "number",
+     "default": "3",
+     "description": "Done steps shown before \"N more\"",
+     "readonly": false
+    },
+    {
+     "name": "doneTitle",
+     "attribute": "done-title",
+     "type": "string",
+     "default": "\"What I did\"",
+     "description": "Heading of the list of what the agent did",
+     "readonly": false
+    },
+    {
+     "name": "needsTitle",
+     "attribute": "needs-title",
+     "type": "string",
+     "default": "\"What I need from you\"",
+     "description": "Heading of the list of what the agent needs – the checklist once you have control",
+     "readonly": false
+    },
+    {
+     "name": "noteLabel",
+     "attribute": "note-label",
+     "type": "string",
+     "default": "\"Note for the agent\"",
+     "description": "Label of the note field shown while you have control",
+     "readonly": false
+    },
+    {
+     "name": "notePlaceholder",
+     "attribute": "note-placeholder",
+     "type": "string",
+     "default": "\"Anything it should know before it carries on\"",
+     "description": "Placeholder of the note field",
+     "readonly": false
+    },
+    {
+     "name": "shortcuts",
+     "attribute": "shortcuts",
+     "type": "boolean",
+     "default": "true",
+     "description": "Show ⌘↵ hints on the main button (the shortcut works either way). Default true",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-status-change",
+     "detail": "",
+     "description": "Take over, Hand back or Take over again ({ status, previous }: HandoffStatusChange); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-checked-change",
+     "detail": "",
+     "description": "A need was ticked or unticked ({ checked }: HandoffCheckedChange); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-note-change",
+     "detail": "",
+     "description": "The note for the agent changed ({ note }: HandoffNoteChange); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-return",
+     "detail": "",
+     "description": "Handed back, with what was done and the note ({ checked, open, note }: HandoffReturn)",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "hand",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-active",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-avatar-font-weight",
+    "--tc-avatar-radius-agent",
+    "--tc-border-control",
+    "--tc-border-control-hover",
+    "--tc-border-default",
+    "--tc-border-strong",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-lg",
+    "--tc-control-h-md",
+    "--tc-control-px-lg",
+    "--tc-control-px-md",
+    "--tc-control-radius-lg",
+    "--tc-control-radius-md",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-quick",
+    "--tc-duration-slow",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-font-size",
+    "--tc-field-px",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-field-shadow-hover",
+    "--tc-fill-default",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-2xs",
+    "--tc-font-size-lg",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-kbd-font-size",
+    "--tc-kbd-font-weight",
+    "--tc-kbd-h",
+    "--tc-kbd-on-inverse-bg",
+    "--tc-kbd-px",
+    "--tc-kbd-radius",
+    "--tc-line-height-none",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-pill-font-size-lg",
+    "--tc-pill-font-weight",
+    "--tc-pill-h-lg",
+    "--tc-pill-px-lg",
+    "--tc-pill-radius",
+    "--tc-radius-badge",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-radius-xs",
+    "--tc-shadow-raised",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-10",
+    "--tc-space-12",
+    "--tc-space-14",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-8",
+    "--tc-status-info-bg",
+    "--tc-status-info-fg",
+    "--tc-status-success-fg",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-surface-control",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-on-inverse",
+    "--tc-text-placeholder",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "Handoff",
+   "exported": true,
+   "props": [
+    {
+     "name": "agent",
+     "type": "{ name: string; model?: string; avatar?: React.ReactNode }",
+     "optional": false,
+     "description": "Who hands over: { name, model?, avatar? }"
+    },
+    {
+     "name": "status",
+     "type": "HandoffStatus",
+     "optional": true,
+     "description": "Who has control – controlled when given"
+    },
+    {
+     "name": "defaultStatus",
+     "type": "HandoffStatus",
+     "optional": true,
+     "description": "Who has control at first, when `status` isn't set – \"waiting\" by default"
+    },
+    {
+     "name": "onStatusChange",
+     "type": "(status: HandoffStatus) => void",
+     "optional": true,
+     "description": "Take over, Hand back, Take over again"
+    },
+    {
+     "name": "checked",
+     "type": "string[]",
+     "optional": true,
+     "description": "Ids of the needs ticked off – controlled when given"
+    },
+    {
+     "name": "defaultChecked",
+     "type": "string[]",
+     "optional": true,
+     "description": "The needs ticked off at first, when `checked` isn't set"
+    },
+    {
+     "name": "onCheckedChange",
+     "type": "(checked: string[]) => void",
+     "optional": true,
+     "description": "Called with the ids of the ticked needs, in the needs' order, whenever one is ticked or unticked"
+    },
+    {
+     "name": "note",
+     "type": "string",
+     "optional": true,
+     "description": "The note for the agent – controlled when given"
+    },
+    {
+     "name": "defaultNote",
+     "type": "string",
+     "optional": true,
+     "description": "The note at first, when `note` isn't set"
+    },
+    {
+     "name": "onNoteChange",
+     "type": "(note: string) => void",
+     "optional": true,
+     "description": "Called with the note as it is typed"
+    },
+    {
+     "name": "onReturn",
+     "type": "(result: HandoffReturn) => void",
+     "optional": true,
+     "description": "Handed back: what was done, what's still open and the note – the agent should listen to this"
+    }
+   ],
+   "hides": []
+  }
+ ],
+ "changelog": [
+  "`tc-handoff` – the agent hands the task to a person: what it did, why it stopped, what it needs; Take over turns the needs into a checklist with a note, Hand back folds it to one line. ⌘/Ctrl+Enter; `tc-status-change`, `tc-checked-change`, `tc-note-change`, `tc-return`."
+ ],
+ "size": {
+  "min": 39447,
+  "gzip": 10297
+ }
+}

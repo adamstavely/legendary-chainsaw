@@ -85,7 +85,9 @@ export class TcCommentThread extends TcElement {
 
   /** The heading, and the region's name */
   @property() accessor heading = "Comment";
+  /** The comment and its replies, oldest first – the source of truth, followed by id */
   @property({ attribute: false }) accessor messages: ThreadMessage[] = [];
+  /** Who is replying here: the author of replies posted from the field */
   @property({ attribute: false }) accessor currentUser: ThreadAuthor = { name: "You" };
   /** The assistant that answers – used for the thinking state */
   @property({ attribute: false }) accessor assistant: ThreadAuthor | undefined = undefined;

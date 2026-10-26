@@ -1,0 +1,320 @@
+{
+ "elements": [
+  {
+   "tag": "tc-context-window",
+   "className": "TcContextWindow",
+   "description": "What fills a model's context window, as a field of cells per part, with removal and compaction.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Context window\"",
+     "description": "The heading, and the group's name",
+     "readonly": false
+    },
+    {
+     "name": "parts",
+     "attribute": null,
+     "type": "ContextPart[]",
+     "default": "[]",
+     "description": "What fills the window, in order – each part takes the next run of cells",
+     "readonly": false
+    },
+    {
+     "name": "limit",
+     "attribute": "limit",
+     "type": "number",
+     "default": "0",
+     "description": "Size of the context window in tokens",
+     "readonly": false
+    },
+    {
+     "name": "model",
+     "attribute": "model",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Small tag in the head, e.g. the model name",
+     "readonly": false
+    },
+    {
+     "name": "modelIcon",
+     "attribute": null,
+     "type": "Element | undefined",
+     "default": "undefined",
+     "description": "Logo in front of the model name, an element that's cloned, sized to 12px",
+     "readonly": false
+    },
+    {
+     "name": "actionLabel",
+     "attribute": "action-label",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Label of a button on the tray (Clean: in the card's last row), e.g. \"New chat\" – it fires tc-action",
+     "readonly": false
+    },
+    {
+     "name": "warnAt",
+     "attribute": "warn-at",
+     "type": "number",
+     "default": "0.8",
+     "description": "Share of the limit from which the card warns (0–1)",
+     "readonly": false
+    },
+    {
+     "name": "cells",
+     "attribute": "cells",
+     "type": "number",
+     "default": "216",
+     "description": "Number of cells and how many sit in one row",
+     "readonly": false
+    },
+    {
+     "name": "columns",
+     "attribute": "columns",
+     "type": "number",
+     "default": "36",
+     "description": "How many cells sit in one row (two thirds of it, at least 8, in a narrow container)",
+     "readonly": false
+    },
+    {
+     "name": "onCompact",
+     "attribute": null,
+     "type": "ContextCompactAction | undefined",
+     "default": "undefined",
+     "description": "Called when Compact is pressed; the cells shimmer until the returned promise settles, and a rejection says so and\nleaves Compact to press again. The signal aborts when the element is removed. Once it settles the part shows its\n`compact` share at once, until `parts` brings a new size for it",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-remove-item",
+     "detail": "",
+     "description": "An item was removed (`{ partId: string; itemId: string }`); it stays hidden until `parts` brings a different list of items for that part",
+     "cancelable": false
+    },
+    {
+     "name": "tc-compact",
+     "detail": "",
+     "description": "Compact was pressed (`{ partId: string }`); `onCompact` may return a promise the cells wait for",
+     "cancelable": false
+    },
+    {
+     "name": "tc-action",
+     "detail": "",
+     "description": "The tray's action button was pressed (`{ label: string }`)",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "cw",
+   "cssProperties": [
+    {
+     "name": "--tc-context-window-series-1",
+     "value": "light-dark(rgba(0, 96, 226, 0.765), #4d8dff)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-context-window-series-2",
+     "value": "light-dark(rgba(0, 96, 226, 0.5), rgba(77, 141, 255, 0.7))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-context-window-series-3",
+     "value": "light-dark(rgba(0, 96, 226, 0.26), rgba(77, 141, 255, 0.46))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-context-window-series-4",
+     "value": "light-dark(rgba(91, 91, 214, 0.8), #7b7bec)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-context-window-series-5",
+     "value": "light-dark(rgba(26, 154, 82, 0.72), #3ec27a)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-context-window-series-6",
+     "value": "light-dark(rgba(232, 162, 12, 0.8), #f0b43a)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-border-default",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-context-window-color",
+    "--tc-context-window-cols",
+    "--tc-context-window-cols-narrow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-md",
+    "--tc-control-radius-md",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-instant",
+    "--tc-duration-moderate",
+    "--tc-duration-quick",
+    "--tc-duration-reveal",
+    "--tc-duration-reveal-slow",
+    "--tc-duration-shimmer",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-ease-decelerate",
+    "--tc-ease-in-out",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-mono",
+    "--tc-font-sans",
+    "--tc-font-size-3xl",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-display",
+    "--tc-line-height-display-sm",
+    "--tc-line-height-normal",
+    "--tc-line-height-tight",
+    "--tc-radius-2xs",
+    "--tc-radius-badge",
+    "--tc-radius-full",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-radius-xs",
+    "--tc-shadow-raised",
+    "--tc-shimmer",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-4-5",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "ContextWindow",
+   "exported": true,
+   "props": [
+    {
+     "name": "parts",
+     "type": "ContextPart[]",
+     "optional": false,
+     "description": "What fills the window, in order – each part takes the next run of cells"
+    },
+    {
+     "name": "limit",
+     "type": "number",
+     "optional": false,
+     "description": "Size of the context window in tokens"
+    },
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading, and the group's name"
+    },
+    {
+     "name": "modelIcon",
+     "type": "React.ReactNode",
+     "optional": true,
+     "description": "Logo in front of the model name – any node, sized to 12px"
+    },
+    {
+     "name": "onRemoveItem",
+     "type": "(partId: string, itemId: string) => void",
+     "optional": true,
+     "description": "Called when an item is removed. The card hides the item at once and keeps it hidden until `parts` brings a\ndifferent list of items for that part – so `parts` stays the source of truth, whether you handle the removal or\nonly listen to it"
+    },
+    {
+     "name": "action",
+     "type": "{ label: string; onClick: () => void }",
+     "optional": true,
+     "description": "A button on the tray (Clean: in the card's last row), e.g. { label: \"New chat\", onClick }"
+    }
+   ],
+   "hides": [
+    "heading",
+    "modelIcon",
+    "actionLabel",
+    "limit",
+    "parts"
+   ]
+  }
+ ],
+ "changelog": [
+  "context-window: Clean's \"Compacting…\" shine runs 3 times and rests, like every other shimmer (it ran endlessly)."
+ ],
+ "size": {
+  "min": 52332,
+  "gzip": 12912
+ }
+}

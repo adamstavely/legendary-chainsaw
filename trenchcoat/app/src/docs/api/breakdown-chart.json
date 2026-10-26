@@ -1,0 +1,326 @@
+{
+ "elements": [
+  {
+   "tag": "tc-breakdown-chart",
+   "className": "TcBreakdownChart",
+   "description": "A stacked bar chart with a linked table: pick the measure, the slice and the segment; legend chips hide segments.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Workload\"",
+     "description": "The heading, and the region's name",
+     "readonly": false
+    },
+    {
+     "name": "records",
+     "attribute": null,
+     "type": "BreakdownRecord[]",
+     "default": "[]",
+     "description": "The rows to chart – one object per item, with a value for each dimension key and each measure field",
+     "readonly": false
+    },
+    {
+     "name": "dimensions",
+     "attribute": null,
+     "type": "BreakdownDimension[]",
+     "default": "[]",
+     "description": "The fields people can slice and segment by, with their values in display order",
+     "readonly": false
+    },
+    {
+     "name": "measures",
+     "attribute": null,
+     "type": "BreakdownMeasure[]",
+     "default": "[]",
+     "description": "What the bars can measure – a count of records, or the sum of a field",
+     "readonly": false
+    },
+    {
+     "name": "measure",
+     "attribute": "measure",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "Measure key; unset is the first measure",
+     "readonly": false
+    },
+    {
+     "name": "slice",
+     "attribute": "slice",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "Dimension key the bars are sliced by; unset is the first dimension",
+     "readonly": false
+    },
+    {
+     "name": "segment",
+     "attribute": "segment",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "Dimension key the bars are segmented by, or \"none\" for single-color bars; unset is the second dimension",
+     "readonly": false
+    },
+    {
+     "name": "hiddenSegments",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[]",
+     "description": "Segment values hidden from the bars and totals; picking another segment clears it (`hidden` is the HTML attribute)",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-measure-change",
+     "detail": "",
+     "description": "The measure was picked; detail `{ measure: string }`. Cancelable (controlled use)",
+     "cancelable": true
+    },
+    {
+     "name": "tc-slice-change",
+     "detail": "",
+     "description": "The slice dimension was picked; detail `{ slice: string }`. Cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-segment-change",
+     "detail": "",
+     "description": "The segment dimension was picked (\"none\" for single-color bars); detail `{ segment: string }`. Cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-hidden-change",
+     "detail": "",
+     "description": "Segment values were hidden or shown; detail `{ hidden: string[] }`. Cancelable",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "bc",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-border-default",
+    "--tc-border-strong",
+    "--tc-border-subtle",
+    "--tc-breakdown-chart-tip-gap",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-h-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-duration-slowest",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-font-size",
+    "--tc-field-h",
+    "--tc-field-px",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-hover",
+    "--tc-fill-default",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-lg-plus",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-loose",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-menu-bg",
+    "--tc-menu-item-font-size",
+    "--tc-menu-item-h",
+    "--tc-menu-item-hover",
+    "--tc-menu-item-px",
+    "--tc-menu-item-radius",
+    "--tc-menu-item-selected-fg",
+    "--tc-menu-padding",
+    "--tc-menu-radius",
+    "--tc-menu-shadow",
+    "--tc-radius-2xs",
+    "--tc-radius-full",
+    "--tc-radius-sm",
+    "--tc-shadow-control",
+    "--tc-shadow-raised",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-4-5",
+    "--tc-space-5",
+    "--tc-space-7",
+    "--tc-surface-on-tray",
+    "--tc-surface-overlay",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tray-inset",
+    "--tc-tray-radius",
+    "--tc-z-dropdown"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "breakdownStatusIcon",
+   "signature": "breakdownStatusIcon({ kind, color = \"currentColor\", look }: { kind: BreakdownStatusKind; color?: string; look?: Look }): SVGSVGElement",
+   "description": "A small status icon element, for a dimension's `icons`. Without `look` it takes the chart's look"
+  }
+ ],
+ "react": [
+  {
+   "component": "BreakdownChart",
+   "exported": true,
+   "props": [
+    {
+     "name": "records",
+     "type": "TcBreakdownChart[\"records\"]",
+     "optional": false,
+     "description": "The rows to chart – one object per item, with a value for each dimension key and each measure field"
+    },
+    {
+     "name": "dimensions",
+     "type": "Dimension[]",
+     "optional": false,
+     "description": "The fields people can slice and segment by; `icons` takes React nodes"
+    },
+    {
+     "name": "measures",
+     "type": "Measure[]",
+     "optional": false,
+     "description": "What the bars can measure – a count of records, or the sum of a field"
+    },
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading, and the region's name (default \"Workload\")"
+    },
+    {
+     "name": "measure",
+     "type": "string",
+     "optional": true,
+     "description": "Measure key (controlled). Leave undefined and use `defaultMeasure` to let the chart keep it"
+    },
+    {
+     "name": "defaultMeasure",
+     "type": "string",
+     "optional": true,
+     "description": "The measure picked at first, when `measure` is not controlled – defaults to the first"
+    },
+    {
+     "name": "onMeasureChange",
+     "type": "(measure: string) => void",
+     "optional": true,
+     "description": "Called when another measure is picked"
+    },
+    {
+     "name": "slice",
+     "type": "string",
+     "optional": true,
+     "description": "Dimension key the bars are sliced by (controlled)"
+    },
+    {
+     "name": "defaultSlice",
+     "type": "string",
+     "optional": true,
+     "description": "The slice picked at first, when `slice` is not controlled – defaults to the first dimension"
+    },
+    {
+     "name": "onSliceChange",
+     "type": "(slice: string) => void",
+     "optional": true,
+     "description": "Called when another slice is picked"
+    },
+    {
+     "name": "segment",
+     "type": "string",
+     "optional": true,
+     "description": "Dimension key the bars are segmented by, or \"none\" for single-color bars (controlled)"
+    },
+    {
+     "name": "defaultSegment",
+     "type": "string",
+     "optional": true,
+     "description": "The segment picked at first, when `segment` is not controlled – defaults to the second dimension"
+    },
+    {
+     "name": "onSegmentChange",
+     "type": "(segment: string) => void",
+     "optional": true,
+     "description": "Called when another segment is picked"
+    },
+    {
+     "name": "hidden",
+     "type": "string[]",
+     "optional": true,
+     "description": "Segment values hidden from the bars and totals (controlled); picking another segment clears it"
+    },
+    {
+     "name": "defaultHidden",
+     "type": "string[]",
+     "optional": true,
+     "description": "The segment values hidden at first, when `hidden` is not controlled"
+    },
+    {
+     "name": "onHiddenChange",
+     "type": "(hidden: string[]) => void",
+     "optional": true,
+     "description": "Called when legend chips hide or show segment values, or Show all is pressed"
+    }
+   ],
+   "hides": [
+    "heading",
+    "dimensions",
+    "records",
+    "measures",
+    "hiddenSegments"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 44430,
+  "gzip": 11347
+ }
+}

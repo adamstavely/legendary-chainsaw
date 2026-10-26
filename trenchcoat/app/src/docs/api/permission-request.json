@@ -1,0 +1,340 @@
+{
+ "elements": [
+  {
+   "tag": "tc-permission-request",
+   "className": "TcPermissionRequest",
+   "description": "An agent asks for one specific right: what will happen, for how long, Allow or Deny – then one line with a countdown.",
+   "properties": [
+    {
+     "name": "agent",
+     "attribute": null,
+     "type": "PermissionAgent",
+     "default": "{ name: \"\" }",
+     "description": "Who asks",
+     "readonly": false
+    },
+    {
+     "name": "action",
+     "attribute": "action",
+     "type": "string",
+     "default": "\"\"",
+     "description": "What it wants to do, lower case after \"wants to\", e.g. \"push to main\"",
+     "readonly": false
+    },
+    {
+     "name": "target",
+     "attribute": "target",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "Where, e.g. \"acme/web\" – shown with the tool's mark",
+     "readonly": false
+    },
+    {
+     "name": "toolIcon",
+     "attribute": null,
+     "type": "Element | undefined",
+     "default": "undefined",
+     "description": "The tool's mark next to the target (cloned)",
+     "readonly": false
+    },
+    {
+     "name": "risk",
+     "attribute": "risk",
+     "type": "PermissionRisk",
+     "default": "\"risky\"",
+     "description": "How much harm the action can do: safe shows no pill, risky a warning, destructive a danger pill and no \"always\"",
+     "readonly": false
+    },
+    {
+     "name": "reason",
+     "attribute": "reason",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The agent's own words on why it needs this",
+     "readonly": false
+    },
+    {
+     "name": "preview",
+     "attribute": null,
+     "type": "PermissionPreviewItem[]",
+     "default": "[]",
+     "description": "What will happen if you allow it – files, recipients, amounts",
+     "readonly": false
+    },
+    {
+     "name": "previewTitle",
+     "attribute": "preview-title",
+     "type": "string",
+     "default": "\"What will happen\"",
+     "description": "The heading over the preview list, e.g. \"5 files will change\"",
+     "readonly": false
+    },
+    {
+     "name": "previewLimit",
+     "attribute": "preview-limit",
+     "type": "number",
+     "default": "3",
+     "description": "Rows shown before \"N more\"",
+     "readonly": false
+    },
+    {
+     "name": "scopes",
+     "attribute": null,
+     "type": "PermissionScope[]",
+     "default": "[\"once\", \"timed\", \"always\"]",
+     "description": "The choices offered; \"always\" is never offered for destructive actions",
+     "readonly": false
+    },
+    {
+     "name": "scope",
+     "attribute": "scope",
+     "type": "PermissionScope",
+     "default": "\"once\"",
+     "description": "How long an Allow holds",
+     "readonly": false
+    },
+    {
+     "name": "duration",
+     "attribute": "duration",
+     "type": "number",
+     "default": "60",
+     "description": "Minutes a timed right holds",
+     "readonly": false
+    },
+    {
+     "name": "decision",
+     "attribute": null,
+     "type": "PermissionDecision | null",
+     "default": "null",
+     "description": "The decision – null while it waits",
+     "readonly": false
+    },
+    {
+     "name": "now",
+     "attribute": "now",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The clock for the countdown, epoch ms – unset uses an internal clock",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-decision-change",
+     "detail": "",
+     "description": "Allow, Deny or Revoke ({ decision: PermissionDecision | null }); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-scope-change",
+     "detail": "",
+     "description": "The user picked how long ({ scope: PermissionScope }); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-expire",
+     "detail": "",
+     "description": "A timed right ran out, once per decision ({ decision: PermissionDecision })",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "pr",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-active",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-avatar-font-weight",
+    "--tc-avatar-radius-agent",
+    "--tc-border-default",
+    "--tc-border-selected",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-lg",
+    "--tc-control-h-md",
+    "--tc-control-px-lg",
+    "--tc-control-px-md",
+    "--tc-control-radius-lg",
+    "--tc-control-radius-md",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-quick",
+    "--tc-duration-reveal-slow",
+    "--tc-duration-slow",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-strong",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-2xs",
+    "--tc-font-size-lg",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-kbd-bg",
+    "--tc-kbd-fg",
+    "--tc-kbd-font-size",
+    "--tc-kbd-font-weight",
+    "--tc-kbd-h",
+    "--tc-kbd-on-inverse-bg",
+    "--tc-kbd-px",
+    "--tc-kbd-radius",
+    "--tc-kbd-shadow",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-pill-font-size-lg",
+    "--tc-pill-font-weight",
+    "--tc-pill-h-lg",
+    "--tc-pill-px-lg",
+    "--tc-pill-radius",
+    "--tc-radius-badge",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-seg-pad",
+    "--tc-seg-thumb-bg",
+    "--tc-seg-thumb-shadow",
+    "--tc-seg-track-bg",
+    "--tc-seg-track-radius",
+    "--tc-shadow-raised",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-8",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-success-fg",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-on-inverse",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "PermissionRequest",
+   "exported": true,
+   "props": [
+    {
+     "name": "agent",
+     "type": "{ name: string; model?: string; avatar?: React.ReactNode }",
+     "optional": false,
+     "description": "Who asks: { name, model?, avatar? }"
+    },
+    {
+     "name": "toolIcon",
+     "type": "React.ReactNode",
+     "optional": true,
+     "description": "The tool's mark next to the target"
+    },
+    {
+     "name": "preview",
+     "type": "PermissionPreviewItem[]",
+     "optional": true,
+     "description": "What will happen if you allow it – files, recipients, amounts"
+    },
+    {
+     "name": "scope",
+     "type": "PermissionScope",
+     "optional": true,
+     "description": "Controlled choice of how long"
+    },
+    {
+     "name": "defaultScope",
+     "type": "PermissionScope",
+     "optional": true,
+     "description": "The starting choice of how long, when `scope` isn't controlled"
+    },
+    {
+     "name": "onScopeChange",
+     "type": "(scope: PermissionScope) => void",
+     "optional": true,
+     "description": "The user picked how long"
+    },
+    {
+     "name": "decision",
+     "type": "PermissionDecision | null",
+     "optional": true,
+     "description": "Controlled decision – null while it waits"
+    },
+    {
+     "name": "defaultDecision",
+     "type": "PermissionDecision | null",
+     "optional": true,
+     "description": "The starting decision, when `decision` isn't controlled"
+    },
+    {
+     "name": "onDecisionChange",
+     "type": "(decision: PermissionDecision | null) => void",
+     "optional": true,
+     "description": "Allow, Deny, Revoke (null) – the agent should listen to this"
+    },
+    {
+     "name": "onExpire",
+     "type": "(decision: PermissionDecision) => void",
+     "optional": true,
+     "description": "Fires once when a timed right runs out (the decision stays, shown as \"Access expired\")"
+    }
+   ],
+   "hides": [
+    "agent",
+    "toolIcon",
+    "preview",
+    "scope",
+    "decision"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 40508,
+  "gzip": 10711
+ }
+}

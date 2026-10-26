@@ -122,6 +122,7 @@ export class TcAgentLedger extends TcElement {
   @property() accessor heading = "Ledger";
   /** Who made the changes – e.g. "Launch agent" */
   @property() accessor agent = "";
+  /** The changes the agent made, in any order – the ledger lists them newest first */
   @property({ attribute: false }) accessor entries: LedgerEntry[] = [];
   /** The clock for "2m ago", in epoch ms – unset, the element keeps its own clock */
   @property({ type: Number }) accessor now: number | undefined = undefined;

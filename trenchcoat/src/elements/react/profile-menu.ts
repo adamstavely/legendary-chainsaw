@@ -19,10 +19,13 @@ const RawProfileMenu = createComponent({
 });
 type RawProfileMenuProps = React.ComponentProps<typeof RawProfileMenu>;
 export type ProfileMenuProps = Omit<RawProfileMenuProps, "avatar" | "items" | "setup" | "name" | "email"> & {
+  /** The signed-in person's name, at the top of the card */
   name: string;
+  /** The signed-in person's email address, under the name */
   email: string;
   /** Replaces the default avatar */
   avatar?: React.ReactNode;
+  /** The actions; unset shows Settings, Docs, Apps and Logout */
   items?: ProfileMenuItem[];
   /** Profile setup progress under the actions – leave empty to hide */
   setup?: ProfileSetup;

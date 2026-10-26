@@ -106,6 +106,7 @@ export class TcContextWindow extends TcElement {
 
   /** The heading, and the group's name */
   @property() accessor heading = "Context window";
+  /** What fills the window, in order – each part takes the next run of cells */
   @property({ attribute: false }) accessor parts: ContextPart[] = [];
   /** Size of the context window in tokens */
   @property({ type: Number }) accessor limit = 0;
@@ -119,6 +120,7 @@ export class TcContextWindow extends TcElement {
   @property({ type: Number, attribute: "warn-at" }) accessor warnAt = 0.8;
   /** Number of cells and how many sit in one row */
   @property({ type: Number }) accessor cells = 216;
+  /** How many cells sit in one row (two thirds of it, at least 8, in a narrow container) */
   @property({ type: Number }) accessor columns = 36;
   /**
    * Called when Compact is pressed; the cells shimmer until the returned promise settles, and a rejection says so and

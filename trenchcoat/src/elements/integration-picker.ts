@@ -198,6 +198,7 @@ let nextId = 0;
 export class TcIntegrationPicker extends TcElement {
   static override ui = "ip";
 
+  /** The services to list, grouped into Connected and Available – the sample services by default */
   @property({ attribute: false }) accessor integrations: IntegrationPickerItem[] = integrationPickerDefaults;
   /** Your product's name in the details, e.g. "Trenchcoat + Linear" */
   @property({ attribute: "app-name" }) accessor appName = "Trenchcoat";

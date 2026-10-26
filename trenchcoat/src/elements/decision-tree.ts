@@ -121,7 +121,7 @@ export class TcDecisionTree extends TcElement {
   @property({ attribute: false }) accessor onChoose: ((decision: TreeDecision, choice: TreeDecisionChoice) => string | void | Promise<string | void>) | undefined = undefined;
   /** Shows the "Other…" branch; allow-other="false" hides it */
   @property({ attribute: "allow-other", converter: { fromAttribute: (v: string | null) => v !== "false" } }) accessor allowOther = true;
-  /** The heading */
+  /** The heading in the bar, before how many decisions wait */
   @property() accessor heading = "Decisions";
 
   /** @internal */

@@ -526,7 +526,9 @@ export class TcAgentQueue extends TcElement {
   @property({ type: Boolean }) accessor pausable = false;
   /** Shows a – N + stepper for the number of workers */
   @property({ type: Boolean }) accessor stepper = false;
+  /** The fewest workers the stepper allows – its – button is disabled at this number */
   @property({ type: Number, attribute: "min-concurrency" }) accessor minConcurrency = 1;
+  /** The most workers the stepper allows – its + button is disabled at this number */
   @property({ type: Number, attribute: "max-concurrency" }) accessor maxConcurrency = 8;
   /** A depth that means trouble – drawn as a dashed line on the chart; above it Waiting turns amber */
   @property({ type: Number }) accessor backpressure: number | undefined = undefined;
@@ -540,6 +542,7 @@ export class TcAgentQueue extends TcElement {
   @property({ type: Boolean }) accessor promotable = false;
   /** Shows "Cancel" in a waiting or running job's card */
   @property({ type: Boolean }) accessor cancellable = false;
+  /** The heading at the top of the card */
   @property() accessor heading = "Queue";
   /** The queue's name, muted next to the heading */
   @property() accessor name: string | undefined = undefined;

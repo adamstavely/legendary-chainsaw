@@ -1,0 +1,111 @@
+{
+ "elements": [
+  {
+   "tag": "tc-outreach-branches",
+   "className": "TcOutreachBranches",
+   "description": "Lines branching out to Gmail, Slack and Notion – an illustration for multi-channel outreach.",
+   "properties": [
+    {
+     "name": "label",
+     "attribute": "label",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Describes the scene to assistive tech (role=\"img\"); without it the illustration is decorative and hidden from them",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [],
+   "slots": [],
+   "methods": [],
+   "ui": "obr",
+   "cssProperties": [
+    {
+     "name": "--tc-outreach-branches-line",
+     "value": "light-dark(#e4e7ec, rgba(255, 255, 255, 0.14))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-outreach-branches-tile",
+     "value": "light-dark(#ffffff, #232326)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-outreach-branches-tile-edge",
+     "value": "light-dark(#e4e7ec, rgba(255, 255, 255, 0.08))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-outreach-branches-drop",
+     "value": "light-dark(rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.4))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-outreach-branches-sliver",
+     "value": "light-dark(#eaecef, #1a1a1c)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-outreach-branches-gray",
+     "value": "light-dark(#e4e7ec, #3a3a3f)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-outreach-branches-notion-page",
+     "value": "light-dark(#ffffff, #191919)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-outreach-branches-mark",
+     "value": "light-dark(#171717, #ededed)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-outreach-branches-pulse",
+     "value": "4.2s",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": []
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "OutreachBranches",
+   "exported": false,
+   "props": [],
+   "hides": []
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 21109,
+  "gzip": 7575
+ }
+}

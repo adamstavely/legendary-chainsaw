@@ -22,6 +22,7 @@ export type AnswerArenaProps = Omit<RawAnswerArenaProps, Own> & {
   answers: ArenaAnswer[];
   /** The vote – controlled when defined (null: none yet) */
   value?: ArenaVote | null;
+  /** The vote at first when uncontrolled – null by default */
   defaultValue?: ArenaVote | null;
   /** Every change of the vote: a side or a tie, then a reason */
   onChange?: (vote: ArenaVote | null) => void;

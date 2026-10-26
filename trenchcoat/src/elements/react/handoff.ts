@@ -23,16 +23,21 @@ export type HandoffProps = Omit<RawProps, Owned> & {
   agent: { name: string; model?: string; avatar?: React.ReactNode };
   /** Who has control – controlled when given */
   status?: HandoffStatus;
+  /** Who has control at first, when `status` isn't set – "waiting" by default */
   defaultStatus?: HandoffStatus;
   /** Take over, Hand back, Take over again */
   onStatusChange?: (status: HandoffStatus) => void;
   /** Ids of the needs ticked off – controlled when given */
   checked?: string[];
+  /** The needs ticked off at first, when `checked` isn't set */
   defaultChecked?: string[];
+  /** Called with the ids of the ticked needs, in the needs' order, whenever one is ticked or unticked */
   onCheckedChange?: (checked: string[]) => void;
   /** The note for the agent – controlled when given */
   note?: string;
+  /** The note at first, when `note` isn't set */
   defaultNote?: string;
+  /** Called with the note as it is typed */
   onNoteChange?: (note: string) => void;
   /** Handed back: what was done, what's still open and the note – the agent should listen to this */
   onReturn?: (result: HandoffReturn) => void;

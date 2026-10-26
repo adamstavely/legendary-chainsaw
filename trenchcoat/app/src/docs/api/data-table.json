@@ -1,0 +1,350 @@
+{
+ "elements": [
+  {
+   "tag": "tc-data-table",
+   "className": "TcDataTable",
+   "description": "A database-style table that works like a small spreadsheet.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The table's name: its heading and the grid's label",
+     "readonly": false
+    },
+    {
+     "name": "icon",
+     "attribute": null,
+     "type": "Element | undefined",
+     "default": "undefined",
+     "description": "An icon element in front of the heading (cloned)",
+     "readonly": false
+    },
+    {
+     "name": "columns",
+     "attribute": null,
+     "type": "DataColumn[]",
+     "default": "[]",
+     "description": "The columns, left to right: each one's key, label, type, width and whether it can be edited",
+     "readonly": false
+    },
+    {
+     "name": "rows",
+     "attribute": null,
+     "type": "DataRow[]",
+     "default": "[]",
+     "description": "The rows. Edits change them unless a tc-rows-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "selection",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[]",
+     "description": "Ids of the checked rows",
+     "readonly": false
+    },
+    {
+     "name": "sort",
+     "attribute": null,
+     "type": "DataSort",
+     "default": "null",
+     "description": "Sort; null shows the rows in their own order",
+     "readonly": false
+    },
+    {
+     "name": "tagTones",
+     "attribute": null,
+     "type": "Record<string, TagTone>",
+     "default": "{}",
+     "description": "Tag colors by tag text – falls back to blue",
+     "readonly": false
+    },
+    {
+     "name": "readonly",
+     "attribute": "readonly",
+     "type": "boolean",
+     "default": "false",
+     "description": "Read only: selection and copy still work",
+     "readonly": false
+    },
+    {
+     "name": "renderCell",
+     "attribute": null,
+     "type": "((row: DataRow, column: DataColumn) => Node | string | undefined) | undefined",
+     "default": "undefined",
+     "description": "Draw a cell yourself: return a Node or a string, or undefined for the default",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-rows-change",
+     "detail": "RowsChange",
+     "description": "Rows were edited, pasted, cleared, added, deleted, undone or redone ({ rows }); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-selection-change",
+     "detail": "SelectionChange",
+     "description": "Rows were checked or unchecked ({ selection }); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-sort-change",
+     "detail": "SortChange",
+     "description": "The sort changed ({ sort }); cancelable",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "dt",
+   "cssProperties": [
+    {
+     "name": "--tc-data-table-header-bg-active",
+     "value": "light-dark(#fafbff, rgba(47, 107, 255, 0.08))",
+     "looks": [
+      "standard"
+     ]
+    },
+    {
+     "name": "--tc-data-table-cell-border-inactive",
+     "value": "light-dark(rgba(0, 96, 226, 0.35), rgba(77, 141, 255, 0.5))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-border-control",
+    "--tc-border-control-hover",
+    "--tc-border-default",
+    "--tc-border-strong",
+    "--tc-border-subtle",
+    "--tc-card-radius",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-md",
+    "--tc-control-radius-md",
+    "--tc-control-radius-sm",
+    "--tc-data-table-tag-bg",
+    "--tc-data-table-tag-fg",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-quick",
+    "--tc-duration-slower",
+    "--tc-ease-move",
+    "--tc-ease-spring",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-hover",
+    "--tc-fill-selected",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-lg-plus",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-loose",
+    "--tc-line-height-normal",
+    "--tc-line-height-relaxed",
+    "--tc-line-height-tight",
+    "--tc-menu-bg",
+    "--tc-menu-item-font-size",
+    "--tc-menu-item-h",
+    "--tc-menu-item-hover",
+    "--tc-menu-item-px",
+    "--tc-menu-item-radius",
+    "--tc-menu-item-selected-fg",
+    "--tc-menu-padding",
+    "--tc-menu-radius",
+    "--tc-menu-shadow",
+    "--tc-pill-font-size-lg",
+    "--tc-pill-font-weight",
+    "--tc-pill-h-lg",
+    "--tc-pill-px-lg",
+    "--tc-pill-radius",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-radius-xs",
+    "--tc-shadow-control",
+    "--tc-shadow-raised",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-4-5",
+    "--tc-space-6",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-info-bg",
+    "--tc-status-info-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-surface-inverse",
+    "--tc-surface-overlay",
+    "--tc-surface-raised",
+    "--tc-surface-sunken",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-on-inverse",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tone-amber-bg",
+    "--tc-tone-amber-fg",
+    "--tc-tone-pink-bg",
+    "--tc-tone-pink-fg",
+    "--tc-tone-violet-bg",
+    "--tc-tone-violet-fg",
+    "--tc-tray-inset",
+    "--tc-tray-radius",
+    "--tc-z-dropdown"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "DataTable",
+   "exported": true,
+   "props": [
+    {
+     "name": "renderCell",
+     "type": "(row: DataRow, column: DataColumn) => Node | string | undefined",
+     "optional": true,
+     "description": "Draws a cell itself: a DOM node or a string; undefined leaves the cell to the table. Gets the row as the app gave it"
+    },
+    {
+     "name": "title",
+     "type": "string",
+     "optional": false,
+     "description": "The table's heading and the grid's name"
+    },
+    {
+     "name": "icon",
+     "type": "React.ReactNode",
+     "optional": true,
+     "description": "Icon in front of the title"
+    },
+    {
+     "name": "columns",
+     "type": "DataColumn[]",
+     "optional": false,
+     "description": "The columns, left to right: each one's key, label, type, width and whether it can be edited"
+    },
+    {
+     "name": "rows",
+     "type": "DataRow[]",
+     "optional": true,
+     "description": "The rows (controlled) – pair it with `onRowsChange`"
+    },
+    {
+     "name": "defaultRows",
+     "type": "DataRow[]",
+     "optional": true,
+     "description": "The rows to start with when `rows` isn't controlled"
+    },
+    {
+     "name": "onRowsChange",
+     "type": "(rows: DataRow[]) => void",
+     "optional": true,
+     "description": "Called with every row after an edit, paste, clear, add, delete, undo or redo"
+    },
+    {
+     "name": "selection",
+     "type": "string[]",
+     "optional": true,
+     "description": "Ids of the checked rows (controlled) – pair it with `onSelectionChange`"
+    },
+    {
+     "name": "defaultSelection",
+     "type": "string[]",
+     "optional": true,
+     "description": "The checked rows to start with when `selection` isn't controlled"
+    },
+    {
+     "name": "onSelectionChange",
+     "type": "(ids: string[]) => void",
+     "optional": true,
+     "description": "Called with the ids of the checked rows whenever a row is checked or unchecked"
+    },
+    {
+     "name": "sort",
+     "type": "DataSort",
+     "optional": true,
+     "description": "The sorted column and direction, or null for the rows' own order (controlled)"
+    },
+    {
+     "name": "defaultSort",
+     "type": "DataSort",
+     "optional": true,
+     "description": "The sort to start with when `sort` isn't controlled"
+    },
+    {
+     "name": "onSortChange",
+     "type": "(sort: DataSort) => void",
+     "optional": true,
+     "description": "Called when a column header changes the sort"
+    },
+    {
+     "name": "editable",
+     "type": "boolean",
+     "optional": true,
+     "description": "false turns the table read only"
+    }
+   ],
+   "hides": [
+    "rows",
+    "selection",
+    "sort",
+    "heading",
+    "readonly",
+    "columns",
+    "icon",
+    "renderCell"
+   ]
+  }
+ ],
+ "changelog": [
+  "data-table and agent-lanes: a look selector left in front of a comment turned two rules into descendant selectors, so Clean lost data-table's coloured tag pills and agent-lanes' Reject / Approve button styles.",
+  "Lit 3 web components: `tc-button`, `tc-combobox` and `tc-data-table` (the pilot), `tc-look-provider` for an app-wide default look, the shared controllers (row window, focus rescue, smooth height, off-screen, on-screen, ARIA forwarding, hotkeys, rolling numbers). Pixel-identical to the React components in both looks and themes.",
+  "data-table renders only the rows in view above 60 rows (was 200); combobox windows options above 300 matches; command-menu shows at most `maxRows` (default 200) results.",
+  "data-table renders only the rows in view above 200 rows (spacer rows keep the scroll height; `aria-rowcount` and `aria-rowindex` are set on every row)."
+ ],
+ "size": {
+  "min": 60390,
+  "gzip": 15378
+ }
+}

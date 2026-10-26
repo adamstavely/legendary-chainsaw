@@ -1,0 +1,92 @@
+{
+ "elements": [
+  {
+   "tag": "tc-logo-cluster",
+   "className": "TcLogoCluster",
+   "description": "A brand mark with company logos bouncing out around it.",
+   "properties": [
+    {
+     "name": "label",
+     "attribute": "label",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Describes the scene to assistive tech (role=\"img\"); without it the illustration is decorative and hidden",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [],
+   "slots": [],
+   "methods": [],
+   "ui": "lc",
+   "cssProperties": [
+    {
+     "name": "--tc-logo-cluster-mid",
+     "value": "light-dark(#ffffff, #2a2a2e)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-logo-cluster-ring",
+     "value": "light-dark(rgba(0, 0, 0, 0.06), rgba(255, 255, 255, 0.08))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-logo-cluster-shadow",
+     "value": "0 1px 2px light-dark(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.4)), 0 8px 20px -8px light-dark(rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.6))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-logo-cluster-shadow-hover",
+     "value": "0 2px 4px light-dark(rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.45)), 0 14px 28px -10px light-dark(rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.7))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-logo-cluster-spin",
+     "value": "48s",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-duration-moderate",
+    "--tc-duration-reveal-slow",
+    "--tc-duration-slower",
+    "--tc-duration-slowest",
+    "--tc-ease-spring",
+    "--tc-ease-standard",
+    "--tc-surface-overlay",
+    "--tc-text-primary"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "LogoCluster",
+   "exported": false,
+   "props": [],
+   "hides": []
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 33262,
+  "gzip": 14662
+ }
+}

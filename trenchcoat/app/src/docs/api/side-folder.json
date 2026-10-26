@@ -1,0 +1,65 @@
+{
+ "elements": [
+  {
+   "tag": "tc-side-folder",
+   "className": "TcSideFolder",
+   "description": "A glassy folder on its side with documents that slide out on hover.",
+   "properties": [
+    {
+     "name": "label",
+     "attribute": "label",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Describes the scene to assistive tech (role=\"img\"); without it the illustration is decorative and hidden",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [],
+   "slots": [],
+   "methods": [],
+   "ui": "sfo",
+   "cssProperties": [
+    {
+     "name": "--tc-side-folder-paper",
+     "value": "light-dark(#ffffff, #dfe5ea)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-side-folder-paper-end",
+     "value": "light-dark(#eaf2f8, #c3cfd9)",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-duration-slowest",
+    "--tc-ease-emphasized"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "SideFolder",
+   "exported": false,
+   "props": [],
+   "hides": []
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 10682,
+  "gzip": 4339
+ }
+}

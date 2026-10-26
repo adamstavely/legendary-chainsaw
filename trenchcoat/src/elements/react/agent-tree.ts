@@ -24,18 +24,22 @@ const RawAgentTree = createComponent({
   },
 });
 type RawAgentTreeProps = React.ComponentProps<typeof RawAgentTree>;
-export type AgentTreeProps = Omit<RawAgentTreeProps, "root" | "heading" | "collapsed" | "resolver" | "selectable" | "onTcCollapsedChange" | "onTcSelect"> & {
+export type AgentTreeProps = Omit<RawAgentTreeProps, "root" | "heading" | "collapsed" | "resolver" | "selectable" | "onTcCollapsedChange" | "onTcSelect" | "onSelect"> & {
+  /** The orchestrator, with its sub-agents nested in `children` – the whole run as one tree */
   root: TreeAgent;
   /** Ids of folded branches. Controlled when defined; otherwise the component keeps them, starting from
    *  `defaultCollapsed` */
   collapsed?: string[];
+  /** Ids of the branches folded at first when `collapsed` isn't controlled */
   defaultCollapsed?: string[];
+  /** Called with every folded branch's id after a branch is folded or unfolded */
   onCollapsedChange?: (collapsed: string[]) => void;
   /** An answer from the "needs you" or "failed" window: approve or reject a waiting agent, retry or dismiss a failed
    *  one. May return a promise: the answer's buttons wait, and if it rejects the window stays open and says so */
   onResolve?: (agent: TreeAgent, action: AgentTreeResolution) => void | Promise<unknown>;
   /** A click on a card – e.g. to open its log */
   onSelect?: (agent: TreeAgent) => void;
+  /** The heading, and the tree list's name (default "Agents") */
   title?: string;
 };
 

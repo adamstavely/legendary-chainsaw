@@ -63,10 +63,12 @@ export type ChatComposerProps = Omit<RawChatComposerProps, Own> & {
   onModelChange?: (model: ChatModel) => void;
   /** The plus button only reports the click – open your own file or folder picker here */
   onAttach?: () => void;
+  /** "Select a project" was pressed – open your own project picker here */
   onSelectProject?: () => void;
   /** Opt-in: what's in context, as chips above the composer (controlled). Leave undefined to let it keep the list,
    *  starting at `defaultContext` – or leave both unset for no tray */
   context?: ContextTrayItem[];
+  /** The context chips to start with when uncontrolled */
   defaultContext?: ContextTrayItem[];
   /** Every change to the context chips: removed, restored, pinned */
   onContextChange?: (items: ContextTrayItem[], change: ContextTrayChange) => void;

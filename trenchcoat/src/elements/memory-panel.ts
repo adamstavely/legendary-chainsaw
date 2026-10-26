@@ -133,6 +133,7 @@ let uidCount = 0;
 export class TcMemoryPanel extends TcElement {
   static override ui = "mp";
 
+  /** The memories shown, grouped by their category */
   @property({ attribute: false }) accessor memories: Memory[] = [];
   /** The master switch */
   @property({ type: Boolean }) accessor enabled = true;

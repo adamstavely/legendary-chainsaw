@@ -1,0 +1,317 @@
+{
+ "elements": [
+  {
+   "tag": "tc-date-range-picker",
+   "className": "TcDateRangePicker",
+   "description": "Pick a date range from presets or two calendars, optionally compared with the period before or a year back.",
+   "properties": [
+    {
+     "name": "value",
+     "attribute": null,
+     "type": "DateRange | undefined",
+     "default": "undefined",
+     "description": "The applied range; unset, the last 30 days",
+     "readonly": false
+    },
+    {
+     "name": "presets",
+     "attribute": null,
+     "type": "RangePreset[]",
+     "default": "[ { id: \"today\", label: \"Today\", range: (t) => ({ start: t, end: t }) }, { id: \"yesterday\", label: \"Yesterday\", range: (t) => ({ start: addDays(t, -1), end: addDays(t, -1) }) }, { id: \"7d\", label: \"Last 7 days\", range: (t) => ({ start: addDays(t, -6), end: t }) }, { id: \"30d\", label: \"Last 30 days\", range: (t) => ({ start: addDays(t, -29), end: t }) }, { id: \"90d\", label: \"Last 90 days\", range: (t) => ({ start: addDays(t, -89), end: t }) }, { id: \"month\", label: \"This month\", range: (t) => ({ start: startOfMonth(t), end: t }) }, { id: \"last-month\", label: \"Last month\", range: (t) => ({ start: addMonths(t, -1), end: endOfMonth(addMonths(t, -1)) }) }, { id: \"quarter\", label: \"This quarter\", range: (t) => ({ start: quarterStart(t), end: t }) }, { id: \"ytd\", label: \"Year to date\", range: (t) => ({ start: new Date(t.getFullYear(), 0, 1), end: t }) }, ]",
+     "description": "The quick picks on the left, each building its range from today – defaults to Today through Year to date",
+     "readonly": false
+    },
+    {
+     "name": "compare",
+     "attribute": null,
+     "type": "boolean",
+     "default": "true",
+     "description": "Show the \"Compare to\" control",
+     "readonly": false
+    },
+    {
+     "name": "compareMode",
+     "attribute": "compare-mode",
+     "type": "CompareMode",
+     "default": "\"previous\"",
+     "description": "The applied comparison",
+     "readonly": false
+    },
+    {
+     "name": "open",
+     "attribute": "open",
+     "type": "boolean",
+     "default": "false",
+     "description": "Whether the panel is open",
+     "readonly": false
+    },
+    {
+     "name": "name",
+     "attribute": "name",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Name for native form submission: a hidden input with the applied range as \"YYYY-MM-DD/YYYY-MM-DD\"",
+     "readonly": false
+    },
+    {
+     "name": "disabled",
+     "attribute": "disabled",
+     "type": "boolean",
+     "default": "false",
+     "description": "The trigger can't be used and the hidden input is left out of the form",
+     "readonly": false
+    },
+    {
+     "name": "weekStartsOn",
+     "attribute": "week-starts-on",
+     "type": "0 | 1",
+     "default": "1",
+     "description": "0 = Sunday, 1 = Monday",
+     "readonly": false
+    },
+    {
+     "name": "max",
+     "attribute": null,
+     "type": "Date | undefined",
+     "default": "undefined",
+     "description": "Days after this can't be picked – defaults to today",
+     "readonly": false
+    },
+    {
+     "name": "min",
+     "attribute": null,
+     "type": "Date | undefined",
+     "default": "undefined",
+     "description": "Days before this can't be picked – unset, there is no lower limit",
+     "readonly": false
+    },
+    {
+     "name": "today",
+     "attribute": null,
+     "type": "Date | undefined",
+     "default": "undefined",
+     "description": "\"Today\" for the presets – defaults to the real day, read when the element connects",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-value-change",
+     "detail": "",
+     "description": "Apply; detail `{ value, compare, mode }` – the range, the comparison range (or null) and the compare mode. Cancelable: preventDefault() keeps `value` as it is (controlled use)",
+     "cancelable": true
+    },
+    {
+     "name": "tc-compare-change",
+     "detail": "",
+     "description": "Apply with another compare mode; detail `{ mode }`. Cancelable: preventDefault() keeps `compareMode` as it is",
+     "cancelable": true
+    },
+    {
+     "name": "tc-open-change",
+     "detail": "",
+     "description": "The panel opens or closes; detail `{ open: boolean }`. Cancelable: preventDefault() keeps `open` as it is",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "drp",
+   "cssProperties": [
+    {
+     "name": "--tc-date-range-picker-band",
+     "value": "light-dark(#5796ec, #3364bf)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-date-range-picker-compare-bg",
+     "value": "light-dark(rgba(0, 0, 0, 0.06), rgba(255, 255, 255, 0.1))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-date-range-picker-compare-border",
+     "value": "light-dark(rgba(0, 0, 0, 0.32), rgba(255, 255, 255, 0.36))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-active",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-border-default",
+    "--tc-border-selected",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-px-md",
+    "--tc-control-radius-md",
+    "--tc-date-range-picker-panel-width",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-quick",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-ease-move",
+    "--tc-ease-spring",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-h",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-hover",
+    "--tc-fill-default",
+    "--tc-fill-hover",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-2xs",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-icon-muted",
+    "--tc-line-height-display-sm",
+    "--tc-line-height-loose",
+    "--tc-line-height-normal",
+    "--tc-line-height-tight",
+    "--tc-radius-2xl",
+    "--tc-radius-2xs",
+    "--tc-radius-full",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-shadow-overlay",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-6",
+    "--tc-surface-raised",
+    "--tc-surface-sunken",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-on-accent",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tray-inset",
+    "--tc-tray-radius",
+    "--tc-z-dropdown"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "formatDateRange",
+   "signature": "formatDateRange({ start, end }: DateRange): void",
+   "description": "\"Sep 9 – Oct 8, 2026\", \"Dec 20, 2025 – Jan 5, 2026\", \"Oct 8, 2026\""
+  },
+  {
+   "name": "compareDateRange",
+   "signature": "compareDateRange(range: DateRange, mode: CompareMode): DateRange | null",
+   "description": "The comparison range for a mode: the period before, or the same days a year back"
+  }
+ ],
+ "react": [
+  {
+   "component": "DateRangePicker",
+   "exported": true,
+   "props": [
+    {
+     "name": "value",
+     "type": "DateRange",
+     "optional": true,
+     "description": "The applied range. Controlled when defined; otherwise the picker keeps its own, starting at `defaultValue`"
+    },
+    {
+     "name": "defaultValue",
+     "type": "DateRange",
+     "optional": true,
+     "description": "Starting range when uncontrolled – defaults to the last 30 days"
+    },
+    {
+     "name": "onChange",
+     "type": "(range: DateRange, compare: DateRange | null, mode: CompareMode) => void",
+     "optional": true,
+     "description": "Called on Apply with the range and the comparison range (if any)"
+    },
+    {
+     "name": "compareMode",
+     "type": "CompareMode",
+     "optional": true,
+     "description": "The applied comparison. Controlled when defined (changes come through onChange's third argument); otherwise\nstarts at `defaultCompare`"
+    },
+    {
+     "name": "defaultCompare",
+     "type": "CompareMode",
+     "optional": true,
+     "description": "The comparison applied at first when `compareMode` isn't controlled – defaults to \"previous\""
+    },
+    {
+     "name": "open",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether the panel is open. Controlled when defined; otherwise starts at `defaultOpen`"
+    },
+    {
+     "name": "defaultOpen",
+     "type": "boolean",
+     "optional": true,
+     "description": "Open the panel right away – nice for previews"
+    },
+    {
+     "name": "onOpenChange",
+     "type": "(open: boolean) => void",
+     "optional": true,
+     "description": "Called whenever the panel opens or closes, controlled or not"
+    }
+   ],
+   "hides": [
+    "value",
+    "open",
+    "compareMode",
+    "onChange"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 61239,
+  "gzip": 13178
+ }
+}

@@ -17,6 +17,7 @@ const RawProgressTracker = createComponent({
 });
 type RawProgressTrackerProps = React.ComponentProps<typeof RawProgressTracker>;
 export type ProgressTrackerProps = Omit<RawProgressTrackerProps, "heading" | "steps" | "done" | "defaultDone" | "onChange" | "onTcDoneChange"> & {
+  /** The heading, and the progress bar's name */
   title?: string;
   /** The checklist. Each step's `done` flag is where it starts; when the flags change, the tracker follows them */
   steps: ProgressStep[];

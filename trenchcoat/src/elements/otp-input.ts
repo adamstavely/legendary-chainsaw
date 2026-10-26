@@ -107,6 +107,7 @@ export class TcOtpInput extends TcElement {
   @property({ type: Number, attribute: "resend-in" }) accessor resendIn = 30;
   /** Center the boxes and the lines below them */
   @property() accessor align: "start" | "center" = "start";
+  /** Turns the field off: no typing or resending, and the code isn't submitted with the form */
   @property({ type: Boolean, reflect: true }) accessor disabled = false;
   /** Name for form submission – the code is submitted under it */
   @property({ reflect: true }) accessor name = "";

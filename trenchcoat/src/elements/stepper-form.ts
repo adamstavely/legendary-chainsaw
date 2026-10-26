@@ -141,6 +141,7 @@ const formLook = (el: Element): Look | undefined => (el.closest("tc-stepper-form
 export class TcStepperForm extends TcElement {
   static override ui = "sf";
 
+  /** The steps in order: id, title, content and the check Continue runs */
   @property({ attribute: false }) accessor steps: StepperFormStep[] = [];
   /** The values of every step */
   @property({ attribute: false }) accessor values: Values = {};
@@ -1210,9 +1211,11 @@ export class TcStepperField extends TcStepperBlock {
 
   /** Matches the key in the step's validate result */
   @property() accessor name = "";
+  /** The field's label, tied to its control */
   @property() accessor label = "";
   /** A hint under the control: text, or an element (cloned) */
   @property() accessor hint: string | Element | undefined = undefined;
+  /** Shows “Optional” after the label */
   @property({ type: Boolean }) accessor optional = false;
 
   @state() private accessor local: string | null = null;
@@ -1356,7 +1359,9 @@ export class TcStepperTags extends TcStepperBlock {
   static override ui = "sf-tags";
   static formAssociated = true;
 
+  /** The entries added so far */
   @property({ attribute: false }) accessor value: string[] = [];
+  /** Placeholder while there are no entries – then it reads “Add another” */
   @property() accessor placeholder = "name@company.com";
   /** Returns a message when an entry can't be added */
   @property({ attribute: false }) accessor validate: (entry: string, list: string[]) => string | null = emailCheck;
@@ -1364,6 +1369,7 @@ export class TcStepperTags extends TcStepperBlock {
   @property({ type: Number }) accessor max: number | undefined = undefined;
   /** Name for form submission: the entries, comma-separated */
   @property({ reflect: true }) accessor name = "";
+  /** Turns off typing and removing entries */
   @property({ type: Boolean, reflect: true }) accessor disabled = false;
   /** Marks the field as required for assistive tech – checking it is up to the step's validate */
   @property({ type: Boolean }) accessor required = false;
@@ -1557,12 +1563,15 @@ export class TcStepperChoices extends TcStepperBlock {
   static override ui = "sf-choices";
   static formAssociated = true;
 
+  /** The chosen option's value; empty when none is chosen */
   @property() accessor value = "";
+  /** The cards to choose from */
   @property({ attribute: false }) accessor options: StepperChoice[] = [];
   /** Name of the group for screen readers */
   @property() accessor label = "";
   /** Name for form submission */
   @property({ reflect: true }) accessor name = "";
+  /** Turns off choosing */
   @property({ type: Boolean, reflect: true }) accessor disabled = false;
   /** Marks the group as required for assistive tech – checking it is up to the step's validate */
   @property({ type: Boolean }) accessor required = false;
@@ -1693,6 +1702,7 @@ export type StepperReviewRow = {
 export class TcStepperReview extends TcStepperBlock {
   static override ui = "sf-review";
 
+  /** The rows: a label, the value entered and the step that sets it */
   @property({ attribute: false }) accessor rows: StepperReviewRow[] = [];
   /** Shows the Edit links */
   @property({ type: Boolean }) accessor editable = false;
@@ -1723,6 +1733,7 @@ export class TcStepperReview extends TcStepperBlock {
 export class TcStepperSuccess extends TcStepperBlock {
   static override ui = "sf-success";
 
+  /** The success heading, e.g. “All set” */
   @property() accessor heading = "";
   /** Text, or an element (cloned) */
   @property() accessor description: string | Element | undefined = undefined;

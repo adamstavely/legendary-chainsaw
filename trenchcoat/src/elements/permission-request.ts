@@ -98,11 +98,13 @@ export class TcPermissionRequest extends TcElement {
   @property() accessor target: string | undefined = undefined;
   /** The tool's mark next to the target (cloned) */
   @property({ attribute: false }) accessor toolIcon: Element | undefined = undefined;
+  /** How much harm the action can do: safe shows no pill, risky a warning, destructive a danger pill and no "always" */
   @property() accessor risk: PermissionRisk = "risky";
   /** The agent's own words on why it needs this */
   @property() accessor reason: string | undefined = undefined;
   /** What will happen if you allow it – files, recipients, amounts */
   @property({ attribute: false }) accessor preview: PermissionPreviewItem[] = [];
+  /** The heading over the preview list, e.g. "5 files will change" */
   @property({ attribute: "preview-title" }) accessor previewTitle = "What will happen";
   /** Rows shown before "N more" */
   @property({ type: Number, attribute: "preview-limit" }) accessor previewLimit = 3;

@@ -9,6 +9,7 @@ type RawBlurCrossfadeProps = React.ComponentProps<typeof RawBlurCrossfade>;
 export type BlurCrossfadeOwnProps = {
   /** Change this to swap – the children of the old id fade out, the new ones fade in */
   id: string | number;
+  /** The content on show – it swaps whenever `id` changes */
   children?: React.ReactNode;
   /** Length of the swap in ms */
   duration?: number;
@@ -18,7 +19,9 @@ export type BlurCrossfadeOwnProps = {
   morph?: "height" | "both" | "none";
   /** The layer element – use span inside buttons and other inline content */
   as?: "div" | "span";
+  /** Classes on the root element */
   className?: string;
+  /** Inline styles on the root element */
   style?: React.CSSProperties;
   /** The root element */
   ref?: React.Ref<TcBlurCrossfade>;

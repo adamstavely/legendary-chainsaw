@@ -182,6 +182,7 @@ export class TcDateRangePicker extends TcElement {
 
   /** The applied range; unset, the last 30 days */
   @property({ attribute: false }) accessor value: DateRange | undefined = undefined;
+  /** The quick picks on the left, each building its range from today – defaults to Today through Year to date */
   @property({ attribute: false }) accessor presets: RangePreset[] = defaultRangePresets;
   /** Show the "Compare to" control */
   @property({ attribute: false }) accessor compare = true;
@@ -197,6 +198,7 @@ export class TcDateRangePicker extends TcElement {
   @property({ type: Number, attribute: "week-starts-on" }) accessor weekStartsOn: 0 | 1 = 1;
   /** Days after this can't be picked – defaults to today */
   @property({ attribute: false }) accessor max: Date | undefined = undefined;
+  /** Days before this can't be picked – unset, there is no lower limit */
   @property({ attribute: false }) accessor min: Date | undefined = undefined;
   /** "Today" for the presets – defaults to the real day, read when the element connects */
   @property({ attribute: false }) accessor today: Date | undefined = undefined;

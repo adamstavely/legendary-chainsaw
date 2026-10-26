@@ -18,14 +18,21 @@ const RawCombobox = createComponent({
 });
 type RawComboboxProps = React.ComponentProps<typeof RawCombobox>;
 export type ComboboxProps = Omit<RawComboboxProps, "value" | "open" | "onTcValueChange" | "onTcOpenChange" | "single" | "onChange" | "options"> & {
+  /** Every option; icons and avatars may be React nodes */
   options: ComboboxOptionNode[];
   /** Pick many (the default) or one */
   multiple?: boolean;
+  /** The picked values (controlled). Leave undefined to let the combobox keep them, starting at `defaultValue` */
   value?: string[];
+  /** The values picked at first when uncontrolled */
   defaultValue?: string[];
+  /** Every pick and removal, with the picked options */
   onChange?: (value: string[], options: ComboboxOption[]) => void;
+  /** Whether the list is open (controlled) */
   open?: boolean;
+  /** Whether the list starts open when uncontrolled */
   defaultOpen?: boolean;
+  /** The list opened or closed */
   onOpenChange?: (open: boolean) => void;
 };
 export function Combobox({ multiple = true, value, defaultValue = [], onChange, open, defaultOpen = false, onOpenChange, options, ...props }: ComboboxProps) {

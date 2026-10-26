@@ -34,6 +34,7 @@ const RawAutonomyDial = createComponent({
 });
 type RawAutonomyDialProps = React.ComponentProps<typeof RawAutonomyDial>;
 export type AutonomyDialProps = Omit<RawAutonomyDialProps, "actions" | "level" | "pinned" | "heading" | "onTcLevelChange" | "onTcPinnedChange"> & {
+  /** The agent's actions; each sorts into "Runs on its own" or "Asks you first" – `icon` takes a React node */
   actions: AgentAction[];
   /** 0 Ask every time · 1 Ask before risky actions · 2 Full auto. Controlled when defined */
   level?: AutonomyLevel;

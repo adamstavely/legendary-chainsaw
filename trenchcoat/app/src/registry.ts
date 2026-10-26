@@ -5,6 +5,8 @@ import cleanTwins from "virtual:tc-clean";
 // Components, illustrations and motion pieces ported to Lit (src/elements/<slug>.ts): their demos get the React wrappers – the same API – and the
 // stage's look comes from a look provider, so both looks load the same module
 const litPorts = new Set(Object.keys(import.meta.glob("../../src/elements/*.ts")).map((p) => p.match(/([^/]+)\.ts$/)![1]).filter((s) => s !== "index" && s !== "react"));
+// The look provider lives in src/elements/internal/look.ts – it has a page too
+litPorts.add("look-provider");
 const loadWrappers = () => import("../../src/elements/react");
 import blocksReadme from "../../blocks/README.md?raw";
 import screensReadme from "../../screens/README.md?raw";
@@ -67,6 +69,7 @@ const LIBRARIES: Library[] = [
       ["AI & chat", ["ai-answer", "answer-arena", "chat-composer", "chat-history", "cited-answer", "code-block", "comment-thread", "comments-panel", "context-tray", "conversation-branches", "email-draft", "image-grid", "inline-diff", "memory-panel", "mention-picker", "message-actions", "model-picker", "prompt-library", "smart-recommendation", "thinking-loader", "thinking-state", "voice-mode", "writing-assistant"]],
       ["Data & charts", ["billing-schedule", "breakdown-chart", "change-summary", "compact-breakdown", "data-table", "experiment-card", "kpi-chart", "project-card", "usage-meter"]],
       ["Inputs & controls", ["button", "combobox", "command-menu", "date-range-picker", "dropzone", "filter-menu", "integration-picker", "integration-settings", "otp-input", "profile-menu", "reaction-bar", "segmented-control", "stepper-form"]],
+      ["Utilities", ["look-provider"]],
       ["Feedback & onboarding", ["notification-stack", "progress-tracker", "setup-guide", "tips-panel", "toaster"]],
     ],
   },

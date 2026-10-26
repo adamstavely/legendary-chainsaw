@@ -53,10 +53,12 @@ const show = (v: string | Element) => (typeof v === "string" ? v : v.cloneNode(t
 export class TcSegmentedControl extends TcElement {
   static override ui = "seg";
 
+  /** The options to switch between, in order – two to six read best */
   @property({ attribute: false }) accessor options: SegmentOption[] = [];
   /** The picked value; unset picks the first enabled option. Changed by the user unless a tc-value-change listener
    *  calls preventDefault() */
   @property() accessor value: string | undefined = undefined;
+  /** Height and text size of the control: "sm", "md" or "lg" */
   @property() accessor size: "sm" | "md" | "lg" = "md";
   /** "tray", "underline" or "buttons" (Clean only – Standard shows it as "tray"). Unset: "tray" in Standard, "buttons" in Clean */
   @property() accessor variant: "buttons" | "tray" | "underline" | undefined = undefined;
@@ -64,6 +66,7 @@ export class TcSegmentedControl extends TcElement {
   @property({ type: Boolean, attribute: "full-width" }) accessor fullWidth = false;
   /** "radio" (a radiogroup, the default) or "tabs" (a tablist that switches panels) */
   @property() accessor kind: "radio" | "tabs" = "radio";
+  /** Turns every option off; the hidden form input is disabled too */
   @property({ type: Boolean }) accessor disabled = false;
   /** Submits the picked value with a native form, through a hidden input */
   @property() accessor name: string | undefined = undefined;

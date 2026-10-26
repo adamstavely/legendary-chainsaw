@@ -1,0 +1,283 @@
+{
+ "elements": [
+  {
+   "tag": "tc-skeleton",
+   "className": "TcSkeleton",
+   "description": "A placeholder block with a soft band of light sweeping over it. Hidden from assistive tech unless the page sets\naria-hidden itself.",
+   "properties": [
+    {
+     "name": "width",
+     "attribute": "width",
+     "type": "number | string | undefined",
+     "default": "undefined",
+     "description": "Width – a number is px, a string any CSS length; defaults to 100%",
+     "readonly": false
+    },
+    {
+     "name": "height",
+     "attribute": "height",
+     "type": "number | string | undefined",
+     "default": "undefined",
+     "description": "Height – a number is px, a string any CSS length; defaults to 12px",
+     "readonly": false
+    },
+    {
+     "name": "radius",
+     "attribute": "radius",
+     "type": "number | string | undefined",
+     "default": "undefined",
+     "description": "Corner radius; defaults to 6px",
+     "readonly": false
+    },
+    {
+     "name": "circle",
+     "attribute": "circle",
+     "type": "boolean",
+     "default": "false",
+     "description": "Round shape, e.g. for avatars – uses width for both sides",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [],
+   "slots": [],
+   "methods": [],
+   "ui": "shm",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-duration-shimmer",
+    "--tc-shimmer",
+    "--tc-text-strong"
+   ]
+  },
+  {
+   "tag": "tc-shimmer-text",
+   "className": "TcShimmerText",
+   "description": "A label with a brighter band running through its letters, like an AI \"Thinking…\" state. The label stays readable;\nthe brighter copy in the band is hidden from assistive tech.",
+   "properties": [
+    {
+     "name": "text",
+     "attribute": "text",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The label",
+     "readonly": false
+    },
+    {
+     "name": "content",
+     "attribute": null,
+     "type": "Element | undefined",
+     "default": "undefined",
+     "description": "Rich content instead of `text`: an element that's cloned for the label and for the band's copy",
+     "readonly": false
+    },
+    {
+     "name": "duration",
+     "attribute": "duration",
+     "type": "number",
+     "default": "1.6",
+     "description": "Seconds for one pass of the highlight",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [],
+   "slots": [],
+   "methods": [],
+   "ui": "shm-text",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-duration-shimmer",
+    "--tc-shimmer",
+    "--tc-text-strong"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "SkeletonOwn",
+   "exported": false,
+   "props": [
+    {
+     "name": "width",
+     "type": "number | string",
+     "optional": true,
+     "description": "Width – a number is px, a string any CSS length; defaults to 100%"
+    },
+    {
+     "name": "height",
+     "type": "number | string",
+     "optional": true,
+     "description": "Height – a number is px, a string any CSS length; defaults to 12px"
+    },
+    {
+     "name": "radius",
+     "type": "number | string",
+     "optional": true,
+     "description": "Corner radius; defaults to 6px"
+    },
+    {
+     "name": "circle",
+     "type": "boolean",
+     "optional": true,
+     "description": "Round shape, e.g. for avatars – uses width for both sides"
+    },
+    {
+     "name": "className",
+     "type": "string",
+     "optional": true,
+     "description": "Classes on the element"
+    },
+    {
+     "name": "style",
+     "type": "React.CSSProperties",
+     "optional": true,
+     "description": "Inline styles on the element – width and height size the block"
+    },
+    {
+     "name": "ref",
+     "type": "React.Ref<TcSkeleton>",
+     "optional": true,
+     "description": "The placeholder element"
+    }
+   ],
+   "hides": []
+  },
+  {
+   "component": "Skeleton",
+   "exported": true,
+   "props": [
+    {
+     "name": "width",
+     "type": "number | string",
+     "optional": true,
+     "description": "Width – a number is px, a string any CSS length; defaults to 100%"
+    },
+    {
+     "name": "height",
+     "type": "number | string",
+     "optional": true,
+     "description": "Height – a number is px, a string any CSS length; defaults to 12px"
+    },
+    {
+     "name": "radius",
+     "type": "number | string",
+     "optional": true,
+     "description": "Corner radius; defaults to 6px"
+    },
+    {
+     "name": "circle",
+     "type": "boolean",
+     "optional": true,
+     "description": "Round shape, e.g. for avatars – uses width for both sides"
+    },
+    {
+     "name": "className",
+     "type": "string",
+     "optional": true,
+     "description": "Classes on the element"
+    },
+    {
+     "name": "style",
+     "type": "React.CSSProperties",
+     "optional": true,
+     "description": "Inline styles on the element – width and height size the block"
+    },
+    {
+     "name": "ref",
+     "type": "React.Ref<TcSkeleton>",
+     "optional": true,
+     "description": "The placeholder element"
+    }
+   ],
+   "hides": []
+  },
+  {
+   "component": "ShimmerTextOwn",
+   "exported": false,
+   "props": [
+    {
+     "name": "children",
+     "type": "React.ReactNode",
+     "optional": false,
+     "description": "The text that shimmers – a string, or React nodes the element clones"
+    },
+    {
+     "name": "duration",
+     "type": "number",
+     "optional": true,
+     "description": "Seconds for one pass of the highlight"
+    },
+    {
+     "name": "className",
+     "type": "string",
+     "optional": true,
+     "description": "Classes on the element"
+    },
+    {
+     "name": "ref",
+     "type": "React.Ref<TcShimmerText>",
+     "optional": true,
+     "description": "The text element"
+    }
+   ],
+   "hides": []
+  },
+  {
+   "component": "ShimmerText",
+   "exported": true,
+   "props": [
+    {
+     "name": "children",
+     "type": "React.ReactNode",
+     "optional": false,
+     "description": "The text that shimmers – a string, or React nodes the element clones"
+    },
+    {
+     "name": "duration",
+     "type": "number",
+     "optional": true,
+     "description": "Seconds for one pass of the highlight"
+    },
+    {
+     "name": "className",
+     "type": "string",
+     "optional": true,
+     "description": "Classes on the element"
+    },
+    {
+     "name": "ref",
+     "type": "React.Ref<TcShimmerText>",
+     "optional": true,
+     "description": "The text element"
+    }
+   ],
+   "hides": [
+    "text",
+    "content"
+   ]
+  }
+ ],
+ "changelog": [
+  "The 22 illustrations and 8 motion pieces as elements (step 2.7), 105 tags in all; shimmer-loader is two (`tc-skeleton`, `tc-shimmer-text`). Same React names and props through `trenchcoat/react`; parity with the React versions at 0.00 % except voice-orb's canvas particles (timing) and tilt-card, which drops 3 px of line space under its inline-block root."
+ ],
+ "size": {
+  "min": 10383,
+  "gzip": 4096
+ }
+}

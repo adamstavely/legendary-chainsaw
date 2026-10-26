@@ -17,6 +17,7 @@ const RawParallelAttempts = createComponent({
 });
 type RawParallelAttemptsProps = React.ComponentProps<typeof RawParallelAttempts>;
 export type ParallelAttemptsProps = Omit<RawParallelAttemptsProps, "attempts" | "picked" | "heading" | "onTcPickedChange"> & {
+  /** The attempts, one row each; icons can be React nodes */
   attempts: Attempt[];
   /** The id of the attempt in use. Controlled when defined; null or an unknown id falls back to the best finished
    *  attempt once all are through */
@@ -26,6 +27,7 @@ export type ParallelAttemptsProps = Omit<RawParallelAttemptsProps, "attempts" | 
   /** Called with the attempt in use whenever it changes – picked by hand (`auto: false`), or the best one taken on its
    *  own once all are through (`auto: true`) */
   onPick?: (attempt: Attempt, reason: AttemptPickReason) => void;
+  /** The heading – "Best of <n>" when unset */
   title?: string;
 };
 export function ParallelAttempts({ attempts, picked, defaultPicked = null, onPick, title, ...props }: ParallelAttemptsProps) {

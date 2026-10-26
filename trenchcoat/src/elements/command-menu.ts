@@ -158,7 +158,9 @@ type RunStatus = { id: string; label: string; state: "pending" | "failed" };
 export class TcCommandMenu extends TcElement {
   static override ui = "cm";
 
+  /** The commands, in titled groups; a group with the id "suggestions" gets ⌘1–⌘5 */
   @property({ attribute: false }) accessor groups: CommandMenuGroup[] = defaultCommandGroups;
+  /** Placeholder text in the search field */
   @property() accessor placeholder = "Type a command or search…";
   /** The search text */
   @property() accessor query = "";

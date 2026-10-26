@@ -20,16 +20,23 @@ export type ExperimentCardProps = Omit<
   RawExperimentCardProps,
   "heading" | "variants" | "metrics" | "metric" | "winner" | "status" | "note" | "action" | "hint" | "trigger" | "open" | "onTcOpenChange" | "onTcMetricChange" | "onTcWinnerChange"
 > & {
+  /** The test's name */
   title: string;
+  /** The variants under test, the control first (or marked `control`) – one row and one chart column each */
   variants: ExperimentVariant[];
+  /** The metrics to compare on; with more than one, a switch picks which one the card shows */
   metrics: ExperimentMetric[];
   /** Controlled metric id */
   metric?: string;
+  /** Starting metric id when `metric` isn't controlled – defaults to the first metric */
   defaultMetric?: string;
+  /** Called with the id of the metric picked */
   onMetricChange?: (id: string) => void;
   /** Controlled id of the variant picked as the winner */
   winner?: string | null;
+  /** Starting winner when `winner` isn't controlled – defaults to none */
   defaultWinner?: string | null;
+  /** Called with the id of the variant picked as the winner, or null when the pick is cleared */
   onWinnerChange?: (id: string | null) => void;
   /** The tag under the title, e.g. { label: "Running", tone: "green" } */
   status?: { label: string; tone?: ExperimentTone };
@@ -47,7 +54,9 @@ export type ExperimentCardProps = Omit<
   trigger?: "hover" | "click";
   /** Controlled open state */
   open?: boolean;
+  /** Whether the card starts unfolded when `open` isn't controlled */
   defaultOpen?: boolean;
+  /** Called when the card opens or closes */
   onOpenChange?: (open: boolean) => void;
 };
 

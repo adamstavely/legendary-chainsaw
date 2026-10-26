@@ -17,6 +17,7 @@ export type NumberTickerOwnProps = {
   duration?: number;
   /** Wait before the first count-in, in ms */
   delay?: number;
+  /** Class names for the root element */
   className?: string;
   /** The root element */
   ref?: React.Ref<TcNumberTicker>;

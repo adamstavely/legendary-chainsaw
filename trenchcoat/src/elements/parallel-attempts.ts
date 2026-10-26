@@ -74,6 +74,7 @@ let uid = 0;
 export class TcParallelAttempts extends TcElement {
   static override ui = "pa";
 
+  /** The attempts, one row each – name, approach, status and, once done, a score */
   @property({ attribute: false }) accessor attempts: ParallelAttempt[] = [];
   /** What all of them try to do – e.g. "Fix the flaky checkout test" */
   @property() accessor task = "";

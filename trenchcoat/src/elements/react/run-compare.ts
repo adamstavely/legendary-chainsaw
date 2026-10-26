@@ -22,7 +22,9 @@ export type RunCompareProps = Omit<RawRunCompareProps, "heading" | "view" | "can
   title?: string;
   /** The open tab. Controlled when defined; otherwise the component keeps it, starting from `defaultView` */
   view?: RunCompareView;
+  /** The tab open at first when `view` isn't controlled */
   defaultView?: RunCompareView;
+  /** Called with the tab the user picked, controlled or not */
   onViewChange?: (view: RunCompareView) => void;
   /** Shows "Use this" on each finished run */
   onPick?: (pick: RunComparePick) => void;

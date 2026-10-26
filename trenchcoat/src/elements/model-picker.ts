@@ -90,6 +90,7 @@ let uid = 0;
 export class TcModelPicker extends TcElement {
   static override ui = "mdp";
 
+  /** The models to choose from, in menu order – each with its strengths, first-token time and price */
   @property({ attribute: false }) accessor models: PickerModel[] = [];
   /** Id of the chosen model – unset or unknown shows the first */
   @property() accessor value = "";

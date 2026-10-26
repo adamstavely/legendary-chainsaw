@@ -25,6 +25,7 @@ const RawIntegrationPicker = createComponent({
 type RawIntegrationPickerProps = React.ComponentProps<typeof RawIntegrationPicker>;
 
 export type IntegrationPickerOwnProps = {
+  /** The services to list – the sample services by default */
   integrations?: Integration[];
   /** Your product's name in the details, e.g. "Trenchcoat + Linear" */
   appName?: string;
@@ -34,15 +35,20 @@ export type IntegrationPickerOwnProps = {
   selected?: string;
   /** Id of the integration that is picked first */
   defaultSelected?: string;
+  /** Called with the id of the integration picked by click or arrow key */
   onSelectedChange?: (id: string) => void;
   /** Ids of the connected integrations. Controlled when defined; otherwise starts at `defaultConnected`, or at the
    *  integrations marked `connected` (and follows those flags when they change) */
   connected?: string[];
+  /** The connected ids on mount when `connected` isn't controlled */
   defaultConnected?: string[];
+  /** Called with every connected id after an integration is switched on or off */
   onConnectedChange?: (ids: string[]) => void;
   /** The search text. Controlled when defined; otherwise starts at `defaultQuery` */
   query?: string;
+  /** The search text on mount when `query` isn't controlled */
   defaultQuery?: string;
+  /** Called with the search text as it's typed or cleared */
   onQueryChange?: (query: string) => void;
   /** Called with the id and the new state when an integration is switched on or off. May return a promise (the
    *  real connect): the switch shows that it's working and flips when it resolves; a rejection leaves it as it was
@@ -51,6 +57,7 @@ export type IntegrationPickerOwnProps = {
   /** Window shortcut that jumps into the search: "mod+/" (⌘/ on Apple devices, Ctrl / elsewhere) by default, any
    *  other combination, or false for none */
   hotkey?: string | false;
+  /** Runs with the picked integration's id when "Explore integration" is pressed */
   onExplore?: (id: string) => void;
   /** Shows the back button and runs on ← in an empty search */
   onBack?: () => void;

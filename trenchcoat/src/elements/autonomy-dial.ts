@@ -75,6 +75,7 @@ type Roll = { shown: number; dir: "up" | "down" | null };
 export class TcAutonomyDial extends TcElement {
   static override ui = "ad";
 
+  /** The agent's actions; each sorts into "Runs on its own" or "Asks you first" by its risk, the level and the pins */
   @property({ attribute: false }) accessor actions: AgentAction[] = [];
   /** 0 Ask every time · 1 Ask before risky actions · 2 Full auto */
   @property({ type: Number }) accessor level: AutonomyLevel = 1;

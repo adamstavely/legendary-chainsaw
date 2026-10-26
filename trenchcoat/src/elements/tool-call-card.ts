@@ -245,6 +245,7 @@ export class TcToolCallCard extends TcElement {
   @property({ attribute: false }) accessor summary: string | Element | undefined = undefined;
   /** Icon in the tile on the left (cloned) – defaults to a wrench */
   @property({ attribute: false }) accessor icon: Element | undefined = undefined;
+  /** "running" shows a spinner and a live timer, "success" a check and the duration, "error" "Failed" and the message */
   @property() accessor status: ToolCallStatus = "success";
   /** Arguments the tool was called with – objects are pretty-printed, JSON strings parsed */
   @property({ attribute: false }) accessor args: unknown = undefined;

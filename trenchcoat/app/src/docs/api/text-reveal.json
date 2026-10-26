@@ -1,0 +1,239 @@
+{
+ "elements": [
+  {
+   "tag": "tc-text-reveal",
+   "className": "TcTextReveal",
+   "description": "Text that arrives piece by piece out of a soft blur when it scrolls into view.",
+   "properties": [
+    {
+     "name": "text",
+     "attribute": "text",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The text to reveal",
+     "readonly": false
+    },
+    {
+     "name": "by",
+     "attribute": "by",
+     "type": "TextRevealBy",
+     "default": "\"word\"",
+     "description": "Reveal word by word or letter by letter",
+     "readonly": false
+    },
+    {
+     "name": "stagger",
+     "attribute": "stagger",
+     "type": "number",
+     "default": "40",
+     "description": "Time between two pieces, in ms",
+     "readonly": false
+    },
+    {
+     "name": "delay",
+     "attribute": "delay",
+     "type": "number",
+     "default": "0",
+     "description": "Wait before the first piece, in ms",
+     "readonly": false
+    },
+    {
+     "name": "duration",
+     "attribute": "duration",
+     "type": "number",
+     "default": "700",
+     "description": "Time each piece takes to arrive, in ms",
+     "readonly": false
+    },
+    {
+     "name": "as",
+     "attribute": "as",
+     "type": "TextRevealTag",
+     "default": "\"p\"",
+     "description": "What the text is: a paragraph, a heading (h1–h3, the host becomes a heading of that level) or inline text",
+     "readonly": false
+    },
+    {
+     "name": "once",
+     "attribute": "once",
+     "type": "boolean",
+     "default": "true",
+     "description": "Reveal only the first time; false plays it again each time it enters the view (attribute: once=\"false\")",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [],
+   "slots": [],
+   "methods": [],
+   "ui": "trv",
+   "cssProperties": [
+    {
+     "name": "--tc-text-reveal-heading-weight",
+     "value": "bold",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-text-reveal-blur",
+     "value": "8px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-text-reveal-rise",
+     "value": "0.35em",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-ease-emphasized",
+    "--tc-text-reveal-delay",
+    "--tc-text-reveal-duration",
+    "--tc-text-reveal-i",
+    "--tc-text-reveal-stagger"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "TextRevealOwn",
+   "exported": false,
+   "props": [
+    {
+     "name": "text",
+     "type": "string",
+     "optional": false,
+     "description": "The text to reveal"
+    },
+    {
+     "name": "by",
+     "type": "\"word\" | \"char\"",
+     "optional": true,
+     "description": "Reveal word by word or letter by letter"
+    },
+    {
+     "name": "stagger",
+     "type": "number",
+     "optional": true,
+     "description": "Time between two pieces, in ms"
+    },
+    {
+     "name": "delay",
+     "type": "number",
+     "optional": true,
+     "description": "Wait before the first piece, in ms"
+    },
+    {
+     "name": "duration",
+     "type": "number",
+     "optional": true,
+     "description": "Time each piece takes to arrive, in ms"
+    },
+    {
+     "name": "as",
+     "type": "\"p\" | \"h1\" | \"h2\" | \"h3\" | \"span\"",
+     "optional": true,
+     "description": "What the text is: a paragraph, a heading or inline text"
+    },
+    {
+     "name": "once",
+     "type": "boolean",
+     "optional": true,
+     "description": "Reveal only the first time; otherwise it plays again each time it enters the view"
+    },
+    {
+     "name": "className",
+     "type": "string",
+     "optional": true,
+     "description": "Class names for the root element"
+    },
+    {
+     "name": "ref",
+     "type": "React.Ref<TcTextReveal>",
+     "optional": true,
+     "description": "The root element"
+    }
+   ],
+   "hides": []
+  },
+  {
+   "component": "TextReveal",
+   "exported": true,
+   "props": [
+    {
+     "name": "text",
+     "type": "string",
+     "optional": false,
+     "description": "The text to reveal"
+    },
+    {
+     "name": "by",
+     "type": "\"word\" | \"char\"",
+     "optional": true,
+     "description": "Reveal word by word or letter by letter"
+    },
+    {
+     "name": "stagger",
+     "type": "number",
+     "optional": true,
+     "description": "Time between two pieces, in ms"
+    },
+    {
+     "name": "delay",
+     "type": "number",
+     "optional": true,
+     "description": "Wait before the first piece, in ms"
+    },
+    {
+     "name": "duration",
+     "type": "number",
+     "optional": true,
+     "description": "Time each piece takes to arrive, in ms"
+    },
+    {
+     "name": "as",
+     "type": "\"p\" | \"h1\" | \"h2\" | \"h3\" | \"span\"",
+     "optional": true,
+     "description": "What the text is: a paragraph, a heading or inline text"
+    },
+    {
+     "name": "once",
+     "type": "boolean",
+     "optional": true,
+     "description": "Reveal only the first time; otherwise it plays again each time it enters the view"
+    },
+    {
+     "name": "className",
+     "type": "string",
+     "optional": true,
+     "description": "Class names for the root element"
+    },
+    {
+     "name": "ref",
+     "type": "React.Ref<TcTextReveal>",
+     "optional": true,
+     "description": "The root element"
+    }
+   ],
+   "hides": []
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 9144,
+  "gzip": 3677
+ }
+}
