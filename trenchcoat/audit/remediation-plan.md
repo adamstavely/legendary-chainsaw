@@ -6,9 +6,11 @@ Planning only – nothing here has been started. Every decision is made (see "De
 before or during the work.
 
 **Direction.** Trenchcoat is built as a package (not published to npm) for apps in React and other frameworks, so
-everything – components, blocks, screens, illustrations and motion – moves to **Lit 3 web components**
+every reusable part – the components, App Shell's primitives, illustrations, motion and four widget blocks – moves
+to **Lit 3 web components**
 ([lit-port-plan.md](lit-port-plan.md)). `src/` becomes the only source; the generated `components/` folder and its
-`-clean` copies go away, and the look is chosen with the `look` property. How real apps receive the package is
+`-clean` copies go away, and the look is chosen with the `look` property. The screens and the app-like blocks stay
+React, as reference examples built on the Lit elements. How real apps receive the package is
 decided after this plan is done (the build and the `examples/` apps install the packed tarball locally); nothing in
 the plan depends on it.
 
@@ -74,8 +76,10 @@ branch from `main` after Part 1 is merged.
 
 ### Step 0 – Working copy
 
-- Work in `~/Documents/GitHub/legendary-chainsaw` (this session needs access to that folder granted once), on
-  `trenchcoat-remediation-plan`, pulled up to date.
+- Work in `~/Documents/GitHub/legendary-chainsaw` (access granted 2026-10-25), on `trenchcoat-remediation-plan`,
+  pulled up to date. That clone has an untracked Vue project ("Icon Composer": `package.json`, `src/`, `tests/`,
+  `dist/`, … at the repo root) that isn't part of this work: it's left untouched, and switching branches doesn't
+  affect it because the branch only adds `trenchcoat/`.
 - Retire the separate `trenchcoat/.git` in `~/Lockin/legendary-chainsaw`: save its history as a bundle
   (`git bundle create trenchcoat-history.bundle --all`, kept outside the repo), then stop using that copy. From here
   on commits go straight to legendary-chainsaw instead of being copied over.
@@ -187,8 +191,9 @@ samples and the measured time per component – in `audit/lit-patterns.md`. Abou
 - **The package build:** Vite library mode, one module per element, type declarations, `custom-elements.json`, the
   generated `@lit/react` wrappers as a `react` entry, `tokens.css` as the one stylesheet apps import. package.json
   keeps `"private": true` (so it can't be published by accident), `"license": "UNLICENSED"` (proprietary),
-  `"version": "0.1.0"`, `exports` for the elements, the React wrappers, blocks, screens, illustrations, motion and
-  `tokens.css`, `"sideEffects": ["*.css"]`, a `files` list; Lit is a dependency and React a peer dependency of the
+  `"version": "0.1.0"`, `exports` for the elements (components, promoted App Shell primitives, illustrations, motion
+  and the four widget blocks), the React wrappers and `tokens.css` – the React reference screens and blocks aren't
+  exported – `"sideEffects": ["*.css"]`, a `files` list; Lit is a dependency and React a peer dependency of the
   `react` entry only. CI runs `npm pack`, keeps the tarball as a build artifact, and builds the gallery and the
   `examples/` apps against it, so a broken export fails in CI.
 
@@ -205,13 +210,20 @@ patterns. With each component: its tests rewritten for the new harness, its demo
 scan, a screenshot diff against the React version, and then the React component deleted. Folded into the port:
 
 - **filter-menu windowing** – the row-window controller from the pilot, above ~300 options.
-- **glass-folder `open` property** (illustrations) – app-shell and assistant-home use it instead of copying its
-  hover classes.
+- **App Shell's primitives promoted to components** – Dropdown / MenuList / MenuButton → `tc-menu`, Tabs, EmptyState,
+  FileCard, Popover, SearchField and SectionHead as new elements; Toast, ViewToggle and IconButton / SortButton /
+  FilterButton onto the existing toaster, segmented control and Button. The table is in
+  [lit-port-plan.md](lit-port-plan.md).
 
-### 2.7 Blocks, screens, illustrations and motion; demos; measurements
+### 2.7 Illustrations, motion and widget blocks; React references; demos; measurements
 
-- Port blocks, screens, illustrations and motion to Lit elements, so every framework gets all of Trenchcoat.
-  Screens switch from `lucide-react` to `lucide`; blocks and screens compose the component elements.
+- Port the 24 illustrations, the 8 motion pieces and the blocks logo-marquee, testimonial-wall, kpi-board and
+  pricing-plans to Lit elements. Folded in: the **glass-folder `open` property** (illustrations), which app-shell and
+  assistant-home then use instead of copying its hover classes.
+- Keep the 15 screens (with the App Shell layout) and the 7 app-like blocks (ai-workspace, metrics-dashboard,
+  agent-gallery, app-directory, client-context, task-board, invoice-credit) as React reference examples: they
+  switch from the React components to the Lit elements through the wrappers, keep `lucide-react`, stay in the
+  gallery and aren't exported from the package.
 - **Demo paths for the unseen states** (stepper-form review/success, ai-workspace projects, client-context
   empty/create, decision-tree sub-questions), then a runtime "selector never matched" pass across all demos and
   delete what stays unmatched.
@@ -238,7 +250,7 @@ scan, a screenshot diff against the React version, and then the React component 
 | A | How do the looks ship? | **Revised: one npm package, one module per component carrying both looks, chosen with the `look` property.** `src/` is the only source; `components/` and the `-clean` copies are deleted; the gallery gets a look switch. (Was: single-look files – that suited copy-paste files, not a package.) |
 | D | What is the component layer? | **Lit 3 web components**, in TypeScript with standard decorators, ts-lit-plugin in the editor and lit-analyzer in CI. Committed – no spike; three pilot components (step 2.3) prove the patterns. Stencil was compared and dropped. The element patterns (light DOM, content, values, forms, React wrappers, no SSR in v1, windowing, tests, `tc-` tags) are decisions L1–L16 in [lit-port-plan.md](lit-port-plan.md). |
 | E | In what order? | **Carry-over work first (Part 1), then the shift to Lit (Part 2)**, which absorbs everything whose form changes with Lit. |
-| F | What moves to Lit? | **Everything:** components, blocks, screens, illustrations and motion. The gallery stays React. |
+| F | What moves to Lit? | **Every reusable part:** the 64 components, App Shell's primitives (promoted to components), the 24 illustrations, the 8 motion pieces and the blocks logo-marquee, testimonial-wall, kpi-board and pricing-plans. **Kept as React references** on the wrappers, outside the package: the 15 screens (with the App Shell layout) and the 7 app-like blocks. The gallery stays React. |
 | G | Distribution | **Not published to npm.** The package is built and packed (`"private": true`); how apps receive it is decided after the plan is done. |
 | H | License and version | **Proprietary** (`"license": "UNLICENSED"`), starting at **0.1.0**. No app uses Trenchcoat yet, so breaking changes need no deprecation period. |
 | I | Working copy and PRs | **`~/Documents/GitHub/legendary-chainsaw`**, with trenchcoat's separate `.git` retired (step 0). **One pull request per part.** |
@@ -268,9 +280,9 @@ scan, a screenshot diff against the React version, and then the React component 
 | 2.4 Foundations | 2.3 | 3–4 days |
 | 2.5 Look switch | 2.4 | 0.5 day |
 | 2.6 Port components | 2.4 | 5–7 weeks, with tests |
-| 2.7 Blocks, screens, illustrations, motion; demos; measurements | 2.6 | 2–3 weeks |
+| 2.7 Illustrations, motion, widget blocks; references; demos; measurements | 2.6 | 1–1.5 weeks |
 | 2.8 Verification | 2.6, 2.7 | 3–5 days, partly manual |
 
 Part 1 is about 7–8 days; 1.4–1.7 touch different files from 1.1–1.3 and can run alongside them. 2.1 can run during
-Part 1 (it only measures). Part 2 is about 7–11 weeks for one developer; the pilot's measured time per component
+Part 1 (it only measures). Part 2 is about 6–10 weeks for one developer; the pilot's measured time per component
 refines it.

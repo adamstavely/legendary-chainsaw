@@ -1,8 +1,8 @@
 # Lit port plan – Lit 3, TypeScript and ts-lit-plugin
 
 2026-10-25 · Planning only; every decision is made (see "Decisions" below). Trenchcoat will be used by apps in other
-frameworks as well as React, so all of it – components, blocks, screens, illustrations and motion – moves to web
-components built with **[Lit 3](https://lit.dev/)** in **TypeScript**, with
+frameworks as well as React, so every reusable part – the components, App Shell's primitives (promoted to
+components), illustrations, motion and four widget blocks – moves to web components built with **[Lit 3](https://lit.dev/)** in **TypeScript**, with
 **[ts-lit-plugin](https://github.com/runem/lit-analyzer)** type-checking the templates. The port starts with three
 **pilot components** built for real in `src/`; they prove the decided patterns in practice and measure what the
 rest of the port costs.
@@ -17,7 +17,8 @@ The React code is large and React-specific, so the port is a rewrite:
 | | Size |
 |---|---|
 | Component source (`src/components/`) | 71,000 lines, 64 components |
-| Blocks, screens, illustrations, motion | 36,000 lines, 58 files |
+| Ported from the other libraries | Illustrations (24 files, 12,500 lines), motion (8 files, 2,000 lines), App Shell's primitives (from `screens/app-shell.tsx`), and the blocks logo-marquee, testimonial-wall, kpi-board and pricing-plans |
+| Kept as React references | The 15 screens and 7 app-like blocks (ai-workspace, metrics-dashboard, agent-gallery, app-directory, client-context, task-board, invoice-credit), rebuilt on the Lit elements through the React wrappers |
 | Shared helpers (`src/internal/`) | 300 lines: value props, root ref, hotkeys, on-screen, focus rescue, smooth height |
 | React APIs in use | `useState` / `useEffect` / `useRef` in ~62 components, `useId` in 51, the value-prop helper in 54, React 19 `<style href precedence>` in all 64, 182 props typed `ReactNode` |
 | Tests | 185 contract and regression files; 127 use React Testing Library |
@@ -44,7 +45,7 @@ the real-browser tools (`scripts/a11y.mjs`, `scripts/visual.mjs`), which test th
 | L11 | Windowing | data-table's `useRowWindow` ported as a reactive controller (it keeps its `aria-rowindex` and keyboard behaviour); combobox, trace-waterfall and filter-menu use the same controller |
 | L12 | Tests | Vitest browser mode with the Playwright provider, in Chromium, Firefox and WebKit – the repo keeps Vitest; `scripts/a11y.mjs` scans every element |
 | L13 | Tag names | `tc-` prefix: `<tc-button>`, `<tc-combobox>`, `<tc-data-table>` |
-| L14 | Scope | Everything moves to Lit: components, blocks, screens, illustrations and motion. Screens switch from `lucide-react` to `lucide` (the framework-free package). The gallery stays a React app, using the elements through the wrappers. |
+| L14 | Scope | **Ported to Lit:** the 64 components; App Shell's primitives, promoted to components (see "App Shell's primitives"); the 24 illustrations; the 8 motion pieces; the blocks logo-marquee, testimonial-wall, kpi-board and pricing-plans. **Kept as React references:** the 15 screens (including the App Shell layout itself) and the 7 app-like blocks – they stay React, use the Lit elements through the `@lit/react` wrappers and keep `lucide-react`, appear in the gallery, and aren't part of the package. The gallery stays a React app. |
 | L15 | Frameworks | `examples/` apps for React 19 (Vite) and Next.js, Vue 3 (Vite) and Nuxt, Angular (`CUSTOM_ELEMENTS_SCHEMA`), Svelte 5, and plain HTML |
 | L16 | Screen readers | VoiceOver, run by Claude on this Mac, at the end of the pilot and in the final verification. NVDA isn't tested – a known gap. |
 
@@ -58,15 +59,38 @@ the real-browser tools (`scripts/a11y.mjs`, `scripts/visual.mjs`), which test th
 | Element metadata | `@custom-elements-manifest/analyzer` → `custom-elements.json`, which drives framework types, editor completion and the wrappers |
 | Build | Vite library mode, one module per element (remediation step 2.4) |
 | Tests | Vitest browser mode + Playwright (Chromium, Firefox, WebKit) |
-| Icons in screens | `lucide` |
+| Icons | Components and promoted primitives draw Lucide glyphs as inline SVG, as the components do today; the React reference screens keep `lucide-react` |
 
 ## Where the code lives during the port
 
-- Lit elements go in `src/elements/<slug>.ts` (blocks, screens, illustrations and motion in matching folders),
-  beside the React code, until each React file is deleted. The gallery and tests switch per component as it's
+- Lit elements go in `src/elements/<slug>.ts` (illustrations, motion and the four widget blocks in matching
+  folders), beside the React code, until each React file is deleted. The screens and app-like blocks stay where
+  they are and switch from the React components to the wrappers as each element lands. The gallery and tests switch per component as it's
   ported, so `npm run ci` stays green the whole way.
 - `examples/{react,next,vue,nuxt,angular,svelte,html}` are small apps that install the packed tarball (`npm pack`)
   and render the ported elements. They start with the pilot and stay in the repo as integration checks, run in CI.
+
+## App Shell's primitives
+
+`screens/app-shell.tsx` exports general-purpose parts that the screens share. Each becomes a component (a Lit
+element), unless an existing component already covers its use – then the screens switch to that component and the
+primitive is deleted:
+
+| Primitive | Screens using it | Becomes |
+|---|---|---|
+| Dropdown, MenuList, MenuButton | 7, 0, 3 | `tc-menu` (one element: a trigger plus a menu list) |
+| Toast (`useToast`) | 7 | The existing toaster (`tc-toaster`) |
+| Tabs | 4 | `tc-tabs` |
+| EmptyState | 4 | `tc-empty-state` |
+| FileCard | 3 | `tc-file-card` |
+| Popover | 2 | `tc-popover` |
+| SearchField | 2 | `tc-search-field` |
+| ViewToggle | 1 | The existing segmented control (`tc-segmented-control`) |
+| IconButton, SortButton, FilterButton | 1 each | Button (`tc-button`) with an icon; SortButton and FilterButton as Button variants |
+| SectionHead, BarTitle | 1 each | `tc-section-head` (BarTitle is its compact form) |
+
+The App Shell layout itself (`AppShell`) stays with the screens as a React reference. The promoted elements get
+the same treatment as every component: both looks, tests, a gallery entry and a demo.
 
 ## The pilot components
 
@@ -114,8 +138,9 @@ The pilot elements stay – they're the first three components of the port, not 
 The pilot is remediation step 2.3; it comes after 2.1 (the React baseline) and 2.2 (one source, no `components/`).
 The rest of the port follows steps 2.4–2.8: the foundations (the remaining helpers as controllers, `@lit/context`,
 the CI checks on Lit's CSS, the package build), the gallery look switch, the other 61 components (simplest first,
-then menus and fields, then the large agent views, each with its tests, demo, axe scan and screenshot diff), blocks,
-screens, illustrations and motion, and the full verification.
+then menus and fields, then the large agent views, each with its tests, demo, axe scan and screenshot diff), App
+Shell's primitives, illustrations, motion and the four widget blocks, the screens and app-like blocks moved onto the
+wrappers, and the full verification.
 
-Expected size: 7–11 weeks for one developer, most of it in the component port and the tests; the pilot's measured
+Expected size: 6–10 weeks for one developer, most of it in the component port and the tests; the pilot's measured
 time per component refines it.
