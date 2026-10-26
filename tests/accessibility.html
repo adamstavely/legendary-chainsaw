@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Icon Composer accessibility checks</title></head><body>
+<h1>Icon Composer accessibility checks</h1>
+<icon-composer></icon-composer>
+<section aria-label="Audit results"><button id="run">Run accessibility checks</button><pre id="results" role="status">Ready</pre></section>
+<script type="module">
+import {registerIconComposer} from '/src/element.ts';
+import '/src/theme.css';
+import axe from 'axe-core';
+registerIconComposer();
+const host=document.querySelector('icon-composer');
+const results=document.querySelector('#results');
+const wait=()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+const button=(text)=>[...host.shadowRoot.querySelectorAll('button')].find(el=>!el.closest('[inert]')&&(el.textContent.trim().startsWith(text)||el.getAttribute('aria-label')===text));
+const click=async(text)=>{const el=button(text);if(!el)throw Error('Missing control: '+text);el.click();await wait();};
+const scan=async(label)=>{await wait();const data=await axe.run(host,{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21a','wcag21aa','wcag22aa']}});return {state:label,violations:data.violations.map(v=>({id:v.id,impact:v.impact,description:v.description,nodes:v.nodes.map(n=>({target:n.target,summary:n.failureSummary}))})),incomplete:data.incomplete.map(v=>({id:v.id,count:v.nodes.length,nodes:v.nodes.map(n=>({target:n.target,summary:n.failureSummary}))})),passes:data.passes.length};};
+document.querySelector('#run').onclick=async()=>{
+ results.textContent='Running…';
+ try{
+ const reports=[];
+ reports.push(await scan('Default style'));
+ await click('Export icon');reports.push(await scan('Export options'));await click('Export icon');
+ await click('Browse icons');await click('Modifiers');reports.push(await scan('Modifier catalog'));
+ const count=host.shadowRoot.querySelector('.catalog-pages [role=status]').textContent;
+ await click('Edit');reports.push(await scan('Edit icon'));await click('Edit icon paths');reports.push(await scan('Vector point editing'));
+ await click('Erase / restore');reports.push(await scan('Brush erase'));
+ const select=host.shadowRoot.querySelector('select[aria-label="Eraser shape"]');select.value='rect';select.dispatchEvent(new Event('change',{bubbles:true}));await wait();reports.push(await scan('Rectangle erase'));
+ await click('Transform');reports.push(await scan('Transform'));
+ await click('Draw a custom path').catch(async()=>{await click('Create from scratch');await click('Draw a custom path');});reports.push(await scan('Drawing coordinates'));
+ await click('Add point to drawing');host.shadowRoot.querySelector('input[min="0"][max="24"]').value='8';host.shadowRoot.querySelector('input[min="0"][max="24"]').dispatchEvent(new Event('input',{bubbles:true}));await click('Add point to drawing');await click('Finish path');reports.push(await scan('Custom path'));
+ await click('Add rectangle');await click('Style');const appearance=host.shadowRoot.querySelector('select[aria-label="Shape appearance"]');appearance.value='both';appearance.dispatchEvent(new Event('change',{bubbles:true}));await wait();reports.push(await scan('Shape fill and outline'));
+ await click('Add text layer');reports.push(await scan('Text editing'));await click('Style');reports.push(await scan('Text colors'));
+ await click('Toggle dark preview');host.shadowRoot.querySelector('details').open=true;await wait();reports.push(await scan('Dark background controls'));
+ results.textContent=JSON.stringify({reports,modifierCatalog:count},null,2);
+ }catch(error){results.textContent=String(error.stack||error);}
+};
+</script></body></html>
