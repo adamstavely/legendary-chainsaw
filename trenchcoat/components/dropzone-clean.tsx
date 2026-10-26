@@ -1329,7 +1329,7 @@ const css = /* css */ `
   width: 34px;
   height: 42px;
   margin-left: -17px;
-  border-radius: 7px;
+  border-radius: var(--tc-radius-sm, var(--_tc-radius-sm));
   background: var(--tc-surface-overlay, var(--_tc-surface-overlay));
   box-shadow: 0 0 0 1px var(--tc-border-default, var(--_tc-border-default)), 0 2px 6px rgba(0, 0, 0, 0.06);
   transition: transform var(--tc-duration-slower, var(--_tc-duration-slower)) var(--tc-ease-move, var(--_tc-ease-move));

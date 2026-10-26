@@ -1669,7 +1669,7 @@ const css = /* css */ `
 .ui-agc__face:hover .ui-agc__face-tip, .ui-agc__face:focus-visible .ui-agc__face-tip { opacity: 1; transform: none; pointer-events: auto; }
 .ui-agc[data-hush] .ui-agc__face .ui-agc__face-tip { opacity: 0; pointer-events: none; }
 /* ----- The text ----- */
-.ui-agc__text { position: relative; z-index: 1; padding: 36px var(--tc-space-12) var(--tc-space-12); font-size: var(--tc-font-size-lg); line-height: 23px; color: var(--tc-text-secondary); }
+.ui-agc__text { position: relative; z-index: 1; padding: 36px var(--tc-space-12) var(--tc-space-12); font-size: var(--tc-font-size-lg); line-height: var(--tc-line-height-relaxed); color: var(--tc-text-secondary); }
 :where([data-look="clean"], [data-look="clean"] *).ui-agc__text { padding: var(--tc-space-8) 44px 44px; font-size: var(--tc-font-size-md); line-height: var(--tc-line-height-relaxed); }
 .ui-agc__block { margin: 0; }
 .ui-agc__text > * + * { margin-top: var(--tc-agent-cursors-gap); }
@@ -1686,7 +1686,7 @@ const css = /* css */ `
 :where([data-look="clean"], [data-look="clean"] *).ui-agc__block--item::marker { color: var(--tc-text-disabled); }
 /* Code: a soft panel, monospace, same suggestions inside */
 .ui-agc__code { margin: 0; padding: var(--tc-space-3-5) var(--tc-space-4); overflow: hidden; border-radius: var(--tc-radius-xl); background: var(--tc-fill-subtle); box-shadow: inset 0 0 0 1px var(--tc-border-default); font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-normal); letter-spacing: 0; color: var(--tc-text-primary); white-space: pre-wrap; }
-:where([data-look="clean"], [data-look="clean"] *).ui-agc__code { padding: var(--tc-space-3) var(--tc-space-3-5); border-radius: var(--tc-radius-md); box-shadow: inset 0 0 0 var(--tc-hairline) var(--tc-border-default); font-size: var(--tc-font-size-sm); line-height: 19px; }
+:where([data-look="clean"], [data-look="clean"] *).ui-agc__code { padding: var(--tc-space-3) var(--tc-space-3-5); border-radius: var(--tc-radius-md); box-shadow: inset 0 0 0 var(--tc-hairline) var(--tc-border-default); font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-snug); }
 .ui-agc__code code { font: inherit; }
 /* Images: loading with a shimmer; held by an agent: frame, handles and size in its color */
 .ui-agc__figure { max-width: 100%; margin: 0; transition: width var(--tc-duration-slowest) var(--tc-ease-move); }
@@ -1744,8 +1744,8 @@ const css = /* css */ `
    open, it grows into the comment's window – to the bottom right, to the left near the edge, upwards near the bottom */
 .ui-agc__pin { --tc-agent-cursors-pin: 30px; }
 :where([data-look="clean"], [data-look="clean"] *).ui-agc__pin { --tc-agent-cursors-pin: 28px; }
-.ui-agc__pin-box { position: absolute; top: calc(var(--tc-agent-cursors-pin) * -1); left: var(--tc-agent-cursors-pin-x, 0px); width: var(--tc-agent-cursors-pin); height: var(--tc-agent-cursors-pin); overflow: hidden; border-radius: 15px 15px 15px 3px; background: var(--tc-agent-cursors-flag-bg); color: var(--tc-agent-cursors-flag-fg); box-shadow: 0 0 0 1px var(--tc-agent-cursors-flag-soft), 0 8px 20px -8px rgba(0, 0, 0, 0.45); transition: left var(--tc-duration-slow) var(--tc-ease-move), width var(--tc-duration-slow) var(--tc-ease-move), height var(--tc-duration-slow) var(--tc-ease-move), border-radius var(--tc-duration-slow) var(--tc-ease-move), box-shadow var(--tc-duration-slow) var(--tc-ease-standard); }
-:where([data-look="clean"], [data-look="clean"] *).ui-agc__pin-box { border-radius: 14px 14px 14px 3px; }
+.ui-agc__pin-box { position: absolute; top: calc(var(--tc-agent-cursors-pin) * -1); left: var(--tc-agent-cursors-pin-x, 0px); width: var(--tc-agent-cursors-pin); height: var(--tc-agent-cursors-pin); overflow: hidden; border-radius: var(--tc-radius-2xl) var(--tc-radius-2xl) var(--tc-radius-2xl) var(--tc-radius-2xs); background: var(--tc-agent-cursors-flag-bg); color: var(--tc-agent-cursors-flag-fg); box-shadow: 0 0 0 1px var(--tc-agent-cursors-flag-soft), 0 8px 20px -8px rgba(0, 0, 0, 0.45); transition: left var(--tc-duration-slow) var(--tc-ease-move), width var(--tc-duration-slow) var(--tc-ease-move), height var(--tc-duration-slow) var(--tc-ease-move), border-radius var(--tc-duration-slow) var(--tc-ease-move), box-shadow var(--tc-duration-slow) var(--tc-ease-standard); }
+:where([data-look="clean"], [data-look="clean"] *).ui-agc__pin-box { border-radius: 14px 14px 14px var(--tc-radius-2xs); }
 /* The closed pin's focus ring sits on the pin itself (its button is clipped inside it) */
 .ui-agc__pin:has(.ui-agc__pin-hit:focus-visible) .ui-agc__pin-box { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
 .ui-agc__pin[data-up] .ui-agc__pin-box { top: auto; bottom: 0; }
@@ -1861,7 +1861,7 @@ const css = /* css */ `
 /* Phones: follows the component's own width, not the window's (the old 520px viewport query fired on phones,
    where the page is ~340–400px wide) */
 @container agc (max-width: 400px) {
-  .ui-agc__text { padding: 26px 22px 36px; font-size: var(--tc-font-size-lg); line-height: 23px; }
+  .ui-agc__text { padding: 26px 22px 36px; font-size: var(--tc-font-size-lg); line-height: var(--tc-line-height-relaxed); }
   .ui-agc__block--title { font-size: var(--tc-font-size-2xl); line-height: 26px; }
   :where([data-look="clean"], [data-look="clean"] *).ui-agc__text { padding: var(--tc-space-6) var(--tc-space-5) var(--tc-space-8); }
   /* The count and cost give way to the faces and Accept all; the suggestions themselves stay in the text */

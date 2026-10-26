@@ -1885,7 +1885,7 @@ const css = /* css */ `
 :where([data-look="standard"], [data-look="standard"] *).ui-agq__pop-stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--tc-space-2) var(--tc-space-3); padding: var(--tc-space-2-5) var(--tc-space-3); border-radius: var(--tc-radius-lg); background: var(--tc-fill-subtle); }
 :where([data-look="standard"], [data-look="standard"] *).ui-agq__pop-stats dt { font-size: var(--tc-font-size-xs); line-height: 14px; color: var(--tc-text-muted); }
 :where([data-look="standard"], [data-look="standard"] *).ui-agq__pop-stats dd { overflow: hidden; font-size: var(--tc-font-size-md); font-weight: var(--tc-font-weight-semibold); line-height: var(--tc-line-height-snug); color: var(--tc-text-primary); white-space: nowrap; text-overflow: ellipsis; font-variant-numeric: tabular-nums; }
-:where([data-look="standard"], [data-look="standard"] *).ui-agq__pop-error { display: flex; gap: var(--tc-space-2); padding: var(--tc-space-2) var(--tc-space-2-5); border-radius: var(--tc-radius-lg); background: var(--tc-status-danger-bg); font-size: var(--tc-font-size-sm); line-height: 17px; color: var(--tc-status-danger-fg); }
+:where([data-look="standard"], [data-look="standard"] *).ui-agq__pop-error { display: flex; gap: var(--tc-space-2); padding: var(--tc-space-2) var(--tc-space-2-5); border-radius: var(--tc-radius-lg); background: var(--tc-status-danger-bg); font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); color: var(--tc-status-danger-fg); }
 :where([data-look="standard"], [data-look="standard"] *).ui-agq__pop-error > svg { margin-top: 2.5px; }
 :where([data-look="standard"], [data-look="standard"] *).ui-agq__pop-actions { display: flex; gap: var(--tc-space-1-5); }
 /* ----- The chart ----- */

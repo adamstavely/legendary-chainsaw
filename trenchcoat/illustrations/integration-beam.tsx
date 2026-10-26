@@ -856,7 +856,7 @@ const css = /* css */ `
     padding: 0 0 var(--tc-space-1, 4px);
   }
   .ui-ib__group { flex-direction: row; gap: clamp(14px, 7cqw, 34px); }
-  .ui-ib__tool { width: 56px; height: 56px; border-radius: 17px; }
+  .ui-ib__tool { width: 56px; height: 56px; border-radius: var(--tc-radius-2xl, 16px); }
   .ui-ib__center { width: 76px; height: 76px; border-radius: 23px; }
   /* Tooltips sit between the rows; the outer tools align theirs to their edge */
   .ui-ib__tip,

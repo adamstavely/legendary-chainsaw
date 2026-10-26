@@ -13,6 +13,11 @@ See `audit/remediation-plan.md`, Part 1.
   `--tc-space-*` (3,389 values that were already on the scale, 322 that were 1 px off it and moved by 1 px). What
   stays literal – 1 px, fractions, negatives and values 2 px or more off the scale – is counted by the ratchet's
   new "literal spacing" rule (448 in these libraries; blocks and screens are untouched).
+- Line heights and radii on the scale (`scripts/apply-scales.mjs`): 12 values already on it and 56 that were 1 px off
+  now use `--tc-line-height-*` / `--tc-radius-*` (in Clean-only rules, 5 px radii use Clean's
+  `--tc-radius-badge`); memory-panel's cards use `--tc-shadow-raised`. Ratchet totals: line-height 151 → 109,
+  radius 176 → 101, blurred shadow 50 → 46. Unitless line heights, illustration art shadows and values 2 px or more
+  off the scale stay literal.
 
 ### Behaviour changes
 

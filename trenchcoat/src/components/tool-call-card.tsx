@@ -786,7 +786,7 @@ const css = /* css */ `
   flex: none;
   width: 26px;
   height: 26px;
-  border-radius: 7px;
+  border-radius: var(--tc-radius-sm);
   background: var(--tc-tool-call-card-tc-tile);
   box-shadow: inset 0 0 0 1px var(--tc-border-default);
   color: var(--tc-text-primary);
@@ -1089,7 +1089,7 @@ const css = /* css */ `
   right: 1px;
   bottom: 1px;
   height: 56px;
-  border-radius: 0 0 7px 7px;
+  border-radius: 0 0 var(--tc-radius-sm) var(--tc-radius-sm);
   background: linear-gradient(to bottom, transparent, var(--tc-tool-call-card-code-bg));
   opacity: 0;
   transition: opacity var(--tc-duration-moderate) var(--tc-ease-standard);
@@ -1118,7 +1118,7 @@ const css = /* css */ `
   justify-self: start;
   padding: var(--tc-space-0-5) var(--tc-space-1);
   margin-left: -4px;
-  border-radius: 5px;
+  border-radius: var(--tc-radius-xs);
   color: var(--tc-text-muted);
   font-size: var(--tc-font-size-sm);
   font-weight: var(--tc-font-weight-medium);
@@ -1224,7 +1224,7 @@ const css = /* css */ `
 :where([data-look="standard"], [data-look="standard"] *).ui-tc-group__stack .ui-tc__icon {
   width: 24px;
   height: 24px;
-  border-radius: 7px;
+  border-radius: var(--tc-radius-sm);
   box-shadow: inset 0 0 0 1px var(--tc-border-default), 0 0 0 2px var(--tc-surface-raised);
   animation: ui-tc-pop var(--tc-duration-slower) var(--tc-ease-move) both;
 }

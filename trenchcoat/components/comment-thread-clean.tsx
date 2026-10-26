@@ -791,7 +791,7 @@ img.ui-ct__avatar { box-shadow: 0 0 0 var(--tc-hairline, var(--_tc-hairline)) va
 :where([data-look="clean"], [data-look="clean"] *).ui-ct__name { font-size: var(--tc-font-size-md, var(--_tc-font-size-md)); color: var(--tc-text-strong, var(--_tc-text-strong)); }
 .ui-ct__time { flex: none; margin-left: auto; font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); white-space: nowrap; color: var(--tc-text-muted, var(--_tc-text-muted)); font-variant-numeric: tabular-nums; }
 :where([data-look="clean"], [data-look="clean"] *).ui-ct__time { font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); line-height: var(--tc-line-height-tight, var(--_tc-line-height-tight)); }
-.ui-ct__text { margin: var(--tc-space-2, var(--_tc-space-2)) 0 0; font-size: var(--tc-font-size-lg, var(--_tc-font-size-lg)); line-height: 21px; overflow-wrap: break-word; color: var(--tc-text-secondary, var(--_tc-text-secondary)); }
+.ui-ct__text { margin: var(--tc-space-2, var(--_tc-space-2)) 0 0; font-size: var(--tc-font-size-lg, var(--_tc-font-size-lg)); line-height: var(--tc-line-height-normal, var(--_tc-line-height-normal)); overflow-wrap: break-word; color: var(--tc-text-secondary, var(--_tc-text-secondary)); }
 /* Clean: text and status line up with the name, not the avatar */
 :where([data-look="clean"], [data-look="clean"] *).ui-ct__text { margin: var(--tc-space-1, var(--_tc-space-1)) 0 0 var(--tc-space-7, var(--_tc-space-7)); font-size: var(--tc-font-size-md, var(--_tc-font-size-md)); line-height: var(--tc-line-height-normal, var(--_tc-line-height-normal)); color: var(--tc-text-primary, var(--_tc-text-primary)); }
 .ui-ct__command { color: var(--tc-text-muted, var(--_tc-text-muted)); }

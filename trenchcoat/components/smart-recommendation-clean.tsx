@@ -845,7 +845,7 @@ const css = /* css */ `
   margin: 0;
   padding: 0 var(--tc-space-2-5, var(--_tc-space-2-5));
   font-size: var(--tc-font-size-lg, var(--_tc-font-size-lg));
-  line-height: 21px;
+  line-height: var(--tc-line-height-normal, var(--_tc-line-height-normal));
   color: var(--tc-text-secondary, var(--_tc-text-secondary));
   animation: ui-sr-swap var(--tc-duration-slow, var(--_tc-duration-slow)) var(--tc-ease-move, var(--_tc-ease-move));
 }

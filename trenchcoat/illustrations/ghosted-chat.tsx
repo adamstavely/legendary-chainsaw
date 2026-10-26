@@ -264,7 +264,7 @@ const css = /* css */ `
   padding: var(--tc-space-2, 8px) var(--tc-space-3, 12px);
   background: var(--tc-surface-overlay, light-dark(#ffffff, #232326));
   border: 1px solid var(--tc-border-default, light-dark(#ececec, #2a2a2e));
-  border-radius: 14px 14px 4px 14px;
+  border-radius: 14px 14px var(--tc-radius-xs, 4px) 14px;
   box-shadow: var(--tc-ghosted-chat-bubble-shadow);
   font-size: var(--tc-font-size-sm, 12px);
   line-height: 1.3;
@@ -364,7 +364,7 @@ const css = /* css */ `
   padding: var(--tc-space-1-5, 6px) var(--tc-space-3, 12px);
   background: #155EEF;
   border: 1px solid #155EEF;
-  border-radius: 14px 14px 14px 4px;
+  border-radius: 14px 14px 14px var(--tc-radius-xs, 4px);
   color: #FFFFFF;
   font-size: 15px;
   line-height: 1.1;

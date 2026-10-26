@@ -1090,11 +1090,14 @@ const css = /* css */ `
   --_tc-pill-px-lg: 10px;
   --_tc-pill-radius: 999px;
   --_tc-radius-2xl: 16px;
+  --_tc-radius-2xs: 2px;
   --_tc-radius-3xl: 20px;
+  --_tc-radius-badge: 999px;
   --_tc-radius-full: 999px;
   --_tc-radius-lg: 10px;
   --_tc-radius-md: 8px;
   --_tc-radius-sm: 6px;
+  --_tc-radius-xs: 4px;
   --_tc-seg-pad: 2px;
   --_tc-seg-thumb-bg: light-dark(#ffffff, #34343a);
   --_tc-seg-thumb-shadow: 0 1px 2px light-dark(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.4));
@@ -1170,11 +1173,14 @@ const css = /* css */ `
   --_tc-pill-px-lg: 8px;
   --_tc-pill-radius: 5px;
   --_tc-radius-2xl: 16px;
+  --_tc-radius-2xs: 2px;
   --_tc-radius-3xl: 20px;
+  --_tc-radius-badge: 5px;
   --_tc-radius-full: 999px;
   --_tc-radius-lg: 10px;
   --_tc-radius-md: 8px;
   --_tc-radius-sm: 6px;
+  --_tc-radius-xs: 4px;
   --_tc-seg-pad: 2px;
   --_tc-seg-thumb-bg: light-dark(#ffffff, #34343a);
   --_tc-seg-thumb-shadow: 0 0 0 0.5px light-dark(rgba(0, 0, 0, 0.06), rgba(255, 255, 255, 0.08)), 0 1px 1px -1px light-dark(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.4)), 0 1px 2px 0 light-dark(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.4));
@@ -1296,11 +1302,11 @@ const css = /* css */ `
 :where([data-look="clean"], [data-look="clean"] *).ui-cxm__title { flex: none; font-weight: var(--tc-font-weight-medium, var(--_tc-font-weight-medium)); color: var(--tc-text-strong, var(--_tc-text-strong)); }
 .ui-cxm__who { display: inline-flex; align-items: center; gap: var(--tc-space-2, var(--_tc-space-2)); min-width: 0; }
 /* The model maker's logo on a small white tile */
-:where([data-look="standard"], [data-look="standard"] *).ui-cxm__logo { display: grid; flex: none; place-items: center; width: 22px; height: 22px; border-radius: 7px; background: var(--tc-surface-raised, var(--_tc-surface-raised)); box-shadow: var(--tc-shadow-raised, var(--_tc-shadow-raised)); }
+:where([data-look="standard"], [data-look="standard"] *).ui-cxm__logo { display: grid; flex: none; place-items: center; width: 22px; height: 22px; border-radius: var(--tc-radius-sm, var(--_tc-radius-sm)); background: var(--tc-surface-raised, var(--_tc-surface-raised)); box-shadow: var(--tc-shadow-raised, var(--_tc-shadow-raised)); }
 :where([data-look="standard"], [data-look="standard"] *).ui-cxm__logo > svg { width: 12px; height: 12px; }
 :where([data-look="standard"], [data-look="standard"] *).ui-cxm__model { min-width: 0; overflow: hidden; color: var(--tc-text-muted, var(--_tc-text-muted)); white-space: nowrap; text-overflow: ellipsis; }
 /* The model maker's logo on a small white tile */
-:where([data-look="clean"], [data-look="clean"] *).ui-cxm__logo { display: grid; flex: none; place-items: center; width: 20px; height: 20px; border-radius: 5px; background: var(--tc-surface-raised, var(--_tc-surface-raised)); box-shadow: var(--tc-shadow-raised, var(--_tc-shadow-raised)); }
+:where([data-look="clean"], [data-look="clean"] *).ui-cxm__logo { display: grid; flex: none; place-items: center; width: 20px; height: 20px; border-radius: var(--tc-radius-badge, var(--_tc-radius-badge)); background: var(--tc-surface-raised, var(--_tc-surface-raised)); box-shadow: var(--tc-shadow-raised, var(--_tc-shadow-raised)); }
 :where([data-look="clean"], [data-look="clean"] *).ui-cxm__logo > svg { width: 11px; height: 11px; }
 :where([data-look="clean"], [data-look="clean"] *).ui-cxm__model { min-width: 0; overflow: hidden; color: var(--tc-text-secondary, var(--_tc-text-secondary)); white-space: nowrap; text-overflow: ellipsis; }
 /* The agent menu */
@@ -1325,16 +1331,16 @@ const css = /* css */ `
 /* The current agent: a tick in the selected colour */
 .ui-cxm__check { flex: none; width: 12px; height: 12px; margin-left: -4px; color: var(--tc-menu-item-selected-fg, var(--_tc-menu-item-selected-fg)); }
 .ui-cxm__option-text { display: grid; flex: 1; min-width: 0; }
-:where([data-look="standard"], [data-look="standard"] *).ui-cxm__option-name { overflow: hidden; font-size: var(--tc-font-size-lg, var(--_tc-font-size-lg)); font-weight: var(--tc-font-weight-semibold, var(--_tc-font-weight-semibold)); line-height: 19px; color: var(--tc-text-primary, var(--_tc-text-primary)); white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="standard"], [data-look="standard"] *).ui-cxm__option-model { font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); line-height: 17px; color: var(--tc-text-muted, var(--_tc-text-muted)); }
+:where([data-look="standard"], [data-look="standard"] *).ui-cxm__option-name { overflow: hidden; font-size: var(--tc-font-size-lg, var(--_tc-font-size-lg)); font-weight: var(--tc-font-weight-semibold, var(--_tc-font-weight-semibold)); line-height: var(--tc-line-height-snug, var(--_tc-line-height-snug)); color: var(--tc-text-primary, var(--_tc-text-primary)); white-space: nowrap; text-overflow: ellipsis; }
+:where([data-look="standard"], [data-look="standard"] *).ui-cxm__option-model { font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); line-height: var(--tc-line-height-tight, var(--_tc-line-height-tight)); color: var(--tc-text-muted, var(--_tc-text-muted)); }
 :where([data-look="standard"], [data-look="standard"] *).ui-cxm__option .ui-cxm__logo { width: 28px; height: 28px; border-radius: var(--tc-radius-md, var(--_tc-radius-md)); }
 :where([data-look="standard"], [data-look="standard"] *).ui-cxm__option .ui-cxm__logo > svg { width: 14px; height: 14px; }
 :where([data-look="standard"], [data-look="standard"] *).ui-cxm__limit { flex: none; height: var(--tc-pill-h, var(--_tc-pill-h)); padding: 0 var(--tc-pill-px, var(--_tc-pill-px)); border-radius: var(--tc-pill-radius, var(--_tc-pill-radius)); background: var(--tc-fill-hover, var(--_tc-fill-hover)); font-size: var(--tc-pill-font-size, var(--_tc-pill-font-size)); font-weight: var(--tc-pill-font-weight, var(--_tc-pill-font-weight)); line-height: var(--tc-pill-h, var(--_tc-pill-h)); color: var(--tc-text-muted, var(--_tc-text-muted)); font-variant-numeric: tabular-nums; }
 :where([data-look="standard"], [data-look="standard"] *).ui-cxm__status { display: inline-flex; flex: none; align-items: center; gap: var(--tc-space-1, var(--_tc-space-1)); height: var(--tc-pill-h-lg, var(--_tc-pill-h-lg)); padding: 0 var(--tc-pill-px-lg, var(--_tc-pill-px-lg)) 0 calc(var(--tc-pill-px-lg, var(--_tc-pill-px-lg)) - 2px); border-radius: var(--tc-pill-radius, var(--_tc-pill-radius)); background: var(--tc-context-map-summary-bg); font-size: var(--tc-pill-font-size-lg, var(--_tc-pill-font-size-lg)); font-weight: var(--tc-pill-font-weight, var(--_tc-pill-font-weight)); color: var(--tc-context-map-summary-ink); animation: ui-cxm-fade var(--tc-duration-moderate, var(--_tc-duration-moderate)) var(--tc-ease-standard, var(--_tc-ease-standard)) both; }
 :where([data-look="standard"], [data-look="standard"] *).ui-cxm__sum { display: flex; align-items: center; gap: var(--tc-space-2-5, var(--_tc-space-2-5)); margin-left: auto; font-size: var(--tc-font-size-md, var(--_tc-font-size-md)); line-height: var(--tc-line-height-snug, var(--_tc-line-height-snug)); color: var(--tc-text-muted, var(--_tc-text-muted)); font-variant-numeric: tabular-nums; white-space: nowrap; }
 :where([data-look="standard"], [data-look="standard"] *).ui-cxm__sum b { font-weight: var(--tc-font-weight-semibold, var(--_tc-font-weight-semibold)); color: var(--tc-text-primary, var(--_tc-text-primary)); }
-:where([data-look="clean"], [data-look="clean"] *).ui-cxm__option-name { overflow: hidden; font-size: var(--tc-font-size-md, var(--_tc-font-size-md)); font-weight: var(--tc-font-weight-medium, var(--_tc-font-weight-medium)); line-height: 17px; color: var(--tc-text-primary, var(--_tc-text-primary)); white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="clean"], [data-look="clean"] *).ui-cxm__option-model { font-size: var(--tc-font-size-xs, var(--_tc-font-size-xs)); line-height: 15px; color: var(--tc-text-muted, var(--_tc-text-muted)); }
+:where([data-look="clean"], [data-look="clean"] *).ui-cxm__option-name { overflow: hidden; font-size: var(--tc-font-size-md, var(--_tc-font-size-md)); font-weight: var(--tc-font-weight-medium, var(--_tc-font-weight-medium)); line-height: var(--tc-line-height-tight, var(--_tc-line-height-tight)); color: var(--tc-text-primary, var(--_tc-text-primary)); white-space: nowrap; text-overflow: ellipsis; }
+:where([data-look="clean"], [data-look="clean"] *).ui-cxm__option-model { font-size: var(--tc-font-size-xs, var(--_tc-font-size-xs)); line-height: var(--tc-line-height-tight, var(--_tc-line-height-tight)); color: var(--tc-text-muted, var(--_tc-text-muted)); }
 :where([data-look="clean"], [data-look="clean"] *).ui-cxm__option .ui-cxm__logo { width: 24px; height: 24px; border-radius: var(--tc-radius-sm, var(--_tc-radius-sm)); }
 :where([data-look="clean"], [data-look="clean"] *).ui-cxm__option .ui-cxm__logo > svg { width: 13px; height: 13px; }
 :where([data-look="clean"], [data-look="clean"] *).ui-cxm__limit { flex: none; height: var(--tc-pill-h, var(--_tc-pill-h)); padding: 0 var(--tc-pill-px, var(--_tc-pill-px)); border-radius: var(--tc-pill-radius, var(--_tc-pill-radius)); background: var(--tc-fill-hover, var(--_tc-fill-hover)); font-size: var(--tc-pill-font-size, var(--_tc-pill-font-size)); font-weight: var(--tc-pill-font-weight, var(--_tc-pill-font-weight)); line-height: var(--tc-pill-h, var(--_tc-pill-h)); color: var(--tc-text-secondary, var(--_tc-text-secondary)); font-variant-numeric: tabular-nums; }
@@ -1367,7 +1373,7 @@ const css = /* css */ `
 .ui-cxm__compare button:focus-visible { outline: var(--tc-focus-outline, var(--_tc-focus-outline)); outline-offset: var(--tc-focus-ring-offset, var(--_tc-focus-ring-offset)); }
 /* ----- The white card: one tile per part, placed by the layout, gliding when it changes ----- */
 :where([data-look="standard"], [data-look="standard"] *).ui-cxm__area { position: relative; height: var(--tc-context-map-height); padding: 0; border-radius: var(--tc-radius-2xl, var(--_tc-radius-2xl)); background: var(--tc-surface-raised, var(--_tc-surface-raised)); box-shadow: var(--tc-shadow-raised, var(--_tc-shadow-raised)); }
-:where([data-look="standard"], [data-look="standard"] *).ui-cxm__tile { position: absolute; left: 0; top: 0; width: max(0px, calc(var(--w) - var(--tc-context-map-gap))); height: max(0px, calc(var(--h) - var(--tc-context-map-gap))); border-radius: 9px; background: var(--tc-context-map-tile-bg); box-shadow: inset 0 0 0 1px var(--tc-context-map-tile-edge); overflow: hidden; transform: translate(calc(var(--x) + var(--tc-context-map-gap) / 2), calc(var(--y) + var(--tc-context-map-gap) / 2)); transition: opacity var(--tc-duration-base, var(--_tc-duration-base)) var(--tc-ease-standard, var(--_tc-ease-standard)), background-color var(--tc-duration-slow, var(--_tc-duration-slow)) var(--tc-ease-standard, var(--_tc-ease-standard)); cursor: default; }
+:where([data-look="standard"], [data-look="standard"] *).ui-cxm__tile { position: absolute; left: 0; top: 0; width: max(0px, calc(var(--w) - var(--tc-context-map-gap))); height: max(0px, calc(var(--h) - var(--tc-context-map-gap))); border-radius: var(--tc-radius-md, var(--_tc-radius-md)); background: var(--tc-context-map-tile-bg); box-shadow: inset 0 0 0 1px var(--tc-context-map-tile-edge); overflow: hidden; transform: translate(calc(var(--x) + var(--tc-context-map-gap) / 2), calc(var(--y) + var(--tc-context-map-gap) / 2)); transition: opacity var(--tc-duration-base, var(--_tc-duration-base)) var(--tc-ease-standard, var(--_tc-ease-standard)), background-color var(--tc-duration-slow, var(--_tc-duration-slow)) var(--tc-ease-standard, var(--_tc-ease-standard)); cursor: default; }
 /* The free space: dashed, with a faint hatch */
 :where([data-look="standard"], [data-look="standard"] *).ui-cxm__tile[data-kind="free"] { background: repeating-linear-gradient(135deg, transparent 0 6px, var(--tc-fill-subtle, var(--_tc-fill-subtle)) 6px 7px); box-shadow: none; outline: 1.5px dashed var(--tc-border-strong, var(--_tc-border-strong)); outline-offset: -2px; }
 /* ----- The area: one tile per part, placed by the layout, gliding when it changes ----- */
@@ -1381,10 +1387,10 @@ const css = /* css */ `
 /* The label: no ellipsis – a line that runs into the edge fades out, and a line without room fades away before it's cut */
 :where([data-look="clean"], [data-look="clean"] *).ui-cxm__label { position: absolute; top: 7px; right: 0; left: 9px; display: grid; min-width: 0; pointer-events: none; }
 .ui-cxm__name, .ui-cxm__tokens { overflow: hidden; white-space: nowrap; -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 22px), transparent calc(100% - 4px)); mask-image: linear-gradient(90deg, #000 calc(100% - 22px), transparent calc(100% - 4px)); opacity: 0; transition: opacity var(--tc-duration-base, var(--_tc-duration-base)) var(--tc-ease-standard, var(--_tc-ease-standard)); }
-:where([data-look="standard"], [data-look="standard"] *).ui-cxm__name { font-size: var(--tc-font-size-md, var(--_tc-font-size-md)); font-weight: var(--tc-font-weight-semibold, var(--_tc-font-weight-semibold)); line-height: 17px; color: var(--tc-context-map-tile-ink); }
-:where([data-look="standard"], [data-look="standard"] *).ui-cxm__tokens { font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); line-height: 17px; color: var(--tc-context-map-tile-ink); font-variant-numeric: tabular-nums; }
+:where([data-look="standard"], [data-look="standard"] *).ui-cxm__name { font-size: var(--tc-font-size-md, var(--_tc-font-size-md)); font-weight: var(--tc-font-weight-semibold, var(--_tc-font-weight-semibold)); line-height: var(--tc-line-height-tight, var(--_tc-line-height-tight)); color: var(--tc-context-map-tile-ink); }
+:where([data-look="standard"], [data-look="standard"] *).ui-cxm__tokens { font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); line-height: var(--tc-line-height-tight, var(--_tc-line-height-tight)); color: var(--tc-context-map-tile-ink); font-variant-numeric: tabular-nums; }
 :where([data-look="clean"], [data-look="clean"] *).ui-cxm__name { font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); font-weight: var(--tc-font-weight-medium, var(--_tc-font-weight-medium)); line-height: var(--tc-line-height-tight, var(--_tc-line-height-tight)); color: var(--tc-context-map-tile-ink); }
-:where([data-look="clean"], [data-look="clean"] *).ui-cxm__tokens { font-size: var(--tc-font-size-xs, var(--_tc-font-size-xs)); line-height: 15px; color: var(--tc-context-map-tile-ink); font-variant-numeric: tabular-nums; }
+:where([data-look="clean"], [data-look="clean"] *).ui-cxm__tokens { font-size: var(--tc-font-size-xs, var(--_tc-font-size-xs)); line-height: var(--tc-line-height-tight, var(--_tc-line-height-tight)); color: var(--tc-context-map-tile-ink); font-variant-numeric: tabular-nums; }
 .ui-cxm__name[data-show] { opacity: 1; }
 /* The count is real text: full ink, no opacity (1.4.3) */
 .ui-cxm__tokens[data-show] { opacity: 1; }
@@ -1404,7 +1410,7 @@ const css = /* css */ `
 /* ----- The window over a tile ----- */
 :where([data-look="clean"], [data-look="clean"] *).ui-cxm__tip { position: absolute; top: 0; left: 0; z-index: 5; display: grid; gap: var(--tc-space-0-5, var(--_tc-space-0-5)); width: max-content; max-width: 300px; padding: var(--tc-space-2, var(--_tc-space-2)) var(--tc-space-3, var(--_tc-space-3)) var(--tc-space-2-5, var(--_tc-space-2-5)); border-radius: var(--tc-menu-radius, var(--_tc-menu-radius)); background: var(--tc-menu-bg, var(--_tc-menu-bg)); box-shadow: var(--tc-menu-shadow, var(--_tc-menu-shadow)); animation: ui-cxm-tip-clean var(--tc-duration-fast, var(--_tc-duration-fast)) var(--tc-ease-move, var(--_tc-ease-move)) both; }
 .ui-cxm__tip-head { display: flex; align-items: center; gap: var(--tc-space-2, var(--_tc-space-2)); min-width: 0; }
-:where([data-look="standard"], [data-look="standard"] *).ui-cxm__swatch { flex: none; width: 10px; height: 10px; border-radius: 3px; background: var(--tc-context-map-tile-bg); box-shadow: inset 0 0 0 1px var(--tc-context-map-tile-edge); }
+:where([data-look="standard"], [data-look="standard"] *).ui-cxm__swatch { flex: none; width: 10px; height: 10px; border-radius: var(--tc-radius-2xs, var(--_tc-radius-2xs)); background: var(--tc-context-map-tile-bg); box-shadow: inset 0 0 0 1px var(--tc-context-map-tile-edge); }
 :where([data-look="standard"], [data-look="standard"] *).ui-cxm__tip-name { overflow: hidden; font-weight: var(--tc-font-weight-semibold, var(--_tc-font-weight-semibold)); color: var(--tc-text-primary, var(--_tc-text-primary)); white-space: nowrap; text-overflow: ellipsis; }
 :where([data-look="standard"], [data-look="standard"] *).ui-cxm__tip-meta { font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); line-height: var(--tc-line-height-snug, var(--_tc-line-height-snug)); color: var(--tc-text-muted, var(--_tc-text-muted)); font-variant-numeric: tabular-nums; }
 /* What's inside: each with its logo, in two columns */
@@ -1425,11 +1431,11 @@ const css = /* css */ `
 :where([data-look="clean"], [data-look="clean"] *).ui-cxm__tip-items .ui-cxm__logo > svg,
 :where([data-look="clean"], [data-look="clean"] *).ui-cxm__tip-head .ui-cxm__logo > svg { width: 10px; height: 10px; }
 .ui-cxm__icon { display: inline-flex; vertical-align: -2px; margin-right: var(--tc-space-1, var(--_tc-space-1)); }
-:where([data-look="standard"], [data-look="standard"] *).ui-cxm__icon > svg { width: 13px; height: 13px; border-radius: 3px; }
-:where([data-look="standard"], [data-look="standard"] *).ui-cxm__tip-detail { font-size: var(--tc-font-size-md, var(--_tc-font-size-md)); line-height: 19px; color: var(--tc-text-muted, var(--_tc-text-muted)); }
+:where([data-look="standard"], [data-look="standard"] *).ui-cxm__icon > svg { width: 13px; height: 13px; border-radius: var(--tc-radius-2xs, var(--_tc-radius-2xs)); }
+:where([data-look="standard"], [data-look="standard"] *).ui-cxm__tip-detail { font-size: var(--tc-font-size-md, var(--_tc-font-size-md)); line-height: var(--tc-line-height-snug, var(--_tc-line-height-snug)); color: var(--tc-text-muted, var(--_tc-text-muted)); }
 /* What the compaction did with the block, in the window */
 :where([data-look="standard"], [data-look="standard"] *).ui-cxm__tip-fate { display: flex; align-items: center; gap: var(--tc-space-1-5, var(--_tc-space-1-5)); margin-top: var(--tc-space-1, var(--_tc-space-1)); font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); font-weight: var(--tc-font-weight-medium, var(--_tc-font-weight-medium)); line-height: var(--tc-line-height-tight, var(--_tc-line-height-tight)); color: var(--tc-text-muted, var(--_tc-text-muted)); }
-:where([data-look="clean"], [data-look="clean"] *).ui-cxm__icon > svg { width: 12px; height: 12px; border-radius: 3px; }
+:where([data-look="clean"], [data-look="clean"] *).ui-cxm__icon > svg { width: 12px; height: 12px; border-radius: var(--tc-radius-2xs, var(--_tc-radius-2xs)); }
 :where([data-look="clean"], [data-look="clean"] *).ui-cxm__tip-detail { font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); line-height: var(--tc-line-height-snug, var(--_tc-line-height-snug)); color: var(--tc-text-secondary, var(--_tc-text-secondary)); }
 /* What the compaction did with the block, in the window */
 :where([data-look="clean"], [data-look="clean"] *).ui-cxm__tip-fate { display: flex; align-items: center; gap: var(--tc-space-1-5, var(--_tc-space-1-5)); margin-top: var(--tc-space-1, var(--_tc-space-1)); font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); font-weight: var(--tc-font-weight-medium, var(--_tc-font-weight-medium)); line-height: var(--tc-line-height-tight, var(--_tc-line-height-tight)); color: var(--tc-text-secondary, var(--_tc-text-secondary)); }
@@ -1445,7 +1451,7 @@ const css = /* css */ `
 /* After: the summary they went into carries a ring */
 .ui-cxm__tile[data-fate="summary"] { box-shadow: inset 0 0 0 1px var(--tc-context-map-summary-edge); }
 /* Summarized: a small grey mark in the top right corner */
-.ui-cxm__badge { position: absolute; top: 6px; right: 6px; z-index: 1; display: grid; place-items: center; width: 18px; height: 18px; border-radius: 5px; background: var(--tc-fill-hover, var(--_tc-fill-hover)); color: var(--tc-text-muted, var(--_tc-text-muted)); pointer-events: none; animation: ui-cxm-fade var(--tc-duration-moderate, var(--_tc-duration-moderate)) var(--tc-ease-standard, var(--_tc-ease-standard)) both; }
+.ui-cxm__badge { position: absolute; top: 6px; right: 6px; z-index: 1; display: grid; place-items: center; width: 18px; height: 18px; border-radius: var(--tc-radius-xs, var(--_tc-radius-xs)); background: var(--tc-fill-hover, var(--_tc-fill-hover)); color: var(--tc-text-muted, var(--_tc-text-muted)); pointer-events: none; animation: ui-cxm-fade var(--tc-duration-moderate, var(--_tc-duration-moderate)) var(--tc-ease-standard, var(--_tc-ease-standard)) both; }
 .ui-cxm__badge > svg { width: 11px; height: 11px; }
 /* A pinned card's block: a quiet ring in its own color */
 .ui-cxm__tile[data-pinned] { box-shadow: inset 0 0 0 1.5px var(--tc-context-map-tile-ink); }

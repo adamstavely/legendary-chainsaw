@@ -1091,10 +1091,10 @@ const css = /* css */ `
   white-space: pre-wrap;
   animation: ui-wa-in var(--tc-duration-slow, var(--_tc-duration-slow)) var(--tc-ease-move, var(--_tc-ease-move)) both;
 }
-:where([data-look="standard"], [data-look="standard"] *).ui-wa__msg--user { align-self: flex-end; border-radius: 18px 18px 6px 18px; background: var(--tc-fill-default, var(--_tc-fill-default)); }
+:where([data-look="standard"], [data-look="standard"] *).ui-wa__msg--user { align-self: flex-end; border-radius: 18px 18px var(--tc-radius-sm, var(--_tc-radius-sm)) 18px; background: var(--tc-fill-default, var(--_tc-fill-default)); }
 :where([data-look="standard"], [data-look="standard"] *).ui-wa__msg--assistant {
   align-self: flex-start;
-  border-radius: 18px 18px 18px 6px;
+  border-radius: 18px 18px 18px var(--tc-radius-sm, var(--_tc-radius-sm));
   background: var(--tc-writing-assistant-bubble-bg);
   box-shadow: 0 0 0 1px var(--tc-border-default, var(--_tc-border-default));
   backdrop-filter: blur(10px);
@@ -1144,7 +1144,7 @@ const css = /* css */ `
   resize: none;
   font: inherit;
   font-size: 14.5px;
-  line-height: 21px;
+  line-height: var(--tc-line-height-normal, var(--_tc-line-height-normal));
   color: var(--tc-text-primary, var(--_tc-text-primary));
   overflow-y: auto;
   scrollbar-width: none;

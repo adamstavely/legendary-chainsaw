@@ -854,6 +854,7 @@ const css = /* css */ `
   --_tc-radius-md: 8px;
   --_tc-radius-sm: 6px;
   --_tc-radius-xl: 12px;
+  --_tc-radius-xs: 4px;
   --_tc-shadow-raised: 0 0 0 1px light-dark(#ececec, #2a2a2e), 0 1px 2px light-dark(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.4));
   --_tc-shimmer: light-dark(rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.28));
   --_tc-space-0-5: 2px;
@@ -912,6 +913,7 @@ const css = /* css */ `
   --_tc-radius-md: 8px;
   --_tc-radius-sm: 6px;
   --_tc-radius-xl: 12px;
+  --_tc-radius-xs: 4px;
   --_tc-shadow-raised: 0 0 0 0.5px light-dark(rgba(0, 0, 0, 0.06), rgba(255, 255, 255, 0.08)), 0 1px 1px -1px light-dark(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.4)), 0 1px 2px 0 light-dark(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.4));
   --_tc-shimmer: light-dark(rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.3));
   --_tc-space-0-5: 2px;
@@ -1030,7 +1032,7 @@ const css = /* css */ `
   flex: none;
   width: 26px;
   height: 26px;
-  border-radius: 7px;
+  border-radius: var(--tc-radius-sm, var(--_tc-radius-sm));
   background: var(--tc-tool-call-card-tc-tile);
   box-shadow: inset 0 0 0 1px var(--tc-border-default, var(--_tc-border-default));
   color: var(--tc-text-primary, var(--_tc-text-primary));
@@ -1333,7 +1335,7 @@ const css = /* css */ `
   right: 1px;
   bottom: 1px;
   height: 56px;
-  border-radius: 0 0 7px 7px;
+  border-radius: 0 0 var(--tc-radius-sm, var(--_tc-radius-sm)) var(--tc-radius-sm, var(--_tc-radius-sm));
   background: linear-gradient(to bottom, transparent, var(--tc-tool-call-card-code-bg));
   opacity: 0;
   transition: opacity var(--tc-duration-moderate, var(--_tc-duration-moderate)) var(--tc-ease-standard, var(--_tc-ease-standard));
@@ -1362,7 +1364,7 @@ const css = /* css */ `
   justify-self: start;
   padding: var(--tc-space-0-5, var(--_tc-space-0-5)) var(--tc-space-1, var(--_tc-space-1));
   margin-left: -4px;
-  border-radius: 5px;
+  border-radius: var(--tc-radius-xs, var(--_tc-radius-xs));
   color: var(--tc-text-muted, var(--_tc-text-muted));
   font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm));
   font-weight: var(--tc-font-weight-medium, var(--_tc-font-weight-medium));
@@ -1468,7 +1470,7 @@ const css = /* css */ `
 :where([data-look="standard"], [data-look="standard"] *).ui-tc-group__stack .ui-tc__icon {
   width: 24px;
   height: 24px;
-  border-radius: 7px;
+  border-radius: var(--tc-radius-sm, var(--_tc-radius-sm));
   box-shadow: inset 0 0 0 1px var(--tc-border-default, var(--_tc-border-default)), 0 0 0 2px var(--tc-surface-raised, var(--_tc-surface-raised));
   animation: ui-tc-pop var(--tc-duration-slower, var(--_tc-duration-slower)) var(--tc-ease-move, var(--_tc-ease-move)) both;
 }

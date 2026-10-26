@@ -791,7 +791,7 @@ const css = /* css */ `
   max-width: 100%;
   margin-left: -4px;
   padding: 0 var(--tc-space-1);
-  border-radius: 5px;
+  border-radius: var(--tc-radius-badge);
   font-weight: var(--tc-font-weight-medium);
   color: var(--tc-text-primary);
   outline: none;
@@ -986,7 +986,7 @@ const css = /* css */ `
 :where([data-look="clean"], [data-look="clean"] *).ui-bs__empty { margin: 0; padding: var(--tc-space-3-5); border-bottom: 0.5px solid var(--tc-border-default); color: var(--tc-text-muted); }
 :where([data-look="clean"], [data-look="clean"] *).ui-bs__name { display: flex; align-items: center; gap: var(--tc-space-2); min-width: 0; font-weight: var(--tc-font-weight-medium); color: var(--tc-text-primary); }
 .ui-bs__name-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-:where([data-look="standard"], [data-look="standard"] *).ui-bs__tag { display: grid; place-items: center; width: 22px; height: 22px; flex: none; border-radius: 7px; background: var(--tc-fill-default); color: var(--tc-text-secondary); }
+:where([data-look="standard"], [data-look="standard"] *).ui-bs__tag { display: grid; place-items: center; width: 22px; height: 22px; flex: none; border-radius: var(--tc-radius-sm); background: var(--tc-fill-default); color: var(--tc-text-secondary); }
 :where([data-look="standard"], [data-look="standard"] *).ui-bs__tag svg { width: 13px; height: 13px; }
 :where([data-look="standard"], [data-look="standard"] *).ui-bs__muted { font-size: var(--tc-font-size-md); color: var(--tc-text-muted); white-space: nowrap; }
 :where([data-look="standard"], [data-look="standard"] *).ui-bs__repeat { position: relative; display: inline-flex; align-items: center; gap: var(--tc-space-1-5); color: var(--tc-text-secondary); }
@@ -1005,7 +1005,7 @@ const css = /* css */ `
 :where([data-look="standard"], [data-look="standard"] *).ui-bs__timing:hover { background: var(--tc-fill-hover); }
 /* Under the amount, right-aligned with it (the remove button's slot stays free) */
 :where([data-look="standard"], [data-look="standard"] *).ui-bs__timing { min-height: 24px; margin: 0 var(--tc-space-7) 0 0 !important; padding: 1px var(--tc-space-1) !important; font-size: var(--tc-font-size-sm); color: var(--tc-text-muted) !important; text-align: right; }
-:where([data-look="clean"], [data-look="clean"] *).ui-bs__tag { display: grid; place-items: center; width: 20px; height: 20px; flex: none; border-radius: 5px; background: var(--tc-fill-default); color: var(--tc-icon-muted); }
+:where([data-look="clean"], [data-look="clean"] *).ui-bs__tag { display: grid; place-items: center; width: 20px; height: 20px; flex: none; border-radius: var(--tc-radius-badge); background: var(--tc-fill-default); color: var(--tc-icon-muted); }
 :where([data-look="clean"], [data-look="clean"] *).ui-bs__tag svg { width: 14px; height: 14px; }
 :where([data-look="clean"], [data-look="clean"] *).ui-bs__muted { font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); color: var(--tc-text-muted); white-space: nowrap; }
 :where([data-look="clean"], [data-look="clean"] *).ui-bs__repeat { position: relative; display: inline-flex; align-items: center; gap: var(--tc-space-1); color: var(--tc-icon-muted); }
@@ -1049,7 +1049,7 @@ const css = /* css */ `
   margin-left: var(--tc-space-1) !important;
   padding: 0;
   border: 0;
-  border-radius: 7px;
+  border-radius: var(--tc-radius-sm);
   background: none;
   color: var(--tc-text-muted) !important;
   opacity: 0;
@@ -1060,7 +1060,7 @@ const css = /* css */ `
 :where([data-look="clean"], [data-look="clean"] *).ui-bs__num input {
   height: 24px;
   padding: 0 1px;
-  border-radius: 5px;
+  border-radius: var(--tc-radius-badge);
   outline: none;
   font-weight: var(--tc-font-weight-medium);
   text-align: right;
@@ -1142,7 +1142,7 @@ const css = /* css */ `
 :where([data-look="clean"], [data-look="clean"] *).ui-bs__total em {
   align-self: center;
   padding: var(--tc-space-0-5) var(--tc-space-1-5);
-  border-radius: 5px;
+  border-radius: var(--tc-radius-badge);
   background: var(--tc-accent-subtle);
   font-size: var(--tc-font-size-xs);
   line-height: var(--tc-line-height-tight);

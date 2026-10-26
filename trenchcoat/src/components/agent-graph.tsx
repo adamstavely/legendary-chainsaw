@@ -1836,7 +1836,7 @@ const css = /* css */ `
 .ui-agg__label[data-above] { top: auto; bottom: calc(var(--d) / 2 + 5px); }
 :where([data-look="standard"], [data-look="standard"] *).ui-agg__node[data-kind="agent"] .ui-agg__label { top: calc(var(--d) / 2 + 7px); }
 :where([data-look="standard"], [data-look="standard"] *).ui-agg__node[data-kind="agent"] .ui-agg__label[data-above] { top: auto; bottom: calc(var(--d) / 2 + 7px); }
-:where([data-look="standard"], [data-look="standard"] *).ui-agg__name { font-size: var(--tc-font-size-sm); font-weight: var(--tc-font-weight-medium); line-height: 15px; color: var(--tc-text-muted); }
+:where([data-look="standard"], [data-look="standard"] *).ui-agg__name { font-size: var(--tc-font-size-sm); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-tight); color: var(--tc-text-muted); }
 :where([data-look="standard"], [data-look="standard"] *).ui-agg__node[data-kind="agent"] .ui-agg__name { font-size: var(--tc-font-size-sm); font-weight: var(--tc-font-weight-semibold); color: var(--tc-text-primary); }
 :where([data-look="clean"], [data-look="clean"] *).ui-agg__node[data-kind="agent"] .ui-agg__label { top: calc(var(--d) / 2 + 6px); }
 :where([data-look="clean"], [data-look="clean"] *).ui-agg__node[data-kind="agent"] .ui-agg__label[data-above] { top: auto; bottom: calc(var(--d) / 2 + 6px); }
@@ -1873,8 +1873,8 @@ const css = /* css */ `
 :where([data-look="clean"], [data-look="clean"] *).ui-agg__card-icon > svg { width: 14px; height: 14px; }
 .ui-agg__card-icon[data-kind="user"] { background: var(--tc-agent-graph-user-bg); color: var(--tc-agent-graph-user-fg); box-shadow: none; }
 .ui-agg__card-who { display: grid; flex: 1; min-width: 0; }
-:where([data-look="standard"], [data-look="standard"] *).ui-agg__card-name { overflow: hidden; font-size: var(--tc-font-size-md); font-weight: var(--tc-font-weight-semibold); line-height: 17px; color: var(--tc-text-primary); white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="standard"], [data-look="standard"] *).ui-agg__card-detail { overflow: hidden; font-size: var(--tc-font-size-xs); line-height: 15px; color: var(--tc-text-muted); white-space: nowrap; text-overflow: ellipsis; }
+:where([data-look="standard"], [data-look="standard"] *).ui-agg__card-name { overflow: hidden; font-size: var(--tc-font-size-md); font-weight: var(--tc-font-weight-semibold); line-height: var(--tc-line-height-tight); color: var(--tc-text-primary); white-space: nowrap; text-overflow: ellipsis; }
+:where([data-look="standard"], [data-look="standard"] *).ui-agg__card-detail { overflow: hidden; font-size: var(--tc-font-size-xs); line-height: var(--tc-line-height-tight); color: var(--tc-text-muted); white-space: nowrap; text-overflow: ellipsis; }
 /* The status pill */
 .ui-agg__pill { flex: none; display: inline-flex; align-items: center; min-height: var(--tc-pill-h); padding: 0 var(--tc-pill-px); border-radius: var(--tc-pill-radius); background: var(--tc-fill-default); font-size: var(--tc-pill-font-size); font-weight: var(--tc-pill-font-weight); line-height: var(--tc-line-height-tight); white-space: nowrap; }
 :where([data-look="standard"], [data-look="standard"] *).ui-agg__pill { color: var(--tc-text-muted); }
@@ -1894,7 +1894,7 @@ const css = /* css */ `
 /* Narrow: the numbers wrap to their own line under the title, Pause stays on the first one */
 .ui-agg[data-narrow] .ui-agg__still { margin-left: auto; }
 .ui-agg[data-narrow] .ui-agg__sum { order: 1; }
-:where([data-look="standard"], [data-look="standard"] *).ui-agg__doing { font-size: var(--tc-font-size-sm); line-height: 17px; color: var(--tc-text-muted); }
+:where([data-look="standard"], [data-look="standard"] *).ui-agg__doing { font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); color: var(--tc-text-muted); }
 :where([data-look="standard"], [data-look="standard"] *).ui-agg__calls { display: grid; gap: var(--tc-space-0-5); padding: var(--tc-space-1); border-radius: var(--tc-radius-xl); background: var(--tc-agent-graph-tray-bg); list-style: none; }
 :where([data-look="standard"], [data-look="standard"] *).ui-agg__call { display: flex; align-items: center; gap: var(--tc-space-1-5); min-width: 0; height: 26px; padding: 0 var(--tc-space-1-5); border-radius: var(--tc-radius-md); font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); animation: ui-agg-rise var(--tc-duration-moderate) var(--tc-ease-move) both; }
 :where([data-look="standard"], [data-look="standard"] *).ui-agg__call:first-child { background: var(--tc-agent-graph-card-bg); box-shadow: 0 0 0 1px var(--tc-border-default); }

@@ -1161,7 +1161,7 @@ a.ui-think__source:where([data-look="clean"], [data-look="clean"] *):hover {
   flex: none;
   width: 18px;
   height: 18px;
-  border-radius: 5px;
+  border-radius: var(--tc-radius-xs, var(--_tc-radius-xs));
   overflow: hidden;
 }
 :where([data-look="clean"], [data-look="clean"] *).ui-think__favicon {
