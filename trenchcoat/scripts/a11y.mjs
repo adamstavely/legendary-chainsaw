@@ -5,6 +5,8 @@
 // a scan sees each demo at the same moment. axe covers roughly a third of WCAG – keyboard, focus management and
 // announcements still need the regression tests and a manual pass.
 // A11Y_BROWSER=firefox|webkit scans in that engine (Chromium by default); give parallel runs their own VISUAL_PORT.
+// A11Y_DOCS=1 scans each entry's design-system page instead – the text, tables, tabs and controls around the live
+// example (the stages are scanned by the normal run).
 import { chromium, firefox, webkit } from "@playwright/test";
 import { createServer } from "vite";
 import { readFileSync, writeFileSync } from "node:fs";
@@ -44,7 +46,22 @@ async function scan(name, filter) {
 
   /** results[entry][file][theme] = [{ rule, impact, help, nodes: [target…] }] */
   const results = {};
+  const checkDocs = async (id) => {
+    const page = await context.newPage();
+    await page.goto(`http://localhost:${PORT}/#/${id}`);
+    const documented = await page.waitForSelector("#docs-accessibility", { timeout: 15000 }).then(() => true, () => false);
+    if (!documented) return page.close();
+    await page.waitForTimeout(800);
+    await page.addScriptTag({ content: AXE });
+    const list = await page.evaluate(async (tags) => {
+      const { violations } = await window.axe.run({ include: [".docs-body"], exclude: [".stage"] }, { runOnly: { type: "tag", values: tags } });
+      return violations.map((v) => ({ rule: v.id, impact: v.impact, help: v.help, nodes: v.nodes.map((n) => n.target.join(" ")) }));
+    }, TAGS);
+    results[id] = { [`docs/${id}`]: { light: list } };
+    await page.close();
+  };
   const check = async (id) => {
+    if (process.env.A11Y_DOCS) return checkDocs(id);
     const page = await context.newPage();
     await page.clock.install({ time: new Date("2026-10-24T12:00:00Z") });
     await page.goto(`http://localhost:${PORT}/#/${id}`);

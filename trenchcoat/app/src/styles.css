@@ -6,7 +6,7 @@
   --bg: #f6f6f4;
   --panel: #ffffff;
   --ink: #18181b;
-  --muted: #71717a;
+  --muted: #5f5f67; /* 5.5:1 on --bg: the gallery's own small text meets 4.5:1 */
   --line: #e4e4e7;
   --accent: #4f46e5;
   --stage: #fafaf9;
