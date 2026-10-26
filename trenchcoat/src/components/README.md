@@ -14,21 +14,28 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Agent Steering** (`agent-steering.tsx`) – Steer an agent while it works – queue a note for the next step and watch it glide into the plan when the agent picks it up, or interrupt right away
 - **Agent Tree** (`agent-tree.tsx`) – Who started whom – an orchestrator and its sub-agents as a live tree, with status, cost and time on every card, costs rolling up each branch, and branches that fold to one line
 - **AI Answer** (`ai-answer.tsx`) – Streamed answer with source cards, citation chips that preview their source, copy, regenerate, feedback and follow-ups
+- **Answer Arena** (`answer-arena.tsx`) – Two models answer the same prompt side by side, streaming together – then A is better, B is better or a tie, with a reason
 - **Approval Card** (`approval-card.tsx`) – An agent asks before it acts – risk badge, preview, Approve and Deny with shortcuts, a pausing countdown, and a smooth morph into a resolved row
+- **Artifact Panel** (`artifact-panel.tsx`) – Everything a run produced in one place – files, code, documents and images with a preview for each, versions you can diff, and download
 - **Autonomy Dial** (`autonomy-dial.tsx`) – How much an agent may do on its own – a three-stop dial, and its real actions gliding between “Runs on its own” and “Asks you first”, with a lock for what always asks
 - **Billing Schedule** (`billing-schedule.tsx`) – Build a billing phase – start date, duration, products with repeats and timing, discount, minimum and live totals
 - **Breakdown Chart** (`breakdown-chart.tsx`) – Stacked bar chart with measure, slice and segment pickers, a hover breakdown and a linked table
+- **Budget Guard** (`budget-guard.tsx`) – Spend and token limits for a live run – progress against the cap, a warning as it nears it, a hard stop at it, and raising the cap right from the warning
 - **Button** (`button.tsx`) – Primary, secondary, ghost and destructive buttons with icons, sizes and a shimmering loading state
 - **Change Summary** (`change-summary.tsx`) – What moved since last time – one metric per row with a colored trend
 - **Chat Composer** (`chat-composer.tsx`) – Prompt composer with model picker, voice input, app connections and approval request
+- **Chat History** (`chat-history.tsx`) – Your conversations, grouped by date – search, pin, folders, rename and delete with undo, smooth with thousands of chats
 - **Cited Answer** (`cited-answer.tsx`) – An AI answer wired to its sources – point at a citation to light up its sentence and source, click to unfold the quoted passage with the matching words marked
+- **Code Block** (`code-block.tsx`) – Code that streams in with syntax colours from the theme – Copy, Apply, and a diff against the current file before you apply it
 - **Combobox** (`combobox.tsx`) – Pick one or many from a searchable, grouped list – chips with avatars, highlighted matches, create-on-the-fly and full keyboard support
 - **Command Menu** (`command-menu.tsx`) – Search and run anything from one field – tool actions with logos and ⌘1–⌘5, everyday commands with icons
 - **Comment Thread** (`comment-thread.tsx`) – One comment with replies – an assistant reports what it did, folds open details and answers @mentions
 - **Comments Panel** (`comments-panel.tsx`) – Comment feed with filters, runnable /edit commands, resolve and a composer
 - **Compact Breakdown** (`compact-breakdown.tsx`) – A total split into its parts in one small card – numbers roll, the bar glides and the ranked rows trade places when the period changes
 - **Context Map** (`context-map.tsx`) – What fills an agent's context window, as a living treemap – system prompt, tools, memory, every file, the chat and tool results as tiles that glide as it grows, the free space dashed, and compaction squeezing old turns into a summary
+- **Context Tray** (`context-tray.tsx`) – What the model can see, as chips – files, @-mentions and sources, each with its token weight; pin or remove them and watch the total against the window
 - **Context Window** (`context-window.tsx`) – What fills the model's context, as a field of cells – hover a part to light it up, remove files, and compact the conversation while its cells shimmer and clear
+- **Conversation Branches** (`conversation-branches.tsx`) – Edit a past message and the conversation forks – a 2 / 3 switcher on the edited message, and each branch's replies below it
 - **Data Table** (`data-table.tsx`) – Spreadsheet-style table: select cells and ranges, edit in place, copy and paste, undo and sort
 - **Date Range Picker** (`date-range-picker.tsx`) – Presets and two calendars with a hover preview, comparison with the previous period or year, full keyboard control
 - **Decision Inbox** (`decision-inbox.tsx`) – Open decisions with two quick answers each – answered ones confirm and fold away
@@ -39,11 +46,15 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Experiment Card** (`experiment-card.tsx`) – An A/B test in two lines that quietly unfolds on hover – variants linked to a tiny chart, a metric switch with rolling numbers, and a winner you pick with a click
 - **Fan-out Grid** (`fan-out-grid.tsx`) – One agent hands a big job to many workers – every task a cell on a live grid that fills in as they get through it, with retries, failures, cost and the time left, and the details of any task on hover
 - **Filter Menu** (`filter-menu.tsx`) – Grouped filters with removable chips, collapsible checkbox groups, Clear all and full keyboard control
+- **Handoff** (`handoff.tsx`) – The agent hands the task to you mid-run – what it did, why it stopped and what it needs – and takes it back when you're done
+- **Image Grid** (`image-grid.tsx`) – Generated images as a grid of variations – upscale, regenerate one tile, compare two, download, and alt text for every image
 - **Inline Diff** (`inline-diff.tsx`) – AI edits to prose shown inline – struck and added words you accept or reject one by one, with keys, a popover and undo
 - **Integration Picker** (`integration-picker.tsx`) – Integrations page of a command menu – search, a list of services and the picked one with its connection on two tiles
 - **Integration Settings** (`integration-settings.tsx`) – Settings card for a connected service – on/off switch, API key, validated site address, time zone and a save bar
 - **KPI Chart** (`kpi-chart.tsx`) – Metric card with a multi-line chart and a tooltip that follows the pointer
+- **Live View** (`live-view.tsx`) – Watch the agent's screen as it works – its clicks and typing drawn on top, a caption for each step, and Pause or Take over at any moment
 - **Memory Panel** (`memory-panel.tsx`) – What the assistant remembers about you, grouped and editable – a master switch, category filters, and on every memory edit in place, pause or forget with Undo on the tray
+- **Mention Picker** (`mention-picker.tsx`) – The / and @ picker inside a composer – grouped results, arrow keys and Enter, and the pick lands as a chip
 - **Message Actions** (`message-actions.tsx`) – The quiet bar under an AI message – copy turns into a check, regenerate spins and unfolds a version switcher, thumbs pop and ask why, read aloud becomes a tiny equalizer
 - **Model Picker** (`model-picker.tsx`) – The model menu of an AI chat – point at a model and its speed, quality and cost bars fill, switch on extended thinking and its effort unfolds, while the tray rolls the first-token time and price
 - **Notification Stack** (`notification-stack.tsx`) – Notice cards stacked behind each other – dismiss the front one to reveal the next
@@ -57,6 +68,9 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Prompt Library** (`prompt-library.tsx`) – Saved prompt templates with variables – type straight into the sentence, watch the finished prompt assemble below, and use it once every variable is filled
 - **Reaction Bar** (`reaction-bar.tsx`) – Like, comment, repost and share in one pill – icons pop and fill, counts roll in digit by digit
 - **Review Center** (`review-center.tsx`) – A focused workspace for what your agents want to do – the queue sorted by risk, one item at a time with the shaky spans marked, Approve, Edit, Reject and Skip on single keys, a stamp as each one leaves and the next one rising in
+- **Run Checkpoints** (`run-checkpoints.tsx`) – A run's restore points on a timeline – what each one captured, what going back discards, and “go back to step 4 and try again”
+- **Run Compare** (`run-compare.tsx`) – Two runs or two prompt versions side by side – outputs, steps, cost and time, with every difference highlighted
+- **Sandbox Log** (`sandbox-log.tsx`) – Command output from the agent's sandbox – a block per step with the command, exit code and time, streaming text in colour, copy and search, fast with long logs
 - **Segmented Control** (`segmented-control.tsx`) – Switch between two to six options – a raised pill or underline that glides, stretches a little and can be dragged across, with icons, counts and badges
 - **Setup Guide** (`setup-guide.tsx`) – Onboarding panel with a progress bar and collapsible task groups that strike through when done
 - **Smart Recommendation** (`smart-recommendation.tsx`) – Suggestion card with a confidence signal, alternatives to switch to and accept with undo
@@ -66,8 +80,11 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Tips Panel** (`tips-panel.tsx`) – Grid of short tips with one action each – taken tips turn into a done state
 - **Toaster** (`toaster.tsx`) – Calm toasts from anywhere – a stack that fans out on hover, promise toasts that morph from spinner to check, swipe to dismiss
 - **Tool Call Card** (`tool-call-card.tsx`) – An agent's tool call in one line – live timer, status and summary, folds open to highlighted arguments and result with copy, retry on errors and a group that sums them up
+- **Tool Permissions** (`tool-permissions.tsx`) – Which agent may use which tools – allow, ask or deny per cell, presets for the common setups, and a summary of what you changed
 - **Trace Waterfall** (`trace-waterfall.tsx`) – Where the time and money of an agent run go – every LLM call, tool call and sub-agent as a bar on a live timeline, with tokens and cost per step, the slowest call marked and branches that fold into their parent
+- **Trigger Builder** (`trigger-builder.tsx`) – “Run when X happens, or every Monday at 9” – an event or a schedule, conditions, a plain-language summary and the next run times
 - **Usage Meter** (`usage-meter.tsx`) – Plan usage and AI credits – a stacked credits meter by category, daily sparkline, limits and a button that speaks up near the limit
+- **Voice Mode** (`voice-mode.tsx`) – A spoken conversation with the model – live transcript, listening and speaking states, interrupt, mute and end, with captions for every turn
 - **Writing Assistant** (`writing-assistant.tsx`) – AI chat card with a soft gradient glow, suggestions, streaming replies and live voice dictation
 
 Live previews: run `npm run dev` and open the gallery.
