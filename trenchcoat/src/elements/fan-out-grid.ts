@@ -5,6 +5,7 @@ import { keyed } from "lit/directives/keyed.js";
 import { repeat } from "lit/directives/repeat.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
+import { dollars, duration as took } from "./internal/format";
 import { FocusRescueController, OnScreenController } from "./internal/controllers";
 
 /*
@@ -51,13 +52,6 @@ const ORDER: FanoutStatus[] = ["done", "running", "retrying", "failed", "queued"
 const SHOWN: FanoutStatus[] = ["done", "running", "retrying", "failed"];
 const LABEL: Record<FanoutStatus, string> = { queued: "Queued", running: "Running", retrying: "Retrying", done: "Done", failed: "Failed" };
 const SEC = 1000;
-const dollars = (n: number) => (n === 0 ? "$0" : n < 0.01 ? `$${n.toFixed(3)}` : n < 100 ? `$${n.toFixed(2)}` : `$${Math.round(n).toLocaleString("en-US")}`);
-const took = (ms: number) => {
-  if (ms < SEC) return `${Math.max(0, Math.round(ms))}ms`;
-  if (ms < 10 * SEC) return `${(ms / SEC).toFixed(1)}s`;
-  const s = Math.round(ms / SEC);
-  return s < 60 ? `${s}s` : `${Math.floor(s / 60)}m ${String(s % 60).padStart(2, "0")}s`;
-};
 
 /* A small fan-out mark for the title (drawn for Trenchcoat) */
 const fanMark = html`<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">${svg`

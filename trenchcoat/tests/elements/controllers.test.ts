@@ -129,5 +129,18 @@ describe("controllers", () => {
     d.focus();
     expect(d.tabIndex).toBe(0);
   });
+
+  test("ToolbarController: aria-disabled items stay reachable (only native disabled is skipped)", async () => {
+    let ctl!: ToolbarController;
+    const el = define(
+      (h) => (ctl = new ToolbarController(h, { items: () => [...h.querySelectorAll<HTMLButtonElement>("button")], orientation: "both" })),
+      () => html`<div role="toolbar" @keydown=${(e: KeyboardEvent) => ctl.onKeyDown(e)}><button>A</button><button aria-disabled="true">B</button></div>`,
+    );
+    await settle();
+    const [a, b] = [...el.querySelectorAll<HTMLButtonElement>("button")];
+    a.focus();
+    a.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true, cancelable: true }));
+    expect(document.activeElement).toBe(b);
+  });
 });
 

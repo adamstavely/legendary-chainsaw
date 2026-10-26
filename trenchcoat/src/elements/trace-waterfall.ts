@@ -5,6 +5,7 @@ import { repeat } from "lit/directives/repeat.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { reducedMotion } from "../internal/reduced-motion";
 import { TcElement } from "./internal/base";
+import { duration as took } from "./internal/format";
 import { FocusRescueController, OnScreenController, RowWindowController, rescueFocus } from "./internal/controllers";
 
 /*
@@ -79,12 +80,6 @@ const SHINE_MAX = 20;
 
 const INTEGER = new Intl.NumberFormat("en-US");
 const dollars = (n: number) => (n === 0 ? "$0" : n < 0.01 ? `$${n.toFixed(3)}` : n < 10 ? `$${n.toFixed(2)}` : `$${INTEGER.format(Math.round(n))}`);
-const took = (ms: number) => {
-  if (ms < SEC) return `${Math.max(0, Math.round(ms))}ms`;
-  if (ms < 10 * SEC) return `${(ms / SEC).toFixed(1)}s`;
-  const s = Math.round(ms / SEC);
-  return s < 60 ? `${s}s` : `${Math.floor(s / 60)}m ${String(s % 60).padStart(2, "0")}s`;
-};
 const tickLabel = (v: number) => {
   const s = Math.round(v / SEC);
   if (s < 60) return `${s}s`;

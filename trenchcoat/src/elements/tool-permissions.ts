@@ -4,6 +4,7 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
 import { FocusRescueController } from "./internal/controllers";
+import { isMac } from "./internal/util";
 
 /*
  * <tc-tool-permissions> – which agent may use which tools, set up ahead of time: a matrix of tools and their scopes
@@ -80,10 +81,6 @@ const initials = (name: string) =>
     .slice(0, 2)
     .toUpperCase();
 const clone = (node: Element | undefined) => node?.cloneNode(true);
-const isMac = () => {
-  const p = (navigator as Navigator & { userAgentData?: { platform?: string } }).userAgentData?.platform;
-  return /mac|iphone|ipad|ipod/i.test(p || navigator.userAgent);
-};
 let uidCount = 0;
 
 /* Allow, ask and deny – check, circle-help and ban: Lucide (ISC, lucide.dev) */

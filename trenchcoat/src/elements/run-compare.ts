@@ -2,6 +2,7 @@ import { html, nothing, svg, type PropertyValues, type TemplateResult } from "li
 import { property, state } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { TcElement } from "./internal/base";
+import { compact as count, dollars, duration as took } from "./internal/format";
 import { diffWords, type DiffSegment } from "./inline-diff";
 
 /*
@@ -90,15 +91,6 @@ export function alignRunSteps(a: RunCompareStep[], b: RunCompareStep[]): RunComp
   return rows;
 }
 
-const SEC = 1000;
-const dollars = (n: number) => (n === 0 ? "$0" : n < 0.01 ? `$${n.toFixed(3)}` : n < 100 ? `$${n.toFixed(2)}` : `$${Math.round(n).toLocaleString("en-US")}`);
-const took = (ms: number) => {
-  if (ms < SEC) return `${Math.max(0, Math.round(ms))}ms`;
-  if (ms < 10 * SEC) return `${(ms / SEC).toFixed(1)}s`;
-  const s = Math.round(ms / SEC);
-  return s < 60 ? `${s}s` : `${Math.floor(s / 60)}m ${String(s % 60).padStart(2, "0")}s`;
-};
-const count = (n: number) => (n < 1000 ? String(n) : n < 10_000 ? `${(n / 1000).toFixed(1)}k` : `${Math.round(n / 1000)}k`);
 const changes = (segs: DiffSegment[]) => segs.reduce((k, s) => k + (s.type === "change" ? 1 : 0), 0);
 const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
 const VIEWS: Record<RunCompareView, string> = { output: "Output", steps: "Steps", prompt: "Prompt" };

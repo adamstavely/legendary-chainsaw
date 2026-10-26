@@ -429,10 +429,11 @@ export class RollingController implements ReactiveController {
 /* ---------- Toolbar (WAI-ARIA toolbar: one tab stop, arrows move) ---------- */
 
 export type ToolbarOptions = {
-  /** The toolbar's buttons, in order (disabled ones are skipped) */
+  /** The toolbar's buttons, in order. Natively disabled ones are skipped; aria-disabled ones stay reachable (the
+   *  WAI-ARIA toolbar keeps disabled items focusable so people can find them) */
   items: () => HTMLElement[];
-  /** "horizontal" (← →, the default) or "vertical" (↑ ↓) */
-  orientation?: "horizontal" | "vertical";
+  /** "horizontal" (← →, the default), "vertical" (↑ ↓) or "both" */
+  orientation?: "horizontal" | "vertical" | "both";
   /** Wrap from the last item to the first and back (default true) */
   wrap?: boolean;
 };
@@ -455,7 +456,7 @@ export class ToolbarController implements ReactiveController {
   }
 
   private enabled() {
-    return this.options.items().filter((el) => !(el as HTMLButtonElement).disabled && el.getAttribute("aria-disabled") !== "true");
+    return this.options.items().filter((el) => !(el as HTMLButtonElement).disabled);
   }
 
   hostUpdated() {
@@ -472,14 +473,14 @@ export class ToolbarController implements ReactiveController {
     const enabled = this.enabled();
     const at = enabled.indexOf(e.target as HTMLElement);
     if (at < 0) return;
-    const vertical = this.options.orientation === "vertical";
+    const o = this.options.orientation ?? "horizontal";
     const wrap = this.options.wrap !== false;
-    const next = vertical ? "ArrowDown" : "ArrowRight";
-    const prev = vertical ? "ArrowUp" : "ArrowLeft";
+    const isNext = (o !== "vertical" && e.key === "ArrowRight") || (o !== "horizontal" && e.key === "ArrowDown");
+    const isPrev = (o !== "vertical" && e.key === "ArrowLeft") || (o !== "horizontal" && e.key === "ArrowUp");
     const last = enabled.length - 1;
     const to =
-      e.key === next ? (at === last ? (wrap ? 0 : last) : at + 1)
-      : e.key === prev ? (at === 0 ? (wrap ? last : 0) : at - 1)
+      isNext ? (at === last ? (wrap ? 0 : last) : at + 1)
+      : isPrev ? (at === 0 ? (wrap ? last : 0) : at - 1)
       : e.key === "Home" ? 0
       : e.key === "End" ? last
       : -1;

@@ -12,7 +12,8 @@ Part 4's pages were – in the same pass, so it ships with its page:
 ## What's new since Part 3 – use it, don't copy it
 
 - **Shared helpers** in `src/elements/internal/`:
-  - `controllers.ts` `ToolbarController` – the WAI-ARIA toolbar (one tab stop, arrows, Home/End, skips disabled).
+  - `controllers.ts` `ToolbarController` – the WAI-ARIA toolbar: one tab stop, arrows (`orientation` horizontal,
+    vertical or both), Home/End; natively disabled buttons are skipped, aria-disabled ones stay reachable.
     Wire `onKeyDown` / `onFocusIn` to the toolbar element; don't bind tabindex in the template.
   - `util.ts` – `initials()`, `copyText()`, `tokenMs()`, `isMac()`, `textCaret()`.
   - `format.ts` – `duration()` (420ms · 3.4s · 2m 05s), `dollars()`, `compact()` (3.4k).

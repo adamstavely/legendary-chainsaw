@@ -7,6 +7,7 @@ import { styleMap } from "lit/directives/style-map.js";
 import { reducedMotion } from "../internal/reduced-motion";
 import { TcElement } from "./internal/base";
 import { AriaForwardController } from "./internal/controllers";
+import { initials } from "./internal/util";
 
 /*
  * <tc-combobox> – the Lit port of src/components/combobox.tsx (pilot component, audit/lit-port-plan.md).
@@ -68,11 +69,6 @@ const icons = {
   plus: "M12 6v12M6 12h12",
 };
 const glyph = (d: string, cls = "") => html`<svg viewBox="0 0 24 24" class=${`ui-cbx__glyph ${cls}`.trim()} aria-hidden="true">${svg`<path d=${d}></path>`}</svg>`;
-
-const initials = (label: string) => {
-  const words = label.trim().split(/\s+/);
-  return ((words[0]?.[0] ?? "") + (words.length > 1 ? words[words.length - 1][0] : "")).toUpperCase();
-};
 
 /** The typed text, marked where it matches */
 function highlight(text: string, query: string): TemplateResult {

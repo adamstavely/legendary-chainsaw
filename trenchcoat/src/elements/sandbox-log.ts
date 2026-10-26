@@ -7,6 +7,7 @@ import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
 import { FocusRescueController, RowWindowController } from "./internal/controllers";
 import type { Look } from "./internal/look";
+import { copyText } from "./internal/util";
 
 /*
  * <tc-sandbox-log> – command output from an agent's sandbox. One collapsible block per step: the command in mono, its
@@ -227,23 +228,6 @@ function formatMs(ms: number) {
 }
 const statusOf = (s: SandboxLogStep): SandboxLogStatus => s.status ?? (s.exitCode == null ? "running" : s.exitCode === 0 ? "success" : "error");
 const plural = (n: number, one: string, many = `${one}s`) => `${n.toLocaleString("en-US")} ${n === 1 ? one : many}`;
-
-async function copyText(text: string) {
-  try {
-    await navigator.clipboard.writeText(text);
-    return true;
-  } catch {
-    // Older browsers and non-secure contexts
-    const area = document.createElement("textarea");
-    area.value = text;
-    area.style.cssText = "position:fixed;opacity:0";
-    document.body.appendChild(area);
-    area.select();
-    const ok = document.execCommand("copy");
-    area.remove();
-    return ok;
-  }
-}
 
 /* ---------- Icons ---------- */
 

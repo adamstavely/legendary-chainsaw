@@ -4,6 +4,7 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { keyed } from "lit/directives/keyed.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
+import { dollars, duration as tookText } from "./internal/format";
 import { OffScreenController } from "./internal/controllers";
 
 /*
@@ -46,14 +47,6 @@ export type ParallelAttempt = {
 /** The detail of tc-picked-change: the attempt now in use, and whether it was the best one taken on its own */
 export type ParallelAttemptPick = { picked: string; attempt: ParallelAttempt; auto: boolean };
 
-const SEC = 1000;
-const dollars = (n: number) => (n === 0 ? "$0" : n < 0.01 ? `$${n.toFixed(3)}` : n < 100 ? `$${n.toFixed(2)}` : `$${Math.round(n).toLocaleString("en-US")}`);
-const tookText = (ms: number) => {
-  if (ms < SEC) return `${Math.max(0, Math.round(ms))}ms`;
-  if (ms < 10 * SEC) return `${(ms / SEC).toFixed(1)}s`;
-  const s = Math.round(ms / SEC);
-  return s < 60 ? `${s}s` : `${Math.floor(s / 60)}m ${String(s % 60).padStart(2, "0")}s`;
-};
 const STATUS: Record<ParallelAttemptStatus, string> = { running: "Running", done: "Done", failed: "Failed" };
 
 /* Three lanes and a finish mark for the title (drawn for Trenchcoat) */

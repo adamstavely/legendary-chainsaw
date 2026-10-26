@@ -8,6 +8,7 @@ import { TcElement } from "./internal/base";
 import { FocusRescueController, rescueFocus } from "./internal/controllers";
 import type { Look } from "./internal/look";
 import { adoptStyles } from "./internal/styles";
+import { copyText } from "./internal/util";
 
 /*
  * <tc-tool-call-card> and <tc-tool-call-group> – the Lit port of src/components/tool-call-card.tsx: one tool call of
@@ -88,23 +89,6 @@ function highlight(text: string): Array<TemplateResult | string> {
   }
   if (last < text.length) out.push(text.slice(last));
   return out;
-}
-
-async function copyText(text: string) {
-  try {
-    await navigator.clipboard.writeText(text);
-    return true;
-  } catch {
-    // Older browsers and non-secure contexts
-    const area = document.createElement("textarea");
-    area.value = text;
-    area.style.cssText = "position:fixed;opacity:0";
-    document.body.appendChild(area);
-    area.select();
-    const ok = document.execCommand("copy");
-    area.remove();
-    return ok;
-  }
 }
 
 /* ---------- Icons ---------- */

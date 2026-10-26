@@ -5,6 +5,7 @@ import { live } from "lit/directives/live.js";
 import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
 import { FocusRescueController, rescueFocus } from "./internal/controllers";
+import { isMac, tokenMs } from "./internal/util";
 
 /*
  * <tc-handoff> – the agent hands the task to a person mid-run, with the context it has, and takes it back when
@@ -50,16 +51,6 @@ const initials = (name: string) =>
     .toUpperCase();
 const clone = (node: Element | undefined) => node?.cloneNode(true);
 const reducedMotion = () => typeof window !== "undefined" && !!window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-/** A duration token in ms, read from the element's computed style */
-const tokenMs = (el: Element, name: string, fallback: number) => {
-  const v = getComputedStyle(el).getPropertyValue(name).trim();
-  const n = parseFloat(v);
-  return Number.isFinite(n) ? (v.endsWith("ms") ? n : n * 1000) : fallback;
-};
-const isMac = () => {
-  const p = (navigator as Navigator & { userAgentData?: { platform?: string } }).userAgentData?.platform;
-  return /mac|iphone|ipad|ipod/i.test(p || navigator.userAgent);
-};
 let uidCount = 0;
 
 /* Hand, check, circle-check, undo and dot – hand, check, circle-check, undo-2: Lucide (ISC, lucide.dev) */

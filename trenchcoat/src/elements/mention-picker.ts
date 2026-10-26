@@ -4,6 +4,7 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { keyed } from "lit/directives/keyed.js";
 import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
+import { initials, textCaret } from "./internal/util";
 
 /*
  * <tc-mention-picker> – the / and @ picker inside a composer. It attaches to a text field the app owns (a <textarea>,
@@ -78,11 +79,6 @@ const EDGE = 8;
 
 const isText = (f: Field): f is HTMLTextAreaElement | HTMLInputElement => f instanceof HTMLTextAreaElement || f instanceof HTMLInputElement;
 
-const initials = (label: string) => {
-  const words = label.trim().split(/\s+/);
-  return ((words[0]?.[0] ?? "") + (words.length > 1 ? words[words.length - 1][0] : "")).toUpperCase();
-};
-
 /** The typed text, marked where it matches */
 const highlight = (text: string, query: string): TemplateResult | string => {
   const i = query ? text.toLowerCase().indexOf(query.toLowerCase()) : -1;
@@ -99,32 +95,6 @@ const score = (item: MentionPickerItem, q: string) => {
   if (label.includes(q)) return 2;
   return `${item.hint ?? ""} ${item.keywords ?? ""}`.toLowerCase().includes(q) ? 1 : 0;
 };
-
-/** Where character `index` of a textarea / input sits on screen: a hidden copy of the field with the same box and type */
-const MIRRORED = [
-  "boxSizing", "width", "borderTopWidth", "borderRightWidth", "borderBottomWidth", "borderLeftWidth", "borderStyle",
-  "paddingTop", "paddingRight", "paddingBottom", "paddingLeft", "fontStyle", "fontVariant", "fontWeight", "fontStretch",
-  "fontSize", "lineHeight", "fontFamily", "textAlign", "textTransform", "textIndent", "letterSpacing", "wordSpacing", "tabSize",
-] as const;
-function textCaret(field: HTMLTextAreaElement | HTMLInputElement, index: number) {
-  const doc = field.ownerDocument;
-  const style = getComputedStyle(field);
-  const copy = doc.createElement("div");
-  for (const p of MIRRORED) copy.style[p] = style[p];
-  Object.assign(copy.style, { position: "absolute", top: "0", left: "-9999px", visibility: "hidden", overflow: "hidden", whiteSpace: field instanceof HTMLInputElement ? "pre" : "pre-wrap", overflowWrap: "break-word" });
-  copy.textContent = field.value.slice(0, index);
-  const mark = doc.createElement("span");
-  mark.textContent = field.value.slice(index, index + 1) || ".";
-  copy.append(mark);
-  doc.body.append(copy);
-  const box = copy.getBoundingClientRect();
-  const at = mark.getClientRects()[0] ?? mark.getBoundingClientRect();
-  copy.remove();
-  const r = field.getBoundingClientRect();
-  const left = r.left + at.left - box.left - field.scrollLeft;
-  const top = r.top + at.top - box.top - field.scrollTop;
-  return { left, top, bottom: top + at.height };
-}
 
 /* Glyphs: Standard draws 24px-grid icons with 1.8px strokes, Clean the same paths thinner */
 const spinner = html`<span class="ui-mnp__spinner" aria-hidden="true"></span>`;
