@@ -111,6 +111,7 @@ export * from "./react/toaster";
 export * from "./react/tool-call-card";
 export * from "./react/tool-permissions";
 export * from "./react/trace-waterfall";
+export * from "./react/trigger-builder";
 export * from "./react/usage-meter";
 export * from "./react/voice-orb";
 export * from "./react/world-map";

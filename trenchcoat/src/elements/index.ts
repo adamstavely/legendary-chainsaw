@@ -100,6 +100,7 @@ export * from "./toaster";
 export * from "./tool-call-card";
 export * from "./tool-permissions";
 export * from "./trace-waterfall";
+export * from "./trigger-builder";
 export * from "./usage-meter";
 export * from "./voice-orb";
 export * from "./world-map";
