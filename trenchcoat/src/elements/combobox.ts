@@ -386,6 +386,8 @@ export class TcCombobox extends TcElement {
 
   /** The form gets one entry per picked value; `required` is checked by the browser, pointing at the input */
   private syncForm() {
+    // Environments without form-associated custom elements (jsdom) skip it; every supported browser has it
+    if (typeof this.internals.setFormValue !== "function") return;
     const disabled = this.isDisabled;
     if (this.name && !disabled) {
       const data = new FormData();
@@ -400,7 +402,7 @@ export class TcCombobox extends TcElement {
   private labelInput() {
     const input = this.input;
     if (!input || this.label || input.hasAttribute("aria-label")) return;
-    const labels = [...(this.internals.labels as NodeListOf<HTMLLabelElement>)];
+    const labels = [...((this.internals.labels as NodeListOf<HTMLLabelElement> | undefined) ?? [])];
     if (!labels.length) return;
     labels.forEach((l, i) => (l.id ||= `${this.uid}-for${i}`));
     input.setAttribute("aria-labelledby", labels.map((l) => l.id).join(" "));

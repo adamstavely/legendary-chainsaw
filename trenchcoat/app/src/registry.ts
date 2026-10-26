@@ -1,6 +1,11 @@
 import type { ComponentType } from "react";
 import componentsReadme from "../../src/components/README.md?raw";
 import cleanTwins from "virtual:tc-clean";
+
+// Components ported to Lit (src/elements/<slug>.ts): their demos get the React wrappers – the same API – and the
+// stage's look comes from a look provider, so both looks load the same module
+const litPorts = new Set(Object.keys(import.meta.glob("../../src/elements/*.ts")).map((p) => p.match(/([^/]+)\.ts$/)![1]).filter((s) => s !== "index" && s !== "react"));
+const loadWrappers = () => import("../../src/elements/react");
 import blocksReadme from "../../blocks/README.md?raw";
 import screensReadme from "../../screens/README.md?raw";
 import illustrationsReadme from "../../illustrations/README.md?raw";
@@ -139,7 +144,10 @@ function build(lib: Library): Entry[] {
     };
     entry.files[variant] = `${file}.tsx`;
     entry.load[variant] = moduleFor(file);
-    if (lib.key === "components" && !cleanOnly && cleanTwins[slug]) {
+    if (lib.key === "components" && litPorts.has(slug)) {
+      entry.files = { standard: `elements/${slug}.ts`, clean: `elements/${slug}.ts · look="clean"` };
+      entry.load = { standard: loadWrappers, clean: loadWrappers };
+    } else if (lib.key === "components" && !cleanOnly && cleanTwins[slug]) {
       entry.files.clean = `${file}.tsx · look="clean"`;
       entry.load.clean = cleanTwins[slug];
     }

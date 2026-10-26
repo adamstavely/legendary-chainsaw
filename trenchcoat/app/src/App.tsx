@@ -1,4 +1,5 @@
 import { Component, createContext, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { LookProvider } from "../../src/elements/react";
 import { CATEGORIES, ENTRIES, LIBRARY_INFO, type Entry, type LibraryInfo, type Variant } from "./registry";
 
 type Mode = Variant | "both";
@@ -6,6 +7,7 @@ type Theme = "light" | "dark" | "system";
 
 const THEMES: Theme[] = ["light", "dark", "system"];
 const THEME_KEY = "trenchcoat-gallery-theme";
+const LOOK_KEY = "trenchcoat-gallery-look";
 /** The stages' theme – set as data-tc-theme, the mechanism tokens.css documents (chrome stays light) */
 const ThemeContext = createContext<Theme>("light");
 
@@ -26,6 +28,29 @@ function useStoredTheme() {
     }
   }, [theme]);
   return [theme, setTheme] as const;
+}
+
+/** The Standard / Clean / Both switch: ?look=clean in the URL wins on load, then the viewer's last choice */
+function useStoredMode() {
+  const modes: Mode[] = ["standard", "clean", "both"];
+  const [mode, setMode] = useState<Mode>(() => {
+    const fromUrl = new URLSearchParams(location.search).get("look") as Mode | null;
+    if (fromUrl && modes.includes(fromUrl)) return fromUrl;
+    try {
+      const saved = localStorage.getItem(LOOK_KEY) as Mode | null;
+      return saved && modes.includes(saved) ? saved : "both";
+    } catch {
+      return "both";
+    }
+  });
+  useEffect(() => {
+    try {
+      localStorage.setItem(LOOK_KEY, mode);
+    } catch {
+      // storage unavailable – the choice just isn't remembered
+    }
+  }, [mode]);
+  return [mode, setMode] as const;
 }
 
 function useHash() {
@@ -51,7 +76,7 @@ function grouped(list: Entry[]) {
 
 export function App() {
   const [query, setQuery] = useState("");
-  const [mode, setMode] = useState<Mode>("both");
+  const [mode, setMode] = useStoredMode();
   const [theme, setTheme] = useStoredTheme();
   const route = useHash();
   const focused = ENTRIES.find((e) => e.id === route);
@@ -81,7 +106,7 @@ export function App() {
         <div className="spacer" />
         <input className="search" type="search" placeholder="Search everything…" value={query} onChange={(e) => setQuery(e.target.value)} />
         {showVariant && (
-          <div className="seg" role="radiogroup" aria-label="Variant">
+          <div className="seg" role="radiogroup" aria-label="Look">
             {(["standard", "clean", "both"] as Mode[]).map((m) => (
               <button key={m} role="radio" aria-checked={mode === m} className={mode === m ? "on" : ""} onClick={() => setMode(m)}>
                 {m === "both" ? "Both" : m[0].toUpperCase() + m.slice(1)}
@@ -439,7 +464,10 @@ function LazyStage({ entry, variant, eager }: { entry: Entry; variant: Variant; 
         <div className="placeholder">No demo written for this component yet.</div>
       ) : near && mod ? (
         <Boundary>
-          <Demo ui={mod} />
+          {/* Lit elements take the stage's look from this provider; React components still load their look's twin */}
+          <LookProvider look={variant}>
+            <Demo ui={mod} />
+          </LookProvider>
         </Boundary>
       ) : (
         <div className="placeholder">Loading…</div>
