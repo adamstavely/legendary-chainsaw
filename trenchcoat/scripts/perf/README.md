@@ -16,4 +16,4 @@ there. The repo root is the default for scripts that take one.
 | `bench/anims-all.mjs` | Infinite CSS animations still running off-screen | `node ../scripts/perf/bench/anims-all.mjs` |
 | `bench/leak.mjs`, `leak2.mjs` | Listeners, observers, timers and heap after mount/unmount cycles | `node ../scripts/perf/bench/leak.mjs` |
 
-The bench reads the React files in `components/`; step 2.7 of the remediation plan points it at the Lit package.
+The bench mounts each gallery demo: through the React wrappers (`src/elements/react.ts`) for everything ported to Lit, through the React module for blocks, screens and the React files that stay. The React numbers from before the port are in `audit/perf-baseline-react.md`.
