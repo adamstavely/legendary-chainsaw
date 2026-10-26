@@ -48,11 +48,12 @@ export function DataTable({ title, icon, renderCell, columns, rows, defaultRows 
   for (const row of r.value) if (isNode(row.logo)) nodes.push([`row:${row.id}`, row.logo]);
   const { stage, els } = useStaged(nodes);
   const cols = React.useMemo(() => columns.map((c) => (isNode(c.icon) ? { ...c, icon: els[`col:${c.key}`] } : c)) as ElementColumn[], [columns, els]);
-  const toElementRows = (list: DataRow[]) => list.map((row) => (isNode(row.logo) ? { ...row, logo: els[`row:${row.id}`] } : row)) as ElementRow[];
+  // The same array while the rows and staged logos are the same: a new array makes the table re-process every row
+  const elementRows = React.useMemo(() => r.value.map((row) => (isNode(row.logo) ? { ...row, logo: els[`row:${row.id}`] } : row)) as ElementRow[], [r.value, els]);
   const s = useControlled(selection, defaultSelection, onSelectionChange);
   const o = useControlled(sort, defaultSort, onSortChange);
   // Edits come back with the element's rows; logos are put back as the React nodes the app gave
-  const byId = new Map(r.value.map((row) => [row.id, row]));
+  const byId = React.useMemo(() => new Map(r.value.map((row) => [row.id, row])), [r.value]);
   const latest = React.useRef({ renderCell, byId, columns });
   latest.current = { renderCell, byId, columns };
   // One stable function, so the table doesn't redraw every render; it hands the app its own row and column objects
@@ -68,7 +69,7 @@ export function DataTable({ title, icon, renderCell, columns, rows, defaultRows 
     icon: isNode(icon) ? els.icon : (icon as Element | undefined),
     columns: cols,
     readonly: !editable,
-    rows: toElementRows(r.value),
+    rows: elementRows,
     selection: s.value,
     sort: o.value,
     onTcRowsChange: (e: CustomEvent<{ rows: ElementRow[] }>) => r.handler(fromElementRows(e.detail.rows), e),

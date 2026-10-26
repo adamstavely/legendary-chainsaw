@@ -158,7 +158,8 @@ export class TcCompactBreakdown extends TcElement {
     this.frame = 0;
     if (!this.started) this.shown = Object.fromEntries(Object.keys(to).map((k) => [k, 0]));
     const from = { ...this.shown };
-    if (reducedMotion()) {
+    // Nothing moves (an empty card, or the same values again): no frame loop
+    if (reducedMotion() || Object.keys(to).every((k) => (from[k] ?? 0) === to[k])) {
       this.started = true;
       this.shown = to;
       return;

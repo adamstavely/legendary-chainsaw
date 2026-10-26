@@ -8,7 +8,8 @@ const require = createRequire(join(ROOT, "package.json")); const esbuild = requi
 const LIBS = ["components", "blocks", "screens", "illustrations", "motion"];
 const dirOf = (lib) => (lib === "components" ? "src/components" : lib);
 const WRAPPERS = join(ROOT, "src/elements/react.ts");
-const ported = (slug) => existsSync(join(ROOT, "src/elements", `${slug}.ts`));
+// BENCH_REACT=1 measures the React module wherever one is left (the kept components), for a same-machine comparison
+const ported = (slug) => existsSync(join(ROOT, "src/elements", `${slug}.ts`)) && !(process.env.BENCH_REACT && existsSync(join(ROOT, "src/components", `${slug}.tsx`)));
 let imports = `import * as LIT from "${WRAPPERS}";\n`, entries = [];
 let i = 0;
 for (const lib of LIBS) {

@@ -504,7 +504,9 @@ export class TcDataTable extends TcElement {
       this.future = [];
       this.history = { past: 0, future: 0 };
     }
-    this.view = this.computeView();
+    // Sorting 10,000 rows is the costly part of an update: only when the data or the order changed, not on every
+    // scroll step or selection
+    if (!this.hasUpdated || changed.has("rows") || changed.has("sort") || changed.has("columns")) this.view = this.computeView();
     this.window.compute();
   }
 

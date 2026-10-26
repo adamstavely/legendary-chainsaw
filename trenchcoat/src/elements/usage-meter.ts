@@ -351,7 +351,8 @@ export class TcUsageMeter extends TcElement {
     cancelAnimationFrame(this.frame);
     this.frame = 0;
     const from = { ...this.cur };
-    if (reducedMotion()) {
+    // Nothing moves (empty, or already there): no frame loop
+    if (reducedMotion() || Object.keys(target).every((k) => (from[k] ?? 0) === target[k])) {
       this.cur = { ...target };
       return;
     }
