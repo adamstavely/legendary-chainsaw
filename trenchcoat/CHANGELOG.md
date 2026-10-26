@@ -17,6 +17,7 @@ browser tests in Chromium, Firefox and WebKit, and a gallery demo.
 - `tc-tool-permissions` – a grid of agents × tool scopes, allow / ask / deny per cell (a destructive scope never offers allow), presets, a Custom state, and a summary of changes against `saved`. WAI-ARIA grid; `tc-value-change` with the cause, `tc-save`.
 - `tc-trigger-builder` – an event or a schedule, an active window, conditions with all/any, a plain-language summary and the next run times; form-associated (JSON under `name`, validity, reset). Built from combobox, date-range-picker and segmented-control.
 - `tc-mention-picker` – the / and @ picker for a textarea, input or contenteditable: grouped, scored results, the field keeps focus (aria-activedescendant), ↵ / Tab insert a token or a chip, and the composer's Enter-to-send never sees that ↵. `search` may be async.
+- `tc-context-tray` – what's in context as chips with token weights, a meter against the window with a reserved share, pin, remove with undo (⌘/Ctrl+Z), and a warning near the limit. Toolbar keyboard; `tc-items-change` (cancelable).
 
 ## Unreleased – remediation Part 2 (the shift to Lit)
 

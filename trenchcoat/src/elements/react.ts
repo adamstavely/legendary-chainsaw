@@ -41,6 +41,7 @@ export * from "./react/comment-thread";
 export * from "./react/comments-panel";
 export * from "./react/compact-breakdown";
 export * from "./react/context-map";
+export * from "./react/context-tray";
 export * from "./react/context-window";
 export * from "./react/cover-flow";
 export * from "./react/date-range-picker";

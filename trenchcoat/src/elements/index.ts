@@ -30,6 +30,7 @@ export * from "./comment-thread";
 export * from "./comments-panel";
 export * from "./compact-breakdown";
 export * from "./context-map";
+export * from "./context-tray";
 export * from "./context-window";
 export * from "./cover-flow";
 export * from "./date-range-picker";
