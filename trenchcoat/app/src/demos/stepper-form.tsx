@@ -49,7 +49,7 @@ export default function Demo({ ui }: { ui: typeof UI }) {
             />
           </StepperField>
           <StepperField name="slug" label="Workspace address" hint="You can change this later in settings.">
-            <StepperInput prefix="affect.app/" value={values.slug} placeholder="northwind" onChange={(e) => setValues({ slug: e.target.value.toLowerCase() })} />
+            <StepperInput prefix="trenchcoat.app/" value={values.slug} placeholder="northwind" onChange={(e) => setValues({ slug: e.target.value.toLowerCase() })} />
           </StepperField>
         </>
       ),
@@ -87,7 +87,7 @@ export default function Demo({ ui }: { ui: typeof UI }) {
           onEdit={goTo}
           rows={[
             { label: "Workspace", value: values.workspace, step: "workspace" },
-            { label: "Address", value: `affect.app/${values.slug}`, step: "workspace" },
+            { label: "Address", value: `trenchcoat.app/${values.slug}`, step: "workspace" },
             {
               label: "Invites",
               value: values.invites.length ? `${values.invites.length} ${values.invites.length === 1 ? "person" : "people"}` : "Just you for now",
@@ -113,8 +113,8 @@ export default function Demo({ ui }: { ui: typeof UI }) {
             title={`${values.workspace} is ready`}
             description={
               values.invites.length
-                ? `We sent ${values.invites.length} invite${values.invites.length === 1 ? "" : "s"}. Your workspace lives at affect.app/${values.slug}.`
-                : `Your workspace lives at affect.app/${values.slug}.`
+                ? `We sent ${values.invites.length} invite${values.invites.length === 1 ? "" : "s"}. Your workspace lives at trenchcoat.app/${values.slug}.`
+                : `Your workspace lives at trenchcoat.app/${values.slug}.`
             }
           >
             <button

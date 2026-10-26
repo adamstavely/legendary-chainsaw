@@ -58,9 +58,9 @@ export type Integration = {
 
 export type IntegrationPickerOwnProps = {
   integrations?: Integration[];
-  /** Your product's name in the details, e.g. "affectUI + Linear" */
+  /** Your product's name in the details, e.g. "Trenchcoat + Linear" */
   appName?: string;
-  /** Your product's mark on the black tile – the affectUI mark by default */
+  /** Your product's mark on the black tile – the Trenchcoat mark by default */
   appIcon?: ReactNode;
   /** Id of the picked integration. Controlled when defined; otherwise starts at `defaultSelected` */
   selected?: string;
@@ -140,8 +140,8 @@ const AirtableMark = () => (
 
 const CUSTOM: Record<string, () => ReactNode> = { figma: () => <FigmaMark />, clickup: () => <ClickUpMark />, airtable: () => <AirtableMark /> };
 
-/** The affectUI mark – the default for your app's tile */
-const APP_MARK = "M106.447 67.3367C106.447 69.7104 104.523 71.6348 102.149 71.6348H75.928C73.5542 71.6348 71.6299 73.5591 71.6299 75.9329V102.16C71.6299 104.534 69.7056 106.458 67.3318 106.458H35.8198C35.8185 106.458 35.8174 106.459 35.8174 106.46C35.8174 106.462 35.8163 106.463 35.8149 106.463H4.29811C1.92433 106.463 0 104.539 0 102.165V39.1262C0 36.7525 1.92433 34.8281 4.29811 34.8281H30.5193C32.8931 34.8281 34.8174 32.9038 34.8174 30.53V4.29812C34.8174 1.92433 36.7417 0 39.1155 0H102.149C104.523 0 106.447 1.92433 106.447 4.29811V67.3367ZM35.8174 66.3425C35.8174 68.7163 37.7417 70.6406 40.1155 70.6406H66.3318C68.7056 70.6406 70.6299 68.7163 70.6299 66.3425V40.1155C70.6299 37.7417 68.7056 35.8174 66.3318 35.8174H40.1155C37.7417 35.8174 35.8174 37.7417 35.8174 40.1155V66.3425Z";
+/** The Trenchcoat mark (a half-filled circle) – the default for your app's tile */
+const APP_MARK = "M53.5 3.5A50 50 0 1 1 53.5 103.5A50 50 0 1 1 53.5 3.5ZM53.5 13.5A40 40 0 1 0 53.5 93.5A40 40 0 1 0 53.5 13.5ZM53.5 13.5A40 40 0 0 0 53.5 93.5Z";
 
 /** Sample services – company marks from Simple Icons (CC0) */
 export const defaultIntegrations: Integration[] = [
@@ -493,7 +493,7 @@ function CleanFoot({ count, total }: { count: number; total: number }) {
 
 export function IntegrationPicker({
   integrations = defaultIntegrations,
-  appName = "affectUI",
+  appName = "Trenchcoat",
   appIcon,
   selected: selectedProp,
   defaultSelected,

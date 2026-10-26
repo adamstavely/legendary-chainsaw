@@ -1,6 +1,6 @@
-# affectUI — code-quality review
+# Trenchcoat — code-quality review
 
-**Date:** 2026-10-24 · **Scope:** all 129 files in `affectui-components` (64 components × standard/clean + plan-vs-actual) · accessibility is covered separately in [WCAG-2.2-AA-audit.md](WCAG-2.2-AA-audit.md)
+**Date:** 2026-10-24 · **Scope:** all 129 component files (64 components × standard/clean + plan-vs-actual) · accessibility is covered separately in [WCAG-2.2-AA-audit.md](WCAG-2.2-AA-audit.md)
 
 **Verdict:** carefully written, well-commented, type-clean code that is **demo-grade rather than library-grade**. Component-level craft is above typical UI-kit standard; the problems are in how the components plug into a real app — props ignored after mount, async failures swallowed, "fake success" defaults, whole-tree re-renders on clocks — plus a copy-paste architecture that doubles every fix.
 

@@ -15,7 +15,7 @@ export default function Demo({ ui }: { ui: typeof UI }) {
         }}
       >
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <span style={{ fontWeight: 700, letterSpacing: "0.04em" }}>AFFECT PRO</span>
+          <span style={{ fontWeight: 700, letterSpacing: "0.04em" }}>TRENCHCOAT PRO</span>
           <span style={{ fontSize: 12, padding: "3px 8px", borderRadius: 999, background: "rgba(255,255,255,0.18)" }}>Annual</span>
         </div>
         <div>

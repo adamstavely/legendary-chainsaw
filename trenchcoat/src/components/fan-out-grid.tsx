@@ -126,7 +126,7 @@ const took = (ms: number) => {
 
 /* ---------- Icons ---------- */
 
-/* A small fan-out mark for the title (drawn for affectUI) */
+/* A small fan-out mark for the title (drawn for Trenchcoat) */
 const FanMark = () => (
   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
     <circle cx="3" cy="8" r="1.9" fill="currentColor" />

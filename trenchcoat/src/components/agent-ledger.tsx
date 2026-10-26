@@ -128,7 +128,7 @@ const chainsOf = (entries: LedgerEntry[]) => {
 
 /* ---------- Icons ---------- */
 
-/* A small ledger mark for the title (drawn for affectUI) */
+/* A small ledger mark for the title (drawn for Trenchcoat) */
 const LedgerMark = () => (
   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
     <rect x="2" y="1.8" width="12" height="12.4" rx="2.6" stroke="currentColor" strokeWidth="1.3" />

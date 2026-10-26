@@ -1,4 +1,4 @@
-# affectUI — WCAG 2.2 AA audit
+# Trenchcoat — WCAG 2.2 AA audit
 
 **Date:** 2026-10-24 · **Scope:** all 129 files (64 components × standard/clean + plan-vs-actual clean) · **Target:** WCAG 2.2 Level A + AA
 

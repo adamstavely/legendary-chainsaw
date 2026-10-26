@@ -140,7 +140,7 @@ function place(steps: PlanStep[], now: number): Placed[] {
 
 /* ---------- Icons ---------- */
 
-/* The chart mark and the step states: drawn for affectUI */
+/* The chart mark and the step states: drawn for Trenchcoat */
 const ChartMark = () => (
   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
     <rect x="1.5" y="2.5" width="7" height="3" rx="1.5" fill="currentColor" />

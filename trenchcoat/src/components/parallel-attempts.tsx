@@ -93,7 +93,7 @@ const STATUS: Record<AttemptStatus, string> = { running: "Running", done: "Done"
 
 /* ---------- Icons ---------- */
 
-/* Three lanes and a finish mark for the title (drawn for affectUI) */
+/* Three lanes and a finish mark for the title (drawn for Trenchcoat) */
 const RaceMark = () => (
   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
     <rect x="1.5" y="2.5" width="9" height="2.4" rx="1.2" fill="currentColor" />

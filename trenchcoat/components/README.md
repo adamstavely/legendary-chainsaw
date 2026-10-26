@@ -1,8 +1,8 @@
-# affectUI – components
+# Trenchcoat – components
 
 Every file is a single, self-contained React component (React is the only dependency).
 Copy a file into your project, e.g. `components/ui/`, and import it from there.
-Some files import another affectUI component from `@/components/ui/<name>` – copy that one alongside.
+Some files import another Trenchcoat component from `@/components/ui/<name>` – copy that one alongside.
 
 - **Agent Cursors** (`agent-cursors.tsx`) – Agents working in a document like teammates in a multiplayer editor – live pointers with names, suggestions typed letter by letter, images they resize, code they fix and comments beside the page
 - **Agent Cursors (Clean)** (`agent-cursors-clean.tsx`) – Agents working in a document like teammates in a multiplayer editor – live pointers with names, suggestions typed letter by letter, images they resize, code they fix and comments beside the page
@@ -134,4 +134,4 @@ Some files import another affectUI component from `@/components/ui/<name>` – c
 - **Writing Assistant** (`writing-assistant.tsx`) – AI chat card with a soft gradient glow, suggestions, streaming replies and live voice dictation
 - **Writing Assistant (Clean)** (`writing-assistant-clean.tsx`) – AI chat card with a soft gradient glow, suggestions, streaming replies and live voice dictation
 
-Docs and live previews: https://www.affectui.com
+Live previews: run `npm run dev` and open the gallery.

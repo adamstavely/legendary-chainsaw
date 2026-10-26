@@ -91,10 +91,12 @@ Steps 1–3 move everything onto `src/` while `components/` still exists, so CI 
    - render-budgets.json and ratchet-baseline.json are re-keyed from `components/<slug>[-clean].tsx` to
      `src/components/<slug>.tsx`; check-prefixes, check-ratchet and check-tokens scan `src/components` in place of
      `components`.
-2. **Gallery look switch.** A Standard / Clean control next to the Light / Dark / System switch. It sets the `look`
-   prop on the demo (demos already receive `DemoProps`), is remembered per viewer, and appears only on library
-   entries that have both looks (components; blocks, screens, illustrations and motion have one). The overview lists
-   each component once; a deep link can carry `?look=clean`.
+2. **Gallery look switch.** The top bar already has a Standard / Clean / Both switch (`app/src/App.tsx`), but it
+   picks which *file* to load (`<slug>.tsx`, `<slug>-clean.tsx` or both side by side). Rework it to load the one
+   module and set the `look` prop on the demo (demos already receive `DemoProps`); Both renders the same module
+   twice, `look="standard"` and `look="clean"`. It is remembered per viewer, applies only to entries with both looks
+   (components; blocks, screens, illustrations, motion and plan-vs-actual have one), and the overview lists each
+   component once with the file count halved. A deep link can carry `?look=clean`.
 3. **Package build.**
    - A library build (Vite library mode or tsup) of `src/components`, blocks, screens, illustrations and motion to
      `dist/`: ES modules with one module per component (`preserveModules`), `src/internal` shared rather than

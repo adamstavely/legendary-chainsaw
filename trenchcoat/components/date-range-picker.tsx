@@ -1169,7 +1169,7 @@ const css = /* css */ `
 :where([data-look="clean"], [data-look="clean"] *).ui-drp__trigger-compare { flex: 0 1 auto; min-width: 0; overflow: hidden; font-size: var(--tc-font-size-sm, var(--_tc-font-size-sm)); line-height: var(--tc-line-height-tight, var(--_tc-line-height-tight)); color: var(--tc-text-muted, var(--_tc-text-muted)); text-overflow: ellipsis; }
 :where([data-look="clean"], [data-look="clean"] *).ui-drp__chevron { transition: transform var(--tc-duration-moderate, var(--_tc-duration-moderate)) var(--tc-ease-move, var(--_tc-ease-move)); }
 .ui-drp[data-open] .ui-drp__chevron { transform: rotate(180deg); }
-/* The panel: a gray tray around a white card, like the other affectUI menus */
+/* The panel: a gray tray around a white card, like the other Trenchcoat menus */
 :where([data-look="standard"], [data-look="standard"] *).ui-drp__panel {
   position: absolute;
   z-index: var(--tc-z-dropdown, var(--_tc-z-dropdown));

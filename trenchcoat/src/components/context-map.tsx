@@ -240,7 +240,7 @@ const moveTip = (tip: HTMLElement | null, room: TipRoom | null, r: Rect | undefi
 
 /* ---------- Icons ---------- */
 
-/* A small map mark for the title (drawn for affectUI) */
+/* A small map mark for the title (drawn for Trenchcoat) */
 /* A spinner of eight spokes pointing to the center, each fainter than the one before */
 const Spinner = () => (
   <svg className="ui-cxm__spin" viewBox="0 0 16 16" fill="none" aria-hidden="true">

@@ -146,7 +146,7 @@ const Alert = () => (
     <path d="M12 17h.01" strokeWidth="2.4" />
   </svg>
 );
-/* A small branching mark for the title (drawn for affectUI) */
+/* A small branching mark for the title (drawn for Trenchcoat) */
 const Branches = () => (
   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
     <circle cx="3.5" cy="8" r="2" stroke="currentColor" strokeWidth="1.4" />
