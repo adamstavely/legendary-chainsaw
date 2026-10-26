@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased – remediation Part 1 (design work that carries over to Lit)
+
+See `audit/remediation-plan.md`, Part 1.
+
+### Removed
+
+- illustrations/frost-cloud and illustrations/glow-cloud, with their demos and tests.
+
 ## Unreleased – accessibility and design pass, blocks, screens, illustrations, motion
 
 All 187 published files now pass axe (WCAG 2.0–2.2 A/AA) in light and dark in a real browser, and every library
