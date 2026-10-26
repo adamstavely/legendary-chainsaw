@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import type * as UI from "@components/tool-call-card";
-import type { ToolCallStatus } from "@components/tool-call-card";
+import type * as UI from "../../../src/elements/react";
+import type { ToolCallStatus } from "../../../src/elements/react";
 
 const Globe = () => (
   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.3" aria-hidden="true">

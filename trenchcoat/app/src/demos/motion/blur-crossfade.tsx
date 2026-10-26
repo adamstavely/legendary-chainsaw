@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type * as UI from "@motion/blur-crossfade";
+import type * as UI from "../../../../src/elements/react";
 
 const muted = "var(--tc-text-muted, light-dark(#646464, #9a9aa1))";
 

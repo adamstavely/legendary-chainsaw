@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import type * as UI from "@components/review-center";
-import type { ReviewItem } from "@components/review-center";
+import type * as UI from "../../../src/elements/react";
+import type { ReviewItem } from "../../../src/elements/react";
 import { buttonSm } from "../demo-kit";
 
 const MIN = 60_000;

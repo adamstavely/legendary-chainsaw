@@ -1,3 +1,7 @@
+/* The gallery chrome stays light; each stage sets its own theme (data-tc-theme). tokens.css makes :root follow the
+   OS, which this overrides for the page – it has no specificity, so this plain rule wins */
+:root { color-scheme: light; }
+
 :root {
   --bg: #f6f6f4;
   --panel: #ffffff;

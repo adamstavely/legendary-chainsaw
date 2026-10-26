@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import type * as UI from "@components/agent-cursors";
-import type { AgentCursor, DocBlock, DocComment, DocSuggestion } from "@components/agent-cursors";
+import type * as UI from "../../../src/elements/react";
+import type { AgentCursor, DocBlock, DocComment, DocSuggestion } from "../../../src/elements/react";
 
 /* A scripted session: three agents edit a launch brief together. The script is a pure function of a tick,
    so it loops cleanly; accepting/rejecting suggestions is layered on top as demo state. */

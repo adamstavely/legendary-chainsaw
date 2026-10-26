@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Trenchcoat · HTML</title>
+  </head>
+  <body>
+    <main>
+      <tc-button id="save" label="Save"></tc-button>
+      <output id="clicks">0</output>
+      <form id="f">
+        <label for="who">Reviewers</label>
+        <tc-combobox id="who" name="who" required></tc-combobox>
+        <tc-button type="submit" variant="secondary" label="Send"></tc-button>
+      </form>
+      <output id="value">[]</output>
+      <output id="submitted"></output>
+      <tc-data-table id="table" heading="Accounts"></tc-data-table>
+      <tc-look-provider look="clean"><tc-button id="clean" variant="ghost" label="Clean"></tc-button></tc-look-provider>
+    </main>
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>

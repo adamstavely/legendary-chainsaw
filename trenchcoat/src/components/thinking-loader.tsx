@@ -13,8 +13,7 @@ import { useRootRef } from "../internal/use-root-ref";
  * and the label settles on "Thought for 6s".
  * The styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop (the default comes from the file: thinking-loader.tsx is
- * Standard, thinking-loader-clean.tsx is Clean). Clean is one white chip with hairline shadows, a thin
+ * Two looks, picked with the `look` prop (Standard by default). Clean is one white chip with hairline shadows, a thin
  * spinner in the accent blue and a quiet gray label with a darker band sweeping over it.
  */
 export type Look = "standard" | "clean";
@@ -22,7 +21,7 @@ const DEFAULT_LOOK: Look = "standard";
 const ROOT_CLASS = "ui-tl";
 
 type ThinkingLoaderOwnProps = {
-  /** Visual style. Defaults to the file's look: Standard in thinking-loader.tsx, Clean in thinking-loader-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   /** Labels to walk through, one after another */
   phases?: string[];

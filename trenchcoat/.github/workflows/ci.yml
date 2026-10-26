@@ -24,7 +24,11 @@ jobs:
         run: npm run check:ratchet
       - name: Design tokens
         run: npm run check:tokens
-      - name: Published components are built from src/
-        run: npm run check:lib
+      - name: Lit templates
+        run: npm run check:lit
+      - name: Browsers for the element tests
+        run: npx playwright install --with-deps chromium firefox webkit
       - name: Tests
         run: npm test
+      - name: Framework examples (React, Next.js, Vue, Nuxt, Angular, Svelte, HTML)
+        run: npm run examples

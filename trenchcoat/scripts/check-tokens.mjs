@@ -1,8 +1,9 @@
 // Token hygiene for the library files:
 //   · no legacy custom properties (--ui-…) and no bare ones outside the --tc- namespace, except short
 //     per-element values set from JS (--i, --x, --w …), which aren't design tokens
-//   · every reference to a dictionary token carries a fallback, and that fallback is exactly the
-//     dictionary's value for the file's look – so a lone copied file renders like it does with tokens.css
+//   · in the hand-written libraries (blocks, screens, illustrations, motion), every reference to a dictionary token
+//     carries a fallback, and that fallback is exactly the dictionary's value for the file's look – so a lone copied
+//     file renders like it does with tokens.css. Components in src/components rely on tokens.css and have none.
 //   node scripts/check-tokens.mjs [file…]
 //   node scripts/check-tokens.mjs --fix [file…]   rewrite fallbacks to the dictionary's current values
 //                                                 (after editing tokens/tokens.css)
@@ -10,11 +11,12 @@ import { readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { fallbacks } from "./tokens.mjs";
 
-const LIBRARIES = ["components", "blocks", "screens", "illustrations", "motion"];
+// src/elements: the Lit ports – their CSS sits in the same /* css */ template strings
+const LIBRARIES = ["src/components", "src/elements", "blocks", "screens", "illustrations", "motion"];
 const FB = fallbacks();
 const FIX = process.argv.includes("--fix");
 const named = process.argv.slice(2).filter((a) => !a.startsWith("--"));
-const files = named.length ? named : LIBRARIES.flatMap((lib) => readdirSync(lib).filter((f) => f.endsWith(".tsx")).map((f) => join(lib, f)));
+const files = named.length ? named : LIBRARIES.flatMap((lib) => readdirSync(lib).filter((f) => /\.tsx?$/.test(f) && f !== "index.ts" && f !== "react.ts").map((f) => join(lib, f)));
 
 /** var(--tc-x, …) with its fallback, balancing nested parentheses */
 function* references(source) {
@@ -43,7 +45,7 @@ for (const file of files) {
   const look = file.endsWith("-clean.tsx") ? "clean" : "standard";
   if (FIX) {
     // Rewrite from the end so earlier offsets stay valid
-    const refs = source.includes("by scripts/build-lib.mjs – edit the source") ? [] : [...references(source)].filter((r) => r.fallback !== null && FB[look][r.name] !== undefined).reverse();
+    const refs = file.startsWith("src/") ? [] : [...references(source)].filter((r) => r.fallback !== null && FB[look][r.name] !== undefined).reverse();
     for (const ref of refs) {
       const open = source.indexOf(",", ref.at) + 1;
       const end = open + source.slice(open).indexOf(ref.fallback) + ref.fallback.length;
@@ -60,11 +62,10 @@ for (const file of files) {
   if (!/^(blocks|screens)\//.test(file))
     for (const m of source.matchAll(/--tc-font-size-(?:xs|sm|md)-plus\b/g))
       problems.push(`${file}:${lineOf(source, m.index)} deprecated ${m[0]} – use ${m[0].replace("-plus", "")}`);
-  // Files built from src/ carry their fallbacks as private variables on the root (both looks, see
-  // scripts/build-lib.mjs), so each reference falls back to var(--_tc-…); build-lib --check keeps them current
-  const built = source.includes("by scripts/build-lib.mjs – edit the source");
+  // Components in src/ read tokens.css (the package requires it), so their references carry no fallbacks to check
+  if (file.startsWith("src/")) continue;
   for (const ref of references(source)) {
-    const expected = built && FB[look][ref.name] !== undefined ? `var(--_${ref.name.slice(2)})` : FB[look][ref.name];
+    const expected = FB[look][ref.name];
     if (expected === undefined) continue; // a component token (--tc-<component>-…), defined in the file
     const norm = (s) => s?.replace(/\s+/g, " ");
     if (norm(ref.fallback) !== norm(expected))

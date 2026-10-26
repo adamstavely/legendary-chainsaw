@@ -1,6 +1,6 @@
 import { useState } from "react";
-import type * as UI from "@components/cited-answer";
-import type { CitedSegment, CitedSource } from "@components/cited-answer";
+import type * as UI from "../../../src/elements/react";
+import type { CitedSegment, CitedSource } from "../../../src/elements/react";
 import { caption } from "../demo-kit";
 
 const SOURCES: CitedSource[] = [

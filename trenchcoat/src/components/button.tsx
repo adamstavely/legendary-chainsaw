@@ -14,8 +14,7 @@ import { useRootRef } from "../internal/use-root-ref";
 /*
  * Button – a single self-contained file.
  * The styles are injected below, so no extra files are needed.
- * Two looks, picked with the `look` prop (the default comes from the file: button.tsx is Standard,
- * button-clean.tsx is Clean):
+ * Two looks, picked with the `look` prop (Standard by default):
  *   · Standard: a flat ink chip, a white button with the card ring, 28 · 32 · 40 high
  *   · Clean: a flat ink chip, a white button with hairline shadows, a quiet ghost and a minimal red fill,
  *     24 · 28 · 32 high
@@ -28,7 +27,7 @@ const DEFAULT_LOOK: Look = "standard";
 const ROOT_CLASS = "ui-button";
 
 export type ButtonProps = ComponentPropsWithRef<"button"> & {
-  /** Visual style. Defaults to the file's look: Standard in button.tsx, Clean in button-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   /** primary: dark and filled · secondary: white with an outline (Clean: a hairline shadow) · ghost: text only ·
    *  destructive: red, for deleting */

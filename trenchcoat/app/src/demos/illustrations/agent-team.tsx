@@ -1,4 +1,4 @@
-import type * as UI from "@illustrations/agent-team";
+import type * as UI from "../../../../src/elements/react";
 
 /** A square initials portrait as an inline SVG data URL */
 function initials(text: string, from: string, to: string) {

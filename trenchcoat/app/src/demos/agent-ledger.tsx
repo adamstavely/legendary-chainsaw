@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import type * as UI from "@components/agent-ledger";
-import type { LedgerEntry } from "@components/agent-ledger";
+import type * as UI from "../../../src/elements/react";
+import type { LedgerEntry } from "../../../src/elements/react";
 
 /* A launch agent making changes across your tools: a new entry slides in every few seconds until the launch is
    done, then the ledger holds and starts over. Point at a row's time to Undo it and see what builds on it. */

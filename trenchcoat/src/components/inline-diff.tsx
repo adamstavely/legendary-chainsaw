@@ -27,8 +27,7 @@ import { useControllable } from "../internal/use-controllable";
  * The white card sits on a gray tray that also holds the optional label above it.
  * The styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop (the default comes from the file: inline-diff.tsx is Standard,
- * inline-diff-clean.tsx is Clean). Clean drops the tray: one white card with hairline shadows, edits are quiet
+ * Two looks, picked with the `look` prop (Standard by default). Clean drops the tray: one white card with hairline shadows, edits are quiet
  * tinted fills without strokes, the optional label opens the card and the toolbar is its last row under a
  * hairline; the popover's Accept is a dark filled button.
  */
@@ -81,7 +80,7 @@ type InlineDiffOwnProps = {
   onDecisionsChange?: (decisions: InlineDiffDecisions) => void;
   /** Small line on the gray tray above the card (Clean: at the top of the card), e.g. "Suggested by AI · Make it shorter" */
   label?: string;
-  /** Visual style. Defaults to the file's look: Standard in inline-diff.tsx, Clean in inline-diff-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   /**
    * Grow to the container's height: the diff stretches to the height its grid or flex parent gives it and the white

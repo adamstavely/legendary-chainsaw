@@ -98,10 +98,13 @@ where a dictionary value already matched; everything else stayed literal. So:
 
 ## Follow-ups (not done)
 
-- glass-folder needs an `open` prop (or `data-open`) so app-shell and assistant-home can stop mirroring its hover
-  classes.
-- Demo coverage: states no demo shows (stepper-form review/success, ai-workspace projects view, client-context empty
-  and create, decision-tree sub-questions) – add demo paths, then delete any CSS still unseen.
+- glass-folder has an `open` property now (remediation 2.7); app-shell and assistant-home still mirror its hover
+  classes until the blocks-and-screens phase uses it.
+- Demo coverage: stepper-form and decision-tree got demo paths in 2.7 and `scripts/dead-css.mjs` guards the
+  elements; ai-workspace's projects view and client-context empty/create are blocks-and-screens work.
+- decision-tree (found by the Lit port's real-browser tests): the folded "N options" text in the narrow layout is
+  under 4.5:1, and the follow-up option buttons fail `label-content-name-mismatch` (named by their top line while
+  the visible text includes the consequences).
 - Judgement calls left for design: breakdown-chart's segment palette (1.6–2.5:1 against white; the table carries the
   values), fan-out-grid's 12 px cells and agent-queue's 12 px backlog squares (target size; keyboard alternatives
   exist), date-range-picker's in-range band (< 3:1; endpoints and text identify the range), context-map's small tiles

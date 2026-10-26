@@ -1,5 +1,68 @@
 # Changelog
 
+## Unreleased – remediation Part 2 (the shift to Lit)
+
+See `audit/remediation-plan.md`, Part 2, and `audit/lit-port-plan.md`.
+
+### Added
+
+- Lit 3 web components: `tc-button`, `tc-combobox` and `tc-data-table` (the pilot), `tc-look-provider` for an
+  app-wide default look, the shared controllers (row window, focus rescue, smooth height, off-screen, on-screen,
+  ARIA forwarding, hotkeys, rolling numbers). Pixel-identical to the React components in both looks and themes.
+- The package build (`npm run build:package`): ES modules per element, TypeScript declarations,
+  `custom-elements.json`, React wrappers (`trenchcoat/react`, same API as the React components) and typed bindings
+  for Vue (`trenchcoat/vue`) and Svelte (`trenchcoat/svelte`). Still private, 0.1.0, UNLICENSED.
+- `examples/`: React, Next.js, Vue, Nuxt, Angular, Svelte and plain-HTML apps that install the packed package;
+  `npm run examples` checks all seven.
+- Every other component as an element (step 2.6): 61 more, 64 in all, each with its React wrapper under the same
+  name and props in `trenchcoat/react`, browser tests in Chromium, Firefox and WebKit, and its gallery demo diffed
+  against React in both looks and themes (all under 1 %; the remaining differences are demos that use
+  `Math.random()` or a running clock). Import one element with `trenchcoat/<slug>`.
+- The 22 illustrations and 8 motion pieces as elements (step 2.7), 105 tags in all; shimmer-loader is two
+  (`tc-skeleton`, `tc-shimmer-text`). Same React names and props through `trenchcoat/react`; parity with the React
+  versions at 0.00 % except voice-orb's canvas particles (timing) and tilt-card, which drops 3 px of line space
+  under its inline-block root.
+- glass-folder has an `open` property: the look its hover gives, on demand.
+- filter-menu renders only the rows near the viewport in groups over 60 options (tested with 5,000).
+- otp-input, dropzone and stepper-form's tags and choices are form controls (ElementInternals): they submit under
+  `name`, honour `required`, reset and a disabled fieldset, and are named by a page `<label for>`.
+
+### Breaking
+
+- `components/` is gone: no more generated single-file components and no `-clean` copies. Each component is
+  `src/components/<slug>.tsx` with both looks – set `look="clean"` for Clean. Components no longer carry token
+  fallbacks or inlined helpers: load `tokens/tokens.css` (it also holds the theme and forced-colours rules they used
+  to inline). `npm run build:lib` and `check:lib` are removed. plan-vs-actual (Clean only) is now
+  `src/components/plan-vs-actual.tsx`. No app uses Trenchcoat yet, so there is no deprecation period.
+- The React components are retired except the ones blocks and screens still import (agent-plan, approval-card,
+  button, chat-composer, combobox, data-table, filter-menu, inline-diff, kpi-chart, segmented-control, setup-guide,
+  thinking-loader, thinking-state, tool-call-card, usage-meter). Use `trenchcoat/react`: same names and props.
+- The React illustrations and motion pieces are retired except glass-folder (three screens import it).
+- model-wheel's `defaultModels` is `modelWheelDefaults` (chat-composer's wrapper exports `defaultModels`).
+- Renamed types, so the package index can export every element's types: decision-inbox `Decision` →
+  `InboxDecision`, plan-vs-actual `PlanStep` → `PlanVsActualStep`, agent-plan `PlanStep` / `PlanStepStatus` →
+  `AgentPlanStep` / `AgentPlanStepStatus`. decision-tree keeps `Decision` on the wrapper.
+- `ref` on a wrapper is the custom element. Where the React component had an imperative handle (review-center,
+  inline-diff, decision-tree), the element has the same methods.
+- A few callbacks get the native event instead of React's synthetic one: model-picker `onKeyDown`, toaster
+  `ToastAction.onClick` (`preventDefault()` still works). Model-picker, toaster and review-center handle Escape or
+  their shortcuts on the element first; a page's `onKeyDown` on the component sees them after (or not, for Escape
+  while a menu or toast is open).
+- React nodes passed as content (icons, avatars, approval-card previews, toast text, MessageText children) are
+  rendered once in a hidden box and cloned into the element: they look the same, but event handlers inside them
+  don't run. Plain strings are unaffected. stepper-form steps are the exception: they render through a portal and
+  stay live React.
+
+### Behaviour changes
+
+- trace-waterfall rows show an outline when focused in forced-colours mode (their ring was a box-shadow, which
+  forced colours removes). data-table sorts only when its rows, sort or columns change – scrolling 10,000 sorted
+  rows was 72 ms per step.
+- thinking-state no longer reports `onOpenChange(true)` on mount when `open` is held false; date-range-picker
+  doesn't flash its "Last 30 days" stand-in before reading today; memory-panel with `undoFor={Infinity}` keeps a
+  failure message instead of clearing it at once; dropzone keeps focus on a row while another row folds away (the
+  React version lost it in real browsers).
+
 ## Unreleased – remediation Part 1 (design work that carries over to Lit)
 
 See `audit/remediation-plan.md`, Part 1.

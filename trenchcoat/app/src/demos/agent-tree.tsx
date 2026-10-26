@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import type * as UI from "@components/agent-tree";
-import type { TreeAgent } from "@components/agent-tree";
+import type * as UI from "../../../src/elements/react";
+import type { TreeAgent } from "../../../src/elements/react";
 
 /* A run that grows: the orchestrator hands out work, sub-agents start their own helpers, one fails, one stops to
    ask you, branches finish and costs roll up. Answer from the "needs you" / "failed" windows to move it along.

@@ -1,4 +1,4 @@
-import type * as UI from "@motion/tilt-card";
+import type * as UI from "../../../../src/elements/react";
 
 export default function Demo({ ui }: { ui: typeof UI }) {
   const { TiltCard } = ui;

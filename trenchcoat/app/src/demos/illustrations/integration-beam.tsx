@@ -1,4 +1,4 @@
-import type * as UI from "@illustrations/integration-beam";
+import type * as UI from "../../../../src/elements/react";
 
 export default function Demo({ ui }: { ui: typeof UI }) {
   return <ui.IntegrationBeam />;

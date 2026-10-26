@@ -32,8 +32,7 @@ import { useRootRef } from "../internal/use-root-ref";
  * (also the card's own open-on-error). onRetry may return a promise: Retry shows pending, and a rejection is shown
  * next to the error. Other DOM props and `ref` go to each root.
  * The styles are injected below, so no extra files are needed.
- * Two looks, picked with the `look` prop (the default comes from the file: tool-call-card.tsx is Standard,
- * tool-call-card-clean.tsx is Clean); ToolCallCard and ToolCallGroup each take it. Clean is one white card with
+ * Two looks, picked with the `look` prop (Standard by default); ToolCallCard and ToolCallGroup each take it. Clean is one white card with
  * hairline shadows, no tile and no tray: a blue spinner and a filled blue check, a red "Failed", JSON on a faint
  * panel with small white copy and Retry buttons, and slightly different glyphs.
  */
@@ -41,13 +40,11 @@ import { useRootRef } from "../internal/use-root-ref";
 export type Look = "standard" | "clean";
 const DEFAULT_LOOK: Look = "standard";
 const ROOT_CLASS = "ui-tc";
-/** Other exported components render their own root, which also carries the token fallbacks */
-const EXTRA_ROOT_CLASSES = ["ui-tc-group"];
 
 export type ToolCallStatus = "running" | "success" | "error";
 
 type ToolCallCardOwnProps = {
-  /** Visual style. Defaults to the file's look: Standard in tool-call-card.tsx, Clean in tool-call-card-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   /** Tool name as the agent calls it, shown in mono – e.g. "search_web" */
   name: string;
@@ -84,7 +81,7 @@ type ToolCallCardOwnProps = {
 export type ToolCallCardProps = Omit<ComponentPropsWithoutRef<"div">, keyof ToolCallCardOwnProps> & ToolCallCardOwnProps;
 
 type ToolCallGroupOwnProps = {
-  /** Visual style. Defaults to the file's look: Standard in tool-call-card.tsx, Clean in tool-call-card-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   /** ToolCallCard elements – the group reads their name, icon, status and duration */
   children: ReactNode;

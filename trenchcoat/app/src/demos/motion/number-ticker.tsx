@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type * as UI from "@motion/number-ticker";
+import type * as UI from "../../../../src/elements/react";
 
 const label: React.CSSProperties = {
   fontSize: 12,

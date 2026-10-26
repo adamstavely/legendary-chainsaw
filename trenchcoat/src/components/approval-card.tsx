@@ -25,8 +25,7 @@ import { useRootRef } from "../internal/use-root-ref";
  * draws in and the height glides down.
  * The styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop (the default comes from the file: approval-card.tsx is Standard,
- * approval-card-clean.tsx is Clean). Clean is one clean white card: a risk tag, the preview as plain rows under a
+ * Two looks, picked with the `look` prop (Standard by default). Clean is one clean white card: a risk tag, the preview as plain rows under a
  * hairline, and – by default (actions="card") – a last row holding "Always allow this action" and Deny / Approve;
  * with actions="tray" the buttons sit on a gray tray below the card instead.
  */
@@ -40,7 +39,7 @@ export type ApprovalDetail = { label: string; value: ReactNode };
 export type DenyReason = "user" | "timeout";
 
 type ApprovalCardOwnProps = {
-  /** Visual style. Defaults to the file's look: Standard in approval-card.tsx, Clean in approval-card-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   /** The action, e.g. "Send campaign email" */
   title: string;

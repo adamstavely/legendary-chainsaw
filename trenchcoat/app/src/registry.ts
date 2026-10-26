@@ -1,5 +1,11 @@
 import type { ComponentType } from "react";
-import componentsReadme from "../../components/README.md?raw";
+import componentsReadme from "../../src/components/README.md?raw";
+import cleanTwins from "virtual:tc-clean";
+
+// Components, illustrations and motion pieces ported to Lit (src/elements/<slug>.ts): their demos get the React wrappers – the same API – and the
+// stage's look comes from a look provider, so both looks load the same module
+const litPorts = new Set(Object.keys(import.meta.glob("../../src/elements/*.ts")).map((p) => p.match(/([^/]+)\.ts$/)![1]).filter((s) => s !== "index" && s !== "react"));
+const loadWrappers = () => import("../../src/elements/react");
 import blocksReadme from "../../blocks/README.md?raw";
 import screensReadme from "../../screens/README.md?raw";
 import illustrationsReadme from "../../illustrations/README.md?raw";
@@ -53,7 +59,7 @@ const LIBRARIES: Library[] = [
     about: "Self-contained UI pieces – agent views, chat and answer UIs, charts, inputs and feedback. Each one ships in a Standard and a Clean style with the same props. Start here when you need a single control or widget.",
     label: "Components",
     readme: componentsReadme,
-    modules: import.meta.glob("../../components/*.tsx"),
+    modules: import.meta.glob("../../src/components/*.tsx"),
     demos: import.meta.glob<{ default: ComponentType<DemoProps> }>("./demos/*.tsx", { eager: true }),
     layout: "card",
     categories: [
@@ -115,18 +121,20 @@ function build(lib: Library): Entry[] {
   const categoryOf = new Map(lib.categories?.flatMap(([c, slugs]) => slugs.map((s) => [s, c] as const)));
   const moduleFor = (file: string) => Object.entries(lib.modules).find(([path]) => path.endsWith(`/${file}.tsx`))?.[1];
   const bySlug = new Map<string, Entry>();
-  // README lines look like: - **Name (Clean)** (`name-clean.tsx`) – description
+  // README lines look like: - **Name** (`name.tsx`) – description. Components have one source with both looks
+  // ("(Clean only)" for a single-look one); the Clean stage loads its in-memory twin (vite.config.ts)
   for (const line of lib.readme.split("\n")) {
     const m = line.match(/^- \*\*(.+?)\*\* \(`(.+?)\.tsx`\) – (.*)$/);
     if (!m) continue;
     const [, label, file, description] = m;
-    const variant: Variant = file.endsWith("-clean") ? "clean" : "standard";
+    const cleanOnly = label.endsWith(" (Clean only)");
+    const variant: Variant = file.endsWith("-clean") || cleanOnly ? "clean" : "standard";
     const slug = file.replace(/-clean$/, "");
     const entry = bySlug.get(slug) ?? {
       id: lib.key === "components" ? slug : `${lib.key}/${slug}`,
       slug,
       library: lib.key,
-      name: label.replace(/ \(Clean\)$/, ""),
+      name: label.replace(/ \((?:Clean|Clean only)\)$/, ""),
       description,
       category: categoryOf.get(slug) ?? (lib.categories ? "Other" : lib.label),
       layout: lib.layout,
@@ -136,6 +144,17 @@ function build(lib: Library): Entry[] {
     };
     entry.files[variant] = `${file}.tsx`;
     entry.load[variant] = moduleFor(file);
+    if (lib.key === "components" && litPorts.has(slug)) {
+      entry.files = { standard: `elements/${slug}.ts`, clean: `elements/${slug}.ts · look="clean"` };
+      entry.load = { standard: loadWrappers, clean: loadWrappers };
+    } else if ((lib.key === "illustrations" || lib.key === "motion") && litPorts.has(slug)) {
+      // Single-look libraries: one stage, on the wrappers
+      entry.files = { standard: `elements/${slug}.ts` };
+      entry.load = { standard: loadWrappers };
+    } else if (lib.key === "components" && !cleanOnly && cleanTwins[slug]) {
+      entry.files.clean = `${file}.tsx · look="clean"`;
+      entry.load.clean = cleanTwins[slug];
+    }
     bySlug.set(slug, entry);
   }
   return [...bySlug.values()];

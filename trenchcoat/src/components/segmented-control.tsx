@@ -23,8 +23,7 @@ import { useRootRef } from "../internal/use-root-ref";
  * If it doesn't fit (phones), it scrolls sideways with soft edges and keeps the active option in view.
  * The styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop (the default comes from the file: segmented-control.tsx is Standard,
- * segmented-control-clean.tsx is Clean). Clean adds the "buttons" variant – its default: separate quiet chips with a
+ * Two looks, picked with the `look` prop (Standard by default). Clean adds the "buttons" variant – its default: separate quiet chips with a
  * hairline, the active one filled light gray; its "tray" is a compact light-gray track. The indicator slide is
  * shorter and crisper, and labels keep one weight (only the color changes), so there is no semibold copy.
  */
@@ -72,7 +71,7 @@ type SegmentedControlOwnProps<T extends string = string> = {
   "aria-label"?: string;
   "aria-labelledby"?: string;
   className?: string;
-  /** Visual style. Defaults to the file's look: Standard in segmented-control.tsx, Clean in segmented-control-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   ref?: Ref<HTMLDivElement>;
 };

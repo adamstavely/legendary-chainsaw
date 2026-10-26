@@ -13,8 +13,7 @@ import { useRootRef } from "../internal/use-root-ref";
  * also move through them, Enter or Space picks, ← and → fold a group. Folded options are inert. Heights glide when groups open or chips come and go.
  * The styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop (the default comes from the file: filter-menu.tsx is Standard,
- * filter-menu-clean.tsx is Clean). Clean has no tray – one white card with hairline shadows, gray tab-like chips
+ * Two looks, picked with the `look` prop (Standard by default). Clean has no tray – one white card with hairline shadows, gray tab-like chips
  * kept on one line (as many as fit, "+N" for the rest), quiet rows with a subtle hover, blue checkboxes, finer icons
  * and the keyboard hints as the card's last row.
  */
@@ -54,7 +53,7 @@ export type FilterMenuOwnProps = {
   title?: string;
   /** Show the keyboard hints at the bottom (Clean: as the last row of the card) */
   hints?: boolean;
-  /** Visual style. Defaults to the file's look: Standard in filter-menu.tsx, Clean in filter-menu-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   className?: string;
   /** The root element */

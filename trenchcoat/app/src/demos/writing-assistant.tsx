@@ -1,4 +1,4 @@
-import type * as UI from "@components/writing-assistant";
+import type * as UI from "../../../src/elements/react";
 
 const replies: [RegExp, string][] = [
   [/launch|announce/i, "Big news: Atlas 2.0 is here. Faster search, shared workspaces and a brand-new mobile app – all included in your plan at no extra cost. Take a look and tell us what you think!"],

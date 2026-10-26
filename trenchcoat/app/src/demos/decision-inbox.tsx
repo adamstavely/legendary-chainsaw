@@ -1,6 +1,6 @@
 import { useState } from "react";
-import type * as UI from "@components/decision-inbox";
-import type { Decision } from "@components/decision-inbox";
+import type * as UI from "../../../src/elements/react";
+import type { InboxDecision as Decision } from "../../../src/elements/react";
 import { buttonSm } from "../demo-kit";
 
 const DECISIONS: Decision[] = [

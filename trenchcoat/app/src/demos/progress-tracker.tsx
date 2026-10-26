@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type * as UI from "@components/progress-tracker";
+import type * as UI from "../../../src/elements/react";
 
 const Dot = ({ color, letter }: { color: string; letter: string }) => (
   <svg viewBox="0 0 20 20" aria-hidden="true">

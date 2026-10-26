@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import type * as UI from "@components/context-window";
-import type { ContextPart } from "@components/context-window";
+import type * as UI from "../../../src/elements/react";
+import type { ContextPart } from "../../../src/elements/react";
 
 /* The conversation keeps growing while you watch, so the percentage creeps toward the amber warning. Remove files
    or tools to free room, press Compact on the conversation (the cells shimmer for a moment), or New chat to start

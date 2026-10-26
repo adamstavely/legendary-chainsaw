@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import type * as UI from "@components/agent-queue";
-import type { QueueJob, QueueJobKind, QueueJobPriority, QueueRateLimit, QueueWorker } from "@components/agent-queue";
+import type * as UI from "../../../src/elements/react";
+import type { QueueJob, QueueJobKind, QueueJobPriority, QueueRateLimit, QueueWorker } from "../../../src/elements/react";
 
 /* A small scheduler drives the queue: jobs arrive at a steady clip (with bursts), free workers pull the front one,
    some fail and retry, and every ~40s the provider rate-limits for 8s so you can watch the backlog build and drain.

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type * as UI from "@components/command-menu";
+import type * as UI from "../../../src/elements/react";
 import { button } from "../demo-kit";
 
 export default function Demo({ ui }: { ui: typeof UI }) {

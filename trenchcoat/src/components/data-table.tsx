@@ -25,8 +25,7 @@ import { useSmoothHeight } from "../internal/use-smooth-height";
  * Select a cell or a range, edit in place, copy and paste with Excel or Sheets, undo, sort, and check rows.
  * The styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop (the default comes from the file: data-table.tsx is Standard,
- * data-table-clean.tsx is Clean). Clean has no tray – one white card with hairline shadows; title, table and
+ * Two looks, picked with the `look` prop (Standard by default). Clean has no tray – one white card with hairline shadows; title, table and
  * actions all sit inside it, with quiet gray type, hairline row dividers, tinted tags (also in the tag picker)
  * and a soft blue fill for selections. Its icons are 16px with thin 1.1px lines.
  */
@@ -61,7 +60,7 @@ export type TagTone = "blue" | "violet" | "pink" | "green" | "amber" | "gray";
 export type DataSort = { key: string; dir: "asc" | "desc" } | null;
 
 type OwnProps = {
-  /** Visual style. Defaults to the file's look: Standard in data-table.tsx, Clean in data-table-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   title: string;
   /** Icon in front of the title */

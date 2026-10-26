@@ -9,7 +9,7 @@
 //   · everything else stays literal and is counted by the ratchet ("literal spacing"): 1 px, fractions, negative
 //     values, values 2 px or more off the scale (22, 30, 36 …), and anything inside calc(), var() or ${}.
 // Hand-written libraries (illustrations, motion) get the dictionary fallback, var(--tc-space-1, 4px), as
-// check-tokens requires; src/ files get none – build-lib adds them.
+// check-tokens requires; src/ files get none – they rely on tokens.css.
 import { readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 

@@ -1,4 +1,4 @@
-import type * as UI from "@illustrations/cover-flow";
+import type * as UI from "../../../../src/elements/react";
 
 /** An album-style cover as an inline SVG data URL: gradient, a shape and the title */
 function cover(title: string, a: string, b: string, shape: "circle" | "ring" | "bars" | "wave") {

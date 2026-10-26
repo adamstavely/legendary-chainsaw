@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import type * as UI from "@components/context-map";
-import type { ContextBlock, ContextCompaction } from "@components/context-map";
+import type * as UI from "../../../src/elements/react";
+import type { ContextBlock, ContextCompaction } from "../../../src/elements/react";
 
 /* The fixer's context fills up as it reads files, runs tests and chats; near the limit it compacts (status in the
    bar), and Before / After appear. Then it keeps working and the cycle repeats. A second agent with a 500k window

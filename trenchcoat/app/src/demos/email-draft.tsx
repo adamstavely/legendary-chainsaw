@@ -1,6 +1,6 @@
 import { useState } from "react";
-import type * as UI from "@components/email-draft";
-import type { DraftContact, DraftTone } from "@components/email-draft";
+import type * as UI from "../../../src/elements/react";
+import type { DraftContact, DraftTone } from "../../../src/elements/react";
 import { caption } from "../demo-kit";
 
 const contacts: DraftContact[] = [

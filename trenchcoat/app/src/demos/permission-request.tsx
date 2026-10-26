@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import type * as UI from "@components/permission-request";
-import type { PermissionDecision, PermissionPreviewItem } from "@components/permission-request";
+import type * as UI from "../../../src/elements/react";
+import type { PermissionDecision, PermissionPreviewItem } from "../../../src/elements/react";
 
 const Star = () => (
   <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">

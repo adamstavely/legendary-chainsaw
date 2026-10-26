@@ -1,0 +1,7 @@
+{
+  "name": "trenchcoat-example-nuxt",
+  "private": true,
+  "type": "module",
+  "scripts": { "build": "nuxt build", "serve": "node scripts-serve.mjs" },
+  "dependencies": { "nuxt": "4.6.2", "trenchcoat": "file:../.packed/trenchcoat.tgz", "vue": "3.5.44" }
+}

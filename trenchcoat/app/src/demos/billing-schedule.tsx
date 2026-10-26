@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
-import type * as UI from "@components/billing-schedule";
-import type { CatalogItem, ScheduleLine } from "@components/billing-schedule";
+import type * as UI from "../../../src/elements/react";
+import type { CatalogItem, ScheduleLine } from "../../../src/elements/react";
 import { caption } from "../demo-kit";
 
 const catalog: CatalogItem[] = [

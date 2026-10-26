@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type * as UI from "@components/notification-stack";
+import type * as UI from "../../../src/elements/react";
 import { textButton } from "../demo-kit";
 
 const NOTICES: UI.Notice[] = [

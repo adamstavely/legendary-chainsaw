@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import type * as UI from "@components/agent-steering";
-import type { SteerNote, SteerStep } from "@components/agent-steering";
+import type * as UI from "../../../src/elements/react";
+import type { SteerNote, SteerStep } from "../../../src/elements/react";
 
 /* The run advances a step every ~6s. Notes you queue (↵) are taken in when the next step starts and glide into
    the plan; ⌘↵ or "Now" applies one to the active step right away. One note is queued already so the glide shows

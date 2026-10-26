@@ -1,5 +1,6 @@
-import type * as UI from "@components/stepper-form";
-import { button } from "../demo-kit";
+import { useState } from "react";
+import type * as UI from "../../../src/elements/react";
+import { button, textButton } from "../demo-kit";
 
 type Values = {
   workspace: string;
@@ -23,6 +24,8 @@ const toSlug = (s: string) =>
 
 export default function Demo({ ui }: { ui: typeof UI }) {
   const { StepperForm, StepperField, StepperInput, StepperTags, StepperChoices, StepperReview, StepperSuccess } = ui;
+  // Jump links: start over empty, or open at the review step with everything filled in (one click from success)
+  const [run, setRun] = useState<{ n: number; at: "start" | "review" }>({ n: 0, at: "start" });
 
   const steps: UI.Step<Values>[] = [
     {
@@ -101,10 +104,16 @@ export default function Demo({ ui }: { ui: typeof UI }) {
   ];
 
   return (
-    <div style={{ width: "100%", maxWidth: 520 }}>
+    <div style={{ width: "100%", maxWidth: 520, display: "grid", gap: 8 }}>
       <StepperForm<Values>
+        key={run.n}
         steps={steps}
-        initialValues={{ workspace: "", slug: "", invites: ["maya@northwind.studio"], plan: "team" }}
+        defaultStep={run.at === "review" ? 3 : 0}
+        defaultValues={
+          run.at === "review"
+            ? { workspace: "Northwind Studio", slug: "northwind-studio", invites: ["maya@northwind.studio", "leo@northwind.studio"], plan: "team" }
+            : { workspace: "", slug: "", invites: ["maya@northwind.studio"], plan: "team" }
+        }
         submitLabel="Create workspace"
         submittingLabel="Creating…"
         onComplete={() => new Promise<void>((resolve) => setTimeout(resolve, 1400))}
@@ -127,6 +136,14 @@ export default function Demo({ ui }: { ui: typeof UI }) {
           </StepperSuccess>
         )}
       />
+      <div style={{ display: "flex", gap: 12, justifyContent: "flex-end" }}>
+        <button type="button" style={textButton} onClick={() => setRun((r) => ({ n: r.n + 1, at: "start" }))}>
+          Start over
+        </button>
+        <button type="button" style={textButton} onClick={() => setRun((r) => ({ n: r.n + 1, at: "review" }))}>
+          Jump to review
+        </button>
+      </div>
     </div>
   );
 }

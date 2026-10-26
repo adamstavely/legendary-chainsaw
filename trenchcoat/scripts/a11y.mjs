@@ -4,7 +4,8 @@
 // Rules: WCAG 2.0/2.1/2.2 A and AA. Pages run on the same fake clock as the visual harness, with reduced motion, so
 // a scan sees each demo at the same moment. axe covers roughly a third of WCAG – keyboard, focus management and
 // announcements still need the regression tests and a manual pass.
-import { chromium } from "@playwright/test";
+// A11Y_BROWSER=firefox|webkit scans in that engine (Chromium by default); give parallel runs their own VISUAL_PORT.
+import { chromium, firefox, webkit } from "@playwright/test";
 import { createServer } from "vite";
 import { readFileSync, writeFileSync } from "node:fs";
 import { createRequire } from "node:module";
@@ -26,7 +27,7 @@ else {
 async function scan(name, filter) {
   const server = await createServer({ configFile: "vite.config.ts", server: { port: PORT, strictPort: true }, logLevel: "error" });
   await server.listen();
-  const browser = await chromium.launch();
+  const browser = await ({ chromium, firefox, webkit }[process.env.A11Y_BROWSER ?? "chromium"]).launch();
   const context = await browser.newContext({ viewport: { width: 1280, height: 900 }, reducedMotion: "reduce" });
   await context.addInitScript(() => {
     let seed = 42;

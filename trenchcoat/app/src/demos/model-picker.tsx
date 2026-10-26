@@ -1,6 +1,6 @@
 import { useState } from "react";
-import type * as UI from "@components/model-picker";
-import type { ModelEffort, PickerModel } from "@components/model-picker";
+import type * as UI from "../../../src/elements/react";
+import type { ModelEffort, PickerModel } from "../../../src/elements/react";
 import { surface } from "../demo-kit";
 
 const Spark = () => (

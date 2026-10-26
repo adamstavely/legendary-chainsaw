@@ -1,4 +1,5 @@
 import { Component, createContext, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { LookProvider } from "../../src/elements/react";
 import { CATEGORIES, ENTRIES, LIBRARY_INFO, type Entry, type LibraryInfo, type Variant } from "./registry";
 
 type Mode = Variant | "both";
@@ -6,6 +7,7 @@ type Theme = "light" | "dark" | "system";
 
 const THEMES: Theme[] = ["light", "dark", "system"];
 const THEME_KEY = "trenchcoat-gallery-theme";
+const LOOK_KEY = "trenchcoat-gallery-look";
 /** The stages' theme – set as data-tc-theme, the mechanism tokens.css documents (chrome stays light) */
 const ThemeContext = createContext<Theme>("light");
 
@@ -28,6 +30,29 @@ function useStoredTheme() {
   return [theme, setTheme] as const;
 }
 
+/** The Standard / Clean / Both switch: ?look=clean in the URL wins on load, then the viewer's last choice */
+function useStoredMode() {
+  const modes: Mode[] = ["standard", "clean", "both"];
+  const [mode, setMode] = useState<Mode>(() => {
+    const fromUrl = new URLSearchParams(location.search).get("look") as Mode | null;
+    if (fromUrl && modes.includes(fromUrl)) return fromUrl;
+    try {
+      const saved = localStorage.getItem(LOOK_KEY) as Mode | null;
+      return saved && modes.includes(saved) ? saved : "both";
+    } catch {
+      return "both";
+    }
+  });
+  useEffect(() => {
+    try {
+      localStorage.setItem(LOOK_KEY, mode);
+    } catch {
+      // storage unavailable – the choice just isn't remembered
+    }
+  }, [mode]);
+  return [mode, setMode] as const;
+}
+
 function useHash() {
   const [hash, setHash] = useState(() => decodeURIComponent(location.hash.slice(2)));
   useEffect(() => {
@@ -38,7 +63,8 @@ function useHash() {
   return hash;
 }
 
-const fileCount = (list: Entry[]) => list.reduce((n, e) => n + Object.keys(e.files).length, 0);
+// Source files, not stages: a component's Clean stage is the same file with look="clean"
+const fileCount = (list: Entry[]) => list.reduce((n, e) => n + new Set(Object.values(e.files).map((f) => f.split(" ")[0])).size, 0);
 const entriesOf = (library: string) => ENTRIES.filter((e) => e.library === library);
 
 /** Entries grouped by category, in sidebar order, empty groups dropped */
@@ -50,7 +76,7 @@ function grouped(list: Entry[]) {
 
 export function App() {
   const [query, setQuery] = useState("");
-  const [mode, setMode] = useState<Mode>("both");
+  const [mode, setMode] = useStoredMode();
   const [theme, setTheme] = useStoredTheme();
   const route = useHash();
   const focused = ENTRIES.find((e) => e.id === route);
@@ -80,7 +106,7 @@ export function App() {
         <div className="spacer" />
         <input className="search" type="search" placeholder="Search everything…" value={query} onChange={(e) => setQuery(e.target.value)} />
         {showVariant && (
-          <div className="seg" role="radiogroup" aria-label="Variant">
+          <div className="seg" role="radiogroup" aria-label="Look">
             {(["standard", "clean", "both"] as Mode[]).map((m) => (
               <button key={m} role="radio" aria-checked={mode === m} className={mode === m ? "on" : ""} onClick={() => setMode(m)}>
                 {m === "both" ? "Both" : m[0].toUpperCase() + m.slice(1)}
@@ -203,8 +229,8 @@ function Home() {
       <section className="hero">
         <h1>Trenchcoat</h1>
         <p className="lede">
-          A UI kit for AI-native products. Every piece is a single, self-contained React file – copy it into your app and import it. No
-          package to install and no stylesheet to wire up: React 19 is the only dependency (Screens also use Lucide icons).
+          A UI kit for AI-native products. Components, illustrations and motion are moving to Lit web components that any framework
+          can use, packaged with one stylesheet, <code>tokens.css</code>. Blocks and Screens are single React files you can copy.
         </p>
         <div className="stats">
           {LIBRARY_INFO.map((lib) => (
@@ -257,8 +283,8 @@ function Home() {
       <section>
         <h2 className="cathead">Standard and Clean</h2>
         <p className="intro">
-          Every component comes in two styles – <code>button.tsx</code> and <code>button-clean.tsx</code>. They are two design languages,
-          not two weights of one theme: pick one per product. Props and behaviour are the same, so you can swap one import for the other.
+          Every component comes in two styles, picked with its <code>look</code> prop: <code>"standard"</code> (the default) or <code>"clean"</code>.
+          They are two design languages, not two weights of one theme: pick one per product. Props and behaviour are the same.
           Blocks, Screens, Illustrations and Motion come in a single style.
         </p>
         <table className="compare">
@@ -322,15 +348,20 @@ function Home() {
         <h2 className="cathead">Using a file</h2>
         <ol className="steps">
           <li>
-            Copy the file into your project, e.g. <code>components/ui/</code>, and import it from there.
+            Components need <code>tokens/tokens.css</code> on the page – it holds every value they use. While they're ported to Lit, copy{" "}
+            <code>src/components/&lt;name&gt;.tsx</code> together with <code>src/internal/</code>.
+          </li>
+          <li>
+            Blocks, Screens, Illustrations and Motion are self-contained: copy the file into your project, e.g. <code>components/ui/</code>, and
+            import it from there.
           </li>
           <li>
             If it imports another piece as <code>@/components/ui/&lt;name&gt;</code>, copy that file alongside – Screens build on App Shell,
             Blocks on components like Button and Kpi Chart.
           </li>
           <li>
-            The styles are injected by the file itself. Theme it by overriding <code>--tc-</code> tokens – or include the optional{" "}
-            <code>tokens/tokens.css</code> dictionary to theme everything in one place. Dark mode: <code>data-tc-theme="dark"</code> (or{" "}
+            The styles are injected by the file itself. Theme it by overriding <code>--tc-</code> tokens in <code>tokens/tokens.css</code> or
+            on any ancestor. Dark mode: <code>data-tc-theme="dark"</code> (or{" "}
             <code>.dark</code>) on an ancestor, <code>data-tc-theme="system"</code> to follow the OS. Reduced motion is respected automatically.
           </li>
           <li>Open any item here to see its file name, and use Replay to restart its animations.</li>
@@ -433,7 +464,10 @@ function LazyStage({ entry, variant, eager }: { entry: Entry; variant: Variant; 
         <div className="placeholder">No demo written for this component yet.</div>
       ) : near && mod ? (
         <Boundary>
-          <Demo ui={mod} />
+          {/* Lit elements take the stage's look from this provider; React components still load their look's twin */}
+          <LookProvider look={variant}>
+            <Demo ui={mod} />
+          </LookProvider>
         </Boundary>
       ) : (
         <div className="placeholder">Loading…</div>

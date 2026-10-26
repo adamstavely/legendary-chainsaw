@@ -6,7 +6,8 @@ import { existsSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { TOKEN_RULES } from "./css-literals.mjs";
 
-const LIBRARIES = ["components", "blocks", "screens", "illustrations", "motion"];
+// src/elements: the Lit ports – their CSS sits in the same /* css */ template strings
+const LIBRARIES = ["src/components", "src/elements", "blocks", "screens", "illustrations", "motion"];
 const BASELINE = "scripts/ratchet-baseline.json";
 
 const PATTERNS = {
@@ -24,7 +25,7 @@ const PATTERNS = {
 
 const counts = {};
 for (const lib of LIBRARIES) {
-  for (const name of readdirSync(lib).filter((f) => f.endsWith(".tsx"))) {
+  for (const name of readdirSync(lib).filter((f) => /\.tsx?$/.test(f) && f !== "index.ts" && f !== "react.ts")) {
     const file = join(lib, name);
     const source = readFileSync(file, "utf8");
     for (const [label, re] of Object.entries(PATTERNS)) {

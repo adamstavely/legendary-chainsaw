@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Lit vs React</title>
+    <!-- Dev-only page for scripts/compare-lit.mjs: each React component next to its Lit element, same props -->
+    <style>
+      body { margin: 0; padding: 16px; font-family: system-ui; background: #fff; }
+      .pair { display: grid; grid-template-columns: 480px 480px; gap: 24px; padding: 12px; }
+      .pair[data-theme="dark"] { background: #111113; }
+      .side { padding: 8px; min-height: 40px; }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="./src/compare.tsx"></script>
+  </body>
+</html>

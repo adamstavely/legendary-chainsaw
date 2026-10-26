@@ -1,0 +1,32 @@
+// The package build (remediation plan 2.4, started with the pilot): ES modules, one per element, into dist/elements.
+// Lit stays external – apps get one copy – and so does React, which only the react entry uses.
+import { defineConfig } from "vite";
+import { readdirSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+
+const here = (p: string) => fileURLToPath(new URL(p, import.meta.url));
+
+export default defineConfig({
+  publicDir: false,
+  // Standard decorators are lowered here: rollup can't parse them, and no browser ships them yet
+  esbuild: { target: "es2022" },
+  build: {
+    outDir: here("dist"),
+    emptyOutDir: true,
+    target: "es2022",
+    minify: false,
+    sourcemap: true,
+    lib: {
+      formats: ["es"],
+      // Every element module (src/elements/<slug>.ts) is an entry, with the index, the React wrappers and the provider
+      entry: {
+        ...Object.fromEntries(readdirSync(here("src/elements")).filter((f) => f.endsWith(".ts")).map((f) => [f.slice(0, -3), here(`src/elements/${f}`)])),
+        "look-provider": here("src/elements/internal/look.ts"),
+      },
+    },
+    rollupOptions: {
+      external: [/^lit($|\/)/, /^@lit\//, "react", "react-dom", "react/jsx-runtime"],
+      output: { preserveModules: true, preserveModulesRoot: here("src"), entryFileNames: "[name].js" },
+    },
+  },
+});

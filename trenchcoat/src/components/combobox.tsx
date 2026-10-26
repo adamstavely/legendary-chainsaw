@@ -25,8 +25,7 @@ import { useRootRef } from "../internal/use-root-ref";
  * to create what's missing. ↑ ↓ move, ↵ picks, Esc closes, Tab leaves. The field and the list glide to their new heights.
  * The styles are injected below, so no extra files are needed.
  *
- * Two looks, picked with the `look` prop (the default comes from the file: combobox.tsx is Standard,
- * combobox-clean.tsx is Clean). Clean has no tray – a white field with a hairline shadow, gray tab-like chips and
+ * Two looks, picked with the `look` prop (Standard by default). Clean has no tray – a white field with a hairline shadow, gray tab-like chips and
  * one white popover with a blue check. Its field always stays one line: as many chips as fit next to the input are
  * shown, the rest go into "+N" (which names them, and opens the list where they can be unticked).
  * The row ↵ will pick always keeps its highlight; while the keyboard drives the list it also gets a focus ring.
@@ -92,7 +91,7 @@ export type ComboboxOwnProps = {
   emptyText?: string;
   /** Shows the field as invalid (red edge, aria-invalid on the input) */
   invalid?: boolean;
-  /** Visual style. Defaults to the file's look: Standard in combobox.tsx, Clean in combobox-clean.tsx */
+  /** Visual style: "standard" (the default) or "clean" */
   look?: Look;
   className?: string;
   /** The root element */

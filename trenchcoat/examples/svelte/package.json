@@ -1,0 +1,8 @@
+{
+  "name": "trenchcoat-example-svelte",
+  "private": true,
+  "type": "module",
+  "scripts": { "build": "vite build", "serve": "vite preview --strictPort --port" },
+  "dependencies": { "svelte": "5.57.2", "trenchcoat": "file:../.packed/trenchcoat.tgz" },
+  "devDependencies": { "@sveltejs/vite-plugin-svelte": "5.1.1", "vite": "6.4.5" }
+}

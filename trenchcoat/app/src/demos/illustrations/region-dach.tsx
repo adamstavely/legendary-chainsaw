@@ -1,4 +1,4 @@
-import type * as UI from "@illustrations/region-dach";
+import type * as UI from "../../../../src/elements/react";
 
 export default function Demo({ ui }: { ui: typeof UI }) {
   return <ui.RegionDach />;

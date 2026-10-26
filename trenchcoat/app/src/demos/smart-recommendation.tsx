@@ -1,6 +1,6 @@
 import { useState } from "react";
-import type * as UI from "@components/smart-recommendation";
-import type { Recommendation } from "@components/smart-recommendation";
+import type * as UI from "../../../src/elements/react";
+import type { Recommendation } from "../../../src/elements/react";
 
 const options: Recommendation[] = [
   {

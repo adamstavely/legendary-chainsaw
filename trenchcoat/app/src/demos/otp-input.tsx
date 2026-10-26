@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import type * as UI from "@components/otp-input";
+import type * as UI from "../../../src/elements/react";
 import { textButton } from "../demo-kit";
 
 const CORRECT = "246810";

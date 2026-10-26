@@ -1,6 +1,6 @@
 import { useState } from "react";
-import type * as UI from "@components/project-card";
-import type { ProjectMember, ProjectTask } from "@components/project-card";
+import type * as UI from "../../../src/elements/react";
+import type { ProjectMember, ProjectTask } from "../../../src/elements/react";
 
 const MEMBERS: ProjectMember[] = [{ name: "Maya Chen" }, { name: "Jonas Weber" }, { name: "Priya Nair" }];
 

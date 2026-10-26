@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import type * as UI from "@components/message-actions";
+import type * as UI from "../../../src/elements/react";
 import { bubble } from "../demo-kit";
 
 const pool = [

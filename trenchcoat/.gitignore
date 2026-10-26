@@ -5,3 +5,26 @@ coverage/
 *.log
 .DS_Store
 .visual/
+
+# Perf bench output (scripts/perf) and its generated harness files
+.perf/
+scripts/perf/bench/entries.gen.ts
+scripts/perf/bench/out.js
+scripts/perf/bench/index.html
+dist-gallery/
+custom-elements.json
+
+# Example apps: their installs, builds and the packed package they install
+examples/.packed/
+examples/*/node_modules/
+examples/*/package-lock.json
+examples/*/dist/
+examples/*/.next/
+examples/*/next-env.d.ts
+examples/*/.nuxt/
+examples/*/.output/
+examples/*/.angular/
+
+# Lockfiles: the example runner reinstalls the packed tarball each run
+examples/*/package-lock*.json
+examples/html/dist-shake
