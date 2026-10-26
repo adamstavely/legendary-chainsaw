@@ -1,6 +1,7 @@
 /// <reference types="vitest/config" />
 import { defineConfig, transformWithEsbuild, type Plugin } from "vite";
 import react from "@vitejs/plugin-react";
+import { playwright } from "@vitest/browser-playwright";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -74,11 +75,31 @@ export default defineConfig({
   build: { outDir: here("dist"), emptyOutDir: true },
   test: {
     root: here("."),
-    environment: "jsdom",
-    include: ["tests/**/*.test.{ts,tsx}"],
-    setupFiles: ["tests/setup.ts"],
     testTimeout: 30_000,
     // Tests that reproduce a missing .catch() raise an unhandled rejection on purpose; they tag it "[expected]"
     onUnhandledError: (error) => (String((error as Error)?.message).includes("[expected]") ? false : undefined),
+    projects: [
+      // The React components, in jsdom
+      {
+        extends: true,
+        test: { name: "react", environment: "jsdom", include: ["tests/**/*.test.{ts,tsx}"], exclude: ["tests/elements/**"], setupFiles: ["tests/setup.ts"] },
+      },
+      // The Lit elements, in real browsers (decision L12): Chromium, Firefox and WebKit through Playwright
+      {
+        extends: true,
+        test: {
+          name: "elements",
+          include: ["tests/elements/**/*.test.ts"],
+          setupFiles: ["tests/elements/setup.ts"],
+          browser: {
+            enabled: true,
+            provider: playwright(),
+            headless: true,
+            screenshotFailures: false,
+            instances: [{ browser: "chromium" }, { browser: "firefox" }, { browser: "webkit" }],
+          },
+        },
+      },
+    ],
   },
 });

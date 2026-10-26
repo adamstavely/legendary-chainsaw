@@ -1,5 +1,7 @@
 import tseslint from "typescript-eslint";
 import hooks from "eslint-plugin-react-hooks";
+import lit from "eslint-plugin-lit";
+import wc from "eslint-plugin-wc";
 
 export default tseslint.config(
   { ignores: ["node_modules", "dist", "coverage", ".visual", ".perf", "scripts/perf"] },
@@ -15,13 +17,13 @@ export default tseslint.config(
   {
     // The libraries predate the gate: exhaustive-deps stays a warning there until Phase 2 rewrites the effects.
     // New suppressions are policed by scripts/check-ratchet.mjs instead.
-    files: ["components/**", "blocks/**", "screens/**", "illustrations/**", "motion/**"],
+    files: ["src/components/**", "blocks/**", "screens/**", "illustrations/**", "motion/**"],
     rules: { "react-hooks/exhaustive-deps": "warn" },
   },
   {
-    // Component sources declare build metadata that only scripts/build-lib.mjs reads
-    files: ["src/components/**"],
-    rules: { "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_", varsIgnorePattern: "^(_|EXTRA_ROOT_CLASSES$)" }] },
+    // The Lit elements (audit/lit-port-plan.md, toolchain): lit-analyzer checks the templates in CI as well
+    files: ["src/elements/**/*.ts", "tests/elements/**/*.ts"],
+    extends: [lit.configs["flat/recommended"], wc.configs["flat/recommended"]],
   },
   {
     // Demos pass the imported module around as `any` on purpose (`ui: any` in the registry)

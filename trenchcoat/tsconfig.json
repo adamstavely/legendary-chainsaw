@@ -18,6 +18,13 @@
       "vite/client",
       "node"
     ],
+    "useDefineForClassFields": true,
+    "plugins": [
+      {
+        "name": "ts-lit-plugin",
+        "strict": true
+      }
+    ],
     "baseUrl": ".",
     "paths": {
       "@components/*-clean": [

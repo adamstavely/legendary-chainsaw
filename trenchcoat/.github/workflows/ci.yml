@@ -24,5 +24,9 @@ jobs:
         run: npm run check:ratchet
       - name: Design tokens
         run: npm run check:tokens
+      - name: Lit templates
+        run: npm run check:lit
+      - name: Browsers for the element tests
+        run: npx playwright install --with-deps chromium firefox webkit
       - name: Tests
         run: npm test
