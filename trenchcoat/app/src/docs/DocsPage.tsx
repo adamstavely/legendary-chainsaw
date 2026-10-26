@@ -197,7 +197,7 @@ export function DocsPage({ entry, section, example }: { entry: Entry; section: s
               <div className="docs-api">
                 <h4>Functions</h4>
                 <p className="docs-hint muted">Exported from the module next to the element.</p>
-                <Table head={["Function", "Description"]} rows={api.functions.map((f) => [<code key="s" className="docs-type">{f.signature}</code>, <Inline key="d" text={f.description} />])} />
+                <Table label={"Functions"} head={["Function", "Description"]} rows={api.functions.map((f) => [<code key="s" className="docs-type">{f.signature}</code>, <Inline key="d" text={f.description} />])} />
               </div>
             )}
           </Section>
@@ -215,7 +215,7 @@ export function DocsPage({ entry, section, example }: { entry: Entry; section: s
                 <div key={r.component}>
                   {api.react.filter((x) => x.exported).length > 1 && <h3 className="docs-sub">{r.component}</h3>}
                   <Table
-                    head={["Prop", "Type", "Description"]}
+                    label={`${r.component} props`} head={["Prop", "Type", "Description"]}
                     rows={r.props.map((p) => [<code key="n">{p.name + (p.optional ? "" : "")}</code>, <code key="t" className="docs-type">{p.type}</code>, p.description ? <Inline key="d" text={p.description} /> : <span className="muted">–</span>])}
                   />
                   {r.hides.length > 0 && (
@@ -375,10 +375,11 @@ function Section({ id, title, anchorOf, children }: { id: string; title: string;
   );
 }
 
-function Table({ head, rows }: { head: string[]; rows: ReactNode[][] }) {
+function Table({ head, rows, label }: { head: string[]; rows: ReactNode[][]; label: string }) {
   if (!rows.length) return null;
+  // A wide table scrolls sideways: the wrapper is a named region keyboard users can focus and scroll
   return (
-    <div className="docs-table-wrap">
+    <div className="docs-table-wrap" role="region" aria-label={label} tabIndex={0}>
       <table className="docs-table">
         <thead>
           <tr>
@@ -417,7 +418,7 @@ function ElementApi({ el, several, singleLook }: { el: ApiElement; several: bool
       {several && el.description && <p className="muted docs-hint">{el.description}</p>}
       <h4>Properties and attributes</h4>
       <Table
-        head={["Property", "Attribute", "Type", "Default", "Description"]}
+        label={`${el.tag} properties`} head={["Property", "Attribute", "Type", "Default", "Description"]}
         rows={el.properties.filter((p) => !(singleLook && p.name === "look")).map((p) => [
           <code key="n">{p.name}</code>,
           p.attribute ? <code key="a">{p.attribute}</code> : dash,
@@ -430,7 +431,7 @@ function ElementApi({ el, several, singleLook }: { el: ApiElement; several: bool
         <>
           <h4>Events</h4>
           <Table
-            head={["Event", "Detail", "Cancelable", "Description"]}
+            label={`${el.tag} events`} head={["Event", "Detail", "Cancelable", "Description"]}
             rows={el.events.map((e) => [<code key="n">{e.name}</code>, e.detail ? <code key="d" className="docs-type">{e.detail}</code> : dash, e.cancelable ? "Yes" : "No", e.description ? <Inline key="d" text={e.description} /> : dash])}
           />
         </>
@@ -438,14 +439,14 @@ function ElementApi({ el, several, singleLook }: { el: ApiElement; several: bool
       {el.slots.length > 0 && (
         <>
           <h4>Slots</h4>
-          <Table head={["Slot", "Description"]} rows={el.slots.map((s) => [<code key="n">{s.name}</code>, s.description ? <Inline key="d" text={s.description} /> : dash])} />
+          <Table label={`${el.tag} slots`} head={["Slot", "Description"]} rows={el.slots.map((s) => [<code key="n">{s.name}</code>, s.description ? <Inline key="d" text={s.description} /> : dash])} />
         </>
       )}
       {el.methods.length > 0 && (
         <>
           <h4>Methods</h4>
           <Table
-            head={["Method", "Returns", "Description"]}
+            label={`${el.tag} methods`} head={["Method", "Returns", "Description"]}
             rows={el.methods.map((m) => [<code key="n">{`${m.name}(${m.params})`}</code>, <code key="r" className="docs-type">{m.returns}</code>, m.description ? <Inline key="d" text={m.description} /> : dash])}
           />
         </>
@@ -455,7 +456,7 @@ function ElementApi({ el, several, singleLook }: { el: ApiElement; several: bool
           <h4>Component tokens</h4>
           <p className="docs-hint muted">Custom properties on the element – set them on the element or an ancestor to adjust it.</p>
           <Table
-            head={["Custom property", "Value", "Look"]}
+            label={`${el.tag} component tokens`} head={["Custom property", "Value", "Look"]}
             rows={el.cssProperties.map((c) => [<code key="n">{c.name}</code>, <code key="v" className="docs-type">{c.value}</code>, c.looks.join(", ")])}
           />
         </>

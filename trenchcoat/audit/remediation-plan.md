@@ -414,6 +414,17 @@ and the changelog.
 examples type-checked (React, Vue) and run in the HTML example; a screenshot of every page in both themes reviewed
 for layout.
 
+*Done differently (2026-10-26):*
+- **How it was built:** the page, the generator and the check were built first, with combobox as the reference
+  page. Ten agents then wrote the other 112 guidance files from `audit/docs-brief.md`. 113 pages in all, including
+  one for the look provider.
+- **What documenting found:** reading every component against its README, comments and demo found six bugs, all
+  fixed, and a list of mismatches to fix later, in `audit/docs-findings.md`.
+- **Checks:** axe on every docs page in three engines; every page rendered in a test; the React examples
+  type-checked by `check:docs`.
+- **Not done:** a person reviewing the screenshots of every page. Pages were reviewed by the agents that wrote them,
+  plus a spot check.
+
 ## Part 5 – More AI components, and trust & calibration
 
 27 new components and one enhancement, built the way Part 3 was: Lit elements on Part 2's toolchain and patterns,
