@@ -140,8 +140,10 @@ describe("tc-progress-tracker", () => {
     const el = await fixture<TcProgressTracker>(html`<tc-progress-tracker .steps=${three} interval="60" auto-play></tc-progress-tracker>`);
     box(el, "Three").dispatchEvent(new PointerEvent("pointerdown", { bubbles: true }));
     await settle();
+    // Nothing moves on after the interaction (a slow runner may already have ticked once while mounting)
+    const at = bar(el).getAttribute("aria-valuenow");
     await wait(250);
-    expect(bar(el).getAttribute("aria-valuenow")).toBe("0");
+    expect(bar(el).getAttribute("aria-valuenow")).toBe(at);
     expect(el.querySelector(".ui-progress__play")!.getAttribute("aria-label")).toBe("Play auto-play");
   });
 
