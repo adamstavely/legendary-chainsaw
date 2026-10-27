@@ -268,7 +268,10 @@ export class TcBackgroundTasks extends TcElement {
     if (this.focusAfter !== null) {
       const id = this.focusAfter;
       this.focusAfter = null;
-      this.row(id)?.focus({ preventScroll: false });
+      const row = this.row(id);
+      row?.focus({ preventScroll: false });
+      // Not every engine scrolls a just-rendered row into view on focus; make sure, so the window can let go of it
+      row?.scrollIntoView({ block: "nearest" });
     }
   }
 

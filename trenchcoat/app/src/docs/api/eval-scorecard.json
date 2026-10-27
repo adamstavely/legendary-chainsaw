@@ -645,7 +645,9 @@
    "MutationObserver (internal/controllers › FocusRescueController)",
    "ResizeObserver (inline-diff)"
   ],
-  "clock": [],
+  "clock": [
+   "performance.now() (internal/controllers › RowWindowController)"
+  ],
   "listeners": [
    "window scroll (internal/controllers › RowWindowController)",
    "window resize (internal/controllers › RowWindowController)",
@@ -664,7 +666,7 @@
   "windowed": true
  },
  "size": {
-  "min": 90023,
-  "gzip": 22694
+  "min": 90298,
+  "gzip": 22786
  }
 }

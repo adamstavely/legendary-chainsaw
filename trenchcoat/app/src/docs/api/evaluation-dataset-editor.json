@@ -761,7 +761,9 @@
    "MutationObserver (internal/controllers › AriaForwardController)",
    "MutationObserver (internal/controllers › FocusRescueController)"
   ],
-  "clock": [],
+  "clock": [
+   "performance.now() (internal/controllers › RowWindowController)"
+  ],
   "listeners": [
    "window scroll (internal/controllers › RowWindowController)",
    "window resize (internal/controllers › RowWindowController)"
@@ -777,7 +779,7 @@
   "windowed": true
  },
  "size": {
-  "min": 74791,
-  "gzip": 19579
+  "min": 75064,
+  "gzip": 19671
  }
 }

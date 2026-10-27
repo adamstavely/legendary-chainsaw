@@ -524,7 +524,9 @@
    "ResizeObserver (stepper-form)",
    "IntersectionObserver (internal/controllers › OffScreenController)"
   ],
-  "clock": [],
+  "clock": [
+   "performance.now() (internal/controllers › RowWindowController)"
+  ],
   "listeners": [
    "window pointerup (data-table)",
    "window scroll (internal/controllers › RowWindowController)",
@@ -549,7 +551,7 @@
   "windowed": false
  },
  "size": {
-  "min": 228634,
-  "gzip": 54248
+  "min": 228909,
+  "gzip": 54343
  }
 }
