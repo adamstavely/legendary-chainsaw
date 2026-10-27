@@ -8,7 +8,7 @@ import { act } from "react";
 import { createRoot } from "react-dom/client";
 import { afterEach, describe, expect, test, vi } from "vitest";
 import "../../src/elements/permission-request";
-import type { PermissionDecision, PermissionPreviewItem, TcPermissionRequest } from "../../src/elements/permission-request";
+import type { PermissionDecision, PermissionEmergencyRequest, PermissionPreviewItem, TcPermissionRequest } from "../../src/elements/permission-request";
 import { PermissionRequest } from "../../src/elements/react/permission-request";
 import { cleanup, fixture, settle } from "./helpers";
 
@@ -272,12 +272,162 @@ describe("tc-permission-request", () => {
     await act(async () => root.unmount());
   });
 
-  test("axe: no violations in either look", async () => {
-    const wrap = await fixture(html`<div>
-      <tc-permission-request .agent=${agent} action="push to main" reason="The tests passed." .preview=${[{ id: "1", label: "a.ts", meta: "+1" }]}></tc-permission-request>
-      <tc-permission-request look="clean" .agent=${agent} action="push to main" .decision=${{ allow: true, scope: "timed", at: 0, until: 60_000 }} .now=${30_000}></tc-permission-request>
-    </div>`);
-    const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
-    expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
+  for (const look of ["standard", "clean"] as const) {
+    test(`${look}: emergency – offered only when listed; asks for a justification and an urgency window`, async () => {
+      const plain = await make(look);
+      expect(radio(plain, "Emergency")).toBeUndefined();
+      const el = await fixture<TcPermissionRequest>(html`<tc-permission-request look=${look} .agent=${agent} action="restore the database" risk="destructive" .scopes=${["once", "emergency"]}></tc-permission-request>`);
+      expect(el.querySelector(".ui-pr__sos")).toBeNull();
+      radio(el, "Emergency").click();
+      await settle();
+      expect(el.querySelector(".ui-pr__sos")).toBeTruthy();
+      const field = el.querySelector<HTMLTextAreaElement>(".ui-pr__why-field")!;
+      expect(el.querySelector<HTMLLabelElement>(`label[for="${field.id}"]`)!.textContent).toBe("Why can't this wait?");
+      expect(field.getAttribute("aria-required")).toBe("true");
+      const group = el.querySelector('.ui-pr__urgencies[role="radiogroup"]')!;
+      expect(document.getElementById(group.getAttribute("aria-labelledby")!)!.textContent).toBe("How urgent");
+      expect([...group.querySelectorAll('[role="radio"]')].map((r) => r.textContent!.trim())).toEqual(["Standard30 min", "Urgent15 min", "Critical5 min"]);
+      expect(group.querySelector('[aria-checked="true"]')!.textContent).toContain("Standard");
+      expect(button(el, /Request emergency access/)).toBeTruthy();
+    });
+
+    test(`${look}: emergency – no justification, no request: the field says so and takes focus`, async () => {
+      const el = await fixture<TcPermissionRequest>(html`<tc-permission-request look=${look} .agent=${agent} action="restore the database" .scopes=${["emergency"]} scope="emergency"></tc-permission-request>`);
+      const seen: unknown[] = [];
+      el.addEventListener("tc-emergency-request", (e) => seen.push(e));
+      el.addEventListener("tc-decision-change", (e) => seen.push(e));
+      button(el, /Request emergency access/).click();
+      await settle();
+      expect(seen).toHaveLength(0);
+      const field = el.querySelector<HTMLTextAreaElement>(".ui-pr__why-field")!;
+      expect(field.getAttribute("aria-invalid")).toBe("true");
+      expect(document.getElementById(field.getAttribute("aria-describedby")!)!.textContent).toMatch(/Say why it can't wait/);
+      expect(document.activeElement).toBe(field);
+      // Enter in the justification makes a new line, never a request
+      key(field, "Enter");
+      expect(seen).toHaveLength(0);
+    });
+
+    test(`${look}: emergency – a cancelable request carrying the justification; granted, the banner shows the time left as given`, async () => {
+      const el = await fixture<TcPermissionRequest>(html`<tc-permission-request look=${look} .agent=${agent} action="restore the database" .scopes=${["once", "emergency"]} scope="emergency" .now=${5_000}></tc-permission-request>`);
+      const requests: PermissionEmergencyRequest[] = [];
+      let refuse = true;
+      el.addEventListener("tc-emergency-request", (e) => {
+        requests.push((e as CustomEvent<PermissionEmergencyRequest>).detail);
+        if (refuse) e.preventDefault();
+      });
+      const field = el.querySelector<HTMLTextAreaElement>(".ui-pr__why-field")!;
+      field.value = "  Checkout is down  ";
+      field.dispatchEvent(new Event("input", { bubbles: true }));
+      const urgent = el.querySelector<HTMLElement>('[data-urgency="standard"]')!;
+      urgent.focus();
+      key(urgent, "ArrowRight");
+      await settle();
+      expect(document.activeElement).toBe(el.querySelector('[data-urgency="urgent"]'));
+      expect(el.querySelector('[data-urgency="urgent"]')!.getAttribute("aria-checked")).toBe("true");
+      button(el, /Request emergency access/).click();
+      await settle();
+      // Refused: nothing is granted
+      expect(requests[0]).toMatchObject({ justification: "Checkout is down", urgency: { id: "urgent", window: "15 min" }, decision: { allow: true, scope: "emergency", at: 5_000, urgency: "urgent" } });
+      expect(el.decision).toBeNull();
+      refuse = false;
+      button(el, /Request emergency access/).click();
+      await settle();
+      expect(el.decision).toMatchObject({ scope: "emergency", justification: "Checkout is down" });
+      expect(el.dataset.state).toBe("emergency");
+      const banner = el.querySelector<HTMLElement>('.ui-pr__result[data-kind="emergency"]')!;
+      expect(banner.querySelector(".ui-pr__result-head")!.textContent).toBe("Emergency access active · restore the database");
+      expect(banner.querySelector(".ui-pr__result-note")!.textContent).toBe("Urgent · review due afterwards");
+      expect(banner.querySelector(".ui-pr__result-why")!.textContent).toBe("“Checkout is down”");
+      expect(status(el)).toBe("Emergency access active: Coder may restore the database");
+      el.emergencyRemaining = "3 h 12 min";
+      await settle();
+      expect(banner.querySelector(".ui-pr__result-note")!.textContent).toBe("3 h 12 min left · Urgent · review due afterwards");
+      el.emergencyEnded = true;
+      el.reviewDue = "by Fri 31 Oct";
+      await settle();
+      const ended = el.querySelector('.ui-pr__result[data-kind="emergency-ended"]')!;
+      expect(ended.querySelector(".ui-pr__result-head")!.textContent).toBe("Emergency access ended · restore the database");
+      expect(ended.querySelector(".ui-pr__result-note")!.textContent).toBe("Review due by Fri 31 Oct");
+      expect(el.dataset.state).toBe("emergency-ended");
+      expect(status(el)).toBe("Emergency access ended: Coder may not restore the database. Review due by Fri 31 Oct");
+      expect(button(el, /^Ask again$/)).toBeTruthy();
+    });
+
+    test(`${look}: emergency – rendering the banner never reads the clock; End now takes it back`, async () => {
+      const spy = vi.spyOn(Date, "now");
+      const decision: PermissionDecision = { allow: true, scope: "emergency", at: 0, justification: "Outage", urgency: "critical" };
+      const el = await fixture<TcPermissionRequest>(html`<tc-permission-request look=${look} .agent=${agent} action="restore" .scopes=${["emergency"]} .decision=${decision} emergency-remaining="45 min"></tc-permission-request>`);
+      el.emergencyRemaining = "44 min";
+      await settle();
+      expect(spy).not.toHaveBeenCalled();
+      spy.mockRestore();
+      expect(el.querySelector(".ui-pr__result-note")!.textContent).toBe("44 min left · Critical · review due afterwards");
+      const seen: unknown[] = [];
+      el.addEventListener("tc-decision-change", (e) => seen.push((e as CustomEvent).detail.decision));
+      button(el, /^End now$/).click();
+      await settle();
+      expect(seen).toEqual([null]);
+    });
+  }
+
+  test("React wrapper: onEmergencyRequest returning false refuses it", async () => {
+    (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+    const host = document.createElement("div");
+    document.body.append(host);
+    const root = createRoot(host);
+    const asked: string[] = [];
+    const decided: unknown[] = [];
+    let allow = false;
+    const App = () =>
+      React.createElement(PermissionRequest, {
+        agent: { name: "Ops" },
+        action: "restore",
+        scopes: ["emergency"],
+        defaultScope: "emergency",
+        emergencyRemaining: "1 h",
+        onEmergencyRequest: (r) => {
+          asked.push(r.justification);
+          return allow;
+        },
+        onDecisionChange: (d) => void decided.push(d),
+      });
+    await act(async () => root.render(React.createElement(App)));
+    await settle();
+    const el = host.querySelector("tc-permission-request")!;
+    const field = el.querySelector<HTMLTextAreaElement>(".ui-pr__why-field")!;
+    field.value = "Outage";
+    field.dispatchEvent(new Event("input", { bubbles: true }));
+    await settle();
+    button(el, /Request emergency access/).click();
+    await settle();
+    expect(asked).toEqual(["Outage"]);
+    expect(decided).toEqual([]);
+    allow = true;
+    button(el, /Request emergency access/).click();
+    await settle();
+    expect(decided[0]).toMatchObject({ scope: "emergency", justification: "Outage" });
+    expect(el.querySelector(".ui-pr__result-note")!.textContent).toBe("1 h left · Standard · review due afterwards");
+    await act(async () => root.unmount());
   });
+
+  for (const theme of ["light", "dark"] as const) {
+    test(`axe (${theme}): no violations in either look, with the emergency form and banner`, async () => {
+      const wrap = await fixture(html`<div data-tc-theme=${theme} style="padding: 16px; background: var(--tc-surface-base)">
+        <tc-permission-request .agent=${agent} action="push to main" reason="The tests passed." .preview=${[{ id: "1", label: "a.ts", meta: "+1" }]}></tc-permission-request>
+        <tc-permission-request look="clean" .agent=${agent} action="push to main" .decision=${{ allow: true, scope: "timed", at: 0, until: 60_000 }} .now=${30_000}></tc-permission-request>
+        <tc-permission-request .agent=${agent} action="restore" .scopes=${["once", "emergency"]} scope="emergency"></tc-permission-request>
+        <tc-permission-request look="clean" .agent=${agent} action="restore" .scopes=${["once", "emergency"]} scope="emergency"></tc-permission-request>
+        <tc-permission-request .agent=${agent} action="restore" .decision=${{ allow: true, scope: "emergency", at: 0, justification: "Outage" }} emergency-remaining="45 min"></tc-permission-request>
+        <tc-permission-request look="clean" .agent=${agent} action="restore" .decision=${{ allow: true, scope: "emergency", at: 0, justification: "Outage" }} emergency-remaining="45 min"></tc-permission-request>
+        <tc-permission-request look="clean" .agent=${agent} action="restore" .decision=${{ allow: true, scope: "emergency", at: 0 }} emergency-ended review-due="by Friday"></tc-permission-request>
+      </div>`);
+      for (const b of wrap.querySelectorAll<HTMLButtonElement>("tc-permission-request:nth-of-type(3) .ui-pr__btn--primary, tc-permission-request:nth-of-type(4) .ui-pr__btn--primary")) b.click();
+      await settle();
+      for (const a of wrap.getAnimations?.({ subtree: true }) ?? []) a.finish();
+      await settle();
+      const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
+      expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
+    });
+  }
 });

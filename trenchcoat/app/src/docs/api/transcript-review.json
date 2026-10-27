@@ -1,0 +1,974 @@
+{
+ "elements": [
+  {
+   "tag": "tc-transcript-review",
+   "className": "TcTranscriptReview",
+   "description": "A recording with a transcript that follows playback: timestamps, speakers, recognition and translation confidence,\nlow-confidence segments marked, search, and \"Send to verification\".",
+   "properties": [
+    {
+     "name": "segments",
+     "attribute": null,
+     "type": "TranscriptSegment[]",
+     "default": "[]",
+     "description": "The transcript, in order of `start`",
+     "readonly": false
+    },
+    {
+     "name": "speakers",
+     "attribute": null,
+     "type": "TranscriptSpeaker[]",
+     "default": "[]",
+     "description": "Names, chip text and colours for the speaker ids in `segments`; an id with no entry shows as itself",
+     "readonly": false
+    },
+    {
+     "name": "src",
+     "attribute": "src",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The recording's URL; the element makes its own <audio> or <video> (see `kind`). Ignored when `media` is set",
+     "readonly": false
+    },
+    {
+     "name": "media",
+     "attribute": null,
+     "type": "HTMLMediaElement | null",
+     "default": "null",
+     "description": "The app's own <audio> or <video> to drive instead of `src`. A <video> that isn't on the page is shown in the card",
+     "readonly": false
+    },
+    {
+     "name": "kind",
+     "attribute": "kind",
+     "type": "TranscriptMediaKind",
+     "default": "\"audio\"",
+     "description": "What `src` is: \"audio\" (default) or \"video\", which shows the picture above the waveform",
+     "readonly": false
+    },
+    {
+     "name": "peaks",
+     "attribute": null,
+     "type": "number[]",
+     "default": "[]",
+     "description": "The waveform: loudness peaks from 0 to 1, as many as you have – they're resampled to fit the width",
+     "readonly": false
+    },
+    {
+     "name": "duration",
+     "attribute": "duration",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The recording's length in seconds, until the media reports it (default: the last segment's end)",
+     "readonly": false
+    },
+    {
+     "name": "threshold",
+     "attribute": "threshold",
+     "type": "number",
+     "default": "0.7",
+     "description": "Segments and words with confidence below this (0–1) are marked for checking",
+     "readonly": false
+    },
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Transcript\"",
+     "description": "The heading, and the region's name",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The quiet line under the heading (default: the length and how many speakers)",
+     "readonly": false
+    },
+    {
+     "name": "translationMode",
+     "attribute": "translation-mode",
+     "type": "TranscriptTranslationMode",
+     "default": "\"original\"",
+     "description": "What the transcript shows when segments have translations: the original, the translation, or both side by side",
+     "readonly": false
+    },
+    {
+     "name": "originalLabel",
+     "attribute": "original-label",
+     "type": "string",
+     "default": "\"Original\"",
+     "description": "The name of the original language's column and button, e.g. \"Spanish\"",
+     "readonly": false
+    },
+    {
+     "name": "translationLabel",
+     "attribute": "translation-label",
+     "type": "string",
+     "default": "\"Translation\"",
+     "description": "The name of the translation's column and button, e.g. \"English (machine)\"",
+     "readonly": false
+    },
+    {
+     "name": "hiddenSpeakers",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[]",
+     "description": "Speaker ids whose segments the list leaves out",
+     "readonly": false
+    },
+    {
+     "name": "query",
+     "attribute": "query",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The search text",
+     "readonly": false
+    },
+    {
+     "name": "sent",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[]",
+     "description": "Ids of segments already sent to verification",
+     "readonly": false
+    },
+    {
+     "name": "verifiable",
+     "attribute": "verifiable",
+     "type": "boolean",
+     "default": "true",
+     "description": "Shows \"Send to verification\" on each segment (default true)",
+     "readonly": false
+    },
+    {
+     "name": "verifyLabel",
+     "attribute": "verify-label",
+     "type": "string",
+     "default": "\"Send to verification\"",
+     "description": "The verification action's label",
+     "readonly": false
+    },
+    {
+     "name": "skip",
+     "attribute": "skip",
+     "type": "number",
+     "default": "5",
+     "description": "How far J and L (and the back and forward buttons) jump, in seconds",
+     "readonly": false
+    },
+    {
+     "name": "maxHeight",
+     "attribute": "max-height",
+     "type": "number",
+     "default": "360",
+     "description": "The tallest the list grows, in px, before it scrolls",
+     "readonly": false
+    },
+    {
+     "name": "totalDuration",
+     "attribute": null,
+     "type": "",
+     "default": null,
+     "description": "The recording's length in seconds: `duration`, else what the media reports, else the last segment's end",
+     "readonly": true
+    },
+    {
+     "name": "currentSegment",
+     "attribute": null,
+     "type": "TranscriptSegment | null",
+     "default": null,
+     "description": "The segment being played, if any",
+     "readonly": true
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-segment-change",
+     "detail": "",
+     "description": "The segment being played changed (playback, a seek or a step); detail `{ segment }` (TranscriptSegmentChange) – null in a gap between segments",
+     "cancelable": false
+    },
+    {
+     "name": "tc-verify",
+     "detail": "",
+     "description": "\"Send to verification\" on a segment; detail `{ segment, sent }` (TranscriptVerifyDetail) – `sent` is the list after it. Cancelable: preventDefault() keeps `sent` as it is",
+     "cancelable": true
+    },
+    {
+     "name": "tc-copy",
+     "detail": "",
+     "description": "Copy on a segment; detail `{ segment, text }` (TranscriptCopyDetail) – the text with its timestamp and speaker. Cancelable: preventDefault() and copy it yourself",
+     "cancelable": true
+    },
+    {
+     "name": "tc-query-change",
+     "detail": "",
+     "description": "The search text changed; detail `{ query }` (TranscriptQueryChange). Cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-hidden-speakers-change",
+     "detail": "",
+     "description": "A speaker chip was toggled; detail `{ hiddenSpeakers }` (TranscriptHiddenSpeakersChange). Cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-translation-mode-change",
+     "detail": "",
+     "description": "Original, Translation or Side by side was chosen; detail `{ mode }` (TranscriptTranslationModeChange). Cancelable",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [
+    {
+     "name": "play",
+     "params": "",
+     "returns": "void",
+     "description": "Plays the media from where it is"
+    },
+    {
+     "name": "pause",
+     "params": "",
+     "returns": "void",
+     "description": "Pauses the media"
+    },
+    {
+     "name": "seek",
+     "params": "seconds: number",
+     "returns": "void",
+     "description": "Moves playback to `seconds` from the start"
+    }
+   ],
+   "ui": "tsr",
+   "cssProperties": [
+    {
+     "name": "--tc-transcript-review-max",
+     "value": "360px",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    }
+   ],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-highlight",
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-border-default",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-sm",
+    "--tc-control-radius-md",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-ease-standard",
+    "--tc-field-bg-sunken",
+    "--tc-field-font-size",
+    "--tc-field-h-sm",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-field-shadow-hover",
+    "--tc-fill-default",
+    "--tc-fill-strong",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-mono",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-none",
+    "--tc-line-height-normal",
+    "--tc-line-height-tight",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-2xs",
+    "--tc-radius-full",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-radius-xs",
+    "--tc-scrim",
+    "--tc-seg-pad",
+    "--tc-seg-thumb-bg",
+    "--tc-seg-thumb-shadow",
+    "--tc-seg-track-bg",
+    "--tc-seg-track-radius",
+    "--tc-shadow-overlay",
+    "--tc-shadow-raised",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-6",
+    "--tc-status-danger-fg",
+    "--tc-status-info-bg",
+    "--tc-status-info-fg",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-status-warning-solid",
+    "--tc-surface-inverse",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-on-inverse",
+    "--tc-text-placeholder",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tone-amber-bg",
+    "--tc-tone-amber-fg",
+    "--tc-tone-pink-bg",
+    "--tc-tone-pink-fg",
+    "--tc-tone-rose-bg",
+    "--tc-tone-rose-fg",
+    "--tc-tone-teal-bg",
+    "--tc-tone-teal-fg",
+    "--tc-tone-violet-bg",
+    "--tc-tone-violet-fg",
+    "--tc-transcript-review-bg",
+    "--tc-transcript-review-fg",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "transcriptClock",
+   "signature": "transcriptClock(seconds: number, pad: unknown): void",
+   "description": "A timestamp: 00:42 · 1:04:09"
+  }
+ ],
+ "react": [
+  {
+   "component": "TranscriptReview",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading, and the region's name"
+    },
+    {
+     "name": "query",
+     "type": "string",
+     "optional": true,
+     "description": "The search text – controlled when defined; pair it with `onQueryChange`"
+    },
+    {
+     "name": "defaultQuery",
+     "type": "string",
+     "optional": true,
+     "description": "The search text at first, when `query` isn't controlled"
+    },
+    {
+     "name": "onQueryChange",
+     "type": "(query: string) => void",
+     "optional": true,
+     "description": "Called as the search text changes"
+    },
+    {
+     "name": "hiddenSpeakers",
+     "type": "string[]",
+     "optional": true,
+     "description": "Speaker ids the list leaves out – controlled when defined"
+    },
+    {
+     "name": "defaultHiddenSpeakers",
+     "type": "string[]",
+     "optional": true,
+     "description": "Speaker ids left out at first, when `hiddenSpeakers` isn't controlled"
+    },
+    {
+     "name": "onHiddenSpeakersChange",
+     "type": "(hiddenSpeakers: string[]) => void",
+     "optional": true,
+     "description": "Called when a speaker chip is toggled, with the ids now hidden"
+    },
+    {
+     "name": "translationMode",
+     "type": "TranscriptTranslationMode",
+     "optional": true,
+     "description": "Original, translation or both side by side – controlled when defined"
+    },
+    {
+     "name": "defaultTranslationMode",
+     "type": "TranscriptTranslationMode",
+     "optional": true,
+     "description": "The view at first, when `translationMode` isn't controlled (default \"original\")"
+    },
+    {
+     "name": "onTranslationModeChange",
+     "type": "(mode: TranscriptTranslationMode) => void",
+     "optional": true,
+     "description": "Called when the view is switched"
+    },
+    {
+     "name": "sent",
+     "type": "string[]",
+     "optional": true,
+     "description": "Ids of segments sent to verification – controlled when defined; pair it with `onSentChange`"
+    },
+    {
+     "name": "defaultSent",
+     "type": "string[]",
+     "optional": true,
+     "description": "Ids already sent at first, when `sent` isn't controlled"
+    },
+    {
+     "name": "onSentChange",
+     "type": "(sent: string[]) => void",
+     "optional": true,
+     "description": "Called with every sent id after \"Send to verification\""
+    },
+    {
+     "name": "onVerify",
+     "type": "(segment: TranscriptSegment) => void",
+     "optional": true,
+     "description": "Called when a segment is sent to verification – hand it to your review process here"
+    },
+    {
+     "name": "onCopySegment",
+     "type": "(segment: TranscriptSegment, text: string) => void",
+     "optional": true,
+     "description": "Called when a segment is copied, with the text that went to the clipboard"
+    },
+    {
+     "name": "onSegmentChange",
+     "type": "(segment: TranscriptSegment | null) => void",
+     "optional": true,
+     "description": "Called when the segment being played changes – null in a gap between segments"
+    }
+   ],
+   "hides": [
+    "heading",
+    "query",
+    "hiddenSpeakers",
+    "translationMode",
+    "sent"
+   ],
+   "events": {
+    "tc-segment-change": "onSegmentChange",
+    "tc-verify": "onVerify",
+    "tc-copy": "onCopySegment",
+    "tc-query-change": "onQueryChange",
+    "tc-hidden-speakers-change": "onHiddenSpeakersChange",
+    "tc-translation-mode-change": "onTranslationModeChange"
+   }
+  }
+ ],
+ "changelog": [
+  "**Trust & calibration**, from THEMIS and built domain-neutral: - `tc-agreement-tracker`, `tc-confidence-brief`, `tc-capability-notice`, `tc-transcript-review`, `tc-version-history`, `tc-session-context-bar`, `tc-evidence-coverage`, `tc-review-conflict`; - `tc-handoff-brief`, `tc-engagement-quality`, `tc-knowledge-promotion`, `tc-friction-profile`, `tc-reasoning-flags`."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-transcript-review",
+   "className": "TcTranscriptReview",
+   "module": "trenchcoat/transcript-review",
+   "data": [
+    "segments",
+    "speakers",
+    "media",
+    "peaks",
+    "hiddenSpeakers",
+    "sent"
+   ],
+   "attributes": [
+    {
+     "name": "src",
+     "attribute": "src"
+    },
+    {
+     "name": "kind",
+     "attribute": "kind"
+    },
+    {
+     "name": "duration",
+     "attribute": "duration"
+    },
+    {
+     "name": "threshold",
+     "attribute": "threshold"
+    },
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    },
+    {
+     "name": "translationMode",
+     "attribute": "translation-mode"
+    },
+    {
+     "name": "originalLabel",
+     "attribute": "original-label"
+    },
+    {
+     "name": "translationLabel",
+     "attribute": "translation-label"
+    },
+    {
+     "name": "query",
+     "attribute": "query"
+    },
+    {
+     "name": "verifiable",
+     "attribute": "verifiable"
+    },
+    {
+     "name": "verifyLabel",
+     "attribute": "verify-label"
+    },
+    {
+     "name": "skip",
+     "attribute": "skip"
+    },
+    {
+     "name": "maxHeight",
+     "attribute": "max-height"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-segment-change",
+     "cancelable": false
+    },
+    {
+     "name": "tc-verify",
+     "cancelable": true
+    },
+    {
+     "name": "tc-copy",
+     "cancelable": true
+    },
+    {
+     "name": "tc-query-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-hidden-speakers-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-translation-mode-change",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "translationMode",
+     "event": "tc-translation-mode-change"
+    },
+    {
+     "property": "hiddenSpeakers",
+     "event": "tc-hidden-speakers-change"
+    },
+    {
+     "property": "query",
+     "event": "tc-query-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "inert",
+    "name": "inert",
+    "bcd": "api.HTMLElement.inert",
+    "versions": {
+     "chrome": "102",
+     "edge": "102",
+     "firefox": "112",
+     "safari": "15.5",
+     "safari_ios": "15.5"
+    },
+    "progressive": false,
+    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
+    "via": [
+     "internal/controllers"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "aspect-ratio",
+    "name": "aspect-ratio",
+    "bcd": "css.properties.aspect-ratio",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "89",
+     "safari": "15",
+     "safari_ios": "15"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "individual-transforms",
+    "name": "translate, scale and rotate properties",
+    "bcd": "css.properties.translate",
+    "versions": {
+     "chrome": "104",
+     "edge": "104",
+     "firefox": "72",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "clipboard",
+    "name": "Async Clipboard (writeText)",
+    "bcd": "api.Clipboard.writeText",
+    "versions": {
+     "chrome": "66",
+     "edge": "79",
+     "firefox": "63",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "why": "Copy buttons.",
+    "via": [
+     "internal/util"
+    ]
+   },
+   {
+    "id": "resize-observer",
+    "name": "ResizeObserver",
+    "bcd": "api.ResizeObserver",
+    "versions": {
+     "chrome": "64",
+     "edge": "79",
+     "firefox": "69",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "intersection-observer",
+    "name": "IntersectionObserver",
+    "bcd": "api.IntersectionObserver",
+    "versions": {
+     "chrome": "51",
+     "edge": "15",
+     "firefox": "55",
+     "safari": "12.1",
+     "safari_ios": "12.2"
+    },
+    "progressive": false,
+    "via": [
+     "internal/controllers"
+    ]
+   },
+   {
+    "id": "scrollbar-color",
+    "name": "scrollbar-color",
+    "bcd": "css.properties.scrollbar-color",
+    "versions": {
+     "chrome": "121",
+     "edge": "121",
+     "firefox": "64",
+     "safari": "26.2",
+     "safari_ios": "26.2"
+    },
+    "progressive": true,
+    "without": "Scrollbars keep the browser's default colours.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "scrollbar-width",
+    "name": "scrollbar-width",
+    "bcd": "css.properties.scrollbar-width",
+    "versions": {
+     "chrome": "121",
+     "edge": "121",
+     "firefox": "64",
+     "safari": "18.2",
+     "safari_ios": "18.2"
+    },
+    "progressive": true,
+    "without": "Scrollbars keep the browser's default width.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "overscroll-contain",
+    "name": "overscroll-behavior: contain",
+    "bcd": "css.properties.overscroll-behavior.contain",
+    "versions": {
+     "chrome": "63",
+     "edge": "18",
+     "firefox": "59",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "Scrolling past the end of a list carries on scrolling the page.",
+    "via": [
+     "itself"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setTimeout"
+  ],
+  "frames": [
+   "requestAnimationFrame, cancelled",
+   "requestAnimationFrame, cancelled (internal/controllers › RowWindowController)"
+  ],
+  "animations": 0,
+  "observers": [
+   "ResizeObserver",
+   "MutationObserver (internal/controllers › AriaForwardController)",
+   "MutationObserver (internal/controllers › FocusRescueController)",
+   "IntersectionObserver (internal/controllers › OffScreenController)"
+  ],
+  "clock": [],
+  "listeners": [
+   "window scroll (internal/controllers › RowWindowController)",
+   "window resize (internal/controllers › RowWindowController)"
+  ],
+  "pauses": {
+   "offscreen": [
+    "itself",
+    "internal/controllers › OffScreenController"
+   ],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": true
+ },
+ "size": {
+  "min": 63433,
+  "gzip": 18095
+ }
+}

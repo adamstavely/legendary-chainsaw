@@ -9,6 +9,9 @@ const litPorts = new Set(Object.keys(import.meta.glob("../../src/elements/*.ts")
 litPorts.add("look-provider");
 const loadWrappers = () => import("../../src/elements/react");
 import blocksReadme from "../../blocks/README.md?raw";
+// Blocks built on the Lit components through trenchcoat/react (decision O): one file, both looks – the stage's look
+// provider picks one, as it does for the elements
+const litBlocks = new Set(["ai-side-pane", "evidence-gallery", "oversight-home", "publish-readiness", "red-team-finding", "uncertainty-mix"]);
 import screensReadme from "../../screens/README.md?raw";
 import illustrationsReadme from "../../illustrations/README.md?raw";
 import motionReadme from "../../motion/README.md?raw";
@@ -67,12 +70,12 @@ const LIBRARIES: Library[] = [
     categories: [
       ["Agents", ["agent-cursors", "agent-graph", "agent-inbox", "agent-lanes", "agent-ledger", "agent-plan", "agent-queue", "agent-steering", "agent-tree", "approval-card", "artifact-panel", "autonomy-dial", "budget-guard", "context-map", "context-window", "decision-inbox", "decision-tree", "delegate-board", "fan-out-grid", "handoff", "live-view", "parallel-attempts", "permission-request", "plan-vs-actual", "review-center", "run-checkpoints", "run-compare", "sandbox-log", "tool-call-card", "tool-permissions", "trace-waterfall", "trigger-builder"]],
       ["AI configuration", ["provider-connection", "configuration-release-control", "mcp-connection-manager", "data-handling-policy", "conversation-annotation", "multimodal-input", "model-settings", "instruction-editor", "output-schema-builder", "tool-configuration", "knowledge-source-manager", "retrieval-settings", "evaluation-dataset-editor", "model-routing"]],
-      ["AI & chat", ["ai-answer", "answer-arena", "chat-composer", "chat-history", "cited-answer", "clarifying-questions", "code-block", "comment-thread", "comments-panel", "context-tray", "conversation-branches", "email-draft", "extraction-review", "feedback-rubric", "generated-ui", "guardrail-notice", "image-grid", "inline-diff", "memory-panel", "mention-picker", "message-actions", "model-picker", "prompt-library", "prompt-starters", "retrieval-inspector", "smart-recommendation", "structured-output", "thinking-loader", "thinking-state", "voice-mode", "writing-assistant"]],
+      ["AI & chat", ["ai-answer", "answer-arena", "chat-composer", "chat-history", "cited-answer", "clarifying-questions", "code-block", "comment-thread", "comments-panel", "context-tray", "conversation-branches", "email-draft", "extraction-review", "feedback-rubric", "generated-ui", "guardrail-notice", "image-grid", "inline-diff", "memory-panel", "mention-picker", "message-actions", "model-picker", "prompt-library", "prompt-starters", "response-selection", "retrieval-inspector", "selection-translate", "smart-recommendation", "structured-output", "thinking-loader", "thinking-state", "voice-mode", "writing-assistant"]],
       ["Data & charts", ["billing-schedule", "breakdown-chart", "change-summary", "compact-breakdown", "data-table", "eval-scorecard", "experiment-card", "kpi-chart", "project-card", "usage-meter"]],
-      ["Inputs & controls", ["number-field", "slider-field", "switch", "checkbox", "radio-group", "secret-field", "tooltip", "dialog", "button", "combobox", "command-menu", "date-range-picker", "dropzone", "filter-menu", "integration-picker", "integration-settings", "otp-input", "profile-menu", "reaction-bar", "segmented-control", "stepper-form"]],
-      ["Trust & calibration", ["attestation-check", "claim-answer", "correction-propagation", "coverage-matrix", "disagreement-banner", "gate-config", "kill-switch", "lineage-graph", "playbook-canvas", "policy-simulator", "provenance-summary", "reflection-gate", "reliance-gauge", "run-manifest", "synthesis-notes", "validity-badge", "verification-queue"]],
+      ["Inputs & controls", ["button", "checkbox", "combobox", "command-menu", "date-range-picker", "dialog", "dropzone", "filter-menu", "integration-picker", "integration-settings", "isbn-details", "number-field", "otp-input", "profile-menu", "radio-group", "reaction-bar", "secret-field", "segmented-control", "slider-field", "stepper-form", "switch", "text-annotator", "tooltip"]],
+      ["Trust & calibration", ["agreement-tracker", "attestation-check", "capability-notice", "claim-answer", "confidence-brief", "correction-propagation", "coverage-matrix", "disagreement-banner", "engagement-quality", "evidence-coverage", "friction-profile", "gate-config", "handoff-brief", "kill-switch", "knowledge-promotion", "lineage-graph", "playbook-canvas", "policy-simulator", "provenance-summary", "reasoning-flags", "reflection-gate", "reliance-gauge", "review-conflict", "run-manifest", "session-context-bar", "synthesis-notes", "transcript-review", "validity-badge", "verification-queue", "version-history"]],
       ["Utilities", ["look-provider"]],
-      ["Feedback & onboarding", ["notification-stack", "progress-tracker", "setup-guide", "tips-panel", "toaster"]],
+      ["Feedback & onboarding", ["background-tasks", "notification-stack", "progress-tracker", "setup-guide", "stories", "tips-panel", "toaster"]],
     ],
   },
   {
@@ -156,6 +159,9 @@ function build(lib: Library): Entry[] {
       // Single-look libraries: one stage, on the wrappers
       entry.files = { standard: `elements/${slug}.ts` };
       entry.load = { standard: loadWrappers };
+    } else if (lib.key === "blocks" && litBlocks.has(slug)) {
+      entry.files.clean = `${file}.tsx · look="clean"`;
+      entry.load.clean = entry.load.standard;
     } else if (lib.key === "components" && !cleanOnly && cleanTwins[slug]) {
       entry.files.clean = `${file}.tsx · look="clean"`;
       entry.load.clean = cleanTwins[slug];

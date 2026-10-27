@@ -68,7 +68,6 @@ export class TcNotificationStack extends TcElement {
   /** @internal The persistent status line */
   @state() accessor status = "";
 
-  private heights: Record<string, number> = {};
   private timers = new Set<number>();
   private ro?: ResizeObserver;
   private observedKey = "";
@@ -133,7 +132,6 @@ export class TcNotificationStack extends TcElement {
     const cards = [...this.querySelectorAll<HTMLElement>(":scope > .ui-ns__card")];
     const next: Record<string, number> = {};
     for (const card of cards) next[card.dataset.id!] = card.offsetHeight;
-    this.heights = next;
     const front = visible[0] ? (next[visible[0].id] ?? 0) : 0;
     const behind = Math.min(visible.length - 1, 2);
     this.style.height = `${visible.length ? front + behind * PEEK : 0}px`;

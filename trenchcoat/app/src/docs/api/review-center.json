@@ -397,6 +397,30 @@
       "standard",
       "clean"
      ]
+    },
+    {
+     "name": "--tc-review-center-tone-bg",
+     "value": "var(--tc-fill-subtle)",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    },
+    {
+     "name": "--tc-review-center-tone-edge",
+     "value": "var(--tc-border-default)",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    },
+    {
+     "name": "--tc-review-center-tone-fg",
+     "value": "var(--tc-text-primary)",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
     }
    ],
    "tokens": [
@@ -495,9 +519,6 @@
     "--tc-radius-sm",
     "--tc-radius-xl",
     "--tc-radius-xs",
-    "--tc-review-center-tone-bg",
-    "--tc-review-center-tone-edge",
-    "--tc-review-center-tone-fg",
     "--tc-seg-thumb-bg",
     "--tc-seg-thumb-shadow",
     "--tc-shadow-overlay",
@@ -602,13 +623,436 @@
     }
    ],
    "hides": [
-    "heading"
-   ]
+    "heading",
+    "all",
+    "high",
+    "unsure",
+    "Review center"
+   ],
+   "events": {
+    "tc-filter-change": "onFilterChange",
+    "tc-undo": "onUndo",
+    "tc-skip": "onSkip"
+   }
   }
  ],
  "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-review-center",
+   "className": "TcReviewCenter",
+   "module": "trenchcoat/review-center",
+   "data": [
+    "items",
+    "onDecide",
+    "reasons",
+    "undoTimeout"
+   ],
+   "attributes": [
+    {
+     "name": "reviewed",
+     "attribute": "reviewed"
+    },
+    {
+     "name": "total",
+     "attribute": "total"
+    },
+    {
+     "name": "sla",
+     "attribute": "sla"
+    },
+    {
+     "name": "now",
+     "attribute": "now"
+    },
+    {
+     "name": "lowConfidence",
+     "attribute": "low-confidence"
+    },
+    {
+     "name": "order",
+     "attribute": "order"
+    },
+    {
+     "name": "filter",
+     "attribute": "filter"
+    },
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "shortcuts",
+     "attribute": "shortcuts"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-filter-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-undo",
+     "cancelable": false
+    },
+    {
+     "name": "tc-skip",
+     "cancelable": false
+    }
+   ],
+   "controlled": [
+    {
+     "property": "filter",
+     "event": "tc-filter-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "itself",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-units",
+    "name": "Container query units (cqi, cqw…)",
+    "bcd": "css.types.length.container_query_length_units",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Sizes relative to the component's own width.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "inert",
+    "name": "inert",
+    "bcd": "api.HTMLElement.inert",
+    "versions": {
+     "chrome": "102",
+     "edge": "102",
+     "firefox": "112",
+     "safari": "15.5",
+     "safari_ios": "15.5"
+    },
+    "progressive": false,
+    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
+    "via": [
+     "internal/controllers"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "resize-observer",
+    "name": "ResizeObserver",
+    "bcd": "api.ResizeObserver",
+    "versions": {
+     "chrome": "64",
+     "edge": "79",
+     "firefox": "69",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "intersection-observer",
+    "name": "IntersectionObserver",
+    "bcd": "api.IntersectionObserver",
+    "versions": {
+     "chrome": "51",
+     "edge": "15",
+     "firefox": "55",
+     "safari": "12.1",
+     "safari_ios": "12.2"
+    },
+    "progressive": false,
+    "via": [
+     "internal/controllers"
+    ]
+   },
+   {
+    "id": "text-wrap-pretty",
+    "name": "text-wrap: pretty",
+    "bcd": "css.properties.text-wrap.pretty",
+    "versions": {
+     "chrome": "117",
+     "edge": "117",
+     "firefox": null,
+     "safari": "26",
+     "safari_ios": "26"
+    },
+    "progressive": true,
+    "without": "Paragraphs may end on a single short word.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "scrollbar-width",
+    "name": "scrollbar-width",
+    "bcd": "css.properties.scrollbar-width",
+    "versions": {
+     "chrome": "121",
+     "edge": "121",
+     "firefox": "64",
+     "safari": "18.2",
+     "safari_ios": "18.2"
+    },
+    "progressive": true,
+    "without": "Scrollbars keep the browser's default width.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "text-wrap-balance",
+    "name": "text-wrap: balance",
+    "bcd": "css.properties.text-wrap.balance",
+    "versions": {
+     "chrome": "114",
+     "edge": "114",
+     "firefox": "121",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": true,
+    "without": "Titles break where the line fills up instead of into even lines.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "overscroll-contain",
+    "name": "overscroll-behavior: contain",
+    "bcd": "css.properties.overscroll-behavior.contain",
+    "versions": {
+     "chrome": "63",
+     "edge": "18",
+     "firefox": "59",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "Scrolling past the end of a list carries on scrolling the page.",
+    "via": [
+     "itself"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setInterval, cleared",
+   "setTimeout"
+  ],
+  "frames": [
+   "requestAnimationFrame"
+  ],
+  "animations": 0,
+  "observers": [
+   "ResizeObserver",
+   "MutationObserver (internal/controllers › AriaForwardController)",
+   "MutationObserver (internal/controllers › FocusRescueController)",
+   "IntersectionObserver (internal/controllers › OnScreenController)"
+  ],
+  "clock": [
+   "Date.now()",
+   "performance.now()"
+  ],
+  "listeners": [
+   "document keydown",
+   "document visibilitychange (internal/controllers › OnScreenController)"
+  ],
+  "pauses": {
+   "offscreen": [
+    "itself",
+    "internal/controllers › OnScreenController"
+   ],
+   "hidden": [
+    "internal/controllers › OnScreenController"
+   ],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
  "size": {
-  "min": 111211,
-  "gzip": 24710
+  "min": 112861,
+  "gzip": 25074
  }
 }

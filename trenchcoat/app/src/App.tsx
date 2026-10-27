@@ -95,8 +95,15 @@ export function App() {
     return ENTRIES.filter((e) => `${e.name} ${e.slug} ${e.library} ${e.description} ${GUIDANCE[e.slug]?.text ?? ""}`.toLowerCase().includes(q));
   }, [query]);
 
-  // Standard/Clean only exists for components, so the switch only shows where components are on screen
-  const showVariant = Boolean(results) || library?.key === "components" || focused?.library === "components";
+  // Standard/Clean exists for components and for the blocks built on the elements (they follow the stage's look
+  // provider), so the switch shows where those are on screen
+  const twoLooks = (e: Entry | undefined) => Boolean(e && e.load.standard && e.load.clean);
+  const showVariant =
+    Boolean(results) ||
+    library?.key === "components" ||
+    focused?.library === "components" ||
+    (library?.key === "blocks" && entriesOf("blocks").some(twoLooks)) ||
+    (focused?.library === "blocks" && twoLooks(focused));
 
   return (
     <div className="shell">
@@ -304,7 +311,8 @@ function Home() {
         <p className="intro">
           Every component comes in two styles, picked with its <code>look</code> prop: <code>"standard"</code> (the default) or <code>"clean"</code>.
           They are two design languages, not two weights of one theme: pick one per product. Props and behaviour are the same.
-          Blocks, Screens, Illustrations and Motion come in a single style.
+          Blocks built on the elements follow the nearest look provider, so they come in both; other Blocks, Screens,
+          Illustrations and Motion come in a single style.
         </p>
         <table className="compare">
           <thead>

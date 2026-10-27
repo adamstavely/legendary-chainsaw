@@ -4,6 +4,11 @@
 //   · the React wrappers' TypeScript – each wrapper's own props and the element properties it renames or hides
 //   · CHANGELOG.md – the lines that name the element
 //   · esbuild – its size on its own, minified and gzipped, Lit external (an app loads Lit once)
+//   · scripts/browser-support.mjs – the browsers it works in, from the platform features its code and CSS use
+//   · scripts/docs-data.mjs – what runs on its own once it's on the page (timers, frames, observers, clock reads), and
+//     the facts the Frameworks section is written from (data properties, events, controlled pairs, form value, slots)
+// It also writes app/src/docs/browser-floor.json, the library-wide floor the Browser support foundations page shows.
+// Measured numbers (render timings, the bundle breakdown) aren't here: npm run measure:perf writes app/src/docs/perf.json.
 // The hand-written half – when to use, keyboard, content, do and don't – is app/src/docs/<slug>.md.
 //   node scripts/gen-docs.mjs            regenerate (runs the manifest analyzer first)
 //   node scripts/gen-docs.mjs --check    fail when a page's file is out of date (CI)
@@ -12,12 +17,13 @@ import { execSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import { join } from "node:path";
+import { libraryFloor, scan } from "./browser-support.mjs";
+import { frameworkFacts, runtime, windowed, withoutLit } from "./docs-data.mjs";
 
 const require = createRequire(import.meta.url);
 const ts = require("typescript");
-const esbuild = require("esbuild");
-const { gzipSync } = require("node:zlib");
 const OUT = "app/src/docs/api";
+const FLOOR = "app/src/docs/browser-floor.json";
 const check = process.argv.includes("--check");
 const only = process.argv.slice(2).filter((a) => !a.startsWith("--"));
 
@@ -64,7 +70,23 @@ function api(decl) {
   };
 }
 
-/** Component tokens declared on the element's root rules, and the design tokens its CSS reads */
+const DESIGN_TOKENS = new Set([...readFileSync("tokens/tokens.css", "utf8").matchAll(/(--tc-[\w-]+)\s*:/g)].map((m) => m[1]));
+/** Every `var(--tc-x, fallback)` in some CSS: [name, fallback], the fallback read to its balancing parenthesis */
+function fallbacks(css) {
+  const out = new Map();
+  for (const m of css.matchAll(/var\((--tc-[\w-]+)\s*,/g)) {
+    let depth = 1;
+    let i = m.index + m[0].length;
+    const start = i;
+    for (; i < css.length && depth; i++) depth += css[i] === "(" ? 1 : css[i] === ")" ? -1 : 0;
+    const value = css.slice(start, i - 1).replace(/\s+/g, " ").trim();
+    if (!out.has(m[1]) && value) out.set(m[1], value);
+  }
+  return out;
+}
+
+/** Component tokens declared on the element's root rules (or read only with a fallback), and the design tokens its
+ *  CSS reads */
 function cssOf(source, ui) {
   const blocks = [...source.matchAll(/\/\* css \*\/ `([\s\S]*?)`/g)].map((m) => m[1]).join("\n");
   const css = blocks.replace(/\/\*[\s\S]*?\*\//g, "");
@@ -79,6 +101,12 @@ function cssOf(source, ui) {
       defined.set(name, { name, value: value.trim(), looks: prev ? [...new Set([...prev.looks, look])] : [look] });
     }
   }
+  // Component tokens read only through a fallback (`var(--tc-story-ring, conic-gradient(…))`), never declared on the
+  // host: not design tokens (tokens.css doesn't declare them), so they're the component's own, defaulting to the fallback
+  for (const [name, fallback] of fallbacks(css)) {
+    if (defined.has(name) || DESIGN_TOKENS.has(name)) continue;
+    defined.set(name, { name, value: fallback, looks: ["both"], fallback: true });
+  }
   const reads = [...new Set([...css.matchAll(/var\((--tc-[\w-]+)/g)].map((m) => m[1]))].filter((n) => !defined.has(n)).sort();
   return { cssProperties: [...defined.values()], tokens: reads };
 }
@@ -86,8 +114,31 @@ function cssOf(source, ui) {
 /** A React wrapper's own props: the type literal in `export type <X>Props = Omit<Raw, …> & { … }` */
 function reactOf(file) {
   if (!existsSync(file)) return [];
-  const src = ts.createSourceFile(file, readFileSync(file, "utf8"), ts.ScriptTarget.Latest, true);
+  const text = readFileSync(file, "utf8");
+  const src = ts.createSourceFile(file, text, ts.ScriptTarget.Latest, true);
   const out = [];
+  /** The wrapper's callback behind a hidden raw event prop: the on… it calls in `onTcX: (e) => …`, directly or through
+   *  useControlled(value, default, onX); null when it calls none (the event isn't offered) */
+  const aliasOf = (raw) => {
+    const start = [...text.matchAll(new RegExp(`\\b${raw}:`, "g"))].map((m) => m.index).find((i) => !/^\s*"/.test(text.slice(i + raw.length + 1)));
+    if (start === undefined) return null;
+    let depth = 0;
+    let i = start + raw.length + 1;
+    for (; i < text.length; i++) {
+      const c = text[i];
+      if ("([{".includes(c)) depth++;
+      else if (")]}".includes(c)) {
+        if (depth === 0) break;
+        depth--;
+      } else if (c === "," && depth === 0) break;
+    }
+    const body = text.slice(start, i);
+    const direct = body.match(/\b(on[A-Z]\w*)\??\.?\(/)?.[1];
+    if (direct && direct !== raw) return direct;
+    const via = body.match(/\b(\w+)\.handler\(/)?.[1];
+    const call = via && text.match(new RegExp(`const ${via} = useControlled\\(([^;]*?)\\);`))?.[1];
+    return call?.match(/\b(on[A-Z]\w*)/)?.[1] ?? null;
+  };
   const docOf = (node) => (node.jsDoc ?? []).map((d) => (typeof d.comment === "string" ? d.comment : (d.comment ?? []).map((c) => c.text).join(""))).join(" ").trim();
   const exported = new Set();
   src.forEachChild((n) => {
@@ -113,6 +164,7 @@ function reactOf(file) {
     const parts = flatten(n.type);
     const props = [];
     const hides = [];
+    const omitted = [];
     for (const part of parts) {
       if (ts.isTypeLiteralNode(part)) {
         for (const m of part.members) {
@@ -120,10 +172,19 @@ function reactOf(file) {
           props.push({ name: m.name.getText(src), type: m.type ? m.type.getText(src).replace(/\s+/g, " ") : "unknown", optional: !!m.questionToken, description: docOf(m) });
         }
       } else if (ts.isTypeReferenceNode(part) && part.typeName.getText(src) === "Omit" && part.typeArguments?.[1]) {
-        hides.push(...[...part.typeArguments[1].getText(src).matchAll(/"([^"]+)"/g)].map((m) => m[1]).filter((h) => !/^onTc/.test(h)));
+        // The omitted names, written out or through a local alias (`type Wrapped = "steps" | …`)
+        const arg = part.typeArguments[1].getText(src);
+        const names = [arg, ...[...arg.matchAll(/\b[A-Z]\w*/g)].map((m) => m[0]).filter((a) => aliases.has(a)).map((a) => aliases.get(a).getText(src))].join(" ");
+        omitted.push(...[...names.matchAll(/"([^"]+)"/g)].map((m) => m[1]), ...(/`onTc\$\{string\}`/.test(names) ? ["onTc*"] : []));
       }
     }
-    out.push({ component, exported: exported.has(component), props, hides });
+    hides.push(...omitted.filter((h) => !/^onTc/.test(h)));
+    // Each event's React prop: the raw onTc… prop, or – when the wrapper hides it – the callback it calls instead
+    const events = {};
+    // (`onTc${string}` in the omitted names hides every raw event prop)
+    const allRaw = omitted.includes("onTc*");
+    for (const [, raw, event] of text.matchAll(/(onTc\w+):\s*"([\w-]+)"/g)) events[event] = allRaw || omitted.includes(raw) ? aliasOf(raw) : raw;
+    out.push({ component, exported: exported.has(component), props, hides, events });
   });
   return out;
 }
@@ -156,17 +217,26 @@ for (const mod of manifest.modules) {
     react: reactOf(join("src/elements/react", `${slug}.ts`)),
     // Entries that name the element by tag, or start with its name ("- data-table sorts only when …")
     changelog: changelog.filter((l) => /^- /.test(l) && [...names].some((n) => l.includes(`\`${n}\``) || new RegExp(`^- \\**${n}\\b`).test(l))).map((l) => l.slice(2)),
+    frameworks: elements.map((el) => frameworkFacts(el, slug, source)),
+    browser: scan(slug),
+    runtime: { ...runtime(slug), windowed: windowed(slug) },
   };
 }
-// Size: the element's module bundled on its own (its share of the shared internals included, as an app importing only
-// it would get)
+// Size: the element's module bundled on its own (its share of the shared internals and the elements it renders
+// included, as an app importing only it would get), Lit external
 for (const [slug, piece] of Object.entries(pieces)) {
   if (only.length && !only.includes(slug)) continue;
-  const entry = slug === "look-provider" ? "src/elements/internal/look.ts" : `src/elements/${slug}.ts`;
-  const out = await esbuild.build({ entryPoints: [entry], bundle: true, minify: true, write: false, format: "esm", target: "es2022", external: ["lit", "lit/*", "@lit/*"], logLevel: "silent" });
-  const code = out.outputFiles[0].contents;
-  piece.size = { min: code.length, gzip: gzipSync(code).length };
+  const { min, gzip } = await withoutLit(slug);
+  piece.size = { min, gzip };
 }
+const floor = JSON.stringify(
+  (() => {
+    const lib = libraryFloor(Object.fromEntries(Object.entries(pieces).map(([slug, p]) => [slug, p.browser])));
+    return { ...lib, setBy: Object.fromEntries(Object.entries(lib.setBy).map(([b, v]) => [b, { features: v.features, elements: v.elements.length }])), features: lib.features.map(({ count, ...f }) => ({ ...f, elements: count })) };
+  })(),
+  null,
+  1,
+) + "\n";
 
 const files = Object.fromEntries(Object.entries(pieces).map(([slug, piece]) => [`${slug}.json`, JSON.stringify(piece, null, 1) + "\n"]));
 
@@ -176,6 +246,7 @@ if (check) {
   // Sizes vary by a few bytes with the environment esbuild runs in (npm run vs node): compared without them
   const bare = (json) => JSON.stringify({ ...JSON.parse(json), size: undefined });
   const stale = [...Object.keys(files).filter((f) => !existsSync(join(OUT, f)) || bare(readFileSync(join(OUT, f), "utf8")) !== bare(files[f])), ...have.filter((f) => !(f in files))];
+  if (!existsSync(FLOOR) || readFileSync(FLOOR, "utf8") !== floor) stale.push(FLOOR);
   if (stale.length) {
     console.error(`docs api out of date (${stale.slice(0, 5).join(", ")}${stale.length > 5 ? " …" : ""}) – run node scripts/gen-docs.mjs`);
     process.exit(1);
@@ -187,11 +258,13 @@ if (check) {
     if (!files[`${slug}.json`]) throw new Error(`no element module for ${slug}`);
     writeFileSync(join(OUT, `${slug}.json`), files[`${slug}.json`]);
   }
+  writeFileSync(FLOOR, floor);
   console.log(`${OUT}/: ${only.join(", ")}`);
 } else {
   rmSync(OUT, { recursive: true, force: true });
   mkdirSync(OUT, { recursive: true });
   for (const [f, body] of Object.entries(files)) writeFileSync(join(OUT, f), body);
+  writeFileSync(FLOOR, floor);
   const count = Object.values(pieces).reduce((n, p) => n + p.elements.length, 0);
   console.log(`${OUT}/: ${Object.keys(files).length} pages, ${count} elements`);
 }

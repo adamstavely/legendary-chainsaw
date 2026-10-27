@@ -1,0 +1,521 @@
+{
+ "elements": [
+  {
+   "tag": "tc-knowledge-promotion",
+   "className": "TcKnowledgePromotion",
+   "description": "Promote a verified fact into shared team knowledge: the fact with any disputed versions beside it, a checklist of\nrequired and recommended conditions with who met them and when, and Promote and Dispute.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Promote to team knowledge\"",
+     "description": "The heading, and the region's name",
+     "readonly": false
+    },
+    {
+     "name": "scope",
+     "attribute": "scope",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Where the knowledge goes or what it covers, a quiet line under the heading – e.g. \"Acme lease review\"",
+     "readonly": false
+    },
+    {
+     "name": "fact",
+     "attribute": null,
+     "type": "KnowledgeFact",
+     "default": "{ text: \"\" }",
+     "description": "The fact to promote",
+     "readonly": false
+    },
+    {
+     "name": "conditions",
+     "attribute": null,
+     "type": "KnowledgeCondition[]",
+     "default": "[]",
+     "description": "The checklist, in order – required conditions block Promote, recommended ones only warn",
+     "readonly": false
+    },
+    {
+     "name": "versions",
+     "attribute": null,
+     "type": "KnowledgeVersion[]",
+     "default": "[]",
+     "description": "Disputed versions of the fact, shown side by side with it",
+     "readonly": false
+    },
+    {
+     "name": "threshold",
+     "attribute": "threshold",
+     "type": "number",
+     "default": "0.8",
+     "description": "Confidence the fact needs, 0–1 – checked when `fact.confidence` is set",
+     "readonly": false
+    },
+    {
+     "name": "thresholdOptional",
+     "attribute": "threshold-optional",
+     "type": "boolean",
+     "default": "false",
+     "description": "Makes the confidence condition recommended instead of required",
+     "readonly": false
+    },
+    {
+     "name": "status",
+     "attribute": "status",
+     "type": "KnowledgeStatus",
+     "default": "\"candidate\"",
+     "description": "\"candidate\" (default), \"promoting\" while the app saves, or \"promoted\"",
+     "readonly": false
+    },
+    {
+     "name": "error",
+     "attribute": "error",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Why the last promotion failed – shown above the actions; Promote tries again",
+     "readonly": false
+    },
+    {
+     "name": "disputing",
+     "attribute": "disputing",
+     "type": "boolean",
+     "default": "false",
+     "description": "The dispute form is open – set false to close it after a prevented tc-dispute",
+     "readonly": false
+    },
+    {
+     "name": "noDispute",
+     "attribute": "no-dispute",
+     "type": "boolean",
+     "default": "false",
+     "description": "Hides Dispute, for people who can promote but not dispute",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string",
+     "default": "\"en-US\"",
+     "description": "Locale for numbers",
+     "readonly": false
+    },
+    {
+     "name": "ready",
+     "attribute": null,
+     "type": "",
+     "default": null,
+     "description": "Every required condition is met",
+     "readonly": true
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-promote",
+     "detail": "",
+     "description": "Promote was pressed with every required condition met (detail: { fact, unmetRecommended: ids of recommended conditions not met }); cancelable – prevent it to save first and set `status` yourself",
+     "cancelable": true
+    },
+    {
+     "name": "tc-dispute",
+     "detail": "",
+     "description": "The dispute form was sent (detail: { reason, version: the corrected wording, or \"\" }); cancelable – prevent it to keep the form open, e.g. while saving",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "kpro",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-border-strong",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-lg",
+    "--tc-control-h-md",
+    "--tc-control-px-md",
+    "--tc-control-radius-md",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-font-size",
+    "--tc-field-h",
+    "--tc-field-px",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-field-shadow-hover",
+    "--tc-field-shadow-invalid",
+    "--tc-fill-default",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-hairline",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-pill-font-size",
+    "--tc-pill-font-size-lg",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-h-lg",
+    "--tc-pill-px",
+    "--tc-pill-px-lg",
+    "--tc-pill-radius",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-status-danger-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-border",
+    "--tc-status-warning-fg",
+    "--tc-status-warning-solid",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-surface-well",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "KnowledgePromotion",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading, and the region's name"
+    },
+    {
+     "name": "status",
+     "type": "KnowledgeStatus",
+     "optional": true,
+     "description": "\"candidate\", \"promoting\" or \"promoted\". Controlled when defined: Promote only reports through onPromote, and you\npass the new status back. Otherwise the component marks the fact promoted itself"
+    },
+    {
+     "name": "defaultStatus",
+     "type": "KnowledgeStatus",
+     "optional": true,
+     "description": "The status at first, when uncontrolled"
+    },
+    {
+     "name": "onPromote",
+     "type": "(fact: KnowledgeFact, unmetRecommended: string[]) => void",
+     "optional": true,
+     "description": "Promote was pressed with every required condition met: the fact and the ids of recommended conditions not met"
+    },
+    {
+     "name": "onDispute",
+     "type": "(reason: string, version: string) => void",
+     "optional": true,
+     "description": "Shows Dispute; called with the reason and the corrected wording (\"\" when none) when the form is sent"
+    }
+   ],
+   "hides": [
+    "heading",
+    "status",
+    "noDispute"
+   ],
+   "events": {
+    "tc-promote": "onPromote",
+    "tc-dispute": "onDispute"
+   }
+  }
+ ],
+ "changelog": [
+  "**Trust & calibration**, from THEMIS and built domain-neutral: - `tc-agreement-tracker`, `tc-confidence-brief`, `tc-capability-notice`, `tc-transcript-review`, `tc-version-history`, `tc-session-context-bar`, `tc-evidence-coverage`, `tc-review-conflict`; - `tc-handoff-brief`, `tc-engagement-quality`, `tc-knowledge-promotion`, `tc-friction-profile`, `tc-reasoning-flags`."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-knowledge-promotion",
+   "className": "TcKnowledgePromotion",
+   "module": "trenchcoat/knowledge-promotion",
+   "data": [
+    "fact",
+    "conditions",
+    "versions"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "scope",
+     "attribute": "scope"
+    },
+    {
+     "name": "threshold",
+     "attribute": "threshold"
+    },
+    {
+     "name": "thresholdOptional",
+     "attribute": "threshold-optional"
+    },
+    {
+     "name": "status",
+     "attribute": "status"
+    },
+    {
+     "name": "error",
+     "attribute": "error"
+    },
+    {
+     "name": "disputing",
+     "attribute": "disputing"
+    },
+    {
+     "name": "noDispute",
+     "attribute": "no-dispute"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-promote",
+     "cancelable": true
+    },
+    {
+     "name": "tc-dispute",
+     "cancelable": true
+    }
+   ],
+   "controlled": [],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 33961,
+  "gzip": 9590
+ }
+}

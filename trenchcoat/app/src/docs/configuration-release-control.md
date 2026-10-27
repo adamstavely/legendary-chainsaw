@@ -13,11 +13,17 @@ approvals. Below it, what changed, the evidence against the version it would rep
 and Roll back both ask first and name exactly what moves. The element deploys nothing: it tells the app, which does
 the work and sends back the new state.
 
+Where a release policy runs more than one evaluation, the same gate can carry gate suites – each passing, failing or
+conditional – the open findings linked to the candidate, and the waivers that let a conditional suite or a blocking
+finding through, with who granted each and when it expires. A waiver the app marks expired counts as unmet.
+
 ## When to use
 
 - Releasing a whole AI configuration through environments, where a person signs off on evidence before production.
 - A release page that needs promotion and rollback in one place, with the rollback target always visible.
 - Showing a staged rollout as it happens, with the stage marked "Requested" until the app reports the move.
+- A release gate that also checks regression suites and open findings, where exceptions are granted as waivers that
+  expire.
 
 ## When not to use
 
@@ -40,14 +46,16 @@ the work and sends back the new state.
 Standard is a white card on a gray tray: the stages are filled tiles joined by chevrons, the target outlined, and the
 gate a raised tile between them with a coloured rule – amber while blocked, green when ready, blue while moving. Clean
 is one white card: the stages sit on a quiet track with dots, the gate is a hairline box on it, and the evidence is
-three columns between hairlines, with quieter text and thinner icons. Narrow, the pipeline runs down the card in both.
+three columns between hairlines, with quieter text and thinner icons. Gate suites and open findings follow the same
+pattern under the evidence: tiles in Standard, columns between hairlines in Clean. Narrow, the pipeline runs down the card in both.
 
 ## Keyboard
 
 | Key | What it does |
 |---|---|
 | Tab | Moves through Promote, Compare and Roll back |
-| Enter / Space | On Promote, opens the confirmation when it's ready (otherwise says what's missing); on Roll back, opens its confirmation; on Compare, asks for the diff |
+| Tab | Also reaches each linked finding, when there are findings |
+| Enter / Space | On Promote, opens the confirmation when it's ready (otherwise says what's missing); on Roll back, opens its confirmation; on Compare, asks for the diff; on a finding, asks the app to open it |
 
 In a confirmation, focus starts on Cancel:
 
@@ -70,6 +78,12 @@ Evaluation and Approvals. Roll back is named in full: “Roll back Production to
 `alertdialog`s named by their question (“Promote v14 to Production?”) and described by the move. A polite status
 message confirms “Promotion of v14 to Production requested.”
 
+With suites and findings, the gate gains “Suites, met: 2 pass · 1 on a waiver” and “Findings, not met: 1 blocking”,
+and the gate's line names what holds it: “To promote: Retrieval's waiver W-014 has expired; 1 blocking finding is
+open.” Gate suites and Open findings are sections named by their headings; each suite's result is a visible word
+(Pass, Fail, Conditional), and each finding is a button that reads its reference, severity, title and status, and
+“Blocks promotion” while it does. A waiver reads “W-014 · expires 2026-11-07 · granted by Dana Lee”, or “expired …”.
+
 ## Content
 
 - Name versions short (“v14”) and give each a `title` that says what changed for people: “Shorter refund answers”.
@@ -77,6 +91,11 @@ message confirms “Promotion of v14 to Production requested.”
 - Set `threshold` to the pass rate your release policy needs, and give `baseline` from the same suite, so the
   comparison is fair.
 - Use `hold` for a reason that stops every promotion, in a full sentence: “Releases are frozen until Monday.”
+- Give suites the names your release policy uses, and pass their counts (`passed`, `failed`, `inconclusive`) so a
+  conditional result shows why.
+- Give findings and waivers short references (`ref`, `label`) – “F-021”, “W-014” – the ones people search for.
+- Pass `expires` as your policy states it (“2026-11-07”); the element shows it as given and never compares it with
+  the clock – set `expired` when your server says it has run out.
 - Say what promotion and rollback actually do in `promoteNote` and `rollbackNote` – whether traffic moves at once or in
   steps, and what isn't undone.
 
@@ -86,12 +105,14 @@ message confirms “Promotion of v14 to Production requested.”
 - Answer `tc-promote` and `tc-rollback` with new `stages`; the "Requested" mark stays until the stage changes.
 - Call `preventDefault()` on the event when the request can't start, so nothing is marked as requested.
 - Keep the rollback target current after every release, so Roll back always names the version it returns to.
+- Mark a finding `blocking` only when your policy says it holds a release; open it from `tc-finding-open`.
 
 ## Don't
 
 - Don't show a stage as moved before your deployment reports it.
 - Don't embed the full diff here; open `run-compare` from Compare.
 - Don't lower the threshold to get a release through – change the policy where it lives.
+- Don't use a waiver for a failing suite – the gate won't count it. Fix the suite, or change what it tests.
 
 ## Example
 
@@ -114,6 +135,13 @@ message confirms “Promotion of v14 to Production requested.”
   release.evidence = { passRate: 93.8, baseline: 91.2, threshold: 92, cases: 412 };
   release.approvals = [{ id: "p", name: "Priya Shah", state: "approved" }];
   release.rollback = { stage: "production", version: "v13" };
+  release.suites = [
+    { id: "safety", label: "Safety regression", status: "pass", passed: 48, failed: 0 },
+    { id: "retrieval", label: "Retrieval regression", status: "conditional", passed: 5, inconclusive: 1 },
+  ];
+  release.findings = [{ id: "f21", ref: "F-021", severity: "P1", title: "Order lookup skipped", status: "Acknowledged", blocking: true }];
+  release.waivers = [{ id: "w14", label: "W-014", covers: ["retrieval", "f21"], grantedBy: "Dana Lee", expires: "2026-11-07" }];
+  release.addEventListener("tc-finding-open", (e) => open(`/findings/${e.detail.finding.id}`));
   release.addEventListener("tc-promote", (e) => {
     fetch("/api/releases", { method: "POST", body: JSON.stringify({ version: e.detail.version.id, stage: e.detail.stage.id }) });
   });
@@ -133,6 +161,9 @@ export function Release({ stages, versions, promote }: { stages: ReleaseStage[];
       evidence={{ passRate: 93.8, baseline: 91.2, threshold: 92 }}
       approvals={[{ id: "p", name: "Priya Shah", state: "approved" }]}
       rollback={{ stage: "production", version: "v13" }}
+      suites={[{ id: "safety", label: "Safety regression", status: "pass", passed: 48, failed: 0 }]}
+      findings={[{ id: "f21", ref: "F-021", title: "Order lookup skipped", status: "Open" }]}
+      onOpenFinding={(finding) => window.open(`/findings/${finding.id}`)}
       onPromote={(request) => void promote(request.version.id, request.stage.id)}
     />
   );

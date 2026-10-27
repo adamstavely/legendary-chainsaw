@@ -1,7 +1,9 @@
 // The foundations pages beside the component pages (remediation Part 4.4): getting started, looks, themes, tokens,
 // accessibility, patterns and the changelog. Prose lives in ./foundations/*.md; the Tokens page reads tokens.css.
 import { marked } from "marked";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { Table, kb, type PerfFile } from "./DocsSections";
+import type { Browser } from "./usage";
 import changelog from "../../../CHANGELOG.md?raw";
 import tokensCss from "../../../tokens/tokens.css?raw";
 
@@ -14,8 +16,18 @@ export const FOUNDATIONS: [string, string][] = [
   ["tokens", "Tokens"],
   ["patterns", "Patterns"],
   ["accessibility", "Accessibility"],
+  ["frameworks", "Frameworks"],
+  ["browser-support", "Browser support"],
+  ["performance", "Performance"],
   ["changelog", "Changelog"],
 ];
+
+/** Generated parts of a prose page, where its markdown has the marker comment */
+const GENERATED: Record<string, () => ReactNode> = {
+  floor: () => <Floor />,
+  summary: () => <PerfSummary />,
+};
+const html = (text: string) => ({ __html: marked.parse(text, { async: false }) as string });
 
 export function Foundations({ page }: { page: string }) {
   const source = page === "changelog" ? changelog : prose[`./foundations/${page}.md`];
@@ -25,7 +37,11 @@ export function Foundations({ page }: { page: string }) {
         {page === "tokens" ? (
           <Tokens />
         ) : source ? (
-          <div className="docs-md docs-prose" dangerouslySetInnerHTML={{ __html: marked.parse(source, { async: false }) as string }} />
+          <div className="docs-prose">
+            {source.split(/<!-- (\w+) -->/).map((part, i) =>
+              i % 2 ? <div key={i}>{GENERATED[part]?.()}</div> : <div key={i} className="docs-md" dangerouslySetInnerHTML={html(part)} />,
+            )}
+          </div>
         ) : (
           <p className="muted">No such page.</p>
         )}
@@ -155,5 +171,67 @@ function Swatch({ token, look, theme, value }: { token: Token; look: "standard" 
     <span className="docs-swatch-cell" data-tc-look={look} data-tc-theme={theme} title={value}>
       {kind === "color" ? <span className="docs-swatch" style={{ background: `var(${token.name})` }} /> : <span className="docs-swatch docs-swatch-shadow" style={{ boxShadow: `var(${token.name})` }} />}
     </span>
+  );
+}
+
+// ── Browser support: the library-wide floor (app/src/docs/browser-floor.json, written by gen-docs) ───────────────
+type FloorFile = {
+  floor: Record<Browser, string | null>;
+  setBy: Record<Browser, { features: string[]; elements: number }>;
+  features: { id: string; name: string; versions: Record<Browser, string | null>; progressive: boolean; without?: string; elements: number }[];
+  engines: { playwright: string; chromium: string; firefox: string; webkit: string };
+};
+const floorFile = Object.values(import.meta.glob<FloorFile>("./browser-floor.json", { eager: true, import: "default" }))[0];
+const v = (x: string | null) => (x === null ? "No" : x);
+
+function Floor() {
+  if (!floorFile) return <p className="muted">Run node scripts/gen-docs.mjs to work out the floor.</p>;
+  const f = floorFile;
+  const name = (id: string) => f.features.find((x) => x.id === id)?.name ?? id;
+  const row = (b: Browser, label: string) => [label, <strong key="v">{v(f.floor[b])}</strong>, f.setBy[b].features.map(name).join(", "), `${f.setBy[b].elements} components`];
+  return (
+    <>
+      <Table
+        label="Library-wide floor" head={["Browser", "Works fully from", "Set by", "At that version"]}
+        rows={[row("chrome", "Chrome"), row("edge", "Edge"), row("firefox", "Firefox"), row("safari", "Safari (macOS)"), row("safari_ios", "Safari (iOS, iPadOS)")]}
+      />
+      <p className="docs-hint muted">
+        Tested in Chromium {f.engines.chromium.split(".")[0]}, Firefox {f.engines.firefox.split(".")[0]} and WebKit {f.engines.webkit} (Playwright {f.engines.playwright}).
+      </p>
+      <h3>Every feature in use</h3>
+      <Table
+        label="Features in use" head={["Feature", "Chrome / Edge", "Firefox", "Safari", "iOS", "Components", "Kind"]}
+        rows={f.features.map((x) => [x.name, v(x.versions.chrome), v(x.versions.firefox), v(x.versions.safari), v(x.versions.safari_ios), x.elements, x.progressive ? `Progressive – ${x.without}` : "Needed"])}
+      />
+    </>
+  );
+}
+
+// ── Performance: what was measured, and the heaviest and slowest components ────────────────────────────────────
+const perfLoader = Object.values(import.meta.glob<PerfFile>("./perf.json", { import: "default" }))[0];
+
+function PerfSummary() {
+  const [perf, setPerf] = useState<PerfFile | null>(null);
+  useEffect(() => {
+    void perfLoader?.().then(setPerf);
+  }, []);
+  if (!perfLoader) return <p className="muted">Nothing measured yet – run npm run measure:perf.</p>;
+  if (!perf) return <p className="muted">Loading the measurements…</p>;
+  const entries = Object.entries(perf.pieces);
+  const dates = entries.map(([, p]) => p.measuredAt).sort();
+  const heaviest = [...entries].sort(([, a], [, b]) => b.bundle.withoutLit.gzip - a.bundle.withoutLit.gzip).slice(0, 8);
+  const slowest = entries.filter(([, p]) => p.render && !p.render.error).sort(([, a], [, b]) => b.render!.first - a.render!.first).slice(0, 8);
+  const link = (slug: string) => <a key="l" className="docs-link" href={`#/${slug}`}>{slug}</a>;
+  return (
+    <>
+      <p className="docs-hint muted">
+        {entries.length} components measured{dates.length ? `, ${dates[0] === dates[dates.length - 1] ? `on ${dates[0]}` : `between ${dates[0]} and ${dates[dates.length - 1]}`}` : ""}, in headless {perf.environment.browser} on{" "}
+        {perf.environment.cpu || perf.environment.os}.
+      </p>
+      <h3>Largest, on a page that has Lit</h3>
+      <Table label="Largest components" head={["Component", "Gzip", "Minified", "Own code (gzip)"]} rows={heaviest.map(([slug, p]) => [link(slug), kb(p.bundle.withoutLit.gzip), kb(p.bundle.withoutLit.min), kb(p.bundle.own.gzip)])} />
+      <h3>Slowest first render</h3>
+      <Table label="Slowest first render" head={["Component", "First render", "Update", "DOM nodes"]} rows={slowest.map(([slug, p]) => [link(slug), `${p.render!.first} ms`, `${p.render!.update} ms`, p.render!.nodes])} />
+    </>
   );
 }

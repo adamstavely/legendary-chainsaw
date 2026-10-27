@@ -9,7 +9,9 @@ related: claim-answer, retrieval-inspector, verification-queue, change-summary
 How fresh a piece of evidence is, as one of four bands – high, good, aging, stale – worked out from when it was
 observed and how fast that kind of evidence decays. An exchange rate is stale within a month; a handbook stays
 good for years. Evidence can also be contested (something else disputes it) or superseded (something newer
-replaces it), whatever its age. As a badge it sits next to a source; as a strip it runs down the margin of a
+replaces it), whatever its age – and it can have changed since someone used it: the app knows what was relied on
+and what is there now, and the badge says “Changed since used” with a sentence on what to do. As a badge it sits
+next to a source; as a strip it runs down the margin of a
 document, one bar per paragraph, so people can see which parts rest on old evidence before they rely on them.
 
 ## When to use
@@ -30,7 +32,7 @@ document, one bar per paragraph, so people can see which parts rest on old evide
 1. **Mark** `.ui-vb__mark` – four signal bars in a tinted square, as many filled as the band is fresh
 2. **Band** `.ui-vb__band` – the band in words
 3. **Age** `.ui-vb__age` – how long ago the evidence was observed
-4. **Flag** `.ui-vb__flag` – Contested or Superseded, when it applies
+4. **Flag** `.ui-vb__flag` – Contested, Superseded or Changed since used (in blue, with a dot on the mark), when it applies
 5. **Strip** `.ui-vb__strip` – the margin strip, one bar per paragraph
 6. **Bar** `.ui-vb__seg` – one paragraph's band; dashed when aging, dotted when stale
 
@@ -56,7 +58,9 @@ The badge takes no focus and handles no keys. The strip is one tab stop:
 ## Screen readers
 
 The badge's visible words are hidden and said as one sentence instead – “Aging evidence, observed 5 months ago,
-contested” – which is also the host's `title`. `subject-label` changes “evidence” to your own word (“source”). In
+contested” – which is also the host's `title`. A changed source adds its words and a second sentence: “High source,
+observed 12 days ago, changed since used. It has changed since you used it – check it still says what you relied
+on.” (`changed-label` and `changed-note` change them). `subject-label` changes “evidence” to your own word (“source”). In
 `compact` mode only the mark shows, with the same sentence. The strip is a list named “Evidence freshness”
 (`strip-label`); each bar is a button named after its paragraph and its band: “Supplier prices: Aging evidence,
 observed 5 months ago, contested”. The tooltip repeats this for sighted people and is hidden from screen readers.
@@ -70,6 +74,8 @@ observed 5 months ago, contested”. The tooltip repeats this for sighted people
 - Use `bandLabels` for your organisation's own words, and keep them to one word each.
 - Contested and superseded say why in your product, not in the badge: put “Contested by the August invoice” next
   to it.
+- Set `changed` only when you have compared what was used with what is there now; write `changedNote` as what to
+  do (“Check the figures still match”), not as an alarm.
 
 ## Do
 
@@ -77,6 +83,7 @@ observed 5 months ago, contested”. The tooltip repeats this for sighted people
 - Use the same profile for the same kind of evidence across the product, so bands mean the same thing.
 - Line the strip up with the document (`for` and `selector`) and handle `tc-locate` to scroll to and mark the
   paragraph.
+- Clear `changed` once the person has looked at the new version – it marks something to act on, not history.
 
 ## Don't
 
@@ -89,6 +96,7 @@ observed 5 months ago, contested”. The tooltip repeats this for sighted people
 
 ```html
 <tc-validity-badge id="price" profile="fast" contested></tc-validity-badge>
+<tc-validity-badge id="rates" changed subject-label="source"></tc-validity-badge>
 
 <div style="display: flex; gap: 8px">
   <tc-validity-badge id="margin" mode="strip" for="report" selector="p"></tc-validity-badge>
@@ -103,6 +111,7 @@ observed 5 months ago, contested”. The tooltip repeats this for sighted people
   import "trenchcoat/tokens.css";
 
   document.querySelector("#price").observed = "2026-09-30";
+  document.querySelector("#rates").observed = "2026-10-12";
   const margin = document.querySelector("#margin");
   margin.items = [
     { observed: "2026-10-19", label: "Shipping costs" },
@@ -121,8 +130,8 @@ const paragraphs: ValidityInfo[] = [
   { observed: "2026-05-17", contested: true, label: "Supplier prices" },
 ];
 
-export function SourceRow({ observed }: { observed: string }) {
-  return <ValidityBadge observed={observed} profile="standard" />;
+export function SourceRow({ observed, editedSinceCited }: { observed: string; editedSinceCited: boolean }) {
+  return <ValidityBadge observed={observed} profile="standard" changed={editedSinceCited} />;
 }
 
 export function Margin() {

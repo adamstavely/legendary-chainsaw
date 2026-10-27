@@ -27,7 +27,7 @@ and can step through the points with the keyboard.
 
 1. **Header** `.tc-head` – a chart icon and the title, what the metric is
 2. **Value** `.ui-kpi__value` – the headline number, already formatted
-3. **Change** `.ui-kpi__delta` – up in green, down in red
+3. **Change** `.ui-kpi__delta` – a rise in green and a drop in red, or the other way round with `lower-is-better`
 4. **Plot** `.ui-kpi__plot` – the lines on three gridlines, with the axis values beside them
 5. **Tooltip** `.ui-kpi__tooltip` – the point's date and each line's value, largest first
 6. **Legend** `.ui-kpi__legend` – names each line by its colour and stroke pattern
@@ -60,7 +60,13 @@ stroke pattern as well as its colour, so the series don't rely on colour alone.
 
 - Title the card with the metric, not the chart: “Revenue”, “Active users”.
 - Format `value` the way the product shows the number elsewhere, and pass the same formatting as `format` – it is
-  used for the axis, the tooltip and the change.
+  used for the axis, the tooltip and the change. When the change is a percentage of a money value, give it its own
+  `deltaFormat` (“+8.6%”), so it doesn't read as money (“+$9”).
+- For a metric where less is better – latency, cost, error rate – set `lower-is-better`: a drop then shows green and a
+  rise red. The sign still says which way it moved.
+- Leave a series' `color` unset to take the look's chart palette (`--tc-chart-1` to `--tc-chart-6`, in order), or set
+  any CSS colour, including a token such as `var(--tc-chart-2)` or `var(--tc-status-danger-fg)`. Colours are applied
+  as styles, so custom properties resolve in both themes.
 - Keep `labels` short for the axis (“Mar 4”) and put the longer form in `tooltipLabels` (“Tue, Mar 4”) – screen
   readers hear the tooltip labels.
 - Use `footer` for the period and freshness: “Last 14 days · updated live”.
@@ -71,17 +77,20 @@ stroke pattern as well as its colour, so the series don't rely on colour alone.
 - Give every series the same number of values as there are `labels`.
 - Set `default-index` to the latest point when the newest day matters most – its tooltip shows at rest.
 - Keep to four lines or fewer; after that the patterns repeat.
+- Prefer the chart tokens to literal colours, so the lines follow the look and the dark theme.
 
 ## Don't
 
-- Don't pass a percentage as `delta` when `format` formats money – the change uses the same `format`.
+- Don't pass a percentage as `delta` with a money `format` and no `deltaFormat` – the change would read as money.
+- Don't colour a falling cost red by hand – set `lower-is-better`.
 - Don't use it for a single number without a trend; a plain stat says it with less.
 - Don't rely on the line colours alone in the text around the chart – name the series.
 
 ## Example
 
 ```html
-<tc-kpi-chart id="revenue" heading="Revenue" value="$96.4k" footer="Last 3 days" default-index="2"></tc-kpi-chart>
+<tc-kpi-chart id="revenue" heading="Revenue" value="$96.4k" delta="8.6" footer="Last 3 days" default-index="2"></tc-kpi-chart>
+<tc-kpi-chart id="latency" heading="p95 latency" value="420ms" delta="-12" lower-is-better></tc-kpi-chart>
 
 <script type="module">
   import "trenchcoat/kpi-chart";
@@ -90,10 +99,11 @@ stroke pattern as well as its colour, so the series don't rely on colour alone.
   const chart = document.querySelector("#revenue");
   chart.labels = ["Mar 2", "Mar 3", "Mar 4"];
   chart.series = [
-    { label: "Subscriptions", color: "#2f6bff", values: [4200, 4380, 4610] },
-    { label: "Services", color: "#8b5cf6", values: [2300, 2210, 2470] },
+    { label: "Subscriptions", values: [4200, 4380, 4610] }, // --tc-chart-1
+    { label: "Services", color: "var(--tc-chart-2)", values: [2300, 2210, 2470] },
   ];
   chart.format = (n) => `$${(n / 1000).toFixed(1)}k`;
+  chart.deltaFormat = (n) => `${n.toFixed(1)}%`;
   chart.addEventListener("tc-index-change", (e) => console.log(e.detail.index));
 </script>
 ```
@@ -103,8 +113,8 @@ import { KpiChart, type KpiSeries } from "trenchcoat/react";
 import "trenchcoat/tokens.css";
 
 const series: KpiSeries[] = [
-  { label: "Subscriptions", color: "#2f6bff", values: [4200, 4380, 4610] },
-  { label: "Services", color: "#8b5cf6", values: [2300, 2210, 2470] },
+  { label: "Subscriptions", values: [4200, 4380, 4610] },
+  { label: "Services", color: "var(--tc-chart-2)", values: [2300, 2210, 2470] },
 ];
 
 export function Revenue() {
@@ -112,7 +122,8 @@ export function Revenue() {
     <KpiChart
       title="Revenue"
       value="$96.4k"
-      delta={1200}
+      delta={8.6}
+      deltaFormat={(n) => `${n.toFixed(1)}%`}
       labels={["Mar 2", "Mar 3", "Mar 4"]}
       series={series}
       format={(n) => `$${(n / 1000).toFixed(1)}k`}
@@ -120,5 +131,9 @@ export function Revenue() {
       defaultIndex={2}
     />
   );
+}
+
+export function Latency() {
+  return <KpiChart title="p95 latency" value="420ms" delta={-12} lowerIsBetter labels={["Mar 2", "Mar 3", "Mar 4"]} series={[{ label: "p95", values: [480, 450, 420] }]} format={(n) => `${n}ms`} />;
 }
 ```

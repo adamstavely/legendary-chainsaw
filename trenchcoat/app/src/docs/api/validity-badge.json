@@ -54,6 +54,14 @@
      "readonly": false
     },
     {
+     "name": "changed",
+     "attribute": "changed",
+     "type": "boolean",
+     "default": "false",
+     "description": "The source has changed since it was used (the app compares what was relied on with what is there now): a blue dot on the mark and the words \"Changed since used\"",
+     "readonly": false
+    },
+    {
      "name": "now",
      "attribute": "now",
      "type": "number | undefined",
@@ -99,6 +107,22 @@
      "type": "string",
      "default": "\"Superseded\"",
      "description": "The word for a superseded piece of evidence",
+     "readonly": false
+    },
+    {
+     "name": "changedLabel",
+     "attribute": "changed-label",
+     "type": "string",
+     "default": "\"Changed since used\"",
+     "description": "The words for a source that has changed since it was used",
+     "readonly": false
+    },
+    {
+     "name": "changedNote",
+     "attribute": "changed-note",
+     "type": "string",
+     "default": "\"It has changed since you used it – check it still says what you relied on.\"",
+     "description": "What a changed source means and what to do – said after the band, and in the tooltip; empty leaves it out",
      "readonly": false
     },
     {
@@ -197,6 +221,9 @@
     "--tc-space-0-5",
     "--tc-space-1",
     "--tc-space-1-5",
+    "--tc-status-info-fg",
+    "--tc-status-info-solid",
+    "--tc-surface-raised",
     "--tc-text-disabled",
     "--tc-text-muted",
     "--tc-text-primary",
@@ -257,14 +284,308 @@
    ],
    "hides": [
     "for"
-   ]
+   ],
+   "events": {
+    "tc-locate": "onLocate"
+   }
   }
  ],
  "changelog": [
   "**Trust & calibration**, from THEMIS and built domain-neutral: - claims and their reliability: `tc-claim-answer`, `tc-verification-queue`, `tc-reflection-gate`, `tc-reliance-gauge`, `tc-disagreement-banner`, `tc-synthesis-notes`; - where outputs came from: `tc-lineage-graph`, `tc-validity-badge`, `tc-provenance-summary`, `tc-correction-propagation`, `tc-attestation-check`, `tc-run-manifest`; - policy and control: `tc-policy-simulator`, `tc-gate-config`, `tc-coverage-matrix`, `tc-kill-switch`, `tc-playbook-canvas`."
  ],
+ "frameworks": [
+  {
+   "tag": "tc-validity-badge",
+   "className": "TcValidityBadge",
+   "module": "trenchcoat/validity-badge",
+   "data": [
+    "bandLabels",
+    "items"
+   ],
+   "attributes": [
+    {
+     "name": "mode",
+     "attribute": "mode"
+    },
+    {
+     "name": "observed",
+     "attribute": "observed"
+    },
+    {
+     "name": "profile",
+     "attribute": "profile"
+    },
+    {
+     "name": "band",
+     "attribute": "band"
+    },
+    {
+     "name": "contested",
+     "attribute": "contested"
+    },
+    {
+     "name": "superseded",
+     "attribute": "superseded"
+    },
+    {
+     "name": "changed",
+     "attribute": "changed"
+    },
+    {
+     "name": "now",
+     "attribute": "now"
+    },
+    {
+     "name": "compact",
+     "attribute": "compact"
+    },
+    {
+     "name": "hideAge",
+     "attribute": "hide-age"
+    },
+    {
+     "name": "contestedLabel",
+     "attribute": "contested-label"
+    },
+    {
+     "name": "supersededLabel",
+     "attribute": "superseded-label"
+    },
+    {
+     "name": "changedLabel",
+     "attribute": "changed-label"
+    },
+    {
+     "name": "changedNote",
+     "attribute": "changed-note"
+    },
+    {
+     "name": "subjectLabel",
+     "attribute": "subject-label"
+    },
+    {
+     "name": "for",
+     "attribute": "for"
+    },
+    {
+     "name": "selector",
+     "attribute": "selector"
+    },
+    {
+     "name": "stripLabel",
+     "attribute": "strip-label"
+    },
+    {
+     "name": "paragraphLabel",
+     "attribute": "paragraph-label"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-locate",
+     "cancelable": false
+    }
+   ],
+   "controlled": [],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "relative-time-format",
+    "name": "Intl.RelativeTimeFormat",
+    "bcd": "javascript.builtins.Intl.RelativeTimeFormat",
+    "versions": {
+     "chrome": "71",
+     "edge": "79",
+     "firefox": "65",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "resize-observer",
+    "name": "ResizeObserver",
+    "bcd": "api.ResizeObserver",
+    "versions": {
+     "chrome": "64",
+     "edge": "79",
+     "firefox": "69",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [
+   "requestAnimationFrame, cancelled"
+  ],
+  "animations": 0,
+  "observers": [
+   "ResizeObserver",
+   "MutationObserver",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [
+   "Date.now()"
+  ],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
  "size": {
-  "min": 23306,
-  "gzip": 8134
+  "min": 26415,
+  "gzip": 8864
  }
 }

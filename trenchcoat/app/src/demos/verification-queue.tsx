@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import type * as UI from "../../../src/elements/react";
-import type { ClaimSource, VerificationClaim } from "../../../src/elements/react";
+import type { ClaimSource, ClaimSourceType, VerificationClaim, VerificationVerdict } from "../../../src/elements/react";
 import { buttonSm, caption } from "../demo-kit";
 
 // Dates are fixed against one day, so the source badges read the same every time
@@ -14,9 +14,28 @@ const SOURCES: ClaimSource[] = [
   { id: "orders", site: "Orders export", title: "Orders by region, last 12 months", date: "Oct 22, 2026", quote: "North: 31.8% of orders (48,210 of 151,600).", validity: { observed: ago(2) } },
   { id: "survey", site: "Customer survey", title: "Delivery satisfaction, Q3", date: "Sep 6, 2026", quote: "Customers who waited three days or more were half as likely to order again within 60 days.", validity: { observed: ago(48) } },
   { id: "lease", site: "Lease terms", title: "Northern site – draft lease", date: "Jul 2, 2026", quote: "Break clause at 36 months with six months' notice.", validity: { observed: ago(114), superseded: true } },
+  { id: "call", site: "Site call, Tuesday", title: "Weekly call with the fit-out contractor – machine transcript", date: "Oct 20, 2026", quote: "“…the loading bays, we're looking at end of January for those, all being well.”", validity: { observed: ago(4), profile: "fast" } },
+  { id: "scan", site: "Lease, signed scan", title: "Northern site lease – scanned copy", date: "Sep 30, 2026", quote: "Access for fit-out and occupation from 1 February 2027.", validity: { observed: ago(24), changed: true } },
 ];
 
+/* Claims read from a recording or a scan get verdicts in their own words; the other types keep the four marks */
+const VERDICTS: Partial<Record<ClaimSourceType, VerificationVerdict[]>> = {
+  transcript: [
+    { id: "matches", label: "Matches the recording", status: "verified" },
+    { id: "misheard", label: "Transcript misheard", status: "incorrect" },
+    { id: "dismiss", label: "Dismiss", status: "dismissed" },
+  ],
+  ocr: [
+    { id: "matches", label: "Matches the original", status: "verified" },
+    { id: "misread", label: "OCR misread", status: "incorrect" },
+    { id: "misrepresents", label: "Misrepresents source", status: "incorrect", key: "M" },
+    { id: "dismiss", label: "Dismiss", status: "dismissed" },
+  ],
+};
+
 const SESSION: VerificationClaim[] = [
+  { id: "q0", text: "The contractor said the loading bays would be finished by the end of January.", source: "transcript", recognition: 0.91, confidence: 0.8, sources: ["call"], origin: "Opening answer" },
+  { id: "q0b", text: "The signed lease lets us move in from 1 February.", source: "ocr", recognition: 0.72, confidence: 0.72, sources: ["scan"], origin: "Opening answer" },
   { id: "q1", text: "Shipping through the northern hub costs about 4% more per order than the coast route.", source: "grounded", confidence: 0.86, sources: ["freight"], origin: "Hub answer" },
   { id: "q2", text: "It would cut delivery by about a day for northern customers.", source: "grounded", confidence: 0.78, sources: ["routes"], origin: "Hub answer", status: "verified" },
   { id: "q3", text: "Northern customers place nearly a third of all orders.", source: "grounded", confidence: 0.93, sources: ["orders"], origin: "Hub answer", status: "verified" },
@@ -56,6 +75,7 @@ export default function Demo({ ui }: { ui: typeof UI }) {
         key={big ? "big" : "session"}
         defaultClaims={start}
         sources={SOURCES}
+        verdicts={VERDICTS}
         now={TODAY}
         maxHeight={big ? 320 : 240}
         onExport={({ counts }) => setNote(`Exported – ${counts.verified} verified, ${counts.incorrect} incorrect, ${counts.unverifiable} can't verify, ${counts.dismissed} dismissed.`)}

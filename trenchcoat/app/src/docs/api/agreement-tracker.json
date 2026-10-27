@@ -1,0 +1,560 @@
+{
+ "elements": [
+  {
+   "tag": "tc-agreement-tracker",
+   "className": "TcAgreementTracker",
+   "description": "How often the AI agreed with the person's framing versus pushed back, this session: the record, the rate and the\nrun, amber at a run of agreements, with \"Show the other side\".",
+   "properties": [
+    {
+     "name": "turns",
+     "attribute": null,
+     "type": "AgreementTurn[]",
+     "default": "[]",
+     "description": "The session's answers in order, oldest first, each classified by the app",
+     "readonly": false
+    },
+    {
+     "name": "threshold",
+     "attribute": "threshold",
+     "type": "number",
+     "default": "2",
+     "description": "How many agreements in a row turn the tracker amber",
+     "readonly": false
+    },
+    {
+     "name": "layout",
+     "attribute": "layout",
+     "type": "AgreementLayout",
+     "default": "\"card\"",
+     "description": "\"card\" – a small card; \"inline\" – one compact strip for a chat",
+     "readonly": false
+    },
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Agreement\"",
+     "description": "The heading, and the tracker's accessible name",
+     "readonly": false
+    },
+    {
+     "name": "scope",
+     "attribute": "scope",
+     "type": "string",
+     "default": "\"This session\"",
+     "description": "A quiet line under the heading (card only)",
+     "readonly": false
+    },
+    {
+     "name": "stanceLabels",
+     "attribute": null,
+     "type": "Partial<Record<AgreementStance, string>>",
+     "default": "{}",
+     "description": "Names of the three stances – \"Agreed\", \"Pushed back\" and \"Neutral\" by default",
+     "readonly": false
+    },
+    {
+     "name": "max",
+     "attribute": "max",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "How many of the latest turns the record shows – 24 in a card and 8 inline by default; earlier ones are counted",
+     "readonly": false
+    },
+    {
+     "name": "counterLabel",
+     "attribute": "counter-label",
+     "type": "string",
+     "default": "\"Show the other side\"",
+     "description": "The label of the button that asks for the counter-argument",
+     "readonly": false
+    },
+    {
+     "name": "warningText",
+     "attribute": "warning-text",
+     "type": "string",
+     "default": "\"The last {n} answers agreed with you. The strongest case against may show what agreement hides.\"",
+     "description": "The warning at the threshold; {n} is replaced by the length of the run",
+     "readonly": false
+    },
+    {
+     "name": "stats",
+     "attribute": null,
+     "type": "AgreementStats",
+     "default": null,
+     "description": "The counts, the rate and the current run",
+     "readonly": true
+    },
+    {
+     "name": "warned",
+     "attribute": null,
+     "type": "",
+     "default": null,
+     "description": "Whether the run of agreements has reached the threshold",
+     "readonly": true
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-counter-request",
+     "detail": "",
+     "description": "\"Show the other side\" was pressed; detail `{ run, turnId }`: AgreementCounterRequest – the run's length and its last turn.",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "agr",
+   "cssProperties": [
+    {
+     "name": "--tc-agreement-tracker-agreed-bg",
+     "value": "var(--tc-fill-strong)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-agreement-tracker-agreed-fg",
+     "value": "var(--tc-text-secondary)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-agreement-tracker-pushed-bg",
+     "value": "var(--tc-tone-teal-bg)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-agreement-tracker-pushed-fg",
+     "value": "var(--tc-tone-teal-fg)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-agreement-tracker-turn",
+     "value": "18px",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-border-default",
+    "--tc-border-subtle",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-ease-move",
+    "--tc-ease-spring",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-strong",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-2xl",
+    "--tc-font-size-3xl",
+    "--tc-font-size-lg",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-display",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-full",
+    "--tc-radius-lg",
+    "--tc-radius-sm",
+    "--tc-radius-xl",
+    "--tc-radius-xs",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-border",
+    "--tc-status-warning-fg",
+    "--tc-status-warning-solid",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-surface-well",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-on-accent",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tone-teal-bg",
+    "--tc-tone-teal-fg",
+    "--tc-tracking-tight",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "agreementStats",
+   "signature": "agreementStats(turns: AgreementTurn[]): AgreementStats",
+   "description": "Counts and the current run of a list of turns – neutral turns neither extend nor break a run"
+  }
+ ],
+ "react": [
+  {
+   "component": "AgreementTrackerOwn",
+   "exported": false,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading, and the tracker's accessible name – \"Agreement\" by default"
+    },
+    {
+     "name": "onRequestCounter",
+     "type": "(detail: AgreementCounterRequest) => void",
+     "optional": true,
+     "description": "\"Show the other side\" was pressed: the length of the run of agreements and its last turn – show the counter-argument"
+    }
+   ],
+   "hides": [],
+   "events": {
+    "tc-counter-request": "onTcCounterRequest"
+   }
+  },
+  {
+   "component": "AgreementTracker",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading, and the tracker's accessible name – \"Agreement\" by default"
+    },
+    {
+     "name": "onRequestCounter",
+     "type": "(detail: AgreementCounterRequest) => void",
+     "optional": true,
+     "description": "\"Show the other side\" was pressed: the length of the run of agreements and its last turn – show the counter-argument"
+    }
+   ],
+   "hides": [
+    "heading",
+    "Agreement",
+    "Show the other side"
+   ],
+   "events": {
+    "tc-counter-request": "onRequestCounter"
+   }
+  }
+ ],
+ "changelog": [
+  "**Trust & calibration**, from THEMIS and built domain-neutral: - `tc-agreement-tracker`, `tc-confidence-brief`, `tc-capability-notice`, `tc-transcript-review`, `tc-version-history`, `tc-session-context-bar`, `tc-evidence-coverage`, `tc-review-conflict`; - `tc-handoff-brief`, `tc-engagement-quality`, `tc-knowledge-promotion`, `tc-friction-profile`, `tc-reasoning-flags`."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-agreement-tracker",
+   "className": "TcAgreementTracker",
+   "module": "trenchcoat/agreement-tracker",
+   "data": [
+    "turns",
+    "stanceLabels"
+   ],
+   "attributes": [
+    {
+     "name": "threshold",
+     "attribute": "threshold"
+    },
+    {
+     "name": "layout",
+     "attribute": "layout"
+    },
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "scope",
+     "attribute": "scope"
+    },
+    {
+     "name": "max",
+     "attribute": "max"
+    },
+    {
+     "name": "counterLabel",
+     "attribute": "counter-label"
+    },
+    {
+     "name": "warningText",
+     "attribute": "warning-text"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-counter-request",
+     "cancelable": false
+    }
+   ],
+   "controlled": [],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "121",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "has"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "has",
+    "name": ":has()",
+    "bcd": "css.selectors.has",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "121",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Layout and state that depend on what's inside a part (an icon present, a focused field).",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "text-wrap-pretty",
+    "name": "text-wrap: pretty",
+    "bcd": "css.properties.text-wrap.pretty",
+    "versions": {
+     "chrome": "117",
+     "edge": "117",
+     "firefox": null,
+     "safari": "26",
+     "safari_ios": "26"
+    },
+    "progressive": true,
+    "without": "Paragraphs may end on a single short word.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 29126,
+  "gzip": 8541
+ }
+}

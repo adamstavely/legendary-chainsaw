@@ -19,6 +19,14 @@ const STEPS: UI.ProgressStep[] = [
   { id: "deploy", label: "Ship your first deploy" },
 ];
 
+// The same tracker as a status list for a job the product runs
+const IMPORT: UI.ProgressStep[] = [
+  { id: "upload", label: "Upload 1,240 files", done: true },
+  { id: "scan", label: "Scan for secrets", state: "failed" },
+  { id: "index", label: "Build the search index", state: "pending" },
+  { id: "notify", label: "Tell the team" },
+];
+
 export default function Demo({ ui }: { ui: typeof UI }) {
   const { ProgressTracker } = ui;
   const [count, setCount] = useState(STEPS.filter((s) => s.done).length);
@@ -36,6 +44,9 @@ export default function Demo({ ui }: { ui: typeof UI }) {
       </div>
       <div style={{ fontSize: 12, color: "var(--tc-text-muted, light-dark(#646464, #9a9aa1))", textAlign: "center" }} aria-live="polite">
         {count} of {STEPS.length} done · plays on its own until you tick a step
+      </div>
+      <div style={{ width: "100%" }}>
+        <ProgressTracker title="Import from Drive" steps={IMPORT} readonly doneStyle="plain" />
       </div>
     </div>
   );

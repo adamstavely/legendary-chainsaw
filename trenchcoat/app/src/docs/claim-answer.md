@@ -12,6 +12,12 @@ can't be sure: the world hasn't settled it, the evidence is thin, or it's beyond
 answer waits the strongest case against it. People can see at a glance which parts rest on evidence and which on
 the model's say-so, and send the claims that matter to a verification queue before they rely on them.
 
+Beyond the three text types, a claim can come from a medium – a machine transcript, a video, a recording, an image or
+text read off a scan (OCR), shown with how well it was read (“OCR 72%”) – or from memory: an earlier session, the
+team's shared knowledge or another agent's finding. The app sets a confidence ceiling for any type, so a transcript
+claim never looks surer than transcripts deserve, and can tag the question the answer replies to – factual,
+analytical, predictive or opinion – so people know how much uncertainty to expect before they read.
+
 ## When to use
 
 - Answers people will act on or pass on – a recommendation, a briefing, a finding – where some claims are sourced
@@ -29,20 +35,21 @@ the model's say-so, and send the claims that matter to a verification queue befo
 
 ## Anatomy
 
-1. **Key** `.ui-cla__keys` – the source types with their counts; pressing one picks out its claims
-2. **Claim** `.ui-cla__claim` – one claim, underlined in its source type's colour and line style
-3. **Uncertainty mark** `.ui-cla__unc` – a small “?” after a claim the model can't be sure of
-4. **Claim detail** `.ui-cla__detail` – the source type, the confidence, the uncertainty and the passages behind it
-5. **Send to verification** `.ui-cla__btn` – puts the claim in the verification queue
+1. **Question type** `.ui-cla__qtype` – the kind of question the answer replies to, when the app sets it
+2. **Key** `.ui-cla__keys` – the source types with their counts; pressing one picks out its claims
+3. **Claim** `.ui-cla__claim` – one claim, underlined in its source type's colour and line style
+4. **Uncertainty mark** `.ui-cla__unc` – a small “?” after a claim the model can't be sure of
+5. **Claim detail** `.ui-cla__detail` – the source type (and how well a medium was read), the confidence – capped where a ceiling applies – the uncertainty, the passages behind it and Send to verification
 6. **Counter-position** `.ui-cla__counter` – the strongest case against the answer, folded
-7. **Caption** `.ui-cla__caption` – how many claims are sourced, or what the pointer is on
+7. **Caption** `.ui-cla__caption` – how many claims rest on a source or a medium, or what the pointer is on
 
 ## Looks
 
 Standard sets the answer on a white card in a gray tray, with the caption on the tray and the open claim on a light
 gray well. Clean is one white card: the caption is its last row under a hairline, the open claim is a raised card of
 its own and the key's buttons are smaller. Both use the same underlines – solid for sourced, dashed for model
-knowledge, dotted for inferred – so the types read without colour.
+knowledge, dotted for inferred, double for the media types and wavy for the memory types – so the families read
+without colour, and the label names each type.
 
 ## Keyboard
 
@@ -60,7 +67,10 @@ knowledge, dotted for inferred – so the types read without colour.
 The host is a group named “Answer, claim by claim” unless the page names it. Each claim is a button that reads its
 words, then its type, confidence and uncertainty (“Faster delivery usually lifts repeat purchases, Model knowledge,
 62% confidence, Thin evidence”), with `aria-expanded` and `aria-controls` pointing at the detail, a region named
-“Claim: …”. The confidence is a meter (“62%, medium”). The key's buttons are toggle buttons (`aria-pressed`) in a
+“Claim: …”. A media claim adds how well it was read (“OCR 72%”), and a capped confidence says so (“72% confidence
+(capped)”). The confidence is a meter (“62%, medium”, or “80%, high, capped”), and the detail explains a cap: “Capped
+at 80% – the model said 88%, but transcript claims are shown no higher.” The question tag reads “Question type:
+Predictive”, then what that means. The key's buttons are toggle buttons (`aria-pressed`) in a
 group named “Source types”. A polite status says “Sent to verification: …” and “Showing model knowledge claims”.
 Each source's freshness badge says, for example, “Aging source, observed 5 months ago, contested”.
 
@@ -74,13 +84,19 @@ Each source's freshness badge says, for example, “Aging source, observed 5 mon
   much.”
 - Write the counter-position as the best argument against the answer, not a disclaimer: name what could be wrong
   and why.
-- Rename the source types for your field with `sourceLabels`; keep the three kinds.
+- Rename the source types for your field with `sourceLabels`; keep the kinds. Mark a claim read from a recording, an
+  image or a scan with its media type, not `grounded`, so people check the original.
+- Use a memory type for what the model remembers rather than retrieves now; its note says it may be out of date.
+- Set `questionType` from your own classifier; leave it unset when you don't classify questions.
 
 ## Do
 
 - Give every claim a confidence the model actually produced, and set `confidenceBands` to where your evaluation
   shows the levels change.
-- Attach a source's `validity` so an old or disputed passage shows it next to the claim it supports.
+- Attach a source's `validity` so an old or disputed passage shows it next to the claim it supports – and set
+  `changed` on it when the source has changed since the answer used it.
+- Set `confidenceCeilings` from your evaluation of each type, and pass `recognition` for media claims, so a shaky
+  transcript or a poor scan can't look certain.
 - Handle `tc-verify` and add the claim to your verification queue.
 
 ## Don't
@@ -88,6 +104,7 @@ Each source's freshness badge says, for example, “Aging source, observed 5 mon
 - Don't mark connecting text as a claim – it dilutes the ones that matter.
 - Don't hide the counter-position for answers people will act on.
 - Don't use colour alone to tell types apart in your own additions – keep the underline styles.
+- Don't use a ceiling to hide a confidence you don't trust – the detail says what the model said.
 
 ## Example
 
@@ -105,7 +122,10 @@ Each source's freshness badge says, for example, “Aging source, observed 5 mon
   answer.claims = [
     { id: "c1", text: "The northern hub costs about 4% more per order.", source: "grounded", confidence: 0.86, sources: ["quote"] },
     { id: "c2", text: " Fuel prices will decide much of the gap.", source: "model", confidence: 0.35, uncertainty: "unsettled" },
+    { id: "c3", text: " The lease starts in February.", source: "ocr", confidence: 0.9, recognition: 0.72 },
   ];
+  answer.confidenceCeilings = { transcript: 0.8, ocr: 0.85, session: 0.7 };
+  answer.questionType = "analytical";
   answer.counter = "The quote is five months old and disputed.";
   answer.addEventListener("tc-verify", (e) => console.log(e.detail.claim, e.detail.sources));
 </script>
@@ -120,6 +140,7 @@ const sources: ClaimSource[] = [{ id: "quote", site: "Freight quote", title: "Ca
 const claims: AnswerClaim[] = [
   { id: "c1", text: "The northern hub costs about 4% more per order.", source: "grounded", confidence: 0.86, sources: ["quote"] },
   { id: "c2", text: " Fuel prices will decide much of the gap.", source: "model", confidence: 0.35, uncertainty: "unsettled" },
+  { id: "c3", text: " Last time, fit-out ran six weeks late.", source: "session", confidence: 0.8 },
 ];
 
 export function Answer() {
@@ -129,6 +150,8 @@ export function Answer() {
       claims={claims}
       sources={sources}
       counter="The quote is five months old and disputed."
+      questionType="predictive"
+      confidenceCeilings={{ transcript: 0.8, session: 0.7 }}
       queued={queued}
       onQueuedChange={setQueued}
       onVerify={(claim) => console.log("verify", claim.id)}

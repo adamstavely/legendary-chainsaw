@@ -54,8 +54,10 @@ const pending = (id: string, activity = "Generating"): ImageGridTile => ({ id, a
 export default function Demo({ ui }: { ui: typeof UI }) {
   const { ImageGrid } = ui;
   const [tiles, setTiles] = useState<ImageGridTile[]>(() => START.map(([id]) => pending(id)));
-  const [note, setNote] = useState("Arrow keys move between images · Enter opens a tile's actions · F2 edits its alt text");
+  const [note, setNote] = useState("Click an image or press Space to pick it · Enter opens a tile's actions · F2 edits its alt text");
   const [run, setRun] = useState(0);
+  const [picked, setPicked] = useState<string | null>("v1");
+  const [tries, setTries] = useState<Record<string, number>>({});
   const jobs = useRef(new Map<string, Job>(START));
   const next = useRef(4);
   const busy = tiles.some((t) => t.status === "pending");
@@ -87,6 +89,8 @@ export default function Demo({ ui }: { ui: typeof UI }) {
     // Try again redraws the same scene; Regenerate draws a new one
     const scene = tile.status === "failed" && job ? job.scene : next.current++;
     jobs.current.set(tile.id, { scene, speed: 0.06 + Math.random() * 0.03 });
+    setTries((t) => ({ ...t, [tile.id]: (t[tile.id] ?? 1) + 1 }));
+    if (picked === tile.id) setPicked(null);
     setTiles((list) => list.map((t) => (t.id === tile.id ? pending(t.id) : t)));
     setNote(`Regenerating variation ${index + 1}`);
   };
@@ -101,7 +105,9 @@ export default function Demo({ ui }: { ui: typeof UI }) {
     jobs.current = new Map(START);
     next.current = 4;
     setTiles(START.map(([id]) => pending(id)));
-    setNote("Arrow keys move between images · Enter opens a tile's actions · F2 edits its alt text");
+    setPicked("v1");
+    setTries({});
+    setNote("Click an image or press Space to pick it · Enter opens a tile's actions · F2 edits its alt text");
     setRun((n) => n + 1);
   };
 
@@ -110,9 +116,18 @@ export default function Demo({ ui }: { ui: typeof UI }) {
       <ImageGrid
         title="Lighthouse at dusk"
         prompt="A lighthouse on a sea cliff at dusk, soft watercolor, warm light on the water"
-        tiles={tiles}
+        tiles={tiles.map((t) => ({
+          ...t,
+          // The app's own state on each tile: the one picked for the cover, and how many tries it took
+          ...(t.id === picked ? { badge: "Picked", badgeTone: "success" as const } : {}),
+          ...((tries[t.id] ?? 1) > 1 ? { meta: `${tries[t.id]} tries` } : {}),
+        }))}
+        onOpen={(tile, index) => {
+          setPicked(tile.id);
+          setNote(`Opened variation ${index + 1} – picked for the cover`);
+        }}
         onTilesChange={(list) => {
-          setTiles(list);
+          setTiles(list.map(({ badge: _b, badgeTone: _t, meta: _m, ...t }) => t));
           setNote("Alt text saved");
         }}
         onRegenerate={regenerate}

@@ -284,3 +284,94 @@ for (const theme of ["light", "dark"] as const) {
     expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
   });
 }
+
+describe("tc-validity-badge – changed since used", () => {
+  test("changed: a dot on the mark, the words in blue, and a sentence on what to do", async () => {
+    const el = await fixture<TcValidityBadge>(html`<tc-validity-badge .now=${NOW} .observed=${ago(12)} subject-label="source" changed></tc-validity-badge>`);
+    expect(el.querySelector(".ui-vb__mark")!.hasAttribute("data-changed")).toBe(true);
+    const flag = el.querySelector<HTMLElement>('.ui-vb__flag[data-kind="changed"]')!;
+    expect(text(flag)).toBe("Changed since used");
+    expect(getComputedStyle(flag).color).not.toBe(getComputedStyle(el.querySelector(".ui-vb__age")!).color);
+    // The dot is drawn: a real box at the mark's corner
+    expect(getComputedStyle(el.querySelector(".ui-vb__mark")!, "::after").width).toBe("8px");
+    const said = "High source, observed 12 days ago, changed since used. It has changed since you used it – check it still says what you relied on.";
+    expect(text(el.querySelector(".ui-vb__sr"))).toBe(said);
+    expect(el.getAttribute("title")).toBe(said);
+    // The visible words stay out of the accessibility tree; the sentence is said once
+    expect(el.querySelector(".ui-vb__text")!.getAttribute("aria-hidden")).toBe("true");
+  });
+
+  test("not changed: no dot, no words – and the existing sentence is unchanged", async () => {
+    const el = await fixture<TcValidityBadge>(html`<tc-validity-badge .now=${NOW} .observed=${ago(12)}></tc-validity-badge>`);
+    expect(el.querySelector(".ui-vb__mark")!.hasAttribute("data-changed")).toBe(false);
+    expect(el.querySelector('.ui-vb__flag[data-kind="changed"]')).toBeNull();
+    expect(text(el.querySelector(".ui-vb__sr"))).toBe("High evidence, observed 12 days ago");
+  });
+
+  test("the label and the note are properties; an empty note leaves the second sentence out", async () => {
+    const el = await fixture<TcValidityBadge>(
+      html`<tc-validity-badge .now=${NOW} .observed=${ago(12)} changed changed-label="Edited" changed-note="Read it again."></tc-validity-badge>`,
+    );
+    expect(text(el.querySelector('.ui-vb__flag[data-kind="changed"]'))).toBe("Edited");
+    expect(text(el.querySelector(".ui-vb__sr"))).toBe("High evidence, observed 12 days ago, edited. Read it again.");
+    el.changedNote = "";
+    await settle();
+    expect(text(el.querySelector(".ui-vb__sr"))).toBe("High evidence, observed 12 days ago, edited");
+    el.changed = false;
+    await settle();
+    expect(el.querySelector('.ui-vb__flag[data-kind="changed"]')).toBeNull();
+  });
+
+  test("with contested and superseded, changed comes last; compact keeps the dot and the sentence", async () => {
+    const el = await fixture<TcValidityBadge>(html`<tc-validity-badge .now=${NOW} .observed=${ago(200)} contested superseded changed changed-note=""></tc-validity-badge>`);
+    expect([...el.querySelectorAll<HTMLElement>(".ui-vb__flag")].map((f) => f.dataset.kind)).toEqual(["superseded", "contested", "changed"]);
+    expect(text(el.querySelector(".ui-vb__sr"))).toBe("Aging evidence, observed 6 months ago, superseded, contested, changed since used");
+    el.compact = true;
+    await settle();
+    expect(el.querySelector(".ui-vb__text")).toBeNull();
+    expect(el.querySelector(".ui-vb__mark")!.hasAttribute("data-changed")).toBe(true);
+    expect(el.getAttribute("title")).toContain("changed since used");
+  });
+
+  test("strip: a changed paragraph's bar has the dot, and its name and tooltip say so", async () => {
+    const items: ValidityInfo[] = [{ observed: ago(3), label: "Rates" }, { observed: ago(12), changed: true, label: "Carrier rates" }];
+    const el = await fixture<TcValidityBadge>(html`<tc-validity-badge mode="strip" .now=${NOW} .items=${items}></tc-validity-badge>`);
+    const segs = [...el.querySelectorAll<HTMLElement>(".ui-vb__seg")];
+    expect(segs.map((s) => s.hasAttribute("data-changed"))).toEqual([false, true]);
+    expect(segs[1].getAttribute("aria-label")).toBe(
+      "Carrier rates: High evidence, observed 12 days ago, changed since used. It has changed since you used it – check it still says what you relied on.",
+    );
+    segs[1].focus();
+    await settle();
+    expect(text(el.querySelector(".ui-vb__tip-text"))).toBe("High · 12 days ago · Changed since used");
+  });
+
+  test("React: changed and its words reach the element", async () => {
+    const host = document.createElement("div");
+    document.body.append(host);
+    const root = createRoot(host);
+    await act(async () => root.render(createElement(ValidityBadge, { observed: ago(12), now: NOW, changed: true, changedLabel: "Edited since cited" })));
+    await settle();
+    const el = host.querySelector<TcValidityBadge>("tc-validity-badge")!;
+    expect(el.changed).toBe(true);
+    expect(text(el.querySelector('.ui-vb__flag[data-kind="changed"]'))).toBe("Edited since cited");
+    await act(async () => root.unmount());
+  });
+
+  for (const theme of ["light", "dark"] as const)
+    test(`axe: changed passes in both looks (${theme})`, async () => {
+      const wrap = await fixture(html`<div data-tc-theme=${theme} style="background: ${theme === "dark" ? "#0e0e10" : "#fff"}; padding: 8px">
+        ${(["standard", "clean"] as const).map(
+          (look) => html`<div>
+            <tc-validity-badge look=${look} .now=${NOW} .observed=${ago(12)} changed></tc-validity-badge>
+            <tc-validity-badge look=${look} .now=${NOW} .observed=${ago(200)} contested changed></tc-validity-badge>
+            <tc-validity-badge look=${look} mode="strip" .now=${NOW} .items=${[{ observed: ago(12), changed: true }]}></tc-validity-badge>
+          </div>`,
+        )}
+      </div>`);
+      await settle();
+      await Promise.all(document.getAnimations().map((x) => (x.finish(), x.finished)));
+      const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
+      expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
+    });
+});

@@ -112,7 +112,7 @@ export abstract class TcSettingsElement<T> extends TcElement {
   }
 }
 
-export const settingsCss = /* css */ `
+const rawSettingsCss = /* css */ `
 .tc-settings { min-width: 0; color: var(--tc-text-primary); font-family: var(--tc-font-sans); font-size: var(--tc-font-size-md); line-height: var(--tc-line-height-normal); text-align: left; }
 .tc-settings, .tc-settings * { box-sizing: border-box; }
 .tc-settings-card { overflow: hidden; border-radius: var(--tc-card-radius); background: var(--tc-surface-on-tray); box-shadow: var(--tc-card-shadow); }
@@ -185,3 +185,29 @@ export const settingsCss = /* css */ `
 .tc-settings-media { display: block; max-width: 100%; max-height: 240px; border-radius: var(--tc-radius-md); object-fit: contain; }
 @media (prefers-reduced-motion: reduce) { .tc-settings input, .tc-settings button, .tc-settings input::before { transition: none; } }
 `;
+
+/*
+ * The primitives' own parts only. A primitive that hosts the app's content (tc-dialog's body and actions) marks that
+ * region .tc-settings-host, and the descendant rules above (`.tc-settings button`, `.tc-settings p` …) must not reach
+ * into it – a hosted tc-button or progress tracker keeps its own styling. Every selector that goes below a
+ * .tc-settings root gets OWN on its last compound: not inside a host, unless inside a primitive nested in one (a
+ * tc-switch placed in a dialog still gets its styles). :where() adds no specificity, so the primitives render exactly
+ * as before.
+ */
+const OWN = ":where(:not(.tc-settings-host *), .tc-settings-host .tc-settings *)";
+const scopeSelector = (selector: string) => {
+  if (!/\.tc-settings[\w-]*[^,]*?[\s>]+\S/.test(selector)) return selector;
+  const pseudo = selector.indexOf("::");
+  return pseudo < 0 ? selector + OWN : selector.slice(0, pseudo) + OWN + selector.slice(pseudo);
+};
+export const settingsCss = rawSettingsCss.replace(
+  /(?<=^|[;{}])(\s*)([^{}@;]+?)(\s*\{)/g,
+  (_whole, lead: string, selectors: string, open: string) =>
+    lead +
+    selectors
+      .split(/,(?![^(]*\))/)
+      .map((s) => scopeSelector(s.trim()))
+      .join(", ") +
+    open,
+);
+

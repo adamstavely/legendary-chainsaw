@@ -23,6 +23,10 @@ import { RollingController } from "./internal/controllers";
  * and `reason` override it. With `review-level` set to something else, the footer offers to switch: a cancelable
  * `tc-review-level-change` ({ level, previous }). With `browsable`, the episode counts are buttons that fire
  * `tc-episodes-open` ({ kind }). Numbers roll to new values; the element reads no clock.
+ *
+ * Two optional sections, both data the app supplies: `domains` – a calibration table, one row per domain with the
+ * AI's accuracy against the confidence it stated, banded well calibrated, over-confident or under-confident – and
+ * `agents`, a ranking by the rating the app gives each one.
  */
 
 export type RelianceSignal = {
@@ -48,6 +52,32 @@ export type RelianceDirection = "overtrust" | "undertrust" | "matched";
 export type RelianceEpisodeKind = "overtrust" | "undertrust";
 export type RelianceSignalState = "ok" | "spot-check" | "mandatory";
 
+/** How the AI's stated confidence compares with its accuracy in a domain */
+export type RelianceCalibration = "calibrated" | "over" | "under";
+/** One row of the calibration table */
+export type RelianceDomain = {
+  id: string;
+  /** "Contract terms", "Case law" */
+  label: string;
+  /** How often the AI was right in this domain, 0–1 */
+  accuracy: number;
+  /** The confidence it stated there, on average, 0–1 */
+  confidence: number;
+  /** How many outputs the row rests on – a quiet line under the label */
+  count?: number;
+  /** The band, set outright – otherwise worked out from accuracy, confidence and `calibrationTolerance` */
+  band?: RelianceCalibration;
+};
+/** One agent in the ranking */
+export type RelianceAgent = {
+  id: string;
+  label: string;
+  /** The rating the app gives it, 0–1 – the ranking sorts by it, highest first */
+  rating: number;
+  /** A quiet line under the name, e.g. "212 answers" */
+  detail?: string;
+};
+
 /** Details of the events */
 export type RelianceReviewLevelChange = { level: RelianceReviewLevel; previous: RelianceReviewLevel };
 export type RelianceEpisodesOpen = { kind: RelianceEpisodeKind };
@@ -55,6 +85,7 @@ export type RelianceEpisodesOpen = { kind: RelianceEpisodeKind };
 const RANK: Record<RelianceReviewLevel, number> = { routine: 0, "spot-check": 1, mandatory: 2 };
 const DEFAULT_LEVELS: Record<RelianceReviewLevel, string> = { routine: "Routine review", "spot-check": "Spot-check", mandatory: "Mandatory review" };
 const BANDS: Record<RelianceBand, string> = { calibrated: "Calibrated", drifting: "Drifting", miscalibrated: "Miscalibrated" };
+const DEFAULT_CALIBRATION_LABELS: Record<RelianceCalibration, string> = { calibrated: "Well calibrated", over: "Over-confident", under: "Under-confident" };
 /** Reliance and accuracy closer than this read as matched */
 const MATCHED = 0.05;
 
@@ -87,6 +118,9 @@ const checkIcon = html`<svg viewBox="0 0 16 16" aria-hidden="true">${svg`<circle
 const warnIcon = html`<svg viewBox="0 0 16 16" aria-hidden="true">${svg`<path d="M8 2.6 1.9 13.1h12.2z"></path><path d="M8 6.6v3M8 11.4h.01"></path>`}</svg>`;
 const shieldIcon = html`<svg viewBox="0 0 16 16" aria-hidden="true">${svg`<path d="M8 2.2 3.2 4v3.6c0 3 2 5 4.8 6.2 2.8-1.2 4.8-3.2 4.8-6.2V4z"></path><path d="M8 5.6v3M8 10.6h.01"></path>`}</svg>`;
 const upIcon = html`<svg viewBox="0 0 16 16" aria-hidden="true">${svg`<path d="M8 12.5v-9M4.5 7 8 3.5 11.5 7"></path>`}</svg>`;
+const tinyCheck = html`<svg viewBox="0 0 12 12" aria-hidden="true">${svg`<path d="m3 6.2 2 2 4-4.4"></path>`}</svg>`;
+const tinyUp = html`<svg viewBox="0 0 12 12" aria-hidden="true">${svg`<path d="M6 9.5v-7M3.25 5.25 6 2.5l2.75 2.75"></path>`}</svg>`;
+const tinyDown = html`<svg viewBox="0 0 12 12" aria-hidden="true">${svg`<path d="M6 2.5v7M3.25 6.75 6 9.5l2.75-2.75"></path>`}</svg>`;
 const downIcon = html`<svg viewBox="0 0 16 16" aria-hidden="true">${svg`<path d="M8 3.5v9M4.5 9 8 12.5 11.5 9"></path>`}</svg>`;
 
 /**
@@ -135,6 +169,18 @@ export class TcRelianceGauge extends TcElement {
   @property() accessor reason = "";
   /** Names of the review levels */
   @property({ attribute: false }) accessor levelLabels: Partial<Record<RelianceReviewLevel, string>> = {};
+  /** The calibration table: one row per domain, the AI's accuracy against the confidence it stated; empty hides it */
+  @property({ attribute: false }) accessor domains: RelianceDomain[] = [];
+  /** How far confidence may sit from accuracy (0–1) and still read "Well calibrated" */
+  @property({ type: Number, attribute: "calibration-tolerance" }) accessor calibrationTolerance = 0.05;
+  /** The names of the calibration bands – in place of Well calibrated, Over-confident and Under-confident */
+  @property({ attribute: false }) accessor calibrationLabels: Partial<Record<RelianceCalibration, string>> = {};
+  /** The calibration table's caption */
+  @property({ attribute: "domains-label" }) accessor domainsLabel = "Calibration by domain";
+  /** Agents to rank by the rating the app gives each; empty hides the ranking */
+  @property({ attribute: false }) accessor agents: RelianceAgent[] = [];
+  /** The ranking's caption */
+  @property({ attribute: "agents-label" }) accessor agentsLabel = "Agents by rating";
   /** Locale for numbers */
   @property() accessor locale = "en-US";
 
@@ -220,6 +266,13 @@ export class TcRelianceGauge extends TcElement {
     }
     if (this.recommended) level = this.recommended;
     return { level, text: this.reason || text };
+  }
+
+  /** @internal A domain's band: given, or how far its stated confidence sits from its accuracy */
+  calibrationOf(d: RelianceDomain): RelianceCalibration {
+    if (d.band) return d.band;
+    const gap = d.confidence - d.accuracy;
+    return gap > this.calibrationTolerance ? "over" : gap < -this.calibrationTolerance ? "under" : "calibrated";
   }
 
   /** @internal */
@@ -469,6 +522,59 @@ export class TcRelianceGauge extends TcElement {
     </ul>`;
   }
 
+  private renderDomains() {
+    const domains = this.domains;
+    if (!domains.length) return nothing;
+    const id = `${this.uid}-domains`;
+    const count = (n: number) => numberFormat(this.locale, { maximumFractionDigits: 0 }).format(n);
+    return html`<div class="ui-rlg__section">
+      <p class="ui-rlg__caption" id=${id}>${this.domainsLabel}</p>
+      <table class="ui-rlg__domains" aria-labelledby=${id}>
+        <thead>
+          <tr><th scope="col">Domain</th><th scope="col" class="ui-rlg__num">Confidence</th><th scope="col" class="ui-rlg__num">Accuracy</th><th scope="col"><span class="ui-rlg__sr">Calibration</span></th></tr>
+        </thead>
+        <tbody>
+          ${repeat(
+            domains,
+            (d) => d.id,
+            (d) => {
+              const band = this.calibrationOf(d);
+              const icon = band === "over" ? tinyUp : band === "under" ? tinyDown : tinyCheck;
+              return html`<tr data-band=${band}>
+                <th scope="row" class="ui-rlg__domain">${d.label}${d.count !== undefined ? html`<span class="ui-rlg__domain-n">${count(d.count)} outputs</span>` : nothing}</th>
+                <td class="ui-rlg__num"><span class="ui-rlg__cell-label" aria-hidden="true">Confidence </span>${this.pct(clamp01(d.confidence))}</td>
+                <td class="ui-rlg__num"><span class="ui-rlg__cell-label" aria-hidden="true">Accuracy </span>${this.pct(clamp01(d.accuracy))}</td>
+                <td class="ui-rlg__cal-cell"><span class="ui-rlg__cal" data-band=${band}>${icon}${this.calibrationLabels[band] ?? DEFAULT_CALIBRATION_LABELS[band]}</span></td>
+              </tr>`;
+            },
+          )}
+        </tbody>
+      </table>
+    </div>`;
+  }
+
+  private renderAgents() {
+    const agents = [...this.agents].sort((a, b) => b.rating - a.rating);
+    if (!agents.length) return nothing;
+    const id = `${this.uid}-agents`;
+    const top = Math.max(...agents.map((a) => clamp01(a.rating))) || 1;
+    return html`<div class="ui-rlg__section">
+      <p class="ui-rlg__caption" id=${id}>${this.agentsLabel}</p>
+      <ol class="ui-rlg__agents" aria-labelledby=${id}>
+        ${repeat(
+          agents,
+          (a) => a.id,
+          (a, i) => html`<li class="ui-rlg__agent">
+            <span class="ui-rlg__rank" aria-hidden="true">${i + 1}</span>
+            <span class="ui-rlg__agent-name">${a.label}${a.detail ? html`<span class="ui-rlg__agent-detail">${a.detail}</span>` : nothing}</span>
+            <span class="ui-rlg__agent-bar" aria-hidden="true"><span style=${styleMap({ width: `${(clamp01(a.rating) / top) * 100}%` })}></span></span>
+            <span class="ui-rlg__agent-value"><span class="ui-rlg__sr">, rated </span>${this.idx(clamp01(a.rating))}</span>
+          </li>`,
+        )}
+      </ol>
+    </div>`;
+  }
+
   private renderAdvice() {
     const { level, text } = this.advice;
     const icon = level === "mandatory" ? shieldIcon : level === "spot-check" ? warnIcon : checkIcon;
@@ -516,7 +622,7 @@ export class TcRelianceGauge extends TcElement {
         ${clean ? head : nothing}
         <div class="ui-rlg__inner">
           <div class="ui-rlg__figure">${this.renderDial(v)}${this.renderLean()}${this.renderTrend()}</div>
-          ${this.renderEpisodes()}${this.renderSignals()}${this.renderAdvice()}
+          ${this.renderEpisodes()}${this.renderSignals()}${this.renderDomains()}${this.renderAgents()}${this.renderAdvice()}
         </div>
       </div>
       ${this.renderFoot()}
@@ -534,7 +640,8 @@ export class TcRelianceGauge extends TcElement {
   max-width: 480px;
   padding: var(--tc-tray-inset);
   border-radius: var(--tc-tray-radius);
-  background: var(--tc-surface-sunken);
+  background: var(--tc-surface-tray);
+  --tc-reliance-gauge-card: var(--tc-surface-on-tray);
   font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-md);
   line-height: var(--tc-line-height-snug);
@@ -552,6 +659,7 @@ export class TcRelianceGauge extends TcElement {
   border-radius: var(--tc-card-radius);
   background: var(--tc-surface-raised);
   box-shadow: var(--tc-card-shadow);
+  --tc-reliance-gauge-card: var(--tc-surface-raised);
   font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-md);
   line-height: var(--tc-line-height-normal);
@@ -571,7 +679,7 @@ export class TcRelianceGauge extends TcElement {
 .ui-rlg__muted { color: var(--tc-text-muted); }
 .ui-rlg__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 /* The white card (Clean: the body of the one card) */
-:where([data-look="standard"], [data-look="standard"] *).ui-rlg__card { border-radius: var(--tc-card-radius); background: var(--tc-surface-raised); box-shadow: var(--tc-card-shadow); }
+:where([data-look="standard"], [data-look="standard"] *).ui-rlg__card { border-radius: var(--tc-card-radius); background: var(--tc-reliance-gauge-card); box-shadow: var(--tc-card-shadow); }
 :where([data-look="standard"], [data-look="standard"] *).ui-rlg__inner { padding: var(--tc-space-4); }
 :where([data-look="clean"], [data-look="clean"] *).ui-rlg__inner { padding: 0 var(--tc-space-4) var(--tc-space-4); }
 /* The band's pill, at the header's right */
@@ -595,7 +703,7 @@ export class TcRelianceGauge extends TcElement {
 .ui-rlg__dial[data-band="drifting"] .ui-rlg__fill { stroke: var(--tc-status-warning-solid); }
 .ui-rlg__dial[data-band="miscalibrated"] .ui-rlg__fill { stroke: var(--tc-status-danger-solid); }
 /* Where the bands start: a cut through the arc */
-.ui-rlg__notch { stroke: var(--tc-surface-raised); stroke-width: 2; }
+.ui-rlg__notch { stroke: var(--tc-reliance-gauge-card); stroke-width: 2; }
 .ui-rlg__reading { position: absolute; right: 0; bottom: 0; left: 0; display: grid; justify-items: center; }
 .ui-rlg__index { font-weight: var(--tc-font-weight-strong); font-variant-numeric: tabular-nums; }
 :where([data-look="standard"], [data-look="standard"] *).ui-rlg__index { font-size: var(--tc-font-size-3xl); line-height: var(--tc-line-height-display); letter-spacing: var(--tc-tracking-tight); color: var(--tc-text-primary); }
@@ -627,9 +735,9 @@ export class TcRelianceGauge extends TcElement {
 .ui-rlg__line polyline { fill: none; stroke: var(--tc-text-secondary); stroke-linecap: round; stroke-linejoin: round; }
 :where([data-look="standard"], [data-look="standard"] *).ui-rlg__line polyline { stroke-width: 1.75; }
 :where([data-look="clean"], [data-look="clean"] *).ui-rlg__line polyline { stroke-width: 1.25; }
-.ui-rlg__point { position: absolute; width: 6px; height: 6px; border-radius: 50%; background: var(--tc-surface-raised); transform: translate(-50%, -50%); box-shadow: inset 0 0 0 1.5px var(--tc-text-muted); transition: transform var(--tc-duration-fast) var(--tc-ease-move); }
-.ui-rlg__point[data-last] { background: var(--tc-text-secondary); box-shadow: 0 0 0 2px var(--tc-surface-raised); }
-.ui-rlg__point[data-active] { background: var(--tc-accent); box-shadow: 0 0 0 2px var(--tc-surface-raised); transform: translate(-50%, -50%) scale(1.4); }
+.ui-rlg__point { position: absolute; width: 6px; height: 6px; border-radius: 50%; background: var(--tc-reliance-gauge-card); transform: translate(-50%, -50%); box-shadow: inset 0 0 0 1.5px var(--tc-text-muted); transition: transform var(--tc-duration-fast) var(--tc-ease-move); }
+.ui-rlg__point[data-last] { background: var(--tc-text-secondary); box-shadow: 0 0 0 2px var(--tc-reliance-gauge-card); }
+.ui-rlg__point[data-active] { background: var(--tc-accent); box-shadow: 0 0 0 2px var(--tc-reliance-gauge-card); transform: translate(-50%, -50%) scale(1.4); }
 /* Episodes: two counts side by side */
 .ui-rlg__episodes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--tc-space-2); margin-top: var(--tc-space-4); }
 .ui-rlg__ep { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: baseline; column-gap: var(--tc-space-2); width: 100%; height: 100%; padding: var(--tc-space-2-5) var(--tc-space-3); background: var(--tc-surface-well); transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), box-shadow var(--tc-duration-fast) var(--tc-ease-standard); }
@@ -656,9 +764,37 @@ button.ui-rlg__ep:hover { background: var(--tc-fill-hover); }
 .ui-rlg__thin-fill { position: absolute; top: 0; bottom: 0; left: 0; border-radius: inherit; background: var(--tc-meter-fill); transition: background-color var(--tc-duration-moderate) var(--tc-ease-standard); }
 .ui-rlg__signal[data-state="spot-check"] .ui-rlg__thin-fill { background: var(--tc-status-warning-solid); }
 .ui-rlg__signal[data-state="mandatory"] .ui-rlg__thin-fill { background: var(--tc-status-danger-solid); }
-.ui-rlg__tick { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--tc-surface-raised); transform: translateX(-50%); }
+.ui-rlg__tick { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--tc-reliance-gauge-card); transform: translateX(-50%); }
 .ui-rlg__dot { display: inline-block; flex: none; width: 6px; height: 6px; border-radius: 50%; background: var(--tc-status-warning-solid); animation: ui-rlg-pop var(--tc-duration-slower) var(--tc-ease-spring) both; }
 .ui-rlg__signal[data-state="mandatory"] .ui-rlg__dot { background: var(--tc-status-danger-solid); }
+/* Calibration by domain and the agent ranking: sections under a hairline, each with a caption */
+.ui-rlg__section { margin-top: var(--tc-space-4); padding-top: var(--tc-space-3-5); border-top: var(--tc-hairline) solid var(--tc-divider); }
+.ui-rlg__caption { font-size: var(--tc-caption-font-size); font-weight: var(--tc-caption-font-weight); line-height: var(--tc-caption-line-height); letter-spacing: var(--tc-caption-tracking); text-transform: var(--tc-caption-transform); color: var(--tc-caption-color); }
+.ui-rlg__domains { width: 100%; margin-top: var(--tc-space-1-5); border-collapse: collapse; font-size: var(--tc-font-size-sm); font-variant-numeric: tabular-nums; }
+.ui-rlg__domains :is(th, td) { padding: var(--tc-space-1-5) 0; text-align: left; vertical-align: middle; }
+.ui-rlg__domains :is(th, td) + :is(th, td) { padding-left: var(--tc-space-3); }
+.ui-rlg__domains thead th { padding-top: 0; font-weight: var(--tc-font-weight-regular); color: var(--tc-text-muted); white-space: nowrap; }
+.ui-rlg__domains tbody tr + tr { border-top: var(--tc-hairline) solid var(--tc-divider); }
+.ui-rlg__domains .ui-rlg__num { text-align: right; white-space: nowrap; color: var(--tc-text-primary); }
+.ui-rlg__domains thead .ui-rlg__num { color: var(--tc-text-muted); }
+.ui-rlg__domain { width: 100%; font-weight: var(--tc-font-weight-regular); color: var(--tc-text-primary); }
+.ui-rlg__domain-n { display: block; font-size: var(--tc-font-size-xs); color: var(--tc-text-muted); }
+.ui-rlg__cell-label { display: none; color: var(--tc-text-muted); }
+.ui-rlg__domains .ui-rlg__cal-cell { text-align: right; }
+.ui-rlg__cal { display: inline-flex; align-items: center; gap: var(--tc-space-1); height: var(--tc-pill-h); padding: 0 var(--tc-pill-px); border-radius: var(--tc-pill-radius); font-size: var(--tc-pill-font-size); font-weight: var(--tc-pill-font-weight); line-height: var(--tc-line-height-tight); white-space: nowrap; }
+.ui-rlg__cal svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+:where([data-look="clean"], [data-look="clean"] *).ui-rlg__cal svg { stroke-width: 1.2; }
+.ui-rlg__cal[data-band="calibrated"] { background: var(--tc-status-success-bg); color: var(--tc-status-success-fg); }
+.ui-rlg__cal[data-band="over"] { background: var(--tc-status-warning-bg); color: var(--tc-status-warning-fg); }
+.ui-rlg__cal[data-band="under"] { background: var(--tc-status-info-bg); color: var(--tc-status-info-fg); }
+.ui-rlg__agents { display: grid; gap: var(--tc-space-2-5); margin-top: var(--tc-space-2-5); }
+.ui-rlg__agent { display: grid; grid-template-columns: 16px minmax(0, 1fr) minmax(48px, 30%) auto; align-items: center; column-gap: var(--tc-space-2-5); font-size: var(--tc-font-size-sm); }
+.ui-rlg__rank { font-size: var(--tc-font-size-xs); color: var(--tc-text-muted); text-align: center; font-variant-numeric: tabular-nums; }
+.ui-rlg__agent-name { min-width: 0; overflow: hidden; color: var(--tc-text-primary); white-space: nowrap; text-overflow: ellipsis; }
+.ui-rlg__agent-detail { display: block; overflow: hidden; font-size: var(--tc-font-size-xs); color: var(--tc-text-muted); text-overflow: ellipsis; }
+.ui-rlg__agent-bar { display: block; height: var(--tc-meter-h); overflow: hidden; border-radius: var(--tc-meter-radius); background: var(--tc-meter-track); }
+.ui-rlg__agent-bar > span { display: block; height: 100%; border-radius: inherit; background: var(--tc-meter-fill); }
+.ui-rlg__agent-value { min-width: 32px; font-weight: var(--tc-font-weight-medium); color: var(--tc-text-primary); text-align: right; font-variant-numeric: tabular-nums; }
 /* The recommendation – budget-guard's note, toned by the level */
 .ui-rlg__advice { display: flex; gap: var(--tc-space-2-5); margin-top: var(--tc-space-4); padding: var(--tc-space-3) var(--tc-space-3-5) var(--tc-space-3-5) var(--tc-space-3); background: var(--tc-fill-subtle); box-shadow: inset 0 0 0 var(--tc-hairline) var(--tc-border-subtle); animation: ui-rlg-in var(--tc-duration-moderate) var(--tc-ease-move) both; }
 :where([data-look="standard"], [data-look="standard"] *).ui-rlg__advice { border-radius: var(--tc-radius-lg); }
@@ -710,6 +846,18 @@ button.ui-rlg__ep:hover { background: var(--tc-fill-hover); }
   .ui-rlg__foot > :last-child { margin-left: auto; }
   :where([data-look="clean"], [data-look="clean"] *).ui-rlg__foot:has(> .ui-rlg__btn) { padding-bottom: var(--tc-space-2); }
   :where([data-look="standard"], [data-look="standard"] *).ui-rlg__index { font-size: var(--tc-font-size-2xl); }
+  /* The calibration table: each domain on two lines – the name and the band, then what it said and how often it was right */
+  .ui-rlg__domains thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .ui-rlg__domains tbody tr { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; column-gap: var(--tc-space-3); padding: var(--tc-space-2) 0; }
+  .ui-rlg__domains tbody :is(th, td) { padding: 0; }
+  .ui-rlg__domains tbody :is(th, td) + :is(th, td) { padding-left: 0; }
+  .ui-rlg__domain { grid-column: 1 / 3; grid-row: 1; }
+  .ui-rlg__domains .ui-rlg__cal-cell { grid-column: 3; grid-row: 1; }
+  .ui-rlg__domains .ui-rlg__num { grid-row: 2; margin-top: var(--tc-space-0-5); text-align: left; }
+  .ui-rlg__domains .ui-rlg__num + .ui-rlg__num { grid-column: 2 / -1; }
+  .ui-rlg__cell-label { display: inline; }
+  .ui-rlg__agent { grid-template-columns: 16px minmax(0, 1fr) auto; row-gap: var(--tc-space-1); }
+  .ui-rlg__agent-bar { grid-column: 2 / -1; grid-row: 2; }
 }
 @container (max-width: 300px) {
   .ui-rlg__figure { grid-template-columns: minmax(0, 1fr); justify-items: center; }

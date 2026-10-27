@@ -147,8 +147,10 @@ export class TcDataTable extends TcElement {
   @property({ attribute: false }) accessor sort: DataSort = null;
   /** Tag colors by tag text – falls back to blue */
   @property({ attribute: false }) accessor tagTones: Record<string, TagTone> = {};
-  /** Read only: selection and copy still work */
+  /** Read only: no editing, adding or deleting; cell selection and copy still work, and the row checkboxes hide unless `selectable` is set */
   @property({ type: Boolean, reflect: true }) accessor readonly = false;
+  /** Whether rows have selection checkboxes; unset, they show unless the table is `readonly` */
+  @property({ type: Boolean }) accessor selectable: boolean | undefined = undefined;
   /** Draw a cell yourself: return a Node or a string, or undefined for the default */
   @property({ attribute: false }) accessor renderCell: ((row: DataRow, column: DataColumn) => Node | string | undefined) | undefined = undefined;
 
@@ -188,6 +190,10 @@ export class TcDataTable extends TcElement {
   }
   private get editable() {
     return !this.readonly;
+  }
+  /** Rows have checkboxes: `selectable`, else editable tables only */
+  private get checkable() {
+    return this.selectable ?? !this.readonly;
   }
 
   override connectedCallback() {
@@ -581,7 +587,8 @@ export class TcDataTable extends TcElement {
     const view = this.view;
     const { start, end } = this.window;
     const rowH = this.window.rowHeight;
-    const checked = new Set(this.selection);
+    const checkable = this.checkable;
+    const checked = new Set(checkable ? this.selection : []);
     const checkedCount = view.reduce((n, r) => n + (checked.has(r.id) ? 1 : 0), 0);
     const all = view.length > 0 && checkedCount === view.length;
     const some = checkedCount > 0 && !all;
@@ -595,7 +602,7 @@ export class TcDataTable extends TcElement {
     const multiCell = !!range && (range.r2 > range.r1 || range.c2 > range.c1);
     const announce = [checkedCount > 0 ? `${checkedCount} ${checkedCount === 1 ? "row" : "rows"} selected` : "", multiCell ? (summary ?? "") : ""].filter(Boolean).join(". ");
     const spacer = (n: number) =>
-      n > 0 ? html`<tr class="ui-dt__spacer" aria-hidden="true"><td colspan=${columns.length + 1} style=${styleMap({ height: `${n * rowH}px`, padding: "0", border: "0" })}></td></tr>` : nothing;
+      n > 0 ? html`<tr class="ui-dt__spacer" aria-hidden="true"><td colspan=${columns.length + (checkable ? 1 : 0)} style=${styleMap({ height: `${n * rowH}px`, padding: "0", border: "0" })}></td></tr>` : nothing;
 
     return html`
       ${cardHead({
@@ -627,7 +634,9 @@ export class TcDataTable extends TcElement {
             <table class="ui-dt__table" role="presentation">
               <thead>
                 <tr role="row" aria-rowindex="1">
-                  <th class="ui-dt__select" role="columnheader" style=${styleMap({ width: clean ? "40px" : "44px" })}>${this.checkbox(all, some, "Select all rows", () => this.setSelection(all ? [] : view.map((r) => r.id)))}</th>
+                  ${checkable
+                    ? html`<th class="ui-dt__select" role="columnheader" style=${styleMap({ width: clean ? "40px" : "44px" })}>${this.checkbox(all, some, "Select all rows", () => this.setSelection(all ? [] : view.map((r) => r.id)))}</th>`
+                    : nothing}
                   ${columns.map((col, c) => {
                     const dir = this.sort?.key === col.key ? this.sort.dir : null;
                     return html`<th
@@ -655,7 +664,7 @@ export class TcDataTable extends TcElement {
                 ${repeat(
                   view.slice(start, end),
                   (row) => row.id,
-                  (row, i) => this.renderRow(row, start + i, checked.has(row.id), look),
+                  (row, i) => this.renderRow(row, start + i, checked.has(row.id), look, checkable),
                 )}
                 ${spacer(view.length - end)}
               </tbody>
@@ -691,13 +700,13 @@ export class TcDataTable extends TcElement {
     `;
   }
 
-  private renderRow(row: DataRow, r: number, isChecked: boolean, look: Look): TemplateResult {
+  private renderRow(row: DataRow, r: number, isChecked: boolean, look: Look, checkable: boolean): TemplateResult {
     const range = this.range;
     const inRows = !!range && r >= range.r1 && r <= range.r2;
     const activeC = this.active?.r === r ? this.active.c : -1;
     const editC = this.editing?.cell.r === r ? this.editing.cell.c : -1;
     return html`<tr role="row" aria-rowindex=${r + 2} ?data-selected=${isChecked}>
-      <td class="ui-dt__select" role="gridcell">${this.checkbox(isChecked, false, `Select ${text(row[this.titleKey]) || "row"}`, () => this.toggle(row.id))}</td>
+      ${checkable ? html`<td class="ui-dt__select" role="gridcell">${this.checkbox(isChecked, false, `Select ${text(row[this.titleKey]) || "row"}`, () => this.toggle(row.id))}</td>` : nothing}
       ${this.columns.map((col, c) => {
         const isActive = activeC === c;
         const isEditing = editC === c;

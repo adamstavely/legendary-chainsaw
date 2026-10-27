@@ -224,7 +224,6 @@ export class TcAgentTree extends TcElement {
   private lastPos = new Map<string, { x: number; y: number }>();
   private ro?: ResizeObserver;
   private clockTimer = 0;
-  private clockOn = false;
   private openedBefore: "waiting" | "failed" | null = null;
 
   constructor() {
@@ -264,7 +263,6 @@ export class TcAgentTree extends TcElement {
     this.ro = undefined;
     window.clearInterval(this.clockTimer);
     this.clockTimer = 0;
-    this.clockOn = false;
     this.drawTimers.forEach((t) => window.clearTimeout(t));
     this.drawTimers.clear();
     this.ghostTimers.forEach((t) => window.clearTimeout(t));

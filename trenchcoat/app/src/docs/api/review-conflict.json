@@ -1,0 +1,516 @@
+{
+ "elements": [
+  {
+   "tag": "tc-review-conflict",
+   "className": "TcReviewConflict",
+   "description": "Two reviewers disagree: both verdicts with who gave them, resolved by a third person with a reason, or kept blind.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Review conflict\"",
+     "description": "The heading, and the group's name",
+     "readonly": false
+    },
+    {
+     "name": "scope",
+     "attribute": "scope",
+     "type": "string",
+     "default": "\"\"",
+     "description": "A quiet line under the heading, e.g. the document or queue the item is from",
+     "readonly": false
+    },
+    {
+     "name": "item",
+     "attribute": "item",
+     "type": "string",
+     "default": "\"\"",
+     "description": "What was reviewed, quoted at the top – a claim, a finding, a row",
+     "readonly": false
+    },
+    {
+     "name": "reviews",
+     "attribute": null,
+     "type": "ReviewVerdict[]",
+     "default": "[]",
+     "description": "The two reviews, in the order to show them",
+     "readonly": false
+    },
+    {
+     "name": "difference",
+     "attribute": "difference",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The difference in one sentence; unset, it's written from the verdicts",
+     "readonly": false
+    },
+    {
+     "name": "blind",
+     "attribute": "blind",
+     "type": "boolean",
+     "default": "false",
+     "description": "The reviewers' view: identities and verdicts are hidden, only that a conflict exists is shown",
+     "readonly": false
+    },
+    {
+     "name": "viewer",
+     "attribute": "viewer",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "In blind mode, the id of the review that belongs to the person looking – they see their own verdict",
+     "readonly": false
+    },
+    {
+     "name": "resolvable",
+     "attribute": "resolvable",
+     "type": "boolean",
+     "default": "true",
+     "description": "The person looking may resolve it. Default true; false shows the conflict read-only",
+     "readonly": false
+    },
+    {
+     "name": "resolution",
+     "attribute": null,
+     "type": "ReviewResolution | null",
+     "default": "null",
+     "description": "The outcome, once resolved",
+     "readonly": false
+    },
+    {
+     "name": "resolver",
+     "attribute": "resolver",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The resolver's name, recorded with the resolution when the element sets it",
+     "readonly": false
+    },
+    {
+     "name": "confirmLabel",
+     "attribute": "confirm-label",
+     "type": "string",
+     "default": "\"Confirm resolution\"",
+     "description": "The confirm button's text",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-resolve",
+     "detail": "",
+     "description": "The resolver confirmed ({ choice, verdict, reason }: ReviewResolveDetail) – choice is the upheld review's id or \"override\"; cancelable – not prevented, `resolution` is set",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "rcf",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-avatar-font-weight",
+    "--tc-border-control",
+    "--tc-border-default",
+    "--tc-border-selected",
+    "--tc-border-strong",
+    "--tc-border-subtle",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-px-md",
+    "--tc-control-radius-md",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-quick",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-font-size",
+    "--tc-field-h",
+    "--tc-field-px",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-field-shadow-hover",
+    "--tc-fill-default",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-pill-font-size",
+    "--tc-pill-font-size-lg",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-h-lg",
+    "--tc-pill-px",
+    "--tc-pill-px-lg",
+    "--tc-pill-radius",
+    "--tc-radius-lg",
+    "--tc-shadow-raised",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-border",
+    "--tc-status-success-fg",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-surface-control",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-surface-well",
+    "--tc-text-muted",
+    "--tc-text-placeholder",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "ReviewConflict",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading, and the group's name"
+    },
+    {
+     "name": "resolution",
+     "type": "ReviewResolution | null",
+     "optional": true,
+     "description": "The outcome – controlled when given (null while open)"
+    },
+    {
+     "name": "defaultResolution",
+     "type": "ReviewResolution | null",
+     "optional": true,
+     "description": "The outcome at first, when `resolution` isn't set"
+    },
+    {
+     "name": "onResolve",
+     "type": "(resolution: ReviewResolution) => void",
+     "optional": true,
+     "description": "Called when the resolver confirms, with the choice (a review's id or \"override\"), the verdict and the reason"
+    }
+   ],
+   "hides": [
+    "heading",
+    "resolution",
+    "children"
+   ],
+   "events": {
+    "tc-resolve": null
+   }
+  }
+ ],
+ "changelog": [
+  "**Trust & calibration**, from THEMIS and built domain-neutral: - `tc-agreement-tracker`, `tc-confidence-brief`, `tc-capability-notice`, `tc-transcript-review`, `tc-version-history`, `tc-session-context-bar`, `tc-evidence-coverage`, `tc-review-conflict`; - `tc-handoff-brief`, `tc-engagement-quality`, `tc-knowledge-promotion`, `tc-friction-profile`, `tc-reasoning-flags`."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-review-conflict",
+   "className": "TcReviewConflict",
+   "module": "trenchcoat/review-conflict",
+   "data": [
+    "reviews",
+    "resolution"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "scope",
+     "attribute": "scope"
+    },
+    {
+     "name": "item",
+     "attribute": "item"
+    },
+    {
+     "name": "difference",
+     "attribute": "difference"
+    },
+    {
+     "name": "blind",
+     "attribute": "blind"
+    },
+    {
+     "name": "viewer",
+     "attribute": "viewer"
+    },
+    {
+     "name": "resolvable",
+     "attribute": "resolvable"
+    },
+    {
+     "name": "resolver",
+     "attribute": "resolver"
+    },
+    {
+     "name": "confirmLabel",
+     "attribute": "confirm-label"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-resolve",
+     "cancelable": true
+    }
+   ],
+   "controlled": [],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "121",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "has"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "inert",
+    "name": "inert",
+    "bcd": "api.HTMLElement.inert",
+    "versions": {
+     "chrome": "102",
+     "edge": "102",
+     "firefox": "112",
+     "safari": "15.5",
+     "safari_ios": "15.5"
+    },
+    "progressive": false,
+    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
+    "via": [
+     "internal/controllers"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "has",
+    "name": ":has()",
+    "bcd": "css.selectors.has",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "121",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Layout and state that depend on what's inside a part (an icon present, a focused field).",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/controllers › AriaForwardController)",
+   "MutationObserver (internal/controllers › FocusRescueController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 33126,
+  "gzip": 9454
+ }
+}

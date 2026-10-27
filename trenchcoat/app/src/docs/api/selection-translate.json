@@ -1,0 +1,577 @@
+{
+ "elements": [
+  {
+   "tag": "tc-selection-translate",
+   "className": "TcSelectionTranslate",
+   "description": "Select text and translate it in place: the translation in a card with the detected language, Copy, Replace in place\nand Show original. The app translates; the element never calls a service.",
+   "properties": [
+    {
+     "name": "text",
+     "attribute": "text",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The text: plain text, paragraphs separated by blank lines. Offsets index into it",
+     "readonly": false
+    },
+    {
+     "name": "editable",
+     "attribute": "editable",
+     "type": "boolean",
+     "default": "false",
+     "description": "Replace in place is offered: the text can be changed by the element (tc-text-change)",
+     "readonly": false
+    },
+    {
+     "name": "target",
+     "attribute": "target",
+     "type": "string",
+     "default": "\"en\"",
+     "description": "The language to translate into, as a code from `languages`. Changed from the card unless a tc-target-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "languages",
+     "attribute": null,
+     "type": "TranslateLanguage[]",
+     "default": "[ { code: \"en\", name: \"English\" }, { code: \"es\", name: \"Spanish\" }, { code: \"fr\", name: \"French\" }, { code: \"de\", name: \"German\" }, { code: \"it\", name: \"Italian\" }, { code: \"pt\", name: \"Portuguese\" }, { code: \"nl\", name: \"Dutch\" }, { code: \"pl\", name: \"Polish\" }, { code: \"ja\", name: \"Japanese\" }, { code: \"ko\", name: \"Korean\" }, { code: \"zh\", name: \"Chinese\" }, { code: \"ar\", name: \"Arabic\" }, { code: \"hi\", name: \"Hindi\" }, ]",
+     "description": "The languages the card offers",
+     "readonly": false
+    },
+    {
+     "name": "resolveTranslate",
+     "attribute": null,
+     "type": "SelectionTranslateResolver | undefined",
+     "default": "undefined",
+     "description": "Translates when no tc-translate listener answers: (text, target, signal) => { text, source? }",
+     "readonly": false
+    },
+    {
+     "name": "textLabel",
+     "attribute": "text-label",
+     "type": "string",
+     "default": "\"Text\"",
+     "description": "The text's accessible name",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-translate",
+     "detail": "",
+     "description": "A translation is needed ({ text, target, start, end, signal, respondWith }: SelectionTranslateRequest); answer with `detail.respondWith()`, or leave it to `resolveTranslate`; prevented without an answer, the card closes",
+     "cancelable": false
+    },
+    {
+     "name": "tc-target-change",
+     "detail": "",
+     "description": "The target language was changed in the card ({ target }: SelectionTranslateTargetChange); cancelable – prevent it to control `target`",
+     "cancelable": true
+    },
+    {
+     "name": "tc-copy",
+     "detail": "",
+     "description": "Copy was chosen on a translation ({ text }: SelectionTranslateCopy); cancelable – prevent it to copy your own way",
+     "cancelable": true
+    },
+    {
+     "name": "tc-text-change",
+     "detail": "",
+     "description": "Replace was chosen ({ text, previous, start, end, replacement, target }: SelectionTranslateTextChange); cancelable – prevent it to control `text`",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [
+    {
+     "name": "langName",
+     "params": "code: string | undefined",
+     "returns": "void",
+     "description": "A language's name: from `languages`, else the browser's name for the code, else as given"
+    }
+   ],
+   "ui": "strn",
+   "cssProperties": [
+    {
+     "name": "--tc-selection-translate-card-w",
+     "value": "340px",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-highlight",
+    "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-shimmer",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-h-sm",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-fill-hover",
+    "--tc-fill-strong",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-hairline",
+    "--tc-highlight-blue-bg",
+    "--tc-highlight-blue-fg",
+    "--tc-icon-muted",
+    "--tc-line-height-loose",
+    "--tc-line-height-normal",
+    "--tc-line-height-relaxed",
+    "--tc-line-height-tight",
+    "--tc-menu-item-hover",
+    "--tc-radius-2xs",
+    "--tc-radius-xs",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-status-danger-fg",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "SelectionTranslate",
+   "exported": true,
+   "props": [
+    {
+     "name": "text",
+     "type": "string",
+     "optional": true,
+     "description": "The text, plain. Controlled when defined (with `onTextChange`); otherwise the component keeps it, starting at `defaultText`"
+    },
+    {
+     "name": "defaultText",
+     "type": "string",
+     "optional": true,
+     "description": "The text when uncontrolled"
+    },
+    {
+     "name": "onTextChange",
+     "type": "(text: string, change: SelectionTranslateTextChange) => void",
+     "optional": true,
+     "description": "Called with the new text when Replace puts a translation in place (needs `editable`)"
+    },
+    {
+     "name": "target",
+     "type": "string",
+     "optional": true,
+     "description": "The target language's code. Controlled when defined; otherwise the component keeps it, starting at `defaultTarget`"
+    },
+    {
+     "name": "defaultTarget",
+     "type": "string",
+     "optional": true,
+     "description": "The target language when uncontrolled (default \"en\")"
+    },
+    {
+     "name": "onTargetChange",
+     "type": "(target: string) => void",
+     "optional": true,
+     "description": "Called when the target language is changed in the card – store it to remember the choice"
+    },
+    {
+     "name": "onTranslate",
+     "type": "(request: SelectionTranslateRequest) => boolean | void",
+     "optional": true,
+     "description": "Called for every translation the card needs; answer with `request.respondWith()`, or leave it to `resolveTranslate`. Return false to take it elsewhere (the card closes)"
+    },
+    {
+     "name": "onCopy",
+     "type": "(text: string) => boolean | void",
+     "optional": true,
+     "description": "Called when Copy is chosen on a translation; return false to stop the component writing to the clipboard itself"
+    }
+   ],
+   "hides": [
+    "text",
+    "target",
+    "children"
+   ],
+   "events": {
+    "tc-translate": "onTranslate",
+    "tc-target-change": null,
+    "tc-copy": "onCopy",
+    "tc-text-change": null
+   }
+  }
+ ],
+ "changelog": [
+  "**Text selection:** - `tc-text-annotator`: highlight a passage and comment on it; - `tc-response-selection`: select part of a model reply to reply to it or request an edit; - `tc-selection-translate`: translate the selected text; - `tc-isbn-details`: hover an ISBN for its book details."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-selection-translate",
+   "className": "TcSelectionTranslate",
+   "module": "trenchcoat/selection-translate",
+   "data": [
+    "languages",
+    "resolveTranslate"
+   ],
+   "attributes": [
+    {
+     "name": "text",
+     "attribute": "text"
+    },
+    {
+     "name": "editable",
+     "attribute": "editable"
+    },
+    {
+     "name": "target",
+     "attribute": "target"
+    },
+    {
+     "name": "textLabel",
+     "attribute": "text-label"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-translate",
+     "cancelable": false
+    },
+    {
+     "name": "tc-target-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-copy",
+     "cancelable": true
+    },
+    {
+     "name": "tc-text-change",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "text",
+     "event": "tc-text-change"
+    },
+    {
+     "property": "target",
+     "event": "tc-target-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "inert",
+    "name": "inert",
+    "bcd": "api.HTMLElement.inert",
+    "versions": {
+     "chrome": "102",
+     "edge": "102",
+     "firefox": "112",
+     "safari": "15.5",
+     "safari_ios": "15.5"
+    },
+    "progressive": false,
+    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
+    "via": [
+     "internal/popover"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself",
+     "internal/popover"
+    ]
+   },
+   {
+    "id": "individual-transforms",
+    "name": "translate, scale and rotate properties",
+    "bcd": "css.properties.translate",
+    "versions": {
+     "chrome": "104",
+     "edge": "104",
+     "firefox": "72",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "clipboard",
+    "name": "Async Clipboard (writeText)",
+    "bcd": "api.Clipboard.writeText",
+    "versions": {
+     "chrome": "66",
+     "edge": "79",
+     "firefox": "63",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "why": "Copy buttons.",
+    "via": [
+     "internal/util"
+    ]
+   },
+   {
+    "id": "resize-observer",
+    "name": "ResizeObserver",
+    "bcd": "api.ResizeObserver",
+    "versions": {
+     "chrome": "64",
+     "edge": "79",
+     "firefox": "69",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "via": [
+     "internal/popover"
+    ]
+   },
+   {
+    "id": "popover",
+    "name": "Popover API",
+    "bcd": "api.HTMLElement.popover",
+    "versions": {
+     "chrome": "114",
+     "edge": "114",
+     "firefox": "125",
+     "safari": "17",
+     "safari_ios": "18.3"
+    },
+    "progressive": true,
+    "without": "Lists open fixed to the window instead of in the top layer, so a clipping ancestor or a modal can cover them.",
+    "via": [
+     "internal/popover"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "internal/popover",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setTimeout (internal/popover › PopoverController)"
+  ],
+  "frames": [
+   "requestAnimationFrame, cancelled (internal/popover › PopoverController)",
+   "requestAnimationFrame, cancelled (internal/selection › SelectionController)"
+  ],
+  "animations": 2,
+  "observers": [
+   "MutationObserver (internal/controllers › AriaForwardController)",
+   "ResizeObserver (internal/popover › PopoverController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)",
+    "CSS (internal/popover › popoverCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 50913,
+  "gzip": 16139
+ }
+}

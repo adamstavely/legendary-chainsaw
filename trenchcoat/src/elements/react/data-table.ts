@@ -46,8 +46,10 @@ export type DataTableProps = Omit<RawDataTableProps, "rows" | "selection" | "sor
   defaultSort?: DataSort;
   /** Called when a column header changes the sort */
   onSortChange?: (sort: DataSort) => void;
-  /** false turns the table read only */
+  /** false turns the table read only – it also hides the row checkboxes unless `selectable` is true */
   editable?: boolean;
+  /** Whether rows have selection checkboxes; unset, they show unless `editable` is false */
+  selectable?: boolean;
 };
 export function DataTable({ title, icon, renderCell, columns, rows, defaultRows = [], onRowsChange, selection, defaultSelection = [], onSelectionChange, sort, defaultSort = null, onSortChange, editable = true, ...props }: DataTableProps) {
   const r = useControlled(rows, defaultRows, onRowsChange);

@@ -1,16 +1,24 @@
-import { html, nothing, type PropertyValues, type TemplateResult } from "lit";
+import { html, render as litRender, nothing, svg, type PropertyValues, type TemplateResult } from "lit";
 import { property, state } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { keyed } from "lit/directives/keyed.js";
 import { live } from "lit/directives/live.js";
 import { styleMap } from "lit/directives/style-map.js";
 import "./context-tray";
-import type { ContextTrayItem } from "./context-tray";
+import type { ContextTrayItem, ContextTrayItemsChange } from "./context-tray";
 import { TcElement } from "./internal/base";
 import "./mention-picker";
 import type { MentionPickerTrigger } from "./mention-picker";
-import { FocusRescueController, rescueFocus } from "./internal/controllers";
+import "./model-picker";
+import type { PickerModel } from "./model-picker";
+import "./model-settings";
+import type { ModelSettingsChange, ModelSettingsModel, ModelSettingsValue } from "./model-settings";
+import "./prompt-library";
+import type { PromptTemplate, PromptValues } from "./prompt-library";
+import { FocusRescueController, ToolbarController, rescueFocus } from "./internal/controllers";
+import { compact } from "./internal/format";
 import type { Look } from "./internal/look";
+import { PopoverController } from "./internal/popover";
 
 /*
  * <tc-chat-composer> – the Lit port of src/components/chat-composer.tsx: the message box of an AI chat, with a model
@@ -23,6 +31,21 @@ import type { Look } from "./internal/look";
  * shadows and fixed px sizes: the message on top (growing up to four lines), the tools in a row below it, and a quiet
  * last row that connects apps and then lets you pick a project; its icons are 16px glyphs with thin lines and solid
  * shapes.
+ *
+ * The toolbar row (remediation 6.3) – every part optional and off by default, so a composer without them is unchanged.
+ * It sits under the composer, with the disclaimer under it:
+ *   · model – `model-switcher="toolbar"` moves the model switch out of the card into tc-model-picker's menu (same
+ *     `models`, same cancelable tc-model-change)
+ *   · settings – `settings` (a ModelSettingsValue) turns on a button that opens tc-model-settings in a popover; changes
+ *     come as a cancelable tc-settings-change
+ *   · prompts – `prompts` (PromptTemplate[]) turns on a button that opens tc-prompt-library in a popover; Use fires a
+ *     cancelable tc-prompt-pick and, unless prevented, inserts the prompt at the caret (over any selection) and closes
+ *   · page context – `pageContext` turns on a chip that connects or disconnects what's on the page; toggling it, or
+ *     removing an attached item (shown in a tc-context-tray popover), is a cancelable tc-page-context-change
+ *   · disclaimer – one quiet line under it all, which also describes the message field
+ * Keyboard: the row is a WAI-ARIA toolbar – one Tab stop, ← → Home End. Popovers close on Escape and give focus back.
+ * When the row doesn't fit (and always at 400px or less) the settings and prompts buttons and the model switch keep
+ * only their icons (their names stay); when it still doesn't fit, settings and prompts move into a "More" menu.
  */
 
 type Step = "idle" | "loading" | "done";
@@ -33,7 +56,37 @@ export type ChatModel = {
   description: string;
   /** The model's logo, an element that's cloned */
   logo?: Element;
+  /** In the toolbar's model menu: strengths from 1 to 5 (cost 5 is the most expensive) */
+  speed?: number;
+  quality?: number;
+  cost?: number;
+  /** In the toolbar's model menu: typical time to the first token, in milliseconds */
+  latencyMs?: number;
+  /** In the toolbar's model menu: price per million output tokens, in dollars */
+  pricePerM?: number;
 };
+
+/** What's on the page the composer sits beside – the app decides what is actually sent */
+export type ChatPageContext = {
+  /** What the page is, e.g. "Q3 report" */
+  title: string;
+  /** Whether the model can see it */
+  connected: boolean;
+  /** How many items are attached – shown as "4 items" */
+  count?: number;
+  /** The app's token estimate – shown as "2.4k tokens" when there is no count */
+  tokens?: number;
+  /** The attached items; while connected, a button beside the chip shows them in a context tray */
+  items?: ContextTrayItem[];
+};
+/** tc-page-context-change: the next page context and what changed */
+export type ChatPageContextChange = { pageContext: ChatPageContext; change: "connect" | "disconnect" | "items" };
+/** tc-prompt-pick: the finished prompt from the library, its template and the variables' values */
+export type ChatPromptPick = { prompt: string; template: PromptTemplate; values: Record<string, string> };
+/** tc-settings-change: the next settings and the parameter ids that changed */
+export type ChatSettingsChange = ModelSettingsChange;
+
+type Panel = "" | "settings" | "prompts" | "page" | "more";
 
 /** A live speech-to-text session: push the transcript and the input level; stop when `signal` aborts */
 export type ChatDictationSession = {
@@ -121,6 +174,24 @@ const iconsFor = (clean: boolean) => ({
   cancel: clean ? cleanCancelIcon : stdCancelIcon,
 });
 
+/* Toolbar icons (Lucide, ISC): sliders, book-open, eye, eye-off, ellipsis, chevron-up – Clean draws thinner lines */
+const TOOL_PATHS = {
+  settings: svg`<path d="M21 4h-7M10 4H3M21 12h-9M8 12H3M21 20h-5M12 20H3M14 2v4M8 10v4M16 18v4"></path>`,
+  prompts: svg`<path d="M12 7v14"></path><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"></path>`,
+  on: svg`<path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"></path><circle cx="12" cy="12" r="3"></circle>`,
+  off: svg`<path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49"></path><path d="M14.084 14.158a3 3 0 0 1-4.242-4.242"></path><path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143"></path><path d="m2 2 20 20"></path>`,
+  more: svg`<circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle>`,
+  items: svg`<path d="m18 15-6-6-6 6"></path>`,
+};
+const toolIcon = (name: keyof typeof TOOL_PATHS, clean: boolean) =>
+  html`<svg class="ui-chat-composer__tool-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=${clean ? 1.5 : 1.75} stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${TOOL_PATHS[name]}</svg>`;
+
+/** The model picker's name in its trigger – hidden (for sight only) when the toolbar is narrow */
+const PICKER_NAME = ".ui-mdp__name";
+
+/** "4 items" · "2.4k tokens" – what the page context chip says is attached */
+const pageMeta = (pc: ChatPageContext) => (pc.count !== undefined ? `${pc.count} ${pc.count === 1 ? "item" : "items"}` : pc.tokens !== undefined ? `${compact(pc.tokens)} tokens` : "");
+
 /** The default models' logos draw themselves in the composer's look */
 const BUILT_IN = new WeakMap<ChatModel, (clean: boolean) => TemplateResult>();
 
@@ -137,6 +208,21 @@ BUILT_IN.set(defaultChatModels[2], () => chatGPTLogo);
 /** @internal A default model's logo in a look – for the React wrapper's `defaultModels` */
 export const chatModelLogo = (model: ChatModel, look: Look) => BUILT_IN.get(model)?.(look === "clean");
 
+/** A default model's logo as an element, for tc-model-picker (which clones it) – made once per model and look */
+const builtInLogos = new WeakMap<ChatModel, Partial<Record<Look, Element>>>();
+function builtInLogo(model: ChatModel, look: Look): Element | undefined {
+  const tpl = chatModelLogo(model, look);
+  if (!tpl) return undefined;
+  const byLook = builtInLogos.get(model) ?? {};
+  builtInLogos.set(model, byLook);
+  if (!byLook[look]) {
+    const box = document.createElement("span");
+    litRender(tpl, box);
+    byLook[look] = box.querySelector("svg") ?? undefined;
+  }
+  return byLook[look];
+}
+
 let uid = 0;
 
 /**
@@ -149,10 +235,19 @@ let uid = 0;
  * @fires tc-connect-apps - "Connect apps" was pressed; `onConnectApps` may return a promise it waits for
  * @fires tc-request-approval - "Request approval" was pressed; `onRequestApproval` may return a promise it waits for
  * @fires tc-select-project - "Select a project" was pressed
+ * @fires tc-settings-change - The model settings changed in the settings popover (`ChatSettingsChange`: `{ value, changed }`); cancelable – prevent it to control `settings`
+ * @fires tc-prompt-pick - A prompt was picked in the prompt library (`ChatPromptPick`: `{ prompt, template, values }`); cancelable – prevent it to place the prompt yourself
+ * @fires tc-page-context-change - The page context chip was toggled, or an attached item removed (`ChatPageContextChange`: `{ pageContext, change }`); cancelable – prevent it to control `pageContext`
  */
 export class TcChatComposer extends TcElement {
   static override ui = "chat-composer";
 
+  /** Leave out "Connect apps"; "Select a project" (unless hidden too) is offered straight away */
+  @property({ type: Boolean, attribute: "hide-connect-apps" }) accessor hideConnectApps = false;
+  /** Leave out "Select a project"; once apps are connected the row folds away */
+  @property({ type: Boolean, attribute: "hide-project" }) accessor hideProject = false;
+  /** Leave out "Request approval" */
+  @property({ type: Boolean, attribute: "hide-approval" }) accessor hideApproval = false;
   /** Placeholder of the message field */
   @property() accessor placeholder = "Start by typing...";
   /** The message */
@@ -190,6 +285,27 @@ export class TcChatComposer extends TcElement {
   @property({ attribute: false }) accessor context: ContextTrayItem[] | undefined = undefined;
   /** The context window the tray measures against, in tokens */
   @property({ type: Number, attribute: "context-limit" }) accessor contextLimit = 0;
+
+  /** Where the model switch is: in the card (the default), or in the toolbar row as tc-model-picker's menu */
+  @property({ attribute: "model-switcher" }) accessor modelSwitcher: "card" | "toolbar" = "card";
+  /** Opt-in: the model settings (by parameter id), edited in a popover from the toolbar. Changes come as tc-settings-change */
+  @property({ attribute: false }) accessor settings: ModelSettingsValue | undefined = undefined;
+  /** The model the settings are for – only the parameters it supports are shown; unset shows them all */
+  @property({ attribute: false }) accessor settingsModel: ModelSettingsModel | undefined = undefined;
+  /** Opt-in: saved prompts, in a popover from the toolbar. A used prompt goes in at the caret (tc-prompt-pick) */
+  @property({ attribute: false }) accessor prompts: PromptTemplate[] | undefined = undefined;
+  /** Opt-in: what's on the page, as a chip in the toolbar that connects or disconnects it (tc-page-context-change) */
+  @property({ attribute: false }) accessor pageContext: ChatPageContext | undefined = undefined;
+  /** One quiet line under the composer, e.g. "AI can make mistakes. Check important info." – it also describes the message field */
+  @property() accessor disclaimer = "";
+
+  /** @internal The open toolbar popover */
+  @state() accessor sheet: Panel = "";
+  /** @internal How much the toolbar folds to fit: 0 everything with labels, 1 icons only, 2 settings and prompts in "More" */
+  @state() accessor fold: 0 | 1 | 2 = 0;
+  /** @internal The prompt library's chosen template and typed variables, kept while its popover is closed */
+  @state() accessor promptChoice = "";
+  /** @internal */ @state() accessor promptValues: PromptValues = {};
   /** @internal */ @state() accessor sending = false;
   /** @internal */ @state() accessor menuOpen = false;
   /** @internal */ @state() accessor status = "";
@@ -219,6 +335,9 @@ export class TcChatComposer extends TcElement {
   private shownModel: string | null = null;
   private ro?: ResizeObserver;
   private reveal = false;
+  /** Typed while controlled, waiting for the page's `value` (see setMessage) */
+  private typed: string | null = null;
+  private revert = 0;
   private wasShown = false;
 
   private onDocDown = (e: PointerEvent) => {
@@ -226,6 +345,29 @@ export class TcChatComposer extends TcElement {
     if (this.panel?.contains(target) || this.modelButton?.contains(target)) return;
     this.closeMenu(false);
   };
+
+  /** The toolbar row: one Tab stop, ← → Home End (the model picker's trigger is one of its items) */
+  private tools = new ToolbarController(this, {
+    items: () => [...this.querySelectorAll<HTMLElement>(".ui-chat-composer__bar .ui-mdp__trigger, .ui-chat-composer__bar > .ui-chat-composer__tool")],
+  });
+  /** The settings, prompts, page items and More popovers – one at a time, anchored to the button that opened it */
+  private panelFrom: HTMLElement | null = null;
+  private pop = new PopoverController(this, {
+    popover: () => this.querySelector<HTMLElement>(".ui-chat-composer__pop"),
+    anchor: () => this.panelFrom,
+    side: "top",
+    align: "start",
+    // A panel (not the More menu): Shift + Tab from its first control back to its button, Tab from its last on past the toolbar
+    tabBridge: () => this.sheet !== "more",
+    onClose: () => {
+      this.sheet = "";
+    },
+  });
+  private barRo?: ResizeObserver;
+  /** The width the toolbar needed at each fold when it last didn't fit – it unfolds once there's that much room again */
+  private needs = [0, 0];
+  /** Where a prompt goes: the caret (or selection) in the message when the prompt library opened */
+  private caret: [number, number] | null = null;
 
   constructor() {
     super();
@@ -236,6 +378,8 @@ export class TcChatComposer extends TcElement {
 
   override disconnectedCallback() {
     super.disconnectedCallback();
+    this.barRo?.disconnect();
+    this.barRo = undefined;
     this.timers.forEach((t) => window.clearTimeout(t));
     this.timers = [];
     this.stopSpeaking();
@@ -244,6 +388,9 @@ export class TcChatComposer extends TcElement {
     this.ro?.disconnect();
     this.ro = undefined;
     document.removeEventListener("pointerdown", this.onDocDown);
+    if (this.revert) cancelAnimationFrame(this.revert);
+    this.revert = 0;
+    this.typed = null;
   }
 
   private get textarea() {
@@ -263,7 +410,7 @@ export class TcChatComposer extends TcElement {
     return this.models.find((m) => m.id === this.model) ?? this.models[0] ?? NO_MODEL;
   }
   private get canSend() {
-    return this.value.trim().length > 0 && !this.sending;
+    return this.message.trim().length > 0 && !this.sending;
   }
 
   /* ---------- Saying what happened ---------- */
@@ -284,9 +431,36 @@ export class TcChatComposer extends TcElement {
   }
 
   private setMessage(next: string) {
-    if (this.emit("tc-value-change", { value: next }, { cancelable: true })) this.value = next;
-    // Controlled: the text area goes back to `value`
-    else this.requestUpdate();
+    if (this.emit("tc-value-change", { value: next }, { cancelable: true })) {
+      this.typed = null;
+      this.value = next;
+      return;
+    }
+    // Controlled: the page answers with its next `value` – React, for one, after this event has returned. Until it
+    // does, the text area keeps what was typed (going back to `value` at once would drop the next keystroke and move
+    // the caret); a page that keeps `value` as it was gets it back in the next frame
+    this.typed = next;
+    if (this.revert) cancelAnimationFrame(this.revert);
+    this.revert = requestAnimationFrame(() => {
+      this.revert = 0;
+      if (this.typed === null) return;
+      this.typed = null;
+      this.requestUpdate();
+    });
+    this.requestUpdate();
+  }
+  /** Apps count as connected: connected here, or "Connect apps" is left out */
+  private get appsDone() {
+    return this.hideConnectApps || this.apps === "done";
+  }
+  /** Which of the apps row's buttons there are */
+  private get rows(): "both" | "connect" | "project" | "none" {
+    if (this.hideConnectApps) return this.hideProject ? "none" : "project";
+    return this.hideProject ? "connect" : "both";
+  }
+  /** The message as shown: what was just typed while a controlling page hasn't answered yet, else `value` */
+  private get message() {
+    return this.typed ?? this.value;
   }
 
   /* ---------- Connect apps and Request approval: idle → loading → done, or back to idle with an error ---------- */
@@ -391,7 +565,7 @@ export class TcChatComposer extends TcElement {
     this.recording = false;
     const heard = this.heard;
     if (keep && heard) {
-      const current = this.value;
+      const current = this.message;
       this.setMessage(current.trim() ? `${current.trimEnd()} ${heard}` : heard);
       this.status = "Recording added to your message.";
     } else {
@@ -405,7 +579,7 @@ export class TcChatComposer extends TcElement {
 
   private async send() {
     if (!this.canSend) return;
-    const message = this.value.trim();
+    const message = this.message.trim();
     const details = { model: this.current.id };
     this.emit("tc-send", { message, ...details });
     const result = this.onSend?.(message, details);
@@ -438,7 +612,8 @@ export class TcChatComposer extends TcElement {
     if (next.id !== this.current.id) this.morph = true;
     if (this.emit("tc-model-change", { model: next.id, choice: next }, { cancelable: true })) this.model = next.id;
     this.menuOpen = false;
-    this.status = `${next.name} selected.`;
+    // The toolbar's model picker says it itself
+    if (this.modelSwitcher !== "toolbar") this.status = `${next.name} selected.`;
     this.modelButton?.focus();
   }
   private closeMenu(refocus: boolean) {
@@ -500,7 +675,148 @@ export class TcChatComposer extends TcElement {
     this.reveal = true;
   }
 
+  /* ---------- The toolbar row ---------- */
+
+  private get hasToolbar() {
+    return this.modelSwitcher === "toolbar" || this.settings !== undefined || this.prompts !== undefined || this.pageContext !== undefined;
+  }
+  private get bar() {
+    return this.querySelector<HTMLElement>(".ui-chat-composer__bar");
+  }
+
+  /** The toolbar's model picker reports a pick; the composer's own cancelable tc-model-change decides */
+  private onPickerValue = (e: CustomEvent<{ value: string }>) => {
+    // Its tc-value-change would read as a change to the message
+    e.stopPropagation();
+    e.preventDefault();
+    const next = this.models.find((m) => m.id === e.detail.value);
+    if (next) this.pickModel(next);
+  };
+
+  /** Opens a toolbar popover from `from`, or closes it when it's already the open one */
+  private openPanel(which: Exclude<Panel, "">, from: HTMLElement | null) {
+    if (this.sheet === which && this.pop.open && from === this.panelFrom) {
+      this.pop.close();
+      return;
+    }
+    if (which === "prompts") {
+      const t = this.textarea;
+      this.caret = t ? [t.selectionStart, t.selectionEnd] : null;
+    }
+    // From the More menu: focus waits on More while the menu gives way to the panel, so it never drops to <body>
+    if (this.sheet === "more" && this.pop.open) from?.focus({ preventScroll: true });
+    this.panelFrom = from;
+    this.sheet = which;
+    this.pop.show();
+    // Focus goes in once the panel's component has rendered its controls
+    void this.updateComplete.then(async () => {
+      const inner = this.querySelector<HTMLElement & { updateComplete?: Promise<unknown> }>(".ui-chat-composer__pop > *");
+      await inner?.updateComplete;
+      if (!this.pop.open || this.sheet !== which) return;
+      this.pop.focusFirst();
+      // Focusing scrolls the panel to its first control; keep its heading in view when that control still shows
+      const pop = this.querySelector<HTMLElement>(".ui-chat-composer__pop");
+      const focused = document.activeElement;
+      if (!pop || !focused || !pop.scrollTop) return;
+      const was = pop.scrollTop;
+      pop.scrollTop = 0;
+      if (focused.getBoundingClientRect().bottom > pop.getBoundingClientRect().bottom) pop.scrollTop = was;
+    });
+  }
+
+  private onSettingsChange = (e: CustomEvent<ModelSettingsChange>) => {
+    e.stopPropagation();
+    if (this.emit<ChatSettingsChange>("tc-settings-change", e.detail, { cancelable: true })) this.settings = e.detail.value;
+    // Controlled: the settings stay as the page gave them
+    else e.preventDefault();
+  };
+
+  /** The prompt library's own changes stay inside the composer; it keeps them while the popover is closed */
+  private onPromptChoice = (e: CustomEvent<{ value: string }>) => {
+    e.stopPropagation();
+    this.promptChoice = e.detail.value;
+  };
+  private onPromptValues = (e: CustomEvent<{ values: PromptValues }>) => {
+    e.stopPropagation();
+    this.promptValues = e.detail.values;
+  };
+
+  /** The prompt library's Use: the prompt goes in at the caret (or over the selection) unless the page prevents it */
+  private usePrompt = (prompt: string, template: PromptTemplate, values: Record<string, string>) => {
+    const place = this.emit<ChatPromptPick>("tc-prompt-pick", { prompt, template, values }, { cancelable: true });
+    this.pop.close();
+    if (!place) return;
+    const current = this.message;
+    const [from, to] = this.caret ?? [current.length, current.length];
+    const before = current.slice(0, from);
+    const after = current.slice(to);
+    const head = `${before}${before && !/\s$/.test(before) ? " " : ""}${prompt}`;
+    this.setMessage(`${head}${after && !/^\s/.test(after) ? " " : ""}${after}`);
+    this.status = `${template.title} added to your message.`;
+    void this.updateComplete.then(() => {
+      const t = this.textarea;
+      if (!t) return;
+      t.focus();
+      t.setSelectionRange(head.length, head.length);
+    });
+  };
+
+  private togglePage() {
+    const pc = this.pageContext;
+    if (!pc) return;
+    const next = { ...pc, connected: !pc.connected };
+    if (this.emit<ChatPageContextChange>("tc-page-context-change", { pageContext: next, change: next.connected ? "connect" : "disconnect" }, { cancelable: true })) this.pageContext = next;
+  }
+
+  /** An item removed (or restored) in the page items tray */
+  private onPageItems = (e: CustomEvent<ContextTrayItemsChange>) => {
+    e.stopPropagation();
+    const pc = this.pageContext;
+    if (!pc) return;
+    const next = { ...pc, items: e.detail.items };
+    if (this.emit<ChatPageContextChange>("tc-page-context-change", { pageContext: next, change: "items" }, { cancelable: true })) this.pageContext = next;
+    else e.preventDefault();
+  };
+
+  /**
+   * Folds the toolbar until it fits – first to icons only, then settings and prompts into "More" – and unfolds a step
+   * once there's room for it again. Each fold re-renders and is measured again (updated() → watchBar)
+   */
+  private measureBar = () => {
+    const bar = this.bar;
+    if (!bar) return;
+    const room = bar.clientWidth;
+    const gap = parseFloat(getComputedStyle(bar).columnGap) || 0;
+    const kids = [...bar.children] as HTMLElement[];
+    const needed = kids.reduce((sum, el) => sum + el.offsetWidth, 0) + gap * Math.max(0, kids.length - 1);
+    const max = this.settings !== undefined || this.prompts !== undefined ? 2 : 1;
+    if (needed > room + 0.5 && this.fold < max) {
+      this.needs[this.fold] = needed;
+      this.fold = (this.fold + 1) as 1 | 2;
+    } else if (this.fold > 0 && room >= this.needs[this.fold - 1]) this.fold = (this.fold - 1) as 0 | 1;
+  };
+
+  private onMoreKey = (e: KeyboardEvent) => {
+    const items = [...(e.currentTarget as HTMLElement).querySelectorAll<HTMLElement>('[role="menuitem"]')];
+    const at = items.indexOf(e.target as HTMLElement);
+    const last = items.length - 1;
+    const to = e.key === "ArrowDown" ? (at + 1) % items.length : e.key === "ArrowUp" ? (at <= 0 ? last : at - 1) : e.key === "Home" ? 0 : e.key === "End" ? last : -1;
+    if (to < 0) return;
+    e.preventDefault();
+    items[to]?.focus();
+  };
+
   /* ---------- Lifecycle ---------- */
+
+  protected override willUpdate(changed: PropertyValues<this>) {
+    super.willUpdate(changed);
+    // The page answered with what was typed
+    if (changed.has("value") && this.value === this.typed) this.typed = null;
+    // Turning the page context on or off is said, whoever does it (the chip, or the page through `pageContext`)
+    const before = changed.get("pageContext");
+    const pc = this.pageContext;
+    if (changed.has("pageContext") && before && pc && before.connected !== pc.connected) this.status = pc.connected ? `Page context on: ${pc.title}.` : "Page context off.";
+  }
 
   protected override firstUpdated() {
     // The picker attaches to the message, which exists only after the first render
@@ -521,6 +837,10 @@ export class TcChatComposer extends TcElement {
   }
 
   protected override updated(changed: PropertyValues<this>) {
+    this.watchBar(changed);
+    // The toolbar's model picker renders its trigger after this update – the toolbar's tab stop is set again then
+    const picker = this.querySelector<HTMLElement & { hasUpdated: boolean; updateComplete: Promise<unknown> }>(".ui-chat-composer__picker");
+    if (picker && !picker.hasUpdated) void picker.updateComplete.then(() => this.requestUpdate());
     const clean = this.resolvedLook === "clean";
     // The message starts with one line and grows with the text, up to 4 lines (Clean) or 2 (Standard)
     if (changed.has("value") || changed.has("heard") || changed.has("look") || changed.has("contextLook") || !this.hasMeasured) {
@@ -576,6 +896,22 @@ export class TcChatComposer extends TcElement {
   }
   private hasMeasured = false;
 
+  /** The toolbar row is measured when it's resized or what's in it changes */
+  private watchedBar: HTMLElement | null = null;
+  private watchBar(changed: PropertyValues<this>) {
+    const bar = this.bar;
+    if (bar !== this.watchedBar) {
+      this.barRo?.disconnect();
+      this.barRo = undefined;
+      this.watchedBar = bar;
+      if (bar && typeof ResizeObserver !== "undefined") {
+        this.barRo = new ResizeObserver(() => this.measureBar());
+        this.barRo.observe(bar);
+      }
+    }
+    if (bar && (["pageContext", "settings", "prompts", "modelSwitcher", "model", "models", "look", "contextLook", "fold"] as const).some((k) => changed.has(k))) this.measureBar();
+  }
+
   /* ---------- Rendering ---------- */
 
   /** Clicking anywhere on the white card (Clean: the writing area) puts the caret in the text area */
@@ -603,7 +939,7 @@ export class TcChatComposer extends TcElement {
 
   /** The message and, while recording, the heard words in gray behind the confirmed text */
   private writing() {
-    const message = this.value;
+    const message = this.message;
     const heard = this.heard;
     return html`<textarea
         class="ui-chat-composer__message"
@@ -612,6 +948,7 @@ export class TcChatComposer extends TcElement {
         @keydown=${this.onMessageKey}
         placeholder=${this.placeholder}
         aria-label="Message"
+        aria-describedby=${ifDefined(this.disclaimer ? `${this.uid}-disclaimer` : undefined)}
         spellcheck="false"
         ?readonly=${this.recording || this.sending}
       ></textarea>
@@ -625,6 +962,7 @@ export class TcChatComposer extends TcElement {
 
   /** "Request approval", which turns into "Unrestricted access" once granted */
   private approvalButton(clean: boolean, i: ReturnType<typeof iconsFor>) {
+    if (this.hideApproval) return nothing;
     const approval = this.approval;
     return html`<button type="button" class="ui-chat-composer__approval" @click=${() => void this.runStep("approval")} aria-busy=${approval === "loading" ? "true" : "false"} aria-disabled=${approval !== "idle" ? "true" : "false"}>
       ${clean ? nothing : html`<span class="ui-chat-composer__wash" aria-hidden="true"></span>`}
@@ -668,6 +1006,7 @@ export class TcChatComposer extends TcElement {
   }
 
   private connectButton(clean: boolean) {
+    if (this.hideConnectApps) return nothing;
     const apps = this.apps;
     const logos = clean
       ? html`<span class="ui-chat-composer__logo">${gmailLogo(`${this.uid}-g`)}</span><span class="ui-chat-composer__logo">${slackLogo}</span><span class="ui-chat-composer__logo">${clickUpLogo(`${this.uid}-c`)}</span>`
@@ -679,7 +1018,8 @@ export class TcChatComposer extends TcElement {
   }
 
   private projectButton(clean: boolean, i: ReturnType<typeof iconsFor>) {
-    const done = this.apps === "done";
+    if (this.hideProject) return nothing;
+    const done = this.appsDone;
     return html`<button
       type="button"
       class="ui-chat-composer__row ui-chat-composer__project"
@@ -707,7 +1047,7 @@ export class TcChatComposer extends TcElement {
           </div>
           <div class="ui-chat-composer__swap">
             <div class="ui-chat-composer__group ui-chat-composer__group--end" .inert=${this.recording}>
-              ${this.modelButtonTemplate(true, i)}
+              ${this.modelSwitcher === "toolbar" ? nothing : this.modelButtonTemplate(true, i)}
               <button type="button" class="ui-chat-composer__icon-btn" aria-label="Voice input" data-focus-key="voice" @click=${() => this.startRecording()}>${i.mic}</button>
               <button type="button" class="ui-chat-composer__send" aria-label="Send message" ?disabled=${!this.canSend} aria-busy=${ifDefined(this.sending ? "true" : undefined)} @click=${() => void this.send()}>${i.arrowUp}</button>
             </div>
@@ -719,7 +1059,7 @@ export class TcChatComposer extends TcElement {
           </div>
         </div>
       </div>
-      <div class="ui-chat-composer__foot">${this.connectButton(true)}${this.projectButton(true, i)}</div>`;
+      ${this.rows === "none" ? nothing : html`<div class="ui-chat-composer__foot">${this.connectButton(true)}${this.projectButton(true, i)}</div>`}`;
   }
 
   /** Standard: a gray tray with "Select a project" / "Connect apps", and the white card on top of it */
@@ -732,7 +1072,7 @@ export class TcChatComposer extends TcElement {
           ${this.approvalButton(false, i)}
         </div>
         <div class="ui-chat-composer__toolbar ui-chat-composer__toolbar--end" .inert=${this.recording}>
-          ${this.modelButtonTemplate(false, i)}
+          ${this.modelSwitcher === "toolbar" ? nothing : this.modelButtonTemplate(false, i)}
           <button type="button" class="ui-chat-composer__icon-btn" aria-label="Voice input" data-focus-key="voice" @click=${() => this.startRecording()}><span class="ui-chat-composer__icon">${i.mic}</span></button>
           <button type="button" class="ui-chat-composer__send" aria-label="Send message" ?disabled=${!this.canSend} aria-busy=${ifDefined(this.sending ? "true" : undefined)} @click=${() => void this.send()}>${i.arrowUp}</button>
         </div>
@@ -800,6 +1140,129 @@ export class TcChatComposer extends TcElement {
     </div>`;
   }
 
+  /* ---------- Toolbar row ---------- */
+
+  /** The models as tc-model-picker takes them – made again only when the list or the look changes */
+  private pickerCache: { models: ChatModel[]; look: Look; list: PickerModel[] } | null = null;
+  private get pickerModels(): PickerModel[] {
+    const look = this.resolvedLook;
+    if (this.pickerCache?.models !== this.models || this.pickerCache.look !== look) {
+      const list = this.models.map((m) => ({ id: m.id, name: m.name, description: m.description || undefined, icon: m.logo ?? builtInLogo(m, look), speed: m.speed, quality: m.quality, cost: m.cost, latencyMs: m.latencyMs, pricePerM: m.pricePerM }));
+      this.pickerCache = { models: this.models, look, list };
+    }
+    return this.pickerCache.list;
+  }
+
+  /** Whether the popover open now came from the toolbar button `tool` */
+  private expanded(tool: string) {
+    return this.pop.open && this.panelFrom?.dataset.tool === tool ? "true" : "false";
+  }
+
+  private toolButton(which: "settings" | "prompts", clean: boolean) {
+    return html`<button
+      type="button"
+      class="ui-chat-composer__tool"
+      data-tool=${which}
+      aria-label=${ifDefined(which === "settings" ? "Model settings" : undefined)}
+      aria-haspopup="dialog"
+      aria-expanded=${this.expanded(which)}
+      @click=${(e: Event) => this.openPanel(which, e.currentTarget as HTMLElement)}
+    >
+      ${toolIcon(which, clean)}<span class="ui-chat-composer__tool-label">${which === "settings" ? "Settings" : "Prompts"}</span>
+    </button>`;
+  }
+
+  private pageChip(pc: ChatPageContext, clean: boolean) {
+    const meta = pageMeta(pc);
+    const items = pc.connected ? (pc.items?.length ?? 0) : 0;
+    return html`<button
+        type="button"
+        class="ui-chat-composer__tool ui-chat-composer__page"
+        data-tool="page"
+        data-on=${pc.connected ? "true" : "false"}
+        aria-label=${pc.connected ? `Page context on: ${pc.title}${meta ? `, ${meta}` : ""}` : `Page context: ${pc.title}, off`}
+        aria-describedby=${`${this.uid}-page-hint`}
+        @click=${() => this.togglePage()}
+      >
+        ${toolIcon(pc.connected ? "on" : "off", clean)}<span class="ui-chat-composer__page-title">${pc.title}</span>
+        ${pc.connected && !meta ? nothing : html`<span class="ui-chat-composer__page-meta">${pc.connected ? meta : "Off"}</span>`}
+      </button>
+      ${items
+        ? html`<button
+            type="button"
+            class="ui-chat-composer__tool ui-chat-composer__page-items"
+            data-tool="page-items"
+            aria-label=${`Show what's attached from the page (${items})`}
+            aria-haspopup="dialog"
+            aria-expanded=${this.expanded("page-items")}
+            @click=${(e: Event) => this.openPanel("page", e.currentTarget as HTMLElement)}
+          >
+            ${toolIcon("items", clean)}
+          </button>`
+        : nothing}`;
+  }
+
+  /** The row under the composer: model, settings, prompts (or More), and the page context chip at the end */
+  private toolbar(clean: boolean) {
+    const pc = this.pageContext;
+    const more = this.fold === 2 && (this.settings !== undefined || this.prompts !== undefined);
+    return html`<div class="ui-chat-composer__extras" data-fold=${this.fold}>
+      <div class="ui-chat-composer__bar" role="toolbar" aria-label="Message options" @keydown=${this.tools.onKeyDown} @focusin=${this.tools.onFocusIn}>
+        ${this.modelSwitcher === "toolbar"
+          ? html`<tc-model-picker
+              class="ui-chat-composer__picker"
+              look=${this.resolvedLook}
+              side="top"
+              .models=${this.pickerModels}
+              .value=${this.current.id}
+              @tc-value-change=${this.onPickerValue}
+            ></tc-model-picker>`
+          : nothing}
+        ${more
+          ? html`<button type="button" class="ui-chat-composer__tool" data-tool="more" aria-label="More" aria-haspopup="menu" aria-expanded=${this.expanded("more")} @click=${(e: Event) => this.openPanel("more", e.currentTarget as HTMLElement)}>
+              ${toolIcon("more", clean)}
+            </button>`
+          : html`${this.settings !== undefined ? this.toolButton("settings", clean) : nothing}${this.prompts !== undefined ? this.toolButton("prompts", clean) : nothing}`}
+        ${pc ? this.pageChip(pc, clean) : nothing}
+      </div>
+      ${pc ? html`<span id=${`${this.uid}-page-hint`} hidden>${pc.connected ? "The model can see this page. Press to disconnect it." : "The model can't see this page. Press to connect it."}</span>` : nothing}
+      ${this.panelTemplate(clean)}
+    </div>`;
+  }
+
+  /** The open toolbar popover: the More menu, model settings, the prompt library or the page's attached items */
+  private panelTemplate(clean: boolean) {
+    const panel = this.sheet;
+    if (!this.pop.open || !panel) return nothing;
+    const look = this.resolvedLook;
+    if (panel === "more")
+      return html`<div class="tc-pop ui-chat-composer__pop" data-panel="more" role="menu" aria-label="More options" @keydown=${this.onMoreKey}>
+        ${this.settings !== undefined
+          ? html`<button type="button" role="menuitem" class="ui-chat-composer__more-item" @click=${() => this.openPanel("settings", this.panelFrom)}>${toolIcon("settings", clean)}Model settings</button>`
+          : nothing}
+        ${this.prompts !== undefined
+          ? html`<button type="button" role="menuitem" class="ui-chat-composer__more-item" @click=${() => this.openPanel("prompts", this.panelFrom)}>${toolIcon("prompts", clean)}Prompts</button>`
+          : nothing}
+      </div>`;
+    const pc = this.pageContext;
+    const label = panel === "settings" ? "Model settings" : panel === "prompts" ? "Prompts" : `Attached from ${pc?.title ?? "the page"}`;
+    return html`<div class="tc-pop ui-chat-composer__pop" data-panel=${panel} role="dialog" aria-label=${label}>
+      ${panel === "settings"
+        ? html`<tc-model-settings look=${look} .model=${this.settingsModel} .value=${this.settings ?? {}} @tc-value-change=${this.onSettingsChange}></tc-model-settings>`
+        : panel === "prompts"
+          ? html`<tc-prompt-library
+              look=${look}
+              .templates=${this.prompts ?? []}
+              .value=${this.promptChoice}
+              .values=${this.promptValues}
+              .onUse=${this.usePrompt}
+              @tc-value-change=${this.onPromptChoice}
+              @tc-values-change=${this.onPromptValues}
+            ></tc-prompt-library>`
+          : html`<tc-context-tray look=${look} heading=${pc?.title ?? "Page"} .items=${pc?.items ?? []} limit=${this.contextLimit} @tc-items-change=${this.onPageItems}></tc-context-tray>`}
+    </div>`;
+  }
+
   protected override render() {
     const clean = this.resolvedLook === "clean";
     const i = iconsFor(clean);
@@ -816,7 +1279,8 @@ export class TcChatComposer extends TcElement {
         : nothing}
       <section
         class="ui-chat-composer__body"
-        data-apps=${this.apps}
+        data-apps=${this.appsDone ? "done" : this.apps}
+        data-rows=${this.rows}
         data-approval=${this.approval}
         data-recording=${this.recording ? "true" : "false"}
         data-sending=${ifDefined(this.sending ? "true" : undefined)}
@@ -824,9 +1288,11 @@ export class TcChatComposer extends TcElement {
         aria-label="Message composer"
         @keydown=${this.onBodyKey}
       >
-        ${clean ? this.cleanLayout(i) : this.standardLayout(i)}${this.menu(clean, i)}
+        ${clean ? this.cleanLayout(i) : this.standardLayout(i)}${this.modelSwitcher === "toolbar" ? nothing : this.menu(clean, i)}
       </section>
+      ${this.hasToolbar ? this.toolbar(clean) : nothing}
       ${this.error ? html`<p class="ui-chat-composer__error" role="alert">${this.error}</p>` : nothing}
+      ${this.disclaimer ? html`<p class="ui-chat-composer__disclaimer" id=${`${this.uid}-disclaimer`}>${this.disclaimer}</p>` : nothing}
       <p class="ui-chat-composer__sr-only" aria-live="polite">${this.status}</p>
       <span id=${`${this.uid}-heard`} hidden>${heard ? `Heard so far: ${heard}` : "Nothing heard yet."}</span>
       ${this.mentions?.length
@@ -1242,6 +1708,13 @@ export class TcChatComposer extends TcElement {
 }
 :where([data-look="standard"], [data-look="standard"] *).ui-chat-composer__body[data-apps="done"] .ui-chat-composer__card {
   transform: translateY(calc(169 * var(--u)));
+}
+/* No apps row (hide-connect-apps with hide-project, or hide-project once apps are connected): no strip under the card */
+:where([data-look="standard"], [data-look="standard"] *).ui-chat-composer__body:is([data-rows="none"], [data-rows="connect"][data-apps="done"]) {
+  height: calc((var(--tc-chat-composer-card-h) + 2 * var(--tc-chat-composer-frame)) * var(--u));
+}
+:where([data-look="standard"], [data-look="standard"] *).ui-chat-composer__body:is([data-rows="none"], [data-rows="connect"][data-apps="done"]) .ui-chat-composer__card {
+  transform: none;
 }
 /* Approval granted: pill "Unrestricted access" */
 :where([data-look="standard"], [data-look="standard"] *).ui-chat-composer__body[data-approval="done"] .ui-chat-composer__approval {
@@ -1700,6 +2173,7 @@ export class TcChatComposer extends TcElement {
 :where([data-look="clean"], [data-look="clean"] *).ui-chat-composer__project { opacity: 0; transform: translateY(10px); filter: blur(3px); pointer-events: none; }
 :where([data-look="clean"], [data-look="clean"] *).ui-chat-composer__body[data-apps="done"] .ui-chat-composer__connect { opacity: 0; transform: translateY(-10px); filter: blur(3px); pointer-events: none; }
 :where([data-look="clean"], [data-look="clean"] *).ui-chat-composer__body[data-apps="done"] .ui-chat-composer__project { opacity: 1; transform: none; filter: none; pointer-events: auto; transition-delay: 0ms, 0ms, var(--tc-duration-quick), var(--tc-duration-quick), var(--tc-duration-quick); }
+:where([data-look="clean"], [data-look="clean"] *).ui-chat-composer__body[data-rows="connect"][data-apps="done"] .ui-chat-composer__foot { display: none; }
 :where([data-look="clean"], [data-look="clean"] *).ui-chat-composer__body[data-apps="loading"] .ui-chat-composer__logo { animation: ui-chat-composer-hop-clean var(--tc-chat-composer-load) var(--tc-ease-in-out) 2; }
 :where([data-look="clean"], [data-look="clean"] *).ui-chat-composer__body[data-apps="loading"] .ui-chat-composer__logo:nth-child(2) { animation-delay: var(--tc-duration-instant); }
 :where([data-look="clean"], [data-look="clean"] *).ui-chat-composer__body[data-apps="loading"] .ui-chat-composer__logo:nth-child(3) { animation-delay: var(--tc-duration-base); }
@@ -1959,6 +2433,94 @@ export class TcChatComposer extends TcElement {
     clip-path: inset(50%);
     white-space: nowrap;
 }
+}
+
+/* ---------- Toolbar row under the composer (opt-in): model, settings, prompts, page context ---------- */
+.ui-chat-composer__extras { container-type: inline-size; margin-top: var(--tc-space-2); font-family: var(--tc-font-sans); }
+.ui-chat-composer__bar { display: flex; align-items: center; gap: var(--tc-space-1); min-width: 0; }
+.ui-chat-composer__picker { flex: none; }
+/* The model picker's trigger takes the row's height */
+.ui-chat-composer__picker .ui-mdp__trigger { height: var(--tc-control-h-sm); font-size: var(--tc-control-font-size); }
+.ui-chat-composer__tool {
+  appearance: none;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: var(--tc-space-1-5);
+  height: var(--tc-control-h-sm);
+  margin: 0;
+  padding: 0 var(--tc-control-px-sm);
+  border: 0;
+  border-radius: var(--tc-control-radius-sm);
+  background: none;
+  font: inherit;
+  font-size: var(--tc-control-font-size);
+  font-weight: var(--tc-control-font-weight);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard);
+}
+.ui-chat-composer__tool:focus-visible, .ui-chat-composer__more-item:focus-visible { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
+.ui-chat-composer__tool:hover, .ui-chat-composer__tool[aria-expanded="true"] { background: var(--tc-action-ghost-bg-hover); color: var(--tc-text-primary); }
+.ui-chat-composer__tool-icon { display: block; flex: none; width: 16px; height: 16px; }
+:where([data-look="standard"], [data-look="standard"] *).ui-chat-composer__tool { color: var(--tc-text-secondary); }
+:where([data-look="clean"], [data-look="clean"] *).ui-chat-composer__tool { color: var(--tc-text-muted); }
+:where([data-look="clean"], [data-look="clean"] *).ui-chat-composer__tool .ui-chat-composer__tool-icon { color: var(--tc-icon-muted); }
+:where([data-look="clean"], [data-look="clean"] *).ui-chat-composer__tool:hover .ui-chat-composer__tool-icon { color: currentColor; }
+/* Page context: a chip at the end of the row. On, it's tinted with an open eye; off, a dashed outline, a crossed eye
+   and "Off" – so the state never rests on colour alone */
+.ui-chat-composer__page { flex: 0 1 auto; margin-left: auto; border-radius: var(--tc-radius-full); box-shadow: inset 0 0 0 var(--tc-hairline) var(--tc-border-default); }
+.ui-chat-composer__page[data-on="false"] { box-shadow: none; outline: var(--tc-hairline) dashed var(--tc-border-strong); outline-offset: calc(-1 * var(--tc-hairline)); }
+.ui-chat-composer__page[data-on="false"]:focus-visible { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
+.ui-chat-composer__page-title { min-width: var(--tc-space-12); overflow: hidden; text-overflow: ellipsis; color: var(--tc-text-primary); }
+.ui-chat-composer__page-meta { flex: none; color: var(--tc-text-muted); font-variant-numeric: tabular-nums; }
+.ui-chat-composer__page[data-on="false"] .ui-chat-composer__page-title { color: var(--tc-text-secondary); }
+:where([data-look="standard"], [data-look="standard"] *).ui-chat-composer__page[data-on="true"] { background: var(--tc-accent-subtle); box-shadow: inset 0 0 0 var(--tc-hairline) var(--tc-status-info-border); }
+:where([data-look="standard"], [data-look="standard"] *).ui-chat-composer__page[data-on="true"] .ui-chat-composer__tool-icon { color: var(--tc-accent-text); }
+:where([data-look="clean"], [data-look="clean"] *).ui-chat-composer__page[data-on="true"] { background: var(--tc-surface-control); box-shadow: var(--tc-shadow-raised); }
+:where([data-look="clean"], [data-look="clean"] *).ui-chat-composer__page[data-on="true"] .ui-chat-composer__tool-icon { color: var(--tc-accent); }
+.ui-chat-composer__page-items { width: var(--tc-control-h-sm); padding: 0; justify-content: center; border-radius: var(--tc-radius-full); }
+/* The disclaimer: one quiet line under it all */
+.ui-chat-composer__disclaimer { margin: var(--tc-space-2) 0 0; font-family: var(--tc-font-sans); font-size: var(--tc-font-size-xs); line-height: var(--tc-line-height-normal); text-align: center; color: var(--tc-text-muted); }
+/* The popovers (internal/popover.ts places them): settings and prompts hold their own card, so the surface is theirs */
+.ui-chat-composer__pop[role="dialog"] { width: min(420px, calc(100vw - var(--tc-space-4))); max-height: min(560px, calc(100vh - var(--tc-space-8))); overflow: auto; padding: 0; background: none; overscroll-behavior: contain; }
+:where([data-look="standard"], [data-look="standard"] *).ui-chat-composer__pop[role="dialog"] { border-radius: var(--tc-tray-radius); }
+:where([data-look="clean"], [data-look="clean"] *).ui-chat-composer__pop[role="dialog"] { border-radius: var(--tc-card-radius); }
+.ui-chat-composer__pop[role="dialog"] > * { max-width: none; }
+.ui-chat-composer__pop[role="menu"] { display: grid; min-width: 180px; }
+.ui-chat-composer__more-item {
+  appearance: none;
+  display: flex;
+  align-items: center;
+  gap: var(--tc-space-2);
+  height: var(--tc-menu-item-h);
+  margin: 0;
+  padding: 0 var(--tc-menu-item-px);
+  border: 0;
+  border-radius: var(--tc-menu-item-radius);
+  background: none;
+  font: inherit;
+  font-size: var(--tc-menu-item-font-size);
+  color: var(--tc-text-primary);
+  text-align: left;
+  cursor: pointer;
+}
+.ui-chat-composer__more-item:hover, .ui-chat-composer__more-item:focus-visible { background: var(--tc-menu-item-hover); }
+.ui-chat-composer__more-item .ui-chat-composer__tool-icon { color: var(--tc-icon-muted); }
+/* Folded (a side pane, or a row that doesn't fit): the tools keep only their icons – their names stay for screen
+   readers – and the model switch only its glyph; the page context chip keeps its title, which says what's attached.
+   Up to 400px wide it starts folded; wider, the script folds it when the row doesn't fit */
+.ui-chat-composer__extras:not([data-fold="0"]) :is(.ui-chat-composer__tool-label, .ui-chat-composer__picker ${PICKER_NAME}, .ui-chat-composer__page[data-on="true"] .ui-chat-composer__page-meta) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.ui-chat-composer__extras:not([data-fold="0"]) .ui-chat-composer__tool:not(.ui-chat-composer__page) { width: var(--tc-control-h-sm); padding: 0; justify-content: center; }
+@container (max-width: 400px) {
+  :is(.ui-chat-composer__tool-label, .ui-chat-composer__picker ${PICKER_NAME}, .ui-chat-composer__page[data-on="true"] .ui-chat-composer__page-meta) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .ui-chat-composer__tool:not(.ui-chat-composer__page) { width: var(--tc-control-h-sm); padding: 0; justify-content: center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ui-chat-composer__tool { transition: none; }
+}
+@media (forced-colors: active) {
+  .ui-chat-composer__page[data-on="true"] { outline: var(--tc-hairline) solid CanvasText; }
 }
 `;
 }

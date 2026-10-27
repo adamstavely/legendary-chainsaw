@@ -4,8 +4,9 @@ import { marked } from "marked";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { CodeBlock } from "../../../src/elements/react";
 import { ENTRIES, type Entry } from "../registry";
+import { BrowserSupportSection, FrameworkTabs, FrameworksSection, Imports, Inline, PerformanceSection, Table, dash, kb } from "./DocsSections";
 import { GUIDANCE, PATTERNS, type AnatomyPart, type Guidance } from "./guidance";
-import { snippets, type ApiElement, type ApiPage, type Framework } from "./usage";
+import { FRAMEWORKS, snippets, type ApiElement, type ApiPage } from "./usage";
 
 const API = import.meta.glob<ApiPage>("./api/*.json", { import: "default" });
 
@@ -18,8 +19,10 @@ const SECTIONS: [string, string][] = [
   ["theme", "Theme"],
   ["usage", "Usage"],
   ["api", "API"],
-  ["react", "React"],
+  ["frameworks", "Frameworks"],
   ["accessibility", "Accessibility"],
+  ["browser-support", "Browser support"],
+  ["performance", "Performance"],
   ["content", "Content"],
   ["do-dont", "Do and don't"],
   ["related", "Related"],
@@ -27,18 +30,6 @@ const SECTIONS: [string, string][] = [
 ];
 
 const md = (text: string) => ({ __html: marked.parse(text, { async: false }) as string });
-/** A JSDoc description with its inline code and emphasis rendered */
-const Inline = ({ text }: { text: string }) => <span dangerouslySetInnerHTML={{ __html: marked.parseInline(escapeTags(text), { async: false }) as string }} />;
-/** Tag names in JSDoc prose ("<tc-look-provider>") are text, not HTML – escaped outside code spans */
-const escapeTags = (text: string) => text.split(/(`[^`]*`)/).map((part, i) => (i % 2 ? part : part.replace(/</g, "&lt;"))).join("");
-const kb = (n: number) => `${(n / 1024).toFixed(1)} KB`;
-const FRAMEWORKS: [Framework, string, string][] = [
-  ["html", "HTML", "html"],
-  ["react", "React", "tsx"],
-  ["vue", "Vue", "html"],
-  ["angular", "Angular", "ts"],
-  ["svelte", "Svelte", "html"],
-];
 
 export function DocsPage({ entry, section, example }: { entry: Entry; section: string; example: ReactNode }) {
   const [api, setApi] = useState<ApiPage | null>(null);
@@ -97,34 +88,27 @@ export function DocsPage({ entry, section, example }: { entry: Entry; section: s
                   ))}
                 </dd>
               </div>
-              <div>
-                <dt>Import</dt>
-                <dd>
-                  <code>import "trenchcoat/{entry.slug}"</code>
-                </dd>
-              </div>
-              {api!.react[0] && (
-                <div>
-                  <dt>React</dt>
-                  <dd>
-                    <code>
-                      {"import { "}
-                      {api!.react.filter((r) => r.exported).map((r) => r.component).join(", ")}
-                      {' } from "trenchcoat/react"'}
-                    </code>
-                  </dd>
-                </div>
-              )}
               {api!.size && (
                 <div>
                   <dt>Size</dt>
                   <dd>
-                    {kb(api!.size.gzip)} gzip <span className="muted">· {kb(api!.size.min)} min, Lit not included</span>
+                    {kb(api!.size.gzip)} gzip <span className="muted">· {kb(api!.size.min)} min, on a page that has Lit ·</span>{" "}
+                    <a className="docs-link" href={`#/${entry.id}/performance`}>Performance</a>
+                  </dd>
+                </div>
+              )}
+              {api!.browser && (
+                <div>
+                  <dt>Works in</dt>
+                  <dd>
+                    Chrome / Edge {api!.browser.floor.chrome}+, Firefox {api!.browser.floor.firefox}+, Safari {api!.browser.floor.safari}+ <span className="muted">·</span>{" "}
+                    <a className="docs-link" href={`#/${entry.id}/browser-support`}>Browser support</a>
                   </dd>
                 </div>
               )}
             </dl>
           )}
+          {main && <Imports slug={entry.slug} api={api!} />}
         </header>
 
         <Section id="example" title="Example" anchorOf={entry.id}>
@@ -203,28 +187,39 @@ export function DocsPage({ entry, section, example }: { entry: Entry; section: s
           </Section>
         )}
 
-        {api && api.react.some((r) => r.exported) && (
-          <Section id="react" title="React" anchorOf={entry.id}>
+        {main && api && (
+          <Section id="frameworks" title="Frameworks" anchorOf={entry.id}>
+            <FrameworksSection
+              slug={entry.slug}
+              api={api}
+              reactTable={
+                api.react.some((r) => r.exported) ? (
+                  <>
+                    <h3 className="docs-sub">React props</h3>
             <p className="docs-hint muted">
-              The wrapper takes every element property above under the same name, plus these. Values with a <code>default…</code> twin are
-              controlled when given and kept by the element otherwise.
-            </p>
-            {api.react
-              .filter((r) => r.exported)
-              .map((r) => (
-                <div key={r.component}>
-                  {api.react.filter((x) => x.exported).length > 1 && <h3 className="docs-sub">{r.component}</h3>}
-                  <Table
-                    label={`${r.component} props`} head={["Prop", "Type", "Description"]}
-                    rows={r.props.map((p) => [<code key="n">{p.name + (p.optional ? "" : "")}</code>, <code key="t" className="docs-type">{p.type}</code>, p.description ? <Inline key="d" text={p.description} /> : <span className="muted">–</span>])}
-                  />
-                  {r.hides.length > 0 && (
-                    <p className="docs-hint muted">
-                      Renamed or hidden on the wrapper: {r.hides.map((h) => <code key={h}>{h}</code>).reduce<ReactNode[]>((a, c, i) => (i ? [...a, ", ", c] : [c]), [])}
+                      The wrapper takes every element property above under the same name, plus these. Values with a <code>default…</code> twin are
+                      controlled when given and kept by the element otherwise.
                     </p>
-                  )}
-                </div>
-              ))}
+                    {api.react
+                      .filter((r) => r.exported)
+                      .map((r) => (
+                        <div key={r.component}>
+                          {api.react.filter((x) => x.exported).length > 1 && <h3 className="docs-sub">{r.component}</h3>}
+                          <Table
+                            label={`${r.component} props`} head={["Prop", "Type", "Description"]}
+                            rows={r.props.map((p) => [<code key="n">{p.name + (p.optional ? "" : "")}</code>, <code key="t" className="docs-type">{p.type}</code>, p.description ? <Inline key="d" text={p.description} /> : <span className="muted">–</span>])}
+                          />
+                          {r.hides.length > 0 && (
+                            <p className="docs-hint muted">
+                              Renamed or hidden on the wrapper: {r.hides.map((h) => <code key={h}>{h}</code>).reduce<ReactNode[]>((a, c, i) => (i ? [...a, ", ", c] : [c]), [])}
+                            </p>
+                          )}
+                        </div>
+                      ))}
+                  </>
+                ) : null
+              }
+            />
           </Section>
         )}
 
@@ -254,6 +249,18 @@ export function DocsPage({ entry, section, example }: { entry: Entry; section: s
               <li>Reduced motion: animations stop or shorten under <code>prefers-reduced-motion</code>.</li>
               <li>Not yet tested with a screen reader by a person (VoiceOver, NVDA).</li>
             </ul>
+          </Section>
+        )}
+
+        {api?.browser && (
+          <Section id="browser-support" title="Browser support" anchorOf={entry.id}>
+            <BrowserSupportSection api={api} singular={entry.library === "components" ? "the component" : "the piece"} />
+          </Section>
+        )}
+
+        {api && (
+          <Section id="performance" title="Performance" anchorOf={entry.id}>
+            <PerformanceSection slug={entry.slug} entryId={entry.id} api={api} library={entry.library} />
           </Section>
         )}
 
@@ -337,8 +344,12 @@ function has(id: string, guide: Guidance | undefined, api: ApiPage | null) {
     case "usage":
     case "api":
       return !!api?.elements.length;
-    case "react":
-      return !!api?.react.some((r) => r.exported);
+    case "frameworks":
+      return !!api?.elements.length;
+    case "browser-support":
+      return !!api?.browser;
+    case "performance":
+      return !!api;
     case "accessibility":
       return true;
     case "content":
@@ -374,37 +385,6 @@ function Section({ id, title, anchorOf, children }: { id: string; title: string;
     </section>
   );
 }
-
-function Table({ head, rows, label }: { head: string[]; rows: ReactNode[][]; label: string }) {
-  if (!rows.length) return null;
-  // A wide table scrolls sideways: the wrapper is a named region keyboard users can focus and scroll
-  return (
-    <div className="docs-table-wrap" role="region" aria-label={label} tabIndex={0}>
-      <table className="docs-table">
-        <thead>
-          <tr>
-            {head.map((h) => (
-              <th key={h} scope="col">
-                {h}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((r, i) => (
-            <tr key={i}>
-              {r.map((c, j) => (
-                <td key={j}>{c}</td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-}
-
-const dash = <span className="muted">–</span>;
 
 function ElementApi({ el, several, singleLook }: { el: ApiElement; several: boolean; singleLook: boolean }) {
   const [showTokens, setShowTokens] = useState(false);
@@ -457,7 +437,11 @@ function ElementApi({ el, several, singleLook }: { el: ApiElement; several: bool
           <p className="docs-hint muted">Custom properties on the element – set them on the element or an ancestor to adjust it.</p>
           <Table
             label={`${el.tag} component tokens`} head={["Custom property", "Value", "Look"]}
-            rows={el.cssProperties.map((c) => [<code key="n">{c.name}</code>, <code key="v" className="docs-type">{c.value}</code>, c.looks.join(", ")])}
+            rows={el.cssProperties.map((c) => [
+              <code key="n">{c.name}</code>,
+              <code key="v" className="docs-type">{c.value}</code>,
+              c.fallback ? <span key="l" className="muted">not set – this fallback applies</span> : c.looks.join(", "),
+            ])}
           />
         </>
       )}
@@ -481,42 +465,22 @@ function ElementApi({ el, several, singleLook }: { el: ApiElement; several: bool
 }
 
 function Usage({ slug, el, guide, api }: { slug: string; el: ApiElement; guide?: Guidance; api: ApiPage }) {
-  const [fw, setFw] = useState<Framework>(() => {
-    try {
-      return (localStorage.getItem("trenchcoat-docs-framework") as Framework) || "react";
-    } catch {
-      return "react";
-    }
-  });
-  const code = useMemo(() => snippets(slug, el, guide?.examples ?? {}, api.react.find((r) => r.exported)), [slug, el, guide, api]);
-  const pick = (f: Framework) => {
-    setFw(f);
-    try {
-      localStorage.setItem("trenchcoat-docs-framework", f);
-    } catch {
-      // storage unavailable – the choice just isn't remembered
-    }
-  };
-  const lang = FRAMEWORKS.find(([f]) => f === fw)![2];
+  const code = useMemo(() => snippets(slug, el, guide?.examples ?? {}, api.react.find((r) => r.exported), api.frameworks?.[0]), [slug, el, guide, api]);
   return (
     <div className="docs-usage">
-      <div className="seg docs-fw" role="tablist" aria-label="Framework">
-        {FRAMEWORKS.map(([f, label]) => (
-          <button key={f} role="tab" aria-selected={fw === f} className={fw === f ? "on" : ""} onClick={() => pick(f)}>
-            {label}
-          </button>
-        ))}
-      </div>
-      <div role="tabpanel" aria-label={`${FRAMEWORKS.find(([f]) => f === fw)![1]} example`}>
-        <CodeBlock key={fw} code={code[fw]} language={lang} look="clean" lineNumbers={false} wrap />
-      </div>
-      {(fw === "vue" || fw === "angular" || fw === "svelte") && (
-        <p className="docs-hint muted">
-          Generated from the element's API – see <a className="docs-link" href="#/">examples/{fw}</a> in the repository for a full app.
-          {fw === "angular" && " Angular needs CUSTOM_ELEMENTS_SCHEMA."}
-          {fw === "vue" && " Tell Vue that tags starting with tc- are custom elements (compilerOptions.isCustomElement)."}
-        </p>
-      )}
+      <FrameworkTabs id={`usage-${slug}`}>
+        {(fw) => (
+          <>
+            <CodeBlock key={fw} code={code[fw]} language={FRAMEWORKS.find(([f]) => f === fw)![3]} look="clean" lineNumbers={false} wrap />
+            {((fw === "html" && !guide?.examples.html) || (fw === "react" && !guide?.examples.tsx) || fw === "vue" || fw === "angular" || fw === "svelte") && (
+              <p className="docs-hint muted">
+                Generated from the element's API and compiled in <code>examples/{fw}</code> by <code>npm run check:snippets</code>. The Frameworks section below covers events,
+                control, slots, server rendering and types.
+              </p>
+            )}
+          </>
+        )}
+      </FrameworkTabs>
     </div>
   );
 }

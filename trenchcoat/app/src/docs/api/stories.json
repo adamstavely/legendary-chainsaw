@@ -1,0 +1,884 @@
+{
+ "elements": [
+  {
+   "tag": "tc-stories",
+   "className": "TcStories",
+   "description": "A row of story avatars – a gradient ring for something new, a gray ring once seen – and the modal viewer they open,\nwith progress bars, auto-advance, tap and arrow-key stepping, and swipe down to close.",
+   "properties": [
+    {
+     "name": "people",
+     "attribute": null,
+     "type": "StoryPerson[]",
+     "default": "[]",
+     "description": "The people with stories, in the order the row shows them; people with no items are left out",
+     "readonly": false
+    },
+    {
+     "name": "seen",
+     "attribute": null,
+     "type": "StorySeen",
+     "default": "new Set<string>()",
+     "description": "The item ids that have been seen, as a Set or a record of id → true; the app owns it",
+     "readonly": false
+    },
+    {
+     "name": "open",
+     "attribute": null,
+     "type": "StoryOpen",
+     "default": "null",
+     "description": "What the viewer shows ({ person, item } ids), or null when it's closed",
+     "readonly": false
+    },
+    {
+     "name": "addable",
+     "attribute": "addable",
+     "type": "boolean",
+     "default": "false",
+     "description": "Show the \"add\" tile first in the row",
+     "readonly": false
+    },
+    {
+     "name": "addLabel",
+     "attribute": "add-label",
+     "type": "string",
+     "default": "\"Add story\"",
+     "description": "The \"add\" tile's text",
+     "readonly": false
+    },
+    {
+     "name": "addAvatar",
+     "attribute": "add-avatar",
+     "type": "string",
+     "default": "\"\"",
+     "description": "An image for the \"add\" tile (the person's own avatar); without one it shows a plus",
+     "readonly": false
+    },
+    {
+     "name": "replyable",
+     "attribute": "replyable",
+     "type": "boolean",
+     "default": "false",
+     "description": "Show a reply field at the foot of the viewer; sending fires tc-reply",
+     "readonly": false
+    },
+    {
+     "name": "duration",
+     "attribute": "duration",
+     "type": "number",
+     "default": "5000",
+     "description": "How long an image or text card shows, in milliseconds, unless the item sets its own",
+     "readonly": false
+    },
+    {
+     "name": "autoplay",
+     "attribute": "autoplay",
+     "type": "boolean",
+     "default": "true",
+     "description": "Advance on its own; off (or with reduced motion) items change only when the person steps",
+     "readonly": false
+    },
+    {
+     "name": "muted",
+     "attribute": "muted",
+     "type": "boolean",
+     "default": "true",
+     "description": "Whether videos start muted; the viewer's mute toggle changes it",
+     "readonly": false
+    },
+    {
+     "name": "label",
+     "attribute": "label",
+     "type": "string",
+     "default": "\"Stories\"",
+     "description": "The row's accessible name",
+     "readonly": false
+    },
+    {
+     "name": "newLabel",
+     "attribute": "new-label",
+     "type": "string",
+     "default": "\"new\"",
+     "description": "Said after a person's name when they have something new (\"Maya Chen, 2 new\")",
+     "readonly": false
+    },
+    {
+     "name": "seenLabel",
+     "attribute": "seen-label",
+     "type": "string",
+     "default": "\"seen\"",
+     "description": "Said after a person's name when everything's been seen (\"Maya Chen, seen\")",
+     "readonly": false
+    },
+    {
+     "name": "emptyLabel",
+     "attribute": "empty-label",
+     "type": "string",
+     "default": "\"No stories yet.\"",
+     "description": "Shown when there are no stories and no \"add\" tile",
+     "readonly": false
+    },
+    {
+     "name": "replyLabel",
+     "attribute": "reply-label",
+     "type": "string",
+     "default": "\"Reply to\"",
+     "description": "The reply field's placeholder and name, before the person's name (\"Reply to Maya Chen\")",
+     "readonly": false
+    },
+    {
+     "name": "sendLabel",
+     "attribute": "send-label",
+     "type": "string",
+     "default": "\"Send\"",
+     "description": "The send button's name",
+     "readonly": false
+    },
+    {
+     "name": "closeLabel",
+     "attribute": "close-label",
+     "type": "string",
+     "default": "\"Close\"",
+     "description": "The close button's name",
+     "readonly": false
+    },
+    {
+     "name": "pauseLabel",
+     "attribute": "pause-label",
+     "type": "string",
+     "default": "\"Pause\"",
+     "description": "The pause button's name",
+     "readonly": false
+    },
+    {
+     "name": "playLabel",
+     "attribute": "play-label",
+     "type": "string",
+     "default": "\"Play\"",
+     "description": "The play button's name",
+     "readonly": false
+    },
+    {
+     "name": "muteLabel",
+     "attribute": "mute-label",
+     "type": "string",
+     "default": "\"Mute\"",
+     "description": "The mute button's name",
+     "readonly": false
+    },
+    {
+     "name": "unmuteLabel",
+     "attribute": "unmute-label",
+     "type": "string",
+     "default": "\"Unmute\"",
+     "description": "The unmute button's name",
+     "readonly": false
+    },
+    {
+     "name": "previousLabel",
+     "attribute": "previous-label",
+     "type": "string",
+     "default": "\"Previous\"",
+     "description": "The previous-item button's name",
+     "readonly": false
+    },
+    {
+     "name": "nextLabel",
+     "attribute": "next-label",
+     "type": "string",
+     "default": "\"Next\"",
+     "description": "The next-item button's name",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-open-change",
+     "detail": "",
+     "description": "The viewer is opening, stepping or closing ({ open }: StoryOpenChangeEvent – the next `open`, or null); cancelable – prevented, `open` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-seen-change",
+     "detail": "",
+     "description": "An unseen item was shown ({ seen, person, item }: StorySeenChangeEvent – `seen` with the item added, in the same shape); cancelable – prevented, `seen` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-reply",
+     "detail": "",
+     "description": "A reply was sent from the viewer ({ text, person, item }: StoryReplyEvent)",
+     "cancelable": false
+    },
+    {
+     "name": "tc-add",
+     "detail": "",
+     "description": "The \"add\" tile was activated (no detail)",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "sty",
+   "cssProperties": [
+    {
+     "name": "--tc-story-size",
+     "value": "var(--tc-space-14)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-story-ring-width",
+     "value": "calc(var(--tc-space-0-5) + var(--tc-hairline))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-story-stage-bg",
+     "value": "var(--tc-gray-950)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-story-stage-fg",
+     "value": "var(--tc-gray-0)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-story-ring",
+     "value": "conic-gradient(from 210deg, var(--tc-tone-amber-solid), var(--tc-tone-rose-solid), var(--tc-tone-pink-solid), var(--tc-tone-violet-solid), var(--tc-tone-amber-solid))",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    },
+    {
+     "name": "--tc-story-ring-seen",
+     "value": "var(--tc-border-strong)",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    },
+    {
+     "name": "--tc-story-gap",
+     "value": "var(--tc-surface-base)",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    },
+    {
+     "name": "--tc-story-scrim",
+     "value": "color-mix(in srgb, var(--tc-gray-950) 90%, transparent)",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    },
+    {
+     "name": "--tc-story-card-violet",
+     "value": "linear-gradient(160deg, var(--tc-violet-600), var(--tc-pink-600))",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    },
+    {
+     "name": "--tc-story-card-pink",
+     "value": "linear-gradient(160deg, var(--tc-pink-600), var(--tc-rose-600))",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    },
+    {
+     "name": "--tc-story-card-amber",
+     "value": "linear-gradient(160deg, var(--tc-amber-600), var(--tc-rose-600))",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    },
+    {
+     "name": "--tc-story-card-rose",
+     "value": "linear-gradient(160deg, var(--tc-rose-600), var(--tc-violet-600))",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    },
+    {
+     "name": "--tc-story-card-teal",
+     "value": "linear-gradient(160deg, var(--tc-teal-600), var(--tc-blue-600))",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    },
+    {
+     "name": "--tc-story-card-blue",
+     "value": "linear-gradient(160deg, var(--tc-blue-600), var(--tc-violet-600))",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    }
+   ],
+   "tokens": [
+    "--tc-accent-solid",
+    "--tc-amber-600",
+    "--tc-blue-600",
+    "--tc-border-default",
+    "--tc-border-strong",
+    "--tc-card-radius",
+    "--tc-control-h-md",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-field-h",
+    "--tc-fill-default",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-sans",
+    "--tc-font-size-2xl",
+    "--tc-font-size-lg",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-strong",
+    "--tc-gray-0",
+    "--tc-gray-950",
+    "--tc-hairline",
+    "--tc-line-height-display",
+    "--tc-line-height-none",
+    "--tc-line-height-normal",
+    "--tc-line-height-tight",
+    "--tc-pink-600",
+    "--tc-radius-full",
+    "--tc-rose-600",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-14",
+    "--tc-space-16",
+    "--tc-space-2",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-5",
+    "--tc-space-6",
+    "--tc-space-8",
+    "--tc-surface-base",
+    "--tc-teal-600",
+    "--tc-text-muted",
+    "--tc-text-on-accent",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tone-amber-bg",
+    "--tc-tone-amber-fg",
+    "--tc-tone-amber-solid",
+    "--tc-tone-pink-bg",
+    "--tc-tone-pink-fg",
+    "--tc-tone-pink-solid",
+    "--tc-tone-rose-bg",
+    "--tc-tone-rose-fg",
+    "--tc-tone-rose-solid",
+    "--tc-tone-teal-bg",
+    "--tc-tone-teal-fg",
+    "--tc-tone-violet-bg",
+    "--tc-tone-violet-fg",
+    "--tc-tone-violet-solid",
+    "--tc-tracking-snug",
+    "--tc-violet-600"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "Stories",
+   "exported": true,
+   "props": [
+    {
+     "name": "seen",
+     "type": "StorySeen",
+     "optional": true,
+     "description": "The item ids that have been seen – controlled when given"
+    },
+    {
+     "name": "defaultSeen",
+     "type": "StorySeen",
+     "optional": true,
+     "description": "The seen item ids on mount when `seen` isn't controlled"
+    },
+    {
+     "name": "onSeenChange",
+     "type": "(seen: StorySeen, item: StoryItem, person: StoryPerson) => void",
+     "optional": true,
+     "description": "An unseen item was shown: `seen` is the set (or record) with it added"
+    },
+    {
+     "name": "open",
+     "type": "StoryOpen",
+     "optional": true,
+     "description": "What the viewer shows ({ person, item } ids), or null when closed – controlled when given"
+    },
+    {
+     "name": "defaultOpen",
+     "type": "StoryOpen",
+     "optional": true,
+     "description": "What the viewer shows on mount when `open` isn't controlled"
+    },
+    {
+     "name": "onOpenChange",
+     "type": "(open: StoryOpen) => void",
+     "optional": true,
+     "description": "The viewer is opening, stepping to another item, or closing (null)"
+    },
+    {
+     "name": "onAdd",
+     "type": "() => void",
+     "optional": true,
+     "description": "Shows the \"add\" tile first in the row; called when it's activated"
+    },
+    {
+     "name": "onReply",
+     "type": "(text: string, item: StoryItem, person: StoryPerson) => void",
+     "optional": true,
+     "description": "Shows a reply field in the viewer; called with the text when a reply is sent"
+    }
+   ],
+   "hides": [
+    "seen",
+    "open",
+    "addable",
+    "replyable",
+    "children"
+   ],
+   "events": {
+    "tc-open-change": null,
+    "tc-seen-change": "onSeenChange",
+    "tc-reply": "onReply",
+    "tc-add": "onAdd"
+   }
+  }
+ ],
+ "changelog": [
+  "**Feedback and onboarding:** - `tc-stories`: a gradient ring for new updates that opens a modal viewer; - `tc-background-tasks`."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-stories",
+   "className": "TcStories",
+   "module": "trenchcoat/stories",
+   "data": [
+    "people",
+    "seen",
+    "open"
+   ],
+   "attributes": [
+    {
+     "name": "addable",
+     "attribute": "addable"
+    },
+    {
+     "name": "addLabel",
+     "attribute": "add-label"
+    },
+    {
+     "name": "addAvatar",
+     "attribute": "add-avatar"
+    },
+    {
+     "name": "replyable",
+     "attribute": "replyable"
+    },
+    {
+     "name": "duration",
+     "attribute": "duration"
+    },
+    {
+     "name": "autoplay",
+     "attribute": "autoplay"
+    },
+    {
+     "name": "muted",
+     "attribute": "muted"
+    },
+    {
+     "name": "label",
+     "attribute": "label"
+    },
+    {
+     "name": "newLabel",
+     "attribute": "new-label"
+    },
+    {
+     "name": "seenLabel",
+     "attribute": "seen-label"
+    },
+    {
+     "name": "emptyLabel",
+     "attribute": "empty-label"
+    },
+    {
+     "name": "replyLabel",
+     "attribute": "reply-label"
+    },
+    {
+     "name": "sendLabel",
+     "attribute": "send-label"
+    },
+    {
+     "name": "closeLabel",
+     "attribute": "close-label"
+    },
+    {
+     "name": "pauseLabel",
+     "attribute": "pause-label"
+    },
+    {
+     "name": "playLabel",
+     "attribute": "play-label"
+    },
+    {
+     "name": "muteLabel",
+     "attribute": "mute-label"
+    },
+    {
+     "name": "unmuteLabel",
+     "attribute": "unmute-label"
+    },
+    {
+     "name": "previousLabel",
+     "attribute": "previous-label"
+    },
+    {
+     "name": "nextLabel",
+     "attribute": "next-label"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-open-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-seen-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-reply",
+     "cancelable": false
+    },
+    {
+     "name": "tc-add",
+     "cancelable": false
+    }
+   ],
+   "controlled": [
+    {
+     "property": "seen",
+     "event": "tc-seen-change"
+    },
+    {
+     "property": "open",
+     "event": "tc-open-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "itself",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "dialog",
+    "name": "<dialog> and showModal()",
+    "bcd": "api.HTMLDialogElement.showModal",
+    "versions": {
+     "chrome": "37",
+     "edge": "79",
+     "firefox": "98",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Modals trap focus, close on Escape and sit in the top layer.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "aspect-ratio",
+    "name": "aspect-ratio",
+    "bcd": "css.properties.aspect-ratio",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "89",
+     "safari": "15",
+     "safari_ios": "15"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "conic-gradient",
+    "name": "conic-gradient()",
+    "bcd": "css.types.gradient.conic-gradient",
+    "versions": {
+     "chrome": "69",
+     "edge": "79",
+     "firefox": "83",
+     "safari": "12.1",
+     "safari_ios": "12.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "scrollbar-width",
+    "name": "scrollbar-width",
+    "bcd": "css.properties.scrollbar-width",
+    "versions": {
+     "chrome": "121",
+     "edge": "121",
+     "firefox": "64",
+     "safari": "18.2",
+     "safari_ios": "18.2"
+    },
+    "progressive": true,
+    "without": "Scrollbars keep the browser's default width.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "text-wrap-balance",
+    "name": "text-wrap: balance",
+    "bcd": "css.properties.text-wrap.balance",
+    "versions": {
+     "chrome": "114",
+     "edge": "114",
+     "firefox": "121",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": true,
+    "without": "Titles break where the line fills up instead of into even lines.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "overscroll-contain",
+    "name": "overscroll-behavior: contain",
+    "bcd": "css.properties.overscroll-behavior.contain",
+    "versions": {
+     "chrome": "63",
+     "edge": "18",
+     "firefox": "59",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "Scrolling past the end of a list carries on scrolling the page.",
+    "via": [
+     "itself"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [
+   "requestAnimationFrame, cancelled"
+  ],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 37321,
+  "gzip": 11346
+ }
+}

@@ -25,7 +25,7 @@ import { FocusRescueController, OffScreenController } from "./internal/controlle
  * tc-split-change – preventDefault() and pass the value back to own it.
  *
  * Keyboard (the WAI-ARIA grid pattern): arrows move between tiles, Home/End to the row's ends, Ctrl+Home/End to the
- * first and last tile. Enter moves into the tile's actions (Tab cycles them, Escape goes back to the tile); F2 edits
+ * first and last tile. With `openable`, Space or O fires tc-open. Enter moves into the tile's actions (Tab cycles them, Escape goes back to the tile); F2 edits
  * the alt text; R, U, C and D regenerate, upscale, compare and download the focused tile. The compare divider is a
  * slider: arrows (Shift for 10), Page Up/Down, Home/End; Escape closes the comparison.
  */
@@ -52,7 +52,16 @@ export type ImageGridTile = {
   label?: string;
   /** File name for downloads – from the heading and the tile number by default */
   filename?: string;
+  /** A short status pill in the tile's top-left corner – "Attested", "Unverified", "Draft" */
+  badge?: string;
+  /** The badge's colour – "neutral" by default */
+  badgeTone?: ImageGridBadgeTone;
+  /** A short note beside the tile number – "3 claims", "×2" */
+  meta?: string;
 };
+
+/** The colours a tile badge can take */
+export type ImageGridBadgeTone = "neutral" | "success" | "warning" | "danger" | "info";
 
 export type ImageGridAction = "regenerate" | "upscale" | "compare" | "download";
 
@@ -70,6 +79,8 @@ const ALL_ACTIONS: ImageGridAction[] = ["regenerate", "upscale", "compare", "dow
 /* ---------- Helpers ---------- */
 
 const statusOf = (t: ImageGridTile): ImageGridTileStatus => t.status ?? "done";
+const TONES = new Set<ImageGridBadgeTone>(["neutral", "success", "warning", "danger", "info"]);
+const toneOf = (t: ImageGridTile): ImageGridBadgeTone => (t.badgeTone && TONES.has(t.badgeTone) ? t.badgeTone : "neutral");
 const labelOf = (t: ImageGridTile, i: number) => t.label ?? `Variation ${i + 1}`;
 const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
 const percent = (p: number) => `${Math.round(clamp(p, 0, 1) * 100)}%`;
@@ -132,6 +143,7 @@ let instances = 0;
 /**
  * Generated images as a grid of variations: regenerate one, upscale, compare two, download, alt text for each.
  * @tag tc-image-grid
+ * @fires tc-open - A done tile was opened (its image clicked, or Space or O on the tile) – only when `openable` is set. Detail: ImageGridTileEvent ({ tile, index })
  * @fires tc-regenerate - Regenerate (or Try again) on a tile; the app answers by updating it. Detail: ImageGridTileEvent ({ tile, index })
  * @fires tc-upscale - Upscale on a done tile; the app answers by updating it. Detail: ImageGridTileEvent ({ tile, index })
  * @fires tc-download - Download on a done tile. Cancelable: unless prevented, the image is saved. Detail: ImageGridTileEvent ({ tile, index })
@@ -158,6 +170,10 @@ export class TcImageGrid extends TcElement {
   @property({ attribute: false }) accessor compare: [string, string] | null = null;
   /** Where the compare divider is: 0–100, percent from the left */
   @property({ type: Number }) accessor split = 50;
+  /** Done tiles open: clicking the image, or Space or O on the tile, fires tc-open (for a viewer or a detail pane) */
+  @property({ type: Boolean, reflect: true }) accessor openable = false;
+  /** Grow to the container's width instead of stopping at 560px */
+  @property({ type: Boolean, reflect: true }) accessor fill = false;
 
   /** @internal The tile that holds the grid's tab stop */
   @state() accessor active = 0;
@@ -283,6 +299,11 @@ export class TcImageGrid extends TcElement {
 
   /* ---------- Actions ---------- */
 
+  private open(i: number) {
+    const tile = this.tiles[i];
+    if (!this.openable || !tile || statusOf(tile) !== "done") return;
+    this.emit<ImageGridTileEvent>("tc-open", { tile, index: i });
+  }
   private regenerate(i: number) {
     const tile = this.tiles[i];
     if (!tile || statusOf(tile) === "pending" || !this.enabled.has("regenerate")) return;
@@ -457,7 +478,13 @@ export class TcImageGrid extends TcElement {
       return;
     }
     if (e.altKey || mod || e.shiftKey) return;
+    if (this.openable && e.key === " ") {
+      e.preventDefault();
+      this.open(i);
+      return;
+    }
     const shortcut: Record<string, (i: number) => void> = { r: (x) => this.regenerate(x), u: (x) => this.upscale(x), c: (x) => this.toggleCompare(x), d: (x) => this.download(x) };
+    if (this.openable) shortcut.o = (x) => this.open(x);
     const run = shortcut[e.key.toLowerCase()];
     if (run) {
       e.preventDefault();
@@ -559,10 +586,12 @@ export class TcImageGrid extends TcElement {
         </div>
       </div>`;
     }
-    return html`<div class="ui-igrid__media">
+    return html`<div class="ui-igrid__media" @click=${() => this.open(i)}>
       ${t.src ? keyed(t.src, html`<img class="ui-igrid__img" src=${t.src} alt=${t.alt} draggable="false" decoding="async" />`) : nothing}
       <span class="ui-igrid__chips" aria-hidden="true"
-        ><span class="ui-igrid__chip" data-text=${i + 1}></span>${t.upscaled ? html`<span class="ui-igrid__chip ui-igrid__chip-hd" data-text="Upscaled">${glyph(icons.hd)}</span>` : nothing}</span
+        ><span class="ui-igrid__chip" data-text=${i + 1}></span>${t.upscaled ? html`<span class="ui-igrid__chip ui-igrid__chip-hd" data-text="Upscaled">${glyph(icons.hd)}</span>` : nothing}${t.meta
+          ? html`<span class="ui-igrid__chip ui-igrid__meta" data-text=${t.meta}></span>`
+          : nothing}</span
       >
     </div>`;
   }
@@ -637,6 +666,7 @@ export class TcImageGrid extends TcElement {
           : t.alt.trim()
             ? `${t.alt}${t.upscaled ? ", upscaled" : ""}`
             : "No alt text";
+    const extra = [t.badge, status === "done" ? t.meta : undefined].filter(Boolean).join(", ");
     return html`<div
       class="ui-igrid__tile"
       role="gridcell"
@@ -645,10 +675,11 @@ export class TcImageGrid extends TcElement {
       data-id=${t.id}
       data-status=${status}
       ?data-picked=${this.picking === t.id}
-      aria-label=${`${label}: ${what}`}
+      aria-label=${`${label}: ${what}${extra ? `. ${extra}` : ""}`}
       aria-describedby=${`${this.uid}-keys`}
     >
-      ${this.renderMedia(t, i, label)} ${this.renderTools(t, i, label)} ${this.renderAlt(t, i, label)}
+      ${this.renderMedia(t, i, label)}${t.badge ? html`<span class="ui-igrid__badge" data-tone=${toneOf(t)} aria-hidden="true" data-text=${t.badge}></span>` : nothing}
+      ${this.renderTools(t, i, label)} ${this.renderAlt(t, i, label)}
     </div>`;
   }
 
@@ -764,7 +795,7 @@ export class TcImageGrid extends TcElement {
     const foot = this.renderFoot(pair);
     return html`
       ${clean ? html`<div class="ui-igrid__card">${head}${body}${foot}</div>` : html`${head}<div class="ui-igrid__card">${body}</div>${foot}`}
-      <span class="ui-igrid__sr" id=${`${this.uid}-keys`}>Enter for actions, F2 to edit alt text, R regenerate, U upscale, C compare, D download</span>
+      <span class="ui-igrid__sr" id=${`${this.uid}-keys`}>${this.openable ? "Space to open, " : ""}Enter for actions, F2 to edit alt text, R regenerate, U upscale, C compare, D download</span>
       <span class="ui-igrid__sr" role="status">${this.said}</span>
     `;
   }
@@ -811,6 +842,8 @@ export class TcImageGrid extends TcElement {
   text-align: left;
   -webkit-font-smoothing: antialiased;
 }
+/* fill: as wide as the container */
+[data-ui="igrid"][fill] { max-width: none; }
 [data-ui="igrid"] *, [data-ui="igrid"] *::before, [data-ui="igrid"] *::after { box-sizing: border-box; }
 :where([data-ui="igrid"]) button { margin: 0; padding: 0; border: 0; background: none; font: inherit; color: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 :where([data-ui="igrid"]) svg { display: block; flex: none; }
@@ -844,7 +877,16 @@ export class TcImageGrid extends TcElement {
 /* Number and Upscaled, bottom left */
 .ui-igrid__chips { position: absolute; left: var(--tc-space-2); bottom: var(--tc-space-2); display: flex; gap: var(--tc-space-1); pointer-events: none; }
 .ui-igrid__chip { display: inline-flex; align-items: center; gap: var(--tc-space-1); min-width: var(--tc-pill-h); height: var(--tc-pill-h); padding: 0 var(--tc-space-1-5); border-radius: var(--tc-pill-radius); background: color-mix(in srgb, var(--tc-surface-raised) 90%, transparent); box-shadow: var(--tc-shadow-control); font-size: var(--tc-pill-font-size); font-weight: var(--tc-pill-font-weight); line-height: var(--tc-line-height-none); font-variant-numeric: tabular-nums; color: var(--tc-text-primary); justify-content: center; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
-.ui-igrid__chip::after, .ui-igrid__alt-tag::after { content: attr(data-text); content: attr(data-text) / ""; }
+.ui-igrid__meta { padding: 0 var(--tc-space-2); box-shadow: 0 0 0 var(--tc-hairline) var(--tc-border-default), var(--tc-shadow-control); }  /* a hairline edge so it reads on a white image */
+/* Openable: the image is the way in */
+[data-ui="igrid"][openable] .ui-igrid__tile[data-status="done"] .ui-igrid__media { cursor: zoom-in; }
+/* The badge, top left: a status pill the app sets per tile – its tint laid over an opaque surface, so it reads on any image */
+.ui-igrid__badge { --tc-image-grid-badge: transparent; position: absolute; top: var(--tc-space-2); left: var(--tc-space-2); max-width: calc(50% - var(--tc-space-2)); overflow: hidden; height: var(--tc-pill-h); padding: 0 var(--tc-pill-px); border-radius: var(--tc-pill-radius); background: linear-gradient(var(--tc-image-grid-badge), var(--tc-image-grid-badge)), var(--tc-surface-raised); box-shadow: var(--tc-shadow-control); font-size: var(--tc-pill-font-size); font-weight: var(--tc-pill-font-weight); line-height: var(--tc-pill-h); color: var(--tc-text-secondary); white-space: nowrap; text-overflow: ellipsis; pointer-events: none; }
+.ui-igrid__badge[data-tone="success"] { --tc-image-grid-badge: var(--tc-status-success-bg); color: var(--tc-status-success-fg); }
+.ui-igrid__badge[data-tone="warning"] { --tc-image-grid-badge: var(--tc-status-warning-bg); color: var(--tc-status-warning-fg); }
+.ui-igrid__badge[data-tone="danger"] { --tc-image-grid-badge: var(--tc-status-danger-bg); color: var(--tc-status-danger-fg); }
+.ui-igrid__badge[data-tone="info"] { --tc-image-grid-badge: var(--tc-status-info-bg); color: var(--tc-status-info-fg); }
+.ui-igrid__chip::after, .ui-igrid__alt-tag::after, .ui-igrid__badge::after { content: attr(data-text); content: attr(data-text) / ""; }
 .ui-igrid__chip .ui-igrid__glyph { width: 12px; height: 12px; }
 /* ----- Pending: a shimmer sweeps across while it generates ----- */
 .ui-igrid__pending::before { content: ""; position: absolute; inset: 0; background: linear-gradient(100deg, transparent 25%, var(--tc-shimmer) 50%, transparent 75%); transform: translateX(-100%); animation: ui-igrid-sweep var(--tc-duration-shimmer) linear infinite; pointer-events: none; }

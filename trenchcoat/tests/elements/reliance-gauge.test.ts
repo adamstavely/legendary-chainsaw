@@ -11,7 +11,7 @@ import { createRoot } from "react-dom/client";
 import { act } from "react";
 import { afterEach, describe, expect, test } from "vitest";
 import "../../src/elements/reliance-gauge";
-import type { RelianceSignal, RelianceWindow, TcRelianceGauge } from "../../src/elements/reliance-gauge";
+import type { RelianceAgent, RelianceDomain, RelianceSignal, RelianceWindow, TcRelianceGauge } from "../../src/elements/reliance-gauge";
 import { RelianceGauge } from "../../src/elements/react/reliance-gauge";
 import { cleanup, fixture, settle } from "./helpers";
 
@@ -303,4 +303,108 @@ describe("tc-reliance-gauge", () => {
       expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
     });
   }
+});
+
+describe("tc-reliance-gauge – calibration by domain, agent ranking, the tray", () => {
+  const DOMAINS: RelianceDomain[] = [
+    { id: "pay", label: "Payment terms", confidence: 0.86, accuracy: 0.84, count: 142 },
+    { id: "liab", label: "Liability caps", confidence: 0.88, accuracy: 0.66 },
+    { id: "term", label: "Termination", confidence: 0.71, accuracy: 0.83, count: 61 },
+    { id: "data", label: "Data protection", confidence: 0.79, accuracy: 0.76, band: "over" },
+  ];
+  const AGENTS: RelianceAgent[] = [
+    { id: "r", label: "Redline drafter", rating: 0.67 },
+    { id: "s", label: "Clause summariser", rating: 0.91, detail: "412 answers" },
+    { id: "o", label: "Obligation extractor", rating: 0.84 },
+  ];
+  const withData = (look = "standard") =>
+    fixture<TcRelianceGauge>(html`<tc-reliance-gauge look=${look} reliance="0.9" accuracy="0.73" .domains=${DOMAINS} .agents=${AGENTS}></tc-reliance-gauge>`);
+
+  test("neither section shows without data", async () => {
+    const el = await gauge();
+    expect(el.querySelector(".ui-rlg__domains")).toBeNull();
+    expect(el.querySelector(".ui-rlg__agents")).toBeNull();
+  });
+
+  test("the calibration table: a row per domain, banded by how far confidence sits from accuracy", async () => {
+    const el = await withData();
+    const table = el.querySelector<HTMLTableElement>(".ui-rlg__domains")!;
+    expect(document.getElementById(table.getAttribute("aria-labelledby")!)!.textContent).toBe("Calibration by domain");
+    expect([...table.querySelectorAll("thead th")].map((th) => plain(th.textContent))).toEqual(["Domain", "Confidence", "Accuracy", "Calibration"]);
+    const rows = [...table.querySelectorAll<HTMLTableRowElement>("tbody tr")];
+    expect(rows.map((r) => r.querySelector("th")!.getAttribute("scope"))).toEqual(["row", "row", "row", "row"]);
+    expect(rows.map((r) => r.dataset.band)).toEqual(["calibrated", "over", "under", "over"]);
+    expect(rows.map((r) => plain(r.querySelector(".ui-rlg__cal")!.textContent))).toEqual(["Well calibrated", "Over-confident", "Under-confident", "Over-confident"]);
+    expect(plain(rows[0].querySelector("th")!.textContent)).toBe("Payment terms142 outputs");
+    expect([...rows[1].querySelectorAll(".ui-rlg__num")].map((c) => plain(c.textContent))).toEqual(["Confidence 88%", "Accuracy 66%"]);
+    expect(el.calibrationOf(DOMAINS[2])).toBe("under");
+  });
+
+  test("the tolerance, the labels and the caption are properties", async () => {
+    const el = await withData();
+    el.calibrationTolerance = 0.25;
+    el.calibrationLabels = { calibrated: "On target", over: "Too sure" };
+    el.domainsLabel = "By practice area";
+    await settle();
+    const rows = [...el.querySelectorAll<HTMLTableRowElement>(".ui-rlg__domains tbody tr")];
+    // Within 0.25 everything is calibrated – except the row whose band is set outright
+    expect(rows.map((r) => r.dataset.band)).toEqual(["calibrated", "calibrated", "calibrated", "over"]);
+    expect(plain(rows[3].querySelector(".ui-rlg__cal")!.textContent)).toBe("Too sure");
+    expect(plain(rows[0].querySelector(".ui-rlg__cal")!.textContent)).toBe("On target");
+    expect(plain(el.querySelector(".ui-rlg__section .ui-rlg__caption")!.textContent)).toBe("By practice area");
+  });
+
+  test("agents are ranked by their rating, highest first, as an ordered list", async () => {
+    const el = await withData();
+    const list = el.querySelector<HTMLOListElement>("ol.ui-rlg__agents")!;
+    expect(document.getElementById(list.getAttribute("aria-labelledby")!)!.textContent).toBe("Agents by rating");
+    const items = [...list.querySelectorAll(".ui-rlg__agent")];
+    expect(items.map((i) => plain(i.querySelector(".ui-rlg__agent-name")!.textContent))).toEqual(["Clause summariser412 answers", "Obligation extractor", "Redline drafter"]);
+    expect(items.map((i) => plain(i.querySelector(".ui-rlg__agent-value")!.textContent))).toEqual([", rated 0.91", ", rated 0.84", ", rated 0.67"]);
+    expect(plain(items[0].querySelector(".ui-rlg__agent-detail")!.textContent)).toBe("412 answers");
+    // The bars are drawn against the top rating; the app's array is left as it was
+    expect((items[0].querySelector(".ui-rlg__agent-bar > span") as HTMLElement).style.width).toBe("100%");
+    expect(AGENTS[0].id).toBe("r");
+    el.agentsLabel = "Ranking";
+    await settle();
+    expect(plain(document.getElementById(list.getAttribute("aria-labelledby")!)!.textContent)).toBe("Ranking");
+  });
+
+  test("Standard sits on the library's tray, with the card on the tray's surface; Clean is one card", async () => {
+    const probe = await fixture<HTMLDivElement>(html`<div style="background: var(--tc-surface-tray)"><div style="background: var(--tc-surface-on-tray)"></div></div>`);
+    const el = await withData();
+    expect(getComputedStyle(el).backgroundColor).toBe(getComputedStyle(probe).backgroundColor);
+    expect(getComputedStyle(el.querySelector(".ui-rlg__card")!).backgroundColor).toBe(getComputedStyle(probe.firstElementChild!).backgroundColor);
+    // The cuts in the arc and meters are the card's colour, so they read as gaps
+    expect(getComputedStyle(el.querySelector(".ui-rlg__notch")!).stroke).toBe(getComputedStyle(probe.firstElementChild!).backgroundColor);
+    const clean = await withData("clean");
+    expect(getComputedStyle(clean.querySelector(".ui-rlg__notch")!).stroke).toBe(getComputedStyle(clean).backgroundColor);
+  });
+
+  test("the wrapper: domains and agents reach the element", async () => {
+    const host = document.createElement("div");
+    document.body.append(host);
+    const root = createRoot(host);
+    await act(async () => root.render(React.createElement(RelianceGauge, { reliance: 0.9, accuracy: 0.73, domains: DOMAINS, agents: AGENTS, calibrationTolerance: 0.1 })));
+    await settle();
+    const el = host.querySelector<TcRelianceGauge>("tc-reliance-gauge")!;
+    expect(el.querySelectorAll(".ui-rlg__domains tbody tr")).toHaveLength(4);
+    expect(el.calibrationTolerance).toBe(0.1);
+    expect(el.querySelectorAll(".ui-rlg__agent")).toHaveLength(3);
+    await act(async () => root.unmount());
+  });
+
+  for (const theme of ["light", "dark"])
+    test(`axe: the table and the ranking pass in both looks (${theme})`, async () => {
+      const wrap = await fixture(html`<div data-tc-theme=${theme} style="background: ${theme === "dark" ? "#0e0e10" : "#fff"}; padding: 8px">
+        ${looks.map(
+          (look) => html`<tc-reliance-gauge look=${look} aria-label=${`Reliance ${look}`} reliance="0.9" accuracy="0.73" .domains=${DOMAINS} .agents=${AGENTS}></tc-reliance-gauge>`,
+        )}
+      </div>`);
+      await settle();
+      await wait(50);
+      await Promise.all(document.getAnimations().map((x) => (x.finish(), x.finished)));
+      const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
+      expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
+    });
 });

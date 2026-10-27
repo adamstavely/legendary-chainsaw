@@ -1,5 +1,6 @@
 import { html, nothing, svg, type PropertyValues } from "lit";
 import { property, state } from "lit/decorators.js";
+import { ifDefined } from "lit/directives/if-defined.js";
 import { keyed } from "lit/directives/keyed.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
@@ -18,7 +19,15 @@ import { OnScreenController } from "./internal/controllers";
  * flags change, the new flags win. `auto-play` ticks the open steps one after another, then starts over – it stops on
  * the first interaction, shows a Pause / Play button (WCAG 2.2.2), waits while off screen and doesn't run when the
  * user asked for reduced motion.
+ *
+ * Steps the app drives: a step's `state` ("failed" or "pending") shows in place of its check and says so in words; such
+ * a step, a `disabled` one and a `readonly` one can't be ticked. `readonly` on the tracker turns the whole list into a
+ * status list – no checkboxes, no auto play. `done-style="plain"` drops the line through done steps; `fit` widens the
+ * card ("wide") or lets it fill its container ("fill").
  */
+
+/** A step the app drives: "failed" (it went wrong) or "pending" (under way) */
+export type ProgressStepState = "failed" | "pending";
 
 export type ProgressStep = {
   id: string;
@@ -26,7 +35,20 @@ export type ProgressStep = {
   done?: boolean;
   /** Small icon on the right, e.g. the app the step belongs to (cloned) */
   icon?: Element;
+  /** "failed" or "pending": shown in place of the check and in words; the step doesn't count as done and can't be ticked */
+  state?: ProgressStepState;
+  /** Can't be ticked or cleared – it stays in the tab order, dimmed and announced as unavailable */
+  disabled?: boolean;
+  /** Shows its state as text, not as a checkbox */
+  readonly?: boolean;
 };
+
+/** How done steps look: a line through them ("strike"), or grayed only ("plain") */
+export type ProgressDoneStyle = "strike" | "plain";
+/** The card's width: "compact" (up to 360 px), "wide" (up to 560 px) or "fill" (its container's width) */
+export type ProgressFit = "compact" | "wide" | "fill";
+
+const STATUS_TEXT = { done: "Done", open: "Not done", failed: "Failed", pending: "In progress" } as const;
 
 export type ProgressDoneChange = { done: string[]; steps: ProgressStep[] };
 
@@ -57,6 +79,12 @@ export class TcProgressTracker extends TcElement {
   @property({ type: Boolean, attribute: "auto-play" }) accessor autoPlay = false;
   /** Pause between two automatic steps, in ms */
   @property({ type: Number }) accessor interval = 2200;
+  /** A status list: every step shows its state as text, nothing can be ticked and auto play stays off */
+  @property({ type: Boolean, reflect: true }) accessor readonly = false;
+  /** How done steps look: "strike" draws a line through them, "plain" only grays them */
+  @property({ attribute: "done-style", reflect: true }) accessor doneStyle: ProgressDoneStyle = "strike";
+  /** The card's width: "compact" (up to 360 px), "wide" (up to 560 px) or "fill" (no maximum) */
+  @property({ reflect: true }) accessor fit: ProgressFit = "compact";
 
   /** @internal Own ticks, with the steps' flags they were made on */
   @state() accessor own: { base: string; ids: string[] } | undefined = undefined;
@@ -101,8 +129,17 @@ export class TcProgressTracker extends TcElement {
     return this.own.base === key ? this.own.ids : flagged;
   }
 
+  /** A step a click or auto play may tick */
+  private canTick(step: ProgressStep) {
+    return !this.readonly && !step.readonly && !step.disabled && !step.state;
+  }
+
+  private get tickable() {
+    return this.steps.filter((s) => this.canTick(s));
+  }
+
   private get playing() {
-    return this.autoPlay && !this.interrupted && !this.still;
+    return this.autoPlay && !this.interrupted && !this.still && this.tickable.length > 0;
   }
 
   private commit(next: Set<string>) {
@@ -114,6 +151,8 @@ export class TcProgressTracker extends TcElement {
   }
 
   private toggle(id: string) {
+    const step = this.steps.find((s) => s.id === id);
+    if (!step || !this.canTick(step)) return;
     const next = new Set(this.doneIds);
     if (next.has(id)) next.delete(id);
     else next.add(id);
@@ -124,7 +163,7 @@ export class TcProgressTracker extends TcElement {
   private autoStep = () => {
     this.timerKey = "";
     const done = new Set(this.doneIds);
-    const open = this.steps.find((s) => !done.has(s.id));
+    const open = this.tickable.find((s) => !done.has(s.id));
     if (open) this.toggle(open.id);
     else this.commit(new Set(this.flagged));
     this.requestUpdate();
@@ -140,10 +179,10 @@ export class TcProgressTracker extends TcElement {
 
   protected override updated() {
     const done = new Set(this.doneIds);
-    const count = this.steps.filter((s) => done.has(s.id)).length;
+    const count = this.steps.filter((s) => !s.state && done.has(s.id)).length;
     this.toggleAttribute("data-complete", count === this.steps.length);
     // The timer restarts whenever what it depends on changes, like the React effect
-    const allDone = count === this.steps.length;
+    const allDone = this.tickable.every((s) => done.has(s.id));
     const run = this.playing && this.screen.onScreen && this.isConnected;
     const key = run ? `${[...done].join("\u0000")}|${allDone}|${this.interval}|${this.steps.length}` : "";
     if (key === this.timerKey) return;
@@ -155,7 +194,7 @@ export class TcProgressTracker extends TcElement {
   protected override render() {
     const done = new Set(this.doneIds);
     const total = this.steps.length;
-    const count = this.steps.filter((s) => done.has(s.id)).length;
+    const count = this.steps.filter((s) => !s.state && done.has(s.id)).length;
     const progress = total ? count / total : 0;
     const playing = this.playing;
     // The header (.tc-head): on the tray above the card in Standard, the card's first row in Clean
@@ -164,7 +203,7 @@ export class TcProgressTracker extends TcElement {
       title: this.heading,
       aside: html`
         <span class="ui-progress__count" aria-hidden="true">${keyed(count, html`<span class="ui-progress__digit">${count}</span>`)}/${total}</span>
-        ${this.autoPlay
+        ${this.autoPlay && this.tickable.length
           ? html`<button
               type="button"
               class="ui-progress__play"
@@ -195,13 +234,34 @@ export class TcProgressTracker extends TcElement {
       </div>
       <ul class="ui-progress__list">
         ${this.steps.map((step, index) => {
-          const checked = done.has(step.id);
+          const checked = !step.state && done.has(step.id);
+          const status = step.state ?? (checked ? "done" : "open");
+          const control = !this.readonly && !step.readonly && !step.state;
+          // Failed and pending say so on screen; a read-only row says done / not done to screen readers only
+          const said = step.state
+            ? html`<span class="ui-progress__sr">, </span><span class="ui-progress__state">${STATUS_TEXT[step.state]}</span>`
+            : control
+              ? nothing
+              : html`<span class="ui-progress__sr">, ${STATUS_TEXT[status].toLowerCase()}</span>`;
+          const inner = html`<span class="ui-progress__check" aria-hidden="true">${step.state === "failed"
+              ? html`<svg viewBox="0 0 24 24">${svg`<path d="M8 8l8 8M16 8l-8 8"></path>`}</svg>`
+              : step.state === "pending"
+                ? nothing
+                : html`<svg viewBox="0 0 24 24">${svg`<path d="M6.5 12.5l3.5 3.5 7.5-8" pathLength="1"></path>`}</svg>`}</span>
+            <span class="ui-progress__label"><span>${step.label}</span>${said}</span>
+            ${step.icon ? html`<span class="ui-progress__icon" aria-hidden="true">${step.icon.cloneNode(true)}</span>` : nothing}`;
           return html`<li style=${styleMap({ animationDelay: `${180 + index * 90}ms` })}>
-            <button type="button" role="checkbox" aria-checked=${checked ? "true" : "false"} class="ui-progress__step" @click=${() => this.toggle(step.id)}>
-              <span class="ui-progress__check" aria-hidden="true"><svg viewBox="0 0 24 24">${svg`<path d="M6.5 12.5l3.5 3.5 7.5-8" pathLength="1"></path>`}</svg></span>
-              <span class="ui-progress__label"><span>${step.label}</span></span>
-              ${step.icon ? html`<span class="ui-progress__icon" aria-hidden="true">${step.icon.cloneNode(true)}</span>` : nothing}
-            </button>
+            ${control
+              ? html`<button
+                  type="button"
+                  role="checkbox"
+                  aria-checked=${checked ? "true" : "false"}
+                  aria-disabled=${ifDefined(step.disabled ? "true" : undefined)}
+                  class="ui-progress__step"
+                  data-status=${status}
+                  @click=${() => this.toggle(step.id)}
+                >${inner}</button>`
+              : html`<div class="ui-progress__step" data-status=${status}>${inner}</div>`}
           </li>`;
         })}
       </ul>
@@ -241,6 +301,9 @@ export class TcProgressTracker extends TcElement {
   line-height: var(--tc-line-height-normal);
   text-align: left;
 }
+/* fit: "wide" for a page column, "fill" for whatever holds it */
+[data-ui="progress"][fit="wide"] { max-width: 560px; }
+[data-ui="progress"][fit="fill"] { max-width: none; }
 [data-ui="progress"] *,
 [data-ui="progress"] *::before,
 [data-ui="progress"] *::after {
@@ -356,9 +419,14 @@ export class TcProgressTracker extends TcElement {
   line-height: var(--tc-line-height-normal);
   transition: background-color var(--tc-duration-instant) var(--tc-ease-decelerate);
 }
-.ui-progress__step:hover {
+button.ui-progress__step:not([aria-disabled="true"]):hover {
   background: var(--tc-fill-hover);
 }
+/* A disabled step: dimmed, no hover, still reachable */
+.ui-progress__step[aria-disabled="true"] { cursor: not-allowed; color: var(--tc-text-disabled); }
+.ui-progress__step[aria-disabled="true"] .ui-progress__check { opacity: 0.6; }
+/* A status row (read only) isn't a control */
+div.ui-progress__step { cursor: default; }
 /* Rows sit edge to edge: the ring is drawn inside the row so it never overlaps its neighbour */
 .ui-progress__step:focus-visible {
   outline: var(--tc-focus-outline);
@@ -399,17 +467,17 @@ export class TcProgressTracker extends TcElement {
 }
 :where([data-look="standard"], [data-look="standard"] *).ui-progress__check svg { width: 14px; height: 14px; stroke: var(--tc-text-on-inverse); stroke-width: 2.4; }
 :where([data-look="clean"], [data-look="clean"] *).ui-progress__check svg { width: 12px; height: 12px; stroke: var(--tc-text-on-accent); stroke-width: 2.2; }
-:where([data-look="standard"], [data-look="standard"] *).ui-progress__step[aria-checked="true"] .ui-progress__check {
+:where([data-look="standard"], [data-look="standard"] *).ui-progress__step[data-status="done"] .ui-progress__check {
   background: var(--tc-surface-inverse);
   border-color: var(--tc-surface-inverse);
   animation: ui-progress-pop var(--tc-duration-slowest) var(--tc-ease-move);
 }
-:where([data-look="clean"], [data-look="clean"] *).ui-progress__step[aria-checked="true"] .ui-progress__check {
+:where([data-look="clean"], [data-look="clean"] *).ui-progress__step[data-status="done"] .ui-progress__check {
   background: var(--tc-accent);
   box-shadow: inset 0 0 0 1px transparent;
   animation: ui-progress-pop-clean var(--tc-duration-slowest) var(--tc-ease-move);
 }
-.ui-progress__step[aria-checked="true"] .ui-progress__check svg {
+.ui-progress__step[data-status="done"] .ui-progress__check svg {
   stroke-dashoffset: 0;
   transition: stroke-dashoffset var(--tc-duration-slower) var(--tc-ease-move) var(--tc-duration-fast);
 }
@@ -427,12 +495,42 @@ export class TcProgressTracker extends TcElement {
 }
 :where([data-look="standard"], [data-look="standard"] *).ui-progress__label > span { background: linear-gradient(currentColor, currentColor) 0 58% / 0% 1.5px no-repeat; }
 :where([data-look="clean"], [data-look="clean"] *).ui-progress__label > span { background: linear-gradient(var(--tc-text-disabled), var(--tc-text-disabled)) 0 60% / 0% 1px no-repeat; }
-.ui-progress__step[aria-checked="true"] .ui-progress__label {
+.ui-progress__step[data-status="done"] .ui-progress__label {
   color: var(--tc-text-muted);
 }
-.ui-progress__step[aria-checked="true"] .ui-progress__label > span { transition: background-size var(--tc-duration-slowest) var(--tc-ease-move) var(--tc-duration-base); }
-:where([data-look="standard"], [data-look="standard"] *).ui-progress__step[aria-checked="true"] .ui-progress__label > span { background-size: 100% 1.5px; }
-:where([data-look="clean"], [data-look="clean"] *).ui-progress__step[aria-checked="true"] .ui-progress__label > span { background-size: 100% 1px; }
+.ui-progress__step[data-status="done"] .ui-progress__label > span { transition: background-size var(--tc-duration-slowest) var(--tc-ease-move) var(--tc-duration-base); }
+[data-ui="progress"]:not([done-style="plain"]) :where([data-look="standard"], [data-look="standard"] *).ui-progress__step[data-status="done"] .ui-progress__label > span:first-child { background-size: 100% 1.5px; }
+[data-ui="progress"]:not([done-style="plain"]) :where([data-look="clean"], [data-look="clean"] *).ui-progress__step[data-status="done"] .ui-progress__label > span:first-child { background-size: 100% 1px; }
+/* Failed: a red ring with a cross; pending: a ring with a turning arc. Both say so in words after the label */
+.ui-progress__step[data-status="failed"] .ui-progress__check { border-color: var(--tc-status-danger-solid); box-shadow: inset 0 0 0 1px var(--tc-status-danger-solid); }
+:where([data-look="standard"], [data-look="standard"] *).ui-progress__step[data-status="failed"] .ui-progress__check { box-shadow: none; }
+.ui-progress__step[data-status="failed"] .ui-progress__check svg { stroke: var(--tc-status-danger-fg); stroke-dashoffset: 0; }
+.ui-progress__step[data-status="pending"] .ui-progress__check::after {
+  content: "";
+  position: absolute;
+  inset: -1.5px;
+  border: 1.5px solid transparent;
+  border-top-color: var(--tc-accent);
+  border-radius: 50%;
+  animation: ui-progress-spin var(--tc-duration-slowest) linear infinite;
+}
+:where([data-look="clean"], [data-look="clean"] *).ui-progress__step[data-status="pending"] .ui-progress__check::after { inset: 0; border-width: 1px; }
+.ui-progress__state {
+  margin-left: var(--tc-space-2);
+  font-size: var(--tc-font-size-sm);
+  font-weight: var(--tc-font-weight-medium);
+  white-space: nowrap;
+}
+.ui-progress__step[data-status="failed"] .ui-progress__state { color: var(--tc-status-danger-fg); }
+.ui-progress__step[data-status="pending"] .ui-progress__state { color: var(--tc-text-muted); }
+.ui-progress__sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
 .ui-progress__icon {
   flex: none;
   display: grid;
@@ -445,7 +543,7 @@ export class TcProgressTracker extends TcElement {
   width: 100%;
   height: 100%;
 }
-.ui-progress__step[aria-checked="true"] .ui-progress__icon {
+.ui-progress__step[data-status="done"] .ui-progress__icon {
   opacity: 0.45;
 }
 @keyframes ui-progress-pop {
@@ -486,6 +584,9 @@ export class TcProgressTracker extends TcElement {
 @keyframes ui-progress-roll {
   from { opacity: 0; transform: translateY(60%); }
   to { opacity: 1; transform: none; }
+}
+@keyframes ui-progress-spin {
+  to { transform: rotate(1turn); }
 }
 @keyframes ui-progress-shine {
   from { transform: translateX(100%); opacity: 1; }

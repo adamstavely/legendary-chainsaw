@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import type * as UI from "../../../src/elements/react";
 import type { PermissionDecision, PermissionPreviewItem } from "../../../src/elements/react";
+import { textButton } from "../demo-kit";
 
 const Star = () => (
   <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
@@ -32,18 +33,74 @@ const PREVIEW: PermissionPreviewItem[] = [
 
 /** The demo clock runs 60× real time so a 15-minute grant drains in ~15 seconds */
 const SPEED = 60;
+/** Emergency access lasts an hour here – the demo is the app, so it works out the time left and passes it in */
+const EMERGENCY_MS = 60 * 60_000;
+const leftText = (ms: number) => {
+  const m = Math.max(1, Math.ceil(ms / 60_000));
+  return m >= 60 ? `${Math.floor(m / 60)} h ${m % 60 ? `${m % 60} min` : ""}`.trim() : `${m} min`;
+};
+
+const ROLLBACK: PermissionPreviewItem[] = [
+  { id: "1", label: "orders-db → snapshot 02:10", meta: "41 min old" },
+  { id: "2", label: "Writes paused while it restores", meta: "~4 min" },
+];
 
 export default function Demo({ ui }: { ui: typeof UI }) {
   const { PermissionRequest } = ui;
   const [now, setNow] = useState(() => Date.now());
   const [last, setLast] = useState<PermissionDecision | null>(null);
+  const [emergency, setEmergency] = useState(false);
+  const [run, setRun] = useState(0);
+  const [granted, setGranted] = useState<number | null>(null);
   useEffect(() => {
     const id = window.setInterval(() => setNow((n) => n + 250 * SPEED), 250);
     return () => window.clearInterval(id);
   }, []);
+  const left = granted === null ? 0 : granted + EMERGENCY_MS - now;
+  const switchTo = (on: boolean) => {
+    setEmergency(on);
+    setGranted(null);
+    setLast(null);
+    setRun((n) => n + 1);
+  };
+  const caption = { fontSize: 12, color: "var(--tc-text-muted, light-dark(#646464, #9a9aa1))", textAlign: "center" as const };
+
+  if (emergency)
+    return (
+      <div style={{ width: "100%", maxWidth: 460, display: "grid", gap: 8 }}>
+        <PermissionRequest
+          key={`sos-${run}`}
+          agent={{ name: "Ops agent", model: "Claude Sonnet", avatar: <Star /> }}
+          action="restore the orders database"
+          target="prod / orders-db"
+          risk="destructive"
+          reason="Checkout has failed for 12 minutes after a bad migration. The on-call lead isn't answering; restoring the 02:10 snapshot brings orders back."
+          preview={ROLLBACK}
+          previewTitle="What the restore does"
+          scopes={["once", "emergency"]}
+          defaultScope="emergency"
+          emergencyRemaining={granted !== null && left > 0 ? leftText(left) : ""}
+          emergencyEnded={granted !== null && left <= 0}
+          reviewDue="by Fri 31 Oct"
+          onEmergencyRequest={() => setGranted(now)}
+          onDecisionChange={(d) => {
+            setLast(d);
+            if (!d) setGranted(null);
+          }}
+        />
+        <div style={caption}>
+          {granted === null ? "Emergency access: say why it can't wait, pick how urgent." : left > 0 ? "Active – the app reports the time left (60× here)." : "Ended – the review is due."}{" "}
+          <button type="button" style={textButton} onClick={() => switchTo(false)}>
+            Back to the normal request
+          </button>
+        </div>
+      </div>
+    );
+
   return (
     <div style={{ width: "100%", maxWidth: 460, display: "grid", gap: 8 }}>
       <PermissionRequest
+        key={`ask-${run}`}
         agent={{ name: "Coder", model: "Claude Sonnet", avatar: <Star /> }}
         action="push to main"
         target="acme/web"
@@ -57,8 +114,11 @@ export default function Demo({ ui }: { ui: typeof UI }) {
         now={now}
         onDecisionChange={setLast}
       />
-      <div style={{ fontSize: 12, color: "var(--tc-text-muted, light-dark(#646464, #9a9aa1))", textAlign: "center" }}>
-        {last === null ? "Clock runs 60× – a timed grant drains in seconds." : last.allow ? `Allowed (${last.scope})` : "Denied"}
+      <div style={caption}>
+        {last === null ? "Clock runs 60× – a timed grant drains in seconds." : last.allow ? `Allowed (${last.scope})` : "Denied"}{" "}
+        <button type="button" style={textButton} onClick={() => switchTo(true)}>
+          Show emergency access
+        </button>
       </div>
     </div>
   );

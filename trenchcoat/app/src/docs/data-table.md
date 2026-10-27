@@ -64,7 +64,7 @@ picker, ↑ / ↓ / Home / End move between choices, Enter or Space picks one, a
 The table is a `grid` named by the heading, with `aria-rowcount` and `aria-multiselectable`; rows carry
 `aria-rowindex`, so the count is right even when only part of a long table is rendered. Focus stays on the grid and
 `aria-activedescendant` points at the active cell; cells in the range are `aria-selected`, and read-only cells
-`aria-readonly`. Column headers carry `aria-sort`. Checkboxes are named “Select all rows” and “Select Linear” (the row's
+`aria-readonly`. Column headers carry `aria-sort`. When rows are selectable, checkboxes are named “Select all rows” and “Select Linear” (the row's
 title) with `aria-checked`, the header's is “mixed” when some rows are checked. Undo and Redo are named with their keys (“Undo (⌘ Z)”).
 A status region says how many rows are checked and, for a range, its summary: “2 rows selected. 6 values · Sum
 1,200”.
@@ -80,7 +80,9 @@ A status region says how many rows are checked and, for a range, its summary: �
 
 - Save with `tc-rows-change` – it fires for every edit, paste, clear, add, delete, undo and redo, with all the rows.
 - Pass new `rows` from the server when they change elsewhere; the table takes them and starts a fresh undo history.
-- Set `readonly` (or `editable={false}` in React) for tables people should only read and copy from.
+- Set `readonly` (or `editable={false}` in React) for tables people should only read and copy from. A read-only
+  table drops its row checkboxes; set `selectable` when people still need to pick rows from it, or
+  `selectable={false}` to drop them from an editable table.
 
 ## Don't
 

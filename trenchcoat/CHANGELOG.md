@@ -1,5 +1,64 @@
 # Changelog
 
+## Unreleased – remediation Part 6 (text selection, the rest of THEMIS, blocks, docs for every framework)
+
+See `audit/remediation-plan.md`, Part 6, and `audit/part6-brief.md`. Every new component is a Lit element with
+both looks, a React wrapper, tests in Chromium, Firefox and WebKit, a gallery demo and a docs page.
+
+### Added
+
+- **Text selection:**
+  - `tc-text-annotator`: highlight a passage and comment on it;
+  - `tc-response-selection`: select part of a model reply to reply to it or request an edit;
+  - `tc-selection-translate`: translate the selected text;
+  - `tc-isbn-details`: hover an ISBN for its book details.
+- **Feedback and onboarding:**
+  - `tc-stories`: a gradient ring for new updates that opens a modal viewer;
+  - `tc-background-tasks`.
+- **Trust & calibration**, from THEMIS and built domain-neutral:
+  - `tc-agreement-tracker`, `tc-confidence-brief`, `tc-capability-notice`, `tc-transcript-review`,
+    `tc-version-history`, `tc-session-context-bar`, `tc-evidence-coverage`, `tc-review-conflict`;
+  - `tc-handoff-brief`, `tc-engagement-quality`, `tc-knowledge-promotion`, `tc-friction-profile`,
+    `tc-reasoning-flags`.
+- **Blocks:** the five THEMIS blocks and the AI side pane. The side pane is a chat drawer about the page beside it.
+- **`tc-chat-composer` toolbar:**
+  - model picker, settings and prompt library;
+  - page context you can connect and disconnect;
+  - a disclaimer line under the input;
+  - `hide*` props for each piece.
+- **Docs on every page:**
+  - Usage and Frameworks tabs for HTML, React / Next.js, Vue / Nuxt, Angular and Svelte;
+  - a Browser support section with each component's minimum versions;
+  - a Performance section with bundle size, render times and runtime cost.
+
+  New foundations pages cover frameworks, browser support and performance. Components' fallback-only tokens now
+  show in the token table.
+- **Tooling:**
+  - `npm run measure:perf` writes `app/src/docs/perf.json`; `-- --missing` measures only new or changed elements;
+  - `npm run check:snippets` type-checks each page's framework snippets and is part of `npm run ci`;
+  - the browser feature table is `scripts/browser-features.json`.
+- **Shared code:**
+  - selection: `SelectionController`, `SelectionToolbarController`;
+  - popovers: `PopoverController` and `placePopover`, in the top layer with hover intent;
+  - `RequestController`, `internal/kit.ts`, `internal/source-line.ts`;
+  - the `--tc-highlight-*` tokens.
+
+### Changed
+
+- **Eight enhancements to existing components**, plus gap fixes:
+  - dialog actions, and dialog styles no longer leaking;
+  - progress-tracker states;
+  - data-table `selectable`;
+  - image-grid badges, meta, `openable` and fill;
+  - breakdown-chart wrap and fill;
+  - kpi-chart colours, `lowerIsBetter` and `deltaFormat`;
+  - ai-answer `hideActions`.
+- Popovers across the library share one helper.
+- `tc-evidence-coverage`'s types are `EvidenceCoverageStatus` and `EvidenceCoverageOpenChange`, so they don't clash
+  with coverage-matrix's.
+- CI moved to the repo root as `.github/workflows/trenchcoat-ci.yml`, so GitHub runs it. It runs only for changes
+  under `trenchcoat/`, and it now also checks the framework snippets.
+
 ## Unreleased – remediation Part 5 (more AI components, trust & calibration), the AI configuration rebuild and one card style
 
 See `audit/remediation-plan.md`, Part 5; `audit/ai-config-brief.md`; and `audit/style-drift.md`. Every new or

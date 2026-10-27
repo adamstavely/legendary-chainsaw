@@ -8,7 +8,8 @@ import type { Look } from "./internal/look";
  * <tc-validity-badge> – how fresh a piece of evidence is. Evidence ages: from the moment it was observed it moves
  * through four bands – high, good, aging, stale – at the pace of its decay profile (a price goes stale in a month, a
  * reference work in years). It can also be contested (other evidence disputes it) or superseded (something newer
- * replaces it), whatever its age.
+ * replaces it), whatever its age – and it can have changed since someone used it (the app knows; the badge says so
+ * in blue, with a sentence on what to do).
  *   · badge (the default): change-summary's tone mark – a small tinted square holding four signal bars, as many
  *     filled as the band is fresh – then the band and the age in words ("Aging · 8 mo. ago")
  *   · strip: a margin strip for a document – one bar per paragraph, aligned with the paragraphs of the element
@@ -42,6 +43,8 @@ export type ValidityInfo = {
   contested?: boolean;
   /** Something newer replaces it */
   superseded?: boolean;
+  /** The source has changed since it was used – the app compares what was relied on with what is there now */
+  changed?: boolean;
   /** Strip: what the paragraph is called in its tooltip and to screen readers (default "Paragraph 2") */
   label?: string;
 };
@@ -121,6 +124,8 @@ export class TcValidityBadge extends TcElement {
   @property({ type: Boolean }) accessor contested = false;
   /** Something newer replaces it: the mark turns gray and the badge says "Superseded" first */
   @property({ type: Boolean }) accessor superseded = false;
+  /** The source has changed since it was used (the app compares what was relied on with what is there now): a blue dot on the mark and the words "Changed since used" */
+  @property({ type: Boolean }) accessor changed = false;
   /** The moment the age is counted to, in epoch ms – defaults to when the element connected */
   @property({ type: Number }) accessor now: number | undefined = undefined;
   /** Badge: only the mark, with its words in a tooltip and for screen readers */
@@ -133,6 +138,10 @@ export class TcValidityBadge extends TcElement {
   @property({ attribute: "contested-label" }) accessor contestedLabel = "Contested";
   /** The word for a superseded piece of evidence */
   @property({ attribute: "superseded-label" }) accessor supersededLabel = "Superseded";
+  /** The words for a source that has changed since it was used */
+  @property({ attribute: "changed-label" }) accessor changedLabel = "Changed since used";
+  /** What a changed source means and what to do – said after the band, and in the tooltip; empty leaves it out */
+  @property({ attribute: "changed-note" }) accessor changedNote = "It has changed since you used it – check it still says what you relied on.";
   /** What screen readers call the evidence: "Aging evidence, observed 8 months ago" */
   @property({ attribute: "subject-label" }) accessor subjectLabel = "evidence";
   /** Strip: one entry per paragraph, in document order */
@@ -187,8 +196,10 @@ export class TcValidityBadge extends TcElement {
     const age = known ? this.nowMs - at : NaN;
     const short = known ? validityAge(age, "short", this.locale) : "";
     const long = known ? validityAge(age, "long", this.locale) : "";
-    const marks = [item.superseded ? this.supersededLabel : "", item.contested ? this.contestedLabel : ""].filter(Boolean);
-    const full = [`${this.label(band)} ${this.subjectLabel}`, long ? `observed ${long}` : "", ...marks.map((m) => m.toLowerCase())].filter(Boolean).join(", ");
+    const marks = [item.superseded ? this.supersededLabel : "", item.contested ? this.contestedLabel : "", item.changed ? this.changedLabel : ""].filter(Boolean);
+    const sentence = [`${this.label(band)} ${this.subjectLabel}`, long ? `observed ${long}` : "", ...marks.map((m) => m.toLowerCase())].filter(Boolean).join(", ");
+    // A changed source says what to do about it, as a second sentence
+    const full = item.changed && this.changedNote ? `${sentence}. ${this.changedNote}` : sentence;
     return { short, long, marks, full };
   }
 
@@ -210,7 +221,7 @@ export class TcValidityBadge extends TcElement {
     // The badge's text is shown short and said long: the host carries the long form as its tooltip
     if (this.mode === "badge") {
       const band = this.currentBand;
-      const w = this.words({ observed: this.observed, band: this.band, contested: this.contested, superseded: this.superseded }, band);
+      const w = this.words({ observed: this.observed, band: this.band, contested: this.contested, superseded: this.superseded, changed: this.changed }, band);
       const tip = w.full.charAt(0).toUpperCase() + w.full.slice(1);
       if (this.getAttribute("title") !== tip) this.setAttribute("title", tip);
     } else if (changed.get("mode") === "badge") this.removeAttribute("title");
@@ -328,17 +339,17 @@ export class TcValidityBadge extends TcElement {
   /* ---------- Render ---------- */
 
   private mark(band: ValidityBand, look: Look, item: ValidityInfo) {
-    return html`<span class="ui-vb__mark" data-band=${band} ?data-contested=${!!item.contested} ?data-superseded=${!!item.superseded} aria-hidden="true">${barsIcon(band, look)}</span>`;
+    return html`<span class="ui-vb__mark" data-band=${band} ?data-contested=${!!item.contested} ?data-superseded=${!!item.superseded} ?data-changed=${!!item.changed} aria-hidden="true">${barsIcon(band, look)}</span>`;
   }
 
   private renderBadge(look: Look) {
     const band = this.currentBand;
-    const item: ValidityInfo = { observed: this.observed, band: this.band, contested: this.contested, superseded: this.superseded };
+    const item: ValidityInfo = { observed: this.observed, band: this.band, contested: this.contested, superseded: this.superseded, changed: this.changed };
     const w = this.words(item, band);
     const label = this.label(band);
     return html`${this.mark(band, look, item)}<span class="ui-vb__sr">${w.full}</span>${this.compact
       ? nothing
-      : html`<span class="ui-vb__text" aria-hidden="true">${this.superseded ? html`<span class="ui-vb__flag" data-kind="superseded">${this.supersededLabel}</span><span class="ui-vb__dot">·</span>` : nothing}<span class="ui-vb__band" ?data-struck=${this.superseded}>${label}</span>${w.short && !this.hideAge ? html`<span class="ui-vb__dot">·</span><span class="ui-vb__age">${w.short}</span>` : nothing}${this.contested ? html`<span class="ui-vb__dot">·</span><span class="ui-vb__flag" data-kind="contested">${this.contestedLabel}</span>` : nothing}</span>`}`;
+      : html`<span class="ui-vb__text" aria-hidden="true">${this.superseded ? html`<span class="ui-vb__flag" data-kind="superseded">${this.supersededLabel}</span><span class="ui-vb__dot">·</span>` : nothing}<span class="ui-vb__band" ?data-struck=${this.superseded}>${label}</span>${w.short && !this.hideAge ? html`<span class="ui-vb__dot">·</span><span class="ui-vb__age">${w.short}</span>` : nothing}${this.contested ? html`<span class="ui-vb__dot">·</span><span class="ui-vb__flag" data-kind="contested">${this.contestedLabel}</span>` : nothing}${this.changed ? html`<span class="ui-vb__dot">·</span><span class="ui-vb__flag" data-kind="changed">${this.changedLabel}</span>` : nothing}</span>`}`;
   }
 
   private renderStrip(look: Look) {
@@ -369,6 +380,7 @@ export class TcValidityBadge extends TcElement {
         data-band=${s.band}
         ?data-contested=${!!s.item.contested}
         ?data-superseded=${!!s.item.superseded}
+        ?data-changed=${!!s.item.changed}
         tabindex=${this.active === s.index ? 0 : -1}
         aria-label=${`${name}: ${w.full}`}
         @pointerenter=${(e: PointerEvent) => e.pointerType === "mouse" && (this.tip = s.index)}
@@ -379,7 +391,7 @@ export class TcValidityBadge extends TcElement {
         @blur=${() => this.tip === s.index && (this.tip = null)}
         @click=${() => this.locate(s.index)}
       ><span class="ui-vb__bar" aria-hidden="true"></span></button>${tipShown
-        ? html`<span class="ui-vb__tip" aria-hidden="true"><span class="ui-vb__tip-head">${this.mark(s.band, look, s.item)}<b>${name}</b></span><span class="ui-vb__tip-text">${[s.item.superseded ? this.supersededLabel : "", this.label(s.band), w.short, s.item.contested ? this.contestedLabel : ""].filter(Boolean).join(" · ")}</span></span>`
+        ? html`<span class="ui-vb__tip" aria-hidden="true"><span class="ui-vb__tip-head">${this.mark(s.band, look, s.item)}<b>${name}</b></span><span class="ui-vb__tip-text">${[s.item.superseded ? this.supersededLabel : "", this.label(s.band), w.short, s.item.contested ? this.contestedLabel : "", s.item.changed ? this.changedLabel : ""].filter(Boolean).join(" · ")}</span></span>`
         : nothing}</span>`;
     })}</div>`;
   }
@@ -431,6 +443,9 @@ export class TcValidityBadge extends TcElement {
 /* Contested: a dashed ring outside the mark */
 .ui-vb__mark[data-contested] { outline: 1px dashed var(--tc-validity-badge-fg); outline-offset: 1px; }
 :where([data-ui="vb"][compact]) .ui-vb__mark { cursor: help; }
+/* Changed since used: a blue dot on the mark's corner, cut out of the surface – and the words, in blue */
+.ui-vb__mark[data-changed]::after, .ui-vb__seg[data-changed]::after { content: ""; position: absolute; top: -3px; right: -3px; width: 8px; height: 8px; border-radius: var(--tc-radius-full); background: var(--tc-status-info-solid); box-shadow: 0 0 0 1.5px var(--tc-surface-raised); }
+.ui-vb__seg[data-changed]::after { top: -2px; right: auto; left: 50%; transform: translateX(-50%); }
 .ui-vb__text { display: inline-flex; align-items: baseline; gap: var(--tc-space-1); min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 :where([data-look="standard"], [data-look="standard"] *).ui-vb__band { font-weight: var(--tc-font-weight-medium); color: var(--tc-text-primary); }
 :where([data-look="clean"], [data-look="clean"] *).ui-vb__band { font-weight: var(--tc-font-weight-medium); color: var(--tc-text-secondary); }
@@ -438,6 +453,7 @@ export class TcValidityBadge extends TcElement {
 .ui-vb__age { color: var(--tc-text-muted); font-variant-numeric: tabular-nums; }
 .ui-vb__dot { color: var(--tc-text-disabled); }
 .ui-vb__flag { font-weight: var(--tc-font-weight-medium); color: var(--tc-text-secondary); }
+.ui-vb__flag[data-kind="changed"] { color: var(--tc-status-info-fg); }
 
 /* ----- Strip: one bar per paragraph, down the margin ----- */
 [data-ui="vb"][mode="strip"] { position: relative; display: block; flex: none; width: 16px; align-self: stretch; }
@@ -506,6 +522,7 @@ export class TcValidityBadge extends TcElement {
 }
 @media (forced-colors: active) {
   .ui-vb__mark { forced-color-adjust: auto; border: 1px solid CanvasText; }
+  .ui-vb__mark[data-changed]::after, .ui-vb__seg[data-changed]::after { background: Highlight; }
 }
 `;
 }

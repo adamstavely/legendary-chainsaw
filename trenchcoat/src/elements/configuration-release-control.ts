@@ -17,6 +17,9 @@ import { initials } from "./internal/util";
  *   · Roll back asks first too, naming the stage and exactly which version it returns to.
  *   · the confirmation is a modal dialog: focus moves to Cancel, Tab and Shift+Tab stay inside it, Escape cancels, and
  *     focus returns to the button that opened it
+ *   · optional, and in the same gate: suites that pass, fail or are conditional; linked open findings (a list, each
+ *     opening through tc-finding-open); and waivers – who granted them and when they expire, shown as given. A
+ *     conditional suite or a blocking finding needs a waiver that hasn't expired; a failing suite can't be waived
  * The element moves nothing: tc-promote, tc-rollback and tc-compare tell the app, which does the real work and sends
  * back new `stages`. Between the two, the stage shows "Requested". Every event is cancelable.
  * Standard: the header on a gray tray above a white card, stages as filled tiles and the gate a raised tile between them. Clean: one
@@ -78,6 +81,49 @@ export type ReleaseApproval = {
   /** A quiet line, e.g. their role or when they approved */
   detail?: string;
 };
+/** A gate suite's result: pass, fail, or conditional – passing only on a waiver */
+export type ReleaseSuiteStatus = "pass" | "fail" | "conditional";
+/** A suite of checks the release gate runs, e.g. "Safety regression" */
+export type ReleaseSuite = {
+  id: string;
+  label: string;
+  status: ReleaseSuiteStatus;
+  /** Counts, shown as "5 passed · 2 failed · 1 inconclusive" */
+  passed?: number;
+  failed?: number;
+  inconclusive?: number;
+};
+/** An open finding linked to the candidate */
+export type ReleaseFinding = {
+  id: string;
+  /** "Tool ran before its approval" */
+  title: string;
+  /** A short reference, e.g. "F-001" */
+  ref?: string;
+  /** e.g. "P0" or "High" */
+  severity?: string;
+  /** e.g. "Open", "Acknowledged" */
+  status?: string;
+  /** The id of the suite it came from */
+  suite?: string;
+  /** A blocking finding holds promotion until it's closed or waived */
+  blocking?: boolean;
+};
+/** A waiver: lets a conditional suite or a blocking finding through until it expires */
+export type ReleaseWaiver = {
+  id: string;
+  /** A short reference, e.g. "W-001" */
+  label?: string;
+  /** The ids of the suites and findings it covers */
+  covers: string[];
+  /** Who granted it */
+  grantedBy: string;
+  /** When it expires, shown as given, e.g. "2026-06-10" */
+  expires: string;
+  /** The app says it has expired – it then counts as unmet */
+  expired?: boolean;
+};
+
 /** Where a rollback goes: the stage, and the version it returns to */
 export type ReleaseRollback = { stage: string; version: string };
 
@@ -85,9 +131,10 @@ export type ReleaseRollback = { stage: string; version: string };
 export type ReleasePromoteEvent = { version: ReleaseVersion; stage: ReleaseStage; from?: ReleaseVersion };
 export type ReleaseRollbackEvent = { stage: ReleaseStage; from?: ReleaseVersion; to: ReleaseVersion };
 export type ReleaseCompareEvent = { from?: ReleaseVersion; to: ReleaseVersion };
+export type ReleaseFindingOpenEvent = { finding: ReleaseFinding };
 
 /** A requirement: `text` stands alone, `phrase` goes after "To promote:" */
-type Check = { id: "evidence" | "approvals" | "hold"; met: boolean; text: string; phrase: string };
+type Check = { id: "evidence" | "suites" | "findings" | "approvals" | "hold"; met: boolean; text: string; phrase: string; value?: string };
 /** A move the app was told about; `was` is the stage as it was then, so any change to it ends the wait */
 type Requested = { kind: "promote" | "rollback"; stage: string; version: string; was: string };
 const stageKey = (s: ReleaseStage | undefined) => (s ? `${s.version ?? ""}|${s.rollout?.version ?? ""}|${s.rollout?.percent ?? ""}` : "");
@@ -108,6 +155,8 @@ const checkIcon = () => lucide(12, svg`<path d="M20 6 9 17l-5-5"></path>`);
 const xIcon = () => lucide(12, svg`<path d="M18 6 6 18"></path><path d="m6 6 12 12"></path>`);
 const clockIcon = () => lucide(12, svg`<circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path>`);
 const chevron = () => lucide(14, svg`<path d="m9 18 6-6-6-6"></path>`);
+const alertIcon = () => lucide(12, svg`<path d="M12 8v4"></path><path d="M12 16h.01"></path>`);
+const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
 
 /**
  * A configuration version moving through environments: the pipeline, what changed, the evaluation evidence, the
@@ -116,6 +165,7 @@ const chevron = () => lucide(14, svg`<path d="m9 18 6-6-6-6"></path>`);
  * @fires tc-promote - Promote was confirmed ({ version, stage, from }: ReleasePromoteEvent); cancelable – prevented, the stage isn't marked "Requested"
  * @fires tc-rollback - Roll back was confirmed ({ stage, from, to }: ReleaseRollbackEvent); cancelable – prevented, the stage isn't marked "Requested"
  * @fires tc-compare - Compare was pressed – open the full diff ({ from, to }: ReleaseCompareEvent); cancelable, with nothing else to stop
+ * @fires tc-finding-open - A linked finding was pressed – open it ({ finding }: ReleaseFindingOpenEvent); cancelable, with nothing else to stop
  */
 export class TcConfigurationReleaseControl extends TcElement {
   static override ui = "rls";
@@ -150,6 +200,12 @@ export class TcConfigurationReleaseControl extends TcElement {
   @property({ attribute: "rollback-note" }) accessor rollbackNote = "Only this stage changes. Other stages keep the versions they run.";
   /** The confirmation's Cancel button */
   @property({ attribute: "cancel-label" }) accessor cancelLabel = "Cancel";
+  /** Gate suites and their results; unset, the gate doesn't ask for any */
+  @property({ attribute: false }) accessor suites: ReleaseSuite[] = [];
+  /** Open findings linked to the candidate; blocking ones hold promotion unless waived */
+  @property({ attribute: false }) accessor findings: ReleaseFinding[] = [];
+  /** Waivers for conditional suites and blocking findings, with who granted them and when they expire */
+  @property({ attribute: false }) accessor waivers: ReleaseWaiver[] = [];
 
   /** Which confirmation is open, or null */
   @state() private accessor confirming: "promote" | "rollback" | null = null;
@@ -195,6 +251,28 @@ export class TcConfigurationReleaseControl extends TcElement {
     const from = this.rollbackFrom(stage);
     return from !== undefined && from !== this.rollback!.version;
   }
+  /** The waiver covering a suite or finding – an active one first */
+  private waiverFor(id: string) {
+    const all = this.waivers.filter((w) => w.covers.includes(id));
+    return all.find((w) => !w.expired) ?? all[0];
+  }
+  private waiverName(w: ReleaseWaiver) {
+    return w.label ?? "Waiver";
+  }
+  /** Why a suite doesn't pass the gate, or "" when it does */
+  private suiteProblem(s: ReleaseSuite) {
+    if (s.status === "pass") return "";
+    if (s.status === "fail") return `${s.label} fails`;
+    const w = this.waiverFor(s.id);
+    if (!w) return `${s.label} is conditional, with no waiver`;
+    return w.expired ? `${s.label}'s waiver ${this.waiverName(w)} has expired` : "";
+  }
+  private findingBlocks(f: ReleaseFinding) {
+    if (!f.blocking) return false;
+    const w = this.waiverFor(f.id);
+    return !w || !!w.expired;
+  }
+
   /** What promotion still needs */
   private get checks(): Check[] {
     const out: Check[] = [];
@@ -204,6 +282,25 @@ export class TcConfigurationReleaseControl extends TcElement {
     else if (e.state === "running") add("evidence", false, "Evaluation still running");
     else if (e.passRate! >= e.threshold) add("evidence", true, `Pass rate ${pct(e.passRate!)} meets the ${pct(e.threshold)} threshold`);
     else add("evidence", false, `Pass rate ${pct(e.passRate!)} is under the ${pct(e.threshold)} threshold`);
+    if (this.suites.length) {
+      const problems = this.suites.map((s) => this.suiteProblem(s)).filter(Boolean);
+      const pass = this.suites.filter((s) => s.status === "pass").length;
+      const waived = this.suites.length - pass - problems.length;
+      const failing = this.suites.filter((s) => s.status === "fail").length;
+      const value = problems.length
+        ? [failing ? `${failing} failing` : "", problems.length - failing ? `${problems.length - failing} conditional` : ""].filter(Boolean).join(" · ")
+        : `${pass} pass${waived ? ` · ${waived} on a waiver` : ""}`;
+      if (problems.length) add("suites", false, problems.join(", "), problems.join(", "));
+      else add("suites", true, `${pass} of ${plural(this.suites.length, "suite")} pass${waived ? `, ${waived} on a waiver` : ""}`);
+      out[out.length - 1].value = value;
+    }
+    if (this.findings.length) {
+      const blocking = this.findings.filter((f) => this.findingBlocks(f)).length;
+      const waived = this.findings.filter((f) => f.blocking && !this.findingBlocks(f)).length;
+      if (blocking) add("findings", false, `${plural(blocking, "blocking finding")} ${blocking === 1 ? "is" : "are"} open`);
+      else add("findings", true, `${plural(this.findings.length, "open finding")}, ${waived ? `${waived} blocking on a waiver` : "none blocking"}`);
+      out[out.length - 1].value = blocking ? `${blocking} blocking` : `${this.findings.length} open${waived ? ` · ${waived} waived` : " · none blocking"}`;
+    }
     const approved = this.approvals.filter((a) => a.state === "approved").length;
     const rejected = this.approvals.find((a) => a.state === "rejected");
     const need = Math.max(0, this.requiredApprovals);
@@ -320,6 +417,10 @@ export class TcConfigurationReleaseControl extends TcElement {
 
   protected override willUpdate(changed: PropertyValues) {
     super.willUpdate(changed);
+    // The optional gate parts, unset from a framework, are empty lists
+    this.suites ??= [];
+    this.findings ??= [];
+    this.waivers ??= [];
     // The app's answer is a change to the stage (or a new candidate): the request is no longer pending. Compared by
     // content, so a parent that re-renders with equal data doesn't end the wait
     const req = this.requested;
@@ -377,12 +478,13 @@ export class TcConfigurationReleaseControl extends TcElement {
     const e = this.evidence;
     const value = (c: Check) => {
       if (c.id === "hold") return c.text;
+      if (c.value) return c.value;
       if (c.id === "approvals") return c.met || !this.approvals.some((a) => a.state === "rejected") ? c.text : "Changes requested";
       if (!e || (e.state !== "running" && e.passRate === undefined)) return "Not run yet";
       if (e.state === "running") return "Running…";
       return `${pct(clamp(e.passRate!))} · needs ${pct(e.threshold)}`;
     };
-    const name = { evidence: "Evaluation", approvals: "Approvals", hold: "Hold" } as const;
+    const name = { evidence: "Evaluation", suites: "Suites", findings: "Findings", approvals: "Approvals", hold: "Hold" } as const;
     return html`<li class="ui-rls__gate" data-state=${state} aria-labelledby=${`${id}-gate-title`}>
       <span class="ui-rls__arrow">${chevron()}</span>
       <h4 class="ui-rls__gate-title" id=${`${id}-gate-title`}>Gate to ${stage.label}</h4>
@@ -407,7 +509,7 @@ export class TcConfigurationReleaseControl extends TcElement {
     </li>`;
   }
 
-  private renderBlock(id: string, label: string, status: Check | undefined, body: unknown) {
+  private renderBlock(id: string, label: unknown, status: Check | undefined, body: unknown) {
     return html`<section class="ui-rls__block" data-block=${id} aria-labelledby=${`${this.uid}-${id}`}>
       <h4 class="ui-rls__label" id=${`${this.uid}-${id}`}>
         ${label}${status
@@ -471,6 +573,60 @@ export class TcConfigurationReleaseControl extends TcElement {
         : html`<p class="ui-rls__quiet">Nobody has reviewed it yet.</p>`}`;
   }
 
+  /** A waiver's line: who granted it and when it expires, as given; expired, said so */
+  private renderWaiver(w: ReleaseWaiver | undefined) {
+    if (!w) return nothing;
+    return html`<span class="ui-rls__waiver" ?data-expired=${!!w.expired}
+      >${w.expired ? alertIcon() : clockIcon()}<span class="ui-rls__waiver-ref">${this.waiverName(w)}</span> · ${w.expired ? `expired ${w.expires}` : `expires ${w.expires}`} · granted by ${w.grantedBy}</span
+    >`;
+  }
+
+  private renderSuites(check: Check) {
+    const status = { pass: "Pass", fail: "Fail", conditional: "Conditional" } as const;
+    const count = (s: ReleaseSuite) =>
+      [s.passed !== undefined ? `${s.passed} passed` : "", s.failed !== undefined ? `${s.failed} failed` : "", s.inconclusive !== undefined ? `${s.inconclusive} inconclusive` : ""].filter(Boolean).join(" · ");
+    return html`<p class="ui-rls__fine">${check.text}</p>
+      <ul class="ui-rls__suites">
+        ${this.suites.map((s) => {
+          const problem = this.suiteProblem(s);
+          const w = s.status === "conditional" ? this.waiverFor(s.id) : undefined;
+          return html`<li class="ui-rls__suite" data-status=${s.status} data-met=${problem ? "false" : "true"}>
+            <span class="ui-rls__suite-icon" data-status=${s.status}>${s.status === "pass" ? checkIcon() : s.status === "fail" ? xIcon() : alertIcon()}</span>
+            <span class="ui-rls__suite-text">
+              <span class="ui-rls__suite-name">${s.label}</span>
+              ${count(s) ? html`<span class="ui-rls__suite-count">${count(s)}</span>` : nothing}
+              ${s.status === "conditional" && !w ? html`<span class="ui-rls__waiver" data-expired>${alertIcon()}No waiver</span>` : this.renderWaiver(w)}
+            </span>
+            <span class="ui-rls__status" data-status=${s.status}>${status[s.status]}</span>
+          </li>`;
+        })}
+      </ul>`;
+  }
+
+  private renderFindings() {
+    const suite = (id: string | undefined) => this.suites.find((s) => s.id === id)?.label;
+    return html`<ul class="ui-rls__findings">
+      ${this.findings.map((f) => {
+        const w = f.blocking ? this.waiverFor(f.id) : undefined;
+        const blocks = this.findingBlocks(f);
+        return html`<li class="ui-rls__finding" ?data-blocking=${blocks}>
+          <button type="button" class="ui-rls__finding-btn" @click=${() => this.emit<ReleaseFindingOpenEvent>("tc-finding-open", { finding: f }, { cancelable: true })}>
+            <span class="ui-rls__finding-top">
+              ${f.ref ? html`<span class="ui-rls__finding-ref">${f.ref}</span>` : nothing}
+              ${f.severity ? html`<span class="ui-rls__sev">${f.severity}</span>` : nothing}
+              <span class="ui-rls__finding-title">${f.title}</span>
+            </span>
+            <span class="ui-rls__finding-meta">
+              ${blocks ? html`<span class="ui-rls__blocks-tag">Blocks promotion</span>` : nothing}
+              ${[f.status, suite(f.suite)].filter(Boolean).join(" · ")}
+            </span>
+            ${this.renderWaiver(w)}
+          </button>
+        </li>`;
+      })}
+    </ul>`;
+  }
+
   private renderRollback() {
     const r = this.rollback;
     const stage = this.rollbackStage;
@@ -505,6 +661,9 @@ export class TcConfigurationReleaseControl extends TcElement {
       const changed = this.changes.filter((c) => c.count);
       const approved = this.approvals.filter((a) => a.state === "approved").map((a) => a.name);
       const e = this.evidence;
+      const checks = this.checks;
+      // The waivers this promotion leans on
+      const waivers = this.waivers.filter((w) => !w.expired && w.covers.some((id) => this.suites.some((s) => s.id === id && s.status === "conditional") || this.findings.some((f) => f.id === id && f.blocking)));
       body = html`<div class="ui-rls__dlg-head">
           <span class="ui-rls__dlg-icon" data-kind="promote">${promoteIcon()}</span>
           <h3 class="ui-rls__dlg-title" id=${`${id}-dlg-title`}>Promote ${to?.label} to ${stage?.label}?</h3>
@@ -514,6 +673,8 @@ export class TcConfigurationReleaseControl extends TcElement {
           <dl class="ui-rls__facts">
             <div><dt>Changes</dt><dd>${changed.length ? changed.map((c) => `${c.label} ${c.count}`).join(" · ") : "None reported"}</dd></div>
             ${e && e.passRate !== undefined ? html`<div><dt>Evaluation</dt><dd>${pct(e.passRate)} pass rate · ${pct(e.threshold)} threshold</dd></div>` : nothing}
+            ${this.suites.length ? html`<div><dt>Suites</dt><dd>${checks.find((c) => c.id === "suites")?.text}</dd></div>` : nothing}
+            ${waivers.length ? html`<div><dt>Waivers</dt><dd>${waivers.map((w) => `${this.waiverName(w)} by ${w.grantedBy}, expires ${w.expires}`).join("; ")}</dd></div>` : nothing}
             <div><dt>Approved by</dt><dd>${approved.length ? approved.join(", ") : "Nobody"}</dd></div>
           </dl>
           <p class="ui-rls__dlg-note">${this.promoteNote}</p>
@@ -612,6 +773,14 @@ export class TcConfigurationReleaseControl extends TcElement {
                 ${this.renderBlock("evidence", "Evaluation", checks.find((c) => c.id === "evidence"), this.renderEvidence(checks.find((c) => c.id === "evidence")!, from))}
                 ${this.renderBlock("approvals", "Approvals", checks.find((c) => c.id === "approvals"), this.renderApprovals(checks.find((c) => c.id === "approvals")!))}
               </div>
+              ${this.suites.length || this.findings.length
+                ? html`<div class="ui-rls__blocks ui-rls__blocks--gate" data-n=${this.suites.length && this.findings.length ? 2 : 1}>
+                    ${this.suites.length ? this.renderBlock("suites", "Gate suites", checks.find((c) => c.id === "suites"), this.renderSuites(checks.find((c) => c.id === "suites")!)) : nothing}
+                    ${this.findings.length
+                      ? this.renderBlock("findings", html`Open findings<span class="ui-rls__count">${this.findings.length}</span>`, checks.find((c) => c.id === "findings"), this.renderFindings())
+                      : nothing}
+                  </div>`
+                : nothing}
             </div>`
           : nothing}
         ${this.renderRollback()}
@@ -780,6 +949,40 @@ export class TcConfigurationReleaseControl extends TcElement {
 .ui-rls__state[data-state="approved"] { color: var(--tc-status-success-fg); }
 .ui-rls__state[data-state="rejected"] { color: var(--tc-status-danger-fg); }
 
+/* ----- Gate suites, linked findings and their waivers ----- */
+.ui-rls__blocks--gate { grid-template-columns: minmax(0, 1fr); }
+.ui-rls__blocks--gate[data-n="2"] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+:where([data-look="clean"], [data-look="clean"] *).ui-rls__blocks--gate { margin-top: calc(-1 * var(--tc-space-3)); }
+.ui-rls__count { display: inline-grid; place-items: center; min-width: 18px; height: 18px; padding: 0 var(--tc-space-1); border-radius: var(--tc-radius-badge); background: var(--tc-fill-default); color: var(--tc-text-secondary); font-size: var(--tc-font-size-xs); font-weight: var(--tc-font-weight-medium); letter-spacing: normal; text-transform: none; font-variant-numeric: tabular-nums; }
+.ui-rls__suites, .ui-rls__findings { display: grid; }
+.ui-rls__suite { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: start; gap: var(--tc-space-2); padding: var(--tc-space-2) 0; }
+.ui-rls__suite + .ui-rls__suite, .ui-rls__finding + .ui-rls__finding { border-top: var(--tc-hairline) solid var(--tc-divider); }
+.ui-rls__suite-icon { display: grid; place-items: center; width: 20px; height: 20px; border-radius: var(--tc-radius-sm); background: var(--tc-status-success-bg); color: var(--tc-status-success-fg); }
+.ui-rls__suite-icon[data-status="fail"] { background: var(--tc-status-danger-bg); color: var(--tc-status-danger-fg); }
+.ui-rls__suite-icon[data-status="conditional"] { background: var(--tc-status-warning-bg); color: var(--tc-status-warning-fg); }
+.ui-rls__suite-icon > svg { width: 12px; height: 12px; stroke-width: 2.25; }
+.ui-rls__suite-text { display: grid; gap: var(--tc-space-0-5); min-width: 0; }
+.ui-rls__suite-name { color: var(--tc-text-primary); font-size: var(--tc-font-size-sm); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-snug); }
+.ui-rls__suite-count { color: var(--tc-text-muted); font-size: var(--tc-font-size-xs); line-height: var(--tc-line-height-snug); font-variant-numeric: tabular-nums; }
+/* A suite's result: a pill on its status tone */
+.ui-rls__status { display: inline-flex; align-items: center; height: var(--tc-pill-h); padding: 0 var(--tc-pill-px); border-radius: var(--tc-pill-radius); background: var(--tc-status-success-bg); color: var(--tc-status-success-fg); font-size: var(--tc-pill-font-size); font-weight: var(--tc-pill-font-weight); line-height: var(--tc-line-height-tight); white-space: nowrap; }
+.ui-rls__status[data-status="fail"] { background: var(--tc-status-danger-bg); color: var(--tc-status-danger-fg); }
+.ui-rls__status[data-status="conditional"] { background: var(--tc-status-warning-bg); color: var(--tc-status-warning-fg); }
+/* A waiver: its reference, when it expires as given, who granted it; expired, on the danger tone */
+.ui-rls__waiver { display: block; color: var(--tc-status-warning-fg); font-size: var(--tc-font-size-xs); line-height: var(--tc-line-height-snug); font-variant-numeric: tabular-nums; }
+[data-ui="rls"] .ui-rls__waiver > svg { display: inline-block; width: 12px; height: 12px; margin-right: var(--tc-space-1); vertical-align: -2px; }
+.ui-rls__waiver[data-expired] { color: var(--tc-status-danger-fg); }
+.ui-rls__waiver-ref { font-family: var(--tc-font-mono); font-weight: var(--tc-font-weight-medium); }
+/* A finding: a row that opens it */
+.ui-rls__finding-btn { display: grid; gap: var(--tc-space-1); width: calc(100% + 2 * var(--tc-space-1-5)); margin: 0 calc(-1 * var(--tc-space-1-5)); padding: var(--tc-space-2) var(--tc-space-1-5); border-radius: var(--tc-radius-md); text-align: left; transition: background-color var(--tc-duration-fast) var(--tc-ease-standard); }
+.ui-rls__finding-btn:hover { background: var(--tc-fill-hover); }
+.ui-rls__finding-top { display: flex; align-items: baseline; gap: var(--tc-space-1-5); min-width: 0; }
+.ui-rls__finding-ref { flex: none; color: var(--tc-text-muted); font-family: var(--tc-font-mono); font-size: var(--tc-font-size-xs); }
+.ui-rls__sev { flex: none; display: inline-flex; align-items: center; height: var(--tc-pill-h); padding: 0 var(--tc-space-1-5); border-radius: var(--tc-radius-sm); background: var(--tc-fill-default); color: var(--tc-text-secondary); font-family: var(--tc-font-mono); font-size: var(--tc-font-size-xs); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-tight); }
+.ui-rls__finding-title { min-width: 0; color: var(--tc-text-primary); font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-snug); }
+.ui-rls__finding-meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-1) var(--tc-space-1-5); color: var(--tc-text-muted); font-size: var(--tc-font-size-xs); line-height: var(--tc-line-height-snug); }
+.ui-rls__blocks-tag { display: inline-flex; align-items: center; height: var(--tc-pill-h); padding: 0 var(--tc-pill-px); border-radius: var(--tc-pill-radius); background: var(--tc-status-danger-bg); color: var(--tc-status-danger-fg); font-size: var(--tc-pill-font-size); font-weight: var(--tc-pill-font-weight); line-height: var(--tc-line-height-tight); }
+
 /* ----- Rollback target ----- */
 .ui-rls__rollback { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: var(--tc-space-3); padding: var(--tc-space-3) var(--tc-space-4); border-top: var(--tc-hairline) solid var(--tc-divider); }
 .ui-rls__rb-icon { display: grid; place-items: center; width: 24px; height: 24px; border-radius: var(--tc-radius-md); background: var(--tc-fill-default); color: var(--tc-text-secondary); }
@@ -824,7 +1027,7 @@ export class TcConfigurationReleaseControl extends TcElement {
 
 /* ----- Narrow: the pipeline runs down the card, the gate between stages ----- */
 @container (max-width: 640px) {
-  .ui-rls__blocks { grid-template-columns: minmax(0, 1fr); }
+  .ui-rls__blocks, .ui-rls__blocks--gate[data-n="2"] { grid-template-columns: minmax(0, 1fr); }
   :where([data-look="clean"], [data-look="clean"] *).ui-rls__block:nth-child(n) { padding: var(--tc-space-3) 0; box-shadow: none; }
 }
 @container (max-width: 560px) {

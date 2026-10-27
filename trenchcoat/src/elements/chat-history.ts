@@ -26,6 +26,10 @@ import type { Look } from "./internal/look";
  * The open chat is `value` (cancelable `tc-value-change`); every list change fires a cancelable
  * `tc-conversations-change` with the whole list, and a granular action event (tc-rename, tc-pin, tc-move, tc-delete,
  * tc-restore) for apps that call an API per action.
+ *
+ * Load as context: a chat with a structured `summary` offers "Load as context" in its menu. The loaded items show in
+ * an "In context" section under the list – exactly what's active, each with Remove – and every load or remove is a
+ * cancelable `tc-context-change` with the whole `context`. The app decides what it actually sends with the next message.
  */
 
 export type ChatConversation = {
@@ -36,7 +40,19 @@ export type ChatConversation = {
   pinned?: boolean;
   /** The id of the folder it's in */
   folder?: string | null;
+  /** The session's structured summary – findings, open questions, next steps – which can be loaded as context */
+  summary?: ChatSummaryItem[];
 };
+
+/** One part of a session's structured summary */
+export type ChatSummaryItem = {
+  id: string;
+  text: string;
+  /** What kind of item, e.g. "Finding", "Open question", "Next step" */
+  kind?: string;
+};
+/** A summary item loaded into the current chat, with the id of the chat it came from */
+export type ChatContextItem = ChatSummaryItem & { chat: string; /** The chat's title when it was loaded */ from?: string };
 
 export type ChatFolder = { id: string; label: string };
 
@@ -47,6 +63,8 @@ export type ChatRenameDetail = { id: string; title: string };
 export type ChatPinDetail = { id: string; pinned: boolean };
 export type ChatMoveDetail = { id: string; folder: string | null };
 export type ChatDeleteDetail = { id: string; conversation: ChatConversation };
+/** What's loaded as context now, and what changed: a chat's summary loaded, or items removed */
+export type ChatContextChange = { context: ChatContextItem[]; action: "load" | "remove"; chat: string; items: ChatContextItem[] };
 
 type GroupKind = "pinned" | "folder" | "date";
 type Group = { key: string; label: string; kind: GroupKind; items: ChatConversation[]; total: number };
@@ -64,7 +82,7 @@ const typeahead = /^\S$/u;
 
 /* ---------- Icons: Standard 24-unit outlines at 16px, Clean thin 16px glyphs ---------- */
 
-type IconName = "search" | "close" | "compose" | "pin" | "more" | "chevron" | "folder" | "undo";
+type IconName = "search" | "close" | "compose" | "pin" | "more" | "chevron" | "folder" | "undo" | "context";
 const outline = (d: string) => html`<svg viewBox="0 0 24 24" class="ui-chh__glyph" aria-hidden="true">${svg`<path d=${d}></path>`}</svg>`;
 const thin = (d: string, solid = false) => html`<svg viewBox="0 0 16 16" class="ui-chh__glyph" ?data-solid=${solid} aria-hidden="true">${svg`<path d=${d}></path>`}</svg>`;
 const ICONS: Record<Look, Record<IconName, TemplateResult>> = {
@@ -77,6 +95,7 @@ const ICONS: Record<Look, Record<IconName, TemplateResult>> = {
     chevron: outline("M6.5 9.5 12 15l5.5-5.5"),
     folder: outline("M4 7.5A1.5 1.5 0 0 1 5.5 6h3.8l2 2h7.2A1.5 1.5 0 0 1 20 9.5v8a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 17.5v-10Z"),
     undo: outline("M8 6 4.5 9.5 8 13M5 9.5h9a4.5 4.5 0 0 1 0 9h-3"),
+    context: outline("M12 4 4 8l8 4 8-4-8-4ZM4 12l8 4 8-4M4 16l8 4 8-4"),
   },
   clean: {
     search: thin("M7.2 11.9a4.7 4.7 0 1 0 0-9.4 4.7 4.7 0 0 0 0 9.4ZM10.6 10.6l2.9 2.9"),
@@ -87,6 +106,7 @@ const ICONS: Record<Look, Record<IconName, TemplateResult>> = {
     chevron: thin("M4.5 6.25 8 9.75l3.5-3.5"),
     folder: thin("M2 4.5a1 1 0 0 1 1-1h3l1.5 1.5H13a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-7.5Z"),
     undo: thin("M5.5 3.5 3 6l2.5 2.5M3.2 6h6.3a3.5 3.5 0 0 1 0 7H7"),
+    context: thin("M8 2.5 2.5 5.25 8 8l5.5-2.75L8 2.5ZM2.5 8 8 10.75 13.5 8M2.5 10.75 8 13.5l5.5-2.75"),
   },
 };
 
@@ -119,6 +139,7 @@ const historyIcon = svg`<path d="M3 12a9 9 0 1 0 3-6.7L3 8"></path><path d="M3 3
  * @fires tc-delete - A chat was deleted (Undo may still bring it back); detail `{ id, conversation }`
  * @fires tc-restore - Undo brought a deleted chat back; detail `{ id, conversation }`
  * @fires tc-new-chat - New chat was pressed
+ * @fires tc-context-change - A chat's summary was loaded as context, or items were removed; detail `{ context, action, chat, items }`: ChatContextChange. Cancelable: prevent it to control `context`
  */
 export class TcChatHistory extends TcElement {
   static override ui = "chh";
@@ -144,6 +165,8 @@ export class TcChatHistory extends TcElement {
   @property({ converter: { fromAttribute: (v: string | null) => v !== "false" } }) accessor hints = true;
   /** Locale for the month names; unset uses the page's */
   @property() accessor locale: string | undefined = undefined;
+  /** What's loaded into the current chat as context – summary items from earlier chats. The app decides what's sent */
+  @property({ attribute: false }) accessor context: ChatContextItem[] = [];
 
   /** @internal */ @state() accessor query = "";
   /** @internal Folded groups */
@@ -405,6 +428,45 @@ export class TcChatHistory extends TcElement {
     this.build();
   }
 
+  /* ---------- Context ---------- */
+
+  private inContext(id: string) {
+    return this.context.some((c) => c.chat === id);
+  }
+
+  private setContext(next: ChatContextItem[], action: ChatContextChange["action"], chat: string, items: ChatContextItem[]) {
+    if (this.emit<ChatContextChange>("tc-context-change", { context: next, action, chat, items }, { cancelable: true })) {
+      this.context = next;
+      return true;
+    }
+    return false;
+  }
+
+  /** Loads a chat's summary as context, in place of anything loaded from it before */
+  private loadContext(id: string) {
+    const chat = this.find(id);
+    if (!chat?.summary?.length) return;
+    const items = chat.summary.map((s) => ({ ...s, chat: id, from: chat.title }));
+    if (this.setContext([...this.context.filter((c) => c.chat !== id), ...items], "load", id, items))
+      this.announce(`Loaded ${items.length} item${items.length === 1 ? "" : "s"} from “${chat.title}” as context`);
+  }
+
+  /** Removes one item, or everything loaded from a chat; focus moves to the next Remove, else back to the list */
+  private removeContext(chat: string, item?: string, from?: HTMLElement) {
+    const items = this.context.filter((c) => c.chat === chat && (item === undefined || c.id === item));
+    if (!items.length) return;
+    const buttons = [...this.querySelectorAll<HTMLElement>(".ui-chh__ctx-remove")];
+    const at = from ? buttons.indexOf(from) : -1;
+    if (!this.setContext(this.context.filter((c) => !items.includes(c)), "remove", chat, items)) return;
+    const title = this.find(chat)?.title ?? items[0].from ?? chat;
+    this.announce(item === undefined ? `Removed “${title}” from context` : `Removed “${items[0].text}” from context`);
+    if (from && at >= 0)
+      void this.updateComplete.then(() => {
+        const left = [...this.querySelectorAll<HTMLElement>(".ui-chh__ctx-remove")];
+        (left[Math.min(at, left.length - 1)] ?? this.rowEl(this.active) ?? this.querySelector<HTMLElement>(".ui-chh__input"))?.focus();
+      });
+  }
+
   private toggleGroup(key: string) {
     const folded = this.folded.has(key);
     const next = new Set(this.folded);
@@ -647,7 +709,7 @@ export class TcChatHistory extends TcElement {
       aria-posinset=${row.pos}
       aria-setsize=${row.group.items.length}
       aria-selected=${selected ? "true" : "false"}
-      aria-label=${chat.title}
+      aria-label=${this.inContext(chat.id) ? `${chat.title}, loaded as context` : chat.title}
       ?data-renaming=${renaming}
       ?data-menu=${this.menu?.id === chat.id}
       tabindex=${this.active === row.key ? 0 : -1}
@@ -677,6 +739,7 @@ export class TcChatHistory extends TcElement {
             @blur=${() => this.renaming === chat.id && this.endRename(true, false)}
           />`
         : html`<span class="ui-chh__title">${marked(chat.title, this.query.trim().toLowerCase())}</span>
+            ${this.inContext(chat.id) ? html`<span class="ui-chh__ctx-mark" aria-hidden="true" title="Loaded as context">${icons.context}</span>` : nothing}
             <span class="ui-chh__acts" aria-hidden="true">
               <button
                 type="button"
@@ -733,6 +796,11 @@ export class TcChatHistory extends TcElement {
     return html`<div class="ui-chh__menu" role="menu" aria-label=${`Actions for “${chat.title}”`} @keydown=${this.onMenuKey}>
       ${item("Rename", () => this.startRename(chat.id), { kbd: "F2" })}
       ${item(chat.pinned ? "Unpin" : "Pin", () => this.togglePin(chat.id))}
+      ${chat.summary?.length
+        ? this.inContext(chat.id)
+          ? item("Remove from context", () => this.removeContext(chat.id))
+          : item("Load as context", () => this.loadContext(chat.id))
+        : nothing}
       ${this.folders.length
         ? html`<div class="ui-chh__menu-sep" role="separator"></div>
             <div role="group" aria-label="Move to folder">
@@ -752,6 +820,42 @@ export class TcChatHistory extends TcElement {
       <div class="ui-chh__menu-sep" role="separator"></div>
       ${item("Delete", () => this.deleteChat(chat.id), { kbd: "⌫", danger: true })}
     </div>`;
+  }
+
+  /** In context: exactly what's loaded, by the chat it came from, each with Remove */
+  private contextPart(icons: Record<IconName, TemplateResult>) {
+    const ctx = this.context;
+    if (!ctx.length) return nothing;
+    const sources = [...new Set(ctx.map((c) => c.chat))];
+    return html`<section class="ui-chh__ctx" aria-labelledby=${`${this.uid}-ctx`}>
+      <h4 class="ui-chh__ctx-head" id=${`${this.uid}-ctx`}>${icons.context}<span>In context</span><span class="ui-chh__ctx-count">${ctx.length}</span></h4>
+      <div class="ui-chh__ctx-body">
+        ${repeat(
+          sources,
+          (id) => id,
+          (id) => {
+            const items = ctx.filter((c) => c.chat === id);
+            const title = this.find(id)?.title ?? items[0].from ?? id;
+            return html`<div class="ui-chh__ctx-src">
+              <div class="ui-chh__ctx-title">
+                <span class="ui-chh__ctx-name">${title}</span>
+                <button type="button" class="ui-chh__ctx-remove ui-chh__ctx-all" aria-label=${`Remove “${title}” from context`} title="Remove all" @click=${(e: Event) => this.removeContext(id, undefined, e.currentTarget as HTMLElement)}>${icons.close}</button>
+              </div>
+              <ul class="ui-chh__ctx-list" aria-label=${`From “${title}”`}>
+                ${repeat(
+                  items,
+                  (c) => c.id,
+                  (c) => html`<li class="ui-chh__ctx-item">
+                    <span class="ui-chh__ctx-text">${c.kind ? html`<span class="ui-chh__ctx-kind">${c.kind}</span>` : nothing}${c.text}</span>
+                    <button type="button" class="ui-chh__ctx-remove" aria-label=${`Remove “${c.text}” from context`} title="Remove" @click=${(e: Event) => this.removeContext(id, c.id, e.currentTarget as HTMLElement)}>${icons.close}</button>
+                  </li>`,
+                )}
+              </ul>
+            </div>`;
+          },
+        )}
+      </div>
+    </section>`;
   }
 
   private foot(icons: Record<IconName, TemplateResult>, clean: boolean) {
@@ -827,6 +931,7 @@ export class TcChatHistory extends TcElement {
         }}>${this.rowsPart(icons)}</div>
         ${empty ? html`<p class="ui-chh__empty">${q ? `No chats match “${q}”` : "No chats yet"}</p>` : nothing}
       </div>
+      ${this.contextPart(icons)}
     `;
     return html`
       ${clean ? html`${head}${body}${this.foot(icons, clean)}` : html`${head}<div class="ui-chh__card">${body}</div>${this.foot(icons, clean)}`}
@@ -957,6 +1062,28 @@ export class TcChatHistory extends TcElement {
 :where([data-look="clean"], [data-look="clean"] *).ui-chh__undo { gap: var(--tc-space-1-5); height: var(--tc-control-h-md); padding: 0 var(--tc-control-px-md) 0 var(--tc-space-2); border-radius: var(--tc-control-radius-md); }
 .ui-chh__undo:hover { box-shadow: var(--tc-action-secondary-shadow-hover); }
 .ui-chh__undo .ui-chh__glyph { width: 14px; height: 14px; }
+/* ----- In context: what's loaded from earlier chats, each with Remove ----- */
+.ui-chh__ctx { display: grid; border-top: var(--tc-hairline) solid var(--tc-divider); }
+:where([data-look="standard"], [data-look="standard"] *).ui-chh__ctx { padding: var(--tc-space-2) var(--tc-space-2-5) var(--tc-space-2-5); }
+:where([data-look="clean"], [data-look="clean"] *).ui-chh__ctx { padding: var(--tc-space-2) var(--tc-space-3) var(--tc-space-2-5); }
+.ui-chh__ctx-head { display: flex; align-items: center; gap: var(--tc-space-1-5); margin: 0 0 var(--tc-space-1-5); font-size: var(--tc-caption-font-size); font-weight: var(--tc-caption-font-weight); line-height: var(--tc-caption-line-height); letter-spacing: var(--tc-caption-tracking); text-transform: var(--tc-caption-transform); color: var(--tc-caption-color); }
+.ui-chh__ctx-head .ui-chh__glyph { width: 14px; height: 14px; color: var(--tc-accent-text); }
+.ui-chh__ctx-count { min-width: 18px; height: 18px; padding: 0 var(--tc-space-1); border-radius: var(--tc-radius-badge); background: var(--tc-accent-subtle); color: var(--tc-accent-text); font-size: var(--tc-font-size-xs); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-none); letter-spacing: normal; text-align: center; display: inline-grid; place-items: center; text-transform: none; font-variant-numeric: tabular-nums; }
+.ui-chh__ctx-body { display: grid; gap: var(--tc-space-2); max-height: 220px; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; }
+.ui-chh__ctx-src { display: grid; gap: var(--tc-space-0-5); padding: var(--tc-space-1-5) var(--tc-space-1) var(--tc-space-1-5) var(--tc-space-2-5); border-radius: var(--tc-radius-md); background: var(--tc-fill-subtle); box-shadow: inset 2px 0 0 var(--tc-accent); }
+.ui-chh__ctx-title { display: flex; align-items: center; gap: var(--tc-space-1); min-width: 0; }
+.ui-chh__ctx-name { flex: 1; min-width: 0; overflow: hidden; font-size: var(--tc-font-size-sm); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-snug); color: var(--tc-text-primary); white-space: nowrap; text-overflow: ellipsis; }
+.ui-chh__ctx-list { display: grid; margin: 0; padding: 0; list-style: none; }
+.ui-chh__ctx-item { display: flex; align-items: flex-start; gap: var(--tc-space-1); min-width: 0; }
+.ui-chh__ctx-text { flex: 1; min-width: 0; padding: var(--tc-space-1) 0; font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-snug); color: var(--tc-text-secondary); overflow-wrap: anywhere; }
+.ui-chh__ctx-kind { margin-right: var(--tc-space-1-5); font-size: var(--tc-font-size-xs); font-weight: var(--tc-font-weight-medium); color: var(--tc-text-muted); }
+.ui-chh__ctx-remove { display: grid; flex: none; place-items: center; width: 24px; height: 24px; border-radius: var(--tc-radius-sm); color: var(--tc-icon-muted); transition: background-color var(--tc-duration-instant) var(--tc-ease-standard), color var(--tc-duration-instant) var(--tc-ease-standard); }
+.ui-chh__ctx-remove:hover { background: var(--tc-fill-default); color: var(--tc-text-primary); }
+.ui-chh__ctx-remove .ui-chh__glyph { width: 14px; height: 14px; }
+.ui-chh__ctx-mark { display: grid; flex: none; place-items: center; color: var(--tc-accent-text); }
+.ui-chh__ctx-mark .ui-chh__glyph { width: 14px; height: 14px; }
+.ui-chh__item:is(:hover, [data-menu]) .ui-chh__ctx-mark { display: none; }
+
 /* ----- The actions menu: the menu pattern, hung from the row ----- */
 [data-ui="chh"] { position: relative; }
 .ui-chh__menu { position: absolute; z-index: var(--tc-z-dropdown); display: grid; gap: var(--tc-space-0-5); width: 200px; padding: var(--tc-menu-padding); border-radius: var(--tc-menu-radius); background: var(--tc-menu-bg); box-shadow: var(--tc-menu-shadow); animation: ui-chh-drop var(--tc-duration-fast) var(--tc-ease-move) both; }

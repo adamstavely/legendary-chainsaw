@@ -9,7 +9,7 @@ import { act } from "react";
 import { createRoot } from "react-dom/client";
 import { afterEach, describe, expect, test, vi } from "vitest";
 import "../../src/elements/chat-history";
-import { TcChatHistory, type ChatConversation, type ChatConversationsChange, type ChatDeleteDetail, type ChatFolder, type ChatValueChange } from "../../src/elements/chat-history";
+import { TcChatHistory, type ChatContextChange, type ChatContextItem, type ChatConversation, type ChatConversationsChange, type ChatDeleteDetail, type ChatFolder, type ChatValueChange } from "../../src/elements/chat-history";
 import { ChatHistory } from "../../src/elements/react/chat-history";
 import { cleanup, fixture, settle } from "./helpers";
 
@@ -426,11 +426,127 @@ describe("tc-chat-history", () => {
     await act(async () => root.unmount());
   });
 
+  const SUMMARY = [
+    { id: "s1", kind: "Finding", text: "Acme renews only with SSO" },
+    { id: "s2", kind: "Next step", text: "Send the SSO timeline" },
+  ];
+  const WITH_SUMMARY = CHATS.map((c) => (c.id === "y1" ? { ...c, summary: SUMMARY } : c.id === "w1" ? { ...c, summary: [{ id: "o1", text: "Book the venue" }] } : c));
+  const ctxMenu = async (el: TcChatHistory, id: string) => {
+    row(el, `c:${id}`).focus();
+    key(row(el, `c:${id}`), "ContextMenu");
+    await settle();
+    return [...el.querySelectorAll<HTMLElement>(".ui-chh__menu-item")];
+  };
+
+  for (const look of ["standard", "clean"] as const) {
+    test(`${look}: Load as context – from the menu of a chat with a summary; exactly what's active shows, with Remove`, async () => {
+      const el = await fixture<TcChatHistory>(html`<tc-chat-history look=${look} .conversations=${WITH_SUMMARY} .now=${NOW} value="t1"></tc-chat-history>`);
+      expect(el.querySelector(".ui-chh__ctx")).toBeNull();
+      // No summary, no item
+      expect((await ctxMenu(el, "t2")).map((i) => i.textContent!.trim())).not.toContain("Load as context");
+      key(el.querySelector('[role="menu"]')!, "Escape");
+      await settle();
+      const changes: ChatContextChange[] = [];
+      el.addEventListener("tc-context-change", (e) => changes.push((e as CustomEvent<ChatContextChange>).detail));
+      (await ctxMenu(el, "y1")).find((i) => i.textContent!.trim() === "Load as context")!.click();
+      await settle();
+      expect(changes[0]).toMatchObject({ action: "load", chat: "y1", items: [{ id: "s1", chat: "y1" }, { id: "s2", chat: "y1" }] });
+      expect(el.context.map((c) => `${c.chat}/${c.id}`)).toEqual(["y1/s1", "y1/s2"]);
+      expect(status(el)).toBe("Loaded 2 items from “Summarize the Acme call” as context");
+      const section = el.querySelector<HTMLElement>(".ui-chh__ctx")!;
+      expect(document.getElementById(section.getAttribute("aria-labelledby")!)!.textContent).toBe("In context2");
+      expect(section.querySelector(".ui-chh__ctx-name")!.textContent).toBe("Summarize the Acme call");
+      expect([...section.querySelectorAll(".ui-chh__ctx-item")].map((i) => i.querySelector(".ui-chh__ctx-text")!.textContent)).toEqual(["FindingAcme renews only with SSO", "Next stepSend the SSO timeline"]);
+      // The row says so, and its menu now offers Remove
+      expect(row(el, "c:y1").getAttribute("aria-label")).toBe("Summarize the Acme call, loaded as context");
+      expect(row(el, "c:y1").querySelector(".ui-chh__ctx-mark")).toBeTruthy();
+      expect((await ctxMenu(el, "y1")).map((i) => i.textContent!.trim())).toContain("Remove from context");
+      key(el.querySelector('[role="menu"]')!, "Escape");
+      await settle();
+      // A second chat adds to it
+      (await ctxMenu(el, "w1")).find((i) => i.textContent!.trim() === "Load as context")!.click();
+      await settle();
+      expect(el.context.map((c) => c.id)).toEqual(["s1", "s2", "o1"]);
+      expect(el.querySelectorAll(".ui-chh__ctx-src")).toHaveLength(2);
+      // Remove one item: focus moves to the next Remove
+      const removes = () => [...el.querySelectorAll<HTMLButtonElement>(".ui-chh__ctx-remove")];
+      expect(removes().map((b) => b.getAttribute("aria-label"))).toEqual([
+        "Remove “Summarize the Acme call” from context",
+        "Remove “Acme renews only with SSO” from context",
+        "Remove “Send the SSO timeline” from context",
+        "Remove “Plan the offsite” from context",
+        "Remove “Book the venue” from context",
+      ]);
+      removes()[1].focus();
+      removes()[1].click();
+      await settle();
+      expect(changes.at(-1)).toMatchObject({ action: "remove", chat: "y1", items: [{ id: "s1" }] });
+      expect(el.context.map((c) => c.id)).toEqual(["s2", "o1"]);
+      expect(status(el)).toBe("Removed “Acme renews only with SSO” from context");
+      expect(document.activeElement).toBe(removes()[1]);
+      // Remove a whole chat's items
+      removes()[2].click();
+      await settle();
+      expect(el.context.map((c) => c.id)).toEqual(["s2"]);
+      expect(status(el)).toBe("Removed “Plan the offsite” from context");
+      // The last one: focus goes back to the list
+      removes()[1].focus();
+      removes()[1].click();
+      await settle();
+      expect(el.querySelector(".ui-chh__ctx")).toBeNull();
+      expect(document.activeElement?.classList.contains("ui-chh__row")).toBe(true);
+    });
+  }
+
+  test("Load as context is cancelable: controlled, nothing changes until the app passes `context` back", async () => {
+    const el = await fixture<TcChatHistory>(html`<tc-chat-history .conversations=${WITH_SUMMARY} .now=${NOW}></tc-chat-history>`);
+    el.addEventListener("tc-context-change", (e) => e.preventDefault());
+    (await ctxMenu(el, "y1")).find((i) => i.textContent!.trim() === "Load as context")!.click();
+    await settle();
+    expect(el.context).toEqual([]);
+    expect(el.querySelector(".ui-chh__ctx")).toBeNull();
+    // A context the app sets shows as is, titled from `from` when the chat is gone
+    el.context = [{ id: "x", text: "Kept from a deleted chat", chat: "gone", from: "Old plan" }];
+    await settle();
+    expect(el.querySelector(".ui-chh__ctx-name")!.textContent).toBe("Old plan");
+  });
+
+  test("React wrapper: uncontrolled context survives a re-render; onContextChange gets the list and the change", async () => {
+    (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+    const host = document.createElement("div");
+    document.body.append(host);
+    const root = createRoot(host);
+    const seen: [ChatContextItem[], string][] = [];
+    let bump = () => {};
+    function App() {
+      const [n, setN] = React.useState(0);
+      bump = () => setN((x) => x + 1);
+      return React.createElement(ChatHistory, {
+        defaultConversations: WITH_SUMMARY,
+        now: NOW,
+        defaultContext: [{ ...SUMMARY[0], chat: "y1" }],
+        onContextChange: (c, change) => void seen.push([c, change.action]),
+        "data-n": n,
+      } as React.ComponentProps<typeof ChatHistory>);
+    }
+    await act(async () => root.render(React.createElement(App)));
+    await settle();
+    const el = host.querySelector<TcChatHistory>("tc-chat-history")!;
+    expect(el.querySelectorAll(".ui-chh__ctx-item")).toHaveLength(1);
+    el.querySelectorAll<HTMLButtonElement>(".ui-chh__ctx-remove")[1].click();
+    await settle();
+    await act(async () => bump());
+    await settle();
+    expect(seen).toEqual([[[], "remove"]]);
+    expect(el.querySelector(".ui-chh__ctx")).toBeNull();
+    await act(async () => root.unmount());
+  });
+
   for (const theme of ["light", "dark"])
     test(`axe: no violations in either look (${theme}), with search marks, the menu and Undo showing`, async () => {
       const wrap = await fixture(html`<div data-tc-theme=${theme} style="background: ${theme === "dark" ? "#0e0e10" : "#fff"}; padding: 8px">
-        <tc-chat-history .conversations=${CHATS} .folders=${FOLDERS} .now=${NOW} value="t1"></tc-chat-history>
-        <tc-chat-history look="clean" heading="Clean chats" .conversations=${CHATS} .folders=${FOLDERS} .now=${NOW} value="t2"></tc-chat-history>
+        <tc-chat-history .conversations=${WITH_SUMMARY} .folders=${FOLDERS} .now=${NOW} value="t1" .context=${SUMMARY.map((x) => ({ ...x, chat: "y1" }))}></tc-chat-history>
+        <tc-chat-history look="clean" heading="Clean chats" .context=${SUMMARY.map((x) => ({ ...x, chat: "y1" }))} .conversations=${WITH_SUMMARY} .folders=${FOLDERS} .now=${NOW} value="t2"></tc-chat-history>
       </div>`);
       const [a, b] = [...wrap.querySelectorAll<TcChatHistory>("tc-chat-history")];
       row(a, "c:t2").focus();

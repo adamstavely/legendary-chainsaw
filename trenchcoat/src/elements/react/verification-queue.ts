@@ -9,6 +9,7 @@ import {
   type VerificationFilterChange,
   type VerificationReviewDetail,
   type VerificationStatus,
+  type VerificationVerdict,
 } from "../verification-queue";
 import { h, useControlled } from "./internal";
 
@@ -21,6 +22,7 @@ export type {
   VerificationFilterChange,
   VerificationReviewDetail,
   VerificationStatus,
+  VerificationVerdict,
 } from "../verification-queue";
 
 const NONE: VerificationClaim[] = [];
@@ -46,8 +48,8 @@ export type VerificationQueueProps = Omit<RawVerificationQueueProps, "claims" | 
   defaultClaims?: VerificationClaim[];
   /** Called with the whole list after every mark */
   onClaimsChange?: (claims: VerificationClaim[]) => void;
-  /** Called when a claim is marked, with its new and previous status – for apps that save one claim at a time */
-  onReview?: (claim: VerificationClaim, status: VerificationStatus, previous: VerificationStatus) => void;
+  /** Called when a claim is marked, with its new and previous status – and the verdict, when its source type has its own – for apps that save one claim at a time */
+  onReview?: (claim: VerificationClaim, status: VerificationStatus, previous: VerificationStatus, verdict?: VerificationVerdict) => void;
   /** What the list shows – controlled when defined */
   filter?: VerificationFilter;
   /** What the list shows at first (default "open": the claims still to review) */
@@ -67,7 +69,7 @@ export function VerificationQueue({ title = "Verification queue", claims, defaul
     claims: c.value,
     filter: f.value,
     onTcClaimsChange: (e: CustomEvent<VerificationClaimsChange>) => c.handler(e.detail.claims, e),
-    onTcReview: (e: CustomEvent<VerificationReviewDetail>) => onReview?.(e.detail.claim, e.detail.status, e.detail.previous),
+    onTcReview: (e: CustomEvent<VerificationReviewDetail>) => onReview?.(e.detail.claim, e.detail.status, e.detail.previous, e.detail.verdict),
     onTcFilterChange: (e: CustomEvent<VerificationFilterChange>) => f.handler(e.detail.filter, e),
     onTcExport: (e: CustomEvent<VerificationExportDetail>) => onExport?.(e.detail),
   });

@@ -45,6 +45,12 @@
       "@motion/*": [
         "motion/*"
       ],
+      "trenchcoat/react": [
+        "src/elements/react.ts"
+      ],
+      "trenchcoat/look-provider": [
+        "src/elements/internal/look.ts"
+      ],
       "@/components/ui/*": [
         "src/components/*",
         "screens/*",

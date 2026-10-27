@@ -5,6 +5,10 @@ import { html } from "lit";
 import axe from "axe-core";
 import { afterEach, describe, expect, test, vi } from "vitest";
 import { userEvent } from "vitest/browser";
+import * as React from "react";
+import { act } from "react";
+import { createRoot } from "react-dom/client";
+import { ProgressTracker } from "../../src/elements/react/progress-tracker";
 import "../../src/elements/progress-tracker";
 import type { ProgressDoneChange, ProgressStep, TcProgressTracker } from "../../src/elements/progress-tracker";
 import { cleanup, fixture, settle } from "./helpers";
@@ -191,6 +195,114 @@ describe("tc-progress-tracker", () => {
     expect(css).toMatch(/ui-progress__check \{[^}]*--tc-border-control/);
     expect(css).not.toMatch(/background-position/);
   });
+
+  const states: ProgressStep[] = [
+    { id: "a", label: "Upload the files", done: true },
+    { id: "b", label: "Scan for secrets", state: "failed" },
+    { id: "c", label: "Build the index", state: "pending" },
+    { id: "d", label: "Invite reviewers", disabled: true },
+    { id: "e", label: "Publish" },
+  ];
+
+  test("failed and pending steps say so, don't count as done and can't be ticked", async () => {
+    const onDone = vi.fn();
+    const el = await fixture<TcProgressTracker>(html`<tc-progress-tracker .steps=${[...states.slice(0, 2), { ...states[2], done: true }]} @tc-done-change=${onDone}></tc-progress-tracker>`);
+    expect(el.querySelectorAll('[role="checkbox"]').length).toBe(1);
+    const failed = el.querySelector<HTMLElement>('[data-status="failed"]')!;
+    expect(failed.tagName).toBe("DIV");
+    expect(failed.textContent!.replace(/\s+/g, " ").trim()).toBe("Scan for secrets, Failed");
+    expect(failed.querySelector(".ui-progress__check svg path")).toBeTruthy();
+    const pending = el.querySelector<HTMLElement>('[data-status="pending"]')!;
+    expect(pending.textContent!.replace(/\s+/g, " ").trim()).toBe("Build the index, In progress");
+    failed.click();
+    await settle();
+    expect(onDone).not.toHaveBeenCalled();
+    // A pending step's done flag doesn't count
+    expect(bar(el).getAttribute("aria-valuetext")).toBe("1 of 3 done");
+  });
+
+  test("a disabled step stays focusable with aria-disabled and ignores clicks and keys", async () => {
+    const onDone = vi.fn();
+    const el = await fixture<TcProgressTracker>(html`<tc-progress-tracker .steps=${states} @tc-done-change=${onDone}></tc-progress-tracker>`);
+    const step = box(el, "Invite reviewers");
+    expect(step.getAttribute("aria-disabled")).toBe("true");
+    expect(step.disabled).toBe(false);
+    step.click();
+    step.focus();
+    await userEvent.keyboard(" ");
+    await settle();
+    expect(onDone).not.toHaveBeenCalled();
+    expect(step.getAttribute("aria-checked")).toBe("false");
+    box(el, "Publish").click();
+    await settle();
+    expect(onDone).toHaveBeenCalledTimes(1);
+  });
+
+  test("readonly: a status list – no checkboxes, the state in words, no auto play", async () => {
+    const el = await fixture<TcProgressTracker>(html`<tc-progress-tracker readonly auto-play interval="20" .steps=${states}></tc-progress-tracker>`);
+    expect(el.querySelectorAll('[role="checkbox"], button.ui-progress__step').length).toBe(0);
+    expect(el.querySelector(".ui-progress__play")).toBeNull();
+    const rows = [...el.querySelectorAll(".ui-progress__step")].map((r) => r.textContent!.replace(/\s+/g, " ").trim());
+    expect(rows).toEqual(["Upload the files, done", "Scan for secrets, Failed", "Build the index, In progress", "Invite reviewers, not done", "Publish, not done"]);
+    await wait(120);
+    expect(bar(el).getAttribute("aria-valuenow")).toBe("1");
+  });
+
+  test("a step's own readonly makes just that row a status row", async () => {
+    const el = await fixture<TcProgressTracker>(html`<tc-progress-tracker .steps=${[{ id: "a", label: "A", done: true, readonly: true }, { id: "b", label: "B" }]}></tc-progress-tracker>`);
+    expect(el.querySelectorAll('[role="checkbox"]').length).toBe(1);
+    expect(el.querySelector('div[data-status="done"]')!.textContent).toContain(", done");
+  });
+
+  test("auto play skips steps it can't tick", async () => {
+    const el = await fixture<TcProgressTracker>(html`<tc-progress-tracker auto-play interval="80" .steps=${states}></tc-progress-tracker>`);
+    await wait(130);
+    expect(box(el, "Invite reviewers").getAttribute("aria-checked")).toBe("false");
+    expect(box(el, "Publish").getAttribute("aria-checked")).toBe("true");
+  });
+
+  test("done-style plain: no line through done steps; fit widens or fills", async () => {
+    const wrap = await fixture(html`<div style="width: 900px">
+      <tc-progress-tracker .steps=${steps}></tc-progress-tracker>
+      <tc-progress-tracker done-style="plain" fit="wide" .steps=${steps}></tc-progress-tracker>
+      <tc-progress-tracker look="clean" done-style="plain" fit="fill" .steps=${steps}></tc-progress-tracker>
+    </div>`);
+    for (const a of wrap.getAnimations({ subtree: true })) a.finish();
+    const [strike, plain, fill] = [...wrap.querySelectorAll<TcProgressTracker>("tc-progress-tracker")];
+    const line = (el: Element) => getComputedStyle(el.querySelector('[data-status="done"] .ui-progress__label > span')!).backgroundSize;
+    expect(line(strike)).toMatch(/^100%/);
+    expect(line(plain)).toMatch(/^0%/);
+    expect(line(fill)).toMatch(/^0%/);
+    expect(strike.getBoundingClientRect().width).toBe(360);
+    expect(plain.getBoundingClientRect().width).toBe(560);
+    expect(fill.getBoundingClientRect().width).toBe(900);
+    expect(plain.doneStyle).toBe("plain");
+  });
+
+  test("the wrapper: readonly, doneStyle, fit and step states reach the element", async () => {
+    const host = document.createElement("div");
+    document.body.append(host);
+    const root = createRoot(host);
+    await act(async () => root.render(React.createElement(ProgressTracker, { title: "Import", steps: states as React.ComponentProps<typeof ProgressTracker>["steps"], readonly: true, doneStyle: "plain", fit: "wide" })));
+    await settle();
+    const el = host.querySelector("tc-progress-tracker")!;
+    expect(el.getAttribute("fit")).toBe("wide");
+    expect(el.getAttribute("done-style")).toBe("plain");
+    expect(el.querySelectorAll('[role="checkbox"]').length).toBe(0);
+    expect(el.querySelector('[data-status="failed"]')).toBeTruthy();
+    await act(async () => root.unmount());
+  });
+
+  for (const scheme of ["light", "dark"] as const)
+    test(`axe: the step states in both looks (${scheme})`, async () => {
+      const wrap = await fixture(html`<div style=${`color-scheme: ${scheme}`}>
+        <tc-progress-tracker .steps=${states}></tc-progress-tracker>
+        <tc-progress-tracker look="clean" readonly heading="Clean" .steps=${states}></tc-progress-tracker>
+      </div>`);
+      for (const a of wrap.getAnimations({ subtree: true })) if (a.effect?.getTiming().iterations !== Infinity) a.finish();
+      const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
+      expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
+    });
 
   test("axe: no violations in either look", async () => {
     const wrap = await fixture(html`<div>

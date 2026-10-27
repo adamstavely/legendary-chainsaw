@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type * as UI from "../../../src/elements/react";
-import type { ReleaseApproval, ReleaseChange, ReleaseEvidence, ReleaseRollback, ReleaseStage, ReleaseVersion } from "../../../src/elements/react";
+import type { ReleaseApproval, ReleaseChange, ReleaseEvidence, ReleaseFinding, ReleaseRollback, ReleaseStage, ReleaseSuite, ReleaseVersion, ReleaseWaiver } from "../../../src/elements/react";
 import { buttonSm, caption, textButton } from "../demo-kit";
 
 /* A support assistant's configuration on its way to production. v14 is in staging; its evaluation finishes a moment
@@ -32,6 +32,25 @@ const START_APPROVALS: ReleaseApproval[] = [
 const START_ROLLBACK: ReleaseRollback = { stage: "production", version: "v12" };
 const STEPS = [10, 50, 100];
 
+/* "With gate suites": the release gate also runs suites, with a finding linked to the candidate. The retrieval suite
+   passes only on a waiver; the finding's waiver has expired, so it blocks until someone renews it. */
+const SUITES: ReleaseSuite[] = [
+  { id: "safety", label: "Safety regression", status: "pass", passed: 48, failed: 0, inconclusive: 0 },
+  { id: "retrieval", label: "Retrieval regression", status: "conditional", passed: 5, failed: 0, inconclusive: 1 },
+  { id: "tools", label: "Tool use", status: "pass", passed: 12, failed: 0, inconclusive: 0 },
+];
+const FINDINGS: ReleaseFinding[] = [
+  { id: "f21", ref: "F-021", severity: "P1", title: "Order lookup skipped for refunds under $20", status: "Acknowledged", suite: "tools", blocking: true },
+  { id: "f24", ref: "F-024", severity: "P2", title: "Policy page cited without its effective date", status: "Open", suite: "retrieval" },
+];
+const NONE_SUITES: ReleaseSuite[] = [];
+const NONE_FINDINGS: ReleaseFinding[] = [];
+const NONE_WAIVERS: ReleaseWaiver[] = [];
+const START_WAIVERS: ReleaseWaiver[] = [
+  { id: "w14", label: "W-014", covers: ["retrieval"], grantedBy: "Dana Lee", expires: "2026-11-07" },
+  { id: "w15", label: "W-015", covers: ["f21"], grantedBy: "Dana Lee", expires: "2026-10-20", expired: true },
+];
+
 export default function Demo({ ui }: { ui: typeof UI }) {
   const { ConfigurationReleaseControl } = ui;
   const [stages, setStages] = useState(START_STAGES);
@@ -39,6 +58,8 @@ export default function Demo({ ui }: { ui: typeof UI }) {
   const [approvals, setApprovals] = useState(START_APPROVALS);
   const [rollback, setRollback] = useState(START_ROLLBACK);
   const [note, setNote] = useState("The evaluation is still running.");
+  const [gated, setGated] = useState(false);
+  const [waivers, setWaivers] = useState(START_WAIVERS);
   const timers = useRef<number[]>([]);
   const later = (ms: number, fn: () => void) => void timers.current.push(window.setTimeout(fn, ms));
   const clear = () => {
@@ -52,6 +73,7 @@ export default function Demo({ ui }: { ui: typeof UI }) {
     setEvidence(RUNNING);
     setApprovals(START_APPROVALS);
     setRollback(START_ROLLBACK);
+    setWaivers(START_WAIVERS);
     setNote("The evaluation is still running.");
     later(2400, () => {
       setEvidence(DONE);
@@ -78,6 +100,10 @@ export default function Demo({ ui }: { ui: typeof UI }) {
         approvals={approvals}
         requiredApprovals={2}
         rollback={rollback}
+        suites={gated ? SUITES : NONE_SUITES}
+        findings={gated ? FINDINGS : NONE_FINDINGS}
+        waivers={gated ? waivers : NONE_WAIVERS}
+        onOpenFinding={(f) => setNote(`${f.ref} opens in the findings tracker.`)}
         onCompare={({ from, to }) => setNote(`Compare opens the run comparison for ${from?.label ?? "nothing"} → ${to.label}.`)}
         onPromote={({ version }) => {
           clear();
@@ -117,6 +143,21 @@ export default function Demo({ ui }: { ui: typeof UI }) {
             Approve as Sam
           </button>
         ) : null}
+        {gated && waivers.some((w) => w.expired) ? (
+          <button
+            type="button"
+            style={buttonSm}
+            onClick={() => {
+              setWaivers((list) => list.map((w) => (w.expired ? { ...w, expired: false, expires: "2026-11-14", grantedBy: "Priya Shah" } : w)));
+              setNote("Priya renewed W-015 until 2026-11-14.");
+            }}
+          >
+            Renew W-015
+          </button>
+        ) : null}
+        <button type="button" style={textButton} onClick={() => setGated((g) => !g)}>
+          {gated ? "Without gate suites" : "With gate suites"}
+        </button>
         <button type="button" style={textButton} onClick={start}>
           Reset
         </button>

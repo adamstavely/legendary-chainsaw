@@ -72,7 +72,9 @@ export default defineConfig({
   plugins: [cleanTwins(), uiAlias(), react()],
   // The Lit elements use standard decorators, which no browser ships yet: esbuild lowers them
   esbuild: { target: "es2022" },
-  resolve: { alias: LIBS },
+  // Blocks built on the elements import them as a consumer would, from "trenchcoat/react" (decision O): here that is
+  // the source, so the gallery and tests run the elements being edited, not a stale dist
+  resolve: { alias: { ...LIBS, "trenchcoat/react": here("src/elements/react.ts"), "trenchcoat/look-provider": here("src/elements/internal/look.ts") } },
   server: { port: 5199, fs: { allow: [here(".")] } },
   build: { outDir: here("dist-gallery"), emptyOutDir: true },
   test: {

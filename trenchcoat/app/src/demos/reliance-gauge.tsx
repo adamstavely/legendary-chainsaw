@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import type * as UI from "../../../src/elements/react";
-import type { RelianceReviewLevel, RelianceSignal, RelianceWindow } from "../../../src/elements/react";
+import type { RelianceAgent, RelianceDomain, RelianceReviewLevel, RelianceSignal, RelianceWindow } from "../../../src/elements/react";
 import { caption, textButton } from "../demo-kit";
 
 /* A contract-review assistant over six weeks: as the team gets used to it, they accept more of its clause summaries
@@ -28,11 +28,27 @@ const signalsOf = (w: Week): RelianceSignal[] => [
   { id: "unchecked", label: "Sources not opened", hint: "Cited clauses nobody looked at", value: w.signals[2] },
 ];
 
+/* Per domain, the summaries' stated confidence against how often they were right – liability caps drift into
+   over-confidence as the new template's wording spreads */
+const domainsOf = (week: number): RelianceDomain[] => [
+  { id: "payment", label: "Payment terms", confidence: 0.86, accuracy: 0.84, count: 142 },
+  { id: "liability", label: "Liability caps", confidence: 0.88, accuracy: +(0.84 - week * 0.03).toFixed(2), count: 96 },
+  { id: "termination", label: "Termination", confidence: 0.71, accuracy: 0.83, count: 61 },
+  { id: "data", label: "Data protection", confidence: 0.79, accuracy: 0.76, count: 113 },
+];
+
+const AGENTS: RelianceAgent[] = [
+  { id: "summariser", label: "Clause summariser", rating: 0.91, detail: "412 answers" },
+  { id: "extractor", label: "Obligation extractor", rating: 0.84, detail: "268 answers" },
+  { id: "redliner", label: "Redline drafter", rating: 0.67, detail: "95 answers" },
+];
+
 export default function Demo({ ui }: { ui: typeof UI }) {
   const { RelianceGauge } = ui;
   const [shown, setShown] = useState(SHOWN_AT_START);
   const [level, setLevel] = useState<RelianceReviewLevel>("routine");
   const [log, setLog] = useState("");
+  const [detail, setDetail] = useState(true);
 
   // A week comes in every beat until the sixth – nothing ticks after that
   useEffect(() => {
@@ -61,6 +77,8 @@ export default function Demo({ ui }: { ui: typeof UI }) {
         signals={signalsOf(now)}
         overtrust={now.overtrust}
         undertrust={now.undertrust}
+        domains={detail ? domainsOf(shown) : []}
+        agents={detail ? AGENTS : []}
         reviewLevel={level}
         onReviewLevelChange={(next) => {
           setLevel(next);
@@ -72,6 +90,9 @@ export default function Demo({ ui }: { ui: typeof UI }) {
         {log || (shown < WEEKS.length ? "A new week arrives every couple of seconds" : "Six weeks in – reliance has outrun accuracy")}{" "}
         <button type="button" style={textButton} onClick={replay}>
           Replay
+        </button>{" "}
+        <button type="button" style={textButton} onClick={() => setDetail((d) => !d)}>
+          {detail ? "Hide domains and agents" : "Show domains and agents"}
         </button>
       </p>
     </div>

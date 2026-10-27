@@ -1,18 +1,35 @@
-name: CI
+name: Trenchcoat CI
 
+# Runs only for changes under trenchcoat/ (and to this file); nothing else in the repo triggers it
 on:
   push:
+    branches: [main]
+    paths:
+      - "trenchcoat/**"
+      - ".github/workflows/trenchcoat-ci.yml"
   pull_request:
+    paths:
+      - "trenchcoat/**"
+      - ".github/workflows/trenchcoat-ci.yml"
+
+# A newer push to the same branch cancels the run it replaces
+concurrency:
+  group: trenchcoat-ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   check:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: trenchcoat
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
+          cache-dependency-path: trenchcoat/package-lock.json
       - run: npm ci
       # The same checks as `npm run ci`, one step each so a failure is named on the PR; fast ones first
       - name: Typecheck
@@ -41,3 +58,6 @@ jobs:
         run: npm test
       - name: Framework examples (React, Next.js, Vue, Nuxt, Angular, Svelte, HTML)
         run: npm run examples
+      # Needs the examples/ apps installed by the step above
+      - name: Framework snippets on the docs pages
+        run: npm run check:snippets

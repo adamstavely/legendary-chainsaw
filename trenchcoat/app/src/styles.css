@@ -339,7 +339,7 @@ section:not(.stage *) + section:not(.stage *) { margin-top: 36px; }
 .docs-example-bar .ghost.on { background: #eef2ff; color: #4338ca; }
 .docs-example-stage { position: relative; }
 .docs-example-inner[data-narrow] .stage > :not(tc-look-provider),
-.docs-example-inner[data-narrow] .stage > tc-look-provider > * { width: var(--docs-w); max-width: var(--docs-w); }  /* the provider has no box of its own */
+.docs-example-inner[data-narrow] .stage > tc-look-provider > * { width: var(--docs-w); max-width: var(--docs-w) !important; }  /* the provider has no box of its own; !important beats a demo's inline maxWidth, so the narrow preview is always that narrow */
 .cardhead.slim { padding: 6px 10px; border-bottom: 1px solid var(--line); }
 .docs-pin-box { position: absolute; z-index: 5; border: 1.5px dashed #6366f1; border-radius: 6px; pointer-events: none; }
 .docs-pin-box .docs-pin { position: absolute; top: -10px; left: -10px; }
@@ -347,7 +347,19 @@ section:not(.stage *) + section:not(.stage *) { margin-top: 36px; }
 .docs-anatomy { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; max-width: 76ch; }
 .docs-anatomy li { display: flex; gap: 12px; align-items: flex-start; font-size: 14px; line-height: 1.5; }
 
-.docs-usage .docs-fw { display: inline-flex; margin-bottom: 10px; }
+.docs-usage .docs-fw, .docs-section .docs-fw { display: inline-flex; flex-wrap: wrap; margin-bottom: 10px; }
+/* Install and import per framework, in the header (6.5) */
+.docs-imports { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 6px 16px; margin: 16px 0 0; padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); font-size: 13px; }
+.docs-imports div { display: contents; }
+.docs-imports dt { font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); padding-top: 2px; }
+.docs-imports dd { margin: 0; overflow-wrap: anywhere; line-height: 1.5; }
+.docs-imports code { padding: 1px 5px; border-radius: 5px; background: #f1f1ef; }
+.docs-fw-panel > p:first-child { margin-top: 4px; font-size: 14px; line-height: 1.55; max-width: 76ch; }
+.docs-fw-panel tc-code-block { margin-bottom: 8px; }
+@media (max-width: 640px) {
+  .docs-imports { grid-template-columns: minmax(0, 1fr); }
+  .docs-imports dt { padding-top: 6px; }
+}
 .docs-table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--panel); }
 .docs-table { width: 100%; border-collapse: collapse; font-size: 13px; }
 .docs-table th { position: sticky; top: 0; padding: 9px 12px; background: #fafaf9; border-bottom: 1px solid var(--line); font-size: 11.5px; font-weight: 600; color: var(--muted); text-align: left; white-space: nowrap; }

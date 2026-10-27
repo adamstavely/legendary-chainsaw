@@ -1,0 +1,687 @@
+{
+ "elements": [
+  {
+   "tag": "tc-text-annotator",
+   "className": "TcTextAnnotator",
+   "description": "A document to highlight and comment on: marks in the text, notes in a margin rail, a toolbar on the selection.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Annotations\"",
+     "description": "The heading, and the component's name",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string",
+     "default": "\"\"",
+     "description": "A quieter line under the heading – the document's name or where it came from",
+     "readonly": false
+    },
+    {
+     "name": "text",
+     "attribute": "text",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The document: plain text, paragraphs separated by blank lines. Offsets index into it",
+     "readonly": false
+    },
+    {
+     "name": "value",
+     "attribute": null,
+     "type": "TextAnnotation[]",
+     "default": "[]",
+     "description": "The annotations. Changed by the user unless a tc-value-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "author",
+     "attribute": "author",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Who is annotating: the author of new annotations",
+     "readonly": false
+    },
+    {
+     "name": "colors",
+     "attribute": null,
+     "type": "HighlightColor[]",
+     "default": "[\"yellow\", \"green\", \"blue\", \"pink\", \"purple\"]",
+     "description": "The colours the toolbar offers, in order (1–5 pick them from the keyboard)",
+     "readonly": false
+    },
+    {
+     "name": "colorNames",
+     "attribute": null,
+     "type": "Record<HighlightColor, string>",
+     "default": "{ yellow: \"Yellow\", green: \"Green\", blue: \"Blue\", pink: \"Pink\", purple: \"Purple\" }",
+     "description": "The colours' names, as people read and hear them",
+     "readonly": false
+    },
+    {
+     "name": "filter",
+     "attribute": null,
+     "type": "TextAnnotatorFilter",
+     "default": "{ colors: [], authors: [], resolved: true }",
+     "description": "What the rail and the marks show; changed from the filter bar (tc-filter-change)",
+     "readonly": false
+    },
+    {
+     "name": "readonly",
+     "attribute": "readonly",
+     "type": "boolean",
+     "default": "false",
+     "description": "Read and copy only: no new highlights, comments or changes",
+     "readonly": false
+    },
+    {
+     "name": "timestamp",
+     "attribute": null,
+     "type": "(() => string | number) | undefined",
+     "default": "undefined",
+     "description": "Stamps a new annotation's `at` (epoch ms or ISO) – the element itself reads no clock",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The locale times are written in (default: the browser's)",
+     "readonly": false
+    },
+    {
+     "name": "textLabel",
+     "attribute": "text-label",
+     "type": "string",
+     "default": "\"Document text\"",
+     "description": "The text's accessible name",
+     "readonly": false
+    },
+    {
+     "name": "emptyText",
+     "attribute": "empty-text",
+     "type": "string",
+     "default": "\"Select text to highlight it or add a comment.\"",
+     "description": "Shown in the rail before there are any annotations",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-value-change",
+     "detail": "",
+     "description": "An annotation was added, edited, resolved, reopened, removed or restored ({ value, change }: TextAnnotatorValueChange); cancelable – prevent it to control `value`",
+     "cancelable": true
+    },
+    {
+     "name": "tc-copy",
+     "detail": "",
+     "description": "Copy was chosen on a selection ({ text, start, end }: TextAnnotatorCopy); cancelable – prevent it to copy your own way",
+     "cancelable": true
+    },
+    {
+     "name": "tc-filter-change",
+     "detail": "",
+     "description": "The colour, author or resolved filter changed ({ filter }: TextAnnotatorFilterChange)",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "tan",
+   "cssProperties": [
+    {
+     "name": "--tc-text-annotator-rail",
+     "value": "248px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-text-annotator-measure",
+     "value": "68ch",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-text-annotator-panel-bg",
+     "value": "var(--tc-surface-raised)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-highlight",
+    "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-border-default",
+    "--tc-border-selected",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-shimmer",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-font-size",
+    "--tc-field-px",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-fill-hover",
+    "--tc-fill-selected",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-lg-plus",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-hairline",
+    "--tc-highlight-blue-bg",
+    "--tc-highlight-blue-fg",
+    "--tc-highlight-green-bg",
+    "--tc-highlight-green-fg",
+    "--tc-highlight-pink-bg",
+    "--tc-highlight-pink-fg",
+    "--tc-highlight-purple-bg",
+    "--tc-highlight-purple-fg",
+    "--tc-highlight-yellow-bg",
+    "--tc-highlight-yellow-fg",
+    "--tc-icon-muted",
+    "--tc-line-height-loose",
+    "--tc-line-height-relaxed",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-menu-item-hover",
+    "--tc-pill-font-size",
+    "--tc-pill-font-size-lg",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-h-lg",
+    "--tc-pill-px",
+    "--tc-pill-px-lg",
+    "--tc-pill-radius",
+    "--tc-radius-2xs",
+    "--tc-radius-lg",
+    "--tc-radius-sm",
+    "--tc-radius-xs",
+    "--tc-shadow-raised",
+    "--tc-shadow-raised-hover",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-5",
+    "--tc-space-6",
+    "--tc-status-danger-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-surface-control",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-placeholder",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "TextAnnotator",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading, and the component's name"
+    },
+    {
+     "name": "value",
+     "type": "TextAnnotation[]",
+     "optional": true,
+     "description": "The annotations. Controlled when defined; otherwise the component keeps them, starting at `defaultValue`"
+    },
+    {
+     "name": "defaultValue",
+     "type": "TextAnnotation[]",
+     "optional": true,
+     "description": "The annotations when uncontrolled"
+    },
+    {
+     "name": "onChange",
+     "type": "(value: TextAnnotation[], type: TextAnnotatorChangeType, annotation: TextAnnotation) => void",
+     "optional": true,
+     "description": "Called with the whole new list, what kind of change it was and the annotation it touched"
+    },
+    {
+     "name": "filter",
+     "type": "TextAnnotatorFilter",
+     "optional": true,
+     "description": "What the rail and the marks show. Controlled when defined"
+    },
+    {
+     "name": "defaultFilter",
+     "type": "TextAnnotatorFilter",
+     "optional": true,
+     "description": "The filter when uncontrolled"
+    },
+    {
+     "name": "onFilterChange",
+     "type": "(filter: TextAnnotatorFilter) => void",
+     "optional": true,
+     "description": "Called when the filter changes"
+    },
+    {
+     "name": "onCopy",
+     "type": "(text: string, start: number, end: number) => boolean | void",
+     "optional": true,
+     "description": "Called when Copy is chosen; return false to stop the component writing to the clipboard itself"
+    }
+   ],
+   "hides": [
+    "heading",
+    "value",
+    "defaultValue",
+    "filter",
+    "onChange",
+    "onCopy",
+    "children"
+   ],
+   "events": {
+    "tc-value-change": null,
+    "tc-copy": "onCopy",
+    "tc-filter-change": "onFilterChange"
+   }
+  }
+ ],
+ "changelog": [
+  "**Text selection:** - `tc-text-annotator`: highlight a passage and comment on it; - `tc-response-selection`: select part of a model reply to reply to it or request an edit; - `tc-selection-translate`: translate the selected text; - `tc-isbn-details`: hover an ISBN for its book details."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-text-annotator",
+   "className": "TcTextAnnotator",
+   "module": "trenchcoat/text-annotator",
+   "data": [
+    "value",
+    "colors",
+    "colorNames",
+    "filter",
+    "timestamp"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    },
+    {
+     "name": "text",
+     "attribute": "text"
+    },
+    {
+     "name": "author",
+     "attribute": "author"
+    },
+    {
+     "name": "readonly",
+     "attribute": "readonly"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    },
+    {
+     "name": "textLabel",
+     "attribute": "text-label"
+    },
+    {
+     "name": "emptyText",
+     "attribute": "empty-text"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-value-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-copy",
+     "cancelable": true
+    },
+    {
+     "name": "tc-filter-change",
+     "cancelable": false
+    }
+   ],
+   "controlled": [
+    {
+     "property": "value",
+     "event": "tc-value-change"
+    }
+   ],
+   "form": {
+    "property": "value",
+    "event": "tc-value-change",
+    "formAssociated": false
+   },
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "itself",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "inert",
+    "name": "inert",
+    "bcd": "api.HTMLElement.inert",
+    "versions": {
+     "chrome": "102",
+     "edge": "102",
+     "firefox": "112",
+     "safari": "15.5",
+     "safari_ios": "15.5"
+    },
+    "progressive": false,
+    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
+    "via": [
+     "internal/popover"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "internal/popover"
+    ]
+   },
+   {
+    "id": "individual-transforms",
+    "name": "translate, scale and rotate properties",
+    "bcd": "css.properties.translate",
+    "versions": {
+     "chrome": "104",
+     "edge": "104",
+     "firefox": "72",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "clipboard",
+    "name": "Async Clipboard (writeText)",
+    "bcd": "api.Clipboard.writeText",
+    "versions": {
+     "chrome": "66",
+     "edge": "79",
+     "firefox": "63",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "why": "Copy buttons.",
+    "via": [
+     "internal/util"
+    ]
+   },
+   {
+    "id": "resize-observer",
+    "name": "ResizeObserver",
+    "bcd": "api.ResizeObserver",
+    "versions": {
+     "chrome": "64",
+     "edge": "79",
+     "firefox": "69",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "via": [
+     "itself",
+     "internal/popover"
+    ]
+   },
+   {
+    "id": "popover",
+    "name": "Popover API",
+    "bcd": "api.HTMLElement.popover",
+    "versions": {
+     "chrome": "114",
+     "edge": "114",
+     "firefox": "125",
+     "safari": "17",
+     "safari_ios": "18.3"
+    },
+    "progressive": true,
+    "without": "Lists open fixed to the window instead of in the top layer, so a clipping ancestor or a modal can cover them.",
+    "via": [
+     "internal/popover"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "internal/popover",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setTimeout (internal/popover › PopoverController)"
+  ],
+  "frames": [
+   "requestAnimationFrame, cancelled",
+   "requestAnimationFrame, cancelled (internal/selection › SelectionController)",
+   "requestAnimationFrame, cancelled (internal/popover › PopoverController)"
+  ],
+  "animations": 1,
+  "observers": [
+   "ResizeObserver",
+   "MutationObserver (internal/controllers › AriaForwardController)",
+   "ResizeObserver (internal/popover › PopoverController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)",
+    "CSS (internal/popover › popoverCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 69757,
+  "gzip": 21046
+ }
+}

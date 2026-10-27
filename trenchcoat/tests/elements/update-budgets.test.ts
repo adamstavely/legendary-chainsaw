@@ -59,5 +59,6 @@ describe("update budgets", () => {
       .map(({ tag, n, budget }) => `${tag}: ${n} idle updates in ${IDLE_MS} ms (budget ${budget})`);
     expect(over).toEqual([]);
     expect(Object.keys(counts).length, "every element was mounted").toBeGreaterThan(100);
-  });
+    // Every element at once: slow on a two-core CI runner, in WebKit above all
+  }, 120_000);
 });

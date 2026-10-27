@@ -5,6 +5,7 @@ import { repeat } from "lit/directives/repeat.js";
 import { styleMap } from "lit/directives/style-map.js";
 import type { AnswerClaim, ClaimSource, ClaimSourceType } from "./claim-answer";
 import { TcElement } from "./internal/base";
+import { sourceSwatch } from "./internal/source-line";
 import { cardHead } from "./internal/card-head";
 import { FocusRescueController, RowWindowController, ToolbarController } from "./internal/controllers";
 import type { Look } from "./internal/look";
@@ -26,6 +27,10 @@ import "./validity-badge";
  * Every mark fires a cancelable `tc-claims-change` with the whole list (preventDefault() to own `claims`), then
  * `tc-review`. Export fires `tc-export` only once the gate is open: no more than `allowUnreviewed` claims left to
  * review. Standard sits in a gray tray with a white card; Clean is one white card.
+ *
+ * A source type can have its own verdicts (`verdicts`): a transcript claim might be "Verified against recording",
+ * "Transcript may be inaccurate" or "Dismiss". Each counts under one of the four statuses, so the progress, the
+ * filters and the gate work the same; the claim keeps the verdict's id in `verdict`.
  */
 
 /** Where a claim stands: not yet reviewed, or the reviewer's verdict */
@@ -36,9 +41,22 @@ export type VerificationClaim = AnswerClaim & {
   status?: VerificationStatus;
   /** Where in the session it came from, e.g. "Turn 3" or "Hub answer" */
   origin?: string;
+  /** The id of the verdict given, when its source type has its own verdicts (`verdicts`) */
+  verdict?: string;
 };
-export type VerificationClaimsChange = { claims: VerificationClaim[]; claim: VerificationClaim; status: VerificationStatus };
-export type VerificationReviewDetail = { claim: VerificationClaim; status: VerificationStatus; previous: VerificationStatus };
+/** A verdict for claims of one source type, in that type's own words – counted under one of the four statuses */
+export type VerificationVerdict = {
+  /** Kept on the claim as `verdict`, e.g. "misrepresents" */
+  id: string;
+  /** The button's words, e.g. "Misrepresents source" */
+  label: string;
+  /** The status it counts as */
+  status: Exclude<VerificationStatus, "pending">;
+  /** The single key that gives it on the list; unset, the first verdict of each status takes that status's key (V C X D) */
+  key?: string;
+};
+export type VerificationClaimsChange = { claims: VerificationClaim[]; claim: VerificationClaim; status: VerificationStatus; verdict?: VerificationVerdict };
+export type VerificationReviewDetail = { claim: VerificationClaim; status: VerificationStatus; previous: VerificationStatus; verdict?: VerificationVerdict };
 export type VerificationCounts = Record<VerificationStatus, number>;
 export type VerificationExportDetail = { claims: VerificationClaim[]; counts: VerificationCounts };
 export type VerificationFilter = "open" | "reviewed" | "all";
@@ -57,9 +75,22 @@ const DEFAULT_STATUS_LABELS: Record<VerificationStatus, string> = {
 };
 /** The short form on the toolbar buttons */
 const DEFAULT_ACTION_LABELS: Record<Exclude<VerificationStatus, "pending">, string> = { verified: "Verified", unverifiable: "Can't verify", incorrect: "Incorrect", dismissed: "Dismiss" };
-const KEYS: Record<string, VerificationStatus> = { v: "verified", c: "unverifiable", x: "incorrect", d: "dismissed", u: "pending" };
+/** The key that puts a claim back to review */
+const UNDO_KEY = "u";
 const KEY_OF: Record<Exclude<VerificationStatus, "pending">, string> = { verified: "V", unverifiable: "C", incorrect: "X", dismissed: "D" };
-const DEFAULT_SOURCE_LABELS: Record<ClaimSourceType, string> = { grounded: "Sourced", model: "Model knowledge", inferred: "Inferred" };
+const DEFAULT_SOURCE_LABELS: Record<ClaimSourceType, string> = {
+  grounded: "Sourced",
+  model: "Model knowledge",
+  inferred: "Inferred",
+  transcript: "Transcript",
+  video: "Video",
+  audio: "Audio",
+  image: "Image",
+  ocr: "OCR",
+  session: "Earlier session",
+  team: "Team knowledge",
+  agent: "Agent finding",
+};
 const FILTERS: VerificationFilter[] = ["open", "reviewed", "all"];
 const FILTER_LABELS: Record<VerificationFilter, string> = { open: "To review", reviewed: "Reviewed", all: "All" };
 
@@ -127,6 +158,8 @@ export class TcVerificationQueue extends TcElement {
   @property({ attribute: false }) accessor actionLabels: Partial<Record<Exclude<VerificationStatus, "pending">, string>> = {};
   /** The names of the source types, as tc-claim-answer's `sourceLabels` */
   @property({ attribute: false }) accessor sourceLabels: Partial<Record<ClaimSourceType, string>> = {};
+  /** Verdicts for particular source types, in their own words – e.g. `{ ocr: [{ id: "confirmed", label: "Confirmed against original", status: "verified" }, { id: "misread", label: "OCR misread", status: "incorrect" }] }`. Types without an entry keep the four marks */
+  @property({ attribute: false }) accessor verdicts: Partial<Record<ClaimSourceType, VerificationVerdict[]>> = {};
   /** What the list shows: the claims still to review, the reviewed ones, or all */
   @property() accessor filter: VerificationFilter = "open";
 
@@ -175,6 +208,33 @@ export class TcVerificationQueue extends TcElement {
     return this.statusLabels[s] ?? DEFAULT_STATUS_LABELS[s];
   }
 
+  /** The marks a claim can be given: its source type's own verdicts, or the four, each with its key */
+  private optionsFor(c: VerificationClaim): (VerificationVerdict & { own: boolean })[] {
+    const own = c.source ? this.verdicts[c.source] : undefined;
+    if (!own?.length) return VERDICTS.map((s) => ({ id: s, label: this.actionLabels[s] ?? DEFAULT_ACTION_LABELS[s], status: s, key: KEY_OF[s], own: false }));
+    const taken = new Set(own.map((v) => v.key?.toUpperCase()).filter(Boolean));
+    const seen = new Set<VerificationStatus>();
+    return own.map((v) => {
+      let key = v.key?.toUpperCase();
+      if (!key && !seen.has(v.status) && !taken.has(KEY_OF[v.status])) key = KEY_OF[v.status];
+      seen.add(v.status);
+      return { ...v, key, own: true };
+    });
+  }
+
+  /** The option a claim's mark shows as given: its verdict, or the first option of its status */
+  private givenOf(c: VerificationClaim, options = this.optionsFor(c)) {
+    const status = statusOf(c);
+    if (status === "pending") return undefined;
+    return options.find((o) => o.own && o.id === c.verdict) ?? options.find((o) => o.status === status);
+  }
+
+  /** What a claim's mark is called: its verdict's words, or its status's */
+  private markLabel(c: VerificationClaim) {
+    const given = this.givenOf(c);
+    return given?.own ? given.label : this.label(statusOf(c));
+  }
+
   private rowEl(id: string | null | undefined) {
     return id ? this.querySelector<HTMLElement>(`.ui-vq__row[data-id="${CSS.escape(id)}"]`) : null;
   }
@@ -216,22 +276,25 @@ export class TcVerificationQueue extends TcElement {
 
   /* ---------- Marking ---------- */
 
-  /** Marks a claim; returns false when it was already so */
-  private mark(id: string, status: VerificationStatus, from: "list" | "toolbar") {
+  /** Marks a claim – with one of its type's own verdicts when given; returns false when it was already so */
+  private mark(id: string, status: VerificationStatus, from: "list" | "toolbar", verdict?: VerificationVerdict) {
     const claim = this.claims.find((c) => c.id === id);
     if (!claim) return false;
     const previous = statusOf(claim);
-    if (previous === status) return false;
+    const verdictId = status === "pending" ? undefined : verdict?.id;
+    if (previous === status && claim.verdict === verdictId) return false;
     // In the list, the next claim takes the tab stop (in "To review" the marked one leaves, so it's the one after)
     const at = this.shownIndex.get(id) ?? -1;
     const next = this.shown[at + 1]?.id ?? this.shown[at - 1]?.id ?? null;
-    const updated: VerificationClaim = { ...claim, status };
+    const { verdict: _was, ...rest } = claim;
+    const updated: VerificationClaim = verdictId ? { ...rest, status, verdict: verdictId } : { ...rest, status };
     const claims = this.claims.map((c) => (c.id === id ? updated : c));
-    if (this.emit<VerificationClaimsChange>("tc-claims-change", { claims, claim: updated, status }, { cancelable: true })) this.claims = claims;
-    this.emit<VerificationReviewDetail>("tc-review", { claim: updated, status, previous });
+    const given = verdictId ? verdict : undefined;
+    if (this.emit<VerificationClaimsChange>("tc-claims-change", { claims, claim: updated, status, verdict: given }, { cancelable: true })) this.claims = claims;
+    this.emit<VerificationReviewDetail>("tc-review", { claim: updated, status, previous, verdict: given });
     const counts = this.countsOf(this.claims);
     const reviewed = this.claims.length - counts.pending;
-    this.said = `${this.label(status)}: ${claim.text.trim()} – ${reviewed} of ${this.claims.length} reviewed`;
+    this.said = `${given?.label ?? this.label(status)}: ${claim.text.trim()} – ${reviewed} of ${this.claims.length} reviewed`;
     if (from === "list") {
       const stays = this.filter === "all" || (this.filter === "open") === (status === "pending");
       const to = stays ? (next ?? id) : next;
@@ -295,10 +358,17 @@ export class TcVerificationQueue extends TcElement {
       this.moveTo(to);
       return;
     }
-    const status = this.shortcuts && !e.shiftKey ? KEYS[e.key.toLowerCase()] : undefined;
-    if (status && this.active) {
+    if (!this.shortcuts || e.shiftKey || !this.active) return;
+    const claim = this.claims.find((c) => c.id === this.active);
+    if (!claim) return;
+    const k = e.key.toUpperCase();
+    const option = k.length === 1 ? this.optionsFor(claim).find((o) => o.key === k) : undefined;
+    if (option) {
       e.preventDefault();
-      this.mark(this.active, status, "list");
+      this.mark(claim.id, option.status, "list", option.own ? option : undefined);
+    } else if (e.key.toLowerCase() === UNDO_KEY) {
+      e.preventDefault();
+      this.mark(claim.id, "pending", "list");
     }
   };
 
@@ -360,8 +430,8 @@ export class TcVerificationQueue extends TcElement {
       <span class="ui-vq__status" data-status=${status}>${glyph(status, look)}</span>
       <span class="ui-vq__text">${c.text.trim()}</span>
       ${c.origin ? html`<span class="ui-vq__origin">${c.origin}</span>` : nothing}
-      ${c.source ? html`<span class="ui-vq__swatch" data-source=${c.source} title=${this.sourceLabels[c.source] ?? DEFAULT_SOURCE_LABELS[c.source]}></span>` : nothing}
-      <span class="ui-vq__sr">, ${this.label(status)}${c.source ? `, ${this.sourceLabels[c.source] ?? DEFAULT_SOURCE_LABELS[c.source]}` : ""}</span>
+      ${c.source ? html`<span class="ui-vq__src" data-source=${c.source} title=${this.sourceLabels[c.source] ?? DEFAULT_SOURCE_LABELS[c.source]}>${sourceSwatch(c.source, "ui-vq__swatch")}</span>` : nothing}
+      <span class="tc-sr-only">, ${this.markLabel(c)}${c.source ? `, ${this.sourceLabels[c.source] ?? DEFAULT_SOURCE_LABELS[c.source]}` : ""}</span>
     </div>`;
   }
 
@@ -396,12 +466,14 @@ export class TcVerificationQueue extends TcElement {
     const byId = new Map(this.sources.map((s) => [s.id, s]));
     const passages = (c.sources ?? []).map((id) => byId.get(id)).filter((s): s is ClaimSource => !!s);
     const typeLabel = c.source ? (this.sourceLabels[c.source] ?? DEFAULT_SOURCE_LABELS[c.source]) : "";
+    const options = this.optionsFor(c);
+    const given = this.givenOf(c, options);
     return html`<section class="ui-vq__detail" aria-label="Claim to review">
       <div class="ui-vq__dt-meta">
-        ${c.source ? html`<span class="ui-vq__type" data-source=${c.source}><span class="ui-vq__type-swatch" aria-hidden="true"></span>${typeLabel}</span>` : nothing}
+        ${c.source ? html`<span class="ui-vq__type" data-source=${c.source}>${sourceSwatch(c.source, "ui-vq__type-swatch")}${typeLabel}${c.recognition !== undefined ? html`<span class="ui-vq__recog">${Math.round(c.recognition * 100)}%</span>` : nothing}</span>` : nothing}
         ${c.confidence !== undefined ? html`<span class="ui-vq__meta-text">${Math.round(c.confidence * 100)}% confidence</span>` : nothing}
         ${c.origin ? html`<span class="ui-vq__meta-text"><span class="ui-vq__dot">·</span> ${c.origin}</span>` : nothing}
-        <span class="ui-vq__now" data-status=${status}>${glyph(status, look)}${this.label(status)}</span>
+        <span class="ui-vq__now" data-status=${status}>${glyph(status, look)}${this.markLabel(c)}</span>
       </div>
       <p class="ui-vq__claim">${c.text.trim()}</p>
       ${c.note ? html`<p class="ui-vq__note">${c.note}</p>` : nothing}
@@ -419,6 +491,7 @@ export class TcVerificationQueue extends TcElement {
                       .band=${s.validity.band}
                       .contested=${!!s.validity.contested}
                       .superseded=${!!s.validity.superseded}
+                      .changed=${!!s.validity.changed}
                       .now=${this.now}
                       subject-label="source"
                     ></tc-validity-badge>`
@@ -429,16 +502,19 @@ export class TcVerificationQueue extends TcElement {
           )}</ul>`
         : html`<p class="ui-vq__note">No source passage – check it against your own sources.</p>`}
       <div class="ui-vq__marks" role="toolbar" aria-label="Mark this claim" @keydown=${this.tools.onKeyDown} @focusin=${this.tools.onFocusIn}>
-        ${VERDICTS.map(
-          (s) => html`<button
+        ${options.map((o) => {
+          const pressed = given?.id === o.id;
+          const key = this.shortcuts ? o.key : undefined;
+          return html`<button
             type="button"
             class="ui-vq__mark"
-            data-status=${s}
-            aria-pressed=${status === s ? "true" : "false"}
-            aria-keyshortcuts=${ifDefined(this.shortcuts ? KEY_OF[s] : undefined)}
-            @click=${() => this.mark(c.id, status === s ? "pending" : s, "toolbar")}
-          ><span class="ui-vq__mark-glyph" data-status=${s}>${glyph(s, look)}</span>${this.actionLabels[s] ?? DEFAULT_ACTION_LABELS[s]}${this.shortcuts ? html`<kbd class="ui-vq__kbd" aria-hidden="true">${KEY_OF[s]}</kbd>` : nothing}</button>`,
-        )}
+            data-status=${o.status}
+            data-verdict=${ifDefined(o.own ? o.id : undefined)}
+            aria-pressed=${pressed ? "true" : "false"}
+            aria-keyshortcuts=${ifDefined(key)}
+            @click=${() => (pressed ? this.mark(c.id, "pending", "toolbar") : this.mark(c.id, o.status, "toolbar", o.own ? o : undefined))}
+          ><span class="ui-vq__mark-glyph" data-status=${o.status}>${glyph(o.status, look)}</span>${o.label}${key ? html`<kbd class="ui-vq__kbd" aria-hidden="true">${key}</kbd>` : nothing}</button>`;
+        })}
       </div>
     </section>`;
   }
@@ -481,7 +557,7 @@ export class TcVerificationQueue extends TcElement {
         ${this.detail(look)}
       </div>
       ${this.foot(look)}
-      <span class="ui-vq__sr" role="status">${this.said}</span>
+      <span class="tc-sr-only" role="status">${this.said}</span>
     `;
   }
 
@@ -505,7 +581,6 @@ export class TcVerificationQueue extends TcElement {
 :where([data-ui="vq"]) button { margin: 0; padding: 0; border: 0; background: none; font: inherit; color: inherit; text-align: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 [data-ui="vq"] :is(button, a, [role="option"]):focus-visible { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
 [data-ui="vq"] svg { display: block; flex: none; }
-.ui-vq__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .ui-vq__icon { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.1; stroke-linecap: round; stroke-linejoin: round; }
 .ui-vq__dot { color: var(--tc-text-disabled); }
 /* Status colours; the glyph shapes carry the meaning too */
@@ -514,9 +589,17 @@ export class TcVerificationQueue extends TcElement {
 [data-ui="vq"] [data-status="unverifiable"] { --tc-verification-queue-fg: var(--tc-status-warning-fg); --tc-verification-queue-bg: var(--tc-status-warning-bg); }
 [data-ui="vq"] [data-status="incorrect"] { --tc-verification-queue-fg: var(--tc-status-danger-fg); --tc-verification-queue-bg: var(--tc-status-danger-bg); }
 [data-ui="vq"] [data-status="dismissed"] { --tc-verification-queue-fg: var(--tc-text-muted); --tc-verification-queue-bg: var(--tc-fill-default); }
-[data-ui="vq"] [data-source="grounded"] { --tc-verification-queue-src: var(--tc-source-grounded-fg); --tc-verification-queue-src-bg: var(--tc-source-grounded-bg); --tc-verification-queue-line: solid; }
-[data-ui="vq"] [data-source="model"] { --tc-verification-queue-src: var(--tc-source-model-fg); --tc-verification-queue-src-bg: var(--tc-source-model-bg); --tc-verification-queue-line: dashed; }
-[data-ui="vq"] [data-source="inferred"] { --tc-verification-queue-src: var(--tc-source-inferred-fg); --tc-verification-queue-src-bg: var(--tc-source-inferred-bg); --tc-verification-queue-line: dotted; }
+[data-ui="vq"] [data-source="grounded"] { --tc-verification-queue-src: var(--tc-source-grounded-fg); --tc-verification-queue-src-bg: var(--tc-source-grounded-bg); }
+[data-ui="vq"] [data-source="model"] { --tc-verification-queue-src: var(--tc-source-model-fg); --tc-verification-queue-src-bg: var(--tc-source-model-bg); }
+[data-ui="vq"] [data-source="inferred"] { --tc-verification-queue-src: var(--tc-source-inferred-fg); --tc-verification-queue-src-bg: var(--tc-source-inferred-bg); }
+/* Media types share teal, memory types blue – as in tc-claim-answer */
+[data-ui="vq"] :is([data-source="transcript"], [data-source="video"], [data-source="audio"], [data-source="image"], [data-source="ocr"]) { --tc-verification-queue-src: var(--tc-source-media-fg); --tc-verification-queue-src-bg: var(--tc-source-media-bg); }
+[data-ui="vq"] :is([data-source="session"], [data-source="team"], [data-source="agent"]) { --tc-verification-queue-src: var(--tc-source-memory-fg); --tc-verification-queue-src-bg: var(--tc-source-memory-bg); }
+/* The type's line, drawn as tc-claim-answer draws it */
+:is(.ui-vq__swatch, .ui-vq__type-swatch) { flex: none; width: 12px; height: 6px; overflow: visible; fill: none; stroke: var(--tc-verification-queue-src); stroke-width: 2; }
+:is(.ui-vq__swatch, .ui-vq__type-swatch) [data-line="dotted"] { stroke-linecap: round; }
+:is(.ui-vq__swatch, .ui-vq__type-swatch) [data-line="double"] { stroke-width: 1.2; }
+:is(.ui-vq__swatch, .ui-vq__type-swatch) [data-line="wavy"] { stroke-width: 1.5; stroke-linecap: round; }
 /* The glyphs' marks are cut out in the colour of the surface under them */
 .ui-vq__cut { stroke: var(--tc-surface-raised); }
 :where([data-look="standard"], [data-look="standard"] *)[data-ui="vq"] .ui-vq__cut { stroke: var(--tc-surface-on-tray); }
@@ -550,7 +633,7 @@ export class TcVerificationQueue extends TcElement {
 .ui-vq__text { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; color: var(--tc-text-primary); }
 .ui-vq__row[data-status="dismissed"] .ui-vq__text { color: var(--tc-text-muted); text-decoration: line-through; text-decoration-color: var(--tc-border-default); }
 .ui-vq__origin { flex: none; max-width: 30%; overflow: hidden; font-size: var(--tc-font-size-sm); color: var(--tc-text-muted); white-space: nowrap; text-overflow: ellipsis; }
-.ui-vq__swatch { flex: none; width: 12px; height: 0; border-bottom: 2px var(--tc-verification-queue-line) var(--tc-verification-queue-src); }
+.ui-vq__src { display: grid; flex: none; place-items: center; }
 .ui-vq__empty { margin: 0; padding: var(--tc-space-6) var(--tc-space-4); font-size: var(--tc-font-size-sm); color: var(--tc-text-muted); text-align: center; }
 
 /* ----- The claim you're on ----- */
@@ -558,7 +641,8 @@ export class TcVerificationQueue extends TcElement {
 :where([data-look="standard"], [data-look="standard"] *).ui-vq__detail { background: var(--tc-surface-well); }
 .ui-vq__dt-meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-1) var(--tc-space-2); min-height: 22px; font-size: var(--tc-font-size-sm); color: var(--tc-text-muted); }
 .ui-vq__type { display: inline-flex; align-items: center; gap: var(--tc-space-1-5); height: var(--tc-pill-h); padding: 0 var(--tc-pill-px); border-radius: var(--tc-pill-radius); background: var(--tc-verification-queue-src-bg); font-size: var(--tc-pill-font-size); font-weight: var(--tc-pill-font-weight); color: var(--tc-verification-queue-src); white-space: nowrap; }
-.ui-vq__type-swatch { width: 10px; height: 0; border-bottom: 2px var(--tc-verification-queue-line) currentColor; }
+.ui-vq__type .ui-vq__type-swatch { width: 11px; height: 5px; }
+.ui-vq__recog { font-variant-numeric: tabular-nums; }
 .ui-vq__meta-text { white-space: nowrap; font-variant-numeric: tabular-nums; }
 .ui-vq__now { display: inline-flex; align-items: center; gap: var(--tc-space-1); margin-left: auto; font-weight: var(--tc-font-weight-medium); color: var(--tc-verification-queue-fg); white-space: nowrap; }
 .ui-vq__claim { margin: var(--tc-space-2) 0 0; font-size: var(--tc-font-size-md); line-height: var(--tc-line-height-relaxed); color: var(--tc-text-primary); }

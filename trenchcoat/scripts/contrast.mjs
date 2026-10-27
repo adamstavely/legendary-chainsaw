@@ -120,6 +120,13 @@ for (const tone of TONES) {
   for (const s of ["surface-raised", "surface-overlay", "surface-sunken", "surface-tray"]) checks.push({ group: "Chip text on its tint (4.5)", fg: `${tone}-fg`, bg: [s, `${tone}-bg`], min: 4.5 });
   for (const s of ["surface-raised", "surface-sunken"]) checks.push({ group: "Status/tone text on surfaces (4.5)", fg: `${tone}-fg`, bg: [s], min: 4.5 });
 }
+// Highlighted text: each highlight's ink, and plain body text, on its fill over every surface text sits on
+const HIGHLIGHTS = ["yellow", "green", "blue", "pink", "purple"];
+for (const h of HIGHLIGHTS)
+  for (const s of ["surface-base", "surface-raised", "surface-overlay", "surface-sunken", "surface-tray", "surface-on-tray"]) {
+    checks.push({ group: "Text on highlights (4.5)", fg: `highlight-${h}-fg`, bg: [s, `highlight-${h}-bg`], min: 4.5 });
+    checks.push({ group: "Text on highlights (4.5)", fg: "text-primary", bg: [s, `highlight-${h}-bg`], min: 4.5 });
+  }
 checks.push({ group: "Labels on solid fills (4.5)", fg: "text-on-accent", bg: ["accent"], min: 4.5 });
 checks.push({ group: "Labels on solid fills (4.5)", fg: "text-on-accent", bg: ["accent-hover"], min: 4.5 });
 for (const s of ["action-primary-bg", "action-primary-bg-hover", "action-primary-bg-active"])

@@ -5,9 +5,14 @@
 import { html } from "lit";
 import axe from "axe-core";
 import { afterEach, describe, expect, test, vi } from "vitest";
+import { userEvent } from "vitest/browser";
 import "../../src/elements/chat-composer";
-import { TcChatComposer, type ChatDictationSession, type ChatModel } from "../../src/elements/chat-composer";
+import { TcChatComposer, type ChatDictationSession, type ChatModel, type ChatPageContext } from "../../src/elements/chat-composer";
 import { cleanup, fixture, settle } from "./helpers";
+import * as React from "react";
+import { act } from "react";
+import { createRoot } from "react-dom/client";
+import { ChatComposer, defaultModels } from "../../src/elements/react/chat-composer";
 
 afterEach(() => {
   cleanup();
@@ -416,4 +421,439 @@ describe("tc-chat-composer: the opt-in mention picker and context tray (Part 3)"
     await sleep(0);
     expect(el.context!.map((i) => i.id)).toEqual(["m"]);
   });
+});
+
+describe("tc-chat-composer: the toolbar row and the disclaimer (Part 6.3)", () => {
+  const templates = [
+    { id: "sum", title: "Summarise", body: "Summarise this page in three bullets." },
+    { id: "ask", title: "Ask about", body: "What does {topic} mean here?", variables: { topic: { default: "churn" } } },
+  ];
+  const page = { title: "Q3 report", connected: true, count: 2, items: [{ id: "t", label: "Revenue table", tokens: 900 }, { id: "c", label: "Churn chart", tokens: 400 }] };
+  const bar = (el: Element) => el.querySelector<HTMLElement>('[role="toolbar"]');
+  const pop = (el: Element) => el.querySelector<HTMLElement>(".ui-chat-composer__pop");
+  const chip = (el: Element) => el.querySelector<HTMLButtonElement>(".ui-chat-composer__page")!;
+
+  for (const look of ["standard", "clean"] as const) {
+    describe(look, () => {
+      test("off by default: no toolbar, no disclaimer, the model switch stays in the card", async () => {
+        const el = await fixture<TcChatComposer>(html`<tc-chat-composer look=${look} demo></tc-chat-composer>`);
+        expect(bar(el)).toBeNull();
+        expect(el.querySelector(".ui-chat-composer__disclaimer")).toBeNull();
+        expect(message(el).hasAttribute("aria-describedby")).toBe(false);
+        expect(el.querySelector(".ui-chat-composer__model")).toBeTruthy();
+        expect(el.querySelector("tc-model-picker")).toBeNull();
+      });
+
+      test("disclaimer: one line under the composer that describes the message field", async () => {
+        const el = await fixture<TcChatComposer>(html`<tc-chat-composer look=${look} demo disclaimer="AI can make mistakes. Check important info."></tc-chat-composer>`);
+        const line = el.querySelector(".ui-chat-composer__disclaimer")!;
+        expect(line.textContent).toBe("AI can make mistakes. Check important info.");
+        expect(document.getElementById(message(el).getAttribute("aria-describedby")!)).toBe(line);
+        expect(bar(el)).toBeNull();
+      });
+
+      test("model in the toolbar: model-picker's menu replaces the card's switch; tc-model-change is cancelable", async () => {
+        const changes: string[] = [];
+        const leaks: unknown[] = [];
+        const el = await fixture<TcChatComposer>(html`<tc-chat-composer look=${look} demo model-switcher="toolbar"
+          @tc-model-change=${(e: CustomEvent<{ model: string }>) => changes.push(e.detail.model)}
+          @tc-value-change=${(e: CustomEvent) => leaks.push(e.detail)}></tc-chat-composer>`);
+        expect(el.querySelector(".ui-chat-composer__model")).toBeNull();
+        const picker = bar(el)!.querySelector("tc-model-picker")!;
+        expect(picker.models.map((m) => m.id)).toEqual(["auto", "claude", "chatgpt"]);
+        expect(picker.models[1].icon).toBeInstanceOf(SVGElement);
+        expect(picker.value).toBe("auto");
+        picker.querySelector<HTMLButtonElement>(".ui-mdp__trigger")!.click();
+        await settle();
+        picker.querySelectorAll<HTMLElement>('[role="option"]')[1].click();
+        await settle();
+        expect(changes).toEqual(["claude"]);
+        expect(el.model).toBe("claude");
+        expect(picker.value).toBe("claude");
+        expect(leaks).toEqual([]);
+        // Controlled: the page prevents, and the picker shows the model it was given
+        el.addEventListener("tc-model-change", (e) => e.preventDefault());
+        picker.querySelector<HTMLButtonElement>(".ui-mdp__trigger")!.click();
+        await settle();
+        picker.querySelectorAll<HTMLElement>('[role="option"]')[2].click();
+        await settle();
+        expect(el.model).toBe("claude");
+        expect(picker.value).toBe("claude");
+      });
+
+      test("settings: a button opens model-settings in a popover; changes are tc-settings-change; Escape gives focus back", async () => {
+        const seen: unknown[] = [];
+        const el = await fixture<TcChatComposer>(html`<tc-chat-composer look=${look} demo .settings=${{ temperature: 0.4 }}
+          .settingsModel=${{ id: "m", label: "Atlas", supports: ["temperature"] }}
+          @tc-settings-change=${(e: CustomEvent) => seen.push(e.detail)}></tc-chat-composer>`);
+        const open = button(el, "Model settings")!;
+        expect(open.getAttribute("aria-haspopup")).toBe("dialog");
+        expect(open.getAttribute("aria-expanded")).toBe("false");
+        open.focus();
+        open.click();
+        await settle();
+        const dialog = pop(el)!;
+        expect(dialog.getAttribute("role")).toBe("dialog");
+        expect(dialog.getAttribute("aria-label")).toBe("Model settings");
+        expect(open.getAttribute("aria-expanded")).toBe("true");
+        expect(dialog.contains(document.activeElement)).toBe(true);
+        const settings = dialog.querySelector("tc-model-settings")!;
+        expect(settings.value).toEqual({ temperature: 0.4 });
+        const range = settings.querySelector<HTMLInputElement>('input[type="range"]')!;
+        range.value = "1.2";
+        range.dispatchEvent(new Event("input", { bubbles: true }));
+        await settle();
+        expect(seen).toEqual([{ value: { temperature: 1.2 }, changed: ["temperature"] }]);
+        expect(el.settings).toEqual({ temperature: 1.2 });
+        // Controlled
+        el.addEventListener("tc-settings-change", (e) => e.preventDefault());
+        range.value = "0.2";
+        range.dispatchEvent(new Event("input", { bubbles: true }));
+        await settle();
+        expect(el.settings).toEqual({ temperature: 1.2 });
+        key(document.activeElement!, "Escape");
+        await settle();
+        expect(pop(el)).toBeNull();
+        expect(document.activeElement).toBe(open);
+      });
+
+      test("prompts: Use puts the prompt in at the caret, fires tc-prompt-pick and closes the popover", async () => {
+        const picks: string[] = [];
+        const el = await fixture<TcChatComposer>(html`<tc-chat-composer look=${look} demo value="Please: thanks" .prompts=${templates}
+          @tc-prompt-pick=${(e: CustomEvent<{ prompt: string; template: { id: string } }>) => picks.push(`${e.detail.template.id}:${e.detail.prompt}`)}></tc-chat-composer>`);
+        message(el).setSelectionRange(7, 7);
+        const open = button(el, "Prompts")!;
+        open.click();
+        await settle();
+        const library = pop(el)!.querySelector("tc-prompt-library")!;
+        expect(library.templates).toHaveLength(2);
+        button(library, /Use prompt/)!.click();
+        await settle();
+        expect(picks).toEqual(["sum:Summarise this page in three bullets."]);
+        expect(el.value).toBe("Please: Summarise this page in three bullets. thanks");
+        expect(pop(el)).toBeNull();
+        expect(document.activeElement).toBe(message(el));
+        expect(message(el).selectionStart).toBe("Please: Summarise this page in three bullets.".length);
+      });
+
+      test("prompts: preventing tc-prompt-pick leaves the message alone; the chosen template is kept between openings", async () => {
+        const el = await fixture<TcChatComposer>(html`<tc-chat-composer look=${look} demo .prompts=${templates} @tc-prompt-pick=${(e: Event) => e.preventDefault()}></tc-chat-composer>`);
+        button(el, "Prompts")!.click();
+        await settle();
+        let library = pop(el)!.querySelector("tc-prompt-library")!;
+        const second = [...library.querySelectorAll<HTMLElement>('[role="option"], button')].find((b) => /Ask about/.test(b.textContent!))!;
+        second.click();
+        await settle();
+        expect(library.value).toBe("ask");
+        button(library, /Use prompt/)!.click();
+        await settle();
+        expect(el.value).toBe("");
+        expect(pop(el)).toBeNull();
+        button(el, "Prompts")!.click();
+        await settle();
+        library = pop(el)!.querySelector("tc-prompt-library")!;
+        expect(library.value).toBe("ask");
+      });
+
+      test("page context: the chip says its state; toggling is a cancelable tc-page-context-change and is announced", async () => {
+        const seen: string[] = [];
+        const el = await fixture<TcChatComposer>(html`<tc-chat-composer look=${look} demo .pageContext=${page}
+          @tc-page-context-change=${(e: CustomEvent<{ change: string }>) => seen.push(e.detail.change)}></tc-chat-composer>`);
+        const c = chip(el);
+        expect(c.getAttribute("aria-label")).toBe("Page context on: Q3 report, 2 items");
+        expect(c.dataset.on).toBe("true");
+        expect(document.getElementById(c.getAttribute("aria-describedby")!)!.textContent).toMatch(/can see this page/);
+        c.click();
+        await settle();
+        expect(seen).toEqual(["disconnect"]);
+        expect(el.pageContext!.connected).toBe(false);
+        expect(c.getAttribute("aria-label")).toBe("Page context: Q3 report, off");
+        expect(c.querySelector(".ui-chat-composer__page-meta")!.textContent).toBe("Off");
+        expect(el.querySelector('[aria-live="polite"]')!.textContent).toBe("Page context off.");
+        // Controlled: the page decides
+        el.addEventListener("tc-page-context-change", (e) => e.preventDefault(), { once: true });
+        c.click();
+        await settle();
+        expect(el.pageContext!.connected).toBe(false);
+        c.click();
+        await settle();
+        expect(el.pageContext!.connected).toBe(true);
+        expect(el.querySelector('[aria-live="polite"]')!.textContent).toBe("Page context on: Q3 report.");
+      });
+
+      test("page context: a token estimate when there's no count; the attached items show in a context tray", async () => {
+        const seen: string[][] = [];
+        const el = await fixture<TcChatComposer>(html`<tc-chat-composer look=${look} demo context-limit="200000" .pageContext=${{ ...page, count: undefined, tokens: 2400 }}
+          @tc-page-context-change=${(e: CustomEvent<{ pageContext: { items: { id: string }[] } }>) => seen.push(e.detail.pageContext.items.map((i) => i.id))}
+          @tc-items-change=${() => seen.push(["leaked"])}></tc-chat-composer>`);
+        expect(chip(el).getAttribute("aria-label")).toBe("Page context on: Q3 report, 2.4k tokens");
+        const show = button(el, "Show what's attached from the page (2)")!;
+        show.click();
+        await settle();
+        const tray = pop(el)!.querySelector("tc-context-tray")!;
+        expect(pop(el)!.getAttribute("aria-label")).toBe("Attached from Q3 report");
+        expect(tray.textContent).toContain("Revenue table");
+        button(tray, "Remove Revenue table")!.click();
+        await settle();
+        expect(seen).toEqual([["c"]]);
+        expect(el.pageContext!.items!.map((i) => i.id)).toEqual(["c"]);
+      });
+
+      test("the row is one toolbar: one Tab stop, ← → Home End", async () => {
+        const el = await fixture<TcChatComposer>(html`<tc-chat-composer look=${look} demo model-switcher="toolbar" .settings=${{}} .prompts=${templates} .pageContext=${page}></tc-chat-composer>`);
+        const toolbar = bar(el)!;
+        expect(toolbar.getAttribute("aria-label")).toBe("Message options");
+        const items = [toolbar.querySelector<HTMLElement>(".ui-mdp__trigger")!, button(el, "Model settings")!, button(el, "Prompts")!, chip(el), button(el, /Show what's attached/)!];
+        expect(items.map((b) => b.tabIndex)).toEqual([0, -1, -1, -1, -1]);
+        items[0].focus();
+        key(items[0], "ArrowRight");
+        expect(document.activeElement).toBe(items[1]);
+        key(items[1], "End");
+        expect(document.activeElement).toBe(items[4]);
+        key(items[4], "Home");
+        expect(document.activeElement).toBe(items[0]);
+        key(items[0], "ArrowLeft");
+        expect(document.activeElement).toBe(items[4]);
+        expect(items.map((b) => b.tabIndex)).toEqual([-1, -1, -1, -1, 0]);
+      });
+
+      test("wider than a side pane, the row keeps its labels while they fit and folds to icons when they don't", async () => {
+        const wrap = await fixture<HTMLElement>(html`<div style="width: 900px"><tc-chat-composer look=${look} demo model-switcher="toolbar" .settings=${{}} .prompts=${templates} .pageContext=${page}></tc-chat-composer></div>`);
+        const el = wrap.firstElementChild as TcChatComposer;
+        const extras = el.querySelector<HTMLElement>(".ui-chat-composer__extras")!;
+        const label = () => getComputedStyle(el.querySelector('[data-tool="prompts"] .ui-chat-composer__tool-label')!).position;
+        await until(() => expect(extras.dataset.fold).toBe("0"));
+        expect(label()).toBe("static");
+        expect(text(chip(el))).toBe("Q3 report 2 items");
+        wrap.style.width = "430px";
+        await until(() => expect(extras.dataset.fold).toBe("1"));
+        expect(label()).toBe("absolute");
+        expect(button(el, "More")).toBeNull();
+        wrap.style.width = "900px";
+        await until(() => expect(extras.dataset.fold).toBe("0"));
+      });
+
+      test("in a 320px side pane the tools keep their icons and names; narrower, settings and prompts move into More", async () => {
+        const wrap = await fixture<HTMLElement>(html`<div style="width: 320px"><tc-chat-composer look=${look} demo model-switcher="toolbar" .settings=${{}} .prompts=${templates} .pageContext=${page}></tc-chat-composer></div>`);
+        const el = wrap.firstElementChild as TcChatComposer;
+        await sleep(50);
+        await settle();
+        const label = el.querySelector<HTMLElement>('[data-tool="prompts"] .ui-chat-composer__tool-label')!;
+        expect(getComputedStyle(label).position).toBe("absolute");
+        expect(button(el, "Prompts")).toBeTruthy();
+        expect(button(el, "Model settings")!.getBoundingClientRect().width).toBeLessThanOrEqual(32);
+        expect(getComputedStyle(el.querySelector(".ui-mdp__name")!).position).toBe("absolute");
+        expect(el.querySelector(".ui-mdp__trigger")!.textContent).toMatch(/Model:\s*Auto/);
+        const toolbar = bar(el)!;
+        expect(toolbar.scrollWidth).toBeLessThanOrEqual(toolbar.clientWidth + 1);
+        expect(button(el, "More")).toBeNull();
+        // A very narrow pane
+        wrap.style.width = "190px";
+        await until(() => expect(button(el, "More")).toBeTruthy());
+        expect(button(el, "Prompts")).toBeNull();
+        const more = button(el, "More")!;
+        expect(more.getAttribute("aria-haspopup")).toBe("menu");
+        more.click();
+        await settle();
+        const menu = pop(el)!;
+        expect(menu.getAttribute("role")).toBe("menu");
+        const entries = [...menu.querySelectorAll<HTMLElement>('[role="menuitem"]')];
+        expect(entries.map(text)).toEqual(["Model settings", "Prompts"]);
+        expect(document.activeElement).toBe(entries[0]);
+        key(entries[0], "ArrowDown");
+        expect(document.activeElement).toBe(entries[1]);
+        entries[1].click();
+        await settle();
+        expect(pop(el)!.querySelector("tc-prompt-library")).toBeTruthy();
+        expect(more.getAttribute("aria-expanded")).toBe("true");
+        key(document.activeElement!, "Escape");
+        await settle();
+        expect(document.activeElement).toBe(more);
+        // Room again: back out of More
+        wrap.style.width = "600px";
+        await until(() => expect(button(el, "Prompts")).toBeTruthy());
+      });
+    });
+  }
+
+  test("React: the toolbar props flow in and the callbacks fire", async () => {
+    const host = document.createElement("div");
+    document.body.append(host);
+    const root = createRoot(host);
+    const calls: string[] = [];
+    function App() {
+      const [pc, setPc] = React.useState<ChatPageContext>(page);
+      return React.createElement(ChatComposer, {
+        demo: true,
+        modelSwitcher: "toolbar",
+        models: defaultModels,
+        model: "chatgpt",
+        onModelChange: (m: { id: string }) => calls.push(`model:${m.id}`),
+        defaultSettings: { temperature: 0.5 },
+        onSettingsChange: (s: Record<string, unknown>, changed: string[]) => calls.push(`settings:${changed.join()}:${s.temperature}`),
+        prompts: templates,
+        onPromptPick: (p: { template: { id: string } }) => calls.push(`prompt:${p.template.id}`),
+        pageContext: pc,
+        onPageContextChange: (next: ChatPageContext, change: string) => {
+          calls.push(`page:${change}`);
+          setPc(next);
+        },
+        disclaimer: "AI can make mistakes.",
+      });
+    }
+    await act(async () => root.render(React.createElement(App)));
+    await settle();
+    const el = host.querySelector<TcChatComposer>("tc-chat-composer")!;
+    expect(el.querySelector(".ui-chat-composer__disclaimer")!.textContent).toBe("AI can make mistakes.");
+    const picker = el.querySelector("tc-model-picker")!;
+    expect(picker.value).toBe("chatgpt");
+    await act(async () => chip(el).click());
+    await settle();
+    expect(el.pageContext!.connected).toBe(false);
+    expect(chip(el).getAttribute("aria-label")).toBe("Page context: Q3 report, off");
+    // Controlled model: a pick is reported but the selection stays with the parent
+    await act(async () => {
+      picker.querySelector<HTMLButtonElement>(".ui-mdp__trigger")!.click();
+    });
+    await settle();
+    await act(async () => picker.querySelectorAll<HTMLElement>('[role="option"]')[1].click());
+    await settle();
+    expect(el.model).toBe("chatgpt");
+    await act(async () => button(el, "Model settings")!.click());
+    await settle();
+    const range = pop(el)!.querySelector<HTMLInputElement>('input[type="range"]')!;
+    range.value = "0.9";
+    await act(async () => void range.dispatchEvent(new Event("input", { bubbles: true })));
+    await settle();
+    expect(el.settings).toEqual({ temperature: 0.9 });
+    key(document.activeElement!, "Escape");
+    await settle();
+    await act(async () => button(el, "Prompts")!.click());
+    await settle();
+    await act(async () => button(pop(el)!, /Use prompt/)!.click());
+    await settle();
+    expect(calls).toEqual(["page:disconnect", "model:claude", "settings:temperature:0.9", "prompt:sum"]);
+    expect(el.value).toBe("Summarise this page in three bullets.");
+    await act(async () => root.unmount());
+  });
+
+  test("React, controlled: fast typing keeps every keystroke and the caret (the page answers after the event)", async () => {
+    const host = document.createElement("div");
+    document.body.append(host);
+    const root = createRoot(host);
+    let seen = "";
+    let fill = (_: string) => {};
+    function App() {
+      const [v, setV] = React.useState("");
+      seen = v;
+      fill = setV;
+      return React.createElement(ChatComposer, { value: v, onValueChange: setV });
+    }
+    await act(async () => root.render(React.createElement(App)));
+    await settle();
+    const t = message(host);
+    t.focus();
+    await userEvent.keyboard("Should we ship?");
+    await settle();
+    expect(t.value).toBe("Should we ship?");
+    expect(seen).toBe("Should we ship?");
+    // Typing in the middle keeps the caret where it was
+    t.setSelectionRange(6, 6);
+    await userEvent.keyboard("n't");
+    await settle();
+    expect(t.value).toBe("Shouldn't we ship?");
+    expect(t.selectionStart).toBe(9);
+    // A starter filled in by the page replaces the text
+    await act(async () => fill("Summarise "));
+    await settle();
+    expect(t.value).toBe("Summarise ");
+    await act(async () => root.unmount());
+  });
+
+  test("React, controlled: a page that keeps value as it was gets it back; one that rewrites it shows its text", async () => {
+    const host = document.createElement("div");
+    document.body.append(host);
+    const root = createRoot(host);
+    const calls: string[] = [];
+    function App({ upper }: { upper: boolean }) {
+      const [v, setV] = React.useState("Hi");
+      return React.createElement(ChatComposer, { value: v, onValueChange: (x: string) => { calls.push(x); if (upper) setV(x.toUpperCase()); } });
+    }
+    await act(async () => root.render(React.createElement(App, { upper: false })));
+    await settle();
+    const t = message(host);
+    t.focus();
+    t.setSelectionRange(2, 2);
+    await userEvent.keyboard("!");
+    await settle();
+    expect(calls).toEqual(["Hi!"]);
+    expect(t.value).toBe("Hi");
+    await act(async () => root.unmount());
+    const host2 = document.createElement("div");
+    document.body.append(host2);
+    const root2 = createRoot(host2);
+    await act(async () => root2.render(React.createElement(App, { upper: true })));
+    await settle();
+    const t2 = message(host2);
+    t2.focus();
+    t2.setSelectionRange(2, 2);
+    await userEvent.keyboard("ya");
+    await settle();
+    expect(t2.value).toBe("HIYA");
+    await act(async () => root2.unmount());
+  });
+
+  for (const look of ["standard", "clean"] as const)
+    test(`${look}: hide-connect-apps, hide-project and hide-approval leave those buttons out`, async () => {
+      const el = await fixture<TcChatComposer>(html`<tc-chat-composer look=${look} demo hide-approval></tc-chat-composer>`);
+      expect(button(el, /Request approval/)).toBeNull();
+      expect(button(el, /Connect apps/)).toBeTruthy();
+      const full = body(el).getBoundingClientRect().height;
+      // Without "Connect apps", "Select a project" is offered straight away
+      el.hideConnectApps = true;
+      await settle();
+      expect(button(el, /Connect apps/)).toBeNull();
+      const project = button(el, "Select a project")!;
+      expect(project.inert).toBe(false);
+      expect(body(el).dataset.rows).toBe("project");
+      const picked: number[] = [];
+      el.addEventListener("tc-select-project", () => picked.push(1));
+      project.click();
+      expect(picked).toEqual([1]);
+      // Neither: no apps row at all
+      el.hideProject = true;
+      await settle();
+      for (const a of el.getAnimations({ subtree: true })) a.finish();
+      expect(button(el, "Select a project")).toBeNull();
+      expect(el.querySelector(".ui-chat-composer__foot")).toBeNull();
+      expect(body(el).getBoundingClientRect().height).toBeLessThan(full);
+    });
+
+  test("hide-project: once apps are connected the row folds away", async () => {
+    for (const look of ["standard", "clean"] as const) {
+      const el = await fixture<TcChatComposer>(html`<tc-chat-composer look=${look} load-ms="20" hide-project .onConnectApps=${() => Promise.resolve()}></tc-chat-composer>`);
+      const before = body(el).getBoundingClientRect().height;
+      button(el, /Connect apps/)!.click();
+      await until(() => expect(body(el).dataset.apps).toBe("done"));
+      await settle();
+      for (const a of el.getAnimations({ subtree: true })) a.finish();
+      expect(button(el, "Select a project")).toBeNull();
+      expect(body(el).getBoundingClientRect().height).toBeLessThan(before);
+    }
+  });
+
+  for (const theme of ["light", "dark"])
+    test(`axe: the full toolbar, a popover open, in both looks (${theme})`, async () => {
+      const wrap = await fixture<HTMLElement>(html`<div data-tc-theme=${theme} style="background: ${theme === "dark" ? "#0e0e10" : "#fff"}; padding: 360px 8px 8px; display: grid; gap: 16px; width: 380px">
+        <tc-chat-composer demo model-switcher="toolbar" .settings=${{}} .prompts=${templates} .pageContext=${page} disclaimer="AI can make mistakes. Check important info."></tc-chat-composer>
+        <tc-chat-composer look="clean" demo model-switcher="toolbar" .settings=${{}} .prompts=${templates} .pageContext=${{ ...page, connected: false }} disclaimer="AI can make mistakes. Check important info."></tc-chat-composer>
+      </div>`);
+      const [one] = wrap.querySelectorAll<TcChatComposer>("tc-chat-composer");
+      button(one, "Prompts")!.click();
+      await sleep(150);
+      await settle();
+      for (const a of document.getAnimations()) a.finish();
+      const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
+      expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
+    });
 });

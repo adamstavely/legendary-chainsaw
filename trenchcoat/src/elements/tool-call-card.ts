@@ -133,7 +133,7 @@ class StopwatchController implements ReactiveController {
   private watched: Element | null = null;
 
   constructor(
-    private host: TcElement,
+    host: TcElement,
     private opts: { running: () => boolean; startedAt: () => number | undefined; accumulate: boolean; format: (ms: number) => string; el: () => HTMLElement | null },
   ) {
     host.addController(this);

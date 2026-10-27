@@ -1,0 +1,526 @@
+{
+ "elements": [
+  {
+   "tag": "tc-isbn-details",
+   "className": "TcIsbnDetails",
+   "description": "ISBN numbers in text, validated and marked: hover or focus one for the book's details.",
+   "properties": [
+    {
+     "name": "text",
+     "attribute": "text",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The text to find ISBNs in: plain text, shown as written (line breaks kept)",
+     "readonly": false
+    },
+    {
+     "name": "resolve",
+     "attribute": null,
+     "type": "IsbnResolver | undefined",
+     "default": "undefined",
+     "description": "Supplies a book's details for an ISBN-13 – a book, null for none, or a promise; used when no tc-isbn-lookup listener responds",
+     "readonly": false
+    },
+    {
+     "name": "hoverDelay",
+     "attribute": "hover-delay",
+     "type": "number",
+     "default": "300",
+     "description": "How long the pointer rests on a mark before its card opens, ms",
+     "readonly": false
+    },
+    {
+     "name": "notFoundText",
+     "attribute": "not-found-text",
+     "type": "string",
+     "default": "\"No details for this ISBN\"",
+     "description": "What the card says when there are no details for an ISBN",
+     "readonly": false
+    },
+    {
+     "name": "errorText",
+     "attribute": "error-text",
+     "type": "string",
+     "default": "\"Couldn't load the details.\"",
+     "description": "What the card says when the lookup failed",
+     "readonly": false
+    },
+    {
+     "name": "isbns",
+     "attribute": null,
+     "type": "IsbnMatch[]",
+     "default": null,
+     "description": "The valid ISBNs in `text`, in order",
+     "readonly": true
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-isbn-lookup",
+     "detail": "",
+     "description": "A card needs a book's details ({ isbn13, isbn10, signal, respondWith }: IsbnLookupDetail); cancelable – call respondWith() with the book (or a promise), or prevent it without responding for \"no details\"",
+     "cancelable": true
+    },
+    {
+     "name": "tc-copy",
+     "detail": "",
+     "description": "Copy was pressed on an ISBN ({ text, form }: IsbnCopyDetail); cancelable – prevent it to copy your own way",
+     "cancelable": true
+    },
+    {
+     "name": "tc-open-change",
+     "detail": "",
+     "description": "A card opened or closed ({ isbn13 }: IsbnOpenChange; null when closed)",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [
+    {
+     "name": "clearCache",
+     "params": "isbn13?: string",
+     "returns": "void",
+     "description": "Forgets cached details – one ISBN-13's, or all of them – so the next card asks again"
+    },
+    {
+     "name": "openCard",
+     "params": "index: unknown",
+     "returns": "void",
+     "description": "Opens the card for the ISBN at `index` in `isbns`, pinned open; focus stays where it is"
+    },
+    {
+     "name": "closeCard",
+     "params": "",
+     "returns": "void",
+     "description": "Closes the open card, if any"
+    }
+   ],
+   "ui": "isbn",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-accent-highlight",
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-border-default",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-duration-shimmer",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-mono",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-relaxed",
+    "--tc-line-height-snug",
+    "--tc-radius-2xs",
+    "--tc-radius-xs",
+    "--tc-shadow-raised",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-3",
+    "--tc-status-danger-fg",
+    "--tc-status-success-fg",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "parseIsbn",
+   "signature": "parseIsbn(input: string): IsbnParts",
+   "description": "Reads an ISBN-10 or ISBN-13, written with or without hyphens or spaces and optionally after \"ISBN\", \"ISBN-10\" or\n\"ISBN-13\", and gives it in both forms. A 979 ISBN-13 has no ISBN-10. Invalid input gives `{ isbn13: \"\", valid: false }`."
+  },
+  {
+   "name": "isValidIsbn",
+   "signature": "isValidIsbn(input: string): void",
+   "description": "Whether `input` is a valid ISBN-10 or ISBN-13 (check digit included)"
+  },
+  {
+   "name": "findIsbns",
+   "signature": "findIsbns(text: string): IsbnMatch[]",
+   "description": "Every valid ISBN in `text`, in order: compact or hyphenated (or spaced) as published, with or without an \"ISBN\"\nlabel (the range covers the number only). Numbers that fail the check digit, 13-digit numbers without the 978 / 979\nprefix, and numbers inside longer runs of digits aren't returned."
+  }
+ ],
+ "react": [
+  {
+   "component": "IsbnDetails",
+   "exported": true,
+   "props": [
+    {
+     "name": "onLookup",
+     "type": "(detail: IsbnLookupDetail, event: CustomEvent<IsbnLookupDetail>) => void",
+     "optional": true,
+     "description": "Called when a card needs a book's details; call `detail.respondWith(book | promise)` to answer, or use `resolve` instead"
+    },
+    {
+     "name": "onCopy",
+     "type": "(text: string, form: \"isbn13\" | \"isbn10\") => boolean | void",
+     "optional": true,
+     "description": "Called when Copy is pressed; return false to stop the component writing to the clipboard itself"
+    },
+    {
+     "name": "onOpenChange",
+     "type": "(isbn13: string | null) => void",
+     "optional": true,
+     "description": "Called with the ISBN-13 whose card opened, or null when it closed"
+    }
+   ],
+   "hides": [
+    "onCopy",
+    "children"
+   ],
+   "events": {
+    "tc-isbn-lookup": "onLookup",
+    "tc-copy": "onCopy",
+    "tc-open-change": "onOpenChange"
+   }
+  }
+ ],
+ "changelog": [
+  "**Text selection:** - `tc-text-annotator`: highlight a passage and comment on it; - `tc-response-selection`: select part of a model reply to reply to it or request an edit; - `tc-selection-translate`: translate the selected text; - `tc-isbn-details`: hover an ISBN for its book details."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-isbn-details",
+   "className": "TcIsbnDetails",
+   "module": "trenchcoat/isbn-details",
+   "data": [
+    "resolve"
+   ],
+   "attributes": [
+    {
+     "name": "text",
+     "attribute": "text"
+    },
+    {
+     "name": "hoverDelay",
+     "attribute": "hover-delay"
+    },
+    {
+     "name": "notFoundText",
+     "attribute": "not-found-text"
+    },
+    {
+     "name": "errorText",
+     "attribute": "error-text"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-isbn-lookup",
+     "cancelable": true
+    },
+    {
+     "name": "tc-copy",
+     "cancelable": true
+    },
+    {
+     "name": "tc-open-change",
+     "cancelable": false
+    }
+   ],
+   "controlled": [],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "itself",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "inert",
+    "name": "inert",
+    "bcd": "api.HTMLElement.inert",
+    "versions": {
+     "chrome": "102",
+     "edge": "102",
+     "firefox": "112",
+     "safari": "15.5",
+     "safari_ios": "15.5"
+    },
+    "progressive": false,
+    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
+    "via": [
+     "internal/popover"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "aspect-ratio",
+    "name": "aspect-ratio",
+    "bcd": "css.properties.aspect-ratio",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "89",
+     "safari": "15",
+     "safari_ios": "15"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself",
+     "internal/popover"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "clipboard",
+    "name": "Async Clipboard (writeText)",
+    "bcd": "api.Clipboard.writeText",
+    "versions": {
+     "chrome": "66",
+     "edge": "79",
+     "firefox": "63",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "why": "Copy buttons.",
+    "via": [
+     "internal/util"
+    ]
+   },
+   {
+    "id": "resize-observer",
+    "name": "ResizeObserver",
+    "bcd": "api.ResizeObserver",
+    "versions": {
+     "chrome": "64",
+     "edge": "79",
+     "firefox": "69",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "via": [
+     "internal/popover"
+    ]
+   },
+   {
+    "id": "popover",
+    "name": "Popover API",
+    "bcd": "api.HTMLElement.popover",
+    "versions": {
+     "chrome": "114",
+     "edge": "114",
+     "firefox": "125",
+     "safari": "17",
+     "safari_ios": "18.3"
+    },
+    "progressive": true,
+    "without": "Lists open fixed to the window instead of in the top layer, so a clipping ancestor or a modal can cover them.",
+    "via": [
+     "internal/popover"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "internal/popover",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setTimeout",
+   "setTimeout (internal/popover › PopoverController)"
+  ],
+  "frames": [
+   "requestAnimationFrame, cancelled (internal/popover › PopoverController)"
+  ],
+  "animations": 1,
+  "observers": [
+   "MutationObserver (internal/controllers › AriaForwardController)",
+   "ResizeObserver (internal/popover › PopoverController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)",
+    "CSS (internal/popover › popoverCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 36618,
+  "gzip": 12284
+ }
+}

@@ -15,6 +15,8 @@ import { FocusRescueController } from "./internal/controllers";
  *   · checkpoint – name one claim you'll verify (from `claims`, or typed), and how
  * The fields are stepper-form's: a label, the control and a message that appears after a Submit that didn't pass.
  * Standard is a gray tray with the prompt on a white card; Clean is one white card with a hairline above the buttons.
+ * `brief` is the short version for deadline situations: each mode asks one combined question in one field, says
+ * plainly that it's the short version, and still records the answer (tc-submit carries `brief: true`).
  *
  *   <tc-reflection-gate mode="prior" .answer=${text}></tc-reflection-gate>
  *
@@ -27,14 +29,14 @@ export type ReflectionMode = "intent" | "prior" | "reformulate" | "checkpoint";
 /** open: being filled in · compare: reformulate's second step · done: submitted · skipped */
 export type ReflectionPhase = "open" | "compare" | "done" | "skipped";
 /** The fields across the four modes */
-export type ReflectionField = "task" | "decision" | "stakes" | "belief" | "confidence" | "changeMind" | "restatement" | "match" | "claim" | "method";
+export type ReflectionField = "task" | "decision" | "stakes" | "belief" | "confidence" | "changeMind" | "restatement" | "match" | "claim" | "method" | "brief";
 /** What the person wrote or picked, by field – choices hold their key ("high", "partly", a claim's id…) */
 export type ReflectionGateValue = Partial<Record<ReflectionField, string>>;
 /** A claim to pick in checkpoint mode */
 export type ReflectionClaim = { id: string; text: string };
 export type ReflectionGateValueChange = { value: ReflectionGateValue };
 /** The detail of tc-submit: the mode, and only that mode's fields */
-export type ReflectionGateSubmission = { mode: ReflectionMode; value: ReflectionGateValue };
+export type ReflectionGateSubmission = { mode: ReflectionMode; value: ReflectionGateValue; /** The short version was used */ brief?: boolean };
 export type ReflectionGateSkip = { mode: ReflectionMode };
 export type ReflectionGatePhaseChange = { phase: ReflectionPhase };
 
@@ -95,6 +97,19 @@ export type ReflectionGateLabels = {
   required: string;
   requiredChoice: string;
   tooShort: string;
+  /** The short version's tag, its line under the heading, and its result */
+  briefTag: string;
+  briefDescription: string;
+  notedBrief: string;
+  /** The one question per mode in the short version, and its placeholder */
+  briefIntent: string;
+  briefIntentPlaceholder: string;
+  briefPrior: string;
+  briefPriorPlaceholder: string;
+  briefReformulate: string;
+  briefReformulatePlaceholder: string;
+  briefCheckpoint: string;
+  briefCheckpointPlaceholder: string;
 };
 
 const DEFAULT_LABELS: ReflectionGateLabels = {
@@ -153,6 +168,17 @@ const DEFAULT_LABELS: ReflectionGateLabels = {
   required: "Fill this in to continue",
   requiredChoice: "Pick one to continue",
   tooShort: "Write at least {n} words",
+  briefTag: "Short version",
+  briefDescription: "The short version, for when time is tight. One line – it's still kept with the answer.",
+  notedBrief: "Noted – short version",
+  briefIntent: "What's this for, and what if it's wrong?",
+  briefIntentPlaceholder: "e.g. Refund reply going out today – a wrong amount costs us",
+  briefPrior: "What do you expect, and how sure are you?",
+  briefPriorPlaceholder: "Your guess in a line",
+  briefReformulate: "The answer in one line of your own",
+  briefReformulatePlaceholder: "What it says, in your words",
+  briefCheckpoint: "One thing you'll check, and how",
+  briefCheckpointPlaceholder: "e.g. The 30-day notice, against the contract",
 };
 
 type Kind = "text" | "area" | "cards" | "seg" | "claims";
@@ -177,6 +203,9 @@ const MODES: Record<ReflectionMode, FieldSpec[]> = {
   ],
 };
 const MATCH: FieldSpec = { key: "match", kind: "cards", required: true };
+/** The short version: one combined field, whatever the mode */
+const BRIEF: FieldSpec = { key: "brief", kind: "text", required: true };
+const BRIEF_LABEL: Record<ReflectionMode, keyof ReflectionGateLabels> = { intent: "briefIntent", prior: "briefPrior", reformulate: "briefReformulate", checkpoint: "briefCheckpoint" };
 
 /** Choices by field: key → [label key, hint key] */
 const CHOICES: Partial<Record<ReflectionField, [string, keyof ReflectionGateLabels, keyof ReflectionGateLabels | null][]>> = {
@@ -255,6 +284,8 @@ export class TcReflectionGate extends TcElement {
   @property() accessor heading = "";
   /** The line under the heading – defaults to the mode's */
   @property() accessor description = "";
+  /** The short version for deadline situations: one combined field per mode, marked as the short version, still recorded */
+  @property({ type: Boolean, reflect: true }) accessor brief = false;
   /** Any of the gate's texts, to change the wording or the language */
   @property({ attribute: false }) accessor labels: Partial<ReflectionGateLabels> = {};
 
@@ -284,7 +315,7 @@ export class TcReflectionGate extends TcElement {
   protected override willUpdate(changed: PropertyValues<this>) {
     super.willUpdate(changed);
     if (changed.has("value")) this.latest = this.value;
-    if (changed.has("mode") && changed.get("mode") !== undefined) this.attempted = false;
+    if ((changed.has("mode") && changed.get("mode") !== undefined) || (changed.has("brief") && changed.get("brief") !== undefined)) this.attempted = false;
   }
 
   protected override updated(changed: PropertyValues<this>) {
@@ -319,6 +350,7 @@ export class TcReflectionGate extends TcElement {
 
   /** The fields the current step checks */
   private get specs(): FieldSpec[] {
+    if (this.brief) return [BRIEF];
     return this.phase === "compare" ? [MATCH] : MODES[this.mode] ?? MODES.intent;
   }
 
@@ -334,6 +366,7 @@ export class TcReflectionGate extends TcElement {
 
   /** The submitted fields: this mode's, plus `match` for reformulate */
   private picked(): ReflectionGateValue {
+    if (this.brief) return this.latest.brief?.trim() ? { brief: this.latest.brief.trim() } : {};
     const keys = [...MODES[this.mode].map((s) => s.key), ...(this.mode === "reformulate" ? (["match"] as const) : [])];
     return Object.fromEntries(keys.filter((k) => this.latest[k] !== undefined && this.latest[k] !== "").map((k) => [k, this.latest[k]!.trim()]));
   }
@@ -349,15 +382,18 @@ export class TcReflectionGate extends TcElement {
       return;
     }
     this.attempted = false;
-    if (this.mode === "reformulate" && this.phase !== "compare") {
+    if (this.mode === "reformulate" && this.phase !== "compare" && !this.brief) {
       this.setPhase("compare");
       const missing = missingTerms(this.answer, this.latest.restatement ?? "").length;
       this.announce = missing ? `${missing} ${missing === 1 ? "term" : "terms"} from the answer ${missing === 1 ? "isn't" : "aren't"} in yours` : "Yours covers the answer's key terms";
       return;
     }
-    if (!this.emit<ReflectionGateSubmission>("tc-submit", { mode: this.mode, value: this.picked() }, { cancelable: true })) return;
+    const submission: ReflectionGateSubmission = { mode: this.mode, value: this.picked() };
+    if (this.brief) submission.brief = true;
+    if (!this.emit<ReflectionGateSubmission>("tc-submit", submission, { cancelable: true })) return;
     this.setPhase("done");
-    this.announce = this.mode === "prior" && this.answer ? `${this.t.noted}. The answer is shown.` : this.t.noted;
+    const noted = this.brief ? this.t.notedBrief : this.t.noted;
+    this.announce = this.mode === "prior" && this.answer ? `${noted}. The answer is shown.` : noted;
   }
 
   private skip() {
@@ -375,6 +411,7 @@ export class TcReflectionGate extends TcElement {
   /* ---------- Parts ---------- */
 
   private label(key: ReflectionField) {
+    if (key === "brief") return this.t[BRIEF_LABEL[this.mode] ?? "briefIntent"];
     return this.t[key as keyof ReflectionGateLabels] ?? key;
   }
 
@@ -382,7 +419,7 @@ export class TcReflectionGate extends TcElement {
   private textField(spec: FieldSpec, message: string) {
     const id = `${this.uid}-${spec.key}`;
     const msgId = `${id}-msg`;
-    const placeholder = this.t[`${spec.key}Placeholder` as keyof ReflectionGateLabels];
+    const placeholder = spec.key === "brief" ? this.t[`${BRIEF_LABEL[this.mode] ?? "briefIntent"}Placeholder` as keyof ReflectionGateLabels] : this.t[`${spec.key}Placeholder` as keyof ReflectionGateLabels];
     const onInput = (e: Event) => this.set(spec.key, (e.target as HTMLInputElement).value);
     const onKey = (e: KeyboardEvent) => {
       // ⌘/Ctrl + Enter sends from a text area; Enter alone makes a new line
@@ -520,7 +557,7 @@ export class TcReflectionGate extends TcElement {
       const choice = CHOICES[key]?.find(([k]) => k === raw);
       return choice ? this.t[choice[1]] : raw;
     };
-    const keys = [...MODES[this.mode].map((s) => s.key), ...(this.mode === "reformulate" ? (["match"] as const) : [])];
+    const keys: ReflectionField[] = this.brief ? ["brief"] : [...MODES[this.mode].map((s) => s.key), ...(this.mode === "reformulate" ? (["match"] as const) : [])];
     const rows = keys.map((k) => [k, show(k)] as const).filter(([, s]) => s);
     return html`<dl class="ui-rg__noted">
       ${rows.map(([k, s]) => html`<div class="ui-rg__row"><dt>${this.label(k)}</dt><dd>${s}</dd></div>`)}
@@ -535,14 +572,14 @@ export class TcReflectionGate extends TcElement {
       return html`<div class="ui-rg__card ui-rg__card--result">
         <div class="ui-rg__result" tabindex="-1" data-phase=${phase}>
           <span class="ui-rg__badge" data-phase=${phase}>${done ? check : skipIcon}</span>
-          <span class="ui-rg__result-text">${done ? t.noted : t.skipped}</span>
-          <button type="button" class="ui-rg__text-btn" @click=${() => this.reopen(this.mode === "reformulate" && done ? "compare" : "open")}>${done ? t.edit : t.reflectNow}</button>
+          <span class="ui-rg__result-text">${done ? (this.brief ? t.notedBrief : t.noted) : t.skipped}</span>
+          <button type="button" class="ui-rg__text-btn" @click=${() => this.reopen(this.mode === "reformulate" && done && !this.brief ? "compare" : "open")}>${done ? t.edit : t.reflectNow}</button>
         </div>
         ${done ? this.summary() : nothing}
         ${this.mode === "prior" || (this.mode === "reformulate" && !done) || this.mode === "checkpoint" ? this.answerBlock() : nothing}
       </div>`;
     }
-    const compare = phase === "compare" && this.mode === "reformulate";
+    const compare = phase === "compare" && this.mode === "reformulate" && !this.brief;
     const missing = compare ? missingTerms(this.answer, this.value.restatement ?? "") : [];
     return html`<form class="ui-rg__card" novalidate aria-labelledby=${`${this.uid}-title`} aria-describedby=${`${this.uid}-desc`} @submit=${this.onSubmit}>
       <div class="ui-rg__body">
@@ -569,7 +606,7 @@ export class TcReflectionGate extends TcElement {
           : this.allowSkip
             ? html`<button type="button" class="ui-rg__btn ui-rg__btn--ghost" @click=${() => this.skip()}>${t.skip}</button>`
             : nothing}
-        <button type="submit" class="ui-rg__btn ui-rg__btn--primary">${this.mode === "reformulate" && !compare ? t.compare : t.submit}</button>
+        <button type="submit" class="ui-rg__btn ui-rg__btn--primary">${this.mode === "reformulate" && !compare && !this.brief ? t.compare : t.submit}</button>
       </div>
     </form>`;
   }
@@ -578,12 +615,12 @@ export class TcReflectionGate extends TcElement {
     const t = this.t;
     const mode = MODES[this.mode] ? this.mode : "intent";
     const heading = this.heading || t[`${mode}Heading` as keyof ReflectionGateLabels];
-    const description = this.description || t[`${mode}Description` as keyof ReflectionGateLabels];
+    const description = this.brief ? t.briefDescription : this.description || t[`${mode}Description` as keyof ReflectionGateLabels];
     return html`
       <div class="ui-rg__bar">
         <span class="ui-rg__mark">${bulb}</span>
         <span class="ui-rg__head">
-          <span class="ui-rg__title" id=${`${this.uid}-title`}>${heading}</span>
+          <span class="ui-rg__title" id=${`${this.uid}-title`}>${heading}${this.brief ? html` <span class="ui-rg__tag">${t.briefTag}</span>` : nothing}</span>
           <span class="ui-rg__desc" id=${`${this.uid}-desc`}>${description}</span>
         </span>
       </div>
@@ -634,6 +671,7 @@ export class TcReflectionGate extends TcElement {
 :where([data-look="clean"], [data-look="clean"] *).ui-rg__mark-svg { stroke-width: 1.5; }
 .ui-rg__head { display: grid; gap: var(--tc-space-0-5); min-width: 0; }
 .ui-rg__title { font-size: var(--tc-title-font-size); font-weight: var(--tc-title-font-weight); line-height: var(--tc-title-line-height); letter-spacing: var(--tc-title-tracking); color: var(--tc-title-color); }
+.ui-rg__tag { display: inline-flex; align-items: center; height: var(--tc-pill-h); margin-left: var(--tc-space-1); padding: 0 var(--tc-pill-px); border-radius: var(--tc-pill-radius); background: var(--tc-status-warning-bg); color: var(--tc-status-warning-fg); font-size: var(--tc-pill-font-size); font-weight: var(--tc-pill-font-weight); line-height: var(--tc-line-height-tight); letter-spacing: normal; vertical-align: 1px; white-space: nowrap; }
 .ui-rg__desc { font-size: var(--tc-subtitle-font-size); line-height: var(--tc-subtitle-line-height); color: var(--tc-subtitle-color); text-wrap: pretty; }
 /* ----- The card ----- */
 .ui-rg__card { display: grid; min-width: 0; border-radius: var(--tc-card-radius); background: var(--tc-surface-on-tray); box-shadow: var(--tc-card-shadow); }

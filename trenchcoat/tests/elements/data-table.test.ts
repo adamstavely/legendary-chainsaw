@@ -7,6 +7,10 @@ import axe from "axe-core";
 import { afterEach, describe, expect, test, vi } from "vitest";
 import "../../src/elements/data-table";
 import { numberColumnIcon, tagColumnIcon, type DataColumn, type DataRow, type TcDataTable } from "../../src/elements/data-table";
+import * as React from "react";
+import { act } from "react";
+import { createRoot } from "react-dom/client";
+import { DataTable, type DataColumn as ReactColumn, type DataRow as ReactRow } from "../../src/elements/react/data-table";
 import { cleanup, fixture, settle } from "./helpers";
 
 afterEach(cleanup);
@@ -147,6 +151,48 @@ describe("tc-data-table", () => {
     expect(document.activeElement).toBe(grid(el));
   });
 
+  test("readonly hides the row checkboxes and the bulk bar; selectable brings them back", async () => {
+    const el = await fixture<TcDataTable>(html`<tc-data-table heading="Accounts" readonly .columns=${columns()} .rows=${rows()} .selection=${["b"]}></tc-data-table>`);
+    expect(el.querySelectorAll(".ui-dt__select, [role=checkbox]").length).toBe(0);
+    expect(el.querySelector("thead tr")!.children.length).toBe(3);
+    expect(el.querySelector("tr[data-selected]")).toBeNull();
+    expect(el.querySelector(".ui-dt__bulk")).toBeNull();
+    expect(el.querySelector(".ui-dt__add")).toBeNull();
+    // Cell selection and copy still work
+    const g = grid(el);
+    g.focus();
+    key(g, "ArrowDown");
+    await settle();
+    expect(document.getElementById(g.getAttribute("aria-activedescendant")!)).toBe(cell(el, 0, 0));
+    el.selectable = true;
+    await settle();
+    expect(el.querySelectorAll("[role=checkbox]").length).toBe(4);
+    expect(el.querySelector(".ui-dt__bulk")!.textContent).toContain("1 selected");
+    expect(el.querySelector(".ui-dt__add--danger")).toBeNull();
+  });
+
+  test("selectable false drops the checkboxes from an editable table", async () => {
+    const el = await fixture<TcDataTable>(html`<tc-data-table heading="Accounts" .selectable=${false} .columns=${columns()} .rows=${rows()}></tc-data-table>`);
+    expect(el.querySelectorAll("[role=checkbox]").length).toBe(0);
+    expect(el.querySelector(".ui-dt__add")!.textContent).toContain("Add row");
+    expect(el.querySelector("tbody tr[aria-rowindex]")!.children.length).toBe(3);
+  });
+
+  test("the wrapper: editable={false} hides the checkboxes; selectable brings them back", async () => {
+    const host = document.createElement("div");
+    document.body.append(host);
+    const root = createRoot(host);
+    const render = (selectable?: boolean) => root.render(React.createElement(DataTable, { title: "Accounts", columns: columns() as ReactColumn[], defaultRows: rows() as ReactRow[], editable: false, selectable }));
+    await act(async () => render());
+    await settle();
+    const el = host.querySelector("tc-data-table")!;
+    expect(el.querySelectorAll("[role=checkbox]").length).toBe(0);
+    await act(async () => render(true));
+    await settle();
+    expect(el.querySelectorAll("[role=checkbox]").length).toBe(4);
+    await act(async () => root.unmount());
+  });
+
   test("renderCell draws a cell from the app; icons are cloned into the headers", async () => {
     const renderCell = (row: DataRow, col: DataColumn) => (col.key === "arr" ? `€${row.arr}` : undefined);
     const el = await fixture<TcDataTable>(html`<tc-data-table heading="Accounts" .columns=${columns()} .rows=${rows()} .renderCell=${renderCell}></tc-data-table>`);
@@ -180,6 +226,12 @@ describe("tc-data-table", () => {
       grid(el).focus();
       key(grid(el), "ArrowDown");
       await settle();
+      await new Promise((r) => setTimeout(r, 300));
+      const result = await axe.run(el, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
+      expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
+    });
+    test(`axe, read only (${look})`, async () => {
+      const el = await fixture<TcDataTable>(html`<tc-data-table look=${look} readonly heading="Accounts" .columns=${columns()} .rows=${rows()}></tc-data-table>`);
       await new Promise((r) => setTimeout(r, 300));
       const result = await axe.run(el, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
       expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);

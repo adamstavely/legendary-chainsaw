@@ -3,7 +3,7 @@ import * as React from "react";
 import { TcClaimAnswer, type AnswerClaim, type ClaimOpenChange, type ClaimQueuedChange, type ClaimSource, type ClaimVerifyDetail } from "../claim-answer";
 import { h, useControlled } from "./internal";
 
-export type { AnswerClaim, ClaimOpenChange, ClaimQueuedChange, ClaimSource, ClaimSourceType, ClaimUncertainty, ClaimVerifyDetail } from "../claim-answer";
+export type { AnswerClaim, ClaimMediaType, ClaimMemoryType, ClaimOpenChange, ClaimQuestionType, ClaimQueuedChange, ClaimSource, ClaimSourceType, ClaimUncertainty, ClaimVerifyDetail } from "../claim-answer";
 
 const NONE: string[] = [];
 
