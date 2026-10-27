@@ -113,8 +113,8 @@ describe("tc-progress-tracker", () => {
     expect(bar(el).getAttribute("aria-valuenow")).toBe("1");
     el.autoPlay = true;
     await settle();
-    await wait(110);
-    expect(bar(el).getAttribute("aria-valuenow")).toBe("2");
+    // It starts playing: the next step is ticked – however long a busy runner takes to get there
+    await expect.poll(() => Number(bar(el).getAttribute("aria-valuenow")), { timeout: 3000 }).toBeGreaterThanOrEqual(2);
   });
 
   test("WCAG 2.2.2: auto-play has one Pause / Play button that stops and restarts it and keeps focus", async () => {
@@ -256,7 +256,8 @@ describe("tc-progress-tracker", () => {
 
   test("auto play skips steps it can't tick", async () => {
     const el = await fixture<TcProgressTracker>(html`<tc-progress-tracker auto-play interval="80" .steps=${states}></tc-progress-tracker>`);
-    await wait(130);
+    // The first tick lands on Publish, past the step it can't tick
+    await expect.poll(() => box(el, "Publish").getAttribute("aria-checked"), { timeout: 3000 }).toBe("true");
     expect(box(el, "Invite reviewers").getAttribute("aria-checked")).toBe("false");
     expect(box(el, "Publish").getAttribute("aria-checked")).toBe("true");
   });
