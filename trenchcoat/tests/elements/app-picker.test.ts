@@ -13,7 +13,7 @@ import { userEvent } from "vitest/browser";
 import "../../src/elements/app-picker";
 import { appMatch, appTone, TcAppPicker, type AppPickerApp, type AppPickerPinDetail, type AppPickerSelectDetail } from "../../src/elements/app-picker";
 import { AppPicker } from "../../src/elements/react/app-picker";
-import { cleanup, fixture, parkPointer, settle } from "./helpers";
+import { cleanup, finish, fixture, parkPointer, settle } from "./helpers";
 
 afterEach(cleanup);
 
@@ -269,9 +269,8 @@ describe("tc-app-picker", () => {
     expect(cols()).toBe("3");
     expect(el.querySelector('[role="grid"]')!.querySelectorAll('[role="row"]').length).toBe(3);
     el.style.width = "420px";
-    await wait(100);
+    await expect.poll(cols, { timeout: 3000 }).toBe("4");
     await settle();
-    expect(cols()).toBe("4");
     el.columns = 2;
     await settle();
     expect(cols()).toBe("2");
@@ -282,7 +281,7 @@ describe("tc-app-picker", () => {
   test("the popover stays inside the viewport, anchored under the button at the right edge", async () => {
     const el = await make({ style: "position: fixed; top: 8px; right: 8px" });
     await openPanel(el);
-    await wait(50);
+    await finish();
     const r = pop(el)!.getBoundingClientRect();
     expect(r.left).toBeGreaterThanOrEqual(0);
     expect(r.right).toBeLessThanOrEqual(document.documentElement.clientWidth);

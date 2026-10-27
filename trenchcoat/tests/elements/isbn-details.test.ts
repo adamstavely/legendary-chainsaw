@@ -136,6 +136,17 @@ const ready = async (el: TcIsbnDetails, ms = 30) => {
   await wait(ms);
   await settle(el.parentElement!);
 };
+const title = (c: Element) => document.getElementById(c.getAttribute("aria-labelledby")!)?.textContent;
+/** Waits until a card is open and done looking up (and `check` holds on it, when given) */
+const opened = async (el: TcIsbnDetails, check: (c: HTMLElement) => boolean = () => true) => {
+  await expect
+    .poll(() => {
+      const c = card(el);
+      return !!c && c.dataset.status !== "loading" && check(c);
+    }, { timeout: 3000 })
+    .toBe(true);
+  await settle(el.parentElement!);
+};
 
 describe("tc-isbn-details", () => {
   for (const look of ["standard", "clean"] as const) {
@@ -164,7 +175,7 @@ describe("tc-isbn-details", () => {
     await wait(20);
     await el.updateComplete;
     expect(card(el)).toBeNull();
-    await ready(el, 80);
+    await opened(el);
     const c = card(el)!;
     expect(c.getAttribute("role")).toBe("dialog");
     expect(getComputedStyle(c).position).toBe("fixed");
@@ -186,16 +197,14 @@ describe("tc-isbn-details", () => {
     await wait(150);
     await el.updateComplete;
     expect(card(el)).toBeNull();
-    await wait(250);
-    await el.updateComplete;
-    expect(card(el)).not.toBeNull();
+    await expect.poll(() => card(el), { timeout: 3000 }).not.toBeNull();
   });
 
   test("the card stays open while the pointer moves from the mark into it, and closes when it leaves both", async () => {
     const el = await make({ resolve: resolver([]) });
     const m = marksOf(el)[0];
     enter(m);
-    await ready(el, 100);
+    await opened(el);
     leave(m);
     await wait(60);
     enter(card(el)!);
@@ -203,9 +212,7 @@ describe("tc-isbn-details", () => {
     await el.updateComplete;
     expect(card(el)).not.toBeNull();
     leave(card(el)!);
-    await wait(300);
-    await el.updateComplete;
-    expect(card(el)).toBeNull();
+    await expect.poll(() => card(el), { timeout: 3000 }).toBeNull();
     // Leaving the mark before the delay runs out never opens it
     enter(m);
     await wait(20);
@@ -219,10 +226,10 @@ describe("tc-isbn-details", () => {
     const calls: Calls = [];
     const el = await make({ resolve: resolver(calls) });
     enter(marksOf(el)[0]);
-    await ready(el, 100);
+    await opened(el);
     leave(marksOf(el)[0]);
     enter(marksOf(el)[1]);
-    await ready(el);
+    await opened(el, (c) => title(c) === "Field Notes");
     expect(document.getElementById(card(el)!.getAttribute("aria-labelledby")!)!.textContent).toBe("Field Notes");
     expect(calls.map((x) => x.isbn)).toEqual(["9780306406157", "9780804429573"]);
   });
@@ -231,7 +238,7 @@ describe("tc-isbn-details", () => {
     const el = await make({ resolve: resolver([]) });
     const [a, b] = marksOf(el);
     a.focus();
-    await ready(el);
+    await opened(el);
     expect(card(el)).not.toBeNull();
     await userEvent.keyboard("{Tab}");
     expect(document.activeElement).toBe(card(el)!.querySelector('[aria-label="Copy ISBN-13"]'));
@@ -241,7 +248,7 @@ describe("tc-isbn-details", () => {
     await userEvent.keyboard("{Tab}{Tab}");
     expect(document.activeElement).toBe(card(el)!.querySelector('[aria-label="Copy ISBN-10"]'));
     await userEvent.keyboard("{Tab}");
-    await ready(el);
+    await opened(el, (c) => title(c) === "Field Notes");
     expect(document.activeElement).toBe(b);
     expect(document.getElementById(card(el)!.getAttribute("aria-labelledby")!)!.textContent).toBe("Field Notes");
     // Esc from inside the card: it closes, focus back on its mark
@@ -257,19 +264,19 @@ describe("tc-isbn-details", () => {
     const el = await make({ resolve: resolver([]) });
     const [a] = marksOf(el);
     a.focus();
-    await ready(el);
+    await opened(el);
     await userEvent.keyboard("{Escape}");
     await el.updateComplete;
     expect(card(el)).toBeNull();
     await userEvent.keyboard("{Enter}");
-    await ready(el);
+    await opened(el, (c) => c.contains(document.activeElement));
     expect(card(el)!.contains(document.activeElement)).toBe(true);
     await userEvent.keyboard("{Escape}");
     await el.updateComplete;
     expect(document.activeElement).toBe(a);
     a.blur();
     a.dispatchEvent(new MouseEvent("click", { bubbles: true, detail: 1 }));
-    await ready(el);
+    await opened(el);
     expect(card(el)).not.toBeNull();
     // Pinned: leaving doesn't close it
     leave(a);
@@ -284,7 +291,7 @@ describe("tc-isbn-details", () => {
   test("openCard() opens a card pinned, without moving focus; closeCard() closes it", async () => {
     const el = await make({ resolve: resolver([]) });
     el.openCard(1);
-    await ready(el);
+    await opened(el, (c) => title(c) === "Field Notes");
     expect(document.getElementById(card(el)!.getAttribute("aria-labelledby")!)!.textContent).toBe("Field Notes");
     expect(document.activeElement).toBe(document.body);
     leave(marksOf(el)[1]);
@@ -299,7 +306,7 @@ describe("tc-isbn-details", () => {
   test("a pointer-down outside closes it", async () => {
     const el = await make({ resolve: resolver([]) });
     marksOf(el)[0].dispatchEvent(new MouseEvent("click", { bubbles: true, detail: 1 }));
-    await ready(el);
+    await opened(el);
     document.body.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, composed: true }));
     await el.updateComplete;
     expect(card(el)).toBeNull();
@@ -310,16 +317,16 @@ describe("tc-isbn-details", () => {
     const el = await make({ resolve: resolver(calls), text: "0306406152 and again 978-0-306-40615-7." });
     const [a, b] = marksOf(el);
     a.focus();
-    await ready(el);
+    await opened(el);
     b.focus();
-    await ready(el);
+    await opened(el);
     a.focus();
-    await ready(el);
+    await opened(el);
     expect(calls).toHaveLength(1);
     el.clearCache("9780306406157");
     b.focus();
-    await ready(el);
-    expect(calls).toHaveLength(2);
+    await expect.poll(() => calls.length, { timeout: 3000 }).toBe(2);
+    await opened(el);
   });
 
   test("loading, then an error with Retry, then the book; results are announced", async () => {
@@ -331,21 +338,21 @@ describe("tc-isbn-details", () => {
         ),
     });
     marksOf(el)[0].focus();
-    await ready(el, 10);
+    await expect.poll(() => card(el)?.dataset.status, { timeout: 3000 }).toBe("loading");
     const c = card(el)!;
     expect(c.getAttribute("aria-busy")).toBe("true");
     expect(c.dataset.status).toBe("loading");
     expect(plain(c.textContent)).toContain("Looking up this ISBN…");
     expect(c.getAttribute("aria-label")).toBe("Book details for ISBN 9780306406157");
-    await ready(el, 120);
+    await expect.poll(() => card(el)?.dataset.status, { timeout: 3000 }).toBe("error");
     expect(card(el)!.dataset.status).toBe("error");
     expect(plain(card(el)!.querySelector(".ui-isbn__msg")!.textContent)).toBe("Couldn't load the details.");
     expect(status(el)).toBe("Couldn't load the details.");
     fail = false;
     card(el)!.querySelector<HTMLButtonElement>(".ui-isbn__retry")!.click();
-    await ready(el, 10);
+    await expect.poll(() => card(el)?.dataset.status, { timeout: 3000 }).toBe("loading");
     expect(card(el)!.dataset.status).toBe("loading");
-    await ready(el, 120);
+    await expect.poll(() => card(el)?.dataset.status, { timeout: 3000 }).toBe("done");
     expect(card(el)!.dataset.status).toBe("done");
     expect(status(el)).toBe("Signals and Systems, by Ada Moreno, Li Wei");
   });
@@ -353,7 +360,7 @@ describe("tc-isbn-details", () => {
   test('no resolver and no listener, or no book: "No details for this ISBN"; a 979 number has no ISBN-10', async () => {
     const el = await make();
     marksOf(el)[2].focus();
-    await ready(el);
+    await opened(el);
     const c = card(el)!;
     expect(c.dataset.status).toBe("empty");
     expect(plain(c.querySelector(".ui-isbn__msg")!.textContent)).toBe("No details for this ISBN");
@@ -376,10 +383,10 @@ describe("tc-isbn-details", () => {
       else e.preventDefault();
     });
     marksOf(el)[0].focus();
-    await ready(el);
+    await opened(el, (c) => title(c) === "From the event");
     expect(document.getElementById(card(el)!.getAttribute("aria-labelledby")!)!.textContent).toBe("From the event");
     marksOf(el)[1].focus();
-    await ready(el);
+    await opened(el, (c) => plain(c.querySelector(".ui-isbn__msg")?.textContent) === "No details for this ISBN");
     expect(plain(card(el)!.querySelector(".ui-isbn__msg")!.textContent)).toBe("No details for this ISBN");
     expect(calls).toHaveLength(0);
     expect(seen.map((d) => [d.isbn13, d.isbn10])).toEqual([["9780306406157", "0306406152"], ["9780804429573", "080442957X"]]);
@@ -394,7 +401,7 @@ describe("tc-isbn-details", () => {
       e.preventDefault();
     });
     marksOf(el)[1].focus();
-    await ready(el);
+    await opened(el);
     card(el)!.querySelector<HTMLButtonElement>('[aria-label="Copy ISBN-10"]')!.click();
     card(el)!.querySelector<HTMLButtonElement>('[aria-label="Copy ISBN-13"]')!.click();
     expect(seen).toEqual([{ text: "080442957X", form: "isbn10" }, { text: "9780804429573", form: "isbn13" }]);
@@ -436,14 +443,14 @@ describe("tc-isbn-details", () => {
     await settle();
     const el = host.querySelector<TcIsbnDetails>("tc-isbn-details")!;
     marksOf(el)[0].focus();
-    await act(async () => ready(el));
+    await act(async () => opened(el));
     card(el)!.querySelector<HTMLButtonElement>('[aria-label="Copy ISBN-13"]')!.click();
     expect(copies).toEqual(["9780306406157"]);
     await act(async () => rerender(1));
     await settle();
     marksOf(el)[0].blur();
     marksOf(el)[0].focus();
-    await act(async () => ready(el));
+    await act(async () => opened(el));
     expect(calls).toHaveLength(1);
     await act(async () => rootEl.unmount());
   });
@@ -457,7 +464,7 @@ describe("tc-isbn-details", () => {
       </div>`);
       const els = [...wrap.querySelectorAll<TcIsbnDetails>("tc-isbn-details")];
       els.forEach((el, i) => marksOf(el)[i === 0 ? 0 : 2].dispatchEvent(new MouseEvent("click", { bubbles: true, detail: 1 })));
-      await wait(200);
+      await expect.poll(() => els.map((el) => card(el)?.dataset.status), { timeout: 3000 }).toEqual(["done", "error", "empty"]);
       await settle(wrap);
       expect(els.map((el) => card(el)?.dataset.status)).toEqual(["done", "error", "empty"]);
       document.getAnimations().forEach((a) => a.effect?.getTiming().iterations !== Infinity && a.finish());

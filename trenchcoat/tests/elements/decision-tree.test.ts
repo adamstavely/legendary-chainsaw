@@ -11,7 +11,7 @@ import { afterEach, describe, expect, test, vi } from "vitest";
 import "../../src/elements/decision-tree";
 import type { TcDecisionTree, TreeDecision } from "../../src/elements/decision-tree";
 import { DecisionTree, type DecisionTreeHandle } from "../../src/elements/react/decision-tree";
-import { cleanup, fixture, settle } from "./helpers";
+import { cleanup, finish, fixture, settle } from "./helpers";
 
 afterEach(cleanup);
 
@@ -102,8 +102,7 @@ describe("tc-decision-tree", () => {
       expect(el.querySelector('[aria-live="polite"]')?.textContent).toMatch(/Couldn't send to the release agent/);
       // Retry: the same instruction goes out again, and this time the answer arrives
       el.send();
-      await wait(900);
-      await settle();
+      await expect.poll(() => el.querySelector(".ui-dct__answer")?.textContent, { timeout: 3000 }).toBe("On it.");
       expect(onChoose).toHaveBeenCalledTimes(2);
       expect(onChoose.mock.lastCall![1]).toEqual({ other: "Wait for the hotfix instead" });
       expect(el.textContent).not.toMatch(/Couldn't send –/);
@@ -338,8 +337,7 @@ describe("tc-decision-tree", () => {
       <tc-decision-tree .decisions=${[followUp, decision]}></tc-decision-tree>
       <tc-decision-tree look="clean" heading="Clean" .decisions=${[followUp, decision]}></tc-decision-tree>
     </div>`);
-    await wait(100);
-    document.getAnimations().forEach((a) => a.finish());
+    await finish();
     // label-content-name-mismatch: a follow-up option is named by its top line and described by its consequences (the
     // React component's a11y pass chose this); real browsers count the consequences as visible label text – reported
     const result = await axe.run(wrap, {

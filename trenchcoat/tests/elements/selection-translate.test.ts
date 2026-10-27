@@ -71,8 +71,9 @@ const translate = async (el: TcSelectionTranslate, phrase = SENTENCE) => {
   await el.updateComplete;
   await frames(2);
 };
+/** Waits until the translation (or its failure) is in: the card stops being busy */
 const answered = async (el: TcSelectionTranslate) => {
-  await wait(140);
+  await expect.poll(() => card(el)?.getAttribute("aria-busy"), { timeout: 3000 }).toBe("false");
   await el.updateComplete;
   await frames(2);
 };
@@ -233,7 +234,10 @@ describe("tc-selection-translate", () => {
     expect(card(el)).toBeNull();
     expect(document.activeElement).toBe(root(el));
     release();
-    await answered(el);
+    // The late answer is dropped: nothing comes back
+    await wait(140);
+    await el.updateComplete;
+    await frames(2);
     expect(card(el)).toBeNull();
     expect(el.querySelector(".ui-strn__mark")).toBeNull();
   });

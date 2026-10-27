@@ -221,9 +221,7 @@ describe("tc-trace-waterfall", () => {
     el.querySelector<HTMLButtonElement>('[aria-label="Close details"]')!.focus();
     el.openId = null;
     await settle();
-    await new Promise((r) => setTimeout(r, 300));
-    expect(document.activeElement).not.toBe(document.body);
-    expect(document.activeElement?.getAttribute("role")).toBe("treeitem");
+    await expect.poll(() => document.activeElement?.getAttribute("role"), { timeout: 3000 }).toBe("treeitem");
   });
 
   test("folding the parent of the focused row hands focus to the parent", async () => {

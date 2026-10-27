@@ -113,7 +113,8 @@ describe("tc-reasoning-flags", () => {
     await wait(20);
     await el.updateComplete;
     expect(card(el)).toBeNull();
-    await ready(el, 80);
+    await expect.poll(() => card(el), { timeout: 3000 }).not.toBeNull();
+    await settle(el.parentElement!);
     const c = card(el)!;
     expect(c.getAttribute("role")).toBe("tooltip");
     expect(getComputedStyle(c).position).toBe("fixed");
@@ -132,7 +133,7 @@ describe("tc-reasoning-flags", () => {
     const el = await make();
     const s = spans(el, 0)[0];
     enter(s);
-    await ready(el, 100);
+    await expect.poll(() => card(el), { timeout: 3000 }).not.toBeNull();
     leave(s);
     await wait(60);
     enter(card(el)!);
@@ -140,9 +141,7 @@ describe("tc-reasoning-flags", () => {
     await el.updateComplete;
     expect(card(el)).not.toBeNull();
     leave(card(el)!);
-    await wait(300);
-    await el.updateComplete;
-    expect(card(el)).toBeNull();
+    await expect.poll(() => card(el), { timeout: 3000 }).toBeNull();
   });
 
   test("keyboard without reconsider: focus opens a tooltip that describes the marker; Esc closes it", async () => {
@@ -279,10 +278,8 @@ describe("tc-reasoning-flags", () => {
       const [std, clean] = [...wrap.querySelectorAll<TcReasoningFlags>("tc-reasoning-flags")];
       markers(std)[0].dispatchEvent(new MouseEvent("click", { bubbles: true, detail: 1 }));
       markers(clean)[3].dispatchEvent(new MouseEvent("click", { bubbles: true, detail: 1 }));
-      await wait(300);
+      await expect.poll(() => !!card(std) && !!card(clean), { timeout: 3000 }).toBe(true);
       await settle(wrap);
-      expect(card(std)).not.toBeNull();
-      expect(card(clean)).not.toBeNull();
       // Hot spans too
       enter(spans(std, 1)[0]);
       await settle(wrap);

@@ -19,6 +19,19 @@ export async function settle(root: ParentNode = document.body) {
   await new Promise((r) => requestAnimationFrame(() => r(null)));
 }
 
+/**
+ * Finishes every finite animation and transition under `root`, so axe and geometry read the settled state. Finishing
+ * can re-render, and a re-render can start new ones: repeat until none are left. Infinite ones (spinners, pulses) run on
+ */
+export async function finish(root: Element = document.body) {
+  for (let i = 0; i < 5; i++) {
+    const running = root.getAnimations({ subtree: true }).filter((a) => a.playState !== "finished" && a.effect?.getComputedTiming().endTime !== Infinity);
+    if (!running.length) break;
+    for (const a of running) a.finish();
+    await settle(root);
+  }
+}
+
 export function cleanup() {
   document.body.replaceChildren();
 }

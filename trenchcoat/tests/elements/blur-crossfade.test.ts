@@ -7,7 +7,7 @@ import axe from "axe-core";
 import { afterEach, describe, expect, test } from "vitest";
 import "../../src/elements/blur-crossfade";
 import type { TcBlurCrossfade } from "../../src/elements/blur-crossfade";
-import { cleanup, fixture, settle } from "./helpers";
+import { cleanup, finish, fixture, settle } from "./helpers";
 
 afterEach(cleanup);
 
@@ -50,9 +50,8 @@ describe("tc-blur-crossfade", () => {
       expect(out.hasAttribute("inert")).toBe(true);
       expect(el.hasAttribute("data-busy")).toBe(true);
     }
-    await new Promise((r) => setTimeout(r, 200));
+    await expect.poll(() => outgoing(el), { timeout: 3000 }).toBeUndefined();
     await settle();
-    expect(outgoing(el)).toBeUndefined();
     expect(el.hasAttribute("data-busy")).toBe(false);
     expect(el.style.height).toBe("");
   });
@@ -120,8 +119,8 @@ describe("tc-blur-crossfade", () => {
       return result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`);
     };
     expect(await run({ "color-contrast": { enabled: false } })).toEqual([]);
-    await new Promise((r) => setTimeout(r, 300));
-    await settle();
+    await expect.poll(() => wrap.querySelector(".ui-bx__layer--out"), { timeout: 3000 }).toBeNull();
+    await finish(wrap);
     expect(await run()).toEqual([]);
   });
 });

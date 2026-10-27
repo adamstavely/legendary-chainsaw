@@ -23,9 +23,9 @@ const people: DraftContact[] = [
   { name: "Lena Hart", email: "lena@northwind.io" },
 ];
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
-/** Sending shows its spinner for at least 900 ms */
-const sent = async () => {
-  await wait(1000);
+/** Sending shows its spinner for at least 900 ms: waits until it's over (sent, or back to the draft on a failure) */
+const sent = async (...els: Element[]) => {
+  for (const el of els) await expect.poll(() => (el as HTMLElement).dataset.phase, { timeout: 5000 }).not.toBe("sending");
   await settle();
 };
 const button = (root: Element, name: string | RegExp) =>
@@ -57,12 +57,13 @@ describe("tc-email-draft", () => {
     const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
     const quiet = await draft();
     await click(sendButton(quiet));
-    await sent();
+    await sent(quiet);
     expect(warn.mock.calls.filter(([m]) => String(m).startsWith("EmailDraft:"))).toHaveLength(0);
     cleanup();
     const wrap = await fixture(html`<div><tc-email-draft></tc-email-draft><tc-email-draft></tc-email-draft></div>`);
     for (const b of wrap.querySelectorAll<HTMLButtonElement>(".ui-ed__primary")) b.click();
-    await sent();
+    await settle();
+    await sent(...wrap.querySelectorAll("tc-email-draft"));
     expect(warn.mock.calls.filter(([m]) => String(m).startsWith("EmailDraft:"))).toHaveLength(1);
   });
 
@@ -91,7 +92,7 @@ describe("tc-email-draft", () => {
       const undo = vi.fn();
       el.addEventListener("tc-undo", (e) => undo((e as CustomEvent).detail.action));
       await click(sendButton(el));
-      await sent();
+      await sent(el);
       expect(onSend).toHaveBeenCalledTimes(1);
       expect(onSend.mock.calls[0][0]).toEqual({ to: people[0], body: expect.stringMatching(/^Hi Jonas, .* Review quote: #$/), attachment: "Renewal-quote.pdf" });
       expect(el.dataset.phase).toBe("sent");
@@ -105,7 +106,7 @@ describe("tc-email-draft", () => {
       const el = await fixture<TcEmailDraft>(html`<tc-email-draft look=${look}></tc-email-draft>`);
       el.onSend = vi.fn();
       await click(sendButton(el));
-      await sent();
+      await sent(el);
       expect(status(el).textContent).toMatch(/sent to Jonas Weber/i);
       expect(button(el, "Undo")).toBeUndefined();
     });
@@ -134,7 +135,7 @@ describe("tc-email-draft", () => {
       const el = await fixture<TcEmailDraft>(html`<tc-email-draft look=${look}></tc-email-draft>`);
       el.onSend = () => Promise.reject(new Error("smtp down"));
       await click(sendButton(el));
-      await sent();
+      await sent(el);
       expect(el.querySelector('[role="alert"]')!.textContent).toMatch(/couldn't be sent/);
       expect(sendButton(el).disabled).toBe(false);
       expect(el.querySelector(".ui-ed__receipt")).toBeNull();
@@ -279,7 +280,7 @@ describe("tc-email-draft", () => {
       await click(send);
       expect(send.getAttribute("aria-disabled")).toBe("true");
       expect(document.activeElement).toBe(send);
-      await sent();
+      await sent(el);
       await until(() => document.activeElement === button(el, "Undo"));
       await click(button(el, "Undo")!);
       await until(() => document.activeElement === sendButton(el));
@@ -290,7 +291,7 @@ describe("tc-email-draft", () => {
       el.onSend = vi.fn();
       sendButton(el).focus();
       await click(sendButton(el));
-      await sent();
+      await sent(el);
       await until(() => document.activeElement === el.querySelector(".ui-ed__receipt"));
     });
 
@@ -299,7 +300,7 @@ describe("tc-email-draft", () => {
       const s = status(el);
       expect(s.textContent).toBe("");
       await click(sendButton(el));
-      await sent();
+      await sent(el);
       expect(status(el)).toBe(s);
       expect(s.textContent).toMatch(/Email sent to Jonas Weber/);
       expect(el.querySelector(".ui-ed__receipt[role]")).toBeNull();
@@ -345,7 +346,7 @@ describe("tc-email-draft", () => {
     await settle();
     expect(trigger(el).textContent).toContain("lena@northwind.io");
     await click(sendButton(el));
-    await sent();
+    await sent(el);
     expect(onSend.mock.calls[0][0].to).toEqual(people[1]);
     await click(button(el, "Undo")!);
     expect(onUndo).toHaveBeenCalledWith("send");

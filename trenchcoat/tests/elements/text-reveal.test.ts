@@ -6,7 +6,7 @@ import axe from "axe-core";
 import { afterEach, describe, expect, test } from "vitest";
 import "../../src/elements/text-reveal";
 import { TcTextReveal } from "../../src/elements/text-reveal";
-import { cleanup, fixture, settle } from "./helpers";
+import { cleanup, finish, fixture, settle } from "./helpers";
 
 afterEach(cleanup);
 
@@ -104,6 +104,7 @@ describe("tc-text-reveal", () => {
     </div>`);
     await until(() => [...wrap.querySelectorAll("tc-text-reveal")].every((e) => e.hasAttribute("data-shown")));
     await new Promise((r) => setTimeout(r, 100));
+    await finish(wrap);
     const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
     expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
   });

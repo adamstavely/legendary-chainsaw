@@ -270,8 +270,7 @@ describe("tc-extraction-review", () => {
     // The total sits low on page 1: the view scrolls down to it
     await key(active(), "ArrowUp");
     const view = el.querySelector<HTMLElement>(".ui-xrev__viewport")!;
-    await new Promise((r) => setTimeout(r, 600));
-    expect(view.scrollTop).toBeGreaterThan(0);
+    await expect.poll(() => view.scrollTop, { timeout: 3000 }).toBeGreaterThan(0);
   });
 
   test("Confirm is off until every field is reviewed, then fires tc-confirm; the last review is announced", async () => {

@@ -242,9 +242,8 @@ describe("tc-filter-menu", () => {
     expect(el.querySelectorAll(".ui-fm__chips > .ui-fm__chip:not(.ui-fm__more)")).toHaveLength(3 - hidden);
     // Wide enough, every chip fits and there's no "+N"
     wrap.style.width = "800px";
-    await new Promise((r) => setTimeout(r, 50));
+    await expect.poll(() => el.querySelector(".ui-fm__chips > .ui-fm__more"), { timeout: 3000 }).toBeNull();
     await settle();
-    expect(el.querySelector(".ui-fm__chips > .ui-fm__more")).toBeNull();
     expect(el.querySelectorAll(".ui-fm__chips > .ui-fm__chip")).toHaveLength(3);
   });
 
@@ -274,9 +273,8 @@ describe("tc-filter-menu", () => {
       expect(panel.querySelector('[data-key="o:tag:t2500"]')).toBeNull();
       const row = panel.querySelector<HTMLElement>(".ui-fm__option")!.offsetHeight;
       window.scrollTo(0, panel.getBoundingClientRect().top + window.scrollY + 2500 * row);
-      await new Promise((r) => setTimeout(r, 100));
+      await expect.poll(() => !!panel.querySelector('[data-key="o:tag:t2500"]'), { timeout: 3000 }).toBe(true);
       await settle();
-      expect(panel.querySelector('[data-key="o:tag:t2500"]')).toBeTruthy();
       expect(panel.querySelector('[data-key="o:tag:t0"]')).toBeNull();
       window.scrollTo(0, 0);
     });
@@ -302,9 +300,8 @@ describe("tc-filter-menu", () => {
       first.focus();
       const panel = el.querySelector<HTMLElement>('.ui-fm__panel-inner[data-group="tag"]')!;
       window.scrollTo(0, panel.getBoundingClientRect().top + window.scrollY + 3000 * first.offsetHeight);
-      await new Promise((r) => setTimeout(r, 100));
+      await expect.poll(() => !!panel.querySelector('[data-key="o:tag:t3000"]'), { timeout: 3000 }).toBe(true);
       await settle();
-      expect(panel.querySelector('[data-key="o:tag:t3000"]')).toBeTruthy();
       expect(document.activeElement).toBe(first);
       expect(first.isConnected).toBe(true);
       // Its place is kept: spacers on both sides add up to the full list

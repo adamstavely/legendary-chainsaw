@@ -98,9 +98,8 @@ describe("tc-message-actions", () => {
     await settle();
     expect(said).toHaveLength(0);
     expect(el.hasAttribute("data-active")).toBe(true);
-    await wait(300);
+    await expect.poll(() => playing, { timeout: 3000 }).toEqual([true, false]);
     await settle();
-    expect(playing).toEqual([true, false]);
     expect(btn(el, "Read aloud")!.getAttribute("aria-pressed")).toBe("false");
     expect(el.querySelector(".ui-ma__sr")!.textContent).toBe("Finished reading");
   });
@@ -354,9 +353,7 @@ describe("tc-message-text", () => {
       [false, "Second"],
     ]);
     expect(items[0].getAttribute("aria-hidden")).toBe("true");
-    await wait(400);
-    await settle();
-    expect(el.querySelectorAll(".ui-ma__swap-item")).toHaveLength(1);
+    await expect.poll(() => el.querySelectorAll(".ui-ma__swap-item").length, { timeout: 3000 }).toBe(1);
   });
 
   test("changes inside the content element are followed", async () => {

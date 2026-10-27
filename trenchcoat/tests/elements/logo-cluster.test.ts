@@ -6,7 +6,7 @@ import axe from "axe-core";
 import { afterEach, describe, expect, test } from "vitest";
 import "../../src/elements/logo-cluster";
 import { TcLogoCluster } from "../../src/elements/logo-cluster";
-import { cleanup, fixture, settle } from "./helpers";
+import { cleanup, finish, fixture, settle } from "./helpers";
 
 afterEach(cleanup);
 
@@ -69,6 +69,7 @@ describe("tc-logo-cluster", () => {
   test("axe: no violations once the entrance has played", async () => {
     const wrap = await fixture(html`<div><tc-logo-cluster style="width: 200px"></tc-logo-cluster><tc-logo-cluster label="Integrations" style="width: 200px"></tc-logo-cluster></div>`);
     await new Promise((r) => setTimeout(r, 1200));
+    await finish(wrap);
     const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
     expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
   });

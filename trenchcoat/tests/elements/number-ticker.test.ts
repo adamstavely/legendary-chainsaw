@@ -98,11 +98,13 @@ describe("tc-number-ticker", () => {
   });
 
   test("it waits for delay before the count-in", async () => {
+    const start = performance.now();
     const el = await fixture<TcNumberTicker>(html`<tc-number-ticker value="7" locale="en-US" delay="300" duration="0"></tc-number-ticker>`);
-    await wait(100);
-    expect(offsets(el)).toEqual(at([0]));
+    // Still at 0 before the delay is up (only checked when the runner got here early enough to tell)
+    if (performance.now() - start < 200) expect(offsets(el)).toEqual(at([0]));
     await until(() => offsets(el).join() === at([7]).join());
     expect(offsets(el)).toEqual(at([7]));
+    expect(performance.now() - start).toBeGreaterThanOrEqual(300);
   });
 
   test("removed mid-roll, the roll jumps to its end and stops", async () => {

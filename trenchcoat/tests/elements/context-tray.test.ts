@@ -11,7 +11,7 @@ import { afterEach, describe, expect, test, vi } from "vitest";
 import "../../src/elements/context-tray";
 import type { ContextTrayItem, ContextTrayItemsChange, TcContextTray } from "../../src/elements/context-tray";
 import { ContextTray, type ContextTrayEntry } from "../../src/elements/react/context-tray";
-import { cleanup, fixture, settle } from "./helpers";
+import { cleanup, finish, fixture, settle } from "./helpers";
 
 afterEach(() => {
   cleanup();
@@ -34,11 +34,8 @@ const press = (target: Element, init: KeyboardEventInit) => {
   target.dispatchEvent(e);
   return e;
 };
-/** Waits out the fold of a removed chip */
-const folded = async () => {
-  await new Promise((r) => setTimeout(r, 320));
-  await settle();
-};
+/** Waits out the fold of removed chips: until `n` are left */
+const folded = (el: Element, n: number) => expect.poll(() => el.querySelectorAll(".ui-ctt__chip").length, { timeout: 3000 }).toBe(n);
 
 describe("tc-context-tray", () => {
   for (const look of ["standard", "clean"] as const) {
@@ -95,8 +92,7 @@ describe("tc-context-tray", () => {
         expect(chips(el)[1].dataset.id).toBe("stripe");
         expect(el.querySelector('[role="status"]')!.textContent).toContain("Removed @Priya Shah");
         expect(el.querySelector(".ui-ctt__caption")!.textContent).toContain("Removed @Priya Shah");
-        await folded();
-        expect(el.querySelectorAll(".ui-ctt__chip")).toHaveLength(2);
+        await folded(el, 2);
         el.querySelector<HTMLButtonElement>(".ui-ctt__undo")!.click();
         await settle();
         expect(changes[1].change).toMatchObject({ type: "restore", item: { id: "priya" } });
@@ -112,7 +108,8 @@ describe("tc-context-tray", () => {
         await settle();
         expect(el.items).toEqual([]);
         expect(document.activeElement).toBe(el.querySelector(".ui-ctt__undo"));
-        await folded();
+        await folded(el, 0);
+        await settle();
         expect(el.querySelector(".ui-ctt__empty")!.textContent).toContain("Nothing in context yet");
         expect(press(document.activeElement!, { key: "z", ctrlKey: true }).defaultPrevented).toBe(true);
         await settle();
@@ -134,8 +131,7 @@ describe("tc-context-tray", () => {
         el.items = items().slice(0, 1);
         await settle();
         expect(labels(el)).toEqual(["billing-spec.md"]);
-        await folded();
-        expect(el.querySelectorAll(".ui-ctt__chip")).toHaveLength(1);
+        await folded(el, 1);
       });
 
       test("pin toggles with aria-pressed; it's announced and the chip is marked", async () => {
@@ -197,9 +193,7 @@ describe("tc-context-tray", () => {
         chips(el)[0].querySelector<HTMLButtonElement>(".ui-ctt__remove")!.click();
         await settle();
         expect(el.querySelector(".ui-ctt__undo")).toBeTruthy();
-        await new Promise((r) => setTimeout(r, 200));
-        await settle();
-        expect(el.querySelector(".ui-ctt__undo")).toBeNull();
+        await expect.poll(() => el.querySelector(".ui-ctt__undo"), { timeout: 3000 }).toBeNull();
         expect(el.undo()).toBe(false);
         el.undoTimeout = 0;
         chips(el)[0].querySelector<HTMLButtonElement>(".ui-ctt__remove")!.click();
@@ -291,8 +285,8 @@ describe("tc-context-tray", () => {
         </div>`);
         const el = wrap.querySelector<TcContextTray>("tc-context-tray")!;
         chips(el)[1].querySelector<HTMLButtonElement>(".ui-ctt__remove")!.click();
-        await folded();
-        wrap.getAnimations({ subtree: true }).forEach((a) => a.finish());
+        await folded(el, 2);
+        await finish(wrap);
         const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
         expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
       });

@@ -7,7 +7,7 @@ import axe from "axe-core";
 import { afterEach, describe, expect, test, vi } from "vitest";
 import "../../src/elements/combobox";
 import type { ComboboxOption, TcCombobox } from "../../src/elements/combobox";
-import { cleanup, fixture, settle } from "./helpers";
+import { cleanup, finish, fixture, settle } from "./helpers";
 
 afterEach(cleanup);
 
@@ -186,6 +186,7 @@ describe("tc-combobox", () => {
       key(input, "ArrowDown");
       await settle();
       await new Promise((r) => setTimeout(r, 400));
+      await finish();
       const result = await axe.run(el, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
       expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
     });

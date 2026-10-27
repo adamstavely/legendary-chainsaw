@@ -142,9 +142,8 @@ describe("tc-compact-breakdown", () => {
 
   test("numbers roll to their values", async () => {
     const el = await fixture<TcCompactBreakdown>(html`<tc-compact-breakdown .items=${items} .format=${(n: number) => `$${Math.round(n)}`}></tc-compact-breakdown>`);
-    await new Promise((r) => setTimeout(r, 1100));
-    await settle();
-    expect(el.querySelector(".ui-cb__big")!.textContent).toBe("$50");
+    await expect.poll(() => el.querySelector(".ui-cb__big")!.textContent, { timeout: 3000 }).toBe("$50");
+    await expect.poll(() => [...el.querySelectorAll(".ui-cb__value")].map((n) => n.textContent)).toEqual(["$40", "$10"]);
     expect([...el.querySelectorAll(".ui-cb__value")].map((n) => n.textContent)).toEqual(["$40", "$10"]);
     expect([...el.querySelectorAll(".ui-cb__share")].map((n) => n.textContent)).toEqual(["80%", "20%"]);
   });

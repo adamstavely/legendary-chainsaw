@@ -42,7 +42,8 @@ describe("tc-notification-stack", () => {
       test("notices added after mount show up; dismissed ones stay hidden while listed", async () => {
         const el = await fixture<TcNotificationStack>(html`<tc-notification-stack look=${look} .notices=${[a, b]}></tc-notification-stack>`);
         close(el, "First").click();
-        await wait(400);
+        // Slid out and gone
+        await expect.poll(() => el.querySelectorAll("article").length, { timeout: 3000 }).toBe(1);
         await settle();
         expect(titles(el)).toEqual(["Second"]);
         el.notices = [c, a, b];
@@ -56,9 +57,8 @@ describe("tc-notification-stack", () => {
         close(el, "First").click();
         await settle();
         expect(el.querySelectorAll("article[data-leaving]")).toHaveLength(1);
-        await wait(400);
+        await expect.poll(() => el.querySelectorAll("article").length, { timeout: 3000 }).toBe(1);
         await settle();
-        expect(el.querySelectorAll("article")).toHaveLength(1);
         el.notices = [a, b];
         await settle();
         expect(titles(el)).toEqual(["First", "Second"]);

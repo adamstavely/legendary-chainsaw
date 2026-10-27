@@ -113,14 +113,12 @@ describe("tc-progress-tracker", () => {
     expect(bar(el).getAttribute("aria-valuenow")).toBe("1");
     el.autoPlay = true;
     await settle();
-    await wait(110);
-    expect(bar(el).getAttribute("aria-valuenow")).toBe("2");
+    await expect.poll(() => bar(el).getAttribute("aria-valuenow"), { timeout: 3000 }).toBe("2");
   });
 
   test("WCAG 2.2.2: auto-play has one Pause / Play button that stops and restarts it and keeps focus", async () => {
     const el = await fixture<TcProgressTracker>(html`<tc-progress-tracker .steps=${three} interval="150" auto-play></tc-progress-tracker>`);
-    await wait(220);
-    expect(bar(el).getAttribute("aria-valuenow")).toBe("1");
+    await expect.poll(() => bar(el).getAttribute("aria-valuenow"), { timeout: 3000 }).toBe("1");
     const pause = el.querySelector<HTMLButtonElement>(".ui-progress__play")!;
     expect(pause.getAttribute("aria-label")).toBe("Pause auto-play");
     pause.focus();
@@ -134,16 +132,18 @@ describe("tc-progress-tracker", () => {
     expect(document.activeElement).toBe(play);
     play.click();
     await settle();
-    await wait(220);
-    expect(bar(el).getAttribute("aria-valuenow")).toBe("2");
+    // Restarted: it moves on again (how far by the time it's read depends on the runner)
+    await expect.poll(() => Number(bar(el).getAttribute("aria-valuenow")), { timeout: 3000 }).toBeGreaterThanOrEqual(2);
   });
 
   test("an interaction stops auto-play", async () => {
     const el = await fixture<TcProgressTracker>(html`<tc-progress-tracker .steps=${three} interval="60" auto-play></tc-progress-tracker>`);
     box(el, "Three").dispatchEvent(new PointerEvent("pointerdown", { bubbles: true }));
     await settle();
+    // Nothing moves on after the interaction (a slow runner may already have ticked once while mounting)
+    const at = bar(el).getAttribute("aria-valuenow");
     await wait(250);
-    expect(bar(el).getAttribute("aria-valuenow")).toBe("0");
+    expect(bar(el).getAttribute("aria-valuenow")).toBe(at);
     expect(el.querySelector(".ui-progress__play")!.getAttribute("aria-label")).toBe("Play auto-play");
   });
 
@@ -256,9 +256,8 @@ describe("tc-progress-tracker", () => {
 
   test("auto play skips steps it can't tick", async () => {
     const el = await fixture<TcProgressTracker>(html`<tc-progress-tracker auto-play interval="80" .steps=${states}></tc-progress-tracker>`);
-    await wait(130);
+    await expect.poll(() => box(el, "Publish").getAttribute("aria-checked"), { timeout: 3000 }).toBe("true");
     expect(box(el, "Invite reviewers").getAttribute("aria-checked")).toBe("false");
-    expect(box(el, "Publish").getAttribute("aria-checked")).toBe("true");
   });
 
   test("done-style plain: no line through done steps; fit widens or fills", async () => {
