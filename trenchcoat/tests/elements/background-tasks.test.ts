@@ -293,10 +293,11 @@ describe("tc-background-tasks", () => {
     await wait(100);
     await settle();
     expect(rows(el).length).toBeLessThan(120);
-    await expect.poll(() => document.activeElement).toBe(row(el, "t0"));
+    await expect.poll(() => document.activeElement === row(el, "t0")).toBe(true);
     await userEvent.keyboard("{End}");
-    // The window scrolls, renders the last rows, then focuses – a few frames when the machine is busy
-    await expect.poll(() => document.activeElement, { timeout: 3000 }).toBe(row(el, "t299"));
+    // The window scrolls, renders the last rows, then focuses – a few frames when the machine is busy. The row is
+    // looked up on each try: it doesn't exist until the window reaches it
+    await expect.poll(() => document.activeElement === row(el, "t299"), { timeout: 5000 }).toBe(true);
   });
 
   test("reduced motion stops the ring's spin and the indeterminate bars", () => {

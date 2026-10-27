@@ -60,6 +60,8 @@ describe("tc-context-map", () => {
       test("the motion stops once the tiles have settled; nothing runs after removal", async () => {
         const el = await fixture<TcContextMap>(mapAt(look, BLOCKS));
         await glide(1500);
+        // A slow runner may still be easing after 1.5 s: measure from where it has actually settled
+        await expect.poll(() => el["raf"], { timeout: 5000 }).toBe(0);
         const before = geometry(el);
         let updates = 0;
         const update = el["update"].bind(el);

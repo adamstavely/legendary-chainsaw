@@ -65,8 +65,13 @@ const dialog = (el: Element) => el.querySelector<HTMLDialogElement>(".ui-dhp__di
 const text = (el: Element | null) => el?.textContent?.replace(/\s+/g, " ").trim();
 const key = (target: Element, k: string, init: KeyboardEventInit = {}) => target.dispatchEvent(new KeyboardEvent("keydown", { key: k, bubbles: true, cancelable: true, ...init }));
 const finish = async (root: Element) => {
-  for (const a of root.getAnimations?.({ subtree: true }) ?? []) a.finish();
-  await settle();
+  // Finishing can re-render, and a re-render can start new transitions: repeat until nothing is running
+  for (let i = 0; i < 5; i++) {
+    const running = root.getAnimations?.({ subtree: true }) ?? [];
+    if (!running.length) break;
+    for (const a of running) a.finish();
+    await settle();
+  }
 };
 
 describe("tc-data-handling-policy", () => {
