@@ -245,7 +245,7 @@ export class SmoothHeightController implements ReactiveController {
   private ro?: ResizeObserver;
   private frame = 0;
   constructor(
-    private host: Host,
+    host: Host,
     private outer: () => HTMLElement | null,
     private inner: () => HTMLElement | null,
   ) {
@@ -465,7 +465,7 @@ export class ToolbarController implements ReactiveController {
   index = 0;
 
   constructor(
-    private host: Host,
+    host: Host,
     private options: ToolbarOptions,
   ) {
     host.addController(this);
@@ -516,5 +516,55 @@ export class ToolbarController implements ReactiveController {
     this.index = items.indexOf(el);
     for (const item of items) item.tabIndex = item === el ? 0 : -1;
     if (move) el.focus();
+  }
+}
+
+/** Where a request the app sends stands: "pending" while it's sent, "requested" once it is, "failed" if it couldn't be */
+export type RequestState = "pending" | "requested" | "failed";
+
+/**
+ * The "Request … → Requesting… / Requested / Couldn't request + Retry" pattern. `run()` reports each state to the
+ * host; the app's sender gets an AbortSignal that aborts when the host leaves the page, and a request that was
+ * aborted reports nothing more. With no sender, a request counts as sent at once.
+ *
+ *   private readonly requests = new RequestController(this);
+ *   void this.requests.run(resolver && ((signal) => resolver(item, signal)), (state) => { … });
+ *
+ * `key` (optional) ties runs together: a new run with the same key aborts the one before it.
+ */
+export class RequestController implements ReactiveController {
+  private readonly running = new Map<AbortController, string | undefined>();
+
+  constructor(host: ReactiveControllerHost) {
+    host.addController(this);
+  }
+
+  hostDisconnected() {
+    for (const abort of this.running.keys()) abort.abort();
+    this.running.clear();
+  }
+
+  async run(send: ((signal: AbortSignal) => Promise<unknown>) | undefined, report: (state: RequestState) => void, key?: string): Promise<void> {
+    if (!send) {
+      report("requested");
+      return;
+    }
+    if (key !== undefined)
+      for (const [abort, k] of this.running)
+        if (k === key) {
+          abort.abort();
+          this.running.delete(abort);
+        }
+    const abort = new AbortController();
+    this.running.set(abort, key);
+    report("pending");
+    try {
+      await send(abort.signal);
+      if (!abort.signal.aborted) report("requested");
+    } catch {
+      if (!abort.signal.aborted) report("failed");
+    } finally {
+      this.running.delete(abort);
+    }
   }
 }

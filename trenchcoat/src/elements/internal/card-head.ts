@@ -36,14 +36,14 @@ export function cardHead({ icon, title, subtitle, id, level = 3, aside }: CardHe
       ? html`<h2 class="tc-head__title" id=${ifDefined(id)}>${title}</h2>`
       : html`<h3 class="tc-head__title" id=${ifDefined(id)}>${title}</h3>`;
   return html`<div class="tc-head">
-    <span class="tc-head__icon" aria-hidden="true"
+    <div class="tc-head__main"><span class="tc-head__icon" aria-hidden="true"
       >${icon instanceof Element
         ? icon
         : html`<svg class="tc-head__glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">${icon}</svg>`}</span
     >
     <div class="tc-head__text">
       ${heading}${subtitle ? html`<p class="tc-head__sub">${subtitle}</p>` : nothing}
-    </div>
+    </div></div>
     ${aside ? html`<div class="tc-head__aside">${aside}</div>` : nothing}
   </div>`;
 }
@@ -54,7 +54,9 @@ export const cardHeadCss = /* css */ `
 .tc-head__icon { flex: none; display: grid; place-items: center; width: var(--tc-head-icon-size); height: var(--tc-head-icon-size); border-radius: var(--tc-head-icon-radius); background: var(--tc-head-icon-bg); box-shadow: var(--tc-head-icon-shadow); color: var(--tc-head-icon-fg); }
 .tc-head .tc-head__icon > svg.tc-head__glyph { display: block; width: var(--tc-head-glyph); height: var(--tc-head-glyph); stroke-width: var(--tc-head-glyph-stroke); }
 .tc-head .tc-head__icon > :not(.tc-head__glyph) { display: block; max-width: var(--tc-head-glyph); max-height: var(--tc-head-glyph); }
-.tc-head__text { flex: 1 1 auto; min-width: 0; }
+/* The icon and the text stay together; only the aside wraps, onto its own line when the title needs the room */
+.tc-head__main { flex: 1 1 auto; display: flex; align-items: center; gap: var(--tc-head-gap); min-width: min(100%, 12rem); }
+.tc-head__text { flex: 1 1 0; min-width: 0; }
 .tc-head__title { margin: 0; color: var(--tc-title-color); font-family: var(--tc-font-sans); font-size: var(--tc-title-font-size); font-weight: var(--tc-title-font-weight); line-height: var(--tc-title-line-height); letter-spacing: var(--tc-title-tracking); overflow-wrap: break-word; }
 .tc-head__sub { margin: 0; color: var(--tc-subtitle-color); font-size: var(--tc-subtitle-font-size); line-height: var(--tc-subtitle-line-height); overflow-wrap: anywhere; }
 .tc-head__aside { flex: 0 1 auto; display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--tc-space-2); margin-left: auto; min-width: 0; }

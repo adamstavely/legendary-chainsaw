@@ -149,6 +149,8 @@ export class TcBreakdownChart extends TcElement {
 
   /** The heading, and the region's name */
   @property() accessor heading = "Workload";
+  /** Grow to the container's width instead of stopping at 560px */
+  @property({ type: Boolean, reflect: true }) accessor fill = false;
   /** The rows to chart – one object per item, with a value for each dimension key and each measure field */
   @property({ attribute: false }) accessor records: BreakdownRecord[] = [];
   /** The fields people can slice and segment by, with their values in display order */
@@ -581,6 +583,8 @@ export class TcBreakdownChart extends TcElement {
   line-height: var(--tc-line-height-normal);
   font-weight: var(--tc-font-weight-regular);
 }
+/* fill: as wide as the container */
+[data-ui="bc"][fill] { max-width: none; }
 [data-ui="bc"] *, [data-ui="bc"] *::before, [data-ui="bc"] *::after { box-sizing: border-box; }
 :where([data-ui="bc"]) button { margin: 0; padding: 0; border: 0; background: none; font: inherit; color: inherit; cursor: pointer; }
 :where([data-ui="bc"]) svg { display: block; flex: none; }
@@ -793,10 +797,8 @@ export class TcBreakdownChart extends TcElement {
 .ui-bc__foot { display: flex; align-items: center; justify-content: space-between; min-height: 44px; }
 :where([data-look="standard"], [data-look="standard"] *).ui-bc__foot { gap: var(--tc-space-2-5); padding: var(--tc-space-1-5) var(--tc-space-2-5) var(--tc-space-2) var(--tc-space-2-5); }
 :where([data-look="clean"], [data-look="clean"] *).ui-bc__foot { gap: var(--tc-space-2); padding: var(--tc-space-2); border-top: var(--tc-hairline) solid var(--tc-divider); }
-.ui-bc__legend { display: flex; gap: var(--tc-space-0-5); }
-:where([data-look="standard"], [data-look="standard"] *).ui-bc__legend { flex-wrap: wrap; }
-:where([data-look="clean"], [data-look="clean"] *).ui-bc__legend { flex-wrap: nowrap; min-width: 0; overflow-x: auto; scrollbar-width: none; }
-:where([data-look="clean"], [data-look="clean"] *).ui-bc__legend::-webkit-scrollbar { display: none; }
+/* The chips wrap onto more rows when they don't fit */
+.ui-bc__legend { display: flex; flex-wrap: wrap; flex: 1 1 auto; min-width: 0; gap: var(--tc-space-0-5); }
 .ui-bc__chip {
   display: inline-flex;
   align-items: center;
@@ -811,7 +813,7 @@ export class TcBreakdownChart extends TcElement {
 :where([data-look="clean"], [data-look="clean"] *).ui-bc__chip { flex: none; padding: 0 var(--tc-space-2); font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); font-weight: var(--tc-font-weight-medium); }
 .ui-bc__chip:hover { background: var(--tc-fill-subtle); }
 :where([data-look="clean"], [data-look="clean"] *).ui-bc__chip:hover { color: var(--tc-text-primary); }
-/* The legend scrolls sideways when it doesn't fit, so the focus ring sits inside the chip */
+/* Wrapped rows touch, so the focus ring sits inside the chip */
 :where([data-look="clean"], [data-look="clean"] *)[data-ui="bc"] .ui-bc__chip:focus-visible { outline-offset: calc(-1 * var(--tc-focus-ring-width)); }
 /* Off: muted and struck through (not only faded), the swatch fades */
 .ui-bc__chip[aria-pressed="false"] { color: var(--tc-text-muted); text-decoration: line-through; }

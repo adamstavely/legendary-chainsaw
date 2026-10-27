@@ -3,6 +3,7 @@ import { LitElement, type PropertyValues } from "lit";
 import { property } from "lit/decorators.js";
 import { lookContext, type Look } from "./look";
 import { cardHeadCss } from "./card-head";
+import { kitCss } from "./kit";
 import { adoptStyles } from "./styles";
 import { clearForwardedAria } from "./controllers";
 
@@ -57,6 +58,7 @@ export abstract class TcElement extends LitElement {
     // CSS overrides this zero-specificity default (Button is inline-flex)
     adoptStyles("tc-base", ":where([data-ui]) { display: block; }", this.ownerDocument);
     adoptStyles("tc-head", cardHeadCss, this.ownerDocument);
+    adoptStyles("tc-kit", kitCss, this.ownerDocument);
     adoptStyles(`ui-${type.ui}`, type.css, this.ownerDocument);
     this.dataset.ui = type.ui;
     super.connectedCallback();

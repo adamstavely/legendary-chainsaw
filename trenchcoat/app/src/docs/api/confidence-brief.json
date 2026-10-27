@@ -1,0 +1,617 @@
+{
+ "elements": [
+  {
+   "tag": "tc-confidence-brief",
+   "className": "TcConfidenceBrief",
+   "description": "An answer explained for someone who wasn't in the session: the conclusion, the kind of uncertainty, what would\nchange it, the key assumptions, signs to watch, the track record and the provenance record – with Copy as text.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Confidence brief\"",
+     "description": "The heading – what the brief is about, often the question as it was asked",
+     "readonly": false
+    },
+    {
+     "name": "meta",
+     "attribute": "meta",
+     "type": "string",
+     "default": "\"\"",
+     "description": "A quiet line under the heading: when it was prepared, for whom",
+     "readonly": false
+    },
+    {
+     "name": "question",
+     "attribute": "question",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The question as it was asked, quoted above the conclusion",
+     "readonly": false
+    },
+    {
+     "name": "conclusion",
+     "attribute": "conclusion",
+     "type": "string",
+     "default": "\"\"",
+     "description": "What we conclude, in a sentence or two",
+     "readonly": false
+    },
+    {
+     "name": "confidence",
+     "attribute": "confidence",
+     "type": "ConfidenceLevel | undefined",
+     "default": "undefined",
+     "description": "How confident the conclusion is – shown beside it; unset shows no level",
+     "readonly": false
+    },
+    {
+     "name": "confidenceLabels",
+     "attribute": null,
+     "type": "Partial<Record<ConfidenceLevel, string>>",
+     "default": "{}",
+     "description": "Names of the three levels – \"High confidence\", \"Moderate confidence\" and \"Low confidence\" by default",
+     "readonly": false
+    },
+    {
+     "name": "uncertainty",
+     "attribute": null,
+     "type": "ConfidenceUncertaintyKind[]",
+     "default": "[]",
+     "description": "The kinds of uncertainty behind the conclusion: \"data\", \"model\", \"disagreement\", \"time\"",
+     "readonly": false
+    },
+    {
+     "name": "uncertaintyLabels",
+     "attribute": null,
+     "type": "Partial<Record<ConfidenceUncertaintyKind, string>>",
+     "default": "{}",
+     "description": "Names of the four kinds – \"Data\", \"Model\", \"Disagreement\" and \"Time\" by default",
+     "readonly": false
+    },
+    {
+     "name": "uncertaintyNote",
+     "attribute": "uncertainty-note",
+     "type": "string",
+     "default": "\"\"",
+     "description": "A sentence on why it's uncertain, under the labels",
+     "readonly": false
+    },
+    {
+     "name": "basis",
+     "attribute": "basis",
+     "type": "string",
+     "default": "\"\"",
+     "description": "What the conclusion rests on, in plain words – the kinds of source and how recent, not their names",
+     "readonly": false
+    },
+    {
+     "name": "changers",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[]",
+     "description": "What would change the conclusion",
+     "readonly": false
+    },
+    {
+     "name": "assumptions",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[]",
+     "description": "The assumptions the conclusion depends on",
+     "readonly": false
+    },
+    {
+     "name": "signals",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[]",
+     "description": "Things to watch for that would call the conclusion into question",
+     "readonly": false
+    },
+    {
+     "name": "record",
+     "attribute": null,
+     "type": "ConfidenceRecord | undefined",
+     "default": "undefined",
+     "description": "How often similar conclusions turned out right",
+     "readonly": false
+    },
+    {
+     "name": "provenanceId",
+     "attribute": "provenance-id",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The provenance record's reference; set, the brief shows it and fires tc-provenance-open when it's pressed",
+     "readonly": false
+    },
+    {
+     "name": "provenanceLabel",
+     "attribute": "provenance-label",
+     "type": "string",
+     "default": "\"Provenance record\"",
+     "description": "What the provenance reference is called",
+     "readonly": false
+    },
+    {
+     "name": "copyLabel",
+     "attribute": "copy-label",
+     "type": "string",
+     "default": "\"Copy as text\"",
+     "description": "The label of the copy button",
+     "readonly": false
+    },
+    {
+     "name": "noCopy",
+     "attribute": "no-copy",
+     "type": "boolean",
+     "default": "false",
+     "description": "Hides the copy button",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-provenance-open",
+     "detail": "",
+     "description": "The provenance reference was pressed; detail `{ id }`: ConfidenceProvenanceOpen.",
+     "cancelable": false
+    },
+    {
+     "name": "tc-copy",
+     "detail": "",
+     "description": "\"Copy as text\" was pressed; detail `{ text }`: ConfidenceCopy. Cancelable: preventDefault() stops the element copying, to copy or export it yourself.",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [
+    {
+     "name": "toText",
+     "params": "",
+     "returns": "void",
+     "description": "The brief as plain text – what \"Copy as text\" copies"
+    }
+   ],
+   "ui": "cfb",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-border-default",
+    "--tc-border-strong",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-ease-standard",
+    "--tc-eyebrow-color",
+    "--tc-eyebrow-font-size",
+    "--tc-eyebrow-font-weight",
+    "--tc-eyebrow-line-height",
+    "--tc-eyebrow-tracking",
+    "--tc-eyebrow-transform",
+    "--tc-fill-strong",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-mono",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xl",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-line-height-display",
+    "--tc-line-height-normal",
+    "--tc-line-height-relaxed",
+    "--tc-line-height-snug",
+    "--tc-meter-h",
+    "--tc-meter-radius",
+    "--tc-meter-track",
+    "--tc-pill-font-size-lg",
+    "--tc-pill-font-weight",
+    "--tc-pill-h-lg",
+    "--tc-pill-px-lg",
+    "--tc-pill-radius",
+    "--tc-radius-2xs",
+    "--tc-radius-full",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-5",
+    "--tc-space-6",
+    "--tc-status-success-fg",
+    "--tc-status-success-solid",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-border",
+    "--tc-status-warning-fg",
+    "--tc-status-warning-solid",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tracking-snug",
+    "--tc-tracking-tight",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "ConfidenceBriefOwn",
+   "exported": false,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading – what the brief is about, often the question as it was asked"
+    },
+    {
+     "name": "onOpenProvenance",
+     "type": "(id: string) => void",
+     "optional": true,
+     "description": "The provenance reference was pressed – open the record with this id"
+    },
+    {
+     "name": "onCopy",
+     "type": "(text: string, event: Event) => void",
+     "optional": true,
+     "description": "\"Copy as text\" was pressed, with the brief as plain text; call event.preventDefault() to copy or export it yourself"
+    }
+   ],
+   "hides": [],
+   "events": {
+    "tc-provenance-open": "onTcProvenanceOpen",
+    "tc-copy": "onTcCopy"
+   }
+  },
+  {
+   "component": "ConfidenceBrief",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading – what the brief is about, often the question as it was asked"
+    },
+    {
+     "name": "onOpenProvenance",
+     "type": "(id: string) => void",
+     "optional": true,
+     "description": "The provenance reference was pressed – open the record with this id"
+    },
+    {
+     "name": "onCopy",
+     "type": "(text: string, event: Event) => void",
+     "optional": true,
+     "description": "\"Copy as text\" was pressed, with the brief as plain text; call event.preventDefault() to copy or export it yourself"
+    }
+   ],
+   "hides": [
+    "heading",
+    "Copy as text"
+   ],
+   "events": {
+    "tc-provenance-open": "onOpenProvenance",
+    "tc-copy": "onCopy"
+   }
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-confidence-brief",
+   "className": "TcConfidenceBrief",
+   "module": "trenchcoat/confidence-brief",
+   "data": [
+    "confidenceLabels",
+    "uncertainty",
+    "uncertaintyLabels",
+    "changers",
+    "assumptions",
+    "signals",
+    "record"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "meta",
+     "attribute": "meta"
+    },
+    {
+     "name": "question",
+     "attribute": "question"
+    },
+    {
+     "name": "conclusion",
+     "attribute": "conclusion"
+    },
+    {
+     "name": "confidence",
+     "attribute": "confidence"
+    },
+    {
+     "name": "uncertaintyNote",
+     "attribute": "uncertainty-note"
+    },
+    {
+     "name": "basis",
+     "attribute": "basis"
+    },
+    {
+     "name": "provenanceId",
+     "attribute": "provenance-id"
+    },
+    {
+     "name": "provenanceLabel",
+     "attribute": "provenance-label"
+    },
+    {
+     "name": "copyLabel",
+     "attribute": "copy-label"
+    },
+    {
+     "name": "noCopy",
+     "attribute": "no-copy"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-provenance-open",
+     "cancelable": false
+    },
+    {
+     "name": "tc-copy",
+     "cancelable": true
+    }
+   ],
+   "controlled": [],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "clipboard",
+    "name": "Async Clipboard (writeText)",
+    "bcd": "api.Clipboard.writeText",
+    "versions": {
+     "chrome": "66",
+     "edge": "79",
+     "firefox": "63",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "why": "Copy buttons.",
+    "via": [
+     "internal/util"
+    ]
+   },
+   {
+    "id": "text-wrap-pretty",
+    "name": "text-wrap: pretty",
+    "bcd": "css.properties.text-wrap.pretty",
+    "versions": {
+     "chrome": "117",
+     "edge": "117",
+     "firefox": null,
+     "safari": "26",
+     "safari_ios": "26"
+    },
+    "progressive": true,
+    "without": "Paragraphs may end on a single short word.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setTimeout"
+  ],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 28376,
+  "gzip": 8859
+ }
+}

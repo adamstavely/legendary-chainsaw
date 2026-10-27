@@ -258,6 +258,9 @@ export class TcAiAnswer extends TcElement {
   @property({ attribute: false }) accessor feedback: AnswerFeedback | null = null;
   /** Reasons offered after a thumbs down */
   @property({ attribute: false }) accessor feedbackReasons = ["Not accurate", "Wrong source", "Too long", "Out of date"];
+  /** Leave out the built-in actions under a finished answer (copy, regenerate, thumbs and the status beside them) –
+   *  for an app that puts its own row there, such as `tc-message-actions`. Stop still shows while the answer is written */
+  @property({ type: Boolean, attribute: "hide-actions" }) accessor hideActions = false;
   /** Regenerate: may return a promise – a rejection shows in the last row, and Regenerate can be tried again */
   @property({ attribute: false }) accessor onRegenerate: (() => void | Promise<unknown>) | undefined = undefined;
 
@@ -578,6 +581,7 @@ export class TcAiAnswer extends TcElement {
     const reason = this.feedback?.reason ?? null;
     const copied = this.copied;
     const reasonsOpen = vote === "down" && !reason;
+    if (finished && this.hideActions) return nothing;
     return html`
       <div class="ui-ans__foot">
         ${finished
@@ -597,9 +601,11 @@ export class TcAiAnswer extends TcElement {
             )
           : nothing}
       </div>
-      <div class="ui-ans__reasons" data-open=${reasonsOpen ? "true" : "false"} .inert=${!reasonsOpen}>
-        <div>${this.feedbackReasons.map((r) => html`<button type="button" @click=${() => this.pickReason(r)}>${r}</button>`)}</div>
-      </div>
+      ${this.hideActions
+        ? nothing
+        : html`<div class="ui-ans__reasons" data-open=${reasonsOpen ? "true" : "false"} .inert=${!reasonsOpen}>
+            <div>${this.feedbackReasons.map((r) => html`<button type="button" @click=${() => this.pickReason(r)}>${r}</button>`)}</div>
+          </div>`}
     `;
   }
 

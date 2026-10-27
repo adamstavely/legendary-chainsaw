@@ -101,6 +101,10 @@ any required pair drops below its minimum.
 | tone-rose-fg on overlay + tone-rose-bg | 5.69 | 6.44 | 5.63 | 6.51 |
 | tone-rose-fg on sunken + tone-rose-bg | 5.69 | 7.95 | 5.27 | 7.80 |
 | tone-rose-fg on tray + tone-rose-bg | 5.69 | 7.27 | 5.27 | 7.80 |
+| tone-teal-fg on raised + tone-teal-bg | 5.38 | 7.13 | 5.38 | 6.87 |
+| tone-teal-fg on overlay + tone-teal-bg | 5.38 | 6.28 | 5.38 | 6.12 |
+| tone-teal-fg on sunken + tone-teal-bg | 5.38 | 7.83 | 5.38 | 7.39 |
+| tone-teal-fg on tray + tone-teal-bg | 5.38 | 7.13 | 5.38 | 7.39 |
 
 ### Status/tone text on surfaces (4.5)
 
@@ -122,6 +126,73 @@ any required pair drops below its minimum.
 | tone-amber-fg on sunken | 4.90 | 9.36 | 5.21 | 8.97 |
 | tone-rose-fg on raised | 6.29 | 9.28 | 6.29 | 9.00 |
 | tone-rose-fg on sunken | 5.52 | 9.97 | 5.87 | 9.56 |
+| tone-teal-fg on raised | 6.03 | 9.41 | 6.03 | 9.12 |
+| tone-teal-fg on sunken | 5.29 | 10.11 | 5.63 | 9.69 |
+
+### Text on highlights (4.5)
+
+| Pair | Std/light | Std/dark | Clean/light | Clean/dark |
+|---|---:|---:|---:|---:|
+| highlight-yellow-fg on base + highlight-yellow-bg | 9.57 | 8.52 | 9.74 | 8.23 |
+| text-primary on base + highlight-yellow-bg | 15.38 | 9.06 | 14.76 | 8.66 |
+| highlight-yellow-fg on raised + highlight-yellow-bg | 9.57 | 7.76 | 9.74 | 7.49 |
+| text-primary on raised + highlight-yellow-bg | 15.38 | 8.26 | 14.76 | 7.93 |
+| highlight-yellow-fg on overlay + highlight-yellow-bg | 9.57 | 6.89 | 9.74 | 6.73 |
+| text-primary on overlay + highlight-yellow-bg | 15.38 | 7.33 | 14.76 | 7.17 |
+| highlight-yellow-fg on sunken + highlight-yellow-bg | 8.75 | 8.52 | 9.26 | 8.04 |
+| text-primary on sunken + highlight-yellow-bg | 14.05 | 9.06 | 14.14 | 8.47 |
+| highlight-yellow-fg on tray + highlight-yellow-bg | 8.75 | 7.76 | 9.26 | 8.04 |
+| text-primary on tray + highlight-yellow-bg | 14.05 | 8.26 | 14.14 | 8.47 |
+| highlight-yellow-fg on on-tray + highlight-yellow-bg | 9.57 | 6.89 | 9.74 | 7.49 |
+| text-primary on on-tray + highlight-yellow-bg | 15.38 | 7.33 | 14.76 | 7.93 |
+| highlight-green-fg on base + highlight-green-bg | 9.08 | 10.27 | 9.39 | 9.92 |
+| text-primary on base + highlight-green-bg | 14.74 | 10.63 | 14.42 | 10.06 |
+| highlight-green-fg on raised + highlight-green-bg | 9.08 | 9.34 | 9.39 | 9.01 |
+| text-primary on raised + highlight-green-bg | 14.74 | 9.67 | 14.42 | 9.20 |
+| highlight-green-fg on overlay + highlight-green-bg | 9.08 | 8.27 | 9.39 | 8.07 |
+| text-primary on overlay + highlight-green-bg | 14.74 | 8.56 | 14.42 | 8.29 |
+| highlight-green-fg on sunken + highlight-green-bg | 8.17 | 10.27 | 8.85 | 9.68 |
+| text-primary on sunken + highlight-green-bg | 13.25 | 10.63 | 13.72 | 9.84 |
+| highlight-green-fg on tray + highlight-green-bg | 8.17 | 9.34 | 8.85 | 9.68 |
+| text-primary on tray + highlight-green-bg | 13.25 | 9.67 | 13.72 | 9.84 |
+| highlight-green-fg on on-tray + highlight-green-bg | 9.08 | 8.27 | 9.39 | 9.01 |
+| text-primary on on-tray + highlight-green-bg | 14.74 | 8.56 | 14.42 | 9.20 |
+| highlight-blue-fg on base + highlight-blue-bg | 9.97 | 9.94 | 10.39 | 9.62 |
+| text-primary on base + highlight-blue-bg | 14.27 | 10.63 | 14.13 | 10.09 |
+| highlight-blue-fg on raised + highlight-blue-bg | 9.97 | 9.10 | 10.39 | 8.80 |
+| text-primary on raised + highlight-blue-bg | 14.27 | 9.73 | 14.13 | 9.28 |
+| highlight-blue-fg on overlay + highlight-blue-bg | 9.97 | 8.12 | 10.39 | 7.94 |
+| text-primary on overlay + highlight-blue-bg | 14.27 | 8.68 | 14.13 | 8.43 |
+| highlight-blue-fg on sunken + highlight-blue-bg | 8.86 | 9.94 | 9.75 | 9.41 |
+| text-primary on sunken + highlight-blue-bg | 12.69 | 10.63 | 13.38 | 9.88 |
+| highlight-blue-fg on tray + highlight-blue-bg | 8.86 | 9.10 | 9.75 | 9.41 |
+| text-primary on tray + highlight-blue-bg | 12.69 | 9.73 | 13.38 | 9.88 |
+| highlight-blue-fg on on-tray + highlight-blue-bg | 9.97 | 8.12 | 10.39 | 8.80 |
+| text-primary on on-tray + highlight-blue-bg | 14.27 | 8.68 | 14.13 | 9.28 |
+| highlight-pink-fg on base + highlight-pink-bg | 9.21 | 9.50 | 9.57 | 9.20 |
+| text-primary on base + highlight-pink-bg | 14.34 | 10.94 | 14.15 | 10.35 |
+| highlight-pink-fg on raised + highlight-pink-bg | 9.21 | 8.70 | 9.57 | 8.41 |
+| text-primary on raised + highlight-pink-bg | 14.34 | 10.01 | 14.15 | 9.52 |
+| highlight-pink-fg on overlay + highlight-pink-bg | 9.21 | 7.75 | 9.57 | 7.58 |
+| text-primary on overlay + highlight-pink-bg | 14.34 | 8.93 | 14.15 | 8.64 |
+| highlight-pink-fg on sunken + highlight-pink-bg | 8.20 | 9.50 | 8.99 | 9.00 |
+| text-primary on sunken + highlight-pink-bg | 12.77 | 10.94 | 13.41 | 10.14 |
+| highlight-pink-fg on tray + highlight-pink-bg | 8.20 | 8.70 | 8.99 | 9.00 |
+| text-primary on tray + highlight-pink-bg | 12.77 | 10.01 | 13.41 | 10.14 |
+| highlight-pink-fg on on-tray + highlight-pink-bg | 9.21 | 7.75 | 9.57 | 8.41 |
+| text-primary on on-tray + highlight-pink-bg | 14.34 | 8.93 | 14.15 | 9.52 |
+| highlight-purple-fg on base + highlight-purple-bg | 9.98 | 9.15 | 10.38 | 8.85 |
+| text-primary on base + highlight-purple-bg | 14.13 | 10.45 | 13.98 | 9.93 |
+| highlight-purple-fg on raised + highlight-purple-bg | 9.98 | 8.37 | 10.38 | 8.09 |
+| text-primary on raised + highlight-purple-bg | 14.13 | 9.57 | 13.98 | 9.13 |
+| highlight-purple-fg on overlay + highlight-purple-bg | 9.98 | 7.46 | 10.38 | 7.30 |
+| text-primary on overlay + highlight-purple-bg | 14.13 | 8.53 | 13.98 | 8.28 |
+| highlight-purple-fg on sunken + highlight-purple-bg | 8.89 | 9.15 | 9.75 | 8.66 |
+| text-primary on sunken + highlight-purple-bg | 12.59 | 10.45 | 13.25 | 9.73 |
+| highlight-purple-fg on tray + highlight-purple-bg | 8.89 | 8.37 | 9.75 | 8.66 |
+| text-primary on tray + highlight-purple-bg | 12.59 | 9.57 | 13.25 | 9.73 |
+| highlight-purple-fg on on-tray + highlight-purple-bg | 9.98 | 7.46 | 10.38 | 8.09 |
+| text-primary on on-tray + highlight-purple-bg | 14.13 | 8.53 | 13.98 | 9.13 |
 
 ### Labels on solid fills (4.5)
 

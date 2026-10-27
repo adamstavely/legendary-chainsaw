@@ -26,7 +26,7 @@ const SOURCES: AnswerSource[] = [
   { title: "Re: Lisbon", name: "Slack", href: "https://example.com/b" },
 ];
 
-type Props = Partial<Pick<TcAiAnswer, "answer" | "sources" | "streaming" | "animated" | "feedback" | "onRegenerate" | "look" | "followUps">>;
+type Props = Partial<Pick<TcAiAnswer, "answer" | "sources" | "streaming" | "animated" | "feedback" | "onRegenerate" | "look" | "followUps" | "hideActions">>;
 
 /** Mounts without waiting on animation frames (they're faked here) */
 async function mount(props: Props) {
@@ -247,6 +247,27 @@ for (const look of ["standard", "clean"] as const) {
       el.streaming = false;
       await frames(el, 1000);
       expect(el.querySelector('[role="status"]')!.textContent).toMatch(/^Answered in /);
+    });
+
+    test("hide-actions: Stop while writing, then no built-in actions, reasons or status row – the result is still announced", async () => {
+      const { el } = await mount({ look, answer: ANSWER, hideActions: true });
+      await frames(el, 100);
+      const stop = byName(el, "Stop")!;
+      expect(stop).toBeTruthy();
+      stop.focus();
+      stop.click();
+      await el.updateComplete;
+      await Promise.resolve();
+      expect(el.querySelector(".ui-ans__foot")).toBeNull();
+      expect(el.querySelector(".ui-ans__reasons")).toBeNull();
+      expect(byName(el, "Copy answer")).toBeUndefined();
+      expect(byName(el, "Regenerate")).toBeUndefined();
+      // Focus doesn't drop to <body> when Stop goes
+      expect(document.activeElement).not.toBe(document.body);
+      expect(el.querySelector('[role="status"]')!.textContent).toBe("Stopped");
+      el.hideActions = false;
+      await el.updateComplete;
+      expect(byName(el, "Copy answer")).toBeTruthy();
     });
 
     test("follow-ups show once done and fire tc-follow-up", async () => {

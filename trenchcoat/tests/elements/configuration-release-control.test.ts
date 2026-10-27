@@ -14,10 +14,14 @@ import type {
   ReleaseApproval,
   ReleaseCompareEvent,
   ReleaseEvidence,
+  ReleaseFinding,
+  ReleaseFindingOpenEvent,
   ReleasePromoteEvent,
   ReleaseRollbackEvent,
   ReleaseStage,
+  ReleaseSuite,
   ReleaseVersion,
+  ReleaseWaiver,
   TcConfigurationReleaseControl,
 } from "../../src/elements/configuration-release-control";
 import { ConfigurationReleaseControl } from "../../src/elements/react/configuration-release-control";
@@ -352,11 +356,121 @@ describe("tc-configuration-release-control", () => {
     await act(async () => root.unmount());
   });
 
+  const SUITES: ReleaseSuite[] = [
+    { id: "safety", label: "Safety", status: "pass", passed: 7, failed: 0, inconclusive: 0 },
+    { id: "retrieval", label: "Retrieval", status: "conditional", passed: 5, failed: 0, inconclusive: 1 },
+  ];
+  const FINDINGS: ReleaseFinding[] = [
+    { id: "f1", ref: "F-001", severity: "P0", title: "Tool ran before approval", status: "Acknowledged", suite: "safety", blocking: true },
+    { id: "f2", ref: "F-002", title: "Stale policy cited", status: "Open" },
+  ];
+  const WAIVERS: ReleaseWaiver[] = [
+    { id: "w1", label: "W-001", covers: ["retrieval"], grantedBy: "Dana Lee", expires: "2026-06-10" },
+    { id: "w2", label: "W-002", covers: ["f1"], grantedBy: "Sam Ortiz", expires: "2026-05-01" },
+  ];
+  const gate = (el: Element) => text(document.getElementById(promote(el).getAttribute("aria-describedby")!));
+  const checkOf = (el: Element, id: string) => text(el.querySelector(`.ui-rls__check[data-id="${id}"]`));
+
+  for (const look of ["standard", "clean"] as const) {
+    test(`${look}: without suites, findings or waivers the gate is unchanged`, async () => {
+      const el = await make({ look });
+      expect(el.querySelector(".ui-rls__blocks--gate")).toBeNull();
+      expect([...el.querySelectorAll(".ui-rls__check")].map((c) => c.getAttribute("data-id"))).toEqual(["evidence", "approvals"]);
+      // Unset from a framework (undefined) reads as none
+      el.suites = undefined as never;
+      el.findings = undefined as never;
+      el.waivers = undefined as never;
+      await settle();
+      expect(el.querySelectorAll(".ui-rls__check")).toHaveLength(2);
+    });
+
+    test(`${look}: suites, findings and waivers sit in the gate; an expired waiver counts as unmet`, async () => {
+      const el = await make({ look });
+      el.suites = SUITES;
+      el.findings = FINDINGS;
+      el.waivers = WAIVERS;
+      await settle();
+      expect([...el.querySelectorAll(".ui-rls__check")].map((c) => c.getAttribute("data-id"))).toEqual(["evidence", "suites", "findings", "approvals"]);
+      expect(checkOf(el, "suites")).toBe("Suites, met: 1 pass · 1 on a waiver");
+      expect(checkOf(el, "findings")).toBe("Findings, met: 2 open · 1 waived");
+      expect(promote(el).getAttribute("aria-disabled")).toBe("false");
+      // The suites: status, counts, the waiver as given
+      const suites = [...el.querySelectorAll(".ui-rls__suite")];
+      expect(suites.map((x) => x.getAttribute("data-status"))).toEqual(["pass", "conditional"]);
+      expect(text(suites[0].querySelector(".ui-rls__suite-count"))).toBe("7 passed · 0 failed · 0 inconclusive");
+      expect(text(suites[1].querySelector(".ui-rls__status"))).toBe("Conditional");
+      expect(text(suites[1].querySelector(".ui-rls__waiver"))).toBe("W-001 · expires 2026-06-10 · granted by Dana Lee");
+      expect(text(el.querySelector('[data-block="suites"] .ui-rls__label'))).toBe("Gate suites – met");
+      // The findings: a count, a list, the waiver
+      expect(text(el.querySelector('[data-block="findings"] .ui-rls__label'))).toBe("Open findings2 – met");
+      const findings = [...el.querySelectorAll(".ui-rls__finding")];
+      expect(text(findings[0].querySelector(".ui-rls__finding-top"))).toBe("F-001 P0 Tool ran before approval");
+      expect(text(findings[0].querySelector(".ui-rls__finding-meta"))).toBe("Acknowledged · Safety");
+      expect(findings[0].hasAttribute("data-blocking")).toBe(false);
+      // Expired: the finding's waiver no longer counts
+      el.waivers = [WAIVERS[0], { ...WAIVERS[1], expired: true }];
+      await settle();
+      expect(checkOf(el, "findings")).toBe("Findings, not met: 1 blocking");
+      expect(text(findings[0].querySelector(".ui-rls__waiver"))).toBe("W-002 · expired 2026-05-01 · granted by Sam Ortiz");
+      expect(text(findings[0].querySelector(".ui-rls__blocks-tag"))).toBe("Blocks promotion");
+      expect(promote(el).getAttribute("aria-disabled")).toBe("true");
+      expect(gate(el)).toBe("To promote: 1 blocking finding is open.");
+      // A conditional suite whose waiver expired, and a failing suite (no waiver lets it through)
+      el.waivers = [{ ...WAIVERS[0], expired: true }, WAIVERS[1]];
+      el.suites = [...SUITES, { id: "tools", label: "Tool use", status: "fail" }];
+      el.waivers = [...el.waivers, { id: "w3", covers: ["tools"], grantedBy: "X", expires: "2027" }];
+      await settle();
+      expect(checkOf(el, "suites")).toBe("Suites, not met: 1 failing · 1 conditional");
+      expect(gate(el)).toBe("To promote: Retrieval's waiver W-001 has expired, Tool use fails.");
+      el.waivers = [];
+      el.suites = SUITES;
+      await settle();
+      expect(gate(el)).toBe("To promote: Retrieval is conditional, with no waiver; 1 blocking finding is open.");
+      expect(text(el.querySelectorAll(".ui-rls__suite")[1].querySelector(".ui-rls__waiver"))).toBe("No waiver");
+    });
+  }
+
+  test("a finding opens through tc-finding-open; the promote confirmation names the suites and waivers", async () => {
+    const el = await make();
+    el.suites = SUITES;
+    el.findings = FINDINGS;
+    el.waivers = WAIVERS;
+    await settle();
+    const opened: ReleaseFindingOpenEvent[] = [];
+    el.addEventListener("tc-finding-open", (e) => opened.push((e as CustomEvent<ReleaseFindingOpenEvent>).detail));
+    el.querySelectorAll<HTMLButtonElement>(".ui-rls__finding-btn")[1].click();
+    expect(opened.map((o) => o.finding.id)).toEqual(["f2"]);
+    promote(el).click();
+    await settle();
+    const facts = [...dialog(el).querySelectorAll(".ui-rls__facts > div")].map((r) => `${r.querySelector("dt")!.textContent}: ${text(r.querySelector("dd"))}`);
+    expect(facts).toContain("Suites: 1 of 2 suites pass, 1 on a waiver");
+    expect(facts).toContain("Waivers: W-001 by Dana Lee, expires 2026-06-10; W-002 by Sam Ortiz, expires 2026-05-01");
+    dialog(el).querySelector<HTMLButtonElement>(".ui-rls__cancel")!.click();
+    await settle();
+  });
+
+  test("React wrapper: onOpenFinding gets the finding", async () => {
+    (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+    const host = document.createElement("div");
+    document.body.append(host);
+    const root = createRoot(host);
+    const seen: string[] = [];
+    await act(async () =>
+      root.render(
+        React.createElement(ConfigurationReleaseControl, { stages: STAGES, versions: VERSIONS, candidate: "v14", evidence: PASSING, findings: FINDINGS, onOpenFinding: (f) => void seen.push(f.id) }),
+      ),
+    );
+    await settle();
+    host.querySelector<HTMLButtonElement>(".ui-rls__finding-btn")!.click();
+    expect(seen).toEqual(["f1"]);
+    await act(async () => root.unmount());
+  });
+
   for (const theme of ["light", "dark"] as const) {
     test(`axe (${theme}): no violations in either look, with the dialog open`, async () => {
       const wrap = await fixture(html`<div data-tc-theme=${theme} style="padding: 16px; background: var(--tc-surface-base)">
-        <tc-configuration-release-control candidate="v14" required-approvals="2" .stages=${STAGES} .versions=${VERSIONS} .changes=${CHANGES} .evidence=${PASSING} .approvals=${[APPROVED[0], { id: "x", name: "Sam Ortiz", state: "pending" }]} .rollback=${{ stage: "production", version: "v12" }}></tc-configuration-release-control>
-        <tc-configuration-release-control look="clean" candidate="v14" .stages=${STAGES.map((s) => (s.id === "production" ? { ...s, rollout: { version: "v14", percent: 30 } } : s))} .versions=${VERSIONS} .changes=${CHANGES} .evidence=${{ passRate: 80, baseline: 90, threshold: 92 }} .approvals=${APPROVED} .rollback=${{ stage: "production", version: "v13" }}></tc-configuration-release-control>
+        <tc-configuration-release-control candidate="v14" required-approvals="2" .stages=${STAGES} .versions=${VERSIONS} .changes=${CHANGES} .evidence=${PASSING} .approvals=${[APPROVED[0], { id: "x", name: "Sam Ortiz", state: "pending" }]} .rollback=${{ stage: "production", version: "v12" }} .suites=${[...SUITES, { id: "t", label: "Tools", status: "fail" }]} .findings=${FINDINGS} .waivers=${[WAIVERS[0], { ...WAIVERS[1], expired: true }]}></tc-configuration-release-control>
+        <tc-configuration-release-control look="clean" candidate="v14" .stages=${STAGES.map((s) => (s.id === "production" ? { ...s, rollout: { version: "v14", percent: 30 } } : s))} .versions=${VERSIONS} .changes=${CHANGES} .evidence=${{ passRate: 80, baseline: 90, threshold: 92 }} .approvals=${APPROVED} .rollback=${{ stage: "production", version: "v13" }} .suites=${SUITES} .findings=${FINDINGS} .waivers=${WAIVERS}></tc-configuration-release-control>
       </div>`);
       const [, b] = wrap.querySelectorAll<TcConfigurationReleaseControl>("tc-configuration-release-control");
       rollbackBtn(b).click();

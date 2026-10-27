@@ -3,7 +3,7 @@ import * as React from "react";
 import { TcRelianceGauge, type RelianceEpisodeKind, type RelianceEpisodesOpen, type RelianceReviewLevel, type RelianceReviewLevelChange } from "../reliance-gauge";
 import { h, useControlled } from "./internal";
 
-export type { RelianceBand, RelianceDirection, RelianceEpisodeKind, RelianceReviewLevel, RelianceSignal, RelianceSignalState, RelianceWindow } from "../reliance-gauge";
+export type { RelianceAgent, RelianceBand, RelianceCalibration, RelianceDirection, RelianceDomain, RelianceEpisodeKind, RelianceReviewLevel, RelianceSignal, RelianceSignalState, RelianceWindow } from "../reliance-gauge";
 
 const RawRelianceGauge = createComponent({
   tagName: "tc-reliance-gauge",

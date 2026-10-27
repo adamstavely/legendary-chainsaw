@@ -3,6 +3,7 @@ import { property, state } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { keyed } from "lit/directives/keyed.js";
 import { TcElement } from "./internal/base";
+import { sourceSwatch } from "./internal/source-line";
 import { FocusRescueController, rescueFocus } from "./internal/controllers";
 import type { Look } from "./internal/look";
 import "./validity-badge";
@@ -18,6 +19,9 @@ import type { ValidityInfo } from "./validity-badge";
  *   · a claim opens in place: its source type, its confidence, its uncertainty, the passages it rests on (with their
  *     freshness, tc-validity-badge) and "Send to verification"
  *   · the line under the answer always says what you are pointing at
+ *   · beyond the three text types: media types (transcript, video, audio, image, OCR – each with how well the medium
+ *     was read) and memory types (earlier session, team knowledge, agent finding); the app can cap the confidence
+ *     shown for any type (`confidenceCeilings`), and tag the question the answer replies to (`questionType`)
  *
  *   <tc-claim-answer .claims=${claims} .sources=${sources} counter="The survey was small…"></tc-claim-answer>
  *
@@ -26,8 +30,15 @@ import type { ValidityInfo } from "./validity-badge";
  * tc-verification-queue. Labels are properties, so a product can use its own words for the source types.
  */
 
-/** Where a claim came from: a retrieved source, the model's own knowledge, or an inference from other claims */
-export type ClaimSourceType = "grounded" | "model" | "inferred";
+/** Read from a medium rather than a text: a machine transcript, a video, a recording, an image, or text read off a scan (OCR) */
+export type ClaimMediaType = "transcript" | "video" | "audio" | "image" | "ocr";
+/** Remembered rather than retrieved now: an earlier session, the team's shared knowledge, or another agent's finding */
+export type ClaimMemoryType = "session" | "team" | "agent";
+/** Where a claim came from: a retrieved source, the model's own knowledge, an inference from other claims – or a
+ *  medium, or memory */
+export type ClaimSourceType = "grounded" | "model" | "inferred" | ClaimMediaType | ClaimMemoryType;
+/** What kind of question the answer replies to: a fact to look up, an interpretation, a forecast, or a view */
+export type ClaimQuestionType = "factual" | "analytical" | "predictive" | "opinion";
 /** Why a claim can't be certain: the world hasn't decided · the evidence is thin · it's beyond what the model can know */
 export type ClaimUncertainty = "unsettled" | "evidence" | "beyond";
 
@@ -54,8 +65,11 @@ export type AnswerClaim = {
   text: string;
   /** Where it came from; leave it out for connecting text that claims nothing */
   source?: ClaimSourceType;
-  /** How sure the model is, 0–1 */
+  /** How sure the model is, 0–1 – shown no higher than the type's ceiling and the `recognition` */
   confidence?: number;
+  /** Media types: how well the medium was read, 0–1 – OCR or speech-recognition confidence, shown beside the type
+   *  ("OCR 87%"); the claim's confidence is shown no higher */
+  recognition?: number;
   /** Why it can't be certain, when that applies */
   uncertainty?: ClaimUncertainty;
   /** A sentence on the uncertainty or the inference, e.g. "Only two studies, both small" */
@@ -70,12 +84,39 @@ export type ClaimOpenChange = { open: string | null };
 export type ClaimQueuedChange = { queued: string[]; claim: AnswerClaim };
 export type ClaimVerifyDetail = { claim: AnswerClaim; sources: ClaimSource[] };
 
-const TYPES: ClaimSourceType[] = ["grounded", "model", "inferred"];
-const DEFAULT_SOURCE_LABELS: Record<ClaimSourceType, string> = { grounded: "Sourced", model: "Model knowledge", inferred: "Inferred" };
+const TYPES: ClaimSourceType[] = ["grounded", "model", "inferred", "transcript", "video", "audio", "image", "ocr", "session", "team", "agent"];
+const DEFAULT_SOURCE_LABELS: Record<ClaimSourceType, string> = {
+  grounded: "Sourced",
+  model: "Model knowledge",
+  inferred: "Inferred",
+  transcript: "Transcript",
+  video: "Video",
+  audio: "Audio",
+  image: "Image",
+  ocr: "OCR",
+  session: "Earlier session",
+  team: "Team knowledge",
+  agent: "Agent finding",
+};
 const DEFAULT_SOURCE_NOTES: Record<ClaimSourceType, string> = {
   grounded: "Rests on a source the model retrieved.",
   model: "From the model's training, not from a source it retrieved.",
   inferred: "Worked out from other claims – no source states it.",
+  transcript: "From a machine transcript of a recording – the transcript can mishear, so check the recording.",
+  video: "From the model's reading of a video – check the clip.",
+  audio: "From the model's reading of a recording – listen to the passage.",
+  image: "From the model's reading of an image – look at the image.",
+  ocr: "From text read off a scan – the reading can be wrong, so check the original.",
+  session: "Remembered from an earlier session, not retrieved now – it may be out of date.",
+  team: "From your team's shared knowledge, not retrieved now.",
+  agent: "Found by another agent – check how it got there.",
+};
+const DEFAULT_QUESTION_LABELS: Record<ClaimQuestionType, string> = { factual: "Factual", analytical: "Analytical", predictive: "Predictive", opinion: "Opinion" };
+const DEFAULT_QUESTION_NOTES: Record<ClaimQuestionType, string> = {
+  factual: "Asks for a fact that can be looked up.",
+  analytical: "Asks for an interpretation – expect judgement as well as facts.",
+  predictive: "Asks about the future – expect more uncertainty than a fact carries.",
+  opinion: "Asks for a view – weigh it as one view among others.",
 };
 const DEFAULT_UNCERTAINTY_LABELS: Record<ClaimUncertainty, string> = { unsettled: "Not settled", evidence: "Thin evidence", beyond: "Beyond the model" };
 const DEFAULT_UNCERTAINTY_NOTES: Record<ClaimUncertainty, string> = {
@@ -105,6 +146,8 @@ const cleanIcons = {
 };
 const icon = (name: keyof typeof cleanIcons, look: Look) =>
   look === "clean" ? html`<svg viewBox="0 0 16 16" class="ui-cla__icon" aria-hidden="true">${svg`<path d=${cleanIcons[name]}></path>`}</svg>` : standardIcons[name];
+
+const MEDIA = new Set<ClaimSourceType>(["transcript", "video", "audio", "image", "ocr"]);
 
 let uidCount = 0;
 
@@ -143,6 +186,15 @@ export class TcClaimAnswer extends TcElement {
   @property({ attribute: false }) accessor uncertaintyNotes: Partial<Record<ClaimUncertainty, string>> = {};
   /** The words for the confidence levels – in place of High, Medium and Low */
   @property({ attribute: false }) accessor confidenceLabels: Partial<Record<Confidence, string>> = {};
+  /** The highest confidence shown for each source type, 0–1 – a transcript claim might go no higher than 0.7, whatever
+   *  the model says. Unset types aren't capped */
+  @property({ attribute: false }) accessor confidenceCeilings: Partial<Record<ClaimSourceType, number>> = {};
+  /** The kind of question the answer replies to, shown as a tag in the head; unset shows none */
+  @property({ attribute: "question-type" }) accessor questionType: ClaimQuestionType | undefined = undefined;
+  /** The names of the question types – in place of Factual, Analytical, Predictive and Opinion */
+  @property({ attribute: false }) accessor questionTypeLabels: Partial<Record<ClaimQuestionType, string>> = {};
+  /** What each question type means for the answer, in the tag's tooltip and for screen readers */
+  @property({ attribute: false }) accessor questionTypeNotes: Partial<Record<ClaimQuestionType, string>> = {};
   /** The counter-position's toggle */
   @property({ attribute: "counter-label" }) accessor counterLabel = "Strongest case against";
   /** The button that sends a claim to verification */
@@ -199,6 +251,19 @@ export class TcClaimAnswer extends TcElement {
   private confidenceWords(c: number) {
     const level = this.confidenceOf(c);
     return { level, pct: `${Math.round(c * 100)}%`, label: this.confidenceLabels[level] ?? DEFAULT_CONFIDENCE_LABELS[level] };
+  }
+
+  /** @internal The confidence a claim is shown with: the model's, no higher than its type's ceiling or its recognition */
+  shownConfidence(claim: AnswerClaim): { value: number; capped: "type" | "recognition" | null } | null {
+    if (claim.confidence === undefined) return null;
+    const type = claim.source ? this.confidenceCeilings[claim.source] : undefined;
+    const ceiling = Math.min(type ?? 1, claim.recognition ?? 1);
+    if (claim.confidence <= ceiling) return { value: claim.confidence, capped: null };
+    return { value: ceiling, capped: claim.recognition !== undefined && claim.recognition <= (type ?? 1) ? "recognition" : "type" };
+  }
+
+  private pctOf(n: number) {
+    return `${Math.round(Math.max(0, Math.min(1, n)) * 100)}%`;
   }
 
   private uncertaintyLabel(u: ClaimUncertainty) {
@@ -298,7 +363,14 @@ export class TcClaimAnswer extends TcElement {
   private head() {
     const marked = this.marked;
     const count = (t: ClaimSourceType) => marked.filter((c) => c.source === t).length;
+    const q = this.questionType && DEFAULT_QUESTION_LABELS[this.questionType] ? this.questionType : null;
+    const qNote = q ? (this.questionTypeNotes[q] ?? DEFAULT_QUESTION_NOTES[q]) : "";
     return html`<div class="ui-cla__head">
+      ${q
+        ? html`<span class="ui-cla__qtype" data-qtype=${q} title=${qNote}
+            ><span class="tc-sr-only">Question type: </span>${this.questionTypeLabels[q] ?? DEFAULT_QUESTION_LABELS[q]}${qNote ? html`<span class="tc-sr-only">. ${qNote}</span>` : nothing}</span
+          >`
+        : nothing}
       <span class="ui-cla__count">${marked.length} ${marked.length === 1 ? "claim" : "claims"}</span>
       <span class="ui-cla__keys" role="group" aria-label="Source types">${TYPES.filter((t) => count(t)).map(
         (t) => html`<button
@@ -310,7 +382,7 @@ export class TcClaimAnswer extends TcElement {
             this.only = this.only === t ? null : t;
             this.said = this.only ? `Showing ${this.sourceLabel(t).toLowerCase()} claims` : "Showing all claims";
           }}
-        ><span class="ui-cla__swatch" aria-hidden="true"></span>${this.sourceLabel(t)}<span class="ui-cla__key-n">${count(t)}</span></button>`,
+        >${sourceSwatch(t, "ui-cla__swatch")}${this.sourceLabel(t)}<span class="ui-cla__key-n">${count(t)}</span></button>`,
       )}</span>
     </div>`;
   }
@@ -326,8 +398,15 @@ export class TcClaimAnswer extends TcElement {
       (para) => html`<p class="ui-cla__p">${para.map((c) => {
         const [, lead, body, trail] = c.text.match(/^(\s*)([\s\S]*?)(\s*)$/) ?? ["", "", c.text, ""];
         if (!c.source || !body) return c.text;
-        const conf = c.confidence !== undefined ? this.confidenceWords(c.confidence) : null;
-        const sr = [this.sourceLabel(c.source), conf ? `${conf.pct} confidence` : "", c.uncertainty ? this.uncertaintyLabel(c.uncertainty) : ""].filter(Boolean).join(", ");
+        const shown = this.shownConfidence(c);
+        const conf = shown ? this.confidenceWords(shown.value) : null;
+        const sr = [
+          this.sourceLabel(c.source) + (c.recognition !== undefined ? ` ${this.pctOf(c.recognition)}` : ""),
+          conf ? `${conf.pct} confidence${shown?.capped ? " (capped)" : ""}` : "",
+          c.uncertainty ? this.uncertaintyLabel(c.uncertainty) : "",
+        ]
+          .filter(Boolean)
+          .join(", ");
         return html`${lead}<span
           role="button"
           class="ui-cla__claim"
@@ -347,7 +426,7 @@ export class TcClaimAnswer extends TcElement {
           @blur=${() => this.hot === c.id && (this.hot = null)}
           @keydown=${(e: KeyboardEvent) => this.onClaimKey(e, c)}
           @click=${() => this.toggle(c.id)}
-        >${c.uncertainty ? this.withMark(body) : body}<span class="ui-cla__sr">, ${sr}</span></span>${trail}`;
+        >${c.uncertainty ? this.withMark(body) : body}<span class="tc-sr-only">, ${sr}</span></span>${trail}`;
       })}</p>`,
     )}</div>`;
   }
@@ -358,14 +437,26 @@ export class TcClaimAnswer extends TcElement {
     return html`${body.slice(0, cut)}<span class="ui-cla__keep">${body.slice(cut)}<span class="ui-cla__unc" aria-hidden="true">?</span></span>`;
   }
 
-  private meter(confidence: number) {
+  private meter(confidence: number, capped: boolean) {
     const w = this.confidenceWords(confidence);
     const pct = Math.round(Math.max(0, Math.min(1, confidence)) * 100);
-    return html`<span class="ui-cla__conf" data-level=${w.level}>
+    return html`<span class="ui-cla__conf" data-level=${w.level} ?data-capped=${capped}>
       <span class="ui-cla__conf-label">Confidence</span>
-      <span class="ui-cla__meter" .role=${"meter"} aria-label="Confidence" aria-valuemin="0" aria-valuemax="100" aria-valuenow=${pct} aria-valuetext=${`${w.pct}, ${w.label.toLowerCase()}`}><span class="ui-cla__meter-fill" style=${`inline-size: ${pct}%`}></span></span>
+      <span class="ui-cla__meter" .role=${"meter"} aria-label="Confidence" aria-valuemin="0" aria-valuemax="100" aria-valuenow=${pct} aria-valuetext=${`${w.pct}, ${w.label.toLowerCase()}${capped ? ", capped" : ""}`}><span class="ui-cla__meter-fill" style=${`inline-size: ${pct}%`}></span></span>
       <span class="ui-cla__conf-value">${w.pct}<span class="ui-cla__dot"> · </span>${w.label}</span>
     </span>`;
+  }
+
+  /** The sentence under a capped confidence: what the model said and why it shows lower */
+  private capNote(claim: AnswerClaim, shown: { value: number; capped: "type" | "recognition" | null }) {
+    if (!shown.capped || claim.confidence === undefined) return nothing;
+    const said = this.pctOf(claim.confidence);
+    const at = this.pctOf(shown.value);
+    const why =
+      shown.capped === "recognition"
+        ? `the source itself was only read at ${this.pctOf(claim.recognition ?? 1)}`
+        : `${this.sourceLabel(claim.source!).toLowerCase()} claims are shown no higher`;
+    return html`<p class="ui-cla__dt-note ui-cla__cap"><b>Capped at ${at}</b> – the model said ${said}, but ${why}.</p>`;
   }
 
   private detail(claim: AnswerClaim, look: Look) {
@@ -373,13 +464,15 @@ export class TcClaimAnswer extends TcElement {
     const sources = this.sourcesOf(claim);
     const queued = this.queued.includes(claim.id);
     const note = this.sourceNotes[type] ?? DEFAULT_SOURCE_NOTES[type];
+    const shown = this.shownConfidence(claim);
     return html`<div class="ui-cla__detail" data-source=${type}>
       <div class="ui-cla__dt-head">
-        <span class="ui-cla__type" data-source=${type}><span class="ui-cla__swatch" aria-hidden="true"></span>${this.sourceLabel(type)}</span>
-        ${claim.confidence !== undefined ? this.meter(claim.confidence) : html`<span class="ui-cla__spacer"></span>`}
+        <span class="ui-cla__type" data-source=${type}>${sourceSwatch(type, "ui-cla__swatch")}${this.sourceLabel(type)}${claim.recognition !== undefined ? html`<span class="ui-cla__recog">${this.pctOf(claim.recognition)}</span>` : nothing}</span>
+        ${shown ? this.meter(shown.value, !!shown.capped) : html`<span class="ui-cla__spacer"></span>`}
         <button type="button" class="ui-cla__close" aria-label="Close claim" @click=${() => this.close()}>${icon("close", look)}</button>
       </div>
       <p class="ui-cla__dt-note">${note}</p>
+      ${shown ? this.capNote(claim, shown) : nothing}
       ${claim.uncertainty
         ? html`<div class="ui-cla__uncertain">
             <span class="ui-cla__unc ui-cla__unc--lg" aria-hidden="true">?</span>
@@ -404,6 +497,7 @@ export class TcClaimAnswer extends TcElement {
                       .band=${s.validity.band}
                       .contested=${!!s.validity.contested}
                       .superseded=${!!s.validity.superseded}
+                      .changed=${!!s.validity.changed}
                       .now=${this.now}
                       subject-label="source"
                     ></tc-validity-badge>`
@@ -441,10 +535,12 @@ export class TcClaimAnswer extends TcElement {
     const marked = this.marked;
     const hot = this.hot ? marked.find((c) => c.id === this.hot) : null;
     if (hot?.source) {
-      const conf = hot.confidence !== undefined ? this.confidenceWords(hot.confidence) : null;
+      const shown = this.shownConfidence(hot);
+      const conf = shown ? this.confidenceWords(shown.value) : null;
       return html`<b>${this.sourceLabel(hot.source)}</b>${conf ? html`<span class="ui-cla__dot"> · </span>${conf.pct} confidence` : nothing}${hot.uncertainty ? html`<span class="ui-cla__dot"> · </span>${this.uncertaintyLabel(hot.uncertainty)}` : nothing}`;
     }
-    const grounded = marked.filter((c) => c.source === "grounded").length;
+    // Backed by a source: retrieved text, or a medium – a recording, an image, a scan
+    const grounded = marked.filter((c) => c.source === "grounded" || MEDIA.has(c.source!)).length;
     const sent = this.queued.filter((id) => marked.some((c) => c.id === id)).length;
     return html`<b>${grounded}</b> of ${marked.length} ${marked.length === 1 ? "claim" : "claims"} backed by a source${sent ? html`<span class="ui-cla__dot"> · </span>${sent} sent to verification` : nothing}`;
   }
@@ -465,7 +561,7 @@ export class TcClaimAnswer extends TcElement {
         ${this.counterPart(look)}
       </div>
       <div class="ui-cla__foot">
-        <span class="ui-cla__sr" role="status">${this.said}</span>
+        <span class="tc-sr-only" role="status">${this.said}</span>
         <span class="ui-cla__caption">${this.caption()}</span>
       </div>
     `;
@@ -510,13 +606,15 @@ export class TcClaimAnswer extends TcElement {
 [data-ui="cla"] :is(button, a, [role="button"]):focus-visible { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
 [data-ui="cla"] svg { display: block; flex: none; }
 [data-ui="cla"] b { font-weight: var(--tc-font-weight-medium); color: var(--tc-text-primary); }
-.ui-cla__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .ui-cla__icon { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.1; stroke-linecap: round; stroke-linejoin: round; }
 .ui-cla__dot { color: var(--tc-text-disabled); }
 /* The source-type colours, and the underline that tells them apart without colour: solid, dashed, dotted */
 [data-ui="cla"] [data-source="grounded"] { --tc-claim-answer-fg: var(--tc-source-grounded-fg); --tc-claim-answer-bg: var(--tc-source-grounded-bg); --tc-claim-answer-line: solid; }
 [data-ui="cla"] [data-source="model"] { --tc-claim-answer-fg: var(--tc-source-model-fg); --tc-claim-answer-bg: var(--tc-source-model-bg); --tc-claim-answer-line: dashed; }
 [data-ui="cla"] [data-source="inferred"] { --tc-claim-answer-fg: var(--tc-source-inferred-fg); --tc-claim-answer-bg: var(--tc-source-inferred-bg); --tc-claim-answer-line: dotted; }
+/* Media types share teal and a double line; memory types share blue and a wavy line – the label names each one */
+[data-ui="cla"] :is([data-source="transcript"], [data-source="video"], [data-source="audio"], [data-source="image"], [data-source="ocr"]) { --tc-claim-answer-fg: var(--tc-source-media-fg); --tc-claim-answer-bg: var(--tc-source-media-bg); --tc-claim-answer-line: double; }
+[data-ui="cla"] :is([data-source="session"], [data-source="team"], [data-source="agent"]) { --tc-claim-answer-fg: var(--tc-source-memory-fg); --tc-claim-answer-bg: var(--tc-source-memory-bg); --tc-claim-answer-line: wavy; }
 
 :where([data-look="standard"], [data-look="standard"] *).ui-cla__card { padding: var(--tc-space-3) var(--tc-space-4) var(--tc-space-3-5); border-radius: var(--tc-card-radius); background: var(--tc-surface-on-tray); box-shadow: var(--tc-card-shadow); }
 :where([data-look="clean"], [data-look="clean"] *).ui-cla__body { padding: var(--tc-space-4) var(--tc-space-5); }
@@ -528,9 +626,14 @@ export class TcClaimAnswer extends TcElement {
 .ui-cla__key { display: inline-flex; align-items: center; gap: var(--tc-space-1-5); height: 24px; padding: 0 var(--tc-space-2); border-radius: var(--tc-radius-sm); font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); color: var(--tc-text-secondary); white-space: nowrap; transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard), box-shadow var(--tc-duration-fast) var(--tc-ease-standard); }
 .ui-cla__key:hover { background: var(--tc-fill-subtle); color: var(--tc-text-primary); }
 .ui-cla__key[aria-pressed="true"] { background: var(--tc-claim-answer-bg); box-shadow: inset 0 0 0 1px var(--tc-border-selected); color: var(--tc-text-primary); }
+.ui-cla__qtype { display: inline-flex; flex: none; align-items: center; height: var(--tc-pill-h); padding: 0 var(--tc-pill-px); border-radius: var(--tc-pill-radius); background: var(--tc-fill-default); font-size: var(--tc-pill-font-size); font-weight: var(--tc-pill-font-weight); line-height: var(--tc-line-height-tight); color: var(--tc-text-secondary); white-space: nowrap; cursor: help; }
 .ui-cla__key-n { font-size: var(--tc-font-size-xs); color: var(--tc-text-muted); font-variant-numeric: tabular-nums; }
 /* The swatch: a short stretch of the claim's underline */
-.ui-cla__swatch { flex: none; width: 14px; height: 0; border-bottom: 2px var(--tc-claim-answer-line) var(--tc-claim-answer-fg); }
+.ui-cla__swatch { flex: none; width: 14px; height: 6px; overflow: visible; fill: none; stroke: var(--tc-claim-answer-fg); stroke-width: 2; stroke-linecap: butt; }
+.ui-cla__swatch [data-line="dotted"] { stroke-linecap: round; }
+.ui-cla__swatch [data-line="double"] { stroke-width: 1.2; }
+.ui-cla__swatch [data-line="wavy"] { stroke-width: 1.5; stroke-linecap: round; }
+
 :where([data-look="clean"], [data-look="clean"] *).ui-cla__key { height: 22px; padding: 0 var(--tc-space-1-5); }
 
 /* ----- Answer ----- */
@@ -571,7 +674,8 @@ export class TcClaimAnswer extends TcElement {
 :where([data-look="clean"], [data-look="clean"] *).ui-cla__detail { border-radius: var(--tc-radius-md); background: var(--tc-surface-raised); box-shadow: var(--tc-shadow-raised); }
 .ui-cla__dt-head { display: flex; align-items: center; gap: var(--tc-space-2); min-height: 24px; }
 .ui-cla__type { display: inline-flex; flex: none; align-items: center; gap: var(--tc-space-1-5); height: var(--tc-pill-h-lg); padding: 0 var(--tc-pill-px); border-radius: var(--tc-pill-radius); background: var(--tc-claim-answer-bg); font-size: var(--tc-pill-font-size-lg); font-weight: var(--tc-pill-font-weight); line-height: var(--tc-line-height-tight); color: var(--tc-claim-answer-fg); white-space: nowrap; }
-.ui-cla__type .ui-cla__swatch { width: 10px; }
+.ui-cla__type .ui-cla__swatch { width: 11px; height: 5px; }
+.ui-cla__recog { margin-left: calc(var(--tc-space-0-5) * -1); font-variant-numeric: tabular-nums; }
 .ui-cla__spacer { flex: 1; }
 .ui-cla__conf { display: flex; flex: 1; align-items: center; gap: var(--tc-space-2); min-width: 0; font-size: var(--tc-font-size-sm); color: var(--tc-text-muted); }
 .ui-cla__conf-label { flex: none; }
@@ -582,6 +686,7 @@ export class TcClaimAnswer extends TcElement {
 .ui-cla__close { display: grid; flex: none; place-items: center; width: 24px; height: 24px; margin-left: auto; margin-right: calc(var(--tc-space-1-5) * -1); border-radius: var(--tc-radius-sm); color: var(--tc-text-muted); transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard); }
 .ui-cla__close:hover { background: var(--tc-fill-default); color: var(--tc-text-primary); }
 .ui-cla__dt-note { margin: var(--tc-space-2) 0 0; font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-normal); color: var(--tc-text-secondary); }
+.ui-cla__cap { margin-top: var(--tc-space-1); }
 .ui-cla__uncertain { display: flex; gap: var(--tc-space-2); margin-top: var(--tc-space-2); padding: var(--tc-space-2) var(--tc-space-2-5); border-radius: var(--tc-radius-md); background: var(--tc-fill-subtle); font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-normal); color: var(--tc-text-secondary); }
 .ui-cla__sources { display: grid; gap: var(--tc-space-2-5); margin: var(--tc-space-3) 0 0; padding: 0; list-style: none; }
 .ui-cla__source { min-width: 0; }
@@ -624,7 +729,7 @@ export class TcClaimAnswer extends TcElement {
 :where([data-look="clean"], [data-look="clean"] *).ui-cla__body { padding: var(--tc-space-3-5) var(--tc-space-4); }
 :where([data-look="clean"], [data-look="clean"] *).ui-cla__foot { padding: 0 var(--tc-space-4); }
   .ui-cla__conf-label { display: none; }
-  .ui-cla__count { flex-basis: 100%; }
+  .ui-cla__keys { flex-basis: 100%; }
 }
 @media (pointer: coarse) {
   .ui-cla__key { height: 32px; }

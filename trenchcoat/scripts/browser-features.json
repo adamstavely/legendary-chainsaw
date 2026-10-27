@@ -1,0 +1,605 @@
+{
+ "about": "The platform features scripts/browser-support.mjs looks for in each element's code and CSS (and in tokens.css, which every element reads), with the first browser versions that support them. Versions are MDN browser-compat-data (bcd key on each row) – checked against @mdn/browser-compat-data 8.1.7 on 2026-10-27; `node scripts/browser-support.mjs --bcd` re-reads them. null: no version supports it. `pattern` is a regular expression run on the source with comments removed; `alt` is an older or prefixed form that, when the same code also has it, lowers the versions; `progressive` features have a fallback and say what changes without them; `watch` features aren't used by any element yet – the scanner reports them as soon as one does (tests/browser-features.test.ts).",
+ "bcd": "8.1.7",
+ "checked": "2026-10-27",
+ "features": [
+  {
+   "id": "light-dark",
+   "name": "light-dark()",
+   "bcd": "css.types.color.light-dark",
+   "pattern": "light-dark\\(",
+   "sample": "--tc-text: light-dark(#111, #eee);",
+   "versions": {
+    "chrome": "123",
+    "edge": "123",
+    "firefox": "120",
+    "safari": "17.5",
+    "safari_ios": "17.5"
+   },
+   "why": "Every colour token is a light / dark pair; without it no colour token resolves."
+  },
+  {
+   "id": "has",
+   "name": ":has()",
+   "bcd": "css.selectors.has",
+   "pattern": ":has\\(",
+   "sample": "[data-ui=\"x\"]:has(> .ui-x__icon) { gap: 8px; }",
+   "versions": {
+    "chrome": "105",
+    "edge": "105",
+    "firefox": "121",
+    "safari": "15.4",
+    "safari_ios": "15.4"
+   },
+   "why": "Layout and state that depend on what's inside a part (an icon present, a focused field)."
+  },
+  {
+   "id": "container-size",
+   "name": "Container size queries",
+   "bcd": "css.at-rules.container",
+   "pattern": "@container\\b(?![^{]*\\bstyle\\()|container-type\\s*:",
+   "sample": "@container (width < 420px) { .ui-x__row { display: block; } }",
+   "versions": {
+    "chrome": "105",
+    "edge": "105",
+    "firefox": "110",
+    "safari": "16",
+    "safari_ios": "16"
+   },
+   "why": "Components adapt to the width they're given, not the window's."
+  },
+  {
+   "id": "container-units",
+   "name": "Container query units (cqi, cqw…)",
+   "bcd": "css.types.length.container_query_length_units",
+   "pattern": "\\d(?:cqi|cqw|cqh|cqb|cqmin|cqmax)\\b",
+   "sample": "font-size: max(12px, 4cqi);",
+   "versions": {
+    "chrome": "105",
+    "edge": "105",
+    "firefox": "110",
+    "safari": "16",
+    "safari_ios": "16"
+   },
+   "why": "Sizes relative to the component's own width."
+  },
+  {
+   "id": "container-style",
+   "name": "Container style queries",
+   "bcd": "css.at-rules.container.style_queries_for_custom_properties",
+   "pattern": "@container[^{]*\\bstyle\\(",
+   "sample": "@container style(--tc-dense: 1) { .ui-x { gap: 4px; } }",
+   "versions": {
+    "chrome": "111",
+    "edge": "111",
+    "firefox": "151",
+    "safari": "18",
+    "safari_ios": "18"
+   },
+   "watch": true
+  },
+  {
+   "id": "color-mix",
+   "name": "color-mix()",
+   "bcd": "css.types.color.color-mix",
+   "pattern": "color-mix\\(",
+   "sample": "background: color-mix(in srgb, var(--tc-accent) 12%, transparent);",
+   "versions": {
+    "chrome": "111",
+    "edge": "111",
+    "firefox": "113",
+    "safari": "16.2",
+    "safari_ios": "16.2"
+   },
+   "why": "Tints and washes mixed from the tokens."
+  },
+  {
+   "id": "is-where",
+   "name": ":is() and :where()",
+   "bcd": "css.selectors.where",
+   "pattern": ":(?:is|where)\\(",
+   "sample": ":where([data-ui]) { display: block; }",
+   "versions": {
+    "chrome": "88",
+    "edge": "88",
+    "firefox": "78",
+    "safari": "14",
+    "safari_ios": "14"
+   },
+   "why": "Every rule is keyed on :where() so the page can override it."
+  },
+  {
+   "id": "focus-visible",
+   "name": ":focus-visible",
+   "bcd": "css.selectors.focus-visible",
+   "pattern": ":focus-visible",
+   "sample": ".ui-x__item:focus-visible { outline: 2px solid; }",
+   "versions": {
+    "chrome": "86",
+    "edge": "86",
+    "firefox": "85",
+    "safari": "15.4",
+    "safari_ios": "15.4"
+   },
+   "why": "Focus rings for keyboard users."
+  },
+  {
+   "id": "aspect-ratio",
+   "name": "aspect-ratio",
+   "bcd": "css.properties.aspect-ratio",
+   "pattern": "(?:^|[\\s;{])aspect-ratio\\s*:",
+   "sample": ".ui-x__thumb { aspect-ratio: 16 / 9; }",
+   "versions": {
+    "chrome": "88",
+    "edge": "88",
+    "firefox": "89",
+    "safari": "15",
+    "safari_ios": "15"
+   }
+  },
+  {
+   "id": "inset",
+   "name": "inset",
+   "bcd": "css.properties.inset",
+   "pattern": "(?:^|[\\s;{])inset\\s*:",
+   "sample": ".ui-x__overlay { position: absolute; inset: 0; }",
+   "versions": {
+    "chrome": "87",
+    "edge": "87",
+    "firefox": "66",
+    "safari": "14.1",
+    "safari_ios": "14.1"
+   }
+  },
+  {
+   "id": "individual-transforms",
+   "name": "translate, scale and rotate properties",
+   "bcd": "css.properties.translate",
+   "pattern": "(?:^|[\\s;{])(?:translate|scale|rotate)\\s*:",
+   "sample": ".ui-x__chip { translate: 0 -2px; }",
+   "versions": {
+    "chrome": "104",
+    "edge": "104",
+    "firefox": "72",
+    "safari": "14.1",
+    "safari_ios": "14.1"
+   }
+  },
+  {
+   "id": "conic-gradient",
+   "name": "conic-gradient()",
+   "bcd": "css.types.gradient.conic-gradient",
+   "pattern": "conic-gradient\\(",
+   "sample": "background: conic-gradient(var(--tc-accent) 40%, transparent 0);",
+   "versions": {
+    "chrome": "69",
+    "edge": "79",
+    "firefox": "83",
+    "safari": "12.1",
+    "safari_ios": "12.1"
+   }
+  },
+  {
+   "id": "mask",
+   "name": "CSS masks",
+   "bcd": "css.properties.mask-image",
+   "pattern": "(?:^|[\\s;{])mask(?:-image)?\\s*:",
+   "alt": {
+    "pattern": "-webkit-mask",
+    "versions": {
+     "chrome": "1",
+     "edge": "79",
+     "firefox": "53",
+     "safari": "4",
+     "safari_ios": "3.2"
+    },
+    "note": "with the -webkit- prefix"
+   },
+   "sample": ".ui-x__fade { mask-image: linear-gradient(black 80%, transparent); }",
+   "versions": {
+    "chrome": "120",
+    "edge": "120",
+    "firefox": "53",
+    "safari": "15.4",
+    "safari_ios": "15.4"
+   }
+  },
+  {
+   "id": "field-sizing",
+   "name": "field-sizing",
+   "bcd": "css.properties.field-sizing",
+   "pattern": "field-sizing\\s*:",
+   "sample": "textarea { field-sizing: content; min-height: 60px; max-height: 200px; }",
+   "versions": {
+    "chrome": "123",
+    "edge": "123",
+    "firefox": "152",
+    "safari": "26.2",
+    "safari_ios": "26.2"
+   },
+   "progressive": "Text fields grow with their text. Without it they keep their minimum height and scroll."
+  },
+  {
+   "id": "text-wrap-balance",
+   "name": "text-wrap: balance",
+   "bcd": "css.properties.text-wrap.balance",
+   "pattern": "text-wrap(?:-style)?\\s*:\\s*balance",
+   "sample": ".ui-x__title { text-wrap: balance; }",
+   "versions": {
+    "chrome": "114",
+    "edge": "114",
+    "firefox": "121",
+    "safari": "17.5",
+    "safari_ios": "17.5"
+   },
+   "progressive": "Titles break where the line fills up instead of into even lines."
+  },
+  {
+   "id": "text-wrap-pretty",
+   "name": "text-wrap: pretty",
+   "bcd": "css.properties.text-wrap.pretty",
+   "pattern": "text-wrap(?:-style)?\\s*:\\s*pretty",
+   "sample": ".ui-x__body { text-wrap: pretty; }",
+   "versions": {
+    "chrome": "117",
+    "edge": "117",
+    "firefox": null,
+    "safari": "26",
+    "safari_ios": "26"
+   },
+   "progressive": "Paragraphs may end on a single short word."
+  },
+  {
+   "id": "at-property",
+   "name": "@property",
+   "bcd": "css.at-rules.property",
+   "pattern": "@property\\s+--",
+   "sample": "@property --tc-x-turn { syntax: \"<angle>\"; inherits: false; initial-value: 0deg; }",
+   "versions": {
+    "chrome": "85",
+    "edge": "85",
+    "firefox": "128",
+    "safari": "16.4",
+    "safari_ios": "16.4"
+   },
+   "progressive": "The registered custom properties don't interpolate, so the transitions and spins they drive jump to their end state."
+  },
+  {
+   "id": "backdrop-filter",
+   "name": "backdrop-filter",
+   "bcd": "css.properties.backdrop-filter",
+   "pattern": "(?:^|[\\s;{])backdrop-filter\\s*:",
+   "alt": {
+    "pattern": "-webkit-backdrop-filter",
+    "versions": {
+     "chrome": "76",
+     "edge": "17",
+     "firefox": "103",
+     "safari": "9",
+     "safari_ios": "9"
+    },
+    "note": "with the -webkit- prefix"
+   },
+   "sample": ".ui-x__bar { backdrop-filter: blur(12px); }",
+   "versions": {
+    "chrome": "76",
+    "edge": "79",
+    "firefox": "103",
+    "safari": "18",
+    "safari_ios": "18"
+   },
+   "progressive": "What's behind a translucent surface isn't blurred; the surface keeps its fill."
+  },
+  {
+   "id": "overscroll-contain",
+   "name": "overscroll-behavior: contain",
+   "bcd": "css.properties.overscroll-behavior.contain",
+   "pattern": "overscroll-behavior(?:-[xy]|-block|-inline)?\\s*:\\s*contain",
+   "sample": ".ui-x__list { overflow: auto; overscroll-behavior: contain; }",
+   "versions": {
+    "chrome": "63",
+    "edge": "18",
+    "firefox": "59",
+    "safari": "16",
+    "safari_ios": "16"
+   },
+   "progressive": "Scrolling past the end of a list carries on scrolling the page."
+  },
+  {
+   "id": "scrollbar-width",
+   "name": "scrollbar-width",
+   "bcd": "css.properties.scrollbar-width",
+   "pattern": "scrollbar-width\\s*:",
+   "sample": ".ui-x__rail { scrollbar-width: none; }",
+   "versions": {
+    "chrome": "121",
+    "edge": "121",
+    "firefox": "64",
+    "safari": "18.2",
+    "safari_ios": "18.2"
+   },
+   "progressive": "Scrollbars keep the browser's default width."
+  },
+  {
+   "id": "scrollbar-color",
+   "name": "scrollbar-color",
+   "bcd": "css.properties.scrollbar-color",
+   "pattern": "scrollbar-color\\s*:",
+   "sample": ".ui-x__list { scrollbar-color: var(--tc-border) transparent; }",
+   "versions": {
+    "chrome": "121",
+    "edge": "121",
+    "firefox": "64",
+    "safari": "26.2",
+    "safari_ios": "26.2"
+   },
+   "progressive": "Scrollbars keep the browser's default colours."
+  },
+  {
+   "id": "scrollbar-gutter",
+   "name": "scrollbar-gutter",
+   "bcd": "css.properties.scrollbar-gutter",
+   "pattern": "scrollbar-gutter\\s*:",
+   "sample": ".ui-x__list { scrollbar-gutter: stable; }",
+   "versions": {
+    "chrome": "94",
+    "edge": "94",
+    "firefox": "97",
+    "safari": "18.2",
+    "safari_ios": "18.2"
+   },
+   "progressive": "Content can shift sideways when a scrollbar appears."
+  },
+  {
+   "id": "forced-colors",
+   "name": "forced-colors media query",
+   "bcd": "css.at-rules.media.forced-colors",
+   "pattern": "forced-colors\\s*:\\s*active",
+   "sample": "@media (forced-colors: active) { .ui-x__dot { forced-color-adjust: none; } }",
+   "versions": {
+    "chrome": "89",
+    "edge": "79",
+    "firefox": "89",
+    "safari": "16",
+    "safari_ios": "16"
+   },
+   "progressive": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes."
+  },
+  {
+   "id": "starting-style",
+   "name": "@starting-style",
+   "bcd": "css.at-rules.starting-style",
+   "pattern": "@starting-style",
+   "sample": "@starting-style { .ui-x__toast { opacity: 0; } }",
+   "versions": {
+    "chrome": "117",
+    "edge": "117",
+    "firefox": "129",
+    "safari": "17.5",
+    "safari_ios": "17.5"
+   },
+   "progressive": "Parts appear without their entry transition.",
+   "watch": true
+  },
+  {
+   "id": "nesting",
+   "name": "CSS nesting",
+   "bcd": "css.selectors.nesting",
+   "pattern": "^\\s*&[^\\n{;]*\\{",
+   "sample": ".ui-x {\n  &:hover { color: red; }\n}",
+   "versions": {
+    "chrome": "120",
+    "edge": "120",
+    "firefox": "117",
+    "safari": "17.2",
+    "safari_ios": "17.2"
+   },
+   "watch": true
+  },
+  {
+   "id": "content-visibility",
+   "name": "content-visibility",
+   "bcd": "css.properties.content-visibility",
+   "pattern": "content-visibility\\s*:",
+   "sample": ".ui-x__row { content-visibility: auto; contain-intrinsic-size: auto 40px; }",
+   "versions": {
+    "chrome": "85",
+    "edge": "85",
+    "firefox": "125",
+    "safari": "18",
+    "safari_ios": "18"
+   },
+   "progressive": "Off-screen parts are laid out and painted up front.",
+   "watch": true
+  },
+  {
+   "id": "form-associated",
+   "name": "Form association (ElementInternals)",
+   "bcd": "api.ElementInternals.setFormValue",
+   "pattern": "static\\s+(?:override\\s+)?formAssociated\\s*=\\s*true|\\.attachInternals\\(",
+   "sample": "static formAssociated = true;\nthis.internals = this.attachInternals();",
+   "versions": {
+    "chrome": "77",
+    "edge": "79",
+    "firefox": "98",
+    "safari": "16.4",
+    "safari_ios": "16.4"
+   },
+   "why": "The element's value is submitted with its form, and it takes part in form validation and reset."
+  },
+  {
+   "id": "adopted-stylesheets",
+   "name": "adoptedStyleSheets",
+   "bcd": "api.Document.adoptedStyleSheets",
+   "pattern": "adoptedStyleSheets",
+   "sample": "document.adoptedStyleSheets = [...document.adoptedStyleSheets, sheet];",
+   "versions": {
+    "chrome": "73",
+    "edge": "79",
+    "firefox": "101",
+    "safari": "16.4",
+    "safari_ios": "16.4"
+   },
+   "progressive": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same."
+  },
+  {
+   "id": "aria-reflection",
+   "name": "ARIA reflection (element.ariaBusy…)",
+   "bcd": "api.Element.ariaBusy",
+   "pattern": "\\.aria[A-Z][a-zA-Z]+\\s*=",
+   "sample": "<button .ariaBusy=${busy}></button>",
+   "versions": {
+    "chrome": "81",
+    "edge": "81",
+    "firefox": "119",
+    "safari": "12.1",
+    "safari_ios": "12.1"
+   },
+   "why": "States such as busy and disabled reach screen readers."
+  },
+  {
+   "id": "inert",
+   "name": "inert",
+   "bcd": "api.HTMLElement.inert",
+   "pattern": "[.?]inert=|\\.inert\\s*=[^=]|\\[inert\\]|<[a-z][^>]*\\sinert[\\s>]",
+   "sample": "<div class=\"ui-x__fold\" .inert=${!open}></div>",
+   "versions": {
+    "chrome": "102",
+    "edge": "102",
+    "firefox": "112",
+    "safari": "15.5",
+    "safari_ios": "15.5"
+   },
+   "why": "Closed and leaving parts are out of the tab order and hidden from screen readers."
+  },
+  {
+   "id": "dialog",
+   "name": "<dialog> and showModal()",
+   "bcd": "api.HTMLDialogElement.showModal",
+   "pattern": "<dialog\\b|\\.showModal\\(",
+   "sample": "<dialog class=\"ui-x__dialog\"></dialog>",
+   "versions": {
+    "chrome": "37",
+    "edge": "79",
+    "firefox": "98",
+    "safari": "15.4",
+    "safari_ios": "15.4"
+   },
+   "why": "Modals trap focus, close on Escape and sit in the top layer."
+  },
+  {
+   "id": "popover",
+   "name": "Popover API",
+   "bcd": "api.HTMLElement.popover",
+   "pattern": "\\.showPopover\\(|\\spopover=|setAttribute\\(\\s*[\"']popover",
+   "sample": "if (typeof pop.showPopover === \"function\") pop.showPopover();",
+   "versions": {
+    "chrome": "114",
+    "edge": "114",
+    "firefox": "125",
+    "safari": "17",
+    "safari_ios": "18.3"
+   },
+   "progressive": "Lists open fixed to the window instead of in the top layer, so a clipping ancestor or a modal can cover them."
+  },
+  {
+   "id": "resize-observer",
+   "name": "ResizeObserver",
+   "bcd": "api.ResizeObserver",
+   "pattern": "new ResizeObserver\\(",
+   "sample": "new ResizeObserver(() => this.measure()).observe(this);",
+   "versions": {
+    "chrome": "64",
+    "edge": "79",
+    "firefox": "69",
+    "safari": "13.1",
+    "safari_ios": "13.4"
+   }
+  },
+  {
+   "id": "intersection-observer",
+   "name": "IntersectionObserver",
+   "bcd": "api.IntersectionObserver",
+   "pattern": "new IntersectionObserver\\(",
+   "sample": "new IntersectionObserver(([e]) => (this.onScreen = e.isIntersecting)).observe(this);",
+   "versions": {
+    "chrome": "51",
+    "edge": "15",
+    "firefox": "55",
+    "safari": "12.1",
+    "safari_ios": "12.2"
+   }
+  },
+  {
+   "id": "structured-clone",
+   "name": "structuredClone()",
+   "bcd": "api.structuredClone",
+   "pattern": "\\bstructuredClone\\(",
+   "sample": "const copy = structuredClone(value);",
+   "versions": {
+    "chrome": "98",
+    "edge": "98",
+    "firefox": "94",
+    "safari": "15.4",
+    "safari_ios": "15.4"
+   }
+  },
+  {
+   "id": "array-at",
+   "name": "Array.prototype.at()",
+   "bcd": "javascript.builtins.Array.at",
+   "pattern": "\\.at\\(-\\d+\\)",
+   "sample": "const last = items.at(-1);",
+   "versions": {
+    "chrome": "92",
+    "edge": "92",
+    "firefox": "90",
+    "safari": "15.4",
+    "safari_ios": "15.4"
+   }
+  },
+  {
+   "id": "object-hasown",
+   "name": "Object.hasOwn()",
+   "bcd": "javascript.builtins.Object.hasOwn",
+   "pattern": "\\bObject\\.hasOwn\\(",
+   "sample": "if (Object.hasOwn(value, key)) …",
+   "versions": {
+    "chrome": "93",
+    "edge": "93",
+    "firefox": "92",
+    "safari": "15.4",
+    "safari_ios": "15.4"
+   }
+  },
+  {
+   "id": "clipboard",
+   "name": "Async Clipboard (writeText)",
+   "bcd": "api.Clipboard.writeText",
+   "pattern": "navigator\\.clipboard",
+   "sample": "await navigator.clipboard.writeText(text);",
+   "versions": {
+    "chrome": "66",
+    "edge": "79",
+    "firefox": "63",
+    "safari": "13.1",
+    "safari_ios": "13.4"
+   },
+   "why": "Copy buttons."
+  },
+  {
+   "id": "relative-time-format",
+   "name": "Intl.RelativeTimeFormat",
+   "bcd": "javascript.builtins.Intl.RelativeTimeFormat",
+   "pattern": "Intl\\.RelativeTimeFormat",
+   "sample": "new Intl.RelativeTimeFormat(\"en\", { numeric: \"auto\" });",
+   "versions": {
+    "chrome": "71",
+    "edge": "79",
+    "firefox": "65",
+    "safari": "14",
+    "safari_ios": "14"
+   }
+  }
+ ]
+}

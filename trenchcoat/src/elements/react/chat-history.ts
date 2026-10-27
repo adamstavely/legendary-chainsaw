@@ -2,6 +2,8 @@ import { createComponent, type EventName } from "@lit/react";
 import * as React from "react";
 import {
   TcChatHistory,
+  type ChatContextChange,
+  type ChatContextItem,
   type ChatConversation,
   type ChatConversationsChange,
   type ChatDeleteDetail,
@@ -12,9 +14,10 @@ import {
 } from "../chat-history";
 import { h, useControlled } from "./internal";
 
-export type { ChatConversation, ChatFolder } from "../chat-history";
+export type { ChatContextChange, ChatContextItem, ChatConversation, ChatFolder, ChatSummaryItem } from "../chat-history";
 
 const NO_CHATS: ChatConversation[] = [];
+const NO_CONTEXT: ChatContextItem[] = [];
 
 const RawChatHistory = createComponent({
   tagName: "tc-chat-history",
@@ -29,6 +32,7 @@ const RawChatHistory = createComponent({
     onTcDelete: "tc-delete" as EventName<CustomEvent<ChatDeleteDetail>>,
     onTcRestore: "tc-restore" as EventName<CustomEvent<ChatDeleteDetail>>,
     onTcNewChat: "tc-new-chat" as EventName<CustomEvent<null>>,
+    onTcContextChange: "tc-context-change" as EventName<CustomEvent<ChatContextChange>>,
   },
 });
 type RawProps = React.ComponentProps<typeof RawChatHistory>;
@@ -48,6 +52,8 @@ export type ChatHistoryProps = Omit<
   | "onTcDelete"
   | "onTcRestore"
   | "onTcNewChat"
+  | "context"
+  | "onTcContextChange"
 > & {
   /** Every conversation. Controlled when defined; otherwise the list keeps them, starting at `defaultConversations` */
   conversations?: ChatConversation[];
@@ -75,6 +81,12 @@ export type ChatHistoryProps = Omit<
   onRestore?: (id: string, conversation: ChatConversation) => void;
   /** Called when New chat is pressed */
   onNewChat?: () => void;
+  /** What's loaded as context now. Controlled when defined; otherwise the list keeps it, starting at `defaultContext` */
+  context?: ChatContextItem[];
+  /** The starting context when `context` is not controlled */
+  defaultContext?: ChatContextItem[];
+  /** Called when a chat's summary is loaded as context or items are removed – send what's in `context` with the next message */
+  onContextChange?: (context: ChatContextItem[], change: ChatContextChange) => void;
 };
 
 /** The conversation list: search, pinning, folders, rename and delete with Undo, grouped by date; windowed */
@@ -92,9 +104,13 @@ export function ChatHistory({
   onDelete,
   onRestore,
   onNewChat,
+  context,
+  defaultContext = NO_CONTEXT,
+  onContextChange,
   ...props
 }: ChatHistoryProps) {
   const list = useControlled(conversations, defaultConversations, onConversationsChange);
+  const ctx = useControlled(context, defaultContext, undefined);
   const open = useControlled(value, defaultValue, onChange);
   return h(RawChatHistory, {
     ...props,
@@ -110,5 +126,10 @@ export function ChatHistory({
     onTcDelete: (e: CustomEvent<ChatDeleteDetail>) => onDelete?.(e.detail.id, e.detail.conversation),
     onTcRestore: (e: CustomEvent<ChatDeleteDetail>) => onRestore?.(e.detail.id, e.detail.conversation),
     onTcNewChat: () => onNewChat?.(),
+    context: ctx.value,
+    onTcContextChange: (e: CustomEvent<ChatContextChange>) => {
+      ctx.handler(e.detail.context, e);
+      onContextChange?.(e.detail.context, e.detail);
+    },
   });
 }

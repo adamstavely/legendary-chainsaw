@@ -1465,7 +1465,17 @@
      "description": "The element, for `next()`, `goTo()` and `reset()`"
     }
    ],
-   "hides": []
+   "hides": [
+    "Creating…",
+    "All set"
+   ],
+   "events": {
+    "tc-values-change": "onValuesChange",
+    "tc-step-change": "onStepChange",
+    "tc-panes-change": null,
+    "tc-value-change": "onTcValueChange",
+    "tc-edit": "onTcEdit"
+   }
   },
   {
    "component": "StepperField",
@@ -1502,7 +1512,14 @@
      "description": "The control: a StepperInput, StepperTags or StepperChoices"
     }
    ],
-   "hides": []
+   "hides": [],
+   "events": {
+    "tc-values-change": "onTcValuesChange",
+    "tc-step-change": "onTcStepChange",
+    "tc-panes-change": "onTcPanesChange",
+    "tc-value-change": "onTcValueChange",
+    "tc-edit": "onTcEdit"
+   }
   },
   {
    "component": "StepperInput",
@@ -1529,7 +1546,14 @@
    ],
    "hides": [
     "prefix"
-   ]
+   ],
+   "events": {
+    "tc-values-change": "onTcValuesChange",
+    "tc-step-change": "onTcStepChange",
+    "tc-panes-change": "onTcPanesChange",
+    "tc-value-change": "onTcValueChange",
+    "tc-edit": "onTcEdit"
+   }
   },
   {
    "component": "StepperTags",
@@ -1590,7 +1614,14 @@
      "description": "The input's autocomplete – \"off\" by default, since the entries are usually other people's addresses"
     }
    ],
-   "hides": []
+   "hides": [],
+   "events": {
+    "tc-values-change": "onTcValuesChange",
+    "tc-step-change": "onTcStepChange",
+    "tc-panes-change": "onTcPanesChange",
+    "tc-value-change": "onTcValueChange",
+    "tc-edit": "onTcEdit"
+   }
   },
   {
    "component": "StepperChoices",
@@ -1639,15 +1670,603 @@
      "description": "Marks the group as required for assistive tech – checking it is up to the step's validate"
     }
    ],
-   "hides": []
+   "hides": [],
+   "events": {
+    "tc-values-change": "onTcValuesChange",
+    "tc-step-change": "onTcStepChange",
+    "tc-panes-change": "onTcPanesChange",
+    "tc-value-change": "onTcValueChange",
+    "tc-edit": "onTcEdit"
+   }
   }
  ],
  "changelog": [
   "**stepper-form error contrast:** its error messages were 3.9:1; they now use the danger text colour.",
   "stepper-form `initialValues` → `defaultValues`; `initialStep` → `defaultStep`"
  ],
+ "frameworks": [
+  {
+   "tag": "tc-stepper-form",
+   "className": "TcStepperForm",
+   "module": "trenchcoat/stepper-form",
+   "data": [
+    "steps",
+    "values",
+    "onComplete",
+    "success"
+   ],
+   "attributes": [
+    {
+     "name": "step",
+     "attribute": "step"
+    },
+    {
+     "name": "submitLabel",
+     "attribute": "submit-label"
+    },
+    {
+     "name": "submittingLabel",
+     "attribute": "submitting-label"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-values-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-step-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-panes-change",
+     "cancelable": false
+    }
+   ],
+   "controlled": [
+    {
+     "property": "values",
+     "event": "tc-values-change"
+    },
+    {
+     "property": "step",
+     "event": "tc-step-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  },
+  {
+   "tag": "tc-stepper-field",
+   "className": "TcStepperField",
+   "module": "trenchcoat/stepper-form",
+   "data": [],
+   "attributes": [
+    {
+     "name": "name",
+     "attribute": "name"
+    },
+    {
+     "name": "label",
+     "attribute": "label"
+    },
+    {
+     "name": "hint",
+     "attribute": "hint"
+    },
+    {
+     "name": "optional",
+     "attribute": "optional"
+    }
+   ],
+   "events": [],
+   "controlled": [],
+   "form": null,
+   "slots": []
+  },
+  {
+   "tag": "tc-stepper-input",
+   "className": "TcStepperInput",
+   "module": "trenchcoat/stepper-form",
+   "data": [],
+   "attributes": [
+    {
+     "name": "prefixText",
+     "attribute": "prefix"
+    },
+    {
+     "name": "describedby",
+     "attribute": "describedby"
+    },
+    {
+     "name": "controlId",
+     "attribute": "control-id"
+    },
+    {
+     "name": "controlInvalid",
+     "attribute": "control-invalid"
+    }
+   ],
+   "events": [],
+   "controlled": [],
+   "form": null,
+   "slots": []
+  },
+  {
+   "tag": "tc-stepper-tags",
+   "className": "TcStepperTags",
+   "module": "trenchcoat/stepper-form",
+   "data": [
+    "value",
+    "validate"
+   ],
+   "attributes": [
+    {
+     "name": "placeholder",
+     "attribute": "placeholder"
+    },
+    {
+     "name": "max",
+     "attribute": "max"
+    },
+    {
+     "name": "name",
+     "attribute": "name"
+    },
+    {
+     "name": "disabled",
+     "attribute": "disabled"
+    },
+    {
+     "name": "required",
+     "attribute": "required"
+    },
+    {
+     "name": "autocomplete",
+     "attribute": "autocomplete"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-value-change",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "value",
+     "event": "tc-value-change"
+    }
+   ],
+   "form": {
+    "property": "value",
+    "event": "tc-value-change",
+    "formAssociated": true
+   },
+   "slots": []
+  },
+  {
+   "tag": "tc-stepper-choices",
+   "className": "TcStepperChoices",
+   "module": "trenchcoat/stepper-form",
+   "data": [
+    "options"
+   ],
+   "attributes": [
+    {
+     "name": "value",
+     "attribute": "value"
+    },
+    {
+     "name": "label",
+     "attribute": "label"
+    },
+    {
+     "name": "name",
+     "attribute": "name"
+    },
+    {
+     "name": "disabled",
+     "attribute": "disabled"
+    },
+    {
+     "name": "required",
+     "attribute": "required"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-value-change",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "value",
+     "event": "tc-value-change"
+    }
+   ],
+   "form": {
+    "property": "value",
+    "event": "tc-value-change",
+    "formAssociated": true
+   },
+   "slots": []
+  },
+  {
+   "tag": "tc-stepper-review",
+   "className": "TcStepperReview",
+   "module": "trenchcoat/stepper-form",
+   "data": [
+    "rows"
+   ],
+   "attributes": [
+    {
+     "name": "editable",
+     "attribute": "editable"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-edit",
+     "cancelable": false
+    }
+   ],
+   "controlled": [],
+   "form": null,
+   "slots": []
+  },
+  {
+   "tag": "tc-stepper-success",
+   "className": "TcStepperSuccess",
+   "module": "trenchcoat/stepper-form",
+   "data": [],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    }
+   ],
+   "events": [],
+   "controlled": [],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "121",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "has"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "itself",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "form-associated",
+    "name": "Form association (ElementInternals)",
+    "bcd": "api.ElementInternals.setFormValue",
+    "versions": {
+     "chrome": "77",
+     "edge": "79",
+     "firefox": "98",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": false,
+    "why": "The element's value is submitted with its form, and it takes part in form validation and reset.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "inert",
+    "name": "inert",
+    "bcd": "api.HTMLElement.inert",
+    "versions": {
+     "chrome": "102",
+     "edge": "102",
+     "firefox": "112",
+     "safari": "15.5",
+     "safari_ios": "15.5"
+    },
+    "progressive": false,
+    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
+    "via": [
+     "itself",
+     "internal/controllers"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "has",
+    "name": ":has()",
+    "bcd": "css.selectors.has",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "121",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Layout and state that depend on what's inside a part (an icon present, a focused field).",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "resize-observer",
+    "name": "ResizeObserver",
+    "bcd": "api.ResizeObserver",
+    "versions": {
+     "chrome": "64",
+     "edge": "79",
+     "firefox": "69",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "text-wrap-pretty",
+    "name": "text-wrap: pretty",
+    "bcd": "css.properties.text-wrap.pretty",
+    "versions": {
+     "chrome": "117",
+     "edge": "117",
+     "firefox": null,
+     "safari": "26",
+     "safari_ios": "26"
+    },
+    "progressive": true,
+    "without": "Paragraphs may end on a single short word.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "scrollbar-width",
+    "name": "scrollbar-width",
+    "bcd": "css.properties.scrollbar-width",
+    "versions": {
+     "chrome": "121",
+     "edge": "121",
+     "firefox": "64",
+     "safari": "18.2",
+     "safari_ios": "18.2"
+    },
+    "progressive": true,
+    "without": "Scrollbars keep the browser's default width.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "text-wrap-balance",
+    "name": "text-wrap: balance",
+    "bcd": "css.properties.text-wrap.balance",
+    "versions": {
+     "chrome": "114",
+     "edge": "114",
+     "firefox": "121",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": true,
+    "without": "Titles break where the line fills up instead of into even lines.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "overscroll-contain",
+    "name": "overscroll-behavior: contain",
+    "bcd": "css.properties.overscroll-behavior.contain",
+    "versions": {
+     "chrome": "63",
+     "edge": "18",
+     "firefox": "59",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "Scrolling past the end of a list carries on scrolling the page.",
+    "via": [
+     "itself"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setTimeout"
+  ],
+  "frames": [],
+  "animations": 2,
+  "observers": [
+   "ResizeObserver",
+   "MutationObserver (internal/controllers › AriaForwardController)",
+   "MutationObserver (internal/controllers › FocusRescueController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
  "size": {
-  "min": 86239,
-  "gzip": 19241
+  "min": 87856,
+  "gzip": 19483
  }
 }

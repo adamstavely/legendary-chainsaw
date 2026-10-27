@@ -1,0 +1,555 @@
+{
+ "elements": [
+  {
+   "tag": "tc-handoff-brief",
+   "className": "TcHandoffBrief",
+   "description": "Work passing from one person to another: summary, open items and commitments, each acknowledged by the receiver,\nblocked when they lack access.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Handoff\"",
+     "description": "The heading, and the group's name",
+     "readonly": false
+    },
+    {
+     "name": "from",
+     "attribute": null,
+     "type": "HandoffBriefPerson",
+     "default": "{ name: \"\" }",
+     "description": "Who hands the work over",
+     "readonly": false
+    },
+    {
+     "name": "to",
+     "attribute": null,
+     "type": "HandoffBriefPerson",
+     "default": "{ name: \"\" }",
+     "description": "Who receives it – the person looking",
+     "readonly": false
+    },
+    {
+     "name": "at",
+     "attribute": "at",
+     "type": "string",
+     "default": "\"\"",
+     "description": "When, as the app words it – \"Today 16:40\"",
+     "readonly": false
+    },
+    {
+     "name": "summary",
+     "attribute": "summary",
+     "type": "string",
+     "default": "\"\"",
+     "description": "What the work is and where it stands, in a short paragraph",
+     "readonly": false
+    },
+    {
+     "name": "unresolved",
+     "attribute": null,
+     "type": "HandoffBriefItem[]",
+     "default": "[]",
+     "description": "What's still open",
+     "readonly": false
+    },
+    {
+     "name": "commitments",
+     "attribute": null,
+     "type": "HandoffBriefItem[]",
+     "default": "[]",
+     "description": "What the previous owner promised, to whom and by when",
+     "readonly": false
+    },
+    {
+     "name": "acknowledged",
+     "attribute": null,
+     "type": "HandoffBriefSection[]",
+     "default": "[]",
+     "description": "The sections acknowledged so far",
+     "readonly": false
+    },
+    {
+     "name": "missing",
+     "attribute": null,
+     "type": "HandoffBriefAccess[]",
+     "default": "[]",
+     "description": "Material the work refers to that the receiver can't open – any blocks the handoff",
+     "readonly": false
+    },
+    {
+     "name": "accessRequest",
+     "attribute": "access-request",
+     "type": "HandoffBriefRequest | \"\"",
+     "default": "\"\"",
+     "description": "Where the access request stands, when the app owns it; the element sets it when not prevented",
+     "readonly": false
+    },
+    {
+     "name": "requestAccess",
+     "attribute": null,
+     "type": "HandoffBriefAccessResolver | undefined",
+     "default": "undefined",
+     "description": "Sends the access request and settles when it's sent. Unset, a request counts as sent",
+     "readonly": false
+    },
+    {
+     "name": "accepted",
+     "attribute": "accepted",
+     "type": "boolean",
+     "default": "false",
+     "description": "The receiver accepted the work",
+     "readonly": false
+    },
+    {
+     "name": "sectionTitles",
+     "attribute": null,
+     "type": "Partial<Record<HandoffBriefSection, string>>",
+     "default": "{}",
+     "description": "Names of the three sections",
+     "readonly": false
+    },
+    {
+     "name": "acceptLabel",
+     "attribute": "accept-label",
+     "type": "string",
+     "default": "\"Accept handoff\"",
+     "description": "The accept button's text",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-acknowledged-change",
+     "detail": "",
+     "description": "A section was acknowledged or un-acknowledged ({ acknowledged, section, on }: HandoffBriefAcknowledgedChange); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-access-request",
+     "detail": "",
+     "description": "Request access (or Retry) was pressed ({ items }: HandoffBriefAccessRequest); cancelable – prevented, the app sets `accessRequest` itself",
+     "cancelable": true
+    },
+    {
+     "name": "tc-accept",
+     "detail": "",
+     "description": "Accept handoff was pressed ({ acknowledged }: HandoffBriefAccept); cancelable – not prevented, `accepted` becomes true",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "hob",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-border-strong",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-md",
+    "--tc-control-radius-md",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-quick",
+    "--tc-duration-slowest",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-2xs",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-none",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-meter-h",
+    "--tc-meter-radius",
+    "--tc-meter-track",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-badge",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-7",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-success-solid",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-on-accent",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "HandoffBrief",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading, and the group's name"
+    },
+    {
+     "name": "acknowledged",
+     "type": "HandoffBriefSection[]",
+     "optional": true,
+     "description": "The sections acknowledged – controlled when given"
+    },
+    {
+     "name": "defaultAcknowledged",
+     "type": "HandoffBriefSection[]",
+     "optional": true,
+     "description": "The sections acknowledged at first, when `acknowledged` isn't set"
+    },
+    {
+     "name": "onAcknowledgedChange",
+     "type": "(acknowledged: HandoffBriefSection[]) => void",
+     "optional": true,
+     "description": "Called with the acknowledged sections whenever one is acknowledged or un-acknowledged"
+    },
+    {
+     "name": "onRequestAccess",
+     "type": "(items: HandoffBriefAccess[], event: CustomEvent<HandoffBriefAccessRequest>) => void",
+     "optional": true,
+     "description": "Called when Request access (or Retry) is pressed; call `event.preventDefault()` to set `accessRequest` yourself"
+    },
+    {
+     "name": "accepted",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether the receiver has accepted – controlled when given"
+    },
+    {
+     "name": "defaultAccepted",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether it starts accepted, when `accepted` isn't set"
+    },
+    {
+     "name": "onAccept",
+     "type": "() => void",
+     "optional": true,
+     "description": "Called when the receiver accepts the handoff"
+    }
+   ],
+   "hides": [
+    "heading",
+    "acknowledged",
+    "accepted",
+    "children"
+   ],
+   "events": {
+    "tc-acknowledged-change": "onAcknowledgedChange",
+    "tc-access-request": "onRequestAccess",
+    "tc-accept": "onAccept"
+   }
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-handoff-brief",
+   "className": "TcHandoffBrief",
+   "module": "trenchcoat/handoff-brief",
+   "data": [
+    "from",
+    "to",
+    "unresolved",
+    "commitments",
+    "acknowledged",
+    "missing",
+    "requestAccess",
+    "sectionTitles"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "at",
+     "attribute": "at"
+    },
+    {
+     "name": "summary",
+     "attribute": "summary"
+    },
+    {
+     "name": "accessRequest",
+     "attribute": "access-request"
+    },
+    {
+     "name": "accepted",
+     "attribute": "accepted"
+    },
+    {
+     "name": "acceptLabel",
+     "attribute": "accept-label"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-acknowledged-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-access-request",
+     "cancelable": true
+    },
+    {
+     "name": "tc-accept",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "acknowledged",
+     "event": "tc-acknowledged-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "inert",
+    "name": "inert",
+    "bcd": "api.HTMLElement.inert",
+    "versions": {
+     "chrome": "102",
+     "edge": "102",
+     "firefox": "112",
+     "safari": "15.5",
+     "safari_ios": "15.5"
+    },
+    "progressive": false,
+    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
+    "via": [
+     "internal/controllers"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 1,
+  "observers": [
+   "MutationObserver (internal/controllers › AriaForwardController)",
+   "MutationObserver (internal/controllers › FocusRescueController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 30854,
+  "gzip": 9150
+ }
+}

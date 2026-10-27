@@ -338,6 +338,10 @@
   --tc-source-model-bg: var(--tc-tone-violet-bg);
   --tc-source-inferred-fg: var(--tc-tone-amber-fg);
   --tc-source-inferred-bg: var(--tc-tone-amber-bg);
+  --tc-source-media-fg: var(--tc-tone-teal-fg);
+  --tc-source-media-bg: var(--tc-tone-teal-bg);
+  --tc-source-memory-fg: var(--tc-status-info-fg);
+  --tc-source-memory-bg: var(--tc-status-info-bg);
   /* Evidence freshness bands: high, good, aging, stale */
   --tc-validity-high-fg: var(--tc-status-success-fg);
   --tc-validity-high-bg: var(--tc-status-success-bg);
@@ -347,6 +351,18 @@
   --tc-validity-aging-bg: var(--tc-status-warning-bg);
   --tc-validity-stale-fg: var(--tc-status-danger-fg);
   --tc-validity-stale-bg: var(--tc-status-danger-bg);
+  /* Highlighter colours for marks in text (text-annotator and the other selection components): a translucent fill
+     that tints whatever surface the text sits on, and the ink that reads on it (≥ 4.5:1 – scripts/contrast.mjs) */
+  --tc-highlight-yellow-bg: light-dark(rgba(255, 204, 0, 0.34), rgba(250, 204, 21, 0.24));
+  --tc-highlight-yellow-fg: light-dark(#4d3800, #fde68a);
+  --tc-highlight-green-bg: light-dark(rgba(52, 199, 89, 0.24), rgba(74, 222, 128, 0.2));
+  --tc-highlight-green-fg: light-dark(#0f4527, #bbf7d0);
+  --tc-highlight-blue-bg: light-dark(rgba(47, 104, 255, 0.17), rgba(107, 149, 255, 0.26));
+  --tc-highlight-blue-fg: light-dark(#14306e, #dbe6ff);
+  --tc-highlight-pink-bg: light-dark(rgba(236, 72, 153, 0.18), rgba(244, 114, 182, 0.24));
+  --tc-highlight-pink-fg: light-dark(#6e1240, #fbd3e8);
+  --tc-highlight-purple-bg: light-dark(rgba(139, 92, 246, 0.19), rgba(167, 139, 250, 0.26));
+  --tc-highlight-purple-fg: light-dark(#40197e, #e2dafe);
   /* Syntax colours for code (code-block, tool-call-card, structured output) – every one ≥ 4.5:1 on the surfaces */
   --tc-syntax-keyword: var(--tc-tone-violet-fg);
   --tc-syntax-string: var(--tc-status-success-fg);
@@ -632,6 +648,10 @@
   --tc-source-model-bg: var(--tc-tone-violet-bg);
   --tc-source-inferred-fg: var(--tc-tone-amber-fg);
   --tc-source-inferred-bg: var(--tc-tone-amber-bg);
+  --tc-source-media-fg: var(--tc-tone-teal-fg);
+  --tc-source-media-bg: var(--tc-tone-teal-bg);
+  --tc-source-memory-fg: var(--tc-status-info-fg);
+  --tc-source-memory-bg: var(--tc-status-info-bg);
   /* Evidence freshness bands: high, good, aging, stale */
   --tc-validity-high-fg: var(--tc-status-success-fg);
   --tc-validity-high-bg: var(--tc-status-success-bg);
@@ -641,6 +661,19 @@
   --tc-validity-aging-bg: var(--tc-status-warning-bg);
   --tc-validity-stale-fg: var(--tc-status-danger-fg);
   --tc-validity-stale-bg: var(--tc-status-danger-bg);
+  /* Highlighter colours for marks in text (text-annotator and the other selection components): a translucent fill
+     that tints whatever surface the text sits on, and the ink that reads on it (≥ 4.5:1 – scripts/contrast.mjs).
+     Clean's light fills are a step softer */
+  --tc-highlight-yellow-bg: light-dark(rgba(255, 204, 0, 0.3), rgba(250, 204, 21, 0.24));
+  --tc-highlight-yellow-fg: light-dark(#4d3800, #fde68a);
+  --tc-highlight-green-bg: light-dark(rgba(52, 199, 89, 0.2), rgba(74, 222, 128, 0.2));
+  --tc-highlight-green-fg: light-dark(#0f4527, #bbf7d0);
+  --tc-highlight-blue-bg: light-dark(rgba(47, 104, 255, 0.14), rgba(107, 149, 255, 0.26));
+  --tc-highlight-blue-fg: light-dark(#14306e, #dbe6ff);
+  --tc-highlight-pink-bg: light-dark(rgba(236, 72, 153, 0.15), rgba(244, 114, 182, 0.24));
+  --tc-highlight-pink-fg: light-dark(#6e1240, #fbd3e8);
+  --tc-highlight-purple-bg: light-dark(rgba(139, 92, 246, 0.16), rgba(167, 139, 250, 0.26));
+  --tc-highlight-purple-fg: light-dark(#40197e, #e2dafe);
   /* Syntax colours for code (code-block, tool-call-card, structured output) – every one ≥ 4.5:1 on the surfaces */
   --tc-syntax-keyword: var(--tc-tone-violet-fg);
   --tc-syntax-string: var(--tc-status-success-fg);
@@ -908,6 +941,16 @@
     --tc-tone-teal-bg: var(--tc-teal-50);
     --tc-tone-teal-solid: var(--tc-teal-500);
     --tc-surface-well: #f4f4f5;
+    --tc-highlight-yellow-bg: rgba(255, 204, 0, 0.34);
+    --tc-highlight-yellow-fg: #4d3800;
+    --tc-highlight-green-bg: rgba(52, 199, 89, 0.24);
+    --tc-highlight-green-fg: #0f4527;
+    --tc-highlight-blue-bg: rgba(47, 104, 255, 0.17);
+    --tc-highlight-blue-fg: #14306e;
+    --tc-highlight-pink-bg: rgba(236, 72, 153, 0.18);
+    --tc-highlight-pink-fg: #6e1240;
+    --tc-highlight-purple-bg: rgba(139, 92, 246, 0.19);
+    --tc-highlight-purple-fg: #40197e;
     --tc-chart-1: var(--tc-blue-500);
     --tc-chart-2: var(--tc-violet-500);
     --tc-chart-3: var(--tc-pink-500);
@@ -986,6 +1029,16 @@
     --tc-tone-teal-solid: var(--tc-teal-500);
     --tc-accent-solid: rgba(0, 96, 226, 0.765);
     --tc-surface-well: #f4f4f5;
+    --tc-highlight-yellow-bg: rgba(255, 204, 0, 0.3);
+    --tc-highlight-yellow-fg: #4d3800;
+    --tc-highlight-green-bg: rgba(52, 199, 89, 0.2);
+    --tc-highlight-green-fg: #0f4527;
+    --tc-highlight-blue-bg: rgba(47, 104, 255, 0.14);
+    --tc-highlight-blue-fg: #14306e;
+    --tc-highlight-pink-bg: rgba(236, 72, 153, 0.15);
+    --tc-highlight-pink-fg: #6e1240;
+    --tc-highlight-purple-bg: rgba(139, 92, 246, 0.16);
+    --tc-highlight-purple-fg: #40197e;
     --tc-chart-1: rgba(0, 96, 226, 0.77);
     --tc-chart-2: #5b5bd6;
     --tc-chart-3: rgba(0, 96, 226, 0.5);
@@ -1064,6 +1117,16 @@
     --tc-tone-teal-bg: rgba(79, 209, 197, 0.14);
     --tc-tone-teal-solid: var(--tc-teal-400);
     --tc-surface-well: #222225;
+    --tc-highlight-yellow-bg: rgba(250, 204, 21, 0.24);
+    --tc-highlight-yellow-fg: #fde68a;
+    --tc-highlight-green-bg: rgba(74, 222, 128, 0.2);
+    --tc-highlight-green-fg: #bbf7d0;
+    --tc-highlight-blue-bg: rgba(107, 149, 255, 0.26);
+    --tc-highlight-blue-fg: #dbe6ff;
+    --tc-highlight-pink-bg: rgba(244, 114, 182, 0.24);
+    --tc-highlight-pink-fg: #fbd3e8;
+    --tc-highlight-purple-bg: rgba(167, 139, 250, 0.26);
+    --tc-highlight-purple-fg: #e2dafe;
     --tc-chart-1: var(--tc-blue-400);
     --tc-chart-2: var(--tc-violet-400);
     --tc-chart-3: var(--tc-pink-400);
@@ -1144,6 +1207,16 @@
     --tc-tone-teal-solid: var(--tc-teal-400);
     --tc-accent-solid: #4d8dff;
     --tc-surface-well: #222225;
+    --tc-highlight-yellow-bg: rgba(250, 204, 21, 0.24);
+    --tc-highlight-yellow-fg: #fde68a;
+    --tc-highlight-green-bg: rgba(74, 222, 128, 0.2);
+    --tc-highlight-green-fg: #bbf7d0;
+    --tc-highlight-blue-bg: rgba(107, 149, 255, 0.26);
+    --tc-highlight-blue-fg: #dbe6ff;
+    --tc-highlight-pink-bg: rgba(244, 114, 182, 0.24);
+    --tc-highlight-pink-fg: #fbd3e8;
+    --tc-highlight-purple-bg: rgba(167, 139, 250, 0.26);
+    --tc-highlight-purple-fg: #e2dafe;
     --tc-chart-1: var(--tc-cobalt-400);
     --tc-chart-2: #8585f0;
     --tc-chart-3: rgba(77, 141, 255, 0.62);
@@ -1222,6 +1295,16 @@
     --tc-tone-teal-bg: var(--tc-teal-50);
     --tc-tone-teal-solid: var(--tc-teal-500);
     --tc-surface-well: #f4f4f5;
+    --tc-highlight-yellow-bg: rgba(255, 204, 0, 0.34);
+    --tc-highlight-yellow-fg: #4d3800;
+    --tc-highlight-green-bg: rgba(52, 199, 89, 0.24);
+    --tc-highlight-green-fg: #0f4527;
+    --tc-highlight-blue-bg: rgba(47, 104, 255, 0.17);
+    --tc-highlight-blue-fg: #14306e;
+    --tc-highlight-pink-bg: rgba(236, 72, 153, 0.18);
+    --tc-highlight-pink-fg: #6e1240;
+    --tc-highlight-purple-bg: rgba(139, 92, 246, 0.19);
+    --tc-highlight-purple-fg: #40197e;
     --tc-chart-1: var(--tc-blue-500);
     --tc-chart-2: var(--tc-violet-500);
     --tc-chart-3: var(--tc-pink-500);
@@ -1302,6 +1385,16 @@
     --tc-tone-teal-solid: var(--tc-teal-500);
     --tc-accent-solid: rgba(0, 96, 226, 0.765);
     --tc-surface-well: #f4f4f5;
+    --tc-highlight-yellow-bg: rgba(255, 204, 0, 0.3);
+    --tc-highlight-yellow-fg: #4d3800;
+    --tc-highlight-green-bg: rgba(52, 199, 89, 0.2);
+    --tc-highlight-green-fg: #0f4527;
+    --tc-highlight-blue-bg: rgba(47, 104, 255, 0.14);
+    --tc-highlight-blue-fg: #14306e;
+    --tc-highlight-pink-bg: rgba(236, 72, 153, 0.15);
+    --tc-highlight-pink-fg: #6e1240;
+    --tc-highlight-purple-bg: rgba(139, 92, 246, 0.16);
+    --tc-highlight-purple-fg: #40197e;
     --tc-chart-1: rgba(0, 96, 226, 0.77);
     --tc-chart-2: #5b5bd6;
     --tc-chart-3: rgba(0, 96, 226, 0.5);
@@ -1379,6 +1472,16 @@
     --tc-tone-teal-bg: rgba(79, 209, 197, 0.14);
     --tc-tone-teal-solid: var(--tc-teal-400);
     --tc-surface-well: #222225;
+    --tc-highlight-yellow-bg: rgba(250, 204, 21, 0.24);
+    --tc-highlight-yellow-fg: #fde68a;
+    --tc-highlight-green-bg: rgba(74, 222, 128, 0.2);
+    --tc-highlight-green-fg: #bbf7d0;
+    --tc-highlight-blue-bg: rgba(107, 149, 255, 0.26);
+    --tc-highlight-blue-fg: #dbe6ff;
+    --tc-highlight-pink-bg: rgba(244, 114, 182, 0.24);
+    --tc-highlight-pink-fg: #fbd3e8;
+    --tc-highlight-purple-bg: rgba(167, 139, 250, 0.26);
+    --tc-highlight-purple-fg: #e2dafe;
     --tc-chart-1: var(--tc-blue-400);
     --tc-chart-2: var(--tc-violet-400);
     --tc-chart-3: var(--tc-pink-400);
@@ -1459,6 +1562,16 @@
     --tc-tone-teal-solid: var(--tc-teal-400);
     --tc-accent-solid: #4d8dff;
     --tc-surface-well: #222225;
+    --tc-highlight-yellow-bg: rgba(250, 204, 21, 0.24);
+    --tc-highlight-yellow-fg: #fde68a;
+    --tc-highlight-green-bg: rgba(74, 222, 128, 0.2);
+    --tc-highlight-green-fg: #bbf7d0;
+    --tc-highlight-blue-bg: rgba(107, 149, 255, 0.26);
+    --tc-highlight-blue-fg: #dbe6ff;
+    --tc-highlight-pink-bg: rgba(244, 114, 182, 0.24);
+    --tc-highlight-pink-fg: #fbd3e8;
+    --tc-highlight-purple-bg: rgba(167, 139, 250, 0.26);
+    --tc-highlight-purple-fg: #e2dafe;
     --tc-chart-1: var(--tc-cobalt-400);
     --tc-chart-2: #8585f0;
     --tc-chart-3: rgba(77, 141, 255, 0.62);

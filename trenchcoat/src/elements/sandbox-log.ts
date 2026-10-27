@@ -621,7 +621,7 @@ export class TcSandboxLog extends TcElement {
     const steps = this.steps;
     if (!steps.length) return "No commands yet";
     const statuses = steps.map(statusOf);
-    const running = steps.findIndex((s, i) => statuses[i] === "running");
+    const running = steps.findIndex((_, i) => statuses[i] === "running");
     if (running >= 0) return `Running step ${running + 1} of ${steps.length} · ${steps[running].command}`;
     const failed = statuses.filter((s) => s === "error").length;
     const known = steps.filter((s) => s.duration != null);

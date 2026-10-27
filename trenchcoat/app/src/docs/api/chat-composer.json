@@ -6,6 +6,30 @@
    "description": "The message box of an AI chat: model picker, voice input, attachments, connecting apps and requesting approval.",
    "properties": [
     {
+     "name": "hideConnectApps",
+     "attribute": "hide-connect-apps",
+     "type": "boolean",
+     "default": "false",
+     "description": "Leave out \"Connect apps\"; \"Select a project\" (unless hidden too) is offered straight away",
+     "readonly": false
+    },
+    {
+     "name": "hideProject",
+     "attribute": "hide-project",
+     "type": "boolean",
+     "default": "false",
+     "description": "Leave out \"Select a project\"; once apps are connected the row folds away",
+     "readonly": false
+    },
+    {
+     "name": "hideApproval",
+     "attribute": "hide-approval",
+     "type": "boolean",
+     "default": "false",
+     "description": "Leave out \"Request approval\"",
+     "readonly": false
+    },
+    {
      "name": "placeholder",
      "attribute": "placeholder",
      "type": "string",
@@ -118,6 +142,54 @@
      "readonly": false
     },
     {
+     "name": "modelSwitcher",
+     "attribute": "model-switcher",
+     "type": "\"card\" | \"toolbar\"",
+     "default": "\"card\"",
+     "description": "Where the model switch is: in the card (the default), or in the toolbar row as tc-model-picker's menu",
+     "readonly": false
+    },
+    {
+     "name": "settings",
+     "attribute": null,
+     "type": "ModelSettingsValue | undefined",
+     "default": "undefined",
+     "description": "Opt-in: the model settings (by parameter id), edited in a popover from the toolbar. Changes come as tc-settings-change",
+     "readonly": false
+    },
+    {
+     "name": "settingsModel",
+     "attribute": null,
+     "type": "ModelSettingsModel | undefined",
+     "default": "undefined",
+     "description": "The model the settings are for – only the parameters it supports are shown; unset shows them all",
+     "readonly": false
+    },
+    {
+     "name": "prompts",
+     "attribute": null,
+     "type": "PromptTemplate[] | undefined",
+     "default": "undefined",
+     "description": "Opt-in: saved prompts, in a popover from the toolbar. A used prompt goes in at the caret (tc-prompt-pick)",
+     "readonly": false
+    },
+    {
+     "name": "pageContext",
+     "attribute": null,
+     "type": "ChatPageContext | undefined",
+     "default": "undefined",
+     "description": "Opt-in: what's on the page, as a chip in the toolbar that connects or disconnects it (tc-page-context-change)",
+     "readonly": false
+    },
+    {
+     "name": "disclaimer",
+     "attribute": "disclaimer",
+     "type": "string",
+     "default": "\"\"",
+     "description": "One quiet line under the composer, e.g. \"AI can make mistakes. Check important info.\" – it also describes the message field",
+     "readonly": false
+    },
+    {
      "name": "look",
      "attribute": "look",
      "type": "Look | undefined",
@@ -168,6 +240,24 @@
      "detail": "",
      "description": "\"Select a project\" was pressed",
      "cancelable": false
+    },
+    {
+     "name": "tc-settings-change",
+     "detail": "",
+     "description": "The model settings changed in the settings popover (`ChatSettingsChange`: `{ value, changed }`); cancelable – prevent it to control `settings`",
+     "cancelable": true
+    },
+    {
+     "name": "tc-prompt-pick",
+     "detail": "",
+     "description": "A prompt was picked in the prompt library (`ChatPromptPick`: `{ prompt, template, values }`); cancelable – prevent it to place the prompt yourself",
+     "cancelable": true
+    },
+    {
+     "name": "tc-page-context-change",
+     "detail": "",
+     "description": "The page context chip was toggled, or an attached item removed (`ChatPageContextChange`: `{ pageContext, change }`); cancelable – prevent it to control `pageContext`",
+     "cancelable": true
     }
    ],
    "slots": [],
@@ -217,10 +307,36 @@
      "looks": [
       "standard"
      ]
+    },
+    {
+     "name": "--tc-chat-composer-span",
+     "value": "1900",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    },
+    {
+     "name": "--tc-chat-composer-grow",
+     "value": "0",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    },
+    {
+     "name": "--tc-chat-composer-lines",
+     "value": "1",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
     }
    ],
    "tokens": [
     "--tc-accent",
+    "--tc-accent-subtle",
+    "--tc-accent-text",
     "--tc-action-ghost-bg-hover",
     "--tc-action-ghost-fg",
     "--tc-action-primary-bg",
@@ -231,16 +347,18 @@
     "--tc-action-secondary-shadow",
     "--tc-action-secondary-shadow-hover",
     "--tc-border-default",
+    "--tc-border-strong",
+    "--tc-card-radius",
     "--tc-chat-composer-card-h",
     "--tc-chat-composer-frame",
-    "--tc-chat-composer-grow",
     "--tc-chat-composer-inset",
-    "--tc-chat-composer-lines",
-    "--tc-chat-composer-span",
     "--tc-control-font-size",
     "--tc-control-font-weight",
     "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-sm",
     "--tc-control-radius-md",
+    "--tc-control-radius-sm",
     "--tc-divider",
     "--tc-duration-base",
     "--tc-duration-fast",
@@ -266,6 +384,7 @@
     "--tc-font-sans",
     "--tc-font-size-md",
     "--tc-font-size-sm",
+    "--tc-font-size-xs",
     "--tc-font-weight-medium",
     "--tc-font-weight-regular",
     "--tc-hairline",
@@ -290,12 +409,17 @@
     "--tc-space-0-5",
     "--tc-space-1",
     "--tc-space-1-5",
+    "--tc-space-12",
     "--tc-space-2",
     "--tc-space-2-5",
     "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-8",
     "--tc-status-danger-bg",
     "--tc-status-danger-border",
     "--tc-status-danger-fg",
+    "--tc-status-info-border",
+    "--tc-surface-control",
     "--tc-surface-raised",
     "--tc-surface-sunken",
     "--tc-text-disabled",
@@ -304,6 +428,7 @@
     "--tc-text-primary",
     "--tc-text-secondary",
     "--tc-text-strong",
+    "--tc-tray-radius",
     "--tc-z-dropdown"
    ]
   }
@@ -397,16 +522,676 @@
      "type": "(pick: MentionPickerPick, event: Event) => void",
      "optional": true,
      "description": "A row picked in the / and @ picker (set `mentions` to turn it on); call event.preventDefault() to keep the text"
+    },
+    {
+     "name": "settings",
+     "type": "ModelSettingsValue",
+     "optional": true,
+     "description": "Opt-in: the model settings, edited in a popover from the toolbar (controlled). Leave undefined to let the composer\nkeep them, starting at `defaultSettings` – or leave both unset for no settings button"
+    },
+    {
+     "name": "defaultSettings",
+     "type": "ModelSettingsValue",
+     "optional": true,
+     "description": "The model settings to start with when uncontrolled"
+    },
+    {
+     "name": "onSettingsChange",
+     "type": "(settings: ModelSettingsValue, changed: string[]) => void",
+     "optional": true,
+     "description": "Every change in the settings popover: the next settings and the parameter ids that changed"
+    },
+    {
+     "name": "onPromptPick",
+     "type": "(pick: ChatPromptPick, event: Event) => void",
+     "optional": true,
+     "description": "A prompt used in the prompt library (set `prompts` to turn it on); call event.preventDefault() to place it yourself"
+    },
+    {
+     "name": "pageContext",
+     "type": "ChatPageContext",
+     "optional": true,
+     "description": "Opt-in: what's on the page, as a chip that connects or disconnects it (controlled). Leave undefined to let the\ncomposer keep it, starting at `defaultPageContext` – or leave both unset for no chip"
+    },
+    {
+     "name": "defaultPageContext",
+     "type": "ChatPageContext",
+     "optional": true,
+     "description": "The page context to start with when uncontrolled"
+    },
+    {
+     "name": "onPageContextChange",
+     "type": "(pageContext: ChatPageContext, change: ChatPageContextChange[\"change\"]) => void",
+     "optional": true,
+     "description": "The chip was toggled or an attached item removed: the next page context and what changed"
     }
    ],
-   "hides": []
+   "hides": [
+    "value",
+    "models",
+    "model",
+    "context",
+    "settings",
+    "pageContext"
+   ],
+   "events": {
+    "tc-value-change": "onValueChange",
+    "tc-model-change": "onModelChange",
+    "tc-attach": "onAttach",
+    "tc-select-project": "onSelectProject",
+    "tc-items-change": null,
+    "tc-pick": "onMentionPick",
+    "tc-settings-change": null,
+    "tc-prompt-pick": "onPromptPick",
+    "tc-page-context-change": null
+   }
   }
  ],
  "changelog": [
   "chat-composer (the Lit element and `trenchcoat/react`): opt-in `mentions` (a `tc-mention-picker` on the message) and `context` / `context-limit` (a `tc-context-tray` above it). Without them it renders as before."
  ],
+ "frameworks": [
+  {
+   "tag": "tc-chat-composer",
+   "className": "TcChatComposer",
+   "module": "trenchcoat/chat-composer",
+   "data": [
+    "models",
+    "onDictate",
+    "onSend",
+    "onConnectApps",
+    "onRequestApproval",
+    "mentions",
+    "context",
+    "settings",
+    "settingsModel",
+    "prompts",
+    "pageContext"
+   ],
+   "attributes": [
+    {
+     "name": "hideConnectApps",
+     "attribute": "hide-connect-apps"
+    },
+    {
+     "name": "hideProject",
+     "attribute": "hide-project"
+    },
+    {
+     "name": "hideApproval",
+     "attribute": "hide-approval"
+    },
+    {
+     "name": "placeholder",
+     "attribute": "placeholder"
+    },
+    {
+     "name": "value",
+     "attribute": "value"
+    },
+    {
+     "name": "model",
+     "attribute": "model"
+    },
+    {
+     "name": "loadMs",
+     "attribute": "load-ms"
+    },
+    {
+     "name": "dictation",
+     "attribute": "dictation"
+    },
+    {
+     "name": "demo",
+     "attribute": "demo"
+    },
+    {
+     "name": "contextLimit",
+     "attribute": "context-limit"
+    },
+    {
+     "name": "modelSwitcher",
+     "attribute": "model-switcher"
+    },
+    {
+     "name": "disclaimer",
+     "attribute": "disclaimer"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-value-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-model-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-send",
+     "cancelable": false
+    },
+    {
+     "name": "tc-attach",
+     "cancelable": false
+    },
+    {
+     "name": "tc-connect-apps",
+     "cancelable": false
+    },
+    {
+     "name": "tc-request-approval",
+     "cancelable": false
+    },
+    {
+     "name": "tc-select-project",
+     "cancelable": false
+    },
+    {
+     "name": "tc-settings-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-prompt-pick",
+     "cancelable": true
+    },
+    {
+     "name": "tc-page-context-change",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "value",
+     "event": "tc-value-change"
+    },
+    {
+     "property": "model",
+     "event": "tc-model-change"
+    },
+    {
+     "property": "settings",
+     "event": "tc-settings-change"
+    },
+    {
+     "property": "pageContext",
+     "event": "tc-page-context-change"
+    }
+   ],
+   "form": {
+    "property": "value",
+    "event": "tc-value-change",
+    "formAssociated": false
+   },
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "121",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "has"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "itself",
+     "prompt-library",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "form-associated",
+    "name": "Form association (ElementInternals)",
+    "bcd": "api.ElementInternals.setFormValue",
+    "versions": {
+     "chrome": "77",
+     "edge": "79",
+     "firefox": "98",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": false,
+    "why": "The element's value is submitted with its form, and it takes part in form validation and reset.",
+    "via": [
+     "model-settings"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "prompt-library",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-units",
+    "name": "Container query units (cqi, cqw…)",
+    "bcd": "css.types.length.container_query_length_units",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Sizes relative to the component's own width.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself",
+     "context-tray",
+     "model-picker",
+     "model-settings",
+     "prompt-library"
+    ]
+   },
+   {
+    "id": "inert",
+    "name": "inert",
+    "bcd": "api.HTMLElement.inert",
+    "versions": {
+     "chrome": "102",
+     "edge": "102",
+     "firefox": "112",
+     "safari": "15.5",
+     "safari_ios": "15.5"
+    },
+    "progressive": false,
+    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
+    "via": [
+     "itself",
+     "context-tray",
+     "internal/controllers",
+     "model-picker",
+     "prompt-library",
+     "internal/popover"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "context-tray",
+     "internal/kit",
+     "model-picker",
+     "model-settings",
+     "segmented-control",
+     "prompt-library"
+    ]
+   },
+   {
+    "id": "has",
+    "name": ":has()",
+    "bcd": "css.selectors.has",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "121",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Layout and state that depend on what's inside a part (an icon present, a focused field).",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself",
+     "mention-picker",
+     "prompt-library",
+     "internal/popover"
+    ]
+   },
+   {
+    "id": "individual-transforms",
+    "name": "translate, scale and rotate properties",
+    "bcd": "css.properties.translate",
+    "versions": {
+     "chrome": "104",
+     "edge": "104",
+     "firefox": "72",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "model-picker",
+     "segmented-control"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "context-tray",
+     "internal/base",
+     "mention-picker",
+     "model-picker",
+     "model-settings",
+     "segmented-control",
+     "prompt-library",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "clipboard",
+    "name": "Async Clipboard (writeText)",
+    "bcd": "api.Clipboard.writeText",
+    "versions": {
+     "chrome": "66",
+     "edge": "79",
+     "firefox": "63",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "why": "Copy buttons.",
+    "via": [
+     "prompt-library"
+    ]
+   },
+   {
+    "id": "resize-observer",
+    "name": "ResizeObserver",
+    "bcd": "api.ResizeObserver",
+    "versions": {
+     "chrome": "64",
+     "edge": "79",
+     "firefox": "69",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "via": [
+     "itself",
+     "mention-picker",
+     "segmented-control",
+     "prompt-library",
+     "internal/popover"
+    ]
+   },
+   {
+    "id": "mask",
+    "name": "CSS masks",
+    "bcd": "css.properties.mask-image",
+    "versions": {
+     "chrome": "1",
+     "edge": "79",
+     "firefox": "53",
+     "safari": "4",
+     "safari_ios": "3.2"
+    },
+    "progressive": false,
+    "note": "with the -webkit- prefix",
+    "via": [
+     "itself",
+     "segmented-control"
+    ]
+   },
+   {
+    "id": "scrollbar-width",
+    "name": "scrollbar-width",
+    "bcd": "css.properties.scrollbar-width",
+    "versions": {
+     "chrome": "121",
+     "edge": "121",
+     "firefox": "64",
+     "safari": "18.2",
+     "safari_ios": "18.2"
+    },
+    "progressive": true,
+    "without": "Scrollbars keep the browser's default width.",
+    "via": [
+     "itself",
+     "mention-picker",
+     "segmented-control"
+    ]
+   },
+   {
+    "id": "popover",
+    "name": "Popover API",
+    "bcd": "api.HTMLElement.popover",
+    "versions": {
+     "chrome": "114",
+     "edge": "114",
+     "firefox": "125",
+     "safari": "17",
+     "safari_ios": "18.3"
+    },
+    "progressive": true,
+    "without": "Lists open fixed to the window instead of in the top layer, so a clipping ancestor or a modal can cover them.",
+    "via": [
+     "mention-picker",
+     "internal/popover"
+    ]
+   },
+   {
+    "id": "at-property",
+    "name": "@property",
+    "bcd": "css.at-rules.property",
+    "versions": {
+     "chrome": "85",
+     "edge": "85",
+     "firefox": "128",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "The registered custom properties don't interpolate, so the transitions and spins they drive jump to their end state.",
+    "via": [
+     "segmented-control"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "internal/popover",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "overscroll-contain",
+    "name": "overscroll-behavior: contain",
+    "bcd": "css.properties.overscroll-behavior.contain",
+    "versions": {
+     "chrome": "63",
+     "edge": "18",
+     "firefox": "59",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "Scrolling past the end of a list carries on scrolling the page.",
+    "via": [
+     "itself",
+     "mention-picker",
+     "segmented-control"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setInterval, cleared",
+   "setTimeout",
+   "setTimeout (context-tray)",
+   "setTimeout (model-picker)",
+   "setTimeout (segmented-control)",
+   "setTimeout (prompt-library)",
+   "setTimeout (internal/popover › PopoverController)"
+  ],
+  "frames": [
+   "requestAnimationFrame, cancelled",
+   "requestAnimationFrame, cancelled (internal/controllers › RollingController)",
+   "requestAnimationFrame, cancelled (mention-picker)",
+   "requestAnimationFrame (model-picker)",
+   "requestAnimationFrame, cancelled (segmented-control)",
+   "requestAnimationFrame, cancelled (prompt-library)",
+   "requestAnimationFrame, cancelled (internal/popover › PopoverController)"
+  ],
+  "animations": 1,
+  "observers": [
+   "ResizeObserver",
+   "MutationObserver (internal/controllers › AriaForwardController)",
+   "MutationObserver (internal/controllers › FocusRescueController)",
+   "ResizeObserver (mention-picker)",
+   "ResizeObserver (segmented-control)",
+   "ResizeObserver (prompt-library)",
+   "ResizeObserver (internal/popover › PopoverController)"
+  ],
+  "clock": [
+   "performance.now() (internal/controllers › RollingController)",
+   "performance.now() (prompt-library)"
+  ],
+  "listeners": [
+   "document pointerdown",
+   "document pointerdown (model-picker)",
+   "window resize (model-picker)"
+  ],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (context-tray)",
+    "CSS (internal/kit › kitCss)",
+    "CSS (mention-picker)",
+    "CSS (model-picker)",
+    "CSS (model-settings)",
+    "CSS (segmented-control)",
+    "CSS (prompt-library)",
+    "CSS (internal/popover › popoverCss)"
+   ]
+  },
+  "windowed": false
+ },
  "size": {
-  "min": 110411,
-  "gzip": 25559
+  "min": 347622,
+  "gzip": 79171
  }
 }

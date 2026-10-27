@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import type * as UI from "../../../src/elements/react";
-import type { ChatConversation, ChatFolder } from "../../../src/elements/react";
+import type { ChatContextItem, ChatConversation, ChatFolder, ChatSummaryItem } from "../../../src/elements/react";
 import { caption, textButton } from "../demo-kit";
 
 const HOUR = 3_600_000;
@@ -44,8 +44,28 @@ const SAMPLE: [string, number, string?, boolean?][] = [
 const TOPICS = ["Draft", "Summarize", "Review", "Explain", "Plan", "Fix", "Rewrite", "Compare", "Outline", "Debug"];
 const THINGS = ["the Q3 report", "a churn query", "the API errors", "launch emails", "the hiring plan", "a pricing test", "the roadmap", "support macros", "the data model", "release notes"];
 
+/* Structured summaries of a few earlier sessions – "Load as context" in a chat's menu brings one into the current chat */
+const SUMMARIES: Record<string, ChatSummaryItem[]> = {
+  "Summarize the Acme call": [
+    { id: "s1", kind: "Finding", text: "Acme renews only if SSO ships by March" },
+    { id: "s2", kind: "Open question", text: "Who owns the data-residency answer?" },
+    { id: "s3", kind: "Next step", text: "Send the SSO timeline to Dana by Friday" },
+  ],
+  "Launch checklist review": [
+    { id: "l1", kind: "Finding", text: "Status page copy still says beta" },
+    { id: "l2", kind: "Next step", text: "Dry-run the rollback on staging" },
+  ],
+  "Postmortem: login outage": [
+    { id: "p1", kind: "Finding", text: "Token cache expired every pod at once" },
+    { id: "p2", kind: "Next step", text: "Jitter the cache TTL" },
+  ],
+};
+
 const sample = (now: number): ChatConversation[] =>
-  SAMPLE.map(([title, hours, folder, pinned], i) => ({ id: `c${i}`, title, updatedAt: now - hours * HOUR, folder, pinned }));
+  SAMPLE.map(([title, hours, folder, pinned], i) => ({ id: `c${i}`, title, updatedAt: now - hours * HOUR, folder, pinned, summary: SUMMARIES[title] }));
+
+/** The Acme call's summary, already loaded into the open chat */
+const START_CONTEXT: ChatContextItem[] = SUMMARIES["Summarize the Acme call"].map((s) => ({ ...s, chat: "c10", from: "Summarize the Acme call" }));
 
 /** 10,000 chats over the last three years */
 const many = (now: number): ChatConversation[] =>
@@ -61,7 +81,7 @@ export default function Demo({ ui }: { ui: typeof UI }) {
   // "Now" is read once – the groups are relative to it
   const [now] = useState(() => Date.now());
   const [big, setBig] = useState(false);
-  const [note, setNote] = useState("Right-click a chat, or focus one and press F2 or Delete");
+  const [note, setNote] = useState("Right-click a chat, or focus one and press F2 or Delete. Chats with a summary can be loaded as context.");
   const start = useMemo(() => (big ? many(now) : sample(now)), [big, now]);
 
   return (
@@ -71,6 +91,10 @@ export default function Demo({ ui }: { ui: typeof UI }) {
         defaultConversations={start}
         folders={big ? [] : FOLDERS}
         defaultValue={big ? "m0" : "c2"}
+        defaultContext={big ? undefined : START_CONTEXT}
+        onContextChange={(context, change) =>
+          setNote(`${change.action === "load" ? "Loaded" : "Removed"} ${change.items.length} item${change.items.length === 1 ? "" : "s"} – the app sends ${context.length} with the next message`)
+        }
         now={now}
         maxHeight={440}
         onChange={(id) => setNote(`Opened ${id}`)}

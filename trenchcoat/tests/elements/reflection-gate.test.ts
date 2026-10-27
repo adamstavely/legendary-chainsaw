@@ -332,6 +332,78 @@ describe("tc-reflection-gate", () => {
     await act(async () => root.unmount());
   });
 
+  for (const look of ["standard", "clean"] as const) {
+    test(`${look}: brief – one combined field per mode, said plainly to be the short version`, async () => {
+      const el = await fixture<TcReflectionGate>(html`<tc-reflection-gate look=${look} brief .answer=${ANSWER} .claims=${CLAIMS}></tc-reflection-gate>`);
+      const labels: Record<string, string> = {
+        intent: "What's this for, and what if it's wrong?",
+        prior: "What do you expect, and how sure are you?",
+        reformulate: "The answer in one line of your own",
+        checkpoint: "One thing you'll check, and how",
+      };
+      for (const mode of ["intent", "prior", "reformulate", "checkpoint"] as const) {
+        el.mode = mode;
+        await settle();
+        expect([...el.querySelectorAll(".ui-rg__field")].map((f) => f.getAttribute("data-field"))).toEqual(["brief"]);
+        const input = el.querySelector<HTMLInputElement>('[data-field="brief"] input')!;
+        expect(el.querySelector<HTMLLabelElement>(`label[for="${input.id}"]`)!.textContent).toBe(labels[mode]);
+        expect(input.getAttribute("aria-required")).toBe("true");
+        expect(text(el.querySelector(".ui-rg__tag"))).toBe("Short version");
+        expect(text(el.querySelector(".ui-rg__desc"))).toMatch(/^The short version, for when time is tight/);
+        expect(text(el.querySelector('[type="submit"]'))).toBe("Continue");
+      }
+      // Prior still hides the answer until the line is in
+      el.mode = "prior";
+      await settle();
+      expect(el.querySelector(".ui-rg__veil")).toBeTruthy();
+      expect(el.querySelector(".ui-rg__quote")).toBeNull();
+      expect(el.getAttribute("brief")).toBe("");
+    });
+  }
+
+  test("brief: empty is refused; a line is submitted with brief: true and recorded as the short version", async () => {
+    const el = await fixture<TcReflectionGate>(html`<tc-reflection-gate brief mode="reformulate" .answer=${ANSWER} .value=${{ restatement: "stray" }}></tc-reflection-gate>`);
+    const got: ReflectionGateSubmission[] = [];
+    el.addEventListener("tc-submit", (e) => got.push((e as CustomEvent<ReflectionGateSubmission>).detail));
+    await submit(el);
+    expect(got).toEqual([]);
+    const input = el.querySelector<HTMLInputElement>('[data-field="brief"] input')!;
+    expect(input.getAttribute("aria-invalid")).toBe("true");
+    expect(document.activeElement).toBe(input);
+    expect(el.querySelector('[role="status"]')!.textContent).toBe("Fill this in to continue");
+    await type(el, '[data-field="brief"] input', " 30 days' notice, in writing ");
+    await submit(el);
+    // No compare step in the short version
+    expect(got).toEqual([{ mode: "reformulate", value: { brief: "30 days' notice, in writing" }, brief: true }]);
+    expect(el.phase).toBe("done");
+    expect(text(el.querySelector(".ui-rg__result-text"))).toBe("Noted – short version");
+    expect(el.querySelector('[role="status"]')!.textContent).toBe("Noted – short version");
+    expect([...el.querySelectorAll(".ui-rg__row")].map((r) => text(r))).toEqual(["The answer in one line of your own 30 days' notice, in writing"]);
+    // Edit goes back to the line, not to a comparison
+    el.querySelector<HTMLButtonElement>(".ui-rg__text-btn")!.click();
+    await settle();
+    expect(el.phase).toBe("open");
+  });
+
+  test("brief: prior shows the answer once the line is in; without brief nothing changes", async () => {
+    const el = await fixture<TcReflectionGate>(html`<tc-reflection-gate brief mode="prior" .answer=${ANSWER}></tc-reflection-gate>`);
+    const got: ReflectionGateSubmission[] = [];
+    el.addEventListener("tc-submit", (e) => got.push((e as CustomEvent<ReflectionGateSubmission>).detail));
+    await type(el, '[data-field="brief"] input', "A month, fairly sure");
+    await submit(el);
+    expect(got[0]).toEqual({ mode: "prior", value: { brief: "A month, fairly sure" }, brief: true });
+    expect(el.querySelector('[role="status"]')!.textContent).toBe("Noted – short version. The answer is shown.");
+    expect(el.querySelector(".ui-rg__quote")).toBeTruthy();
+    const full = await fixture<TcReflectionGate>(html`<tc-reflection-gate mode="prior"></tc-reflection-gate>`);
+    expect(full.querySelector(".ui-rg__tag")).toBeNull();
+    expect(full.hasAttribute("brief")).toBe(false);
+    full.addEventListener("tc-submit", (e) => got.push((e as CustomEvent<ReflectionGateSubmission>).detail));
+    await type(full, '[data-field="belief"] textarea', "A month");
+    await type(full, '[data-field="changeMind"] textarea', "The clause");
+    await submit(full);
+    expect("brief" in got[1]).toBe(false);
+  });
+
   test("axe: no violations in either look or theme, in every mode and phase", async () => {
     const cases = [
       { mode: "intent", phase: "open", value: {} },
@@ -340,12 +412,14 @@ describe("tc-reflection-gate", () => {
       { mode: "reformulate", phase: "compare", value: { restatement: "Thirty days, in writing" } },
       { mode: "checkpoint", phase: "open", value: { claim: "c1" } },
       { mode: "intent", phase: "skipped", value: {} },
+      { mode: "prior", phase: "open", value: {}, brief: true },
+      { mode: "reformulate", phase: "done", value: { brief: "Thirty days, in writing" }, brief: true },
     ] as const;
     for (const theme of ["light", "dark"]) {
       for (const c of cases) {
         const wrap = await fixture(html`<div data-tc-theme=${theme}>
-          <div style="width: 560px"><tc-reflection-gate allow-skip mode=${c.mode} phase=${c.phase} .value=${c.value} .answer=${ANSWER} .claims=${CLAIMS}></tc-reflection-gate></div>
-          <div style="width: 320px"><tc-reflection-gate look="clean" allow-skip mode=${c.mode} phase=${c.phase} .value=${c.value} .answer=${ANSWER} .claims=${CLAIMS}></tc-reflection-gate></div>
+          <div style="width: 560px"><tc-reflection-gate allow-skip ?brief=${"brief" in c} mode=${c.mode} phase=${c.phase} .value=${c.value} .answer=${ANSWER} .claims=${CLAIMS}></tc-reflection-gate></div>
+          <div style="width: 320px"><tc-reflection-gate look="clean" allow-skip ?brief=${"brief" in c} mode=${c.mode} phase=${c.phase} .value=${c.value} .answer=${ANSWER} .claims=${CLAIMS}></tc-reflection-gate></div>
         </div>`);
         // Messages showing too
         const gate = wrap.querySelector<TcReflectionGate>("tc-reflection-gate")!;

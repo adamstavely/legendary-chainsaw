@@ -219,6 +219,40 @@ describe("tc-breakdown-chart", () => {
     expect([svg.getAttribute("width"), svg.getAttribute("stroke-width"), svg.getAttribute("stroke")]).toEqual(["16", "1.1", "#737373"]);
   });
 
+  for (const look of ["standard", "clean"] as const) {
+    test(`the legend wraps at narrow widths instead of cutting chips off (${look})`, async () => {
+      const many: BreakdownDimension[] = [dimensions[0], { key: "team", label: "Team", values: ["Core platform", "Growth marketing", "Design systems", "Data science", "Infrastructure", "Support"] }];
+      const rows = many[1].values!.map((team, i) => ({ year: 2025 + (i % 2), team, points: i + 1 }));
+      const wrap = await fixture(html`<div style="width: 320px"><tc-breakdown-chart look=${look} .records=${rows} .dimensions=${many} .measures=${measures}></tc-breakdown-chart></div>`);
+      const el = wrap.querySelector<TcBreakdownChart>("tc-breakdown-chart")!;
+      await settle();
+      const legend = el.querySelector<HTMLElement>(".ui-bc__legend")!;
+      expect(getComputedStyle(legend).flexWrap).toBe("wrap");
+      const box = el.getBoundingClientRect();
+      const chips = [...el.querySelectorAll<HTMLElement>(".ui-bc__chip")];
+      expect(chips).toHaveLength(6);
+      for (const c of chips) {
+        const r = c.getBoundingClientRect();
+        expect(r.left).toBeGreaterThanOrEqual(box.left);
+        expect(r.right).toBeLessThanOrEqual(box.right + 0.5);
+      }
+      // More than one row of chips
+      expect(new Set(chips.map((c) => Math.round(c.getBoundingClientRect().top))).size).toBeGreaterThan(1);
+      expect(legend.scrollWidth).toBeLessThanOrEqual(legend.clientWidth + 1);
+    });
+  }
+
+  test("fill: grows past 560px to the container's width", async () => {
+    const wrap = await fixture(html`<div style="width: 900px">
+      <tc-breakdown-chart .records=${records} .dimensions=${dimensions} .measures=${measures}></tc-breakdown-chart>
+      <tc-breakdown-chart fill .records=${records} .dimensions=${dimensions} .measures=${measures}></tc-breakdown-chart>
+    </div>`);
+    const [capped, filled] = [...wrap.querySelectorAll<TcBreakdownChart>("tc-breakdown-chart")];
+    expect(capped.getBoundingClientRect().width).toBe(560);
+    expect(filled.fill).toBe(true);
+    expect(filled.getBoundingClientRect().width).toBe(900);
+  });
+
   test("axe: no violations in either look", async () => {
     const wrap = await fixture(html`<div>
       <tc-breakdown-chart .records=${records} .dimensions=${dimensions} .measures=${twoMeasures}></tc-breakdown-chart>

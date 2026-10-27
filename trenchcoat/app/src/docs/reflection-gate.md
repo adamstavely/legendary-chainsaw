@@ -13,12 +13,19 @@ A short pause that makes a person think before relying on an AI answer. It asks 
 theirs marked; **checkpoint** – one claim they'll verify, and how. What they write is submitted through a cancelable
 event, so the product can keep it, check it, or hold the gate open. Skip appears only where the product allows it.
 
+Under a deadline, `brief` gives the short version: each mode asks one combined question in a single line (“What's
+this for, and what if it's wrong?”), marked “Short version” beside the heading and in the line under it. It is still
+a pause – the field is required – and what's written is still submitted, with `brief: true`, so the record shows
+which version was used. Reformulate skips its comparison step; prior still hides the answer until the line is in.
+
 ## When to use
 
 - Before an answer feeds a decision that is costly to get wrong – a contract, a diagnosis, a payment.
 - Where people tend to accept answers without reading them closely, and you want a record that they did.
 - Collecting someone's expectation before showing the answer, so you can see later whether it changed their mind.
 - Asking for one concrete check before an answer is exported or shared.
+- Under real time pressure – a filing, a hearing, a release tonight – with `brief`, where a short pause that people
+  complete beats a full one they skip.
 
 ## When not to use
 
@@ -39,7 +46,7 @@ event, so the product can keep it, check it, or hold the gate open. Skip appears
 
 Standard puts the heading on a gray tray and the prompt on a white card inside it, with Skip as a quiet text
 button. Clean is one white card: the buttons sit under a hairline, Skip is a secondary button, and the choice cards
-use hairline shadows instead of borders. Both stack the choice cards and the comparison when the gate is narrow.
+use hairline shadows instead of borders. The short version's tag is the same warning-toned pill in both. Both stack the choice cards and the comparison when the gate is narrow.
 
 ## Keyboard
 
@@ -50,7 +57,7 @@ use hairline shadows instead of borders. Both stack the choice cards and the com
 | ← / ↑ | In a radio group, picks the previous option, wrapping round |
 | Home / End | In a radio group, picks the first or last option |
 | Space | On a radio group with nothing picked, picks the first option; on an option, picks it |
-| Enter | In a one-line field, submits; on a button, presses it |
+| Enter | In a one-line field (including the short version's), submits; on a button, presses it |
 | ⌘ Enter / Ctrl Enter | In a text area, submits (Enter alone starts a new line) |
 
 ## Screen readers
@@ -64,12 +71,17 @@ nothing noted”. In prior mode the answer isn't in the page at all until the pr
 early. After Submit or Skip, focus moves to the result line; after Edit, to the first field. Terms the restatement
 missed are `<mark>` elements.
 
+In the short version the form's name includes “Short version”, the one field is labelled with its question and is
+`aria-required`, and the status region says “Noted – short version”.
+
 ## Content
 
 - Keep the defaults' voice: questions the person can answer in a line (“What decision will it support?”), not
   instructions about thinking.
 - Pass claims for checkpoint mode in the answer's own words, short enough to read at a glance.
 - Change any text through `labels` – for another language, or your product's words for “decision” or “claim”.
+- Keep the short version's questions to one line each; change them through `labels` (`briefIntent`,
+  `briefPrior`, `briefReformulate`, `briefCheckpoint`) and keep `briefTag` plain – “Short version”.
 - Say what happens with the answers somewhere near the gate (“Kept with this session”) – people write more
   honestly when they know who sees it.
 
@@ -78,12 +90,15 @@ missed are `<mark>` elements.
 - Match the mode to the moment: intent before asking, prior before showing, reformulate or checkpoint after.
 - Keep what's submitted with the session, so the reflection is part of the record.
 - Use `allow-skip` (or `onSkip`) for low-stakes uses, and leave it off where the check is policy.
+- Turn on `brief` from the session's own deadline setting, and store `brief: true` with the submission so later
+  review can tell the short version apart.
 
 ## Don't
 
 - Don't show the gate on every answer – people learn to click through a pause they always see.
 - Don't grade the restatement automatically; the marked terms are a prompt to reread, not a score.
 - Don't put the answer next to a prior-mode gate yourself – it defeats the point of noting the prior first.
+- Don't use `brief` to make the pause go away – it's for deadlines, not for people who find the full one slow.
 
 ## Example
 
@@ -96,7 +111,10 @@ missed are `<mark>` elements.
 
   const gate = document.querySelector("#gate");
   gate.answer = "Either side can end the agreement with 30 days' written notice.";
-  gate.addEventListener("tc-submit", (e) => saveReflection(e.detail.mode, e.detail.value));
+  gate.addEventListener("tc-submit", (e) => saveReflection(e.detail.mode, e.detail.value, e.detail.brief === true));
+
+  // Under a deadline: the short, single-field version
+  gate.brief = true;
 </script>
 ```
 
@@ -109,7 +127,7 @@ const claims = [
   { id: "refund", text: "Prepaid months are refunded" },
 ];
 
-export function VerifyFirst({ answer, onNoted }: { answer: string; onNoted: (s: ReflectionGateSubmission) => void }) {
-  return <ReflectionGate mode="checkpoint" answer={answer} claims={claims} onSubmit={onNoted} />;
+export function VerifyFirst({ answer, deadline, onNoted }: { answer: string; deadline: boolean; onNoted: (s: ReflectionGateSubmission) => void }) {
+  return <ReflectionGate mode="checkpoint" brief={deadline} answer={answer} claims={claims} onSubmit={onNoted} />;
 }
 ```

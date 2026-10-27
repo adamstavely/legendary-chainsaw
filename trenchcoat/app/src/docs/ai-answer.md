@@ -34,7 +34,8 @@ list, `**bold**` is bold and `[1]` or `[1,3]` cite sources.
 3. **Label** `.ui-ans__label` – the assistant's mark and what it's doing: reading, writing, or done
 4. **Answer** `.ui-ans__answer` – the streamed text, with paragraphs, lists and bold
 5. **Citation** `.ui-ans__cite` – a chip naming its source; it previews the source and lights up its card
-6. **Footer** `.ui-ans__foot` – Stop while writing; then Copy, Regenerate, Good answer, Bad answer and the status
+6. **Footer** `.ui-ans__foot` – Stop while writing; then Copy, Regenerate, Good answer, Bad answer and the status.
+   `hide-actions` leaves the finished row out, for an app that puts `message-actions` there instead
 
 ## Looks
 
@@ -79,6 +80,8 @@ status says how the answer ended and what happened next: “Answered in 3.2s”,
 - Set `onRegenerate` and return a promise, so a failure shows in the footer and Regenerate can be tried again.
 - Use `feedbackReasons` to ask about the problems you can act on.
 - Pass `animate={false}` (React) or `animated = false` for answers loaded from history.
+- In a conversation that puts `message-actions` under every reply, set `hide-actions` (React: `hideActions`) so the
+  answer doesn't show a second row of the same actions.
 
 ## Don't
 

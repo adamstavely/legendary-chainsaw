@@ -237,11 +237,6 @@ export class TcLineageGraph extends TcElement {
     return this.compact ? COMPACT : WIDE;
   }
 
-  /** @internal A node's column, as placed */
-  private columnOf(id: string) {
-    return this.layout.nodes.get(id)?.column ?? -1;
-  }
-
   /** @internal The nodes in a column, top to bottom */
   private inColumn(column: number) {
     return [...this.layout.nodes.values()].filter((p) => p.column === column).sort((a, b) => a.row - b.row);

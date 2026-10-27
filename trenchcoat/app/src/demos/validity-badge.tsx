@@ -8,10 +8,11 @@ const TODAY = Date.parse("2026-10-24T12:00:00Z");
 const DAY = 86_400_000;
 const ago = (days: number) => TODAY - days * DAY;
 
-const SOURCES: { name: string; kind: string; observed: number; profile: ValidityProfileName; contested?: boolean; superseded?: boolean }[] = [
+const SOURCES: { name: string; kind: string; observed: number; profile: ValidityProfileName; contested?: boolean; superseded?: boolean; changed?: boolean }[] = [
   { name: "Exchange-rate feed", kind: "Updated hourly", observed: ago(0.2), profile: "fast" },
   { name: "Customer survey, Q3", kind: "Quarterly", observed: ago(48), profile: "standard" },
   { name: "Supplier price list", kind: "Contested by the August invoice", observed: ago(160), profile: "standard", contested: true },
+  { name: "Carrier rate card", kind: "Edited after you cited it", observed: ago(12), profile: "standard", changed: true },
   { name: "Onboarding handbook, 2nd ed.", kind: "Replaced by the 3rd edition", observed: ago(700), profile: "slow", superseded: true },
   { name: "Warehouse audit", kind: "Yearly", observed: ago(420), profile: "standard" },
 ];
@@ -20,6 +21,7 @@ const PARAGRAPHS: { text: string; info: ValidityInfo }[] = [
   { text: "Shipping costs rose 4% this quarter, mostly on routes through the northern hub.", info: { observed: ago(5), profile: "standard", label: "Shipping costs" } },
   { text: "Customers rate delivery times 4.1 out of 5, unchanged since the spring survey; complaints now centre on tracking updates rather than speed.", info: { observed: ago(48), label: "Delivery ratings" } },
   { text: "Two suppliers still quote last year's unit prices, which the August invoices contradict.", info: { observed: ago(160), contested: true, label: "Supplier prices" } },
+  { text: "The carrier's rate card puts the northern lane at $1.84 a mile.", info: { observed: ago(12), changed: true, label: "Carrier rates" } },
   { text: "Stock levels match the last warehouse audit.", info: { observed: ago(420), label: "Stock levels" } },
 ];
 
@@ -61,7 +63,7 @@ export default function Demo({ ui }: { ui: typeof UI }) {
               <div style={{ fontSize: 13, fontWeight: 500 }}>{s.name}</div>
               <div style={caption}>{s.kind}</div>
             </div>
-            <ValidityBadge observed={s.observed} profile={s.profile} contested={s.contested} superseded={s.superseded} now={now} />
+            <ValidityBadge observed={s.observed} profile={s.profile} contested={s.contested} superseded={s.superseded} changed={s.changed} now={now} />
           </div>
         ))}
       </div>

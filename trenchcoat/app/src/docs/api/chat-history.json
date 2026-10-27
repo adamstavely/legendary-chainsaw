@@ -78,6 +78,14 @@
      "readonly": false
     },
     {
+     "name": "context",
+     "attribute": null,
+     "type": "ChatContextItem[]",
+     "default": "[]",
+     "description": "What's loaded into the current chat as context – summary items from earlier chats. The app decides what's sent",
+     "readonly": false
+    },
+    {
      "name": "look",
      "attribute": "look",
      "type": "Look | undefined",
@@ -134,12 +142,27 @@
      "detail": "",
      "description": "New chat was pressed",
      "cancelable": false
+    },
+    {
+     "name": "tc-context-change",
+     "detail": "",
+     "description": "A chat's summary was loaded as context, or items were removed; detail `{ context, action, chat, items }`: ChatContextChange. Cancelable: prevent it to control `context`",
+     "cancelable": true
     }
    ],
    "slots": [],
    "methods": [],
    "ui": "chh",
-   "cssProperties": [],
+   "cssProperties": [
+    {
+     "name": "--tc-chat-history-max",
+     "value": "420px",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    }
+   ],
    "tokens": [
     "--tc-accent",
     "--tc-accent-subtle",
@@ -150,9 +173,14 @@
     "--tc-action-secondary-fg",
     "--tc-action-secondary-shadow",
     "--tc-action-secondary-shadow-hover",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
     "--tc-card-radius",
     "--tc-card-shadow",
-    "--tc-chat-history-max",
     "--tc-control-font-size",
     "--tc-control-font-weight",
     "--tc-control-h-md",
@@ -202,6 +230,7 @@
     "--tc-kbd-px",
     "--tc-kbd-radius",
     "--tc-kbd-shadow",
+    "--tc-line-height-none",
     "--tc-line-height-normal",
     "--tc-line-height-snug",
     "--tc-line-height-tight",
@@ -218,6 +247,7 @@
     "--tc-radius-2xs",
     "--tc-radius-badge",
     "--tc-radius-lg",
+    "--tc-radius-md",
     "--tc-radius-sm",
     "--tc-radius-xs",
     "--tc-shadow-raised",
@@ -330,6 +360,24 @@
      "type": "() => void",
      "optional": true,
      "description": "Called when New chat is pressed"
+    },
+    {
+     "name": "context",
+     "type": "ChatContextItem[]",
+     "optional": true,
+     "description": "What's loaded as context now. Controlled when defined; otherwise the list keeps it, starting at `defaultContext`"
+    },
+    {
+     "name": "defaultContext",
+     "type": "ChatContextItem[]",
+     "optional": true,
+     "description": "The starting context when `context` is not controlled"
+    },
+    {
+     "name": "onContextChange",
+     "type": "(context: ChatContextItem[], change: ChatContextChange) => void",
+     "optional": true,
+     "description": "Called when a chat's summary is loaded as context or items are removed – send what's in `context` with the next message"
     }
    ],
    "hides": [
@@ -337,15 +385,375 @@
     "value",
     "defaultValue",
     "heading",
-    "onChange"
-   ]
+    "onChange",
+    "context"
+   ],
+   "events": {
+    "tc-value-change": "onChange",
+    "tc-conversations-change": "onConversationsChange",
+    "tc-rename": "onRename",
+    "tc-pin": "onPin",
+    "tc-move": "onMove",
+    "tc-delete": "onDelete",
+    "tc-restore": "onRestore",
+    "tc-new-chat": "onNewChat",
+    "tc-context-change": "onContextChange"
+   }
   }
  ],
  "changelog": [
   "`tc-chat-history` – conversations grouped by Pinned, folders, Today … month: search, rename in place (F2), pin, move, delete with undo, a context menu; the WAI-ARIA tree pattern, windowed (10,000 chats render under 120 rows)."
  ],
+ "frameworks": [
+  {
+   "tag": "tc-chat-history",
+   "className": "TcChatHistory",
+   "module": "trenchcoat/chat-history",
+   "data": [
+    "conversations",
+    "folders",
+    "now",
+    "context"
+   ],
+   "attributes": [
+    {
+     "name": "value",
+     "attribute": "value"
+    },
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "maxHeight",
+     "attribute": "max-height"
+    },
+    {
+     "name": "undoFor",
+     "attribute": "undo-for"
+    },
+    {
+     "name": "hints",
+     "attribute": "hints"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-value-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-conversations-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-rename",
+     "cancelable": false
+    },
+    {
+     "name": "tc-pin",
+     "cancelable": false
+    },
+    {
+     "name": "tc-move",
+     "cancelable": false
+    },
+    {
+     "name": "tc-delete",
+     "cancelable": false
+    },
+    {
+     "name": "tc-restore",
+     "cancelable": false
+    },
+    {
+     "name": "tc-new-chat",
+     "cancelable": false
+    },
+    {
+     "name": "tc-context-change",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "conversations",
+     "event": "tc-conversations-change"
+    },
+    {
+     "property": "value",
+     "event": "tc-value-change"
+    },
+    {
+     "property": "context",
+     "event": "tc-context-change"
+    }
+   ],
+   "form": {
+    "property": "value",
+    "event": "tc-value-change",
+    "formAssociated": false
+   },
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "inert",
+    "name": "inert",
+    "bcd": "api.HTMLElement.inert",
+    "versions": {
+     "chrome": "102",
+     "edge": "102",
+     "firefox": "112",
+     "safari": "15.5",
+     "safari_ios": "15.5"
+    },
+    "progressive": false,
+    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
+    "via": [
+     "internal/controllers"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "scrollbar-color",
+    "name": "scrollbar-color",
+    "bcd": "css.properties.scrollbar-color",
+    "versions": {
+     "chrome": "121",
+     "edge": "121",
+     "firefox": "64",
+     "safari": "26.2",
+     "safari_ios": "26.2"
+    },
+    "progressive": true,
+    "without": "Scrollbars keep the browser's default colours.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "scrollbar-width",
+    "name": "scrollbar-width",
+    "bcd": "css.properties.scrollbar-width",
+    "versions": {
+     "chrome": "121",
+     "edge": "121",
+     "firefox": "64",
+     "safari": "18.2",
+     "safari_ios": "18.2"
+    },
+    "progressive": true,
+    "without": "Scrollbars keep the browser's default width.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "overscroll-contain",
+    "name": "overscroll-behavior: contain",
+    "bcd": "css.properties.overscroll-behavior.contain",
+    "versions": {
+     "chrome": "63",
+     "edge": "18",
+     "firefox": "59",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "Scrolling past the end of a list carries on scrolling the page.",
+    "via": [
+     "itself"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setTimeout"
+  ],
+  "frames": [
+   "requestAnimationFrame, cancelled (internal/controllers › RowWindowController)"
+  ],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/controllers › AriaForwardController)",
+   "MutationObserver (internal/controllers › FocusRescueController)"
+  ],
+  "clock": [
+   "Date.now()"
+  ],
+  "listeners": [
+   "document pointerdown",
+   "window resize",
+   "window scroll (internal/controllers › RowWindowController)",
+   "window resize (internal/controllers › RowWindowController)"
+  ],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": true
+ },
  "size": {
-  "min": 49257,
-  "gzip": 14412
+  "min": 57459,
+  "gzip": 16087
  }
 }

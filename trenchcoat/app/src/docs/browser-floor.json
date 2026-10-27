@@ -1,0 +1,565 @@
+{
+ "floor": {
+  "chrome": "123",
+  "edge": "123",
+  "firefox": "121",
+  "safari": "17.5",
+  "safari_ios": "17.5"
+ },
+ "setBy": {
+  "chrome": {
+   "features": [
+    "light-dark"
+   ],
+   "elements": 180
+  },
+  "edge": {
+   "features": [
+    "light-dark"
+   ],
+   "elements": 180
+  },
+  "firefox": {
+   "features": [
+    "has"
+   ],
+   "elements": 54
+  },
+  "safari": {
+   "features": [
+    "light-dark"
+   ],
+   "elements": 180
+  },
+  "safari_ios": {
+   "features": [
+    "light-dark"
+   ],
+   "elements": 180
+  }
+ },
+ "features": [
+  {
+   "id": "light-dark",
+   "name": "light-dark()",
+   "bcd": "css.types.color.light-dark",
+   "versions": {
+    "chrome": "123",
+    "edge": "123",
+    "firefox": "120",
+    "safari": "17.5",
+    "safari_ios": "17.5"
+   },
+   "progressive": false,
+   "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+   "elements": 180
+  },
+  {
+   "id": "color-mix",
+   "name": "color-mix()",
+   "bcd": "css.types.color.color-mix",
+   "versions": {
+    "chrome": "111",
+    "edge": "111",
+    "firefox": "113",
+    "safari": "16.2",
+    "safari_ios": "16.2"
+   },
+   "progressive": false,
+   "why": "Tints and washes mixed from the tokens.",
+   "elements": 180
+  },
+  {
+   "id": "is-where",
+   "name": ":is() and :where()",
+   "bcd": "css.selectors.where",
+   "versions": {
+    "chrome": "88",
+    "edge": "88",
+    "firefox": "78",
+    "safari": "14",
+    "safari_ios": "14"
+   },
+   "progressive": false,
+   "why": "Every rule is keyed on :where() so the page can override it.",
+   "elements": 180
+  },
+  {
+   "id": "focus-visible",
+   "name": ":focus-visible",
+   "bcd": "css.selectors.focus-visible",
+   "versions": {
+    "chrome": "86",
+    "edge": "86",
+    "firefox": "85",
+    "safari": "15.4",
+    "safari_ios": "15.4"
+   },
+   "progressive": false,
+   "why": "Focus rings for keyboard users.",
+   "elements": 179
+  },
+  {
+   "id": "container-size",
+   "name": "Container size queries",
+   "bcd": "css.at-rules.container",
+   "versions": {
+    "chrome": "105",
+    "edge": "105",
+    "firefox": "110",
+    "safari": "16",
+    "safari_ios": "16"
+   },
+   "progressive": false,
+   "why": "Components adapt to the width they're given, not the window's.",
+   "elements": 137
+  },
+  {
+   "id": "inert",
+   "name": "inert",
+   "bcd": "api.HTMLElement.inert",
+   "versions": {
+    "chrome": "102",
+    "edge": "102",
+    "firefox": "112",
+    "safari": "15.5",
+    "safari_ios": "15.5"
+   },
+   "progressive": false,
+   "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
+   "elements": 103
+  },
+  {
+   "id": "inset",
+   "name": "inset",
+   "bcd": "css.properties.inset",
+   "versions": {
+    "chrome": "87",
+    "edge": "87",
+    "firefox": "66",
+    "safari": "14.1",
+    "safari_ios": "14.1"
+   },
+   "progressive": false,
+   "elements": 94
+  },
+  {
+   "id": "resize-observer",
+   "name": "ResizeObserver",
+   "bcd": "api.ResizeObserver",
+   "versions": {
+    "chrome": "64",
+    "edge": "79",
+    "firefox": "69",
+    "safari": "13.1",
+    "safari_ios": "13.4"
+   },
+   "progressive": false,
+   "elements": 83
+  },
+  {
+   "id": "intersection-observer",
+   "name": "IntersectionObserver",
+   "bcd": "api.IntersectionObserver",
+   "versions": {
+    "chrome": "51",
+    "edge": "15",
+    "firefox": "55",
+    "safari": "12.1",
+    "safari_ios": "12.2"
+   },
+   "progressive": false,
+   "elements": 66
+  },
+  {
+   "id": "has",
+   "name": ":has()",
+   "bcd": "css.selectors.has",
+   "versions": {
+    "chrome": "105",
+    "edge": "105",
+    "firefox": "121",
+    "safari": "15.4",
+    "safari_ios": "15.4"
+   },
+   "progressive": false,
+   "why": "Layout and state that depend on what's inside a part (an icon present, a focused field).",
+   "elements": 54
+  },
+  {
+   "id": "mask",
+   "name": "CSS masks",
+   "bcd": "css.properties.mask-image",
+   "versions": {
+    "chrome": "1",
+    "edge": "79",
+    "firefox": "53",
+    "safari": "4",
+    "safari_ios": "3.2"
+   },
+   "progressive": false,
+   "note": "with the -webkit- prefix",
+   "elements": 34
+  },
+  {
+   "id": "individual-transforms",
+   "name": "translate, scale and rotate properties",
+   "bcd": "css.properties.translate",
+   "versions": {
+    "chrome": "104",
+    "edge": "104",
+    "firefox": "72",
+    "safari": "14.1",
+    "safari_ios": "14.1"
+   },
+   "progressive": false,
+   "elements": 32
+  },
+  {
+   "id": "form-associated",
+   "name": "Form association (ElementInternals)",
+   "bcd": "api.ElementInternals.setFormValue",
+   "versions": {
+    "chrome": "77",
+    "edge": "79",
+    "firefox": "98",
+    "safari": "16.4",
+    "safari_ios": "16.4"
+   },
+   "progressive": false,
+   "why": "The element's value is submitted with its form, and it takes part in form validation and reset.",
+   "elements": 25
+  },
+  {
+   "id": "aspect-ratio",
+   "name": "aspect-ratio",
+   "bcd": "css.properties.aspect-ratio",
+   "versions": {
+    "chrome": "88",
+    "edge": "88",
+    "firefox": "89",
+    "safari": "15",
+    "safari_ios": "15"
+   },
+   "progressive": false,
+   "elements": 24
+  },
+  {
+   "id": "clipboard",
+   "name": "Async Clipboard (writeText)",
+   "bcd": "api.Clipboard.writeText",
+   "versions": {
+    "chrome": "66",
+    "edge": "79",
+    "firefox": "63",
+    "safari": "13.1",
+    "safari_ios": "13.4"
+   },
+   "progressive": false,
+   "why": "Copy buttons.",
+   "elements": 22
+  },
+  {
+   "id": "container-units",
+   "name": "Container query units (cqi, cqw…)",
+   "bcd": "css.types.length.container_query_length_units",
+   "versions": {
+    "chrome": "105",
+    "edge": "105",
+    "firefox": "110",
+    "safari": "16",
+    "safari_ios": "16"
+   },
+   "progressive": false,
+   "why": "Sizes relative to the component's own width.",
+   "elements": 16
+  },
+  {
+   "id": "structured-clone",
+   "name": "structuredClone()",
+   "bcd": "api.structuredClone",
+   "versions": {
+    "chrome": "98",
+    "edge": "98",
+    "firefox": "94",
+    "safari": "15.4",
+    "safari_ios": "15.4"
+   },
+   "progressive": false,
+   "elements": 7
+  },
+  {
+   "id": "dialog",
+   "name": "<dialog> and showModal()",
+   "bcd": "api.HTMLDialogElement.showModal",
+   "versions": {
+    "chrome": "37",
+    "edge": "79",
+    "firefox": "98",
+    "safari": "15.4",
+    "safari_ios": "15.4"
+   },
+   "progressive": false,
+   "why": "Modals trap focus, close on Escape and sit in the top layer.",
+   "elements": 7
+  },
+  {
+   "id": "array-at",
+   "name": "Array.prototype.at()",
+   "bcd": "javascript.builtins.Array.at",
+   "versions": {
+    "chrome": "92",
+    "edge": "92",
+    "firefox": "90",
+    "safari": "15.4",
+    "safari_ios": "15.4"
+   },
+   "progressive": false,
+   "elements": 4
+  },
+  {
+   "id": "relative-time-format",
+   "name": "Intl.RelativeTimeFormat",
+   "bcd": "javascript.builtins.Intl.RelativeTimeFormat",
+   "versions": {
+    "chrome": "71",
+    "edge": "79",
+    "firefox": "65",
+    "safari": "14",
+    "safari_ios": "14"
+   },
+   "progressive": false,
+   "elements": 4
+  },
+  {
+   "id": "conic-gradient",
+   "name": "conic-gradient()",
+   "bcd": "css.types.gradient.conic-gradient",
+   "versions": {
+    "chrome": "69",
+    "edge": "79",
+    "firefox": "83",
+    "safari": "12.1",
+    "safari_ios": "12.1"
+   },
+   "progressive": false,
+   "elements": 3
+  },
+  {
+   "id": "aria-reflection",
+   "name": "ARIA reflection (element.ariaBusy…)",
+   "bcd": "api.Element.ariaBusy",
+   "versions": {
+    "chrome": "81",
+    "edge": "81",
+    "firefox": "119",
+    "safari": "12.1",
+    "safari_ios": "12.1"
+   },
+   "progressive": false,
+   "why": "States such as busy and disabled reach screen readers.",
+   "elements": 2
+  },
+  {
+   "id": "object-hasown",
+   "name": "Object.hasOwn()",
+   "bcd": "javascript.builtins.Object.hasOwn",
+   "versions": {
+    "chrome": "93",
+    "edge": "93",
+    "firefox": "92",
+    "safari": "15.4",
+    "safari_ios": "15.4"
+   },
+   "progressive": false,
+   "elements": 2
+  },
+  {
+   "id": "forced-colors",
+   "name": "forced-colors media query",
+   "bcd": "css.at-rules.media.forced-colors",
+   "versions": {
+    "chrome": "89",
+    "edge": "79",
+    "firefox": "89",
+    "safari": "16",
+    "safari_ios": "16"
+   },
+   "progressive": true,
+   "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+   "elements": 180
+  },
+  {
+   "id": "adopted-stylesheets",
+   "name": "adoptedStyleSheets",
+   "bcd": "api.Document.adoptedStyleSheets",
+   "versions": {
+    "chrome": "73",
+    "edge": "79",
+    "firefox": "101",
+    "safari": "16.4",
+    "safari_ios": "16.4"
+   },
+   "progressive": true,
+   "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+   "elements": 179
+  },
+  {
+   "id": "scrollbar-width",
+   "name": "scrollbar-width",
+   "bcd": "css.properties.scrollbar-width",
+   "versions": {
+    "chrome": "121",
+    "edge": "121",
+    "firefox": "64",
+    "safari": "18.2",
+    "safari_ios": "18.2"
+   },
+   "progressive": true,
+   "without": "Scrollbars keep the browser's default width.",
+   "elements": 40
+  },
+  {
+   "id": "overscroll-contain",
+   "name": "overscroll-behavior: contain",
+   "bcd": "css.properties.overscroll-behavior.contain",
+   "versions": {
+    "chrome": "63",
+    "edge": "18",
+    "firefox": "59",
+    "safari": "16",
+    "safari_ios": "16"
+   },
+   "progressive": true,
+   "without": "Scrolling past the end of a list carries on scrolling the page.",
+   "elements": 36
+  },
+  {
+   "id": "at-property",
+   "name": "@property",
+   "bcd": "css.at-rules.property",
+   "versions": {
+    "chrome": "85",
+    "edge": "85",
+    "firefox": "128",
+    "safari": "16.4",
+    "safari_ios": "16.4"
+   },
+   "progressive": true,
+   "without": "The registered custom properties don't interpolate, so the transitions and spins they drive jump to their end state.",
+   "elements": 15
+  },
+  {
+   "id": "text-wrap-pretty",
+   "name": "text-wrap: pretty",
+   "bcd": "css.properties.text-wrap.pretty",
+   "versions": {
+    "chrome": "117",
+    "edge": "117",
+    "firefox": null,
+    "safari": "26",
+    "safari_ios": "26"
+   },
+   "progressive": true,
+   "without": "Paragraphs may end on a single short word.",
+   "elements": 11
+  },
+  {
+   "id": "field-sizing",
+   "name": "field-sizing",
+   "bcd": "css.properties.field-sizing",
+   "versions": {
+    "chrome": "123",
+    "edge": "123",
+    "firefox": "152",
+    "safari": "26.2",
+    "safari_ios": "26.2"
+   },
+   "progressive": true,
+   "without": "Text fields grow with their text. Without it they keep their minimum height and scroll.",
+   "elements": 11
+  },
+  {
+   "id": "popover",
+   "name": "Popover API",
+   "bcd": "api.HTMLElement.popover",
+   "versions": {
+    "chrome": "114",
+    "edge": "114",
+    "firefox": "125",
+    "safari": "17",
+    "safari_ios": "18.3"
+   },
+   "progressive": true,
+   "without": "Lists open fixed to the window instead of in the top layer, so a clipping ancestor or a modal can cover them.",
+   "elements": 9
+  },
+  {
+   "id": "backdrop-filter",
+   "name": "backdrop-filter",
+   "bcd": "css.properties.backdrop-filter",
+   "versions": {
+    "chrome": "76",
+    "edge": "17",
+    "firefox": "103",
+    "safari": "9",
+    "safari_ios": "9"
+   },
+   "progressive": true,
+   "without": "What's behind a translucent surface isn't blurred; the surface keeps its fill.",
+   "note": "with the -webkit- prefix",
+   "elements": 7
+  },
+  {
+   "id": "scrollbar-color",
+   "name": "scrollbar-color",
+   "bcd": "css.properties.scrollbar-color",
+   "versions": {
+    "chrome": "121",
+    "edge": "121",
+    "firefox": "64",
+    "safari": "26.2",
+    "safari_ios": "26.2"
+   },
+   "progressive": true,
+   "without": "Scrollbars keep the browser's default colours.",
+   "elements": 6
+  },
+  {
+   "id": "text-wrap-balance",
+   "name": "text-wrap: balance",
+   "bcd": "css.properties.text-wrap.balance",
+   "versions": {
+    "chrome": "114",
+    "edge": "114",
+    "firefox": "121",
+    "safari": "17.5",
+    "safari_ios": "17.5"
+   },
+   "progressive": true,
+   "without": "Titles break where the line fills up instead of into even lines.",
+   "elements": 5
+  },
+  {
+   "id": "scrollbar-gutter",
+   "name": "scrollbar-gutter",
+   "bcd": "css.properties.scrollbar-gutter",
+   "versions": {
+    "chrome": "94",
+    "edge": "94",
+    "firefox": "97",
+    "safari": "18.2",
+    "safari_ios": "18.2"
+   },
+   "progressive": true,
+   "without": "Content can shift sideways when a scrollbar appears.",
+   "elements": 1
+  }
+ ],
+ "engines": {
+  "playwright": "1.64.0",
+  "chromium": "156.0.8078.4",
+  "firefox": "157.0",
+  "webkit": "27.2"
+ }
+}

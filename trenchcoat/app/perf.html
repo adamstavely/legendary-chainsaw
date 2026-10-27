@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Trenchcoat – render timings</title>
+    <!-- Dev-only page for scripts/measure-perf.mjs (remediation 6.5): one element per load, measured in Chromium -->
+    <style>
+      body { margin: 0; padding: 16px; font-family: system-ui; }
+      #demo, #host { width: 960px; }
+      #host.away { position: absolute; top: 400vh; }
+    </style>
+  </head>
+  <body>
+    <div id="demo"></div>
+    <div id="host"></div>
+    <script type="module" src="./src/docs/perf-harness.tsx"></script>
+  </body>
+</html>

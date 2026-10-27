@@ -384,3 +384,157 @@ describe("tc-verification-queue", () => {
       expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
     });
 });
+
+describe("tc-verification-queue – verdicts per source type", () => {
+  const VERDICTS: TcVerificationQueue["verdicts"] = {
+    transcript: [
+      { id: "matches", label: "Matches the recording", status: "verified" },
+      { id: "misheard", label: "Transcript misheard", status: "incorrect" },
+      { id: "dismiss", label: "Dismiss", status: "dismissed" },
+    ],
+    ocr: [
+      { id: "matches", label: "Matches the original", status: "verified" },
+      { id: "misread", label: "OCR misread", status: "incorrect" },
+      { id: "misrepresents", label: "Misrepresents source", status: "incorrect", key: "m" },
+    ],
+  };
+  const MEDIA: VerificationClaim[] = [
+    { id: "t", text: "The bays are done by January.", source: "transcript", recognition: 0.91, confidence: 0.8 },
+    { id: "o", text: "We move in on 1 February.", source: "ocr", recognition: 0.72 },
+    { id: "g", text: "Costs rise 4%.", source: "grounded" },
+    { id: "w", text: "Fit-out ran late last time.", source: "session", status: "incorrect" },
+  ];
+  const queue = () => fixture<TcVerificationQueue>(html`<tc-verification-queue .claims=${MEDIA} .verdicts=${VERDICTS} filter="all"></tc-verification-queue>`);
+  const marks = (el: Element) => [...el.querySelectorAll<HTMLButtonElement>(".ui-vq__mark")];
+
+  test("a type with its own verdicts shows them, with their keys; the other types keep the four marks", async () => {
+    const el = await queue();
+    expect(marks(el).map((b) => text(b))).toEqual(["Matches the recordingV", "Transcript misheardX", "DismissD"]);
+    expect(marks(el).map((b) => b.dataset.status)).toEqual(["verified", "incorrect", "dismissed"]);
+    // The type's pill says how well the medium was read
+    expect(text(el.querySelector(".ui-vq__type"))).toBe("Transcript91%");
+    // OCR: the first incorrect verdict takes X; one with its own key keeps it
+    row(el, "o").click();
+    await settle();
+    expect(marks(el).map((b) => text(b))).toEqual(["Matches the originalV", "OCR misreadX", "Misrepresents sourceM"]);
+    expect(marks(el).map((b) => b.getAttribute("aria-keyshortcuts"))).toEqual(["V", "X", "M"]);
+    // Sourced: no verdicts of its own – the four marks
+    row(el, "g").click();
+    await settle();
+    expect(marks(el).map((b) => text(b))).toEqual(["VerifiedV", "Can't verifyC", "IncorrectX", "DismissD"]);
+    // A memory type (no verdicts set) shows the four marks too, with its line
+    row(el, "w").click();
+    await settle();
+    expect(marks(el)).toHaveLength(4);
+    expect(row(el, "w").querySelector(".ui-vq__swatch path")!.getAttribute("data-line")).toBe("wavy");
+  });
+
+  test("giving a verdict: the claim keeps its id, counts under its status, and the events carry it", async () => {
+    const el = await queue();
+    row(el, "o").click();
+    await settle();
+    const changes: VerificationClaimsChange[] = [];
+    const reviews: VerificationReviewDetail[] = [];
+    el.addEventListener("tc-claims-change", (e) => changes.push((e as CustomEvent<VerificationClaimsChange>).detail));
+    el.addEventListener("tc-review", (e) => reviews.push((e as CustomEvent<VerificationReviewDetail>).detail));
+    marks(el)[2].click();
+    await settle();
+    const claim = el.claims.find((c) => c.id === "o")!;
+    expect(claim.status).toBe("incorrect");
+    expect(claim.verdict).toBe("misrepresents");
+    expect(changes[0].verdict?.label).toBe("Misrepresents source");
+    expect(reviews[0]).toMatchObject({ status: "incorrect", previous: "pending", verdict: { id: "misrepresents" } });
+    expect(el.counts.incorrect).toBe(2);
+    // Only the verdict given is pressed – not the other one with the same status
+    expect(marks(el).map((b) => b.getAttribute("aria-pressed"))).toEqual(["false", "false", "true"]);
+    expect(text(el.querySelector(".ui-vq__now"))).toBe("Misrepresents source");
+    expect(text(row(el, "o").querySelector(".tc-sr-only"))).toBe(", Misrepresents source, OCR");
+    expect(text(el.querySelector('[role="status"]'))).toBe("Misrepresents source: We move in on 1 February. – 2 of 4 reviewed");
+    // Another verdict of the same status is a change
+    marks(el)[1].click();
+    await settle();
+    expect(el.claims.find((c) => c.id === "o")!.verdict).toBe("misread");
+    expect(reviews[1]).toMatchObject({ status: "incorrect", previous: "incorrect", verdict: { id: "misread" } });
+    // Pressing the given one puts the claim back, and the verdict goes
+    marks(el)[1].click();
+    await settle();
+    const back = el.claims.find((c) => c.id === "o")!;
+    expect(back.status).toBe("pending");
+    expect("verdict" in back).toBe(false);
+  });
+
+  test("the four marks leave no verdict on the claim", async () => {
+    const el = await queue();
+    row(el, "g").click();
+    await settle();
+    marks(el)[0].click();
+    await settle();
+    expect(el.claims.find((c) => c.id === "g")).toEqual({ id: "g", text: "Costs rise 4%.", source: "grounded", status: "verified" });
+  });
+
+  test("keyboard: single keys give the type's verdicts; a key it doesn't have does nothing; U puts it back", async () => {
+    const el = await queue();
+    const list = el.querySelector(".ui-vq__rows")!;
+    await key(list, "ArrowDown");
+    expect(el.querySelector(".ui-vq__row[aria-selected='true']")!.getAttribute("data-id")).toBe("o");
+    await key(list, "c");
+    expect(el.claims.find((c) => c.id === "o")!.status ?? "pending").toBe("pending");
+    await key(list, "m");
+    expect(el.claims.find((c) => c.id === "o")).toMatchObject({ status: "incorrect", verdict: "misrepresents" });
+    // The tab stop moved on; go back and undo
+    await key(list, "ArrowUp");
+    await key(list, "u");
+    expect(el.claims.find((c) => c.id === "o")!.status).toBe("pending");
+    // On a transcript claim, X gives "Transcript misheard"
+    await key(list, "Home");
+    await key(list, "x");
+    expect(el.claims.find((c) => c.id === "t")).toMatchObject({ status: "incorrect", verdict: "misheard" });
+  });
+
+  test("a claim given a verdict its type no longer offers shows its status's first option", async () => {
+    const el = await fixture<TcVerificationQueue>(
+      html`<tc-verification-queue filter="all" .verdicts=${VERDICTS} .claims=${[{ id: "x", text: "Old.", source: "ocr", status: "incorrect", verdict: "gone" }] as VerificationClaim[]}></tc-verification-queue>`,
+    );
+    expect(marks(el).map((b) => b.getAttribute("aria-pressed"))).toEqual(["false", "true", "false"]);
+    expect(text(el.querySelector(".ui-vq__now"))).toBe("OCR misread");
+  });
+
+  test("React: verdicts reach the element and onReview gets the verdict", async () => {
+    const host = document.createElement("div");
+    document.body.append(host);
+    const root = createRoot(host);
+    const seen: string[] = [];
+    await act(async () =>
+      root.render(
+        React.createElement(VerificationQueue, {
+          defaultClaims: MEDIA,
+          verdicts: VERDICTS,
+          defaultFilter: "all",
+          onReview: (claim, status, _previous, verdict) => seen.push(`${claim.id}:${status}:${verdict?.id ?? "-"}`),
+        }),
+      ),
+    );
+    await settle();
+    const el = host.querySelector<TcVerificationQueue>("tc-verification-queue")!;
+    await act(async () => marks(el)[1].click());
+    await settle();
+    await act(async () => row(el, "g").click());
+    await settle();
+    await act(async () => marks(el)[0].click());
+    await settle();
+    expect(seen).toEqual(["t:incorrect:misheard", "g:verified:-"]);
+    await act(async () => root.unmount());
+  });
+
+  for (const theme of ["light", "dark"])
+    test(`axe: verdicts and the new source types pass in both looks (${theme})`, async () => {
+      const wrap = await fixture(html`<div data-tc-theme=${theme} style="background: ${theme === "dark" ? "#0e0e10" : "#fff"}; padding: 8px">
+        <tc-verification-queue filter="all" .claims=${MEDIA} .verdicts=${VERDICTS}></tc-verification-queue>
+        <tc-verification-queue look="clean" aria-label="Clean queue" filter="all" .claims=${[{ ...MEDIA[1], status: "incorrect", verdict: "misread" }, ...MEDIA.slice(2)]} .verdicts=${VERDICTS}></tc-verification-queue>
+      </div>`);
+      await settle();
+      await Promise.all(document.getAnimations().map((x) => (x.finish(), x.finished)));
+      const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
+      expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
+    });
+});

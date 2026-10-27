@@ -21,8 +21,11 @@ import { cardHead } from "./internal/card-head";
 
 export type KpiSeries = {
   label: string;
-  /** Line color, any CSS color */
-  color: string;
+  /**
+   * Line colour: any CSS colour, including a token such as `var(--tc-chart-2)` – it is applied through CSS, so
+   * custom properties resolve. Unset takes the next `--tc-chart-1…6` token
+   */
+  color?: string;
   /** One value per label, same length as `labels` */
   values: number[];
 };
@@ -33,9 +36,13 @@ export type KpiIndexChange = { index: number | null };
 const DASHES = ["", "5 3", "1.5 3", "7 3 1.5 3"];
 const dashOf = (k: number) => DASHES[k % DASHES.length] || undefined;
 
-/** A short sample of a line: its colour and its stroke pattern */
+/** A series' colour: its own, else the chart token for its position */
+const colorOf = (s: KpiSeries, k: number) => s.color || `var(--tc-chart-${(k % 6) + 1})`;
+
+/** A short sample of a line: its colour and its stroke pattern. The colour is a style, not the `stroke` attribute, so
+ *  var() tokens resolve */
 const swatch = (color: string, k: number) =>
-  html`<svg class="ui-kpi__swatch" viewBox="0 0 14 4" aria-hidden="true">${svg`<line x1="1" y1="2" x2="13" y2="2" stroke=${color} stroke-dasharray=${ifDefined(dashOf(k))}></line>`}</svg>`;
+  html`<svg class="ui-kpi__swatch" viewBox="0 0 14 4" aria-hidden="true">${svg`<line x1="1" y1="2" x2="13" y2="2" style=${styleMap({ stroke: color })} stroke-dasharray=${ifDefined(dashOf(k))}></line>`}</svg>`;
 
 const compact = (n: number) => (Math.abs(n) >= 1000 ? `${+(n / 1000).toFixed(Math.abs(n) >= 10000 ? 0 : 1)}k` : `${Math.round(n)}`);
 
@@ -77,13 +84,17 @@ export class TcKpiChart extends TcElement {
   @property() accessor heading = "";
   /** Headline value, already formatted, e.g. "$96.4k" */
   @property() accessor value = "";
-  /** Change against the previous period – positive is green, negative red */
+  /** Change against the previous period – a rise is green and a drop red, unless `lowerIsBetter` */
   @property({ type: Number }) accessor delta: number | undefined = undefined;
+  /** A drop is the good direction (latency, cost, error rate): a negative `delta` shows green, a positive one red */
+  @property({ type: Boolean, attribute: "lower-is-better" }) accessor lowerIsBetter = false;
+  /** Formats the change on its own, e.g. as a percentage – unset uses `format` */
+  @property({ attribute: false }) accessor deltaFormat: ((n: number) => string) | undefined = undefined;
   /** Short labels along the x-axis, e.g. "Mar 4" */
   @property({ attribute: false }) accessor labels: string[] = [];
   /** Longer labels for the tooltip header, e.g. "Tue, Mar 4" – falls back to `labels` */
   @property({ attribute: false }) accessor tooltipLabels: string[] | undefined = undefined;
-  /** The lines, each with a label, a colour and one value per label – every line also gets its own stroke pattern */
+  /** The lines, each with a label, an optional colour and one value per label – every line also gets its own stroke pattern */
   @property({ attribute: false }) accessor series: KpiSeries[] = [];
   /** Formats the axis, tooltip and delta values */
   @property({ attribute: false }) accessor format: (n: number) => string = compact;
@@ -193,13 +204,13 @@ export class TcKpiChart extends TcElement {
     const shown = this.shown;
     const delta = this.delta;
     const showLegend = this.legend ?? series.length > 1;
-    const rows = series.map((s, k) => ({ ...s, k, value: s.values[shown] ?? 0 })).sort((a, b) => b.value - a.value);
+    const rows = series.map((s, k) => ({ ...s, color: colorOf(s, k), k, value: s.values[shown] ?? 0 })).sort((a, b) => b.value - a.value);
     const flip = x(shown) > 50;
     const axis = [0, Math.round(count / 2 - 0.5), count - 1].filter((v, i, a) => a.indexOf(v) === i);
 
     const body = html`
       <p class="ui-kpi__value">${this.value}${delta !== undefined && delta !== 0 && !Number.isNaN(delta)
-          ? html`<span class="ui-kpi__delta" data-trend=${delta > 0 ? "up" : "down"}>${delta > 0 ? "+" : "−"}${format(Math.abs(delta))}</span>`
+          ? html`<span class="ui-kpi__delta" data-trend=${delta > 0 ? "up" : "down"} data-tone=${delta > 0 !== this.lowerIsBetter ? "good" : "bad"}>${delta > 0 ? "+" : "−"}${(this.deltaFormat ?? format)(Math.abs(delta))}</span>`
           : nothing}</p>
 
       <div class="ui-kpi__chart">
@@ -229,7 +240,7 @@ export class TcKpiChart extends TcElement {
               series,
               (s) => s.label,
               (s, k) =>
-                svg`<polyline points=${s.values.map((v, i) => `${x(i)},${y(v)}`).join(" ")} stroke=${s.color} stroke-dasharray=${ifDefined(dashOf(k))} vector-effect="non-scaling-stroke"></polyline>`,
+                svg`<polyline points=${s.values.map((v, i) => `${x(i)},${y(v)}`).join(" ")} style=${styleMap({ stroke: colorOf(s, k) })} stroke-dasharray=${ifDefined(dashOf(k))} vector-effect="non-scaling-stroke"></polyline>`,
             )}
           </svg>
 
@@ -238,7 +249,7 @@ export class TcKpiChart extends TcElement {
             ${repeat(
               series,
               (s) => s.label,
-              (s) => html`<span class="ui-kpi__dot" style=${styleMap({ left: `${x(shown)}%`, top: `${y(s.values[shown] ?? 0)}%`, background: s.color })}></span>`,
+              (s, k) => html`<span class="ui-kpi__dot" style=${styleMap({ left: `${x(shown)}%`, top: `${y(s.values[shown] ?? 0)}%`, background: colorOf(s, k) })}></span>`,
             )}
           </div>
 
@@ -263,7 +274,7 @@ export class TcKpiChart extends TcElement {
 
       ${showLegend
         ? html`<ul class="ui-kpi__legend" aria-label="Lines">
-            ${series.map((s, k) => html`<li>${swatch(s.color, k)}${s.label}</li>`)}
+            ${series.map((s, k) => html`<li>${swatch(colorOf(s, k), k)}${s.label}</li>`)}
           </ul>`
         : nothing}
       <span class="ui-kpi__sr" role="status">${this.spoken}</span>
@@ -333,8 +344,8 @@ export class TcKpiChart extends TcElement {
   font-weight: var(--tc-font-weight-medium);
   letter-spacing: 0;
 }
-:where([data-look="standard"], [data-look="standard"] *).ui-kpi__delta[data-trend="up"] { color: var(--tc-status-success-fg); }
-:where([data-look="standard"], [data-look="standard"] *).ui-kpi__delta[data-trend="down"] { color: var(--tc-status-danger-fg); }
+:where([data-look="standard"], [data-look="standard"] *).ui-kpi__delta[data-tone="good"] { color: var(--tc-status-success-fg); }
+:where([data-look="standard"], [data-look="standard"] *).ui-kpi__delta[data-tone="bad"] { color: var(--tc-status-danger-fg); }
 /* Chart: y labels on the left, plot on the right, x labels below */
 :where([data-look="standard"], [data-look="standard"] *).ui-kpi__chart {
   display: grid;
@@ -378,8 +389,8 @@ export class TcKpiChart extends TcElement {
   line-height: var(--tc-line-height-tight);
   letter-spacing: 0;
 }
-:where([data-look="clean"], [data-look="clean"] *).ui-kpi__delta[data-trend="up"] { background: var(--tc-status-success-bg); color: var(--tc-status-success-fg); }
-:where([data-look="clean"], [data-look="clean"] *).ui-kpi__delta[data-trend="down"] { background: var(--tc-status-danger-bg); color: var(--tc-status-danger-fg); }
+:where([data-look="clean"], [data-look="clean"] *).ui-kpi__delta[data-tone="good"] { background: var(--tc-status-success-bg); color: var(--tc-status-success-fg); }
+:where([data-look="clean"], [data-look="clean"] *).ui-kpi__delta[data-tone="bad"] { background: var(--tc-status-danger-bg); color: var(--tc-status-danger-fg); }
 /* Chart: y labels on the left, plot on the right, x labels below */
 :where([data-look="clean"], [data-look="clean"] *).ui-kpi__chart {
   display: grid;

@@ -66,7 +66,15 @@
      "attribute": "readonly",
      "type": "boolean",
      "default": "false",
-     "description": "Read only: selection and copy still work",
+     "description": "Read only: no editing, adding or deleting; cell selection and copy still work, and the row checkboxes hide unless `selectable` is set",
+     "readonly": false
+    },
+    {
+     "name": "selectable",
+     "attribute": "selectable",
+     "type": "boolean | undefined",
+     "default": "undefined",
+     "description": "Whether rows have selection checkboxes; unset, they show unless the table is `readonly`",
      "readonly": false
     },
     {
@@ -317,7 +325,13 @@
      "name": "editable",
      "type": "boolean",
      "optional": true,
-     "description": "false turns the table read only"
+     "description": "false turns the table read only – it also hides the row checkboxes unless `selectable` is true"
+    },
+    {
+     "name": "selectable",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether rows have selection checkboxes; unset, they show unless `editable` is false"
     }
    ],
    "hides": [
@@ -329,7 +343,12 @@
     "columns",
     "icon",
     "renderCell"
-   ]
+   ],
+   "events": {
+    "tc-rows-change": "onRowsChange",
+    "tc-selection-change": "onSelectionChange",
+    "tc-sort-change": "onSortChange"
+   }
   }
  ],
  "changelog": [
@@ -338,8 +357,316 @@
   "data-table renders only the rows in view above 60 rows (was 200); combobox windows options above 300 matches; command-menu shows at most `maxRows` (default 200) results.",
   "data-table renders only the rows in view above 200 rows (spacer rows keep the scroll height; `aria-rowcount` and `aria-rowindex` are set on every row)."
  ],
+ "frameworks": [
+  {
+   "tag": "tc-data-table",
+   "className": "TcDataTable",
+   "module": "trenchcoat/data-table",
+   "data": [
+    "icon",
+    "columns",
+    "rows",
+    "selection",
+    "sort",
+    "tagTones",
+    "renderCell"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "readonly",
+     "attribute": "readonly"
+    },
+    {
+     "name": "selectable",
+     "attribute": "selectable"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-rows-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-selection-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-sort-change",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "rows",
+     "event": "tc-rows-change"
+    },
+    {
+     "property": "selection",
+     "event": "tc-selection-change"
+    },
+    {
+     "property": "sort",
+     "event": "tc-sort-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "121",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "has"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "itself",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "inert",
+    "name": "inert",
+    "bcd": "api.HTMLElement.inert",
+    "versions": {
+     "chrome": "102",
+     "edge": "102",
+     "firefox": "112",
+     "safari": "15.5",
+     "safari_ios": "15.5"
+    },
+    "progressive": false,
+    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
+    "via": [
+     "internal/controllers"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "has",
+    "name": ":has()",
+    "bcd": "css.selectors.has",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "121",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Layout and state that depend on what's inside a part (an icon present, a focused field).",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "resize-observer",
+    "name": "ResizeObserver",
+    "bcd": "api.ResizeObserver",
+    "versions": {
+     "chrome": "64",
+     "edge": "79",
+     "firefox": "69",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "via": [
+     "internal/controllers"
+    ]
+   },
+   {
+    "id": "scrollbar-width",
+    "name": "scrollbar-width",
+    "bcd": "css.properties.scrollbar-width",
+    "versions": {
+     "chrome": "121",
+     "edge": "121",
+     "firefox": "64",
+     "safari": "18.2",
+     "safari_ios": "18.2"
+    },
+    "progressive": true,
+    "without": "Scrollbars keep the browser's default width.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [
+   "requestAnimationFrame",
+   "requestAnimationFrame, cancelled (internal/controllers › RowWindowController)",
+   "requestAnimationFrame, cancelled (internal/controllers › SmoothHeightController)"
+  ],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/controllers › AriaForwardController)",
+   "MutationObserver (internal/controllers › FocusRescueController)",
+   "ResizeObserver (internal/controllers › SmoothHeightController)"
+  ],
+  "clock": [],
+  "listeners": [
+   "window pointerup",
+   "window scroll (internal/controllers › RowWindowController)",
+   "window resize (internal/controllers › RowWindowController)"
+  ],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": true
+ },
  "size": {
-  "min": 61608,
-  "gzip": 15974
+  "min": 63477,
+  "gzip": 16373
  }
 }

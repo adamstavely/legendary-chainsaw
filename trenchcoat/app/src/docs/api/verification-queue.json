@@ -94,6 +94,14 @@
      "readonly": false
     },
     {
+     "name": "verdicts",
+     "attribute": null,
+     "type": "Partial<Record<ClaimSourceType, VerificationVerdict[]>>",
+     "default": "{}",
+     "description": "Verdicts for particular source types, in their own words – e.g. `{ ocr: [{ id: \"confirmed\", label: \"Confirmed against original\", status: \"verified\" }, { id: \"misread\", label: \"OCR misread\", status: \"incorrect\" }] }`. Types without an entry keep the four marks",
+     "readonly": false
+    },
+    {
      "name": "filter",
      "attribute": "filter",
      "type": "VerificationFilter",
@@ -155,7 +163,16 @@
    "slots": [],
    "methods": [],
    "ui": "vq",
-   "cssProperties": [],
+   "cssProperties": [
+    {
+     "name": "--tc-verification-queue-max",
+     "value": "320px",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    }
+   ],
    "tokens": [
     "--tc-accent",
     "--tc-action-ghost-bg-hover",
@@ -215,6 +232,10 @@
     "--tc-source-grounded-fg",
     "--tc-source-inferred-bg",
     "--tc-source-inferred-fg",
+    "--tc-source-media-bg",
+    "--tc-source-media-fg",
+    "--tc-source-memory-bg",
+    "--tc-source-memory-fg",
     "--tc-source-model-bg",
     "--tc-source-model-fg",
     "--tc-space-0-5",
@@ -244,8 +265,6 @@
     "--tc-tray-radius",
     "--tc-verification-queue-bg",
     "--tc-verification-queue-fg",
-    "--tc-verification-queue-line",
-    "--tc-verification-queue-max",
     "--tc-verification-queue-src",
     "--tc-verification-queue-src-bg"
    ]
@@ -283,9 +302,9 @@
     },
     {
      "name": "onReview",
-     "type": "(claim: VerificationClaim, status: VerificationStatus, previous: VerificationStatus) => void",
+     "type": "(claim: VerificationClaim, status: VerificationStatus, previous: VerificationStatus, verdict?: VerificationVerdict) => void",
      "optional": true,
-     "description": "Called when a claim is marked, with its new and previous status – for apps that save one claim at a time"
+     "description": "Called when a claim is marked, with its new and previous status – and the verdict, when its source type has its own – for apps that save one claim at a time"
     },
     {
      "name": "filter",
@@ -316,14 +335,381 @@
     "claims",
     "filter",
     "heading"
-   ]
+   ],
+   "events": {
+    "tc-claims-change": "onClaimsChange",
+    "tc-review": "onReview",
+    "tc-filter-change": "onFilterChange",
+    "tc-export": "onExport"
+   }
   }
  ],
  "changelog": [
   "**Trust & calibration**, from THEMIS and built domain-neutral: - claims and their reliability: `tc-claim-answer`, `tc-verification-queue`, `tc-reflection-gate`, `tc-reliance-gauge`, `tc-disagreement-banner`, `tc-synthesis-notes`; - where outputs came from: `tc-lineage-graph`, `tc-validity-badge`, `tc-provenance-summary`, `tc-correction-propagation`, `tc-attestation-check`, `tc-run-manifest`; - policy and control: `tc-policy-simulator`, `tc-gate-config`, `tc-coverage-matrix`, `tc-kill-switch`, `tc-playbook-canvas`."
  ],
+ "frameworks": [
+  {
+   "tag": "tc-verification-queue",
+   "className": "TcVerificationQueue",
+   "module": "trenchcoat/verification-queue",
+   "data": [
+    "claims",
+    "sources",
+    "statusLabels",
+    "actionLabels",
+    "sourceLabels",
+    "verdicts"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "allowUnreviewed",
+     "attribute": "allow-unreviewed"
+    },
+    {
+     "name": "exportLabel",
+     "attribute": "export-label"
+    },
+    {
+     "name": "shortcuts",
+     "attribute": "shortcuts"
+    },
+    {
+     "name": "maxHeight",
+     "attribute": "max-height"
+    },
+    {
+     "name": "now",
+     "attribute": "now"
+    },
+    {
+     "name": "filter",
+     "attribute": "filter"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-claims-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-review",
+     "cancelable": false
+    },
+    {
+     "name": "tc-filter-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-export",
+     "cancelable": false
+    }
+   ],
+   "controlled": [
+    {
+     "property": "claims",
+     "event": "tc-claims-change"
+    },
+    {
+     "property": "filter",
+     "event": "tc-filter-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "inert",
+    "name": "inert",
+    "bcd": "api.HTMLElement.inert",
+    "versions": {
+     "chrome": "102",
+     "edge": "102",
+     "firefox": "112",
+     "safari": "15.5",
+     "safari_ios": "15.5"
+    },
+    "progressive": false,
+    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
+    "via": [
+     "internal/controllers"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "validity-badge",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "validity-badge",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "relative-time-format",
+    "name": "Intl.RelativeTimeFormat",
+    "bcd": "javascript.builtins.Intl.RelativeTimeFormat",
+    "versions": {
+     "chrome": "71",
+     "edge": "79",
+     "firefox": "65",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "via": [
+     "validity-badge"
+    ]
+   },
+   {
+    "id": "resize-observer",
+    "name": "ResizeObserver",
+    "bcd": "api.ResizeObserver",
+    "versions": {
+     "chrome": "64",
+     "edge": "79",
+     "firefox": "69",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "via": [
+     "validity-badge"
+    ]
+   },
+   {
+    "id": "scrollbar-color",
+    "name": "scrollbar-color",
+    "bcd": "css.properties.scrollbar-color",
+    "versions": {
+     "chrome": "121",
+     "edge": "121",
+     "firefox": "64",
+     "safari": "26.2",
+     "safari_ios": "26.2"
+    },
+    "progressive": true,
+    "without": "Scrollbars keep the browser's default colours.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "scrollbar-width",
+    "name": "scrollbar-width",
+    "bcd": "css.properties.scrollbar-width",
+    "versions": {
+     "chrome": "121",
+     "edge": "121",
+     "firefox": "64",
+     "safari": "18.2",
+     "safari_ios": "18.2"
+    },
+    "progressive": true,
+    "without": "Scrollbars keep the browser's default width.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "validity-badge",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "overscroll-contain",
+    "name": "overscroll-behavior: contain",
+    "bcd": "css.properties.overscroll-behavior.contain",
+    "versions": {
+     "chrome": "63",
+     "edge": "18",
+     "firefox": "59",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "Scrolling past the end of a list carries on scrolling the page.",
+    "via": [
+     "itself"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [
+   "requestAnimationFrame, cancelled (validity-badge)",
+   "requestAnimationFrame, cancelled (internal/controllers › RowWindowController)"
+  ],
+  "animations": 0,
+  "observers": [
+   "ResizeObserver (validity-badge)",
+   "MutationObserver (validity-badge)",
+   "MutationObserver (internal/controllers › AriaForwardController)",
+   "MutationObserver (internal/controllers › FocusRescueController)"
+  ],
+  "clock": [
+   "Date.now() (validity-badge)"
+  ],
+  "listeners": [
+   "window scroll (internal/controllers › RowWindowController)",
+   "window resize (internal/controllers › RowWindowController)"
+  ],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (validity-badge)",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": true
+ },
  "size": {
-  "min": 40001,
-  "gzip": 11969
+  "min": 62871,
+  "gzip": 18037
  }
 }

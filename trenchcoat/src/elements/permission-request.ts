@@ -16,6 +16,10 @@ import { FocusRescueController, rescueFocus } from "./internal/controllers";
  *   · Allow or Deny – Enter and Esc work while the card has focus
  *   · then the card folds into one line: "Allowed for 1 hour" with a bar that drains until the right expires, and
  *     Revoke to take it back; destructive actions can never be allowed for always
+ *   · an emergency scope, when `scopes` includes "emergency": a required justification and an urgency window (as
+ *     data), sent as a cancelable tc-emergency-request. Once granted, a banner says it's active with the time left as
+ *     the app reports it (`emergency-remaining` – nothing here reads a clock), then that it ended and when the review
+ *     is due (`emergency-ended`, `review-due`)
  * A short header ("Permission", with the risk as a pill) sits above the sentence. Standard: the header on a gray tray,
  * then a white card, then the answer on the tray. Clean: one quiet white card – the header is its first row – smaller
  * and lighter throughout.
@@ -24,7 +28,19 @@ import { FocusRescueController, rescueFocus } from "./internal/controllers";
  */
 
 export type PermissionRisk = "safe" | "risky" | "destructive";
-export type PermissionScope = "once" | "timed" | "always";
+export type PermissionScope = "once" | "timed" | "always" | "emergency";
+
+/** An urgency window for emergency access – how soon someone must look at it */
+export type PermissionUrgency = {
+  id: string;
+  /** "Urgent" */
+  label: string;
+  /** The window, as text, e.g. "15 min" */
+  window?: string;
+};
+
+/** The detail of tc-emergency-request: why, how urgent, and the decision it makes */
+export type PermissionEmergencyRequest = { justification: string; urgency: PermissionUrgency | undefined; decision: PermissionDecision };
 
 export type PermissionDecision = {
   allow: boolean;
@@ -33,6 +49,10 @@ export type PermissionDecision = {
   at: number;
   /** When a timed right runs out (ms) */
   until?: number;
+  /** Emergency access: why it can't wait, in the person's words */
+  justification?: string;
+  /** Emergency access: the id of the urgency window picked */
+  urgency?: string;
 };
 
 export type PermissionPreviewItem = {
@@ -58,6 +78,11 @@ const left = (ms: number) => {
   const m = Math.ceil(ms / MIN);
   return m >= 60 ? `${Math.floor(m / 60)} h ${m % 60 ? `${m % 60} min ` : ""}left` : `${m} min left`;
 };
+const DEFAULT_URGENCIES: PermissionUrgency[] = [
+  { id: "standard", label: "Standard", window: "30 min" },
+  { id: "urgent", label: "Urgent", window: "15 min" },
+  { id: "critical", label: "Critical", window: "5 min" },
+];
 const RISK: Record<PermissionRisk, string> = { safe: "", risky: "Risky", destructive: "Destructive" };
 const initials = (name: string) =>
   name
@@ -80,6 +105,8 @@ const destructiveIcon = () =>
   );
 const checkIcon = () => lucide(16, svg`<circle cx="12" cy="12" r="10"></circle><path d="m16 9-5.5 5.5L8 12"></path>`);
 const crossIcon = () => lucide(16, svg`<circle cx="12" cy="12" r="10"></circle><path d="m15 9-6 6"></path><path d="m9 9 6 6"></path>`);
+const sirenIcon = (size = 16) =>
+  lucide(size, svg`<path d="M7 18v-6a5 5 0 1 1 10 0v6"></path><path d="M5 21a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-1a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2z"></path><path d="M21 12h1"></path><path d="M18.5 4.5 18 5"></path><path d="M2 12h1"></path><path d="M12 2v1"></path><path d="m4.929 4.929.707.707"></path><path d="M12 12v6"></path>`);
 const clockIcon = () => lucide(16, svg`<circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path>`);
 const dotIcon = () => html`<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">${svg`<circle cx="8" cy="8" r="2.4" fill="currentColor"></circle>`}</svg>`;
 
@@ -89,6 +116,7 @@ const dotIcon = () => html`<svg width="16" height="16" viewBox="0 0 16 16" aria-
  * @fires tc-decision-change - Allow, Deny or Revoke ({ decision: PermissionDecision | null }); cancelable
  * @fires tc-scope-change - The user picked how long ({ scope: PermissionScope }); cancelable
  * @fires tc-expire - A timed right ran out, once per decision ({ decision: PermissionDecision })
+ * @fires tc-emergency-request - Emergency access was asked for, with a justification ({ justification, urgency, decision }: PermissionEmergencyRequest); cancelable – prevented, nothing is granted
  */
 export class TcPermissionRequest extends TcElement {
   static override ui = "pr";
@@ -111,7 +139,7 @@ export class TcPermissionRequest extends TcElement {
   @property({ attribute: "preview-title" }) accessor previewTitle = "What will happen";
   /** Rows shown before "N more" */
   @property({ type: Number, attribute: "preview-limit" }) accessor previewLimit = 3;
-  /** The choices offered; "always" is never offered for destructive actions */
+  /** The choices offered; "always" is never offered for destructive actions, "emergency" only when listed here */
   @property({ attribute: false }) accessor scopes: PermissionScope[] = ["once", "timed", "always"];
   /** How long an Allow holds */
   @property() accessor scope: PermissionScope = "once";
@@ -121,9 +149,23 @@ export class TcPermissionRequest extends TcElement {
   @property({ attribute: false }) accessor decision: PermissionDecision | null = null;
   /** The clock for the countdown, epoch ms – unset uses an internal clock */
   @property({ type: Number }) accessor now: number | undefined = undefined;
+  /** Emergency access: the urgency windows to pick from, as data */
+  @property({ attribute: false }) accessor urgencies: PermissionUrgency[] = DEFAULT_URGENCIES;
+  /** Emergency access: what it means, said above the justification */
+  @property({ attribute: "emergency-note" }) accessor emergencyNote = "Emergency access is logged, time-limited and reviewed afterwards.";
+  /** Emergency access: the time left as the app reports it, e.g. "3 h 12 min" – shown in the banner, never computed here */
+  @property({ attribute: "emergency-remaining" }) accessor emergencyRemaining = "";
+  /** Emergency access: the app says it has ended – the banner turns into the review-due note */
+  @property({ type: Boolean, attribute: "emergency-ended" }) accessor emergencyEnded = false;
+  /** Emergency access: when the review afterwards is due, as text, e.g. "by Fri 31 Oct" */
+  @property({ attribute: "review-due" }) accessor reviewDue = "";
 
   @state() private accessor open = false;
   @state() private accessor tick = 0;
+  /** Emergency access: the justification being written, the urgency picked, and whether a request without one was tried */
+  @state() private accessor why = "";
+  @state() private accessor urgency = "";
+  @state() private accessor whyMissing = false;
 
   private uid = `tc-pr-${++uidCount}`;
   private shown = 0;
@@ -160,9 +202,17 @@ export class TcPermissionRequest extends TcElement {
     const d = this.decision;
     return !!(d?.allow && d.until && this.clockNow >= d.until);
   }
+  private get emergency() {
+    const d = this.decision;
+    return !!(d?.allow && d.scope === "emergency");
+  }
   private get shape() {
     const d = this.decision;
-    return d ? (this.expired ? "expired" : d.allow ? "allowed" : "denied") : `pending:${this.open}`;
+    if (this.emergency) return this.emergencyEnded ? "emergency-ended" : "emergency";
+    return d ? (this.expired ? "expired" : d.allow ? "allowed" : "denied") : `pending:${this.open}:${this.chosenScope === "emergency"}`;
+  }
+  private get pickedUrgency() {
+    return this.urgencies.find((u) => u.id === this.urgency) ?? this.urgencies[0];
   }
 
   override disconnectedCallback() {
@@ -191,12 +241,38 @@ export class TcPermissionRequest extends TcElement {
     if (this.emit("tc-decision-change", { decision: next }, { cancelable: true })) this.decision = next;
   }
   private allow() {
-    this.hold();
     const scope = this.chosenScope;
+    if (scope === "emergency") return this.requestEmergency();
+    this.hold();
     const at = this.now ?? clock();
     // A decision made here: the countdown starts from its own moment
     if (this.now === undefined) this.commit(at);
     this.decide({ allow: true, scope, at, until: scope === "timed" ? at + this.duration * MIN : undefined });
+  }
+  /** Emergency access: a justification is required; the app hears the request first and may refuse it */
+  private requestEmergency() {
+    const justification = this.why.trim();
+    if (!justification) {
+      this.whyMissing = true;
+      void this.updateComplete.then(() => this.querySelector<HTMLElement>(".ui-pr__why-field")?.focus());
+      return;
+    }
+    this.whyMissing = false;
+    const urgency = this.pickedUrgency;
+    const decision: PermissionDecision = { allow: true, scope: "emergency", at: this.now ?? clock(), justification, urgency: urgency?.id };
+    if (!this.emit<PermissionEmergencyRequest>("tc-emergency-request", { justification, urgency, decision }, { cancelable: true })) return;
+    this.hold();
+    this.decide(decision);
+  }
+  private onUrgencyKey(e: KeyboardEvent) {
+    const step = e.key === "ArrowRight" || e.key === "ArrowDown" ? 1 : e.key === "ArrowLeft" || e.key === "ArrowUp" ? -1 : 0;
+    if (!step) return;
+    e.preventDefault();
+    const list = this.urgencies;
+    const at = list.indexOf(this.pickedUrgency!);
+    const next = list[(at + step + list.length) % list.length];
+    this.urgency = next.id;
+    (e.currentTarget as HTMLElement).parentElement?.querySelector<HTMLElement>(`[data-urgency="${CSS.escape(next.id)}"]`)?.focus();
   }
   private deny() {
     this.hold();
@@ -214,7 +290,8 @@ export class TcPermissionRequest extends TcElement {
   private onKey(e: KeyboardEvent) {
     if (this.decision || e.isComposing) return;
     const tag = (e.target as HTMLElement).tagName;
-    if (e.key === "Enter" && tag !== "BUTTON") {
+    // Enter in the justification starts a new line
+    if (e.key === "Enter" && tag !== "BUTTON" && tag !== "TEXTAREA") {
       e.preventDefault();
       this.allow();
     } else if (e.key === "Escape") {
@@ -351,7 +428,28 @@ export class TcPermissionRequest extends TcElement {
 
   /* ---------- Rendering ---------- */
 
+  /** Emergency access, once granted: a banner with the time left as the app reports it; once ended, when the review is due */
+  private renderEmergency(d: PermissionDecision) {
+    const ended = this.emergencyEnded;
+    const urgency = this.urgencies.find((u) => u.id === d.urgency);
+    const note = ended
+      ? this.reviewDue
+        ? `Review due ${this.reviewDue}`
+        : "A review is due"
+      : [this.emergencyRemaining ? `${this.emergencyRemaining} left` : "", urgency ? urgency.label : "", "review due afterwards"].filter(Boolean).join(" · ");
+    return html`<div class="ui-pr__result ui-pr__sos-banner" data-kind=${ended ? "emergency-ended" : "emergency"}>
+      <span class="ui-pr__result-icon">${ended ? clockIcon() : sirenIcon()}</span>
+      <span class="ui-pr__result-text">
+        <span class="ui-pr__result-head">${ended ? "Emergency access ended" : "Emergency access active"}<span class="ui-pr__result-action"> · ${this.action}</span></span>
+        <span class="ui-pr__result-note">${note}</span>
+        ${d.justification ? html`<span class="ui-pr__result-why">“${d.justification}”</span>` : nothing}
+      </span>
+      <button type="button" class="ui-pr__ghost" data-focus-key="reset" @click=${this.reset}>${ended ? "Ask again" : "End now"}</button>
+    </div>`;
+  }
+
   private renderDecided(d: PermissionDecision) {
+    if (d.allow && d.scope === "emergency") return this.renderEmergency(d);
     const now = this.clockNow;
     const expired = this.expired;
     const name = this.agent.name;
@@ -404,12 +502,59 @@ export class TcPermissionRequest extends TcElement {
     </section>`;
   }
 
+  /** Emergency access: what it means, the required justification and the urgency window */
+  private renderSos() {
+    const { uid } = this;
+    const picked = this.pickedUrgency;
+    return html`<div class="ui-pr__sos" role="group" aria-labelledby=${`${uid}-sos`}>
+      <p class="ui-pr__sos-note" id=${`${uid}-sos`}><span class="ui-pr__sos-icon">${sirenIcon(14)}</span><span>${this.emergencyNote}</span></p>
+      <div class="ui-pr__sos-field">
+        <label class="ui-pr__sos-label" for=${`${uid}-just`}>Why can't this wait?</label>
+        <textarea
+          class="ui-pr__why-field"
+          id=${`${uid}-just`}
+          rows="2"
+          required
+          aria-required="true"
+          aria-invalid=${this.whyMissing ? "true" : "false"}
+          aria-describedby=${ifDefined(this.whyMissing ? `${uid}-just-msg` : undefined)}
+          placeholder="What's at stake if it waits for the usual approval"
+          .value=${this.why}
+          @input=${(e: Event) => {
+            this.why = (e.target as HTMLTextAreaElement).value;
+            if (this.why.trim()) this.whyMissing = false;
+          }}
+        ></textarea>
+        ${this.whyMissing ? html`<span class="ui-pr__sos-msg" id=${`${uid}-just-msg`}>Say why it can't wait to ask for emergency access</span>` : nothing}
+      </div>
+      ${this.urgencies.length
+        ? html`<div class="ui-pr__sos-field">
+            <span class="ui-pr__sos-label" id=${`${uid}-urg`}>How urgent</span>
+            <div class="ui-pr__urgencies" role="radiogroup" aria-labelledby=${`${uid}-urg`}>
+              ${this.urgencies.map(
+                (u) => html`<button
+                  type="button"
+                  role="radio"
+                  class="ui-pr__urgency"
+                  data-urgency=${u.id}
+                  aria-checked=${u === picked ? "true" : "false"}
+                  tabindex=${u === picked ? 0 : -1}
+                  @click=${() => (this.urgency = u.id)}
+                  @keydown=${this.onUrgencyKey}
+                ><span class="ui-pr__urgency-label">${u.label}</span>${u.window ? html`<span class="ui-pr__urgency-window">${u.window}</span>` : nothing}</button>`,
+              )}
+            </div>
+          </div>`
+        : nothing}
+    </div>`;
+  }
+
   private renderAsk() {
     const { agent, action, target, risk, reason, uid } = this;
     const offered = this.offered;
     const scope = this.chosenScope;
-    const scopeLabel = (s: PermissionScope) => (s === "once" ? "Just once" : s === "timed" ? span(this.duration) : "Always");
-    const allowLabel = scope === "once" ? "Allow once" : scope === "timed" ? `Allow for ${span(this.duration)}` : "Always allow";
+    const scopeLabel = (s: PermissionScope) => (s === "once" ? "Just once" : s === "timed" ? span(this.duration) : s === "emergency" ? "Emergency" : "Always");
+    const allowLabel = scope === "once" ? "Allow once" : scope === "timed" ? `Allow for ${span(this.duration)}` : scope === "emergency" ? "Request emergency access" : "Always allow";
     return html`<div class="ui-pr__ask">
       <div class="ui-pr__body">
         <header class="ui-pr__head">
@@ -442,6 +587,7 @@ export class TcPermissionRequest extends TcElement {
             </div>`
           : nothing}
         ${risk === "destructive" && this.scopes.includes("always") ? html`<span class="ui-pr__hint">Destructive actions can't be allowed for always</span>` : nothing}
+        ${scope === "emergency" ? this.renderSos() : nothing}
         <div class="ui-pr__buttons">
           <button type="button" class="ui-pr__btn" @click=${this.deny}>Deny<kbd class="ui-pr__kbd">Esc</kbd></button>
           <button type="button" class="ui-pr__btn ui-pr__btn--primary" data-focus-key="allow" @click=${this.allow}>
@@ -456,7 +602,11 @@ export class TcPermissionRequest extends TcElement {
     const d = this.decision;
     const expired = this.expired;
     // Announced once per outcome – the countdown's minutes are not
-    const announcement = d
+    const announcement = this.emergency
+      ? this.emergencyEnded
+        ? `Emergency access ended: ${this.agent.name} may not ${this.action}${this.reviewDue ? `. Review due ${this.reviewDue}` : ""}`
+        : `Emergency access active: ${this.agent.name} may ${this.action}`
+      : d
       ? `${
           expired
             ? "Access expired"
@@ -660,6 +810,40 @@ export class TcPermissionRequest extends TcElement {
 .ui-pr__drain > span { display: block; height: 100%; background: var(--tc-status-success-fg); transform-origin: left; transition: transform var(--tc-duration-reveal-slow) linear; }
 :where([data-look="standard"], [data-look="standard"] *).ui-pr__drain > span { opacity: 0.6; }
 :where([data-look="clean"], [data-look="clean"] *).ui-pr__drain > span { opacity: 0.7; }
+/* ----- Emergency access: what it means, why it can't wait, how urgent ----- */
+.ui-pr__sos { display: grid; gap: var(--tc-space-3); animation: ui-pr-in var(--tc-duration-moderate) var(--tc-ease-move) both; }
+:where([data-look="standard"], [data-look="standard"] *).ui-pr__sos { padding: var(--tc-space-3); border-radius: var(--tc-card-radius); background: var(--tc-surface-on-tray); box-shadow: var(--tc-card-shadow); }
+:where([data-look="clean"], [data-look="clean"] *).ui-pr__sos { padding: var(--tc-space-3); border-radius: var(--tc-radius-lg); box-shadow: inset 0 0 0 var(--tc-hairline) var(--tc-border-default); }
+.ui-pr__sos-note { display: flex; align-items: flex-start; gap: var(--tc-space-2); font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-snug); color: var(--tc-text-secondary); }
+.ui-pr__sos-icon { display: grid; flex: none; place-items: center; width: 20px; height: 20px; border-radius: var(--tc-radius-sm); background: var(--tc-status-warning-bg); color: var(--tc-status-warning-fg); }
+.ui-pr__sos-icon > svg { width: 14px; height: 14px; }
+.ui-pr__sos-field { display: grid; gap: var(--tc-space-1-5); min-width: 0; }
+.ui-pr__sos-label { font-size: var(--tc-font-size-sm); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-tight); color: var(--tc-text-primary); }
+:where([data-look="clean"], [data-look="clean"] *).ui-pr__sos-label { color: var(--tc-text-secondary); }
+.ui-pr__why-field { display: block; width: 100%; min-height: calc(var(--tc-field-h) * 1.75); margin: 0; padding: var(--tc-space-2) var(--tc-field-px); border: 0; border-radius: var(--tc-field-radius); outline: none; background: var(--tc-field-bg); box-shadow: var(--tc-field-shadow); font: inherit; font-size: var(--tc-field-font-size); line-height: var(--tc-line-height-normal); color: var(--tc-text-primary); resize: vertical; field-sizing: content; transition: box-shadow var(--tc-duration-quick) var(--tc-ease-standard); }
+.ui-pr__why-field::placeholder { color: var(--tc-text-placeholder); }
+.ui-pr__why-field:hover { box-shadow: var(--tc-field-shadow-hover); }
+.ui-pr__why-field:focus { box-shadow: var(--tc-field-shadow-focus); }
+.ui-pr__why-field[aria-invalid="true"] { box-shadow: var(--tc-field-shadow-invalid); }
+.ui-pr__why-field[aria-invalid="true"]:focus { box-shadow: var(--tc-field-shadow-invalid), 0 0 0 var(--tc-focus-ring-width) var(--tc-focus-ring); }
+.ui-pr__sos-msg { font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); color: var(--tc-status-danger-fg); }
+/* How urgent: chips with the window under the name; the chosen one ringed */
+.ui-pr__urgencies { display: grid; grid-auto-columns: minmax(0, 1fr); grid-auto-flow: column; gap: var(--tc-space-1-5); }
+.ui-pr__urgency { display: grid; gap: var(--tc-space-0-5); min-width: 0; padding: var(--tc-space-1-5) var(--tc-space-2); border-radius: var(--tc-control-radius-md); background: var(--tc-fill-subtle); box-shadow: inset 0 0 0 var(--tc-hairline) var(--tc-border-subtle); text-align: center !important; transition: background-color var(--tc-duration-base) var(--tc-ease-standard), box-shadow var(--tc-duration-base) var(--tc-ease-standard); }
+.ui-pr__urgency:hover { background: var(--tc-fill-default); }
+.ui-pr__urgency[aria-checked="true"] { background: var(--tc-seg-thumb-bg); box-shadow: var(--tc-seg-thumb-shadow), inset 0 0 0 1px var(--tc-border-selected); }
+.ui-pr__urgency-label { overflow: hidden; font-size: var(--tc-font-size-sm); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-tight); color: var(--tc-text-primary); white-space: nowrap; text-overflow: ellipsis; }
+.ui-pr__urgency-window { font-size: var(--tc-font-size-xs); line-height: var(--tc-line-height-tight); color: var(--tc-text-secondary); font-variant-numeric: tabular-nums; }
+/* The emergency banner: the decided line on the warning tone while access is active */
+.ui-pr__result[data-kind="emergency"] { background: var(--tc-status-warning-bg); }
+.ui-pr__result[data-kind="emergency"] .ui-pr__result-icon { color: var(--tc-status-warning-fg); }
+.ui-pr__result[data-kind="emergency"] .ui-pr__result-note { color: var(--tc-status-warning-fg); }
+.ui-pr__result[data-kind="emergency-ended"] .ui-pr__result-icon { color: var(--tc-text-muted); }
+.ui-pr__sos-banner { align-items: flex-start; }
+.ui-pr__sos-banner .ui-pr__result-icon { margin-top: var(--tc-space-0-5); }
+/* The banner wraps rather than cut off the time left */
+.ui-pr__sos-banner :is(.ui-pr__result-head, .ui-pr__result-note) { white-space: normal; }
+.ui-pr__result-why { display: -webkit-box; overflow: hidden; margin-top: var(--tc-space-1); font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-snug); color: var(--tc-text-secondary); -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
 @keyframes ui-pr-in { from { opacity: 0; transform: translateY(3px); } }
 @keyframes ui-pr-swap { from { opacity: 0; transform: translateY(2px); } }
 @keyframes ui-pr-pop { 0% { opacity: 0; transform: scale(0.5); } 60% { opacity: 1; transform: scale(1.12); } }

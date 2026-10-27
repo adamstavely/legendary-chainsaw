@@ -6,6 +6,10 @@ import axe from "axe-core";
 import { afterEach, describe, expect, test, vi } from "vitest";
 import "../../src/elements/kpi-chart";
 import { niceRange, type KpiIndexChange, type KpiSeries, type TcKpiChart } from "../../src/elements/kpi-chart";
+import * as React from "react";
+import { act } from "react";
+import { createRoot } from "react-dom/client";
+import { KpiChart } from "../../src/elements/react/kpi-chart";
 import { cleanup, fixture, settle } from "./helpers";
 
 afterEach(cleanup);
@@ -70,6 +74,75 @@ describe("tc-kpi-chart", () => {
     el.delta = 0;
     await settle();
     expect(el.querySelector(".ui-kpi__delta")).toBeNull();
+  });
+
+  test("delta: data-tone is good for a rise; lowerIsBetter turns a drop good and a rise bad; deltaFormat formats it alone", async () => {
+    const el = await fixture<TcKpiChart>(html`<tc-kpi-chart heading="Latency" value="420ms" delta="-12" .labels=${labels} .series=${one}></tc-kpi-chart>`);
+    const d = () => el.querySelector(".ui-kpi__delta")!;
+    expect(d().getAttribute("data-tone")).toBe("bad");
+    el.lowerIsBetter = true;
+    await settle();
+    expect(d().getAttribute("data-trend")).toBe("down");
+    expect(d().getAttribute("data-tone")).toBe("good");
+    // Green in both looks: the tone, not the sign, picks the colour
+    const good = getComputedStyle(d()).color;
+    el.delta = 12;
+    await settle();
+    expect(d().getAttribute("data-tone")).toBe("bad");
+    expect(getComputedStyle(d()).color).not.toBe(good);
+    el.removeAttribute("lower-is-better");
+    el.setAttribute("lower-is-better", "");
+    await settle();
+    expect(el.lowerIsBetter).toBe(true);
+    // The headline is money, the change a percentage
+    el.format = (n) => `$${n}`;
+    el.deltaFormat = (n) => `${n.toFixed(1)}%`;
+    el.delta = 8.6;
+    await settle();
+    expect(d().textContent).toBe("+8.6%");
+    expect(el.querySelector(".ui-kpi__yaxis span")!.textContent).toMatch(/^\$/);
+  });
+
+  test("series colours are styles, so tokens resolve; an unset colour takes the --tc-chart-N token", async () => {
+    const series: KpiSeries[] = [
+      { label: "A", color: "var(--test-line)", values: [1, 2, 3] },
+      { label: "B", values: [3, 2, 1] },
+    ];
+    const el = await fixture<TcKpiChart>(html`<tc-kpi-chart style="--test-line: rgb(1, 2, 3); --tc-chart-2: rgb(4, 5, 6)" heading="R" value="1" .labels=${labels} .series=${series} default-index="1"></tc-kpi-chart>`);
+    const [a, b] = el.querySelectorAll<SVGPolylineElement>(".ui-kpi__lines polyline");
+    expect(a.hasAttribute("stroke")).toBe(false);
+    expect(getComputedStyle(a).stroke).toBe("rgb(1, 2, 3)");
+    expect(getComputedStyle(b).stroke).toBe("rgb(4, 5, 6)");
+    const dots = el.querySelectorAll<HTMLElement>(".ui-kpi__dot");
+    expect(getComputedStyle(dots[1]).backgroundColor).toBe("rgb(4, 5, 6)");
+    const legend = el.querySelectorAll<SVGLineElement>(".ui-kpi__legend line");
+    expect(getComputedStyle(legend[0]).stroke).toBe("rgb(1, 2, 3)");
+    expect(getComputedStyle(legend[1]).stroke).toBe("rgb(4, 5, 6)");
+  });
+
+  test("the React wrapper passes lowerIsBetter, deltaFormat and token colours through", async () => {
+    const host = document.createElement("div");
+    document.body.append(host);
+    const root = createRoot(host);
+    await act(async () =>
+      root.render(
+        React.createElement(KpiChart, {
+          title: "Cost",
+          value: "$1.2k",
+          delta: -4,
+          lowerIsBetter: true,
+          deltaFormat: (n: number) => `${n}%`,
+          labels,
+          series: [{ label: "Spend", color: "var(--tc-chart-1)", values: [3, 2, 1] }],
+        }),
+      ),
+    );
+    await settle();
+    const d = host.querySelector(".ui-kpi__delta")!;
+    expect(d.textContent).toBe("−4%");
+    expect(d.getAttribute("data-tone")).toBe("good");
+    expect(host.querySelector("polyline")!.getAttribute("style")).toContain("var(--tc-chart-1)");
+    act(() => root.unmount());
   });
 
   test("controlled: preventDefault keeps the index; the change is still reported", async () => {

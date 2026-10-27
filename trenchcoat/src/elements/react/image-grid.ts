@@ -3,13 +3,14 @@ import * as React from "react";
 import { TcImageGrid, type ImageGridCompareChange, type ImageGridSplitChange, type ImageGridTile, type ImageGridTileEvent, type ImageGridTilesChange } from "../image-grid";
 import { h, useControlled } from "./internal";
 
-export type { ImageGridAction, ImageGridTile, ImageGridTileStatus } from "../image-grid";
+export type { ImageGridAction, ImageGridBadgeTone, ImageGridTile, ImageGridTileStatus } from "../image-grid";
 
 const RawImageGrid = createComponent({
   tagName: "tc-image-grid",
   elementClass: TcImageGrid,
   react: React,
   events: {
+    onTcOpen: "tc-open" as EventName<CustomEvent<ImageGridTileEvent>>,
     onTcRegenerate: "tc-regenerate" as EventName<CustomEvent<ImageGridTileEvent>>,
     onTcUpscale: "tc-upscale" as EventName<CustomEvent<ImageGridTileEvent>>,
     onTcDownload: "tc-download" as EventName<CustomEvent<ImageGridTileEvent>>,
@@ -43,6 +44,8 @@ export type ImageGridOwnProps = {
   defaultSplit?: number;
   /** The compare divider moved: its new place, 0–100 */
   onSplitChange?: (split: number) => void;
+  /** A done tile was opened – its image clicked, or Space or O on it. Setting it makes the tiles openable */
+  onOpen?: (tile: ImageGridTile, index: number) => void;
   /** Regenerate (or Try again) on a tile – answer by updating the tile: pending, then done with the new src */
   onRegenerate?: (tile: ImageGridTile, index: number) => void;
   /** Upscale on a tile – answer by updating the tile */
@@ -50,7 +53,7 @@ export type ImageGridOwnProps = {
   /** Download on a tile; the image is saved unless you call event.preventDefault() */
   onDownload?: (tile: ImageGridTile, index: number, event: Event) => void;
 };
-export type ImageGridProps = Omit<RawImageGridProps, keyof ImageGridOwnProps | "heading" | "onTcRegenerate" | "onTcUpscale" | "onTcDownload" | "onTcTilesChange" | "onTcCompareChange" | "onTcSplitChange"> & ImageGridOwnProps;
+export type ImageGridProps = Omit<RawImageGridProps, keyof ImageGridOwnProps | "heading" | "onTcOpen" | "onTcRegenerate" | "onTcUpscale" | "onTcDownload" | "onTcTilesChange" | "onTcCompareChange" | "onTcSplitChange"> & ImageGridOwnProps;
 
 const EMPTY: ImageGridTile[] = [];
 
@@ -65,9 +68,11 @@ export function ImageGrid({
   split,
   defaultSplit = 50,
   onSplitChange,
+  onOpen,
   onRegenerate,
   onUpscale,
   onDownload,
+  openable,
   ...props
 }: ImageGridProps) {
   const t = useControlled(tiles, defaultTiles, onTilesChange);
@@ -76,12 +81,14 @@ export function ImageGrid({
   return h(RawImageGrid, {
     ...props,
     heading: title,
+    openable: openable ?? !!onOpen,
     tiles: t.value,
     compare: c.value,
     split: s.value,
     onTcTilesChange: (e: CustomEvent<ImageGridTilesChange>) => t.handler(e.detail.tiles, e),
     onTcCompareChange: (e: CustomEvent<ImageGridCompareChange>) => c.handler(e.detail.compare, e),
     onTcSplitChange: (e: CustomEvent<ImageGridSplitChange>) => s.handler(e.detail.split, e),
+    onTcOpen: (e: CustomEvent<ImageGridTileEvent>) => onOpen?.(e.detail.tile, e.detail.index),
     onTcRegenerate: (e: CustomEvent<ImageGridTileEvent>) => onRegenerate?.(e.detail.tile, e.detail.index),
     onTcUpscale: (e: CustomEvent<ImageGridTileEvent>) => onUpscale?.(e.detail.tile, e.detail.index),
     onTcDownload: (e: CustomEvent<ImageGridTileEvent>) => onDownload?.(e.detail.tile, e.detail.index, e),

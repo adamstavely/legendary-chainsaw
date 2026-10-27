@@ -449,6 +449,90 @@ describe("tc-image-grid", () => {
     await act(async () => root.unmount());
   });
 
+  test("badge and meta: a toned pill top left, a note beside the number, both in the tile's name", async () => {
+    const el = await grid([
+      { ...TILES[0], badge: "Attested", badgeTone: "success", meta: "3 claims" },
+      { ...TILES[1], badge: "Unverified", badgeTone: "warning" },
+      { ...TILES[2], badge: "Failed", badgeTone: "danger", meta: "1 claim" },
+      { ...TILES[3], badge: "Odd", badgeTone: "nope" as never },
+    ]);
+    const badge = (id: string) => el.querySelector<HTMLElement>(`[data-id="${id}"] .ui-igrid__badge`)!;
+    expect(badge("a").dataset.text).toBe("Attested");
+    expect(badge("a").dataset.tone).toBe("success");
+    expect(badge("a").getAttribute("aria-hidden")).toBe("true");
+    expect(badge("b").dataset.tone).toBe("warning");
+    expect(badge("d").dataset.tone).toBe("neutral");
+    expect(getComputedStyle(badge("a")).position).toBe("absolute");
+    expect(el.querySelector('[data-id="a"] .ui-igrid__meta')!.getAttribute("data-text")).toBe("3 claims");
+    expect(cells(el)[0].getAttribute("aria-label")).toBe("Variation 1: Orange dusk over the sea. Attested, 3 claims");
+    expect(cells(el)[1].getAttribute("aria-label")).toBe("Variation 2: No alt text. Unverified");
+    // A failed tile keeps its badge; the meta shows with the image only
+    expect(badge("c").dataset.text).toBe("Failed");
+    expect(el.querySelector('[data-id="c"] .ui-igrid__meta')).toBeNull();
+    expect(cells(el)[2].getAttribute("aria-label")).toBe("Variation 3: The model timed out, Try again. Failed");
+    // No badge, no pill
+    const plain = await grid();
+    expect(plain.querySelector(".ui-igrid__badge, .ui-igrid__meta")).toBeNull();
+  });
+
+  test("openable: clicking a done image, Space or O fires tc-open; pending and failed tiles don't open", async () => {
+    const off = await grid();
+    const none = listen(off, "tc-open");
+    off.querySelector<HTMLElement>('[data-id="a"] .ui-igrid__media')!.click();
+    await key(cells(off)[0], " ");
+    await key(cells(off)[0], "o");
+    expect(none).toEqual([]);
+    expect(off.querySelector('[id$="-keys"]')!.textContent).not.toContain("Space to open");
+
+    const el = await grid([...TILES, { id: "p", alt: "", status: "pending" }]);
+    el.openable = true;
+    await settle();
+    expect(el.hasAttribute("openable")).toBe(true);
+    expect(el.querySelector('[id$="-keys"]')!.textContent).toContain("Space to open");
+    const opened = listen<{ tile: ImageGridTile; index: number }>(el, "tc-open");
+    el.querySelector<HTMLElement>('[data-id="d"] .ui-igrid__media')!.click();
+    expect(opened.map((d) => [d.tile.id, d.index])).toEqual([["d", 3]]);
+    const space = new KeyboardEvent("keydown", { key: " ", bubbles: true, cancelable: true });
+    cells(el)[0].dispatchEvent(space);
+    expect(space.defaultPrevented).toBe(true);
+    await key(cells(el)[1], "O");
+    expect(opened.map((d) => d.tile.id)).toEqual(["d", "a", "b"]);
+    el.querySelector<HTMLElement>('[data-id="c"] .ui-igrid__media')!.click();
+    await key(cells(el)[4], " ");
+    expect(opened).toHaveLength(3);
+    // The tile's own actions don't open it
+    btn(el, "Regenerate Variation 1").click();
+    expect(opened).toHaveLength(3);
+  });
+
+  test("fill: grows past 560px to the container's width", async () => {
+    const wrap = await fixture(html`<div style="width: 900px"><tc-image-grid .tiles=${TILES}></tc-image-grid><tc-image-grid fill .tiles=${TILES}></tc-image-grid></div>`);
+    const [capped, filled] = [...wrap.querySelectorAll<TcImageGrid>("tc-image-grid")];
+    expect(capped.getBoundingClientRect().width).toBe(560);
+    expect(filled.fill).toBe(true);
+    expect(filled.getBoundingClientRect().width).toBe(900);
+    capped.fill = true;
+    await settle();
+    expect(capped.getBoundingClientRect().width).toBe(900);
+  });
+
+  test("React wrapper: onOpen makes the tiles openable and reports the tile", async () => {
+    const host = document.body.appendChild(document.createElement("div"));
+    const root = createRoot(host);
+    const onOpen = vi.fn();
+    await act(async () => root.render(React.createElement(ImageGrid, { tiles: TILES, onOpen, fill: true })));
+    await settle();
+    const el = host.querySelector("tc-image-grid")!;
+    expect(el.openable).toBe(true);
+    expect(el.fill).toBe(true);
+    await act(async () => el.querySelector<HTMLElement>('[data-id="a"] .ui-igrid__media')!.click());
+    expect(onOpen).toHaveBeenCalledWith(TILES[0], 0);
+    await act(async () => root.render(React.createElement(ImageGrid, { tiles: TILES })));
+    await settle();
+    expect(el.openable).toBe(false);
+    await act(async () => root.unmount());
+  });
+
   test("React wrapper, controlled: the compare pair and the split stay with the app", async () => {
     const host = document.body.appendChild(document.createElement("div"));
     const root = createRoot(host);
@@ -468,7 +552,7 @@ describe("tc-image-grid", () => {
       test(`axe: no violations – ${look}, ${theme}`, async () => {
         const wrap = await fixture(
           html`<div data-tc-theme=${theme} style="padding: 16px; background: ${theme === "dark" ? "#0e0e10" : "#fff"}">
-            <tc-image-grid look=${look} heading="Lighthouse" prompt="A lighthouse at dusk" .tiles=${[...TILES, { id: "p", alt: "", status: "pending", progress: 0.3 }]}></tc-image-grid>
+            <tc-image-grid look=${look} heading="Lighthouse" prompt="A lighthouse at dusk" .tiles=${[...TILES.map((t, i) => ({ ...t, badge: ["Attested", "Unverified", "Failed", "Draft"][i], badgeTone: (["success", "warning", "danger", "info"] as const)[i], meta: `${i + 1} claims` })), { id: "p", alt: "", status: "pending", progress: 0.3 }]}></tc-image-grid>
             <tc-image-grid look=${look} heading="Compared" .tiles=${TILES} .compare=${["a", "d"]}></tc-image-grid>
           </div>`,
         );

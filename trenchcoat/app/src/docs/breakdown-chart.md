@@ -31,14 +31,15 @@ question.
 3. **Bar** `.ui-bc__col` – one slice value, stacked by segment; hover or focus shows its breakdown
 4. **Breakdown** `.ui-bc__tooltip` – the bar's total and each segment's share, largest first
 5. **Table** `.ui-bc__table` – the same numbers, one row per bar and one column per segment
-6. **Legend** `.ui-bc__foot` – a chip per segment value to hide or show it, and Show all
+6. **Legend** `.ui-bc__foot` – a chip per segment value to hide or show it, wrapping onto more rows when narrow, and Show all
 
 ## Looks
 
 Standard sets the pickers, chart and table on a white card in the gray tray, with the legend on the tray below.
 Clean has no tray: one white card with the title and total on top, quiet white pickers, hairline gridlines and the
 legend as the card's last row. Each look has its own segment palette, every colour at least 3:1 against the
-surface in both themes.
+surface in both themes. In both looks the legend wraps onto more rows when the chips don't fit, so none is cut off on
+a phone. Both stop at 560 px wide; set `fill` to let the chart take its container's whole width on a dashboard.
 
 ## Keyboard
 
@@ -78,11 +79,13 @@ The table has row and column headers, and when it is wider than the card it beco
 - Don't segment by a dimension with more than about seven values – the colours stop being distinguishable.
 - Don't slice by time; use `kpi-chart` for trends.
 - Don't hide the table to save room – it is the accessible form of the chart.
+- Don't stretch a chart with two or three bars across a wide page with `fill`; keep `fill` for many slice values or a
+  dashboard column.
 
 ## Example
 
 ```html
-<tc-breakdown-chart id="work" heading="Sprint 24 workload"></tc-breakdown-chart>
+<tc-breakdown-chart id="work" heading="Sprint 24 workload" fill></tc-breakdown-chart>
 
 <script type="module">
   import "trenchcoat/breakdown-chart";
@@ -117,6 +120,6 @@ const dimensions: Dimension[] = [
 const measures: Measure[] = [{ key: "count", label: "Count", unit: "tasks" }];
 
 export function Workload({ records }: { records: BreakdownRecord[] }) {
-  return <BreakdownChart title="Sprint 24 workload" records={records} dimensions={dimensions} measures={measures} defaultSegment="priority" />;
+  return <BreakdownChart title="Sprint 24 workload" records={records} dimensions={dimensions} measures={measures} defaultSegment="priority" fill />;
 }
 ```

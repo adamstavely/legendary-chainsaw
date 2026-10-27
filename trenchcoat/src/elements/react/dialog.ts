@@ -15,7 +15,7 @@ const Raw = createComponent({
 });
 export type DialogProps = Omit<
   React.ComponentProps<typeof Raw>,
-  "open" | "children" | "content" | "onTcOpenChange"
+  "open" | "children" | "content" | "actions" | "onTcOpenChange"
 > & {
   /** Whether the modal is open when controlled. */
   open?: boolean;
@@ -25,18 +25,23 @@ export type DialogProps = Omit<
   onOpenChange?: (open: boolean) => void;
   /** Interactive React content rendered into the native dialog. */
   children?: React.ReactNode;
+  /** The app's footer actions (e.g. a primary Button), rendered after the built-in Close button. */
+  actions?: React.ReactNode;
 };
 export function Dialog({
   open,
   defaultOpen = false,
   onOpenChange,
   children,
+  actions,
+  closeButton,
   ref,
   ...props
 }: DialogProps) {
   const state = useControlled(open, defaultOpen, onOpenChange);
   const [element, setElement] = React.useState<TcDialog | null>(null);
   const [body, setBody] = React.useState<Element | null>(null);
+  const [footer, setFooter] = React.useState<Element | null>(null);
   const attach = React.useCallback(
     (node: TcDialog | null) => {
       setElement(node);
@@ -49,7 +54,9 @@ export function Dialog({
     let current = true;
     if (element)
       void element.updateComplete.then(() => {
-        if (current) setBody(element.querySelector(".tc-dialog-body"));
+        if (!current) return;
+        setBody(element.querySelector(".tc-dialog-body"));
+        setFooter(element.querySelector(".tc-dialog-actions"));
       });
     return () => {
       current = false;
@@ -61,11 +68,17 @@ export function Dialog({
     h(Raw, {
       ...props,
       ...(children !== undefined ? { text: "" } : {}),
+      // The element can't see portalled actions, so "auto" is resolved here: secondary beside actions
+      closeButton:
+        actions != null && (closeButton ?? "auto") === "auto"
+          ? "secondary"
+          : (closeButton ?? "auto"),
       ref: attach,
       open: state.value,
       onTcOpenChange: (e: CustomEvent<{ open: boolean }>) =>
         state.handler(e.detail.open, e),
     }),
     body && children !== undefined ? createPortal(children, body) : null,
+    footer && actions != null ? createPortal(actions, footer) : null,
   );
 }

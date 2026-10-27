@@ -429,7 +429,6 @@ export class TcAgentCursors extends TcElement {
 
   /* ---------- Measuring ---------- */
 
-  private run = () => this.measure();
   private onRun = (e: TransitionEvent) => {
     // Every frame while an image or a table card resizes, so pointers and pins ride along
     const el = e.target as HTMLElement;

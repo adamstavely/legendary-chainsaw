@@ -345,3 +345,151 @@ describe("tc-claim-answer", () => {
       expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
     });
 });
+
+describe("tc-claim-answer – media and memory, ceilings, the question type", () => {
+  const MEDIA_SOURCES: ClaimSource[] = [
+    { id: "call", site: "Site call", title: "Call transcript", quote: "End of January for the bays." },
+    { id: "lease", site: "Lease scan", title: "Scanned lease", quote: "Occupation from 1 February.", validity: { observed: NOW - 24 * DAY, changed: true } },
+  ];
+  const MEDIA: AnswerClaim[] = [
+    { id: "t", text: "The bays are done by January,", source: "transcript", confidence: 0.88, recognition: 0.91, sources: ["call"] },
+    { id: "o", text: " and we move in on 1 February.", source: "ocr", confidence: 0.9, recognition: 0.72, sources: ["lease"] },
+    { id: "i", text: " The racking is still crated.", source: "image", confidence: 0.64 },
+    { id: "s", text: "Fit-out ran late last time,", source: "session", confidence: 0.7, paragraph: true },
+    { id: "k", text: " so add a month,", source: "team", confidence: 0.75 },
+    { id: "g", text: " and expect mid-March.", source: "agent", confidence: 0.58 },
+  ];
+  const CEILINGS = { transcript: 0.8, image: 0.7, ocr: 0.85, session: 0.7 };
+  const media = (extra = html``) =>
+    fixture<TcClaimAnswer>(html`<tc-claim-answer .claims=${MEDIA} .sources=${MEDIA_SOURCES} .now=${NOW} .confidenceCeilings=${CEILINGS}>${extra}</tc-claim-answer>`);
+
+  test("media types share a double line, memory types a wavy one; the key names each; media count as sourced", async () => {
+    const el = await media();
+    const claims = [...el.querySelectorAll<HTMLElement>(".ui-cla__claim")];
+    expect(claims.map((c) => getComputedStyle(c).textDecorationStyle)).toEqual(["double", "double", "double", "wavy", "wavy", "wavy"]);
+    expect([...el.querySelectorAll(".ui-cla__key")].map((k) => text(k))).toEqual([
+      "Transcript1",
+      "Image1",
+      "OCR1",
+      "Earlier session1",
+      "Team knowledge1",
+      "Agent finding1",
+    ]);
+    // The key's swatch draws the same line
+    expect([...el.querySelectorAll(".ui-cla__key .ui-cla__swatch path")].map((p) => p.getAttribute("data-line"))).toEqual(["double", "double", "double", "wavy", "wavy", "wavy"]);
+    expect(text(el.querySelector(".ui-cla__caption"))).toBe("3 of 6 claims backed by a source");
+  });
+
+  test("a media claim says how well the medium was read, beside its type", async () => {
+    const el = await media();
+    expect(text(claimEl(el, "o"))).toBe("and we move in on 1 February., OCR 72%, 72% confidence (capped)");
+    claimEl(el, "o").click();
+    await settle();
+    expect(text(el.querySelector(".ui-cla__detail .ui-cla__type"))).toBe("OCR72%");
+    expect(text(el.querySelector(".ui-cla__dt-note"))).toBe("From text read off a scan – the reading can be wrong, so check the original.");
+  });
+
+  test("confidence ceilings: a type's ceiling and the recognition cap what's shown, and the detail says why", async () => {
+    const el = await media();
+    // Transcript: the model said 88%, transcripts go no higher than 80%
+    claimEl(el, "t").click();
+    await settle();
+    const meter = () => el.querySelector<HTMLElement>(".ui-cla__detail .ui-cla__meter")!;
+    expect(meter().getAttribute("aria-valuenow")).toBe("80");
+    expect(meter().getAttribute("aria-valuetext")).toBe("80%, high, capped");
+    expect(text(el.querySelector(".ui-cla__cap"))).toBe("Capped at 80% – the model said 88%, but transcript claims are shown no higher.");
+    // OCR: the ceiling is 85%, but the scan was only read at 72%
+    claimEl(el, "o").click();
+    await settle();
+    expect(meter().getAttribute("aria-valuenow")).toBe("72");
+    expect(text(el.querySelector(".ui-cla__cap"))).toBe("Capped at 72% – the model said 90%, but the source itself was only read at 72%.");
+    // Under its ceiling, or a type with none: shown as given, with no note
+    claimEl(el, "g").click();
+    await settle();
+    expect(meter().getAttribute("aria-valuenow")).toBe("58");
+    expect(el.querySelector(".ui-cla__cap")).toBeNull();
+    // The line under the answer uses the shown value
+    claimEl(el, "t").dispatchEvent(new PointerEvent("pointerenter", { pointerType: "mouse" }));
+    await settle();
+    expect(text(el.querySelector(".ui-cla__caption"))).toBe("Transcript · 80% confidence");
+  });
+
+  test("ceilings apply to the text types too; without any, nothing is capped", async () => {
+    const el = await make();
+    expect(text(claimEl(el, "a"))).toBe("Costs rise 4%., Sourced, 86% confidence");
+    el.confidenceCeilings = { grounded: 0.75 };
+    await settle();
+    expect(text(claimEl(el, "a"))).toBe("Costs rise 4%., Sourced, 75% confidence (capped)");
+    expect(el.shownConfidence(CLAIMS[0])).toEqual({ value: 0.75, capped: "type" });
+    expect(el.shownConfidence(CLAIMS[2])).toBeNull();
+  });
+
+  test("memory types say what they are; labels and notes are properties", async () => {
+    const el = await media();
+    claimEl(el, "s").click();
+    await settle();
+    expect(text(el.querySelector(".ui-cla__dt-note"))).toBe("Remembered from an earlier session, not retrieved now – it may be out of date.");
+    el.sourceLabels = { session: "Last week's chat" };
+    el.sourceNotes = { session: "From last week." };
+    await settle();
+    expect(text(el.querySelector(".ui-cla__detail .ui-cla__type"))).toBe("Last week's chat");
+    expect(text(el.querySelector(".ui-cla__dt-note"))).toBe("From last week.");
+  });
+
+  test("a source that changed since it was used shows it on its badge", async () => {
+    const el = await media();
+    claimEl(el, "o").click();
+    await settle();
+    const badge = el.querySelector<TcValidityBadge>(".ui-cla__detail tc-validity-badge")!;
+    expect(badge.changed).toBe(true);
+    expect(badge.querySelector('.ui-vb__flag[data-kind="changed"]')).not.toBeNull();
+  });
+
+  test("the question type: a tag in the head with its meaning; none by default; labels and notes are properties", async () => {
+    const el = await make();
+    expect(el.querySelector(".ui-cla__qtype")).toBeNull();
+    el.questionType = "predictive";
+    await settle();
+    const tag = el.querySelector<HTMLElement>(".ui-cla__qtype")!;
+    expect(tag.dataset.qtype).toBe("predictive");
+    expect(text(tag)).toBe("Question type: Predictive. Asks about the future – expect more uncertainty than a fact carries.");
+    expect(tag.title).toBe("Asks about the future – expect more uncertainty than a fact carries.");
+    el.questionTypeLabels = { predictive: "Forecast" };
+    el.questionTypeNotes = { predictive: "About what happens next." };
+    await settle();
+    expect(text(el.querySelector(".ui-cla__qtype"))).toBe("Question type: Forecast. About what happens next.");
+    // Set as an attribute too; an unknown value shows no tag
+    el.setAttribute("question-type", "factual");
+    await settle();
+    expect(el.querySelector<HTMLElement>(".ui-cla__qtype")!.dataset.qtype).toBe("factual");
+    el.setAttribute("question-type", "rumour");
+    await settle();
+    expect(el.querySelector(".ui-cla__qtype")).toBeNull();
+  });
+
+  test("React: ceilings and the question type reach the element", async () => {
+    const host = document.createElement("div");
+    document.body.append(host);
+    const root = createRoot(host);
+    await act(async () =>
+      root.render(React.createElement(ClaimAnswer, { claims: MEDIA, sources: MEDIA_SOURCES, confidenceCeilings: CEILINGS, questionType: "analytical", now: NOW })),
+    );
+    await settle();
+    const el = host.querySelector<TcClaimAnswer>("tc-claim-answer")!;
+    expect(el.questionType).toBe("analytical");
+    expect(text(claimEl(el, "t"))).toContain("80% confidence (capped)");
+    await act(async () => root.unmount());
+  });
+
+  for (const theme of ["light", "dark"])
+    test(`axe: media and memory claims, a capped claim open and the question tag pass (${theme})`, async () => {
+      const wrap = await fixture(html`<div data-tc-theme=${theme} style="background: ${theme === "dark" ? "#0e0e10" : "#fff"}; padding: 8px">
+        <tc-claim-answer question-type="predictive" .claims=${MEDIA} .sources=${MEDIA_SOURCES} .confidenceCeilings=${CEILINGS} .now=${NOW} .open=${"o"}></tc-claim-answer>
+        <tc-claim-answer look="clean" aria-label="Clean answer" question-type="opinion" .claims=${MEDIA} .sources=${MEDIA_SOURCES} .confidenceCeilings=${CEILINGS} .now=${NOW} .open=${"s"}></tc-claim-answer>
+      </div>`);
+      await settle();
+      await Promise.all(document.getAnimations().map((x) => (x.finish(), x.finished)));
+      const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
+      expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
+    });
+});

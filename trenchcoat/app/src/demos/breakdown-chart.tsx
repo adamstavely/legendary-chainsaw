@@ -90,6 +90,7 @@ export default function Demo({ ui }: { ui: typeof UI }) {
     <div style={{ width: "100%", maxWidth: 760 }}>
       <BreakdownChart
         title="Sprint 24 workload"
+        fill
         records={records}
         dimensions={dimensions}
         measures={measures}

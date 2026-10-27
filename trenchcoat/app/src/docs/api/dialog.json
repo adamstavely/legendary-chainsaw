@@ -3,7 +3,7 @@
   {
    "tag": "tc-dialog",
    "className": "TcDialog",
-   "description": "Native modal dialog with content, focus containment, Escape and focus restoration.",
+   "description": "Native modal dialog with content, focus containment, Escape and focus restoration.\nThe body and the actions are the app's: the dialog's own control styles don't reach into them, so a hosted\ntc-button or progress tracker renders as it does anywhere else.",
    "properties": [
     {
      "name": "open",
@@ -30,11 +30,43 @@
      "readonly": false
     },
     {
+     "name": "description",
+     "attribute": "description",
+     "type": "string",
+     "default": "\"\"",
+     "description": "A line under the heading that says what the dialog is for; it becomes the dialog's accessible description.",
+     "readonly": false
+    },
+    {
      "name": "content",
      "attribute": null,
      "type": "unknown",
      "default": "undefined",
      "description": "Body template or DOM node; the element renders it inside the modal.",
+     "readonly": false
+    },
+    {
+     "name": "actions",
+     "attribute": null,
+     "type": "unknown",
+     "default": "undefined",
+     "description": "The app's actions for the footer (a template or DOM node, e.g. tc-buttons); they sit after the Close button.",
+     "readonly": false
+    },
+    {
+     "name": "closeButton",
+     "attribute": "close-button",
+     "type": "DialogCloseButton",
+     "default": "\"auto\"",
+     "description": "The built-in Close button: \"auto\" (primary alone, secondary beside actions), \"primary\", \"secondary\" or \"hidden\". Escape still closes when hidden.",
+     "readonly": false
+    },
+    {
+     "name": "closeLabel",
+     "attribute": "close-label",
+     "type": "string",
+     "default": "\"Close\"",
+     "description": "The built-in button's text, e.g. \"Cancel\" beside a primary action.",
      "readonly": false
     },
     {
@@ -90,18 +122,268 @@
      "type": "React.ReactNode",
      "optional": true,
      "description": "Interactive React content rendered into the native dialog."
+    },
+    {
+     "name": "actions",
+     "type": "React.ReactNode",
+     "optional": true,
+     "description": "The app's footer actions (e.g. a primary Button), rendered after the built-in Close button."
     }
    ],
    "hides": [
     "open",
     "children",
-    "content"
-   ]
+    "content",
+    "actions"
+   ],
+   "events": {
+    "tc-open-change": "onOpenChange"
+   }
   }
  ],
  "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-dialog",
+   "className": "TcDialog",
+   "module": "trenchcoat/dialog",
+   "data": [
+    "content",
+    "actions"
+   ],
+   "attributes": [
+    {
+     "name": "open",
+     "attribute": "open"
+    },
+    {
+     "name": "label",
+     "attribute": "label"
+    },
+    {
+     "name": "text",
+     "attribute": "text"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    },
+    {
+     "name": "closeButton",
+     "attribute": "close-button"
+    },
+    {
+     "name": "closeLabel",
+     "attribute": "close-label"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-open-change",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "open",
+     "event": "tc-open-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "121",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "has"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "internal/settings",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "internal/kit",
+     "internal/settings"
+    ]
+   },
+   {
+    "id": "has",
+    "name": ":has()",
+    "bcd": "css.selectors.has",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "121",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Layout and state that depend on what's inside a part (an icon present, a focused field).",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "dialog",
+    "name": "<dialog> and showModal()",
+    "bcd": "api.HTMLDialogElement.showModal",
+    "versions": {
+     "chrome": "37",
+     "edge": "79",
+     "firefox": "98",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Modals trap focus, close on Escape and sit in the top layer.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "internal/base",
+     "internal/settings",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS (internal/kit › kitCss)",
+    "CSS (internal/settings › rawSettingsCss)"
+   ]
+  },
+  "windowed": false
+ },
  "size": {
-  "min": 22959,
-  "gzip": 6425
+  "min": 26342,
+  "gzip": 7244
  }
 }

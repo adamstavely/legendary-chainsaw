@@ -29,10 +29,12 @@ export default function Demo({ ui }: { ui: typeof UI }) {
   const [mode, setMode] = useState<ReflectionMode>("intent");
   const [run, setRun] = useState(0);
   const [last, setLast] = useState<string | null>(null);
+  // Deadline mode: the short, single-field version of each pause
+  const [brief, setBrief] = useState(false);
 
   return (
     <div style={{ width: "100%", maxWidth: 560, display: "grid", gap: 12, justifyItems: "stretch" }}>
-      <div style={{ justifySelf: "start", maxWidth: "100%", overflowX: "auto" }}>
+      <div style={{ justifySelf: "start", maxWidth: "100%", overflowX: "auto", display: "flex", flexWrap: "wrap", gap: 8 }}>
         <SegmentedControl
           aria-label="Reflection mode"
           size="sm"
@@ -43,13 +45,27 @@ export default function Demo({ ui }: { ui: typeof UI }) {
             setLast(null);
           }}
         />
+        <SegmentedControl
+          aria-label="Time pressure"
+          size="sm"
+          options={[
+            { value: "full", label: "Full" },
+            { value: "brief", label: "Deadline" },
+          ]}
+          value={brief ? "brief" : "full"}
+          onChange={(v) => {
+            setBrief(v === "brief");
+            setLast(null);
+          }}
+        />
       </div>
       <ReflectionGate
-        key={`${mode}-${run}`}
+        key={`${mode}-${brief}-${run}`}
         mode={mode}
+        brief={brief}
         answer={ANSWER}
         claims={CLAIMS}
-        onSubmit={(s) => setLast(`Submitted ${s.mode}: ${said(s)}`)}
+        onSubmit={(s) => setLast(`Submitted ${s.mode}${s.brief ? " (short version)" : ""}: ${said(s)}`)}
         onSkip={(m) => setLast(`Skipped ${m}`)}
       />
       <div style={{ ...caption, textAlign: "center", minHeight: 18 }}>
