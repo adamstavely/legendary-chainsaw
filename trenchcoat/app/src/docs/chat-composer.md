@@ -1,7 +1,7 @@
 ---
 pattern: none
 status: react-twin
-related: model-picker, model-settings, prompt-library, context-tray
+related: model-picker, mention-picker, prompt-library, context-tray
 ---
 
 ## Overview
@@ -13,7 +13,9 @@ send that returns a promise keeps the message until it goes through, and brings 
 On request it also hosts the / and @ picker and a tray of what's in context, and a toolbar row under the box:
 switch the model, open its settings or the prompt library, connect or disconnect what's on the page – so people
 always know whether the model can see it – and a one-line disclaimer. The row folds to icons, then into a “More”
-menu, to fit a 320 px side pane.
+menu, to fit a 320 px side pane. With `skills` set, people start a message with a skill: typing / at the start (or
+pressing the / button) lists them, recent ones first, then by source; a pick puts “/translate” at the start of the
+message with what to type next greyed after it, and the skill and its arguments ride on the send.
 
 ## When to use
 
@@ -22,6 +24,8 @@ menu, to fit a 320 px side pane.
 - When the agent needs app connections, a project or an approval before it can do its best work.
 - An assistant docked beside a page, where people choose whether it can see the page – turn on `pageContext` and the
   toolbar, and leave out what the pane doesn't offer with `hide-connect-apps`, `hide-project` and `hide-approval`.
+- An agent with skills or slash commands – set `skills` (and `searchSkills` when the catalogue lives on a server), so
+  people can find one by name or by what it does, without knowing the list by heart.
 
 ## When not to use
 
@@ -29,16 +33,21 @@ menu, to fit a 320 px side pane.
 - A full spoken conversation with live captions, rather than dictating one message – use `voice-mode`.
 - Asking for permission at the moment an agent acts – use `permission-request`.
 - Editing generation settings as a page of their own, not from the composer – use `model-settings`.
+- Commands that act on the app rather than on the message (open a file, switch a page) – use `command-menu`.
 
 ## Anatomy
 
 1. **Message** `.ui-chat-composer__message` – the text area; grows with the text. Beside it: attach, “Request approval”, the mic
-2. **Send** `.ui-chat-composer__send` – sends; next to the mic, which records instead
-3. **Connect apps** `.ui-chat-composer__connect` – on the tray (Clean: the last row); then “Select a project”
-4. **Model** `.ui-chat-composer__picker` – with `model-switcher="toolbar"`, model-picker's menu in the toolbar row (otherwise a model button in the card)
-5. **Settings and prompts** `.ui-chat-composer__tool` – open model-settings and prompt-library in popovers
-6. **Page context** `.ui-chat-composer__page` – connects or disconnects what's on the page; the button beside it shows what's attached
-7. **Disclaimer** `.ui-chat-composer__disclaimer` – one quiet line under it all
+2. **Skills** `.ui-chat-composer__skills` – with `skills` set, the / button that opens the skills list
+3. **Send** `.ui-chat-composer__send` – sends; next to the mic, which records instead
+4. **Connect apps** `.ui-chat-composer__connect` – on the tray (Clean: the last row); then “Select a project”
+5. **Model** `.ui-chat-composer__picker` – with `model-switcher="toolbar"`, model-picker's menu in the toolbar row (otherwise a model button in the card)
+6. **Settings and prompts** `.ui-chat-composer__tool` – open model-settings and prompt-library in popovers
+7. **Page context** `.ui-chat-composer__page` – connects or disconnects what's on the page; the button beside it shows what's attached
+
+Under the row, `disclaimer` adds one quiet line. Once a skill is picked, its token `.ui-chat-composer__token` – a
+tint behind “/name” at the start of the message – and its argument hint `.ui-chat-composer__arg` show in the text
+area; the list itself is mention-picker's.
 
 Each of “Connect apps”, “Select a project” and “Request approval” can be left out: `hide-connect-apps` offers
 “Select a project” straight away, `hide-project` folds the row away once apps are connected, and with both the tray
@@ -51,7 +60,8 @@ width, and the message shows one line and grows to two. Clean is one white card 
 sizes: the message on top, growing up to four lines, the tools in a row below it, and a quiet last row that connects
 apps and then lets you pick a project; its icons are 16 px glyphs with thin lines and solid shapes. In the toolbar
 row, Standard tints the connected page context chip in the accent; Clean raises it as a white chip with an accent
-eye, and draws the tool icons in a quieter gray with thinner lines.
+eye, and draws the tool icons in a quieter gray with thinner lines. The skills list is mention-picker's, in the same
+look: Standard sets it on a gray tray, Clean is one white popover. The token is the same accent tint in both.
 
 ## Keyboard
 
@@ -68,10 +78,14 @@ eye, and draws the tool icons in a quieter gray with thinner lines.
 | Home / End | In the toolbar row: the first or last tool |
 | Enter / Space | On a toolbar button: opens its popover (focus moves into it), or toggles the page context |
 | ↓ / ↑ | In the “More” menu: the next or previous entry. Home / End: the first or last |
+| / | With `skills` set, at the start of a line: opens the skills list. Before a skill's token: a / takes its place and the list offers to replace it; Escape puts the token back |
+| ↓ / ↑, Enter / Tab, Escape | In the skills list: move, pick, close – the message keeps focus (`mention-picker`) |
+| Backspace | Right after a skill's token (or the space after it): removes the token whole |
+| Delete | Before a skill's token: removes it whole |
 
-With `mentions` set, typing / or @ in the message opens the picker, which has its own keys (`mention-picker`). The
-toolbar's model switch, settings and prompt library keep their own keys inside their popovers (`model-picker`,
-`model-settings`, `prompt-library`).
+A key typed inside the token lands after it. With `mentions` set, typing @ (or another trigger) opens the same
+picker, which has its own keys (`mention-picker`). The toolbar's model switch, settings and prompt library keep
+their own keys inside their popovers (`model-picker`, `model-settings`, `prompt-library`).
 
 ## Screen readers
 
@@ -94,6 +108,15 @@ Q3 report”. When the row is folded, the icon buttons keep these names; “More
 `menu` of `menuitem`s. A used prompt is announced (“Summarise added to your message.”). The disclaimer describes the
 message field (`aria-describedby`), so it's read with it.
 
+With skills, the text area stays focused and is the combobox: mention-picker gives it `aria-autocomplete="list"`,
+`aria-controls` and `aria-activedescendant` on a listbox named “Skills”, and says the count politely (“9 skills”,
+“No skills match”, and “… Picking one replaces /translate” when there's one already). The token is text in the
+message, so it's read as typed (“/translate French”); while a message starts with a skill, the text area is also
+described by “Skill /translate: Translate the answer into another language. Type language.” – the last sentence
+until something is typed after it. Picks are said in the live region: “/translate added. Then type language.”,
+“/review-pr replaces /translate.”, “/translate removed.” The / button is named “Use a skill”; the mirror that draws
+the token's tint is hidden from screen readers.
+
 ## Content
 
 - Write the placeholder as an invitation in the product's voice: “Ask anything…”, “Ask anything, or press the mic to
@@ -104,6 +127,11 @@ message field (`aria-describedby`), so it's read with it.
 - Give the page context a short title people recognise from the page itself: “Q3 report”, “Acme renewal”, not a URL
   or an id. Pass `count` when the app attaches items, or `tokens` when it sends the page as text.
 - Keep the disclaimer to one sentence or two short ones: “AI can make mistakes. Check important info.”
+- Name skills with the verb people would type, lower case, hyphens for spaces: “translate”, “review-pr”. Give each a
+  one-line description of what it does to the message, and a `source` people recognise: “Built-in”, “Your team”, a
+  plugin's name.
+- Write `argumentHint` as the thing to type in angle brackets: “<language>”, “<pr number>”. Leave it out when the
+  skill takes nothing.
 
 ## Do
 
@@ -114,6 +142,9 @@ message field (`aria-describedby`), so it's read with it.
 - Decide what's sent from `pageContext.connected` in your own send handler – the chip only says what the model can see.
 - Put the model switch in the toolbar (`model-switcher="toolbar"`) when you also turn on settings – the two belong
   together.
+- Pass `recentSkills` from what the person used last, across sessions; the composer only remembers picks while it's
+  on the page.
+- Read `skill` and `args` from `onSend`'s details (or tc-send) to run the skill; `message` still has the whole text.
 
 ## Don't
 
@@ -124,6 +155,8 @@ message field (`aria-describedby`), so it's read with it.
 - Don't put more than a handful of models in the list – use `model-picker` when people need to compare them.
 - Don't send the page when the chip is off, or leave the chip on after the page has changed without updating its
   title and count.
+- Don't put a / trigger in `mentions` next to `skills` – skills take the / key.
+- Don't hide the / button unless your product teaches the shortcut somewhere else.
 
 ## Example
 
@@ -149,16 +182,30 @@ message field (`aria-describedby`), so it's read with it.
   composer.pageContext = { title: "Q3 report", connected: true, count: 4 };
   composer.disclaimer = "AI can make mistakes. Check important info.";
   composer.addEventListener("tc-page-context-change", (e) => console.log("page context", e.detail.change));
+
+  // Skills: / at the start of the message; the picked skill and its arguments ride on tc-send
+  composer.skills = [
+    { id: "translate", name: "translate", description: "Translate the answer", source: "Built-in", argumentHint: "<language>" },
+    { id: "brief", name: "exec-brief", description: "A one-page brief in the team's format", source: "Your team" },
+  ];
+  composer.recentSkills = ["brief"];
+  composer.addEventListener("tc-send", (e) => e.detail.skill && console.log("run", e.detail.skill.id, "with", e.detail.args));
 </script>
 ```
 
 ```tsx
 import { useState } from "react";
-import { ChatComposer, defaultModels, type ChatPageContext } from "trenchcoat/react";
+import { ChatComposer, defaultModels, type ChatPageContext, type ChatSkill } from "trenchcoat/react";
 import "trenchcoat/tokens.css";
 
-export function Composer({ send, pickFiles }: { send: (text: string, model: string, withPage: boolean) => Promise<void>; pickFiles: () => void }) {
+const skills: ChatSkill[] = [
+  { id: "translate", name: "translate", description: "Translate the answer", source: "Built-in", argumentHint: "<language>" },
+  { id: "brief", name: "exec-brief", description: "A one-page brief in the team's format", source: "Your team" },
+];
+
+export function Composer({ send, pickFiles }: { send: (text: string, model: string, withPage: boolean, skill?: string) => Promise<void>; pickFiles: () => void }) {
   const [draft, setDraft] = useState("");
+  const [recent, setRecent] = useState<string[]>([]);
   const [model, setModel] = useState("claude");
   const [settings, setSettings] = useState<Record<string, number | string>>({ temperature: 0.7 });
   const [page, setPage] = useState<ChatPageContext>({ title: "Q3 report", connected: true, count: 4 });
@@ -178,7 +225,10 @@ export function Composer({ send, pickFiles }: { send: (text: string, model: stri
       pageContext={page}
       onPageContextChange={setPage}
       disclaimer="AI can make mistakes. Check important info."
-      onSend={(text, { model }) => send(text, model, page.connected)}
+      skills={skills}
+      recentSkills={recent}
+      onSkillChange={(skill, reason) => skill && reason === "pick" && setRecent((r) => [skill.id, ...r.filter((id) => id !== skill.id)])}
+      onSend={(text, { model, skill, args }) => send(skill ? args : text, model, page.connected, skill?.id)}
       onAttach={pickFiles}
       onConnectApps={() => fetch("/api/connect", { method: "POST" })}
       onRequestApproval={() => fetch("/api/approve", { method: "POST" })}

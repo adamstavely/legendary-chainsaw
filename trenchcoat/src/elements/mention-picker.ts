@@ -26,6 +26,12 @@ import { initials, textCaret } from "./internal/util";
  * above it when there's more room there – so a field inside a clipped or contained card doesn't cut it off.
  * Standard sets the menu card on a gray tray whose last row holds the keys; Clean is one white popover with hairline
  * shadows and the keys as its last row.
+ *
+ * Matching ranks a label's start first, then a word's start (in the label or the keywords), then the rest of the
+ * label, then the hint and description; the mark sits on the part that matched. A trigger can list `recent` items
+ * first while nothing is typed, rank one list across its groups while something is (`rankAcrossGroups`), show its
+ * character on each row (`showChar`), search on its own (`search`), and word its empty state, status and a note. Rows
+ * with a `description` take two lines. A failed search tries again on ↵.
  */
 
 export type MentionPickerItem = {
@@ -41,6 +47,8 @@ export type MentionPickerItem = {
   keywords?: string;
   /** What lands in a textarea / input, and the chip's text – default: the trigger plus the label, e.g. "@Maya Chen" */
   token?: string;
+  /** A second, quieter line under the label – what a command or skill does. It is matched too */
+  description?: string;
 };
 
 export type MentionPickerGroup = { id: string; label: string; items: MentionPickerItem[] };
@@ -53,6 +61,24 @@ export type MentionPickerTrigger = {
   atLineStart?: boolean;
   /** The listbox's name for screen readers, e.g. "People and files" (default "Suggestions") */
   label?: string;
+  /** Ids of items listed first, under `recentLabel`, while nothing is typed after the trigger */
+  recent?: string[];
+  /** The heading over the `recent` items (default "Recent") */
+  recentLabel?: string;
+  /** Rows show the trigger character before the label – "/translate" */
+  showChar?: boolean;
+  /** While a query is typed, one list ranked across the groups (each row tagged with its group) instead of group by group */
+  rankAcrossGroups?: boolean;
+  /** Finds suggestions for this trigger in place of the built-in filter – wins over the picker's `search` */
+  search?: MentionPickerSearch;
+  /** What the list says when nothing matches – wins over the picker's `emptyText` */
+  emptyText?: string;
+  /** A quieter line under the empty text: what to try instead */
+  emptyHint?: string;
+  /** What the status calls the results, one and many – default ["suggestion", "suggestions"] */
+  noun?: [string, string];
+  /** A quiet line over the list, e.g. "Picking one replaces /translate" – said with the count */
+  note?: string;
 };
 
 /** Finds suggestions for a query – in place of the built-in filter over `groups`. May return a promise; the signal
@@ -69,7 +95,12 @@ export type MentionPickerQueryChange = { query: string; trigger: string };
 
 type Field = HTMLTextAreaElement | HTMLInputElement | HTMLElement;
 type Context = { trigger: MentionPickerTrigger; start: number; end: number; query: string; node?: Text };
-type Row = { key: string; item: MentionPickerItem; group: MentionPickerGroup };
+/** `tag`: the row's group, shown on the row when one ranked list mixes groups */
+type Row = { key: string; item: MentionPickerItem; group: MentionPickerGroup; tag?: string };
+/** `group` is null for one ranked list (rankAcrossGroups); `total` counts every match, `rows` only those shown */
+type View = { groups: { group: MentionPickerGroup | null; rows: Row[] }[]; rows: Row[]; q: string; total: number };
+const NONE: View = { groups: [], rows: [], q: "", total: 0 };
+const RECENT = "\u0000recent";
 
 /** The longest query a trigger keeps listening to */
 const MAX_QUERY = 48;
@@ -79,21 +110,42 @@ const EDGE = 8;
 
 const isText = (f: Field): f is HTMLTextAreaElement | HTMLInputElement => f instanceof HTMLTextAreaElement || f instanceof HTMLInputElement;
 
-/** The typed text, marked where it matches */
-const highlight = (text: string, query: string): TemplateResult | string => {
-  const i = query ? text.toLowerCase().indexOf(query.toLowerCase()) : -1;
-  if (i < 0) return text;
-  return html`${text.slice(0, i)}<mark>${text.slice(i, i + query.length)}</mark>${text.slice(i + query.length)}`;
+/** What separates words in a label: "billing-spec.md", "create_report", "docs/api" */
+const SEP = /[\s._/:-]+/;
+const words = (s: string) => s.split(SEP);
+
+/** Where the query matches: the start, else a word's start ("re" in "create-report"), else anywhere – -1 for nowhere */
+const matchAt = (text: string, q: string) => {
+  const t = text.toLowerCase();
+  if (t.startsWith(q)) return 0;
+  for (let i = t.indexOf(q, 1); i > 0; i = t.indexOf(q, i + 1)) if (SEP.test(t[i - 1])) return i;
+  return t.indexOf(q);
 };
 
-/** How well an item matches: the label's start, then a word's start, then anywhere – 0 is no match */
+/** The typed text, marked where it matches */
+const highlight = (text: string, query: string): TemplateResult | string => {
+  const q = query.trim().toLowerCase();
+  const i = q ? matchAt(text, q) : -1;
+  if (i < 0) return text;
+  return html`${text.slice(0, i)}<mark>${text.slice(i, i + q.length)}</mark>${text.slice(i + q.length)}`;
+};
+
+/**
+ * How well an item matches – 0 is no match. The whole label ranks first, then its start, then a word's start in the label or the
+ * keywords, then anywhere in the label, then a word's start in the hint or description, then anywhere in those
+ */
 const score = (item: MentionPickerItem, q: string) => {
   if (!q) return 1;
   const label = item.label.toLowerCase();
-  if (label.startsWith(q)) return 4;
-  if (label.split(/[\s._/-]+/).some((w) => w.startsWith(q))) return 3;
-  if (label.includes(q)) return 2;
-  return `${item.hint ?? ""} ${item.keywords ?? ""}`.toLowerCase().includes(q) ? 1 : 0;
+  if (label === q) return 7;
+  if (label.startsWith(q)) return 6;
+  if (words(label).some((w) => w.startsWith(q))) return 5;
+  const keywords = (item.keywords ?? "").toLowerCase();
+  if (keywords && words(keywords).some((w) => w.startsWith(q))) return 4;
+  if (label.includes(q)) return 3;
+  const more = `${item.hint ?? ""} ${item.description ?? ""}`.toLowerCase();
+  if (words(more).some((w) => w.startsWith(q))) return 2;
+  return more.includes(q) || keywords.includes(q) ? 1 : 0;
 };
 
 /* Glyphs: Standard draws 24px-grid icons with 1.8px strokes, Clean the same paths thinner */
@@ -166,6 +218,13 @@ export class TcMentionPicker extends TcElement {
   close() {
     if (this.context) this.dismissed = this.context.start;
     this.setContext(null);
+  }
+
+  /** Reads the field again after a script changed its text or caret – opening the list on a trigger there, even one
+   *  that Esc closed */
+  sync() {
+    this.dismissed = null;
+    this.check();
   }
 
   override connectedCallback() {
@@ -322,7 +381,8 @@ export class TcMentionPicker extends TcElement {
   }
 
   private runSearch(ctx: Context) {
-    if (!this.search) return;
+    const search = ctx.trigger.search ?? this.search;
+    if (!search) return;
     this.searching?.abort();
     const controller = new AbortController();
     this.searching = controller;
@@ -330,7 +390,7 @@ export class TcMentionPicker extends TcElement {
     const trigger = ctx.trigger.char;
     let result: MentionPickerGroup[] | Promise<MentionPickerGroup[]>;
     try {
-      result = this.search(query, trigger, { signal: controller.signal });
+      result = search(query, trigger, { signal: controller.signal });
     } catch {
       this.found = { query, trigger, groups: [], state: "failed" };
       return;
@@ -355,29 +415,62 @@ export class TcMentionPicker extends TcElement {
 
   /* ---------- The rows ---------- */
 
+  /** The last view and what it was made from: render, updated, willUpdate and the keys all ask for it */
+  private memo: { ctx: Context; found: unknown; search: unknown; max: number; view: View } | null = null;
+
   /** The groups and rows to show for the open query */
-  private view() {
+  private view(): View {
     const ctx = this.context;
-    if (!ctx) return { groups: [] as { group: MentionPickerGroup; rows: Row[] }[], rows: [] as Row[], q: "" };
+    if (!ctx) return NONE;
+    const m = this.memo;
+    if (m && m.ctx === ctx && m.found === this.found && m.search === this.search && m.max === this.maxResults) return m.view;
+    const view = this.compute(ctx);
+    this.memo = { ctx, found: this.found, search: this.search, max: this.maxResults, view };
+    return view;
+  }
+
+  private compute(ctx: Context): View {
     const q = ctx.query.trim().toLowerCase();
-    const source = this.search ? (this.found?.groups ?? []) : ctx.trigger.groups;
+    const trigger = ctx.trigger;
+    const searching = !!(trigger.search ?? this.search);
+    let source = searching ? (this.found?.groups ?? []) : trigger.groups;
+    // Nothing typed yet: the recent items first, under their own heading, and not again in their groups
+    if (!q && trigger.recent?.length) {
+      const wanted = new Set(trigger.recent);
+      const found = new Map<string, MentionPickerItem>();
+      for (const g of source) for (const it of g.items) if (wanted.has(it.id) && !found.has(it.id)) found.set(it.id, it);
+      const items = trigger.recent.map((id) => found.get(id)).filter((it): it is MentionPickerItem => !!it);
+      if (items.length) source = [{ id: RECENT, label: trigger.recentLabel ?? "Recent", items }, ...source.map((g) => ({ ...g, items: g.items.filter((it) => !found.has(it.id)) }))];
+    }
     const matched = source
-      .map((group) => {
-        const scored = this.search ? group.items.map((item) => ({ item, s: 1 })) : group.items.map((item, i) => ({ item, i, s: score(item, q) })).filter((x) => x.s > 0).sort((a, b) => b.s - a.s || a.i - b.i);
-        return { group, scored, best: scored[0]?.s ?? 0 };
+      .map((group, gi) => {
+        const scored = group.items.map((item, i) => ({ item, i, gi, s: searching ? 1 : score(item, q) }));
+        const kept = searching ? scored : scored.filter((x) => x.s > 0).sort((a, b) => b.s - a.s || a.i - b.i);
+        return { group, scored: kept, best: kept[0]?.s ?? 0 };
       })
       .filter((g) => g.scored.length);
+    const total = matched.reduce((n, g) => n + g.scored.length, 0);
+    const max = Math.max(1, this.maxResults);
+    const key = (group: MentionPickerGroup, item: MentionPickerItem) => `${group.id}\u0000${item.id}`;
+    // One list ranked across the groups: the best matches first wherever they come from, each tagged with its group
+    if (q && trigger.rankAcrossGroups) {
+      const all = matched.flatMap((g) => g.scored.map((x) => ({ ...x, group: g.group })));
+      if (!searching) all.sort((a, b) => b.s - a.s || a.gi - b.gi || a.i - b.i);
+      const tagged = matched.length > 1;
+      const rows = all.slice(0, max).map(({ item, group }) => ({ key: key(group, item), item, group, tag: tagged ? group.label : undefined }));
+      return { groups: rows.length ? [{ group: null, rows }] : [], rows, q: ctx.query, total };
+    }
     // Groups with the best match come first (the built-in filter; a search orders its own)
-    if (!this.search && q) matched.sort((a, b) => b.best - a.best);
-    let left = Math.max(1, this.maxResults);
+    if (!searching && q) matched.sort((a, b) => b.best - a.best);
+    let left = max;
     const groups = matched
       .map(({ group, scored }) => {
-        const rows = scored.slice(0, Math.max(0, left)).map(({ item }) => ({ key: `${group.id}\u0000${item.id}`, item, group }));
+        const rows = scored.slice(0, Math.max(0, left)).map(({ item }) => ({ key: key(group, item), item, group }));
         left -= rows.length;
         return { group, rows };
       })
       .filter((g) => g.rows.length);
-    return { groups, rows: groups.flatMap((g) => g.rows), q: ctx.query };
+    return { groups, rows: groups.flatMap((g) => g.rows), q: ctx.query, total };
   }
 
   private current(rows: Row[]) {
@@ -409,6 +502,11 @@ export class TcMentionPicker extends TcElement {
         take();
         this.pick(row);
       } else if (busy) take();
+      // A failed search: ↵ tries again
+      else if (this.found?.state === "failed" && e.key === "Enter") {
+        take();
+        this.runSearch(this.context);
+      }
       // Nothing to pick: close and let the key through (Enter sends, Tab leaves)
       else this.close();
     } else if (e.key === "Escape") {
@@ -569,7 +667,10 @@ export class TcMentionPicker extends TcElement {
     if (this.context && (changed.has("context") || changed.has("found"))) {
       const { rows } = this.view();
       const st = this.found?.state;
-      const text = st === "loading" ? "" : st === "failed" ? "Couldn't load suggestions" : rows.length ? `${rows.length} ${rows.length === 1 ? "suggestion" : "suggestions"}` : this.emptyText;
+      const t = this.context.trigger;
+      const [one, many] = t.noun ?? ["suggestion", "suggestions"];
+      const count = rows.length ? `${rows.length} ${rows.length === 1 ? one : many}` : (t.emptyText ?? this.emptyText);
+      const text = st === "loading" ? "" : st === "failed" ? "Couldn't load suggestions" : t.note ? `${count}. ${t.note}` : count;
       if (text && text !== this.said.text) this.said = { text, n: this.said.n };
     }
   }
@@ -642,14 +743,44 @@ export class TcMentionPicker extends TcElement {
     </div>`;
   }
 
+  /** One row: its icon or avatar, the label (after the trigger character with `showChar`) and hint, the description
+   *  under them, and its group's tag in one ranked list */
+  private option(r: Row, i: number, active: boolean, q: string, char: string | null) {
+    const { item } = r;
+    return html`<div
+      id=${`${this.uid}-o${i}`}
+      class="ui-mnp__option"
+      role="option"
+      aria-selected=${active ? "true" : "false"}
+      ?data-two=${!!item.description}
+      @pointermove=${() => {
+        if (this.active !== r.key) this.active = r.key;
+      }}
+      @click=${() => this.pick(r)}
+    >
+      ${this.lead(item)}
+      <span class="ui-mnp__text"
+        ><span class="ui-mnp__line"
+          ><span class="ui-mnp__name">${char ? html`<span class="ui-mnp__char">${char}</span>` : nothing}${highlight(item.label, q)}</span>${item.hint
+            ? html`<span class="ui-mnp__hint">${highlight(item.hint, q)}</span>`
+            : nothing}</span
+        >${item.description ? html`<span class="ui-mnp__desc">${highlight(item.description, q)}</span>` : nothing}</span
+      >${r.tag ? html`<span class="ui-mnp__tag">${r.tag}</span>` : nothing}
+    </div>`;
+  }
+
   protected override render() {
     const clean = this.resolvedLook === "clean";
     const ctx = this.context;
-    const { groups, rows, q } = this.view();
+    const { groups, rows, q, total } = this.view();
     const row = ctx ? this.current(rows) : undefined;
     const state = this.found?.state;
     const index = new Map(rows.map((r, i) => [r.key, i]));
     const said = this.said;
+    const char = ctx?.trigger.showChar ? ctx.trigger.char : null;
+    const note = ctx?.trigger.note;
+    const empty = ctx?.trigger.emptyText ?? this.emptyText;
+    const hint = state === "failed" ? "Press ↵ to try again" : ctx?.trigger.emptyHint;
     const listbox = html`<div
       id=${`${this.uid}-list`}
       class="ui-mnp__list"
@@ -661,40 +792,43 @@ export class TcMentionPicker extends TcElement {
       <div class="ui-mnp__inner">
         ${repeat(
           groups,
-          (g) => g.group.id,
-          (g, gi) => html`<div role="group" class="ui-mnp__group" aria-labelledby=${`${this.uid}-g${gi}`}>
-            <div class="ui-mnp__label" id=${`${this.uid}-g${gi}`}>${g.group.label}</div>
-            ${repeat(
-              g.rows,
-              (r) => r.key,
-              (r) => html`<div
-                id=${`${this.uid}-o${index.get(r.key)}`}
-                class="ui-mnp__option"
-                role="option"
-                aria-selected=${r === row ? "true" : "false"}
-                @pointermove=${() => {
-                  if (this.active !== r.key) this.active = r.key;
-                }}
-                @click=${() => this.pick(r)}
-              >
-                ${this.lead(r.item)}
-                <span class="ui-mnp__text"><span class="ui-mnp__name">${highlight(r.item.label, q)}</span>${r.item.hint ? html`<span class="ui-mnp__hint">${highlight(r.item.hint, q)}</span>` : nothing}</span>
-              </div>`,
-            )}
-          </div>`,
+          (g) => g.group?.id ?? RECENT,
+          (g, gi) =>
+            g.group
+              ? html`<div role="group" class="ui-mnp__group" aria-labelledby=${`${this.uid}-g${gi}`}>
+                  <div class="ui-mnp__label" id=${`${this.uid}-g${gi}`}>${g.group.label}</div>
+                  ${repeat(
+                    g.rows,
+                    (r) => r.key,
+                    (r) => this.option(r, index.get(r.key)!, r === row, q, char),
+                  )}
+                </div>`
+              : repeat(
+                  g.rows,
+                  (r) => r.key,
+                  (r) => this.option(r, index.get(r.key)!, r === row, q, char),
+                ),
         )}
+        ${ctx && rows.length && total > rows.length && state !== "loading" ? html`<div class="ui-mnp__more">${rows.length} of ${total} shown – type to narrow them down</div>` : nothing}
         ${ctx && !rows.length
           ? state === "loading"
             ? html`<div class="ui-mnp__empty" data-state="loading">${spinner}<span>Searching…</span></div>`
             : keyed(
                 `${ctx.trigger.char}${q}`,
-                html`<div class="ui-mnp__empty" data-state=${state === "failed" ? "failed" : "empty"}>${searchGlyph}<span>${state === "failed" ? "Couldn't load suggestions" : html`${this.emptyText}${q ? html` for “${q}”` : nothing}`}</span></div>`,
+                html`<div class="ui-mnp__empty" data-state=${state === "failed" ? "failed" : "empty"}>
+                  ${searchGlyph}<span class="ui-mnp__empty-text"
+                    ><span>${state === "failed" ? "Couldn't load suggestions" : html`${empty}${q ? html` for “${q}”` : nothing}`}</span>${hint
+                      ? html`<span class="ui-mnp__empty-hint">${hint}</span>`
+                      : nothing}</span
+                  >
+                </div>`,
               )
           : nothing}
       </div>
     </div>`;
+    const top = note ? html`<div class="ui-mnp__note" aria-hidden="true">${note}</div>` : nothing;
     return html`<div class="ui-mnp__pop" @pointerdown=${(e: Event) => e.preventDefault()}>
-        ${clean ? listbox : html`<div class="ui-mnp__card">${listbox}</div>`} ${this.foot(clean)}
+        ${clean ? html`${top}${listbox}` : html`<div class="ui-mnp__card">${top}${listbox}</div>`} ${this.foot(clean)}
       </div>
       <span class="ui-mnp__sr" role="status">${said.text ? said.text + (said.n % 2 ? "" : " ") : ""}</span>`;
   }
@@ -762,14 +896,27 @@ export class TcMentionPicker extends TcElement {
 .ui-mnp__option { position: relative; display: flex; align-items: center; height: var(--tc-menu-item-h); padding: 0 var(--tc-menu-item-px); border-radius: var(--tc-menu-item-radius); font-size: var(--tc-menu-item-font-size); cursor: pointer; user-select: none; -webkit-tap-highlight-color: transparent; }
 :where([data-look="standard"], [data-look="standard"] *).ui-mnp__option { gap: var(--tc-space-2-5); }
 :where([data-look="clean"], [data-look="clean"] *).ui-mnp__option { gap: var(--tc-space-2); }
-.ui-mnp__text { display: flex; flex: 1; align-items: baseline; gap: var(--tc-space-2); min-width: 0; }
+.ui-mnp__text { display: flex; flex: 1; flex-direction: column; justify-content: center; min-width: 0; }
+.ui-mnp__line { display: flex; align-items: baseline; gap: var(--tc-space-2); min-width: 0; }
 /* The name wins over the hint when space runs out */
 .ui-mnp__name { flex: 0 0 auto; max-width: 100%; min-width: 0; overflow: hidden; color: var(--tc-text-primary); white-space: nowrap; text-overflow: ellipsis; }
 .ui-mnp__hint { flex: 0 100 auto; min-width: 0; overflow: hidden; font-size: var(--tc-font-size-sm); color: var(--tc-text-muted); white-space: nowrap; text-overflow: ellipsis; }
 :where([data-look="clean"], [data-look="clean"] *).ui-mnp__hint { line-height: var(--tc-line-height-tight); }
+/* The trigger character before a command's name ("/translate"), quieter than the name */
+.ui-mnp__char { color: var(--tc-text-muted); }
+/* Two-line rows: the description under the name, one line, cut with an ellipsis */
+.ui-mnp__option[data-two] { height: auto; min-height: var(--tc-menu-item-h); padding-top: var(--tc-space-1-5); padding-bottom: var(--tc-space-1-5); }
+.ui-mnp__desc { overflow: hidden; font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); color: var(--tc-text-muted); white-space: nowrap; text-overflow: ellipsis; }
+:where([data-look="standard"], [data-look="standard"] *).ui-mnp__desc { margin-top: var(--tc-space-0-5); }
+/* One ranked list: each row's group at its end */
+.ui-mnp__tag { flex: none; max-width: 40%; overflow: hidden; font-size: var(--tc-font-size-xs); line-height: var(--tc-line-height-tight); color: var(--tc-text-muted); white-space: nowrap; text-overflow: ellipsis; }
+/* A note over the list ("Picking one replaces /translate") and a count under a list cut at max-results */
+.ui-mnp__note, .ui-mnp__more { font-size: var(--tc-font-size-xs); line-height: var(--tc-line-height-tight); color: var(--tc-text-muted); }
+.ui-mnp__note { padding: var(--tc-space-2) var(--tc-space-3) var(--tc-space-1-5); border-bottom: var(--tc-hairline) solid var(--tc-divider); }
+.ui-mnp__more { padding: var(--tc-space-2) var(--tc-menu-item-px) var(--tc-space-1); }
 [data-ui="mnp"] mark { border-radius: var(--tc-radius-2xs); background: var(--tc-accent-highlight); color: inherit; }
 /* A match inside the muted hint reads at full strength – muted text on the highlight is too faint in dark */
-[data-ui="mnp"] .ui-mnp__hint mark { color: var(--tc-text-primary); }
+[data-ui="mnp"] :is(.ui-mnp__hint, .ui-mnp__desc) mark { color: var(--tc-text-primary); }
 /* Avatars and icons */
 .ui-mnp__avatar {
   display: grid;
@@ -797,6 +944,11 @@ export class TcMentionPicker extends TcElement {
 :where([data-look="standard"], [data-look="standard"] *).ui-mnp__empty { padding: var(--tc-space-3-5) var(--tc-space-2-5) var(--tc-space-3); }
 :where([data-look="clean"], [data-look="clean"] *).ui-mnp__empty { padding: var(--tc-space-3) var(--tc-space-2) var(--tc-space-3); font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); }
 .ui-mnp__empty[data-state="failed"] { color: var(--tc-status-danger-fg); }
+/* The empty text, and under it a quieter hint: what to try instead */
+.ui-mnp__empty-text { display: flex; flex-direction: column; gap: var(--tc-space-0-5); min-width: 0; }
+.ui-mnp__empty-hint { font-size: var(--tc-font-size-xs); line-height: var(--tc-line-height-tight); color: var(--tc-text-muted); }
+.ui-mnp__empty:has(.ui-mnp__empty-hint) { justify-content: flex-start; }
+.ui-mnp__empty:has(.ui-mnp__empty-hint) .ui-mnp__glyph { align-self: flex-start; margin-top: var(--tc-space-0-5); }
 .ui-mnp__spinner { width: 12px; height: 12px; border: 1.5px solid var(--tc-border-default); border-top-color: var(--tc-text-primary); border-radius: var(--tc-radius-full); animation: ui-mnp-spin var(--tc-duration-reveal) linear infinite; }
 :where([data-look="clean"], [data-look="clean"] *).ui-mnp__spinner { border-width: 1.25px; border-top-color: var(--tc-accent); }
 /* Standard: the tray below the card · Clean: the popover's last row, under a hairline */
@@ -848,6 +1000,7 @@ export class TcMentionPicker extends TcElement {
 /* Touch screens: taller rows, no key hints */
 @media (hover: none) and (pointer: coarse) {
   .ui-mnp__option { height: 44px; }
+  .ui-mnp__option[data-two] { height: auto; min-height: 44px; }
   .ui-mnp__foot { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {

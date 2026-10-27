@@ -713,6 +713,56 @@ As in 5.8:
   card;
 - `parseIsbn` unit-tested against valid and invalid ISBN-10 and ISBN-13 numbers, including an X check digit.
 
+## Part 7 – Terms dialog, skills in the chat composer, app picker, notifications, the top-right nav and the stories brief
+
+Asked for on 2026-10-27, while Part 6 was in review. Built on branch `trenchcoat-part7`, its own PR, stacked on Part 6.
+The brief is [part6-brief.md](part6-brief.md); the rules are the same.
+
+- **7.1 `tc-terms-dialog`** – a modal for agreeing to terms. It covers:
+  - first acceptance and re-acceptance of changed terms, with a short "what changed" summary;
+  - sections you can jump to;
+  - required consents;
+  - Accept unlocked by reading to the end or by the consents;
+  - Decline;
+  - print or download.
+
+  The app owns the text and the record: a cancelable `tc-accept` carries the version and the consents.
+- **7.2 Skills in `tc-chat-composer`** – a `skills` property. Typing `/` at the start of the message opens a typeahead
+  for finding skills:
+  - name, description and source, grouped;
+  - matching on name, description and keywords;
+  - recently used skills first.
+
+  Picking one puts a skill chip in the message, with its argument hint. The picked skill rides on `tc-send`. It uses
+  `tc-mention-picker` underneath, improved where the picker falls short, rather than a second popup.
+- **7.3 `tc-app-picker`** – the app launcher: a grid button that opens a popover of apps (icon and name). It has:
+  - search;
+  - pinned and recent apps;
+  - an optional "all apps" link;
+  - the current app marked;
+  - grid arrow-key navigation.
+
+  A pick fires a cancelable `tc-app-select`; links stay real links.
+- **7.4 `tc-notifications`** – the notification center: a bell button with an unread badge that opens a panel. The panel
+  has:
+  - tabs or filters (All / Unread, optional categories), with items grouped by day;
+  - per-item read state, actions and links;
+  - mark all as read;
+  - a settings link;
+  - empty, loading and error states;
+  - loading more.
+
+  New arrivals are announced politely. The app owns the data; every change is a cancelable event. It's distinct
+  from `tc-notification-stack`, which shows transient notices.
+- **7.5 Block: top-right nav** – notifications | app picker | user avatar. The avatar opens `tc-profile-menu` in a
+  popover. It shows how the three fit together in an app header, in both looks and at 320 px.
+- **7.6 `tc-stories`, the viewer redesigned** (asked for on 2026-10-27): it opens a "what changed" brief, not a story
+  player. A light modal with a bento of update tiles (metric, status, note, list, image, link) for a person or an
+  account. Entries are stepped through with Previous and Next, with no timers.
+- **7.7 A standalone gallery:** `standalone/trenchcoat-gallery.html`, the gallery as one HTML file that opens from disk.
+  It isn't an npm script, by choice; it is rebuilt by hand when wanted.
+
+
 ## Decisions (2026-10-25)
 
 | | Question | Decision |

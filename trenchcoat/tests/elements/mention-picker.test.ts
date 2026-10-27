@@ -391,3 +391,121 @@ describe("tc-mention-picker", () => {
         expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
       });
 });
+
+describe("tc-mention-picker: ranking, recents and richer rows (Part 7.2)", () => {
+  const skills: MentionPickerGroup[] = [
+    {
+      id: "built",
+      label: "Built-in",
+      items: [
+        { id: "translate", label: "translate", description: "Translate into another language", keywords: "localise" },
+        { id: "report", label: "create-report", description: "Build a report from the data" },
+      ],
+    },
+    { id: "team", label: "Your team", items: [{ id: "review", label: "review-pr", description: "Review a pull request" }] },
+  ];
+  async function make(trigger: Partial<MentionPickerTrigger>, look: "standard" | "clean" = "standard") {
+    const wrap = await fixture<HTMLElement>(html`<div><textarea id="m7" aria-label="Message"></textarea><tc-mention-picker look=${look} for="m7"></tc-mention-picker></div>`);
+    const picker = wrap.querySelector<TcMentionPicker>("tc-mention-picker")!;
+    picker.triggers = [{ char: "/", atLineStart: true, label: "Skills", groups: skills, ...trigger }];
+    await settle();
+    return { picker, input: wrap.querySelector<HTMLTextAreaElement>("#m7")! };
+  }
+  const names = (p: Element) => options(p).map((o) => o.querySelector(".ui-mnp__name")!.textContent);
+  const status = (p: Element) => p.querySelector('[role="status"]')!.textContent!.trim();
+
+  for (const look of ["standard", "clean"] as const)
+    test(`${look}: the mark sits on the word that matched; a description is a second line and is matched too`, async () => {
+      const { picker, input } = await make({}, look);
+      await type(input, "/re");
+      // "review-pr" starts with it; "create-report" has it at a word's start ("report"), not inside "create"
+      expect(names(picker)).toEqual(["review-pr", "create-report"]);
+      const report = options(picker).find((o) => o.textContent!.includes("create-report"))!;
+      expect(report.querySelector(".ui-mnp__name")!.innerHTML.replace(/<!--[^>]*-->/g, "")).toBe("create-<mark>re</mark>port");
+      expect(report.hasAttribute("data-two")).toBe(true);
+      expect(report.querySelector(".ui-mnp__desc")!.textContent).toBe("Build a report from the data");
+      await type(input, "\n/lang");
+      // Only the description has it
+      expect(names(picker)).toEqual(["translate"]);
+      expect(options(picker)[0].querySelector(".ui-mnp__desc mark")!.textContent).toBe("lang");
+    });
+
+  test("rank order: whole label, start, word start, keywords, inside the label, then the description", async () => {
+    const { picker, input } = await make({
+      groups: [
+        {
+          id: "g",
+          label: "All",
+          items: [
+            { id: "desc", label: "zeta", description: "about the loc file" },
+            { id: "inside", label: "unlock" },
+            { id: "kw", label: "omega", keywords: "local" },
+            { id: "word", label: "big-loc" },
+            { id: "start", label: "locale" },
+            { id: "whole", label: "loc" },
+          ],
+        },
+      ],
+    });
+    await type(input, "/loc");
+    expect(names(picker)).toEqual(["loc", "locale", "big-loc", "omega", "unlock", "zeta"]);
+  });
+
+  test("recent items lead under their own heading until something is typed, and aren't listed twice", async () => {
+    const { picker, input } = await make({ recent: ["review", "gone", "translate"], recentLabel: "Used lately" });
+    await type(input, "/");
+    expect([...picker.querySelectorAll(".ui-mnp__label")].map((l) => l.textContent)).toEqual(["Used lately", "Built-in"]);
+    expect(names(picker)).toEqual(["review-pr", "translate", "create-report"]);
+    await type(input, "tr");
+    expect([...picker.querySelectorAll(".ui-mnp__label")].map((l) => l.textContent)).toEqual(["Built-in"]);
+  });
+
+  test("rankAcrossGroups: one ranked list, each row tagged with its group; showChar puts the character first; noun and note", async () => {
+    const { picker, input } = await make({ rankAcrossGroups: true, showChar: true, noun: ["skill", "skills"], note: "Picking one replaces /draft" });
+    await type(input, "/re");
+    expect(names(picker)).toEqual(["/review-pr", "/create-report"]);
+    expect(picker.querySelectorAll('[role="group"]')).toHaveLength(0);
+    expect([...picker.querySelectorAll(".ui-mnp__tag")].map((t) => t.textContent)).toEqual(["Your team", "Built-in"]);
+    expect(picker.querySelector(".ui-mnp__char")!.textContent).toBe("/");
+    expect(picker.querySelector(".ui-mnp__note")!.textContent).toBe("Picking one replaces /draft");
+    expect(status(picker)).toBe("2 skills. Picking one replaces /draft");
+    key(input, { key: "Enter" });
+    expect(input.value).toBe("/review-pr ");
+  });
+
+  test("emptyText and emptyHint word the empty state; maxResults cuts the list and says how many match", async () => {
+    const { picker, input } = await make({ emptyText: "No skills match", emptyHint: "Try another word" });
+    picker.maxResults = 2;
+    await type(input, "/");
+    expect(options(picker)).toHaveLength(2);
+    expect(picker.querySelector(".ui-mnp__more")!.textContent).toBe("2 of 3 shown – type to narrow them down");
+    await type(input, "zz");
+    expect(picker.querySelector(".ui-mnp__empty")!.textContent).toContain("No skills match for “zz”");
+    expect(picker.querySelector(".ui-mnp__empty-hint")!.textContent).toBe("Try another word");
+    expect(status(picker)).toBe("No skills match");
+  });
+
+  test("a trigger's own search wins over the picker's; a failure tries again on ↵; sync() opens on a trigger set by script", async () => {
+    let fail = true;
+    const own = vi.fn((q: string) => (fail ? Promise.reject(new Error("offline")) : Promise.resolve([{ id: "r", label: "Remote", items: [{ id: "x", label: `x-${q}` }] }])));
+    const { picker, input } = await make({ search: own });
+    picker.search = vi.fn(() => []);
+    await type(input, "/a");
+    await settle();
+    expect(picker.search).not.toHaveBeenCalled();
+    expect(picker.querySelector('[data-state="failed"]')!.textContent).toContain("Press ↵ to try again");
+    fail = false;
+    expect(key(input, { key: "Enter" }).defaultPrevented).toBe(true);
+    await settle();
+    await settle();
+    expect(names(picker)).toEqual(["x-a"]);
+    key(input, { key: "Escape" });
+    await settle();
+    expect(picker.open).toBe(false);
+    // A script puts the caret back after the "/": sync() reads it, even after Esc
+    input.setSelectionRange(2, 2);
+    picker.sync();
+    await settle();
+    expect(picker.open).toBe(true);
+  });
+});

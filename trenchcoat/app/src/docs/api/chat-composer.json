@@ -96,9 +96,9 @@
     {
      "name": "onSend",
      "attribute": null,
-     "type": "((message: string, details: { model: string }) => void | Promise<unknown>) | undefined",
+     "type": "((message: string, details: ChatSendDetails) => void | Promise<unknown>) | undefined",
      "default": "undefined",
-     "description": "Sends the message. Return a promise to keep the message (and a pending send button) until it settles: it is\ncleared when it resolves and kept, with an error, when it rejects",
+     "description": "Sends the message. Return a promise to keep the message (and a pending send button) until it settles: it is\ncleared when it resolves and kept, with an error, when it rejects. `details` has the model, and the skill and its\narguments when the message starts with one",
      "readonly": false
     },
     {
@@ -123,6 +123,54 @@
      "type": "MentionPickerTrigger[] | undefined",
      "default": "undefined",
      "description": "Opt-in: the / and @ picker on the message (tc-mention-picker). Its tc-pick bubbles from the composer",
+     "readonly": false
+    },
+    {
+     "name": "skills",
+     "attribute": null,
+     "type": "ChatSkill[] | undefined",
+     "default": "undefined",
+     "description": "Opt-in: the skills (slash commands) a message can start with – / at the start of a line opens them",
+     "readonly": false
+    },
+    {
+     "name": "recentSkills",
+     "attribute": null,
+     "type": "string[] | undefined",
+     "default": "undefined",
+     "description": "Ids of the skills used last, most recent first – listed first before anything is typed. Unset, the composer\nremembers the picks made in it",
+     "readonly": false
+    },
+    {
+     "name": "searchSkills",
+     "attribute": null,
+     "type": "ChatSkillSearch | undefined",
+     "default": "undefined",
+     "description": "Finds skills on the app's side in place of the built-in filter over `skills` (see ChatSkillSearch)",
+     "readonly": false
+    },
+    {
+     "name": "skill",
+     "attribute": "skill",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Id of the message's skill (\"\" for none). Setting it puts that skill's token at the start of the message",
+     "readonly": false
+    },
+    {
+     "name": "hideSkillsButton",
+     "attribute": "hide-skills-button",
+     "type": "boolean",
+     "default": "false",
+     "description": "Leave out the \"/\" button that opens the skills list",
+     "readonly": false
+    },
+    {
+     "name": "skillsPlaceholder",
+     "attribute": "skills-placeholder",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The empty message's placeholder while skills are on – default: the placeholder plus \"/ for skills\"",
      "readonly": false
     },
     {
@@ -190,6 +238,14 @@
      "readonly": false
     },
     {
+     "name": "pickedSkill",
+     "attribute": null,
+     "type": "ChatSkill | null",
+     "default": null,
+     "description": "The message's skill, from its id – a skill the composer hasn't seen is named by its id",
+     "readonly": true
+    },
+    {
      "name": "look",
      "attribute": "look",
      "type": "Look | undefined",
@@ -214,8 +270,14 @@
     {
      "name": "tc-send",
      "detail": "",
-     "description": "A message was sent (`{ message: string; model: string }`); `onSend` may return a promise to keep it until it settles",
+     "description": "A message was sent (`ChatSend`: `{ message, model, skill, args }` – `skill` is the picked skill's `{ id, name }` or null, `args` the text after its token); `onSend` may return a promise to keep it until it settles",
      "cancelable": false
+    },
+    {
+     "name": "tc-skill-change",
+     "detail": "",
+     "description": "The message's skill changed (`ChatSkillChange`: `{ skill, previous, reason }`); cancelable when it was picked, replaced or removed – prevent it to keep the message as it is",
+     "cancelable": true
     },
     {
      "name": "tc-attach",
@@ -404,6 +466,7 @@
     "--tc-radius-full",
     "--tc-radius-lg",
     "--tc-radius-sm",
+    "--tc-radius-xs",
     "--tc-shadow-control",
     "--tc-shadow-raised",
     "--tc-space-0-5",
@@ -564,6 +627,42 @@
      "type": "(pageContext: ChatPageContext, change: ChatPageContextChange[\"change\"]) => void",
      "optional": true,
      "description": "The chip was toggled or an attached item removed: the next page context and what changed"
+    },
+    {
+     "name": "onSend",
+     "type": "(message: string, details: ChatSendDetails) => void | Promise<unknown>",
+     "optional": true,
+     "description": "Sends the message – `details` has the model, and the skill and its arguments when the message starts with one.\nReturn a promise to keep the message until it settles"
+    },
+    {
+     "name": "skills",
+     "type": "ChatSkill[]",
+     "optional": true,
+     "description": "Opt-in: the skills (slash commands) a message can start with – / at the start of a line opens them"
+    },
+    {
+     "name": "searchSkills",
+     "type": "ChatSkillSearch",
+     "optional": true,
+     "description": "Finds skills on the app's side in place of the built-in filter over `skills`"
+    },
+    {
+     "name": "skill",
+     "type": "string",
+     "optional": true,
+     "description": "Id of the message's skill (controlled; \"\" for none). Leave undefined to let the composer keep it"
+    },
+    {
+     "name": "defaultSkill",
+     "type": "string",
+     "optional": true,
+     "description": "Id of the skill to start with when uncontrolled"
+    },
+    {
+     "name": "onSkillChange",
+     "type": "(skill: ChatSkill | null, reason: ChatSkillChangeReason) => void",
+     "optional": true,
+     "description": "The message's skill changed: the skill now (null: none) and why – picked, replaced, removed, edited away or sent"
     }
    ],
    "hides": [
@@ -572,7 +671,11 @@
     "model",
     "context",
     "settings",
-    "pageContext"
+    "pageContext",
+    "skills",
+    "searchSkills",
+    "skill",
+    "onSend"
    ],
    "events": {
     "tc-value-change": "onValueChange",
@@ -583,11 +686,13 @@
     "tc-pick": "onMentionPick",
     "tc-settings-change": null,
     "tc-prompt-pick": "onPromptPick",
-    "tc-page-context-change": null
+    "tc-page-context-change": null,
+    "tc-skill-change": null
    }
   }
  ],
  "changelog": [
+  "**Skills in `tc-chat-composer`:** `skills`, `recentSkills`, `searchSkills`, `skill`. - **Typeahead:** typing `/` at the start of a message opens a ranked typeahead, grouped by source, with recent skills first. - **Token:** a pick adds a tinted `/skill` token with its argument hint. - **Events:** `tc-send` gains `skill` and `args`, and there is a new `tc-skill-change`. - **Toolbar:** an optional \"/\" button.",
   "**`tc-chat-composer` toolbar:** - model picker, settings and prompt library; - page context you can connect and disconnect; - a disclaimer line under the input; - `hide*` props for each piece.",
   "chat-composer (the Lit element and `trenchcoat/react`): opt-in `mentions` (a `tc-mention-picker` on the message) and `context` / `context-limit` (a `tc-context-tray` above it). Without them it renders as before."
  ],
@@ -603,6 +708,9 @@
     "onConnectApps",
     "onRequestApproval",
     "mentions",
+    "skills",
+    "recentSkills",
+    "searchSkills",
     "context",
     "settings",
     "settingsModel",
@@ -647,6 +755,18 @@
      "attribute": "demo"
     },
     {
+     "name": "skill",
+     "attribute": "skill"
+    },
+    {
+     "name": "hideSkillsButton",
+     "attribute": "hide-skills-button"
+    },
+    {
+     "name": "skillsPlaceholder",
+     "attribute": "skills-placeholder"
+    },
+    {
      "name": "contextLimit",
      "attribute": "context-limit"
     },
@@ -671,6 +791,10 @@
     {
      "name": "tc-send",
      "cancelable": false
+    },
+    {
+     "name": "tc-skill-change",
+     "cancelable": true
     },
     {
      "name": "tc-attach",
@@ -709,6 +833,10 @@
     {
      "property": "model",
      "event": "tc-model-change"
+    },
+    {
+     "property": "skill",
+     "event": "tc-skill-change"
     },
     {
      "property": "settings",
@@ -904,7 +1032,8 @@
     "progressive": false,
     "why": "Layout and state that depend on what's inside a part (an icon present, a focused field).",
     "via": [
-     "itself"
+     "itself",
+     "mention-picker"
     ]
    },
    {
@@ -1192,7 +1321,7 @@
   "windowed": false
  },
  "size": {
-  "min": 347610,
-  "gzip": 79170
+  "min": 362995,
+  "gzip": 83755
  }
 }

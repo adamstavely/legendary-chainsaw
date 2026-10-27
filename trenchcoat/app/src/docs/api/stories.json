@@ -3,14 +3,14 @@
   {
    "tag": "tc-stories",
    "className": "TcStories",
-   "description": "A row of story avatars – a gradient ring for something new, a gray ring once seen – and the modal viewer they open,\nwith progress bars, auto-advance, tap and arrow-key stepping, and swipe down to close.",
+   "description": "A row of avatars for people and accounts – a gradient ring when there's something new, a gray ring once seen – and\nthe modal \"what changed\" brief each one opens: a bento grid of update tiles, with Previous and Next between entries.",
    "properties": [
     {
-     "name": "people",
+     "name": "entries",
      "attribute": null,
-     "type": "StoryPerson[]",
+     "type": "StoryEntry[]",
      "default": "[]",
-     "description": "The people with stories, in the order the row shows them; people with no items are left out",
+     "description": "The people and accounts, in the order the row shows them; entries with no updates are left out",
      "readonly": false
     },
     {
@@ -18,7 +18,7 @@
      "attribute": null,
      "type": "StorySeen",
      "default": "new Set<string>()",
-     "description": "The item ids that have been seen, as a Set or a record of id → true; the app owns it",
+     "description": "The update ids that have been seen, as a Set or a record of id → true; the app owns it",
      "readonly": false
     },
     {
@@ -26,7 +26,7 @@
      "attribute": null,
      "type": "StoryOpen",
      "default": "null",
-     "description": "What the viewer shows ({ person, item } ids), or null when it's closed",
+     "description": "The id of the entry whose brief is open, or null when it's closed",
      "readonly": false
     },
     {
@@ -41,7 +41,7 @@
      "name": "addLabel",
      "attribute": "add-label",
      "type": "string",
-     "default": "\"Add story\"",
+     "default": "\"Add update\"",
      "description": "The \"add\" tile's text",
      "readonly": false
     },
@@ -58,38 +58,14 @@
      "attribute": "replyable",
      "type": "boolean",
      "default": "false",
-     "description": "Show a reply field at the foot of the viewer; sending fires tc-reply",
-     "readonly": false
-    },
-    {
-     "name": "duration",
-     "attribute": "duration",
-     "type": "number",
-     "default": "5000",
-     "description": "How long an image or text card shows, in milliseconds, unless the item sets its own",
-     "readonly": false
-    },
-    {
-     "name": "autoplay",
-     "attribute": "autoplay",
-     "type": "boolean",
-     "default": "true",
-     "description": "Advance on its own; off (or with reduced motion) items change only when the person steps",
-     "readonly": false
-    },
-    {
-     "name": "muted",
-     "attribute": "muted",
-     "type": "boolean",
-     "default": "true",
-     "description": "Whether videos start muted; the viewer's mute toggle changes it",
+     "description": "Show a reply field at the foot of the brief; sending fires tc-reply",
      "readonly": false
     },
     {
      "name": "label",
      "attribute": "label",
      "type": "string",
-     "default": "\"Stories\"",
+     "default": "\"Updates\"",
      "description": "The row's accessible name",
      "readonly": false
     },
@@ -98,7 +74,7 @@
      "attribute": "new-label",
      "type": "string",
      "default": "\"new\"",
-     "description": "Said after a person's name when they have something new (\"Maya Chen, 2 new\")",
+     "description": "Said after a name when there's something new (\"Maya Chen, 2 new\")",
      "readonly": false
     },
     {
@@ -106,15 +82,71 @@
      "attribute": "seen-label",
      "type": "string",
      "default": "\"seen\"",
-     "description": "Said after a person's name when everything's been seen (\"Maya Chen, seen\")",
+     "description": "Said after a name when everything's been seen (\"Maya Chen, seen\")",
+     "readonly": false
+    },
+    {
+     "name": "markerLabel",
+     "attribute": "marker-label",
+     "type": "string",
+     "default": "\"New\"",
+     "description": "The marker on a tile that's new since the last look",
+     "readonly": false
+    },
+    {
+     "name": "describeCount",
+     "attribute": null,
+     "type": "(fresh: number, total: number) => string",
+     "default": null,
+     "description": "The header's count line, from the number of new updates and of all of them; `since` follows it after \" · \"",
+     "readonly": false
+    },
+    {
+     "name": "generatedLabel",
+     "attribute": "generated-label",
+     "type": "string",
+     "default": "\"AI summary\"",
+     "description": "The mark on a summary the app says was generated",
+     "readonly": false
+    },
+    {
+     "name": "betterLabel",
+     "attribute": "better-label",
+     "type": "string",
+     "default": "\"better\"",
+     "description": "Said after a metric's change when it's the good direction",
+     "readonly": false
+    },
+    {
+     "name": "worseLabel",
+     "attribute": "worse-label",
+     "type": "string",
+     "default": "\"worse\"",
+     "description": "Said after a metric's change when it's the bad direction",
+     "readonly": false
+    },
+    {
+     "name": "toLabel",
+     "attribute": "to-label",
+     "type": "string",
+     "default": "\"to\"",
+     "description": "Said between a status move's two states (\"Draft to In review\")",
+     "readonly": false
+    },
+    {
+     "name": "moreLabel",
+     "attribute": "more-label",
+     "type": "string",
+     "default": "\"more\"",
+     "description": "After the count of a list's hidden items (\"+3 more\")",
      "readonly": false
     },
     {
      "name": "emptyLabel",
      "attribute": "empty-label",
      "type": "string",
-     "default": "\"No stories yet.\"",
-     "description": "Shown when there are no stories and no \"add\" tile",
+     "default": "\"Nothing new yet.\"",
+     "description": "Shown when there are no entries and no \"add\" tile",
      "readonly": false
     },
     {
@@ -122,7 +154,7 @@
      "attribute": "reply-label",
      "type": "string",
      "default": "\"Reply to\"",
-     "description": "The reply field's placeholder and name, before the person's name (\"Reply to Maya Chen\")",
+     "description": "The reply field's placeholder and name, before the entry's name (\"Reply to Maya Chen\")",
      "readonly": false
     },
     {
@@ -142,43 +174,11 @@
      "readonly": false
     },
     {
-     "name": "pauseLabel",
-     "attribute": "pause-label",
-     "type": "string",
-     "default": "\"Pause\"",
-     "description": "The pause button's name",
-     "readonly": false
-    },
-    {
-     "name": "playLabel",
-     "attribute": "play-label",
-     "type": "string",
-     "default": "\"Play\"",
-     "description": "The play button's name",
-     "readonly": false
-    },
-    {
-     "name": "muteLabel",
-     "attribute": "mute-label",
-     "type": "string",
-     "default": "\"Mute\"",
-     "description": "The mute button's name",
-     "readonly": false
-    },
-    {
-     "name": "unmuteLabel",
-     "attribute": "unmute-label",
-     "type": "string",
-     "default": "\"Unmute\"",
-     "description": "The unmute button's name",
-     "readonly": false
-    },
-    {
      "name": "previousLabel",
      "attribute": "previous-label",
      "type": "string",
      "default": "\"Previous\"",
-     "description": "The previous-item button's name",
+     "description": "The word over the previous entry's name",
      "readonly": false
     },
     {
@@ -186,7 +186,15 @@
      "attribute": "next-label",
      "type": "string",
      "default": "\"Next\"",
-     "description": "The next-item button's name",
+     "description": "The word over the next entry's name",
+     "readonly": false
+    },
+    {
+     "name": "people",
+     "attribute": null,
+     "type": "StoryEntry[]",
+     "default": null,
+     "description": "The same list as `entries`, by its earlier name",
      "readonly": false
     },
     {
@@ -202,19 +210,25 @@
     {
      "name": "tc-open-change",
      "detail": "",
-     "description": "The viewer is opening, stepping or closing ({ open }: StoryOpenChangeEvent – the next `open`, or null); cancelable – prevented, `open` stays as it was",
+     "description": "A brief is opening, moving to another entry or closing ({ open }: StoryOpenChangeEvent – the entry id, or null); cancelable – prevented, `open` stays as it was",
      "cancelable": true
     },
     {
      "name": "tc-seen-change",
      "detail": "",
-     "description": "An unseen item was shown ({ seen, person, item }: StorySeenChangeEvent – `seen` with the item added, in the same shape); cancelable – prevented, `seen` stays as it was",
+     "description": "A brief was opened on unseen updates, once per opening ({ seen, entry, updates }: StorySeenChangeEvent – `seen` with every one of them added, in the same shape); cancelable – prevented, `seen` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-action",
+     "detail": "",
+     "description": "A link or action tile was activated ({ entry, update }: StoryActionEvent); cancelable – prevented, a link doesn't navigate",
      "cancelable": true
     },
     {
      "name": "tc-reply",
      "detail": "",
-     "description": "A reply was sent from the viewer ({ text, person, item }: StoryReplyEvent)",
+     "description": "A reply was sent from the brief ({ text, entry }: StoryReplyEvent)",
      "cancelable": false
     },
     {
@@ -243,15 +257,8 @@
      ]
     },
     {
-     "name": "--tc-story-stage-bg",
-     "value": "var(--tc-gray-950)",
-     "looks": [
-      "both"
-     ]
-    },
-    {
-     "name": "--tc-story-stage-fg",
-     "value": "var(--tc-gray-0)",
+     "name": "--tc-story-account-radius",
+     "value": "var(--tc-radius-2xl)",
      "looks": [
       "both"
      ]
@@ -281,56 +288,8 @@
      "fallback": true
     },
     {
-     "name": "--tc-story-scrim",
-     "value": "color-mix(in srgb, var(--tc-gray-950) 90%, transparent)",
-     "looks": [
-      "both"
-     ],
-     "fallback": true
-    },
-    {
-     "name": "--tc-story-card-violet",
-     "value": "linear-gradient(160deg, var(--tc-violet-600), var(--tc-pink-600))",
-     "looks": [
-      "both"
-     ],
-     "fallback": true
-    },
-    {
-     "name": "--tc-story-card-pink",
-     "value": "linear-gradient(160deg, var(--tc-pink-600), var(--tc-rose-600))",
-     "looks": [
-      "both"
-     ],
-     "fallback": true
-    },
-    {
-     "name": "--tc-story-card-amber",
-     "value": "linear-gradient(160deg, var(--tc-amber-600), var(--tc-rose-600))",
-     "looks": [
-      "both"
-     ],
-     "fallback": true
-    },
-    {
-     "name": "--tc-story-card-rose",
-     "value": "linear-gradient(160deg, var(--tc-rose-600), var(--tc-violet-600))",
-     "looks": [
-      "both"
-     ],
-     "fallback": true
-    },
-    {
-     "name": "--tc-story-card-teal",
-     "value": "linear-gradient(160deg, var(--tc-teal-600), var(--tc-blue-600))",
-     "looks": [
-      "both"
-     ],
-     "fallback": true
-    },
-    {
-     "name": "--tc-story-card-blue",
-     "value": "linear-gradient(160deg, var(--tc-blue-600), var(--tc-violet-600))",
+     "name": "--tc-story-brief-width",
+     "value": "760px",
      "looks": [
       "both"
      ],
@@ -339,55 +298,110 @@
    ],
    "tokens": [
     "--tc-accent-solid",
-    "--tc-amber-600",
-    "--tc-blue-600",
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
     "--tc-border-default",
     "--tc-border-strong",
+    "--tc-border-subtle",
+    "--tc-caption-color",
     "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-chart-neutral",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
     "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-md",
+    "--tc-control-radius-md",
+    "--tc-control-radius-sm",
+    "--tc-divider",
     "--tc-duration-fast",
     "--tc-duration-moderate",
     "--tc-ease-move",
     "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-font-size",
     "--tc-field-h",
+    "--tc-field-px",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-field-shadow-hover",
     "--tc-fill-default",
+    "--tc-fill-strong",
+    "--tc-fill-subtle",
     "--tc-focus-outline",
     "--tc-focus-ring-offset",
-    "--tc-focus-ring-width",
     "--tc-font-sans",
     "--tc-font-size-2xl",
+    "--tc-font-size-3xl",
     "--tc-font-size-lg",
     "--tc-font-size-md",
     "--tc-font-size-sm",
     "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
     "--tc-font-weight-strong",
-    "--tc-gray-0",
-    "--tc-gray-950",
     "--tc-hairline",
+    "--tc-icon-muted",
     "--tc-line-height-display",
     "--tc-line-height-none",
     "--tc-line-height-normal",
+    "--tc-line-height-relaxed",
     "--tc-line-height-tight",
-    "--tc-pink-600",
-    "--tc-radius-full",
-    "--tc-rose-600",
+    "--tc-pill-font-size",
+    "--tc-pill-font-size-lg",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-h-lg",
+    "--tc-pill-px",
+    "--tc-pill-px-lg",
+    "--tc-pill-radius",
+    "--tc-radius-2xl",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-scrim",
+    "--tc-shadow-overlay",
     "--tc-space-0-5",
     "--tc-space-1",
     "--tc-space-1-5",
     "--tc-space-14",
     "--tc-space-16",
     "--tc-space-2",
+    "--tc-space-2-5",
     "--tc-space-3",
+    "--tc-space-3-5",
     "--tc-space-4",
     "--tc-space-5",
-    "--tc-space-6",
     "--tc-space-8",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-danger-solid",
+    "--tc-status-info-bg",
+    "--tc-status-info-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-success-solid",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
     "--tc-surface-base",
-    "--tc-teal-600",
+    "--tc-surface-on-tray",
+    "--tc-surface-overlay",
+    "--tc-surface-tray",
+    "--tc-text-disabled",
     "--tc-text-muted",
     "--tc-text-on-accent",
+    "--tc-text-placeholder",
     "--tc-text-primary",
     "--tc-text-secondary",
+    "--tc-text-strong",
     "--tc-tone-amber-bg",
     "--tc-tone-amber-fg",
     "--tc-tone-amber-solid",
@@ -402,8 +416,9 @@
     "--tc-tone-violet-bg",
     "--tc-tone-violet-fg",
     "--tc-tone-violet-solid",
-    "--tc-tracking-snug",
-    "--tc-violet-600"
+    "--tc-tracking-tight",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
    ]
   }
  ],
@@ -414,40 +429,58 @@
    "exported": true,
    "props": [
     {
+     "name": "entries",
+     "type": "StoryEntry[]",
+     "optional": true,
+     "description": "The people and accounts, in the order the row shows them"
+    },
+    {
+     "name": "people",
+     "type": "StoryEntry[]",
+     "optional": true,
+     "description": "The same list as `entries`, by its earlier name"
+    },
+    {
      "name": "seen",
      "type": "StorySeen",
      "optional": true,
-     "description": "The item ids that have been seen – controlled when given"
+     "description": "The update ids that have been seen – controlled when given"
     },
     {
      "name": "defaultSeen",
      "type": "StorySeen",
      "optional": true,
-     "description": "The seen item ids on mount when `seen` isn't controlled"
+     "description": "The seen update ids on mount when `seen` isn't controlled"
     },
     {
      "name": "onSeenChange",
-     "type": "(seen: StorySeen, item: StoryItem, person: StoryPerson) => void",
+     "type": "(seen: StorySeen, updates: StoryUpdate[], entry: StoryEntry) => void",
      "optional": true,
-     "description": "An unseen item was shown: `seen` is the set (or record) with it added"
+     "description": "A brief was opened on unseen updates: `seen` is the set (or record) with all of them added"
     },
     {
      "name": "open",
      "type": "StoryOpen",
      "optional": true,
-     "description": "What the viewer shows ({ person, item } ids), or null when closed – controlled when given"
+     "description": "The id of the entry whose brief is open, or null when closed – controlled when given"
     },
     {
      "name": "defaultOpen",
      "type": "StoryOpen",
      "optional": true,
-     "description": "What the viewer shows on mount when `open` isn't controlled"
+     "description": "The entry open on mount when `open` isn't controlled"
     },
     {
      "name": "onOpenChange",
      "type": "(open: StoryOpen) => void",
      "optional": true,
-     "description": "The viewer is opening, stepping to another item, or closing (null)"
+     "description": "The brief is opening, moving to another entry, or closing (null)"
+    },
+    {
+     "name": "onAction",
+     "type": "(update: StoryLinkUpdate, entry: StoryEntry, event: Event) => void",
+     "optional": true,
+     "description": "A link or action tile was activated; call `event.preventDefault()` to stop a link navigating"
     },
     {
      "name": "onAdd",
@@ -457,9 +490,9 @@
     },
     {
      "name": "onReply",
-     "type": "(text: string, item: StoryItem, person: StoryPerson) => void",
+     "type": "(text: string, entry: StoryEntry) => void",
      "optional": true,
-     "description": "Shows a reply field in the viewer; called with the text when a reply is sent"
+     "description": "Shows a reply field at the brief's foot; called with the text when a reply is sent"
     }
    ],
    "hides": [
@@ -472,12 +505,15 @@
    "events": {
     "tc-open-change": null,
     "tc-seen-change": "onSeenChange",
+    "tc-action": "onAction",
     "tc-reply": "onReply",
     "tc-add": "onAdd"
    }
   }
  ],
  "changelog": [
+  "**Shared code:** - `internal/modal.ts`, the `ModalController` that `tc-dialog`, `tc-terms-dialog` and `tc-stories` share; - `cardHead()` gains `picture`, `pictureShape` and `keepAside`.",
+  "**`tc-stories`:** opens a \"what changed\" brief instead of a story player. - **The row stays:** the gradient ring still means something new. - **The brief:** a light modal with an optional summary, then a bento of update tiles (metric, status move, note, list, image, link), new ones first. Previous and Next move between entries. - **Entries:** `entries`, which can be people or accounts; `people` still works. - **Removed:** the timers, video and swipe.",
   "**Feedback and onboarding:** - `tc-stories`: a gradient ring for new updates that opens a modal viewer; - `tc-background-tasks`."
  ],
  "frameworks": [
@@ -486,9 +522,11 @@
    "className": "TcStories",
    "module": "trenchcoat/stories",
    "data": [
-    "people",
+    "entries",
     "seen",
-    "open"
+    "open",
+    "describeCount",
+    "people"
    ],
    "attributes": [
     {
@@ -508,18 +546,6 @@
      "attribute": "replyable"
     },
     {
-     "name": "duration",
-     "attribute": "duration"
-    },
-    {
-     "name": "autoplay",
-     "attribute": "autoplay"
-    },
-    {
-     "name": "muted",
-     "attribute": "muted"
-    },
-    {
      "name": "label",
      "attribute": "label"
     },
@@ -530,6 +556,30 @@
     {
      "name": "seenLabel",
      "attribute": "seen-label"
+    },
+    {
+     "name": "markerLabel",
+     "attribute": "marker-label"
+    },
+    {
+     "name": "generatedLabel",
+     "attribute": "generated-label"
+    },
+    {
+     "name": "betterLabel",
+     "attribute": "better-label"
+    },
+    {
+     "name": "worseLabel",
+     "attribute": "worse-label"
+    },
+    {
+     "name": "toLabel",
+     "attribute": "to-label"
+    },
+    {
+     "name": "moreLabel",
+     "attribute": "more-label"
     },
     {
      "name": "emptyLabel",
@@ -548,22 +598,6 @@
      "attribute": "close-label"
     },
     {
-     "name": "pauseLabel",
-     "attribute": "pause-label"
-    },
-    {
-     "name": "playLabel",
-     "attribute": "play-label"
-    },
-    {
-     "name": "muteLabel",
-     "attribute": "mute-label"
-    },
-    {
-     "name": "unmuteLabel",
-     "attribute": "unmute-label"
-    },
-    {
      "name": "previousLabel",
      "attribute": "previous-label"
     },
@@ -579,6 +613,10 @@
     },
     {
      "name": "tc-seen-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-action",
      "cancelable": true
     },
     {
@@ -661,8 +699,24 @@
     "progressive": false,
     "why": "Tints and washes mixed from the tokens.",
     "via": [
-     "itself",
      "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
     ]
    },
    {
@@ -697,7 +751,8 @@
     "progressive": false,
     "why": "Modals trap focus, close on Escape and sit in the top layer.",
     "via": [
-     "itself"
+     "itself",
+     "internal/modal"
     ]
    },
    {
@@ -710,22 +765,6 @@
      "firefox": "89",
      "safari": "15",
      "safari_ios": "15"
-    },
-    "progressive": false,
-    "via": [
-     "itself"
-    ]
-   },
-   {
-    "id": "inset",
-    "name": "inset",
-    "bcd": "css.properties.inset",
-    "versions": {
-     "chrome": "87",
-     "edge": "87",
-     "firefox": "66",
-     "safari": "14.1",
-     "safari_ios": "14.1"
     },
     "progressive": false,
     "via": [
@@ -746,6 +785,7 @@
     "progressive": false,
     "why": "Every rule is keyed on :where() so the page can override it.",
     "via": [
+     "itself",
      "internal/base",
      "tokens.css"
     ]
@@ -767,6 +807,40 @@
     ]
    },
    {
+    "id": "scrollbar-color",
+    "name": "scrollbar-color",
+    "bcd": "css.properties.scrollbar-color",
+    "versions": {
+     "chrome": "121",
+     "edge": "121",
+     "firefox": "64",
+     "safari": "26.2",
+     "safari_ios": "26.2"
+    },
+    "progressive": true,
+    "without": "Scrollbars keep the browser's default colours.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "text-wrap-pretty",
+    "name": "text-wrap: pretty",
+    "bcd": "css.properties.text-wrap.pretty",
+    "versions": {
+     "chrome": "117",
+     "edge": "117",
+     "firefox": null,
+     "safari": "26",
+     "safari_ios": "26"
+    },
+    "progressive": true,
+    "without": "Paragraphs may end on a single short word.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
     "id": "scrollbar-width",
     "name": "scrollbar-width",
     "bcd": "css.properties.scrollbar-width",
@@ -779,23 +853,6 @@
     },
     "progressive": true,
     "without": "Scrollbars keep the browser's default width.",
-    "via": [
-     "itself"
-    ]
-   },
-   {
-    "id": "text-wrap-balance",
-    "name": "text-wrap: balance",
-    "bcd": "css.properties.text-wrap.balance",
-    "versions": {
-     "chrome": "114",
-     "edge": "114",
-     "firefox": "121",
-     "safari": "17.5",
-     "safari_ios": "17.5"
-    },
-    "progressive": true,
-    "without": "Titles break where the line fills up instead of into even lines.",
     "via": [
      "itself"
     ]
@@ -859,7 +916,7 @@
  "runtime": {
   "timers": [],
   "frames": [
-   "requestAnimationFrame, cancelled"
+   "requestAnimationFrame"
   ],
   "animations": 0,
   "observers": [
@@ -878,7 +935,7 @@
   "windowed": false
  },
  "size": {
-  "min": 37321,
-  "gzip": 11346
+  "min": 49276,
+  "gzip": 14121
  }
 }

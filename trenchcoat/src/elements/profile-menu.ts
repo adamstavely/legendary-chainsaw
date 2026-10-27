@@ -257,9 +257,11 @@ export class TcProfileMenu extends TcElement {
   flex: none;
   width: 42px;
   height: 42px;
+  overflow: hidden;
+  border-radius: var(--tc-radius-full);
   color: var(--tc-accent);
 }
-:where([data-look="standard"], [data-look="standard"] *).ui-pm__avatar > * { display: block; width: 100%; height: 100%; }
+:where([data-look="standard"], [data-look="standard"] *).ui-pm__avatar > * { display: block; width: 100%; height: 100%; object-fit: cover; }
 :where([data-look="clean"], [data-look="clean"] *):where([data-ui="pm"]) button { margin: 0; padding: 0; border: 0; background: none; font: inherit; color: inherit; text-align: left; cursor: pointer; }
 :where([data-look="clean"], [data-look="clean"] *):where([data-ui="pm"]) svg { display: block; flex: none; }
 /* One white menu card – the edge is a shadow, not a border */
