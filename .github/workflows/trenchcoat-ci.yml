@@ -52,12 +52,38 @@ jobs:
         run: npm run check:docs
       - name: Lit templates
         run: npm run check:lit
-      - name: Browsers for the element tests
-        run: npx playwright install --with-deps chromium firefox webkit
-      - name: Tests
-        run: npm test
+      - name: Chromium for the framework examples
+        run: npx playwright install --with-deps chromium
+      # The React components, the gallery and its docs, in jsdom; the Lit elements run in the jobs below
+      - name: Tests (jsdom)
+        run: npx vitest run --project react
       - name: Framework examples (React, Next.js, Vue, Nuxt, Angular, Svelte, HTML)
         run: npm run examples
       # Needs the examples/ apps installed by the step above
       - name: Framework snippets on the docs pages
         run: npm run check:snippets
+
+  # The Lit elements in real browsers, one runner per browser: three engines on one two-core runner starved WebKit
+  # of CPU (animations caught mid-way) and once of memory (the page crashed)
+  elements:
+    name: elements (${{ matrix.browser }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    defaults:
+      run:
+        working-directory: trenchcoat
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: trenchcoat/package-lock.json
+      - run: npm ci
+      - name: Browser
+        run: npx playwright install --with-deps ${{ matrix.browser }}
+      - name: Element tests
+        run: npx vitest run --project elements --browser.name=${{ matrix.browser }}

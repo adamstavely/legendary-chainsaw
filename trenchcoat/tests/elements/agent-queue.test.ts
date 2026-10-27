@@ -298,6 +298,13 @@ describe("tc-agent-queue", () => {
       <tc-agent-queue pausable stepper .jobs=${jobs(30_000, t)} .workers=${WORKERS} .now=${t} backpressure="3"></tc-agent-queue>
       <tc-agent-queue look="clean" heading="Clean" .jobs=${jobs(0, t)} .workers=${WORKERS} .now=${t} .openId=${"r1"}></tc-agent-queue>
     </div>`);
+    // Contrast is checked at rest: finish the entrances (a re-render can start new ones, so until none are left)
+    for (let i = 0; i < 5; i++) {
+      const running = wrap.getAnimations({ subtree: true }).filter((a) => a.effect?.getTiming().iterations !== Infinity);
+      if (!running.length) break;
+      for (const a of running) a.finish();
+      await settle();
+    }
     const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
     expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
   });
