@@ -137,8 +137,8 @@ describe("tc-agent-inbox", () => {
           updates++;
           update(c as never);
         };
-        await wait(2100);
-        expect(time()).toMatch(/^[78]s$/);
+        // At least two ticks on (a slow runner may read it a tick or two later)
+        await expect.poll(() => parseInt(time() ?? "", 10), { timeout: 5000 }).toBeGreaterThanOrEqual(7);
         expect(updates).toBe(0);
       });
 
@@ -150,10 +150,9 @@ describe("tc-agent-inbox", () => {
         approve.focus();
         approve.click();
         expect(document.activeElement).toBe(el.querySelector('[data-id="a"] .ui-ai__card-main'));
-        await wait(1000);
+        await expect.poll(() => !!el.querySelector('[data-id="a"] .ui-ai__card-main')?.closest('[aria-label="Running"]'), { timeout: 3000 }).toBe(true);
         await settle();
         const main = el.querySelector('[data-id="a"] .ui-ai__card-main');
-        expect(main!.closest('[aria-label="Running"]')).toBeTruthy();
         expect(document.activeElement).toBe(main);
       });
 

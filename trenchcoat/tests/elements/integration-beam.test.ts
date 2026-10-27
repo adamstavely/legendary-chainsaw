@@ -12,7 +12,7 @@ import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 import { userEvent } from "vitest/browser";
 import { TcIntegrationBeam, type IntegrationBeamTool } from "../../src/elements/integration-beam";
 import { IntegrationBeam } from "../../src/elements/react/integration-beam";
-import { cleanup, fixture, settle } from "./helpers";
+import { cleanup, finish, fixture, settle } from "./helpers";
 
 afterEach(cleanup);
 
@@ -244,6 +244,7 @@ describe("tc-integration-beam", () => {
     const wrap = await fixture(html`<div><tc-integration-beam></tc-integration-beam><tc-integration-beam style="width: 360px" label="Data flow"></tc-integration-beam></div>`);
     // Let the status text finish fading in
     await new Promise((r) => setTimeout(r, 400));
+    await finish(wrap);
     const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
     expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
   });

@@ -236,9 +236,8 @@ describe("tc-chat-history", () => {
     expect(el.querySelector(".ui-chh__undo")).toBeTruthy();
     foot.dispatchEvent(new PointerEvent("pointerleave"));
     await settle();
-    await new Promise((r) => setTimeout(r, 150));
+    await expect.poll(() => el.querySelector(".ui-chh__undo"), { timeout: 3000 }).toBeNull();
     await settle();
-    expect(el.querySelector(".ui-chh__undo")).toBeNull();
     vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
     row(el, "c:w1").focus();
     key(row(el, "c:w1"), "Delete");

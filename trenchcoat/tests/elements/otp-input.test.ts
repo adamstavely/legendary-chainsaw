@@ -115,9 +115,7 @@ describe("tc-otp-input", () => {
         expect(el.hasAttribute("data-error")).toBe(true);
         expect(inputOf(el).getAttribute("aria-invalid")).toBe("true");
         expect(document.getElementById(inputOf(el).getAttribute("aria-describedby")!)!.textContent).toContain("That code didn't work. Try again.");
-        await wait(1200);
-        await settle();
-        expect(inputOf(el).value).toBe("");
+        await expect.poll(() => inputOf(el).value, { timeout: 3000 }).toBe("");
         expect(onChange).toHaveBeenLastCalledWith("");
       });
 
@@ -163,9 +161,8 @@ describe("tc-otp-input", () => {
         await wait(0);
         await settle();
         expect(el.dataset.status).toBe("error");
-        await wait(1200);
+        await expect.poll(() => inputOf(el).value, { timeout: 3000 }).toBe("");
         await settle();
-        expect(inputOf(el).value).toBe("");
         type(el, "5");
         await settle();
         expect(el.dataset.status).toBe("idle");
@@ -198,20 +195,17 @@ describe("tc-otp-input", () => {
           updates++;
           update(c as never);
         };
-        await wait(1100);
-        expect(time()).toBe("0:02");
+        await expect.poll(time, { timeout: 3000 }).toBe("0:02");
         expect(updates).toBe(0);
-        await wait(2000);
+        await expect.poll(() => el.querySelector("[aria-live]")!.textContent, { timeout: 5000 }).toBe("You can resend the code now");
         await settle();
         const button = [...el.querySelectorAll("button")].find((b) => b.textContent === "Resend code")!;
-        expect(el.querySelector("[aria-live]")!.textContent).toBe("You can resend the code now");
         button.click();
         await settle();
         expect(resent).toHaveBeenCalledTimes(1);
         expect(time()).toBe("0:03");
         expect(el.querySelector("[aria-live]")!.textContent).toBe("A new code is on its way");
-        await wait(1100);
-        expect(time()).toBe("0:02");
+        await expect.poll(time, { timeout: 3000 }).toBe("0:02");
       });
 
       test("labelledBy names the field by a visible label, plus the digit count (2.5.3, 3.3.2)", async () => {

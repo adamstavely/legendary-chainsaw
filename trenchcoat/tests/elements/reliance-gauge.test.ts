@@ -60,9 +60,8 @@ describe("tc-reliance-gauge", () => {
     expect(dial.querySelectorAll(".ui-rlg__notch").length).toBe(2);
     el.index = 0.95;
     await settle();
-    await wait(800);
+    await expect.poll(() => el.querySelector(".ui-rlg__index")!.textContent, { timeout: 3000 }).toBe("0.95");
     await settle();
-    expect(el.querySelector(".ui-rlg__index")!.textContent).toBe("0.95");
     expect(el.dataset.band).toBe("calibrated");
     el.driftAt = 0.97;
     el.calibratedAt = 0.99;
@@ -231,13 +230,18 @@ describe("tc-reliance-gauge", () => {
 
   test("a change rolls the numbers to the new value", async () => {
     const el = await gauge();
+    const shown = () => el.querySelector(".ui-rlg__index")!.textContent;
+    const from = shown();
     el.index = 0.4;
     await settle();
-    await wait(100);
-    expect(el.querySelector(".ui-rlg__index")!.textContent).not.toBe("0.40");
-    await wait(800);
-    await settle();
-    expect(el.querySelector(".ui-rlg__index")!.textContent).toBe("0.40");
+    // Read it every frame until it lands: it passes through values between the two (not a jump)
+    const seen: (string | null)[] = [];
+    for (let i = 0; i < 600 && shown() !== "0.40"; i++) {
+      await new Promise((r) => requestAnimationFrame(r));
+      seen.push(shown());
+    }
+    expect(shown()).toBe("0.40");
+    expect(seen.some((v) => v !== from && v !== "0.40")).toBe(true);
   });
 
   test("the wrapper: an uncontrolled level survives a parent re-render; callbacks fire", async () => {

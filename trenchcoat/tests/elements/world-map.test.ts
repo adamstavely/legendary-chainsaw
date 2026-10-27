@@ -66,9 +66,7 @@ describe("tc-world-map", () => {
     el.continent = "asia";
     await el.updateComplete;
     expect([...el.querySelectorAll(".ui-wm-layer")].map((l) => l.getAttribute("data-phase"))).toEqual(["exit", "enter"]);
-    await new Promise((r) => setTimeout(r, 600));
-    await settle();
-    expect([...el.querySelectorAll(".ui-wm-layer")].map((l) => l.getAttribute("data-phase"))).toEqual(["enter"]);
+    await expect.poll(() => [...el.querySelectorAll(".ui-wm-layer")].map((l) => l.getAttribute("data-phase")), { timeout: 3000 }).toEqual(["enter"]);
   });
 
   test("picking a continent fires a cancelable tc-continent-change; preventDefault keeps the value", async () => {

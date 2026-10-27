@@ -13,7 +13,7 @@ import { page, userEvent } from "vitest/browser";
 import "../../src/elements/notifications";
 import { notificationTime, TcNotifications, type NotificationItem, type NotificationsAction, type NotificationsDismiss, type NotificationsLoadMore, type NotificationsMarkAllRead, type NotificationsReadChange } from "../../src/elements/notifications";
 import { Notifications } from "../../src/elements/react/notifications";
-import { cleanup, fixture, settle } from "./helpers";
+import { cleanup, finish, fixture, settle } from "./helpers";
 
 afterEach(cleanup);
 
@@ -546,7 +546,7 @@ describe("tc-notifications", () => {
       const el = await make();
       el.style.cssText = "position: fixed; top: 8px; right: 8px";
       await openPanel(el);
-      await wait(200);
+      await finish();
       const r = pop(el)!.getBoundingClientRect();
       expect(r.left).toBeGreaterThanOrEqual(0);
       expect(r.right).toBeLessThanOrEqual(320);

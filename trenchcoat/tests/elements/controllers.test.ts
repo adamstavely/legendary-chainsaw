@@ -59,8 +59,7 @@ describe("controllers", () => {
     await settle();
     expect(ctl.onScreen).toBe(true);
     el.style.cssText = "display:block;height:20px;position:absolute;top:-5000px";
-    await new Promise((r) => setTimeout(r, 200));
-    expect(ctl.onScreen).toBe(false);
+    await expect.poll(() => ctl.onScreen, { timeout: 3000 }).toBe(false);
   });
 
   test("RollingController: rolls to the new target", async () => {
@@ -70,8 +69,7 @@ describe("controllers", () => {
     await settle();
     target.count = 10;
     (el as LitElement).requestUpdate();
-    await new Promise((r) => setTimeout(r, 300));
-    expect(ctl.shown.count).toBe(10);
+    await expect.poll(() => ctl.shown.count, { timeout: 3000 }).toBe(10);
   });
 
   test("RowWindowController: above the threshold only the rows near the viewport, below it all", async () => {

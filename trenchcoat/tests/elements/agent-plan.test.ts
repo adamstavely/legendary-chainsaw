@@ -7,7 +7,7 @@ import { afterEach, describe, expect, test, vi } from "vitest";
 import { userEvent } from "vitest/browser";
 import "../../src/elements/agent-plan";
 import type { AgentPlanStep, TcAgentPlan } from "../../src/elements/agent-plan";
-import { cleanup, fixture, settle } from "./helpers";
+import { cleanup, finish, fixture, settle } from "./helpers";
 
 afterEach(() => {
   vi.useRealTimers();
@@ -51,10 +51,8 @@ describe("tc-agent-plan", () => {
         button(el, /Remove step 2/).click();
         await settle();
         expect(el.querySelector("[data-removing]")).not.toBeNull();
-        await wait(300);
-        await settle();
+        await expect.poll(() => names(el), { timeout: 3000 }).toEqual(["Search the docs"]);
         expect(seen).toEqual([[steps[0]]]);
-        expect(names(el)).toEqual(["Search the docs"]);
 
         const c = await fixture<TcAgentPlan>(html`<tc-agent-plan look=${look} .steps=${steps} @tc-steps-change=${(e: CustomEvent<{ steps: AgentPlanStep[] }>) => {
           e.preventDefault();
@@ -177,9 +175,8 @@ describe("tc-agent-plan", () => {
         expect(names(el)).toEqual(["Draft it", "Search the docs"]);
         expect(document.activeElement).toBe(rows()[0]);
         await userEvent.keyboard("{Delete}");
-        await wait(300);
+        await expect.poll(() => names(el), { timeout: 3000 }).toEqual(["Search the docs"]);
         await settle();
-        expect(names(el)).toEqual(["Search the docs"]);
         expect(document.activeElement).toBe(rows()[0]);
       });
 
@@ -228,7 +225,7 @@ describe("tc-agent-plan", () => {
       <tc-agent-plan look="clean" heading="Running" status="running" retryable .steps=${[{ id: "a", title: "Search", status: "done", duration: 900 }, { id: "b", title: "Write", status: "failed", error: "Timed out" }, { id: "c", title: "Check", status: "active" }]}></tc-agent-plan>
     </div>`);
     // Rows and the footer fade in; contrast is checked once they're in
-    await wait(1200);
+    await finish(wrap);
     const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
     expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
   });

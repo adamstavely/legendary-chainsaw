@@ -6,7 +6,7 @@ import axe from "axe-core";
 import { afterEach, describe, expect, test } from "vitest";
 import "../../src/elements/usage-meter";
 import type { TcUsageMeter, UsageItem, UsageLimit, UsageDay } from "../../src/elements/usage-meter";
-import { cleanup, fixture, settle } from "./helpers";
+import { cleanup, finish, fixture, settle } from "./helpers";
 
 afterEach(cleanup);
 
@@ -25,10 +25,10 @@ const PERIODS = [
 ];
 const looks = ["standard", "clean"] as const;
 const plain = (s: string | null | undefined) => (s ?? "").replace(/ /g, " ");
-const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
-/** The count-in takes 1.2 s */
-const counted = async () => {
-  await wait(1400);
+/** The count-in takes 1.2 s: waits until every meter at or under `root` has finished rolling and shows its real number */
+const counted = async (root: Element, big = "6,000") => {
+  const meters = [...(root.matches("tc-usage-meter") ? [root] : []), ...root.querySelectorAll("tc-usage-meter")] as TcUsageMeter[];
+  await expect.poll(() => meters.every((m) => m["frame"] === 0 && m.querySelector(".ui-um__big")?.textContent === big), { timeout: 5000 }).toBe(true);
   await settle();
 };
 const meter = (look: string = "standard") =>
@@ -57,12 +57,13 @@ describe("tc-usage-meter", () => {
     test(`${look}: the count-in ends on the real numbers`, async () => {
       const el = await meter(look);
       const big = el.querySelector(".ui-um__big")!;
+      // Read it every frame until it lands
       const seen = new Set<string>();
-      for (let i = 0; i < 40; i++) {
+      for (let i = 0; i < 600 && big.textContent !== "6,000"; i++) {
         seen.add(big.textContent!);
-        await wait(30);
+        await new Promise((r) => requestAnimationFrame(r));
       }
-      await counted();
+      await counted(el);
       // The number rolled through many values
       expect(seen.size).toBeGreaterThan(5);
       expect(big.textContent).toBe("6,000");
@@ -78,17 +79,15 @@ describe("tc-usage-meter", () => {
 
   test("a change tweens to the new numbers", async () => {
     const el = await meter();
-    await counted();
+    await counted(el);
     el.used = [{ label: "Chat", value: 5000 }, USED[1]];
     await settle();
-    await wait(800);
-    await settle();
-    expect(el.querySelector(".ui-um__big")!.textContent).toBe("6,800");
+    await counted(el, "6,800");
   });
 
   test("warn and limit: the state, the dot, the words and the button", async () => {
     const el = await meter();
-    await counted();
+    await counted(el);
     expect(el.querySelector(".ui-um__action-text")!.textContent).toBe("Upgrade");
     el.used = [{ label: "Chat", value: 8500 }];
     await settle();
@@ -145,8 +144,7 @@ describe("tc-usage-meter", () => {
     expect(document.activeElement).toBe(week);
     expect(month.getAttribute("tabindex")).toBe("-1");
     const pill = el.querySelector<HTMLElement>(".ui-um__pill")!;
-    await wait(400);
-    expect(pill.style.width).toBe(`${week.offsetWidth}px`);
+    await expect.poll(() => pill.style.width, { timeout: 3000 }).toBe(`${week.offsetWidth}px`);
     expect(pill.style.transform).toBe(`translate(${week.offsetLeft}px, ${week.offsetTop}px)`);
   });
 
@@ -165,8 +163,7 @@ describe("tc-usage-meter", () => {
 
   test("numbers follow the locale", async () => {
     const el = await fixture<TcUsageMeter>(html`<tc-usage-meter total="10000" locale="de-DE" .used=${USED}></tc-usage-meter>`);
-    await counted();
-    expect(el.querySelector(".ui-um__big")!.textContent).toBe("6.000");
+    await counted(el, "6.000");
   });
 
   test("default colors stay with their label when another label leaves; the leaving row folds away", async () => {
@@ -176,10 +173,9 @@ describe("tc-usage-meter", () => {
     el.used = [{ label: "API", value: 1800 }];
     await settle();
     expect(el.querySelector(".ui-um__row[data-leaving]")!.textContent).toContain("Chat");
-    await wait(600);
+    await expect.poll(() => el.querySelector(".ui-um__row[data-leaving]"), { timeout: 3000 }).toBeNull();
     await settle();
     expect(swatch()).toEqual([api]);
-    expect(el.querySelector(".ui-um__row[data-leaving]")).toBeNull();
   });
 
   test("the credits meter is named and the limit state is in words, not an aria-label on a span", async () => {
@@ -201,7 +197,7 @@ describe("tc-usage-meter", () => {
 
   test("arrow keys on the bar announce each category through the status region; Escape clears", async () => {
     const el = await meter();
-    await counted();
+    await counted(el);
     const bar = el.querySelector<HTMLElement>('[role="group"].ui-um__bar')!;
     bar.focus();
     await key(bar, "ArrowRight");
@@ -268,8 +264,8 @@ describe("tc-usage-meter", () => {
       <tc-usage-meter total="10000" plan="Pro plan" .now=${0} .resetAt=${9 * 864e5} .used=${USED} .limits=${[...LIMITS, { label: "Projects", used: 4, total: null }]} .daily=${DAILY} .periods=${PERIODS}></tc-usage-meter>
       <tc-usage-meter look="clean" heading="Clean" total="10000" .used=${USED} .limits=${LIMITS} .daily=${DAILY} .periods=${PERIODS}></tc-usage-meter>
     </div>`);
-    await counted();
-    document.getAnimations().forEach((a) => a.finish());
+    await counted(wrap);
+    await finish();
     const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
     expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
   });

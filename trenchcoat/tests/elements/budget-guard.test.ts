@@ -23,10 +23,6 @@ const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
 const plain = (s: string | null | undefined) => (s ?? "").replace(/ /g, " ").replace(/\s+/g, " ").trim();
 const guard = (limits: BudgetLimit[], look = "standard", status = "running") =>
   fixture<TcBudgetGuard>(html`<tc-budget-guard look=${look} task="Research agent" status=${status} .limits=${limits}></tc-budget-guard>`);
-const rolled = async () => {
-  await wait(800);
-  await settle();
-};
 
 describe("tc-budget-guard", () => {
   for (const look of looks) {
@@ -69,13 +65,17 @@ describe("tc-budget-guard", () => {
 
   test("a change rolls the numbers to the new value", async () => {
     const el = await guard([spend(2)]);
+    const big = () => el.querySelector(".ui-bgd__big")!.textContent;
     el.limits = [spend(3)];
     await settle();
-    await wait(100);
-    const mid = el.querySelector(".ui-bgd__big")!.textContent;
-    expect(mid).not.toBe("$3.00");
-    await rolled();
-    expect(el.querySelector(".ui-bgd__big")!.textContent).toBe("$3.00");
+    // Read it every frame until it lands: it passes through values between the two (not a jump)
+    const seen: (string | null)[] = [];
+    for (let i = 0; i < 600 && big() !== "$3.00"; i++) {
+      await new Promise((r) => requestAnimationFrame(r));
+      seen.push(big());
+    }
+    expect(big()).toBe("$3.00");
+    expect(seen.some((v) => v !== "$2.00" && v !== "$3.00")).toBe(true);
   });
 
   test("near the cap: the state, the note with the pace and raises, announced once", async () => {
@@ -176,8 +176,7 @@ describe("tc-budget-guard", () => {
     await settle();
     expect(el.querySelector(".ui-bgd__btn")).toBeNull();
     expect(el.querySelector(".ui-bgd__pill")!.textContent).toBe("Done");
-    await rolled();
-    expect(plain(el.querySelector(".ui-bgd__status")!.textContent)).toBe("Finished under budget$2.00 left");
+    await expect.poll(() => plain(el.querySelector(".ui-bgd__status")!.textContent), { timeout: 3000 }).toBe("Finished under budget$2.00 left");
   });
 
   test("tokens, currencies and locales", async () => {

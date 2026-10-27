@@ -85,14 +85,15 @@ describe("tc-plan-vs-actual", () => {
     el.elapsed = 20_000;
     await el.updateComplete;
     expect(forecast(el)).toBe(60_000);
-    await new Promise((r) => setTimeout(r, 60));
-    const mid = forecast(el);
-    // (reduced motion lands at once)
-    if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      expect(mid).toBeLessThan(60_000);
-      expect(mid).toBeGreaterThan(20_000);
+    // Read it every frame until it lands (frame timestamps only: performance.now is watched)
+    const seen: number[] = [];
+    for (let i = 0; i < 600 && forecast(el) !== 20_000; i++) {
+      await new Promise((r) => requestAnimationFrame(r));
+      await el.updateComplete;
+      seen.push(forecast(el));
     }
-    await new Promise((r) => setTimeout(r, 1500));
+    // (reduced motion lands at once)
+    if (!matchMedia("(prefers-reduced-motion: reduce)").matches) expect(seen.some((v) => v < 60_000 && v > 20_000)).toBe(true);
     await settle();
     expect(forecast(el)).toBe(20_000);
     expect(spy).not.toHaveBeenCalled();

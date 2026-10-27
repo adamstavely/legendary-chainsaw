@@ -65,9 +65,7 @@ describe("tc-region-dach", () => {
     el.region = "jp";
     await el.updateComplete;
     expect([...el.querySelectorAll(".ui-rd-layer")].map((l) => l.getAttribute("data-phase"))).toEqual(["exit", "enter"]);
-    await new Promise((r) => setTimeout(r, 600));
-    await settle();
-    expect([...el.querySelectorAll(".ui-rd-layer")].map((l) => l.getAttribute("data-phase"))).toEqual(["enter"]);
+    await expect.poll(() => [...el.querySelectorAll(".ui-rd-layer")].map((l) => l.getAttribute("data-phase")), { timeout: 3000 }).toEqual(["enter"]);
   });
 
   test("picking a region fires a cancelable tc-region-change; preventDefault keeps the value", async () => {

@@ -6,7 +6,7 @@ import axe from "axe-core";
 import { afterEach, describe, expect, test, vi } from "vitest";
 import "../../src/elements/agent-tree";
 import type { TcAgentTree, TreeAgent } from "../../src/elements/agent-tree";
-import { cleanup, fixture, settle } from "./helpers";
+import { cleanup, finish, fixture, settle } from "./helpers";
 
 afterEach(() => {
   vi.useRealTimers();
@@ -47,19 +47,16 @@ describe("tc-agent-tree", () => {
     expect(el.dataset.look).toBe("standard");
     expect(el.hasAttribute("data-wide")).toBe(true);
     el.style.width = "400px";
-    await wait(50);
-    await settle();
-    expect(el.hasAttribute("data-wide")).toBe(false);
+    await expect.poll(() => el.hasAttribute("data-wide"), { timeout: 3000 }).toBe(false);
   });
 
   for (const look of ["standard", "clean"] as const) {
     describe(look, () => {
       test("connectors are drawn and follow a moving card without a render per frame", async () => {
         const el = await fixture<TcAgentTree>(html`<tc-agent-tree look=${look} style="width: 800px" .root=${ROOT} now="0"></tc-agent-tree>`);
-        await wait(100);
         const paths = () => [...el.querySelectorAll(".ui-agt__links:not(.ui-agt__dots) path")].map((p) => p.getAttribute("d"));
+        await expect.poll(() => paths().length, { timeout: 3000 }).toBeGreaterThan(0);
         const start = paths();
-        expect(start.length).toBeGreaterThan(0);
         expect(el.querySelectorAll(".ui-agt__dots circle").length).toBeGreaterThan(0);
         const count = renders(el);
         // The follow loop runs ~900ms after mount: move a card 1px per frame meanwhile
@@ -243,16 +240,12 @@ describe("tc-agent-tree", () => {
     const el = wrap.querySelector("tc-agent-tree")!;
     await wait(1500);
     wrap.style.paddingTop = "5000px";
-    await wait(100);
-    await settle();
-    expect(el.querySelector(".ui-agt__tree")!.hasAttribute("data-offscreen")).toBe(true);
+    await expect.poll(() => el.querySelector(".ui-agt__tree")!.hasAttribute("data-offscreen"), { timeout: 3000 }).toBe(true);
     el.root = { ...ROOT, children: [...ROOT.children!, { id: "c", name: "Docs", task: "Write", status: "running" }] };
     await settle();
     expect((el as unknown as { raf: number }).raf).toBe(0);
     wrap.style.paddingTop = "0";
-    await wait(100);
-    await settle();
-    expect(el.querySelector(".ui-agt__tree")!.hasAttribute("data-offscreen")).toBe(false);
+    await expect.poll(() => el.querySelector(".ui-agt__tree")!.hasAttribute("data-offscreen"), { timeout: 3000 }).toBe(false);
   });
 
   test("queued and stopped cards fade their marks, not their text", async () => {
@@ -277,7 +270,7 @@ describe("tc-agent-tree", () => {
       <tc-agent-tree .root=${tree} now="0" selectable></tc-agent-tree>
       <tc-agent-tree look="clean" heading="Clean run" .root=${ROOT} now="0"></tc-agent-tree>
     </div>`);
-    await wait(1200);
+    await finish(wrap);
     const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
     expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
   });

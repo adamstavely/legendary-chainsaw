@@ -8,7 +8,7 @@ import { afterEach, describe, expect, test, vi } from "vitest";
 import { userEvent } from "vitest/browser";
 import "../../src/elements/chat-composer";
 import { TcChatComposer, type ChatDictationSession, type ChatModel, type ChatPageContext, type ChatSkill, type ChatSkillChange } from "../../src/elements/chat-composer";
-import { cleanup, fixture, settle } from "./helpers";
+import { cleanup, finish, fixture, settle } from "./helpers";
 import * as React from "react";
 import { act } from "react";
 import { createRoot } from "react-dom/client";
@@ -367,8 +367,7 @@ test("axe: no violations in either look", async () => {
     <tc-chat-composer demo value="Hello"></tc-chat-composer>
     <tc-chat-composer look="clean" demo></tc-chat-composer>
   </div>`);
-  await sleep(100);
-  for (const a of document.getAnimations()) a.finish();
+  await finish();
   const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
   expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
 });
@@ -636,10 +635,8 @@ describe("tc-chat-composer: the toolbar row and the disclaimer (Part 6.3)", () =
       test("in a 320px side pane the tools keep their icons and names; narrower, settings and prompts move into More", async () => {
         const wrap = await fixture<HTMLElement>(html`<div style="width: 320px"><tc-chat-composer look=${look} demo model-switcher="toolbar" .settings=${{}} .prompts=${templates} .pageContext=${page}></tc-chat-composer></div>`);
         const el = wrap.firstElementChild as TcChatComposer;
-        await sleep(50);
-        await settle();
-        const label = el.querySelector<HTMLElement>('[data-tool="prompts"] .ui-chat-composer__tool-label')!;
-        expect(getComputedStyle(label).position).toBe("absolute");
+        const label = () => el.querySelector<HTMLElement>('[data-tool="prompts"] .ui-chat-composer__tool-label')!;
+        await until(() => expect(getComputedStyle(label()).position).toBe("absolute"));
         expect(button(el, "Prompts")).toBeTruthy();
         expect(button(el, "Model settings")!.getBoundingClientRect().width).toBeLessThanOrEqual(32);
         expect(getComputedStyle(el.querySelector(".ui-mdp__name")!).position).toBe("absolute");
@@ -850,9 +847,8 @@ describe("tc-chat-composer: the toolbar row and the disclaimer (Part 6.3)", () =
       </div>`);
       const [one] = wrap.querySelectorAll<TcChatComposer>("tc-chat-composer");
       button(one, "Prompts")!.click();
-      await sleep(150);
       await settle();
-      for (const a of document.getAnimations()) a.finish();
+      await finish();
       const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
       expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
     });

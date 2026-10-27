@@ -11,7 +11,7 @@ import * as React from "react";
 import { act } from "react";
 import { createRoot } from "react-dom/client";
 import { DataTable, type DataColumn as ReactColumn, type DataRow as ReactRow } from "../../src/elements/react/data-table";
-import { cleanup, fixture, settle } from "./helpers";
+import { cleanup, finish, fixture, settle } from "./helpers";
 
 afterEach(cleanup);
 
@@ -227,12 +227,14 @@ describe("tc-data-table", () => {
       key(grid(el), "ArrowDown");
       await settle();
       await new Promise((r) => setTimeout(r, 300));
+      await finish(el);
       const result = await axe.run(el, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
       expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
     });
     test(`axe, read only (${look})`, async () => {
       const el = await fixture<TcDataTable>(html`<tc-data-table look=${look} readonly heading="Accounts" .columns=${columns()} .rows=${rows()}></tc-data-table>`);
       await new Promise((r) => setTimeout(r, 300));
+      await finish(el);
       const result = await axe.run(el, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
       expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
     });

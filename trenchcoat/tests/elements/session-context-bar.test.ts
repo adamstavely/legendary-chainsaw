@@ -303,9 +303,7 @@ describe("tc-session-context-bar", () => {
     el.terms = TERMS.map((t) => (t.id === "scope" ? { ...t, value: "Whole company" } : t));
     await settle();
     expect(el.querySelector('.ui-scxb__chip[data-id="scope"]')!.hasAttribute("data-flash")).toBe(true);
-    await new Promise((r) => setTimeout(r, 120));
-    await settle();
-    expect(el.querySelector('.ui-scxb__chip[data-id="scope"]')!.hasAttribute("data-flash")).toBe(false);
+    await expect.poll(() => el.querySelector('.ui-scxb__chip[data-id="scope"]')!.hasAttribute("data-flash"), { timeout: 3000 }).toBe(false);
   });
 
   test("an empty bar says so", async () => {

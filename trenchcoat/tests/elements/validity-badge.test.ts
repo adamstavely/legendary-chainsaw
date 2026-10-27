@@ -169,9 +169,7 @@ describe("tc-validity-badge – strip", () => {
     expect(items.map((i) => [i.offsetTop, i.offsetHeight])).toEqual([[30, 40], [80, 60], [150, 20]]);
     // A paragraph that grows moves the bars after it
     wrap.querySelectorAll<HTMLElement>("p")[0].style.height = "100px";
-    await new Promise((r) => setTimeout(r, 50));
-    await settle();
-    expect([...el.querySelectorAll<HTMLElement>(".ui-vb__item")].map((i) => i.offsetTop)).toEqual([30, 140, 210]);
+    await expect.poll(() => [...el.querySelectorAll<HTMLElement>(".ui-vb__item")].map((i) => i.offsetTop), { timeout: 3000 }).toEqual([30, 140, 210]);
   });
 
   test("keyboard: one tab stop, arrows Home End move, Enter locates, Escape hides the tooltip", async () => {

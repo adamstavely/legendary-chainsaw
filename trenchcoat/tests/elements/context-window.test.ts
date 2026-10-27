@@ -168,8 +168,7 @@ for (const look of ["standard", "clean"] as const) {
       await until(() => expect(status(el).textContent).toMatch(/Saved 28K tokens/));
       expect(document.activeElement).toBe(button(el, "Conversation is compacted"));
       await until(() => expect(button(el, /Conversation is compacted/)).toBeNull(), 4000);
-      await sleep(50);
-      expect(document.activeElement).toBe(button(el, "New chat"));
+      await until(() => expect(document.activeElement).toBe(button(el, "New chat")));
       button(el, "New chat")!.click();
       expect(actions).toEqual([{ label: "New chat" }]);
     });

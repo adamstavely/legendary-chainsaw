@@ -101,9 +101,7 @@ describe("tc-run-manifest", () => {
     if (navigator.clipboard) expect(written).toEqual([HASH]);
     expect(el.querySelectorAll(".ui-rmf__copy")[2].hasAttribute("data-done")).toBe(true);
     expect(el.querySelector('[role="status"]')!.textContent).toBe("Instruction hash copied.");
-    await wait(1700);
-    await settle();
-    expect(el.querySelectorAll(".ui-rmf__copy")[2].hasAttribute("data-done")).toBe(false);
+    await expect.poll(() => el.querySelectorAll(".ui-rmf__copy")[2].hasAttribute("data-done"), { timeout: 4000 }).toBe(false);
   });
 
   test("copy prevented: the app copies, the element only confirms", async () => {

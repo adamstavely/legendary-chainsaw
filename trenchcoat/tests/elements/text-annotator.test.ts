@@ -14,7 +14,7 @@ import "../../src/elements/text-annotator";
 import type { TcTextAnnotator, TextAnnotation, TextAnnotatorCopy, TextAnnotatorValueChange } from "../../src/elements/text-annotator";
 import { rangeOf, textOf } from "../../src/elements/internal/selection";
 import { TextAnnotator } from "../../src/elements/react/text-annotator";
-import { cleanup, fixture, settle } from "./helpers";
+import { cleanup, finish, fixture, settle } from "./helpers";
 
 afterEach(() => {
   document.getSelection()?.removeAllRanges();
@@ -360,7 +360,10 @@ describe("tc-text-annotator", () => {
   test("wide: each note sits beside its mark; narrow: the rail moves under the text", async () => {
     const el = await make({ width: 900 });
     await frames(3);
-    await wait(400);
+    await finish(el);
+    // The notes are placed beside their marks once laid out
+    await expect.poll(() => Math.abs(note(el, "a")!.getBoundingClientRect().top - mark(el, "a")!.getBoundingClientRect().top), { timeout: 3000 }).toBeLessThan(2);
+    await finish(el);
     expect(el.hasAttribute("data-narrow")).toBe(false);
     const m = mark(el, "a")!.getBoundingClientRect();
     const n = note(el, "a")!.getBoundingClientRect();

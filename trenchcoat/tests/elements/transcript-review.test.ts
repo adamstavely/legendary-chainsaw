@@ -455,13 +455,22 @@ describe("tc-transcript-review", () => {
     const el = await fixture<TcTranscriptReview>(html`<tc-transcript-review .segments=${many} max-height="160"></tc-transcript-review>`);
     const list = el.querySelector<HTMLElement>(".ui-tsr__list")!;
     expect(list.scrollHeight).toBeGreaterThan(list.clientHeight);
+    const inView = (id: string) => {
+      const r = row(el, id).getBoundingClientRect();
+      const box = list.getBoundingClientRect();
+      return r.top >= box.top - 1 && r.bottom <= box.bottom + 1;
+    };
     el.seek(30 * 3 + 1);
     await settle();
-    await new Promise((r) => setTimeout(r, 700));
-    const r = row(el, "f30").getBoundingClientRect();
-    const box = list.getBoundingClientRect();
-    expect(r.top).toBeGreaterThanOrEqual(box.top - 1);
-    expect(r.bottom).toBeLessThanOrEqual(box.bottom + 1);
+    // The list scrolls smoothly: wait for it to come to rest (same position two reads running) with the row in view
+    let last = -1;
+    const rested = () => {
+      const at = list.scrollTop;
+      const still = at === last;
+      last = at;
+      return still;
+    };
+    await expect.poll(() => rested() && inView("f30"), { timeout: 3000, interval: 100 }).toBe(true);
     // The person scrolls: following stops, Back to now appears
     list.dispatchEvent(new WheelEvent("wheel", { bubbles: true, deltaY: -200 }));
     list.scrollTop = 0;
@@ -474,11 +483,10 @@ describe("tc-transcript-review", () => {
     expect(list.scrollTop).toBe(0);
     back.click();
     await settle();
-    await new Promise((r) => setTimeout(r, 700));
+    last = -1;
+    await expect.poll(() => rested() && row(el, "f35").getBoundingClientRect().bottom <= list.getBoundingClientRect().bottom + 1, { timeout: 3000, interval: 100 }).toBe(true);
     expect(el.querySelector(".ui-tsr__now-btn")).toBeNull();
     expect(list.scrollTop).toBeGreaterThan(0);
-    const r35 = row(el, "f35").getBoundingClientRect();
-    expect(r35.bottom).toBeLessThanOrEqual(list.getBoundingClientRect().bottom + 1);
   });
 
   test("reduced motion: the list jumps instead of scrolling smoothly", async () => {
@@ -642,11 +650,8 @@ describe("tc-transcript-review", () => {
     expect((document.activeElement as HTMLElement).dataset.id).toBe("w4999");
     expect(rows(el).length).toBeLessThan(200);
     el.seek(2500 * 4 + 1);
-    for (let i = 0; i < 4; i++) {
-      await new Promise((r) => setTimeout(r, 150));
-      await settle();
-    }
-    expect(row(el, "w2500")).toBeTruthy();
+    await expect.poll(() => !!row(el, "w2500"), { timeout: 3000 }).toBe(true);
+    await settle();
     expect(row(el, "w2500").getAttribute("aria-selected")).toBe("true");
   });
 

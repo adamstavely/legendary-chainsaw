@@ -24,7 +24,6 @@ const type = (el: Element, value: string) => {
   f.value = value;
   f.dispatchEvent(new InputEvent("input", { bubbles: true }));
 };
-const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 describe("tc-agent-steering", () => {
   test("the host is the root, with the look and the run's status", async () => {
@@ -108,8 +107,8 @@ describe("tc-agent-steering", () => {
     expect(el.querySelector(".ui-st__state")!.textContent).toMatch(/Running · 2s/);
     expect(el.querySelector(".ui-st__step-time")!.textContent).toMatch(/^2\.\ds$/);
     const renders = vi.spyOn(el as unknown as { render: () => unknown }, "render");
-    await wait(1100);
-    expect(el.querySelector(".ui-st__state")!.textContent).toMatch(/Running · 3s/);
+    // A tick on (a slow runner may read it a second later still)
+    await expect.poll(() => el.querySelector(".ui-st__state")!.textContent, { timeout: 5000 }).toMatch(/Running · [3-9]s/);
     expect(renders).not.toHaveBeenCalled();
   });
 

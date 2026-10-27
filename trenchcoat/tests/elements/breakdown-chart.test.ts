@@ -178,11 +178,11 @@ describe("tc-breakdown-chart", () => {
       { key: "year", label: "Year", values: ["2025", "2026"] },
       { key: "team", label: "Team", values: ["Core", "Growth", "Platform", "Mobile", "Web", "Infrastructure", "Security"] },
     ]} .measures=${measures} segment="team"></tc-breakdown-chart></div>`);
-    await new Promise((r) => setTimeout(r, 100));
-    await settle();
     const wrap = narrow.querySelector<HTMLElement>(".ui-bc__table-wrap")!;
+    // Measured once laid out
+    await expect.poll(() => wrap.tabIndex, { timeout: 3000 }).toBe(0);
+    await settle();
     expect(wrap.scrollWidth).toBeGreaterThan(wrap.clientWidth);
-    expect(wrap.tabIndex).toBe(0);
     expect(wrap.getAttribute("role")).toBe("region");
     expect(wrap.getAttribute("aria-label")).toBe("Points table");
     const wide = await fixture<TcBreakdownChart>(html`<tc-breakdown-chart .records=${records} .dimensions=${dimensions} .measures=${measures} segment="none"></tc-breakdown-chart>`);

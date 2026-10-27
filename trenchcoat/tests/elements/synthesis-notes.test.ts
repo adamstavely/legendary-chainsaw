@@ -189,9 +189,7 @@ describe("tc-synthesis-notes", () => {
     expect(el.querySelector(".ui-syn__btn--undo")).toBeTruthy();
     foot.dispatchEvent(new PointerEvent("pointerleave"));
     await settle();
-    await new Promise((r) => setTimeout(r, 300));
-    await settle();
-    expect(el.querySelector(".ui-syn__btn--undo")).toBeNull();
+    await expect.poll(() => el.querySelector(".ui-syn__btn--undo"), { timeout: 3000 }).toBeNull();
   });
 
   test("controlled: preventDefault keeps every change out until the app passes the list back", async () => {

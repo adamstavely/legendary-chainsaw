@@ -259,9 +259,8 @@ describe("tc-dropzone", () => {
       await settle();
       // The folding rows are inert meanwhile
       expect(el.querySelectorAll("li[data-removing][inert]").length).toBe(3);
-      await new Promise((r) => setTimeout(r, 600));
+      await expect.poll(() => el.querySelectorAll("li").length, { timeout: 3000 }).toBe(0);
       await settle();
-      expect(el.querySelectorAll("li").length).toBe(0);
       expect(document.activeElement).toBe(area(el));
     });
 
@@ -312,8 +311,6 @@ describe("tc-dropzone autoplay", () => {
     expect(rowNames(el)).toEqual([]);
     el.autoplay = true;
     await settle();
-    await new Promise((r) => setTimeout(r, 2600));
-    await settle();
-    expect(rowNames(el).length).toBeGreaterThan(0);
+    await expect.poll(() => rowNames(el).length, { timeout: 6000 }).toBeGreaterThan(0);
   });
 });
