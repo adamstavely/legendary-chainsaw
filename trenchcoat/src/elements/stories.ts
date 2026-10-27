@@ -332,7 +332,7 @@ export class TcStories extends TcElement {
 
   /** The browser closed the dialog on its own (a repeated Escape): ask, and show it again if it must stay */
   private onNativeClose = () => {
-    if (this.open == null || this.request(null)) return;
+    if (this.modal.ownClose() || this.open == null || this.request(null)) return;
     requestAnimationFrame(() => {
       if (this.current()) this.modal.reopen();
     });

@@ -102,10 +102,13 @@ describe("tc-context-map", () => {
         };
         await glide(1500);
         expect(updates).toBeLessThan(1500 / 16 / 4);
+        // Compare where each has actually come to rest – a slow runner may still be easing after 1.5 s
+        await expect.poll(() => el["raf"], { timeout: 5000 }).toBe(0);
         const settled = geometry(el);
         expect(settled).not.toEqual(before);
         const fresh = await fixture<TcContextMap>(mapAt(look, grown));
         await glide(1500);
+        await expect.poll(() => fresh["raf"], { timeout: 5000 }).toBe(0);
         expect(geometry(fresh)).toEqual(settled);
         expect(hits(el).map((t) => t.getAttribute("aria-label"))).toContain("payment-intent.ts, File – 42k tokens");
       });

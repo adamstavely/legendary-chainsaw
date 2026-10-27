@@ -289,7 +289,7 @@ export class TcTermsDialog extends TcElement {
 
   /** The browser closed the dialog on its own (a repeated Escape): ask, and show it again if it must stay */
   private onNativeClose = () => {
-    if (!this.open) return;
+    if (this.modal.ownClose() || !this.open) return;
     if (!this.blocking && !this.busy && this.setOpen(false)) return;
     // A controlled host may close it in its own next render; reopen only if it's still meant to be open then
     requestAnimationFrame(() => {
