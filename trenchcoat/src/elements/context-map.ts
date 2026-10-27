@@ -415,7 +415,8 @@ export class TcContextMap extends TcElement {
       el.style.setProperty("--y", `${r.y}px`);
       el.style.setProperty("--w", `${r.w}px`);
       el.style.setProperty("--h", `${r.h}px`);
-      const name = this.ariaOf(it.id, it.value);
+      // The name says where it's going, not the number rolling there
+      const name = this.ariaOf(it.id, this.target.get(it.id) ?? it.value);
       if (it.id === FREE) el.setAttribute("aria-label", name);
       else el.querySelector(".ui-cxm__hit")?.setAttribute("aria-label", name);
       // The count is the first text in its line
@@ -743,7 +744,7 @@ export class TcContextMap extends TcElement {
       data-fate=${ifDefined(fate)}
       ?data-dim=${!!this.hover && this.hover !== it.id}
       ?data-pinned=${this.pinned === it.id}
-      aria-label=${ifDefined(isFree ? this.ariaOf(it.id, it.value) : undefined)}
+      aria-label=${ifDefined(isFree ? this.ariaOf(it.id, this.target.get(it.id) ?? it.value) : undefined)}
       @mouseenter=${() => {
         this.hover = it.id;
         this.dismissed = false;
@@ -755,7 +756,7 @@ export class TcContextMap extends TcElement {
         : html`<button
             type="button"
             class="ui-cxm__hit"
-            aria-label=${this.ariaOf(it.id, it.value)}
+            aria-label=${this.ariaOf(it.id, this.target.get(it.id) ?? it.value)}
             aria-pressed=${this.pinned === it.id ? "true" : "false"}
             aria-describedby=${ifDefined(this.showing === it.id ? `${this.uid}-tip` : undefined)}
             tabindex=${it.id === tabStop ? 0 : -1}

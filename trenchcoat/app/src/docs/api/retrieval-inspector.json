@@ -688,7 +688,8 @@
    "MutationObserver (internal/controllers › FocusRescueController)"
   ],
   "clock": [
-   "Date.now() (validity-badge)"
+   "Date.now() (validity-badge)",
+   "performance.now() (internal/controllers › RowWindowController)"
   ],
   "listeners": [
    "window scroll (internal/controllers › RowWindowController)",
@@ -706,7 +707,7 @@
   "windowed": true
  },
  "size": {
-  "min": 60658,
-  "gzip": 17027
+  "min": 60933,
+  "gzip": 17117
  }
 }

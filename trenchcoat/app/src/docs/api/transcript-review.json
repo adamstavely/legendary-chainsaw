@@ -949,7 +949,9 @@
    "MutationObserver (internal/controllers › FocusRescueController)",
    "IntersectionObserver (internal/controllers › OffScreenController)"
   ],
-  "clock": [],
+  "clock": [
+   "performance.now() (internal/controllers › RowWindowController)"
+  ],
   "listeners": [
    "window scroll (internal/controllers › RowWindowController)",
    "window resize (internal/controllers › RowWindowController)"
@@ -968,7 +970,7 @@
   "windowed": true
  },
  "size": {
-  "min": 64003,
-  "gzip": 18276
+  "min": 64278,
+  "gzip": 18370
  }
 }

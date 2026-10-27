@@ -100,6 +100,10 @@ export class RowWindowController implements ReactiveController {
   rowHeight: number;
   private frame = 0;
   private win = { start: 0, end: 0 };
+  /** A row `reveal` brought in: kept in the window until it has scrolled into view, so a measure that runs before the
+   *  scroll lands can't take it away again (and the focus with it). Held for a second at most */
+  private keep: number | null = null;
+  private keepUntil = 0;
 
   constructor(
     private host: Host,
@@ -147,6 +151,8 @@ export class RowWindowController implements ReactiveController {
 
   /** Centre the window on a row that is out of it, e.g. one the keyboard jumped to */
   reveal(r: number) {
+    this.keep = r;
+    this.keepUntil = performance.now() + 1000;
     this.place(r - this.options.overscan, r + this.options.overscan);
   }
 
@@ -159,7 +165,16 @@ export class RowWindowController implements ReactiveController {
     const top = body.getBoundingClientRect().top;
     const h = row?.offsetHeight || this.rowHeight;
     this.rowHeight = h;
-    this.place(Math.max(0, Math.floor(-top / h)), Math.max(0, Math.ceil((window.innerHeight - top) / h)));
+    const first = Math.max(0, Math.floor(-top / h));
+    const last = Math.max(0, Math.ceil((window.innerHeight - top) / h));
+    const keep = this.keep;
+    if (keep !== null && keep < this.options.count() && (keep < first || keep > last) && performance.now() < this.keepUntil) {
+      // The revealed row hasn't scrolled into view yet: hold the window around it
+      this.place(keep - this.options.overscan, keep + this.options.overscan);
+      return;
+    }
+    this.keep = null;
+    this.place(first, last);
   };
   private schedule = () => {
     if (!this.frame) this.frame = requestAnimationFrame(this.measure);
@@ -175,6 +190,7 @@ export class RowWindowController implements ReactiveController {
   hostDisconnected() {
     cancelAnimationFrame(this.frame);
     this.frame = 0;
+    this.keep = null;
     window.removeEventListener("scroll", this.schedule, { capture: true });
     window.removeEventListener("resize", this.schedule);
   }

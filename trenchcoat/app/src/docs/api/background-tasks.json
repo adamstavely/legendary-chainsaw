@@ -704,7 +704,9 @@
    "IntersectionObserver (internal/controllers › OffScreenController)",
    "ResizeObserver (internal/popover › PopoverController)"
   ],
-  "clock": [],
+  "clock": [
+   "performance.now() (internal/controllers › RowWindowController)"
+  ],
   "listeners": [
    "window scroll (internal/controllers › RowWindowController)",
    "window resize (internal/controllers › RowWindowController)"
@@ -724,7 +726,7 @@
   "windowed": true
  },
  "size": {
-  "min": 47933,
-  "gzip": 14717
+  "min": 48253,
+  "gzip": 14848
  }
 }

@@ -800,7 +800,8 @@
    "IntersectionObserver (internal/controllers › OnScreenController)"
   ],
   "clock": [
-   "Date.now()"
+   "Date.now()",
+   "performance.now() (internal/controllers › RowWindowController)"
   ],
   "listeners": [
    "document pointerdown",
@@ -824,7 +825,7 @@
   "windowed": true
  },
  "size": {
-  "min": 69498,
-  "gzip": 18396
+  "min": 69773,
+  "gzip": 18491
  }
 }

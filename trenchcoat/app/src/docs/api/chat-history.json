@@ -734,7 +734,8 @@
    "MutationObserver (internal/controllers › FocusRescueController)"
   ],
   "clock": [
-   "Date.now()"
+   "Date.now()",
+   "performance.now() (internal/controllers › RowWindowController)"
   ],
   "listeners": [
    "document pointerdown",
@@ -753,7 +754,7 @@
   "windowed": true
  },
  "size": {
-  "min": 58029,
-  "gzip": 16268
+  "min": 58304,
+  "gzip": 16391
  }
 }
