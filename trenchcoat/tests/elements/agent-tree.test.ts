@@ -66,7 +66,9 @@ describe("tc-agent-tree", () => {
           await frame();
         }
         expect(paths()).not.toEqual(start);
-        expect(count.mock.calls.length).toBeLessThan(5);
+        // Far fewer renders than the 20 frames – a stalled runner stretches them over seconds, so the once-a-second
+        // clock can add a few renders of its own
+        expect(count.mock.calls.length).toBeLessThan(10);
       });
 
       test("no renders once still", async () => {
