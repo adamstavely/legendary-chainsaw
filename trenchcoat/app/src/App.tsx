@@ -4,6 +4,7 @@ import { DocsPage } from "./docs/DocsPage";
 import { FOUNDATIONS, Foundations } from "./docs/Foundations";
 import { GUIDANCE } from "./docs/guidance";
 import { CATEGORIES, ENTRIES, LIBRARY_INFO, type Entry, type LibraryInfo, type Variant } from "./registry";
+import { HAS_CLEAN_THUMBS, categorySlug, initials, thumbFor } from "./thumbs";
 
 type Mode = Variant | "both";
 type Theme = "light" | "dark" | "system";
@@ -70,6 +71,12 @@ function useHash() {
 const fileCount = (list: Entry[]) => list.reduce((n, e) => n + new Set(Object.values(e.files).map((f) => f.split(" ")[0])).size, 0);
 const entriesOf = (library: string) => ENTRIES.filter((e) => e.library === library);
 
+/** A component category page's route; other libraries have one section, the library page itself */
+const categoryHref = (library: string, category: string) =>
+  library === "components" ? `#/library/components/${categorySlug(category)}` : `#/library/${library}`;
+/** The README line up to its first dash or full stop – the tiles' one-line description */
+const summary = (description: string) => description.replace(/`/g, "").split(/ – |\. /)[0].replace(/\.$/, "");
+
 /** Entries grouped by category, in sidebar order, empty groups dropped */
 function grouped(list: Entry[]) {
   return CATEGORIES.map((cat) => [cat, list.filter((e) => e.category === cat)] as const)
@@ -86,6 +93,10 @@ export function App() {
   const focused = ENTRIES.filter((e) => route === e.id || route.startsWith(`${e.id}/`)).sort((a, b) => b.id.length - a.id.length)[0];
   const section = focused && route.length > focused.id.length ? route.slice(focused.id.length + 1) : "";
   const library = LIBRARY_INFO.find((l) => route === `library/${l.key}`);
+  // #/library/components/<category>
+  const category = route.startsWith("library/components/")
+    ? CATEGORIES.find((c) => categorySlug(c) === route.slice("library/components/".length) && entriesOf("components").some((e) => e.category === c))
+    : undefined;
   const foundation = route.startsWith("foundations/") ? route.slice("foundations/".length) : null;
 
   const results = useMemo(() => {
@@ -98,11 +109,11 @@ export function App() {
   // Standard/Clean exists for components and for the blocks built on the elements (they follow the stage's look
   // provider), so the switch shows where those are on screen
   const twoLooks = (e: Entry | undefined) => Boolean(e && e.load.standard && e.load.clean);
+  // The overview pages show thumbnails, which follow the switch only when Clean ones were captured
   const showVariant =
-    Boolean(results) ||
-    library?.key === "components" ||
+    (HAS_CLEAN_THUMBS &&
+      (Boolean(results) || library?.key === "components" || Boolean(category) || (library?.key === "blocks" && entriesOf("blocks").some(twoLooks)))) ||
     focused?.library === "components" ||
-    (library?.key === "blocks" && entriesOf("blocks").some(twoLooks)) ||
     (focused?.library === "blocks" && twoLooks(focused));
 
   return (
@@ -160,7 +171,11 @@ export function App() {
               </a>
               {groups.map(([cat, list]) => (
                 <div key={cat} className="navgroup">
-                  {groups.length > 1 && <div className="navcat">{cat}</div>}
+                  {groups.length > 1 && (
+                    <a href={categoryHref(lib.key, cat)} className={`navcat ${category === cat ? "active" : ""}`}>
+                      {cat}
+                    </a>
+                  )}
                   {list.map((e) => (
                     <a key={e.id} href={`#/${e.id}`} className={focused?.id === e.id ? "active" : ""}>
                       {e.name}
@@ -182,6 +197,8 @@ export function App() {
           <Foundations key={foundation} page={foundation} />
         ) : focused ? (
           <FocusView entry={focused} mode={mode} section={section} />
+        ) : category ? (
+          <CategoryPage category={category} mode={mode} />
         ) : library ? (
           <LibraryPage lib={library} mode={mode} />
         ) : (
@@ -193,31 +210,91 @@ export function App() {
   );
 }
 
+/** Tiles grouped by category, each heading linking to its category page */
 function Sections({ list, mode }: { list: Entry[]; mode: Mode }) {
   const groups = grouped(list);
   return (
     <>
       {groups.map(([cat, items]) => (
-        <section key={cat}>
+        <section key={cat} aria-labelledby={groups.length > 1 ? `cat-${categorySlug(cat)}` : undefined}>
           {groups.length > 1 && (
-            <h2 className="cathead">
-              {cat} <span className="muted">{items.length}</span>
+            <h2 className="cathead" id={`cat-${categorySlug(cat)}`}>
+              <a href={categoryHref(items[0].library, cat)}>{cat}</a> <span className="muted">{items.length}</span>
             </h2>
           )}
-          <div className="grid">
-            {items.map((e) => (
-              <Card key={e.id} entry={e} mode={mode} />
-            ))}
-          </div>
+          <TileGrid list={items} mode={mode} level={groups.length > 1 ? 3 : 2} />
         </section>
       ))}
     </>
   );
 }
 
+function TileGrid({ list, mode, level }: { list: Entry[]; mode: Mode; level: 2 | 3 }) {
+  return (
+    <ul className="tiles" role="list">
+      {list.map((e) => (
+        <li key={e.id}>
+          <Tile entry={e} mode={mode} level={level} />
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+/** The demo's thumbnail in the previews' theme (System follows the OS), or the item's initials when none exists */
+function Thumb({ entry, mode, className = "" }: { entry: Entry; mode: Mode; className?: string }) {
+  const theme = useContext(ThemeContext);
+  const look: Variant = HAS_CLEAN_THUMBS && mode === "clean" ? "clean" : "standard";
+  const light = thumbFor(entry, "light", look);
+  const dark = thumbFor(entry, "dark", look);
+  const img = (src: string) => <img src={src} alt="" width={320} height={200} loading="lazy" decoding="async" />;
+  return (
+    <div className={`thumb ${className}`} data-theme={theme}>
+      {!light && !dark ? (
+        <span className="thumb-initials" aria-hidden>
+          {initials(entry.name)}
+        </span>
+      ) : theme === "system" && light && dark ? (
+        <picture>
+          <source media="(prefers-color-scheme: dark)" srcSet={dark} />
+          {img(light)}
+        </picture>
+      ) : (
+        img((theme === "dark" ? (dark ?? light) : (light ?? dark))!)
+      )}
+    </div>
+  );
+}
+
+/** An overview tile: the name is the link (stretched over the tile), so the image needs no alt text of its own */
+function Tile({ entry, mode, level }: { entry: Entry; mode: Mode; level: 2 | 3 }) {
+  const Heading = level === 2 ? "h2" : "h3";
+  return (
+    <article className="tile">
+      <Thumb entry={entry} mode={mode} />
+      <div className="tile-text">
+        <Heading className="tile-name">
+          <a href={`#/${entry.id}`}>{entry.name}</a>
+        </Heading>
+        <p className="tile-desc">{summary(entry.description)}</p>
+      </div>
+    </article>
+  );
+}
+
 function Results({ list, query, mode }: { list: Entry[]; query: string; mode: Mode }) {
   if (!list.length) return <p className="empty">Nothing matches “{query}”.</p>;
-  return <Sections list={list} mode={mode} />;
+  return (
+    <>
+      <header className="libhead">
+        <h1>Search</h1>
+        <p className="muted" role="status">
+          {list.length} {list.length === 1 ? "item matches" : "items match"} “{query.trim()}”
+        </p>
+      </header>
+      <Sections list={list} mode={mode} />
+    </>
+  );
 }
 
 function LibraryPage({ lib, mode }: { lib: LibraryInfo; mode: Mode }) {
@@ -236,13 +313,49 @@ function LibraryPage({ lib, mode }: { lib: LibraryInfo; mode: Mode }) {
         <p className="about">{lib.about}</p>
         <p className="muted">
           {list.length} items · {fileCount(list)} files
-          {lib.key === "components" && " · switch Standard, Clean or Both in the top bar"}
+          {lib.key === "components" && HAS_CLEAN_THUMBS && " · switch Standard, Clean or Both in the top bar"}
         </p>
       </header>
       <Sections list={list} mode={mode} />
     </>
   );
 }
+
+/** One component category's tiles: #/library/components/<category> */
+function CategoryPage({ category, mode }: { category: string; mode: Mode }) {
+  const list = entriesOf("components").filter((e) => e.category === category);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [category]);
+  return (
+    <>
+      <header className="libhead">
+        <a href="#/library/components" className="crumb">
+          ← Components
+        </a>
+        <h1>{category}</h1>
+        <p className="muted">
+          {list.length} components · {fileCount(list)} files
+        </p>
+      </header>
+      <TileGrid list={list} mode={mode} level={2} />
+    </>
+  );
+}
+
+/** Three recognisable pieces per library for the home page's cards */
+const TEASERS: Record<string, string[]> = {
+  components: ["agent-plan", "kpi-chart", "chat-composer"],
+  blocks: ["kpi-board", "pricing-plans", "task-board"],
+  screens: ["analytics", "crm", "agent-chat"],
+  illustrations: ["voice-orb", "world-map", "glass-folder"],
+  motion: ["number-ticker", "gradient-text", "tilt-card"],
+};
+const teaser = (library: string) => {
+  const list = entriesOf(library);
+  const picked = (TEASERS[library] ?? []).map((slug) => list.find((e) => e.slug === slug)).filter((e): e is Entry => Boolean(e));
+  return [...picked, ...list.filter((e) => !picked.includes(e))].slice(0, 3);
+};
 
 /** The landing page: what Trenchcoat is, the five libraries, and the two component styles */
 function Home() {
@@ -284,6 +397,11 @@ function Home() {
             const list = entriesOf(lib.key);
             return (
               <a key={lib.key} className="libcard" href={`#/library/${lib.key}`}>
+                <div className="libthumbs" aria-hidden>
+                  {teaser(lib.key).map((e) => (
+                    <Thumb key={e.id} entry={e} mode="standard" />
+                  ))}
+                </div>
                 <div className="libcardhead">
                   <h3>{lib.label}</h3>
                   <span className="muted">

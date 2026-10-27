@@ -65,6 +65,7 @@
     "gen:docs": "node scripts/gen-docs.mjs",
     "check:docs": "node scripts/gen-docs.mjs --check && node scripts/check-docs.mjs",
     "measure:perf": "node scripts/measure-perf.mjs",
+    "capture:thumbs": "node scripts/capture-thumbs.mjs",
     "check:snippets": "node scripts/check-snippets.mjs"
   },
   "dependencies": {
