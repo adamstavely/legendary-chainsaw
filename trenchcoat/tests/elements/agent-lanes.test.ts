@@ -51,12 +51,12 @@ describe("tc-agent-lanes", () => {
     const el = await fixture<TcAgentLanes>(html`<tc-agent-lanes .agents=${agents} .tasks=${[done]} .now=${NOW}></tc-agent-lanes>`);
     expect(el.dataset.ui).toBe("al");
     expect(el.dataset.look).toBe("standard");
-    expect(el.querySelector(":scope > .ui-al__bar .ui-al__title")!.textContent).toBe("Agents");
+    expect(el.querySelector(":scope > .tc-head .tc-head__title")!.textContent).toBe("Agents");
     el.look = "clean";
     el.heading = "Crew";
     await settle();
     expect(el.dataset.look).toBe("clean");
-    expect(el.querySelector(".ui-al__card > .ui-al__bar .ui-al__title")!.textContent).toBe("Crew");
+    expect(el.querySelector(".ui-al__card > .tc-head .tc-head__title")!.textContent).toBe("Crew");
   });
 
   for (const look of ["standard", "clean"] as const) {

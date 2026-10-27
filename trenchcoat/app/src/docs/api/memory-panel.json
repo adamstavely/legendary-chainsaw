@@ -1,0 +1,324 @@
+{
+ "elements": [
+  {
+   "tag": "tc-memory-panel",
+   "className": "TcMemoryPanel",
+   "description": "What an assistant remembers – grouped memories with filters, search, in-place editing, pause, forget with Undo, and\na master switch.",
+   "properties": [
+    {
+     "name": "memories",
+     "attribute": null,
+     "type": "Memory[]",
+     "default": "[]",
+     "description": "The memories shown, grouped by their category",
+     "readonly": false
+    },
+    {
+     "name": "enabled",
+     "attribute": "enabled",
+     "type": "boolean",
+     "default": "true",
+     "description": "The master switch",
+     "readonly": false
+    },
+    {
+     "name": "categories",
+     "attribute": null,
+     "type": "string[] | undefined",
+     "default": "undefined",
+     "description": "Order of the groups and the choices for new memories – defaults to the categories in the order they appear",
+     "readonly": false
+    },
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Memory\"",
+     "description": "The heading, and the group's name",
+     "readonly": false
+    },
+    {
+     "name": "maxHeight",
+     "attribute": "max-height",
+     "type": "number",
+     "default": "360",
+     "description": "Height of the list before it scrolls, in px",
+     "readonly": false
+    },
+    {
+     "name": "undoFor",
+     "attribute": "undo-for",
+     "type": "number",
+     "default": "5000",
+     "description": "How long Undo stays on the tray (Clean: in the card's last row), in ms. It waits while the pointer or focus is on\nthe tray and starts over after; `Infinity` keeps it until the next forget (WCAG 2.2.1)",
+     "readonly": false
+    },
+    {
+     "name": "addedSource",
+     "attribute": "added-source",
+     "type": "string",
+     "default": "\"You added\"",
+     "description": "Source given to memories added here",
+     "readonly": false
+    },
+    {
+     "name": "actionLabel",
+     "attribute": "action-label",
+     "type": "string",
+     "default": "\"\"",
+     "description": "A button on the tray that fires tc-action – Undo takes its place for a moment",
+     "readonly": false
+    },
+    {
+     "name": "onAdd",
+     "attribute": null,
+     "type": "((memory: Memory) => MemoryCallbackResult) | undefined",
+     "default": "undefined",
+     "description": "Called with a memory added here",
+     "readonly": false
+    },
+    {
+     "name": "onEdit",
+     "attribute": null,
+     "type": "((id: string, text: string) => MemoryCallbackResult) | undefined",
+     "default": "undefined",
+     "description": "Called when a memory's text was edited",
+     "readonly": false
+    },
+    {
+     "name": "onPause",
+     "attribute": null,
+     "type": "((id: string, paused: boolean) => MemoryCallbackResult) | undefined",
+     "default": "undefined",
+     "description": "Called when a memory was paused or resumed",
+     "readonly": false
+    },
+    {
+     "name": "onForget",
+     "attribute": null,
+     "type": "((id: string) => MemoryCallbackResult) | undefined",
+     "default": "undefined",
+     "description": "Called when a memory was forgotten",
+     "readonly": false
+    },
+    {
+     "name": "onRestore",
+     "attribute": null,
+     "type": "((memory: Memory) => MemoryCallbackResult) | undefined",
+     "default": "undefined",
+     "description": "Called when a forgotten memory is brought back with Undo",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-memories-change",
+     "detail": "",
+     "description": "The list changed (added, edited, paused, forgotten, restored or rolled back); detail `{ memories: Memory[] }`. Cancelable: preventDefault() keeps the change out until the app passes the list back.",
+     "cancelable": true
+    },
+    {
+     "name": "tc-enabled-change",
+     "detail": "",
+     "description": "The master switch was flipped; detail `{ enabled: boolean }`. Cancelable.",
+     "cancelable": true
+    },
+    {
+     "name": "tc-action",
+     "detail": "",
+     "description": "The action button (`actionLabel`) was pressed",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "mp",
+   "cssProperties": [
+    {
+     "name": "--tc-memory-panel-well",
+     "value": "light-dark(#f4f4f5, #222225)",
+     "looks": [
+      "standard"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-border-default",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-md",
+    "--tc-control-px-sm",
+    "--tc-control-radius-md",
+    "--tc-control-radius-sm",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-instant",
+    "--tc-duration-moderate",
+    "--tc-duration-quick",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-ease-decelerate",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-field-bg-sunken",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-fill-default",
+    "--tc-fill-hover",
+    "--tc-fill-strong",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-memory-panel-max",
+    "--tc-radius-badge",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-radius-xs",
+    "--tc-shadow-control",
+    "--tc-shadow-raised",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-4-5",
+    "--tc-space-5",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-switch-h",
+    "--tc-switch-knob",
+    "--tc-switch-knob-bg",
+    "--tc-switch-off",
+    "--tc-switch-on",
+    "--tc-switch-radius",
+    "--tc-switch-w",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-placeholder",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "MemoryPanel",
+   "exported": true,
+   "props": [
+    {
+     "name": "memories",
+     "type": "Memory[]",
+     "optional": true,
+     "description": "The memories (controlled): the panel shows exactly these and asks for changes through onChange. Leave it\nundefined to let the panel keep the list, starting at `defaultMemories`"
+    },
+    {
+     "name": "defaultMemories",
+     "type": "Memory[]",
+     "optional": true,
+     "description": "The memories to start with when uncontrolled"
+    },
+    {
+     "name": "onChange",
+     "type": "(memories: Memory[]) => void",
+     "optional": true,
+     "description": "Called with the full list after any change – in both modes"
+    },
+    {
+     "name": "enabled",
+     "type": "boolean",
+     "optional": true,
+     "description": "The master switch – controlled when defined"
+    },
+    {
+     "name": "defaultEnabled",
+     "type": "boolean",
+     "optional": true,
+     "description": "The master switch to start with when uncontrolled"
+    },
+    {
+     "name": "onEnabledChange",
+     "type": "(enabled: boolean) => void",
+     "optional": true,
+     "description": "Called when the master switch is flipped – in both modes"
+    },
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading, and the group's name"
+    },
+    {
+     "name": "action",
+     "type": "{ label: string; onClick: () => void }",
+     "optional": true,
+     "description": "A button on the tray, e.g. { label: \"Manage\", onClick } – Undo takes its place for a moment"
+    }
+   ],
+   "hides": [
+    "memories",
+    "enabled",
+    "heading",
+    "actionLabel",
+    "onChange"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 72731,
+  "gzip": 16462
+ }
+}

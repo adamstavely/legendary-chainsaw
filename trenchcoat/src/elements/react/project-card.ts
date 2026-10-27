@@ -23,6 +23,7 @@ export type ProjectCardProps = Omit<
   RawProjectCardProps,
   "heading" | "tasks" | "statuses" | "status" | "open" | "hint" | "actionLabel" | "onTcTasksChange" | "onTcStatusChange" | "onTcOpenChange" | "onTcAction"
 > & {
+  /** The project's name */
   title: string;
   /**
    * Subtasks – one ring segment and one row each (controlled): ticks are only reported through `onTasksChange`, so
@@ -39,6 +40,7 @@ export type ProjectCardProps = Omit<
   status?: string;
   /** Starting status id when `status` isn't controlled – defaults to the first option */
   defaultStatus?: string;
+  /** Called with the id of the status picked */
   onStatusChange?: (id: string) => void;
   /** A button on the tray of the open card (Clean: in its last row), e.g. { label: "Open", onClick } */
   action?: { label: string; onClick: () => void };
@@ -46,7 +48,9 @@ export type ProjectCardProps = Omit<
   hint?: React.ReactNode;
   /** Controlled open state */
   open?: boolean;
+  /** Whether the card starts unfolded when `open` isn't controlled */
   defaultOpen?: boolean;
+  /** Called when the card opens or closes */
   onOpenChange?: (open: boolean) => void;
 };
 

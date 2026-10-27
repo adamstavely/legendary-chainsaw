@@ -26,6 +26,20 @@ const grid = (el: TcDataTable) => el.querySelector<HTMLElement>("[role=grid]")!;
 const cell = (el: TcDataTable, r: number, c: number) => el.querySelector<HTMLElement>(`[data-cell="${r}-${c}"]`)!;
 
 describe("tc-data-table", () => {
+  test("the header: the heading in cardHead, with the table icon, or a copy of the app's own icon", async () => {
+    const el = await fixture<TcDataTable>(html`<tc-data-table heading="Accounts" .columns=${columns()} .rows=${rows()}></tc-data-table>`);
+    expect(el.querySelector(".tc-head__title")!.textContent).toBe("Accounts");
+    expect(el.querySelector(".tc-head + .ui-dt__card")).toBeTruthy();
+    expect(el.querySelector(".tc-head__icon rect")).toBeTruthy();
+    const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    icon.setAttribute("viewBox", "0 0 16 16");
+    icon.innerHTML = '<circle cx="8" cy="8" r="5"></circle>';
+    el.icon = icon;
+    await settle();
+    expect(el.querySelector(".tc-head__icon > svg:not(.tc-head__glyph) circle")).toBeTruthy();
+    expect(icon.isConnected).toBe(false);
+  });
+
   test("a grid: arrows move the active cell, which aria-activedescendant points at", async () => {
     const el = await fixture<TcDataTable>(html`<tc-data-table heading="Accounts" .columns=${columns()} .rows=${rows()}></tc-data-table>`);
     const g = grid(el);

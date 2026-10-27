@@ -4,6 +4,7 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { repeat } from "lit/directives/repeat.js";
 import { reducedMotion } from "../internal/reduced-motion";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController, rescueFocus } from "./internal/controllers";
 
 /*
@@ -106,6 +107,8 @@ const wrenchIcon = () => lineIcon(12, "0 0 12 12", 1.2, svg`<path d="M7.6 1.6a2.
 const searchIcon = () => lineIcon(12, "0 0 12 12", 1.2, svg`<circle cx="5.2" cy="5.2" r="3.3"></circle><path d="m7.7 7.7 2.6 2.6"></path>`);
 const boardIcon = () => lineIcon(13, "0 0 14 14", 1.2, svg`<rect x="1.8" y="2.2" width="3.2" height="9.6" rx="1"></rect><rect x="8.9" y="2.2" width="3.2" height="6.4" rx="1"></rect>`);
 const listIcon = () => lineIcon(13, "0 0 14 14", 1.2, svg`<path d="M2.2 3.6h9.6M2.2 7h9.6M2.2 10.4h9.6"></path>`);
+// The header icon: an inbox tray
+const inboxIcon = svg`<path d="M22 12h-6l-2 3h-4l-2-3H2"></path><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>`;
 const plusIcon = () => lineIcon(12, "0 0 12 12", 1.5, svg`<path d="M6 2.2v7.6M2.2 6h7.6"></path>`);
 
 let instances = 0;
@@ -412,20 +415,19 @@ export class TcAgentInbox extends TcElement {
       ${(["board", "list"] as const).map(
         (v) =>
           html`<button type="button" role="radio" aria-checked=${this.view === v ? "true" : "false"} tabindex=${this.view === v ? 0 : -1} class="ui-ai__view" @click=${() => this.setView(v)}>
-            ${v === "board" ? boardIcon() : listIcon()}${v === "board" ? "Board" : "List"}
+            ${v === "board" ? boardIcon() : listIcon()}<span class="ui-ai__label">${v === "board" ? "Board" : "List"}</span>
           </button>`,
       )}
     </div>`;
     return html`
-      <div class="ui-ai__bar">
-        <span class="ui-ai__heading"><span class="ui-ai__crumb">Agents</span><span class="ui-ai__slash" aria-hidden="true">/</span><span>${this.heading}</span></span>
-        ${look === "standard"
-          ? html`<div class="ui-ai__tools">
-              ${this.action ? html`<button type="button" class="ui-ai__action" @click=${() => this.action?.onClick()}>${plusIcon()}${this.action.label}</button>` : nothing}
-              ${views}
-            </div>`
-          : views}
-      </div>
+      ${cardHead({
+        icon: inboxIcon,
+        title: html`<span class="ui-ai__heading"><span class="ui-ai__crumb">Agents</span><span class="ui-ai__slash" aria-hidden="true">/</span><span title=${this.heading}>${this.heading}</span></span>`,
+        aside:
+          look === "standard"
+            ? html`${this.action ? html`<button type="button" class="ui-ai__action" @click=${() => this.action?.onClick()}>${plusIcon()}<span class="ui-ai__label">${this.action.label}</span></button>` : nothing}${views}`
+            : views,
+      })}
       <div class="ui-ai__lanes">
         ${LANES.map(
           (lane) => html`<section class="ui-ai__lane" aria-label=${lane.label}>
@@ -460,10 +462,10 @@ export class TcAgentInbox extends TcElement {
   border-radius: var(--tc-tray-radius);
   background: var(--tc-surface-sunken);
   container-type: inline-size;
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-lg);
   line-height: var(--tc-line-height-normal);
-  letter-spacing: -0.006em;
+  letter-spacing: var(--tc-tracking-normal);
   color: var(--tc-text-muted);
   text-align: left;
   -webkit-font-smoothing: antialiased;
@@ -475,7 +477,7 @@ export class TcAgentInbox extends TcElement {
   width: 100%;
   min-width: 0;
   container-type: inline-size;
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-md);
   line-height: var(--tc-line-height-normal);
   color: var(--tc-text-secondary);
@@ -488,23 +490,20 @@ export class TcAgentInbox extends TcElement {
 [data-ui="ai"] ul, [data-ui="ai"] ol { margin: 0; padding: 0; list-style: none; }
 [data-ui="ai"] svg { display: block; flex: none; }
 .ui-ai__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-/* ----- Bar on the tray: where you are, an optional action and the layout ----- */
-:where([data-look="standard"], [data-look="standard"] *).ui-ai__bar { display: flex; align-items: center; justify-content: space-between; gap: var(--tc-space-3); padding: var(--tc-space-2) var(--tc-space-2) var(--tc-space-2-5) var(--tc-space-3-5); }
-:where([data-look="standard"], [data-look="standard"] *).ui-ai__heading { display: flex; align-items: center; gap: var(--tc-space-2); min-width: 0; font-size: var(--tc-font-size-lg); font-weight: var(--tc-font-weight-semibold); color: var(--tc-text-primary); white-space: nowrap; }
+/* The title: where you are – Agents / the heading */
+.ui-ai__heading { display: flex; align-items: center; gap: var(--tc-space-2); min-width: 0; white-space: nowrap; }
+.ui-ai__heading { overflow: hidden; }
+.ui-ai__heading > :last-child { overflow: hidden; text-overflow: ellipsis; }
 :where([data-look="standard"], [data-look="standard"] *).ui-ai__crumb { color: var(--tc-text-muted); font-weight: var(--tc-font-weight-medium); }
 :where([data-look="standard"], [data-look="standard"] *).ui-ai__slash { color: var(--tc-text-disabled); font-weight: var(--tc-font-weight-regular); }
-:where([data-look="standard"], [data-look="standard"] *).ui-ai__tools { display: flex; flex: none; align-items: center; gap: var(--tc-space-2); }
 /* The bar's action: a ghost button */
-:where([data-look="standard"], [data-look="standard"] *).ui-ai__action { display: inline-flex; align-items: center; gap: var(--tc-space-1-5); height: var(--tc-control-h-md); padding: 0 var(--tc-control-px-md) 0 calc(var(--tc-control-px-md) - 2px); border-radius: var(--tc-control-radius-md); font-size: var(--tc-control-font-size); font-weight: var(--tc-control-font-weight); color: var(--tc-text-primary); transition: background-color var(--tc-duration-fast) var(--tc-ease-standard); }
+:where([data-look="standard"], [data-look="standard"] *).ui-ai__action { display: inline-flex; align-items: center; gap: var(--tc-space-1-5); height: var(--tc-control-h-md); padding: 0 var(--tc-control-px-md) 0 calc(var(--tc-control-px-md) - 2px); border-radius: var(--tc-control-radius-md); font-size: var(--tc-control-font-size); font-weight: var(--tc-control-font-weight); color: var(--tc-action-ghost-fg); transition: background-color var(--tc-duration-fast) var(--tc-ease-standard); }
 :where([data-look="standard"], [data-look="standard"] *).ui-ai__action:hover { background: var(--tc-action-ghost-bg-hover); }
 /* Board / List: the segmented pattern – a track, the chosen layout on the raised thumb */
 .ui-ai__views { display: flex; flex: none; gap: var(--tc-space-0-5); padding: var(--tc-seg-pad); border-radius: var(--tc-seg-track-radius); background: var(--tc-seg-track-bg); }
 .ui-ai__view[aria-checked="true"] { background: var(--tc-seg-thumb-bg); color: var(--tc-text-primary); box-shadow: var(--tc-seg-thumb-shadow); }
 :where([data-look="standard"], [data-look="standard"] *).ui-ai__view[aria-checked="true"] { font-weight: var(--tc-font-weight-strong); }
 :where([data-look="standard"], [data-look="standard"] *).ui-ai__view { display: inline-flex; align-items: center; gap: var(--tc-space-1-5); height: 28px; padding: 0 var(--tc-space-3); border-radius: calc(var(--tc-seg-track-radius) - var(--tc-seg-pad)); font-size: var(--tc-font-size-md); font-weight: var(--tc-font-weight-medium); color: var(--tc-text-muted); transition: background-color var(--tc-duration-base) var(--tc-ease-standard), color var(--tc-duration-base) var(--tc-ease-standard), box-shadow var(--tc-duration-base) var(--tc-ease-standard); }
-/* ----- Bar: where you are, and the layout ----- */
-:where([data-look="clean"], [data-look="clean"] *).ui-ai__bar { display: flex; align-items: center; justify-content: space-between; gap: var(--tc-space-3); margin-bottom: var(--tc-space-3); padding: 0 var(--tc-space-0-5); }
-:where([data-look="clean"], [data-look="clean"] *).ui-ai__heading { display: flex; align-items: center; gap: var(--tc-space-2-5); min-width: 0; font-size: var(--tc-font-size-lg); font-weight: var(--tc-font-weight-medium); color: var(--tc-text-primary); white-space: nowrap; }
 :where([data-look="clean"], [data-look="clean"] *).ui-ai__crumb { color: var(--tc-text-muted); font-weight: var(--tc-font-weight-regular); }
 :where([data-look="clean"], [data-look="clean"] *).ui-ai__slash { color: var(--tc-text-disabled); }
 :where([data-look="clean"], [data-look="clean"] *).ui-ai__view { display: inline-flex; align-items: center; gap: var(--tc-space-1-5); height: 26px; padding: 0 var(--tc-space-2-5); border-radius: calc(var(--tc-seg-track-radius) - var(--tc-seg-pad)); font-size: var(--tc-font-size-sm); font-weight: var(--tc-font-weight-medium); color: var(--tc-text-muted); transition: background-color var(--tc-duration-base) var(--tc-ease-standard), color var(--tc-duration-base) var(--tc-ease-standard), box-shadow var(--tc-duration-base) var(--tc-ease-standard); }
@@ -634,6 +633,10 @@ export class TcAgentInbox extends TcElement {
 :where([data-look="clean"], [data-look="clean"] *).ui-ai__desc,
 :where([data-look="clean"], [data-look="clean"] *).ui-ai__foot { padding-left: 0; }
 :where([data-look="clean"], [data-look="clean"] *).ui-ai__state:is([data-status="running"], [data-status="done"]) .ui-ai__state-word { display: none; }
+}
+/* Narrow: the header's buttons keep only their icons (the words stay for screen readers), so the title keeps room */
+@container (max-width: 440px) {
+  .ui-ai__label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 }
 @container (max-width: 360px) {
   .ui-ai__desc, .ui-ai__foot { padding-left: 0; }

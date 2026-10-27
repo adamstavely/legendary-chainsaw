@@ -48,10 +48,13 @@ export type PermissionRequestProps = Omit<RawProps, "agent" | "toolIcon" | "prev
   preview?: PermissionPreviewItem[];
   /** Controlled choice of how long */
   scope?: PermissionScope;
+  /** The starting choice of how long, when `scope` isn't controlled */
   defaultScope?: PermissionScope;
+  /** The user picked how long */
   onScopeChange?: (scope: PermissionScope) => void;
   /** Controlled decision – null while it waits */
   decision?: PermissionDecision | null;
+  /** The starting decision, when `decision` isn't controlled */
   defaultDecision?: PermissionDecision | null;
   /** Allow, Deny, Revoke (null) – the agent should listen to this */
   onDecisionChange?: (decision: PermissionDecision | null) => void;

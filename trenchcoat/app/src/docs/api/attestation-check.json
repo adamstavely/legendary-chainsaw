@@ -1,0 +1,271 @@
+{
+ "elements": [
+  {
+   "tag": "tc-attestation-check",
+   "className": "TcAttestationCheck",
+   "description": "Verify a signed evidence package by its hash or file – signature, chain integrity and what it covers, checked\nlocally.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Verify an evidence package\"",
+     "description": "The heading, and the component's name",
+     "readonly": false
+    },
+    {
+     "name": "verify",
+     "attribute": null,
+     "type": "AttestationVerify | undefined",
+     "default": "undefined",
+     "description": "Checks a pasted hash (a string) or a dropped file (a File) in the page and returns the result, or a promise of\nit. Throw to say it couldn't check. The element never sends the file anywhere",
+     "readonly": false
+    },
+    {
+     "name": "result",
+     "attribute": null,
+     "type": "AttestationResult | null",
+     "default": "null",
+     "description": "The result on show (null = none). Set by a finished check unless a tc-result-change listener calls\npreventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "hashPattern",
+     "attribute": null,
+     "type": "RegExp",
+     "default": "/^(?:sha(?:256|384|512):)?[0-9a-f]{40,128}$/i",
+     "description": "What a pasted hash must look like before it's checked – hex, 40 to 128 characters, optionally \"sha256:\" first",
+     "readonly": false
+    },
+    {
+     "name": "accept",
+     "attribute": null,
+     "type": "string[] | undefined",
+     "default": "undefined",
+     "description": "File types the file picker offers – e.g. [\".json\", \".zip\"]; unset offers any file",
+     "readonly": false
+    },
+    {
+     "name": "hint",
+     "attribute": "hint",
+     "type": "string",
+     "default": "\"Checked in this browser – the file isn't uploaded\"",
+     "description": "The line under the drop area – where the check happens",
+     "readonly": false
+    },
+    {
+     "name": "placeholder",
+     "attribute": "placeholder",
+     "type": "string",
+     "default": "\"sha256:9f2c41ab07e3…\"",
+     "description": "Placeholder of the hash field",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-verify",
+     "detail": "",
+     "description": "A check started ({ input }: AttestationVerifyStart – the pasted hash or the File)",
+     "cancelable": false
+    },
+    {
+     "name": "tc-result-change",
+     "detail": "",
+     "description": "A check finished, or \"Check another\" cleared the result ({ result, input }: AttestationResultChange); cancelable – prevent it to keep `result` as it is (controlled use)",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "atc",
+   "cssProperties": [
+    {
+     "name": "--tc-attestation-check-tray-bg",
+     "value": "var(--tc-surface-tray)",
+     "looks": [
+      "standard"
+     ]
+    },
+    {
+     "name": "--tc-attestation-check-panel-bg",
+     "value": "var(--tc-surface-raised)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-attestation-check-area-bg",
+     "value": "var(--tc-surface-raised)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-active",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-border-control-hover",
+    "--tc-border-selected",
+    "--tc-border-strong",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-md",
+    "--tc-control-px-sm",
+    "--tc-control-radius-md",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-reveal-slow",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-ease-move",
+    "--tc-ease-spring",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-h",
+    "--tc-field-px",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-field-shadow-hover",
+    "--tc-field-shadow-invalid",
+    "--tc-fill-default",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-mono",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-lg-plus",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-line-height-relaxed",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-pill-font-size",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-radius-badge",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-xl",
+    "--tc-shadow-raised",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-5",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-danger-solid",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-surface-well",
+    "--tc-text-muted",
+    "--tc-text-placeholder",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tracking-normal",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "AttestationCheck",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading, and the component's name"
+    },
+    {
+     "name": "result",
+     "type": "AttestationResult | null",
+     "optional": true,
+     "description": "The result on show. Controlled when defined (null = none); otherwise the component keeps it"
+    },
+    {
+     "name": "defaultResult",
+     "type": "AttestationResult | null",
+     "optional": true,
+     "description": "The result on show when uncontrolled"
+    },
+    {
+     "name": "onResultChange",
+     "type": "(result: AttestationResult | null, input?: AttestationInput) => void",
+     "optional": true,
+     "description": "Called when a check finishes (with its result and what was checked), or with null when \"Check another\" clears it"
+    },
+    {
+     "name": "onVerifyStart",
+     "type": "(input: AttestationInput) => void",
+     "optional": true,
+     "description": "Called when a check starts, with the pasted hash or the File"
+    }
+   ],
+   "hides": []
+  }
+ ],
+ "changelog": [
+  "**Trust & calibration**, from THEMIS and built domain-neutral: - claims and their reliability: `tc-claim-answer`, `tc-verification-queue`, `tc-reflection-gate`, `tc-reliance-gauge`, `tc-disagreement-banner`, `tc-synthesis-notes`; - where outputs came from: `tc-lineage-graph`, `tc-validity-badge`, `tc-provenance-summary`, `tc-correction-propagation`, `tc-attestation-check`, `tc-run-manifest`; - policy and control: `tc-policy-simulator`, `tc-gate-config`, `tc-coverage-matrix`, `tc-kill-switch`, `tc-playbook-canvas`."
+ ],
+ "size": {
+  "min": 36775,
+  "gzip": 10490
+ }
+}

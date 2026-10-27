@@ -1,0 +1,279 @@
+{
+ "elements": [
+  {
+   "tag": "tc-run-manifest",
+   "className": "TcRunManifest",
+   "description": "A run's reproducibility record: model, settings, instruction hash, sources, intent and the verification summary,\nwith copy and export.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Run manifest\"",
+     "description": "The heading, and the region's name",
+     "readonly": false
+    },
+    {
+     "name": "runId",
+     "attribute": "run-id",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The run's id – shown under the heading, with a copy button",
+     "readonly": false
+    },
+    {
+     "name": "timestamp",
+     "attribute": "timestamp",
+     "type": "string",
+     "default": "\"\"",
+     "description": "When the run happened, shown as given – e.g. \"Oct 24, 14:02 UTC\"",
+     "readonly": false
+    },
+    {
+     "name": "model",
+     "attribute": "model",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The model's display name, shown as a badge in the head",
+     "readonly": false
+    },
+    {
+     "name": "modelId",
+     "attribute": "model-id",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The model's exact id or version – what reproducing the run needs; shown in full with a copy button",
+     "readonly": false
+    },
+    {
+     "name": "modelIcon",
+     "attribute": null,
+     "type": "Element | undefined",
+     "default": "undefined",
+     "description": "An icon for the model badge, cloned in (an svg or img)",
+     "readonly": false
+    },
+    {
+     "name": "settings",
+     "attribute": null,
+     "type": "RunManifestSetting[]",
+     "default": "[]",
+     "description": "Sampling and other settings, in order: temperature, top-p, maximum tokens, seed…",
+     "readonly": false
+    },
+    {
+     "name": "instructionLabel",
+     "attribute": "instruction-label",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The instruction's name or version, e.g. \"Analyst v4\"",
+     "readonly": false
+    },
+    {
+     "name": "instructionHash",
+     "attribute": "instruction-hash",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The instruction's hash – shown shortened, copied in full",
+     "readonly": false
+    },
+    {
+     "name": "sources",
+     "attribute": null,
+     "type": "RunManifestSource[]",
+     "default": "[]",
+     "description": "The sources and corpus the run drew on",
+     "readonly": false
+    },
+    {
+     "name": "sourceLimit",
+     "attribute": "source-limit",
+     "type": "number",
+     "default": "3",
+     "description": "How many sources show before \"Show all\"",
+     "readonly": false
+    },
+    {
+     "name": "intent",
+     "attribute": "intent",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The intent the session was started with, in the person's words",
+     "readonly": false
+    },
+    {
+     "name": "verification",
+     "attribute": null,
+     "type": "RunVerification",
+     "default": "{}",
+     "description": "Claims per verification state: verified, unverifiable, incorrect, dismissed, pending",
+     "readonly": false
+    },
+    {
+     "name": "stateLabels",
+     "attribute": null,
+     "type": "Partial<Record<RunVerificationState, string>>",
+     "default": "{}",
+     "description": "Names of the verification states",
+     "readonly": false
+    },
+    {
+     "name": "noun",
+     "attribute": "noun",
+     "type": "string",
+     "default": "\"claims\"",
+     "description": "What the verified things are called, plural – \"claims\"",
+     "readonly": false
+    },
+    {
+     "name": "manifest",
+     "attribute": null,
+     "type": "RunManifestRecord",
+     "default": null,
+     "description": "The whole record as data – what Copy writes as JSON and Export hands to the app",
+     "readonly": true
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-copy",
+     "detail": "",
+     "description": "A copy button was pressed (detail: { field: \"run\" | \"model\" | \"instruction\" | \"manifest\", text: string }); cancelable – prevent it to write the clipboard yourself",
+     "cancelable": true
+    },
+    {
+     "name": "tc-export",
+     "detail": "",
+     "description": "Export was pressed (detail: { manifest: RunManifestRecord })",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "rmf",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-border-strong",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-lg",
+    "--tc-control-h-md",
+    "--tc-control-px-md",
+    "--tc-control-radius-md",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-slow",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-hover",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-mono",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-meter-h",
+    "--tc-meter-radius",
+    "--tc-meter-track",
+    "--tc-pill-font-size-lg",
+    "--tc-pill-h-lg",
+    "--tc-pill-px-lg",
+    "--tc-pill-radius",
+    "--tc-radius-2xs",
+    "--tc-radius-badge",
+    "--tc-radius-sm",
+    "--tc-radius-xs",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-status-danger-solid",
+    "--tc-status-success-fg",
+    "--tc-status-success-solid",
+    "--tc-status-warning-solid",
+    "--tc-surface-raised",
+    "--tc-surface-sunken",
+    "--tc-surface-well",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "RunManifest",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading, and the region's name"
+    },
+    {
+     "name": "modelIcon",
+     "type": "Element",
+     "optional": true,
+     "description": "An icon for the model badge – an Element, cloned in"
+    },
+    {
+     "name": "onCopy",
+     "type": "(field: RunManifestCopyField, text: string) => void | false",
+     "optional": true,
+     "description": "A copy button was pressed: which field and the text copied. Return false to copy it yourself instead (this replaces React's clipboard onCopy on this component)"
+    },
+    {
+     "name": "onExport",
+     "type": "(manifest: RunManifestRecord) => void",
+     "optional": true,
+     "description": "Export was pressed, with the whole record"
+    }
+   ],
+   "hides": []
+  }
+ ],
+ "changelog": [
+  "**Trust & calibration**, from THEMIS and built domain-neutral: - claims and their reliability: `tc-claim-answer`, `tc-verification-queue`, `tc-reflection-gate`, `tc-reliance-gauge`, `tc-disagreement-banner`, `tc-synthesis-notes`; - where outputs came from: `tc-lineage-graph`, `tc-validity-badge`, `tc-provenance-summary`, `tc-correction-propagation`, `tc-attestation-check`, `tc-run-manifest`; - policy and control: `tc-policy-simulator`, `tc-gate-config`, `tc-coverage-matrix`, `tc-kill-switch`, `tc-playbook-canvas`."
+ ],
+ "size": {
+  "min": 31633,
+  "gzip": 9359
+ }
+}

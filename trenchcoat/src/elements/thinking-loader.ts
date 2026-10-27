@@ -48,6 +48,7 @@ export class TcThinkingLoader extends TcElement {
   @property({ type: Boolean }) accessor done = false;
   /** Label once done – a string, or a function that gets the seconds since the loader started */
   @property({ attribute: false }) accessor doneLabel: string | ((seconds: number) => string) = (s) => `Thought for ${s}s`;
+  /** "md" is the default pill; "sm" is smaller, e.g. inside a chat bubble */
   @property({ reflect: true }) accessor size: "sm" | "md" = "md";
   /** "pill" = bordered capsule, "plain" = just the spinner and the label, e.g. inside a chat bubble */
   @property({ reflect: true }) accessor variant: "pill" | "plain" = "pill";
@@ -222,7 +223,7 @@ export class TcThinkingLoader extends TcElement {
   font-size: var(--tc-thinking-loader-font);
   font-weight: var(--tc-font-weight-regular);
   line-height: var(--tc-line-height-none);
-  letter-spacing: -0.006em;
+  letter-spacing: var(--tc-tracking-normal);
   vertical-align: middle;
   -webkit-font-smoothing: antialiased;
 }
@@ -260,7 +261,7 @@ export class TcThinkingLoader extends TcElement {
   font-size: var(--tc-thinking-loader-font);
   font-weight: var(--tc-font-weight-medium);
   line-height: var(--tc-thinking-loader-lh);
-  letter-spacing: -0.003em;
+  letter-spacing: var(--tc-tracking-normal);
   vertical-align: middle;
   -webkit-font-smoothing: antialiased;
 }

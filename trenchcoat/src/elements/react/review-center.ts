@@ -35,10 +35,15 @@ type OwnProps = {
   onDecide?: (item: ReviewItem, result: ReviewResult) => void | Promise<unknown>;
   /** A decision was taken back – put the item back if you dropped it from `items` */
   onUndo?: (item: ReviewItem, result: ReviewResult) => void;
+  /** An item was skipped – it stays in the queue, marked “skipped”, and the next one opens */
   onSkip?: (item: ReviewItem) => void;
+  /** Which items the queue shows (controlled): "all", "high" or "unsure" */
   filter?: ReviewFilter;
+  /** The filter to start with when `filter` isn't given */
   defaultFilter?: ReviewFilter;
+  /** Called with the filter the user picked */
   onFilterChange?: (filter: ReviewFilter) => void;
+  /** The heading (default "Review center") */
   title?: string;
   /** The imperative handle (the element itself) */
   ref?: React.Ref<ReviewCenterHandle>;

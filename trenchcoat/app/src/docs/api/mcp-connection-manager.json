@@ -1,0 +1,322 @@
+{
+ "elements": [
+  {
+   "tag": "tc-mcp-connection-manager",
+   "className": "TcMcpConnectionManager",
+   "description": "MCP servers and their status: add one (transport, auth, test), inspect the tools, resources and prompts it exposes,\nconnect, disconnect, retry and remove – the app does the connecting.",
+   "properties": [
+    {
+     "name": "value",
+     "attribute": null,
+     "type": "McpServer[]",
+     "default": "[]",
+     "description": "The servers. Changed by the user unless a tc-value-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "connections",
+     "attribute": null,
+     "type": "Record<string, McpConnection>",
+     "default": "{}",
+     "description": "What the app knows about each server's connection, by server id; a server without one is not connected",
+     "readonly": false
+    },
+    {
+     "name": "transports",
+     "attribute": null,
+     "type": "McpTransportOption[]",
+     "default": "[ { id: \"stdio\", label: \"stdio\", kind: \"command\", description: \"A local process the app starts and talks to over stdin and stdout\" }, { id: \"http\", label: \"HTTP\", kind: \"url\", description: \"Streamable HTTP at a URL – most remote servers\" }, { id: \"sse\", label: \"SSE\", kind: \"url\", description: \"Server-sent events at a URL – older remote servers\" }, ]",
+     "description": "The transports offered when adding a server",
+     "readonly": false
+    },
+    {
+     "name": "authOptions",
+     "attribute": null,
+     "type": "McpAuthOption[]",
+     "default": "[ { id: \"none\", label: \"None\" }, { id: \"token\", label: \"Bearer token\", credential: true }, { id: \"oauth\", label: \"OAuth\", description: \"The app signs in when it first connects\" }, ]",
+     "description": "The auth options offered when adding a server",
+     "readonly": false
+    },
+    {
+     "name": "credentials",
+     "attribute": null,
+     "type": "McpCredential[]",
+     "default": "[]",
+     "description": "The credential references offered when the auth needs one",
+     "readonly": false
+    },
+    {
+     "name": "statusLabels",
+     "attribute": null,
+     "type": "Partial<Record<McpStatus, string>>",
+     "default": "{}",
+     "description": "The statuses' names, merged over MCP_STATUS_LABELS",
+     "readonly": false
+    },
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"MCP servers\"",
+     "description": "Names the group, shown at the top",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string",
+     "default": "\"\"",
+     "description": "A quieter line under the heading",
+     "readonly": false
+    },
+    {
+     "name": "note",
+     "attribute": "note",
+     "type": "string",
+     "default": "\"Which agents may use each tool is set in tool permissions.\"",
+     "description": "A quiet line beside Add server; empty hides it",
+     "readonly": false
+    },
+    {
+     "name": "name",
+     "attribute": "name",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Submitted with the form: the servers as JSON",
+     "readonly": false
+    },
+    {
+     "name": "disabled",
+     "attribute": "disabled",
+     "type": "boolean",
+     "default": "false",
+     "description": "Turns every control off and leaves the list out of the form; a disabled fieldset does the same",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-value-change",
+     "detail": "",
+     "description": "A server was added or removed ({ value, change }: McpValueChange); cancelable – prevent it to control `value`",
+     "cancelable": true
+    },
+    {
+     "name": "tc-connect",
+     "detail": "",
+     "description": "Connect or Retry was pressed ({ server, signal, retry }: McpConnectEvent); connect, then update `connections`. Cancelable – prevented, nothing shows as connecting",
+     "cancelable": true
+    },
+    {
+     "name": "tc-disconnect",
+     "detail": "",
+     "description": "Disconnect was pressed ({ server }: McpDisconnectEvent); disconnect, then update `connections`",
+     "cancelable": false
+    },
+    {
+     "name": "tc-test",
+     "detail": "",
+     "description": "Test was pressed in the add form ({ server, signal }: McpTestEvent); try it and report on `connections[server.id]`. Cancelable",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [
+    {
+     "name": "statusOf",
+     "params": "id: string",
+     "returns": "McpStatus",
+     "description": "The status shown for a server: connecting while the app hasn't answered, else what the app says"
+    },
+    {
+     "name": "connect",
+     "params": "id: string",
+     "returns": "void",
+     "description": "Asks the app to connect a server, as Connect does"
+    },
+    {
+     "name": "cancel",
+     "params": "id: string",
+     "returns": "void",
+     "description": "Stops a connect or test in progress: its signal aborts"
+    }
+   ],
+   "ui": "mcs",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-action-danger-bg",
+    "--tc-action-danger-bg-hover",
+    "--tc-action-danger-fg",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-border-default",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-md",
+    "--tc-control-px-sm",
+    "--tc-control-radius-md",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-quick",
+    "--tc-duration-shimmer",
+    "--tc-ease-in-out",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-font-size",
+    "--tc-field-h",
+    "--tc-field-px",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-field-shadow-hover",
+    "--tc-field-shadow-invalid",
+    "--tc-fill-default",
+    "--tc-fill-hover",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-mono",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-scrim",
+    "--tc-shadow-overlay",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-5",
+    "--tc-space-7",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-danger-solid",
+    "--tc-status-info-bg",
+    "--tc-status-info-fg",
+    "--tc-status-info-solid",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-success-solid",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-overlay",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-placeholder",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tracking-snug",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "MCP_STATUS_LABELS",
+   "signature": "MCP_STATUS_LABELS: Record<McpStatus, string>",
+   "description": "The statuses' names"
+  }
+ ],
+ "react": [
+  {
+   "component": "McpConnectionManager",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "Shown at the top; names the group"
+    },
+    {
+     "name": "value",
+     "type": "McpServer[]",
+     "optional": true,
+     "description": "The servers (controlled)"
+    },
+    {
+     "name": "defaultValue",
+     "type": "McpServer[]",
+     "optional": true,
+     "description": "The servers to start with when uncontrolled"
+    },
+    {
+     "name": "onChange",
+     "type": "(value: McpServer[], change: McpValueChange[\"change\"]) => void",
+     "optional": true,
+     "description": "Called with the whole list after a server is added or removed, and what changed"
+    },
+    {
+     "name": "onConnect",
+     "type": "(server: McpServer, signal: AbortSignal, retry: boolean) => void",
+     "optional": true,
+     "description": "Connect or Retry was pressed: connect, stop when `signal` aborts, then update `connections`"
+    },
+    {
+     "name": "onDisconnect",
+     "type": "(server: McpServer) => void",
+     "optional": true,
+     "description": "Disconnect was pressed, or a tested server was never added: disconnect it, then update `connections`"
+    },
+    {
+     "name": "onTest",
+     "type": "(server: McpServer, signal: AbortSignal) => void",
+     "optional": true,
+     "description": "Test was pressed in the add form: try the server and report on `connections[server.id]`"
+    }
+   ],
+   "hides": []
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 50826,
+  "gzip": 13828
+ }
+}

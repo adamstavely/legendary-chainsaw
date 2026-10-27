@@ -4,6 +4,7 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { keyed } from "lit/directives/keyed.js";
 import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { OnScreenController } from "./internal/controllers";
 
 /*
@@ -18,7 +19,8 @@ import { OnScreenController } from "./internal/controllers";
  *   · with `agents`, the name in the bar is a menu – switch to another agent and its window
  *   · after a compaction, Before and After in the bar, and a line under the map that adds it up
  *   · `status` in the bar – e.g. "Compacting" – announced through a status region
- * Clean drops the tray: a bar on top and one area below. Behaviour is the same.
+ * Standard puts the header and the bar on a gray tray around the map. Clean drops the tray: one card, the header as
+ * its first row, the bar and the map below. Behaviour is the same.
  *
  *   <tc-context-map limit="200000" model="Sonnet 5" .blocks=${blocks}></tc-context-map>
  *
@@ -203,8 +205,8 @@ const spinner = () =>
     { length: 8 },
     (_, i) => svg`<line x1="8" y1="1.75" x2="8" y2="4.75" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity=${1 - i * 0.11} transform=${`rotate(${-i * 45} 8 8)`}></line>`,
   )}</svg>`;
-const mapMark = () =>
-  html`<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">${svg`<rect x="1.8" y="1.8" width="7" height="12.4" rx="1.6" fill="currentColor"></rect><rect x="10" y="1.8" width="4.2" height="6" rx="1.4" fill="currentColor" opacity="0.6"></rect><rect x="10" y="9" width="4.2" height="5.2" rx="1.4" fill="currentColor" opacity="0.3"></rect>`}</svg>`;
+/** A treemap: one large tile and two smaller ones */
+const mapIcon = svg`<rect x="3" y="3" width="10" height="18" rx="2"></rect><rect x="16" y="3" width="5" height="8" rx="1.5"></rect><rect x="16" y="14" width="5" height="7" rx="1.5"></rect>`;
 const chevron = () =>
   html`<svg class="ui-cxm__chev" viewBox="0 0 12 12" fill="none" aria-hidden="true">${svg`<path d="m3.5 4.75 2.5 2.5 2.5-2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path>`}</svg>`;
 const clone = (el: Element | undefined) => (el ? el.cloneNode(true) : nothing);
@@ -576,9 +578,13 @@ export class TcContextMap extends TcElement {
     const limit = this.windowLimit;
     const view = this.shownView;
     const level = share >= 0.95 ? "full" : share >= 0.8 ? "high" : undefined;
-    return html`<header class="ui-cxm__bar">
-      <span class="ui-cxm__mark">${mapMark()}</span>
-      <span class="ui-cxm__title" id=${`${this.uid}-label`}>${this.heading}</span>
+    return html`${cardHead({
+        icon: mapIcon,
+        title: this.heading,
+        id: `${this.uid}-label`,
+        aside: this.status ? keyed(this.status, html`<span class="ui-cxm__status" aria-hidden="true">${spinner()}${this.status}</span>`) : nothing,
+      })}
+      <div class="ui-cxm__bar">
       ${current
         ? html`<span class="ui-cxm__pick">
             <button
@@ -651,7 +657,6 @@ export class TcContextMap extends TcElement {
               <span class="ui-cxm__limit">${tokens(limit)}</span>
             </span>`
           : nothing}
-      ${this.status ? keyed(this.status, html`<span class="ui-cxm__status" aria-hidden="true">${spinner()}${this.status}</span>`) : nothing}
       <span class="ui-cxm__sr" role="status">${this.status}</span>
       <span class="ui-cxm__sum">
         ${this.compaction
@@ -664,7 +669,7 @@ export class TcContextMap extends TcElement {
         <span><b class="ui-cxm__used">${tokens(used)}</b> / ${tokens(limit)}</span>
         <span class="ui-cxm__pct" data-level=${ifDefined(level)}>${Math.round(share * 100)}%</span>
       </span>
-    </header>`;
+    </div>`;
   }
 
   private tipCard(block: ContextBlock) {
@@ -842,13 +847,13 @@ export class TcContextMap extends TcElement {
   background: var(--tc-surface-sunken);
   min-width: 0;
   container: ui-cxm / inline-size;
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-regular);
   line-height: var(--tc-line-height-normal);
   color: var(--tc-text-muted);
   text-align: left;
-  letter-spacing: -0.006em;
+  letter-spacing: var(--tc-tracking-normal);
   -webkit-font-smoothing: antialiased;
 }
 /* Colors, sizes and motion as variables – override them on [data-ui="cxm"] */
@@ -890,13 +895,12 @@ export class TcContextMap extends TcElement {
   -webkit-font-smoothing: antialiased;
 }
 [data-ui="cxm"] *, [data-ui="cxm"] *::before, [data-ui="cxm"] *::after { box-sizing: border-box; }
-/* ----- On the tray: the agent, the status, how full it is ----- */
-:where([data-look="standard"], [data-look="standard"] *).ui-cxm__bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-1-5) var(--tc-space-2); min-width: 0; padding: var(--tc-space-2-5) var(--tc-space-3) var(--tc-space-3); }
-/* ----- The bar: the model, the status, how full it is ----- */
-:where([data-look="clean"], [data-look="clean"] *).ui-cxm__bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-1) var(--tc-space-2); min-width: 0; margin-bottom: var(--tc-space-4); }
-.ui-cxm__mark { display: grid; flex: none; place-items: center; width: 16px; color: var(--tc-accent-text); }
-:where([data-look="standard"], [data-look="standard"] *).ui-cxm__title { flex: none; font-weight: var(--tc-font-weight-semibold); color: var(--tc-text-strong); }
-:where([data-look="clean"], [data-look="clean"] *).ui-cxm__title { flex: none; font-weight: var(--tc-font-weight-medium); color: var(--tc-text-strong); }
+/* ----- On the tray: the header (cardHead, with the status at its right), then the agent and how full it is ----- */
+:where([data-look="standard"], [data-look="standard"] *).ui-cxm__bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-1-5) var(--tc-space-2); min-width: 0; padding: 0 var(--tc-space-2-5) var(--tc-space-3); }
+/* ----- Clean: one card – the header is its first row, then the model and how full it is, the map and the line under it ----- */
+:where([data-look="clean"], [data-look="clean"] *)[data-ui="cxm"] { border-radius: var(--tc-card-radius); background: var(--tc-surface-raised); box-shadow: var(--tc-card-shadow); padding-bottom: var(--tc-space-4); }
+:where([data-look="clean"], [data-look="clean"] *).ui-cxm__bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-1) var(--tc-space-2); min-width: 0; margin-bottom: var(--tc-space-3); padding: 0 var(--tc-space-4); }
+:where([data-look="clean"], [data-look="clean"] *).ui-cxm__area, :where([data-look="clean"], [data-look="clean"] *).ui-cxm__fates-row { margin-inline: var(--tc-space-4); }
 .ui-cxm__who { display: inline-flex; align-items: center; gap: var(--tc-space-2); min-width: 0; }
 /* The model maker's logo on a small white tile */
 :where([data-look="standard"], [data-look="standard"] *).ui-cxm__logo { display: grid; flex: none; place-items: center; width: 22px; height: 22px; border-radius: var(--tc-radius-sm); background: var(--tc-surface-raised); box-shadow: var(--tc-shadow-raised); }

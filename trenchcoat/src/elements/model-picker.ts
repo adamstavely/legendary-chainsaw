@@ -90,6 +90,7 @@ let uid = 0;
 export class TcModelPicker extends TcElement {
   static override ui = "mdp";
 
+  /** The models to choose from, in menu order – each with its strengths, first-token time and price */
   @property({ attribute: false }) accessor models: PickerModel[] = [];
   /** Id of the chosen model – unset or unknown shows the first */
   @property() accessor value = "";
@@ -531,10 +532,10 @@ export class TcModelPicker extends TcElement {
 [data-ui="mdp"][data-open] .ui-mdp__pop { opacity: 1; visibility: visible; transform: none; transition: opacity var(--tc-duration-base) var(--tc-ease-standard), transform var(--tc-duration-slow) var(--tc-ease-emphasized), visibility 0s; }
 .ui-mdp__card { padding: var(--tc-menu-padding); }
 :where([data-look="standard"], [data-look="standard"] *).ui-mdp__card { border-radius: calc(var(--tc-tray-radius) - var(--tc-tray-inset)); background: var(--tc-menu-bg); box-shadow: var(--tc-shadow-raised); }
-.ui-mdp__head { display: flex; align-items: center; justify-content: space-between; gap: var(--tc-space-3); color: var(--tc-text-muted); }
-:where([data-look="standard"], [data-look="standard"] *).ui-mdp__head { height: 24px; padding: 0 var(--tc-menu-item-px); font-size: var(--tc-font-size-xs); line-height: var(--tc-line-height-tight); }
-/* Clean: the column names are a section caption */
-:where([data-look="clean"], [data-look="clean"] *).ui-mdp__head { height: 28px; padding: 4px var(--tc-menu-item-px) 0; font-size: var(--tc-caption-font-size); font-weight: var(--tc-caption-font-weight); line-height: var(--tc-caption-line-height); letter-spacing: var(--tc-caption-tracking); text-transform: var(--tc-caption-transform); color: var(--tc-caption-color); }
+/* The column names are a section caption */
+.ui-mdp__head { display: flex; align-items: center; justify-content: space-between; gap: var(--tc-space-3); font-size: var(--tc-caption-font-size); font-weight: var(--tc-caption-font-weight); line-height: var(--tc-caption-line-height); letter-spacing: var(--tc-caption-tracking); text-transform: var(--tc-caption-transform); color: var(--tc-caption-color); }
+:where([data-look="standard"], [data-look="standard"] *).ui-mdp__head { height: 24px; padding: 0 var(--tc-menu-item-px); }
+:where([data-look="clean"], [data-look="clean"] *).ui-mdp__head { height: 28px; padding: 4px var(--tc-menu-item-px) 0; }
 .ui-mdp__cols { display: grid; gap: var(--tc-space-2); }
 :where([data-look="standard"], [data-look="standard"] *).ui-mdp__cols { grid-template-columns: repeat(3, 34px); }
 :where([data-look="clean"], [data-look="clean"] *).ui-mdp__cols { grid-template-columns: repeat(3, 40px); }

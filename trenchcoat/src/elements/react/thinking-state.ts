@@ -21,6 +21,7 @@ const RawThinkingState = createComponent({
 });
 type RawThinkingStateProps = React.ComponentProps<typeof RawThinkingState>;
 export type ThinkingStateProps = Omit<RawThinkingStateProps, "steps" | "open" | "onTcProgressChange" | "onTcDone" | "onTcOpenChange"> & {
+  /** The steps and searches to show, in order; a source's icon may be a React node */
   steps: ThinkingStep[];
   /** Reports each step the timeline reveals */
   onProgressChange?: (progress: number) => void;
@@ -28,7 +29,9 @@ export type ThinkingStateProps = Omit<RawThinkingStateProps, "steps" | "open" | 
   onDone?: (seconds: number) => void;
   /** Whether the steps are unfolded (controlled when defined) */
   open?: boolean;
+  /** Whether the steps start unfolded when `open` isn't controlled */
   defaultOpen?: boolean;
+  /** Called when the header is clicked, or a new run unfolds the steps, with the new state */
   onOpenChange?: (open: boolean) => void;
 };
 

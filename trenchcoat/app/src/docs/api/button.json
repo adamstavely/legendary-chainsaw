@@ -1,0 +1,247 @@
+{
+ "elements": [
+  {
+   "tag": "tc-button",
+   "className": "TcButton",
+   "description": "A button: primary, secondary, ghost or destructive, in three sizes, with a loading state.",
+   "properties": [
+    {
+     "name": "variant",
+     "attribute": "variant",
+     "type": "\"primary\" | \"secondary\" | \"ghost\" | \"destructive\"",
+     "default": "\"primary\"",
+     "description": "primary: dark and filled · secondary: white with an outline (Clean: a hairline shadow) · ghost: text only ·\ndestructive: red, for deleting",
+     "readonly": false
+    },
+    {
+     "name": "size",
+     "attribute": "size",
+     "type": "\"sm\" | \"md\" | \"lg\"",
+     "default": "\"md\"",
+     "description": "Height and padding: sm, md or lg (Standard 28 · 32 · 40 px, Clean 24 · 28 · 32 px)",
+     "readonly": false
+    },
+    {
+     "name": "label",
+     "attribute": "label",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The button's text (and its accessible name)",
+     "readonly": false
+    },
+    {
+     "name": "hideLabel",
+     "attribute": "hide-label",
+     "type": "boolean",
+     "default": "false",
+     "description": "Icon only: the label isn't shown, but stays the button's name",
+     "readonly": false
+    },
+    {
+     "name": "loading",
+     "attribute": "loading",
+     "type": "boolean",
+     "default": "false",
+     "description": "Shows a shimmer over the label, blocks clicks and adds \"loading\" to the accessible name",
+     "readonly": false
+    },
+    {
+     "name": "disabled",
+     "attribute": "disabled",
+     "type": "boolean",
+     "default": "false",
+     "description": "Dims the button and disables the native button inside it, so it can't be focused or clicked",
+     "readonly": false
+    },
+    {
+     "name": "type",
+     "attribute": "type",
+     "type": "\"button\" | \"submit\" | \"reset\"",
+     "default": "\"button\"",
+     "description": "The inner native button's type: \"button\" does nothing in a form, \"submit\" submits it, \"reset\" resets it",
+     "readonly": false
+    },
+    {
+     "name": "name",
+     "attribute": "name",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Submitted with the form when this is its submit button",
+     "readonly": false
+    },
+    {
+     "name": "value",
+     "attribute": "value",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Submitted as `name`'s value when this button submits its form",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [],
+   "slots": [
+    {
+     "name": "icon",
+     "description": "An icon before the label"
+    },
+    {
+     "name": "icon-right",
+     "description": "An icon after the label"
+    }
+   ],
+   "methods": [],
+   "ui": "button",
+   "cssProperties": [
+    {
+     "name": "--tc-button-h",
+     "value": "var(--tc-control-h-md)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-button-px",
+     "value": "var(--tc-control-px-md)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-button-radius",
+     "value": "var(--tc-control-radius-md)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-button-fs",
+     "value": "var(--tc-control-font-size)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-button-gap",
+     "value": "var(--tc-space-1-5)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-button-icon",
+     "value": "16px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-button-load",
+     "value": "1040ms",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-active",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-button-fg",
+    "--tc-button-icon-inset",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-lg",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-lg",
+    "--tc-control-px-md",
+    "--tc-control-px-sm",
+    "--tc-control-radius-lg",
+    "--tc-control-radius-md",
+    "--tc-control-radius-sm",
+    "--tc-duration-fast",
+    "--tc-duration-reveal-slow",
+    "--tc-duration-slower",
+    "--tc-duration-slowest",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-sm",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-line-height-tight",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-danger-solid",
+    "--tc-text-primary",
+    "--tc-tracking-snug"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "Button",
+   "exported": true,
+   "props": [
+    {
+     "name": "children",
+     "type": "React.ReactNode",
+     "optional": true,
+     "description": "The label – a string (or set `label`)"
+    },
+    {
+     "name": "label",
+     "type": "string",
+     "optional": true,
+     "description": "The button's text and accessible name; wins over string children"
+    },
+    {
+     "name": "icon",
+     "type": "React.ReactNode",
+     "optional": true,
+     "description": "Icon before the label"
+    },
+    {
+     "name": "iconRight",
+     "type": "React.ReactNode",
+     "optional": true,
+     "description": "Icon after the label"
+    }
+   ],
+   "hides": [
+    "children",
+    "label"
+   ]
+  }
+ ],
+ "changelog": [
+  "Lit 3 web components: `tc-button`, `tc-combobox` and `tc-data-table` (the pilot), `tc-look-provider` for an app-wide default look, the shared controllers (row window, focus rescue, smooth height, off-screen, on-screen, ARIA forwarding, hotkeys, rolling numbers). Pixel-identical to the React components in both looks and themes."
+ ],
+ "size": {
+  "min": 20407,
+  "gzip": 6755
+ }
+}

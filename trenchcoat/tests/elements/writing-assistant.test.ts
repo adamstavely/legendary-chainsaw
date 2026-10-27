@@ -81,8 +81,8 @@ for (const look of ["standard", "clean"] as const) {
       const el = await fixture<TcWritingAssistant>(html`<tc-writing-assistant look=${look} name="Ink" tagline="Hi" demo></tc-writing-assistant>`);
       expect(el.dataset.ui).toBe("wa");
       expect(el.dataset.look).toBe(look);
-      expect(el.querySelector(".ui-wa__name")!.textContent!.trim()).toBe("Ink");
-      expect(!!el.querySelector(".ui-wa__mark")).toBe(look === "clean");
+      expect(el.querySelector(".tc-head__title")!.textContent!.trim()).toBe("Ink");
+      expect(el.querySelector(".tc-head__sub")!.textContent!.trim()).toBe("Hi");
       expect(el.hasAttribute("data-chat")).toBe(false);
       expect(button(el, "New chat")!.tabIndex).toBe(-1);
     });

@@ -24,6 +24,7 @@ export type CoverFlowProps = Omit<
   RawCoverFlowProps,
   "items" | "index" | "label" | "selectable" | "renderCaption" | "onTcIndexChange" | "onTcFrontChange" | "onTcSelect" | "onSelect" | "children"
 > & {
+  /** The covers, in order: an image or your own content each, with a title and subtitle for the caption */
   items: CoverFlowItem[];
   /** Controlled front cover – changes are asked for through onIndexChange */
   index?: number;

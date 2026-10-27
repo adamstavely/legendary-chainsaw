@@ -1,0 +1,107 @@
+{
+ "elements": [
+  {
+   "tag": "tc-dialog",
+   "className": "TcDialog",
+   "description": "Native modal dialog with content, focus containment, Escape and focus restoration.",
+   "properties": [
+    {
+     "name": "open",
+     "attribute": "open",
+     "type": "boolean",
+     "default": "false",
+     "description": "Whether the modal is open.",
+     "readonly": false
+    },
+    {
+     "name": "label",
+     "attribute": "label",
+     "type": "string",
+     "default": "\"Dialog\"",
+     "description": "Visible heading and accessible name.",
+     "readonly": false
+    },
+    {
+     "name": "text",
+     "attribute": "text",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Plain-text content; use content for a renderable template or element.",
+     "readonly": false
+    },
+    {
+     "name": "content",
+     "attribute": null,
+     "type": "unknown",
+     "default": "undefined",
+     "description": "Body template or DOM node; the element renders it inside the modal.",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-open-change",
+     "detail": "",
+     "description": "Proposed open state (detail: { open }); cancelable.",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "dialog",
+   "cssProperties": [],
+   "tokens": []
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "Dialog",
+   "exported": true,
+   "props": [
+    {
+     "name": "open",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether the modal is open when controlled."
+    },
+    {
+     "name": "defaultOpen",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether an uncontrolled modal starts open."
+    },
+    {
+     "name": "onOpenChange",
+     "type": "(open: boolean) => void",
+     "optional": true,
+     "description": "Called when the user requests opening or closing."
+    },
+    {
+     "name": "children",
+     "type": "React.ReactNode",
+     "optional": true,
+     "description": "Interactive React content rendered into the native dialog."
+    }
+   ],
+   "hides": [
+    "open",
+    "children",
+    "content"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 22959,
+  "gzip": 6425
+ }
+}

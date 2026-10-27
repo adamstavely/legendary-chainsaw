@@ -141,6 +141,7 @@ const formLook = (el: Element): Look | undefined => (el.closest("tc-stepper-form
 export class TcStepperForm extends TcElement {
   static override ui = "sf";
 
+  /** The steps in order: id, title, content and the check Continue runs */
   @property({ attribute: false }) accessor steps: StepperFormStep[] = [];
   /** The values of every step */
   @property({ attribute: false }) accessor values: Values = {};
@@ -573,7 +574,7 @@ export class TcStepperForm extends TcElement {
   padding: var(--tc-tray-inset);
   border-radius: var(--tc-tray-radius);
   background: var(--tc-surface-tray);
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-md);
   line-height: var(--tc-line-height-normal);
   color: var(--tc-text-secondary);
@@ -762,13 +763,12 @@ button.ui-sf__step-btn:hover .ui-sf__step-label { color: var(--tc-text-primary);
 .ui-sf__pane[data-first] { animation: none; }
 :where([data-look="standard"], [data-look="standard"] *).ui-sf__pane[data-pane="leaving"] { position: absolute; top: 0; left: 0; right: 0; pointer-events: none; animation: ui-sf-leave var(--tc-duration-slow) var(--tc-ease-move) both; }
 :where([data-look="standard"], [data-look="standard"] *).ui-sf__pane[data-pane="leaving"][data-dir="-1"] { animation-name: ui-sf-leave-back; }
-:where([data-look="standard"], [data-look="standard"] *).ui-sf__heading { font-size: var(--tc-font-size-xl); font-weight: var(--tc-font-weight-semibold); line-height: var(--tc-line-height-normal); letter-spacing: -0.01em; color: var(--tc-text-primary); outline: none; }
-:where([data-look="standard"], [data-look="standard"] *).ui-sf__desc { margin-top: var(--tc-space-1); color: var(--tc-text-muted); text-wrap: pretty; }
+[data-ui="sf"] .ui-sf__heading { margin: 0; color: var(--tc-title-color); font-size: var(--tc-title-font-size); font-weight: var(--tc-title-font-weight); line-height: var(--tc-title-line-height); letter-spacing: var(--tc-title-tracking); outline: none; }
+:where([data-look="standard"], [data-look="standard"] *).ui-sf__desc { margin-top: var(--tc-space-1); }
+.ui-sf__desc { color: var(--tc-subtitle-color); font-size: var(--tc-subtitle-font-size); line-height: var(--tc-subtitle-line-height); text-wrap: pretty; }
 :where([data-look="standard"], [data-look="standard"] *).ui-sf__body { display: grid; gap: var(--tc-space-3-5); margin-top: var(--tc-space-4-5); }
 :where([data-look="clean"], [data-look="clean"] *).ui-sf__pane[data-pane="leaving"] { position: absolute; top: 0; left: 0; right: 0; pointer-events: none; animation: ui-sf-leave-clean var(--tc-duration-moderate) var(--tc-ease-move) both; }
 :where([data-look="clean"], [data-look="clean"] *).ui-sf__pane[data-pane="leaving"][data-dir="-1"] { animation-name: ui-sf-leave-back-clean; }
-:where([data-look="clean"], [data-look="clean"] *).ui-sf__heading { font-size: var(--tc-font-size-lg-plus); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-loose); color: var(--tc-text-strong); outline: none; }
-:where([data-look="clean"], [data-look="clean"] *).ui-sf__desc { color: var(--tc-text-secondary); text-wrap: pretty; }
 :where([data-look="clean"], [data-look="clean"] *).ui-sf__body { display: grid; gap: var(--tc-space-4); margin-top: var(--tc-space-4); }
 /* Fields */
 .ui-sf__field { display: grid; min-width: 0; }
@@ -845,10 +845,10 @@ button.ui-sf__step-btn:hover .ui-sf__step-label { color: var(--tc-text-primary);
 .ui-sf__fold > div { min-height: 0; overflow: hidden; }
 :where([data-look="standard"], [data-look="standard"] *).ui-sf__msg,
 :where([data-look="standard"], [data-look="standard"] *).ui-sf__hint { padding-top: var(--tc-space-1-5); font-size: var(--tc-font-size-sm); text-wrap: pretty; }
-:where([data-look="standard"], [data-look="standard"] *).ui-sf__msg { color: var(--tc-status-danger-solid); animation: ui-sf-in var(--tc-duration-moderate) var(--tc-ease-move) both; }
+:where([data-look="standard"], [data-look="standard"] *).ui-sf__msg { color: var(--tc-status-danger-fg); animation: ui-sf-in var(--tc-duration-moderate) var(--tc-ease-move) both; }
 :where([data-look="clean"], [data-look="clean"] *).ui-sf__msg,
 :where([data-look="clean"], [data-look="clean"] *).ui-sf__hint { padding: var(--tc-space-1-5) 0 0 var(--tc-space-0-5); font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); text-wrap: pretty; }
-:where([data-look="clean"], [data-look="clean"] *).ui-sf__msg { color: var(--tc-status-danger-solid); animation: ui-sf-in-clean var(--tc-duration-moderate) var(--tc-ease-move) both; }
+:where([data-look="clean"], [data-look="clean"] *).ui-sf__msg { color: var(--tc-status-danger-fg); animation: ui-sf-in-clean var(--tc-duration-moderate) var(--tc-ease-move) both; }
 .ui-sf__hint { color: var(--tc-text-muted); }
 /* Email chips */
 :where([data-look="standard"], [data-look="standard"] *).ui-sf__tags { flex-wrap: wrap; gap: var(--tc-space-1-5); padding: var(--tc-space-1); }
@@ -989,7 +989,7 @@ button.ui-sf__step-btn:hover .ui-sf__step-label { color: var(--tc-text-primary);
 :where([data-look="clean"], [data-look="clean"] *).ui-sf__review-row + .ui-sf__review-row { border-top: var(--tc-hairline) solid var(--tc-divider); }
 :where([data-look="clean"], [data-look="clean"] *).ui-sf__review dt { font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-normal); color: var(--tc-text-muted); }
 .ui-sf__review dd { min-width: 0; color: var(--tc-text-primary); overflow-wrap: break-word; }
-:where([data-look="standard"], [data-look="standard"] *).ui-sf__edit { height: var(--tc-control-h-sm); margin: -5px 0; padding: 0 var(--tc-control-px-sm); border-radius: var(--tc-control-radius-sm); font-size: var(--tc-font-size-sm); font-weight: var(--tc-control-font-weight); color: var(--tc-action-ghost-fg); transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard); }
+:where([data-look="standard"], [data-look="standard"] *).ui-sf__edit { height: var(--tc-control-h-sm); margin: -5px 0; padding: 0 var(--tc-control-px-sm); border-radius: var(--tc-control-radius-sm); font-size: var(--tc-control-font-size); font-weight: var(--tc-control-font-weight); color: var(--tc-action-ghost-fg); transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard); }
 :where([data-look="standard"], [data-look="standard"] *).ui-sf__edit:hover { background: var(--tc-action-ghost-bg-hover); color: var(--tc-text-primary); }
 /* Success */
 :where([data-look="standard"], [data-look="standard"] *).ui-sf__success { display: grid; justify-items: center; padding: var(--tc-space-5) 0 var(--tc-space-3-5); text-align: center; }
@@ -1006,7 +1006,7 @@ button.ui-sf__step-btn:hover .ui-sf__step-label { color: var(--tc-text-primary);
   animation: ui-sf-pop var(--tc-duration-slowest) var(--tc-ease-spring) var(--tc-duration-quick) both;
 }
 :where([data-look="standard"], [data-look="standard"] *).ui-sf__success-check .ui-sf__draw { width: 20px; height: 20px; }
-:where([data-look="clean"], [data-look="clean"] *).ui-sf__edit { height: var(--tc-control-h-sm); margin: -2px 0; padding: 0 var(--tc-control-px-sm); border-radius: var(--tc-control-radius-sm); font-size: var(--tc-font-size-sm); font-weight: var(--tc-control-font-weight); line-height: var(--tc-line-height-tight); color: var(--tc-action-ghost-fg); transition: background-color var(--tc-duration-instant) var(--tc-ease-standard), color var(--tc-duration-instant) var(--tc-ease-standard); }
+:where([data-look="clean"], [data-look="clean"] *).ui-sf__edit { height: var(--tc-control-h-sm); margin: -2px 0; padding: 0 var(--tc-control-px-sm); border-radius: var(--tc-control-radius-sm); font-size: var(--tc-control-font-size); font-weight: var(--tc-control-font-weight); line-height: var(--tc-line-height-tight); color: var(--tc-action-ghost-fg); transition: background-color var(--tc-duration-instant) var(--tc-ease-standard), color var(--tc-duration-instant) var(--tc-ease-standard); }
 :where([data-look="clean"], [data-look="clean"] *).ui-sf__edit:hover { background: var(--tc-action-ghost-bg-hover); color: var(--tc-text-primary); }
 /* Success */
 :where([data-look="clean"], [data-look="clean"] *).ui-sf__success { display: grid; justify-items: center; padding: var(--tc-space-4) 0 var(--tc-space-2); text-align: center; }
@@ -1051,7 +1051,7 @@ button.ui-sf__step-btn:hover .ui-sf__step-label { color: var(--tc-text-primary);
 :where([data-look="standard"], [data-look="standard"] *).ui-sf__btn {
   transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), opacity var(--tc-duration-base) var(--tc-ease-standard), transform var(--tc-duration-fast) var(--tc-ease-standard), width var(--tc-duration-slow) var(--tc-ease-move), visibility var(--tc-duration-base);
 }
-:where([data-look="standard"], [data-look="standard"] *).ui-sf__btn-ghost { gap: var(--tc-space-1); padding: 0 var(--tc-control-px-md) 0 8px; color: var(--tc-action-ghost-fg); }
+:where([data-look="standard"], [data-look="standard"] *).ui-sf__btn-ghost { gap: var(--tc-space-1); padding: 0 var(--tc-control-px-md) 0 var(--tc-space-2); color: var(--tc-action-ghost-fg); }
 :where([data-look="standard"], [data-look="standard"] *).ui-sf__btn-ghost:hover { background: var(--tc-action-ghost-bg-hover); color: var(--tc-text-primary); }
 :where([data-look="clean"], [data-look="clean"] *).ui-sf__foot { display: flex; align-items: center; gap: var(--tc-space-3); min-height: 0; overflow: hidden; padding: 0 var(--tc-space-3); border-top: var(--tc-hairline) solid var(--tc-divider); }
 /* The row's height lives on a pseudo spacer so the fold can still close it to 0 */
@@ -1060,7 +1060,7 @@ button.ui-sf__step-btn:hover .ui-sf__step-label { color: var(--tc-text-primary);
   transition: background-color var(--tc-duration-instant) var(--tc-ease-standard), opacity var(--tc-duration-base) var(--tc-ease-standard), transform var(--tc-duration-quick) var(--tc-ease-standard), width var(--tc-duration-slow) var(--tc-ease-move), visibility var(--tc-duration-base);
 }
 /* Back: Button's secondary recipe */
-:where([data-look="clean"], [data-look="clean"] *).ui-sf__btn-ghost { gap: var(--tc-space-1-5); padding: 0 var(--tc-control-px-md) 0 8px; background: var(--tc-action-secondary-bg); box-shadow: var(--tc-action-secondary-shadow); color: var(--tc-action-secondary-fg); }
+:where([data-look="clean"], [data-look="clean"] *).ui-sf__btn-ghost { gap: var(--tc-space-1-5); padding: 0 var(--tc-control-px-md) 0 var(--tc-space-2); background: var(--tc-action-secondary-bg); box-shadow: var(--tc-action-secondary-shadow); color: var(--tc-action-secondary-fg); }
 :where([data-look="clean"], [data-look="clean"] *).ui-sf__btn-ghost .ui-sf__glyph { color: var(--tc-icon-muted); }
 :where([data-look="clean"], [data-look="clean"] *).ui-sf__btn-ghost:hover { box-shadow: var(--tc-action-secondary-shadow-hover); }
 .ui-sf__btn-ghost[data-hidden] { opacity: 0; visibility: hidden; }
@@ -1210,9 +1210,11 @@ export class TcStepperField extends TcStepperBlock {
 
   /** Matches the key in the step's validate result */
   @property() accessor name = "";
+  /** The field's label, tied to its control */
   @property() accessor label = "";
   /** A hint under the control: text, or an element (cloned) */
   @property() accessor hint: string | Element | undefined = undefined;
+  /** Shows “Optional” after the label */
   @property({ type: Boolean }) accessor optional = false;
 
   @state() private accessor local: string | null = null;
@@ -1356,7 +1358,9 @@ export class TcStepperTags extends TcStepperBlock {
   static override ui = "sf-tags";
   static formAssociated = true;
 
+  /** The entries added so far */
   @property({ attribute: false }) accessor value: string[] = [];
+  /** Placeholder while there are no entries – then it reads “Add another” */
   @property() accessor placeholder = "name@company.com";
   /** Returns a message when an entry can't be added */
   @property({ attribute: false }) accessor validate: (entry: string, list: string[]) => string | null = emailCheck;
@@ -1364,6 +1368,7 @@ export class TcStepperTags extends TcStepperBlock {
   @property({ type: Number }) accessor max: number | undefined = undefined;
   /** Name for form submission: the entries, comma-separated */
   @property({ reflect: true }) accessor name = "";
+  /** Turns off typing and removing entries */
   @property({ type: Boolean, reflect: true }) accessor disabled = false;
   /** Marks the field as required for assistive tech – checking it is up to the step's validate */
   @property({ type: Boolean }) accessor required = false;
@@ -1557,12 +1562,15 @@ export class TcStepperChoices extends TcStepperBlock {
   static override ui = "sf-choices";
   static formAssociated = true;
 
+  /** The chosen option's value; empty when none is chosen */
   @property() accessor value = "";
+  /** The cards to choose from */
   @property({ attribute: false }) accessor options: StepperChoice[] = [];
   /** Name of the group for screen readers */
   @property() accessor label = "";
   /** Name for form submission */
   @property({ reflect: true }) accessor name = "";
+  /** Turns off choosing */
   @property({ type: Boolean, reflect: true }) accessor disabled = false;
   /** Marks the group as required for assistive tech – checking it is up to the step's validate */
   @property({ type: Boolean }) accessor required = false;
@@ -1693,6 +1701,7 @@ export type StepperReviewRow = {
 export class TcStepperReview extends TcStepperBlock {
   static override ui = "sf-review";
 
+  /** The rows: a label, the value entered and the step that sets it */
   @property({ attribute: false }) accessor rows: StepperReviewRow[] = [];
   /** Shows the Edit links */
   @property({ type: Boolean }) accessor editable = false;
@@ -1723,6 +1732,7 @@ export class TcStepperReview extends TcStepperBlock {
 export class TcStepperSuccess extends TcStepperBlock {
   static override ui = "sf-success";
 
+  /** The success heading, e.g. “All set” */
   @property() accessor heading = "";
   /** Text, or an element (cloned) */
   @property() accessor description: string | Element | undefined = undefined;

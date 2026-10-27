@@ -7,6 +7,7 @@ import { repeat } from "lit/directives/repeat.js";
 import { easeOutQuart } from "../internal/ease";
 import { reducedMotion } from "../internal/reduced-motion";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import type { Look } from "./internal/look";
 
 /*
@@ -120,6 +121,7 @@ let instances = 0;
 export class TcPromptLibrary extends TcElement {
   static override ui = "pli";
 
+  /** The saved templates, in list order – each with a title, an optional category and a body with {variables} */
   @property({ attribute: false }) accessor templates: PromptTemplate[] = [];
   /** Id of the chosen template – unset or unknown shows the first. Changed by the user unless a tc-value-change
    *  listener calls preventDefault() */
@@ -502,10 +504,6 @@ export class TcPromptLibrary extends TcElement {
       }
     };
     return html`<div class="ui-pli__side">
-      <div class="ui-pli__side-head">
-        <span id=${`${uid}-title`} class="ui-pli__title">${this.heading}</span>
-        <span class="ui-pli__total">${this.templates.length}</span>
-      </div>
       <label class="ui-pli__search">${icon.search}<input
           type="search"
           .value=${live(this.query)}
@@ -585,8 +583,16 @@ export class TcPromptLibrary extends TcElement {
       ${!ready && selected ? html`<span id=${`${uid}-why`} class="ui-pli__sr">${`Fill ${missing.length} more ${missing.length === 1 ? "variable" : "variables"} to use`}</span>` : nothing}
     </div>`;
 
+    // The header (.tc-head): on the tray above the card in Standard, the card's first row in Clean
+    const head = cardHead({
+      icon: svg`<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path><path d="M13 8H7"></path><path d="M17 12H7"></path>`,
+      title: this.heading,
+      id: `${uid}-title`,
+      aside: html`<span class="ui-pli__total">${this.templates.length}</span>`,
+    });
     return html`
-      <div class="ui-pli__card">${clean ? html`<div class="ui-pli__cols">${sideEl}${mainEl}</div>${footEl}` : html`${sideEl}${mainEl}`}</div>
+      ${clean ? nothing : head}
+      <div class="ui-pli__card">${clean ? html`${head}<div class="ui-pli__cols">${sideEl}${mainEl}</div>${footEl}` : html`${sideEl}${mainEl}`}</div>
       ${clean ? nothing : footEl}
       <span class="ui-pli__sr" role="status">${this.said}</span>
     `;
@@ -595,7 +601,7 @@ export class TcPromptLibrary extends TcElement {
   static override css = /* css */ `
 :where([data-look="standard"], [data-look="standard"] *)[data-ui="pli"] {
   /* insets and hover fills: a light grey on the card, lighter than the card in dark mode */
-  --tc-prompt-library-well: light-dark(#f4f4f5, #222225);
+  --tc-prompt-library-well: var(--tc-surface-well);
   /* the flash on a filled-in or inserted value: stronger than --tc-accent-subtle */
   --tc-prompt-library-flash: light-dark(rgba(47, 107, 255, 0.24), rgba(79, 130, 255, 0.36));
   box-sizing: border-box;
@@ -603,10 +609,11 @@ export class TcPromptLibrary extends TcElement {
   max-width: 640px;
   min-width: 0;
   container-type: inline-size;
-  padding: var(--tc-space-1);
-  border-radius: var(--tc-radius-3xl);
-  background: var(--tc-surface-sunken);
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  /* A gray tray: the header on it, the white card, the line below */
+  padding: var(--tc-tray-inset);
+  border-radius: var(--tc-tray-radius);
+  background: var(--tc-surface-tray);
+  font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-md);
   line-height: var(--tc-line-height-normal);
   color: var(--tc-text-secondary);
@@ -643,26 +650,22 @@ export class TcPromptLibrary extends TcElement {
 [data-ui="pli"] b { font-weight: var(--tc-font-weight-medium); color: var(--tc-text-primary); }
 [data-ui="pli"] p { margin: 0; }
 .ui-pli__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-:where([data-look="standard"], [data-look="standard"] *).ui-pli__card { display: grid; grid-template-columns: 220px minmax(0, 1fr); border-radius: var(--tc-radius-2xl); background: var(--tc-surface-raised); box-shadow: var(--tc-shadow-raised); }
+:where([data-look="standard"], [data-look="standard"] *).ui-pli__card { display: grid; grid-template-columns: 220px minmax(0, 1fr); border-radius: var(--tc-card-radius); background: var(--tc-surface-on-tray); box-shadow: var(--tc-card-shadow); }
 /* ----- List ----- */
 :where([data-look="standard"], [data-look="standard"] *).ui-pli__side { min-width: 0; padding: var(--tc-space-3) var(--tc-space-2) var(--tc-space-2); border-right: 1px solid var(--tc-border-default); }
-:where([data-look="standard"], [data-look="standard"] *).ui-pli__side-head { display: flex; align-items: center; gap: var(--tc-space-1-5); height: 22px; padding: 0 var(--tc-space-1-5); }
-:where([data-look="standard"], [data-look="standard"] *).ui-pli__title { overflow: hidden; font-size: var(--tc-font-size-md); font-weight: var(--tc-font-weight-medium); color: var(--tc-text-secondary); white-space: nowrap; text-overflow: ellipsis; }
 :where([data-look="standard"], [data-look="standard"] *).ui-pli__total { font-size: var(--tc-font-size-sm); color: var(--tc-text-muted); font-variant-numeric: tabular-nums; }
-:where([data-look="standard"], [data-look="standard"] *).ui-pli__search { display: flex; align-items: center; gap: var(--tc-space-2); height: 30px; margin-top: var(--tc-space-2); padding: 0 var(--tc-space-2); border-radius: var(--tc-field-radius); background: var(--tc-field-bg-sunken); box-shadow: var(--tc-field-shadow); color: var(--tc-text-muted); cursor: text; transition: box-shadow var(--tc-duration-fast) var(--tc-ease-standard); }
+:where([data-look="standard"], [data-look="standard"] *).ui-pli__search { display: flex; align-items: center; gap: var(--tc-space-2); height: 30px; padding: 0 var(--tc-space-2); border-radius: var(--tc-field-radius); background: var(--tc-field-bg-sunken); box-shadow: var(--tc-field-shadow); color: var(--tc-text-muted); cursor: text; transition: box-shadow var(--tc-duration-fast) var(--tc-ease-standard); }
 .ui-pli__search:hover { box-shadow: var(--tc-field-shadow-hover); }
 .ui-pli__search:focus-within { box-shadow: var(--tc-field-shadow-focus); }
 :where([data-look="standard"], [data-look="standard"] *).ui-pli__search input { flex: 1; min-width: 0; height: 100%; font-size: var(--tc-font-size-sm); color: var(--tc-text-primary); -webkit-appearance: none; appearance: none; }
 .ui-pli__search input::placeholder { color: var(--tc-text-placeholder); }
 /* One white card – the edge is a shadow, not a border; the last row sits inside it */
 :where([data-look="clean"], [data-look="clean"] *).ui-pli__card { overflow: hidden; border-radius: var(--tc-radius-lg); background: var(--tc-surface-raised); box-shadow: var(--tc-shadow-raised); }
-:where([data-look="clean"], [data-look="clean"] *).ui-pli__cols { display: grid; grid-template-columns: 220px minmax(0, 1fr); }
+:where([data-look="clean"], [data-look="clean"] *).ui-pli__cols { display: grid; grid-template-columns: 220px minmax(0, 1fr); border-top: 0.5px solid var(--tc-border-default); }
 /* ----- List ----- */
 :where([data-look="clean"], [data-look="clean"] *).ui-pli__side { min-width: 0; padding: var(--tc-space-3) var(--tc-space-2) var(--tc-space-2); border-right: 0.5px solid var(--tc-border-default); }
-:where([data-look="clean"], [data-look="clean"] *).ui-pli__side-head { display: flex; align-items: center; gap: var(--tc-space-1-5); height: 20px; padding: 0 var(--tc-space-2); }
-:where([data-look="clean"], [data-look="clean"] *).ui-pli__title { overflow: hidden; font-weight: var(--tc-font-weight-medium); color: var(--tc-text-strong); white-space: nowrap; text-overflow: ellipsis; }
 :where([data-look="clean"], [data-look="clean"] *).ui-pli__total { font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); color: var(--tc-text-muted); font-variant-numeric: tabular-nums; }
-:where([data-look="clean"], [data-look="clean"] *).ui-pli__search { display: flex; align-items: center; gap: var(--tc-space-1-5); height: 28px; margin-top: var(--tc-space-2-5); padding: 0 var(--tc-space-2) 0 var(--tc-space-1-5); border-radius: var(--tc-field-radius); background: var(--tc-field-bg-sunken); box-shadow: var(--tc-field-shadow); color: var(--tc-icon-muted); cursor: text; transition: box-shadow var(--tc-duration-fast) var(--tc-ease-standard); }
+:where([data-look="clean"], [data-look="clean"] *).ui-pli__search { display: flex; align-items: center; gap: var(--tc-space-1-5); height: 28px; padding: 0 var(--tc-space-2) 0 var(--tc-space-1-5); border-radius: var(--tc-field-radius); background: var(--tc-field-bg-sunken); box-shadow: var(--tc-field-shadow); color: var(--tc-icon-muted); cursor: text; transition: box-shadow var(--tc-duration-fast) var(--tc-ease-standard); }
 :where([data-look="clean"], [data-look="clean"] *).ui-pli__search input { flex: 1; min-width: 0; height: 100%; font-size: var(--tc-font-size-md); color: var(--tc-text-primary); caret-color: var(--tc-accent); -webkit-appearance: none; appearance: none; }
 .ui-pli__search input::-webkit-search-cancel-button { -webkit-appearance: none; }
 :where([data-look="standard"], [data-look="standard"] *).ui-pli__list { position: relative; display: flex; flex-direction: column; gap: var(--tc-space-0-5); margin-top: var(--tc-space-1-5); }
@@ -729,9 +732,10 @@ export class TcPromptLibrary extends TcElement {
 :where([data-look="standard"], [data-look="standard"] *).ui-pli__input { width: 100%; height: 22px; color: inherit; font-weight: var(--tc-font-weight-medium); text-overflow: ellipsis; }
 :where([data-look="clean"], [data-look="clean"] *).ui-pli__input { width: 100%; height: 22px; color: inherit; font-weight: var(--tc-font-weight-medium); text-overflow: ellipsis; caret-color: var(--tc-accent); }
 .ui-pli__input::placeholder { color: var(--tc-text-placeholder); font-weight: var(--tc-font-weight-regular); opacity: 1; }
-:where([data-look="standard"], [data-look="standard"] *).ui-pli__label { margin-top: var(--tc-space-3); font-size: var(--tc-font-size-sm); color: var(--tc-text-muted); }
+:where([data-look="standard"], [data-look="standard"] *).ui-pli__label { margin-top: var(--tc-space-3); }
 :where([data-look="standard"], [data-look="standard"] *).ui-pli__preview { margin-top: var(--tc-space-1); padding: var(--tc-space-2) var(--tc-space-3); border-radius: var(--tc-radius-lg); background: var(--tc-prompt-library-well); font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-normal); color: var(--tc-text-secondary); white-space: pre-wrap; overflow-wrap: anywhere; }
-:where([data-look="clean"], [data-look="clean"] *).ui-pli__label { margin-top: var(--tc-space-3); font-size: var(--tc-font-size-2xs); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-tight); letter-spacing: 0.5px; text-transform: uppercase; color: var(--tc-text-muted); }
+.ui-pli__label { font-size: var(--tc-caption-font-size); font-weight: var(--tc-caption-font-weight); line-height: var(--tc-caption-line-height); letter-spacing: var(--tc-caption-tracking); text-transform: var(--tc-caption-transform); color: var(--tc-caption-color); }
+:where([data-look="clean"], [data-look="clean"] *).ui-pli__label { margin-top: var(--tc-space-3); }
 :where([data-look="clean"], [data-look="clean"] *).ui-pli__preview { margin-top: var(--tc-space-1); padding: var(--tc-space-2) var(--tc-space-3); border-radius: var(--tc-radius-md); background: var(--tc-fill-subtle); box-shadow: inset 0 0 0 0.5px var(--tc-border-default); font-size: var(--tc-font-size-md); line-height: var(--tc-line-height-normal); color: var(--tc-text-secondary); white-space: pre-wrap; overflow-wrap: anywhere; }
 .ui-pli__fill { border-radius: var(--tc-radius-xs); color: var(--tc-text-primary); font-weight: var(--tc-font-weight-medium); box-decoration-break: clone; -webkit-box-decoration-break: clone; }
 .ui-pli__fill[data-flash="a"] { animation: ui-pli-mark-a 1100ms var(--tc-ease-decelerate); }

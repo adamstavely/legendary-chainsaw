@@ -1,0 +1,332 @@
+{
+ "elements": [
+  {
+   "tag": "tc-instruction-editor",
+   "className": "TcInstructionEditor",
+   "description": "System and developer instructions with highlighted variables, missing and unused variable warnings, an\napp-supplied token count, a diff against a chosen version and Save as a new version.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Instructions\"",
+     "description": "The heading, and the group's name",
+     "readonly": false
+    },
+    {
+     "name": "value",
+     "attribute": null,
+     "type": "InstructionEditorValue",
+     "default": "{ role: \"system\", text: \"\" }",
+     "description": "The role and the text. Changed by the user unless tc-value-change is prevented",
+     "readonly": false
+    },
+    {
+     "name": "roles",
+     "attribute": null,
+     "type": "InstructionRole[]",
+     "default": "[ { id: \"system\", label: \"System\" }, { id: \"developer\", label: \"Developer\" }, ]",
+     "description": "Which instructions these can be; fewer than two hides the switch",
+     "readonly": false
+    },
+    {
+     "name": "variables",
+     "attribute": null,
+     "type": "InstructionVariable[]",
+     "default": "[]",
+     "description": "The variables the app fills in; the text is checked against them",
+     "readonly": false
+    },
+    {
+     "name": "versions",
+     "attribute": null,
+     "type": "InstructionVersion[]",
+     "default": "[]",
+     "description": "Saved versions, oldest first. Grows when Save isn't prevented",
+     "readonly": false
+    },
+    {
+     "name": "compareTo",
+     "attribute": "compare-to",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The id of the version the text is compared with; unset compares with the latest",
+     "readonly": false
+    },
+    {
+     "name": "tokenCount",
+     "attribute": "token-count",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The text's length in tokens, as the app counts it; unset shows no count",
+     "readonly": false
+    },
+    {
+     "name": "tokenLimit",
+     "attribute": "token-limit",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The most tokens the instructions should use; past it the count turns red",
+     "readonly": false
+    },
+    {
+     "name": "counting",
+     "attribute": "counting",
+     "type": "boolean",
+     "default": "false",
+     "description": "The app is counting the tokens for the latest text",
+     "readonly": false
+    },
+    {
+     "name": "placeholder",
+     "attribute": "placeholder",
+     "type": "string",
+     "default": "\"Say who the model is working for, what it should do and what it must not do. Use {{name}} for what the app fills in.\"",
+     "description": "Placeholder in the empty editor",
+     "readonly": false
+    },
+    {
+     "name": "name",
+     "attribute": "name",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Submitted with the form: the text",
+     "readonly": false
+    },
+    {
+     "name": "readonly",
+     "attribute": "readonly",
+     "type": "boolean",
+     "default": "false",
+     "description": "Shows everything but nothing can be changed",
+     "readonly": false
+    },
+    {
+     "name": "variableUses",
+     "attribute": null,
+     "type": "InstructionVariableUse[]",
+     "default": null,
+     "description": "Every variable the text uses or the app defines, with its status",
+     "readonly": true
+    },
+    {
+     "name": "comparedVersion",
+     "attribute": null,
+     "type": "InstructionVersion | undefined",
+     "default": null,
+     "description": "The version the text is compared with",
+     "readonly": true
+    },
+    {
+     "name": "dirty",
+     "attribute": null,
+     "type": "boolean",
+     "default": null,
+     "description": "The text differs from the latest version (or there is none yet and the text isn't empty)",
+     "readonly": true
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-value-change",
+     "detail": "",
+     "description": "The text or the role changed, or a version was restored ({ value: InstructionEditorValue }); cancelable – prevent it to control `value`",
+     "cancelable": true
+    },
+    {
+     "name": "tc-save",
+     "detail": "",
+     "description": "Save as a new version was pressed ({ version, versions }: InstructionSaveEvent); cancelable – prevented, `versions` stays as it was",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [
+    {
+     "name": "insertVariable",
+     "params": "name: string",
+     "returns": "void",
+     "description": "Inserts {{name}} at the caret, or in place of the selection"
+    },
+    {
+     "name": "save",
+     "params": "",
+     "returns": "void",
+     "description": "Saves the text as a new version: fires tc-save and, unless it's prevented, adds the version"
+    }
+   ],
+   "ui": "ied",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-highlight",
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-border-default",
+    "--tc-border-strong",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-lg",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-md",
+    "--tc-control-px-sm",
+    "--tc-control-radius-md",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-font-size",
+    "--tc-field-h",
+    "--tc-field-px",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-field-shadow-hover",
+    "--tc-fill-hover",
+    "--tc-fill-selected",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-mono",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-hairline",
+    "--tc-line-height-normal",
+    "--tc-line-height-relaxed",
+    "--tc-line-height-snug",
+    "--tc-meter-fill",
+    "--tc-meter-h",
+    "--tc-meter-radius",
+    "--tc-meter-track",
+    "--tc-radius-full",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-xs",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-10",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-7",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-danger-solid",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-success-solid",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-status-warning-solid",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-surface-well",
+    "--tc-syntax-text",
+    "--tc-text-muted",
+    "--tc-text-placeholder",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tone-violet-bg",
+    "--tc-tone-violet-fg",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "instructionVariables",
+   "signature": "instructionVariables(text: string): Map<string, number>",
+   "description": "The variables a text uses, by name, with how often"
+  }
+ ],
+ "react": [
+  {
+   "component": "InstructionEditor",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "Shown at the top; names the group and the editor"
+    },
+    {
+     "name": "value",
+     "type": "InstructionEditorValue",
+     "optional": true,
+     "description": "The role and the text (controlled)"
+    },
+    {
+     "name": "defaultValue",
+     "type": "InstructionEditorValue",
+     "optional": true,
+     "description": "The role and the text to start with when uncontrolled"
+    },
+    {
+     "name": "onChange",
+     "type": "(value: InstructionEditorValue) => void",
+     "optional": true,
+     "description": "Called with the role and the text after every edit"
+    },
+    {
+     "name": "versions",
+     "type": "InstructionVersion[]",
+     "optional": true,
+     "description": "Saved versions, oldest first (controlled)"
+    },
+    {
+     "name": "defaultVersions",
+     "type": "InstructionVersion[]",
+     "optional": true,
+     "description": "The versions to start with when uncontrolled"
+    },
+    {
+     "name": "onSave",
+     "type": "(version: InstructionVersion, versions: InstructionVersion[]) => void",
+     "optional": true,
+     "description": "Save as a new version was pressed: `version` is the one to add, `versions` the list with it"
+    }
+   ],
+   "hides": []
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 84636,
+  "gzip": 21091
+ }
+}

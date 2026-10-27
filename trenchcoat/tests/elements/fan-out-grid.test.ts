@@ -32,12 +32,12 @@ describe("tc-fan-out-grid", () => {
     const el = await fixture<TcFanOutGrid>(html`<tc-fan-out-grid .tasks=${mixed} .now=${20}></tc-fan-out-grid>`);
     expect(el.dataset.ui).toBe("fog");
     expect(el.dataset.look).toBe("standard");
-    expect(el.querySelector(".ui-fog__title")!.textContent).toBe("Fan-out");
+    expect(el.querySelector(".tc-head__title")!.textContent).toBe("Fan-out");
     el.look = "clean";
     el.heading = "Leads";
     await settle();
     expect(el.dataset.look).toBe("clean");
-    expect(el.querySelector(".ui-fog__title")!.textContent).toBe("Leads");
+    expect(el.querySelector(".tc-head__title")!.textContent).toBe("Leads");
     // Clean: the counts sit inside the panel
     expect(el.querySelector(".ui-fog__panel .ui-fog__foot")).toBeTruthy();
   });
@@ -244,7 +244,7 @@ describe("tc-fan-out-grid", () => {
     const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     icon.setAttribute("data-mine", "");
     const el = await fixture<TcFanOutGrid>(html`<tc-fan-out-grid .icon=${icon} .tasks=${mixed} .now=${20}></tc-fan-out-grid>`);
-    expect(el.querySelector(".ui-fog__mark svg[data-mine]")).toBeTruthy();
+    expect(el.querySelector(".tc-head__icon svg[data-mine]")).toBeTruthy();
     expect(icon.isConnected).toBe(false);
   });
 

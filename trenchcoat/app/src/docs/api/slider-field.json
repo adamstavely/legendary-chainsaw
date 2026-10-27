@@ -1,0 +1,154 @@
+{
+ "elements": [
+  {
+   "tag": "tc-slider-field",
+   "className": "TcSliderField",
+   "description": "Slider field for AI product settings.",
+   "properties": [
+    {
+     "name": "min",
+     "attribute": "min",
+     "type": "number",
+     "default": "0",
+     "description": "Smallest accepted number.",
+     "readonly": false
+    },
+    {
+     "name": "max",
+     "attribute": "max",
+     "type": "number",
+     "default": "100",
+     "description": "Largest accepted number.",
+     "readonly": false
+    },
+    {
+     "name": "step",
+     "attribute": "step",
+     "type": "number",
+     "default": "1",
+     "description": "Increment used by the native controls.",
+     "readonly": false
+    },
+    {
+     "name": "label",
+     "attribute": "label",
+     "type": "string",
+     "default": "\"Slider Field\"",
+     "description": "Visible heading or field label.",
+     "readonly": false
+    },
+    {
+     "name": "value",
+     "attribute": null,
+     "type": "number",
+     "default": "0",
+     "description": "Current value; prevent tc-value-change to control it from the application.",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Supporting explanation under the label.",
+     "readonly": false
+    },
+    {
+     "name": "name",
+     "attribute": "name",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Form field name; objects and arrays are serialized as JSON.",
+     "readonly": false
+    },
+    {
+     "name": "disabled",
+     "attribute": "disabled",
+     "type": "boolean",
+     "default": "false",
+     "description": "Disable editing and omit the control from form submission.",
+     "readonly": false
+    },
+    {
+     "name": "required",
+     "attribute": "required",
+     "type": "boolean",
+     "default": "false",
+     "description": "Require a nonempty value.",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-value-change",
+     "detail": "",
+     "description": "Proposed value (detail: { value }); cancelable to keep application control.",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [
+    {
+     "name": "checkValidity",
+     "params": "",
+     "returns": "void",
+     "description": "Check the current form validity."
+    },
+    {
+     "name": "reportValidity",
+     "params": "",
+     "returns": "void",
+     "description": "Show the current validation message and focus the first control."
+    }
+   ],
+   "ui": "slider-field",
+   "cssProperties": [],
+   "tokens": []
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "SliderField",
+   "exported": true,
+   "props": [
+    {
+     "name": "value",
+     "type": "number",
+     "optional": true,
+     "description": "Current value when controlled by the application."
+    },
+    {
+     "name": "defaultValue",
+     "type": "number",
+     "optional": true,
+     "description": "Initial value when the element owns its state."
+    },
+    {
+     "name": "onChange",
+     "type": "(value: number) => void",
+     "optional": true,
+     "description": "Called with proposed edits; controlled values remain application-owned."
+    }
+   ],
+   "hides": [
+    "value",
+    "defaultValue",
+    "onChange"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 22494,
+  "gzip": 6349
+ }
+}

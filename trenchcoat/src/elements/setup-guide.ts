@@ -4,6 +4,7 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { repeat } from "lit/directives/repeat.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController, rescueFocus } from "./internal/controllers";
 import type { Look } from "./internal/look";
 
@@ -35,6 +36,9 @@ export type SetupGuideOpenGroupChange = { openGroup: string | null };
 export type SetupGuideMinimizedChange = { minimized: boolean };
 
 const FOLD_DELAY = 420;
+/* After Lucide: list-checks – the header's icon */
+const headIcon = svg`<path d="m3 17 2 2 4-4M3 7l2 2 4-4M13 6h8M13 12h8M13 18h8"></path>`;
+
 let instances = 0;
 
 /** @internal The ids of the tasks flagged done, as one key: own ticks are kept while it stays the same */
@@ -189,26 +193,7 @@ export class TcSetupGuide extends TcElement {
       <span class="ui-sg__fill" style=${styleMap({ transform: `scaleX(${progress})` })}></span>
     </span>`;
 
-    return html`
-      <header class="ui-sg__head">
-        <h3 class="ui-sg__title">${this.heading}</h3>
-        <div class="ui-sg__actions">
-          ${this.editable ? html`<button type="button" class="ui-sg__edit" @click=${() => this.emit("tc-edit", null)}>Edit</button>` : nothing}
-          <button
-            type="button"
-            class="ui-sg__icon-btn"
-            aria-label=${minimized ? "Expand setup guide" : "Minimize setup guide"}
-            aria-expanded=${minimized ? "false" : "true"}
-            aria-controls=${`${this.uid}-body`}
-            @click=${() => this.setMinimized(!minimized)}
-          >
-            ${minimized ? expandIcon(look) : minimizeIcon(look)}
-          </button>
-          ${this.closable ? html`<button type="button" class="ui-sg__icon-btn" aria-label="Close setup guide" @click=${() => this.emit("tc-close", null)}>${closeIcon(look)}</button>` : nothing}
-        </div>
-      </header>
-      ${clean ? html`<div class="ui-sg__progress">${track}<span class="ui-sg__count" aria-hidden="true">${count}/${total}</span></div>` : track}
-      <div class="ui-sg__body" id=${`${this.uid}-body`} data-hidden=${ifDefined(minimized ? "" : undefined)} .inert=${minimized}>
+    const body = html`<div class="ui-sg__body" id=${`${this.uid}-body`} data-hidden=${ifDefined(minimized ? "" : undefined)} .inert=${minimized}>
         <div class="ui-sg__groups">
           ${repeat(
             this.groups,
@@ -258,22 +243,41 @@ export class TcSetupGuide extends TcElement {
             },
           )}
         </div>
-      </div>
-    `;
+      </div>`;
+    // The header (.tc-head): on the tray in Standard, the card's first row in Clean; Edit, Minimise and Close at the right
+    const head = cardHead({
+      icon: headIcon,
+      title: this.heading,
+      aside: html`<div class="ui-sg__actions">
+          ${this.editable ? html`<button type="button" class="ui-sg__edit" @click=${() => this.emit("tc-edit", null)}>Edit</button>` : nothing}
+          <button
+            type="button"
+            class="ui-sg__icon-btn"
+            aria-label=${minimized ? "Expand setup guide" : "Minimize setup guide"}
+            aria-expanded=${minimized ? "false" : "true"}
+            aria-controls=${`${this.uid}-body`}
+            @click=${() => this.setMinimized(!minimized)}
+          >
+            ${minimized ? expandIcon(look) : minimizeIcon(look)}
+          </button>
+          ${this.closable ? html`<button type="button" class="ui-sg__icon-btn" aria-label="Close setup guide" @click=${() => this.emit("tc-close", null)}>${closeIcon(look)}</button>` : nothing}
+        </div>`,
+    });
+    if (clean) return html`${head}<div class="ui-sg__progress">${track}<span class="ui-sg__count" aria-hidden="true">${count}/${total}</span></div>${body}`;
+    return html`${head}<div class="ui-sg__card">${track}${body}</div>`;
   }
 
   static override css = /* css */ `
 :where([data-look="standard"], [data-look="standard"] *)[data-ui="sg"] {
   --tc-setup-guide-mark-bg-hover: light-dark(#d3d7de, #4a4a50);
   box-sizing: border-box;
+  /* The gray tray: the header on it, the white card under it */
   width: 100%;
   max-width: 320px;
-  padding: var(--tc-space-4) var(--tc-space-2) var(--tc-space-2);
-  /* The card pattern – its ring is the shadow */
-  background: var(--tc-surface-raised);
-  border-radius: var(--tc-card-radius);
-  box-shadow: var(--tc-card-shadow);
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  padding: var(--tc-tray-inset);
+  border-radius: var(--tc-tray-radius);
+  background: var(--tc-surface-tray);
+  font-family: var(--tc-font-sans);
   color: var(--tc-text-primary);
   -webkit-font-smoothing: antialiased;
 }
@@ -295,7 +299,7 @@ export class TcSetupGuide extends TcElement {
   -webkit-font-smoothing: antialiased;
 }
 [data-ui="sg"] *, [data-ui="sg"] *::before, [data-ui="sg"] *::after { box-sizing: border-box; }
-:where([data-look="standard"], [data-look="standard"] *)[data-ui="sg"] button {
+:where([data-look="standard"], [data-look="standard"] *):where([data-ui="sg"]) button {
   margin: 0;
   border: 0;
   background: none;
@@ -307,34 +311,22 @@ export class TcSetupGuide extends TcElement {
   outline: var(--tc-focus-outline);
   outline-offset: var(--tc-focus-ring-offset);
 }
-:where([data-look="standard"], [data-look="standard"] *).ui-sg__head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--tc-space-3);
-  padding: 0 var(--tc-space-2);
-}
-:where([data-look="standard"], [data-look="standard"] *).ui-sg__title {
-  margin: 0;
-  font-size: var(--tc-font-size-lg-plus);
-  font-weight: var(--tc-font-weight-semibold);
-  line-height: var(--tc-line-height-relaxed);
-}
+.ui-sg__card { padding: var(--tc-space-2); border-radius: var(--tc-card-radius); background: var(--tc-surface-on-tray); box-shadow: var(--tc-card-shadow); }
 :where([data-look="standard"], [data-look="standard"] *).ui-sg__actions {
   display: flex;
   align-items: center;
   gap: var(--tc-space-1);
-  margin-right: -4px;
 }
 :where([data-look="standard"], [data-look="standard"] *).ui-sg__edit {
-  padding: var(--tc-space-0-5) var(--tc-space-1-5);
-  border-radius: var(--tc-radius-sm);
-  font-size: var(--tc-font-size-lg);
-  line-height: var(--tc-line-height-normal);
-  color: var(--tc-accent-text) !important;
-  transition: opacity var(--tc-duration-fast) var(--tc-ease-standard);
+  height: var(--tc-control-h-sm);
+  padding: 0 var(--tc-control-px-sm);
+  border-radius: var(--tc-control-radius-sm);
+  font-size: var(--tc-control-font-size);
+  font-weight: var(--tc-control-font-weight);
+  color: var(--tc-action-ghost-fg) !important;
+  transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard);
 }
-:where([data-look="standard"], [data-look="standard"] *).ui-sg__edit:hover { opacity: 0.75; }
+:where([data-look="standard"], [data-look="standard"] *).ui-sg__edit:hover { background: var(--tc-action-ghost-bg-hover) !important; color: var(--tc-text-primary) !important; }
 :where([data-look="standard"], [data-look="standard"] *).ui-sg__icon-btn {
   display: grid;
   place-items: center;
@@ -348,25 +340,7 @@ export class TcSetupGuide extends TcElement {
 :where([data-look="clean"], [data-look="clean"] *):where([data-ui="sg"]) button { margin: 0; padding: 0; border: 0; background: none; font: inherit; color: inherit; cursor: pointer; }
 :where([data-look="clean"], [data-look="clean"] *):where([data-ui="sg"]) svg { display: block; flex: none; }
 :where([data-look="clean"], [data-look="clean"] *)[data-ui="sg"] button:focus-visible { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
-/* ---- Header: title, Edit and the two ghost icon buttons ---- */
-:where([data-look="clean"], [data-look="clean"] *).ui-sg__head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--tc-space-3);
-  padding: var(--tc-space-3) var(--tc-space-2-5) 0 var(--tc-space-4);
-}
-:where([data-look="clean"], [data-look="clean"] *).ui-sg__title {
-  overflow: hidden;
-  min-width: 0;
-  margin: 0;
-  font-size: var(--tc-font-size-lg-plus);
-  font-weight: var(--tc-font-weight-medium);
-  line-height: var(--tc-line-height-loose);
-  color: var(--tc-text-strong);
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
+/* ---- The header's actions: Edit and the two ghost icon buttons ---- */
 :where([data-look="clean"], [data-look="clean"] *).ui-sg__actions { display: flex; flex: none; align-items: center; gap: var(--tc-space-0-5); }
 :where([data-look="clean"], [data-look="clean"] *).ui-sg__edit {
   height: var(--tc-control-h-md);
@@ -394,7 +368,7 @@ export class TcSetupGuide extends TcElement {
 :where([data-look="standard"], [data-look="standard"] *).ui-sg__track {
   display: block;
   height: var(--tc-meter-h);
-  margin: var(--tc-space-2-5) var(--tc-space-2) var(--tc-space-2);
+  margin: var(--tc-space-2);
   overflow: hidden;
   border-radius: var(--tc-meter-radius);
   background: var(--tc-meter-track);
@@ -404,7 +378,7 @@ export class TcSetupGuide extends TcElement {
   display: flex;
   align-items: center;
   gap: var(--tc-space-2-5);
-  padding: var(--tc-space-2) var(--tc-space-4) var(--tc-space-3);
+  padding: 0 var(--tc-space-4) var(--tc-space-3);
 }
 :where([data-look="clean"], [data-look="clean"] *).ui-sg__track {
   display: block;
@@ -656,7 +630,6 @@ export class TcSetupGuide extends TcElement {
 }
 /* Narrow: a little less side padding */
 @container (max-width: 300px) {
-:where([data-look="clean"], [data-look="clean"] *).ui-sg__head { padding-left: var(--tc-space-3); }
 :where([data-look="clean"], [data-look="clean"] *).ui-sg__progress { padding-inline: var(--tc-space-3); }
 :where([data-look="clean"], [data-look="clean"] *).ui-sg__group-head { padding-left: var(--tc-space-2-5); }
 }

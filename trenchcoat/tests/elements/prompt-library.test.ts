@@ -43,6 +43,11 @@ describe("tc-prompt-library", () => {
     expect(document.getElementById(el.getAttribute("aria-labelledby")!)!.textContent).toBe("Saved");
     expect(el.dataset.look).toBe("clean");
     expect(el.querySelector(".ui-pli__card > .ui-pli__foot")).toBeTruthy();
+    // The header: the card's first row in Clean, on the tray above the card in Standard; the template count at its right
+    expect(el.querySelector(".ui-pli__card > .tc-head:first-child .tc-head__aside > .ui-pli__total")!.textContent).toBe(String(vars.length));
+    el.look = "standard";
+    await settle();
+    expect(el.querySelector(":scope > .tc-head + .ui-pli__card")).toBeTruthy();
   });
 
   test("a name the page gives stays", async () => {

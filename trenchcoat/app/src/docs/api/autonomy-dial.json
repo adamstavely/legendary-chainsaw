@@ -1,0 +1,222 @@
+{
+ "elements": [
+  {
+   "tag": "tc-autonomy-dial",
+   "className": "TcAutonomyDial",
+   "description": "How much an agent may do on its own: three levels, and the actions it runs alone or asks about first.",
+   "properties": [
+    {
+     "name": "actions",
+     "attribute": null,
+     "type": "AgentAction[]",
+     "default": "[]",
+     "description": "The agent's actions; each sorts into \"Runs on its own\" or \"Asks you first\" by its risk, the level and the pins",
+     "readonly": false
+    },
+    {
+     "name": "level",
+     "attribute": "level",
+     "type": "AutonomyLevel",
+     "default": "1",
+     "description": "0 Ask every time · 1 Ask before risky actions · 2 Full auto",
+     "readonly": false
+    },
+    {
+     "name": "pinned",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[]",
+     "description": "Ids of actions that always ask, whatever the level",
+     "readonly": false
+    },
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Agent permissions\"",
+     "description": "Heading, e.g. the agent's name",
+     "readonly": false
+    },
+    {
+     "name": "subtitle",
+     "attribute": "subtitle",
+     "type": "string",
+     "default": "\"What it may do without asking you\"",
+     "description": "Line under the heading",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-level-change",
+     "detail": "",
+     "description": "The user picked a level ({ level: AutonomyLevel }); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-pinned-change",
+     "detail": "",
+     "description": "The user locked or unlocked an action ({ pinned: string[] }); cancelable",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "ad",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-action-ghost-bg-hover",
+    "--tc-border-selected",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-slow",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-strong",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-2xs",
+    "--tc-font-size-lg",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-badge",
+    "--tc-radius-sm",
+    "--tc-radius-xl",
+    "--tc-seg-pad",
+    "--tc-seg-thumb-bg",
+    "--tc-seg-thumb-shadow",
+    "--tc-seg-track-bg",
+    "--tc-seg-track-radius",
+    "--tc-shadow-raised",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-4-5",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tracking-normal",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "asksFirst",
+   "signature": "asksFirst(action: Pick<AgentAction, \"id\" | \"risk\">, level: AutonomyLevel, pinned: string[]): void",
+   "description": "Does the agent have to ask before this action?"
+  }
+ ],
+ "react": [
+  {
+   "component": "AutonomyDial",
+   "exported": true,
+   "props": [
+    {
+     "name": "actions",
+     "type": "AgentAction[]",
+     "optional": false,
+     "description": "The agent's actions; each sorts into \"Runs on its own\" or \"Asks you first\" – `icon` takes a React node"
+    },
+    {
+     "name": "level",
+     "type": "AutonomyLevel",
+     "optional": true,
+     "description": "0 Ask every time · 1 Ask before risky actions · 2 Full auto. Controlled when defined"
+    },
+    {
+     "name": "defaultLevel",
+     "type": "AutonomyLevel",
+     "optional": true,
+     "description": "Starting level when `level` isn't controlled"
+    },
+    {
+     "name": "onLevelChange",
+     "type": "(level: AutonomyLevel) => void",
+     "optional": true,
+     "description": "Called with the new level on every change, controlled or not"
+    },
+    {
+     "name": "pinned",
+     "type": "string[]",
+     "optional": true,
+     "description": "Ids of actions that always ask, whatever the level. Controlled when defined"
+    },
+    {
+     "name": "defaultPinned",
+     "type": "string[]",
+     "optional": true,
+     "description": "Starting pins when `pinned` isn't controlled"
+    },
+    {
+     "name": "onPinnedChange",
+     "type": "(pinned: string[]) => void",
+     "optional": true,
+     "description": "Called with the new list of pinned ids on every change, controlled or not"
+    },
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "Heading, e.g. the agent's name"
+    }
+   ],
+   "hides": [
+    "actions",
+    "level",
+    "pinned",
+    "heading"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 29251,
+  "gzip": 8857
+ }
+}

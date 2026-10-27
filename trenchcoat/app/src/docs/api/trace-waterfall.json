@@ -1,0 +1,490 @@
+{
+ "elements": [
+  {
+   "tag": "tc-trace-waterfall",
+   "className": "TcTraceWaterfall",
+   "description": "An agent run as a tree of spans next to a timeline: durations, costs, folding and a details window per span.",
+   "properties": [
+    {
+     "name": "root",
+     "attribute": null,
+     "type": "TraceSpan",
+     "default": "{ id: \"run\", name: \"Run\", kind: \"agent\", status: \"done\", start: 0, end: 0 }",
+     "description": "The run: its root span, with the others as children",
+     "readonly": false
+    },
+    {
+     "name": "elapsed",
+     "attribute": "elapsed",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The clock, in ms from the start of the run – e.g. a faster one for a demo",
+     "readonly": false
+    },
+    {
+     "name": "now",
+     "attribute": "now",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The clock in epoch ms, read against `startedAt` (without `startedAt`: ms from the start of the run)",
+     "readonly": false
+    },
+    {
+     "name": "startedAt",
+     "attribute": "started-at",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "When the run started (epoch ms) – with `now`, or the element's own clock while spans run",
+     "readonly": false
+    },
+    {
+     "name": "collapsed",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[]",
+     "description": "Ids of folded spans",
+     "readonly": false
+    },
+    {
+     "name": "openId",
+     "attribute": "open-id",
+     "type": "string | null",
+     "default": "null",
+     "description": "Id of the span whose details are open",
+     "readonly": false
+    },
+    {
+     "name": "markSlowest",
+     "attribute": "mark-slowest",
+     "type": "boolean",
+     "default": "true",
+     "description": "Marks the slowest finished LLM or tool call (default true; mark-slowest=\"false\" turns it off)",
+     "readonly": false
+    },
+    {
+     "name": "minRange",
+     "attribute": "min-range",
+     "type": "",
+     "default": null,
+     "description": "The shortest time the axis shows, in ms (default 10s)",
+     "readonly": false
+    },
+    {
+     "name": "formatCost",
+     "attribute": null,
+     "type": "(amount: number) => string",
+     "default": "dollars",
+     "description": "Formats every cost – defaults to dollars, e.g. \"$0.042\"",
+     "readonly": false
+    },
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Trace\"",
+     "description": "The heading, and the tree's name",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-collapsed-change",
+     "detail": "",
+     "description": "Spans were folded or unfolded; detail `{ collapsed: string[] }`. Cancelable: preventDefault() keeps the folds (controlled use)",
+     "cancelable": true
+    },
+    {
+     "name": "tc-open-change",
+     "detail": "",
+     "description": "A span's details opened or closed; detail `{ openId: string | null, span?: TraceSpan }`. Cancelable",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "tw",
+   "cssProperties": [
+    {
+     "name": "--tc-trace-waterfall-guide",
+     "value": "light-dark(rgba(0, 0, 0, 0.08), rgba(255, 255, 255, 0.1))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-trace-waterfall-now",
+     "value": "light-dark(rgba(0, 96, 226, 0.45), rgba(91, 154, 255, 0.55))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-trace-waterfall-tick-zero",
+     "value": "light-dark(rgba(0, 0, 0, 0.1), rgba(255, 255, 255, 0.12))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-trace-waterfall-agent-bg",
+     "value": "light-dark(#eef0f3, #2c2f35)",
+     "looks": [
+      "standard"
+     ]
+    },
+    {
+     "name": "--tc-trace-waterfall-agent-edge",
+     "value": "light-dark(#d3d8e0, #41464f)",
+     "looks": [
+      "standard"
+     ]
+    },
+    {
+     "name": "--tc-trace-waterfall-agent-ink",
+     "value": "light-dark(#4b5363, #b8c0cc)",
+     "looks": [
+      "standard"
+     ]
+    },
+    {
+     "name": "--tc-trace-waterfall-agent-mark",
+     "value": "light-dark(rgba(0, 0, 0, 0.3), rgba(255, 255, 255, 0.4))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-trace-waterfall-llm-bg",
+     "value": "light-dark(rgba(91, 91, 214, 0.1), rgba(130, 130, 255, 0.16))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-trace-waterfall-llm-edge",
+     "value": "light-dark(rgba(91, 91, 214, 0.3), rgba(130, 130, 255, 0.38))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-trace-waterfall-llm-ink",
+     "value": "light-dark(#4a4ac2, #b1a9ff)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-trace-waterfall-llm-mark",
+     "value": "light-dark(rgba(91, 91, 214, 0.72), rgba(140, 140, 255, 0.8))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-trace-waterfall-tool-bg",
+     "value": "light-dark(rgba(0, 123, 172, 0.085), rgba(0, 170, 220, 0.13))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-trace-waterfall-tool-edge",
+     "value": "light-dark(rgba(0, 123, 172, 0.28), rgba(0, 170, 220, 0.34))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-trace-waterfall-tool-ink",
+     "value": "light-dark(#006a94, #4ccce6)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-trace-waterfall-tool-mark",
+     "value": "light-dark(rgba(0, 123, 172, 0.62), rgba(40, 180, 225, 0.75))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-trace-waterfall-row",
+     "value": "30px",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-trace-waterfall-bar",
+     "value": "14px",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-trace-waterfall-bar-radius",
+     "value": "var(--tc-radius-xs)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-trace-waterfall-axis",
+     "value": "30px",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-trace-waterfall-name",
+     "value": "232px",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-trace-waterfall-pad",
+     "value": "10px",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-trace-waterfall-gap",
+     "value": "14px",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-trace-waterfall-end",
+     "value": "16px",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-trace-waterfall-indent",
+     "value": "14px",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-trace-waterfall-range",
+     "value": "10000",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-avatar-radius-agent",
+    "--tc-border-default",
+    "--tc-border-selected",
+    "--tc-border-strong",
+    "--tc-border-subtle",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-reveal-slow",
+    "--tc-duration-shimmer",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-duration-slowest",
+    "--tc-ease-in-out",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-hover",
+    "--tc-fill-selected",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-lg-plus",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xl",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-line-height-loose",
+    "--tc-line-height-normal",
+    "--tc-line-height-relaxed",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-pill-font-size",
+    "--tc-pill-font-size-lg",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-h-lg",
+    "--tc-pill-px",
+    "--tc-pill-px-lg",
+    "--tc-pill-radius",
+    "--tc-radius-2xl",
+    "--tc-radius-2xs",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-radius-xs",
+    "--tc-shadow-overlay",
+    "--tc-shadow-raised",
+    "--tc-shimmer",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-4-5",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-border",
+    "--tc-status-danger-fg",
+    "--tc-status-danger-solid",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-surface-overlay",
+    "--tc-surface-raised",
+    "--tc-surface-sunken",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-trace-waterfall-at",
+    "--tc-trace-waterfall-span-bg",
+    "--tc-trace-waterfall-span-edge",
+    "--tc-trace-waterfall-span-ink",
+    "--tc-trace-waterfall-span-mark",
+    "--tc-tracking-normal",
+    "--tc-tracking-snug",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "TraceWaterfall",
+   "exported": true,
+   "props": [
+    {
+     "name": "root",
+     "type": "TraceSpan",
+     "optional": false,
+     "description": "The run: its root span, with the others as children"
+    },
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading, and the tree's name"
+    },
+    {
+     "name": "collapsed",
+     "type": "string[]",
+     "optional": true,
+     "description": "Controlled ids of folded spans"
+    },
+    {
+     "name": "defaultCollapsed",
+     "type": "string[]",
+     "optional": true,
+     "description": "Ids of the spans folded on mount when `collapsed` isn't controlled"
+    },
+    {
+     "name": "onCollapsedChange",
+     "type": "(collapsed: string[]) => void",
+     "optional": true,
+     "description": "Called with the ids of every folded span after a fold or an unfold"
+    },
+    {
+     "name": "openId",
+     "type": "string | null",
+     "optional": true,
+     "description": "Controlled id of the span whose details are open"
+    },
+    {
+     "name": "defaultOpenId",
+     "type": "string | null",
+     "optional": true,
+     "description": "Id of the span whose details are open on mount when `openId` isn't controlled"
+    },
+    {
+     "name": "onOpenChange",
+     "type": "(id: string | null, span?: TraceSpan) => void",
+     "optional": true,
+     "description": "Called when a span's details open (with the span) or close (null)"
+    }
+   ],
+   "hides": [
+    "root",
+    "heading",
+    "collapsed",
+    "openId"
+   ]
+  }
+ ],
+ "changelog": [
+  "trace-waterfall rows show an outline when focused in forced-colours mode (their ring was a box-shadow, which forced colours removes). data-table sorts only when its rows, sort or columns change – scrolling 10,000 sorted rows was 72 ms per step.",
+  "trace-waterfall `now` without `startedAt` → `elapsed`"
+ ],
+ "size": {
+  "min": 67276,
+  "gzip": 17867
+ }
+}

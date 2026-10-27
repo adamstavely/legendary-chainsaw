@@ -36,15 +36,29 @@ export class OffScreenController implements ReactiveController {
  * friends aren't allowed; the inner control is what assistive technology reaches. Attributes set later (a framework
  * re-rendering) are moved too.
  */
+const ariaControllers = new WeakMap<HTMLElement, AriaForwardController>();
+
+/** The host no longer holds moved attributes, so native removal alone cannot clear the inner control. */
+export function clearForwardedAria(host: HTMLElement, name: string) {
+  ariaControllers.get(host)?.clear(name.toLowerCase());
+}
+
 export class AriaForwardController implements ReactiveController {
   static readonly ATTRS = ["aria-label", "aria-labelledby", "aria-describedby", "aria-description", "aria-controls", "aria-expanded", "aria-haspopup", "aria-pressed", "aria-current", "aria-keyshortcuts"];
   private mo?: MutationObserver;
+  private forwarded = new Set<string>();
 
   constructor(
     private host: Host,
     private target: () => HTMLElement | null,
   ) {
     host.addController(this);
+    ariaControllers.set(host, this);
+  }
+
+  clear(name: string) {
+    if (!this.forwarded.delete(name)) return;
+    this.target()?.removeAttribute(name);
   }
 
   private move = () => {
@@ -54,7 +68,9 @@ export class AriaForwardController implements ReactiveController {
       const value = this.host.getAttribute(name);
       if (value === null) continue;
       to.setAttribute(name, value);
-      this.host.removeAttribute(name);
+      this.forwarded.add(name);
+      // Bypass the public removal hook: this is a move, not a caller clearing the attribute.
+      HTMLElement.prototype.removeAttribute.call(this.host, name);
     }
   };
 
@@ -423,5 +439,82 @@ export class RollingController implements ReactiveController {
 
   hostDisconnected() {
     cancelAnimationFrame(this.frame);
+  }
+}
+
+/* ---------- Toolbar (WAI-ARIA toolbar: one tab stop, arrows move) ---------- */
+
+export type ToolbarOptions = {
+  /** The toolbar's buttons, in order. Natively disabled ones are skipped; aria-disabled ones stay reachable (the
+   *  WAI-ARIA toolbar keeps disabled items focusable so people can find them) */
+  items: () => HTMLElement[];
+  /** "horizontal" (← →, the default), "vertical" (↑ ↓) or "both" */
+  orientation?: "horizontal" | "vertical" | "both";
+  /** Wrap from the last item to the first and back (default true) */
+  wrap?: boolean;
+};
+
+/**
+ * Roving tabindex for a toolbar: Tab reaches it once, on the item last used; ← → (or ↑ ↓) Home End move. Call
+ * `onKeyDown` and `onFocusIn` from the toolbar's own listeners; the controller sets every item's tabindex after each
+ * update, so the host's template doesn't bind it.
+ *   new ToolbarController(this, { items: () => [...this.querySelectorAll(".ui-x__tool")] })
+ */
+export class ToolbarController implements ReactiveController {
+  /** The item Tab lands on */
+  index = 0;
+
+  constructor(
+    private host: Host,
+    private options: ToolbarOptions,
+  ) {
+    host.addController(this);
+  }
+
+  private enabled() {
+    return this.options.items().filter((el) => !(el as HTMLButtonElement).disabled);
+  }
+
+  hostUpdated() {
+    const items = this.options.items();
+    const enabled = this.enabled();
+    if (!enabled.length) return;
+    const current = items[this.index];
+    const target = current && enabled.includes(current) ? current : enabled[0];
+    this.index = items.indexOf(target);
+    for (const el of items) el.tabIndex = el === target ? 0 : -1;
+  }
+
+  onKeyDown = (e: KeyboardEvent) => {
+    const enabled = this.enabled();
+    const at = enabled.indexOf(e.target as HTMLElement);
+    if (at < 0) return;
+    const o = this.options.orientation ?? "horizontal";
+    const wrap = this.options.wrap !== false;
+    const isNext = (o !== "vertical" && e.key === "ArrowRight") || (o !== "horizontal" && e.key === "ArrowDown");
+    const isPrev = (o !== "vertical" && e.key === "ArrowLeft") || (o !== "horizontal" && e.key === "ArrowUp");
+    const last = enabled.length - 1;
+    const to =
+      isNext ? (at === last ? (wrap ? 0 : last) : at + 1)
+      : isPrev ? (at === 0 ? (wrap ? last : 0) : at - 1)
+      : e.key === "Home" ? 0
+      : e.key === "End" ? last
+      : -1;
+    if (to < 0) return;
+    e.preventDefault();
+    this.focus(enabled[to]);
+  };
+
+  onFocusIn = (e: FocusEvent) => {
+    const items = this.options.items();
+    const at = items.indexOf(e.target as HTMLElement);
+    if (at >= 0 && at !== this.index) this.focus(items[at], false);
+  };
+
+  private focus(el: HTMLElement, move = true) {
+    const items = this.options.items();
+    this.index = items.indexOf(el);
+    for (const item of items) item.tabIndex = item === el ? 0 : -1;
+    if (move) el.focus();
   }
 }

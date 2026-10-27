@@ -30,7 +30,10 @@ export type SetupGuideProps = Omit<RawSetupGuideProps, Wrapped> & {
   defaultDone?: string[];
   /** Called with the ids of all finished tasks whenever a task is ticked or cleared */
   onDoneChange?: (done: string[]) => void;
-  /** @deprecated Use `onDoneChange` – same arguments. Kept for one release */
+  /**
+   * Called with the ids of all finished tasks, like `onDoneChange`
+   * @deprecated Use `onDoneChange` – same arguments. Kept for one release
+   */
   onChange?: (done: string[]) => void;
   /** Id of the unfolded group, `null` for none. Controlled when defined – pair it with `onOpenGroupChange` */
   openGroup?: string | null;
@@ -40,7 +43,9 @@ export type SetupGuideProps = Omit<RawSetupGuideProps, Wrapped> & {
   onOpenGroupChange?: (id: string | null) => void;
   /** Whether the body is collapsed to the header. Controlled when defined – pair it with `onMinimizedChange` */
   minimized?: boolean;
+  /** Whether the body starts collapsed when `minimized` isn't controlled */
   defaultMinimized?: boolean;
+  /** Called when the body is collapsed or expanded */
   onMinimizedChange?: (minimized: boolean) => void;
   /** Shows an "Edit" link in the header */
   onEdit?: () => void;

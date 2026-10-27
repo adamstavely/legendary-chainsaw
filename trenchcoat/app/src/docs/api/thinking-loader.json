@@ -1,0 +1,226 @@
+{
+ "elements": [
+  {
+   "tag": "tc-thinking-loader",
+   "className": "TcThinkingLoader",
+   "description": "A \"the model is working\" pill: a spinner and a label that walks through phases, then a check and a done label.",
+   "properties": [
+    {
+     "name": "phases",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[\"Thinking\", \"Searching the web\", \"Reading sources\", \"Writing response\"]",
+     "description": "Labels to walk through, one after another",
+     "readonly": false
+    },
+    {
+     "name": "interval",
+     "attribute": "interval",
+     "type": "number",
+     "default": "2200",
+     "description": "Time per phase, in ms",
+     "readonly": false
+    },
+    {
+     "name": "phase",
+     "attribute": "phase",
+     "type": "number",
+     "default": "0",
+     "description": "The phase shown. The timer moves it on unless a tc-phase-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "manual",
+     "attribute": "manual",
+     "type": "boolean",
+     "default": "false",
+     "description": "The phase is set from outside (e.g. from stream events): no timer",
+     "readonly": false
+    },
+    {
+     "name": "startedAt",
+     "attribute": "startedAt",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "When the work started, in epoch ms – the done label counts from here. Defaults to when the loader connected (or work restarted)",
+     "readonly": false
+    },
+    {
+     "name": "loop",
+     "attribute": "loop",
+     "type": "boolean",
+     "default": "false",
+     "description": "Start over after the last phase instead of holding it – at most twice, then it holds the last phase (WCAG 2.2.2)",
+     "readonly": false
+    },
+    {
+     "name": "done",
+     "attribute": "done",
+     "type": "boolean",
+     "default": "false",
+     "description": "Finished: the spinner turns into a check and the label into doneLabel",
+     "readonly": false
+    },
+    {
+     "name": "doneLabel",
+     "attribute": null,
+     "type": "string | ((seconds: number) => string)",
+     "default": null,
+     "description": "Label once done – a string, or a function that gets the seconds since the loader started",
+     "readonly": false
+    },
+    {
+     "name": "size",
+     "attribute": "size",
+     "type": "\"sm\" | \"md\"",
+     "default": "\"md\"",
+     "description": "\"md\" is the default pill; \"sm\" is smaller, e.g. inside a chat bubble",
+     "readonly": false
+    },
+    {
+     "name": "variant",
+     "attribute": "variant",
+     "type": "\"pill\" | \"plain\"",
+     "default": "\"pill\"",
+     "description": "\"pill\" = bordered capsule, \"plain\" = just the spinner and the label, e.g. inside a chat bubble",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-phase-change",
+     "detail": "",
+     "description": "The timer moved to another phase (detail: { phase: number }); cancelable – the phase stays if a listener calls preventDefault()",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "tl",
+   "cssProperties": [
+    {
+     "name": "--tc-thinking-loader-shimmer",
+     "value": "light-dark(rgba(255, 255, 255, 0.82), #ffffff)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-thinking-loader-h",
+     "value": "32px",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-thinking-loader-font",
+     "value": "var(--tc-font-size-md)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-thinking-loader-lh",
+     "value": "var(--tc-line-height-normal)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-thinking-loader-icon",
+     "value": "16px",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent",
+    "--tc-border-default",
+    "--tc-duration-moderate",
+    "--tc-duration-quick",
+    "--tc-duration-reveal",
+    "--tc-duration-shimmer",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-line-height-none",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-radius-full",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-shadow-control",
+    "--tc-shadow-raised",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-surface-raised",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tracking-normal"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "ThinkingLoader",
+   "exported": true,
+   "props": [
+    {
+     "name": "phase",
+     "type": "number",
+     "optional": true,
+     "description": "Show a specific phase instead of advancing on a timer – e.g. from your stream events (controlled when defined)"
+    },
+    {
+     "name": "defaultPhase",
+     "type": "number",
+     "optional": true,
+     "description": "The phase to start from when uncontrolled; the timer moves on from there"
+    },
+    {
+     "name": "onPhaseChange",
+     "type": "(phase: number) => void",
+     "optional": true,
+     "description": "Reports each phase the timer moves to"
+    }
+   ],
+   "hides": [
+    "phase",
+    "manual"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 20120,
+  "gzip": 6543
+ }
+}

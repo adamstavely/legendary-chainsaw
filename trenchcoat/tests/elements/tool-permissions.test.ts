@@ -299,7 +299,7 @@ describe("tc-tool-permissions", () => {
     const el = host.querySelector("tc-tool-permissions")!;
     expect(el.querySelector(".ui-tperm__avatar i")!.textContent).toBe("C");
     expect(el.querySelector(".ui-tperm__tool-icon b")!.textContent).toBe("G");
-    expect(el.querySelector(".ui-tperm__title")!.textContent).toBe("Who may do what");
+    expect(el.querySelector(".tc-head__title")!.textContent).toBe("Who may do what");
     cell(el, 1, 0).querySelector<HTMLElement>('[data-level="allow"]')!.click();
     await settle();
     await act(async () => bump());

@@ -3,7 +3,7 @@
  */
 import { LitElement, html } from "lit";
 import { afterEach, describe, expect, test, vi } from "vitest";
-import { FocusRescueController, HotkeyController, OnScreenController, RollingController, RowWindowController } from "../../src/elements/internal/controllers";
+import { FocusRescueController, HotkeyController, OnScreenController, RollingController, RowWindowController, ToolbarController } from "../../src/elements/internal/controllers";
 import { cleanup, settle } from "./helpers";
 
 afterEach(cleanup);
@@ -104,4 +104,43 @@ describe("controllers", () => {
     await settle();
     expect(document.activeElement?.id).toBe("keep");
   });
+
+  test("ToolbarController: one tab stop, arrows and Home/End move, disabled items are skipped, wraps", async () => {
+    let ctl!: ToolbarController;
+    const el = define(
+      (h) => (ctl = new ToolbarController(h, { items: () => [...h.querySelectorAll<HTMLButtonElement>("button")] })),
+      () => html`<div role="toolbar" @keydown=${(e: KeyboardEvent) => ctl.onKeyDown(e)} @focusin=${(e: FocusEvent) => ctl.onFocusIn(e)}>
+        <button>A</button><button disabled>B</button><button>C</button><button>D</button>
+      </div>`,
+    );
+    await settle();
+    const [a, , c, d] = [...el.querySelectorAll<HTMLButtonElement>("button")];
+    expect([...el.querySelectorAll("button")].map((b) => b.tabIndex)).toEqual([0, -1, -1, -1]);
+    a.focus();
+    a.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight", bubbles: true, cancelable: true }));
+    expect(document.activeElement).toBe(c);
+    expect(c.tabIndex).toBe(0);
+    expect(a.tabIndex).toBe(-1);
+    c.dispatchEvent(new KeyboardEvent("keydown", { key: "End", bubbles: true, cancelable: true }));
+    expect(document.activeElement).toBe(d);
+    d.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight", bubbles: true, cancelable: true }));
+    expect(document.activeElement).toBe(a);
+    // Clicking an item makes it the tab stop
+    d.focus();
+    expect(d.tabIndex).toBe(0);
+  });
+
+  test("ToolbarController: aria-disabled items stay reachable (only native disabled is skipped)", async () => {
+    let ctl!: ToolbarController;
+    const el = define(
+      (h) => (ctl = new ToolbarController(h, { items: () => [...h.querySelectorAll<HTMLButtonElement>("button")], orientation: "both" })),
+      () => html`<div role="toolbar" @keydown=${(e: KeyboardEvent) => ctl.onKeyDown(e)}><button>A</button><button aria-disabled="true">B</button></div>`,
+    );
+    await settle();
+    const [a, b] = [...el.querySelectorAll<HTMLButtonElement>("button")];
+    a.focus();
+    a.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true, cancelable: true }));
+    expect(document.activeElement).toBe(b);
+  });
 });
+

@@ -4,6 +4,7 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { keyed } from "lit/directives/keyed.js";
 import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController } from "./internal/controllers";
 
 /*
@@ -58,8 +59,8 @@ const destructiveIcon = () =>
   );
 const lockedIcon = () => lucide(svg`<circle cx="12" cy="16" r="1"></circle><rect x="3" y="10" width="18" height="12" rx="2"></rect><path d="M7 10V7a5 5 0 0 1 10 0v3"></path>`);
 const unlockedIcon = () => lucide(svg`<circle cx="12" cy="16" r="1"></circle><rect width="18" height="12" x="3" y="10" rx="2"></rect><path d="M7 10V7a5 5 0 0 1 9.33-2.5"></path>`);
-const spark = () =>
-  html`<svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">${svg`<path d="M7 1.2c.4 2.9 1.9 4.4 4.8 4.8-2.9.4-4.4 1.9-4.8 4.8C6.6 7.9 5.1 6.4 2.2 6 5.1 5.6 6.6 4.1 7 1.2Z" fill="currentColor"></path><circle cx="11.6" cy="11.4" r="1.1" fill="currentColor" opacity="0.55"></circle>`}</svg>`;
+// The header icon: a gauge
+const gaugeIcon = svg`<path d="m12 14 4-4"></path><path d="M3.34 19a10 10 0 1 1 17.32 0"></path>`;
 const dotIcon = () => html`<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">${svg`<circle cx="8" cy="8" r="2.4" fill="currentColor"></circle>`}</svg>`;
 
 /** Where each row sits, relative to the host, and how tall the gliding box is – the "before" of a move */
@@ -75,6 +76,7 @@ type Roll = { shown: number; dir: "up" | "down" | null };
 export class TcAutonomyDial extends TcElement {
   static override ui = "ad";
 
+  /** The agent's actions; each sorts into "Runs on its own" or "Asks you first" by its risk, the level and the pins */
   @property({ attribute: false }) accessor actions: AgentAction[] = [];
   /** 0 Ask every time · 1 Ask before risky actions · 2 Full auto */
   @property({ type: Number }) accessor level: AutonomyLevel = 1;
@@ -260,15 +262,12 @@ export class TcAutonomyDial extends TcElement {
       </section>
     </div>`;
 
+    // Standard: the header sits on the tray above the card; Clean: it's the card's first row
+    const head = cardHead({ icon: gaugeIcon, title: this.heading, subtitle: this.subtitle });
     return html`
+      ${clean ? nothing : head}
       <div class="ui-ad__card">
-        <header class="ui-ad__head">
-          <span class="ui-ad__spark">${spark()}</span>
-          <span class="ui-ad__heading">
-            <span class="ui-ad__title" title=${this.heading}>${this.heading}</span>
-            ${this.subtitle ? html`<span class="ui-ad__sub" title=${this.subtitle}>${this.subtitle}</span>` : nothing}
-          </span>
-        </header>
+        ${clean ? head : nothing}
         <div class="ui-ad__levels">
           <div class="ui-ad__segmented" role="radiogroup" aria-label="Autonomy" aria-describedby=${`${uid}-hint`} @keydown=${this.onKey}>
             ${clean ? nothing : html`<span class="ui-ad__pill" aria-hidden="true"></span>`}
@@ -313,7 +312,7 @@ export class TcAutonomyDial extends TcElement {
   border-radius: var(--tc-tray-radius);
   background: var(--tc-surface-tray);
   font-size: var(--tc-font-size-lg);
-  letter-spacing: -0.006em;
+  letter-spacing: var(--tc-tracking-normal);
   color: var(--tc-text-muted);
 }
 :where([data-look="clean"], [data-look="clean"] *)[data-ui="ad"] {
@@ -329,23 +328,12 @@ export class TcAutonomyDial extends TcElement {
 [data-ui="ad"] h4 { margin: 0; }
 [data-ui="ad"] svg { display: block; flex: none; }
 .ui-ad__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-/* The card holds the heading and the levels – the edge is a shadow, not a border */
+/* The card holds the levels (and, in Clean, the header) – the edge is a shadow, not a border */
 .ui-ad__card { position: relative; border-radius: var(--tc-card-radius); box-shadow: var(--tc-card-shadow); }
 :where([data-look="standard"], [data-look="standard"] *).ui-ad__card { background: var(--tc-surface-on-tray); }
 :where([data-look="clean"], [data-look="clean"] *).ui-ad__card { overflow: hidden; background: var(--tc-surface-raised); }
-.ui-ad__head { display: flex; align-items: center; padding: var(--tc-space-4) var(--tc-space-4) 0; }
-:where([data-look="standard"], [data-look="standard"] *).ui-ad__head { gap: var(--tc-space-3); }
-:where([data-look="clean"], [data-look="clean"] *).ui-ad__head { gap: var(--tc-space-2-5); }
-.ui-ad__spark { display: grid; flex: none; place-items: center; width: 16px; color: var(--tc-accent-text); }
-.ui-ad__heading { display: grid; min-width: 0; }
-.ui-ad__title { overflow: hidden; font-weight: var(--tc-font-weight-strong); white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="standard"], [data-look="standard"] *).ui-ad__title { color: var(--tc-text-primary); }
-:where([data-look="clean"], [data-look="clean"] *).ui-ad__title { color: var(--tc-text-strong); }
-.ui-ad__sub { overflow: hidden; color: var(--tc-text-muted); white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="standard"], [data-look="standard"] *).ui-ad__sub { font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-snug); }
-:where([data-look="clean"], [data-look="clean"] *).ui-ad__sub { font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); }
 /* ----- Standard levels: the segmented-control recipe – a track, a raised thumb glides to the chosen one ----- */
-:where([data-look="standard"], [data-look="standard"] *).ui-ad__levels { padding: var(--tc-space-3-5) var(--tc-space-4) var(--tc-space-4); }
+:where([data-look="standard"], [data-look="standard"] *).ui-ad__levels { padding: var(--tc-space-4); }
 :where([data-look="standard"], [data-look="standard"] *).ui-ad__segmented { position: relative; display: flex; padding: var(--tc-seg-pad); border-radius: var(--tc-seg-track-radius); background: var(--tc-seg-track-bg); }
 :where([data-look="standard"], [data-look="standard"] *).ui-ad__pill { position: absolute; top: var(--tc-seg-pad); bottom: var(--tc-seg-pad); left: 0; width: var(--w, 0); border-radius: calc(var(--tc-seg-track-radius) - var(--tc-seg-pad)); background: var(--tc-seg-thumb-bg); box-shadow: var(--tc-seg-thumb-shadow); transform: translateX(var(--x, 0)); transition: transform var(--tc-duration-slow) var(--tc-ease-move), width var(--tc-duration-slow) var(--tc-ease-move); }
 :where([data-look="standard"], [data-look="standard"] *).ui-ad__level { position: relative; flex: 1; height: var(--tc-control-h-sm); padding: 0 var(--tc-space-2-5); border-radius: calc(var(--tc-seg-track-radius) - var(--tc-seg-pad)); font-size: var(--tc-font-size-md); font-weight: var(--tc-font-weight-medium); color: var(--tc-text-muted); text-align: center !important; white-space: nowrap; transition: color var(--tc-duration-base) var(--tc-ease-standard); }
@@ -360,7 +348,7 @@ export class TcAutonomyDial extends TcElement {
 .ui-ad__count { display: grid; place-items: center; overflow: hidden; border-radius: var(--tc-radius-badge); background: var(--tc-surface-raised); box-shadow: var(--tc-shadow-raised); font-variant-numeric: tabular-nums; }
 :where([data-look="standard"], [data-look="standard"] *).ui-ad__count { min-width: 18px; height: 18px; padding: 0 var(--tc-space-1); font-size: var(--tc-font-size-xs); color: var(--tc-text-muted); }
 /* ----- Clean levels: three separate buttons ----- */
-:where([data-look="clean"], [data-look="clean"] *).ui-ad__levels { padding: var(--tc-space-4) var(--tc-space-4) var(--tc-space-4-5); }
+:where([data-look="clean"], [data-look="clean"] *).ui-ad__levels { padding: var(--tc-space-1) var(--tc-space-4) var(--tc-space-4-5); }
 :where([data-look="clean"], [data-look="clean"] *).ui-ad__segmented { position: relative; display: flex; gap: var(--tc-space-2); }
 /* The others are gray, the chosen one is white with a lift and a ≥ 3:1 selected edge (WCAG 1.4.11) */
 :where([data-look="clean"], [data-look="clean"] *).ui-ad__level { position: relative; flex: 1; padding: var(--tc-space-1) var(--tc-space-2); border-radius: var(--tc-radius-sm); background: var(--tc-fill-default); font-size: var(--tc-font-size-sm); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-snug); color: var(--tc-text-secondary); text-align: center !important; white-space: nowrap; transition: color var(--tc-duration-base) var(--tc-ease-standard), background-color var(--tc-duration-base) var(--tc-ease-standard), box-shadow var(--tc-duration-base) var(--tc-ease-standard); }

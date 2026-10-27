@@ -1,0 +1,333 @@
+{
+ "elements": [
+  {
+   "tag": "tc-reliance-gauge",
+   "className": "TcRelianceGauge",
+   "description": "Whether trust in an AI matches its performance: a reliance–accuracy dial with its trend, signals against review\nthresholds, overtrust and undertrust episodes, and the recommended review level.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Reliance\"",
+     "description": "The heading, and the region's name",
+     "readonly": false
+    },
+    {
+     "name": "scope",
+     "attribute": "scope",
+     "type": "string",
+     "default": "\"\"",
+     "description": "What the numbers cover, a quiet line under the heading – e.g. \"Last 30 days · 412 answers\"",
+     "readonly": false
+    },
+    {
+     "name": "index",
+     "attribute": "index",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The reliance–accuracy index, 0–1 (1: trust matches accuracy). Unset, it is 1 − |reliance − accuracy|",
+     "readonly": false
+    },
+    {
+     "name": "reliance",
+     "attribute": "reliance",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "How often people relied on the AI's output, 0–1 – compared with `accuracy` to say which way trust leans",
+     "readonly": false
+    },
+    {
+     "name": "accuracy",
+     "attribute": "accuracy",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "How often the AI's output was right, 0–1",
+     "readonly": false
+    },
+    {
+     "name": "trend",
+     "attribute": null,
+     "type": "RelianceWindow[]",
+     "default": "[]",
+     "description": "The index over recent windows, oldest first – drawn as the trend line",
+     "readonly": false
+    },
+    {
+     "name": "calibratedAt",
+     "attribute": "calibrated-at",
+     "type": "number",
+     "default": "0.9",
+     "description": "Index from which the dial reads \"Calibrated\" (0–1)",
+     "readonly": false
+    },
+    {
+     "name": "driftAt",
+     "attribute": "drift-at",
+     "type": "number",
+     "default": "0.8",
+     "description": "Index from which the dial reads \"Drifting\"; below it, \"Miscalibrated\" (0–1)",
+     "readonly": false
+    },
+    {
+     "name": "signals",
+     "attribute": null,
+     "type": "RelianceSignal[]",
+     "default": "[]",
+     "description": "Behaviour signals, each a 0–1 value where higher means more reason to review",
+     "readonly": false
+    },
+    {
+     "name": "spotCheckAt",
+     "attribute": "spot-check-at",
+     "type": "number",
+     "default": "0.6",
+     "description": "Signal value from which a spot-check is recommended (0–1)",
+     "readonly": false
+    },
+    {
+     "name": "mandatoryAt",
+     "attribute": "mandatory-at",
+     "type": "number",
+     "default": "0.8",
+     "description": "Signal value from which review of every output is recommended (0–1)",
+     "readonly": false
+    },
+    {
+     "name": "overtrust",
+     "attribute": "overtrust",
+     "type": "number",
+     "default": "0",
+     "description": "Overtrust episodes: output relied on, then found wrong",
+     "readonly": false
+    },
+    {
+     "name": "undertrust",
+     "attribute": "undertrust",
+     "type": "number",
+     "default": "0",
+     "description": "Undertrust episodes: output overridden, then found right",
+     "readonly": false
+    },
+    {
+     "name": "browsable",
+     "attribute": "browsable",
+     "type": "boolean",
+     "default": "false",
+     "description": "The episode counts are buttons that fire tc-episodes-open",
+     "readonly": false
+    },
+    {
+     "name": "reviewLevel",
+     "attribute": "review-level",
+     "type": "RelianceReviewLevel | undefined",
+     "default": "undefined",
+     "description": "The review level in force – when it differs from the recommendation, the footer offers to switch",
+     "readonly": false
+    },
+    {
+     "name": "recommended",
+     "attribute": "recommended",
+     "type": "RelianceReviewLevel | undefined",
+     "default": "undefined",
+     "description": "Overrides the recommended level worked out from the signals and the index",
+     "readonly": false
+    },
+    {
+     "name": "reason",
+     "attribute": "reason",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Overrides the sentence that explains the recommendation",
+     "readonly": false
+    },
+    {
+     "name": "levelLabels",
+     "attribute": null,
+     "type": "Partial<Record<RelianceReviewLevel, string>>",
+     "default": "{}",
+     "description": "Names of the review levels",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string",
+     "default": "\"en-US\"",
+     "description": "Locale for numbers",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-review-level-change",
+     "detail": "",
+     "description": "The footer's switch was pressed (detail: { level: \"routine\" | \"spot-check\" | \"mandatory\", previous: same }); cancelable – prevent it to keep `reviewLevel` yourself",
+     "cancelable": true
+    },
+    {
+     "name": "tc-episodes-open",
+     "detail": "",
+     "description": "An episode count was pressed, with `browsable` set (detail: { kind: \"overtrust\" | \"undertrust\" })",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "rlg",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-accent",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-border-subtle",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-lg",
+    "--tc-control-h-md",
+    "--tc-control-px-md",
+    "--tc-control-radius-md",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-slower",
+    "--tc-ease-move",
+    "--tc-ease-spring",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-hover",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-2xl",
+    "--tc-font-size-3xl",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xl",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-line-height-display",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-meter-fill",
+    "--tc-meter-h",
+    "--tc-meter-radius",
+    "--tc-meter-track",
+    "--tc-pill-font-size-lg",
+    "--tc-pill-font-weight",
+    "--tc-pill-h-lg",
+    "--tc-pill-px-lg",
+    "--tc-pill-radius",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-xs",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-border",
+    "--tc-status-danger-fg",
+    "--tc-status-danger-solid",
+    "--tc-status-info-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-success-solid",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-border",
+    "--tc-status-warning-fg",
+    "--tc-status-warning-solid",
+    "--tc-surface-raised",
+    "--tc-surface-sunken",
+    "--tc-surface-well",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tracking-snug",
+    "--tc-tracking-tight",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "RelianceGauge",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading, and the region's name"
+    },
+    {
+     "name": "reviewLevel",
+     "type": "RelianceReviewLevel",
+     "optional": true,
+     "description": "The review level in force. Controlled when defined: pair with onReviewLevelChange and pass the new level back.\nOtherwise the component keeps it, starting from `defaultReviewLevel`"
+    },
+    {
+     "name": "defaultReviewLevel",
+     "type": "RelianceReviewLevel",
+     "optional": true,
+     "description": "The level in force at first, when uncontrolled – leave both unset for no footer"
+    },
+    {
+     "name": "onReviewLevelChange",
+     "type": "(level: RelianceReviewLevel, previous: RelianceReviewLevel) => void",
+     "optional": true,
+     "description": "The footer's switch was pressed: the new level and the one before"
+    },
+    {
+     "name": "onOpenEpisodes",
+     "type": "(kind: RelianceEpisodeKind) => void",
+     "optional": true,
+     "description": "Makes the episode counts buttons; called with the kind pressed"
+    }
+   ],
+   "hides": []
+  }
+ ],
+ "changelog": [
+  "**Trust & calibration**, from THEMIS and built domain-neutral: - claims and their reliability: `tc-claim-answer`, `tc-verification-queue`, `tc-reflection-gate`, `tc-reliance-gauge`, `tc-disagreement-banner`, `tc-synthesis-notes`; - where outputs came from: `tc-lineage-graph`, `tc-validity-badge`, `tc-provenance-summary`, `tc-correction-propagation`, `tc-attestation-check`, `tc-run-manifest`; - policy and control: `tc-policy-simulator`, `tc-gate-config`, `tc-coverage-matrix`, `tc-kill-switch`, `tc-playbook-canvas`."
+ ],
+ "size": {
+  "min": 43585,
+  "gzip": 12047
+ }
+}

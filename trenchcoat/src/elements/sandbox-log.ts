@@ -5,8 +5,10 @@ import { live } from "lit/directives/live.js";
 import { repeat } from "lit/directives/repeat.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController, RowWindowController } from "./internal/controllers";
 import type { Look } from "./internal/look";
+import { copyText } from "./internal/util";
 
 /*
  * <tc-sandbox-log> – command output from an agent's sandbox. One collapsible block per step: the command in mono, its
@@ -228,23 +230,6 @@ function formatMs(ms: number) {
 const statusOf = (s: SandboxLogStep): SandboxLogStatus => s.status ?? (s.exitCode == null ? "running" : s.exitCode === 0 ? "success" : "error");
 const plural = (n: number, one: string, many = `${one}s`) => `${n.toLocaleString("en-US")} ${n === 1 ? one : many}`;
 
-async function copyText(text: string) {
-  try {
-    await navigator.clipboard.writeText(text);
-    return true;
-  } catch {
-    // Older browsers and non-secure contexts
-    const area = document.createElement("textarea");
-    area.value = text;
-    area.style.cssText = "position:fixed;opacity:0";
-    document.body.appendChild(area);
-    area.select();
-    const ok = document.execCommand("copy");
-    area.remove();
-    return ok;
-  }
-}
-
 /* ---------- Icons ---------- */
 
 const spinner = (look: Look) =>
@@ -280,6 +265,9 @@ const ROW = 20;
 const MAX_HITS = 10_000;
 
 type Hits = { q: string; upto: number; list: number[]; lines: SandboxLogLine[] };
+/* After Lucide: terminal – the header's icon */
+const terminalIcon = svg`<path d="m4 17 6-6-6-6"></path><path d="M12 19h8"></path>`;
+
 let instances = 0;
 
 /**
@@ -297,6 +285,7 @@ export class TcSandboxLog extends TcElement {
   @property() accessor heading = "Sandbox";
   /** Small text next to the heading – the machine, image or working directory */
   @property() accessor environment = "";
+  /** The commands in the order they ran – one collapsible block each, with their output so far */
   @property({ attribute: false }) accessor steps: SandboxLogStep[] = [];
   /** Ids of the open steps – unset opens the steps that are running or failed */
   @property({ attribute: false }) accessor open: string[] | undefined = undefined;
@@ -684,13 +673,13 @@ export class TcSandboxLog extends TcElement {
       },
     );
 
-    const card = html`
-      <div class="ui-sbl__top">
-        <div class="ui-sbl__title-wrap">
-          <span class="ui-sbl__title">${this.heading}</span>
-          ${this.environment ? html`<span class="ui-sbl__env" title=${this.environment}>${this.environment}</span>` : nothing}
-        </div>
-        <div class="ui-sbl__tools">
+    // The header (.tc-head): on the tray in Standard, the card's first row in Clean; the environment under the title,
+    // the search and Copy all at the right
+    const head = cardHead({
+      icon: terminalIcon,
+      title: this.heading,
+      subtitle: this.environment ? html`<span class="ui-sbl__env" title=${this.environment}>${this.environment}</span>` : undefined,
+      aside: html`<div class="ui-sbl__tools">
           <div class="ui-sbl__search" role="search">
             ${searchIcon}
             <input
@@ -712,8 +701,9 @@ export class TcSandboxLog extends TcElement {
               : nothing}
           </div>
           <button type="button" class="ui-sbl__copy ui-sbl__copy-all" ?data-copied=${copiedAll} ?disabled=${!this.steps.length} aria-label="Copy the whole log" title=${copiedAll ? "Copied" : "Copy the whole log"} @click=${() => this.copy(null)}>${copyIcon(look)}${copyDone}</button>
-        </div>
-      </div>
+        </div>`,
+    });
+    const card = html`
       <div class="ui-sbl__steps" @keydown=${this.onKeyDown}>
         ${this.steps.length ? steps : html`<p class="ui-sbl__none">No commands have run yet.</p>`}
       </div>
@@ -721,7 +711,7 @@ export class TcSandboxLog extends TcElement {
 
     return html`
       <span class="ui-sbl__sr" role="status">${this.announcement}</span>
-      ${clean ? card : html`<div class="ui-sbl__card">${card}</div>`}
+      ${head}${clean ? card : html`<div class="ui-sbl__card">${card}</div>`}
       ${this.hideSummary ? nothing : html`<div class="ui-sbl__summary">${this.summary()}</div>`}
     `;
   }
@@ -732,9 +722,9 @@ export class TcSandboxLog extends TcElement {
   --tc-sandbox-log-code-bg: light-dark(#fafafa, #1d1d20);
   /* One turn of the running spinner */
   --tc-sandbox-log-spin: 800ms;
-  /* ANSI cyan: the library has no teal tone yet */
-  --tc-sandbox-log-cyan: light-dark(#0f7b6c, #5fd4b8);
-  --tc-sandbox-log-cyan-bg: light-dark(rgba(15, 123, 108, 0.1), rgba(95, 212, 184, 0.14));
+  /* ANSI cyan: the teal tone */
+  --tc-sandbox-log-cyan: var(--tc-tone-teal-fg);
+  --tc-sandbox-log-cyan-bg: var(--tc-tone-teal-bg);
   --tc-sandbox-log-hit: light-dark(rgba(245, 165, 36, 0.28), rgba(245, 165, 36, 0.3));
   --tc-sandbox-log-hit-current: light-dark(rgba(245, 165, 36, 0.62), rgba(245, 165, 36, 0.62));
   box-sizing: border-box;
@@ -782,21 +772,10 @@ export class TcSandboxLog extends TcElement {
 .ui-sbl__toggle:focus-visible, .ui-sbl__out:focus-visible { outline-offset: calc(-1 * var(--tc-focus-ring-width)); }
 [data-ui="sbl"] button:disabled { cursor: default; opacity: 0.45; }
 
-/* ---------- Top row: heading, search, copy all ---------- */
-.ui-sbl__top {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--tc-space-2) var(--tc-space-3);
-  padding: var(--tc-space-3) var(--tc-space-3) var(--tc-space-3) var(--tc-space-4);
-}
-.ui-sbl__title-wrap { display: flex; align-items: baseline; gap: var(--tc-space-2); min-width: 0; }
-.ui-sbl__title { color: var(--tc-text-strong); font-size: var(--tc-font-size-lg-plus); line-height: var(--tc-line-height-relaxed); white-space: nowrap; }
-:where([data-look="standard"], [data-look="standard"] *).ui-sbl__title { font-weight: var(--tc-font-weight-semibold); letter-spacing: -0.01em; }
-:where([data-look="clean"], [data-look="clean"] *).ui-sbl__title { font-weight: var(--tc-font-weight-medium); }
-.ui-sbl__env { min-width: 0; overflow: hidden; color: var(--tc-text-muted); font-family: var(--tc-font-mono); font-size: var(--tc-font-size-sm); text-overflow: ellipsis; white-space: nowrap; }
-.ui-sbl__tools { display: flex; align-items: center; gap: var(--tc-space-1-5); margin-left: auto; }
+/* ---------- The environment, under the title ---------- */
+.ui-sbl__env { display: block; overflow: hidden; font-family: var(--tc-font-mono); text-overflow: ellipsis; white-space: nowrap; }
+/* ---------- The header's right: search, copy all ---------- */
+.ui-sbl__tools { display: flex; align-items: center; gap: var(--tc-space-1-5); }
 /* The search: the field recipe, one control tall */
 .ui-sbl__search {
   position: relative;
@@ -1034,7 +1013,6 @@ export class TcSandboxLog extends TcElement {
   .ui-sbl__label { display: none; }
   .ui-sbl__cmd { max-width: none; }
   .ui-sbl__toggle { gap: var(--tc-space-2); padding-left: var(--tc-space-3); }
-  .ui-sbl__top { padding-left: var(--tc-space-3); }
   .ui-sbl__pad { padding: 0 var(--tc-space-2) var(--tc-space-2); }
 }
 @container (max-width: 340px) {

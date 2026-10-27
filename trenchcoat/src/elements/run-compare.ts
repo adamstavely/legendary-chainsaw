@@ -2,6 +2,8 @@ import { html, nothing, svg, type PropertyValues, type TemplateResult } from "li
 import { property, state } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
+import { compact as count, dollars, duration as took } from "./internal/format";
 import { diffWords, type DiffSegment } from "./inline-diff";
 
 /*
@@ -90,15 +92,6 @@ export function alignRunSteps(a: RunCompareStep[], b: RunCompareStep[]): RunComp
   return rows;
 }
 
-const SEC = 1000;
-const dollars = (n: number) => (n === 0 ? "$0" : n < 0.01 ? `$${n.toFixed(3)}` : n < 100 ? `$${n.toFixed(2)}` : `$${Math.round(n).toLocaleString("en-US")}`);
-const took = (ms: number) => {
-  if (ms < SEC) return `${Math.max(0, Math.round(ms))}ms`;
-  if (ms < 10 * SEC) return `${(ms / SEC).toFixed(1)}s`;
-  const s = Math.round(ms / SEC);
-  return s < 60 ? `${s}s` : `${Math.floor(s / 60)}m ${String(s % 60).padStart(2, "0")}s`;
-};
-const count = (n: number) => (n < 1000 ? String(n) : n < 10_000 ? `${(n / 1000).toFixed(1)}k` : `${Math.round(n / 1000)}k`);
 const changes = (segs: DiffSegment[]) => segs.reduce((k, s) => k + (s.type === "change" ? 1 : 0), 0);
 const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
 const VIEWS: Record<RunCompareView, string> = { output: "Output", steps: "Steps", prompt: "Prompt" };
@@ -120,7 +113,8 @@ function deltaOf(m: Metric): Delta | null {
 
 /* ---------- Icons (Lucide, ISC – lucide.dev) ---------- */
 /* Two columns with arrows between them */
-const compareMark = html`<svg class="ui-rc__mark-svg" viewBox="0 0 24 24" aria-hidden="true">${svg`<rect x="3" y="4" width="7" height="16" rx="1.5"></rect><rect x="14" y="4" width="7" height="16" rx="1.5"></rect>`}</svg>`;
+/* The header's icon: two runs side by side */
+const compareMark = svg`<rect x="3" y="4" width="7" height="16" rx="1.5"></rect><rect x="14" y="4" width="7" height="16" rx="1.5"></rect>`;
 const errorIcon = html`<svg class="ui-rc__glyph" viewBox="0 0 24 24" aria-hidden="true">${svg`<circle cx="12" cy="12" r="9"></circle><path d="M12 8v4.5M12 16h.01"></path>`}</svg>`;
 
 let instances = 0;
@@ -355,11 +349,13 @@ export class TcRunCompare extends TcElement {
     const titleId = `${this.uid}-title`;
 
     return html`
-      <div class="ui-rc__bar">
-        <span class="ui-rc__mark">${compareMark}</span>
-        <span class="ui-rc__title" id=${titleId}>${this.heading}</span>
-        <span class="ui-rc__count" ?data-running=${running}>${!a || !b ? "" : running ? "Comparing…" : total === 0 ? "Identical" : plural(total, "difference")}</span>
-        <div class="ui-rc__tabs" role="tablist" aria-labelledby=${titleId} @keydown=${this.onTabKey}>
+      ${/* The header (.tc-head): on the tray in Standard, the card's first row in Clean; how much differs under the title,
+           the tabs at the right */ cardHead({
+        icon: compareMark,
+        title: this.heading,
+        id: titleId,
+        subtitle: html`<span class="ui-rc__count">${!a || !b ? "" : running ? "Comparing…" : total === 0 ? "Identical" : plural(total, "difference")}</span>`,
+        aside: html`<div class="ui-rc__tabs" role="tablist" aria-labelledby=${titleId} @keydown=${this.onTabKey}>
           ${this.views.map(
             (v) => html`<button
               type="button"
@@ -374,8 +370,8 @@ export class TcRunCompare extends TcElement {
               ${VIEWS[v]}${counts[v] ? html`<span class="ui-rc__badge"><span class="ui-rc__sr">, </span>${counts[v]}<span class="ui-rc__sr"> ${counts[v] === 1 ? "difference" : "differences"}</span></span>` : nothing}
             </button>`,
           )}
-        </div>
-      </div>
+        </div>`,
+      })}
       <div class="ui-rc__card">
         <div class="ui-rc__pair ui-rc__runs">
           ${(["baseline", "candidate"] as const).map(
@@ -410,7 +406,6 @@ export class TcRunCompare extends TcElement {
   font-size: var(--tc-font-size-md);
   font-weight: var(--tc-font-weight-regular);
   line-height: var(--tc-line-height-normal);
-  letter-spacing: -0.006em;
   color: var(--tc-text-secondary);
   text-align: left;
   -webkit-font-smoothing: antialiased;
@@ -430,17 +425,10 @@ export class TcRunCompare extends TcElement {
 :where([data-ui="rc"]) button { margin: 0; padding: 0; border: 0; background: none; font: inherit; color: inherit; letter-spacing: inherit; text-align: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 [data-ui="rc"] button:focus-visible { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
 .ui-rc__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-/* ----- The header: what is compared, how much differs, the tabs ----- */
-.ui-rc__bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-1) var(--tc-space-2); min-width: 0; padding: var(--tc-space-1-5) var(--tc-space-1) var(--tc-space-2) var(--tc-space-3); }
-:where([data-look="clean"], [data-look="clean"] *).ui-rc__bar { padding: var(--tc-space-2) var(--tc-space-2) var(--tc-space-2) var(--tc-space-3-5); border-bottom: var(--tc-hairline) solid var(--tc-divider); }
-.ui-rc__mark { display: grid; flex: none; place-items: center; width: 16px; color: var(--tc-accent-text); }
-.ui-rc__mark-svg { width: 16px; height: 16px; fill: currentColor; fill-opacity: 0.18; stroke: currentColor; stroke-width: 1.8; }
-:where([data-look="clean"], [data-look="clean"] *).ui-rc__mark-svg { stroke-width: 1.4; }
-.ui-rc__title { flex: none; max-width: 100%; overflow: hidden; font-weight: var(--tc-font-weight-semibold); color: var(--tc-text-strong); white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="clean"], [data-look="clean"] *).ui-rc__title { font-weight: var(--tc-font-weight-medium); }
-.ui-rc__count { min-width: 0; color: var(--tc-text-muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+/* ----- The header's line under the title: how much differs ----- */
+.ui-rc__count { font-variant-numeric: tabular-nums; }
 /* Tabs: the segmented pattern – a track with a raised thumb */
-.ui-rc__tabs { display: flex; flex: none; margin-left: auto; padding: var(--tc-seg-pad); border-radius: var(--tc-seg-track-radius); background: var(--tc-seg-track-bg); }
+.ui-rc__tabs { display: flex; flex: none; padding: var(--tc-seg-pad); border-radius: var(--tc-seg-track-radius); background: var(--tc-seg-track-bg); }
 .ui-rc__tab { display: inline-flex; align-items: center; gap: var(--tc-space-1-5); height: calc(var(--tc-control-h-md) - 2 * var(--tc-seg-pad)); padding: 0 var(--tc-space-2-5); border-radius: calc(var(--tc-seg-track-radius) - var(--tc-seg-pad)); font-size: var(--tc-control-font-size); font-weight: var(--tc-control-font-weight); color: var(--tc-text-secondary); white-space: nowrap; transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard), box-shadow var(--tc-duration-fast) var(--tc-ease-standard); }
 :where([data-look="clean"], [data-look="clean"] *).ui-rc__tab { padding: 0 var(--tc-space-2); }
 [data-ui="rc"] .ui-rc__tab:hover { color: var(--tc-text-primary); }
@@ -449,7 +437,7 @@ export class TcRunCompare extends TcElement {
 .ui-rc__tab[aria-selected="true"] .ui-rc__badge { background: var(--tc-status-warning-bg); color: var(--tc-status-warning-fg); }
 /* ----- The card ----- */
 .ui-rc__card { overflow: hidden; border-radius: var(--tc-card-radius); background: var(--tc-surface-on-tray); box-shadow: var(--tc-card-shadow); }
-:where([data-look="clean"], [data-look="clean"] *).ui-rc__card { border-radius: 0 0 var(--tc-card-radius) var(--tc-card-radius); background: none; box-shadow: none; }
+:where([data-look="clean"], [data-look="clean"] *).ui-rc__card { border-top: var(--tc-hairline) solid var(--tc-divider); border-radius: 0 0 var(--tc-card-radius) var(--tc-card-radius); background: none; box-shadow: none; }
 /* Two sides, a hairline between them; narrow, they stack */
 .ui-rc__pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 .ui-rc__pair > * { min-width: 0; padding: var(--tc-space-3) var(--tc-space-4); }
@@ -532,7 +520,7 @@ export class TcRunCompare extends TcElement {
   .ui-rc__pair { grid-template-columns: minmax(0, 1fr); }
   .ui-rc__pair > * + * { border-top: var(--tc-hairline) solid var(--tc-border-subtle); border-left: 0; }
   .ui-rc__side { display: block; }
-  .ui-rc__tabs { flex: 1 1 100%; margin-left: 0; }
+  .ui-rc__tabs { flex: 1 1 100%; }
   .ui-rc__tab { flex: 1; justify-content: center; }
   .ui-rc__pair > * { padding-right: var(--tc-space-3-5); padding-left: var(--tc-space-3-5); }
   /* Steps: one line for a step both runs share; a changed one keeps its two sides together */

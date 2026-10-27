@@ -1,0 +1,277 @@
+{
+ "elements": [
+  {
+   "tag": "tc-segmented-control",
+   "className": "TcSegmentedControl",
+   "description": "Switch between two to six options, with a sliding indicator.",
+   "properties": [
+    {
+     "name": "options",
+     "attribute": null,
+     "type": "SegmentOption[]",
+     "default": "[]",
+     "description": "The options to switch between, in order – two to six read best",
+     "readonly": false
+    },
+    {
+     "name": "value",
+     "attribute": "value",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The picked value; unset picks the first enabled option. Changed by the user unless a tc-value-change listener\ncalls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "size",
+     "attribute": "size",
+     "type": "\"sm\" | \"md\" | \"lg\"",
+     "default": "\"md\"",
+     "description": "Height and text size of the control: \"sm\", \"md\" or \"lg\"",
+     "readonly": false
+    },
+    {
+     "name": "variant",
+     "attribute": "variant",
+     "type": "\"buttons\" | \"tray\" | \"underline\" | undefined",
+     "default": "undefined",
+     "description": "\"tray\", \"underline\" or \"buttons\" (Clean only – Standard shows it as \"tray\"). Unset: \"tray\" in Standard, \"buttons\" in Clean",
+     "readonly": false
+    },
+    {
+     "name": "fullWidth",
+     "attribute": "full-width",
+     "type": "boolean",
+     "default": "false",
+     "description": "Fill the container with equal segments",
+     "readonly": false
+    },
+    {
+     "name": "kind",
+     "attribute": "kind",
+     "type": "\"radio\" | \"tabs\"",
+     "default": "\"radio\"",
+     "description": "\"radio\" (a radiogroup, the default) or \"tabs\" (a tablist that switches panels)",
+     "readonly": false
+    },
+    {
+     "name": "disabled",
+     "attribute": "disabled",
+     "type": "boolean",
+     "default": "false",
+     "description": "Turns every option off; the hidden form input is disabled too",
+     "readonly": false
+    },
+    {
+     "name": "name",
+     "attribute": "name",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "Submits the picked value with a native form, through a hidden input",
+     "readonly": false
+    },
+    {
+     "name": "form",
+     "attribute": "form",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The id of the form the hidden input belongs to, when the control sits outside it",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-value-change",
+     "detail": "",
+     "description": "The user picked an option ({ value }: SegmentValueChange); cancelable",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "seg",
+   "cssProperties": [
+    {
+     "name": "--tc-segmented-control-h",
+     "value": "var(--tc-control-h-md)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-segmented-control-px",
+     "value": "var(--tc-control-px-md)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-segmented-control-fs",
+     "value": "var(--tc-font-size-md)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-segmented-control-radius",
+     "value": "var(--tc-seg-track-radius)",
+     "looks": [
+      "standard"
+     ]
+    },
+    {
+     "name": "--tc-segmented-control-pad",
+     "value": "var(--tc-seg-pad)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-segmented-control-icon",
+     "value": "16px",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-segmented-control-gap",
+     "value": "8px",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-segmented-control-lh",
+     "value": "var(--tc-line-height-normal)",
+     "looks": [
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-segmented-control-ring",
+     "value": "3px",
+     "looks": [
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-border-default",
+    "--tc-border-selected",
+    "--tc-control-h-lg",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-lg",
+    "--tc-control-px-md",
+    "--tc-control-px-sm",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-instant",
+    "--tc-duration-moderate",
+    "--tc-duration-quick",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-selected",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-2xs",
+    "--tc-font-size-lg",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-none",
+    "--tc-line-height-normal",
+    "--tc-line-height-tight",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-radius",
+    "--tc-radius-2xs",
+    "--tc-radius-sm",
+    "--tc-seg-pad",
+    "--tc-seg-thumb-bg",
+    "--tc-seg-thumb-shadow",
+    "--tc-seg-track-bg",
+    "--tc-seg-track-radius",
+    "--tc-segmented-control-fade-l",
+    "--tc-segmented-control-fade-r",
+    "--tc-segmented-control-min",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-surface-raised",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "SegmentedControl",
+   "exported": true,
+   "props": [
+    {
+     "name": "options",
+     "type": "SegmentOption<T>[]",
+     "optional": false,
+     "description": "The options to switch between, in order – two to six read best"
+    },
+    {
+     "name": "value",
+     "type": "T",
+     "optional": true,
+     "description": "Controlled value"
+    },
+    {
+     "name": "defaultValue",
+     "type": "T",
+     "optional": true,
+     "description": "Starting value when uncontrolled – defaults to the first enabled option"
+    },
+    {
+     "name": "onChange",
+     "type": "(value: T) => void",
+     "optional": true,
+     "description": "Called with the picked value each time the user picks an option"
+    }
+   ],
+   "hides": [
+    "value",
+    "options",
+    "onChange",
+    "defaultValue"
+   ]
+  }
+ ],
+ "changelog": [
+  "segmented-control selects on pointer release, not press."
+ ],
+ "size": {
+  "min": 37793,
+  "gzip": 9287
+ }
+}

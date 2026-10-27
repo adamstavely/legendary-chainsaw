@@ -687,7 +687,9 @@ export class TcInlineDiff extends TcElement implements InlineDiffHandle {
   border-radius: var(--tc-tray-radius);
   background: var(--tc-surface-tray);
   color: var(--tc-text-secondary);
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--tc-font-sans);
+  font-size: var(--tc-font-size-md);
+  line-height: var(--tc-line-height-normal);
   -webkit-font-smoothing: antialiased;
   text-align: left;
 }
@@ -724,7 +726,6 @@ export class TcInlineDiff extends TcElement implements InlineDiffHandle {
   color: var(--tc-text-muted);
   font-size: var(--tc-font-size-sm);
   line-height: var(--tc-line-height-tight);
-  letter-spacing: -0.003em;
 }
 :where([data-look="clean"], [data-look="clean"] *):where([data-ui="df"]) button {
   appearance: none;
@@ -868,7 +869,6 @@ export class TcInlineDiff extends TcElement implements InlineDiffHandle {
   font-size: var(--tc-font-size-md);
   font-weight: var(--tc-font-weight-medium);
   line-height: var(--tc-line-height-none);
-  letter-spacing: -0.006em;
   white-space: nowrap;
 }
 /* The count: a badge on the pill tokens */
@@ -991,7 +991,6 @@ export class TcInlineDiff extends TcElement implements InlineDiffHandle {
   color: var(--tc-text-secondary);
   font-size: var(--tc-font-size-lg-plus);
   line-height: var(--tc-line-height-loose);
-  letter-spacing: -0.006em;
   white-space: pre-line; /* line breaks stay, doubled spaces around a settled change collapse */
   overflow-wrap: anywhere;
 }
@@ -1133,16 +1132,17 @@ export class TcInlineDiff extends TcElement implements InlineDiffHandle {
   display: inline-flex;
   align-items: center;
   gap: var(--tc-space-1-5);
-  height: 28px;
+  height: var(--tc-control-h-sm);
   margin: 0;
   padding: 0 var(--tc-space-2) 0 var(--tc-space-2);
   border: 0;
-  border-radius: var(--tc-radius-sm);
+  border-radius: var(--tc-control-radius-sm);
+  /* On the inverted popover: the control geometry, with no fill until hover */
   background: transparent;
   color: inherit;
   font: inherit;
-  font-size: var(--tc-font-size-sm);
-  font-weight: var(--tc-font-weight-medium);
+  font-size: var(--tc-control-font-size);
+  font-weight: var(--tc-control-font-weight);
   line-height: var(--tc-line-height-none);
   white-space: nowrap;
   cursor: pointer;

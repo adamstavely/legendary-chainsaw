@@ -1,0 +1,251 @@
+{
+ "elements": [
+  {
+   "tag": "tc-comment-thread",
+   "className": "TcCommentThread",
+   "description": "One comment with its replies, an assistant's status lines and a reply field.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Comment\"",
+     "description": "The heading, and the region's name",
+     "readonly": false
+    },
+    {
+     "name": "messages",
+     "attribute": null,
+     "type": "ThreadMessage[]",
+     "default": "[]",
+     "description": "The comment and its replies, oldest first – the source of truth, followed by id",
+     "readonly": false
+    },
+    {
+     "name": "currentUser",
+     "attribute": null,
+     "type": "ThreadAuthor",
+     "default": "{ name: \"You\" }",
+     "description": "Who is replying here: the author of replies posted from the field",
+     "readonly": false
+    },
+    {
+     "name": "assistant",
+     "attribute": null,
+     "type": "ThreadAuthor | undefined",
+     "default": "undefined",
+     "description": "The assistant that answers – used for the thinking state",
+     "readonly": false
+    },
+    {
+     "name": "onReply",
+     "attribute": null,
+     "type": "((text: string) => ThreadReplyResult) | undefined",
+     "default": "undefined",
+     "description": "Called with every new reply. Return a message (or a promise of one) to let the assistant answer; return nothing\nto just post the reply.",
+     "readonly": false
+    },
+    {
+     "name": "closable",
+     "attribute": "closable",
+     "type": "boolean",
+     "default": "false",
+     "description": "Shows a close button, which fires tc-close",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-messages-change",
+     "detail": "",
+     "description": "A reply was posted here or the assistant answered; detail `{ messages: ThreadMessage[] }` is the whole thread. Cancelable: preventDefault() keeps the new message out until the app passes it back.",
+     "cancelable": true
+    },
+    {
+     "name": "tc-close",
+     "detail": "",
+     "description": "The close button was pressed (shown with `closable`)",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "ct",
+   "cssProperties": [
+    {
+     "name": "--tc-comment-thread-avatar-ring",
+     "value": "light-dark(rgba(0, 0, 0, 0.08), rgba(255, 255, 255, 0.1))",
+     "looks": [
+      "both",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-comment-thread-step",
+     "value": "60ms",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-comment-thread-shimmer",
+     "value": "light-dark(rgba(255, 255, 255, 0.82), #ffffff)",
+     "looks": [
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-active",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-avatar-font-size",
+    "--tc-avatar-font-weight",
+    "--tc-avatar-md",
+    "--tc-avatar-sm",
+    "--tc-border-strong",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-comment-thread-d",
+    "--tc-comment-thread-max-height",
+    "--tc-comment-thread-min-height",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-radius-md",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-instant",
+    "--tc-duration-moderate",
+    "--tc-duration-reveal",
+    "--tc-duration-shimmer",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-focus-outline",
+    "--tc-focus-ring",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-none",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-radius-badge",
+    "--tc-radius-xs",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-4-5",
+    "--tc-space-7",
+    "--tc-status-danger-fg",
+    "--tc-status-success-solid",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-placeholder",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "CommentThread",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading, and the region's name (default \"Comment\")"
+    },
+    {
+     "name": "messages",
+     "type": "ThreadMessage[]",
+     "optional": false,
+     "description": "The comment and its replies, oldest first – the source of truth, followed by id"
+    },
+    {
+     "name": "currentUser",
+     "type": "ThreadAuthor",
+     "optional": false,
+     "description": "Who is replying here: the author of replies posted from the field"
+    },
+    {
+     "name": "assistant",
+     "type": "ThreadAuthor",
+     "optional": true,
+     "description": "The assistant that answers – used for the thinking state"
+    },
+    {
+     "name": "onReply",
+     "type": "(text: string) => ThreadMessage | Promise<ThreadMessage | void> | void",
+     "optional": true,
+     "description": "Called with every new reply. Return a message (or a promise of one) to let the assistant answer;\nreturn nothing to just post the reply."
+    },
+    {
+     "name": "onMessagesChange",
+     "type": "(messages: ThreadMessage[]) => void",
+     "optional": true,
+     "description": "The whole thread after a reply was posted here, or the assistant answered – store it and pass it back"
+    },
+    {
+     "name": "onClose",
+     "type": "() => void",
+     "optional": true,
+     "description": "Shows a close button and runs when it's pressed"
+    }
+   ],
+   "hides": [
+    "heading",
+    "messages",
+    "currentUser",
+    "assistant",
+    "onReply",
+    "closable"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 37523,
+  "gzip": 11279
+ }
+}

@@ -19,12 +19,16 @@ const RawCitedAnswer = createComponent({
 });
 type RawCitedAnswerProps = React.ComponentProps<typeof RawCitedAnswer>;
 export type CitedAnswerProps = Omit<RawCitedAnswerProps, "sources" | "preview" | "openHandled" | "actionLabel" | "onTcPreviewChange" | "onTcOpenSource" | "onTcAction"> & {
+  /** The sources, numbered in this order – chips under the answer and the passages their previews quote */
   sources: CitedSource[];
   /** Id of the source whose preview is open – controlled when defined (null: closed) */
   preview?: string | null;
   /** Id of the source whose preview is open at first (uncontrolled) */
   defaultPreview?: string | null;
-  /** @deprecated use `defaultPreview` */
+  /**
+   * The old name of `defaultPreview`, still read when that's unset
+   * @deprecated use `defaultPreview`
+   */
   defaultOpen?: string;
   /** Called by Open source. With it the link doesn't navigate on its own – open the page yourself */
   onOpenSource?: (source: CitedSource) => void;

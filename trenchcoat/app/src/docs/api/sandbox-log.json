@@ -1,0 +1,330 @@
+{
+ "elements": [
+  {
+   "tag": "tc-sandbox-log",
+   "className": "TcSandboxLog",
+   "description": "Command output from an agent's sandbox: a collapsible block per step with the command, exit code, duration and\nthe output in colour; search and copy; windowed for long logs.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Sandbox\"",
+     "description": "Names the region, shown at the top",
+     "readonly": false
+    },
+    {
+     "name": "environment",
+     "attribute": "environment",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Small text next to the heading – the machine, image or working directory",
+     "readonly": false
+    },
+    {
+     "name": "steps",
+     "attribute": null,
+     "type": "SandboxLogStep[]",
+     "default": "[]",
+     "description": "The commands in the order they ran – one collapsible block each, with their output so far",
+     "readonly": false
+    },
+    {
+     "name": "open",
+     "attribute": null,
+     "type": "string[] | undefined",
+     "default": "undefined",
+     "description": "Ids of the open steps – unset opens the steps that are running or failed",
+     "readonly": false
+    },
+    {
+     "name": "query",
+     "attribute": "query",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The search text",
+     "readonly": false
+    },
+    {
+     "name": "maxHeight",
+     "attribute": "max-height",
+     "type": "number",
+     "default": "320",
+     "description": "Height in px at which a step's output scrolls",
+     "readonly": false
+    },
+    {
+     "name": "follow",
+     "attribute": "follow",
+     "type": "boolean",
+     "default": "true",
+     "description": "Keeps a step's output scrolled to its end, as a terminal does, until the reader scrolls up",
+     "readonly": false
+    },
+    {
+     "name": "lineNumbers",
+     "attribute": "line-numbers",
+     "type": "boolean",
+     "default": "true",
+     "description": "Shows a line-number gutter",
+     "readonly": false
+    },
+    {
+     "name": "hideSummary",
+     "attribute": "hide-summary",
+     "type": "boolean",
+     "default": "false",
+     "description": "Hides the summary line under the log",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-open-change",
+     "detail": "",
+     "description": "A step opens or closes ({ open: string[] }); cancelable – prevent it to control `open`",
+     "cancelable": true
+    },
+    {
+     "name": "tc-query-change",
+     "detail": "",
+     "description": "The search text changes ({ query: string }); cancelable – prevent it to control `query`",
+     "cancelable": true
+    },
+    {
+     "name": "tc-copy",
+     "detail": "",
+     "description": "A step's output, or the whole log, was copied ({ stepId: string | null, text: string })",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [
+    {
+     "name": "linesOf",
+     "params": "id: string",
+     "returns": "readonly SandboxLogLine[]",
+     "description": "The parsed lines of a step (cached; a longer output parses only its new lines)"
+    },
+    {
+     "name": "go",
+     "params": "delta: number",
+     "returns": "void",
+     "description": "Moves to the next (1) or previous (-1) match: opens its step and scrolls it into view"
+    }
+   ],
+   "ui": "sbl",
+   "cssProperties": [
+    {
+     "name": "--tc-sandbox-log-code-bg",
+     "value": "light-dark(#fafafa, #212123)",
+     "looks": [
+      "both",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-sandbox-log-spin",
+     "value": "800ms",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-sandbox-log-cyan",
+     "value": "var(--tc-tone-teal-fg)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-sandbox-log-cyan-bg",
+     "value": "var(--tc-tone-teal-bg)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-sandbox-log-hit",
+     "value": "light-dark(rgba(245, 165, 36, 0.28), rgba(245, 165, 36, 0.3))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-sandbox-log-hit-current",
+     "value": "light-dark(rgba(245, 165, 36, 0.62), rgba(245, 165, 36, 0.62))",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent-text",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-border-default",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-h-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-font-size",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-field-shadow-hover",
+    "--tc-fill-default",
+    "--tc-fill-hover",
+    "--tc-fill-strong",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-mono",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-line-height-tight",
+    "--tc-radius-2xs",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-7",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-info-bg",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-on-accent",
+    "--tc-text-placeholder",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tone-teal-bg",
+    "--tc-tone-teal-fg",
+    "--tc-tone-violet-bg",
+    "--tc-tone-violet-fg",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "sandboxLogPlainText",
+   "signature": "sandboxLogPlainText(output: string): string",
+   "description": "The output of a step as plain text – what Copy takes"
+  }
+ ],
+ "react": [
+  {
+   "component": "SandboxLog",
+   "exported": true,
+   "props": [
+    {
+     "name": "steps",
+     "type": "TcSandboxLog[\"steps\"]",
+     "optional": false,
+     "description": "The commands in the order they ran – one collapsible block each, with their output so far"
+    },
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "Shown at the top; names the region"
+    },
+    {
+     "name": "open",
+     "type": "string[]",
+     "optional": true,
+     "description": "Ids of the open steps (controlled) – unset opens the running and failed ones"
+    },
+    {
+     "name": "defaultOpen",
+     "type": "string[]",
+     "optional": true,
+     "description": "Ids of the steps open at first (uncontrolled) – unset opens the running and failed ones"
+    },
+    {
+     "name": "onOpenChange",
+     "type": "(open: string[]) => void",
+     "optional": true,
+     "description": "Called with the ids of the open steps whenever a step opens or closes"
+    },
+    {
+     "name": "query",
+     "type": "string",
+     "optional": true,
+     "description": "The search text (controlled)"
+    },
+    {
+     "name": "defaultQuery",
+     "type": "string",
+     "optional": true,
+     "description": "The search text at first (uncontrolled)"
+    },
+    {
+     "name": "onQueryChange",
+     "type": "(query: string) => void",
+     "optional": true,
+     "description": "Called with the search text whenever it changes"
+    },
+    {
+     "name": "onCopy",
+     "type": "(stepId: string | null, text: string) => void",
+     "optional": true,
+     "description": "After a copy: the step's id (null for the whole log) and the text"
+    }
+   ],
+   "hides": [
+    "open",
+    "query",
+    "heading",
+    "steps",
+    "onCopy"
+   ]
+  }
+ ],
+ "changelog": [
+  "`tc-sandbox-log` – sandbox command output: a block per step with command, exit code and time; ANSI colours (16, 256 and true colour) mapped to tokens, never parsed as HTML; incremental parsing while it streams; copy and search; windowed (50,000 lines render under 400 rows)."
+ ],
+ "size": {
+  "min": 45047,
+  "gzip": 14093
+ }
+}

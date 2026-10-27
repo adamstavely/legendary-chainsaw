@@ -45,7 +45,7 @@ const css = /* css */ `
   width: 100%;
   aspect-ratio: 3 / 2;
   overflow: hidden;
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  font-family: var(--tc-font-sans, "Inter", "InterVariable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif);
 }
 [data-ui="gc"] *, [data-ui="gc"] *::before, [data-ui="gc"] *::after { box-sizing: border-box; margin: 0; }
 
@@ -209,7 +209,7 @@ const css = /* css */ `
   z-index: -2;
 }
 .ui-gc-read {
-  font-size: 10.5px;
+  font-size: var(--tc-font-size-xs, 11px);
   line-height: 1.4;
   color: var(--tc-text-muted, light-dark(#646464, #9a9aa1));
   margin-top: var(--tc-space-0-5, 2px);
@@ -228,7 +228,7 @@ const css = /* css */ `
   border: 1px solid #155EEF;
   border-radius: 14px 14px 14px var(--tc-radius-xs, 4px);
   color: #FFFFFF;
-  font-size: 15px;
+  font-size: var(--tc-font-size-lg-plus, 15px);
   line-height: 1.1;
   box-shadow: var(--tc-ghosted-chat-reply-shadow);
   opacity: 0;

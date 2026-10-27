@@ -8,6 +8,7 @@ import { TcElement } from "./internal/base";
 import { FocusRescueController, rescueFocus } from "./internal/controllers";
 import type { Look } from "./internal/look";
 import { adoptStyles } from "./internal/styles";
+import { copyText } from "./internal/util";
 
 /*
  * <tc-tool-call-card> and <tc-tool-call-group> – the Lit port of src/components/tool-call-card.tsx: one tool call of
@@ -88,23 +89,6 @@ function highlight(text: string): Array<TemplateResult | string> {
   }
   if (last < text.length) out.push(text.slice(last));
   return out;
-}
-
-async function copyText(text: string) {
-  try {
-    await navigator.clipboard.writeText(text);
-    return true;
-  } catch {
-    // Older browsers and non-secure contexts
-    const area = document.createElement("textarea");
-    area.value = text;
-    area.style.cssText = "position:fixed;opacity:0";
-    document.body.appendChild(area);
-    area.select();
-    const ok = document.execCommand("copy");
-    area.remove();
-    return ok;
-  }
 }
 
 /* ---------- Icons ---------- */
@@ -245,6 +229,7 @@ export class TcToolCallCard extends TcElement {
   @property({ attribute: false }) accessor summary: string | Element | undefined = undefined;
   /** Icon in the tile on the left (cloned) – defaults to a wrench */
   @property({ attribute: false }) accessor icon: Element | undefined = undefined;
+  /** "running" shows a spinner and a live timer, "success" a check and the duration, "error" "Failed" and the message */
   @property() accessor status: ToolCallStatus = "success";
   /** Arguments the tool was called with – objects are pretty-printed, JSON strings parsed */
   @property({ attribute: false }) accessor args: unknown = undefined;
@@ -495,10 +480,9 @@ export class TcToolCallCard extends TcElement {
   box-sizing: border-box;
   min-width: 0;
   color: var(--tc-text-muted);
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-md);
-  line-height: 1.4;
-  letter-spacing: -0.006em;
+  line-height: var(--tc-line-height-normal);
   -webkit-font-smoothing: antialiased;
 }
 /* Colors and motion as variables – override them on [data-ui="tc"] / [data-ui="tc-group"] */
@@ -766,7 +750,7 @@ export class TcToolCallCard extends TcElement {
   gap: var(--tc-space-2);
   min-height: 24px;
 }
-:where([data-look="standard"], [data-look="standard"] *).ui-tc__label { color: var(--tc-text-muted); font-size: var(--tc-font-size-sm); font-weight: var(--tc-font-weight-medium); }
+.ui-tc__label { color: var(--tc-caption-color); font-size: var(--tc-caption-font-size); font-weight: var(--tc-caption-font-weight); line-height: var(--tc-caption-line-height); letter-spacing: var(--tc-caption-tracking); text-transform: var(--tc-caption-transform); }
 :where([data-look="standard"], [data-look="standard"] *).ui-tc__pending { margin: 0; color: var(--tc-text-muted); font-size: var(--tc-font-size-sm); }
 :where([data-look="standard"], [data-look="standard"] *).ui-tc__copy {
   all: unset;
@@ -797,15 +781,6 @@ export class TcToolCallCard extends TcElement {
   justify-content: space-between;
   gap: var(--tc-space-2);
   min-height: 28px;
-}
-/* Tiny uppercase labels: "ARGUMENTS", "RESULT" */
-:where([data-look="clean"], [data-look="clean"] *).ui-tc__label {
-  color: var(--tc-text-muted);
-  font-size: var(--tc-font-size-2xs);
-  line-height: var(--tc-line-height-tight);
-  font-weight: var(--tc-font-weight-medium);
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
 }
 :where([data-look="clean"], [data-look="clean"] *).ui-tc__pending { margin: 0; color: var(--tc-text-muted); font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); }
 /* Copy: a small white icon button with the card's hairline */

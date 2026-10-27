@@ -5,6 +5,7 @@ import { keyed } from "lit/directives/keyed.js";
 import { repeat } from "lit/directives/repeat.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController, RowWindowController, SmoothHeightController, rescueFocus } from "./internal/controllers";
 
 /*
@@ -12,7 +13,8 @@ import { FocusRescueController, RowWindowController, SmoothHeightController, res
  * Active filters sit on top as removable chips; below, collapsible groups list their options as checkboxes with a
  * count of what's picked. Every group head and visible option is a plain button in the Tab order; arrow keys also
  * move through them, Enter or Space picks, ← and → fold a group. Folded options are inert. Heights glide when
- * groups open or chips come and go. Clean has no tray – one white card, chips kept on one line (as many as fit,
+ * groups open or chips come and go. Standard puts the header on the tray above a white card. Clean has no tray – one
+ * white card with the header as its first row, chips kept on one line (as many as fit,
  * "+N" for the rest) and the keyboard hints as the card's last row.
  *
  *   <tc-filter-menu heading="Filter leads" name="f" .groups=${groups} .value=${{ status: ["won"] }}></tc-filter-menu>
@@ -22,6 +24,9 @@ import { FocusRescueController, RowWindowController, SmoothHeightController, res
  * `name[groupId]`. Every change fires a cancelable `tc-value-change` ({ value }) or `tc-open-change` ({ open }):
  * call preventDefault() to control `value` or `open` yourself.
  */
+
+/** A funnel: filters (Lucide funnel, ISC) */
+const funnelIcon = svg`<path d="M10 20a1 1 0 0 0 .553.895l2 1A1 1 0 0 0 14 21v-7a2 2 0 0 1 .517-1.341L21.74 4.67A1 1 0 0 0 21 3H3a1 1 0 0 0-.742 1.67l7.225 7.989A2 2 0 0 1 10 14z"></path>`;
 
 export type FilterOption = { id: string; label: string };
 
@@ -74,6 +79,7 @@ const hintsRow = (clean: boolean) =>
 export class TcFilterMenu extends TcElement {
   static override ui = "fm";
 
+  /** The filter groups, in order – each a collapsible list of options that become chips when picked */
   @property({ attribute: false }) accessor groups: FilterGroup[] = [];
   /** The picked options, per group id */
   @property({ attribute: false }) accessor value: FilterValue = {};
@@ -83,7 +89,7 @@ export class TcFilterMenu extends TcElement {
   @property() accessor name = "";
   /** Nothing can be picked, removed or cleared, and the hidden inputs are left out of the form */
   @property({ type: Boolean, reflect: true }) accessor disabled = false;
-  /** The heading */
+  /** The heading, next to Clear all */
   @property() accessor heading = "Filters";
   /** Show the keyboard hints at the bottom (Clean: as the last row of the card); hints="false" hides them */
   @property({ converter: { fromAttribute: (v: string | null) => v !== "false" } }) accessor hints = true;
@@ -388,11 +394,12 @@ export class TcFilterMenu extends TcElement {
           (c, i) => html`<span class="ui-fm__chip">${c.label}<button type="button" aria-label=${`Remove ${c.label}`} data-focus-key=${`chip-x:${i}`} ?disabled=${disabled} @click=${() => this.toggle(c.group.id, c.option.id)}><svg viewBox="0 0 24 24" aria-hidden="true">${svg`<path d="M6.5 6.5l11 11M17.5 6.5l-11 11"></path>`}</svg></button></span>`,
         )}</div>`;
 
+    const head = cardHead({
+      icon: funnelIcon,
+      title: this.heading,
+      aside: html`<button type="button" class="ui-fm__clear" data-focus-key="clear" ?disabled=${disabled || chips.length === 0} @click=${() => this.commit({})}>Clear all</button>`,
+    });
     const body = html`
-      <div class="ui-fm__head">
-        <span class="ui-fm__title">${this.heading}</span>
-        <button type="button" class="ui-fm__clear" data-focus-key="clear" ?disabled=${disabled || chips.length === 0} @click=${() => this.commit({})}>Clear all</button>
-      </div>
       <div class="ui-fm__chips-outer">${chipRow}</div>
       <div class="ui-fm__groups" @keydown=${this.onKeyDown} @focusin=${this.onFocusIn} @focusout=${this.onFocusOut}>
         ${repeat(
@@ -435,7 +442,7 @@ export class TcFilterMenu extends TcElement {
     `;
 
     return html`
-      ${clean ? body : html`<div class="ui-fm__card">${body}</div>`}
+      ${head}${clean ? body : html`<div class="ui-fm__card">${body}</div>`}
       <div class="ui-fm__sr" role="status">${this.status}</div>
       ${this.name ? repeat(chips, chipKeyOf, (c) => html`<input type="hidden" name=${`${this.name}[${c.group.id}]`} .value=${c.option.id} ?disabled=${disabled} />`) : nothing}
       ${this.hints ? hintsRow(clean) : nothing}
@@ -449,7 +456,9 @@ export class TcFilterMenu extends TcElement {
   padding: var(--tc-tray-inset);
   border-radius: var(--tc-tray-radius);
   background: var(--tc-surface-tray);
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--tc-font-sans);
+  font-size: var(--tc-font-size-md);
+  line-height: var(--tc-line-height-normal);
   color: var(--tc-text-primary);
   -webkit-font-smoothing: antialiased;
 }
@@ -473,22 +482,20 @@ export class TcFilterMenu extends TcElement {
 [data-ui="fm"] *, [data-ui="fm"] *::before, [data-ui="fm"] *::after { box-sizing: border-box; }
 [data-ui="fm"] button:focus-visible { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
 .ui-fm__sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
-:where([data-look="standard"], [data-look="standard"] *)[data-ui="fm"] button { font: inherit; color: inherit; margin: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+:where([data-look="standard"], [data-look="standard"] *):where([data-ui="fm"]) button { font: inherit; color: inherit; margin: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 :where([data-look="standard"], [data-look="standard"] *).ui-fm__card {
   padding: var(--tc-space-4) var(--tc-space-4) var(--tc-space-2-5);
   border-radius: var(--tc-card-radius);
   background: var(--tc-surface-on-tray);
   box-shadow: var(--tc-card-shadow);
 }
-/* ---------- Header ---------- */
-.ui-fm__head { display: flex; align-items: center; justify-content: space-between; gap: var(--tc-space-3); }
-:where([data-look="standard"], [data-look="standard"] *).ui-fm__head { padding: 0 var(--tc-space-0-5); }
-:where([data-look="standard"], [data-look="standard"] *).ui-fm__title { font-size: var(--tc-font-size-lg-plus); line-height: var(--tc-line-height-relaxed); font-weight: var(--tc-font-weight-semibold); letter-spacing: -0.01em; }
+/* ---------- The header (cardHead): on the tray in Standard, the card's first row in Clean; Clear all at its right ---------- */
 /* Clear all: the ghost button recipe */
 .ui-fm__clear {
   border: 0;
   background: none;
   font-size: var(--tc-control-font-size);
+  font-weight: var(--tc-control-font-weight);
   color: var(--tc-action-ghost-fg) !important;
   transition: color var(--tc-duration-fast) var(--tc-ease-standard), background-color var(--tc-duration-fast) var(--tc-ease-standard), opacity var(--tc-duration-base) var(--tc-ease-standard);
 }
@@ -496,26 +503,22 @@ export class TcFilterMenu extends TcElement {
 :where([data-look="standard"], [data-look="standard"] *).ui-fm__clear {
   height: var(--tc-control-h-sm);
   padding: 0 var(--tc-control-px-sm);
-  margin-right: calc(-1 * var(--tc-control-px-sm)) !important;
   border-radius: var(--tc-control-radius-sm);
 }
 :where([data-look="standard"], [data-look="standard"] *).ui-fm__clear:disabled { opacity: 0.45; cursor: default; }
 :where([data-look="clean"], [data-look="clean"] *):where([data-ui="fm"]) button { margin: 0; padding: 0; border: 0; background: none; font: inherit; color: inherit; text-align: left; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 :where([data-look="clean"], [data-look="clean"] *):where([data-ui="fm"]) svg { display: block; flex: none; }
-/* ---------- Header ---------- */
-:where([data-look="clean"], [data-look="clean"] *).ui-fm__head { padding: var(--tc-space-3) var(--tc-space-2-5) var(--tc-space-2) var(--tc-space-4); }
-:where([data-look="clean"], [data-look="clean"] *).ui-fm__title { font-size: var(--tc-font-size-lg-plus); line-height: var(--tc-line-height-loose); font-weight: var(--tc-font-weight-medium); color: var(--tc-text-strong); }
 :where([data-look="clean"], [data-look="clean"] *).ui-fm__clear {
   height: var(--tc-control-h-md);
   padding: 0 var(--tc-control-px-sm) !important;
   border-radius: var(--tc-control-radius-md);
-  font-weight: var(--tc-control-font-weight);
 }
 :where([data-look="clean"], [data-look="clean"] *).ui-fm__clear:disabled { color: var(--tc-text-disabled) !important; cursor: default; }
 /* ---------- Chips ---------- */
 .ui-fm__chips-outer { overflow: hidden; }
 .ui-fm__chips-outer[data-smooth] { transition: height var(--tc-duration-slow) var(--tc-ease-move); }
-:where([data-look="standard"], [data-look="standard"] *).ui-fm__chips { display: flex; flex-wrap: wrap; gap: var(--tc-space-1-5); padding-top: var(--tc-space-3); }
+:where([data-look="standard"], [data-look="standard"] *).ui-fm__chips { display: flex; flex-wrap: wrap; gap: var(--tc-space-1-5); }
+:where([data-look="standard"], [data-look="standard"] *).ui-fm__chips:not(:empty) { padding-bottom: var(--tc-space-3); }
 :where([data-look="standard"], [data-look="standard"] *).ui-fm__chips:empty { padding-top: 0; }
 :where([data-look="standard"], [data-look="standard"] *).ui-fm__chip {
   display: inline-flex;
@@ -777,7 +780,6 @@ export class TcFilterMenu extends TcElement {
 @keyframes ui-fm-roll { from { opacity: 0; transform: translateY(60%); } to { opacity: 1; transform: none; } }
 /* Narrow: a bit less side padding, shorter chips */
 @container (max-width: 320px) {
-:where([data-look="clean"], [data-look="clean"] *).ui-fm__head { padding-left: var(--tc-space-3-5); }
 :where([data-look="clean"], [data-look="clean"] *).ui-fm__chips { padding-left: var(--tc-space-3-5); padding-right: var(--tc-space-3-5); }
 :where([data-look="clean"], [data-look="clean"] *).ui-fm__chip-label { max-width: 132px; }
 }

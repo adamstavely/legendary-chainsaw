@@ -1,0 +1,198 @@
+{
+ "elements": [
+  {
+   "tag": "tc-provenance-summary",
+   "className": "TcProvenanceSummary",
+   "description": "What a document is made of: the share from sources, AI synthesis and original writing, per section and in total,\nwith each segment opening its lineage.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Provenance\"",
+     "description": "The heading, and the region's name",
+     "readonly": false
+    },
+    {
+     "name": "scope",
+     "attribute": "scope",
+     "type": "string",
+     "default": "\"\"",
+     "description": "What the summary covers, a quiet line under the heading – e.g. the document's name",
+     "readonly": false
+    },
+    {
+     "name": "sections",
+     "attribute": null,
+     "type": "ProvenanceSection[]",
+     "default": "[]",
+     "description": "The document's sections, in order, with how much of each came from where",
+     "readonly": false
+    },
+    {
+     "name": "kindLabels",
+     "attribute": null,
+     "type": "Partial<Record<ProvenanceKind, string>>",
+     "default": "{}",
+     "description": "Names of the three kinds",
+     "readonly": false
+    },
+    {
+     "name": "unit",
+     "attribute": "unit",
+     "type": "string",
+     "default": "\"words\"",
+     "description": "The unit of the amounts, plural – \"words\", \"characters\", \"sentences\"",
+     "readonly": false
+    },
+    {
+     "name": "totalLabel",
+     "attribute": "total-label",
+     "type": "string",
+     "default": "\"Whole document\"",
+     "description": "The name of the whole-document row",
+     "readonly": false
+    },
+    {
+     "name": "totalOnly",
+     "attribute": "total-only",
+     "type": "boolean",
+     "default": "false",
+     "description": "Hide the per-section rows and show the total only",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string",
+     "default": "\"en-US\"",
+     "description": "Locale for numbers",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-lineage-open",
+     "detail": "",
+     "description": "A segment was pressed (detail: { section: string | null, kind: \"sourced\" | \"synthesis\" | \"original\", amount: number, share: number }) – section is null for the whole document",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "pvs",
+   "cssProperties": [
+    {
+     "name": "--tc-provenance-summary-sourced",
+     "value": "var(--tc-source-grounded-fg)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-provenance-summary-synthesis",
+     "value": "var(--tc-source-model-fg)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-provenance-summary-original",
+     "value": "var(--tc-text-muted)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-slow",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-2xl",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xl",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-line-height-display",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-meter-h",
+    "--tc-meter-h-hero",
+    "--tc-meter-radius",
+    "--tc-meter-track",
+    "--tc-radius-2xs",
+    "--tc-source-grounded-fg",
+    "--tc-source-model-fg",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-surface-raised",
+    "--tc-surface-sunken",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tracking-snug",
+    "--tc-tracking-tight",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "ProvenanceSummary",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading, and the region's name"
+    },
+    {
+     "name": "onOpenLineage",
+     "type": "(section: string | null, kind: ProvenanceKind, detail: ProvenanceLineageOpen) => void",
+     "optional": true,
+     "description": "A segment was pressed: the section's id (null for the whole document), the kind, its amount and share"
+    }
+   ],
+   "hides": []
+  }
+ ],
+ "changelog": [
+  "**Trust & calibration**, from THEMIS and built domain-neutral: - claims and their reliability: `tc-claim-answer`, `tc-verification-queue`, `tc-reflection-gate`, `tc-reliance-gauge`, `tc-disagreement-banner`, `tc-synthesis-notes`; - where outputs came from: `tc-lineage-graph`, `tc-validity-badge`, `tc-provenance-summary`, `tc-correction-propagation`, `tc-attestation-check`, `tc-run-manifest`; - policy and control: `tc-policy-simulator`, `tc-gate-config`, `tc-coverage-matrix`, `tc-kill-switch`, `tc-playbook-canvas`."
+ ],
+ "size": {
+  "min": 24313,
+  "gzip": 7952
+ }
+}

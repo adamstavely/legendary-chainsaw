@@ -53,10 +53,12 @@ const show = (v: string | Element) => (typeof v === "string" ? v : v.cloneNode(t
 export class TcSegmentedControl extends TcElement {
   static override ui = "seg";
 
+  /** The options to switch between, in order – two to six read best */
   @property({ attribute: false }) accessor options: SegmentOption[] = [];
   /** The picked value; unset picks the first enabled option. Changed by the user unless a tc-value-change listener
    *  calls preventDefault() */
   @property() accessor value: string | undefined = undefined;
+  /** Height and text size of the control: "sm", "md" or "lg" */
   @property() accessor size: "sm" | "md" | "lg" = "md";
   /** "tray", "underline" or "buttons" (Clean only – Standard shows it as "tray"). Unset: "tray" in Standard, "buttons" in Clean */
   @property() accessor variant: "buttons" | "tray" | "underline" | undefined = undefined;
@@ -64,6 +66,7 @@ export class TcSegmentedControl extends TcElement {
   @property({ type: Boolean, attribute: "full-width" }) accessor fullWidth = false;
   /** "radio" (a radiogroup, the default) or "tabs" (a tablist that switches panels) */
   @property() accessor kind: "radio" | "tabs" = "radio";
+  /** Turns every option off; the hidden form input is disabled too */
   @property({ type: Boolean }) accessor disabled = false;
   /** Submits the picked value with a native form, through a hidden input */
   @property() accessor name: string | undefined = undefined;
@@ -424,13 +427,13 @@ export class TcSegmentedControl extends TcElement {
   vertical-align: middle;
   border-radius: var(--tc-segmented-control-radius);
   background: var(--tc-seg-track-bg);
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--tc-font-sans);
   font-size: var(--tc-segmented-control-fs);
   line-height: var(--tc-line-height-none);
   color: var(--tc-text-muted);
   -webkit-font-smoothing: antialiased;
 }
-:where([data-look="standard"], [data-look="standard"] *)[data-ui="seg"][data-size="sm"] { --tc-segmented-control-h: 26px; --tc-segmented-control-px: var(--tc-control-px-sm); --tc-segmented-control-fs: var(--tc-font-size-sm); --tc-segmented-control-icon: 14px; --tc-segmented-control-gap: 16px; }
+:where([data-look="standard"], [data-look="standard"] *)[data-ui="seg"][data-size="sm"] { --tc-segmented-control-h: var(--tc-control-h-sm); --tc-segmented-control-px: var(--tc-control-px-sm); --tc-segmented-control-fs: var(--tc-font-size-sm); --tc-segmented-control-icon: 14px; --tc-segmented-control-gap: 16px; }
 :where([data-look="standard"], [data-look="standard"] *)[data-ui="seg"][data-size="lg"] { --tc-segmented-control-h: var(--tc-control-h-lg); --tc-segmented-control-px: var(--tc-control-px-lg); --tc-segmented-control-fs: var(--tc-font-size-lg); --tc-segmented-control-icon: 16px; --tc-segmented-control-gap: 24px; }
 :where([data-look="clean"], [data-look="clean"] *)[data-ui="seg"] {
   /* Size: md – control-height chips */

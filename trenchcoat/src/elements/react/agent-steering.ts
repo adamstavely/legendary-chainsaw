@@ -29,12 +29,15 @@ export type AgentSteeringProps = Omit<
   /** The text in the field. Controlled when defined – pair with onDraftChange; otherwise the component keeps it,
    *  starting from `defaultDraft` */
   draft?: string;
+  /** The text in the field at first when uncontrolled */
   defaultDraft?: string;
+  /** Called with the field's new text as it changes */
   onDraftChange?: (text: string) => void;
   /** ✕ on a queued note */
   onRemove?: (id: string) => void;
-  /** Shows Pause / Resume in the header */
+  /** Called by Pause in the header while the run is running; passing it shows the button */
   onPause?: () => void;
+  /** Called by Resume in the header while the run is paused; passing it shows the button */
   onResume?: () => void;
 };
 

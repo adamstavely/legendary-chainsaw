@@ -17,6 +17,7 @@ const RawFanoutGrid = createComponent({
 });
 type RawFanoutGridProps = React.ComponentProps<typeof RawFanoutGrid>;
 export type FanoutGridProps = Omit<RawFanoutGridProps, "heading" | "icon" | "selected" | "filter" | "onTcSelectedChange" | "onTcFilterChange" | "onTcSelect" | "onSelect" | "job"> & {
+  /** Every task in the job, one cell each, in order – its label, state, worker, times, cost, result or error */
   tasks: FanoutTask[];
   /** What the whole job does – e.g. "Enrich 240 leads" */
   job?: string;
@@ -34,6 +35,7 @@ export type FanoutGridProps = Omit<RawFanoutGridProps, "heading" | "icon" | "sel
   defaultFilter?: FanoutStatus | null;
   /** Called with the new filter, controlled or not */
   onFilterChange?: (filter: FanoutStatus | null) => void;
+  /** The title on the bar (default "Fan-out") */
   title?: string;
   /** A small mark before the title, e.g. the agent's logo */
   icon?: React.ReactNode;

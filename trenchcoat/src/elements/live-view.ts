@@ -4,6 +4,7 @@ import { keyed } from "lit/directives/keyed.js";
 import { repeat } from "lit/directives/repeat.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { OffScreenController } from "./internal/controllers";
 
 /*
@@ -476,16 +477,14 @@ export class TcLiveView extends TcElement {
     const ratio = `${w} / ${h}`;
     const headingId = `${this.uid}-h`;
 
-    return html`
-      <div class="ui-lv__bar">
-        <span class="ui-lv__state" data-state=${live}
+    // The header (.tc-head): on the tray above the card in Standard, the card's first row in Clean
+    const head = cardHead({
+      icon: svg`<rect x="2" y="3" width="20" height="14" rx="2"></rect><path d="M8 21h8"></path><path d="M12 17v4"></path><path d="m10 7.5 4 2.5-4 2.5z"></path>`,
+      title: this.heading || "Live view",
+      id: headingId,
+      aside: html`<span class="ui-lv__state" data-state=${live}
           ><span class="ui-lv__dot"></span>${STATE_LABEL[live]}</span
         >
-        ${this.heading
-          ? html`<span class="ui-lv__title" id=${headingId}
-              >${this.heading}</span
-            >`
-          : nothing}
         ${tools.length
           ? html`<div
               class="ui-lv__tools"
@@ -524,8 +523,11 @@ export class TcLiveView extends TcElement {
                       </button>`,
               )}
             </div>`
-          : nothing}
-      </div>
+          : nothing}`,
+    });
+
+    return html`
+      <div class="ui-lv__bar">${head}</div>
       <div class="ui-lv__card"></div>
       <div
         class="ui-lv__screen"
@@ -617,7 +619,6 @@ export class TcLiveView extends TcElement {
   font-size: var(--tc-font-size-md);
   font-weight: var(--tc-font-weight-regular);
   line-height: var(--tc-line-height-normal);
-  letter-spacing: -0.006em;
   color: var(--tc-text-secondary);
   text-align: left;
   -webkit-font-smoothing: antialiased;
@@ -631,13 +632,12 @@ export class TcLiveView extends TcElement {
   border-radius: var(--tc-card-radius);
   background: var(--tc-surface-raised);
   box-shadow: var(--tc-card-shadow);
-  letter-spacing: normal;
 }
 [data-ui="lv"] *, [data-ui="lv"] *::before, [data-ui="lv"] *::after { box-sizing: border-box; }
 [data-ui="lv"] svg { display: block; flex: none; }
-/* ----- The header: the state, the task, the toolbar ----- */
-.ui-lv__bar { grid-area: bar; display: flex; align-items: center; gap: var(--tc-space-2); min-width: 0; min-height: 40px; padding: var(--tc-space-0-5) var(--tc-space-0-5) var(--tc-space-1) var(--tc-space-2-5); }
-:where([data-look="clean"], [data-look="clean"] *).ui-lv__bar { min-height: 44px; padding: var(--tc-space-2) var(--tc-space-2) var(--tc-space-2) var(--tc-space-3-5); border-bottom: var(--tc-hairline) solid var(--tc-divider); }
+/* ----- The header's place in the grid; at its right the state and the toolbar ----- */
+.ui-lv__bar { grid-area: bar; min-width: 0; }
+:where([data-look="clean"], [data-look="clean"] *).ui-lv__bar { border-bottom: var(--tc-hairline) solid var(--tc-divider); }
 .ui-lv__state { display: inline-flex; flex: none; align-items: center; gap: var(--tc-space-1-5); height: var(--tc-pill-h); padding: 0 var(--tc-pill-px); border-radius: var(--tc-pill-radius); background: var(--tc-fill-default); font-size: var(--tc-pill-font-size); font-weight: var(--tc-pill-font-weight); color: var(--tc-text-secondary); white-space: nowrap; }
 .ui-lv__state[data-state="live"] { background: var(--tc-status-danger-bg); color: var(--tc-status-danger-fg); }
 .ui-lv__state[data-state="user"] { background: var(--tc-status-info-bg); color: var(--tc-status-info-fg); }
@@ -646,9 +646,7 @@ export class TcLiveView extends TcElement {
 .ui-lv__state[data-state="paused"] .ui-lv__dot, .ui-lv__state[data-state="waiting"] .ui-lv__dot { background: var(--tc-text-muted); }
 /* Live: the dot breathes a few times when the stream starts, then holds */
 .ui-lv__state[data-state="live"] .ui-lv__dot { animation: ui-lv-breathe var(--tc-duration-shimmer) var(--tc-ease-in-out) 3; }
-.ui-lv__title { flex: 1; min-width: 0; overflow: hidden; font-weight: var(--tc-font-weight-semibold); color: var(--tc-text-strong); white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="clean"], [data-look="clean"] *).ui-lv__title { font-weight: var(--tc-font-weight-medium); }
-.ui-lv__tools { display: flex; flex: none; gap: var(--tc-space-1-5); margin-left: auto; }
+.ui-lv__tools { display: flex; flex: none; gap: var(--tc-space-1-5); }
 /* Pause / Take over: Button's secondary and primary – small on the tray, the default size in Clean */
 .ui-lv__btn { appearance: none; display: inline-flex; align-items: center; gap: var(--tc-space-1-5); height: var(--tc-control-h-sm); margin: 0; padding: 0 var(--tc-control-px-sm) 0 var(--tc-space-2); border: 0; border-radius: var(--tc-control-radius-sm); background: var(--tc-action-secondary-bg); box-shadow: var(--tc-action-secondary-shadow); font: inherit; font-size: var(--tc-control-font-size); font-weight: var(--tc-control-font-weight); letter-spacing: normal; color: var(--tc-action-secondary-fg); white-space: nowrap; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), box-shadow var(--tc-duration-fast) var(--tc-ease-standard), transform var(--tc-duration-fast) var(--tc-ease-move); }
 :where([data-look="clean"], [data-look="clean"] *).ui-lv__btn { height: var(--tc-control-h-md); border-radius: var(--tc-control-radius-md); }
@@ -736,11 +734,8 @@ export class TcLiveView extends TcElement {
 @keyframes ui-lv-blink { 0%, 55% { opacity: 1; } 56%, 100% { opacity: 0; } }
 @keyframes ui-lv-drop { from { opacity: 0; transform: translateY(-4px); } }
 @keyframes ui-lv-caption { from { opacity: 0; transform: translateY(3px); } }
-/* Narrow: the task gives way to the state and the toolbar; the buttons keep only their icons */
+/* Narrow: the header's state and toolbar wrap under the title; the caption stacks */
 @container ui-lv (max-width: 380px) {
-  .ui-lv__title { display: none; }
-  .ui-lv__btn { width: var(--tc-control-h-sm); padding: 0; justify-content: center; font-size: 0; gap: 0; }
-  :where([data-look="clean"], [data-look="clean"] *).ui-lv__btn { width: var(--tc-control-h-md); }
   .ui-lv__flag { max-width: 180px; }
   .ui-lv__cap { align-items: flex-start; flex-direction: column; gap: 0; padding-top: var(--tc-space-2); }
   .ui-lv__step { font-size: var(--tc-font-size-sm); }

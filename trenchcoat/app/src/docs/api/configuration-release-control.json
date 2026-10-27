@@ -1,0 +1,319 @@
+{
+ "elements": [
+  {
+   "tag": "tc-configuration-release-control",
+   "className": "TcConfigurationReleaseControl",
+   "description": "A configuration version moving through environments: the pipeline, what changed, the evaluation evidence, the\napprovals, the rollout and the rollback target, with a gated, confirmed Promote and a confirmed Roll back.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Configuration release\"",
+     "description": "The heading",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string",
+     "default": "\"\"",
+     "description": "A quieter line under the heading, e.g. which assistant this configures",
+     "readonly": false
+    },
+    {
+     "name": "stages",
+     "attribute": null,
+     "type": "ReleaseStage[]",
+     "default": "[]",
+     "description": "The environments in order, each with the version it runs and any rollout in progress",
+     "readonly": false
+    },
+    {
+     "name": "versions",
+     "attribute": null,
+     "type": "ReleaseVersion[]",
+     "default": "[]",
+     "description": "Every version the stages, the candidate and the rollback target refer to",
+     "readonly": false
+    },
+    {
+     "name": "candidate",
+     "attribute": "candidate",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The id of the version being promoted",
+     "readonly": false
+    },
+    {
+     "name": "target",
+     "attribute": "target",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The id of the stage it's promoted to; unset, the stage after the last one that fully runs it",
+     "readonly": false
+    },
+    {
+     "name": "changes",
+     "attribute": null,
+     "type": "ReleaseChange[]",
+     "default": "[]",
+     "description": "What changed against the version it replaces, by area",
+     "readonly": false
+    },
+    {
+     "name": "evidence",
+     "attribute": null,
+     "type": "ReleaseEvidence | undefined",
+     "default": "undefined",
+     "description": "The evaluation behind the promotion; unset, promotion waits for one",
+     "readonly": false
+    },
+    {
+     "name": "approvals",
+     "attribute": null,
+     "type": "ReleaseApproval[]",
+     "default": "[]",
+     "description": "Who has reviewed the candidate",
+     "readonly": false
+    },
+    {
+     "name": "requiredApprovals",
+     "attribute": "required-approvals",
+     "type": "number",
+     "default": "1",
+     "description": "How many approvals Promote needs",
+     "readonly": false
+    },
+    {
+     "name": "rollback",
+     "attribute": null,
+     "type": "ReleaseRollback | undefined",
+     "default": "undefined",
+     "description": "Where Roll back goes; unset, there's nothing to roll back to",
+     "readonly": false
+    },
+    {
+     "name": "hold",
+     "attribute": "hold",
+     "type": "string",
+     "default": "\"\"",
+     "description": "A reason that holds every promotion, e.g. \"Releases are frozen until Monday\"",
+     "readonly": false
+    },
+    {
+     "name": "promoteNote",
+     "attribute": "promote-note",
+     "type": "string",
+     "default": "\"Traffic moves as your release process sets it. You can roll back afterwards.\"",
+     "description": "Said in the promote confirmation, under the move",
+     "readonly": false
+    },
+    {
+     "name": "rollbackNote",
+     "attribute": "rollback-note",
+     "type": "string",
+     "default": "\"Only this stage changes. Other stages keep the versions they run.\"",
+     "description": "Said in the rollback confirmation, under the move",
+     "readonly": false
+    },
+    {
+     "name": "cancelLabel",
+     "attribute": "cancel-label",
+     "type": "string",
+     "default": "\"Cancel\"",
+     "description": "The confirmation's Cancel button",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-promote",
+     "detail": "",
+     "description": "Promote was confirmed ({ version, stage, from }: ReleasePromoteEvent); cancelable – prevented, the stage isn't marked \"Requested\"",
+     "cancelable": true
+    },
+    {
+     "name": "tc-rollback",
+     "detail": "",
+     "description": "Roll back was confirmed ({ stage, from, to }: ReleaseRollbackEvent); cancelable – prevented, the stage isn't marked \"Requested\"",
+     "cancelable": true
+    },
+    {
+     "name": "tc-compare",
+     "detail": "",
+     "description": "Compare was pressed – open the full diff ({ from, to }: ReleaseCompareEvent); cancelable, with nothing else to stop",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "rls",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-action-danger-bg",
+    "--tc-action-danger-bg-hover",
+    "--tc-action-danger-fg",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-avatar-sm",
+    "--tc-border-control",
+    "--tc-border-default",
+    "--tc-border-selected",
+    "--tc-border-subtle",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-md",
+    "--tc-control-px-sm",
+    "--tc-control-radius-md",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-quick",
+    "--tc-duration-slow",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-strong",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-mono",
+    "--tc-font-sans",
+    "--tc-font-size-2xs",
+    "--tc-font-size-lg",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xl",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-none",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-meter-fill",
+    "--tc-meter-h",
+    "--tc-meter-radius",
+    "--tc-meter-track",
+    "--tc-pill-font-size",
+    "--tc-pill-font-size-lg",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-h-lg",
+    "--tc-pill-px",
+    "--tc-pill-px-lg",
+    "--tc-pill-radius",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-scrim",
+    "--tc-shadow-overlay",
+    "--tc-shadow-raised",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-5",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-info-bg",
+    "--tc-status-info-fg",
+    "--tc-status-info-solid",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-success-solid",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-status-warning-solid",
+    "--tc-surface-on-tray",
+    "--tc-surface-overlay",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tracking-normal",
+    "--tc-tracking-snug",
+    "--tc-tracking-tight",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "ConfigurationReleaseControl",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading"
+    },
+    {
+     "name": "onPromote",
+     "type": "(request: ReleasePromoteEvent, event: CustomEvent<ReleasePromoteEvent>) => void",
+     "optional": true,
+     "description": "Promote was confirmed: start the move. Call `event.preventDefault()` if it can't start, so the stage isn't marked \"Requested\""
+    },
+    {
+     "name": "onRollback",
+     "type": "(request: ReleaseRollbackEvent, event: CustomEvent<ReleaseRollbackEvent>) => void",
+     "optional": true,
+     "description": "Roll back was confirmed: start it. Call `event.preventDefault()` if it can't start, so the stage isn't marked \"Requested\""
+    },
+    {
+     "name": "onCompare",
+     "type": "(versions: ReleaseCompareEvent) => void",
+     "optional": true,
+     "description": "Compare was pressed: open the full diff between the two versions"
+    }
+   ],
+   "hides": []
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 53154,
+  "gzip": 13362
+ }
+}

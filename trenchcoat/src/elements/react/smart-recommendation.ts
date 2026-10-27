@@ -36,6 +36,7 @@ export type SmartRecommendationProps = Omit<
   RawProps,
   "heading" | "options" | "value" | "accepted" | "open" | "acceptOption" | "undoOption" | "onTcValueChange" | "onTcAcceptedChange" | "onTcOpenChange" | "defaultValue"
 > & {
+  /** The heading, and the region's name – "Smart recommendation" by default */
   title?: string;
   /**
    * First entry is the recommendation, the rest are offered as alternatives. A new set of options starts over
@@ -50,6 +51,7 @@ export type SmartRecommendationProps = Omit<
   onValueChange?: (id: string) => void;
   /** Id of the accepted option, or null (controlled when defined). onAccept / onUndo report the changes */
   accepted?: string | null;
+  /** The accepted option at first when uncontrolled – null by default */
   defaultAccepted?: string | null;
   /**
    * Accepts the option. Return a promise to keep the button pending until it settles: the option counts as
@@ -60,7 +62,9 @@ export type SmartRecommendationProps = Omit<
   onUndo?: (option: Recommendation) => void | Promise<unknown>;
   /** Whether the reason is unfolded (controlled when defined) */
   open?: boolean;
+  /** Whether the reason starts unfolded when uncontrolled – true by default */
   defaultOpen?: boolean;
+  /** Called when the reason is folded or unfolded */
   onOpenChange?: (open: boolean) => void;
 };
 

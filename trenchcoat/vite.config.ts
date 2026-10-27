@@ -78,6 +78,8 @@ export default defineConfig({
   test: {
     root: here("."),
     testTimeout: 30_000,
+    // Bound browser contention so animation and observer tests receive frames on CI workers.
+    maxWorkers: 2,
     // Tests that reproduce a missing .catch() raise an unhandled rejection on purpose; they tag it "[expected]"
     onUnhandledError: (error) => (String((error as Error)?.message).includes("[expected]") ? false : undefined),
     projects: [

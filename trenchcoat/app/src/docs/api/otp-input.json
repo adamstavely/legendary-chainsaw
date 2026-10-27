@@ -1,0 +1,320 @@
+{
+ "elements": [
+  {
+   "tag": "tc-otp-input",
+   "className": "TcOtpInput",
+   "description": "A one-time-code field: one box per character, a gliding focus ring, verify / error / success states and a resend\ncountdown.",
+   "properties": [
+    {
+     "name": "length",
+     "attribute": "length",
+     "type": "number",
+     "default": "6",
+     "description": "Number of boxes",
+     "readonly": false
+    },
+    {
+     "name": "separator",
+     "attribute": "separator",
+     "type": "boolean | number",
+     "default": "false",
+     "description": "A small dash between the boxes – `true` puts it in the middle, a number after that many boxes",
+     "readonly": false
+    },
+    {
+     "name": "numeric",
+     "attribute": "numeric",
+     "type": "boolean",
+     "default": "true",
+     "description": "Digits only (numeric keyboard on phones); `false` (numeric=\"false\") allows letters too, shown in capitals",
+     "readonly": false
+    },
+    {
+     "name": "value",
+     "attribute": "value",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The code. Changed by the user unless a tc-value-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "onComplete",
+     "attribute": null,
+     "type": "OtpCompleteHandler | undefined",
+     "default": "undefined",
+     "description": "Called once the last box is filled – typed, pasted or autofilled. May return a promise (the check)",
+     "readonly": false
+    },
+    {
+     "name": "status",
+     "attribute": "status",
+     "type": "OtpStatus | undefined",
+     "default": "undefined",
+     "description": "The check's state. Unset, it follows the promise `onComplete` returns",
+     "readonly": false
+    },
+    {
+     "name": "errorMessage",
+     "attribute": "error-message",
+     "type": "string | Element",
+     "default": "\"That code didn't work. Try again.\"",
+     "description": "Shown below the boxes while the status is \"error\": text, or an element (cloned)",
+     "readonly": false
+    },
+    {
+     "name": "clearOnError",
+     "attribute": "clear-on-error",
+     "type": "boolean",
+     "default": "true",
+     "description": "Clears the boxes shortly after an error, ready for the next try (clear-on-error=\"false\" keeps them)",
+     "readonly": false
+    },
+    {
+     "name": "successLabel",
+     "attribute": "success-label",
+     "type": "string",
+     "default": "\"Verified\"",
+     "description": "Text in the pill after a successful check",
+     "readonly": false
+    },
+    {
+     "name": "resendable",
+     "attribute": "resendable",
+     "type": "boolean",
+     "default": "false",
+     "description": "Shows \"Resend code\" below the boxes once the countdown is over (fires tc-resend)",
+     "readonly": false
+    },
+    {
+     "name": "resendIn",
+     "attribute": "resend-in",
+     "type": "number",
+     "default": "30",
+     "description": "Seconds until the code can be resent",
+     "readonly": false
+    },
+    {
+     "name": "align",
+     "attribute": "align",
+     "type": "\"start\" | \"center\"",
+     "default": "\"start\"",
+     "description": "Center the boxes and the lines below them",
+     "readonly": false
+    },
+    {
+     "name": "disabled",
+     "attribute": "disabled",
+     "type": "boolean",
+     "default": "false",
+     "description": "Turns the field off: no typing or resending, and the code isn't submitted with the form",
+     "readonly": false
+    },
+    {
+     "name": "name",
+     "attribute": "name",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Name for form submission – the code is submitted under it",
+     "readonly": false
+    },
+    {
+     "name": "required",
+     "attribute": "required",
+     "type": "boolean",
+     "default": "false",
+     "description": "A form needs a code before it submits",
+     "readonly": false
+    },
+    {
+     "name": "autoFocus",
+     "attribute": "auto-focus",
+     "type": "boolean",
+     "default": "false",
+     "description": "Focus the input when the field first renders",
+     "readonly": false
+    },
+    {
+     "name": "label",
+     "attribute": "label",
+     "type": "string",
+     "default": "\"Verification code\"",
+     "description": "Accessible name of the field (used when there's no `labelledBy` and no page <label for>)",
+     "readonly": false
+    },
+    {
+     "name": "labelledBy",
+     "attribute": "labelled-by",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Id of a visible label (a heading or <label>) that names the field – preferred over `label` (WCAG 2.5.3, 3.3.2)",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-value-change",
+     "detail": "",
+     "description": "The user changed the code ({ value }: OtpValueChange); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-resend",
+     "detail": "",
+     "description": "\"Resend code\" was pressed (shown when `resendable`)",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [
+    {
+     "name": "focus",
+     "params": "options?: FocusOptions",
+     "returns": "void",
+     "description": ""
+    }
+   ],
+   "ui": "otp",
+   "cssProperties": [
+    {
+     "name": "--tc-otp-input-box-size",
+     "value": "40px",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-otp-input-gap",
+     "value": "8px",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-text",
+    "--tc-border-default",
+    "--tc-border-strong",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-quick",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-duration-slowest",
+    "--tc-ease-in-out",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-field-shadow",
+    "--tc-fill-default",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xl",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-line-height-loose",
+    "--tc-line-height-normal",
+    "--tc-line-height-tight",
+    "--tc-radius-2xs",
+    "--tc-radius-full",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-radius-xs",
+    "--tc-shadow-raised",
+    "--tc-shimmer",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-border",
+    "--tc-status-danger-fg",
+    "--tc-status-danger-solid",
+    "--tc-status-success-bg",
+    "--tc-status-success-solid",
+    "--tc-surface-raised",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "OtpInput",
+   "exported": true,
+   "props": [
+    {
+     "name": "value",
+     "type": "string",
+     "optional": true,
+     "description": "The code. Controlled when defined; otherwise the field keeps its own, starting at `defaultValue`"
+    },
+    {
+     "name": "defaultValue",
+     "type": "string",
+     "optional": true,
+     "description": "Starting code when uncontrolled"
+    },
+    {
+     "name": "onChange",
+     "type": "(code: string) => void",
+     "optional": true,
+     "description": "Called with the new code each time the user types, pastes or deletes"
+    },
+    {
+     "name": "errorMessage",
+     "type": "React.ReactNode",
+     "optional": true,
+     "description": "Shown below the boxes while `status` is \"error\""
+    },
+    {
+     "name": "onResend",
+     "type": "() => void",
+     "optional": true,
+     "description": "Shows \"Resend code\" below the boxes once the countdown is over"
+    }
+   ],
+   "hides": [
+    "value",
+    "errorMessage",
+    "resendable",
+    "onChange"
+   ]
+  },
+  {
+   "component": "OtpInputOwn",
+   "exported": false,
+   "props": [],
+   "hides": []
+  }
+ ],
+ "changelog": [
+  "otp-input, dropzone and stepper-form's tags and choices are form controls (ElementInternals): they submit under `name`, honour `required`, reset and a disabled fieldset, and are named by a page `<label for>`."
+ ],
+ "size": {
+  "min": 45367,
+  "gzip": 12109
+ }
+}

@@ -1,0 +1,529 @@
+{
+ "elements": [
+  {
+   "tag": "tc-integration-picker",
+   "className": "TcIntegrationPicker",
+   "description": "The integrations page of a command menu: search, a grouped list and the picked service's details with a switch.",
+   "properties": [
+    {
+     "name": "integrations",
+     "attribute": null,
+     "type": "IntegrationPickerItem[]",
+     "default": "[ { id: \"linear\", name: \"Linear\", domain: \"linear.app\", category: \"Project management\", description: \"Turn requests from chat into issues and keep their status in sync both ways.\", features: [\"Create issues from any message\", \"Two-way status sync\", \"Link issues to customers\"], path: \"M2.886 4.18A11.982 11.982 0 0 1 11.99 0C18.624 0 24 5.376 24 12.009c0 3.64-1.62 6.903-4.18 9.105L2.887 4.18ZM1.817 5.626l16.556 16.556c-.524.33-1.075.62-1.65.866L.951 7.277c.247-.575.537-1.126.866-1.65ZM.322 9.163l14.515 14.515c-.71.172-1.443.282-2.195.322L0 11.358a12 12 0 0 1 .322-2.195Zm-.17 4.862 9.823 9.824a12.02 12.02 0 0 1-9.824-9.824Z\", color: \"#ffffff\", tile: \"#5E6AD2\", connected: true, }, { id: \"figma\", tile: \"#ffffff\", name: \"Figma\", domain: \"figma.com\", category: \"Design\", description: \"Preview frames where you talk about them and link designs to their tasks.\", features: [\"Live frame previews\", \"Comment threads in one place\", \"Link frames to tasks\"], connected: false, }, { id: \"notion\", name: \"Notion\", domain: \"notion.so\", category: \"Docs & wiki\", description: \"Search your workspace while you write and save answers as pages.\", features: [\"Search pages and databases\", \"Save answers as pages\", \"Keep docs in sync\"], path: \"M4.459 4.208c.746.606 1.026.56 2.428.466l13.215-.793c.28 0 .047-.28-.046-.326L17.86 1.968c-.42-.326-.981-.7-2.055-.607L3.01 2.295c-.466.046-.56.28-.374.466zm.793 3.08v13.904c0 .747.373 1.027 1.214.98l14.523-.84c.841-.046.935-.56.935-1.167V6.354c0-.606-.233-.933-.748-.887l-15.177.887c-.56.047-.747.327-.747.933zm14.337.745c.093.42 0 .84-.42.888l-.7.14v10.264c-.608.327-1.168.514-1.635.514-.748 0-.935-.234-1.495-.933l-4.577-7.186v6.952L12.21 19s0 .84-1.168.84l-3.222.186c-.093-.186 0-.653.327-.746l.84-.233V9.854L7.822 9.76c-.094-.42.14-1.026.793-1.073l3.456-.233 4.764 7.279v-6.44l-1.215-.139c-.093-.514.28-.887.747-.933zM1.936 1.035l13.31-.98c1.634-.14 2.055-.047 3.082.7l4.249 2.986c.7.513.934.653.934 1.213v16.378c0 1.026-.373 1.634-1.68 1.726l-15.458.934c-.98.047-1.448-.093-1.962-.747l-3.129-4.06c-.56-.747-.793-1.306-.793-1.96V2.667c0-.839.374-1.54 1.447-1.632z\", color: \"currentColor\", tile: \"#ffffff\", connected: true, }, { id: \"stripe\", name: \"Stripe\", domain: \"stripe.com\", category: \"Payments\", description: \"See customers, invoices and subscriptions next to every conversation.\", features: [\"Customer and invoice lookup\", \"Subscription changes as events\", \"Revenue per account\"], path: \"M13.976 9.15c-2.172-.806-3.356-1.426-3.356-2.409 0-.831.683-1.305 1.901-1.305 2.227 0 4.515.858 6.09 1.631l.89-5.494C18.252.975 15.697 0 12.165 0 9.667 0 7.589.654 6.104 1.872 4.56 3.147 3.757 4.992 3.757 7.218c0 4.039 2.467 5.76 6.476 7.219 2.585.92 3.445 1.574 3.445 2.583 0 .98-.84 1.545-2.354 1.545-1.875 0-4.965-.921-6.99-2.109l-.9 5.555C5.175 22.99 8.385 24 11.714 24c2.641 0 4.843-.624 6.328-1.813 1.664-1.305 2.525-3.236 2.525-5.732 0-4.128-2.524-5.851-6.594-7.305h.003z\", color: \"#ffffff\", tile: \"#635BFF\", connected: true, }, { id: \"hubspot\", name: \"HubSpot\", domain: \"hubspot.com\", category: \"CRM\", description: \"Keep contacts and deals current – notes and calls are logged for you.\", features: [\"Sync contacts and companies\", \"Log activity on deals\", \"Trigger workflows\"], path: \"M18.164 7.93V5.084a2.198 2.198 0 001.267-1.978v-.067A2.2 2.2 0 0017.238.845h-.067a2.2 2.2 0 00-2.193 2.193v.067a2.196 2.196 0 001.252 1.973l.013.006v2.852a6.22 6.22 0 00-2.969 1.31l.012-.01-7.828-6.095A2.497 2.497 0 104.3 4.656l-.012.006 7.697 5.991a6.176 6.176 0 00-1.038 3.446c0 1.343.425 2.588 1.147 3.607l-.013-.02-2.342 2.343a1.968 1.968 0 00-.58-.095h-.002a2.033 2.033 0 102.033 2.033 1.978 1.978 0 00-.1-.595l.005.014 2.317-2.317a6.247 6.247 0 104.782-11.134l-.036-.005zm-.964 9.378a3.206 3.206 0 113.215-3.207v.002a3.206 3.206 0 01-3.207 3.207z\", color: \"#ffffff\", tile: \"#FF7A59\", connected: false, }, { id: \"shopify\", name: \"Shopify\", domain: \"shopify.com\", category: \"Commerce\", description: \"Answer customer questions with the real order, product and stock in view.\", features: [\"Order and refund lookup\", \"Low-stock alerts\", \"Product catalog search\"], path: \"M15.337 23.979l7.216-1.561s-2.604-17.613-2.625-17.73c-.018-.116-.114-.192-.211-.192s-1.929-.136-1.929-.136-1.275-1.274-1.439-1.411c-.045-.037-.075-.057-.121-.074l-.914 21.104h.023zM11.71 11.305s-.81-.424-1.774-.424c-1.447 0-1.504.906-1.504 1.141 0 1.232 3.24 1.715 3.24 4.629 0 2.295-1.44 3.76-3.406 3.76-2.354 0-3.54-1.465-3.54-1.465l.646-2.086s1.245 1.066 2.28 1.066c.675 0 .975-.545.975-.932 0-1.619-2.654-1.694-2.654-4.359-.034-2.237 1.571-4.416 4.827-4.416 1.257 0 1.875.361 1.875.361l-.945 2.715-.02.01zM11.17.83c.136 0 .271.038.405.135-.984.465-2.064 1.639-2.508 3.992-.656.213-1.293.405-1.889.578C7.697 3.75 8.951.84 11.17.84V.83zm1.235 2.949v.135c-.754.232-1.583.484-2.394.736.466-1.777 1.333-2.645 2.085-2.971.193.501.309 1.176.309 2.1zm.539-2.234c.694.074 1.141.867 1.429 1.755-.349.114-.735.231-1.158.366v-.252c0-.752-.096-1.371-.271-1.871v.002zm2.992 1.289c-.02 0-.06.021-.078.021s-.289.075-.714.21c-.423-1.233-1.176-2.37-2.508-2.37h-.115C12.135.209 11.669 0 11.265 0 8.159 0 6.675 3.877 6.21 5.846c-1.194.365-2.063.636-2.16.674-.675.213-.694.232-.772.87-.075.462-1.83 14.063-1.83 14.063L15.009 24l.927-21.166z\", color: \"#ffffff\", tile: \"#95BF47\", connected: false, }, { id: \"airtable\", name: \"Airtable\", domain: \"airtable.com\", category: \"Databases\", description: \"Read and update any base – rows and fields stay linked to your projects.\", features: [\"Read and write records\", \"Watch views for changes\", \"Map fields to properties\"], tile: \"#ffffff\", connected: false, }, { id: \"webflow\", name: \"Webflow\", domain: \"webflow.com\", category: \"Website\", description: \"Publish CMS items and collect form submissions right from your workspace.\", features: [\"Publish CMS items\", \"Collect form submissions\", \"Schedule site updates\"], path: \"m24 4.515-7.658 14.97H9.149l3.205-6.204h-.144C9.566 16.713 5.621 18.973 0 19.485v-6.118s3.596-.213 5.71-2.435H0V4.515h6.417v5.278l.144-.001 2.622-5.277h4.854v5.244h.144l2.72-5.244H24Z\", color: \"#ffffff\", tile: \"#146EF5\", connected: false, }, { id: \"vercel\", name: \"Vercel\", domain: \"vercel.com\", category: \"Developer tools\", description: \"Follow deployments, previews and failed builds without switching tabs.\", features: [\"Deployment status\", \"Preview links in threads\", \"Build failure alerts\"], path: \"m12 1.608 12 20.784H0Z\", color: \"currentColor\", tile: \"#000000\", connected: false, }, { id: \"clickup\", tile: \"#ffffff\", name: \"ClickUp\", domain: \"clickup.com\", category: \"Project management\", description: \"Create tasks, assign owners and track due dates across your spaces.\", features: [\"Create and assign tasks\", \"Due date reminders\", \"Sync across spaces\"], connected: false, }, ]",
+     "description": "The services to list, grouped into Connected and Available – the sample services by default",
+     "readonly": false
+    },
+    {
+     "name": "appName",
+     "attribute": "app-name",
+     "type": "string",
+     "default": "\"Trenchcoat\"",
+     "description": "Your product's name in the details, e.g. \"Trenchcoat + Linear\"",
+     "readonly": false
+    },
+    {
+     "name": "appIcon",
+     "attribute": null,
+     "type": "Element | undefined",
+     "default": "undefined",
+     "description": "Your product's mark on the black tile (cloned) – the Trenchcoat mark by default",
+     "readonly": false
+    },
+    {
+     "name": "selected",
+     "attribute": "selected",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "Id of the picked integration; unset picks the first",
+     "readonly": false
+    },
+    {
+     "name": "connected",
+     "attribute": null,
+     "type": "string[] | undefined",
+     "default": "undefined",
+     "description": "Ids of the connected integrations; unset follows the integrations' `connected` flags",
+     "readonly": false
+    },
+    {
+     "name": "query",
+     "attribute": "query",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The search text",
+     "readonly": false
+    },
+    {
+     "name": "onToggle",
+     "attribute": null,
+     "type": "IntegrationToggle | undefined",
+     "default": "undefined",
+     "description": "Runs when an integration is switched on or off; may return a promise (the real connect). The signal aborts when the picker is removed",
+     "readonly": false
+    },
+    {
+     "name": "hotkey",
+     "attribute": null,
+     "type": "string | false",
+     "default": "\"mod+/\"",
+     "description": "Window shortcut that jumps into the search: \"mod+/\" by default, any other combination, or false for none",
+     "readonly": false
+    },
+    {
+     "name": "back",
+     "attribute": "back",
+     "type": "boolean",
+     "default": "false",
+     "description": "Shows the back button (and ← in an empty search goes back)",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-selected-change",
+     "detail": "",
+     "description": "Another integration was picked; detail `{ selected: string }`. Cancelable.",
+     "cancelable": true
+    },
+    {
+     "name": "tc-connected-change",
+     "detail": "",
+     "description": "An integration was switched on or off; detail `{ connected: string[] }`. Cancelable.",
+     "cancelable": true
+    },
+    {
+     "name": "tc-query-change",
+     "detail": "",
+     "description": "The search text changed; detail `{ query: string }`. Cancelable.",
+     "cancelable": true
+    },
+    {
+     "name": "tc-explore",
+     "detail": "",
+     "description": "\"Explore integration\" was pressed; detail `{ id: string }`.",
+     "cancelable": false
+    },
+    {
+     "name": "tc-back",
+     "detail": "",
+     "description": "The back button, or ← in an empty search (only with `back`); detail `{}`.",
+     "cancelable": false
+    },
+    {
+     "name": "tc-close",
+     "detail": "",
+     "description": "Esc in an empty search; detail `{}`.",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "ip",
+   "cssProperties": [
+    {
+     "name": "--tc-integration-picker-app-bg",
+     "value": "#000000",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-integration-picker-app-fg",
+     "value": "#ffffff",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-integration-picker-ring-border",
+     "value": "light-dark(rgba(0, 0, 0, 0.06), rgba(255, 255, 255, 0.07))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-integration-picker-app-ring",
+     "value": "light-dark(rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.14))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-integration-picker-tile-shadow",
+     "value": "0 1px 2px 0 light-dark(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.4)), 0 8px 16px -8px light-dark(rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.6))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-integration-picker-spread",
+     "value": "2800ms",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-border-default",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-md",
+    "--tc-control-radius-md",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-instant",
+    "--tc-duration-moderate",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-duration-slowest",
+    "--tc-ease-move",
+    "--tc-ease-out",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-hover",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-integration-picker-brand",
+    "--tc-integration-picker-logo-ring",
+    "--tc-integration-picker-n",
+    "--tc-kbd-bg",
+    "--tc-kbd-fg",
+    "--tc-kbd-font-size",
+    "--tc-kbd-font-weight",
+    "--tc-kbd-h",
+    "--tc-kbd-px",
+    "--tc-kbd-radius",
+    "--tc-kbd-shadow",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-2xs",
+    "--tc-radius-badge",
+    "--tc-radius-full",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-radius-xl",
+    "--tc-shadow-control",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-4-5",
+    "--tc-status-danger-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-success-solid",
+    "--tc-subtitle-color",
+    "--tc-subtitle-font-size",
+    "--tc-subtitle-line-height",
+    "--tc-surface-inverse",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-switch-h",
+    "--tc-switch-knob",
+    "--tc-switch-knob-bg",
+    "--tc-switch-off",
+    "--tc-switch-on",
+    "--tc-switch-radius",
+    "--tc-switch-w",
+    "--tc-text-muted",
+    "--tc-text-on-inverse",
+    "--tc-text-placeholder",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-title-color",
+    "--tc-title-font-size",
+    "--tc-title-font-weight",
+    "--tc-title-line-height",
+    "--tc-title-tracking",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "integrationPickerDefaults",
+   "signature": "integrationPickerDefaults: IntegrationPickerItem[]",
+   "description": "Sample services – company marks from Simple Icons (CC0)"
+  }
+ ],
+ "react": [
+  {
+   "component": "IntegrationPickerOwn",
+   "exported": false,
+   "props": [
+    {
+     "name": "integrations",
+     "type": "Integration[]",
+     "optional": true,
+     "description": "The services to list – the sample services by default"
+    },
+    {
+     "name": "appName",
+     "type": "string",
+     "optional": true,
+     "description": "Your product's name in the details, e.g. \"Trenchcoat + Linear\""
+    },
+    {
+     "name": "appIcon",
+     "type": "React.ReactNode",
+     "optional": true,
+     "description": "Your product's mark on the black tile – the Trenchcoat mark by default"
+    },
+    {
+     "name": "selected",
+     "type": "string",
+     "optional": true,
+     "description": "Id of the picked integration. Controlled when defined; otherwise starts at `defaultSelected`"
+    },
+    {
+     "name": "defaultSelected",
+     "type": "string",
+     "optional": true,
+     "description": "Id of the integration that is picked first"
+    },
+    {
+     "name": "onSelectedChange",
+     "type": "(id: string) => void",
+     "optional": true,
+     "description": "Called with the id of the integration picked by click or arrow key"
+    },
+    {
+     "name": "connected",
+     "type": "string[]",
+     "optional": true,
+     "description": "Ids of the connected integrations. Controlled when defined; otherwise starts at `defaultConnected`, or at the\nintegrations marked `connected` (and follows those flags when they change)"
+    },
+    {
+     "name": "defaultConnected",
+     "type": "string[]",
+     "optional": true,
+     "description": "The connected ids on mount when `connected` isn't controlled"
+    },
+    {
+     "name": "onConnectedChange",
+     "type": "(ids: string[]) => void",
+     "optional": true,
+     "description": "Called with every connected id after an integration is switched on or off"
+    },
+    {
+     "name": "query",
+     "type": "string",
+     "optional": true,
+     "description": "The search text. Controlled when defined; otherwise starts at `defaultQuery`"
+    },
+    {
+     "name": "defaultQuery",
+     "type": "string",
+     "optional": true,
+     "description": "The search text on mount when `query` isn't controlled"
+    },
+    {
+     "name": "onQueryChange",
+     "type": "(query: string) => void",
+     "optional": true,
+     "description": "Called with the search text as it's typed or cleared"
+    },
+    {
+     "name": "onToggle",
+     "type": "(id: string, connected: boolean, options: { signal: AbortSignal }) => void | Promise<unknown>",
+     "optional": true,
+     "description": "Called with the id and the new state when an integration is switched on or off. May return a promise (the\nreal connect): the switch shows that it's working and flips when it resolves; a rejection leaves it as it was\nand says so, to try again. The signal aborts when the picker unmounts"
+    },
+    {
+     "name": "hotkey",
+     "type": "string | false",
+     "optional": true,
+     "description": "Window shortcut that jumps into the search: \"mod+/\" (⌘/ on Apple devices, Ctrl / elsewhere) by default, any\nother combination, or false for none"
+    },
+    {
+     "name": "onExplore",
+     "type": "(id: string) => void",
+     "optional": true,
+     "description": "Runs with the picked integration's id when \"Explore integration\" is pressed"
+    },
+    {
+     "name": "onBack",
+     "type": "() => void",
+     "optional": true,
+     "description": "Shows the back button and runs on ← in an empty search"
+    },
+    {
+     "name": "onClose",
+     "type": "() => void",
+     "optional": true,
+     "description": "Runs on Esc in an empty search"
+    }
+   ],
+   "hides": []
+  },
+  {
+   "component": "IntegrationPicker",
+   "exported": true,
+   "props": [
+    {
+     "name": "integrations",
+     "type": "Integration[]",
+     "optional": true,
+     "description": "The services to list – the sample services by default"
+    },
+    {
+     "name": "appName",
+     "type": "string",
+     "optional": true,
+     "description": "Your product's name in the details, e.g. \"Trenchcoat + Linear\""
+    },
+    {
+     "name": "appIcon",
+     "type": "React.ReactNode",
+     "optional": true,
+     "description": "Your product's mark on the black tile – the Trenchcoat mark by default"
+    },
+    {
+     "name": "selected",
+     "type": "string",
+     "optional": true,
+     "description": "Id of the picked integration. Controlled when defined; otherwise starts at `defaultSelected`"
+    },
+    {
+     "name": "defaultSelected",
+     "type": "string",
+     "optional": true,
+     "description": "Id of the integration that is picked first"
+    },
+    {
+     "name": "onSelectedChange",
+     "type": "(id: string) => void",
+     "optional": true,
+     "description": "Called with the id of the integration picked by click or arrow key"
+    },
+    {
+     "name": "connected",
+     "type": "string[]",
+     "optional": true,
+     "description": "Ids of the connected integrations. Controlled when defined; otherwise starts at `defaultConnected`, or at the\nintegrations marked `connected` (and follows those flags when they change)"
+    },
+    {
+     "name": "defaultConnected",
+     "type": "string[]",
+     "optional": true,
+     "description": "The connected ids on mount when `connected` isn't controlled"
+    },
+    {
+     "name": "onConnectedChange",
+     "type": "(ids: string[]) => void",
+     "optional": true,
+     "description": "Called with every connected id after an integration is switched on or off"
+    },
+    {
+     "name": "query",
+     "type": "string",
+     "optional": true,
+     "description": "The search text. Controlled when defined; otherwise starts at `defaultQuery`"
+    },
+    {
+     "name": "defaultQuery",
+     "type": "string",
+     "optional": true,
+     "description": "The search text on mount when `query` isn't controlled"
+    },
+    {
+     "name": "onQueryChange",
+     "type": "(query: string) => void",
+     "optional": true,
+     "description": "Called with the search text as it's typed or cleared"
+    },
+    {
+     "name": "onToggle",
+     "type": "(id: string, connected: boolean, options: { signal: AbortSignal }) => void | Promise<unknown>",
+     "optional": true,
+     "description": "Called with the id and the new state when an integration is switched on or off. May return a promise (the\nreal connect): the switch shows that it's working and flips when it resolves; a rejection leaves it as it was\nand says so, to try again. The signal aborts when the picker unmounts"
+    },
+    {
+     "name": "hotkey",
+     "type": "string | false",
+     "optional": true,
+     "description": "Window shortcut that jumps into the search: \"mod+/\" (⌘/ on Apple devices, Ctrl / elsewhere) by default, any\nother combination, or false for none"
+    },
+    {
+     "name": "onExplore",
+     "type": "(id: string) => void",
+     "optional": true,
+     "description": "Runs with the picked integration's id when \"Explore integration\" is pressed"
+    },
+    {
+     "name": "onBack",
+     "type": "() => void",
+     "optional": true,
+     "description": "Shows the back button and runs on ← in an empty search"
+    },
+    {
+     "name": "onClose",
+     "type": "() => void",
+     "optional": true,
+     "description": "Runs on Esc in an empty search"
+    }
+   ],
+   "hides": [
+    "back"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 58062,
+  "gzip": 16687
+ }
+}

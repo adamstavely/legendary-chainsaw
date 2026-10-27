@@ -1,0 +1,120 @@
+{
+ "elements": [
+  {
+   "tag": "tc-glow-keyboard",
+   "className": "TcGlowKeyboard",
+   "description": "An AI chat input above a glass keyboard and a moving gradient floor; the prompt types itself, key by key.",
+   "properties": [
+    {
+     "name": "prompts",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[\"Find a quiet hike near Zermatt\", \"Plan a sunrise climb for Saturday\", \"What should I pack for two days?\"]",
+     "description": "Prompts the demo types one after another, once each – each one is sent with Enter",
+     "readonly": false
+    },
+    {
+     "name": "placeholder",
+     "attribute": "placeholder",
+     "type": "string",
+     "default": "\"Ask AI anything...\"",
+     "description": "Placeholder in the chat input (also its accessible name)",
+     "readonly": false
+    },
+    {
+     "name": "label",
+     "attribute": "label",
+     "type": "string",
+     "default": "\"AI chat input above a glass keyboard and a moving colour gradient\"",
+     "description": "Accessible name of the scene (the host is a group)",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-submit",
+     "detail": "",
+     "description": "A prompt was sent with Enter, by the demo or by the user. Detail: { text: string }",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "gk",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-reveal-slow",
+    "--tc-duration-slower",
+    "--tc-ease-decelerate",
+    "--tc-ease-in-out",
+    "--tc-ease-out",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-glow-keyboard-beat",
+    "--tc-glow-keyboard-bg",
+    "--tc-glow-keyboard-blink",
+    "--tc-glow-keyboard-board-bg",
+    "--tc-glow-keyboard-board-border",
+    "--tc-glow-keyboard-board-inner",
+    "--tc-glow-keyboard-board-shadow",
+    "--tc-glow-keyboard-breathe",
+    "--tc-glow-keyboard-caret",
+    "--tc-glow-keyboard-floor-white",
+    "--tc-glow-keyboard-glow-a",
+    "--tc-glow-keyboard-glow-b",
+    "--tc-glow-keyboard-glow-blur",
+    "--tc-glow-keyboard-input-bg",
+    "--tc-glow-keyboard-input-border",
+    "--tc-glow-keyboard-input-inner",
+    "--tc-glow-keyboard-key-bg",
+    "--tc-glow-keyboard-key-down-bg",
+    "--tc-glow-keyboard-key-down-inner",
+    "--tc-glow-keyboard-key-down-text",
+    "--tc-glow-keyboard-key-drop",
+    "--tc-glow-keyboard-key-edge",
+    "--tc-glow-keyboard-key-inner",
+    "--tc-glow-keyboard-key-text",
+    "--tc-glow-keyboard-placeholder",
+    "--tc-glow-keyboard-ring-white",
+    "--tc-glow-keyboard-tap",
+    "--tc-glow-keyboard-text",
+    "--tc-glow-keyboard-touchid"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "GlowKeyboard",
+   "exported": true,
+   "props": [
+    {
+     "name": "onSubmit",
+     "type": "(text: string) => void",
+     "optional": true,
+     "description": "Called when a prompt is sent with Enter – by the demo or by the user"
+    }
+   ],
+   "hides": [
+    "children",
+    "look",
+    "onSubmit"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 35125,
+  "gzip": 11950
+ }
+}

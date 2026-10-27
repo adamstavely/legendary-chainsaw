@@ -1,4 +1,4 @@
-import { html, nothing, type PropertyValues } from "lit";
+import { html, nothing, svg, type PropertyValues } from "lit";
 import { property, state } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { keyed } from "lit/directives/keyed.js";
@@ -7,6 +7,7 @@ import { styleMap } from "lit/directives/style-map.js";
 import { easeOutQuart } from "../internal/ease";
 import { reducedMotion } from "../internal/reduced-motion";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 
 /*
  * <tc-usage-meter> – the Lit port of src/components/usage-meter.tsx: the "Usage" card of a SaaS or AI product.
@@ -58,6 +59,8 @@ export type UsageUpgrade = { state: UsageState };
 /* ---------- Helpers ---------- */
 
 // One formatter per locale and number of digits – made once, not on every call (the tween formats every frame)
+/* After Lucide: gauge – the header's icon */
+const headIcon = svg`<path d="m12 14 4-4"></path><path d="M3.34 19a10 10 0 1 1 17.32 0"></path>`;
 const formats = new Map<string, Intl.NumberFormat>();
 const numberFormat = (locale: string, digits: number) => {
   const key = `${locale}|${digits}`;
@@ -690,19 +693,19 @@ export class TcUsageMeter extends TcElement {
     const days = this.daily ?? [];
     const dot = html`<span class="ui-um__dot" aria-hidden="true"></span>`;
 
-    return html`
-      <div class="ui-um__card">
-        <div class="ui-um__inner">
-          <header class="ui-um__head">
-            <div class="ui-um__heading">
-              <h3 id=${`${this.uid}-title`} class="ui-um__title">${this.heading}</h3>
-              ${this.plan || reset
-                ? html`<p class="ui-um__sub">${this.plan}${this.plan && reset ? html`<span class="ui-um__sep" aria-hidden="true">·</span>` : nothing}${reset
+    // The header (.tc-head): on the tray in Standard, the card's first row in Clean (the host is the card there; the body
+    // below glides to its height, so the header stays outside it); the plan and reset under the title, the period switch
+    // at the right
+    const head = cardHead({
+      icon: headIcon,
+      title: this.heading,
+      id: `${this.uid}-title`,
+      subtitle: this.plan || reset
+                ? html`<span class="ui-um__sub">${this.plan}${this.plan && reset ? html`<span class="ui-um__sep" aria-hidden="true">·</span>` : nothing}${reset
                     ? html`<time datetime=${reset.toISOString()} title=${`Resets on ${dateFormat(this.locale).format(reset)}`}>${resetText(reset, current, dateFormat(this.locale).format(reset))}</time>`
-                    : nothing}</p>`
-                : nothing}
-            </div>
-            ${periods && periods.length > 1
+                    : nothing}</span>`
+                : undefined,
+      aside: periods && periods.length > 1
               ? html`<div class="ui-um__switch" role="radiogroup" aria-label="Period" @keydown=${this.onSwitchKey}>
                   <span class="ui-um__pill" aria-hidden="true"></span>
                   ${repeat(
@@ -712,9 +715,12 @@ export class TcUsageMeter extends TcElement {
                       html`<button type="button" role="radio" aria-checked=${p.id === active ? "true" : "false"} tabindex=${p.id === active ? 0 : -1} class="ui-um__option" @click=${() => this.choose(p.id)}>${p.label}</button>`,
                   )}
                 </div>`
-              : nothing}
-          </header>
-
+              : undefined,
+    });
+    return html`
+      ${head}
+      <div class="ui-um__card">
+        <div class="ui-um__inner">
           <div class="ui-um__figure">
             <p class="ui-um__amount"><span class="ui-um__big">${fmt(get("used"))}</span><span class="ui-um__of">of ${withUnit(fmt(total), unit)}</span></p>
             <span class="ui-um__pct" data-state=${st}>${strong ? dot : nothing}${fmt(Math.min(get("pct"), 999))}%</span>
@@ -760,7 +766,7 @@ export class TcUsageMeter extends TcElement {
   padding: var(--tc-tray-inset);
   border-radius: var(--tc-tray-radius);
   background: var(--tc-surface-sunken);
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-md);
   line-height: var(--tc-line-height-snug);
   color: var(--tc-text-secondary);
@@ -804,19 +810,10 @@ export class TcUsageMeter extends TcElement {
 .ui-um__card { overflow: hidden; transition: height var(--tc-duration-slow) var(--tc-ease-move); }
 .ui-um__inner { display: flow-root; }
 :where([data-look="standard"], [data-look="standard"] *).ui-um__card { border-radius: var(--tc-card-radius); background: var(--tc-surface-raised); box-shadow: var(--tc-card-shadow); }
-:where([data-look="standard"], [data-look="standard"] *).ui-um__inner { padding: var(--tc-space-3-5) var(--tc-space-4) var(--tc-space-4-5); }
-:where([data-look="clean"], [data-look="clean"] *).ui-um__card { border-radius: var(--tc-card-radius) var(--tc-card-radius) 0 0; }
-:where([data-look="clean"], [data-look="clean"] *).ui-um__inner { padding: var(--tc-space-4); }
-/* Head: title and reset date, the period switch on the right */
-.ui-um__head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--tc-space-3); }
-.ui-um__heading { min-width: 0; }
-:where([data-look="standard"], [data-look="standard"] *).ui-um__heading { padding-top: var(--tc-space-0-5); }
-.ui-um__title { overflow: hidden; font-weight: var(--tc-font-weight-strong); white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="standard"], [data-look="standard"] *).ui-um__title { font-size: var(--tc-font-size-lg); line-height: var(--tc-line-height-normal); color: var(--tc-text-primary); }
-:where([data-look="clean"], [data-look="clean"] *).ui-um__title { font-size: var(--tc-font-size-lg-plus); line-height: var(--tc-line-height-loose); color: var(--tc-text-strong); }
-.ui-um__sub { overflow: hidden; color: var(--tc-text-muted); white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="standard"], [data-look="standard"] *).ui-um__sub { font-size: var(--tc-font-size-sm); }
-:where([data-look="clean"], [data-look="clean"] *).ui-um__sub { font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); }
+:where([data-look="standard"], [data-look="standard"] *).ui-um__inner { padding: var(--tc-space-4) var(--tc-space-4) var(--tc-space-4-5); }
+:where([data-look="clean"], [data-look="clean"] *).ui-um__inner { padding: 0 var(--tc-space-4) var(--tc-space-4); }
+/* The header's line under the title: the plan and the reset date; the period switch at its right */
+.ui-um__sub { display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .ui-um__sep { margin: 0 var(--tc-space-1-5); color: var(--tc-text-disabled); }
 /* The period switch: a segmented control – the thumb glides to the chosen period */
 .ui-um__switch { position: relative; display: grid; grid-auto-columns: auto; grid-auto-flow: column; flex: none; padding: var(--tc-seg-pad); border-radius: var(--tc-seg-track-radius); background: var(--tc-seg-track-bg); }
@@ -838,8 +835,8 @@ export class TcUsageMeter extends TcElement {
 :where([data-look="standard"], [data-look="standard"] *).ui-um__option[aria-checked="true"] { font-weight: var(--tc-font-weight-strong); }
 /* The big number and its share */
 .ui-um__figure { display: flex; justify-content: space-between; gap: var(--tc-space-3); }
-:where([data-look="standard"], [data-look="standard"] *).ui-um__figure { align-items: baseline; margin-top: var(--tc-space-4-5); }
-:where([data-look="clean"], [data-look="clean"] *).ui-um__figure { align-items: center; margin-top: var(--tc-space-3-5); }
+:where([data-look="standard"], [data-look="standard"] *).ui-um__figure { align-items: baseline; }
+:where([data-look="clean"], [data-look="clean"] *).ui-um__figure { align-items: center; }
 .ui-um__amount { display: flex; flex-wrap: wrap; align-items: baseline; min-width: 0; }
 :where([data-look="standard"], [data-look="standard"] *).ui-um__amount { column-gap: var(--tc-space-1-5); }
 :where([data-look="clean"], [data-look="clean"] *).ui-um__amount { column-gap: var(--tc-space-2); }
@@ -1004,21 +1001,19 @@ export class TcUsageMeter extends TcElement {
 @container (min-width: 640px) {
   [data-ui="um"][data-layout="wide"] .ui-um__inner { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: var(--tc-space-10); }
   :where([data-look="standard"], [data-look="standard"] *)[data-ui="um"][data-layout="wide"] .ui-um__inner { padding: var(--tc-space-4) var(--tc-space-5) var(--tc-space-4-5); }
-  :where([data-look="clean"], [data-look="clean"] *)[data-ui="um"][data-layout="wide"] .ui-um__inner { padding: var(--tc-space-4) var(--tc-space-5); }
-  [data-ui="um"][data-layout="wide"] .ui-um__head { grid-column: 1; grid-row: 1; }
-  [data-ui="um"][data-layout="wide"] .ui-um__figure { grid-column: 1; grid-row: 2; }
-  [data-ui="um"][data-layout="wide"] .ui-um__bar { grid-column: 1; grid-row: 3; }
-  [data-ui="um"][data-layout="wide"] .ui-um__legend { grid-column: 1; grid-row: 4; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: var(--tc-space-6); }
-  [data-ui="um"][data-layout="wide"] .ui-um__daily { grid-column: 2; grid-row: 1 / span 3; align-self: end; margin-top: 0; }
+  :where([data-look="clean"], [data-look="clean"] *)[data-ui="um"][data-layout="wide"] .ui-um__inner { padding: 0 var(--tc-space-5) var(--tc-space-4); }
+  [data-ui="um"][data-layout="wide"] .ui-um__figure { grid-column: 1; grid-row: 1; }
+  [data-ui="um"][data-layout="wide"] .ui-um__bar { grid-column: 1; grid-row: 2; }
+  [data-ui="um"][data-layout="wide"] .ui-um__legend { grid-column: 1; grid-row: 3; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: var(--tc-space-6); }
+  [data-ui="um"][data-layout="wide"] .ui-um__daily { grid-column: 2; grid-row: 1 / span 2; align-self: end; margin-top: 0; }
   [data-ui="um"][data-layout="wide"] .ui-um__spark { height: 64px; }
-  [data-ui="um"][data-layout="wide"] .ui-um__limits { grid-column: 2; grid-row: 4; align-self: start; margin-top: var(--tc-space-2-5); }
+  [data-ui="um"][data-layout="wide"] .ui-um__limits { grid-column: 2; grid-row: 3; align-self: start; margin-top: var(--tc-space-2-5); }
 }
 /* Narrow (phones): the switch gets its own full-width row, limits stack as rows */
 @container (max-width: 400px) {
-  :where([data-look="standard"], [data-look="standard"] *).ui-um__inner { padding: var(--tc-space-3) var(--tc-space-3-5) var(--tc-space-4); }
-  :where([data-look="clean"], [data-look="clean"] *).ui-um__inner { padding: var(--tc-space-3-5); }
+  :where([data-look="standard"], [data-look="standard"] *).ui-um__inner { padding: var(--tc-space-3-5) var(--tc-space-3-5) var(--tc-space-4); }
+  :where([data-look="clean"], [data-look="clean"] *).ui-um__inner { padding: 0 var(--tc-space-3-5) var(--tc-space-3-5); }
   :where([data-look="clean"], [data-look="clean"] *).ui-um__foot { padding: 0 var(--tc-space-2) 0 var(--tc-space-3-5); }
-  .ui-um__head { flex-direction: column; align-items: stretch; gap: var(--tc-space-3); }
   .ui-um__switch { grid-auto-columns: minmax(0, auto); }
   .ui-um__option { padding: 0 var(--tc-space-1-5); }
   :where([data-look="standard"], [data-look="standard"] *).ui-um__big { font-size: var(--tc-font-size-3xl); }

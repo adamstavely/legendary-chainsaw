@@ -40,21 +40,29 @@ export type AgentCursorsProps = Omit<
   | "onTcAcceptAll"
   | "onTcResolve"
 > & {
+  /** The agents in the document; `avatar` takes a React node */
   agents: CursorAgent[];
   /** Resolves a comment – the black check in its window */
   onResolveComment?: (comment: DocComment) => void;
+  /** Accepts a suggestion – shows Accept in its window; write the change in with `acceptSuggestion` */
   onAccept?: (suggestion: DocSuggestion) => void;
+  /** Rejects a suggestion – shows Reject in its window */
   onReject?: (suggestion: DocSuggestion) => void;
-  /** Shows "Accept all" in the header when there is more than one suggestion */
+  /** Shows "Accept all" in the header; it is disabled while there are no suggestions */
   onAcceptAll?: () => void;
   /** The agent you follow (the others fade back). Controlled when defined (null = nobody) */
   following?: string | null;
+  /** The agent followed at first, when `following` is not controlled */
   defaultFollowing?: string | null;
+  /** Called when a face is clicked to follow an agent, or to stop (null) */
   onFollowingChange?: (agent: string | null) => void;
   /** The open tab. Controlled when defined; otherwise the component keeps it, starting from `defaultTab` */
   tab?: string;
+  /** The tab open at first, when `tab` is not controlled – defaults to the first */
   defaultTab?: string;
+  /** Called when another tab is picked */
   onTabChange?: (tab: string) => void;
+  /** The document's title in the header (default "Untitled") */
   title?: string;
 };
 

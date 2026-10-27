@@ -1,11 +1,25 @@
 import { createComponent, type EventName } from "@lit/react";
 import * as React from "react";
-import { TcApprovalCard, type ApprovalDeny, type ApprovalStatus, type ApprovalStatusChange, type DenyReason } from "../approval-card";
+import {
+  TcApprovalCard,
+  type ApprovalDeny,
+  type ApprovalDetailsChange,
+  type ApprovalEvidence,
+  type ApprovalEvidenceSelect,
+  type ApprovalStatus,
+  type ApprovalStatusChange,
+  type DenyReason,
+} from "../approval-card";
 import { h, isNode, useStaged } from "./internal";
 
-export type { ApprovalRisk, ApprovalStatus, DenyReason } from "../approval-card";
+export type { ApprovalConsequences, ApprovalEvidence, ApprovalRisk, ApprovalStatus, DenyReason } from "../approval-card";
 /** React nodes in place of elements */
-export type ApprovalDetail = { label: string; value: React.ReactNode };
+export type ApprovalDetail = {
+  label: string;
+  value: React.ReactNode;
+  /** With `editableDetails`: false keeps this row read-only. Only text values can be edited */
+  editable?: boolean;
+};
 
 const RawApprovalCard = createComponent({
   tagName: "tc-approval-card",
@@ -16,11 +30,13 @@ const RawApprovalCard = createComponent({
     onTcDeny: "tc-deny" as EventName<CustomEvent<ApprovalDeny>>,
     onTcEdit: "tc-edit" as EventName<CustomEvent<null>>,
     onTcExpire: "tc-expire" as EventName<CustomEvent<null>>,
+    onTcDetailsChange: "tc-details-change" as EventName<CustomEvent<ApprovalDetailsChange>>,
+    onTcEvidenceSelect: "tc-evidence-select" as EventName<CustomEvent<ApprovalEvidenceSelect>>,
   },
 });
 type RawApprovalCardProps = React.ComponentProps<typeof RawApprovalCard>;
 type Nodes = "heading" | "description" | "icon" | "details" | "preview" | "label" | "status" | "editable";
-export type ApprovalCardProps = Omit<RawApprovalCardProps, Nodes | "onTcStatusChange" | "onTcDeny" | "onTcEdit" | "onTcExpire" | "children"> & {
+export type ApprovalCardProps = Omit<RawApprovalCardProps, Nodes | "onTcStatusChange" | "onTcDeny" | "onTcEdit" | "onTcExpire" | "onTcDetailsChange" | "onTcEvidenceSelect" | "children"> & {
   /** The action, e.g. "Send campaign email" */
   title: string;
   /** One line of context below the title */
@@ -31,6 +47,7 @@ export type ApprovalCardProps = Omit<RawApprovalCardProps, Nodes | "onTcStatusCh
   details?: ApprovalDetail[];
   /** Anything to show above the details, e.g. a recipient list – children work too */
   preview?: React.ReactNode;
+  /** The preview, when `preview` isn't given */
   children?: React.ReactNode;
   /** Small label on the gray tray above the card */
   label?: React.ReactNode;
@@ -40,11 +57,19 @@ export type ApprovalCardProps = Omit<RawApprovalCardProps, Nodes | "onTcStatusCh
   defaultStatus?: ApprovalStatus;
   /** Called with the new status whenever the card is approved, denied or expires (controlled or not) */
   onStatusChange?: (status: ApprovalStatus) => void;
+  /** Called when the card is denied, by the user or by the countdown (`reason: "timeout"`) */
   onDeny?: (decision: { reason: DenyReason }) => void;
   /** Shows an "Edit" button */
   onEdit?: () => void;
   /** Called when the countdown runs out (onDeny is called too) */
   onExpire?: () => void;
+  /**
+   * With `editableDetails`, called with the rows after an argument is edited. Given, the rows are controlled – pass
+   * them back as `details`; without it the card keeps the edits itself
+   */
+  onDetailsChange?: (details: ApprovalDetail[], change: { index: number; label: string; value: string }) => void;
+  /** Called when an evidence chip without `href` is pressed */
+  onEvidenceSelect?: (evidence: ApprovalEvidence, index: number) => void;
 };
 
 /**
@@ -79,8 +104,13 @@ export function ApprovalCard({
   onDeny,
   onEdit,
   onExpire,
+  onDetailsChange,
+  onEvidenceSelect,
   ...props
 }: ApprovalCardProps) {
+  // Edits kept here when the rows aren't controlled, so a parent re-render doesn't undo them
+  const [edits, setEdits] = React.useState<Record<number, string>>({});
+  const rows = React.useMemo(() => (onDetailsChange ? details : details?.map((d, i) => (i in edits ? { ...d, value: edits[i] } : d))), [details, edits, onDetailsChange]);
   const body = preview ?? children;
   const staged: [string, React.ReactNode][] = [];
   const stage = (key: string, n: React.ReactNode) => {
@@ -92,7 +122,7 @@ export function ApprovalCard({
   if (isNode(icon)) stage("icon", icon);
   stage("preview", body);
   stage("label", label);
-  details?.forEach((d, i) => stage(`detail-${i}`, d.value));
+  rows?.forEach((d, i) => stage(`detail-${i}`, d.value));
   const { stage: box, els } = useStaged(staged);
   const pick = (key: string, n: React.ReactNode) => textOf(n) ?? (n == null || n === false ? undefined : els[key]);
   const s = useValue(status, defaultStatus, onStatusChange);
@@ -103,12 +133,20 @@ export function ApprovalCard({
     icon: isNode(icon) ? els.icon : (icon as Element | undefined),
     preview: pick("preview", body),
     label: pick("label", label),
-    details: details?.map((d, i) => ({ label: d.label, value: pick(`detail-${i}`, d.value) ?? "" })),
+    details: rows?.map((d, i) => ({ label: d.label, value: pick(`detail-${i}`, d.value) ?? "", ...(d.editable === undefined ? {} : { editable: d.editable }) })),
     status: s.value,
     editable: !!onEdit,
     onTcStatusChange: (e: CustomEvent<ApprovalStatusChange>) => s.handler(e.detail.status, e),
     onTcDeny: (e: CustomEvent<ApprovalDeny>) => onDeny?.(e.detail),
     onTcEdit: () => onEdit?.(),
     onTcExpire: () => onExpire?.(),
+    onTcDetailsChange: (e: CustomEvent<ApprovalDetailsChange>) => {
+      const { index, label, value } = e.detail;
+      if (onDetailsChange) {
+        e.preventDefault();
+        onDetailsChange((details ?? []).map((d, i) => (i === index ? { ...d, value } : d)), { index, label, value });
+      } else setEdits((x) => ({ ...x, [index]: value }));
+    },
+    onTcEvidenceSelect: (e: CustomEvent<ApprovalEvidenceSelect>) => onEvidenceSelect?.(e.detail.evidence, e.detail.index),
   }));
 }

@@ -5,6 +5,8 @@ import { repeat } from "lit/directives/repeat.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { reducedMotion } from "../internal/reduced-motion";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
+import { duration as took } from "./internal/format";
 import { FocusRescueController, OnScreenController, RowWindowController, rescueFocus } from "./internal/controllers";
 
 /*
@@ -79,12 +81,6 @@ const SHINE_MAX = 20;
 
 const INTEGER = new Intl.NumberFormat("en-US");
 const dollars = (n: number) => (n === 0 ? "$0" : n < 0.01 ? `$${n.toFixed(3)}` : n < 10 ? `$${n.toFixed(2)}` : `$${INTEGER.format(Math.round(n))}`);
-const took = (ms: number) => {
-  if (ms < SEC) return `${Math.max(0, Math.round(ms))}ms`;
-  if (ms < 10 * SEC) return `${(ms / SEC).toFixed(1)}s`;
-  const s = Math.round(ms / SEC);
-  return s < 60 ? `${s}s` : `${Math.floor(s / 60)}m ${String(s % 60).padStart(2, "0")}s`;
-};
 const tickLabel = (v: number) => {
   const s = Math.round(v / SEC);
   if (s < 60) return `${s}s`;
@@ -148,7 +144,8 @@ type Row = { span: TraceSpan; depth: number; parentId?: string; hidden: boolean;
 
 /* ---------- Icons ---------- */
 
-const sparkIcon = html`<svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">${svg`<path d="M7 1.2c.4 2.9 1.9 4.4 4.8 4.8-2.9.4-4.4 1.9-4.8 4.8C6.6 7.9 5.1 6.4 2.2 6 5.1 5.6 6.6 4.1 7 1.2Z" fill="currentColor"></path><circle cx="11.6" cy="11.4" r="1.1" fill="currentColor" opacity="0.55"></circle>`}</svg>`;
+/* After Lucide: chart-gantt – the header's icon */
+const headIcon = svg`<path d="M10 6h8M12 16h6M8 11h7"></path><path d="M3 3v16a2 2 0 0 0 2 2h16"></path>`;
 /* chevron-down, triangle-alert and x: Lucide (ISC, lucide.dev); the loader is a plain arc */
 const chevronIcon = html`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${svg`<path d="m6 9 6 6 6-6"></path>`}</svg>`;
 const warningIcon = html`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${svg`<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"></path><path d="M12 9v4" stroke-width="2.2"></path><path d="M12 17h.01" stroke-width="2.6"></path>`}</svg>`;
@@ -718,12 +715,13 @@ export class TcTraceWaterfall extends TcElement {
     const popSpan = m.openSpan ?? this.closing ?? undefined;
 
     return html`
-      <header class="ui-tw__bar-head">
-        <span class="ui-tw__spark">${sparkIcon}</span>
-        <span class="ui-tw__heading">${this.heading}</span>
-        <span class="ui-tw__task">${root.input ?? root.name}</span>
-        <span class="ui-tw__pill" data-status=${m.runState} aria-live="polite">${running ? html`<span class="ui-tw__pulse" aria-hidden="true"></span>` : nothing}${running ? "Live" : STATUS[m.runState]}</span>
-      </header>
+      ${/* The header (.tc-head): on the tray in Standard, the card's first row in Clean. What ran under the title, whether it
+           still runs at the right */ cardHead({
+        icon: headIcon,
+        title: this.heading,
+        subtitle: html`<span class="ui-tw__task">${root.input ?? root.name}</span>`,
+        aside: html`<span class="ui-tw__pill ui-tw__pill--run" data-status=${m.runState} aria-live="polite">${running ? html`<span class="ui-tw__pulse" aria-hidden="true"></span>` : nothing}${running ? "Live" : STATUS[m.runState]}</span>`,
+      })}
 
       <div class="ui-tw__card">
         <dl class="ui-tw__stats">
@@ -801,11 +799,10 @@ export class TcTraceWaterfall extends TcElement {
   border-radius: var(--tc-tray-radius);
   background: var(--tc-surface-sunken);
   container: ui-tw / inline-size;
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-regular);
   line-height: var(--tc-line-height-normal);
-  letter-spacing: -0.006em;
   color: var(--tc-text-muted);
   text-align: left;
   -webkit-font-smoothing: antialiased;
@@ -858,18 +855,13 @@ export class TcTraceWaterfall extends TcElement {
 [data-ui="tw"] :is(p, dl, dd) { margin: 0; }
 [data-ui="tw"] svg { display: block; flex: none; }
 .ui-tw__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-/* ----- On the tray (Clean: on the card): what ran, and whether it still runs ----- */
-:where([data-look="standard"], [data-look="standard"] *).ui-tw__bar-head { display: flex; align-items: center; gap: var(--tc-space-2); min-width: 0; padding: var(--tc-space-2) var(--tc-space-2) var(--tc-space-3) var(--tc-space-3); }
-:where([data-look="clean"], [data-look="clean"] *).ui-tw__bar-head { display: flex; align-items: center; gap: var(--tc-space-2); min-width: 0; padding: var(--tc-space-3) var(--tc-space-3-5) var(--tc-space-3) var(--tc-space-4); border-bottom: var(--tc-hairline) solid var(--tc-divider); }
-.ui-tw__spark { display: grid; flex: none; place-items: center; width: 16px; color: var(--tc-accent-text); }
-.ui-tw__heading { flex: none; font-weight: var(--tc-font-weight-strong); color: var(--tc-text-strong); }
-.ui-tw__task { flex: 1; min-width: 0; overflow: hidden; color: var(--tc-text-muted); white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="standard"], [data-look="standard"] *).ui-tw__task { font-size: var(--tc-font-size-md); }
+/* ----- The header's line under the title: what ran, on one line ----- */
+.ui-tw__task { display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 /* Status pills: the live/done pill in the header is the large pill, the one in the details the regular one */
 .ui-tw__pill { display: inline-flex; flex: none; align-items: center; gap: var(--tc-space-1-5); height: var(--tc-pill-h-lg); padding: 0 var(--tc-pill-px-lg); border-radius: var(--tc-pill-radius); background: var(--tc-fill-default); font-size: var(--tc-pill-font-size-lg); font-weight: var(--tc-pill-font-weight); line-height: var(--tc-line-height-tight); white-space: nowrap; }
 :where([data-look="standard"], [data-look="standard"] *).ui-tw__pill { color: var(--tc-text-muted); }
 :where([data-look="clean"], [data-look="clean"] *).ui-tw__pill { color: var(--tc-text-secondary); }
-:where([data-look="standard"], [data-look="standard"] *).ui-tw__bar-head .ui-tw__pill { background: var(--tc-surface-raised); box-shadow: var(--tc-shadow-raised); }
+:where([data-look="standard"], [data-look="standard"] *).ui-tw__pill--run { background: var(--tc-surface-raised); box-shadow: var(--tc-shadow-raised); }
 .ui-tw__pill[data-status="running"] { color: var(--tc-accent-text); }
 .ui-tw__pill[data-status="done"] { color: var(--tc-status-success-fg); }
 .ui-tw__pill[data-status="failed"] { color: var(--tc-status-danger-fg); }
@@ -884,7 +876,7 @@ export class TcTraceWaterfall extends TcElement {
 /* ----- The white card: the run in numbers, then the waterfall ----- */
 :where([data-look="standard"], [data-look="standard"] *).ui-tw__card { border-radius: var(--tc-card-radius); background: var(--tc-surface-raised); box-shadow: var(--tc-card-shadow); }
 .ui-tw__stats { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); padding: var(--tc-space-3-5) 0; border-bottom: var(--tc-hairline) solid var(--tc-divider); }
-:where([data-look="clean"], [data-look="clean"] *).ui-tw__stats { padding: var(--tc-space-3) 0; }
+:where([data-look="clean"], [data-look="clean"] *).ui-tw__stats { padding: var(--tc-space-3) 0; border-top: var(--tc-hairline) solid var(--tc-divider); }
 .ui-tw__stat { display: grid; gap: var(--tc-space-0-5); min-width: 0; padding: 0 var(--tc-space-4); }
 /* The first value a little further from the edge, the last one a little closer – so the row looks even */
 .ui-tw__stat:first-child { padding-left: 22px; }
@@ -1053,8 +1045,6 @@ export class TcTraceWaterfall extends TcElement {
 :where([data-look="clean"], [data-look="clean"] *).ui-tw__pop-io > p { font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); color: var(--tc-text-secondary); }
 /* ----- Narrow: the name on its own line, its bar under it across the whole width ----- */
 @container ui-tw (max-width: 560px) {
-  :where([data-look="standard"], [data-look="standard"] *).ui-tw__bar-head { padding: var(--tc-space-2) var(--tc-space-2) var(--tc-space-2-5) var(--tc-space-2-5); }
-  :where([data-look="clean"], [data-look="clean"] *).ui-tw__bar-head { padding: var(--tc-space-2-5) var(--tc-space-3); }
   .ui-tw__stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   :where([data-look="standard"], [data-look="standard"] *).ui-tw__stats { row-gap: var(--tc-space-3); padding: var(--tc-space-3) 0; }
   :where([data-look="clean"], [data-look="clean"] *).ui-tw__stats { row-gap: var(--tc-space-2-5); padding: var(--tc-space-2-5) 0; }
@@ -1090,7 +1080,7 @@ export class TcTraceWaterfall extends TcElement {
 @container ui-tw (max-width: 400px) {
   :where([data-look="clean"], [data-look="clean"] *).ui-tw__stat { padding-inline: var(--tc-space-2-5); }
   :where([data-look="clean"], [data-look="clean"] *).ui-tw__stat:is(:first-child, :nth-child(4)) { padding-left: var(--tc-space-3-5); }
-  :where([data-look="clean"], [data-look="clean"] *).ui-tw__stat dt { letter-spacing: 0.02em; }
+  :where([data-look="clean"], [data-look="clean"] *).ui-tw__stat dt { letter-spacing: var(--tc-tracking-normal); }
   .ui-tw__meta-cost { display: none; }
   .ui-tw__meta .ui-tw__slow { width: 6px; height: 6px; padding: 0; border-radius: 50%; background: var(--tc-status-warning-fg); }
   .ui-tw__meta .ui-tw__slow-text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }

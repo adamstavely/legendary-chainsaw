@@ -84,6 +84,29 @@ describe("tc-combobox", () => {
     expect(el.value).toEqual(["do"]);
   });
 
+  test("a synchronous create failure is announced and can be retried", async () => {
+    const create = vi.fn((text: string) => {
+      if (create.mock.calls.length === 1) throw new Error("Try again");
+      return { value: text, label: text };
+    });
+    const el = await fixture<TcCombobox>(html`<tc-combobox label="Labels" creatable .createOption=${create}></tc-combobox>`);
+    const { input } = parts(el);
+    input.focus();
+    input.value = "New label";
+    input.dispatchEvent(new Event("input", { bubbles: true }));
+    await settle();
+    key(input, "ArrowDown");
+    await settle();
+    key(input, "Enter");
+    await settle();
+    expect(el.value).toEqual([]);
+    expect(el.textContent).toContain("Couldn't create “New label”");
+    key(input, "Enter");
+    await settle();
+    expect(create).toHaveBeenCalledTimes(2);
+    expect(el.value).toEqual(["New label"]);
+  });
+
   test("controlled: preventDefault on tc-value-change keeps the value", async () => {
     const onChange = vi.fn((e: CustomEvent) => e.preventDefault());
     const el = await fixture<TcCombobox>(html`<tc-combobox label="Assignees" .options=${OPTIONS} .value=${["ben"]} @tc-value-change=${onChange}></tc-combobox>`);

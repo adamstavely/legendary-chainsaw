@@ -5,6 +5,8 @@ import { keyed } from "lit/directives/keyed.js";
 import { repeat } from "lit/directives/repeat.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
+import { dollars, duration as took } from "./internal/format";
 import { FocusRescueController, OnScreenController } from "./internal/controllers";
 
 /*
@@ -12,8 +14,9 @@ import { FocusRescueController, OnScreenController } from "./internal/controller
  * every task is a cell on a grid. Cells are tinted by state (queued, running with a sweeping shine, retrying, done,
  * failed); done, cost and the time left are counted on top; the counts under the card double as a filter. Point at a
  * cell (or move with the arrow keys) for a small window with the task's details – click or Enter keeps it open.
- * Failed tasks can be sent again with "Retry failed" (shown when `onRetry` is set). Clean drops the tray: a bar on
- * top, one white panel with the grid and the counts as a quiet line inside it.
+ * Failed tasks can be sent again with "Retry failed" (shown when `onRetry` is set). Standard puts the header on the
+ * tray above the card; Clean drops the tray: one white card, the header its first row, the grid and the counts as a
+ * quiet line under it.
  *
  *   <tc-fan-out-grid heading="Lead enrichment" job="Enrich 140 leads" .tasks=${tasks} .elapsed=${4200}></tc-fan-out-grid>
  *
@@ -51,21 +54,9 @@ const ORDER: FanoutStatus[] = ["done", "running", "retrying", "failed", "queued"
 const SHOWN: FanoutStatus[] = ["done", "running", "retrying", "failed"];
 const LABEL: Record<FanoutStatus, string> = { queued: "Queued", running: "Running", retrying: "Retrying", done: "Done", failed: "Failed" };
 const SEC = 1000;
-const dollars = (n: number) => (n === 0 ? "$0" : n < 0.01 ? `$${n.toFixed(3)}` : n < 100 ? `$${n.toFixed(2)}` : `$${Math.round(n).toLocaleString("en-US")}`);
-const took = (ms: number) => {
-  if (ms < SEC) return `${Math.max(0, Math.round(ms))}ms`;
-  if (ms < 10 * SEC) return `${(ms / SEC).toFixed(1)}s`;
-  const s = Math.round(ms / SEC);
-  return s < 60 ? `${s}s` : `${Math.floor(s / 60)}m ${String(s % 60).padStart(2, "0")}s`;
-};
 
-/* A small fan-out mark for the title (drawn for Trenchcoat) */
-const fanMark = html`<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">${svg`
-  <circle cx="3" cy="8" r="1.9" fill="currentColor"></circle>
-  <rect x="10.2" y="1.6" width="3.6" height="3.6" rx="1" fill="currentColor" opacity="0.9"></rect>
-  <rect x="10.2" y="6.2" width="3.6" height="3.6" rx="1" fill="currentColor" opacity="0.6"></rect>
-  <rect x="10.2" y="10.8" width="3.6" height="3.6" rx="1" fill="currentColor" opacity="0.3"></rect>
-  <path d="M4.9 8H7c.6 0 .9-.3 1-.9l.4-2.4c.1-.6.4-.9 1-.9h.6M4.9 8h5.1M4.9 8H7c.6 0 .9.3 1 .9l.4 2.4c.1.6.4.9 1 .9h.6" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"></path>`}</svg>`;
+/* The header's default icon: one job fanning out to many workers (drawn for Trenchcoat) */
+const fanMark = svg`<circle cx="5" cy="12" r="2.5"></circle><rect x="16" y="3" width="5" height="5" rx="1"></rect><rect x="16" y="9.5" width="5" height="5" rx="1"></rect><rect x="16" y="16" width="5" height="5" rx="1"></rect><path d="M7.5 12H16M7.5 12c3 0 3-6.5 6-6.5H16M7.5 12c3 0 3 6.5 6 6.5H16"></path>`;
 /* rotate-cw: Lucide (ISC, lucide.dev) */
 const retryIcon = html`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${svg`<path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path>`}</svg>`;
 
@@ -81,6 +72,7 @@ let instances = 0;
 export class TcFanOutGrid extends TcElement {
   static override ui = "fog";
 
+  /** Every task in the job, one cell each, in order – its label, state, worker, times, cost, result or error */
   @property({ attribute: false }) accessor tasks: FanoutTask[] = [];
   /** What the whole job does – e.g. "Enrich 240 leads" */
   @property() accessor job = "";
@@ -103,9 +95,9 @@ export class TcFanOutGrid extends TcElement {
   @property({ attribute: false }) accessor filter: FanoutStatus | null = null;
   /** Formats every cost – defaults to dollars, e.g. "$0.014" */
   @property({ attribute: false }) accessor formatCost: (amount: number) => string = dollars;
-  /** The title on the bar */
+  /** The title in the header */
   @property() accessor heading = "Fan-out";
-  /** A small mark before the title (cloned); unset shows the default */
+  /** The header's icon (cloned); unset shows the default */
   @property({ attribute: false }) accessor icon: Element | undefined = undefined;
 
   @state() private accessor hover: number | null = null;
@@ -350,7 +342,7 @@ export class TcFanOutGrid extends TcElement {
       this.iconSource = this.icon;
       this.iconClone = this.icon.cloneNode(true);
     }
-    return this.iconClone;
+    return this.iconClone as Element;
   }
 
   protected override render() {
@@ -437,16 +429,16 @@ export class TcFanOutGrid extends TcElement {
       : nothing;
 
     return html`
-      <header class="ui-fog__bar">
-        <span class="ui-fog__mark">${this.headIcon()}</span>
-        <span class="ui-fog__title">${this.heading}</span>
-        ${this.job ? html`<span class="ui-fog__job" title=${this.job}>${this.job}</span>` : nothing}
-        <span class="ui-fog__sum">
+      ${cardHead({
+        icon: this.headIcon(),
+        title: this.heading,
+        subtitle: this.job,
+        aside: html`<span class="ui-fog__sum">
           <span><b>${count.done}</b> / ${total}</span>
           <span><b>${formatCost(cost)}</b></span>
           <span class="ui-fog__time" ?data-done=${finished}>${finished ? `Finished in ${took(elapsed)}` : eta !== null ? `~${took(eta)} left` : `${took(elapsed)} so far`}</span>
-        </span>
-      </header>
+        </span>`,
+      })}
 
       <div class="ui-fog__panel">
         <div
@@ -515,7 +507,6 @@ export class TcFanOutGrid extends TcElement {
   border-radius: var(--tc-tray-radius);
   background: var(--tc-surface-tray);
   font-size: var(--tc-font-size-lg);
-  letter-spacing: -0.006em;
   color: var(--tc-text-muted);
 }
 :where([data-look="clean"], [data-look="clean"] *)[data-ui="fog"] { font-size: var(--tc-font-size-md); color: var(--tc-text-secondary); }
@@ -525,16 +516,8 @@ export class TcFanOutGrid extends TcElement {
 [data-ui="fog"] svg { display: block; flex: none; }
 .ui-fog__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .ui-fog__n { font-variant-numeric: tabular-nums; }
-/* ----- The bar: what runs, and how far it is ----- */
-.ui-fog__bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-1) var(--tc-space-2); min-width: 0; }
-:where([data-look="standard"], [data-look="standard"] *).ui-fog__bar { padding: var(--tc-space-2) var(--tc-space-3) var(--tc-space-3); }
-:where([data-look="clean"], [data-look="clean"] *).ui-fog__bar { margin-bottom: var(--tc-space-4); }
-.ui-fog__mark { display: grid; flex: none; place-items: center; width: 16px; color: var(--tc-accent-text); }
-.ui-fog__mark > svg { width: 16px; height: 16px; }
-.ui-fog__title { flex: none; font-weight: var(--tc-font-weight-strong); color: var(--tc-text-strong); }
-.ui-fog__job { min-width: 0; overflow: hidden; color: var(--tc-text-muted); white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="standard"], [data-look="standard"] *).ui-fog__job { font-size: var(--tc-font-size-md); }
-.ui-fog__sum { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-0-5) var(--tc-space-3-5); margin-left: auto; color: var(--tc-text-muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+/* ----- The header (cardHead): what runs – the job is its quiet line – and how far it is, at its right ----- */
+.ui-fog__sum { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-0-5) var(--tc-space-3-5); color: var(--tc-text-muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
 :where([data-look="standard"], [data-look="standard"] *).ui-fog__sum { font-size: var(--tc-font-size-md); line-height: var(--tc-line-height-snug); }
 :where([data-look="clean"], [data-look="clean"] *).ui-fog__sum { font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); }
 .ui-fog__sum b { font-weight: var(--tc-font-weight-strong); color: var(--tc-text-primary); }
@@ -543,7 +526,9 @@ export class TcFanOutGrid extends TcElement {
 /* ----- The card with the grid ----- */
 .ui-fog__panel { position: relative; display: grid; border-radius: var(--tc-card-radius); box-shadow: var(--tc-card-shadow); }
 :where([data-look="standard"], [data-look="standard"] *).ui-fog__panel { padding: var(--tc-space-4-5); background: var(--tc-surface-on-tray); }
-:where([data-look="clean"], [data-look="clean"] *).ui-fog__panel { gap: var(--tc-space-3-5); padding: var(--tc-space-4) var(--tc-space-4) var(--tc-space-3-5); background: var(--tc-surface-raised); }
+/* Clean: one white card – the header is its first row, then the grid and the counts */
+:where([data-look="clean"], [data-look="clean"] *)[data-ui="fog"] { border-radius: var(--tc-card-radius); background: var(--tc-surface-raised); box-shadow: var(--tc-card-shadow); }
+:where([data-look="clean"], [data-look="clean"] *).ui-fog__panel { gap: var(--tc-space-3-5); padding: 0 var(--tc-space-4) var(--tc-space-3-5); background: none; box-shadow: none; }
 /* ----- A swatch and a count per state – each one a filter – and Retry: on the tray (Standard), in the panel (Clean) ----- */
 .ui-fog__foot { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-1) var(--tc-space-3); min-width: 0; }
 :where([data-look="standard"], [data-look="standard"] *).ui-fog__foot { padding: var(--tc-space-2) var(--tc-space-1-5) var(--tc-space-1) var(--tc-space-2); }
@@ -572,7 +557,7 @@ export class TcFanOutGrid extends TcElement {
 .ui-fog__retry { display: inline-flex; align-items: center; margin-left: auto; font-size: var(--tc-control-font-size); font-weight: var(--tc-control-font-weight); color: var(--tc-status-danger-fg); animation: ui-fog-in var(--tc-duration-moderate) var(--tc-ease-move) both; }
 :where([data-look="standard"], [data-look="standard"] *).ui-fog__retry { gap: var(--tc-space-1-5); height: var(--tc-control-h-md); padding: 0 var(--tc-control-px-md) 0 10px; border-radius: var(--tc-control-radius-md); background: var(--tc-action-secondary-bg); box-shadow: var(--tc-action-secondary-shadow); transition: box-shadow var(--tc-duration-fast) var(--tc-ease-standard); }
 :where([data-look="standard"], [data-look="standard"] *).ui-fog__retry:hover { box-shadow: var(--tc-action-secondary-shadow-hover); }
-:where([data-look="clean"], [data-look="clean"] *).ui-fog__retry { gap: var(--tc-space-1); height: var(--tc-control-h-sm); margin: -3px -6px -3px auto; padding: 0 var(--tc-space-1-5); border-radius: var(--tc-control-radius-sm); font-size: var(--tc-font-size-sm); transition: background-color var(--tc-duration-fast) var(--tc-ease-standard); }
+:where([data-look="clean"], [data-look="clean"] *).ui-fog__retry { gap: var(--tc-space-1); height: var(--tc-control-h-sm); margin: -3px -6px -3px auto; padding: 0 var(--tc-control-px-sm); border-radius: var(--tc-control-radius-sm); transition: background-color var(--tc-duration-fast) var(--tc-ease-standard); }
 :where([data-look="clean"], [data-look="clean"] *).ui-fog__retry:hover { background: var(--tc-status-danger-bg); }
 :where([data-look="clean"], [data-look="clean"] *).ui-fog__retry > svg { width: 13px; height: 13px; }
 /*
@@ -638,8 +623,7 @@ export class TcFanOutGrid extends TcElement {
   /* Set on the card – a container query can't style the container itself */
   .ui-fog__panel { --tc-fan-out-grid-cell: 10px; --tc-fan-out-grid-gap: 14px; }
   :where([data-look="standard"], [data-look="standard"] *).ui-fog__panel { padding: var(--tc-space-3-5); }
-  :where([data-look="clean"], [data-look="clean"] *).ui-fog__panel { padding: var(--tc-space-3); }
-  .ui-fog__sum { flex-basis: 100%; justify-content: space-between; margin-left: 0; }
+  :where([data-look="clean"], [data-look="clean"] *).ui-fog__panel { padding: 0 var(--tc-space-3) var(--tc-space-3); }
   /* The counts in a fixed two-by-two grid, Retry beside it – nothing moves when a state shows up or Retry appears */
   .ui-fog__foot { flex-wrap: nowrap; align-items: center; }
   .ui-fog__legend { display: grid; grid-template-columns: repeat(2, max-content); }

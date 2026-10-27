@@ -1,0 +1,90 @@
+{
+ "elements": [
+  {
+   "tag": "tc-lead-sourcing",
+   "className": "TcLeadSourcing",
+   "description": "A small card illustration: three connected app tiles with a shine running along the line.",
+   "properties": [
+    {
+     "name": "label",
+     "attribute": "label",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "Describes the scene to assistive tech (role=\"img\"); without it the illustration is decorative and hidden",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [],
+   "slots": [],
+   "methods": [],
+   "ui": "ls",
+   "cssProperties": [
+    {
+     "name": "--tc-lead-sourcing-tile",
+     "value": "light-dark(#ffffff, #232326)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-lead-sourcing-tile-edge",
+     "value": "light-dark(#e4e7ec, rgba(255, 255, 255, 0.08))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-lead-sourcing-drop",
+     "value": "light-dark(rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.4))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-lead-sourcing-sliver",
+     "value": "light-dark(#eaecef, #1a1a1c)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-lead-sourcing-line",
+     "value": "light-dark(#e4e7ec, #3a3a3f)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-lead-sourcing-mark",
+     "value": "light-dark(#171717, #ededed)",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": []
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "LeadSourcing",
+   "exported": false,
+   "props": [],
+   "hides": []
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 20913,
+  "gzip": 7850
+ }
+}

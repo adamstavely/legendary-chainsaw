@@ -158,7 +158,9 @@ type RunStatus = { id: string; label: string; state: "pending" | "failed" };
 export class TcCommandMenu extends TcElement {
   static override ui = "cm";
 
+  /** The commands, in titled groups; a group with the id "suggestions" gets ⌘1–⌘5 */
   @property({ attribute: false }) accessor groups: CommandMenuGroup[] = defaultCommandGroups;
+  /** Placeholder text in the search field */
   @property() accessor placeholder = "Type a command or search…";
   /** The search text */
   @property() accessor query = "";
@@ -538,7 +540,7 @@ export class TcCommandMenu extends TcElement {
   padding: var(--tc-tray-inset);
   border-radius: var(--tc-tray-radius);
   background: var(--tc-surface-tray);
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-md);
   color: var(--tc-text-secondary);
   -webkit-font-smoothing: antialiased;
@@ -576,7 +578,7 @@ export class TcCommandMenu extends TcElement {
 .ui-cm__search input::placeholder { color: var(--tc-text-muted); }
 /* The field's focus ring goes round the whole panel (the search field is its first row); the input itself draws none */
 .ui-cm__card:has(input:focus-visible) { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
-:where([data-look="standard"], [data-look="standard"] *).ui-cm__enter { display: inline-flex; align-items: center; gap: var(--tc-space-1); font-size: var(--tc-font-size-xs); font-weight: var(--tc-font-weight-medium); letter-spacing: 0.04em; text-transform: uppercase; color: var(--tc-text-muted); }
+:where([data-look="standard"], [data-look="standard"] *).ui-cm__enter { display: inline-flex; align-items: center; gap: var(--tc-space-1); font-size: var(--tc-font-size-xs); font-weight: var(--tc-font-weight-medium); letter-spacing: var(--tc-tracking-caps); text-transform: uppercase; color: var(--tc-text-muted); }
 :where([data-look="standard"], [data-look="standard"] *).ui-cm__enter svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 :where([data-look="standard"], [data-look="standard"] *).ui-cm__list { position: relative; max-height: 340px; padding: var(--tc-space-1) var(--tc-space-1-5) var(--tc-space-2); overflow-y: auto; scrollbar-width: thin; transition: height var(--tc-duration-slow) var(--tc-ease-move); }
 :where([data-look="clean"], [data-look="clean"] *).ui-cm__enter svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 1.1; stroke-linecap: round; stroke-linejoin: round; }

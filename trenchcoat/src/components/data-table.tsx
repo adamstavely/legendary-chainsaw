@@ -1627,7 +1627,7 @@ const css = /* css */ `
 .ui-dt__check[aria-checked="true"] svg,
 .ui-dt__check[aria-checked="mixed"] svg { opacity: 1; transform: none; }
 /* Tags: soft fill with a hairline in the same hue */
-:where([data-look="standard"], [data-look="standard"] *)/* Tags: the pill pattern (large size, for table text) in the status / tone colours – every fg ≥ 4.5:1 on its tint */
+/* Tags: the pill pattern (large size, for table text) in the status / tone colours – every fg ≥ 4.5:1 on its tint */
 .ui-dt__tag {
   display: inline-block;
   max-width: 100%;

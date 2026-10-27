@@ -1,0 +1,279 @@
+{
+ "elements": [
+  {
+   "tag": "tc-model-settings",
+   "className": "TcModelSettings",
+   "description": "How one model generates: its supported parameters with plain explanations, presets, feedback on incompatible\nsettings and what differs from the defaults.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Model settings\"",
+     "description": "The heading, and the group's name",
+     "readonly": false
+    },
+    {
+     "name": "model",
+     "attribute": null,
+     "type": "ModelSettingsModel | undefined",
+     "default": "undefined",
+     "description": "The model the settings are for; unset shows every parameter",
+     "readonly": false
+    },
+    {
+     "name": "value",
+     "attribute": null,
+     "type": "ModelSettingsValue",
+     "default": "{}",
+     "description": "The values the person set, by parameter id; missing ones are the defaults. Changed by the user unless tc-value-change is prevented",
+     "readonly": false
+    },
+    {
+     "name": "parameters",
+     "attribute": null,
+     "type": "ModelParam[]",
+     "default": "[ { id: \"temperature\", label: \"Temperature\", kind: \"range\", min: 0, max: 2, step: 0.1, default: 1, ends: [\"Focused\", \"Varied\"], description: \"How much the wording varies between answers. Lower sticks to the likeliest words; higher tries less likely ones.\", }, { id: \"topP\", label: \"Top-p\", kind: \"range\", min: 0, max: 1, step: 0.05, default: 1, description: \"Which words are in the running: only the likeliest ones that add up to this share. Lower is more predictable.\", }, { id: \"maxOutputTokens\", label: \"Output length\", kind: \"range\", min: 256, max: 16384, step: 256, default: 4096, unit: \"tokens\", description: \"The longest an answer can be. An answer that reaches it stops mid-sentence.\", }, { id: \"reasoningEffort\", label: \"Reasoning effort\", kind: \"choice\", default: \"medium\", options: [ { value: \"low\", label: \"Low\" }, { value: \"medium\", label: \"Medium\" }, { value: \"high\", label: \"High\" }, ], description: \"How much work the model does before it answers. More is slower and costs more. Only the answer comes back – its working isn't shown or kept.\", }, ]",
+     "description": "Every parameter the app knows; only those the model supports are shown",
+     "readonly": false
+    },
+    {
+     "name": "presets",
+     "attribute": null,
+     "type": "ModelSettingsPreset[]",
+     "default": "[ { id: \"precise\", label: \"Precise\", description: \"Nearly the same answer every time – for extraction, classification and facts\", values: { temperature: 0.2, reasoningEffort: \"high\" } }, { id: \"balanced\", label: \"Balanced\", description: \"Natural wording with few surprises – a good default for conversation\", values: { temperature: 0.7, reasoningEffort: \"medium\" } }, { id: \"creative\", label: \"Creative\", description: \"More varied wording and ideas – for drafts and brainstorming\", values: { temperature: 1.2, reasoningEffort: \"low\" } }, ]",
+     "description": "Named sets of values; a preset is picked when the shown values match it",
+     "readonly": false
+    },
+    {
+     "name": "conflicts",
+     "attribute": null,
+     "type": "ModelSettingsConflict[]",
+     "default": "[ { params: [\"temperature\", \"topP\"], message: \"Temperature and top-p both change how varied answers are. Move one and leave the other at its default.\" }, ]",
+     "description": "Parameters that shouldn't all move from their defaults at once, with what to say when they do",
+     "readonly": false
+    },
+    {
+     "name": "name",
+     "attribute": "name",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Submitted with the form: the supported values as JSON",
+     "readonly": false
+    },
+    {
+     "name": "disabled",
+     "attribute": "disabled",
+     "type": "boolean",
+     "default": "false",
+     "description": "Turns every control off and leaves the settings out of the form; a disabled fieldset does the same",
+     "readonly": false
+    },
+    {
+     "name": "supported",
+     "attribute": null,
+     "type": "ModelParam[]",
+     "default": null,
+     "description": "The parameters the model supports, in the order `parameters` lists them",
+     "readonly": true
+    },
+    {
+     "name": "resolved",
+     "attribute": null,
+     "type": "ModelSettingsValue",
+     "default": null,
+     "description": "Every supported value, the defaults filled in",
+     "readonly": true
+    },
+    {
+     "name": "changes",
+     "attribute": null,
+     "type": "ModelParam[]",
+     "default": null,
+     "description": "The supported parameters whose value differs from the default",
+     "readonly": true
+    },
+    {
+     "name": "preset",
+     "attribute": null,
+     "type": "string | null",
+     "default": null,
+     "description": "The preset the shown values match, or null for custom values",
+     "readonly": true
+    },
+    {
+     "name": "issues",
+     "attribute": null,
+     "type": "ModelSettingsIssue[]",
+     "default": null,
+     "description": "What to fix: conflicting changes, then values the model ignores",
+     "readonly": true
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-value-change",
+     "detail": "",
+     "description": "A value changed ({ value: ModelSettingsValue, changed: string[] }); cancelable – prevent it to control `value`",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [
+    {
+     "name": "defaultOf",
+     "params": "p: ModelParam",
+     "returns": "ModelParamValue",
+     "description": "A parameter's default for this model"
+    }
+   ],
+   "ui": "mset",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-border-control",
+    "--tc-border-default",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-sm",
+    "--tc-control-px-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-mono",
+    "--tc-font-sans",
+    "--tc-font-size-2xs",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-none",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-meter-fill",
+    "--tc-meter-h",
+    "--tc-meter-radius",
+    "--tc-meter-track",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-radius-xs",
+    "--tc-shadow-control",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-5",
+    "--tc-space-7",
+    "--tc-status-info-bg",
+    "--tc-status-info-fg",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-status-warning-solid",
+    "--tc-surface-inverse",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-surface-well",
+    "--tc-switch-knob-bg",
+    "--tc-text-muted",
+    "--tc-text-on-accent",
+    "--tc-text-on-inverse",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "formatModelParam",
+   "signature": "formatModelParam(p: ModelParam, v: ModelParamValue | undefined): string",
+   "description": "A parameter's value as text: \"0.7\", \"4,096 tokens\", \"High\""
+  }
+ ],
+ "react": [
+  {
+   "component": "ModelSettings",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "Shown at the top; names the group"
+    },
+    {
+     "name": "value",
+     "type": "ModelSettingsValue",
+     "optional": true,
+     "description": "The values the person set, by parameter id (controlled); missing ones are the model's defaults"
+    },
+    {
+     "name": "defaultValue",
+     "type": "ModelSettingsValue",
+     "optional": true,
+     "description": "The values to start with when uncontrolled"
+    },
+    {
+     "name": "onChange",
+     "type": "(value: ModelSettingsValue, changed: string[]) => void",
+     "optional": true,
+     "description": "Called with the next values and the ids that changed"
+    }
+   ],
+   "hides": [
+    "value",
+    "defaultValue",
+    "heading",
+    "onChange"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 38398,
+  "gzip": 10875
+ }
+}

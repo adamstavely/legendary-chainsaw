@@ -51,21 +51,29 @@ export type ChatHistoryProps = Omit<
 > & {
   /** Every conversation. Controlled when defined; otherwise the list keeps them, starting at `defaultConversations` */
   conversations?: ChatConversation[];
+  /** The starting list when `conversations` is not controlled */
   defaultConversations?: ChatConversation[];
   /** Called with the whole list after any change (rename, pin, move, delete, Undo) */
   onConversationsChange?: (conversations: ChatConversation[]) => void;
   /** The open chat's id. Controlled when defined (null for none) */
   value?: string | null;
+  /** The chat open at first, when `value` is not controlled */
   defaultValue?: string | null;
   /** Called with the id of the chat that was opened */
   onChange?: (value: string | null) => void;
+  /** The heading above the list, and the tree's name (default "Chats") */
   title?: string;
+  /** Called when a chat is renamed in place, with its new title */
   onRename?: (id: string, title: string) => void;
+  /** Called when a chat is pinned or unpinned */
   onPin?: (id: string, pinned: boolean) => void;
+  /** Called when a chat is moved to a folder, or out of one (null) */
   onMove?: (id: string, folder: string | null) => void;
   /** Called when a chat is deleted – Undo may still bring it back (onRestore) */
   onDelete?: (id: string, conversation: ChatConversation) => void;
+  /** Called when Undo brings a deleted chat back */
   onRestore?: (id: string, conversation: ChatConversation) => void;
+  /** Called when New chat is pressed */
   onNewChat?: () => void;
 };
 

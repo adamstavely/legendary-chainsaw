@@ -107,7 +107,9 @@ export class TcExperimentCard extends TcElement {
 
   /** The test's name */
   @property() accessor heading = "";
+  /** The variants under test, the control first (or marked `control`) – one row and one chart column each */
   @property({ attribute: false }) accessor variants: ExperimentVariant[] = [];
+  /** The metrics to compare on; with more than one, a switch picks which one the card shows */
   @property({ attribute: false }) accessor metrics: ExperimentMetric[] = [];
   /** The metric id shown; unset shows the first metric */
   @property() accessor metric: string | undefined = undefined;
@@ -123,6 +125,7 @@ export class TcExperimentCard extends TcElement {
   @property() accessor hint: string | Element | undefined = undefined;
   /** "hover" opens under the pointer (taps and the keyboard still toggle), "click" only on click */
   @property() accessor trigger: "hover" | "click" = "hover";
+  /** Whether the card is unfolded, showing the metric switch, the variants and the tray */
   @property({ type: Boolean, reflect: false }) accessor open = false;
 
   /** The variant under the pointer (row or column) */
@@ -510,7 +513,7 @@ export class TcExperimentCard extends TcElement {
   border-radius: var(--tc-tray-radius);
   background: var(--tc-surface-sunken);
   container-type: inline-size;
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-md);
   line-height: var(--tc-line-height-normal);
   color: var(--tc-text-secondary);
@@ -575,12 +578,11 @@ export class TcExperimentCard extends TcElement {
 .ui-xc__col[data-dim] { opacity: 0.3; }
 .ui-xc__col[data-passed]:not([data-hot]) { opacity: 0.35; }
 .ui-xc__titles { display: grid; grid-template-columns: minmax(0, 1fr); flex: 1; min-width: 0; }
-:where([data-look="standard"], [data-look="standard"] *).ui-xc__name { overflow: hidden; font-size: var(--tc-font-size-md); font-weight: var(--tc-font-weight-semibold); color: var(--tc-text-primary); white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="standard"], [data-look="standard"] *).ui-xc__sub { display: flex; align-items: center; gap: var(--tc-space-1-5); min-width: 0; min-height: 20px; margin-top: 1px; overflow: hidden; font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-normal); color: var(--tc-text-muted); white-space: nowrap; }
+.ui-xc__name { overflow: hidden; font-size: var(--tc-title-font-size); font-weight: var(--tc-title-font-weight); line-height: var(--tc-title-line-height); letter-spacing: var(--tc-title-tracking); color: var(--tc-title-color); white-space: nowrap; text-overflow: ellipsis; }
+:where([data-look="standard"], [data-look="standard"] *).ui-xc__sub { display: flex; align-items: center; gap: var(--tc-space-1-5); min-width: 0; min-height: 20px; margin-top: 1px; overflow: hidden; font-size: var(--tc-subtitle-font-size); line-height: var(--tc-subtitle-line-height); color: var(--tc-subtitle-color); white-space: nowrap; }
 /* Status tag, lift and leader chips: the pill pattern */
 .ui-xc__tag { display: inline-flex; flex: none; align-items: center; gap: var(--tc-space-1); height: var(--tc-pill-h); padding: 0 var(--tc-pill-px) 0 calc(var(--tc-pill-px) - 2px); border-radius: var(--tc-pill-radius); background: var(--tc-experiment-card-tag-bg); font-size: var(--tc-pill-font-size); font-weight: var(--tc-pill-font-weight); color: var(--tc-experiment-card-tag-fg); }
-:where([data-look="clean"], [data-look="clean"] *).ui-xc__name { overflow: hidden; font-size: var(--tc-font-size-md); line-height: var(--tc-line-height-normal); font-weight: var(--tc-font-weight-medium); color: var(--tc-text-strong); white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="clean"], [data-look="clean"] *).ui-xc__sub { display: flex; align-items: center; gap: var(--tc-space-1-5); min-width: 0; min-height: 20px; overflow: hidden; font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); color: var(--tc-text-muted); white-space: nowrap; }
+:where([data-look="clean"], [data-look="clean"] *).ui-xc__sub { display: flex; align-items: center; gap: var(--tc-space-1-5); min-width: 0; min-height: 20px; overflow: hidden; font-size: var(--tc-subtitle-font-size); line-height: var(--tc-subtitle-line-height); color: var(--tc-subtitle-color); white-space: nowrap; }
 .ui-xc__note { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .ui-xc__lead { display: inline-flex; flex: none; align-items: center; gap: var(--tc-space-1); height: var(--tc-pill-h-lg); padding: 0 var(--tc-pill-px-lg); border-radius: var(--tc-pill-radius); background: var(--tc-experiment-card-tag-bg); font-size: var(--tc-pill-font-size-lg); line-height: var(--tc-line-height-tight); font-weight: var(--tc-pill-font-weight); color: var(--tc-experiment-card-tag-fg); white-space: nowrap; font-variant-numeric: tabular-nums; animation: ui-xc-pop var(--tc-duration-slow) var(--tc-ease-move) both; }
 .ui-xc__lead b { color: inherit; }

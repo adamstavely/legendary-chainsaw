@@ -4,6 +4,7 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { repeat } from "lit/directives/repeat.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController, OnScreenController, rescueFocus } from "./internal/controllers";
 import type { Look } from "./internal/look";
 
@@ -95,7 +96,8 @@ const place = (el: HTMLElement, box: HTMLElement) => {
 
 /* ---------- Icons ---------- */
 
-const spark = html`<svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">${svg`<path d="M7 1.2c.4 2.9 1.9 4.4 4.8 4.8-2.9.4-4.4 1.9-4.8 4.8C6.6 7.9 5.1 6.4 2.2 6 5.1 5.6 6.6 4.1 7 1.2Z" fill="currentColor"></path><circle cx="11.6" cy="11.4" r="1.1" fill="currentColor" opacity="0.55"></circle>`}</svg>`;
+// The header icon: a parent node branching to two children
+const treeIcon = svg`<rect x="9" y="3" width="6" height="5" rx="1.5"></rect><rect x="3" y="16" width="6" height="5" rx="1.5"></rect><rect x="15" y="16" width="6" height="5" rx="1.5"></rect><path d="M12 8v4M6 16v-2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2"></path>`;
 /* Status glyphs check, triangle-alert and clock, chevron-down: Lucide (ISC, lucide.dev); the loader is a plain arc */
 const STATUS_ICONS: Record<TreeAgentStatus, TemplateResult> = {
   running: html`<svg class="ui-agt__spin" width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true">${svg`<circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-opacity="0.25" stroke-width="2.5"></circle><path d="M12 3.5A8.5 8.5 0 0 1 20.5 12" stroke="currentColor" stroke-linecap="round" stroke-width="2.5"></path>`}</svg>`,
@@ -165,6 +167,7 @@ export class TcAgentTree extends TcElement {
 
   /** The heading, and the tree list's name */
   @property() accessor heading = "Agents";
+  /** The orchestrator, with its sub-agents nested in `children` – the whole run as one tree */
   @property({ attribute: false }) accessor root: TreeAgent = { id: "", name: "", task: "", status: "queued" };
   /** Ids of folded branches. Changed by the fold buttons unless tc-collapsed-change is prevented */
   @property({ attribute: false }) accessor collapsed: string[] = [];
@@ -703,17 +706,19 @@ export class TcAgentTree extends TcElement {
       html`<button type="button" class="ui-agt__sum-btn" data-kind=${kind} data-focus-key=${`sum:${kind}`} aria-expanded=${opened === kind ? "true" : "false"} aria-haspopup="dialog" @click=${() => this.setOpened(this.opened === kind ? null : kind)}>
         ${label}${chevron}
       </button>`;
-    return html`<header class="ui-agt__bar">
-      <span class="ui-agt__spark">${spark}</span>
-      <span class="ui-agt__title">${this.heading}</span>
-      <span class="ui-agt__sr" role="status">${status}</span>
-      <span class="ui-agt__sum">
+    return html`<div class="ui-agt__bar">
+      ${cardHead({
+        icon: treeIcon,
+        title: this.heading,
+        aside: html`<span class="ui-agt__sum">
         <span>${all.length === 1 ? "1 agent" : `${all.length} agents`}</span>
         ${running > 0 ? html`<span class="ui-agt__sum-run">${running} running</span>` : nothing}
         ${waiting > 0 ? sumButton("waiting", `${waiting} needs you`) : nothing}
         ${failed > 0 ? sumButton("failed", `${failed} failed`) : nothing}
         <span class="ui-agt__sum-cost"><span class="ui-agt__amount" data-live=${ifDefined(running > 0 ? "" : undefined)}>${this.formatCost(costOf(this.root))}</span></span>
-      </span>
+      </span>`,
+      })}
+      <span class="ui-agt__sr" role="status">${status}</span>
       ${opened && openList.length > 0
         ? html`<div class="ui-agt__pop" role="dialog" data-kind=${opened} aria-label=${opened === "waiting" ? "Agents that need you" : "Agents that failed"} @keydown=${this.onPopKey}>
             ${repeat(
@@ -739,7 +744,7 @@ export class TcAgentTree extends TcElement {
             )}
           </div>`
         : nothing}
-    </header>`;
+    </div>`;
   }
 
   protected override render() {
@@ -808,7 +813,7 @@ export class TcAgentTree extends TcElement {
   font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-lg);
   line-height: var(--tc-line-height-normal);
-  letter-spacing: -0.006em;
+  letter-spacing: var(--tc-tracking-normal);
   color: var(--tc-text-muted);
   text-align: left;
   -webkit-font-smoothing: antialiased;
@@ -838,13 +843,10 @@ export class TcAgentTree extends TcElement {
 [data-ui="agt"] p { margin: 0; }
 [data-ui="agt"] svg { display: block; flex: none; }
 .ui-agt__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-/* ----- The bar: title and the whole run in numbers ----- */
-:where([data-look="standard"], [data-look="standard"] *).ui-agt__bar { position: relative; z-index: 3; display: flex; align-items: center; gap: var(--tc-space-2); min-width: 0; margin: 0 var(--tc-space-1) var(--tc-space-4-5); }
-:where([data-look="clean"], [data-look="clean"] *).ui-agt__bar { position: relative; z-index: 3; display: flex; align-items: center; gap: var(--tc-space-2); min-width: 0; margin-bottom: var(--tc-space-4); }
-.ui-agt__spark { display: grid; flex: none; place-items: center; width: 16px; color: var(--tc-accent-text); }
-:where([data-look="standard"], [data-look="standard"] *).ui-agt__title { flex: none; font-weight: var(--tc-font-weight-semibold); color: var(--tc-text-primary); }
+/* ----- The bar: the header (title, and the whole run in numbers on the right) and its window ----- */
+:where([data-look="standard"], [data-look="standard"] *).ui-agt__bar { position: relative; z-index: 3; min-width: 0; margin-bottom: var(--tc-space-3); }
+:where([data-look="clean"], [data-look="clean"] *).ui-agt__bar { position: relative; z-index: 3; min-width: 0; margin-bottom: var(--tc-space-2); }
 :where([data-look="standard"], [data-look="standard"] *).ui-agt__sum { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: var(--tc-space-1) var(--tc-space-3); margin-left: auto; font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-snug); color: var(--tc-text-muted); font-variant-numeric: tabular-nums; }
-:where([data-look="clean"], [data-look="clean"] *).ui-agt__title { flex: none; font-weight: var(--tc-font-weight-medium); color: var(--tc-text-strong); }
 :where([data-look="clean"], [data-look="clean"] *).ui-agt__sum { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: var(--tc-space-1) var(--tc-space-2-5); margin-left: auto; font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); color: var(--tc-text-muted); font-variant-numeric: tabular-nums; }
 .ui-agt__sum-run { color: var(--tc-accent-text); }
 :where([data-look="standard"], [data-look="standard"] *).ui-agt__sum-cost { min-width: 46px; color: var(--tc-text-primary); font-weight: var(--tc-font-weight-semibold); text-align: right; }

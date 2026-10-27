@@ -1,0 +1,297 @@
+{
+ "elements": [
+  {
+   "tag": "tc-cover-flow",
+   "className": "TcCoverFlow",
+   "description": "Browse covers in 3D: the front one faces you, the others stack up on both sides.",
+   "properties": [
+    {
+     "name": "items",
+     "attribute": null,
+     "type": "CoverFlowItem[]",
+     "default": "[]",
+     "description": "The covers, in order: an image or your own content each, with a title and subtitle for the caption",
+     "readonly": false
+    },
+    {
+     "name": "index",
+     "attribute": "index",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The front cover; unset starts on the middle one",
+     "readonly": false
+    },
+    {
+     "name": "itemWidth",
+     "attribute": "item-width",
+     "type": "number",
+     "default": "280",
+     "description": "Cover size in px – scales down on narrow containers",
+     "readonly": false
+    },
+    {
+     "name": "itemHeight",
+     "attribute": "item-height",
+     "type": "number",
+     "default": "280",
+     "description": "Cover height in px – scales down with the width",
+     "readonly": false
+    },
+    {
+     "name": "angle",
+     "attribute": "angle",
+     "type": "number",
+     "default": "50",
+     "description": "How far the side covers turn away, in degrees",
+     "readonly": false
+    },
+    {
+     "name": "reflection",
+     "attribute": "reflection",
+     "type": "boolean",
+     "default": "true",
+     "description": "Mirror the covers on the floor",
+     "readonly": false
+    },
+    {
+     "name": "caption",
+     "attribute": "caption",
+     "type": "boolean",
+     "default": "true",
+     "description": "Title and subtitle of the front cover",
+     "readonly": false
+    },
+    {
+     "name": "renderCaption",
+     "attribute": null,
+     "type": "((item: CoverFlowItem, index: number) => Node | string | null | undefined) | undefined",
+     "default": "undefined",
+     "description": "Replaces the default caption: returns a node (cloned) or text",
+     "readonly": false
+    },
+    {
+     "name": "controls",
+     "attribute": "controls",
+     "type": "boolean",
+     "default": "true",
+     "description": "Previous / next buttons next to the caption",
+     "readonly": false
+    },
+    {
+     "name": "ticks",
+     "attribute": "ticks",
+     "type": "boolean",
+     "default": "true",
+     "description": "A row of small position ticks under the caption",
+     "readonly": false
+    },
+    {
+     "name": "sound",
+     "attribute": "sound",
+     "type": "boolean",
+     "default": "false",
+     "description": "A soft click each time a new cover reaches the front",
+     "readonly": false
+    },
+    {
+     "name": "selectable",
+     "attribute": "selectable",
+     "type": "boolean",
+     "default": "false",
+     "description": "A click or Enter on the cover in front fires tc-select",
+     "readonly": false
+    },
+    {
+     "name": "label",
+     "attribute": "label",
+     "type": "string",
+     "default": "\"Cover flow\"",
+     "description": "Names the carousel region",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-index-change",
+     "detail": "",
+     "description": "Cancelable, when a drag, flick, key or click asks for a cover; detail: CoverFlowIndexChange ({ index })",
+     "cancelable": true
+    },
+    {
+     "name": "tc-front-change",
+     "detail": "",
+     "description": "Each time a new cover reaches the front while the row moves; detail: CoverFlowIndexChange ({ index })",
+     "cancelable": false
+    },
+    {
+     "name": "tc-select",
+     "detail": "",
+     "description": "A click (or Enter) on the cover in front, when `selectable`; detail: CoverFlowSelect ({ item, index })",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "cf",
+   "cssProperties": [
+    {
+     "name": "--tc-cover-flow-card",
+     "value": "light-dark(#f1f1f1, #1d1d20)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-cover-flow-dim",
+     "value": "light-dark(rgba(255, 255, 255, 0.24), rgba(0, 0, 0, 0.5))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-cover-flow-shadow",
+     "value": "0 1px 2px light-dark(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.3)), 0 10px 20px -12px light-dark(rgba(0, 0, 0, 0.18), transparent), 0 12px 24px -14px light-dark(transparent, rgba(0, 0, 0, 0.6))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-cover-flow-reflect-mask",
+     "value": "light-dark(rgba(0, 0, 0, var(--tc-cover-flow-reflect, 0.22)), rgba(0, 0, 0, var(--tc-cover-flow-reflect, 0.3)))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-cover-flow-ground",
+     "value": "light-dark(rgba(0, 0, 0, 0.16), rgba(0, 0, 0, 0.45))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-cover-flow-edge",
+     "value": "light-dark(rgba(0, 0, 0, 0.08), rgba(255, 255, 255, 0.1))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-cover-flow-tick",
+     "value": "light-dark(rgba(0, 0, 0, 0.16), rgba(255, 255, 255, 0.2))",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-control-h-lg",
+    "--tc-control-h-md",
+    "--tc-cover-flow-d",
+    "--tc-cover-flow-h",
+    "--tc-cover-flow-reflect",
+    "--tc-cover-flow-t",
+    "--tc-cover-flow-w",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-ease-out",
+    "--tc-ease-standard",
+    "--tc-focus-outline",
+    "--tc-focus-ring",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-lg-plus",
+    "--tc-font-size-md",
+    "--tc-font-weight-semibold",
+    "--tc-radius-full",
+    "--tc-radius-xl",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-5",
+    "--tc-text-muted",
+    "--tc-text-primary"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "CoverFlow",
+   "exported": true,
+   "props": [
+    {
+     "name": "items",
+     "type": "CoverFlowItem[]",
+     "optional": false,
+     "description": "The covers, in order: an image or your own content each, with a title and subtitle for the caption"
+    },
+    {
+     "name": "index",
+     "type": "number",
+     "optional": true,
+     "description": "Controlled front cover – changes are asked for through onIndexChange"
+    },
+    {
+     "name": "defaultIndex",
+     "type": "number",
+     "optional": true,
+     "description": "Starting cover when uncontrolled – defaults to the middle one"
+    },
+    {
+     "name": "onIndexChange",
+     "type": "(index: number) => void",
+     "optional": true,
+     "description": "Uncontrolled: called as each new cover reaches the front. Controlled: called with the cover a gesture settles on"
+    },
+    {
+     "name": "onSelect",
+     "type": "(item: CoverFlowItem, index: number) => void",
+     "optional": true,
+     "description": "Clicking (or pressing Enter on) the cover in front"
+    },
+    {
+     "name": "renderCaption",
+     "type": "(item: CoverFlowItem, index: number) => React.ReactNode",
+     "optional": true,
+     "description": "Replaces the default caption (title and subtitle)"
+    },
+    {
+     "name": "\"aria-label\"",
+     "type": "string",
+     "optional": true,
+     "description": "Names the carousel region"
+    }
+   ],
+   "hides": [
+    "items",
+    "index",
+    "label",
+    "selectable",
+    "renderCaption",
+    "onSelect",
+    "children"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 28312,
+  "gzip": 9459
+ }
+}

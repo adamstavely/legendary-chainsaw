@@ -1,0 +1,311 @@
+{
+ "elements": [
+  {
+   "tag": "tc-agent-ledger",
+   "className": "TcAgentLedger",
+   "description": "Everything an agent changed, newest first, each change with an Undo that takes what builds on it along.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Ledger\"",
+     "description": "The heading, and the list's name",
+     "readonly": false
+    },
+    {
+     "name": "agent",
+     "attribute": "agent",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Who made the changes – e.g. \"Launch agent\"",
+     "readonly": false
+    },
+    {
+     "name": "entries",
+     "attribute": null,
+     "type": "LedgerEntry[]",
+     "default": "[]",
+     "description": "The changes the agent made, in any order – the ledger lists them newest first",
+     "readonly": false
+    },
+    {
+     "name": "now",
+     "attribute": "now",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The clock for \"2m ago\", in epoch ms – unset, the element keeps its own clock",
+     "readonly": false
+    },
+    {
+     "name": "undone",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[]",
+     "description": "Ids of undone changes",
+     "readonly": false
+    },
+    {
+     "name": "pointAt",
+     "attribute": "point-at",
+     "type": "string | null",
+     "default": "null",
+     "description": "Lights up a change and what builds on it, as if its Undo were pointed at – e.g. for a walkthrough",
+     "readonly": false
+    },
+    {
+     "name": "onUndo",
+     "attribute": null,
+     "type": "LedgerAction | undefined",
+     "default": "undefined",
+     "description": "Called with the ids an Undo takes back; a returned promise holds the rows until it settles, a rejection reverts them",
+     "readonly": false
+    },
+    {
+     "name": "onRedo",
+     "attribute": null,
+     "type": "LedgerAction | undefined",
+     "default": "undefined",
+     "description": "Called with the ids a Redo brings back; a returned promise holds the rows until it settles, a rejection reverts them",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-undone-change",
+     "detail": "",
+     "description": "The undone ids changed (`{ undone: string[] }`, the whole new list); cancelable – prevent it to keep `undone` as it is (controlled use)",
+     "cancelable": true
+    },
+    {
+     "name": "tc-undo",
+     "detail": "",
+     "description": "A change was undone (`{ ids: string[] }`: the change and its reversible dependents)",
+     "cancelable": false
+    },
+    {
+     "name": "tc-redo",
+     "detail": "",
+     "description": "A change was redone (`{ ids: string[] }`: the change, what went with it and the undone changes it builds on)",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "alg",
+   "cssProperties": [
+    {
+     "name": "--tc-agent-ledger-tray-bg",
+     "value": "var(--tc-surface-tray)",
+     "looks": [
+      "standard"
+     ]
+    },
+    {
+     "name": "--tc-agent-ledger-panel-bg",
+     "value": "var(--tc-surface-on-tray)",
+     "looks": [
+      "standard"
+     ]
+    },
+    {
+     "name": "--tc-agent-ledger-card-bg",
+     "value": "var(--tc-surface-control)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-agent-ledger-also-bg",
+     "value": "light-dark(rgba(0, 96, 226, 0.045), rgba(91, 154, 255, 0.07))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-agent-ledger-also-chip-bg",
+     "value": "light-dark(rgba(0, 96, 226, 0.09), rgba(91, 154, 255, 0.16))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-agent-ledger-kept-bg",
+     "value": "light-dark(#ff9c0014, rgba(255, 160, 40, 0.09))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-agent-ledger-row",
+     "value": "56px",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-sm",
+    "--tc-control-px-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-quick",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-duration-slowest",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-pill-font-size-lg",
+    "--tc-pill-font-weight",
+    "--tc-pill-h-lg",
+    "--tc-pill-px-lg",
+    "--tc-pill-radius",
+    "--tc-radius-2xs",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-shadow-raised",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-status-danger-fg",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-surface-control",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tracking-normal",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "AgentLedger",
+   "exported": true,
+   "props": [
+    {
+     "name": "entries",
+     "type": "LedgerEntry[]",
+     "optional": false,
+     "description": "The changes the agent made, in any order – listed newest first; `icon` may be a React node"
+    },
+    {
+     "name": "now",
+     "type": "number",
+     "optional": true,
+     "description": "The clock for \"2m ago\", in epoch ms – defaults to an internal clock"
+    },
+    {
+     "name": "undone",
+     "type": "string[]",
+     "optional": true,
+     "description": "Ids of undone changes. Controlled when defined; otherwise the component keeps them, starting from `defaultUndone`"
+    },
+    {
+     "name": "defaultUndone",
+     "type": "string[]",
+     "optional": true,
+     "description": "Ids undone at first when uncontrolled"
+    },
+    {
+     "name": "onUndoneChange",
+     "type": "(ids: string[]) => void",
+     "optional": true,
+     "description": "Every change to the undone ids, as the whole new list"
+    },
+    {
+     "name": "onUndo",
+     "type": "(ids: string[]) => void | Promise<unknown>",
+     "optional": true,
+     "description": "Undo sends the change and its reversible dependents, Redo the same set back – plus any undone changes that set\nbuilds on. Either may return a promise: the rows show the result at once and wait; if it rejects they go back\nand the bar says so"
+    },
+    {
+     "name": "onRedo",
+     "type": "(ids: string[]) => void | Promise<unknown>",
+     "optional": true,
+     "description": "Called with the ids a Redo brings back; a returned promise holds the rows until it settles, a rejection reverts them"
+    },
+    {
+     "name": "pointAt",
+     "type": "string | null",
+     "optional": true,
+     "description": "Lights up a change and what builds on it, as if its Undo were pointed at – e.g. for a walkthrough"
+    },
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading, and the list's name – \"Ledger\" by default"
+    }
+   ],
+   "hides": [
+    "heading",
+    "entries",
+    "undone",
+    "now",
+    "pointAt",
+    "onUndo",
+    "onRedo"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 38810,
+  "gzip": 10347
+ }
+}

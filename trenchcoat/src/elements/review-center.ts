@@ -6,6 +6,7 @@ import { live } from "lit/directives/live.js";
 import { repeat } from "lit/directives/repeat.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController, OnScreenController } from "./internal/controllers";
 
 /*
@@ -201,8 +202,10 @@ const nextGlyph = html`<svg width="16" height="16" viewBox="0 0 24 24" fill="non
 const alert = html`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${svg`<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"></path><path d="M12 9v4" stroke-width="2"></path><path d="M12 17h.01" stroke-width="2.4"></path>`}</svg>`;
 const undoGlyph = html`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${svg`<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path>`}</svg>`;
 const linkGlyph = html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${svg`<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>`}</svg>`;
+/* A badge with a tick: the header's icon, and the empty state's mark */
+const badgePaths = svg`<path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"></path><path d="m16 9-5.5 5.5L8 12"></path>`;
 const badge = (size = 16) =>
-  html`<svg width=${size} height=${size} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${svg`<path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"></path><path d="m16 9-5.5 5.5L8 12"></path>`}</svg>`;
+  html`<svg width=${size} height=${size} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${badgePaths}</svg>`;
 
 /* ---------- Pure pieces ---------- */
 
@@ -268,6 +271,7 @@ export class TcReviewCenter extends TcElement implements ReviewCenterHandle {
   @property({ attribute: false }) accessor reasons: string[] = REASONS;
   /** "risk" (default): high risk first, then oldest · "oldest" · "given": as passed */
   @property() accessor order: "risk" | "oldest" | "given" = "risk";
+  /** Which items the queue shows: "all", "high" (high risk only) or "unsure" (below `lowConfidence`). Changed by the user unless a tc-filter-change listener calls preventDefault() */
   @property() accessor filter: ReviewFilter = "all";
   /** The heading */
   @property() accessor heading = "Review center";
@@ -1236,16 +1240,19 @@ export class TcReviewCenter extends TcElement implements ReviewCenterHandle {
     const chip = this.chip;
 
     return html`
-      <header class="ui-rvc__head">
-        <span class="ui-rvc__mark">${badge()}</span>
-        <span class="ui-rvc__heading">${this.heading}</span>
-        <span class="ui-rvc__progress">
-          <span class="ui-rvc__track" ?data-live=${pending.length > 0} aria-hidden="true"><span class="ui-rvc__fill" style=${styleMap({ width: `${(total ? done / total : 0) * 100}%` })}></span></span>
-          <span class="ui-rvc__count">${keyed(done, html`<b>${done}</b>`)} of ${total} reviewed</span>
-        </span>
-        ${oldest ? html`<span class="ui-rvc__oldest">oldest ${wait(waited(now - toMs(oldest.createdAt)), slaOf(oldest, now, sla), "ui-rvc__oldest-time", true)}</span>` : nothing}
-        ${chip ? keyed(chip.key, this.undoChip(chip)) : nothing}
-      </header>
+      ${/* The header (.tc-head): on the tray in Standard, the card's first row in Clean. How far you are and how
+           long the oldest waits under the title; Undo at the right */ cardHead({
+        icon: badgePaths,
+        title: this.heading,
+        subtitle: html`<span class="ui-rvc__status">
+          <span class="ui-rvc__progress">
+            <span class="ui-rvc__track" ?data-live=${pending.length > 0} aria-hidden="true"><span class="ui-rvc__fill" style=${styleMap({ width: `${(total ? done / total : 0) * 100}%` })}></span></span>
+            <span class="ui-rvc__count">${keyed(done, html`<b>${done}</b>`)} of ${total} reviewed</span>
+          </span>
+          ${oldest ? html`<span class="ui-rvc__oldest">oldest ${wait(waited(now - toMs(oldest.createdAt)), slaOf(oldest, now, sla), "ui-rvc__oldest-time", true)}</span>` : nothing}
+        </span>`,
+        aside: chip ? keyed(chip.key, this.undoChip(chip)) : undefined,
+      })}
 
       <div class="ui-rvc__card" ?data-narrow=${this.narrow}>
         <div class="ui-rvc__queue">
@@ -1342,11 +1349,10 @@ export class TcReviewCenter extends TcElement implements ReviewCenterHandle {
   border-radius: var(--tc-tray-radius);
   background: var(--tc-surface-tray);
   container: ui-rvc / inline-size;
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-regular);
   line-height: var(--tc-line-height-normal);
-  letter-spacing: -0.006em;
   color: var(--tc-text-secondary);
   text-align: left;
   -webkit-font-smoothing: antialiased;
@@ -1411,15 +1417,9 @@ export class TcReviewCenter extends TcElement implements ReviewCenterHandle {
 /* Key chips: the kbd pattern */
 .ui-rvc__kbd { display: inline-grid; place-items: center; min-width: var(--tc-kbd-h); height: var(--tc-kbd-h); padding: 0 var(--tc-kbd-px); border-radius: var(--tc-kbd-radius); background: var(--tc-kbd-bg); box-shadow: var(--tc-kbd-shadow); font-family: inherit; font-size: var(--tc-kbd-font-size); font-weight: var(--tc-kbd-font-weight); line-height: var(--tc-line-height-none); color: var(--tc-kbd-fg); letter-spacing: 0; }
 .ui-rvc__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-/* ----- On the tray: how far you are, how long the oldest waits, the filter ----- */
-:where([data-look="standard"], [data-look="standard"] *).ui-rvc__head { position: relative; display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-2) var(--tc-space-3); min-width: 0; min-height: 44px; padding: var(--tc-space-1) var(--tc-space-1-5) var(--tc-space-2) var(--tc-space-3); }
-/* ----- The bar on top: how far you are, how long the oldest waits ----- */
-:where([data-look="clean"], [data-look="clean"] *).ui-rvc__head { position: relative; display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-2) var(--tc-space-3); min-width: 0; min-height: 48px; padding: var(--tc-space-2-5) var(--tc-space-3) var(--tc-space-2-5) var(--tc-space-4); border-bottom: 0.5px solid var(--tc-border-default); }
-.ui-rvc__mark { display: grid; flex: none; place-items: center; width: 16px; margin-right: -4px; color: var(--tc-accent-text); }
-:where([data-look="standard"], [data-look="standard"] *).ui-rvc__heading { flex: none; font-weight: var(--tc-font-weight-semibold); color: var(--tc-text-strong); }
-:where([data-look="standard"], [data-look="standard"] *).ui-rvc__progress { display: flex; flex: none; align-items: center; gap: var(--tc-space-2); font-size: var(--tc-font-size-md); color: var(--tc-text-muted); white-space: nowrap; }
-:where([data-look="clean"], [data-look="clean"] *).ui-rvc__heading { flex: none; font-weight: var(--tc-font-weight-medium); color: var(--tc-text-strong); }
-:where([data-look="clean"], [data-look="clean"] *).ui-rvc__progress { display: flex; flex: none; align-items: center; gap: var(--tc-space-2); font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); color: var(--tc-text-muted); white-space: nowrap; }
+/* ----- The header's line under the title: how far you are, how long the oldest waits ----- */
+.ui-rvc__status { display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--tc-space-2); }
+.ui-rvc__progress { display: flex; flex: none; align-items: center; gap: var(--tc-space-2); white-space: nowrap; }
 .ui-rvc__count { font-variant-numeric: tabular-nums; }
 .ui-rvc__count b { display: inline-block; font-weight: var(--tc-font-weight-medium); color: var(--tc-text-primary); animation: ui-rvc-tick var(--tc-duration-slower) var(--tc-ease-move) both; }
 /* The progress bar: a light tint with a hairline edge, a sheen sweeping while items wait */
@@ -1431,8 +1431,7 @@ export class TcReviewCenter extends TcElement implements ReviewCenterHandle {
 /* The sheen moves with transform (composited), runs three passes when items arrive and stops (WCAG 2.2.2) */
 .ui-rvc__track[data-live] .ui-rvc__fill::before { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, transparent calc(50% - 20px), var(--tc-surface-raised) 50%, transparent calc(50% + 20px)); opacity: 0.7; transform: translateX(-100%); animation: ui-rvc-sweep var(--tc-duration-shimmer) linear 3; }
 .ui-rvc__fill::after { content: ""; position: absolute; top: 0; right: 0; bottom: 0; width: min(18px, 100%); background: linear-gradient(90deg, transparent, var(--tc-review-center-progress-mark)); opacity: 0.55; animation: ui-rvc-glow var(--tc-review-center-glow) var(--tc-ease-in-out) 4 alternate; }
-:where([data-look="standard"], [data-look="standard"] *).ui-rvc__oldest { flex: none; margin-left: -4px; font-size: var(--tc-font-size-md); color: var(--tc-text-muted); white-space: nowrap; }
-:where([data-look="clean"], [data-look="clean"] *).ui-rvc__oldest { flex: none; margin-left: -4px; font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); color: var(--tc-text-muted); white-space: nowrap; }
+.ui-rvc__oldest { flex: none; white-space: nowrap; }
 .ui-rvc__oldest::before { content: "·"; margin-right: var(--tc-space-2); color: var(--tc-text-disabled); }
 .ui-rvc__oldest-time { display: inline-flex; align-items: center; gap: var(--tc-space-0-5); font-weight: var(--tc-font-weight-medium); color: var(--tc-text-secondary); font-variant-numeric: tabular-nums; }
 .ui-rvc__oldest-time[data-sla="near"] { color: var(--tc-status-warning-fg); }
@@ -1454,7 +1453,7 @@ export class TcReviewCenter extends TcElement implements ReviewCenterHandle {
 :where([data-look="standard"], [data-look="standard"] *).ui-rvc__queue { display: flex; flex-direction: column; min-width: 0; min-height: 0; border-right: 1px solid var(--tc-border-default); background: var(--tc-review-center-queue-bg); }
 :where([data-look="standard"], [data-look="standard"] *).ui-rvc__queue-head { display: flex; flex: none; align-items: center; padding: var(--tc-space-2); background: var(--tc-surface-raised); border-bottom: 1px solid var(--tc-border-default); }
 /* ----- Under the bar: the queue on the left, the item on the right ----- */
-:where([data-look="clean"], [data-look="clean"] *).ui-rvc__card { position: relative; display: grid; grid-template-columns: var(--tc-review-center-queue) minmax(0, 1fr); height: var(--tc-review-center-height); overflow: hidden; border-radius: 0 0 var(--tc-card-radius) var(--tc-card-radius); }
+:where([data-look="clean"], [data-look="clean"] *).ui-rvc__card { position: relative; display: grid; grid-template-columns: var(--tc-review-center-queue) minmax(0, 1fr); height: var(--tc-review-center-height); overflow: hidden; border-top: 0.5px solid var(--tc-border-default); border-radius: 0 0 var(--tc-card-radius) var(--tc-card-radius); }
 /* ----- The queue ----- */
 :where([data-look="clean"], [data-look="clean"] *).ui-rvc__queue { display: flex; flex-direction: column; min-width: 0; min-height: 0; border-right: 0.5px solid var(--tc-border-default); background: var(--tc-fill-subtle); }
 :where([data-look="clean"], [data-look="clean"] *).ui-rvc__queue-head { display: flex; flex: none; align-items: center; padding: var(--tc-space-2); background: var(--tc-surface-raised); border-bottom: 0.5px solid var(--tc-border-default); }
@@ -1532,8 +1531,9 @@ export class TcReviewCenter extends TcElement implements ReviewCenterHandle {
 :where([data-look="clean"], [data-look="clean"] *).ui-rvc__model { overflow: hidden; font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); color: var(--tc-text-muted); white-space: nowrap; text-overflow: ellipsis; }
 /* The risk tag: a tint with its color, like the Live tag in Trace Waterfall – low risk needs none */
 .ui-rvc__ask { display: grid; gap: var(--tc-space-1); }
-:where([data-look="standard"], [data-look="standard"] *).ui-rvc__title { font-size: 18px; font-weight: var(--tc-font-weight-semibold); line-height: var(--tc-line-height-loose); letter-spacing: -0.012em; color: var(--tc-text-strong); text-wrap: balance; }
-:where([data-look="clean"], [data-look="clean"] *).ui-rvc__title { font-size: var(--tc-font-size-lg-plus); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-loose); color: var(--tc-text-strong); text-wrap: balance; }
+/* The item under review is the pane's headline – display-sized on purpose, above the card title */
+:where([data-look="standard"], [data-look="standard"] *).ui-rvc__title { font-size: var(--tc-font-size-xl); font-weight: var(--tc-font-weight-semibold); line-height: var(--tc-line-height-loose); letter-spacing: var(--tc-tracking-snug); color: var(--tc-text-strong); text-wrap: balance; }
+:where([data-look="clean"], [data-look="clean"] *).ui-rvc__title { font-size: var(--tc-title-font-size); font-weight: var(--tc-title-font-weight); line-height: var(--tc-title-line-height); color: var(--tc-title-color); text-wrap: balance; letter-spacing: var(--tc-title-tracking); }
 .ui-rvc__why { margin-top: -6px; font-size: var(--tc-font-size-md); line-height: var(--tc-line-height-normal); color: var(--tc-text-muted); text-wrap: pretty; }
 .ui-rvc__why b { font-weight: var(--tc-font-weight-medium); color: var(--tc-text-secondary); }
 /* The proposal: no box around it – the content is the focus */
@@ -1562,8 +1562,8 @@ export class TcReviewCenter extends TcElement implements ReviewCenterHandle {
 :is(.ui-rvc__count-add, .ui-rvc__count-del) { flex: none; font-size: var(--tc-font-size-sm); font-variant-numeric: tabular-nums; }
 .ui-rvc__count-add { color: var(--tc-status-success-fg); }
 .ui-rvc__count-del { color: var(--tc-status-danger-fg); }
-:where([data-look="standard"], [data-look="standard"] *).ui-rvc__diff { padding: var(--tc-space-2) 0 var(--tc-space-0-5); overflow-x: auto; border-top: 1px solid var(--tc-border-default); font-family: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace; font-size: var(--tc-font-size-md); font-weight: var(--tc-font-weight-regular); line-height: var(--tc-line-height-normal); letter-spacing: normal; white-space: pre; scrollbar-width: thin; }
-:where([data-look="clean"], [data-look="clean"] *).ui-rvc__diff { padding: var(--tc-space-2) 0 var(--tc-space-0-5); overflow-x: auto; border-top: 0.5px solid var(--tc-border-default); font-family: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace; font-size: var(--tc-font-size-md); font-weight: var(--tc-font-weight-regular); line-height: var(--tc-line-height-normal); letter-spacing: normal; white-space: pre; scrollbar-width: thin; }
+:where([data-look="standard"], [data-look="standard"] *).ui-rvc__diff { padding: var(--tc-space-2) 0 var(--tc-space-0-5); overflow-x: auto; border-top: 1px solid var(--tc-border-default); font-family: var(--tc-font-mono); font-size: var(--tc-font-size-md); font-weight: var(--tc-font-weight-regular); line-height: var(--tc-line-height-normal); letter-spacing: normal; white-space: pre; scrollbar-width: thin; }
+:where([data-look="clean"], [data-look="clean"] *).ui-rvc__diff { padding: var(--tc-space-2) 0 var(--tc-space-0-5); overflow-x: auto; border-top: 0.5px solid var(--tc-border-default); font-family: var(--tc-font-mono); font-size: var(--tc-font-size-md); font-weight: var(--tc-font-weight-regular); line-height: var(--tc-line-height-normal); letter-spacing: normal; white-space: pre; scrollbar-width: thin; }
 .ui-rvc__line { display: flex; min-width: max-content; color: var(--tc-text-primary); }
 .ui-rvc__line[data-diff="add"] { background: var(--tc-review-center-diff-add-bg); }
 .ui-rvc__line[data-diff="del"] { background: var(--tc-review-center-diff-del-bg); }
@@ -1608,7 +1608,7 @@ export class TcReviewCenter extends TcElement implements ReviewCenterHandle {
 /* The editor's focus is on its frame (the textarea itself draws none) */
 .ui-rvc__editor:focus-within { box-shadow: var(--tc-field-shadow-focus); }
 :where([data-look="clean"], [data-look="clean"] *).ui-rvc__editor > * { grid-area: 1 / 1; padding: var(--tc-space-1-5) var(--tc-space-2); font-size: var(--tc-font-size-md); line-height: var(--tc-line-height-relaxed); white-space: pre-wrap; overflow-wrap: anywhere; }
-.ui-rvc__body[data-format="code"] .ui-rvc__editor > * { font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace; font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-normal); letter-spacing: 0; }
+.ui-rvc__body[data-format="code"] .ui-rvc__editor > * { font-family: var(--tc-font-mono); font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-normal); letter-spacing: 0; }
 .ui-rvc__mirror { color: transparent; }
 /* No padding here – the mirror has to wrap exactly like the field; the tint reaches out with a shadow */
 .ui-rvc__mirror .ui-rvc__ins { padding: 0; margin: 0; color: transparent; box-shadow: 0 0 0 2px var(--tc-review-center-ins-bg); }
@@ -1638,7 +1638,7 @@ a.ui-rvc__source:hover { color: var(--tc-text-primary); }
 /* The agent's note on a flagged span */
 :where([data-look="clean"], [data-look="clean"] *).ui-rvc__tip { position: absolute; top: 0; left: 0; z-index: 6; display: grid; gap: var(--tc-space-0-5); width: min(300px, calc(100% - 20px)); padding: var(--tc-space-2-5) var(--tc-space-3); border-radius: var(--tc-menu-radius); background: var(--tc-surface-overlay); box-shadow: var(--tc-shadow-overlay); transform-origin: var(--x, 50%) bottom; animation: ui-rvc-tip var(--tc-duration-base) var(--tc-ease-move) both; }
 .ui-rvc__tip[data-side="below"] { transform-origin: var(--x, 50%) top; }
-:where([data-look="standard"], [data-look="standard"] *).ui-rvc__tip-head { display: inline-flex; align-items: center; gap: var(--tc-space-1-5); font-size: var(--tc-font-size-xs); font-weight: var(--tc-font-weight-semibold); line-height: var(--tc-line-height-tight); color: var(--tc-status-warning-fg); }
+:where([data-look="standard"], [data-look="standard"] *).ui-rvc__tip-head { display: inline-flex; align-items: center; gap: var(--tc-space-1-5); font-size: var(--tc-caption-font-size); font-weight: var(--tc-caption-font-weight); line-height: var(--tc-caption-line-height); color: var(--tc-status-warning-fg); letter-spacing: var(--tc-caption-tracking); text-transform: var(--tc-caption-transform); }
 :where([data-look="standard"], [data-look="standard"] *).ui-rvc__tip p { font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-snug); color: var(--tc-text-primary); text-wrap: pretty; }
 :where([data-look="standard"], [data-look="standard"] *).ui-rvc__tip-source { justify-self: start; margin-top: var(--tc-space-0-5); padding: 1px var(--tc-space-2); border-radius: var(--tc-radius-sm); background: var(--tc-fill-default); font-size: var(--tc-font-size-xs); line-height: var(--tc-line-height-tight); color: var(--tc-text-secondary); }
 /* ----- The actions ----- */
@@ -1647,7 +1647,7 @@ a.ui-rvc__source:hover { color: var(--tc-text-primary); }
 .ui-rvc__btn { display: inline-flex; align-items: center; height: var(--tc-control-h-md); border-radius: var(--tc-control-radius-md); background: var(--tc-action-secondary-bg); box-shadow: var(--tc-action-secondary-shadow); font-size: var(--tc-control-font-size); font-weight: var(--tc-control-font-weight); color: var(--tc-action-secondary-fg); white-space: nowrap; transition: transform var(--tc-duration-fast) var(--tc-ease-standard), box-shadow var(--tc-duration-base) var(--tc-ease-standard), background-color var(--tc-duration-base) var(--tc-ease-standard), color var(--tc-duration-base) var(--tc-ease-standard), opacity var(--tc-duration-base) var(--tc-ease-standard); }
 :where([data-look="standard"], [data-look="standard"] *).ui-rvc__btn { gap: var(--tc-space-2); padding: 0 7px 0 var(--tc-control-px-sm); }
 :where([data-look="standard"], [data-look="standard"] *).ui-rvc__btn > svg { color: var(--tc-text-muted); }
-:where([data-look="clean"], [data-look="clean"] *).ui-rvc__tip-head { display: inline-flex; align-items: center; gap: var(--tc-space-1-5); font-size: var(--tc-font-size-2xs); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-tight); letter-spacing: 0.5px; text-transform: uppercase; color: var(--tc-status-warning-fg); }
+:where([data-look="clean"], [data-look="clean"] *).ui-rvc__tip-head { display: inline-flex; align-items: center; gap: var(--tc-space-1-5); font-size: var(--tc-caption-font-size); font-weight: var(--tc-caption-font-weight); line-height: var(--tc-caption-line-height); letter-spacing: var(--tc-caption-tracking); text-transform: var(--tc-caption-transform); color: var(--tc-status-warning-fg); }
 :where([data-look="clean"], [data-look="clean"] *).ui-rvc__tip-head > svg { width: 12px; height: 12px; }
 :where([data-look="clean"], [data-look="clean"] *).ui-rvc__tip p { font-size: var(--tc-font-size-md); line-height: var(--tc-line-height-normal); color: var(--tc-text-primary); text-wrap: pretty; }
 :where([data-look="clean"], [data-look="clean"] *).ui-rvc__tip-source { justify-self: start; margin-top: var(--tc-space-1); padding: 0 var(--tc-space-1-5); border-radius: var(--tc-radius-badge); background: var(--tc-fill-default); font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-normal); color: var(--tc-text-secondary); }
@@ -1676,7 +1676,7 @@ a.ui-rvc__source:hover { color: var(--tc-text-primary); }
 :where([data-look="standard"], [data-look="standard"] *).ui-rvc__reason { gap: var(--tc-space-2); padding: 0 var(--tc-space-3) 0 var(--tc-space-2); }
 :where([data-look="standard"], [data-look="standard"] *).ui-rvc__reason:hover { box-shadow: inset 0 0 0 1px var(--tc-review-center-high-edge); }
 :where([data-look="standard"], [data-look="standard"] *).ui-rvc__reason[data-pressed] { background: var(--tc-status-danger-bg); box-shadow: inset 0 0 0 1px var(--tc-review-center-high-edge); color: var(--tc-status-danger-fg); }
-.ui-rvc__cancel { display: inline-flex; align-items: center; gap: var(--tc-space-1-5); height: var(--tc-control-h-md); padding: 0 var(--tc-space-2); border-radius: var(--tc-control-radius-md); font-size: var(--tc-font-size-sm); color: var(--tc-action-ghost-fg); transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard); }
+.ui-rvc__cancel { display: inline-flex; align-items: center; gap: var(--tc-space-1-5); height: var(--tc-control-h-md); padding: 0 var(--tc-space-2); border-radius: var(--tc-control-radius-md); font-size: var(--tc-control-font-size); color: var(--tc-action-ghost-fg); transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard); font-weight: var(--tc-control-font-weight); }
 :where([data-look="clean"], [data-look="clean"] *).ui-rvc__why-label { margin-right: var(--tc-space-0-5); font-size: var(--tc-font-size-md); font-weight: var(--tc-font-weight-medium); color: var(--tc-text-strong); }
 :where([data-look="clean"], [data-look="clean"] *).ui-rvc__reason { gap: var(--tc-space-1-5); padding: 0 var(--tc-space-2-5) 0 var(--tc-space-1-5); }
 :where([data-look="clean"], [data-look="clean"] *).ui-rvc__reason:hover { box-shadow: inset 0 0 0 0.5px var(--tc-review-center-high-edge), var(--tc-action-secondary-shadow); }
@@ -1688,13 +1688,14 @@ a.ui-rvc__source:hover { color: var(--tc-text-primary); }
 /* Undo: a small chip in the bar for a few seconds, right of how far you are */
 :where([data-look="clean"], [data-look="clean"] *).ui-rvc__undo { display: flex; flex: 0 1 auto; align-items: center; gap: var(--tc-space-0-5); min-width: 0; height: 28px; margin-left: auto; padding: 0 0 0 var(--tc-space-1); border-radius: var(--tc-radius-sm); background: var(--tc-surface-raised); animation: ui-rvc-chip-in var(--tc-duration-slow) var(--tc-ease-move) both; }
 :where([data-look="clean"], [data-look="clean"] *).ui-rvc__undo-text { display: inline-flex; align-items: center; gap: var(--tc-space-1); min-width: 0; overflow: hidden; font-size: var(--tc-font-size-sm); color: var(--tc-text-muted); white-space: nowrap; text-overflow: ellipsis; }
+.ui-rvc__undo { max-width: 55cqi; }
 .ui-rvc__undo[data-leaving] { animation: ui-rvc-chip-out ${EXIT}ms var(--tc-ease-standard) forwards; }
 .ui-rvc__undo-text > svg { width: 14px; height: 14px; color: var(--tc-review-center-tone-fg); }
 .ui-rvc__undo[data-pending] .ui-rvc__undo-text > svg { opacity: 0.5; }
 .ui-rvc__undo[data-error] .ui-rvc__undo-text { color: var(--tc-status-danger-fg); }
 .ui-rvc__undo[data-error] .ui-rvc__undo-text > svg { color: var(--tc-status-danger-fg); }
-:where([data-look="standard"], [data-look="standard"] *).ui-rvc__undo-btn { display: inline-flex; flex: none; align-items: center; gap: var(--tc-space-1); height: 26px; margin-left: var(--tc-space-1-5); padding: 0 var(--tc-space-1) 0 var(--tc-space-2); border-radius: var(--tc-radius-full); font-size: var(--tc-font-size-sm); font-weight: var(--tc-font-weight-medium); color: var(--tc-text-primary); transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), transform var(--tc-duration-fast) var(--tc-ease-standard); }
-:where([data-look="clean"], [data-look="clean"] *).ui-rvc__undo-btn { display: inline-flex; flex: none; align-items: center; gap: var(--tc-space-1); height: 24px; margin-left: var(--tc-space-1); padding: 0 var(--tc-space-1) 0 var(--tc-space-1-5); border-radius: var(--tc-radius-badge); font-size: var(--tc-font-size-sm); font-weight: var(--tc-font-weight-medium); color: var(--tc-text-strong); transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), transform var(--tc-duration-fast) var(--tc-ease-standard); }
+:where([data-look="standard"], [data-look="standard"] *).ui-rvc__undo-btn { display: inline-flex; flex: none; align-items: center; gap: var(--tc-space-1); height: var(--tc-control-h-sm); margin-left: var(--tc-space-1-5); padding: 0 var(--tc-space-1) 0 var(--tc-space-2); border-radius: var(--tc-radius-full); font-size: var(--tc-control-font-size); font-weight: var(--tc-control-font-weight); color: var(--tc-text-primary); transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), transform var(--tc-duration-fast) var(--tc-ease-standard); }
+:where([data-look="clean"], [data-look="clean"] *).ui-rvc__undo-btn { display: inline-flex; flex: none; align-items: center; gap: var(--tc-space-1); height: var(--tc-control-h-sm); margin-left: var(--tc-space-1); padding: 0 var(--tc-space-1) 0 var(--tc-space-1-5); border-radius: var(--tc-radius-badge); font-size: var(--tc-control-font-size); font-weight: var(--tc-control-font-weight); color: var(--tc-text-strong); transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), transform var(--tc-duration-fast) var(--tc-ease-standard); }
 .ui-rvc__undo-btn:hover { background: var(--tc-surface-raised); box-shadow: var(--tc-shadow-raised); }
 :where([data-look="standard"], [data-look="standard"] *).ui-rvc__undo-btn > svg { color: var(--tc-text-muted); }
 /* ----- Medium: a slimmer queue ----- */
@@ -1708,19 +1709,11 @@ a.ui-rvc__source:hover { color: var(--tc-text-primary); }
 }
 /* ----- Narrow: the queue on top, three rows high, the item under it ----- */
 @container ui-rvc (max-width: 639px) {
-:where([data-look="standard"], [data-look="standard"] *).ui-rvc__head { padding: var(--tc-space-1) var(--tc-space-1) var(--tc-space-2) var(--tc-space-2-5); }
-:where([data-look="standard"], [data-look="standard"] *).ui-rvc__oldest { margin-left: auto; padding-right: var(--tc-space-1-5); }
-:where([data-look="standard"], [data-look="standard"] *).ui-rvc__oldest::before { content: none; }
-:where([data-look="standard"], [data-look="standard"] *).ui-rvc__progress { order: 5; width: 100%; padding-right: var(--tc-space-2); }
-:where([data-look="standard"], [data-look="standard"] *).ui-rvc__progress .ui-rvc__track { flex: 1; }
-  /* Undo sits over the right end of the bar, in front of "Oldest" */
-:where([data-look="standard"], [data-look="standard"] *).ui-rvc__undo { position: absolute; top: auto; right: 4px; bottom: 6px; z-index: 2; max-width: calc(100% - 8px); }
 :where([data-look="standard"], [data-look="standard"] *).ui-rvc__card { display: flex; flex-direction: column; height: auto; }
 :where([data-look="standard"], [data-look="standard"] *).ui-rvc__queue { border-right: 0; border-bottom: 1px solid var(--tc-border-default); }
 :where([data-look="standard"], [data-look="standard"] *).ui-rvc__list { flex: none; height: calc(3 * (var(--tc-review-center-row) + 4px) + 16px); }
 :where([data-look="standard"], [data-look="standard"] *).ui-rvc__stage { flex: none; overflow: hidden; }
 :where([data-look="standard"], [data-look="standard"] *).ui-rvc__detail { gap: var(--tc-space-3-5); padding: var(--tc-space-4) var(--tc-space-4) var(--tc-space-4-5); }
-:where([data-look="standard"], [data-look="standard"] *).ui-rvc__title { font-size: var(--tc-font-size-xl); line-height: var(--tc-line-height-relaxed); }
 :where([data-look="standard"], [data-look="standard"] *).ui-rvc__actions { flex-wrap: wrap; padding: var(--tc-space-2-5) var(--tc-space-3) var(--tc-space-3); }
 :where([data-look="standard"], [data-look="standard"] *).ui-rvc__btns { flex: 1; flex-wrap: nowrap; }
 :where([data-look="standard"], [data-look="standard"] *).ui-rvc__btns > .ui-rvc__btn { flex: 1; justify-content: center; padding: 0 var(--tc-space-2); }
@@ -1748,13 +1741,6 @@ a.ui-rvc__source:hover { color: var(--tc-text-primary); }
 }
 /* ----- Narrow: the queue on top, three rows high, the item under it ----- */
 @container ui-rvc (max-width: 639px) {
-:where([data-look="clean"], [data-look="clean"] *).ui-rvc__head { padding: var(--tc-space-2-5) var(--tc-space-2-5) var(--tc-space-2-5) var(--tc-space-3-5); }
-:where([data-look="clean"], [data-look="clean"] *).ui-rvc__oldest { margin-left: auto; padding-right: var(--tc-space-1); }
-:where([data-look="clean"], [data-look="clean"] *).ui-rvc__oldest::before { content: none; }
-:where([data-look="clean"], [data-look="clean"] *).ui-rvc__progress { order: 5; width: 100%; padding-right: var(--tc-space-1); }
-:where([data-look="clean"], [data-look="clean"] *).ui-rvc__progress .ui-rvc__track { flex: 1; }
-  /* Undo sits over the right end of the bar, in front of "Oldest" */
-:where([data-look="clean"], [data-look="clean"] *).ui-rvc__undo { position: absolute; top: auto; right: 10px; bottom: 8px; z-index: 2; max-width: calc(100% - 20px); }
 :where([data-look="clean"], [data-look="clean"] *).ui-rvc__card { display: flex; flex-direction: column; height: auto; }
 :where([data-look="clean"], [data-look="clean"] *).ui-rvc__queue { border-right: 0; border-bottom: 0.5px solid var(--tc-border-default); }
 :where([data-look="clean"], [data-look="clean"] *).ui-rvc__list { flex: none; height: calc(3 * (var(--tc-review-center-row) + 2px) + 16px); }

@@ -1,0 +1,159 @@
+{
+ "elements": [
+  {
+   "tag": "tc-ghosted-chat",
+   "className": "TcGhostedChat",
+   "description": "Unanswered chat messages – an illustration for being ghosted.",
+   "properties": [
+    {
+     "name": "label",
+     "attribute": "label",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Accessible description – when set, the scene is announced as an image; otherwise it is decorative",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [],
+   "slots": [],
+   "methods": [],
+   "ui": "gc",
+   "cssProperties": [
+    {
+     "name": "--tc-ghosted-chat-bubble-shadow",
+     "value": "0 2px 6px light-dark(rgba(28, 29, 31, 0.08), rgba(0, 0, 0, 0.35)), 0 1px 2px light-dark(rgba(28, 29, 31, 0.05), rgba(0, 0, 0, 0.4))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-ghosted-chat-reply-shadow",
+     "value": "0 4px 12px light-dark(rgba(21, 94, 239, 0.22), rgba(0, 0, 0, 0.4)), 0 1px 2px light-dark(rgba(21, 94, 239, 0.18), rgba(0, 0, 0, 0.4))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-ghosted-chat-glow-1",
+     "value": "light-dark(rgba(255, 160, 171, 0.6), rgba(255, 160, 171, 0.45))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-ghosted-chat-glow-2",
+     "value": "light-dark(rgba(255, 184, 158, 0.6), rgba(255, 184, 158, 0.45))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-ghosted-chat-glow-3",
+     "value": "light-dark(rgba(200, 168, 229, 0.6), rgba(200, 168, 229, 0.45))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-ghosted-chat-glow-4",
+     "value": "light-dark(rgba(168, 181, 255, 0.6), rgba(168, 181, 255, 0.45))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-ghosted-chat-at-status",
+     "value": "100ms",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-ghosted-chat-at-1",
+     "value": "500ms",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-ghosted-chat-at-2",
+     "value": "1300ms",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-ghosted-chat-at-3",
+     "value": "2300ms",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-ghosted-chat-at-read",
+     "value": "3200ms",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-ghosted-chat-shine",
+     "value": "4.5s",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-border-default",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-duration-slowest",
+    "--tc-ease-decelerate",
+    "--tc-ease-in-out",
+    "--tc-ease-move",
+    "--tc-ease-out",
+    "--tc-ease-spring",
+    "--tc-ease-standard",
+    "--tc-font-sans",
+    "--tc-font-size-lg-plus",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-radius-xs",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-surface-overlay",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "GhostedChat",
+   "exported": false,
+   "props": [],
+   "hides": []
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 18347,
+  "gzip": 6276
+ }
+}

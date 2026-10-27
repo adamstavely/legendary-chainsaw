@@ -56,6 +56,9 @@ describe("tc-handoff", () => {
     expect(document.getElementById(el.getAttribute("aria-describedby")!)!.textContent).toBe("The airline texts a code.");
     expect(el.querySelector(".ui-hand__sub")!.textContent).toBe("Step 4 of 7 · Book flights");
     expect(el.querySelector('.ui-hand__pill[data-tone="warning"]')!.textContent).toContain("Sign-in required");
+    // A short header above the sentence, the blocker pill at its right
+    expect(el.querySelector(".ui-hand__card > .tc-head:first-child h3.tc-head__title")!.textContent).toBe("Handoff");
+    expect(el.querySelector('.tc-head__aside > .ui-hand__pill[data-tone="warning"]')).toBeTruthy();
   });
 
   for (const look of ["standard", "clean"] as const) {

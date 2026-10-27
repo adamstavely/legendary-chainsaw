@@ -5,6 +5,7 @@ import { keyed } from "lit/directives/keyed.js";
 import { repeat } from "lit/directives/repeat.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController, OnScreenController, rescueFocus } from "./internal/controllers";
 
 /*
@@ -20,10 +21,13 @@ import { FocusRescueController, OnScreenController, rescueFocus } from "./intern
  *   <tc-context-window limit="200000" .parts=${[{ id: "chat", label: "Conversation", tokens: 24000, compact: true }]}>
  *   </tc-context-window>
  *
- * Clean is one white card with hairline shadows: the caption and the action sit in its last row instead of on a gray
- * tray, the percentage is a tag, the icons are 16px with finer strokes, and "Compacting…" shimmers.
+ * Standard puts the header on a gray tray above a white card. Clean is one white card with hairline shadows: the header
+ * is its first row, the caption and the action sit in its last row instead of on a gray tray, the percentage is a tag, the icons are 16px with finer strokes, and "Compacting…" shimmers.
  * The host is the group, named by the heading.
  */
+
+/** A gauge: how full the window is */
+const windowIcon = svg`<path d="m12 14 4-4"></path><path d="M3.34 19a10 10 0 1 1 17.32 0"></path>`;
 
 export type ContextItem = { id: string; label: string; tokens: number };
 
@@ -106,6 +110,7 @@ export class TcContextWindow extends TcElement {
 
   /** The heading, and the group's name */
   @property() accessor heading = "Context window";
+  /** What fills the window, in order – each part takes the next run of cells */
   @property({ attribute: false }) accessor parts: ContextPart[] = [];
   /** Size of the context window in tokens */
   @property({ type: Number }) accessor limit = 0;
@@ -119,6 +124,7 @@ export class TcContextWindow extends TcElement {
   @property({ type: Number, attribute: "warn-at" }) accessor warnAt = 0.8;
   /** Number of cells and how many sit in one row */
   @property({ type: Number }) accessor cells = 216;
+  /** How many cells sit in one row (two thirds of it, at least 8, in a narrow container) */
   @property({ type: Number }) accessor columns = 36;
   /**
    * Called when Compact is pressed; the cells shimmer until the returned promise settles, and a rejection says so and
@@ -564,11 +570,13 @@ export class TcContextWindow extends TcElement {
                 : "";
 
     return html`
+      ${cardHead({
+        icon: windowIcon,
+        title: this.heading,
+        id: `${this.uid}-title`,
+        aside: this.model ? html`<span class="ui-cw__model">${this.modelIcon ? html`<span class="ui-cw__model-icon">${this.modelIcon.cloneNode(true)}</span>` : nothing}<span>${this.model}</span></span>` : nothing,
+      })}
       <div class="ui-cw__card">
-        <div class="ui-cw__head">
-          <span id=${`${this.uid}-title`} class="ui-cw__title">${this.heading}</span>
-          ${this.model ? html`<span class="ui-cw__model">${this.modelIcon ? html`<span class="ui-cw__model-icon">${this.modelIcon.cloneNode(true)}</span>` : nothing}<span>${this.model}</span></span>` : nothing}
-        </div>
 
         <div class="ui-cw__figure">
           <span class="ui-cw__big" aria-hidden="true" data-roll="#figure">${tokens(target["#figure"])}</span>
@@ -672,24 +680,20 @@ export class TcContextWindow extends TcElement {
 [data-ui="cw"] ul { margin: 0; padding: 0; list-style: none; }
 .ui-cw__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 :where([data-look="standard"], [data-look="standard"] *).ui-cw__card { position: relative; padding: var(--tc-space-3) var(--tc-space-3-5) var(--tc-space-2); border-radius: var(--tc-card-radius); background: var(--tc-surface-on-tray); box-shadow: var(--tc-card-shadow); }
-:where([data-look="standard"], [data-look="standard"] *).ui-cw__head { display: flex; align-items: center; justify-content: space-between; gap: var(--tc-space-2-5); min-height: 22px; }
-:where([data-look="standard"], [data-look="standard"] *).ui-cw__title { overflow: hidden; font-size: var(--tc-font-size-md); font-weight: var(--tc-font-weight-medium); color: var(--tc-text-secondary); white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="standard"], [data-look="standard"] *).ui-cw__model { display: inline-flex; flex: none; align-items: center; gap: var(--tc-space-1); max-width: 62%; height: 20px; padding: 0 var(--tc-space-2) 0 var(--tc-space-1-5); border-radius: var(--tc-radius-xs); background: var(--tc-fill-default); font-family: var(--tc-font-mono); font-size: var(--tc-font-size-xs); line-height: var(--tc-line-height-normal); color: var(--tc-text-muted); white-space: nowrap; }
-:where([data-look="clean"], [data-look="clean"] *).ui-cw__card { position: relative; padding: var(--tc-space-3-5) var(--tc-space-4) var(--tc-space-2); }
-:where([data-look="clean"], [data-look="clean"] *).ui-cw__head { display: flex; align-items: center; justify-content: space-between; gap: var(--tc-space-2-5); min-height: 20px; }
-:where([data-look="clean"], [data-look="clean"] *).ui-cw__title { overflow: hidden; font-size: var(--tc-font-size-md); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-normal); color: var(--tc-text-strong); white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="clean"], [data-look="clean"] *).ui-cw__model { display: inline-flex; flex: none; align-items: center; gap: var(--tc-space-1); max-width: 62%; height: 20px; padding: 0 var(--tc-space-1-5); border-radius: var(--tc-radius-badge); background: var(--tc-fill-default); font-size: var(--tc-font-size-xs); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-tight); color: var(--tc-text-secondary); white-space: nowrap; }
+:where([data-look="standard"], [data-look="standard"] *).ui-cw__model { display: inline-flex; flex: none; align-items: center; gap: var(--tc-space-1); max-width: 180px; height: 20px; padding: 0 var(--tc-space-2) 0 var(--tc-space-1-5); border-radius: var(--tc-radius-xs); background: var(--tc-fill-default); font-family: var(--tc-font-mono); font-size: var(--tc-font-size-xs); line-height: var(--tc-line-height-normal); color: var(--tc-text-muted); white-space: nowrap; }
+:where([data-look="clean"], [data-look="clean"] *).ui-cw__card { position: relative; padding: 0 var(--tc-space-4) var(--tc-space-2); }
+:where([data-look="clean"], [data-look="clean"] *).ui-cw__model { display: inline-flex; flex: none; align-items: center; gap: var(--tc-space-1); max-width: 180px; height: 20px; padding: 0 var(--tc-space-1-5); border-radius: var(--tc-radius-badge); background: var(--tc-fill-default); font-size: var(--tc-font-size-xs); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-tight); color: var(--tc-text-secondary); white-space: nowrap; }
 .ui-cw__model > span:last-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .ui-cw__model-icon { display: grid; flex: none; place-items: center; width: 12px; height: 12px; }
 .ui-cw__model-icon > * { width: 12px; height: 12px; }
-:where([data-look="standard"], [data-look="standard"] *).ui-cw__figure { display: flex; align-items: baseline; gap: var(--tc-space-2); margin-top: var(--tc-space-2); }
-:where([data-look="standard"], [data-look="standard"] *).ui-cw__big { font-size: var(--tc-font-size-3xl); font-weight: var(--tc-font-weight-semibold); line-height: var(--tc-line-height-display); letter-spacing: -0.02em; color: var(--tc-text-primary); font-variant-numeric: tabular-nums; }
+:where([data-look="standard"], [data-look="standard"] *).ui-cw__figure { display: flex; align-items: baseline; gap: var(--tc-space-2); }
+:where([data-look="standard"], [data-look="standard"] *).ui-cw__big { font-size: var(--tc-font-size-3xl); font-weight: var(--tc-font-weight-semibold); line-height: var(--tc-line-height-display); letter-spacing: var(--tc-tracking-tight); color: var(--tc-text-primary); font-variant-numeric: tabular-nums; }
 :where([data-look="standard"], [data-look="standard"] *).ui-cw__of { flex: 1; min-width: 0; overflow: hidden; font-size: var(--tc-font-size-sm); color: var(--tc-text-muted); white-space: nowrap; text-overflow: ellipsis; }
 :where([data-look="standard"], [data-look="standard"] *).ui-cw__pill { align-self: baseline; flex: none; font-size: var(--tc-font-size-sm); color: var(--tc-text-muted); font-variant-numeric: tabular-nums; transition: color var(--tc-duration-slow) var(--tc-ease-standard); }
 :where([data-look="standard"], [data-look="standard"] *)[data-ui="cw"][data-level="warn"] .ui-cw__pill { color: var(--tc-status-warning-fg); }
 :where([data-look="standard"], [data-look="standard"] *)[data-ui="cw"][data-level="full"] .ui-cw__pill { color: var(--tc-status-danger-fg); }
-:where([data-look="clean"], [data-look="clean"] *).ui-cw__figure { display: flex; align-items: center; gap: var(--tc-space-2); margin-top: var(--tc-space-2-5); }
-:where([data-look="clean"], [data-look="clean"] *).ui-cw__big { font-size: var(--tc-font-size-3xl); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-display); letter-spacing: -0.02em; color: var(--tc-text-strong); font-variant-numeric: tabular-nums; }
+:where([data-look="clean"], [data-look="clean"] *).ui-cw__figure { display: flex; align-items: center; gap: var(--tc-space-2); }
+:where([data-look="clean"], [data-look="clean"] *).ui-cw__big { font-size: var(--tc-font-size-3xl); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-display); letter-spacing: var(--tc-tracking-tight); color: var(--tc-text-strong); font-variant-numeric: tabular-nums; }
 :where([data-look="clean"], [data-look="clean"] *).ui-cw__of { flex: 1; min-width: 0; overflow: hidden; padding-top: var(--tc-space-1); font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); color: var(--tc-text-muted); white-space: nowrap; text-overflow: ellipsis; }
 /* The share as a small tag – tinted amber, then red, as the window fills up */
 :where([data-look="clean"], [data-look="clean"] *).ui-cw__pill { flex: none; height: 20px; padding: 0 var(--tc-space-1-5); border-radius: var(--tc-radius-badge); background: var(--tc-fill-default); font-size: var(--tc-font-size-sm); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-normal); color: var(--tc-text-secondary); font-variant-numeric: tabular-nums; transition: color var(--tc-duration-slow) var(--tc-ease-standard), background-color var(--tc-duration-slow) var(--tc-ease-standard); }
@@ -822,7 +826,7 @@ export class TcContextWindow extends TcElement {
 @keyframes ui-cw-spin { to { transform: rotate(360deg); } }
 /* Narrow cards: fewer cells per row so they stay readable, the model tag gives way and Compact keeps only its icon */
 @container (max-width: 310px) {
-:where([data-look="standard"], [data-look="standard"] *).ui-cw__model { max-width: 42%; }
+:where([data-look="standard"], [data-look="standard"] *).ui-cw__model { max-width: 120px; }
 :where([data-look="standard"], [data-look="standard"] *).ui-cw__field { grid-template-columns: repeat(var(--tc-context-window-cols-narrow), minmax(0, 1fr)); }
 :where([data-look="standard"], [data-look="standard"] *).ui-cw__compact { padding: 0 var(--tc-space-1-5); }
 :where([data-look="standard"], [data-look="standard"] *).ui-cw__compact-text { display: none; }
@@ -838,9 +842,9 @@ export class TcContextWindow extends TcElement {
 @keyframes ui-cw-sweep { from { background-position: 100% 0; } to { background-position: 0% 0; } }
 /* Narrow cards: fewer cells per row so they stay readable, the model tag gives way and Compact keeps only its icon */
 @container (max-width: 310px) {
-:where([data-look="clean"], [data-look="clean"] *).ui-cw__card { padding: var(--tc-space-3) var(--tc-space-3-5) var(--tc-space-1-5); }
+:where([data-look="clean"], [data-look="clean"] *).ui-cw__card { padding: 0 var(--tc-space-3-5) var(--tc-space-1-5); }
 :where([data-look="clean"], [data-look="clean"] *).ui-cw__foot { padding: 0 var(--tc-space-2) 0 var(--tc-space-3-5); }
-:where([data-look="clean"], [data-look="clean"] *).ui-cw__model { max-width: 42%; }
+:where([data-look="clean"], [data-look="clean"] *).ui-cw__model { max-width: 120px; }
 :where([data-look="clean"], [data-look="clean"] *).ui-cw__field { grid-template-columns: repeat(var(--tc-context-window-cols-narrow), minmax(0, 1fr)); }
 :where([data-look="clean"], [data-look="clean"] *).ui-cw__compact { padding: 0 var(--tc-space-1-5); }
 :where([data-look="clean"], [data-look="clean"] *).ui-cw__compact-text { display: none; }

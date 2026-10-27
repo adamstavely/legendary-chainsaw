@@ -7,6 +7,7 @@ import { ref } from "lit/directives/ref.js";
 import { repeat } from "lit/directives/repeat.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController, rescueFocus } from "./internal/controllers";
 
 /*
@@ -247,7 +248,8 @@ const boxStyle = (b: Box) => styleMap({ translate: `${b.x}px ${b.y}px`, width: `
 /* Lucide (ISC, lucide.dev): gallery-vertical-end (the queue), pause, play, plus, minus, check, x, triangle-alert, rotate-cw, arrow-up and the kind glyphs sparkles, wrench, bot, user */
 const S = (body: ReturnType<typeof svg>, size = 14, w = 1.8) =>
   html`<svg width=${size} height=${size} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=${w} stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${body}</svg>`;
-const queueGlyph = () => S(svg`<path d="M7 2h10"></path><path d="M5 6h14"></path><rect width="18" height="12" x="3" y="10" rx="2"></rect>`, 16);
+// The header icon: a stack of work waiting
+const queueIcon = svg`<path d="M7 2h10"></path><path d="M5 6h14"></path><rect width="18" height="12" x="3" y="10" rx="2"></rect>`;
 const pauseIcon = () => S(svg`<rect x="14" y="3" width="5" height="18" rx="1"></rect><rect x="5" y="3" width="5" height="18" rx="1"></rect>`);
 const playIcon = () => S(svg`<path d="M5 5a2 2 0 0 1 3.008-1.728l11.997 6.998a2 2 0 0 1 .003 3.458l-12 7A2 2 0 0 1 5 19z"></path>`);
 const plusIcon = () => S(svg`<path d="M5 12h14"></path><path d="M12 5v14"></path>`);
@@ -526,7 +528,9 @@ export class TcAgentQueue extends TcElement {
   @property({ type: Boolean }) accessor pausable = false;
   /** Shows a – N + stepper for the number of workers */
   @property({ type: Boolean }) accessor stepper = false;
+  /** The fewest workers the stepper allows – its – button is disabled at this number */
   @property({ type: Number, attribute: "min-concurrency" }) accessor minConcurrency = 1;
+  /** The most workers the stepper allows – its + button is disabled at this number */
   @property({ type: Number, attribute: "max-concurrency" }) accessor maxConcurrency = 8;
   /** A depth that means trouble – drawn as a dashed line on the chart; above it Waiting turns amber */
   @property({ type: Number }) accessor backpressure: number | undefined = undefined;
@@ -540,6 +544,7 @@ export class TcAgentQueue extends TcElement {
   @property({ type: Boolean }) accessor promotable = false;
   /** Shows "Cancel" in a waiting or running job's card */
   @property({ type: Boolean }) accessor cancellable = false;
+  /** The heading at the top of the card */
   @property() accessor heading = "Queue";
   /** The queue's name, muted next to the heading */
   @property() accessor name: string | undefined = undefined;
@@ -991,11 +996,12 @@ export class TcAgentQueue extends TcElement {
     const canLess = workers > this.minConcurrency;
     const canMore = workers < this.maxConcurrency;
     const paused = this.paused;
-    return html`<header class="ui-agq__head">
-      <span class="ui-agq__mark">${queueGlyph()}</span>
-      <span class="ui-agq__title">${this.heading}</span>
-      ${this.name ? html`<span class="ui-agq__name">${this.name}</span>` : nothing}
-      <span class="ui-agq__pill" data-status=${state}
+    return cardHead({
+      icon: queueIcon,
+      title: this.heading,
+      subtitle: this.name ? html`<span class="ui-agq__name">${this.name}</span>` : undefined,
+      aside: html`
+      <span class="ui-agq__pill" data-at="head" data-status=${state}
         >${state === "live" || state === "limited" ? html`<span class="ui-agq__pulse" aria-hidden="true"></span>` : nothing}${state === "limited"
           ? html`Rate limited · <span class="ui-agq__num" data-countdown="" .textContent=${live(`${left}s`)}></span>`
           : pillText}</span
@@ -1014,7 +1020,8 @@ export class TcAgentQueue extends TcElement {
             </span>`
           : nothing}
       </span>
-    </header>`;
+      `,
+    });
   }
 
   private renderChart(chart: ReturnType<ReturnType<typeof chartModel>>, summary: string, spanLabel: string, plotW: number, plotH: number, waiting: number) {
@@ -1263,11 +1270,11 @@ export class TcAgentQueue extends TcElement {
   border-radius: var(--tc-tray-radius);
   background: var(--tc-agent-queue-tray-bg);
   container: ui-agq / inline-size;
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-regular);
   line-height: var(--tc-line-height-normal);
-  letter-spacing: -0.006em;
+  letter-spacing: var(--tc-tracking-normal);
   color: var(--tc-text-muted);
   text-align: left;
   -webkit-font-smoothing: antialiased;
@@ -1314,25 +1321,16 @@ export class TcAgentQueue extends TcElement {
 [data-ui="agq"] :is(p, dl, dd) { margin: 0; }
 [data-ui="agq"] svg { display: block; flex: none; }
 .ui-agq__num { font-variant-numeric: tabular-nums; }
-/* ----- On the tray: the queue's name, its state and the controls ----- */
-:where([data-look="standard"], [data-look="standard"] *).ui-agq__head { display: flex; align-items: center; gap: var(--tc-space-2); min-width: 0; min-height: 44px; padding: var(--tc-space-1) var(--tc-space-1) var(--tc-space-2) var(--tc-space-3); }
-/* ----- The bar: the queue's name, its state and the controls ----- */
-:where([data-look="clean"], [data-look="clean"] *).ui-agq__head { display: flex; align-items: center; gap: var(--tc-space-2); min-width: 0; min-height: 52px; padding: var(--tc-space-3) var(--tc-space-3) var(--tc-space-3) var(--tc-space-4); border-bottom: var(--tc-hairline) solid var(--tc-divider); }
-.ui-agq__mark { display: grid; flex: none; place-items: center; width: 16px; color: var(--tc-accent-text); }
-:where([data-look="standard"], [data-look="standard"] *).ui-agq__title { flex: none; font-weight: var(--tc-font-weight-semibold); color: var(--tc-text-strong); }
-:where([data-look="standard"], [data-look="standard"] *).ui-agq__name { min-width: 0; overflow: hidden; font-size: var(--tc-font-size-md); color: var(--tc-text-muted); white-space: nowrap; text-overflow: ellipsis; }
 /* Status pills: the pill pattern (large in the header, small on a job's card) */
 :where([data-look="standard"], [data-look="standard"] *).ui-agq__pill { display: inline-flex; flex: none; align-items: center; gap: var(--tc-space-1-5); height: var(--tc-pill-h-lg); padding: 0 var(--tc-pill-px-lg); border-radius: var(--tc-pill-radius); background: var(--tc-fill-default); font-size: var(--tc-pill-font-size-lg); font-weight: var(--tc-pill-font-weight); line-height: var(--tc-line-height-tight); color: var(--tc-text-muted); white-space: nowrap; }
-:where([data-look="standard"], [data-look="standard"] *).ui-agq__head .ui-agq__pill { background: var(--tc-agent-queue-card-bg); box-shadow: var(--tc-shadow-raised); }
+:where([data-look="standard"], [data-look="standard"] *).ui-agq__pill[data-at="head"] { background: var(--tc-agent-queue-card-bg); box-shadow: var(--tc-shadow-raised); }
 :where([data-look="standard"], [data-look="standard"] *).ui-agq__pill[data-status="live"] { color: var(--tc-accent-text); }
 :where([data-look="standard"], [data-look="standard"] *).ui-agq__pill[data-status="limited"] { color: var(--tc-status-warning-fg); }
-:where([data-look="standard"], [data-look="standard"] *).ui-agq__head .ui-agq__pill[data-status="limited"] { background: var(--tc-status-warning-bg); box-shadow: inset 0 0 0 1px var(--tc-status-warning-border); }
+:where([data-look="standard"], [data-look="standard"] *).ui-agq__pill[data-at="head"][data-status="limited"] { background: var(--tc-status-warning-bg); box-shadow: inset 0 0 0 1px var(--tc-status-warning-border); }
 :where([data-look="standard"], [data-look="standard"] *).ui-agq__pill[data-status="running"] { color: var(--tc-accent-text); }
 :where([data-look="standard"], [data-look="standard"] *).ui-agq__pill[data-status="done"] { color: var(--tc-status-success-fg); }
 :where([data-look="standard"], [data-look="standard"] *).ui-agq__pill[data-status="failed"] { color: var(--tc-status-danger-fg); }
 :where([data-look="standard"], [data-look="standard"] *).ui-agq__pop .ui-agq__pill[data-status="running"] { background: var(--tc-status-info-bg); }
-:where([data-look="clean"], [data-look="clean"] *).ui-agq__title { flex: none; font-weight: var(--tc-font-weight-medium); color: var(--tc-text-strong); }
-:where([data-look="clean"], [data-look="clean"] *).ui-agq__name { min-width: 0; overflow: hidden; color: var(--tc-text-muted); white-space: nowrap; text-overflow: ellipsis; }
 :where([data-look="clean"], [data-look="clean"] *).ui-agq__pill { display: inline-flex; flex: none; align-items: center; gap: var(--tc-space-1); height: var(--tc-pill-h-lg); padding: 0 var(--tc-pill-px-lg); border-radius: var(--tc-pill-radius); background: var(--tc-fill-default); font-size: var(--tc-pill-font-size-lg); font-weight: var(--tc-pill-font-weight); line-height: var(--tc-line-height-tight); color: var(--tc-text-secondary); white-space: nowrap; }
 :where([data-look="clean"], [data-look="clean"] *).ui-agq__pill > svg { width: 11px; height: 11px; }
 :where([data-look="clean"], [data-look="clean"] *).ui-agq__pill:is([data-status="live"], [data-status="running"]) { background: var(--tc-accent-subtle); color: var(--tc-accent-text); }
@@ -1341,11 +1339,11 @@ export class TcAgentQueue extends TcElement {
 :where([data-look="clean"], [data-look="clean"] *).ui-agq__pill[data-status="failed"] { background: var(--tc-status-danger-bg); color: var(--tc-status-danger-fg); }
 /* Decorative loops pulse a few times and rest (2.2.2) – the state is in the words */
 .ui-agq__pulse { width: 6px; height: 6px; border-radius: 50%; background: currentColor; animation: ui-agq-pulse var(--tc-duration-shimmer) var(--tc-ease-in-out) 3; }
-:where([data-look="standard"], [data-look="standard"] *).ui-agq__tools { display: flex; flex: none; align-items: center; gap: var(--tc-space-1-5); margin-left: auto; }
+:where([data-look="standard"], [data-look="standard"] *).ui-agq__tools { display: flex; flex: none; align-items: center; gap: var(--tc-space-1-5); }
 /* Pause / Move to front / Cancel: secondary buttons, the control geometry */
 :where([data-look="standard"], [data-look="standard"] *).ui-agq__btn { display: inline-flex; align-items: center; gap: var(--tc-space-1-5); height: var(--tc-control-h-sm); padding: 0 var(--tc-control-px-sm) 0 calc(var(--tc-control-px-sm) - 2px); border-radius: var(--tc-control-radius-sm); background: var(--tc-action-secondary-bg); box-shadow: var(--tc-action-secondary-shadow); font-size: var(--tc-control-font-size); font-weight: var(--tc-control-font-weight); color: var(--tc-action-secondary-fg); white-space: nowrap; transition: box-shadow var(--tc-duration-fast) var(--tc-ease-standard), background-color var(--tc-duration-fast) var(--tc-ease-standard); }
 .ui-agq__btn:hover { box-shadow: var(--tc-action-secondary-shadow-hover); }
-:where([data-look="clean"], [data-look="clean"] *).ui-agq__tools { display: flex; flex: none; align-items: center; gap: var(--tc-space-2); margin-left: auto; }
+:where([data-look="clean"], [data-look="clean"] *).ui-agq__tools { display: flex; flex: none; align-items: center; gap: var(--tc-space-2); }
 :where([data-look="clean"], [data-look="clean"] *).ui-agq__btn { display: inline-flex; align-items: center; gap: var(--tc-space-1-5); height: var(--tc-control-h-md); padding: 0 var(--tc-control-px-md) 0 6px; border-radius: var(--tc-control-radius-md); background: var(--tc-action-secondary-bg); box-shadow: var(--tc-action-secondary-shadow); font-size: var(--tc-control-font-size); font-weight: var(--tc-control-font-weight); color: var(--tc-action-secondary-fg); white-space: nowrap; transition: background-color var(--tc-duration-fast) var(--tc-ease-standard); }
 :where([data-look="clean"], [data-look="clean"] *).ui-agq__btn > svg { width: 16px; height: 16px; color: var(--tc-icon-muted); }
 .ui-agq__btn[aria-pressed="true"] { color: var(--tc-accent-text); }
@@ -1365,16 +1363,16 @@ export class TcAgentQueue extends TcElement {
 :where([data-look="standard"], [data-look="standard"] *).ui-agq__stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); padding: var(--tc-space-3-5) 0; border-bottom: var(--tc-hairline) solid var(--tc-divider); }
 :where([data-look="clean"], [data-look="clean"] *).ui-agq__stepper-value { min-width: 18px; font-weight: var(--tc-font-weight-medium); color: var(--tc-text-strong); text-align: center; font-variant-numeric: tabular-nums; }
 /* ----- The queue in numbers, the flow and the chart – all on the one card ----- */
-:where([data-look="clean"], [data-look="clean"] *).ui-agq__card { position: relative; }
+:where([data-look="clean"], [data-look="clean"] *).ui-agq__card { position: relative; border-top: var(--tc-hairline) solid var(--tc-divider); }
 :where([data-look="clean"], [data-look="clean"] *).ui-agq__stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); padding: var(--tc-space-3) 0; border-bottom: var(--tc-hairline) solid var(--tc-divider); }
 .ui-agq__stat { display: grid; gap: var(--tc-space-0-5); min-width: 0; padding: 0 var(--tc-space-4); }
 .ui-agq__stat:first-child { padding-left: 22px; }
 .ui-agq__stat:last-child { padding-right: var(--tc-space-2-5); }
 .ui-agq__stat + .ui-agq__stat { border-left: var(--tc-hairline) solid var(--tc-divider); }
 :where([data-look="standard"], [data-look="standard"] *).ui-agq__stat dt { overflow: hidden; font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); color: var(--tc-text-muted); white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="standard"], [data-look="standard"] *).ui-agq__stat dd { overflow: hidden; font-size: var(--tc-font-size-xl); font-weight: var(--tc-font-weight-semibold); line-height: var(--tc-line-height-relaxed); letter-spacing: -0.01em; color: var(--tc-text-primary); white-space: nowrap; font-variant-numeric: tabular-nums; transition: color var(--tc-duration-moderate) var(--tc-ease-standard); }
+:where([data-look="standard"], [data-look="standard"] *).ui-agq__stat dd { overflow: hidden; font-size: var(--tc-font-size-xl); font-weight: var(--tc-font-weight-semibold); line-height: var(--tc-line-height-relaxed); letter-spacing: var(--tc-tracking-snug); color: var(--tc-text-primary); white-space: nowrap; font-variant-numeric: tabular-nums; transition: color var(--tc-duration-moderate) var(--tc-ease-standard); }
 :where([data-look="standard"], [data-look="standard"] *).ui-agq__of { margin-left: 1px; font-size: var(--tc-font-size-md); font-weight: var(--tc-font-weight-medium); color: var(--tc-text-muted); }
-:where([data-look="clean"], [data-look="clean"] *).ui-agq__stat dt { overflow: hidden; font-size: var(--tc-font-size-2xs); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-tight); letter-spacing: 0.5px; text-transform: uppercase; color: var(--tc-text-muted); white-space: nowrap; text-overflow: ellipsis; }
+:where([data-look="clean"], [data-look="clean"] *).ui-agq__stat dt { overflow: hidden; font-size: var(--tc-font-size-2xs); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-tight); letter-spacing: var(--tc-tracking-caps); text-transform: uppercase; color: var(--tc-text-muted); white-space: nowrap; text-overflow: ellipsis; }
 :where([data-look="clean"], [data-look="clean"] *).ui-agq__stat dd { overflow: hidden; font-size: var(--tc-font-size-lg-plus); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-loose); color: var(--tc-text-primary); white-space: nowrap; font-variant-numeric: tabular-nums; transition: color var(--tc-duration-moderate) var(--tc-ease-standard); }
 :where([data-look="clean"], [data-look="clean"] *).ui-agq__of { margin-left: 1px; font-size: var(--tc-font-size-md); color: var(--tc-text-muted); }
 .ui-agq__stat[data-kind="warn"] dd { color: var(--tc-status-warning-fg); }
@@ -1390,10 +1388,10 @@ export class TcAgentQueue extends TcElement {
 :where([data-look="standard"], [data-look="standard"] *).ui-agq__well { border-radius: var(--tc-radius-md); background: var(--tc-agent-queue-well-bg); box-shadow: inset 0 0 0 1px var(--tc-border-subtle); }
 .ui-agq__empty { display: grid; place-items: center; color: var(--tc-text-disabled); animation: ui-agq-calm var(--tc-duration-slow) var(--tc-ease-move) both; }
 :where([data-look="standard"], [data-look="standard"] *).ui-agq__well { transition: opacity var(--tc-duration-slow) var(--tc-ease-move); }
-:where([data-look="clean"], [data-look="clean"] *).ui-agq__col-head { display: flex; align-items: center; gap: var(--tc-space-1-5); font-size: var(--tc-font-size-2xs); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-tight); letter-spacing: 0.5px; text-transform: uppercase; color: var(--tc-text-muted); white-space: nowrap; }
+:where([data-look="clean"], [data-look="clean"] *).ui-agq__col-head { display: flex; align-items: center; gap: var(--tc-space-1-5); font-size: var(--tc-font-size-2xs); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-tight); letter-spacing: var(--tc-tracking-caps); text-transform: uppercase; color: var(--tc-text-muted); white-space: nowrap; }
 :where([data-look="clean"], [data-look="clean"] *).ui-agq__col-head > b { font-size: var(--tc-font-size-sm); font-weight: var(--tc-font-weight-medium); letter-spacing: 0; color: var(--tc-text-primary); font-variant-numeric: tabular-nums; }
 /* The rate limit, with its countdown – a line under it runs out until the workers resume */
-:where([data-look="clean"], [data-look="clean"] *).ui-agq__col-head > .ui-agq__col-more { margin-left: auto; letter-spacing: 0.3px; }
+:where([data-look="clean"], [data-look="clean"] *).ui-agq__col-head > .ui-agq__col-more { margin-left: auto; }
 :where([data-look="clean"], [data-look="clean"] *).ui-agq__well { border-radius: var(--tc-radius-sm); background: var(--tc-fill-subtle); box-shadow: inset 0 0 0 0.5px var(--tc-border-default); }
 :where([data-look="clean"], [data-look="clean"] *).ui-agq__well { transition: opacity var(--tc-duration-slow) var(--tc-ease-move); }
 .ui-agq__well[data-empty] { opacity: 0; }
@@ -1417,7 +1415,7 @@ export class TcAgentQueue extends TcElement {
 :where([data-look="standard"], [data-look="standard"] *).ui-agq__bin[data-kind="done"] .ui-agq__bin-icon { background: var(--tc-status-success-bg); box-shadow: inset 0 0 0 1px var(--tc-status-success-border); color: var(--tc-status-success-fg); }
 :where([data-look="standard"], [data-look="standard"] *).ui-agq__bin[data-kind="failed"] .ui-agq__bin-icon { background: var(--tc-status-danger-bg); box-shadow: inset 0 0 0 1px var(--tc-status-danger-border); color: var(--tc-status-danger-fg); }
 :where([data-look="standard"], [data-look="standard"] *).ui-agq__bin-label { position: absolute; top: 14px; left: 40px; font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); color: var(--tc-text-muted); }
-:where([data-look="standard"], [data-look="standard"] *).ui-agq__bin-count { position: absolute; left: 12px; bottom: 10px; font-size: var(--tc-font-size-2xl); font-weight: var(--tc-font-weight-semibold); line-height: 26px; letter-spacing: -0.02em; color: var(--tc-text-primary); }
+:where([data-look="standard"], [data-look="standard"] *).ui-agq__bin-count { position: absolute; left: 12px; bottom: 10px; font-size: var(--tc-font-size-2xl); font-weight: var(--tc-font-weight-semibold); line-height: 26px; letter-spacing: var(--tc-tracking-tight); color: var(--tc-text-primary); }
 :where([data-look="clean"], [data-look="clean"] *).ui-agq__who-name { overflow: hidden; font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-tight); color: var(--tc-text-strong); white-space: nowrap; text-overflow: ellipsis; }
 :where([data-look="clean"], [data-look="clean"] *).ui-agq__rail { position: absolute; display: flex; align-items: center; padding-left: var(--tc-space-2-5); border-radius: var(--tc-radius-sm); box-shadow: inset 0 0 0 var(--tc-hairline) var(--tc-border-default); background-color: light-dark(transparent, var(--tc-surface-sunken)); background-image: repeating-linear-gradient(-45deg, transparent 0 6px, var(--tc-agent-queue-rail-stripe) 6px 6.5px); font-size: var(--tc-font-size-sm); color: var(--tc-text-muted); }
 /* Done and Failed: a tick or a cross, a count, and a soft ring when a job lands */
@@ -1425,8 +1423,8 @@ export class TcAgentQueue extends TcElement {
 :where([data-look="clean"], [data-look="clean"] *).ui-agq__bin-icon { position: absolute; top: 12px; left: 12px; display: grid; place-items: center; width: 20px; height: 20px; border-radius: var(--tc-radius-sm); }
 :where([data-look="clean"], [data-look="clean"] *).ui-agq__bin[data-kind="done"] .ui-agq__bin-icon { background: var(--tc-status-success-bg); color: var(--tc-status-success-fg); }
 :where([data-look="clean"], [data-look="clean"] *).ui-agq__bin[data-kind="failed"] .ui-agq__bin-icon { background: var(--tc-status-danger-bg); color: var(--tc-status-danger-fg); }
-:where([data-look="clean"], [data-look="clean"] *).ui-agq__bin-label { position: absolute; top: 14px; left: 40px; font-size: var(--tc-font-size-2xs); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-tight); letter-spacing: 0.5px; text-transform: uppercase; color: var(--tc-text-muted); }
-:where([data-look="clean"], [data-look="clean"] *).ui-agq__bin-count { position: absolute; left: 12px; bottom: 10px; font-size: var(--tc-font-size-2xl); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-display-sm); letter-spacing: -0.2px; color: var(--tc-text-strong); }
+:where([data-look="clean"], [data-look="clean"] *).ui-agq__bin-label { position: absolute; top: 14px; left: 40px; font-size: var(--tc-font-size-2xs); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-tight); letter-spacing: var(--tc-tracking-caps); text-transform: uppercase; color: var(--tc-text-muted); }
+:where([data-look="clean"], [data-look="clean"] *).ui-agq__bin-count { position: absolute; left: 12px; bottom: 10px; font-size: var(--tc-font-size-2xl); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-display-sm); letter-spacing: var(--tc-tracking-snug); color: var(--tc-text-strong); }
 .ui-agq__bin[data-kind="failed"] .ui-agq__bin-count { color: var(--tc-status-danger-fg); }
 .ui-agq__bin-hit { position: absolute; top: 12px; left: 12px; width: 20px; height: 20px; border-radius: var(--tc-radius-sm); opacity: 0; pointer-events: none; animation: ui-agq-hit var(--tc-duration-reveal) var(--tc-ease-decelerate) var(--tc-duration-slower); }
 .ui-agq__bin[data-kind="done"] .ui-agq__bin-hit { box-shadow: 0 0 0 1px var(--tc-status-success-fg); }
@@ -1546,7 +1544,7 @@ export class TcAgentQueue extends TcElement {
 :where([data-look="standard"], [data-look="standard"] *).ui-agq__chart-head { display: flex; align-items: center; gap: var(--tc-space-2); margin-bottom: var(--tc-space-2-5); font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); white-space: nowrap; }
 :where([data-look="standard"], [data-look="standard"] *).ui-agq__chart-title { font-weight: var(--tc-font-weight-medium); color: var(--tc-text-primary); }
 :where([data-look="clean"], [data-look="clean"] *).ui-agq__pop-stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--tc-space-2) var(--tc-space-3); padding: var(--tc-space-2) var(--tc-space-2-5); border-radius: var(--tc-radius-md); background: var(--tc-fill-subtle); box-shadow: inset 0 0 0 var(--tc-hairline) var(--tc-border-default); }
-:where([data-look="clean"], [data-look="clean"] *).ui-agq__pop-stats dt { font-size: var(--tc-font-size-2xs); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-tight); letter-spacing: 0.5px; text-transform: uppercase; color: var(--tc-text-muted); }
+:where([data-look="clean"], [data-look="clean"] *).ui-agq__pop-stats dt { font-size: var(--tc-font-size-2xs); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-tight); letter-spacing: var(--tc-tracking-caps); text-transform: uppercase; color: var(--tc-text-muted); }
 :where([data-look="clean"], [data-look="clean"] *).ui-agq__pop-stats dd { overflow: hidden; font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-normal); color: var(--tc-text-primary); white-space: nowrap; text-overflow: ellipsis; font-variant-numeric: tabular-nums; }
 :where([data-look="clean"], [data-look="clean"] *).ui-agq__pop-error { display: flex; gap: var(--tc-space-2); padding: var(--tc-space-2) var(--tc-space-2-5); border-radius: var(--tc-radius-md); background: var(--tc-status-danger-bg); font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); color: var(--tc-status-danger-fg); }
 :where([data-look="clean"], [data-look="clean"] *).ui-agq__pop-error > svg { margin-top: var(--tc-space-0-5); }
@@ -1555,7 +1553,7 @@ export class TcAgentQueue extends TcElement {
 /* ----- The chart ----- */
 :where([data-look="clean"], [data-look="clean"] *).ui-agq__chart { padding: var(--tc-space-3) var(--tc-space-4) var(--tc-space-3); }
 :where([data-look="clean"], [data-look="clean"] *).ui-agq__chart-head { display: flex; align-items: center; gap: var(--tc-space-2); margin-bottom: var(--tc-space-2-5); line-height: var(--tc-line-height-tight); white-space: nowrap; }
-:where([data-look="clean"], [data-look="clean"] *).ui-agq__chart-title { font-size: var(--tc-font-size-2xs); font-weight: var(--tc-font-weight-medium); letter-spacing: 0.5px; text-transform: uppercase; color: var(--tc-text-muted); }
+:where([data-look="clean"], [data-look="clean"] *).ui-agq__chart-title { font-size: var(--tc-font-size-2xs); font-weight: var(--tc-font-weight-medium); letter-spacing: var(--tc-tracking-caps); text-transform: uppercase; color: var(--tc-text-muted); }
 .ui-agq__plot { position: relative; margin-left: ${GUTTER}px; }
 :where([data-look="standard"], [data-look="standard"] *).ui-agq__grid { position: absolute; left: -6px; right: 0; bottom: calc(var(--v) / var(--tc-agent-queue-ymax) * 100%); height: 1px; background: var(--tc-border-subtle); }
 :where([data-look="standard"], [data-look="standard"] *).ui-agq__grid[data-zero] { background: var(--tc-border-default); }
@@ -1583,7 +1581,6 @@ export class TcAgentQueue extends TcElement {
 .ui-agq__sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 /* ----- Narrow ----- */
 @container ui-agq (max-width: 560px) {
-:where([data-look="standard"], [data-look="standard"] *).ui-agq__head { flex-wrap: wrap; row-gap: var(--tc-space-1-5); padding: var(--tc-space-1) var(--tc-space-1) var(--tc-space-2) var(--tc-space-2-5); }
 :where([data-look="standard"], [data-look="standard"] *).ui-agq__name { display: none; }
 :where([data-look="standard"], [data-look="standard"] *).ui-agq__stats { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: var(--tc-space-3); padding: var(--tc-space-3) 0; }
 :where([data-look="standard"], [data-look="standard"] *).ui-agq__stat { padding: 0 var(--tc-space-3); }
@@ -1593,13 +1590,12 @@ export class TcAgentQueue extends TcElement {
 :where([data-look="standard"], [data-look="standard"] *).ui-agq__chart { padding: var(--tc-space-3) var(--tc-space-3) var(--tc-space-2-5); }
 }
 @container ui-agq (max-width: 440px) {
-  /* The controls get a row of their own: Pause on the left, the workers on the right */
-:where([data-look="standard"], [data-look="standard"] *).ui-agq__tools { flex-basis: 100%; justify-content: space-between; margin-left: 0; }
-:where([data-look="standard"], [data-look="standard"] *).ui-agq__head { padding-right: var(--tc-space-2); }
+  /* The header's controls stay at its right: Pause shrinks to its icon, its name stays for screen readers */
+  .ui-agq__btn-text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .ui-agq__tools .ui-agq__btn { width: var(--tc-control-h-sm); justify-content: center; padding: 0; }
 }
 /* ----- Narrow ----- */
 @container ui-agq (max-width: 560px) {
-:where([data-look="clean"], [data-look="clean"] *).ui-agq__head { flex-wrap: wrap; row-gap: var(--tc-space-2-5); padding: var(--tc-space-2-5) var(--tc-space-3); }
 :where([data-look="clean"], [data-look="clean"] *).ui-agq__name { display: none; }
 :where([data-look="clean"], [data-look="clean"] *).ui-agq__stats { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: var(--tc-space-2-5); padding: var(--tc-space-2-5) 0; }
 :where([data-look="clean"], [data-look="clean"] *).ui-agq__stat { padding: 0 var(--tc-space-3); }
@@ -1608,9 +1604,7 @@ export class TcAgentQueue extends TcElement {
 :where([data-look="clean"], [data-look="clean"] *).ui-agq__chart { padding: var(--tc-space-3) var(--tc-space-3) var(--tc-space-2-5); }
 }
 @container ui-agq (max-width: 440px) {
-  /* The controls get a row of their own: Pause on the left, the workers on the right */
-:where([data-look="clean"], [data-look="clean"] *).ui-agq__tools { flex-basis: 100%; justify-content: space-between; margin-left: 0; }
-:where([data-look="clean"], [data-look="clean"] *).ui-agq__stat dt { letter-spacing: 0.2px; }
+:where([data-look="clean"], [data-look="clean"] *).ui-agq__stat dt { letter-spacing: var(--tc-tracking-normal); }
 }
 /* Paused by a rate limit: the bar keeps its colors, dims a little and stops – no sheen, no glow */
 .ui-agq__job[data-halted] .ui-agq__fill { opacity: 0.55; }

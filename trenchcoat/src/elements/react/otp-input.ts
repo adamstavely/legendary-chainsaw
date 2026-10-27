@@ -20,6 +20,7 @@ export type OtpInputProps = Omit<RawOtpInputProps, "value" | "errorMessage" | "r
   value?: string;
   /** Starting code when uncontrolled */
   defaultValue?: string;
+  /** Called with the new code each time the user types, pastes or deletes */
   onChange?: (code: string) => void;
   /** Shown below the boxes while `status` is "error" */
   errorMessage?: React.ReactNode;

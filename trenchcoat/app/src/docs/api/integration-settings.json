@@ -1,0 +1,420 @@
+{
+ "elements": [
+  {
+   "tag": "tc-integration-settings",
+   "className": "TcIntegrationSettings",
+   "description": "The settings card of one connected service: a switch, an API key, the site address and a time zone, with a save bar.",
+   "properties": [
+    {
+     "name": "name",
+     "attribute": "name",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The service's name, e.g. \"Shopify\"",
+     "readonly": false
+    },
+    {
+     "name": "logo",
+     "attribute": null,
+     "type": "Element | undefined",
+     "default": "undefined",
+     "description": "The service's logo (cloned)",
+     "readonly": false
+    },
+    {
+     "name": "count",
+     "attribute": "count",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "Small number next to the name, e.g. synced orders",
+     "readonly": false
+    },
+    {
+     "name": "meta",
+     "attribute": "meta",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "Line under the name, e.g. when it was connected",
+     "readonly": false
+    },
+    {
+     "name": "values",
+     "attribute": null,
+     "type": "Partial<IntegrationValues>",
+     "default": "{}",
+     "description": "The saved values. Edits collect in the save bar; fields that weren't edited follow new values right away",
+     "readonly": false
+    },
+    {
+     "name": "siteHint",
+     "attribute": "site-hint",
+     "type": "string",
+     "default": "\"Your store's primary domain, without https://\"",
+     "description": "Helper text under the address field",
+     "readonly": false
+    },
+    {
+     "name": "timeZones",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[ \"(GMT −08:00) Los Angeles\", \"(GMT −05:00) New York\", \"(GMT −03:00) São Paulo\", \"(GMT +00:00) London\", \"(GMT +01:00) Berlin\", \"(GMT +01:00) Amsterdam\", \"(GMT +01:00) Warsaw\", \"(GMT +02:00) Athens\", \"(GMT +04:00) Dubai\", \"(GMT +05:30) Mumbai\", \"(GMT +08:00) Singapore\", \"(GMT +09:00) Tokyo\", \"(GMT +10:00) Sydney\", ]",
+     "description": "The time zones the picker offers, as labels like \"(GMT +01:00) Berlin\" – the first is the default",
+     "readonly": false
+    },
+    {
+     "name": "generateKey",
+     "attribute": null,
+     "type": "IntegrationKeyGenerator | undefined",
+     "default": "undefined",
+     "description": "Creates a key; without it a random `sk_demo_…` key is made up (and warns once, unless `demo` is set)",
+     "readonly": false
+    },
+    {
+     "name": "saveValues",
+     "attribute": null,
+     "type": "IntegrationSaver | undefined",
+     "default": "undefined",
+     "description": "Called with all values when Save is pressed",
+     "readonly": false
+    },
+    {
+     "name": "toggleEnabled",
+     "attribute": null,
+     "type": "IntegrationToggler | undefined",
+     "default": "undefined",
+     "description": "Called when the switch flips",
+     "readonly": false
+    },
+    {
+     "name": "demo",
+     "attribute": "demo",
+     "type": "boolean",
+     "default": "false",
+     "description": "Demo mode: keys are made up silently when generateKey is missing",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-values-change",
+     "detail": "",
+     "description": "The saved values changed: after a save, or when the switch flipped ({ values: IntegrationValues }); cancelable",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "is",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-active",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-border-default",
+    "--tc-border-strong",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-md",
+    "--tc-control-px-sm",
+    "--tc-control-radius-md",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-instant",
+    "--tc-duration-moderate",
+    "--tc-duration-quick",
+    "--tc-duration-reveal",
+    "--tc-duration-shimmer",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-ease-decelerate",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-bg-sunken",
+    "--tc-field-font-size",
+    "--tc-field-h",
+    "--tc-field-px",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-field-shadow-hover",
+    "--tc-field-shadow-invalid",
+    "--tc-fill-default",
+    "--tc-fill-hover",
+    "--tc-fill-strong",
+    "--tc-fill-subtle",
+    "--tc-focus-halo-width",
+    "--tc-focus-outline",
+    "--tc-focus-ring",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-mono",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xl",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-menu-bg",
+    "--tc-menu-item-font-size",
+    "--tc-menu-item-h",
+    "--tc-menu-item-hover",
+    "--tc-menu-item-px",
+    "--tc-menu-item-radius",
+    "--tc-menu-item-selected-fg",
+    "--tc-menu-padding",
+    "--tc-menu-radius",
+    "--tc-menu-shadow",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-shadow-control",
+    "--tc-shadow-raised",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-4-5",
+    "--tc-status-danger-fg",
+    "--tc-status-danger-solid",
+    "--tc-status-success-bg",
+    "--tc-status-success-border",
+    "--tc-status-success-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-switch-h",
+    "--tc-switch-knob",
+    "--tc-switch-knob-bg",
+    "--tc-switch-off",
+    "--tc-switch-on",
+    "--tc-switch-radius",
+    "--tc-switch-w",
+    "--tc-text-muted",
+    "--tc-text-placeholder",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius",
+    "--tc-z-dropdown"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "IntegrationSettingsOwn",
+   "exported": false,
+   "props": [
+    {
+     "name": "name",
+     "type": "string",
+     "optional": false,
+     "description": "The service's name, e.g. \"Shopify\""
+    },
+    {
+     "name": "logo",
+     "type": "React.ReactNode",
+     "optional": false,
+     "description": "The service's logo, shown beside its name"
+    },
+    {
+     "name": "count",
+     "type": "number",
+     "optional": true,
+     "description": "Small number next to the name, e.g. synced orders"
+    },
+    {
+     "name": "meta",
+     "type": "string",
+     "optional": true,
+     "description": "Line under the name, e.g. when it was connected"
+    },
+    {
+     "name": "values",
+     "type": "Partial<IntegrationValues>",
+     "optional": true,
+     "description": "The saved values. Controlled when defined: the card shows them, edits collect in the save bar, and saved changes\n(Save, the switch) are reported through onValuesChange. Fields that weren't edited follow new values right away"
+    },
+    {
+     "name": "defaultValues",
+     "type": "Partial<IntegrationValues>",
+     "optional": true,
+     "description": "Saved values when uncontrolled. Read again when they change (e.g. once they've loaded) – fields that weren't\nedited follow"
+    },
+    {
+     "name": "onValuesChange",
+     "type": "(values: IntegrationValues) => void",
+     "optional": true,
+     "description": "Called with all values whenever the saved values change: after a save, or when the switch flips"
+    },
+    {
+     "name": "siteHint",
+     "type": "string",
+     "optional": true,
+     "description": "Helper text under the address field"
+    },
+    {
+     "name": "timeZones",
+     "type": "string[]",
+     "optional": true,
+     "description": "The time zones the picker offers, as labels like \"(GMT +01:00) Berlin\" – the first is the default"
+    },
+    {
+     "name": "onGenerateKey",
+     "type": "(options: { signal: AbortSignal }) => string | Promise<string>",
+     "optional": true,
+     "description": "Creates a key – return it, or a promise of it; a rejection shows an error and keeps the old key. Without it a\nrandom `sk_demo_…` key is made up (and warns once, unless `demo` is set)"
+    },
+    {
+     "name": "onSave",
+     "type": "(values: IntegrationValues, options: { signal: AbortSignal }) => void | Promise<void>",
+     "optional": true,
+     "description": "Called with all values when Save is pressed. A rejection keeps the changes unsaved and shows an error.\nThe signal aborts when the card unmounts"
+    },
+    {
+     "name": "demo",
+     "type": "boolean",
+     "optional": true,
+     "description": "Demo mode: keys are made up silently when onGenerateKey is missing. For galleries and prototypes"
+    },
+    {
+     "name": "onToggle",
+     "type": "(enabled: boolean, options: { signal: AbortSignal }) => void | Promise<unknown>",
+     "optional": true,
+     "description": "Called when the switch flips. May return a promise: the switch shows that it's working and flips when it\nresolves; a rejection leaves it as it was and shows an error"
+    }
+   ],
+   "hides": []
+  },
+  {
+   "component": "IntegrationSettings",
+   "exported": true,
+   "props": [
+    {
+     "name": "name",
+     "type": "string",
+     "optional": false,
+     "description": "The service's name, e.g. \"Shopify\""
+    },
+    {
+     "name": "logo",
+     "type": "React.ReactNode",
+     "optional": false,
+     "description": "The service's logo, shown beside its name"
+    },
+    {
+     "name": "count",
+     "type": "number",
+     "optional": true,
+     "description": "Small number next to the name, e.g. synced orders"
+    },
+    {
+     "name": "meta",
+     "type": "string",
+     "optional": true,
+     "description": "Line under the name, e.g. when it was connected"
+    },
+    {
+     "name": "values",
+     "type": "Partial<IntegrationValues>",
+     "optional": true,
+     "description": "The saved values. Controlled when defined: the card shows them, edits collect in the save bar, and saved changes\n(Save, the switch) are reported through onValuesChange. Fields that weren't edited follow new values right away"
+    },
+    {
+     "name": "defaultValues",
+     "type": "Partial<IntegrationValues>",
+     "optional": true,
+     "description": "Saved values when uncontrolled. Read again when they change (e.g. once they've loaded) – fields that weren't\nedited follow"
+    },
+    {
+     "name": "onValuesChange",
+     "type": "(values: IntegrationValues) => void",
+     "optional": true,
+     "description": "Called with all values whenever the saved values change: after a save, or when the switch flips"
+    },
+    {
+     "name": "siteHint",
+     "type": "string",
+     "optional": true,
+     "description": "Helper text under the address field"
+    },
+    {
+     "name": "timeZones",
+     "type": "string[]",
+     "optional": true,
+     "description": "The time zones the picker offers, as labels like \"(GMT +01:00) Berlin\" – the first is the default"
+    },
+    {
+     "name": "onGenerateKey",
+     "type": "(options: { signal: AbortSignal }) => string | Promise<string>",
+     "optional": true,
+     "description": "Creates a key – return it, or a promise of it; a rejection shows an error and keeps the old key. Without it a\nrandom `sk_demo_…` key is made up (and warns once, unless `demo` is set)"
+    },
+    {
+     "name": "onSave",
+     "type": "(values: IntegrationValues, options: { signal: AbortSignal }) => void | Promise<void>",
+     "optional": true,
+     "description": "Called with all values when Save is pressed. A rejection keeps the changes unsaved and shows an error.\nThe signal aborts when the card unmounts"
+    },
+    {
+     "name": "demo",
+     "type": "boolean",
+     "optional": true,
+     "description": "Demo mode: keys are made up silently when onGenerateKey is missing. For galleries and prototypes"
+    },
+    {
+     "name": "onToggle",
+     "type": "(enabled: boolean, options: { signal: AbortSignal }) => void | Promise<unknown>",
+     "optional": true,
+     "description": "Called when the switch flips. May return a promise: the switch shows that it's working and flips when it\nresolves; a rejection leaves it as it was and shows an error"
+    }
+   ],
+   "hides": [
+    "generateKey",
+    "saveValues",
+    "toggleEnabled"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 52196,
+  "gzip": 13466
+ }
+}

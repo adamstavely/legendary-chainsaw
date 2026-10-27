@@ -4,6 +4,7 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { live } from "lit/directives/live.js";
 import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController, rescueFocus } from "./internal/controllers";
 import type { Look } from "./internal/look";
 import "./combobox";
@@ -82,6 +83,8 @@ export type TriggerValueChange = { value: TriggerValue };
 /** The wall clock – read once, when the element connects (the default `now`), never while rendering. Looked up on
  *  every call, so a page (or a test) that replaces Date is followed */
 const wallClock = (): number => Date.now();
+/* After Lucide: zap – the header's icon */
+const headIcon = svg`<path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"></path>`;
 
 const pad = (n: number) => String(n).padStart(2, "0");
 const isoDay = (d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
@@ -270,6 +273,7 @@ export class TcTriggerBuilder extends TcElement {
   @property({ attribute: "time-zone" }) accessor timeZone = "";
   /** Submitted with the form: the definition as JSON */
   @property({ reflect: true }) accessor name = "";
+  /** Turns every control off and leaves the definition out of the form; a disabled fieldset does the same */
   @property({ type: Boolean, reflect: true }) accessor disabled = false;
 
   @state() private accessor formDisabled = false;
@@ -674,10 +678,9 @@ export class TcTriggerBuilder extends TcElement {
     };
     const tz = this.timeZone || Intl.DateTimeFormat().resolvedOptions().timeZone || "your time zone";
 
+    // The header (.tc-head): on the tray in Standard, the card's first row in Clean
+    const head = cardHead({ icon: headIcon, title: this.heading });
     const body = html`
-      <div class="ui-tgb__head">
-        <span class="ui-tgb__title">${this.heading}</span>
-      </div>
       <div class="ui-tgb__rows">
         ${this.row("when", "When", kindSeg)}
         ${v.kind === "event" ? this.row("event", "Event", eventPicker) : this.scheduleRows(look)}
@@ -705,7 +708,7 @@ export class TcTriggerBuilder extends TcElement {
 
     return html`
       <span class="ui-tgb__sr" role="status">${this.announcement}</span>
-      ${clean ? body : html`<div class="ui-tgb__card">${body}</div>`}
+      ${head}${clean ? body : html`<div class="ui-tgb__card">${body}</div>`}
       <div class="ui-tgb__foot">${v.kind === "schedule" ? `Times in ${tz}` : "Runs each time the event happens"}</div>
     `;
   }
@@ -754,14 +757,9 @@ export class TcTriggerBuilder extends TcElement {
 .ui-tgb__day:focus-visible, .ui-tgb__remove:focus-visible, .ui-tgb__add:focus-visible { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
 .ui-tgb__day:disabled, .ui-tgb__remove:disabled, .ui-tgb__add:disabled, .ui-tgb__input:disabled { cursor: not-allowed; opacity: 0.55; }
 
-/* ---------- Header ---------- */
-.ui-tgb__head { display: flex; align-items: center; gap: var(--tc-space-2); padding: var(--tc-space-4) var(--tc-space-4) var(--tc-space-1); }
-.ui-tgb__title { color: var(--tc-text-strong); font-size: var(--tc-font-size-lg-plus); line-height: var(--tc-line-height-relaxed); }
-:where([data-look="standard"], [data-look="standard"] *).ui-tgb__title { font-weight: var(--tc-font-weight-semibold); letter-spacing: -0.01em; }
-:where([data-look="clean"], [data-look="clean"] *).ui-tgb__title { font-weight: var(--tc-font-weight-medium); }
-
 /* ---------- Rows: a label column and the controls ---------- */
-.ui-tgb__rows { display: grid; gap: var(--tc-space-3); padding: var(--tc-space-3) var(--tc-space-4) var(--tc-space-4); }
+.ui-tgb__rows { display: grid; gap: var(--tc-space-3); padding: var(--tc-space-4); }
+:where([data-look="clean"], [data-look="clean"] *).ui-tgb__rows { padding-top: 0; }
 .ui-tgb__row { display: grid; grid-template-columns: 76px minmax(0, 1fr); align-items: start; gap: var(--tc-space-3); }
 .ui-tgb__label { display: flex; align-items: center; min-height: var(--tc-control-h-sm); color: var(--tc-text-secondary); font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-normal); font-weight: var(--tc-font-weight-medium); }
 :where([data-look="clean"], [data-look="clean"] *).ui-tgb__label { color: var(--tc-text-muted); }
@@ -807,8 +805,8 @@ export class TcTriggerBuilder extends TcElement {
   background: var(--tc-action-secondary-bg);
   box-shadow: var(--tc-action-secondary-shadow);
   color: var(--tc-text-secondary);
-  font-size: var(--tc-font-size-sm);
-  font-weight: var(--tc-font-weight-medium);
+  font-size: var(--tc-control-font-size);
+  font-weight: var(--tc-control-font-weight);
   transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard), box-shadow var(--tc-duration-fast) var(--tc-ease-standard);
 }
 .ui-tgb__day:not(:disabled):hover { box-shadow: var(--tc-action-secondary-shadow-hover); color: var(--tc-text-primary); }
@@ -882,7 +880,7 @@ export class TcTriggerBuilder extends TcElement {
 
 /* ---------- Next runs ---------- */
 .ui-tgb__runs { display: grid; gap: var(--tc-space-1-5); padding: var(--tc-space-4) var(--tc-space-4) var(--tc-space-4); }
-.ui-tgb__runs-title { color: var(--tc-text-muted); font-size: var(--tc-font-size-2xs); line-height: var(--tc-line-height-tight); font-weight: var(--tc-font-weight-medium); letter-spacing: 0.5px; text-transform: uppercase; }
+.ui-tgb__runs-title { color: var(--tc-caption-color); font-size: var(--tc-caption-font-size); line-height: var(--tc-caption-line-height); font-weight: var(--tc-caption-font-weight); letter-spacing: var(--tc-caption-tracking); text-transform: var(--tc-caption-transform); }
 .ui-tgb__run-list { display: grid; margin: 0; padding: 0; list-style: none; }
 .ui-tgb__run {
   display: grid;
@@ -916,7 +914,7 @@ export class TcTriggerBuilder extends TcElement {
 @container (max-width: 420px) {
   .ui-tgb__row { grid-template-columns: minmax(0, 1fr); gap: var(--tc-space-1); }
   .ui-tgb__label { min-height: 0; }
-  .ui-tgb__head, .ui-tgb__rows, .ui-tgb__runs { padding-left: var(--tc-space-3); padding-right: var(--tc-space-3); }
+  .ui-tgb__rows, .ui-tgb__runs { padding-left: var(--tc-space-3); padding-right: var(--tc-space-3); }
   .ui-tgb__summary { margin-left: var(--tc-space-3); margin-right: var(--tc-space-3); }
   .ui-tgb__run { grid-template-columns: minmax(0, 1fr) auto; }
   .ui-tgb__run-rel { display: none; }

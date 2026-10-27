@@ -43,7 +43,7 @@ const css = /* css */ `
   width: 100%;
   aspect-ratio: 3 / 2;
   overflow: hidden;
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  font-family: var(--tc-font-sans, "Inter", "InterVariable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif);
 }
 .ui-ec-art {
   position: absolute;

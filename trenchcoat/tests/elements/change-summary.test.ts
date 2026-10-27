@@ -55,7 +55,7 @@ describe("tc-change-summary", () => {
     const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     icon.setAttribute("data-mine", "");
     const el = await fixture<TcChangeSummary>(html`<tc-change-summary .icon=${icon} .changes=${changes}></tc-change-summary>`);
-    expect(el.querySelector(".ui-cs__title svg[data-mine]")).toBeTruthy();
+    expect(el.querySelector(".tc-head__icon svg[data-mine]")).toBeTruthy();
     expect(icon.isConnected).toBe(false);
   });
 

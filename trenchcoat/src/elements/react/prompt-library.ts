@@ -23,6 +23,7 @@ export type PromptLibraryProps = Omit<RawPromptLibraryProps, "value" | "values" 
   value?: string;
   /** Id chosen at first when uncontrolled – defaults to the first template */
   defaultValue?: string;
+  /** Called with the template's id when another template is chosen */
   onSelect?: (id: string) => void;
   /** The variables typed so far, per template (controlled when defined) */
   values?: PromptValues;
@@ -32,6 +33,7 @@ export type PromptLibraryProps = Omit<RawPromptLibraryProps, "value" | "values" 
   onValuesChange?: (values: PromptValues) => void;
   /** Called once the finished prompt is on the clipboard – not when the clipboard refused it */
   onCopy?: (prompt: string) => void;
+  /** The heading over the list, and the group's accessible name – "Prompts" by default */
   title?: string;
 };
 export function PromptLibrary({ value, defaultValue, onSelect, values, defaultValues = NO_VALUES, onValuesChange, onCopy, title = "Prompts", ...props }: PromptLibraryProps) {

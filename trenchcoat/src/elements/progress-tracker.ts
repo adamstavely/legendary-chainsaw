@@ -3,11 +3,13 @@ import { property, state } from "lit/decorators.js";
 import { keyed } from "lit/directives/keyed.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { OnScreenController } from "./internal/controllers";
 
 /*
  * <tc-progress-tracker> – the Lit port of src/components/progress-tracker.tsx: a checklist with a progress bar.
- * Clean is one white card with hairline shadows, quiet gray type, a thin blue bar and blue checks.
+ * Standard puts the header on a gray tray above the white card with the bar and the steps. Clean is one white card
+ * with hairline shadows (the header is its first row), quiet gray type, a thin blue bar and blue checks.
  *
  *   <tc-progress-tracker heading="Getting started" .steps=${[{ id: "a", label: "Create your account", done: true }]}>
  *   </tc-progress-tracker>
@@ -156,9 +158,11 @@ export class TcProgressTracker extends TcElement {
     const count = this.steps.filter((s) => done.has(s.id)).length;
     const progress = total ? count / total : 0;
     const playing = this.playing;
-    return html`
-      <div class="ui-progress__head">
-        <h3 class="ui-progress__title">${this.heading}</h3>
+    // The header (.tc-head): on the tray above the card in Standard, the card's first row in Clean
+    const head = cardHead({
+      icon: svg`<path d="m3 7 2 2 4-4"/><path d="m3 17 2 2 4-4"/><path d="M13 6h8"/><path d="M13 12h8"/><path d="M13 18h8"/>`,
+      title: this.heading,
+      aside: html`
         <span class="ui-progress__count" aria-hidden="true">${keyed(count, html`<span class="ui-progress__digit">${count}</span>`)}/${total}</span>
         ${this.autoPlay
           ? html`<button
@@ -175,7 +179,9 @@ export class TcProgressTracker extends TcElement {
               }}
             >${playing ? pauseIcon : playIcon}</button>`
           : nothing}
-      </div>
+      `,
+    });
+    return html`${head}<div class="ui-progress__body">
       <div
         class="ui-progress__bar"
         role="progressbar"
@@ -199,7 +205,7 @@ export class TcProgressTracker extends TcElement {
           </li>`;
         })}
       </ul>
-    `;
+    </div>`;
   }
 
   static override css = /* css */ `
@@ -207,9 +213,6 @@ export class TcProgressTracker extends TcElement {
 [data-ui="progress"] {
   box-sizing: border-box;
   width: 100%;
-  background: var(--tc-surface-raised);
-  border-radius: var(--tc-card-radius);
-  box-shadow: var(--tc-card-shadow);
   font-family: var(--tc-font-sans);
   color: var(--tc-text-primary);
   -webkit-font-smoothing: antialiased;
@@ -219,14 +222,20 @@ export class TcProgressTracker extends TcElement {
   /* The sweep of light over the dark (light, in the dark theme) bar */
   --tc-progress-tracker-shine: light-dark(rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.7));
   max-width: 360px;
-  padding: 22px var(--tc-space-4) var(--tc-space-3-5);
+  /* A gray tray: the header on it, the white card below */
+  padding: var(--tc-tray-inset);
+  border-radius: var(--tc-tray-radius);
+  background: var(--tc-surface-tray);
 }
 :where([data-look="clean"], [data-look="clean"] *)[data-ui="progress"] {
   /* The light band over the blue bar is pure white in the dark theme */
   --tc-progress-tracker-shine: light-dark(rgba(255, 255, 255, 0.82), #ffffff);
   container-type: inline-size;
   max-width: 340px;
-  padding: var(--tc-space-3-5) var(--tc-space-1-5) var(--tc-space-1-5);
+  /* One white card – the header is its first row */
+  border-radius: var(--tc-card-radius);
+  background: var(--tc-surface-raised);
+  box-shadow: var(--tc-card-shadow);
   font-size: var(--tc-font-size-md);
   font-weight: var(--tc-font-weight-regular);
   line-height: var(--tc-line-height-normal);
@@ -247,31 +256,16 @@ export class TcProgressTracker extends TcElement {
   color: inherit;
   cursor: pointer;
 }
-/* Header: the title, a quiet counter and – with autoPlay – Pause / Play */
-.ui-progress__head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--tc-space-3);
+/* The body: the white card on the tray in Standard; in Clean the rows under the header */
+:where([data-look="standard"], [data-look="standard"] *).ui-progress__body {
+  padding: var(--tc-space-4) var(--tc-space-4) var(--tc-space-3-5);
+  border-radius: var(--tc-card-radius);
+  background: var(--tc-surface-on-tray);
+  box-shadow: var(--tc-card-shadow);
 }
-:where([data-look="standard"], [data-look="standard"] *).ui-progress__head { padding: 0 var(--tc-space-1-5); }
-:where([data-look="clean"], [data-look="clean"] *).ui-progress__head { padding: 0 var(--tc-space-2-5); }
-.ui-progress__title { margin: 0; font-weight: var(--tc-font-weight-medium); }
-:where([data-look="standard"], [data-look="standard"] *).ui-progress__title {
-  font-size: var(--tc-font-size-xl);
-  letter-spacing: -0.01em;
-}
-:where([data-look="clean"], [data-look="clean"] *).ui-progress__title {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  color: var(--tc-text-strong);
-  font-size: var(--tc-font-size-lg-plus);
-  line-height: var(--tc-line-height-loose);
-}
+:where([data-look="clean"], [data-look="clean"] *).ui-progress__body { padding: 0 var(--tc-space-1-5) var(--tc-space-1-5); }
+/* In the header's aside: a quiet counter and – with autoPlay – Pause / Play */
 .ui-progress__count {
-  margin-left: auto;
   color: var(--tc-text-muted);
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
@@ -307,8 +301,8 @@ export class TcProgressTracker extends TcElement {
   background: var(--tc-meter-track);
   overflow: hidden;
 }
-:where([data-look="standard"], [data-look="standard"] *).ui-progress__bar { height: var(--tc-meter-h-hero); margin: var(--tc-space-4) var(--tc-space-1-5) var(--tc-space-3); }
-:where([data-look="clean"], [data-look="clean"] *).ui-progress__bar { height: var(--tc-meter-h); margin: var(--tc-space-2-5) var(--tc-space-2-5) var(--tc-space-2); }
+:where([data-look="standard"], [data-look="standard"] *).ui-progress__bar { height: var(--tc-meter-h-hero); margin: var(--tc-space-1) var(--tc-space-1-5) var(--tc-space-3); }
+:where([data-look="clean"], [data-look="clean"] *).ui-progress__bar { height: var(--tc-meter-h); margin: 0 var(--tc-space-2-5) var(--tc-space-2); }
 .ui-progress__fill {
   position: absolute;
   inset: 0;
@@ -468,7 +462,6 @@ export class TcProgressTracker extends TcElement {
 }
 /* Narrow cards: a little less inset */
 @container (max-width: 300px) {
-:where([data-look="clean"], [data-look="clean"] *).ui-progress__head { padding: 0 var(--tc-space-2); }
 :where([data-look="clean"], [data-look="clean"] *).ui-progress__bar { margin-left: var(--tc-space-2); margin-right: var(--tc-space-2); }
 :where([data-look="clean"], [data-look="clean"] *).ui-progress__step { padding-left: var(--tc-space-2); padding-right: var(--tc-space-2); }
 }

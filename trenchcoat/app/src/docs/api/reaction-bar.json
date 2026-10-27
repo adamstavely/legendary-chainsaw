@@ -1,0 +1,138 @@
+{
+ "elements": [
+  {
+   "tag": "tc-reaction-bar",
+   "className": "TcReactionBar",
+   "description": "Like, comment, repost and share in one pill, with rolling counts.",
+   "properties": [
+    {
+     "name": "reactions",
+     "attribute": null,
+     "type": "Partial<Record<ReactionKey, ReactionState>>",
+     "default": "{}",
+     "description": "Counts and whether each action is already taken; a tap applies locally until an action's value here changes",
+     "readonly": false
+    },
+    {
+     "name": "actions",
+     "attribute": null,
+     "type": "ReactionKey[]",
+     "default": "[\"like\", \"comment\", \"repost\", \"share\"]",
+     "description": "The actions to show, in order",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-reaction-change",
+     "detail": "",
+     "description": "An action was toggled; detail `{ key: ReactionKey, state: { count, active } }`. Cancelable: preventDefault() keeps the tap from applying.",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "rb",
+   "cssProperties": [
+    {
+     "name": "--tc-reaction-bar-ease",
+     "value": "cubic-bezier(0.85, 0, 0.15, 1)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-reaction-bar-h",
+     "value": "36px",
+     "looks": [
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-border-default",
+    "--tc-border-selected",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-instant",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-ease-in-out",
+    "--tc-ease-standard",
+    "--tc-fill-hover",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-md",
+    "--tc-font-weight-medium",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-radius-full",
+    "--tc-radius-sm",
+    "--tc-reaction-bar-tone",
+    "--tc-shadow-raised",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-status-info-solid",
+    "--tc-surface-overlay",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tone-pink-solid",
+    "--tc-tone-violet-solid"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "ReactionBar",
+   "exported": true,
+   "props": [
+    {
+     "name": "reactions",
+     "type": "Partial<Record<ReactionKey, ReactionState>>",
+     "optional": true,
+     "description": "Counts and whether each action is already taken. The bar follows this prop: a tap changes an action locally\nuntil the prop's value for that action changes, which then wins. To own the state, update it from `onReact`."
+    },
+    {
+     "name": "onReact",
+     "type": "(key: ReactionKey, state: Required<ReactionState>) => void",
+     "optional": true,
+     "description": "Called after an action was toggled, with its new state"
+    },
+    {
+     "name": "actions",
+     "type": "ReactionKey[]",
+     "optional": true,
+     "description": "Hide actions you don't need – the list may change after mount"
+    }
+   ],
+   "hides": [
+    "reactions",
+    "actions"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 17865,
+  "gzip": 6027
+ }
+}

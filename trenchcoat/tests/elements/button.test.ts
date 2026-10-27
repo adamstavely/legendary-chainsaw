@@ -68,6 +68,25 @@ describe("tc-button", () => {
     expect(inner(el).getAttribute("aria-expanded")).toBe("true");
   });
 
+  test("forwarded ARIA attributes can be removed and reapplied by the caller", async () => {
+    const el = await fixture<TcButton>(html`<tc-button label="Menu" aria-describedby="help"></tc-button>`);
+    expect(inner(el).getAttribute("aria-describedby")).toBe("help");
+    el.removeAttribute("ARIA-DESCRIBEDBY");
+    await settle();
+    expect(inner(el).hasAttribute("aria-describedby")).toBe(false);
+    el.setAttribute("aria-describedby", "new-help");
+    await settle();
+    expect(inner(el).getAttribute("aria-describedby")).toBe("new-help");
+    el.removeAttributeNS(null, "aria-describedby");
+    await settle();
+    expect(inner(el).hasAttribute("aria-describedby")).toBe(false);
+    el.setAttribute("aria-describedby", "help");
+    await settle();
+    el.toggleAttribute("aria-describedby", false);
+    await settle();
+    expect(inner(el).hasAttribute("aria-describedby")).toBe(false);
+  });
+
   test("loading blocks clicks and adds 'loading' to the name", async () => {
     const onClick = vi.fn();
     const el = await fixture<TcButton>(html`<tc-button label="Save" loading @click=${onClick}></tc-button>`);

@@ -22,6 +22,7 @@ export type ContextTrayOwnProps = {
   title?: string;
   /** The chips. Controlled when given; otherwise the tray keeps its own, starting at `defaultItems` */
   items?: ContextTrayEntry[];
+  /** The starting chips when `items` isn't given */
   defaultItems?: ContextTrayEntry[];
   /** Every remove, undo (restore), pin and unpin, with the items after it */
   onChange?: (items: ContextTrayEntry[], change: ContextTrayChange) => void;

@@ -1,0 +1,245 @@
+{
+ "elements": [
+  {
+   "tag": "tc-cited-answer",
+   "className": "TcCitedAnswer",
+   "description": "An AI answer with numbered source markers, source chips and an in-place source preview.",
+   "properties": [
+    {
+     "name": "segments",
+     "attribute": null,
+     "type": "CitedSegment[]",
+     "default": "[]",
+     "description": "The answer as text segments, each naming the sources it relies on – a numbered marker ends each cited one",
+     "readonly": false
+    },
+    {
+     "name": "sources",
+     "attribute": null,
+     "type": "CitedSource[]",
+     "default": "[]",
+     "description": "The sources, numbered in this order – chips under the answer and the passages their previews quote",
+     "readonly": false
+    },
+    {
+     "name": "pagesRead",
+     "attribute": "pages-read",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "Pages the model read while searching – shown in the head next to the source count",
+     "readonly": false
+    },
+    {
+     "name": "preview",
+     "attribute": null,
+     "type": "string | null",
+     "default": "null",
+     "description": "Id of the source whose preview is open (null: closed)",
+     "readonly": false
+    },
+    {
+     "name": "openHandled",
+     "attribute": "open-handled",
+     "type": "boolean",
+     "default": "false",
+     "description": "The app opens sources itself (it listens to tc-open-source): links don't navigate, and sources without a url get Open source too",
+     "readonly": false
+    },
+    {
+     "name": "actionLabel",
+     "attribute": "action-label",
+     "type": "string",
+     "default": "\"\"",
+     "description": "A button on the tray that fires tc-action, e.g. \"Follow up\"",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-preview-change",
+     "detail": "",
+     "description": "The open preview changes; detail `{ preview: string | null }` (null: closed). Cancelable.",
+     "cancelable": true
+    },
+    {
+     "name": "tc-open-source",
+     "detail": "",
+     "description": "Open source was pressed; detail `{ source: CitedSource }`",
+     "cancelable": false
+    },
+    {
+     "name": "tc-action",
+     "detail": "",
+     "description": "The action button (`actionLabel`) was pressed",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "ca",
+   "cssProperties": [
+    {
+     "name": "--tc-cited-answer-well",
+     "value": "light-dark(#f4f4f5, #222225)",
+     "looks": [
+      "standard"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-highlight",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-border-default",
+    "--tc-border-selected",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-cited-answer-glyph-bg",
+    "--tc-cited-answer-glyph-fg",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-md",
+    "--tc-control-radius-md",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-instant",
+    "--tc-duration-moderate",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-strong",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-2xs",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-none",
+    "--tc-line-height-normal",
+    "--tc-line-height-relaxed",
+    "--tc-line-height-tight",
+    "--tc-radius-2xs",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-radius-xl",
+    "--tc-radius-xs",
+    "--tc-shadow-raised",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-5",
+    "--tc-status-danger-fg",
+    "--tc-status-success-fg",
+    "--tc-surface-inverse",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-on-accent",
+    "--tc-text-on-inverse",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "CitedAnswer",
+   "exported": true,
+   "props": [
+    {
+     "name": "sources",
+     "type": "CitedSource[]",
+     "optional": false,
+     "description": "The sources, numbered in this order – chips under the answer and the passages their previews quote"
+    },
+    {
+     "name": "preview",
+     "type": "string | null",
+     "optional": true,
+     "description": "Id of the source whose preview is open – controlled when defined (null: closed)"
+    },
+    {
+     "name": "defaultPreview",
+     "type": "string | null",
+     "optional": true,
+     "description": "Id of the source whose preview is open at first (uncontrolled)"
+    },
+    {
+     "name": "defaultOpen",
+     "type": "string",
+     "optional": true,
+     "description": "The old name of `defaultPreview`, still read when that's unset"
+    },
+    {
+     "name": "onOpenSource",
+     "type": "(source: CitedSource) => void",
+     "optional": true,
+     "description": "Called by Open source. With it the link doesn't navigate on its own – open the page yourself"
+    },
+    {
+     "name": "onPreviewChange",
+     "type": "(id: string | null) => void",
+     "optional": true,
+     "description": "Called when the open preview changes (null = closed)"
+    },
+    {
+     "name": "action",
+     "type": "{ label: string; onClick: () => void }",
+     "optional": true,
+     "description": "A button on the tray, e.g. { label: \"Follow up\", onClick }"
+    }
+   ],
+   "hides": [
+    "sources",
+    "preview",
+    "openHandled",
+    "actionLabel"
+   ]
+  }
+ ],
+ "changelog": [
+  "cited-answer `defaultOpen` → `defaultPreview`"
+ ],
+ "size": {
+  "min": 55362,
+  "gzip": 12783
+ }
+}

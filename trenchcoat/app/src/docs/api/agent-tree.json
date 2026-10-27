@@ -1,0 +1,322 @@
+{
+ "elements": [
+  {
+   "tag": "tc-agent-tree",
+   "className": "TcAgentTree",
+   "description": "Who started whom in a run of agents: cards joined by connectors, with costs, times and folding.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Agents\"",
+     "description": "The heading, and the tree list's name",
+     "readonly": false
+    },
+    {
+     "name": "root",
+     "attribute": null,
+     "type": "TreeAgent",
+     "default": "{ id: \"\", name: \"\", task: \"\", status: \"queued\" }",
+     "description": "The orchestrator, with its sub-agents nested in `children` – the whole run as one tree",
+     "readonly": false
+    },
+    {
+     "name": "collapsed",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[]",
+     "description": "Ids of folded branches. Changed by the fold buttons unless tc-collapsed-change is prevented",
+     "readonly": false
+    },
+    {
+     "name": "now",
+     "attribute": "now",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The clock for running times, in epoch ms – unset uses an internal clock",
+     "readonly": false
+    },
+    {
+     "name": "formatCost",
+     "attribute": null,
+     "type": "(amount: number) => string",
+     "default": "dollars",
+     "description": "Formats every cost – defaults to dollars, e.g. \"$0.42\"",
+     "readonly": false
+    },
+    {
+     "name": "resolver",
+     "attribute": null,
+     "type": "((agent: TreeAgent, action: AgentTreeResolution) => void | Promise<unknown>) | undefined",
+     "default": "undefined",
+     "description": "Called with each answer (as well as tc-resolve). May return a promise: the answer's buttons wait, and if it\nrejects the window stays open and says so",
+     "readonly": false
+    },
+    {
+     "name": "selectable",
+     "attribute": "selectable",
+     "type": "boolean",
+     "default": "false",
+     "description": "The agents' names are buttons that fire tc-select (the whole card stays clickable for a pointer)",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-collapsed-change",
+     "detail": "",
+     "description": "A branch was folded or unfolded (detail: { collapsed: string[] }); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-select",
+     "detail": "",
+     "description": "A card was clicked, or its name pressed (detail: { agent: TreeAgent }); shown as a button with `selectable`",
+     "cancelable": false
+    },
+    {
+     "name": "tc-resolve",
+     "detail": "",
+     "description": "An answer from the \"needs you\" or \"failed\" window (detail: { agent: TreeAgent, action: \"approve\" | \"reject\" | \"retry\" | \"dismiss\" })",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "agt",
+   "cssProperties": [
+    {
+     "name": "--tc-agent-tree-link",
+     "value": "light-dark(#82bcff, #4f8fdb)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-agent-tree-link-muted",
+     "value": "var(--tc-border-strong)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-agent-tree-tray-bg",
+     "value": "var(--tc-surface-tray)",
+     "looks": [
+      "standard"
+     ]
+    },
+    {
+     "name": "--tc-agent-tree-card-bg",
+     "value": "var(--tc-surface-on-tray)",
+     "looks": [
+      "standard"
+     ]
+    },
+    {
+     "name": "--tc-agent-tree-dot-bg",
+     "value": "var(--tc-surface-base)",
+     "looks": [
+      "standard"
+     ]
+    },
+    {
+     "name": "--tc-agent-tree-fold-hover-bg",
+     "value": "light-dark(#e4e4e4, #2a2a2e)",
+     "looks": [
+      "standard"
+     ]
+    },
+    {
+     "name": "--tc-agent-tree-shine",
+     "value": "light-dark(rgba(0, 0, 0, 0.22), rgba(255, 255, 255, 0.35))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-agent-tree-card-w",
+     "value": "216px",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-agent-tree-indent",
+     "value": "32px",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-active",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-agent-tree-depth",
+    "--tc-avatar-md",
+    "--tc-border-strong",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-card-shadow-hover",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-px-md",
+    "--tc-control-radius-md",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-reveal-slow",
+    "--tc-duration-shimmer",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-2xs",
+    "--tc-font-size-lg",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-hairline",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-menu-bg",
+    "--tc-menu-padding",
+    "--tc-menu-radius",
+    "--tc-menu-shadow",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-badge",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-radius-xs",
+    "--tc-shadow-raised",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-10",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-7",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-surface-base",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tracking-normal",
+    "--tc-tray-inset",
+    "--tc-tray-radius",
+    "--tc-z-dropdown"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "AgentTree",
+   "exported": true,
+   "props": [
+    {
+     "name": "root",
+     "type": "TreeAgent",
+     "optional": false,
+     "description": "The orchestrator, with its sub-agents nested in `children` – the whole run as one tree"
+    },
+    {
+     "name": "collapsed",
+     "type": "string[]",
+     "optional": true,
+     "description": "Ids of folded branches. Controlled when defined; otherwise the component keeps them, starting from\n`defaultCollapsed`"
+    },
+    {
+     "name": "defaultCollapsed",
+     "type": "string[]",
+     "optional": true,
+     "description": "Ids of the branches folded at first when `collapsed` isn't controlled"
+    },
+    {
+     "name": "onCollapsedChange",
+     "type": "(collapsed: string[]) => void",
+     "optional": true,
+     "description": "Called with every folded branch's id after a branch is folded or unfolded"
+    },
+    {
+     "name": "onResolve",
+     "type": "(agent: TreeAgent, action: AgentTreeResolution) => void | Promise<unknown>",
+     "optional": true,
+     "description": "An answer from the \"needs you\" or \"failed\" window: approve or reject a waiting agent, retry or dismiss a failed\none. May return a promise: the answer's buttons wait, and if it rejects the window stays open and says so"
+    },
+    {
+     "name": "onSelect",
+     "type": "(agent: TreeAgent) => void",
+     "optional": true,
+     "description": "A click on a card – e.g. to open its log"
+    },
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading, and the tree list's name (default \"Agents\")"
+    }
+   ],
+   "hides": [
+    "root",
+    "heading",
+    "collapsed",
+    "resolver",
+    "selectable",
+    "onSelect"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 57142,
+  "gzip": 15274
+ }
+}

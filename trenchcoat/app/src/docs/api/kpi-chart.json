@@ -1,0 +1,250 @@
+{
+ "elements": [
+  {
+   "tag": "tc-kpi-chart",
+   "className": "TcKpiChart",
+   "description": "A metric card with a multi-line chart, a legend and a hover tooltip.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The card's title",
+     "readonly": false
+    },
+    {
+     "name": "value",
+     "attribute": "value",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Headline value, already formatted, e.g. \"$96.4k\"",
+     "readonly": false
+    },
+    {
+     "name": "delta",
+     "attribute": "delta",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "Change against the previous period – positive is green, negative red",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[]",
+     "description": "Short labels along the x-axis, e.g. \"Mar 4\"",
+     "readonly": false
+    },
+    {
+     "name": "tooltipLabels",
+     "attribute": null,
+     "type": "string[] | undefined",
+     "default": "undefined",
+     "description": "Longer labels for the tooltip header, e.g. \"Tue, Mar 4\" – falls back to `labels`",
+     "readonly": false
+    },
+    {
+     "name": "series",
+     "attribute": null,
+     "type": "KpiSeries[]",
+     "default": "[]",
+     "description": "The lines, each with a label, a colour and one value per label – every line also gets its own stroke pattern",
+     "readonly": false
+    },
+    {
+     "name": "format",
+     "attribute": null,
+     "type": "(n: number) => string",
+     "default": "compact",
+     "description": "Formats the axis, tooltip and delta values",
+     "readonly": false
+    },
+    {
+     "name": "footer",
+     "attribute": "footer",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Line under the chart",
+     "readonly": false
+    },
+    {
+     "name": "legend",
+     "attribute": "legend",
+     "type": "boolean | undefined",
+     "default": "undefined",
+     "description": "A legend naming each line – unset shows it when there are two or more lines; legend=\"false\" hides it",
+     "readonly": false
+    },
+    {
+     "name": "defaultIndex",
+     "attribute": "default-index",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "Point that stays highlighted while nobody hovers – unset hides the tooltip at rest",
+     "readonly": false
+    },
+    {
+     "name": "index",
+     "attribute": "index",
+     "type": "number | null",
+     "default": "null",
+     "description": "The highlighted point, or null for none (then `defaultIndex` shows)",
+     "readonly": false
+    },
+    {
+     "name": "fill",
+     "attribute": "fill",
+     "type": "boolean",
+     "default": "false",
+     "description": "Fill the container: no max-width, the card stretches and the plot grows with its height",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-index-change",
+     "detail": "",
+     "description": "The highlighted point changes by pointer or keyboard; detail `{ index: number | null }`. Cancelable: prevent it to control `index`",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "kpi",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-border-strong",
+    "--tc-border-subtle",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-instant",
+    "--tc-duration-quick",
+    "--tc-duration-reveal-slow",
+    "--tc-ease-decelerate",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-focus-outline",
+    "--tc-font-sans",
+    "--tc-font-size-3xl",
+    "--tc-font-size-4xl",
+    "--tc-font-size-lg",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-hairline",
+    "--tc-kpi-chart-shift",
+    "--tc-line-height-display",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-menu-bg",
+    "--tc-menu-radius",
+    "--tc-menu-shadow",
+    "--tc-pill-font-size-lg",
+    "--tc-pill-font-weight",
+    "--tc-pill-h-lg",
+    "--tc-pill-px-lg",
+    "--tc-pill-radius",
+    "--tc-radius-xs",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-4-5",
+    "--tc-space-5",
+    "--tc-space-6",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tracking-tight",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "niceRange",
+   "signature": "niceRange(values: number[]): [min: number, max: number]",
+   "description": "Picks an axis range that halves cleanly and always includes 0: 30 → 15 → 0, $8k → $4k → $0, 10 → 0 → −10.\nEmpty or non-finite data falls back to 0–2 instead of NaN."
+  }
+ ],
+ "react": [
+  {
+   "component": "KpiChart",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": false,
+     "description": "The card's title – it also names the chart for screen readers"
+    },
+    {
+     "name": "value",
+     "type": "string",
+     "optional": false,
+     "description": "Headline value, already formatted, e.g. \"$96.4k\""
+    },
+    {
+     "name": "defaultIndex",
+     "type": "number",
+     "optional": true,
+     "description": "Point that stays highlighted while nobody hovers – leave empty to hide the tooltip at rest"
+    },
+    {
+     "name": "index",
+     "type": "number | null",
+     "optional": true,
+     "description": "The highlighted point (controlled), or null for none"
+    },
+    {
+     "name": "onIndexChange",
+     "type": "(index: number | null) => void",
+     "optional": true,
+     "description": "Called with the point under the pointer or keyboard, or null when it leaves"
+    }
+   ],
+   "hides": [
+    "heading",
+    "index",
+    "defaultIndex",
+    "value"
+   ]
+  }
+ ],
+ "changelog": [
+  "kpi-chart, progress-tracker, setup-guide and writing-assistant now sit on the Standard tray.",
+  "kpi-chart `fill`, inline-diff `fill`, usage-meter `layout=\"wide\"` – what screens used to force by overriding internals."
+ ],
+ "size": {
+  "min": 29462,
+  "gzip": 8384
+ }
+}

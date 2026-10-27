@@ -32,7 +32,7 @@ describe("tc-autonomy-dial", () => {
     expect(el.dataset.ui).toBe("ad");
     expect(el.dataset.look).toBe("standard");
     expect(el.dataset.level).toBe("1");
-    expect(el.querySelector(".ui-ad__title")!.textContent).toBe("Agent permissions");
+    expect(el.querySelector(".tc-head__title")!.textContent).toBe("Agent permissions");
     el.look = "clean";
     await settle();
     expect(el.dataset.look).toBe("clean");

@@ -6,6 +6,7 @@ import { live } from "lit/directives/live.js";
 import { repeat } from "lit/directives/repeat.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController, rescueFocus } from "./internal/controllers";
 
 /*
@@ -267,8 +268,8 @@ function keepSame(prev: DocLayout, next: DocLayout): DocLayout {
 
 /* ---------- Icons ---------- */
 
-const docIcon = () =>
-  html`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${svg`<path d="M14 2.5H7.5a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2V7z"></path><path d="M14 2.5V7h4.5M9 12.5h6M9 16h4"></path>`}</svg>`;
+// The header icon: a page of text
+const docIcon = svg`<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"></path><path d="M14 3v5h5M9 13h6M9 17h4"></path>`;
 const plusIcon = () =>
   html`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">${svg`<path d="M12 5v14M5 12h14"></path>`}</svg>`;
 const checkIcon = () =>
@@ -292,8 +293,11 @@ let instances = 0;
 export class TcAgentCursors extends TcElement {
   static override ui = "agc";
 
+  /** The agents in the document – each one's name, colour, mark and cost; their faces show in the header */
   @property({ attribute: false }) accessor agents: CursorAgent[] = [];
+  /** The document, block by block – title, headings, paragraphs, list items, code, images and tables */
   @property({ attribute: false }) accessor blocks: DocBlock[] = [];
+  /** Suggested changes, shown inline in the text in the suggesting agent's colour */
   @property({ attribute: false }) accessor suggestions: DocSuggestion[] = [];
   /** Comment pins on the page */
   @property({ attribute: false }) accessor comments: DocComment[] = [];
@@ -922,10 +926,12 @@ export class TcAgentCursors extends TcElement {
     const typing = here.filter((a) => cursors[a.id]?.typing).length;
     const count = this.suggestions.length;
     const tipsBack = () => (this.tipsHushed = false);
-    return html`<header class="ui-agc__bar">
-      <span class="ui-agc__doc" aria-hidden="true">${docIcon()}</span>
-      <span class="ui-agc__title" title=${this.heading}>${this.heading}</span>
-      <div class="ui-agc__people" role="group" aria-label="Agents in this document" @pointerover=${tipsBack} @focusin=${tipsBack}>
+    // The header: the document's title, and who is here, the count and Accept all on its right. The bar is only the
+    // layer it sits on (above the page's marks), and in Clean the hairline under it
+    return html`<header class="ui-agc__bar">${cardHead({
+      icon: docIcon,
+      title: html`<span class="ui-agc__title" title=${this.heading}>${this.heading}</span>`,
+      aside: html`<div class="ui-agc__people" role="group" aria-label="Agents in this document" @pointerover=${tipsBack} @focusin=${tipsBack}>
         ${repeat(
           agents,
           (a) => a.id,
@@ -953,8 +959,8 @@ export class TcAgentCursors extends TcElement {
           ? html`<b class="ui-agc__spent" ?data-zero=${spent === 0}>${this.formatCost(spent)}</b>`
           : nothing}</span
       >
-      ${this.canAcceptAll ? html`<button type="button" class="ui-agc__all" ?disabled=${count === 0} @click=${() => this.emit("tc-accept-all", null)}>Accept all</button>` : nothing}
-    </header>`;
+      ${this.canAcceptAll ? html`<button type="button" class="ui-agc__all" ?disabled=${count === 0} @click=${() => this.emit("tc-accept-all", null)}>Accept all</button>` : nothing}`,
+    })}</header>`;
   }
 
   private pin(cm: DocComment) {
@@ -1240,10 +1246,10 @@ export class TcAgentCursors extends TcElement {
   position: relative;
   box-sizing: border-box;
   width: 100%;
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-lg);
   line-height: var(--tc-line-height-normal);
-  letter-spacing: -0.006em;
+  letter-spacing: var(--tc-tracking-normal);
   color: var(--tc-text-secondary);
   text-align: left;
   -webkit-font-smoothing: antialiased;
@@ -1258,10 +1264,8 @@ export class TcAgentCursors extends TcElement {
   --tc-agent-cursors-shimmer: light-dark(rgba(0, 0, 0, 0.04), rgba(255, 255, 255, 0.05));
   --tc-agent-cursors-shine: light-dark(rgba(0, 0, 0, 0.015), rgba(255, 255, 255, 0.1));
   --tc-agent-cursors-outline: light-dark(#ffffff, #1c1c1f);
-  font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-md);
   font-weight: var(--tc-font-weight-regular);
-  letter-spacing: normal;
 }
 [data-ui="agc"] *, [data-ui="agc"] *::before, [data-ui="agc"] *::after { box-sizing: border-box; }
 :where([data-ui="agc"]) button { margin: 0; padding: 0; border: 0; background: none; font: inherit; color: inherit; text-align: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
@@ -1294,9 +1298,9 @@ export class TcAgentCursors extends TcElement {
 /* "Add row": a quiet line under the rows, like the Data Table */
 .ui-agc__table tfoot td { height: 44px; padding: 0 var(--tc-space-1-5); }
 :where([data-look="clean"], [data-look="clean"] *).ui-agc__table tfoot td { height: 40px; }
-.ui-agc__add { display: inline-flex; align-items: center; gap: var(--tc-space-2); height: 30px; padding: 0 var(--tc-space-2-5); border-radius: var(--tc-radius-md); font-size: var(--tc-font-size-md); font-weight: var(--tc-font-weight-medium); color: var(--tc-text-muted); transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard), transform var(--tc-duration-fast) var(--tc-ease-standard); }
-:where([data-look="clean"], [data-look="clean"] *).ui-agc__add { height: 28px; padding: 0 var(--tc-space-2); border-radius: var(--tc-radius-sm); font-size: var(--tc-font-size-md); }
-.ui-agc__add[data-hover] { background: var(--tc-fill-hover); color: var(--tc-text-primary); }
+.ui-agc__add { display: inline-flex; align-items: center; gap: var(--tc-space-2); height: var(--tc-control-h-sm); padding: 0 var(--tc-control-px-sm); border-radius: var(--tc-control-radius-sm); font-size: var(--tc-control-font-size); font-weight: var(--tc-control-font-weight); color: var(--tc-action-ghost-fg); transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard), transform var(--tc-duration-fast) var(--tc-ease-standard); }
+:where([data-look="clean"], [data-look="clean"] *).ui-agc__add { height: var(--tc-control-h-md); padding: 0 var(--tc-control-px-md); border-radius: var(--tc-control-radius-md); }
+.ui-agc__add[data-hover] { background: var(--tc-action-ghost-bg-hover); color: var(--tc-text-primary); }
 .ui-agc__add[data-pressed] { background: var(--tc-fill-strong); transform: scale(0.97); }
 /* Rows an agent adds slide in */
 .ui-agc__table tbody tr { animation: ui-agc-row var(--tc-duration-slower) var(--tc-ease-move) both; }
@@ -1309,8 +1313,10 @@ export class TcAgentCursors extends TcElement {
 .ui-agc__pill[data-tone="amber"] { --tc-agent-cursors-pill-bg: var(--tc-status-warning-bg); --tc-agent-cursors-pill-fg: var(--tc-status-warning-fg); }
 /* ----- The page: a sheet of paper; with a height it fades out towards the bottom ----- */
 /* Standard: a tray carries the header, the page is a card inside it */
-.ui-agc__sheet { position: relative; overflow: hidden; border-radius: var(--tc-tray-radius); background: var(--tc-surface-tray); container-type: inline-size; }
-.ui-agc__paper { position: absolute; inset: 48px var(--tc-tray-inset) var(--tc-tray-inset); z-index: 0; border-radius: var(--tc-card-radius); background: var(--tc-surface-on-tray); box-shadow: var(--tc-card-shadow); }
+/* The header in the first row; the paper and the text share the second, the paper under the text */
+.ui-agc__sheet { position: relative; overflow: hidden; border-radius: var(--tc-tray-radius); background: var(--tc-surface-tray); container-type: inline-size; display: grid; grid-template-rows: auto 1fr; }
+.ui-agc__paper { grid-area: 2 / 1; margin: 0 var(--tc-tray-inset) var(--tc-tray-inset); border-radius: var(--tc-card-radius); background: var(--tc-surface-on-tray); box-shadow: var(--tc-card-shadow); }
+.ui-agc__text { grid-area: 2 / 1; min-width: 0; }
 /* Clean has no tray: one card, the header inside it */
 :where([data-look="clean"], [data-look="clean"] *).ui-agc__sheet { border-radius: var(--tc-card-radius); background: var(--tc-surface-raised); }
 :where([data-look="clean"], [data-look="clean"] *).ui-agc__paper { display: none; }
@@ -1331,11 +1337,10 @@ export class TcAgentCursors extends TcElement {
   mask: linear-gradient(#000 0, #000 calc(40px + var(--tc-agent-cursors-height) * 0.5), transparent calc(40px + var(--tc-agent-cursors-height) * 0.97));
 }
 /* ----- The header ----- */
-.ui-agc__bar { position: relative; z-index: 3; display: flex; align-items: center; gap: var(--tc-space-2); min-width: 0; height: 48px; padding: 0 var(--tc-space-3) 0 var(--tc-space-4); }
-:where([data-look="clean"], [data-look="clean"] *).ui-agc__bar { height: 44px; padding: 0 var(--tc-space-2-5) 0 var(--tc-space-3-5); border-bottom: var(--tc-hairline) solid var(--tc-divider); }
-.ui-agc__doc { display: grid; flex: none; place-items: center; color: var(--tc-icon-muted); }
-.ui-agc__title { flex: 1; min-width: 0; overflow: hidden; font-size: var(--tc-font-size-md); font-weight: var(--tc-font-weight-medium); color: var(--tc-text-muted); white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="clean"], [data-look="clean"] *).ui-agc__title { font-size: var(--tc-font-size-md); }
+.ui-agc__bar { position: relative; z-index: 3; min-width: 0; }
+:where([data-look="clean"], [data-look="clean"] *).ui-agc__bar { border-bottom: var(--tc-hairline) solid var(--tc-divider); }
+/* The title gives way to the faces: one line, cut off with an ellipsis (its full text in a tooltip) */
+.ui-agc__title { display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .ui-agc__sum { flex: none; font-size: var(--tc-font-size-sm); color: var(--tc-text-muted); font-variant-numeric: tabular-nums; }
 :where([data-look="clean"], [data-look="clean"] *).ui-agc__sum { font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); }
 .ui-agc__spent { margin-left: var(--tc-space-2); font-weight: var(--tc-font-weight-strong); color: var(--tc-text-primary); transition: color var(--tc-duration-base) var(--tc-ease-standard); }
@@ -1379,11 +1384,11 @@ export class TcAgentCursors extends TcElement {
 :where([data-look="clean"], [data-look="clean"] *).ui-agc__text { padding: var(--tc-space-8) 44px 44px; font-size: var(--tc-font-size-md); line-height: var(--tc-line-height-relaxed); }
 .ui-agc__block { margin: 0; }
 .ui-agc__text > * + * { margin-top: var(--tc-agent-cursors-gap); }
-.ui-agc__block--title { font-size: 22px; font-weight: var(--tc-font-weight-semibold); line-height: var(--tc-line-height-display-sm); letter-spacing: -0.022em; color: var(--tc-text-primary); }
-:where([data-look="clean"], [data-look="clean"] *).ui-agc__block--title { font-size: var(--tc-font-size-2xl); font-weight: var(--tc-font-weight-medium); letter-spacing: -0.01em; color: var(--tc-text-strong); }
+.ui-agc__block--title { font-size: var(--tc-font-size-2xl); font-weight: var(--tc-font-weight-semibold); line-height: var(--tc-line-height-display-sm); letter-spacing: var(--tc-tracking-tight); color: var(--tc-text-primary); }
+:where([data-look="clean"], [data-look="clean"] *).ui-agc__block--title { font-weight: var(--tc-font-weight-medium); letter-spacing: var(--tc-tracking-snug); color: var(--tc-text-strong); }
 .ui-agc__text > .ui-agc__block--title + * { margin-top: var(--tc-space-3); }
-.ui-agc__block--heading { font-size: var(--tc-font-size-lg-plus); font-weight: var(--tc-font-weight-semibold); line-height: var(--tc-line-height-loose); letter-spacing: -0.012em; color: var(--tc-text-primary); }
-:where([data-look="clean"], [data-look="clean"] *).ui-agc__block--heading { font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-relaxed); letter-spacing: -0.01em; color: var(--tc-text-strong); }
+.ui-agc__block--heading { font-size: var(--tc-font-size-lg-plus); font-weight: var(--tc-font-weight-semibold); line-height: var(--tc-line-height-loose); letter-spacing: var(--tc-tracking-snug); color: var(--tc-text-primary); }
+:where([data-look="clean"], [data-look="clean"] *).ui-agc__block--heading { font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-relaxed); color: var(--tc-text-strong); }
 .ui-agc__text > .ui-agc__block--heading:not(:first-child) { margin-top: calc(var(--tc-agent-cursors-gap) + 10px); }
 .ui-agc__text > .ui-agc__block--heading + * { margin-top: var(--tc-space-2); }
 .ui-agc__list { margin: 0; padding: 0 0 0 var(--tc-space-5); }
@@ -1391,7 +1396,7 @@ export class TcAgentCursors extends TcElement {
 .ui-agc__block--item::marker { color: var(--tc-text-muted); }
 :where([data-look="clean"], [data-look="clean"] *).ui-agc__block--item::marker { color: var(--tc-text-disabled); }
 /* Code: a soft panel, monospace, same suggestions inside */
-.ui-agc__code { margin: 0; padding: var(--tc-space-3-5) var(--tc-space-4); overflow: hidden; border-radius: var(--tc-radius-xl); background: var(--tc-fill-subtle); box-shadow: inset 0 0 0 1px var(--tc-border-default); font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-normal); letter-spacing: 0; color: var(--tc-text-primary); white-space: pre-wrap; }
+.ui-agc__code { margin: 0; padding: var(--tc-space-3-5) var(--tc-space-4); overflow: hidden; border-radius: var(--tc-radius-xl); background: var(--tc-fill-subtle); box-shadow: inset 0 0 0 1px var(--tc-border-default); font-family: var(--tc-font-mono); font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-normal); letter-spacing: 0; color: var(--tc-text-primary); white-space: pre-wrap; }
 :where([data-look="clean"], [data-look="clean"] *).ui-agc__code { padding: var(--tc-space-3) var(--tc-space-3-5); border-radius: var(--tc-radius-md); box-shadow: inset 0 0 0 var(--tc-hairline) var(--tc-border-default); font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-snug); }
 .ui-agc__code code { font: inherit; }
 /* Images: loading with a shimmer; held by an agent: frame, handles and size in its color */
@@ -1527,7 +1532,7 @@ export class TcAgentCursors extends TcElement {
 :where([data-look="clean"], [data-look="clean"] *).ui-agc__cursor[data-free] .ui-agc__flag { top: 19px; left: calc(13px + var(--tc-agent-cursors-shift, 0px)); }
 .ui-agc__flag-row { display: flex; align-items: center; gap: var(--tc-space-3); }
 .ui-agc__flag-tags { display: flex; gap: var(--tc-space-1); margin-left: auto; }
-.ui-agc__flag-tag { padding: 0 var(--tc-space-1); border-radius: var(--tc-radius-xs); background: var(--tc-agent-cursors-flag-soft); font-size: 10.5px; font-weight: var(--tc-font-weight-strong); line-height: var(--tc-line-height-tight); font-variant-numeric: tabular-nums; }
+.ui-agc__flag-tag { padding: 0 var(--tc-space-1); border-radius: var(--tc-radius-xs); background: var(--tc-agent-cursors-flag-soft); font-size: var(--tc-font-size-2xs); font-weight: var(--tc-font-weight-strong); line-height: var(--tc-line-height-tight); font-variant-numeric: tabular-nums; }
 /* What it's doing: a second line that opens below the name */
 .ui-agc__flag-doing { display: block; max-height: 0; overflow: hidden; opacity: 0; transition: max-height var(--tc-duration-slow) var(--tc-ease-move), opacity var(--tc-duration-base) var(--tc-ease-standard), margin-top var(--tc-duration-slow) var(--tc-ease-move); }
 .ui-agc__flag-doing > span { display: block; width: max-content; font-size: var(--tc-font-size-xs); font-weight: var(--tc-font-weight-medium); white-space: nowrap; }
@@ -1575,10 +1580,6 @@ export class TcAgentCursors extends TcElement {
 }
 /* Narrow (phones): a compact header, smaller flags, and tables whose cells wrap instead of cutting words */
 @container agc (max-width: 480px) {
-  .ui-agc__bar { gap: var(--tc-space-1-5); padding: 0 var(--tc-space-2) 0 var(--tc-space-3); }
-  /* The title gives way to the faces – it is in the document's own heading, and in the tab title */
-  .ui-agc__title { display: none; }
-  .ui-agc__doc { margin-right: auto; }
   .ui-agc__face { width: 26px; height: 26px; margin-left: var(--tc-space-0-5); }
   :where([data-look="clean"], [data-look="clean"] *).ui-agc__face { width: 24px; height: 24px; }
   .ui-agc__text { padding: var(--tc-space-6) var(--tc-space-5) var(--tc-space-8); }
@@ -1586,14 +1587,14 @@ export class TcAgentCursors extends TcElement {
   .ui-agc__flag { padding: var(--tc-space-1) var(--tc-space-2) var(--tc-space-1); border-radius: var(--tc-radius-md); font-size: var(--tc-font-size-xs); line-height: 14px; }
   :where([data-look="clean"], [data-look="clean"] *).ui-agc__flag { padding: var(--tc-space-1) var(--tc-space-2) var(--tc-space-1); }
   .ui-agc__flag-tag { padding: 0 var(--tc-space-1); font-size: var(--tc-font-size-2xs); line-height: 14px; }
-  .ui-agc__flag-doing > span { font-size: 10.5px; }
+  .ui-agc__flag-doing > span { font-size: var(--tc-font-size-2xs); }
   .ui-agc__flag-row { gap: var(--tc-space-2); }
   .ui-agc__table { font-size: var(--tc-font-size-xs); line-height: var(--tc-line-height-tight); }
   .ui-agc__table :is(th, td) { height: auto; padding: var(--tc-space-2) var(--tc-space-1); white-space: normal; text-overflow: clip; }
   .ui-agc__table :is(th, td):first-child { padding-left: var(--tc-space-2); }
   .ui-agc__table th { font-size: var(--tc-font-size-xs); }
   .ui-agc__table th:first-child { width: 30%; }
-  .ui-agc__pill { display: inline-block; height: auto; min-height: 18px; padding: 1px var(--tc-space-1-5); font-size: 10.5px; line-height: var(--tc-line-height-tight); white-space: normal; }
+  .ui-agc__pill { display: inline-block; height: auto; min-height: 18px; padding: 1px var(--tc-space-1-5); font-size: var(--tc-font-size-2xs); line-height: var(--tc-line-height-tight); white-space: normal; }
 }
 /* The narrowest phones: a little more room for the table */
 @container agc (max-width: 340px) {

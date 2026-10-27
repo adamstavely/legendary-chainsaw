@@ -1,0 +1,423 @@
+{
+ "elements": [
+  {
+   "tag": "tc-agent-graph",
+   "className": "TcAgentGraph",
+   "description": "Agents and the tools they use, drawn as a living network with pulses along the links.",
+   "properties": [
+    {
+     "name": "nodes",
+     "attribute": null,
+     "type": "GraphNode[]",
+     "default": "[]",
+     "description": "The agents, tools and people in the graph – the lead agent in the middle, the other agents around it, the rest outside",
+     "readonly": false
+    },
+    {
+     "name": "calls",
+     "attribute": null,
+     "type": "GraphCall[]",
+     "default": "[]",
+     "description": "Recent calls, newest last – every new id sends a pulse. Calls also draw the links they need",
+     "readonly": false
+    },
+    {
+     "name": "edges",
+     "attribute": null,
+     "type": "[string, string][]",
+     "default": "[]",
+     "description": "Links that are always there, even before their first call",
+     "readonly": false
+    },
+    {
+     "name": "now",
+     "attribute": "now",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The clock for calls per minute and link heat, in epoch ms – defaults to an internal clock that ticks every second\nwhile the graph is on screen",
+     "readonly": false
+    },
+    {
+     "name": "heatWindow",
+     "attribute": "heat-window",
+     "type": "number",
+     "default": "20000",
+     "description": "How far back calls make a link thicker (ms)",
+     "readonly": false
+    },
+    {
+     "name": "selected",
+     "attribute": "selected",
+     "type": "string | null",
+     "default": "null",
+     "description": "The node whose card is open (null = none). Changed by the user unless a tc-selected-change listener calls\npreventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "height",
+     "attribute": "height",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "Fixed height of the graph in px – defaults to one that fits the width",
+     "readonly": false
+    },
+    {
+     "name": "formatCost",
+     "attribute": null,
+     "type": "(amount: number) => string",
+     "default": "dollars",
+     "description": "Formats every cost – defaults to dollars, e.g. \"$0.42\"",
+     "readonly": false
+    },
+    {
+     "name": "paused",
+     "attribute": "paused",
+     "type": "boolean",
+     "default": "false",
+     "description": "Stops the moving parts, as the bar's Pause button does. Changed by the user unless a tc-paused-change listener\ncalls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Agent graph\"",
+     "description": "The heading in the bar, and the start of the graph's name",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-selected-change",
+     "detail": "",
+     "description": "A card opened or closed ({ selected, removed }: GraphSelectedChange; removed when the open node went away); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-select",
+     "detail": "",
+     "description": "A node or a chip was clicked, or the card was closed ({ node }: GraphSelect, null when closed)",
+     "cancelable": false
+    },
+    {
+     "name": "tc-paused-change",
+     "detail": "",
+     "description": "The Pause button was pressed ({ paused }: GraphPausedChange); cancelable",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "agg",
+   "cssProperties": [
+    {
+     "name": "--tc-agent-graph-link",
+     "value": "light-dark(rgba(0, 0, 0, 0.07), rgba(255, 255, 255, 0.08))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-agent-graph-pulse",
+     "value": "light-dark(rgba(0, 96, 226, 0.8), #70b8ff)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-agent-graph-glow",
+     "value": "light-dark(rgba(130, 188, 255, 0.16), rgba(79, 143, 219, 0.14))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-agent-graph-breath",
+     "value": "light-dark(rgba(0, 96, 226, 0.12), rgba(112, 184, 255, 0.16))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-agent-graph-breath-out",
+     "value": "light-dark(rgba(0, 96, 226, 0.02), rgba(112, 184, 255, 0.03))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-agent-graph-user-bg",
+     "value": "var(--tc-surface-inverse)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-agent-graph-user-fg",
+     "value": "var(--tc-text-on-inverse)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-agent-graph-glyph-size",
+     "value": "7.5px",
+     "looks": [
+      "standard"
+     ]
+    },
+    {
+     "name": "--tc-agent-graph-tray-bg",
+     "value": "var(--tc-surface-tray)",
+     "looks": [
+      "standard"
+     ]
+    },
+    {
+     "name": "--tc-agent-graph-panel-bg",
+     "value": "var(--tc-surface-on-tray)",
+     "looks": [
+      "standard"
+     ]
+    },
+    {
+     "name": "--tc-agent-graph-card-bg",
+     "value": "var(--tc-surface-overlay)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-agent-graph-breathe",
+     "value": "2600ms",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-agent-graph-breathe-fast",
+     "value": "1500ms",
+     "looks": [
+      "standard"
+     ]
+    },
+    {
+     "name": "--tc-agent-graph-turn-time",
+     "value": "1200ms",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-agent-graph-shine-time",
+     "value": "2400ms",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-agent-graph-halo-time",
+     "value": "1200ms",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-agent-graph-shine",
+     "value": "light-dark(rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.16))",
+     "looks": [
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-agent-graph-b1",
+    "--tc-agent-graph-b2",
+    "--tc-agent-graph-r",
+    "--tc-agent-graph-state",
+    "--tc-agent-graph-state-bg",
+    "--tc-agent-graph-turn",
+    "--tc-border-default",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-h-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-quick",
+    "--tc-duration-reveal",
+    "--tc-duration-reveal-slow",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-duration-slowest",
+    "--tc-ease-in-out",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-2xs",
+    "--tc-font-size-lg",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-menu-radius",
+    "--tc-pill-font-size",
+    "--tc-pill-font-size-lg",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-h-lg",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-radius-xl",
+    "--tc-radius-xs",
+    "--tc-shadow-control",
+    "--tc-shadow-overlay",
+    "--tc-shadow-raised",
+    "--tc-shadow-raised-hover",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-danger-solid",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-success-solid",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-status-warning-solid",
+    "--tc-surface-inverse",
+    "--tc-surface-on-tray",
+    "--tc-surface-overlay",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-on-inverse",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tracking-normal",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "AgentGraph",
+   "exported": true,
+   "props": [
+    {
+     "name": "nodes",
+     "type": "GraphNode[]",
+     "optional": false,
+     "description": "The agents, tools and people in the graph; icons can be React nodes"
+    },
+    {
+     "name": "onSelect",
+     "type": "(node: GraphNode | null) => void",
+     "optional": true,
+     "description": "A click on a node – it also opens its card; null when the card closes"
+    },
+    {
+     "name": "selected",
+     "type": "string | null",
+     "optional": true,
+     "description": "The node whose card is open. Controlled when defined (null = none); otherwise the component keeps it, starting\nfrom `defaultSelected`. Changes are reported to `onSelectedChange` (and `onSelect`, with the node)"
+    },
+    {
+     "name": "defaultSelected",
+     "type": "string | null",
+     "optional": true,
+     "description": "The node whose card is open at first, when `selected` isn't set"
+    },
+    {
+     "name": "onSelectedChange",
+     "type": "(id: string | null) => void",
+     "optional": true,
+     "description": "Called with the node id when a card opens, and null when it closes"
+    },
+    {
+     "name": "paused",
+     "type": "boolean",
+     "optional": true,
+     "description": "Stops the moving parts – pulses, ripples, floating and the breathing rings – as the bar's Pause button does.\nControlled when defined; otherwise the component keeps it, starting from `defaultPaused`"
+    },
+    {
+     "name": "defaultPaused",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether the motion starts paused, when `paused` isn't set"
+    },
+    {
+     "name": "onPausedChange",
+     "type": "(paused: boolean) => void",
+     "optional": true,
+     "description": "Called when the Pause button is pressed, with the new paused state"
+    },
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading in the bar, and the start of the graph's accessible name – \"Agent graph\" by default"
+    }
+   ],
+   "hides": [
+    "nodes",
+    "selected",
+    "paused",
+    "heading",
+    "onSelect"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 89082,
+  "gzip": 22426
+ }
+}

@@ -17,6 +17,7 @@ export type TiltCardOwnProps = {
   scale?: number;
   /** Perspective distance in px – smaller is more dramatic */
   perspective?: number;
+  /** Classes on the root, the untransformed wrapper */
   className?: string;
   /** The root (the untransformed wrapper) */
   ref?: React.Ref<TcTiltCard>;

@@ -1,0 +1,232 @@
+{
+ "elements": [
+  {
+   "tag": "tc-parallel-attempts",
+   "className": "TcParallelAttempts",
+   "description": "Several attempts at one task, side by side like a race; the best finished one is marked and picked, and you can\npick another.",
+   "properties": [
+    {
+     "name": "attempts",
+     "attribute": null,
+     "type": "ParallelAttempt[]",
+     "default": "[]",
+     "description": "The attempts, one row each – name, approach, status and, once done, a score",
+     "readonly": false
+    },
+    {
+     "name": "task",
+     "attribute": "task",
+     "type": "string",
+     "default": "\"\"",
+     "description": "What all of them try to do – e.g. \"Fix the flaky checkout test\"",
+     "readonly": false
+    },
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The heading; unset shows \"Best of <n>\"",
+     "readonly": false
+    },
+    {
+     "name": "picked",
+     "attribute": null,
+     "type": "string | null",
+     "default": "null",
+     "description": "The id of the attempt in use; null or an unknown id falls back to the best finished attempt once all are through",
+     "readonly": false
+    },
+    {
+     "name": "formatCost",
+     "attribute": null,
+     "type": "(amount: number) => string",
+     "default": "dollars",
+     "description": "Formats every cost – defaults to dollars, e.g. \"$0.31\"",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-picked-change",
+     "detail": "",
+     "description": "The attempt in use changed; detail `{ picked, attempt, auto }`. Cancelable when picked by hand (`auto: false`): preventDefault() keeps the current pick (controlled use). `auto: true` reports the best one taken on its own once all are through.",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "pa",
+   "cssProperties": [
+    {
+     "name": "--tc-parallel-attempts-picked-bg",
+     "value": "light-dark(#f3fbf6, #1c2b22)",
+     "looks": [
+      "standard"
+     ]
+    },
+    {
+     "name": "--tc-parallel-attempts-best-bg",
+     "value": "light-dark(rgba(0, 164, 51, 0.24), rgba(40, 200, 110, 0.32))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-parallel-attempts-best-edge",
+     "value": "light-dark(rgba(0, 140, 50, 0.48), rgba(60, 220, 130, 0.6))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-parallel-attempts-sweep",
+     "value": "1500ms",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-parallel-attempts-glow",
+     "value": "1100ms",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-parallel-attempts-picked-wash",
+     "value": "light-dark(rgba(0, 164, 51, 0.035), rgba(40, 200, 110, 0.06))",
+     "looks": [
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-avatar-radius-agent",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-duration-fast",
+    "--tc-duration-instant",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-duration-slowest",
+    "--tc-ease-in-out",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-meter-radius",
+    "--tc-parallel-attempts-status-bg",
+    "--tc-parallel-attempts-status-edge",
+    "--tc-parallel-attempts-status-ink",
+    "--tc-radius-full",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-radius-xs",
+    "--tc-shadow-control",
+    "--tc-shadow-raised",
+    "--tc-shimmer",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-4-5",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-border",
+    "--tc-status-danger-fg",
+    "--tc-status-info-bg",
+    "--tc-status-info-border",
+    "--tc-status-info-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-border",
+    "--tc-status-success-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "ParallelAttempts",
+   "exported": true,
+   "props": [
+    {
+     "name": "attempts",
+     "type": "Attempt[]",
+     "optional": false,
+     "description": "The attempts, one row each; icons can be React nodes"
+    },
+    {
+     "name": "picked",
+     "type": "string | null",
+     "optional": true,
+     "description": "The id of the attempt in use. Controlled when defined; null or an unknown id falls back to the best finished\nattempt once all are through"
+    },
+    {
+     "name": "defaultPicked",
+     "type": "string | null",
+     "optional": true,
+     "description": "The attempt in use on mount when `picked` isn't controlled"
+    },
+    {
+     "name": "onPick",
+     "type": "(attempt: Attempt, reason: AttemptPickReason) => void",
+     "optional": true,
+     "description": "Called with the attempt in use whenever it changes – picked by hand (`auto: false`), or the best one taken on its\nown once all are through (`auto: true`)"
+    },
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading – \"Best of <n>\" when unset"
+    }
+   ],
+   "hides": [
+    "attempts",
+    "picked",
+    "heading"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 35526,
+  "gzip": 8951
+ }
+}

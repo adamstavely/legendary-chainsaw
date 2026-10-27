@@ -1,0 +1,130 @@
+{
+ "elements": [
+  {
+   "tag": "tc-empty-calendar",
+   "className": "TcEmptyCalendar",
+   "description": "Stacked empty calendar cards – an illustration for an empty schedule.",
+   "properties": [
+    {
+     "name": "label",
+     "attribute": "label",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Accessible description – when set, the scene is announced as an image; otherwise it is decorative",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [],
+   "slots": [],
+   "methods": [],
+   "ui": "ec",
+   "cssProperties": [
+    {
+     "name": "--tc-empty-calendar-card",
+     "value": "light-dark(#ffffff, #232326)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-empty-calendar-edge",
+     "value": "light-dark(#e4e7ec, rgba(255, 255, 255, 0.08))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-empty-calendar-drop",
+     "value": "light-dark(rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.4))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-empty-calendar-title",
+     "value": "light-dark(#8a8a8a, #8f8f8f)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-empty-calendar-badge",
+     "value": "light-dark(#fef8ef, rgba(250, 176, 130, 0.16))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-empty-calendar-bar",
+     "value": "light-dark(#eff1f4, #2a2a2d)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-empty-calendar-bar-peak",
+     "value": "light-dark(#dde1e5, #36363b)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-empty-calendar-btn",
+     "value": "light-dark(#f4f4f6, #2a2a2d)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-empty-calendar-btn-ink",
+     "value": "light-dark(#9a9aa3, #6b6b70)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-empty-calendar-shimmer",
+     "value": "2.4s",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-empty-calendar-breathe",
+     "value": "5s",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-duration-slow",
+    "--tc-ease-in-out",
+    "--tc-ease-out",
+    "--tc-font-sans"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "EmptyCalendar",
+   "exported": false,
+   "props": [],
+   "hides": []
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 14461,
+  "gzip": 5392
+ }
+}

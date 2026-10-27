@@ -3,7 +3,9 @@ import { property, state } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController } from "./internal/controllers";
+import { isMac } from "./internal/util";
 
 /*
  * <tc-tool-permissions> – which agent may use which tools, set up ahead of time: a matrix of tools and their scopes
@@ -80,13 +82,11 @@ const initials = (name: string) =>
     .slice(0, 2)
     .toUpperCase();
 const clone = (node: Element | undefined) => node?.cloneNode(true);
-const isMac = () => {
-  const p = (navigator as Navigator & { userAgentData?: { platform?: string } }).userAgentData?.platform;
-  return /mac|iphone|ipad|ipod/i.test(p || navigator.userAgent);
-};
 let uidCount = 0;
 
 /* Allow, ask and deny – check, circle-help and ban: Lucide (ISC, lucide.dev) */
+/* After Lucide: shield-check – the header's icon */
+const headIcon = svg`<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path><path d="m9 12 2 2 4-4"></path>`;
 const lucide = (size: number, body: ReturnType<typeof svg>) =>
   html`<svg width=${size} height=${size} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${body}</svg>`;
 const ICON: Record<ToolPermissionLevel, () => ReturnType<typeof lucide>> = {
@@ -125,7 +125,9 @@ export class TcToolPermissions extends TcElement {
   @property({ attribute: false }) accessor presets: ToolPermissionPreset[] = defaultToolPermissionPresets;
   /** Changes listed before "N more" */
   @property({ type: Number, attribute: "changes-limit" }) accessor changesLimit = 4;
+  /** The Save button's text; the number of changes is shown beside it */
   @property({ attribute: "save-label" }) accessor saveLabel = "Save";
+  /** The text of the button that puts back what was last saved */
   @property({ attribute: "reset-label" }) accessor resetLabel = "Reset";
 
   @state() private accessor active = { r: 0, c: 0 };
@@ -445,15 +447,21 @@ export class TcToolPermissions extends TcElement {
     const changes = this.changesOf(this.value);
     const dirty = changes.length > 0;
     const empty = !this.agents.length || !this.rows.length;
+    // The header (.tc-head): on the tray in Standard, the card's first row in Clean; the legend at the right
+    const clean = this.resolvedLook === "clean";
+    const head = cardHead({
+      icon: headIcon,
+      title: this.heading,
+      subtitle: this.description || undefined,
+      id: `${this.uid}-title`,
+      aside: html`<span class="ui-tperm__legend" aria-hidden="true">${LEVELS.map((l) => html`<span class="ui-tperm__legend-item" data-level=${l}>${ICON[l]()}${LEVEL_LABEL[l]}</span>`)}</span>`,
+    });
     return html`
       <span class="ui-tperm__sr" role="status">${this.announce}</span>
       <span class="ui-tperm__sr" id=${`${this.uid}-keys`}>Space changes it, 1 Allow, 2 Ask, 3 Deny</span>
+      ${clean ? nothing : head}
       <div class="ui-tperm__card">
-        <header class="ui-tperm__head">
-          <h3 class="ui-tperm__title" id=${`${this.uid}-title`}>${this.heading}</h3>
-          ${this.description ? html`<p class="ui-tperm__desc">${this.description}</p>` : nothing}
-          <span class="ui-tperm__legend" aria-hidden="true">${LEVELS.map((l) => html`<span class="ui-tperm__legend-item" data-level=${l}>${ICON[l]()}${LEVEL_LABEL[l]}</span>`)}</span>
-        </header>
+        ${clean ? head : nothing}
         ${this.renderPresets()}
         ${empty ? html`<p class="ui-tperm__empty">No agents or tools to set up yet.</p>` : this.renderGrid()}
         ${empty ? nothing : this.renderSummary(changes)}
@@ -480,7 +488,6 @@ export class TcToolPermissions extends TcElement {
   font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-md);
   line-height: var(--tc-line-height-normal);
-  letter-spacing: -0.006em;
   color: var(--tc-text-muted);
   text-align: left;
   -webkit-font-smoothing: antialiased;
@@ -509,27 +516,19 @@ export class TcToolPermissions extends TcElement {
 [data-ui="tperm"] ul { margin: 0; padding: 0; list-style: none; }
 [data-ui="tperm"] h3, [data-ui="tperm"] h4, [data-ui="tperm"] p, [data-ui="tperm"] section { margin: 0; }
 [data-ui="tperm"] svg { display: block; flex: none; }
-:where([data-look="clean"], [data-look="clean"] *)[data-ui="tperm"] svg[stroke-width] { stroke-width: 1.5; }
+:where([data-look="clean"], [data-look="clean"] *)[data-ui="tperm"] svg[stroke-width]:where(:not(.tc-head__icon > svg)) { stroke-width: 1.5; }
 .ui-tperm__sr { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 :where([data-look="standard"], [data-look="standard"] *).ui-tperm__card { overflow: hidden; border-radius: var(--tc-card-radius); background: var(--tc-surface-on-tray); box-shadow: var(--tc-card-shadow); }
-/* ----- Heading, legend and presets ----- */
-.ui-tperm__head { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--tc-space-0-5) var(--tc-space-3); }
-:where([data-look="standard"], [data-look="standard"] *).ui-tperm__head { padding: var(--tc-space-4) var(--tc-space-4) 0; }
-:where([data-look="clean"], [data-look="clean"] *).ui-tperm__head { padding: var(--tc-space-3-5) var(--tc-space-4) 0; }
-.ui-tperm__title { flex: 1 1 auto; min-width: 0; font-weight: var(--tc-font-weight-strong); letter-spacing: -0.011em; }
-:where([data-look="standard"], [data-look="standard"] *).ui-tperm__title { font-size: var(--tc-font-size-lg); line-height: var(--tc-line-height-normal); color: var(--tc-text-primary); }
-:where([data-look="clean"], [data-look="clean"] *).ui-tperm__title { font-size: var(--tc-font-size-lg); line-height: var(--tc-line-height-normal); color: var(--tc-text-strong); }
-.ui-tperm__desc { order: 3; flex-basis: 100%; color: var(--tc-text-muted); }
-:where([data-look="standard"], [data-look="standard"] *).ui-tperm__desc { font-size: var(--tc-font-size-md); line-height: var(--tc-line-height-snug); }
-:where([data-look="clean"], [data-look="clean"] *).ui-tperm__desc { font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-snug); }
-/* The legend: what the three marks mean */
-.ui-tperm__legend { display: flex; flex: none; gap: var(--tc-space-3); font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); color: var(--tc-text-muted); }
+/* ----- Legend and presets ----- */
+/* The legend: what the three marks mean, at the header's right */
+.ui-tperm__legend { display: flex; flex-wrap: wrap; gap: var(--tc-space-1) var(--tc-space-3); font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); color: var(--tc-text-muted); }
 .ui-tperm__legend-item { display: inline-flex; align-items: center; gap: var(--tc-space-1); }
 .ui-tperm__legend-item > svg { width: 12px; height: 12px; }
 .ui-tperm__legend-item[data-level="allow"] > svg { color: var(--tc-status-success-fg); }
 .ui-tperm__legend-item[data-level="ask"] > svg { color: var(--tc-status-warning-fg); }
 .ui-tperm__legend-item[data-level="deny"] > svg { color: var(--tc-status-danger-fg); }
 .ui-tperm__presets-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-2) var(--tc-space-3); padding: var(--tc-space-3) var(--tc-space-4) 0; }
+:where([data-look="clean"], [data-look="clean"] *).ui-tperm__presets-row { padding-top: 0; }
 .ui-tperm__presets-label { color: var(--tc-text-muted); font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); }
 :where([data-look="standard"], [data-look="standard"] *).ui-tperm__presets-label { font-weight: var(--tc-font-weight-medium); }
 /* Presets – Standard: a segmented track, the matching one raised in white; Clean: separate chips. The checked one also
@@ -609,9 +608,9 @@ export class TcToolPermissions extends TcElement {
 .ui-tperm__summary { margin-top: var(--tc-space-2); border-top: var(--tc-hairline) solid var(--tc-divider); }
 :where([data-look="standard"], [data-look="standard"] *).ui-tperm__summary { padding: var(--tc-space-3) var(--tc-space-2) var(--tc-space-2-5); }
 :where([data-look="clean"], [data-look="clean"] *).ui-tperm__summary { padding: var(--tc-space-3) var(--tc-space-2-5) var(--tc-space-2); }
-.ui-tperm__label { display: flex; align-items: center; gap: var(--tc-space-1-5); color: var(--tc-text-muted); font-size: var(--tc-font-size-sm); }
-:where([data-look="standard"], [data-look="standard"] *).ui-tperm__label { margin: 0 var(--tc-space-2) var(--tc-space-1) !important; font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-snug); }
-:where([data-look="clean"], [data-look="clean"] *).ui-tperm__label { margin: 0 var(--tc-space-1-5) var(--tc-space-1) !important; font-weight: var(--tc-font-weight-regular); line-height: var(--tc-line-height-tight); }
+.ui-tperm__label { display: flex; align-items: center; gap: var(--tc-space-1-5); color: var(--tc-caption-color); font-size: var(--tc-caption-font-size); font-weight: var(--tc-caption-font-weight); line-height: var(--tc-caption-line-height); letter-spacing: var(--tc-caption-tracking); text-transform: var(--tc-caption-transform); }
+:where([data-look="standard"], [data-look="standard"] *).ui-tperm__label { margin: 0 var(--tc-space-2) var(--tc-space-1) !important; }
+:where([data-look="clean"], [data-look="clean"] *).ui-tperm__label { margin: 0 var(--tc-space-1-5) var(--tc-space-1) !important; }
 .ui-tperm__count { display: grid; place-items: center; border-radius: var(--tc-radius-badge); font-variant-numeric: tabular-nums; }
 :where([data-look="standard"], [data-look="standard"] *).ui-tperm__count { min-width: 18px; height: 18px; padding: 0 var(--tc-space-1); background: var(--tc-fill-default); font-size: var(--tc-font-size-xs); color: var(--tc-text-muted); }
 :where([data-look="clean"], [data-look="clean"] *).ui-tperm__count { min-width: 16px; height: 16px; padding: 0 var(--tc-space-1); background: var(--tc-surface-raised); box-shadow: var(--tc-shadow-raised); font-size: var(--tc-font-size-2xs); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-tight); color: var(--tc-text-secondary); }
@@ -650,7 +649,6 @@ export class TcToolPermissions extends TcElement {
 @keyframes ui-tperm-pop { 0% { transform: scale(0.6); } 60% { transform: scale(1.12); } }
 /* Narrow containers: the legend goes under the heading, the presets scroll sideways */
 @container (max-width: 480px) {
-  .ui-tperm__legend { order: 4; }
   .ui-tperm__presets-row { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
   .ui-tperm__presets-label { display: none; }
   .ui-tperm__corner { min-width: 112px; }

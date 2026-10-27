@@ -5,6 +5,7 @@ import { keyed } from "lit/directives/keyed.js";
 import { live } from "lit/directives/live.js";
 import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController, SmoothHeightController, rescueFocus } from "./internal/controllers";
 
 /*
@@ -84,6 +85,8 @@ const REPEAT = "M17 3.5 19.5 6 17 8.5M19.5 6H9a5 5 0 0 0-5 5M7 20.5 4.5 18 7 15.
 const DISCOUNT = "M9 15 15 9M9.5 9.5h.01M14.5 14.5h.01M12 3l2.1 1.6 2.6-.2.9 2.5 2.3 1.2-.4 2.6L21 12.6l-1.5 2.1.4 2.6-2.3 1.2-.9 2.5-2.6-.2L12 21.4l-2.1-1.6-2.6.2-.9-2.5L4.1 16.3l.4-2.6L3 12l1.5-2.1-.4-2.6 2.3-1.2.9-2.5 2.6.2Z";
 const MINIMUM = "M5 19.5h14M7 15.5h10M9 11.5h6M10 7.5h4M12 4v1";
 const PENCIL = "M14.5 5.5l4 4M4.5 19.5l1-4.2L15.8 5a1.4 1.4 0 0 1 2 0l1.2 1.2a1.4 1.4 0 0 1 0 2L8.7 18.5l-4.2 1Z";
+// The header icon: a receipt
+const receiptIcon = svg`<path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"></path><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path><path d="M12 17.5v-11"></path>`;
 
 const icon = (d: string) => html`<svg viewBox="0 0 24 24" aria-hidden="true">${svg`<path d=${d}></path>`}</svg>`;
 
@@ -418,7 +421,7 @@ export class TcBillingSchedule extends TcElement {
     const minimumApplies = Boolean(minimum && total === minimum.amount && phaseTotal < minimum.amount);
     const phaseLabel = dur.months ? `Phase total (${dur.label})` : "Phase total";
 
-    const title = html`<p class="ui-bs__title">${this.heading}</p>`;
+    const title = cardHead({ icon: receiptIcon, title: this.heading });
 
     // Phase summary – the name is editable, dates follow the fields below
     const summary = html`<div class="ui-bs__summary">
@@ -505,8 +508,7 @@ export class TcBillingSchedule extends TcElement {
     return html`
       ${this.name !== undefined ? html`<input type="hidden" name=${this.name} ?disabled=${disabled} .value=${JSON.stringify({ phase, start, duration, lines })} />` : nothing}
       ${clean
-        ? html`<div class="ui-bs__head">${title}${summary}</div>
-            ${fields}${table}${actions}${totals}`
+        ? html`${title}${summary}${fields}${table}${actions}${totals}`
         : html`${title}
             <div class="ui-bs__card">${summary}${fields}${table}${actions}</div>
             ${totals}`}
@@ -522,7 +524,9 @@ export class TcBillingSchedule extends TcElement {
   padding: var(--tc-tray-inset);
   border-radius: var(--tc-tray-radius);
   background: var(--tc-surface-sunken);
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--tc-font-sans);
+  font-size: var(--tc-font-size-lg);
+  line-height: var(--tc-line-height-normal);
   color: var(--tc-text-primary);
   -webkit-font-smoothing: antialiased;
 }
@@ -545,13 +549,11 @@ export class TcBillingSchedule extends TcElement {
   -webkit-font-smoothing: antialiased;
 }
 [data-ui="bs"] *, [data-ui="bs"] *::before, [data-ui="bs"] *::after { box-sizing: border-box; }
-:where([data-look="standard"], [data-look="standard"] *)[data-ui="bs"] button,
-:where([data-look="standard"], [data-look="standard"] *)[data-ui="bs"] select,
-:where([data-look="standard"], [data-look="standard"] *)[data-ui="bs"] input { font: inherit; color: inherit; margin: 0; }
+/* Resets stay at element specificity, so the buttons' and fields' own type wins */
+:where([data-look="standard"], [data-look="standard"] *):where([data-ui="bs"]) :where(button, select, input) { font: inherit; color: inherit; margin: 0; }
 :where([data-look="standard"], [data-look="standard"] *)[data-ui="bs"] button { cursor: pointer; -webkit-tap-highlight-color: transparent; }
 [data-ui="bs"] :focus-visible { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
-:where([data-look="standard"], [data-look="standard"] *)[data-ui="bs"] svg { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
-:where([data-look="standard"], [data-look="standard"] *).ui-bs__title { margin: 0; padding: var(--tc-space-2-5) var(--tc-space-2-5) var(--tc-space-3); font-size: var(--tc-font-size-lg-plus); font-weight: var(--tc-font-weight-medium); letter-spacing: -0.01em; }
+:where([data-look="standard"], [data-look="standard"] *)[data-ui="bs"] svg:where(:not(.tc-head__icon > svg)) { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 :where([data-look="standard"], [data-look="standard"] *).ui-bs__card {
   padding: var(--tc-space-3);
   border-radius: var(--tc-card-radius);
@@ -582,11 +584,9 @@ export class TcBillingSchedule extends TcElement {
 :where([data-ui="bs"][data-look="clean"]) input { margin: 0; padding: 0; border: 0; background: none; font: inherit; color: inherit; }
 :where([data-ui="bs"][data-look="clean"]) button { cursor: pointer; -webkit-tap-highlight-color: transparent; }
 /* 16px icons with thin ~1.1px lines */
-:where([data-look="clean"], [data-look="clean"] *)[data-ui="bs"] svg { display: block; width: 16px; height: 16px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.65; stroke-linecap: round; stroke-linejoin: round; }
+:where([data-look="clean"], [data-look="clean"] *)[data-ui="bs"] svg:where(:not(.tc-head__icon > svg)) { display: block; width: 16px; height: 16px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.65; stroke-linecap: round; stroke-linejoin: round; }
 /* Head: title and the phase summary */
-:where([data-look="clean"], [data-look="clean"] *).ui-bs__head { display: grid; gap: var(--tc-space-0-5); padding: var(--tc-space-3-5) var(--tc-space-3-5) var(--tc-space-3); }
-:where([data-look="clean"], [data-look="clean"] *).ui-bs__title { margin: 0; font-size: var(--tc-font-size-lg-plus); line-height: var(--tc-line-height-loose); font-weight: var(--tc-font-weight-medium); color: var(--tc-text-strong); }
-:where([data-look="clean"], [data-look="clean"] *).ui-bs__summary { display: flex; align-items: center; gap: var(--tc-space-1-5); min-width: 0; color: var(--tc-text-secondary); white-space: nowrap; }
+:where([data-look="clean"], [data-look="clean"] *).ui-bs__summary { display: flex; align-items: center; gap: var(--tc-space-1-5); min-width: 0; padding: 0 var(--tc-space-3-5) var(--tc-space-3); color: var(--tc-text-secondary); white-space: nowrap; }
 :where([data-look="clean"], [data-look="clean"] *).ui-bs__phase {
   min-width: 0;
   max-width: 100%;
@@ -774,7 +774,7 @@ export class TcBillingSchedule extends TcElement {
   font-size: var(--tc-font-size-2xs);
   line-height: var(--tc-line-height-tight);
   font-weight: var(--tc-font-weight-medium);
-  letter-spacing: 0.5px;
+  letter-spacing: var(--tc-tracking-caps);
   text-transform: uppercase;
   color: var(--tc-text-muted);
   animation: none;

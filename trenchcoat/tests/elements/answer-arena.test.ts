@@ -35,7 +35,7 @@ describe("tc-answer-arena", () => {
     const el = await fixture<TcAnswerArena>(html`<tc-answer-arena prompt="Explain RAG" .answers=${done}></tc-answer-arena>`);
     expect(el.dataset.ui).toBe("arena");
     expect(el.dataset.look).toBe("standard");
-    expect(el.querySelector(".ui-arena__prompt-text")!.textContent).toBe("Explain RAG");
+    expect(el.querySelector(".tc-head__title")!.textContent).toBe("Prompt: Explain RAG");
     const panes = [...el.querySelectorAll("section.ui-arena__pane")];
     expect(panes.map((p) => p.getAttribute("aria-label"))).toEqual(["Answer A", "Answer B"]);
     expect(names(el)).toEqual(["Atlas", "Nova"]);

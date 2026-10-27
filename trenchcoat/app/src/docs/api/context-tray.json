@@ -1,0 +1,296 @@
+{
+ "elements": [
+  {
+   "tag": "tc-context-tray",
+   "className": "TcContextTray",
+   "description": "What the model can see, as chips with their token weight: remove (undoable), pin, and the total against the window.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"In context\"",
+     "description": "The heading, and the group's name",
+     "readonly": false
+    },
+    {
+     "name": "items",
+     "attribute": null,
+     "type": "ContextTrayItem[]",
+     "default": "[]",
+     "description": "The chips, in order",
+     "readonly": false
+    },
+    {
+     "name": "limit",
+     "attribute": "limit",
+     "type": "number",
+     "default": "0",
+     "description": "Size of the context window in tokens (0: no meter, only the total)",
+     "readonly": false
+    },
+    {
+     "name": "reserved",
+     "attribute": "reserved",
+     "type": "number",
+     "default": "0",
+     "description": "Tokens already in the window besides these items – system prompt, tools, the conversation",
+     "readonly": false
+    },
+    {
+     "name": "warnAt",
+     "attribute": "warn-at",
+     "type": "number",
+     "default": "0.8",
+     "description": "Share of the limit from which the tray warns (0–1)",
+     "readonly": false
+    },
+    {
+     "name": "undoTimeout",
+     "attribute": "undo-timeout",
+     "type": "number",
+     "default": "6000",
+     "description": "How long Undo stays after a removal, in ms (0: no undo)",
+     "readonly": false
+    },
+    {
+     "name": "emptyText",
+     "attribute": "empty-text",
+     "type": "string",
+     "default": "\"Nothing in context yet – type @ to add files, people or sources\"",
+     "description": "What the tray says with no items",
+     "readonly": false
+    },
+    {
+     "name": "used",
+     "attribute": null,
+     "type": "",
+     "default": null,
+     "description": "Tokens in the window: the reserved part plus every item",
+     "readonly": true
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-items-change",
+     "detail": "",
+     "description": "`items` is about to change (`ContextTrayItemsChange`: `{ items, change: { type, item } }`, type \"remove\" | \"restore\" | \"pin\" | \"unpin\"). Cancelable: preventDefault() keeps the current items (controlled use)",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [
+    {
+     "name": "undo",
+     "params": "",
+     "returns": "void",
+     "description": "Puts the last removed item back (what Undo and ⌘Z do); false when there's nothing to undo"
+    }
+   ],
+   "ui": "ctt",
+   "cssProperties": [
+    {
+     "name": "--tc-context-tray-file",
+     "value": "var(--tc-chart-1)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-context-tray-source",
+     "value": "var(--tc-chart-3)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-context-tray-mention",
+     "value": "var(--tc-chart-2)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-context-tray-other",
+     "value": "var(--tc-chart-4)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-context-tray-reserved",
+     "value": "var(--tc-chart-neutral)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-border-default",
+    "--tc-border-selected",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-chart-1",
+    "--tc-chart-2",
+    "--tc-chart-3",
+    "--tc-chart-4",
+    "--tc-chart-5",
+    "--tc-chart-neutral",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-slow",
+    "--tc-ease-move",
+    "--tc-ease-spring",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-strong",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-none",
+    "--tc-line-height-normal",
+    "--tc-line-height-tight",
+    "--tc-meter-radius",
+    "--tc-meter-track",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-radius",
+    "--tc-radius-lg",
+    "--tc-radius-sm",
+    "--tc-radius-xs",
+    "--tc-shadow-raised",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-danger-solid",
+    "--tc-status-warning-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "ContextTrayOwn",
+   "exported": false,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading, and the group's name (default \"In context\")"
+    },
+    {
+     "name": "items",
+     "type": "ContextTrayEntry[]",
+     "optional": true,
+     "description": "The chips. Controlled when given; otherwise the tray keeps its own, starting at `defaultItems`"
+    },
+    {
+     "name": "defaultItems",
+     "type": "ContextTrayEntry[]",
+     "optional": true,
+     "description": "The starting chips when `items` isn't given"
+    },
+    {
+     "name": "onChange",
+     "type": "(items: ContextTrayEntry[], change: ContextTrayChange) => void",
+     "optional": true,
+     "description": "Every remove, undo (restore), pin and unpin, with the items after it"
+    }
+   ],
+   "hides": []
+  },
+  {
+   "component": "ContextTray",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading, and the group's name (default \"In context\")"
+    },
+    {
+     "name": "items",
+     "type": "ContextTrayEntry[]",
+     "optional": true,
+     "description": "The chips. Controlled when given; otherwise the tray keeps its own, starting at `defaultItems`"
+    },
+    {
+     "name": "defaultItems",
+     "type": "ContextTrayEntry[]",
+     "optional": true,
+     "description": "The starting chips when `items` isn't given"
+    },
+    {
+     "name": "onChange",
+     "type": "(items: ContextTrayEntry[], change: ContextTrayChange) => void",
+     "optional": true,
+     "description": "Every remove, undo (restore), pin and unpin, with the items after it"
+    }
+   ],
+   "hides": [
+    "heading",
+    "onChange"
+   ]
+  }
+ ],
+ "changelog": [
+  "`tc-context-tray` – what's in context as chips with token weights, a meter against the window with a reserved share, pin, remove with undo (⌘/Ctrl+Z), and a warning near the limit. Toolbar keyboard; `tc-items-change` (cancelable).",
+  "chat-composer (the Lit element and `trenchcoat/react`): opt-in `mentions` (a `tc-mention-picker` on the message) and `context` / `context-limit` (a `tc-context-tray` above it). Without them it renders as before."
+ ],
+ "size": {
+  "min": 35055,
+  "gzip": 10833
+ }
+}

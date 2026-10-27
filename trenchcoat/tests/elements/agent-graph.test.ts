@@ -41,7 +41,7 @@ for (const look of ["standard", "clean"] as const) {
       const el = await mount(html`<tc-agent-graph look=${look} heading="Crew" .nodes=${nodes} .edges=${[["lead", "search"]]} .now=${0}></tc-agent-graph>`);
       expect(el.dataset.ui).toBe("agg");
       expect(el.dataset.look).toBe(look);
-      expect(el.querySelector(".ui-agg__title")!.textContent).toBe("Crew");
+      expect(el.querySelector(".tc-head__title")!.textContent).toBe("Crew");
       expect(el.querySelector(".ui-agg__stage")!.getAttribute("aria-label")).toBe("Crew: 1 agents and 1 tools");
       expect(el.querySelectorAll(".ui-agg__node")).toHaveLength(2);
       expect(el.querySelector("path.ui-agg__edge")!.getAttribute("d")).toMatch(/^M/);
@@ -198,12 +198,12 @@ for (const look of ["standard", "clean"] as const) {
       test("the alert line is there from the start and says who needs you (4.1.3)", async () => {
         const calm = team().map((n) => ({ ...n, status: undefined }));
         const el = await mount(html`<tc-agent-graph look=${look} .nodes=${calm} .now=${0}></tc-agent-graph>`);
-        const status = el.querySelector('header [role="status"]')!;
+        const status = el.querySelector('.ui-agg__sr[role="status"]')!;
         expect(status.textContent).toBe("");
         expect(el.querySelector("[aria-live]")).toBeNull();
         el.nodes = team();
         await settle();
-        expect(el.querySelector('header [role="status"]')).toBe(status);
+        expect(el.querySelector('.ui-agg__sr[role="status"]')).toBe(status);
         expect(status.textContent).toBe("Reviewer needs you");
       });
 

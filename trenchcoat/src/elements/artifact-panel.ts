@@ -7,6 +7,7 @@ import "./code-block";
 import { codeBlockDiff, codeBlockLanguageLabel } from "./code-block";
 import { diffWords } from "./inline-diff";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController, OffScreenController } from "./internal/controllers";
 import type { Look } from "./internal/look";
 
@@ -234,6 +235,8 @@ const KIND_ICON: Record<ArtifactKind, TemplateResult> = {
 const KIND_LABEL: Record<ArtifactKind, string> = { text: "Document", code: "Code", image: "Image", table: "Table" };
 const downloadIcon = glyph(svg`<path d="M8 2.25v7.5M5 6.75l3 3 3-3M2.75 11.25v1a1.5 1.5 0 0 0 1.5 1.5h7.5a1.5 1.5 0 0 0 1.5-1.5v-1"></path>`);
 const compareIcon = glyph(svg`<path d="M8 2.5v6M5 5.5h6M5 12.5h6"></path>`);
+// The header icon: a stack of files
+const filesIcon = svg`<path d="M20 7h-3a2 2 0 0 1-2-2V2"></path><path d="M9 18a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h7l4 4v10a2 2 0 0 1-2 2Z"></path><path d="M3 7.6v12.8A1.6 1.6 0 0 0 4.6 22h9.8"></path>`;
 
 /* ---------- Element ---------- */
 
@@ -528,11 +531,15 @@ export class TcArtifactPanel extends TcElement {
         ? `Writing ${writing.map((x) => x.name).join(", ")}…`
         : `${list.length} ${list.length === 1 ? "file" : "files"} · ${versionCount} ${versionCount === 1 ? "version" : "versions"}`;
     const foot = html`<div class="ui-artp__foot"><span class="ui-artp__caption">${caption}</span></div>`;
+    const head = cardHead({
+      icon: filesIcon,
+      title: this.heading,
+      id: `${this.uid}-title`,
+      aside: list.length ? html`<span class="ui-artp__count" aria-hidden="true">${list.length}</span>` : nothing,
+    });
+    // Standard: the header sits on the tray above the card; Clean: it's the card's first row
     const card = html`<div class="ui-artp__card" style=${styleMap({ "--tc-artifact-panel-preview-h": `${this.previewHeight}px` })}>
-      <div class="ui-artp__head">
-        <span class="ui-artp__title" id=${`${this.uid}-title`}>${this.heading}</span>
-        ${list.length ? html`<span class="ui-artp__count" aria-hidden="true">${list.length}</span>` : nothing}
-      </div>
+      ${look === "clean" ? head : nothing}
       ${list.length && a
         ? html`<div class="ui-artp__body">
             <div class="ui-artp__list" role="listbox" aria-label="Files" aria-orientation="vertical" tabindex="-1" @keydown=${(e: KeyboardEvent) => this.onListKey(e)}>
@@ -543,7 +550,7 @@ export class TcArtifactPanel extends TcElement {
         : html`<div class="ui-artp__empty"><p class="ui-artp__empty-title">${this.emptyLabel}</p></div>`}
       ${look === "clean" ? foot : nothing}
     </div>`;
-    return html`${card}${look === "clean" ? nothing : foot}<span class="ui-artp__sr" role="status">${this.message}</span>`;
+    return html`${look === "clean" ? nothing : head}${card}${look === "clean" ? nothing : foot}<span class="ui-artp__sr" role="status">${this.message}</span>`;
   }
 
   protected override updated(changed: PropertyValues) {
@@ -571,7 +578,7 @@ export class TcArtifactPanel extends TcElement {
   font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-md);
   line-height: var(--tc-line-height-normal);
-  letter-spacing: -0.006em;
+  letter-spacing: var(--tc-tracking-normal);
 }
 :where([data-look="clean"], [data-look="clean"] *)[data-ui="artp"] {
   color: var(--tc-text-primary);
@@ -583,15 +590,10 @@ export class TcArtifactPanel extends TcElement {
 .ui-artp__card { position: relative; min-width: 0; overflow: hidden; }
 :where([data-look="standard"], [data-look="standard"] *).ui-artp__card { border-radius: var(--tc-card-radius); background: var(--tc-surface-on-tray); box-shadow: var(--tc-card-shadow); }
 :where([data-look="clean"], [data-look="clean"] *).ui-artp__card { border-radius: var(--tc-radius-lg); background: var(--tc-surface-raised); box-shadow: var(--tc-shadow-raised); }
-/* ----- Head ----- */
-.ui-artp__head { display: flex; align-items: center; gap: var(--tc-space-2); min-width: 0; }
-:where([data-look="standard"], [data-look="standard"] *).ui-artp__head { height: 48px; padding: 0 var(--tc-space-3) 0 var(--tc-space-4); border-bottom: var(--tc-hairline) solid var(--tc-border-default); }
-:where([data-look="clean"], [data-look="clean"] *).ui-artp__head { min-height: 48px; padding: var(--tc-space-2) var(--tc-space-3) var(--tc-space-2) var(--tc-space-4); border-bottom: 0.5px solid var(--tc-border-default); }
-.ui-artp__title { min-width: 0; overflow: hidden; color: var(--tc-text-primary); text-overflow: ellipsis; white-space: nowrap; }
-:where([data-look="standard"], [data-look="standard"] *).ui-artp__title { font-size: var(--tc-font-size-md); font-weight: var(--tc-font-weight-semibold); }
-:where([data-look="clean"], [data-look="clean"] *).ui-artp__title { font-size: var(--tc-font-size-lg-plus); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-loose); color: var(--tc-text-strong); }
+/* ----- Head: the count of files beside the title ----- */
 .ui-artp__count { flex: none; min-width: 20px; height: 20px; padding: 0 var(--tc-space-1-5); border-radius: var(--tc-radius-badge); background: var(--tc-fill-default); color: var(--tc-text-muted); font-size: var(--tc-pill-font-size); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-normal); text-align: center; font-variant-numeric: tabular-nums; }
 /* ----- Body: the list beside the preview; above it on narrow cards ----- */
+:where([data-look="clean"], [data-look="clean"] *).ui-artp__body { border-top: 0.5px solid var(--tc-border-default); }
 .ui-artp__body { display: grid; grid-template-columns: minmax(176px, 32%) minmax(0, 1fr); min-width: 0; }
 .ui-artp__list {
   display: flex;

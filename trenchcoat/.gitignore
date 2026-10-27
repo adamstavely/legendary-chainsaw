@@ -28,3 +28,7 @@ examples/*/.angular/
 # Lockfiles: the example runner reinstalls the packed tarball each run
 examples/*/package-lock*.json
 examples/html/dist-shake
+
+# Conflict copies a sync service (iCloud Documents) leaves beside a file: "name 2.json"
+* [2-9].*
+.docs-check*

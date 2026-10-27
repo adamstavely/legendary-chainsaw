@@ -1,0 +1,211 @@
+{
+ "elements": [
+  {
+   "tag": "tc-blur-crossfade",
+   "className": "TcBlurCrossfade",
+   "description": "Swaps its content with a soft blur while the box glides to the new size. Change `swapKey` to swap.",
+   "properties": [
+    {
+     "name": "swapKey",
+     "attribute": "swap-key",
+     "type": "string | number | undefined",
+     "default": "undefined",
+     "description": "Change this to swap – the content that was there fades out, the new content fades in",
+     "readonly": false
+    },
+    {
+     "name": "duration",
+     "attribute": "duration",
+     "type": "number",
+     "default": "420",
+     "description": "Length of the swap in ms",
+     "readonly": false
+    },
+    {
+     "name": "blurAmount",
+     "attribute": "blur",
+     "type": "number",
+     "default": "10",
+     "description": "Blur in px at the start and end of the fade (the React prop `blur`; `blur` is the element's blur() method)",
+     "readonly": false
+    },
+    {
+     "name": "morph",
+     "attribute": "morph",
+     "type": "BlurCrossfadeMorph",
+     "default": "\"height\"",
+     "description": "Which sides glide to the new size; \"both\" sizes the box to its content",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [],
+   "slots": [],
+   "methods": [],
+   "ui": "bx",
+   "cssProperties": [
+    {
+     "name": "--tc-blur-crossfade-duration",
+     "value": "420ms",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-blur-crossfade-blur",
+     "value": "10px",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-ease-in",
+    "--tc-ease-out",
+    "--tc-focus-ring",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "BlurCrossfadeOwn",
+   "exported": false,
+   "props": [
+    {
+     "name": "id",
+     "type": "string | number",
+     "optional": false,
+     "description": "Change this to swap – the children of the old id fade out, the new ones fade in"
+    },
+    {
+     "name": "children",
+     "type": "React.ReactNode",
+     "optional": true,
+     "description": "The content on show – it swaps whenever `id` changes"
+    },
+    {
+     "name": "duration",
+     "type": "number",
+     "optional": true,
+     "description": "Length of the swap in ms"
+    },
+    {
+     "name": "blur",
+     "type": "number",
+     "optional": true,
+     "description": "Blur in px at the start and end of the fade"
+    },
+    {
+     "name": "morph",
+     "type": "\"height\" | \"both\" | \"none\"",
+     "optional": true,
+     "description": "Which sides glide to the new size; \"both\" sizes the box to its content"
+    },
+    {
+     "name": "as",
+     "type": "\"div\" | \"span\"",
+     "optional": true,
+     "description": "The layer element – use span inside buttons and other inline content"
+    },
+    {
+     "name": "className",
+     "type": "string",
+     "optional": true,
+     "description": "Classes on the root element"
+    },
+    {
+     "name": "style",
+     "type": "React.CSSProperties",
+     "optional": true,
+     "description": "Inline styles on the root element"
+    },
+    {
+     "name": "ref",
+     "type": "React.Ref<TcBlurCrossfade>",
+     "optional": true,
+     "description": "The root element"
+    }
+   ],
+   "hides": []
+  },
+  {
+   "component": "BlurCrossfade",
+   "exported": true,
+   "props": [
+    {
+     "name": "id",
+     "type": "string | number",
+     "optional": false,
+     "description": "Change this to swap – the children of the old id fade out, the new ones fade in"
+    },
+    {
+     "name": "children",
+     "type": "React.ReactNode",
+     "optional": true,
+     "description": "The content on show – it swaps whenever `id` changes"
+    },
+    {
+     "name": "duration",
+     "type": "number",
+     "optional": true,
+     "description": "Length of the swap in ms"
+    },
+    {
+     "name": "blur",
+     "type": "number",
+     "optional": true,
+     "description": "Blur in px at the start and end of the fade"
+    },
+    {
+     "name": "morph",
+     "type": "\"height\" | \"both\" | \"none\"",
+     "optional": true,
+     "description": "Which sides glide to the new size; \"both\" sizes the box to its content"
+    },
+    {
+     "name": "as",
+     "type": "\"div\" | \"span\"",
+     "optional": true,
+     "description": "The layer element – use span inside buttons and other inline content"
+    },
+    {
+     "name": "className",
+     "type": "string",
+     "optional": true,
+     "description": "Classes on the root element"
+    },
+    {
+     "name": "style",
+     "type": "React.CSSProperties",
+     "optional": true,
+     "description": "Inline styles on the root element"
+    },
+    {
+     "name": "ref",
+     "type": "React.Ref<TcBlurCrossfade>",
+     "optional": true,
+     "description": "The root element"
+    }
+   ],
+   "hides": [
+    "swapKey",
+    "blurAmount"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 12540,
+  "gzip": 4823
+ }
+}

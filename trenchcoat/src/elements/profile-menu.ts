@@ -81,7 +81,9 @@ const arrowIcon = (look: Look) =>
 export class TcProfileMenu extends TcElement {
   static override ui = "pm";
 
+  /** The signed-in person's name, at the top of the card */
   @property() accessor name = "";
+  /** The signed-in person's email address, under the name */
   @property() accessor email = "";
   /** Replaces the default avatar (cloned) */
   @property({ attribute: false }) accessor avatar: Element | undefined = undefined;
@@ -217,7 +219,7 @@ export class TcProfileMenu extends TcElement {
   /* The gray tray frames the white card on every side */
   padding: var(--tc-tray-inset);
   border-radius: var(--tc-tray-radius);
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--tc-font-sans);
   color: var(--tc-text-primary);
   -webkit-font-smoothing: antialiased;
 }
@@ -291,17 +293,19 @@ export class TcProfileMenu extends TcElement {
 }
 :where([data-look="standard"], [data-look="standard"] *).ui-pm__name {
   overflow: hidden;
-  font-size: var(--tc-font-size-lg-plus);
-  font-weight: var(--tc-font-weight-medium);
-  line-height: var(--tc-line-height-relaxed);
+  font-size: var(--tc-title-font-size);
+  font-weight: var(--tc-title-font-weight);
+  line-height: var(--tc-title-line-height);
+  letter-spacing: var(--tc-title-tracking);
+  color: var(--tc-title-color);
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 :where([data-look="standard"], [data-look="standard"] *).ui-pm__email {
   overflow: hidden;
-  font-size: var(--tc-font-size-md);
-  line-height: var(--tc-line-height-normal);
-  color: var(--tc-text-muted);
+  font-size: var(--tc-subtitle-font-size);
+  line-height: var(--tc-subtitle-line-height);
+  color: var(--tc-subtitle-color);
   white-space: nowrap;
   text-overflow: ellipsis;
 }

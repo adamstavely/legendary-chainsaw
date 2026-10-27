@@ -153,6 +153,7 @@ let uid = 0;
 export class TcChatComposer extends TcElement {
   static override ui = "chat-composer";
 
+  /** Placeholder of the message field */
   @property() accessor placeholder = "Start by typing...";
   /** The message */
   @property() accessor value = "";
@@ -1558,15 +1559,15 @@ export class TcChatComposer extends TcElement {
 :where([data-look="clean"], [data-look="clean"] *).ui-chat-composer__icon-btn {
   display: grid;
   place-items: center;
-  width: 28px;
-  height: 28px;
-  border-radius: var(--tc-radius-sm);
+  width: var(--tc-control-h-md);
+  height: var(--tc-control-h-md);
+  border-radius: var(--tc-control-radius-md);
   color: var(--tc-icon-muted);
   transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard), transform var(--tc-duration-fast) var(--tc-ease-move);
 }
 :where([data-look="clean"], [data-look="clean"] *).ui-chat-composer__icon-btn svg { width: 16px; height: 16px; }
 :where([data-look="clean"], [data-look="clean"] *).ui-chat-composer__icon-btn svg:not([fill="none"]) { fill: currentColor; }
-:where([data-look="clean"], [data-look="clean"] *).ui-chat-composer__icon-btn:hover { background: var(--tc-fill-subtle); color: var(--tc-text-primary); }
+:where([data-look="clean"], [data-look="clean"] *).ui-chat-composer__icon-btn:hover { background: var(--tc-action-ghost-bg-hover); color: var(--tc-text-primary); }
 :where([data-look="clean"], [data-look="clean"] *).ui-chat-composer__icon-btn:active { transform: scale(0.94); }
 /* Request approval: the tab-button look – a hairline, gray text */
 :where([data-look="clean"], [data-look="clean"] *).ui-chat-composer__approval {
@@ -1574,11 +1575,12 @@ export class TcChatComposer extends TcElement {
   display: inline-flex;
   align-items: center;
   gap: var(--tc-space-1-5);
-  height: 28px;
+  height: var(--tc-control-h-md);
   padding: 0 var(--tc-space-2-5) 0 var(--tc-space-2);
-  border-radius: var(--tc-radius-sm);
+  border-radius: var(--tc-control-radius-md);
   box-shadow: inset 0 0 0 0.5px var(--tc-border-default);
-  font-weight: var(--tc-font-weight-medium);
+  font-size: var(--tc-control-font-size);
+  font-weight: var(--tc-control-font-weight);
   white-space: nowrap;
   color: var(--tc-text-secondary);
   transition: background-color var(--tc-duration-base) var(--tc-ease-standard), box-shadow var(--tc-duration-base) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard);
@@ -1603,17 +1605,18 @@ export class TcChatComposer extends TcElement {
   display: inline-flex;
   align-items: center;
   gap: var(--tc-space-1);
-  height: 28px;
+  height: var(--tc-control-h-md);
   padding: 0 var(--tc-space-1-5) 0 var(--tc-space-2);
   overflow: clip;
-  border-radius: var(--tc-radius-sm);
-  font-weight: var(--tc-font-weight-medium);
+  border-radius: var(--tc-control-radius-md);
+  font-size: var(--tc-control-font-size);
+  font-weight: var(--tc-control-font-weight);
   white-space: nowrap;
-  color: var(--tc-text-secondary);
+  color: var(--tc-action-ghost-fg);
   transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard), transform var(--tc-duration-fast) var(--tc-ease-move);
 }
 :where([data-look="clean"], [data-look="clean"] *).ui-chat-composer__model:hover,
-:where([data-look="clean"], [data-look="clean"] *).ui-chat-composer__model[aria-expanded="true"] { background: var(--tc-fill-subtle); color: var(--tc-text-primary); }
+:where([data-look="clean"], [data-look="clean"] *).ui-chat-composer__model[aria-expanded="true"] { background: var(--tc-action-ghost-bg-hover); color: var(--tc-text-primary); }
 :where([data-look="clean"], [data-look="clean"] *).ui-chat-composer__model:active { transform: scale(0.97); }
 :where([data-look="clean"], [data-look="clean"] *).ui-chat-composer__model-face { display: inline-flex; align-items: center; gap: var(--tc-space-1-5); }
 :where([data-look="clean"], [data-look="clean"] *).ui-chat-composer__model-face[data-morph] { animation: ui-chat-composer-model-in-clean var(--tc-duration-slower) var(--tc-ease-move) both; }
@@ -1628,10 +1631,10 @@ export class TcChatComposer extends TcElement {
   display: grid;
   place-items: center;
   flex: none;
-  width: 28px;
-  height: 28px;
+  width: var(--tc-control-h-md);
+  height: var(--tc-control-h-md);
   margin-left: var(--tc-space-0-5);
-  border-radius: var(--tc-radius-sm);
+  border-radius: var(--tc-control-radius-md);
   background: var(--tc-action-primary-bg) !important;
   color: var(--tc-action-primary-fg);
   transition: background-color var(--tc-duration-base) var(--tc-ease-standard), color var(--tc-duration-base) var(--tc-ease-standard), transform var(--tc-duration-fast) var(--tc-ease-move);
@@ -1650,9 +1653,9 @@ export class TcChatComposer extends TcElement {
 :where([data-look="clean"], [data-look="clean"] *).ui-chat-composer__button {
   display: grid;
   place-items: center;
-  width: 28px;
-  height: 28px;
-  border-radius: var(--tc-radius-sm);
+  width: var(--tc-control-h-md);
+  height: var(--tc-control-h-md);
+  border-radius: var(--tc-control-radius-md);
   background: var(--tc-action-secondary-bg) !important;
   box-shadow: var(--tc-action-secondary-shadow);
   color: var(--tc-action-secondary-fg);

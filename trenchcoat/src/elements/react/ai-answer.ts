@@ -27,20 +27,25 @@ export type AIAnswerProps = Omit<
   RawAIAnswerProps,
   "sources" | "feedback" | "animated" | "onCopy" | "onTcFeedbackChange" | "onTcFeedback" | "onTcFollowUp" | "onTcStop" | "onTcCopy"
 > & {
+  /** The sources the answer cites, numbered from 1 in the order given – [1] in the answer is the first */
   sources: AnswerSource[];
   /** Stream the text in; false shows it at once */
   animate?: boolean;
   /** The answer text – may grow while `streaming` is true */
   answer: string;
+  /** Called with the follow-up question that was picked */
   onFollowUp?: (question: string) => void;
+  /** Stop was pressed while the answer was being written */
   onStop?: () => void;
   /** A thumb up, or a thumbs down once its reason is picked */
   onFeedback?: (value: "up" | "down", reason?: string) => void;
   /** The verdict shown – controlled when defined (null: none) */
   feedback?: AnswerFeedback | null;
+  /** The verdict on mount when `feedback` isn't controlled */
   defaultFeedback?: AnswerFeedback | null;
   /** Every change of the verdict, including clearing it and a new answer starting over */
   onFeedbackChange?: (feedback: AnswerFeedback | null) => void;
+  /** Called with the copied text once the answer is on the clipboard */
   onCopy?: (text: string) => void;
 };
 

@@ -4,6 +4,7 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { live } from "lit/directives/live.js";
 import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import type { Look } from "./internal/look";
 import { FocusRescueController, rescueFocus } from "./internal/controllers";
 
@@ -97,6 +98,7 @@ export class TcIntegrationSettings extends TcElement {
   @property({ attribute: false }) accessor values: Partial<IntegrationValues> = {};
   /** Helper text under the address field */
   @property({ attribute: "site-hint" }) accessor siteHint = "Your store's primary domain, without https://";
+  /** The time zones the picker offers, as labels like "(GMT +01:00) Berlin" – the first is the default */
   @property({ attribute: false }) accessor timeZones: string[] = defaultZones;
   /** Creates a key; without it a random `sk_demo_…` key is made up (and warns once, unless `demo` is set) */
   @property({ attribute: false }) accessor generateKey: IntegrationKeyGenerator | undefined = undefined;
@@ -523,31 +525,33 @@ export class TcIntegrationSettings extends TcElement {
       </div>
     </div>`;
 
+    // The header (.tc-head): on the tray above the card in Standard, the card's first row in Clean
     return html`
-      <header class="ui-is__head">
-        <span class="ui-is__logo">${this.logo ? this.logo.cloneNode(true) : nothing}</span>
-        <span class="ui-is__who">
-          <span class="ui-is__name">
-            <span class="ui-is__name-text">${this.name}</span>
-            ${this.count !== undefined && this.count !== null ? html`<span class="ui-is__count">${INTEGER.format(this.count)}</span>` : nothing}
-          </span>
-          <span class="ui-is__meta" data-error=${ifDefined(this.toggleError ? "" : undefined)} role=${ifDefined(this.toggleError ? "alert" : undefined)}>
-            ${this.toggleError || (values.enabled ? (this.meta ?? "") : "Paused – no data is synced")}
-          </span>
-        </span>
-        <button
-          type="button"
-          role="switch"
-          aria-checked=${values.enabled ? "true" : "false"}
-          .ariaBusy=${this.toggling ? "true" : null}
-          aria-label=${`${this.name} sync`}
-          class="ui-is__switch"
-          data-pending=${ifDefined(this.toggling ? "true" : undefined)}
-          @click=${this.toggle}
-        >
-          <span></span>
-        </button>
-      </header>
+      ${cardHead({
+        icon: this.logo
+          ? (this.logo.cloneNode(true) as Element)
+          : svg`<path d="M12 22v-5"/><path d="M9 8V2"/><path d="M15 8V2"/><path d="M18 8v5a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V8Z"/>`,
+        title: this.name,
+        subtitle:
+          this.toggleError || (values.enabled ? this.meta : "Paused – no data is synced")
+            ? html`<span class="ui-is__meta" data-error=${ifDefined(this.toggleError ? "" : undefined)} role=${ifDefined(this.toggleError ? "alert" : undefined)}
+                >${this.toggleError || (values.enabled ? (this.meta ?? "") : "Paused – no data is synced")}</span
+              >`
+            : undefined,
+        aside: html`${this.count !== undefined && this.count !== null ? html`<span class="ui-is__count">${INTEGER.format(this.count)}</span>` : nothing}
+          <button
+            type="button"
+            role="switch"
+            aria-checked=${values.enabled ? "true" : "false"}
+            .ariaBusy=${this.toggling ? "true" : null}
+            aria-label=${`${this.name} sync`}
+            class="ui-is__switch"
+            data-pending=${ifDefined(this.toggling ? "true" : undefined)}
+            @click=${this.toggle}
+          >
+            <span></span>
+          </button>`,
+      })}
       <div class="ui-is__fold" data-open=${ifDefined(values.enabled ? "true" : undefined)} .inert=${!values.enabled}>
         <div class="ui-is__fold-inner">${clean ? sections : html`<div class="ui-is__card">${sections}</div>`}${saveBar}</div>
       </div>
@@ -565,7 +569,9 @@ export class TcIntegrationSettings extends TcElement {
   padding: var(--tc-tray-inset);
   border-radius: var(--tc-tray-radius);
   background: var(--tc-surface-tray);
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--tc-font-sans);
+  font-size: var(--tc-font-size-md);
+  line-height: var(--tc-line-height-normal);
   color: var(--tc-text-primary);
   -webkit-font-smoothing: antialiased;
 }
@@ -588,37 +594,11 @@ export class TcIntegrationSettings extends TcElement {
   -webkit-font-smoothing: antialiased;
 }
 [data-ui="is"] *, [data-ui="is"] *::before, [data-ui="is"] *::after { box-sizing: border-box; }
-:where([data-look="standard"], [data-look="standard"] *)[data-ui="is"] button { margin: 0; font: inherit; color: inherit; cursor: pointer; }
+:where([data-look="standard"], [data-look="standard"] *):where([data-ui="is"]) button { margin: 0; font: inherit; color: inherit; cursor: pointer; }
 [data-ui="is"] button:focus-visible { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
-:where([data-look="standard"], [data-look="standard"] *).ui-is__head { display: flex; align-items: center; gap: var(--tc-space-3-5); padding: var(--tc-space-3-5) var(--tc-space-4) var(--tc-space-3-5) var(--tc-space-3-5); }
-:where([data-look="standard"], [data-look="standard"] *).ui-is__logo {
-  display: grid;
-  place-items: center;
-  flex: none;
-  width: 40px;
-  height: 40px;
-  border-radius: var(--tc-radius-xl);
-  background: var(--tc-surface-raised);
-  box-shadow: var(--tc-shadow-raised);
-}
 :where([data-look="clean"], [data-look="clean"] *):where([data-ui="is"]) button { margin: 0; padding: 0; border: 0; background: none; font: inherit; color: inherit; cursor: pointer; }
 :where([data-look="clean"], [data-look="clean"] *):where([data-ui="is"]) svg { display: block; flex: none; }
-/* Header: logo tile, name with count, meta line and the switch */
-:where([data-look="clean"], [data-look="clean"] *).ui-is__head { display: flex; align-items: center; gap: var(--tc-space-3); padding: var(--tc-space-4); }
-:where([data-look="clean"], [data-look="clean"] *).ui-is__logo {
-  display: grid;
-  place-items: center;
-  flex: none;
-  width: 40px;
-  height: 40px;
-  border-radius: var(--tc-radius-md);
-  background: var(--tc-surface-raised);
-  box-shadow: var(--tc-shadow-raised);
-}
-.ui-is__logo svg { width: 22px; height: 22px; }
-.ui-is__who { display: grid; flex: 1; min-width: 0; }
-:where([data-look="standard"], [data-look="standard"] *).ui-is__name { display: inline-flex; align-items: center; gap: var(--tc-space-2); font-size: var(--tc-font-size-lg-plus); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-relaxed); }
-/* Count: the pill pattern */
+/* Count: the pill pattern, in the header's aside */
 .ui-is__count {
   display: inline-flex;
   align-items: center;
@@ -633,7 +613,6 @@ export class TcIntegrationSettings extends TcElement {
   font-variant-numeric: tabular-nums;
   color: var(--tc-text-secondary);
 }
-:where([data-look="standard"], [data-look="standard"] *).ui-is__meta { overflow: hidden; font-size: var(--tc-font-size-md); line-height: var(--tc-line-height-normal); white-space: nowrap; text-overflow: ellipsis; color: var(--tc-text-muted); }
 /* The switch pattern; the off track is --tc-switch-off (≥ 3:1), on is the accent */
 .ui-is__switch {
   position: relative;
@@ -664,9 +643,6 @@ export class TcIntegrationSettings extends TcElement {
 .ui-is__switch::after { content: ""; position: absolute; inset: -8px -6px; }
 /* Switching off folds the settings away */
 :where([data-look="standard"], [data-look="standard"] *).ui-is__fold { display: grid; grid-template-rows: 0fr; transition: grid-template-rows var(--tc-duration-slower) var(--tc-ease-move), opacity var(--tc-duration-moderate) var(--tc-ease-standard); opacity: 0; }
-:where([data-look="clean"], [data-look="clean"] *).ui-is__name { display: flex; align-items: center; gap: var(--tc-space-2); min-width: 0; font-size: var(--tc-font-size-lg-plus); line-height: var(--tc-line-height-loose); font-weight: var(--tc-font-weight-medium); color: var(--tc-text-strong); }
-:where([data-look="clean"], [data-look="clean"] *).ui-is__name-text { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="clean"], [data-look="clean"] *).ui-is__meta { overflow: hidden; font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); white-space: nowrap; text-overflow: ellipsis; color: var(--tc-text-muted); }
 /* A small switch: 28×16, white knob with the card shadow */
 /* Switching off folds the settings away – only this part animates, the header stays */
 :where([data-look="clean"], [data-look="clean"] *).ui-is__fold { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows var(--tc-duration-slower) var(--tc-ease-move), opacity var(--tc-duration-moderate) var(--tc-ease-standard); }
@@ -736,7 +712,7 @@ export class TcIntegrationSettings extends TcElement {
   flex: 1;
   min-width: 0;
   overflow: hidden;
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family: var(--tc-font-mono);
   font-size: var(--tc-font-size-sm);
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -798,7 +774,7 @@ export class TcIntegrationSettings extends TcElement {
   flex: 1;
   min-width: 0;
   overflow: hidden;
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family: var(--tc-font-mono);
   font-size: var(--tc-font-size-sm);
   line-height: var(--tc-line-height-tight);
   white-space: nowrap;
@@ -1033,9 +1009,6 @@ export class TcIntegrationSettings extends TcElement {
 @keyframes ui-is-window-copy { from { transform: translateX(40%); } to { transform: translateX(-100%); } }
 /* Narrow (phones): tighter padding, the key row keeps its buttons */
 @container (max-width: 400px) {
-:where([data-look="clean"], [data-look="clean"] *).ui-is__head { gap: var(--tc-space-2-5); padding: var(--tc-space-3-5) var(--tc-space-3-5) var(--tc-space-3-5) var(--tc-space-3); }
-:where([data-look="clean"], [data-look="clean"] *).ui-is__logo { width: 36px; height: 36px; }
-:where([data-look="clean"], [data-look="clean"] *).ui-is__logo svg { width: 20px; height: 20px; }
 :where([data-look="clean"], [data-look="clean"] *).ui-is__section { padding: var(--tc-space-3) var(--tc-space-3) var(--tc-space-3-5); }
 :where([data-look="clean"], [data-look="clean"] *).ui-is__regen { min-width: 0; }
 :where([data-look="clean"], [data-look="clean"] *).ui-is__save-inner { padding: 0 var(--tc-space-2-5) 0 var(--tc-space-3); }

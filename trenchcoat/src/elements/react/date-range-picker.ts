@@ -30,11 +30,13 @@ export type DateRangePickerProps = Omit<RawDateRangePickerProps, "value" | "open
   /** The applied comparison. Controlled when defined (changes come through onChange's third argument); otherwise
    *  starts at `defaultCompare` */
   compareMode?: CompareMode;
+  /** The comparison applied at first when `compareMode` isn't controlled – defaults to "previous" */
   defaultCompare?: CompareMode;
   /** Whether the panel is open. Controlled when defined; otherwise starts at `defaultOpen` */
   open?: boolean;
   /** Open the panel right away – nice for previews */
   defaultOpen?: boolean;
+  /** Called whenever the panel opens or closes, controlled or not */
   onOpenChange?: (open: boolean) => void;
 };
 

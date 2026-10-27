@@ -4,6 +4,7 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { repeat } from "lit/directives/repeat.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController, OnScreenController, rescueFocus } from "./internal/controllers";
 import type { Look } from "./internal/look";
 
@@ -392,7 +393,8 @@ const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
 /* ---------- Icons ---------- */
 
 /* A small network: the title mark */
-const graphMark = html`<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">${svg`<path d="M8 8.4 3.2 4M8 8.4l5-4.2M8 8.4l4.4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity="0.5"></path><circle cx="8" cy="8.4" r="2.4" fill="currentColor"></circle><circle cx="3.2" cy="4" r="1.6" fill="currentColor"></circle><circle cx="13" cy="4.2" r="1.6" fill="currentColor"></circle><circle cx="12.4" cy="12.4" r="1.6" fill="currentColor"></circle>`}</svg>`;
+// The header icon: a small network – a hub and the nodes it links to
+const graphIcon = svg`<circle cx="12" cy="5" r="2.5"></circle><circle cx="5" cy="18" r="2.5"></circle><circle cx="19" cy="18" r="2.5"></circle><path d="M10.8 7.2 6.2 15.8M13.2 7.2l4.6 8.6M7.5 18h9"></path>`;
 /* user, x, arrow-right, arrow-left, check, and the marks of circle-alert and clock without their circle (the badge draws it): Lucide (ISC, lucide.dev) */
 const userIcon = html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${svg`<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle>`}</svg>`;
 const closeIcon = html`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${svg`<path d="M18 6 6 18"></path><path d="m6 6 12 12"></path>`}</svg>`;
@@ -586,6 +588,7 @@ let instances = 0;
 export class TcAgentGraph extends TcElement {
   static override ui = "agg";
 
+  /** The agents, tools and people in the graph – the lead agent in the middle, the other agents around it, the rest outside */
   @property({ attribute: false }) accessor nodes: GraphNode[] = [];
   /** Recent calls, newest last – every new id sends a pulse. Calls also draw the links they need */
   @property({ attribute: false }) accessor calls: GraphCall[] = [];
@@ -1392,25 +1395,32 @@ export class TcAgentGraph extends TcElement {
     const heading = this.heading;
     const paused = this.paused;
     const id = this.cardId;
+    const narrow = layout.narrow;
+    const clean = look === "clean";
+    const sum = html`<span class="ui-agg__sum">
+      <span><b>${agents.length}</b> ${agents.length === 1 ? "agent" : "agents"}</span>
+      <span><b>${tools.length}</b> ${tools.length === 1 ? "tool" : "tools"}</span>
+      <span><b>${index.perMinute}</b> calls/min</span>
+      <span class="ui-agg__sum-cost">${this.formatCost(total)}</span>
+    </span>`;
+    const still = html`<button type="button" class="ui-agg__still" aria-pressed=${paused ? "true" : "false"} aria-label="Pause motion" title=${paused ? "Resume motion" : "Pause motion"} @click=${() => this.togglePaused()}>
+      ${paused ? playIcon : pauseIcon}
+    </button>`;
+    // The header: the title, and the chips and totals on its right. Narrow, the chips and totals get a row of their
+    // own under it, so a chip coming and going never moves the graph and the title keeps its room
+    const head = html`${cardHead({
+        icon: graphIcon,
+        title: heading,
+        aside: narrow ? still : html`${this.alerts(waiting, failed, false)}${sum}${still}`,
+      })}
+      ${narrow ? html`<div class="ui-agg__bar">${this.alerts(waiting, failed, true)}${sum}</div>` : nothing}
+      <span class="ui-agg__sr" role="status">${alertText}</span>`;
 
     return html`
-      <header class="ui-agg__bar">
-        <span class="ui-agg__mark">${graphMark}</span>
-        <span class="ui-agg__title">${heading}</span>
-        ${this.alerts(waiting, failed, layout.narrow)}
-        <span class="ui-agg__sum">
-          <span><b>${agents.length}</b> ${agents.length === 1 ? "agent" : "agents"}</span>
-          <span><b>${tools.length}</b> ${tools.length === 1 ? "tool" : "tools"}</span>
-          <span><b>${index.perMinute}</b> calls/min</span>
-          <span class="ui-agg__sum-cost">${this.formatCost(total)}</span>
-        </span>
-        <button type="button" class="ui-agg__still" aria-pressed=${paused ? "true" : "false"} aria-label="Pause motion" title=${paused ? "Resume motion" : "Pause motion"} @click=${() => this.togglePaused()}>
-          ${paused ? playIcon : pauseIcon}
-        </button>
-        <span class="ui-agg__sr" role="status">${alertText}</span>
-      </header>
+      ${clean ? nothing : head}
 
       <div class="ui-agg__panel">
+        ${clean ? head : nothing}
         <div class="ui-agg__stage" style=${styleMap({ height: ready ? `${this.h}px` : undefined })} role="group" aria-label=${`${heading}: ${agents.length} agents and ${tools.length} tools`}>
           ${ready
             ? html`<svg class="ui-agg__svg" width=${layout.w} height=${layout.h} aria-hidden="true">
@@ -1497,6 +1507,8 @@ export class TcAgentGraph extends TcElement {
   --tc-agent-graph-breath-out: light-dark(rgba(47, 107, 255, 0.03), rgba(110, 168, 255, 0.03));
   --tc-agent-graph-user-bg: var(--tc-surface-inverse);
   --tc-agent-graph-user-fg: var(--tc-text-on-inverse);
+  /* The letters drawn inside a 16px tool icon in the graph – part of the illustration, below the type scale */
+  --tc-agent-graph-glyph-size: 7.5px;
   /* Three layers: the gray tray, the white panel on it and the nodes and cards on the panel (lighter again in dark) */
   --tc-agent-graph-tray-bg: var(--tc-surface-tray);
   --tc-agent-graph-panel-bg: var(--tc-surface-on-tray);
@@ -1514,10 +1526,10 @@ export class TcAgentGraph extends TcElement {
   padding: var(--tc-tray-inset);
   border-radius: var(--tc-tray-radius);
   background: var(--tc-agent-graph-tray-bg);
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-lg);
   line-height: var(--tc-line-height-normal);
-  letter-spacing: -0.006em;
+  letter-spacing: var(--tc-tracking-normal);
   color: var(--tc-text-muted);
   text-align: left;
   -webkit-font-smoothing: antialiased;
@@ -1561,26 +1573,19 @@ export class TcAgentGraph extends TcElement {
 [data-ui="agg"] button:focus-visible { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
 [data-ui="agg"] p, [data-ui="agg"] ul { margin: 0; padding: 0; }
 [data-ui="agg"] svg { display: block; flex: none; overflow: visible; }
-/* ----- The bar: title and the whole run in numbers, on the tray ----- */
-:where([data-look="standard"], [data-look="standard"] *).ui-agg__bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-1) var(--tc-space-2); min-width: 0; padding: var(--tc-space-2) var(--tc-space-3) var(--tc-space-2) var(--tc-space-3); }
-/* ----- The bar: title and the whole run in numbers, above the panel ----- */
-:where([data-look="clean"], [data-look="clean"] *).ui-agg__bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-1) var(--tc-space-2); min-width: 0; margin-bottom: var(--tc-space-4); }
-.ui-agg__mark { display: grid; flex: none; place-items: center; width: 16px; color: var(--tc-agent-graph-pulse); }
-:where([data-look="standard"], [data-look="standard"] *).ui-agg__title { flex: none; font-weight: var(--tc-font-weight-semibold); color: var(--tc-text-primary); }
+/* ----- Narrow: the chips and the totals in a row under the header ----- */
+.ui-agg__bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-1-5) var(--tc-space-2); min-width: 0; }
+:where([data-look="standard"], [data-look="standard"] *).ui-agg__bar { padding: 0 var(--tc-space-3) var(--tc-space-2-5); }
+:where([data-look="clean"], [data-look="clean"] *).ui-agg__bar { padding: 0 var(--tc-space-4) var(--tc-space-3); }
 :where([data-look="standard"], [data-look="standard"] *).ui-agg__sum { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: var(--tc-space-0-5) var(--tc-space-3-5); margin-left: auto; font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-snug); color: var(--tc-text-muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
 :where([data-look="standard"], [data-look="standard"] *).ui-agg__sum b { font-weight: var(--tc-font-weight-semibold); color: var(--tc-text-primary); }
 :where([data-look="standard"], [data-look="standard"] *).ui-agg__sum-cost { min-width: 42px; font-weight: var(--tc-font-weight-semibold); color: var(--tc-text-primary); text-align: right; }
-:where([data-look="clean"], [data-look="clean"] *).ui-agg__title { flex: none; font-weight: var(--tc-font-weight-medium); color: var(--tc-text-strong); }
 :where([data-look="clean"], [data-look="clean"] *).ui-agg__sum { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: var(--tc-space-0-5) var(--tc-space-3); margin-left: auto; font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); color: var(--tc-text-muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
 :where([data-look="clean"], [data-look="clean"] *).ui-agg__sum b { font-weight: var(--tc-font-weight-medium); color: var(--tc-text-primary); }
 :where([data-look="clean"], [data-look="clean"] *).ui-agg__sum-cost { min-width: 40px; font-weight: var(--tc-font-weight-medium); color: var(--tc-text-primary); text-align: right; }
-/* Narrow: the numbers get a line of their own, so a chip coming and going never moves the graph */
-[data-ui="agg"][data-narrow] .ui-agg__bar { row-gap: var(--tc-space-1-5); }
-:where([data-look="standard"], [data-look="standard"] *)[data-ui="agg"][data-narrow] .ui-agg__title { line-height: var(--tc-line-height-loose); }
 :where([data-look="standard"], [data-look="standard"] *)[data-ui="agg"][data-narrow] .ui-agg__sum { flex-basis: 100%; justify-content: space-between; gap: var(--tc-space-0-5) var(--tc-space-2); margin-left: 0; font-size: var(--tc-font-size-sm); }
 /* ----- The white panel with the graph ----- */
 :where([data-look="standard"], [data-look="standard"] *).ui-agg__panel { position: relative; overflow: hidden; border-radius: var(--tc-card-radius); background: var(--tc-agent-graph-panel-bg); box-shadow: var(--tc-card-shadow); }
-:where([data-look="clean"], [data-look="clean"] *)[data-ui="agg"][data-narrow] .ui-agg__title { line-height: var(--tc-line-height-relaxed); }
 :where([data-look="clean"], [data-look="clean"] *)[data-ui="agg"][data-narrow] .ui-agg__sum { flex-basis: 100%; justify-content: space-between; gap: var(--tc-space-0-5) var(--tc-space-2); margin-left: 0; }
 /* ----- The white panel with the graph ----- */
 :where([data-look="clean"], [data-look="clean"] *).ui-agg__panel { position: relative; overflow: hidden; border-radius: var(--tc-card-radius); background: var(--tc-surface-raised); box-shadow: var(--tc-card-shadow); }
@@ -1707,7 +1712,7 @@ export class TcAgentGraph extends TcElement {
 [data-ui="agg"][data-narrow] .ui-agg__ring { --tc-agent-graph-b1: 4px; --tc-agent-graph-b2: 9px; }
 [data-ui="agg"][data-narrow] .ui-agg__label { padding: 0 var(--tc-space-1); }
 :where([data-look="standard"], [data-look="standard"] *)[data-ui="agg"][data-narrow] .ui-agg__node[data-kind="agent"] .ui-agg__name { font-size: var(--tc-font-size-xs); }
-:where([data-look="standard"], [data-look="standard"] *)[data-ui="agg"][data-narrow] .ui-agg__line { font-size: 10.5px; line-height: 13px; }
+:where([data-look="standard"], [data-look="standard"] *)[data-ui="agg"][data-narrow] .ui-agg__line { font-size: var(--tc-font-size-2xs); line-height: 13px; }
 :where([data-look="standard"], [data-look="standard"] *)[data-ui="agg"][data-narrow] .ui-agg__node[data-kind="agent"] .ui-agg__disc { box-shadow: 0 0 0 3px var(--tc-agent-graph-tray-bg), 0 0 0 4px var(--tc-border-default), var(--tc-shadow-raised-hover); }
 /* "needs you" and "failed" – in the bar, a click opens that node's card */
 .ui-agg__alerts { display: flex; flex-wrap: wrap; gap: var(--tc-space-1-5); min-width: 0; }
@@ -1749,21 +1754,18 @@ export class TcAgentGraph extends TcElement {
 .ui-agg__close { margin: -6px -6px -6px -2px; }
 .ui-agg__still { margin: -4px -6px -4px 0; }
 .ui-agg__still[aria-pressed="true"] { color: var(--tc-text-primary); }
-/* Narrow: the numbers wrap to their own line under the title, Pause stays on the first one */
-[data-ui="agg"][data-narrow] .ui-agg__still { margin-left: auto; }
-[data-ui="agg"][data-narrow] .ui-agg__sum { order: 1; }
 :where([data-look="standard"], [data-look="standard"] *).ui-agg__doing { font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); color: var(--tc-text-muted); }
 :where([data-look="standard"], [data-look="standard"] *).ui-agg__calls { display: grid; gap: var(--tc-space-0-5); padding: var(--tc-space-1); border-radius: var(--tc-radius-xl); background: var(--tc-agent-graph-tray-bg); list-style: none; }
 :where([data-look="standard"], [data-look="standard"] *).ui-agg__call { display: flex; align-items: center; gap: var(--tc-space-1-5); min-width: 0; height: 26px; padding: 0 var(--tc-space-1-5); border-radius: var(--tc-radius-md); font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); animation: ui-agg-rise var(--tc-duration-moderate) var(--tc-ease-move) both; }
 :where([data-look="standard"], [data-look="standard"] *).ui-agg__call:first-child { background: var(--tc-agent-graph-card-bg); box-shadow: 0 0 0 1px var(--tc-border-default); }
 :where([data-look="standard"], [data-look="standard"] *).ui-agg__call-dir { display: grid; flex: none; place-items: center; color: var(--tc-text-muted); }
-:where([data-look="standard"], [data-look="standard"] *).ui-agg__call-icon { display: grid; flex: none; place-items: center; width: 16px; height: 16px; font-size: 7.5px; font-weight: var(--tc-font-weight-semibold); color: var(--tc-text-muted); }
+:where([data-look="standard"], [data-look="standard"] *).ui-agg__call-icon { display: grid; flex: none; place-items: center; width: 16px; height: 16px; font-size: var(--tc-agent-graph-glyph-size); font-weight: var(--tc-font-weight-semibold); color: var(--tc-text-muted); }
 :where([data-look="clean"], [data-look="clean"] *).ui-agg__doing { font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); color: var(--tc-text-secondary); }
 :where([data-look="clean"], [data-look="clean"] *).ui-agg__calls { display: grid; border-top: var(--tc-hairline) solid var(--tc-divider); border-bottom: var(--tc-hairline) solid var(--tc-divider); list-style: none; }
 :where([data-look="clean"], [data-look="clean"] *).ui-agg__call { display: flex; align-items: center; gap: var(--tc-space-1-5); min-width: 0; height: 28px; font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); animation: ui-agg-rise var(--tc-duration-moderate) var(--tc-ease-move) both; }
 :where([data-look="clean"], [data-look="clean"] *).ui-agg__call + .ui-agg__call { border-top: var(--tc-hairline) solid var(--tc-divider); }
 :where([data-look="clean"], [data-look="clean"] *).ui-agg__call-dir { display: grid; flex: none; place-items: center; color: var(--tc-icon-muted); }
-:where([data-look="clean"], [data-look="clean"] *).ui-agg__call-icon { display: grid; flex: none; place-items: center; width: 16px; height: 16px; font-size: 7.5px; font-weight: var(--tc-font-weight-medium); color: var(--tc-text-secondary); }
+:where([data-look="clean"], [data-look="clean"] *).ui-agg__call-icon { display: grid; flex: none; place-items: center; width: 16px; height: 16px; font-size: var(--tc-agent-graph-glyph-size); font-weight: var(--tc-font-weight-medium); color: var(--tc-text-secondary); }
 .ui-agg__call-icon > svg { width: 13px; height: 13px; }
 .ui-agg__call-text { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; color: var(--tc-text-muted); }
 .ui-agg__call-who { font-weight: var(--tc-font-weight-medium); color: var(--tc-text-primary); }

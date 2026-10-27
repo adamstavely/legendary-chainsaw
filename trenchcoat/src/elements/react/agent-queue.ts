@@ -48,6 +48,7 @@ export type AgentQueueProps = Omit<
   /** The queue is paused – no new jobs start. Controlled when defined; otherwise the component keeps it, starting
    *  from `defaultPaused` */
   paused?: boolean;
+  /** Whether the queue starts paused when `paused` isn't controlled */
   defaultPaused?: boolean;
   /** Shows a Pause/Resume button, and hears every change */
   onPausedChange?: (paused: boolean) => void;
@@ -58,12 +59,15 @@ export type AgentQueueProps = Omit<
   /** The id of the job whose card is pinned. Controlled when defined (null = none); otherwise the component keeps it,
    *  starting from `defaultOpenId` */
   openId?: string | null;
+  /** The job whose card starts pinned when `openId` isn't controlled */
   defaultOpenId?: string | null;
+  /** Called when a job's card is pinned or closed, with its id (null when closed) and the job */
   onOpenChange?: (id: string | null, job?: QueueJob) => void;
   /** Shows "Move to front" in a waiting job's card */
   onPromote?: (job: QueueJob) => void;
   /** Shows "Cancel" in a waiting or running job's card */
   onCancel?: (job: QueueJob) => void;
+  /** The heading at the top of the card (the element's `heading`) */
   title?: string;
 };
 

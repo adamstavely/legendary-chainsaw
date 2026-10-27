@@ -1,0 +1,338 @@
+{
+ "elements": [
+  {
+   "tag": "tc-ai-answer",
+   "className": "TcAiAnswer",
+   "description": "An assistant's answer with its sources, citation chips, actions, feedback and follow-up questions.",
+   "properties": [
+    {
+     "name": "question",
+     "attribute": "question",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The question above the answer",
+     "readonly": false
+    },
+    {
+     "name": "sources",
+     "attribute": null,
+     "type": "AnswerSource[]",
+     "default": "[]",
+     "description": "The sources the answer cites, numbered from 1 in the order given – [1] in the answer is the first",
+     "readonly": false
+    },
+    {
+     "name": "answer",
+     "attribute": "answer",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The answer text – may grow while `streaming` is set",
+     "readonly": false
+    },
+    {
+     "name": "streaming",
+     "attribute": "streaming",
+     "type": "boolean",
+     "default": "false",
+     "description": "More text is still coming from your model, keep the cursor going",
+     "readonly": false
+    },
+    {
+     "name": "animated",
+     "attribute": null,
+     "type": "boolean",
+     "default": "true",
+     "description": "Stream the text in; false shows it at once",
+     "readonly": false
+    },
+    {
+     "name": "speed",
+     "attribute": "speed",
+     "type": "number",
+     "default": "38",
+     "description": "Words per second while streaming in",
+     "readonly": false
+    },
+    {
+     "name": "followUps",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[]",
+     "description": "Follow-up questions offered under the finished answer",
+     "readonly": false
+    },
+    {
+     "name": "feedback",
+     "attribute": null,
+     "type": "AnswerFeedback | null",
+     "default": "null",
+     "description": "The verdict shown (null: none)",
+     "readonly": false
+    },
+    {
+     "name": "feedbackReasons",
+     "attribute": null,
+     "type": "array",
+     "default": "[\"Not accurate\", \"Wrong source\", \"Too long\", \"Out of date\"]",
+     "description": "Reasons offered after a thumbs down",
+     "readonly": false
+    },
+    {
+     "name": "onRegenerate",
+     "attribute": null,
+     "type": "(() => void | Promise<unknown>) | undefined",
+     "default": "undefined",
+     "description": "Regenerate: may return a promise – a rejection shows in the last row, and Regenerate can be tried again",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-feedback-change",
+     "detail": "",
+     "description": "The verdict changes (a thumb, a reason, clearing it, a new answer starting over); detail `{ feedback: AnswerFeedback | null }`. Cancelable: preventDefault() keeps `feedback` as it is (controlled use)",
+     "cancelable": true
+    },
+    {
+     "name": "tc-feedback",
+     "detail": "",
+     "description": "A thumb up, or a thumbs down once its reason is picked; detail `{ value: \"up\" | \"down\", reason?: string }`",
+     "cancelable": false
+    },
+    {
+     "name": "tc-follow-up",
+     "detail": "",
+     "description": "A follow-up question was picked; detail `{ question: string }`",
+     "cancelable": false
+    },
+    {
+     "name": "tc-stop",
+     "detail": "",
+     "description": "Stop was pressed while writing",
+     "cancelable": false
+    },
+    {
+     "name": "tc-copy",
+     "detail": "",
+     "description": "The answer is on the clipboard; detail `{ text: string }`",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "ans",
+   "cssProperties": [
+    {
+     "name": "--tc-ai-answer-shimmer",
+     "value": "light-dark(rgba(255, 255, 255, 0.82), #ffffff)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-ai-answer-source-ring-lit",
+     "value": "light-dark(#cfcfd3, #4a4a50)",
+     "looks": [
+      "standard"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-ai-answer-mark-edge",
+    "--tc-ai-answer-mark-eye-shade",
+    "--tc-border-default",
+    "--tc-border-selected",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-md",
+    "--tc-control-px-sm",
+    "--tc-control-radius-md",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-instant",
+    "--tc-duration-moderate",
+    "--tc-duration-quick",
+    "--tc-duration-reveal-slow",
+    "--tc-duration-shimmer",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-hover",
+    "--tc-fill-selected",
+    "--tc-fill-strong",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-sans",
+    "--tc-font-size-2xs",
+    "--tc-font-size-lg",
+    "--tc-font-size-lg-plus",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-line-height-tight",
+    "--tc-menu-bg",
+    "--tc-menu-item-radius",
+    "--tc-menu-padding",
+    "--tc-menu-radius",
+    "--tc-menu-shadow",
+    "--tc-pill-font-size",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-2xs",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-radius-xl",
+    "--tc-radius-xs",
+    "--tc-shadow-raised",
+    "--tc-shadow-raised-hover",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-4-5",
+    "--tc-space-5",
+    "--tc-space-6",
+    "--tc-status-success-fg",
+    "--tc-status-success-solid",
+    "--tc-surface-inverse",
+    "--tc-surface-raised",
+    "--tc-surface-sunken",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-on-inverse",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tracking-caps",
+    "--tc-tray-inset",
+    "--tc-tray-radius",
+    "--tc-z-dropdown"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "AIAnswer",
+   "exported": true,
+   "props": [
+    {
+     "name": "sources",
+     "type": "AnswerSource[]",
+     "optional": false,
+     "description": "The sources the answer cites, numbered from 1 in the order given – [1] in the answer is the first"
+    },
+    {
+     "name": "animate",
+     "type": "boolean",
+     "optional": true,
+     "description": "Stream the text in; false shows it at once"
+    },
+    {
+     "name": "answer",
+     "type": "string",
+     "optional": false,
+     "description": "The answer text – may grow while `streaming` is true"
+    },
+    {
+     "name": "onFollowUp",
+     "type": "(question: string) => void",
+     "optional": true,
+     "description": "Called with the follow-up question that was picked"
+    },
+    {
+     "name": "onStop",
+     "type": "() => void",
+     "optional": true,
+     "description": "Stop was pressed while the answer was being written"
+    },
+    {
+     "name": "onFeedback",
+     "type": "(value: \"up\" | \"down\", reason?: string) => void",
+     "optional": true,
+     "description": "A thumb up, or a thumbs down once its reason is picked"
+    },
+    {
+     "name": "feedback",
+     "type": "AnswerFeedback | null",
+     "optional": true,
+     "description": "The verdict shown – controlled when defined (null: none)"
+    },
+    {
+     "name": "defaultFeedback",
+     "type": "AnswerFeedback | null",
+     "optional": true,
+     "description": "The verdict on mount when `feedback` isn't controlled"
+    },
+    {
+     "name": "onFeedbackChange",
+     "type": "(feedback: AnswerFeedback | null) => void",
+     "optional": true,
+     "description": "Every change of the verdict, including clearing it and a new answer starting over"
+    },
+    {
+     "name": "onCopy",
+     "type": "(text: string) => void",
+     "optional": true,
+     "description": "Called with the copied text once the answer is on the clipboard"
+    }
+   ],
+   "hides": [
+    "sources",
+    "feedback",
+    "animated",
+    "onCopy"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 66435,
+  "gzip": 16230
+ }
+}

@@ -6,6 +6,7 @@ import { live } from "lit/directives/live.js";
 import { repeat } from "lit/directives/repeat.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController, OffScreenController } from "./internal/controllers";
 
 /*
@@ -13,7 +14,8 @@ import { FocusRescueController, OffScreenController } from "./internal/controlle
  * generates, with its progress when the app knows it), done or failed (with Try again). A done tile has a floating
  * row of actions – Regenerate, Upscale, Compare, Download – and an alt-text line under it that is required and
  * editable. Compare puts two tiles on top of each other with a divider you drag (or move with the arrow keys) to wipe
- * from one to the other. Clean drops the gray tray: one white card whose last row holds the summary.
+ * from one to the other. Standard puts the header on a gray tray, then the white card, then the summary on the tray.
+ * Clean drops the tray: one white card whose first row is the header and whose last row holds the summary.
  *
  *   <tc-image-grid heading="Lighthouse at dusk" .tiles=${tiles} @tc-regenerate=${(e) => regenerate(e.detail.tile)}></tc-image-grid>
  *
@@ -751,14 +753,17 @@ export class TcImageGrid extends TcElement {
     const look = this.resolvedLook;
     const clean = look === "clean";
     const pair = this.pair;
-    const head = html`<div class="ui-igrid__head">
-      <div class="ui-igrid__title" id=${`${this.uid}-title`}>${this.heading}</div>
-      ${this.prompt ? html`<div class="ui-igrid__prompt" id=${`${this.uid}-prompt`}>${this.prompt}</div>` : nothing}
-    </div>`;
+    // The header (.tc-head): on the tray above the card in Standard, the card's first row in Clean
+    const head = cardHead({
+      icon: svg`<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.09-3.09a2 2 0 0 0-2.82 0L6 21"/>`,
+      title: this.heading,
+      id: `${this.uid}-title`,
+      subtitle: this.prompt ? html`<span class="ui-igrid__prompt" id=${`${this.uid}-prompt`}>${this.prompt}</span>` : undefined,
+    });
     const body = html`<div class="ui-igrid__body">${pair ? this.renderCompare(pair) : this.renderGrid()}</div>`;
     const foot = this.renderFoot(pair);
     return html`
-      ${clean ? html`<div class="ui-igrid__card">${head}${body}${foot}</div>` : html`<div class="ui-igrid__card">${head}${body}</div>${foot}`}
+      ${clean ? html`<div class="ui-igrid__card">${head}${body}${foot}</div>` : html`${head}<div class="ui-igrid__card">${body}</div>${foot}`}
       <span class="ui-igrid__sr" id=${`${this.uid}-keys`}>Enter for actions, F2 to edit alt text, R regenerate, U upscale, C compare, D download</span>
       <span class="ui-igrid__sr" role="status">${this.said}</span>
     `;
@@ -768,7 +773,7 @@ export class TcImageGrid extends TcElement {
 /* Colors and motion as variables – override them on [data-ui="igrid"] */
 :where([data-look="standard"], [data-look="standard"] *)[data-ui="igrid"] {
   /* The empty and pending tiles: a faint well */
-  --tc-image-grid-well: light-dark(#f4f4f5, #222225);
+  --tc-image-grid-well: var(--tc-surface-well);
   box-sizing: border-box;
   container-type: inline-size;
   display: grid;
@@ -776,10 +781,11 @@ export class TcImageGrid extends TcElement {
   width: 100%;
   max-width: 560px;
   min-width: 0;
-  padding: var(--tc-space-1);
-  border-radius: var(--tc-radius-3xl);
-  background: var(--tc-surface-sunken);
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  /* A gray tray: the header on it, the white card, the summary below */
+  padding: var(--tc-tray-inset);
+  border-radius: var(--tc-tray-radius);
+  background: var(--tc-surface-tray);
+  font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-md);
   line-height: var(--tc-line-height-normal);
   color: var(--tc-text-secondary);
@@ -817,15 +823,11 @@ export class TcImageGrid extends TcElement {
 :where([data-look="standard"], [data-look="standard"] *).ui-igrid__card { min-width: 0; border-radius: var(--tc-radius-2xl); background: var(--tc-surface-raised); box-shadow: var(--tc-shadow-raised); }
 /* One white card – the edge is a shadow, not a border; the last row sits inside it */
 :where([data-look="clean"], [data-look="clean"] *).ui-igrid__card { min-width: 0; overflow: hidden; border-radius: var(--tc-radius-lg); background: var(--tc-surface-raised); box-shadow: var(--tc-shadow-raised); }
-/* ----- Heading and prompt ----- */
-:where([data-look="standard"], [data-look="standard"] *).ui-igrid__head { padding: var(--tc-space-3) var(--tc-space-3-5) 0; }
-:where([data-look="clean"], [data-look="clean"] *).ui-igrid__head { padding: var(--tc-space-3) var(--tc-space-3) 0; }
-:where([data-look="standard"], [data-look="standard"] *).ui-igrid__title { overflow: hidden; font-weight: var(--tc-font-weight-medium); color: var(--tc-text-primary); white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="clean"], [data-look="clean"] *).ui-igrid__title { overflow: hidden; font-weight: var(--tc-font-weight-medium); color: var(--tc-text-strong); white-space: nowrap; text-overflow: ellipsis; }
-.ui-igrid__prompt { display: -webkit-box; margin-top: var(--tc-space-0-5); overflow: hidden; font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-snug); color: var(--tc-text-muted); -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+/* The prompt under the header's title: two lines at most */
+.ui-igrid__prompt { display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
 /* ----- The grid ----- */
 :where([data-look="standard"], [data-look="standard"] *).ui-igrid__body { padding: var(--tc-space-3) var(--tc-space-2) var(--tc-space-2); }
-:where([data-look="clean"], [data-look="clean"] *).ui-igrid__body { padding: var(--tc-space-3) var(--tc-space-3) var(--tc-space-2); }
+:where([data-look="clean"], [data-look="clean"] *).ui-igrid__body { padding: 0 var(--tc-space-3) var(--tc-space-2); }
 :where([data-look="standard"], [data-look="standard"] *).ui-igrid__grid { display: grid; gap: var(--tc-space-2); }
 :where([data-look="clean"], [data-look="clean"] *).ui-igrid__grid { display: grid; gap: var(--tc-space-2-5); }
 :where([data-look="standard"], [data-look="standard"] *).ui-igrid__row { display: grid; grid-template-columns: repeat(var(--tc-image-grid-cols, 2), minmax(0, 1fr)); gap: var(--tc-space-2); }
@@ -941,7 +943,6 @@ export class TcImageGrid extends TcElement {
   /* The actions share the tile's width instead of running past its edge */
   .ui-igrid__tools { top: var(--tc-space-1-5); right: var(--tc-space-1-5); max-width: calc(100% - var(--tc-space-1-5) * 2); }
   .ui-igrid__state { padding: 0 var(--tc-space-2); }
-  :where([data-look="standard"], [data-look="standard"] *).ui-igrid__head { padding: var(--tc-space-3) var(--tc-space-3) 0; }
   /* The summary wraps rather than clipping next to the buttons */
   .ui-igrid__foot { padding-top: var(--tc-space-1-5); padding-bottom: var(--tc-space-1-5); }
   .ui-igrid__summary, .ui-igrid__summary > span { white-space: normal; }

@@ -17,7 +17,9 @@ export type SkeletonOwnProps = {
   radius?: number | string;
   /** Round shape, e.g. for avatars – uses width for both sides */
   circle?: boolean;
+  /** Classes on the element */
   className?: string;
+  /** Inline styles on the element – width and height size the block */
   style?: React.CSSProperties;
   /** The placeholder element */
   ref?: React.Ref<TcSkeleton>;
@@ -26,9 +28,11 @@ export type SkeletonOwnProps = {
 export type SkeletonProps = Omit<RawSkeletonProps, keyof SkeletonOwnProps> & SkeletonOwnProps;
 
 export type ShimmerTextOwnProps = {
+  /** The text that shimmers – a string, or React nodes the element clones */
   children: React.ReactNode;
   /** Seconds for one pass of the highlight */
   duration?: number;
+  /** Classes on the element */
   className?: string;
   /** The text element */
   ref?: React.Ref<TcShimmerText>;

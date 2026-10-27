@@ -1,0 +1,347 @@
+{
+ "elements": [
+  {
+   "tag": "tc-project-card",
+   "className": "TcProjectCard",
+   "description": "A project summary with a segmented progress ring that unfolds into its subtasks, people and status.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The project's name",
+     "readonly": false
+    },
+    {
+     "name": "tasks",
+     "attribute": null,
+     "type": "ProjectTask[]",
+     "default": "[]",
+     "description": "Subtasks – one ring segment and one row each",
+     "readonly": false
+    },
+    {
+     "name": "statuses",
+     "attribute": null,
+     "type": "ProjectOption[]",
+     "default": "[ { id: \"todo\", label: \"To do\", tone: \"violet\" }, { id: \"progress\", label: \"In progress\", tone: \"amber\" }, { id: \"review\", label: \"In review\", tone: \"blue\" }, { id: \"done\", label: \"Done\", tone: \"green\" }, ]",
+     "description": "Options of the status picker",
+     "readonly": false
+    },
+    {
+     "name": "status",
+     "attribute": "status",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The chosen status id – unset is the first option",
+     "readonly": false
+    },
+    {
+     "name": "due",
+     "attribute": "due",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Ready-to-show due date, e.g. \"Oct 24\"",
+     "readonly": false
+    },
+    {
+     "name": "members",
+     "attribute": null,
+     "type": "ProjectMember[]",
+     "default": "[]",
+     "description": "The people on the project – avatars in the head that filter the subtasks to theirs",
+     "readonly": false
+    },
+    {
+     "name": "actionLabel",
+     "attribute": "action-label",
+     "type": "string",
+     "default": "\"\"",
+     "description": "A button on the tray of the open card (Clean: in its last row); it fires tc-action",
+     "readonly": false
+    },
+    {
+     "name": "hint",
+     "attribute": null,
+     "type": "string | Element | undefined",
+     "default": "undefined",
+     "description": "Replaces the line on the tray while nothing is hovered: text, or an element (cloned)",
+     "readonly": false
+    },
+    {
+     "name": "trigger",
+     "attribute": "trigger",
+     "type": "\"hover\" | \"click\"",
+     "default": "\"hover\"",
+     "description": "\"hover\" opens under the pointer (taps and the keyboard still toggle), \"click\" only on click",
+     "readonly": false
+    },
+    {
+     "name": "open",
+     "attribute": "open",
+     "type": "boolean",
+     "default": "false",
+     "description": "Whether the card is unfolded, showing the subtasks, the people filter and the tray",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-tasks-change",
+     "detail": "",
+     "description": "A subtask was ticked or unticked; detail `{ tasks: ProjectTask[] }`. Cancelable.",
+     "cancelable": true
+    },
+    {
+     "name": "tc-status-change",
+     "detail": "",
+     "description": "Another status was chosen; detail `{ status: string }`. Cancelable.",
+     "cancelable": true
+    },
+    {
+     "name": "tc-open-change",
+     "detail": "",
+     "description": "The card opens or closes; detail `{ open: boolean }`. Cancelable.",
+     "cancelable": true
+    },
+    {
+     "name": "tc-action",
+     "detail": "",
+     "description": "The action button (`actionLabel`) was pressed",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "pc",
+   "cssProperties": [
+    {
+     "name": "--tc-project-card-track",
+     "value": "light-dark(rgba(0, 0, 0, 0.08), rgba(255, 255, 255, 0.1))",
+     "looks": [
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-project-card-track-hover",
+     "value": "light-dark(rgba(0, 0, 0, 0.2), rgba(255, 255, 255, 0.26))",
+     "looks": [
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-active",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-avatar-font-size",
+    "--tc-avatar-font-weight",
+    "--tc-avatar-sm",
+    "--tc-border-control",
+    "--tc-border-control-hover",
+    "--tc-border-default",
+    "--tc-border-selected",
+    "--tc-border-strong",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-md",
+    "--tc-control-px-sm",
+    "--tc-control-radius-md",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-quick",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-ease-decelerate",
+    "--tc-ease-emphasized",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-hover",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-2xs",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-line-height-none",
+    "--tc-line-height-normal",
+    "--tc-line-height-tight",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-project-card-avatar-bg",
+    "--tc-project-card-avatar-fg",
+    "--tc-project-card-hue",
+    "--tc-project-card-tag-bg",
+    "--tc-project-card-tag-fg",
+    "--tc-radius-2xs",
+    "--tc-radius-badge",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-info-bg",
+    "--tc-status-info-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-subtitle-color",
+    "--tc-subtitle-font-size",
+    "--tc-surface-inverse",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-on-accent",
+    "--tc-text-on-inverse",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-title-color",
+    "--tc-title-font-size",
+    "--tc-title-font-weight",
+    "--tc-title-line-height",
+    "--tc-title-tracking",
+    "--tc-tone-amber-bg",
+    "--tc-tone-amber-fg",
+    "--tc-tone-violet-bg",
+    "--tc-tone-violet-fg",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "ProjectCard",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": false,
+     "description": "The project's name"
+    },
+    {
+     "name": "tasks",
+     "type": "ProjectTask[]",
+     "optional": true,
+     "description": "Subtasks – one ring segment and one row each (controlled): ticks are only reported through `onTasksChange`, so\npass the new list back. Use `defaultTasks` to let the card keep the ticks itself"
+    },
+    {
+     "name": "defaultTasks",
+     "type": "ProjectTask[]",
+     "optional": true,
+     "description": "Starting subtasks when `tasks` isn't controlled"
+    },
+    {
+     "name": "onTasksChange",
+     "type": "(tasks: ProjectTask[]) => void",
+     "optional": true,
+     "description": "Called with the full list after a subtask was ticked or unticked"
+    },
+    {
+     "name": "statuses",
+     "type": "ProjectOption[]",
+     "optional": true,
+     "description": "Options of the status picker"
+    },
+    {
+     "name": "status",
+     "type": "string",
+     "optional": true,
+     "description": "The chosen status id (controlled)"
+    },
+    {
+     "name": "defaultStatus",
+     "type": "string",
+     "optional": true,
+     "description": "Starting status id when `status` isn't controlled – defaults to the first option"
+    },
+    {
+     "name": "onStatusChange",
+     "type": "(id: string) => void",
+     "optional": true,
+     "description": "Called with the id of the status picked"
+    },
+    {
+     "name": "action",
+     "type": "{ label: string; onClick: () => void }",
+     "optional": true,
+     "description": "A button on the tray of the open card (Clean: in its last row), e.g. { label: \"Open\", onClick }"
+    },
+    {
+     "name": "hint",
+     "type": "React.ReactNode",
+     "optional": true,
+     "description": "Replaces the line on the tray (Clean: in the last row) while nothing is hovered"
+    },
+    {
+     "name": "open",
+     "type": "boolean",
+     "optional": true,
+     "description": "Controlled open state"
+    },
+    {
+     "name": "defaultOpen",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether the card starts unfolded when `open` isn't controlled"
+    },
+    {
+     "name": "onOpenChange",
+     "type": "(open: boolean) => void",
+     "optional": true,
+     "description": "Called when the card opens or closes"
+    }
+   ],
+   "hides": [
+    "heading",
+    "tasks",
+    "statuses",
+    "status",
+    "open",
+    "hint",
+    "actionLabel"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 41693,
+  "gzip": 10901
+ }
+}

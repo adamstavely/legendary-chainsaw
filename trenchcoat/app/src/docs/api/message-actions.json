@@ -1,0 +1,439 @@
+{
+ "elements": [
+  {
+   "tag": "tc-message-actions",
+   "className": "TcMessageActions",
+   "description": "The action bar under an AI chat message: copy, regenerate with a version switcher, thumbs with a feedback row, and\nread aloud.",
+   "properties": [
+    {
+     "name": "text",
+     "attribute": "text",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The message text – copied to the clipboard by Copy and used to time Read aloud",
+     "readonly": false
+    },
+    {
+     "name": "actions",
+     "attribute": null,
+     "type": "MessageActionKey[]",
+     "default": "[\"copy\", \"regenerate\", \"feedback\", \"speak\"]",
+     "description": "Which actions to show, in this order",
+     "readonly": false
+    },
+    {
+     "name": "versions",
+     "attribute": null,
+     "type": "number | string[] | undefined",
+     "default": "undefined",
+     "description": "All versions of the message, or just how many there are. From 2 on the version switcher shows",
+     "readonly": false
+    },
+    {
+     "name": "version",
+     "attribute": "version",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The shown version (0-based); unset, the bar keeps it, starting at `defaultVersion` and jumping to new versions",
+     "readonly": false
+    },
+    {
+     "name": "defaultVersion",
+     "attribute": "default-version",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "Starting version while `version` is unset – defaults to the newest",
+     "readonly": false
+    },
+    {
+     "name": "onRegenerate",
+     "attribute": null,
+     "type": "((options: { signal: AbortSignal }) => void | Promise<unknown>) | undefined",
+     "default": "undefined",
+     "description": "Called when Regenerate is pressed – add a version and the switcher jumps to it. Return a promise to keep the arrow\nspinning until it settles; a rejection says \"Couldn't regenerate\". `signal` aborts when the element is removed",
+     "readonly": false
+    },
+    {
+     "name": "regenerating",
+     "attribute": "regenerating",
+     "type": "boolean",
+     "default": "false",
+     "description": "Keeps the regenerate arrow spinning while a new version is written",
+     "readonly": false
+    },
+    {
+     "name": "onFeedback",
+     "attribute": null,
+     "type": "((kind: FeedbackKind | null, reason?: string) => void | Promise<unknown>) | undefined",
+     "default": "undefined",
+     "description": "Called with \"up\" or \"down\" when a thumb is pressed, null when it is taken back, and \"down\" with a reason when the\nfeedback row is sent. Sending may return a promise: \"Thanks!\" shows once it resolves, a rejection lets you send again",
+     "readonly": false
+    },
+    {
+     "name": "feedback",
+     "attribute": null,
+     "type": "FeedbackKind | null | undefined",
+     "default": "undefined",
+     "description": "The vote: \"up\", \"down\" or null for none. Unset, the bar keeps it, starting at `defaultFeedback`",
+     "readonly": false
+    },
+    {
+     "name": "defaultFeedback",
+     "attribute": null,
+     "type": "FeedbackKind | null",
+     "default": "null",
+     "description": "The vote to start with while `feedback` is unset",
+     "readonly": false
+    },
+    {
+     "name": "reasons",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[\"Not accurate\", \"Too long\", \"Didn't follow instructions\", \"Other\"]",
+     "description": "Quick reasons in the feedback row. \"Other\" opens a small text field",
+     "readonly": false
+    },
+    {
+     "name": "ownSpeech",
+     "attribute": "own-speech",
+     "type": "boolean",
+     "default": "false",
+     "description": "Set when you play the audio yourself (listen to tc-speak): the bar then doesn't read `text` with the browser's\nspeech synthesis. Without it (and without `speaking`) the browser reads `text`; where there is none, reading is\nsimulated (and warns once, unless `demo` is set)",
+     "readonly": false
+    },
+    {
+     "name": "speaking",
+     "attribute": "speaking",
+     "type": "boolean | undefined",
+     "default": "undefined",
+     "description": "Controlled playing state, e.g. tied to your speech player",
+     "readonly": false
+    },
+    {
+     "name": "speakDuration",
+     "attribute": "speak-duration",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "How long an uncontrolled read aloud plays when it isn't the browser speaking, in ms – defaults to an estimate from `text`",
+     "readonly": false
+    },
+    {
+     "name": "demo",
+     "attribute": "demo",
+     "type": "boolean",
+     "default": "false",
+     "description": "Demo mode: Read aloud is simulated silently where it would be simulated. For galleries and prototypes",
+     "readonly": false
+    },
+    {
+     "name": "quiet",
+     "attribute": "quiet",
+     "type": "boolean",
+     "default": "true",
+     "description": "Lighter icons until the message is hovered (default true; quiet=\"false\" turns it off). Put data-ui-message on the message wrapper",
+     "readonly": false
+    },
+    {
+     "name": "label",
+     "attribute": "label",
+     "type": "string",
+     "default": "\"Message actions\"",
+     "description": "Accessible name of the bar",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-version-change",
+     "detail": "",
+     "description": "A version was picked in the switcher; detail `{ version: number }` (0-based). Cancelable: preventDefault() keeps the shown version (controlled use)",
+     "cancelable": true
+    },
+    {
+     "name": "tc-copy",
+     "detail": "",
+     "description": "`text` is on the clipboard (or Copy was pressed without `text`); detail `{ text?: string }`",
+     "cancelable": false
+    },
+    {
+     "name": "tc-feedback",
+     "detail": "",
+     "description": "A thumb was pressed or taken back, or the feedback row was sent; detail `{ feedback: \"up\" | \"down\" | null, reason?: string }`",
+     "cancelable": false
+    },
+    {
+     "name": "tc-speak",
+     "detail": "",
+     "description": "Read aloud started or stopped; detail `{ playing: boolean }`",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "ma",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-border-default",
+    "--tc-border-selected",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-md",
+    "--tc-control-px-sm",
+    "--tc-control-radius-md",
+    "--tc-control-radius-sm",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-instant",
+    "--tc-duration-moderate",
+    "--tc-duration-reveal",
+    "--tc-duration-reveal-slow",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-ease-in-out",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-font-size",
+    "--tc-field-h",
+    "--tc-field-px",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-field-shadow-hover",
+    "--tc-fill-default",
+    "--tc-fill-hover",
+    "--tc-fill-selected",
+    "--tc-fill-strong",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-line-height-tight",
+    "--tc-message-actions-quiet",
+    "--tc-radius-2xs",
+    "--tc-radius-lg",
+    "--tc-shadow-overlay",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-surface-overlay",
+    "--tc-surface-raised",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-placeholder",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tooltip-bg",
+    "--tc-tooltip-fg",
+    "--tc-tooltip-radius"
+   ]
+  },
+  {
+   "tag": "tc-message-text",
+   "className": "TcMessageText",
+   "description": "The message itself, crossfading when `version` changes: the old content fades out underneath while the new one fades\nin, and the block eases to its new height.",
+   "properties": [
+    {
+     "name": "version",
+     "attribute": "version",
+     "type": "string | number",
+     "default": "0",
+     "description": "Which version is shown – a change crossfades",
+     "readonly": false
+    },
+    {
+     "name": "content",
+     "attribute": null,
+     "type": "Element | string",
+     "default": "\"\"",
+     "description": "The message: text, or an element (cloned; changes inside it are followed)",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [],
+   "slots": [],
+   "methods": [],
+   "ui": "ma-text",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-border-default",
+    "--tc-border-selected",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-md",
+    "--tc-control-px-sm",
+    "--tc-control-radius-md",
+    "--tc-control-radius-sm",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-instant",
+    "--tc-duration-moderate",
+    "--tc-duration-reveal",
+    "--tc-duration-reveal-slow",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-ease-in-out",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-font-size",
+    "--tc-field-h",
+    "--tc-field-px",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-field-shadow-hover",
+    "--tc-fill-default",
+    "--tc-fill-hover",
+    "--tc-fill-selected",
+    "--tc-fill-strong",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-line-height-tight",
+    "--tc-message-actions-quiet",
+    "--tc-radius-2xs",
+    "--tc-radius-lg",
+    "--tc-shadow-overlay",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-surface-overlay",
+    "--tc-surface-raised",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-placeholder",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tooltip-bg",
+    "--tc-tooltip-fg",
+    "--tc-tooltip-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "MessageActions",
+   "exported": true,
+   "props": [
+    {
+     "name": "onVersionChange",
+     "type": "(index: number) => void",
+     "optional": true,
+     "description": "Called with the version index picked in the switcher"
+    },
+    {
+     "name": "onCopy",
+     "type": "(text?: string) => void",
+     "optional": true,
+     "description": "Called once `text` is on the clipboard (or right away when there's no `text`). \"Copied\" shows only after a successful write"
+    },
+    {
+     "name": "onSpeak",
+     "type": "(playing: boolean) => void",
+     "optional": true,
+     "description": "Called with true when Read aloud starts and false when it stops – play your audio here. Without it (and without\n`speaking`) the browser's speech synthesis reads `text`"
+    }
+   ],
+   "hides": [
+    "ownSpeech"
+   ]
+  },
+  {
+   "component": "MessageText",
+   "exported": true,
+   "props": [
+    {
+     "name": "version",
+     "type": "string | number",
+     "optional": false,
+     "description": "Which version is shown – a change crossfades to the new children"
+    },
+    {
+     "name": "children",
+     "type": "React.ReactNode",
+     "optional": false,
+     "description": "The message: text or any React content"
+    }
+   ],
+   "hides": [
+    "content",
+    "children",
+    "version"
+   ]
+  }
+ ],
+ "changelog": [
+  "`tc-conversation-branches` – edit a past message to fork the conversation; a 2 / 3 switcher on the edited message, each branch's replies (with `tc-message-actions`) below, and `tc-edit` answered with the new replies or a promise of them."
+ ],
+ "size": {
+  "min": 53261,
+  "gzip": 13935
+ }
+}

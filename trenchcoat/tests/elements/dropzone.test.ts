@@ -305,3 +305,15 @@ describe("tc-dropzone", () => {
     expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
   });
 });
+
+describe("tc-dropzone autoplay", () => {
+  test("plays the sample when autoplay is set after the element is in the page (as React sets it)", async () => {
+    const el = await fixture<TcDropzone>(html`<tc-dropzone></tc-dropzone>`);
+    expect(rowNames(el)).toEqual([]);
+    el.autoplay = true;
+    await settle();
+    await new Promise((r) => setTimeout(r, 2600));
+    await settle();
+    expect(rowNames(el).length).toBeGreaterThan(0);
+  });
+});

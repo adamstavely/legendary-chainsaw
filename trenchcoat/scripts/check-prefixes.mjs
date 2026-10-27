@@ -29,6 +29,12 @@ for (const lib of LIBRARIES) {
 }
 
 const problems = [];
+// Elements: each one's root name (static ui → [data-ui="…"]) must be unique, or two elements' sheets restyle each other
+const roots = new Map();
+for (const name of readdirSync("src/elements").filter((f) => f.endsWith(".ts"))) {
+  for (const [, ui] of readFileSync(join("src/elements", name), "utf8").matchAll(/static override ui = "([^"]+)"/g)) roots.set(ui, [...(roots.get(ui) ?? []), name]);
+}
+for (const [ui, files] of roots) if (files.length > 1) problems.push(`element root data-ui="${ui}" is used by ${files.join(", ")} – pick a unique ui name`);
 const collisions = [...owners].filter(([p, files]) => files.length > 1 && !(p in SHARED));
 for (const [prefix, files] of collisions) {
   if (!(prefix in KNOWN)) problems.push(`new collision: .${prefix} is rendered by ${files.join(", ")} – pick a unique prefix`);

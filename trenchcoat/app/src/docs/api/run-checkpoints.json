@@ -1,0 +1,309 @@
+{
+ "elements": [
+  {
+   "tag": "tc-run-checkpoints",
+   "className": "TcRunCheckpoints",
+   "description": "An agent run's restore points: pick a step, see what it captured and what going back discards, and go back.",
+   "properties": [
+    {
+     "name": "checkpoints",
+     "attribute": null,
+     "type": "RunCheckpoint[]",
+     "default": "[]",
+     "description": "The checkpoints, oldest first – one before each step of the run",
+     "readonly": false
+    },
+    {
+     "name": "status",
+     "attribute": "status",
+     "type": "RunCheckpointsStatus",
+     "default": "\"done\"",
+     "description": "The run: \"running\" (a live run), \"paused\", \"done\", \"failed\" – always set by the app",
+     "readonly": false
+    },
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The run's goal, shown as the heading",
+     "readonly": false
+    },
+    {
+     "name": "selected",
+     "attribute": "selected",
+     "type": "string | null",
+     "default": "null",
+     "description": "The picked checkpoint's id. Picks apply unless a tc-selected-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "elapsed",
+     "attribute": "elapsed",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "How long the run has gone on, in ms – the strip's length (defaults to the last checkpoint)",
+     "readonly": false
+    },
+    {
+     "name": "placeholder",
+     "attribute": "placeholder",
+     "type": "string",
+     "default": "\"What should it do differently? (optional)\"",
+     "description": "Placeholder of the note that goes along with the restore",
+     "readonly": false
+    },
+    {
+     "name": "currency",
+     "attribute": "currency",
+     "type": "string",
+     "default": "\"USD\"",
+     "description": "Currency of `cost`, an ISO 4217 code",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string",
+     "default": "\"en-US\"",
+     "description": "Locale for money",
+     "readonly": false
+    },
+    {
+     "name": "restorer",
+     "attribute": null,
+     "type": "((checkpointId: string, instruction: string) => void | Promise<unknown>) | undefined",
+     "default": "undefined",
+     "description": "Called on restore (as well as tc-restore). May return a promise: the button waits, and says so if it rejects",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-selected-change",
+     "detail": "",
+     "description": "A step is picked or the pick is cleared (detail: { selected: string | null, checkpoint?: RunCheckpoint }); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-restore",
+     "detail": "",
+     "description": "\"Go back to step N\" pressed (detail: { checkpointId: string, instruction: string, discarded: string[] })",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "rcp",
+   "cssProperties": [
+    {
+     "name": "--tc-run-checkpoints-accent",
+     "value": "var(--tc-accent-solid)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-run-checkpoints-on-accent",
+     "value": "var(--tc-text-on-accent)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-run-checkpoints-drop",
+     "value": "light-dark(rgba(196, 50, 50, 0.26), rgba(255, 110, 110, 0.3))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-run-checkpoints-inset",
+     "value": "var(--tc-space-2-5)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-run-checkpoints-marker",
+     "value": "20px",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent-solid",
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-active",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-border-default",
+    "--tc-border-selected",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-lg",
+    "--tc-control-h-md",
+    "--tc-control-px-md",
+    "--tc-control-radius-md",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-reveal",
+    "--tc-duration-shimmer",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-ease-in-out",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-font-size",
+    "--tc-field-h",
+    "--tc-field-px",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-field-shadow-hover",
+    "--tc-fill-default",
+    "--tc-fill-hover",
+    "--tc-fill-selected",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-mono",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-none",
+    "--tc-line-height-normal",
+    "--tc-line-height-relaxed",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-meter-fill",
+    "--tc-meter-track",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-badge",
+    "--tc-radius-full",
+    "--tc-radius-lg",
+    "--tc-radius-sm",
+    "--tc-run-checkpoints-cut",
+    "--tc-shadow-raised",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-5",
+    "--tc-space-6",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-danger-solid",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-surface-raised",
+    "--tc-surface-sunken",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-on-accent",
+    "--tc-text-placeholder",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "RunCheckpoints",
+   "exported": true,
+   "props": [
+    {
+     "name": "checkpoints",
+     "type": "RunCheckpoint[]",
+     "optional": false,
+     "description": "The checkpoints, oldest first – one before each step of the run"
+    },
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The run's goal, shown as the heading"
+    },
+    {
+     "name": "selected",
+     "type": "string | null",
+     "optional": true,
+     "description": "The picked checkpoint's id. Controlled when defined (null = nothing picked); otherwise the component keeps it,\nstarting at `defaultSelected`"
+    },
+    {
+     "name": "defaultSelected",
+     "type": "string | null",
+     "optional": true,
+     "description": "First pick when uncontrolled"
+    },
+    {
+     "name": "onSelectedChange",
+     "type": "(id: string | null, checkpoint?: RunCheckpoint) => void",
+     "optional": true,
+     "description": "Called with the picked checkpoint's id, or null when the pick is cleared"
+    },
+    {
+     "name": "onRestore",
+     "type": "(checkpointId: string, instruction: string, discarded: string[]) => void | Promise<unknown>",
+     "optional": true,
+     "description": "\"Go back to step N\" pressed: the checkpoint, the note for the agent (\"\" when none) and the ids of the steps it\ndiscards. May return a promise – the button waits, and says so if it rejects"
+    }
+   ],
+   "hides": []
+  }
+ ],
+ "changelog": [
+  "`tc-run-checkpoints` – a run's restore points as a list and a timeline: what each point captured, what going back discards (steps, file changes, tokens, cost), a note for the retry, and `restorer` that may return a promise. Listbox keyboard; `tc-selected-change`, `tc-restore`."
+ ],
+ "size": {
+  "min": 43749,
+  "gzip": 12300
+ }
+}

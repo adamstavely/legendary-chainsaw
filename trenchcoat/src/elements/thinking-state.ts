@@ -68,6 +68,7 @@ const chevronClean = html`<svg viewBox="0 0 16 16">${svg`<path d="M4.5 6.25 8 9.
 export class TcThinkingState extends TcElement {
   static override ui = "think";
 
+  /** The steps and searches to show, in order – `progress` (or the timeline) decides how many have appeared */
   @property({ attribute: false }) accessor steps: ThinkingStep[] = [];
   /** Label of the final row */
   @property({ attribute: "done-label" }) accessor doneLabel = "Finished thinking";
@@ -370,9 +371,9 @@ export class TcThinkingState extends TcElement {
 
   width: 100%;
   max-width: 440px;
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-lg);
-  line-height: 1.45;
+  line-height: var(--tc-line-height-normal);
   color: var(--tc-text-secondary);
   -webkit-font-smoothing: antialiased;
 }

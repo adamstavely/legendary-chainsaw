@@ -80,6 +80,7 @@ export type DecisionTreeProps = Omit<RawDecisionTreeProps, "ref" | "decisions" |
    * of it). A promise holds the picked path until it settles; a rejection lets go of the pick and says so, to try again
    */
   onChoose?: (decision: Decision, choice: DecisionChoice) => string | void | Promise<string | void>;
+  /** The heading in the bar – "Decisions" by default */
   title?: string;
   /** The imperative handle (the root element isn't exposed) */
   ref?: React.Ref<DecisionTreeHandle>;

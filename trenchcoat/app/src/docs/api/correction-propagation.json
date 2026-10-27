@@ -1,0 +1,295 @@
+{
+ "elements": [
+  {
+   "tag": "tc-correction-propagation",
+   "className": "TcCorrectionPropagation",
+   "description": "How far a correction reaches: every artifact and released package that cites the corrected claim, each sent for\nreview – nothing rewritten automatically.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Correction reach\"",
+     "description": "The heading, and the component's name",
+     "readonly": false
+    },
+    {
+     "name": "claim",
+     "attribute": "claim",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The claim as it was, before the correction",
+     "readonly": false
+    },
+    {
+     "name": "correction",
+     "attribute": "correction",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The claim as corrected",
+     "readonly": false
+    },
+    {
+     "name": "reason",
+     "attribute": "reason",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Why it was corrected",
+     "readonly": false
+    },
+    {
+     "name": "meta",
+     "attribute": "meta",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Who corrected it and when, as one line – e.g. \"Dana Okafor · today, 10:42\"",
+     "readonly": false
+    },
+    {
+     "name": "candidates",
+     "attribute": null,
+     "type": "CorrectionCandidate[]",
+     "default": "[]",
+     "description": "The artifacts and released packages that cite the corrected claim",
+     "readonly": false
+    },
+    {
+     "name": "states",
+     "attribute": null,
+     "type": "Record<string, CorrectionState>",
+     "default": "{}",
+     "description": "Each item's state by id; an item not named here uses its own `state`, else \"pending\". Changed by the user unless a\ntc-states-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "note",
+     "attribute": "note",
+     "type": "string",
+     "default": "\"Nothing is changed automatically – each item waits for a person.\"",
+     "description": "The line under the list – what the component won't do",
+     "readonly": false
+    },
+    {
+     "name": "emptyText",
+     "attribute": "empty-text",
+     "type": "string",
+     "default": "\"Nothing else cites this claim.\"",
+     "description": "Shown when nothing cites the claim",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-states-change",
+     "detail": "",
+     "description": "An item's state changed ({ states, id, state, candidate }: CorrectionStatesChange – states is the whole new map); cancelable – prevent it to keep `states` as it is (controlled use)",
+     "cancelable": true
+    },
+    {
+     "name": "tc-review",
+     "detail": "",
+     "description": "Review was pressed on an item ({ id, candidate }: CorrectionAction) – open it for a person to check",
+     "cancelable": false
+    },
+    {
+     "name": "tc-supersede",
+     "detail": "",
+     "description": "Mark superseded was pressed on an item ({ id, candidate }: CorrectionAction)",
+     "cancelable": false
+    },
+    {
+     "name": "tc-dismiss",
+     "detail": "",
+     "description": "Dismiss was pressed on an item – it doesn't rely on the claim ({ id, candidate }: CorrectionAction)",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "cpr",
+   "cssProperties": [
+    {
+     "name": "--tc-correction-propagation-tray-bg",
+     "value": "var(--tc-surface-tray)",
+     "looks": [
+      "standard"
+     ]
+    },
+    {
+     "name": "--tc-correction-propagation-panel-bg",
+     "value": "var(--tc-surface-raised)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-correction-propagation-tile-bg",
+     "value": "var(--tc-surface-control)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-border-strong",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-slow",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-meter-h",
+    "--tc-meter-radius",
+    "--tc-meter-track",
+    "--tc-pill-font-size",
+    "--tc-pill-font-size-lg",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-h-lg",
+    "--tc-pill-px",
+    "--tc-pill-px-lg",
+    "--tc-pill-radius",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-shadow-raised",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-12",
+    "--tc-space-14",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-6",
+    "--tc-status-danger-solid",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-success-solid",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-status-warning-solid",
+    "--tc-surface-control",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tone-violet-bg",
+    "--tc-tone-violet-fg",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "CorrectionPropagation",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading, and the component's name"
+    },
+    {
+     "name": "states",
+     "type": "Record<string, CorrectionState>",
+     "optional": true,
+     "description": "Each item's state by id. Controlled when defined; otherwise the component keeps it, starting at `defaultStates`"
+    },
+    {
+     "name": "defaultStates",
+     "type": "Record<string, CorrectionState>",
+     "optional": true,
+     "description": "The states when uncontrolled"
+    },
+    {
+     "name": "onStatesChange",
+     "type": "(states: Record<string, CorrectionState>, id: string, state: CorrectionState) => void",
+     "optional": true,
+     "description": "Called with the whole new map, the item that changed and its new state"
+    },
+    {
+     "name": "onReview",
+     "type": "(id: string, candidate: CorrectionCandidate) => void",
+     "optional": true,
+     "description": "Review was pressed – open the item for a person to check"
+    },
+    {
+     "name": "onSupersede",
+     "type": "(id: string, candidate: CorrectionCandidate) => void",
+     "optional": true,
+     "description": "Mark superseded was pressed"
+    },
+    {
+     "name": "onDismiss",
+     "type": "(id: string, candidate: CorrectionCandidate) => void",
+     "optional": true,
+     "description": "Dismiss was pressed – the item doesn't rely on the claim"
+    }
+   ],
+   "hides": []
+  }
+ ],
+ "changelog": [
+  "**Trust & calibration**, from THEMIS and built domain-neutral: - claims and their reliability: `tc-claim-answer`, `tc-verification-queue`, `tc-reflection-gate`, `tc-reliance-gauge`, `tc-disagreement-banner`, `tc-synthesis-notes`; - where outputs came from: `tc-lineage-graph`, `tc-validity-badge`, `tc-provenance-summary`, `tc-correction-propagation`, `tc-attestation-check`, `tc-run-manifest`; - policy and control: `tc-policy-simulator`, `tc-gate-config`, `tc-coverage-matrix`, `tc-kill-switch`, `tc-playbook-canvas`."
+ ],
+ "size": {
+  "min": 30947,
+  "gzip": 8957
+ }
+}

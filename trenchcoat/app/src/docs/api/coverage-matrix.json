@@ -1,0 +1,233 @@
+{
+ "elements": [
+  {
+   "tag": "tc-coverage-matrix",
+   "className": "TcCoverageMatrix",
+   "description": "A heatmap of checks × parts – covered, partial or gap – with totals, a legend with counts, and a cell's detail on\nEnter or click.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Coverage\"",
+     "description": "The heading, and the grid's name",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "One line under the heading",
+     "readonly": false
+    },
+    {
+     "name": "checks",
+     "attribute": null,
+     "type": "CoverageCheck[]",
+     "default": "[]",
+     "description": "The rows: what does the covering – tests, controls, policies",
+     "readonly": false
+    },
+    {
+     "name": "parts",
+     "attribute": null,
+     "type": "CoveragePart[]",
+     "default": "[]",
+     "description": "The columns: what gets covered – components, systems, models",
+     "readonly": false
+    },
+    {
+     "name": "coverage",
+     "attribute": null,
+     "type": "CoverageMap",
+     "default": "{}",
+     "description": "Each cell's status, with optional detail and evidence",
+     "readonly": false
+    },
+    {
+     "name": "open",
+     "attribute": null,
+     "type": "CoverageCellRef | null",
+     "default": "null",
+     "description": "The cell whose detail is open. Changed by the user unless a tc-open-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "defaultStatus",
+     "attribute": "default-status",
+     "type": "CoverageStatus",
+     "default": "\"gap\"",
+     "description": "A cell missing from `coverage`",
+     "readonly": false
+    },
+    {
+     "name": "partialWeight",
+     "attribute": "partial-weight",
+     "type": "number",
+     "default": "0.5",
+     "description": "How much a partial cell counts towards a total, from 0 to 1",
+     "readonly": false
+    },
+    {
+     "name": "statusLabels",
+     "attribute": null,
+     "type": "Partial<Record<CoverageStatus, string>>",
+     "default": "{}",
+     "description": "The statuses' names, merged over the defaults (Covered, Partial, Gap, Not applicable)",
+     "readonly": false
+    },
+    {
+     "name": "checkLabel",
+     "attribute": "check-label",
+     "type": "string",
+     "default": "\"Check\"",
+     "description": "The heading of the checks column",
+     "readonly": false
+    },
+    {
+     "name": "totalLabel",
+     "attribute": "total-label",
+     "type": "string",
+     "default": "\"Coverage\"",
+     "description": "The heading of the totals column and row",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-open-change",
+     "detail": "",
+     "description": "A cell's detail opened or closed ({ open, cell }: CoverageOpenChange); cancelable – prevented, `open` stays as it was",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "cov",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-action-ghost-bg-hover",
+    "--tc-border-default",
+    "--tc-border-strong",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-h-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xl",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-meter-fill",
+    "--tc-meter-radius",
+    "--tc-meter-track",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-lg",
+    "--tc-radius-sm",
+    "--tc-radius-xs",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-6",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tracking-tight",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "defaultCoverageStatusLabels",
+   "signature": "defaultCoverageStatusLabels: Record<CoverageStatus, string>",
+   "description": "The statuses' names used when the page gives none"
+  }
+ ],
+ "react": [
+  {
+   "component": "CoverageMatrix",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading, and the grid's name"
+    },
+    {
+     "name": "open",
+     "type": "CoverageCellRef | null",
+     "optional": true,
+     "description": "The cell whose detail is open – controlled when given (null for none)"
+    },
+    {
+     "name": "defaultOpen",
+     "type": "CoverageCellRef | null",
+     "optional": true,
+     "description": "The cell open on mount when `open` isn't controlled"
+    },
+    {
+     "name": "onOpenChange",
+     "type": "(open: CoverageCellRef | null, cell?: CoverageCell) => void",
+     "optional": true,
+     "description": "A cell's detail opened or closed; `cell` is the opened cell"
+    }
+   ],
+   "hides": []
+  }
+ ],
+ "changelog": [
+  "**Trust & calibration**, from THEMIS and built domain-neutral: - claims and their reliability: `tc-claim-answer`, `tc-verification-queue`, `tc-reflection-gate`, `tc-reliance-gauge`, `tc-disagreement-banner`, `tc-synthesis-notes`; - where outputs came from: `tc-lineage-graph`, `tc-validity-badge`, `tc-provenance-summary`, `tc-correction-propagation`, `tc-attestation-check`, `tc-run-manifest`; - policy and control: `tc-policy-simulator`, `tc-gate-config`, `tc-coverage-matrix`, `tc-kill-switch`, `tc-playbook-canvas`."
+ ],
+ "size": {
+  "min": 31546,
+  "gzip": 9348
+ }
+}

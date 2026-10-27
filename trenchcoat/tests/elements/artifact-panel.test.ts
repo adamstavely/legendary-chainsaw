@@ -55,7 +55,7 @@ describe("tc-artifact-panel", () => {
     el.heading = "Run outputs";
     await settle();
     expect(el.getAttribute("aria-label")).toBe("Run outputs");
-    expect(el.querySelector(".ui-artp__title")!.textContent).toBe("Run outputs");
+    expect(el.querySelector(".tc-head__title")!.textContent).toBe("Run outputs");
     const named = await fixture<TcArtifactPanel>(html`<tc-artifact-panel aria-label="Files" .artifacts=${artifacts()}></tc-artifact-panel>`);
     expect(named.getAttribute("aria-label")).toBe("Files");
   });

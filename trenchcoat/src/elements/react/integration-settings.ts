@@ -17,6 +17,7 @@ type RawProps = React.ComponentProps<typeof RawIntegrationSettings>;
 export type IntegrationSettingsOwnProps = {
   /** The service's name, e.g. "Shopify" */
   name: string;
+  /** The service's logo, shown beside its name */
   logo: React.ReactNode;
   /** Small number next to the name, e.g. synced orders */
   count?: number;
@@ -32,6 +33,7 @@ export type IntegrationSettingsOwnProps = {
   onValuesChange?: (values: IntegrationValues) => void;
   /** Helper text under the address field */
   siteHint?: string;
+  /** The time zones the picker offers, as labels like "(GMT +01:00) Berlin" – the first is the default */
   timeZones?: string[];
   /**
    * Creates a key – return it, or a promise of it; a rejection shows an error and keeps the old key. Without it a

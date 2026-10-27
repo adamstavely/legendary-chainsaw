@@ -1,0 +1,239 @@
+{
+ "elements": [
+  {
+   "tag": "tc-tilt-card",
+   "className": "TcTiltCard",
+   "description": "A card that tilts in 3D towards the pointer, with a glare that follows it. Its content is its children.",
+   "properties": [
+    {
+     "name": "maxTilt",
+     "attribute": "max-tilt",
+     "type": "number",
+     "default": "10",
+     "description": "Maximum tilt in degrees",
+     "readonly": false
+    },
+    {
+     "name": "glare",
+     "attribute": "glare",
+     "type": "boolean",
+     "default": "true",
+     "description": "Show a soft glare that follows the pointer (attribute: glare=\"false\" turns it off)",
+     "readonly": false
+    },
+    {
+     "name": "scale",
+     "attribute": "scale",
+     "type": "number",
+     "default": "1.02",
+     "description": "Scale while the pointer is over the card",
+     "readonly": false
+    },
+    {
+     "name": "perspective",
+     "attribute": "perspective",
+     "type": "number",
+     "default": "900",
+     "description": "Perspective distance in px – smaller is more dramatic",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [],
+   "slots": [],
+   "methods": [],
+   "ui": "tlt",
+   "cssProperties": [
+    {
+     "name": "--tc-tilt-card-shadow",
+     "value": "0 1px 2px light-dark(rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.4)), 0 8px 24px -12px light-dark(rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.6))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-tilt-card-shadow-active",
+     "value": "0 2px 4px light-dark(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.4)), 0 24px 48px -16px light-dark(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.75))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-tilt-card-glare-color",
+     "value": "light-dark(rgba(255, 255, 255, 0.32), rgba(255, 255, 255, 0.24))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-tilt-card-rx",
+     "value": "0deg",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-tilt-card-ry",
+     "value": "0deg",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-tilt-card-gx",
+     "value": "50%",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-tilt-card-gy",
+     "value": "50%",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-tilt-card-lift",
+     "value": "0px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-tilt-card-s",
+     "value": "1",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-duration-fast",
+    "--tc-duration-reveal",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-duration-slowest",
+    "--tc-ease-decelerate",
+    "--tc-ease-spring",
+    "--tc-ease-standard",
+    "--tc-radius-3xl",
+    "--tc-tilt-card-perspective",
+    "--tc-tilt-card-scale"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "TiltCardOwn",
+   "exported": false,
+   "props": [
+    {
+     "name": "children",
+     "type": "React.ReactNode",
+     "optional": true,
+     "description": "The card's content – it fills the tilting surface"
+    },
+    {
+     "name": "maxTilt",
+     "type": "number",
+     "optional": true,
+     "description": "Maximum tilt in degrees"
+    },
+    {
+     "name": "glare",
+     "type": "boolean",
+     "optional": true,
+     "description": "Show a soft glare that follows the pointer"
+    },
+    {
+     "name": "scale",
+     "type": "number",
+     "optional": true,
+     "description": "Scale while the pointer is over the card"
+    },
+    {
+     "name": "perspective",
+     "type": "number",
+     "optional": true,
+     "description": "Perspective distance in px – smaller is more dramatic"
+    },
+    {
+     "name": "className",
+     "type": "string",
+     "optional": true,
+     "description": "Classes on the root, the untransformed wrapper"
+    },
+    {
+     "name": "ref",
+     "type": "React.Ref<TcTiltCard>",
+     "optional": true,
+     "description": "The root (the untransformed wrapper)"
+    }
+   ],
+   "hides": []
+  },
+  {
+   "component": "TiltCard",
+   "exported": true,
+   "props": [
+    {
+     "name": "children",
+     "type": "React.ReactNode",
+     "optional": true,
+     "description": "The card's content – it fills the tilting surface"
+    },
+    {
+     "name": "maxTilt",
+     "type": "number",
+     "optional": true,
+     "description": "Maximum tilt in degrees"
+    },
+    {
+     "name": "glare",
+     "type": "boolean",
+     "optional": true,
+     "description": "Show a soft glare that follows the pointer"
+    },
+    {
+     "name": "scale",
+     "type": "number",
+     "optional": true,
+     "description": "Scale while the pointer is over the card"
+    },
+    {
+     "name": "perspective",
+     "type": "number",
+     "optional": true,
+     "description": "Perspective distance in px – smaller is more dramatic"
+    },
+    {
+     "name": "className",
+     "type": "string",
+     "optional": true,
+     "description": "Classes on the root, the untransformed wrapper"
+    },
+    {
+     "name": "ref",
+     "type": "React.Ref<TcTiltCard>",
+     "optional": true,
+     "description": "The root (the untransformed wrapper)"
+    }
+   ],
+   "hides": []
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 12751,
+  "gzip": 4686
+ }
+}

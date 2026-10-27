@@ -56,7 +56,7 @@ describe("tc-smart-recommendation", () => {
       el.open = false;
       await settle();
       expect(el.hasAttribute("data-accepted")).toBe(false);
-      expect(el.querySelector(".ui-sr__head")!.getAttribute("aria-expanded")).toBe("false");
+      expect(el.querySelector(".ui-sr__toggle")!.getAttribute("aria-expanded")).toBe("false");
       expect(el.querySelector(".ui-sr__body")!.hasAttribute("inert")).toBe(true);
     });
 
@@ -131,9 +131,9 @@ describe("tc-smart-recommendation", () => {
     test(`${look}: controlled open – the head is reported, not applied`, async () => {
       const el = await fixture<TcSmartRecommendation>(html`<tc-smart-recommendation look=${look} .options=${options}></tc-smart-recommendation>`);
       el.addEventListener("tc-open-change", (e) => e.preventDefault());
-      el.querySelector<HTMLButtonElement>(".ui-sr__head")!.click();
+      el.querySelector<HTMLButtonElement>(".ui-sr__toggle")!.click();
       await settle();
-      expect(el.querySelector(".ui-sr__head")!.getAttribute("aria-expanded")).toBe("true");
+      expect(el.querySelector(".ui-sr__toggle")!.getAttribute("aria-expanded")).toBe("true");
     });
 
     test(`${look}: menu – focus moves in, arrows move, Esc returns focus to the trigger`, async () => {

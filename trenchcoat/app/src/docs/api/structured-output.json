@@ -1,0 +1,328 @@
+{
+ "elements": [
+  {
+   "tag": "tc-structured-output",
+   "className": "TcStructuredOutput",
+   "description": "Streaming JSON as a collapsible, typed tree, checked against a JSON Schema as it arrives.",
+   "properties": [
+    {
+     "name": "text",
+     "attribute": "text",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The JSON as it arrives – it may grow every frame and stop mid-value. A ```json fence around it is ignored",
+     "readonly": false
+    },
+    {
+     "name": "schema",
+     "attribute": null,
+     "type": "StructuredOutputSchema | undefined",
+     "default": "undefined",
+     "description": "A JSON Schema to check the value against as it arrives (the common keywords – see the docs); unset checks syntax only",
+     "readonly": false
+    },
+    {
+     "name": "streaming",
+     "attribute": "streaming",
+     "type": "boolean",
+     "default": "false",
+     "description": "The text is still coming in: a caret blinks at the end, and what hasn't arrived isn't flagged yet",
+     "readonly": false
+    },
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Output\"",
+     "description": "The heading, and the tree's accessible name",
+     "readonly": false
+    },
+    {
+     "name": "collapsed",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[]",
+     "description": "JSON Pointer paths of folded branches (\"/items/0\"). Changed by the user unless tc-collapsed-change is prevented",
+     "readonly": false
+    },
+    {
+     "name": "variableName",
+     "attribute": "variable-name",
+     "type": "string",
+     "default": "\"output\"",
+     "description": "The variable name in \"Copy as TypeScript\": `const output = { … };`",
+     "readonly": false
+    },
+    {
+     "name": "maxHeight",
+     "attribute": "max-height",
+     "type": "number",
+     "default": "0",
+     "description": "Cap the tree's height in px (0: grow with the value); a capped tree scrolls and follows the end while streaming",
+     "readonly": false
+    },
+    {
+     "name": "value",
+     "attribute": null,
+     "type": "unknown",
+     "default": null,
+     "description": "The value parsed so far (fields still arriving are left out); undefined before anything has arrived",
+     "readonly": true
+    },
+    {
+     "name": "issues",
+     "attribute": null,
+     "type": "StructuredOutputIssue[]",
+     "default": null,
+     "description": "Everything the schema check found so far, in document order",
+     "readonly": true
+    },
+    {
+     "name": "syntaxError",
+     "attribute": null,
+     "type": "StructuredOutputSyntaxError | null",
+     "default": null,
+     "description": "Where the text stopped being JSON, if it did",
+     "readonly": true
+    },
+    {
+     "name": "complete",
+     "attribute": null,
+     "type": "boolean",
+     "default": null,
+     "description": "The value has arrived in full: its outermost bracket closed",
+     "readonly": true
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-collapsed-change",
+     "detail": "",
+     "description": "A branch was folded or opened ({ collapsed: string[] } – JSON Pointer paths); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-copy",
+     "detail": "",
+     "description": "The value was copied ({ format: \"json\" | \"ts\", text: string })",
+     "cancelable": false
+    },
+    {
+     "name": "tc-validate",
+     "detail": "",
+     "description": "The text settled (not streaming) and its result changed ({ valid, value, issues, error, complete })",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "so",
+   "cssProperties": [
+    {
+     "name": "--tc-structured-output-key",
+     "value": "var(--tc-syntax-property)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-structured-output-string",
+     "value": "var(--tc-syntax-string)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-structured-output-number",
+     "value": "var(--tc-syntax-number)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-structured-output-literal",
+     "value": "var(--tc-syntax-keyword)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-structured-output-punctuation",
+     "value": "var(--tc-syntax-punctuation)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-structured-output-text",
+     "value": "var(--tc-syntax-text)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-structured-output-indent",
+     "value": "var(--tc-space-4)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-structured-output-guide",
+     "value": "var(--tc-border-default)",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-border-default",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-sm",
+    "--tc-control-px-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-shimmer",
+    "--tc-duration-slow",
+    "--tc-ease-in-out",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-mono",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-regular",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-2xs",
+    "--tc-radius-lg",
+    "--tc-shadow-raised",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-5",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-danger-solid",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-syntax-keyword",
+    "--tc-syntax-number",
+    "--tc-syntax-property",
+    "--tc-syntax-punctuation",
+    "--tc-syntax-string",
+    "--tc-syntax-text",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-title-color",
+    "--tc-title-font-size",
+    "--tc-title-font-weight",
+    "--tc-title-line-height",
+    "--tc-title-tracking",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "structuredOutputParse",
+   "signature": "structuredOutputParse(text: string, final: unknown): StructuredOutputParse",
+   "description": "Parses JSON that may still be arriving, tolerantly, as tc-structured-output does – for elements that render\nstructured answers as they stream (tc-generated-ui). `final` says no more text is coming"
+  }
+ ],
+ "react": [
+  {
+   "component": "StructuredOutput",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading, and the tree's accessible name"
+    },
+    {
+     "name": "collapsed",
+     "type": "string[]",
+     "optional": true,
+     "description": "JSON Pointer paths of folded branches, e.g. \"/items/0\" (controlled)"
+    },
+    {
+     "name": "defaultCollapsed",
+     "type": "string[]",
+     "optional": true,
+     "description": "Folded branches to start with when uncontrolled"
+    },
+    {
+     "name": "onCollapsedChange",
+     "type": "(collapsed: string[]) => void",
+     "optional": true,
+     "description": "Called with the folded paths each time a branch is folded or opened"
+    },
+    {
+     "name": "onCopy",
+     "type": "(format: \"json\" | \"ts\", text: string) => void",
+     "optional": true,
+     "description": "Called after a copy, with the format (\"json\" or \"ts\") and the text that went to the clipboard"
+    },
+    {
+     "name": "onValidate",
+     "type": "(result: StructuredOutputValidate) => void",
+     "optional": true,
+     "description": "Called once the text settles (not streaming) with the check's result: valid, value, issues, syntax error"
+    }
+   ],
+   "hides": [
+    "heading",
+    "collapsed",
+    "onCopy"
+   ]
+  }
+ ],
+ "changelog": [
+  "**Quality, retrieval, safety, structured output and conversation:** `tc-eval-scorecard`, `tc-feedback-rubric`, `tc-retrieval-inspector`, `tc-extraction-review`, `tc-guardrail-notice`, `tc-clarifying-questions`, `tc-structured-output`, `tc-generated-ui` and `tc-prompt-starters`."
+ ],
+ "size": {
+  "min": 42101,
+  "gzip": 13631
+ }
+}

@@ -1,0 +1,253 @@
+{
+ "elements": [
+  {
+   "tag": "tc-delegate-board",
+   "className": "TcDelegateBoard",
+   "description": "Hand work to agents by dragging it onto them – or by click and keyboard.",
+   "properties": [
+    {
+     "name": "agents",
+     "attribute": null,
+     "type": "DelegateAgent[]",
+     "default": "[]",
+     "description": "The agents work can go to, in the order they're listed (number keys 1–9 pick them)",
+     "readonly": false
+    },
+    {
+     "name": "tasks",
+     "attribute": null,
+     "type": "DelegateTask[]",
+     "default": "[]",
+     "description": "Every task – without an `agentId` it waits under \"Unassigned\"; the first in each agent's queue is the running one",
+     "readonly": false
+    },
+    {
+     "name": "now",
+     "attribute": "now",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The clock for the \"Busy until\" times, in epoch ms – without it the board reads the clock while connected",
+     "readonly": false
+    },
+    {
+     "name": "mode",
+     "attribute": "mode",
+     "type": "DelegateMode",
+     "default": "\"manual\"",
+     "description": "Auto hands every unassigned task to the least busy agent on its own; Manual waits for a drag. Changed by the\nuser unless a tc-mode-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "suggestion",
+     "attribute": null,
+     "type": "{ taskId: string; agentId: string } | null | undefined",
+     "default": "undefined",
+     "description": "A suggested hand-off, e.g. from your router: the agent lights up and previews the new time, the task is marked",
+     "readonly": false
+    },
+    {
+     "name": "formatCost",
+     "attribute": null,
+     "type": "(amount: number) => string",
+     "default": "dollars",
+     "description": "Formats a cost from rate × minutes – defaults to dollars, e.g. \"$0.60\"",
+     "readonly": false
+    },
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Delegate\"",
+     "description": "The heading in the bar",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-assign",
+     "detail": "",
+     "description": "A task was handed over or unassigned ({ taskId, agentId }: DelegateAssign, agentId null for unassigned)",
+     "cancelable": false
+    },
+    {
+     "name": "tc-mode-change",
+     "detail": "",
+     "description": "The Auto switch was flipped ({ mode }: DelegateModeChange); cancelable",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "db",
+   "cssProperties": [
+    {
+     "name": "--tc-delegate-board-target-bg",
+     "value": "light-dark(rgba(0, 120, 245, 0.045), rgba(91, 154, 255, 0.08))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-avatar-radius-agent",
+    "--tc-border-default",
+    "--tc-border-selected",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-card-shadow-hover",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-reveal-slow",
+    "--tc-ease-emphasized",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-2xs",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-hairline",
+    "--tc-kbd-bg",
+    "--tc-kbd-fg",
+    "--tc-kbd-font-size",
+    "--tc-kbd-font-weight",
+    "--tc-kbd-h",
+    "--tc-kbd-px",
+    "--tc-kbd-radius",
+    "--tc-kbd-shadow",
+    "--tc-line-height-none",
+    "--tc-line-height-normal",
+    "--tc-line-height-tight",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-badge",
+    "--tc-radius-full",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-radius-xl",
+    "--tc-shadow-control",
+    "--tc-shadow-overlay",
+    "--tc-shadow-raised",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-surface-raised",
+    "--tc-surface-sunken",
+    "--tc-surface-tray",
+    "--tc-switch-h",
+    "--tc-switch-knob",
+    "--tc-switch-knob-bg",
+    "--tc-switch-off",
+    "--tc-switch-on",
+    "--tc-switch-radius",
+    "--tc-switch-w",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tooltip-bg",
+    "--tc-tooltip-fg",
+    "--tc-tooltip-font-size",
+    "--tc-tooltip-px",
+    "--tc-tooltip-py",
+    "--tc-tooltip-radius",
+    "--tc-tray-inset",
+    "--tc-tray-radius",
+    "--tc-z-drag",
+    "--tc-z-dropdown"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "DelegateBoard",
+   "exported": true,
+   "props": [
+    {
+     "name": "agents",
+     "type": "DelegateAgent[]",
+     "optional": false,
+     "description": "The agents work can go to, in the order they're listed (number keys 1–9 pick them)"
+    },
+    {
+     "name": "tasks",
+     "type": "DelegateTask[]",
+     "optional": false,
+     "description": "Every task – without an `agentId` it waits under \"Unassigned\"; the first in each agent's queue is the running one"
+    },
+    {
+     "name": "onAssign",
+     "type": "(taskId: string, agentId: string | null) => void",
+     "optional": true,
+     "description": "A drop, a keyboard pick or Auto. The board moves the task at once and keeps it there until `tasks` gives that task\nanother agent – so `tasks` stays the source of truth, whether you handle the move or only listen to it"
+    },
+    {
+     "name": "mode",
+     "type": "DelegateMode",
+     "optional": true,
+     "description": "Auto hands every unassigned task to the least busy agent on its own; Manual waits for a drag. Controlled when defined"
+    },
+    {
+     "name": "defaultMode",
+     "type": "DelegateMode",
+     "optional": true,
+     "description": "The mode on mount when `mode` isn't controlled"
+    },
+    {
+     "name": "onModeChange",
+     "type": "(mode: DelegateMode) => void",
+     "optional": true,
+     "description": "Called with the new mode, controlled or not"
+    },
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading in the bar"
+    }
+   ],
+   "hides": [
+    "agents",
+    "tasks",
+    "mode",
+    "heading"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 46943,
+  "gzip": 13488
+ }
+}

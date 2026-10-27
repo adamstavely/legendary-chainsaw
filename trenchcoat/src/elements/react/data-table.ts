@@ -26,15 +26,25 @@ export type DataTableProps = Omit<RawDataTableProps, "rows" | "selection" | "sor
   title: string;
   /** Icon in front of the title */
   icon?: React.ReactNode;
+  /** The columns, left to right: each one's key, label, type, width and whether it can be edited */
   columns: DataColumn[];
+  /** The rows (controlled) – pair it with `onRowsChange` */
   rows?: DataRow[];
+  /** The rows to start with when `rows` isn't controlled */
   defaultRows?: DataRow[];
+  /** Called with every row after an edit, paste, clear, add, delete, undo or redo */
   onRowsChange?: (rows: DataRow[]) => void;
+  /** Ids of the checked rows (controlled) – pair it with `onSelectionChange` */
   selection?: string[];
+  /** The checked rows to start with when `selection` isn't controlled */
   defaultSelection?: string[];
+  /** Called with the ids of the checked rows whenever a row is checked or unchecked */
   onSelectionChange?: (ids: string[]) => void;
+  /** The sorted column and direction, or null for the rows' own order (controlled) */
   sort?: DataSort;
+  /** The sort to start with when `sort` isn't controlled */
   defaultSort?: DataSort;
+  /** Called when a column header changes the sort */
   onSortChange?: (sort: DataSort) => void;
   /** false turns the table read only */
   editable?: boolean;

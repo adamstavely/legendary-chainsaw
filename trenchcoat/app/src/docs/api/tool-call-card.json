@@ -1,0 +1,522 @@
+{
+ "elements": [
+  {
+   "tag": "tc-tool-call-card",
+   "className": "TcToolCallCard",
+   "description": "One tool call of an AI agent: name, summary, status with a live timer, arguments and result.",
+   "properties": [
+    {
+     "name": "name",
+     "attribute": "name",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Tool name as the agent calls it, shown in mono – e.g. \"search_web\"",
+     "readonly": false
+    },
+    {
+     "name": "summary",
+     "attribute": null,
+     "type": "string | Element | undefined",
+     "default": "undefined",
+     "description": "Short human summary – text, or an element (cloned)",
+     "readonly": false
+    },
+    {
+     "name": "icon",
+     "attribute": null,
+     "type": "Element | undefined",
+     "default": "undefined",
+     "description": "Icon in the tile on the left (cloned) – defaults to a wrench",
+     "readonly": false
+    },
+    {
+     "name": "status",
+     "attribute": "status",
+     "type": "ToolCallStatus",
+     "default": "\"success\"",
+     "description": "\"running\" shows a spinner and a live timer, \"success\" a check and the duration, \"error\" \"Failed\" and the message",
+     "readonly": false
+    },
+    {
+     "name": "args",
+     "attribute": null,
+     "type": "unknown",
+     "default": "undefined",
+     "description": "Arguments the tool was called with – objects are pretty-printed, JSON strings parsed",
+     "readonly": false
+    },
+    {
+     "name": "result",
+     "attribute": null,
+     "type": "unknown",
+     "default": "undefined",
+     "description": "What the tool returned – objects are pretty-printed, JSON strings parsed, other text shown as is",
+     "readonly": false
+    },
+    {
+     "name": "error",
+     "attribute": "error",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "Error message, shown when status is \"error\"",
+     "readonly": false
+    },
+    {
+     "name": "startedAt",
+     "attribute": "started-at",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "When the call started (ms since epoch) – the live timer counts from here",
+     "readonly": false
+    },
+    {
+     "name": "duration",
+     "attribute": "duration",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "Final duration in ms – otherwise measured while the card shows \"running\"",
+     "readonly": false
+    },
+    {
+     "name": "open",
+     "attribute": "open",
+     "type": "boolean",
+     "default": "false",
+     "description": "Expanded. Changed by the user (and on an error) unless a tc-open-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "openOnError",
+     "attribute": "open-on-error",
+     "type": "boolean",
+     "default": "true",
+     "description": "Opens the card when the call fails and closes it again on the next run, unless someone toggled it",
+     "readonly": false
+    },
+    {
+     "name": "onRetry",
+     "attribute": null,
+     "type": "(() => void | Promise<unknown>) | undefined",
+     "default": "undefined",
+     "description": "Shows a Retry button next to the error – may return a promise: Retry waits for it, a rejection is shown",
+     "readonly": false
+    },
+    {
+     "name": "maxCodeHeight",
+     "attribute": "max-code-height",
+     "type": "number",
+     "default": "220",
+     "description": "Height in px after which arguments and result are capped with a fade and \"Show all\"",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-open-change",
+     "detail": "",
+     "description": "The card opens or closes – by the user or on an error ({ open: boolean }); cancelable",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "tc",
+   "cssProperties": [
+    {
+     "name": "--tc-tool-call-card-code-bg",
+     "value": "light-dark(#fafafa, #212123)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-tool-call-card-error-bg",
+     "value": "light-dark(rgba(217, 58, 43, 0.04), rgba(255, 110, 100, 0.07))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-tool-call-card-tc-tile",
+     "value": "light-dark(#f5f5f5, #1d1d20)",
+     "looks": [
+      "standard"
+     ]
+    },
+    {
+     "name": "--tc-tool-call-card-syntax-string",
+     "value": "light-dark(rgba(0, 123, 172, 0.9), #5fc8e8)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-tool-call-card-syntax-number",
+     "value": "light-dark(#b25b0c, #f2a65a)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-tool-call-card-syntax-literal",
+     "value": "light-dark(#5b5bd6, #a5a5ff)",
+     "looks": [
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent-text",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-border-default",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-sm",
+    "--tc-control-px-sm",
+    "--tc-control-radius-sm",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-ease-move",
+    "--tc-ease-spring",
+    "--tc-ease-standard",
+    "--tc-fill-hover",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-mono",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-line-height-tight",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-radius-xl",
+    "--tc-radius-xs",
+    "--tc-shadow-raised",
+    "--tc-shimmer",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-status-danger-border",
+    "--tc-status-danger-fg",
+    "--tc-surface-raised",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tone-violet-fg"
+   ]
+  },
+  {
+   "tag": "tc-tool-call-group",
+   "className": "TcToolCallGroup",
+   "description": "Several tool calls folded into one line: \"Used 3 tools · 2.4s\". The cards go in a `slot=\"list\"` child (see above).",
+   "properties": [
+    {
+     "name": "label",
+     "attribute": "label",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "Label once all calls are done – defaults to \"Used 3 tools\"",
+     "readonly": false
+    },
+    {
+     "name": "runningLabel",
+     "attribute": "running-label",
+     "type": "string",
+     "default": "\"Using tools…\"",
+     "description": "Label while any call is running",
+     "readonly": false
+    },
+    {
+     "name": "duration",
+     "attribute": "duration",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "Total duration in ms – otherwise the sum of the cards' durations, or the time measured while running",
+     "readonly": false
+    },
+    {
+     "name": "open",
+     "attribute": "open",
+     "type": "boolean",
+     "default": "false",
+     "description": "Expanded. Changed by the user unless a tc-open-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "cards",
+     "attribute": null,
+     "type": "TcToolCallCard[]",
+     "default": null,
+     "description": "The cards in this group, in order",
+     "readonly": true
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-open-change",
+     "detail": "",
+     "description": "The group opens or closes ({ open: boolean }); cancelable",
+     "cancelable": true
+    }
+   ],
+   "slots": [
+    {
+     "name": "list",
+     "description": "The body with the cards: `<div slot=\"list\" class=\"ui-tc__body\"><div class=\"ui-tc__clip\"><div class=\"ui-tc-group__list\">…`"
+    }
+   ],
+   "methods": [],
+   "ui": "tc-group",
+   "cssProperties": [
+    {
+     "name": "--tc-tool-call-card-code-bg",
+     "value": "light-dark(#fafafa, #212123)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-tool-call-card-error-bg",
+     "value": "light-dark(rgba(217, 58, 43, 0.04), rgba(255, 110, 100, 0.07))",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-tool-call-card-tc-tile",
+     "value": "light-dark(#f5f5f5, #1d1d20)",
+     "looks": [
+      "standard"
+     ]
+    },
+    {
+     "name": "--tc-tool-call-card-syntax-string",
+     "value": "light-dark(rgba(0, 123, 172, 0.9), #5fc8e8)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-tool-call-card-syntax-number",
+     "value": "light-dark(#b25b0c, #f2a65a)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-tool-call-card-syntax-literal",
+     "value": "light-dark(#5b5bd6, #a5a5ff)",
+     "looks": [
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent-text",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-border-default",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-sm",
+    "--tc-control-px-sm",
+    "--tc-control-radius-sm",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-ease-move",
+    "--tc-ease-spring",
+    "--tc-ease-standard",
+    "--tc-fill-hover",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-mono",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-line-height-tight",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-radius-xl",
+    "--tc-radius-xs",
+    "--tc-shadow-raised",
+    "--tc-shimmer",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-status-danger-border",
+    "--tc-status-danger-fg",
+    "--tc-surface-raised",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tone-violet-fg"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "ToolCallCard",
+   "exported": true,
+   "props": [
+    {
+     "name": "name",
+     "type": "string",
+     "optional": false,
+     "description": "Tool name as the agent calls it, shown in mono – e.g. \"search_web\""
+    },
+    {
+     "name": "status",
+     "type": "TcToolCallCard[\"status\"]",
+     "optional": false,
+     "description": "\"running\" shows a spinner and a live timer, \"success\" a check and the duration, \"error\" \"Failed\" and the message"
+    },
+    {
+     "name": "summary",
+     "type": "React.ReactNode",
+     "optional": true,
+     "description": "Short human summary – e.g. \"Searched the web for 'CRM pricing 2026'\""
+    },
+    {
+     "name": "icon",
+     "type": "React.ReactNode",
+     "optional": true,
+     "description": "Icon in the tile on the left – defaults to a wrench"
+    },
+    {
+     "name": "defaultOpen",
+     "type": "boolean",
+     "optional": true,
+     "description": "Start expanded (uncontrolled)"
+    },
+    {
+     "name": "open",
+     "type": "boolean",
+     "optional": true,
+     "description": "Expanded state (controlled)"
+    },
+    {
+     "name": "onOpenChange",
+     "type": "(open: boolean) => void",
+     "optional": true,
+     "description": "Called when the card opens or closes – by a click, or on its own when the call fails"
+    }
+   ],
+   "hides": [
+    "summary",
+    "icon",
+    "open",
+    "name",
+    "status"
+   ]
+  },
+  {
+   "component": "ToolCallGroup",
+   "exported": true,
+   "props": [
+    {
+     "name": "children",
+     "type": "React.ReactNode",
+     "optional": false,
+     "description": "ToolCallCard elements – the group reads their name, icon, status and duration"
+    },
+    {
+     "name": "defaultOpen",
+     "type": "boolean",
+     "optional": true,
+     "description": "Start expanded (uncontrolled)"
+    },
+    {
+     "name": "open",
+     "type": "boolean",
+     "optional": true,
+     "description": "Expanded state (controlled)"
+    },
+    {
+     "name": "onOpenChange",
+     "type": "(open: boolean) => void",
+     "optional": true,
+     "description": "Called when the group opens or closes"
+    }
+   ],
+   "hides": [
+    "open",
+    "children"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 51953,
+  "gzip": 13084
+ }
+}

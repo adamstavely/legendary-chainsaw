@@ -78,12 +78,16 @@ const RawStepperForm = createComponent({
 type RawStepperFormProps = React.ComponentProps<typeof RawStepperForm>;
 
 type StepperFormOwnProps<V extends Record<string, unknown>> = {
+  /** The steps in order: id, title, the content to render and the check Continue runs */
   steps: Step<V>[];
   /** The values of every step. Controlled when defined – pair it with `onValuesChange` */
   values?: V;
   /** Starting values when `values` isn't controlled */
   defaultValues?: V;
-  /** @deprecated Use `defaultValues` – same meaning. Kept for one release */
+  /**
+   * Starting values when `values` isn't controlled – the old name of `defaultValues`
+   * @deprecated Use `defaultValues` – same meaning. Kept for one release
+   */
   initialValues?: V;
   /** Called with all values whenever a step changes them */
   onValuesChange?: (values: V) => void;
@@ -96,8 +100,12 @@ type StepperFormOwnProps<V extends Record<string, unknown>> = {
   step?: number;
   /** Index of the first step shown when `step` isn't controlled */
   defaultStep?: number;
-  /** @deprecated Use `defaultStep` – same meaning. Kept for one release */
+  /**
+   * Index of the first step shown when `step` isn't controlled – the old name of `defaultStep`
+   * @deprecated Use `defaultStep` – same meaning. Kept for one release
+   */
   initialStep?: number;
+  /** Called with the index of the step that opens */
   onStepChange?: (step: number) => void;
   /** Label of the last button */
   submitLabel?: string;
@@ -105,6 +113,7 @@ type StepperFormOwnProps<V extends Record<string, unknown>> = {
   submittingLabel?: string;
   /** What shows once onComplete is done – defaults to a short "All set" */
   success?: (values: V, reset: () => void) => React.ReactNode;
+  /** The element, for `next()`, `goTo()` and `reset()` */
   ref?: React.Ref<TcStepperForm>;
 };
 
@@ -192,9 +201,13 @@ const RawField = createComponent({ tagName: "tc-stepper-field", elementClass: Tc
 export type StepperFieldProps = {
   /** Matches the key in the step's validate result */
   name: string;
+  /** The field's label, tied to its control */
   label: string;
+  /** A hint under the control, replaced by the message while there is one */
   hint?: React.ReactNode;
+  /** Shows “Optional” after the label */
   optional?: boolean;
+  /** The control: a StepperInput, StepperTags or StepperChoices */
   children: React.ReactNode;
 };
 
@@ -213,6 +226,7 @@ export type StepperInputProps = Omit<React.ComponentPropsWithoutRef<"input">, "p
   prefix?: string;
   /** Goes to the wrapper (which draws the field), not the <input> */
   className?: string;
+  /** The native <input> */
   ref?: React.Ref<HTMLInputElement>;
 };
 
@@ -242,8 +256,11 @@ const RawTags = createComponent({
 });
 
 export type StepperTagsProps = {
+  /** The entries added so far */
   value: string[];
+  /** Called with the new list when entries are added or removed */
   onChange: (next: string[]) => void;
+  /** Placeholder while there are no entries – then it reads “Add another” */
   placeholder?: string;
   /** Returns a message when an entry can't be added */
   validate?: (entry: string, list: string[]) => string | null;
@@ -251,6 +268,7 @@ export type StepperTagsProps = {
   max?: number;
   /** Submits the entries with a native form, comma-separated */
   name?: string;
+  /** Turns off typing and removing entries */
   disabled?: boolean;
   /** Marks the field as required for assistive tech – checking it is up to the step's validate */
   required?: boolean;
@@ -287,13 +305,17 @@ const RawChoices = createComponent({
 });
 
 export type StepperChoicesProps = {
+  /** The chosen option's value; empty when none is chosen */
   value: string;
+  /** Called with the value of the card chosen */
   onChange: (value: string) => void;
+  /** The cards to choose from */
   options: StepperChoice[];
   /** Name of the group for screen readers */
   label: string;
   /** Submits the chosen value with a native form */
   name?: string;
+  /** Turns off choosing */
   disabled?: boolean;
   /** Marks the group as required for assistive tech – checking it is up to the step's validate */
   required?: boolean;

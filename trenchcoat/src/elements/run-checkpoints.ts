@@ -5,6 +5,7 @@ import { keyed } from "lit/directives/keyed.js";
 import { repeat } from "lit/directives/repeat.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController, OffScreenController } from "./internal/controllers";
 
 /*
@@ -114,7 +115,8 @@ const spinner = html`<svg class="ui-rcp__spinner" viewBox="0 0 16 16">${Array.fr
   { length: 8 },
   (_, i) => svg`<line x1="8" y1="1.75" x2="8" y2="4.75" transform=${`rotate(${i * 45} 8 8)`} style=${`animation-delay: ${(i - 8) * 100}ms`}></line>`,
 )}</svg>`;
-const flagIcon = html`<svg viewBox="0 0 16 16">${svg`<path d="M4.5 13.5V2.75"></path><path d="M4.5 3h7.25l-1.6 2.6 1.6 2.65H4.5"></path>`}</svg>`;
+/* After Lucide: flag – the header's icon */
+const flagIcon = svg`<path d="M4 22V4"></path><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>`;
 const failedMark = html`<svg viewBox="0 0 16 16" class="ui-rcp__mark">${svg`<path d="M8 4.2v4.4M8 11.6h.01"></path>`}</svg>`;
 /** A counter-clockwise arrow – back in time */
 const backIcon = html`<svg viewBox="0 0 16 16" aria-hidden="true">${svg`<path d="M3 8a5 5 0 1 0 1.6-3.7"></path><path d="M3 3v2.6h2.6"></path>`}</svg>`;
@@ -475,18 +477,18 @@ export class TcRunCheckpoints extends TcElement {
       list[0]?.id;
     const foot = this.renderFoot();
     const live = this.status === "running";
+    // The header (.tc-head): on the tray in Standard, the card's first row in Clean
+    const head = cardHead({
+      icon: flagIcon,
+      title: this.heading || "Run checkpoints",
+      subtitle: html`<span class="ui-rcp__count">Checkpoints · ${n}</span>`,
+      id: `${this.uid}-title`,
+      aside: html`<span class="ui-rcp__pill" data-status=${this.status}>${live ? html`<span class="ui-rcp__pulse" aria-hidden="true"></span>` : nothing}${STATUS_TEXT[this.status]}<span class="ui-rcp__sr"> run</span></span>`,
+    });
     return html`
+      ${clean ? nothing : head}
       <div class="ui-rcp__card">
-        <div class="ui-rcp__head">
-          <div class="ui-rcp__meta">
-            <span class="ui-rcp__state">
-              <span class="ui-rcp__state-icon" aria-hidden="true">${flagIcon}</span>
-              <span class="ui-rcp__state-label">Checkpoints · ${n}</span>
-            </span>
-            <span class="ui-rcp__pill" data-status=${this.status}>${live ? html`<span class="ui-rcp__pulse" aria-hidden="true"></span>` : nothing}${STATUS_TEXT[this.status]}<span class="ui-rcp__sr"> run</span></span>
-          </div>
-          <h3 class="ui-rcp__title" id=${`${this.uid}-title`}>${this.heading || "Run checkpoints"}</h3>
-        </div>
+        ${clean ? head : nothing}
         ${n ? this.renderStrip(range) : nothing}
         ${n
           ? html`<ol class="ui-rcp__list" role="listbox" aria-label="Restore points" @keydown=${this.onListKey}>
@@ -528,12 +530,11 @@ export class TcRunCheckpoints extends TcElement {
   font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-lg);
   line-height: var(--tc-line-height-normal);
-  letter-spacing: -0.006em;
   text-align: left;
   -webkit-font-smoothing: antialiased;
 }
 :where([data-look="clean"], [data-look="clean"] *)[data-ui="rcp"] {
-  --tc-run-checkpoints-accent: light-dark(rgba(0, 96, 226, 0.765), #4d8dff);
+  --tc-run-checkpoints-accent: var(--tc-accent-solid);
   --tc-run-checkpoints-on-accent: var(--tc-text-on-accent);
   --tc-run-checkpoints-drop: light-dark(rgba(196, 50, 50, 0.26), rgba(255, 110, 110, 0.3));
   --tc-run-checkpoints-inset: var(--tc-space-2-5);
@@ -560,31 +561,17 @@ export class TcRunCheckpoints extends TcElement {
 .ui-rcp__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 /* The white card: Standard sits on the gray tray, Clean is the whole component */
 .ui-rcp__card { position: relative; background: var(--tc-surface-raised); }
-:where([data-look="standard"], [data-look="standard"] *).ui-rcp__card { border-radius: var(--tc-card-radius); box-shadow: var(--tc-card-shadow); }
+:where([data-look="standard"], [data-look="standard"] *).ui-rcp__card { padding-top: var(--tc-space-2); border-radius: var(--tc-card-radius); box-shadow: var(--tc-card-shadow); }
 :where([data-look="clean"], [data-look="clean"] *).ui-rcp__card { border-radius: var(--tc-card-radius); box-shadow: var(--tc-card-shadow); }
-/* Header: a quiet status line with the run's pill, then the goal */
-.ui-rcp__head { display: grid; gap: var(--tc-space-1); }
-:where([data-look="standard"], [data-look="standard"] *).ui-rcp__head { padding: var(--tc-space-4) var(--tc-space-4-5) var(--tc-space-2); }
-:where([data-look="clean"], [data-look="clean"] *).ui-rcp__head { padding: var(--tc-space-4) var(--tc-space-4) var(--tc-space-2); }
-.ui-rcp__meta { display: flex; align-items: center; gap: var(--tc-space-2-5); min-height: 20px; font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); color: var(--tc-text-muted); }
-.ui-rcp__state { display: inline-flex; align-items: center; min-width: 0; }
-:where([data-look="standard"], [data-look="standard"] *).ui-rcp__state { gap: var(--tc-space-2); }
-:where([data-look="clean"], [data-look="clean"] *).ui-rcp__state { gap: var(--tc-space-1-5); }
-.ui-rcp__state-label { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-variant-numeric: tabular-nums; }
-.ui-rcp__state-icon { flex: none; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; }
-:where([data-look="standard"], [data-look="standard"] *).ui-rcp__state-icon { width: 13px; height: 13px; stroke-width: 1.5; }
-:where([data-look="clean"], [data-look="clean"] *).ui-rcp__state-icon { width: 16px; height: 16px; stroke-width: 1.1; color: var(--tc-icon-muted); }
+.ui-rcp__count { font-variant-numeric: tabular-nums; }
 /* The run's pill – trace-waterfall's live pill */
-.ui-rcp__pill { display: inline-flex; flex: none; align-items: center; gap: var(--tc-space-1-5); height: var(--tc-pill-h); margin-left: auto; padding: 0 var(--tc-pill-px); border-radius: var(--tc-pill-radius); background: var(--tc-fill-default); font-size: var(--tc-pill-font-size); font-weight: var(--tc-pill-font-weight); line-height: var(--tc-line-height-tight); white-space: nowrap; }
+.ui-rcp__pill { display: inline-flex; flex: none; align-items: center; gap: var(--tc-space-1-5); height: var(--tc-pill-h); padding: 0 var(--tc-pill-px); border-radius: var(--tc-pill-radius); background: var(--tc-fill-default); font-size: var(--tc-pill-font-size); font-weight: var(--tc-pill-font-weight); line-height: var(--tc-line-height-tight); white-space: nowrap; }
 :where([data-look="standard"], [data-look="standard"] *).ui-rcp__pill { color: var(--tc-text-muted); }
 :where([data-look="clean"], [data-look="clean"] *).ui-rcp__pill { color: var(--tc-text-secondary); }
 .ui-rcp__pill[data-status="running"] { background: var(--tc-accent-subtle); color: var(--tc-accent-text); }
 .ui-rcp__pill[data-status="done"] { background: var(--tc-status-success-bg); color: var(--tc-status-success-fg); }
 .ui-rcp__pill[data-status="failed"] { background: var(--tc-status-danger-bg); color: var(--tc-status-danger-fg); }
 .ui-rcp__pulse { width: 6px; height: 6px; border-radius: 50%; background: currentColor; animation: ui-rcp-pulse var(--tc-duration-shimmer) var(--tc-ease-in-out) 3; }
-.ui-rcp__title { margin: 0; overflow-wrap: anywhere; text-wrap: balance; font-size: var(--tc-font-size-lg-plus); }
-:where([data-look="standard"], [data-look="standard"] *).ui-rcp__title { color: var(--tc-text-primary); font-weight: var(--tc-font-weight-semibold); line-height: var(--tc-line-height-relaxed); letter-spacing: -0.012em; }
-:where([data-look="clean"], [data-look="clean"] *).ui-rcp__title { color: var(--tc-text-strong); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-loose); }
 /* ----- The strip: the run as a line, solid where going back keeps it, hatched where it discards ----- */
 .ui-rcp__strip { padding: var(--tc-space-2) var(--tc-space-5) var(--tc-space-1); }
 .ui-rcp__line { position: relative; height: 14px; }
@@ -747,8 +734,6 @@ export class TcRunCheckpoints extends TcElement {
 /* Narrow: one column for the pick, tighter gutters */
 @container (max-width: 400px) {
   .ui-rcp__cols { grid-template-columns: minmax(0, 1fr); gap: var(--tc-space-3); }
-  :where([data-look="standard"], [data-look="standard"] *).ui-rcp__head { padding: var(--tc-space-3-5) var(--tc-space-3-5) var(--tc-space-2); }
-  :where([data-look="clean"], [data-look="clean"] *).ui-rcp__head { padding: var(--tc-space-3-5) var(--tc-space-3-5) var(--tc-space-2); }
   .ui-rcp__strip { padding-inline: var(--tc-space-4); }
   .ui-rcp__list { padding-inline: var(--tc-space-1); }
   .ui-rcp__panel[data-open] .ui-rcp__panel-inner { padding: var(--tc-space-3) var(--tc-space-3-5) var(--tc-space-3-5); }

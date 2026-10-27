@@ -1,0 +1,309 @@
+{
+ "elements": [
+  {
+   "tag": "tc-mention-picker",
+   "className": "TcMentionPicker",
+   "description": "The / and @ picker for a text field the app owns: grouped results, arrow keys, ↵ / Tab inserts a token or a chip.",
+   "properties": [
+    {
+     "name": "htmlFor",
+     "attribute": "for",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The id of the field to attach to (in the same document)",
+     "readonly": false
+    },
+    {
+     "name": "target",
+     "attribute": null,
+     "type": "HTMLElement | null",
+     "default": "null",
+     "description": "The field to attach to – wins over `for`",
+     "readonly": false
+    },
+    {
+     "name": "triggers",
+     "attribute": null,
+     "type": "MentionPickerTrigger[]",
+     "default": "[]",
+     "description": "The trigger characters and what each one offers",
+     "readonly": false
+    },
+    {
+     "name": "search",
+     "attribute": null,
+     "type": "MentionPickerSearch | undefined",
+     "default": "undefined",
+     "description": "Finds suggestions in place of the built-in filter (see MentionPickerSearch)",
+     "readonly": false
+    },
+    {
+     "name": "renderChip",
+     "attribute": null,
+     "type": "MentionPickerRenderChip | undefined",
+     "default": "undefined",
+     "description": "Builds the chip for a contenteditable field (see MentionPickerRenderChip)",
+     "readonly": false
+    },
+    {
+     "name": "maxResults",
+     "attribute": "max-results",
+     "type": "number",
+     "default": "50",
+     "description": "Most rows shown at once",
+     "readonly": false
+    },
+    {
+     "name": "placement",
+     "attribute": "placement",
+     "type": "\"auto\" | \"above\" | \"below\"",
+     "default": "\"auto\"",
+     "description": "\"auto\" opens below the trigger, or above it when there's more room there",
+     "readonly": false
+    },
+    {
+     "name": "emptyText",
+     "attribute": "empty-text",
+     "type": "string",
+     "default": "\"No matches\"",
+     "description": "What the list says when nothing matches",
+     "readonly": false
+    },
+    {
+     "name": "disabled",
+     "attribute": "disabled",
+     "type": "boolean",
+     "default": "false",
+     "description": "Never opens",
+     "readonly": false
+    },
+    {
+     "name": "open",
+     "attribute": null,
+     "type": "",
+     "default": null,
+     "description": "Whether the list is open",
+     "readonly": true
+    },
+    {
+     "name": "attached",
+     "attribute": null,
+     "type": "HTMLElement | null",
+     "default": null,
+     "description": "The field it is attached to",
+     "readonly": true
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-pick",
+     "detail": "",
+     "description": "A row was picked (`MentionPickerPick`: `{ item, trigger, query, token }`). Cancelable: preventDefault() leaves the field as it is – the app inserts the mention itself",
+     "cancelable": true
+    },
+    {
+     "name": "tc-open-change",
+     "detail": "",
+     "description": "The list opened or closed (`{ open, trigger, query }`)",
+     "cancelable": false
+    },
+    {
+     "name": "tc-query-change",
+     "detail": "",
+     "description": "The text after the trigger changed while open (`{ query, trigger }`)",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [
+    {
+     "name": "close",
+     "params": "",
+     "returns": "void",
+     "description": "Closes the list (it opens again when the next trigger is typed)"
+    }
+   ],
+   "ui": "mnp",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-highlight",
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-avatar-font-size",
+    "--tc-avatar-font-weight",
+    "--tc-avatar-md",
+    "--tc-avatar-sm",
+    "--tc-border-default",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-instant",
+    "--tc-duration-moderate",
+    "--tc-duration-reveal",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-strong",
+    "--tc-font-mono",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-kbd-bg",
+    "--tc-kbd-fg",
+    "--tc-kbd-font-size",
+    "--tc-kbd-font-weight",
+    "--tc-kbd-h",
+    "--tc-kbd-px",
+    "--tc-kbd-radius",
+    "--tc-kbd-shadow",
+    "--tc-line-height-none",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-menu-bg",
+    "--tc-menu-item-font-size",
+    "--tc-menu-item-h",
+    "--tc-menu-item-hover",
+    "--tc-menu-item-px",
+    "--tc-menu-item-radius",
+    "--tc-menu-padding",
+    "--tc-menu-radius",
+    "--tc-menu-shadow",
+    "--tc-radius-2xs",
+    "--tc-radius-full",
+    "--tc-radius-xs",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-status-danger-fg",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius",
+    "--tc-z-dropdown"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "MentionPickerOwn",
+   "exported": false,
+   "props": [
+    {
+     "name": "target",
+     "type": "HTMLElement | React.RefObject<HTMLElement | null> | null",
+     "optional": true,
+     "description": "The field to attach to: an element or a ref to one (a <textarea>, an <input> or a contenteditable element)"
+    },
+    {
+     "name": "htmlFor",
+     "type": "string",
+     "optional": true,
+     "description": "…or its id"
+    },
+    {
+     "name": "triggers",
+     "type": "MentionTrigger[]",
+     "optional": false,
+     "description": "The trigger characters and what each one offers – icons may be React nodes"
+    },
+    {
+     "name": "onPick",
+     "type": "(pick: MentionPickerPick, event: Event) => void",
+     "optional": true,
+     "description": "Called with the pick. The picker then puts a token (textarea, input) or a chip (contenteditable) in place of the\ntyped query – call `event.preventDefault()` to insert it yourself instead"
+    },
+    {
+     "name": "onOpenChange",
+     "type": "(open: boolean, trigger: string | null) => void",
+     "optional": true,
+     "description": "Called when the list opens or closes, with the trigger character it opened for (null when closed)"
+    },
+    {
+     "name": "onQueryChange",
+     "type": "(query: string, trigger: string) => void",
+     "optional": true,
+     "description": "Called when the text typed after the trigger changes while the list is open"
+    }
+   ],
+   "hides": []
+  },
+  {
+   "component": "MentionPicker",
+   "exported": true,
+   "props": [
+    {
+     "name": "target",
+     "type": "HTMLElement | React.RefObject<HTMLElement | null> | null",
+     "optional": true,
+     "description": "The field to attach to: an element or a ref to one (a <textarea>, an <input> or a contenteditable element)"
+    },
+    {
+     "name": "htmlFor",
+     "type": "string",
+     "optional": true,
+     "description": "…or its id"
+    },
+    {
+     "name": "triggers",
+     "type": "MentionTrigger[]",
+     "optional": false,
+     "description": "The trigger characters and what each one offers – icons may be React nodes"
+    },
+    {
+     "name": "onPick",
+     "type": "(pick: MentionPickerPick, event: Event) => void",
+     "optional": true,
+     "description": "Called with the pick. The picker then puts a token (textarea, input) or a chip (contenteditable) in place of the\ntyped query – call `event.preventDefault()` to insert it yourself instead"
+    },
+    {
+     "name": "onOpenChange",
+     "type": "(open: boolean, trigger: string | null) => void",
+     "optional": true,
+     "description": "Called when the list opens or closes, with the trigger character it opened for (null when closed)"
+    },
+    {
+     "name": "onQueryChange",
+     "type": "(query: string, trigger: string) => void",
+     "optional": true,
+     "description": "Called when the text typed after the trigger changes while the list is open"
+    }
+   ],
+   "hides": []
+  }
+ ],
+ "changelog": [
+  "`tc-mention-picker` – the / and @ picker for a textarea, input or contenteditable: grouped, scored results, the field keeps focus (aria-activedescendant), ↵ / Tab insert a token or a chip, and the composer's Enter-to-send never sees that ↵. `search` may be async.",
+  "chat-composer (the Lit element and `trenchcoat/react`): opt-in `mentions` (a `tc-mention-picker` on the message) and `context` / `context-limit` (a `tc-context-tray` above it). Without them it renders as before."
+ ],
+ "size": {
+  "min": 33802,
+  "gzip": 11119
+ }
+}

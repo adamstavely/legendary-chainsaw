@@ -79,7 +79,7 @@ describe("tc-decision-tree", () => {
       expect(el.querySelector(".ui-dct__risk")!.textContent).toBe("High risk");
       expect(el.querySelector(".ui-dct__count")!.textContent).toBe("2 waiting for you");
       expect(el.querySelector(".ui-dct__of")!.textContent).toBe("Decision 1 of 2");
-      expect(el.querySelector(".ui-dct__heading")!.textContent).toBe("Decisions");
+      expect(el.querySelector(".tc-head__title")!.textContent).toBe("Decisions");
       // The lines are drawn (wide): a branch per option and "Other…", a leaf per consequence card, the follow-up's rail
       await until(() => el.querySelectorAll(".ui-dct__link").length > 0);
       const kinds = [...el.querySelectorAll(".ui-dct__link")].map((l) => l.getAttribute("data-kind"));
@@ -286,7 +286,7 @@ describe("tc-decision-tree", () => {
   test("allow-other=\"false\" hides Other…; heading names the bar", async () => {
     const el = await fixture<TcDecisionTree>(html`<tc-decision-tree allow-other="false" heading="Waiting on you" .decisions=${[decision]}></tc-decision-tree>`);
     expect(button(el, "Other…")).toBeUndefined();
-    expect(el.querySelector(".ui-dct__heading")!.textContent).toBe("Waiting on you");
+    expect(el.querySelector(".tc-head__title")!.textContent).toBe("Waiting on you");
     expect(el.querySelector(".ui-dct__hint")!.textContent).toBe("Pick a branch 1–2");
   });
 

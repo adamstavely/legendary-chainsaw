@@ -29,7 +29,9 @@ describe("tc-parallel-attempts", () => {
       const el = await fixture<TcParallelAttempts>(html`<tc-parallel-attempts look=${look} .attempts=${run("done")}></tc-parallel-attempts>`);
       expect(el.dataset.ui).toBe("pa");
       expect(el.dataset.look).toBe(look);
-      expect(el.querySelector(".ui-pa__title")!.textContent).toBe("Best of 2");
+      expect(el.querySelector(".tc-head__title")!.textContent).toBe("Best of 2");
+      // The header first, above the attempts' cards; the counts at its right
+      expect(el.querySelector(":scope > .tc-head:first-child .tc-head__aside > .ui-pa__sum")).toBeTruthy();
       expect(getComputedStyle(el).display).toBe("block");
     });
 
@@ -81,7 +83,7 @@ describe("tc-parallel-attempts", () => {
       const onPick = picks(el);
       const [a, b] = el.querySelectorAll<HTMLButtonElement>('[role="radio"]');
       expect([a.tabIndex, b.tabIndex]).toEqual([0, -1]);
-      expect(el.querySelector('[role="radiogroup"]')!.getAttribute("aria-labelledby")).toBe(el.querySelector(".ui-pa__title")!.id);
+      expect(el.querySelector('[role="radiogroup"]')!.getAttribute("aria-labelledby")).toBe(el.querySelector(".tc-head__title")!.id);
       a.focus();
       key(a, "ArrowDown");
       await settle();
@@ -123,7 +125,7 @@ describe("tc-parallel-attempts", () => {
     const el = await fixture<TcParallelAttempts>(html`<tc-parallel-attempts heading="Race" .attempts=${attempts} .formatCost=${(n: number) => `€${n}`}></tc-parallel-attempts>`);
     expect(el.querySelector(".ui-pa__icon svg[data-mine]")).toBeTruthy();
     expect(icon.isConnected).toBe(false);
-    expect(el.querySelector(".ui-pa__title")!.textContent).toBe("Race");
+    expect(el.querySelector(".tc-head__title")!.textContent).toBe("Race");
     expect(el.querySelector(".ui-pa__sum")!.textContent!.replace(/\s+/g, " ")).toContain("€3");
     expect(el.querySelector('[data-status="failed"] .ui-pa__failed')!.textContent).toBe("Failed");
     expect(el.querySelector('[data-status="done"] .ui-pa__meta')!.textContent).toBe("1.5s · €1");

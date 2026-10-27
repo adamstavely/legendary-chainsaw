@@ -1,0 +1,242 @@
+{
+ "elements": [
+  {
+   "tag": "tc-grid-background",
+   "className": "TcGridBackground",
+   "description": "A fine, slowly drifting line grid behind its children, fading out towards the edges.",
+   "properties": [
+    {
+     "name": "size",
+     "attribute": "size",
+     "type": "number",
+     "default": "48",
+     "description": "Cell size in px",
+     "readonly": false
+    },
+    {
+     "name": "color",
+     "attribute": "color",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "Line colour – defaults to a faint black, or a faint white in dark mode",
+     "readonly": false
+    },
+    {
+     "name": "speed",
+     "attribute": "speed",
+     "type": "number",
+     "default": "3",
+     "description": "Seconds per cell; 0 keeps the grid still",
+     "readonly": false
+    },
+    {
+     "name": "playFor",
+     "attribute": "play-for",
+     "type": "number",
+     "default": "5",
+     "description": "Seconds the grid drifts before it rests; Infinity never stops – then give users a way to pause it (WCAG 2.2.2)",
+     "readonly": false
+    },
+    {
+     "name": "direction",
+     "attribute": "direction",
+     "type": "GridDirection",
+     "default": "\"diagonal\"",
+     "description": "Drift direction; \"diagonal\" runs from top right to bottom left",
+     "readonly": false
+    },
+    {
+     "name": "reveal",
+     "attribute": "reveal",
+     "type": "boolean",
+     "default": "true",
+     "description": "Uncover the grid with a growing circle when it first comes into view (attribute: reveal=\"false\" turns it off)",
+     "readonly": false
+    },
+    {
+     "name": "fade",
+     "attribute": "fade",
+     "type": "number",
+     "default": "70",
+     "description": "Radius of the edge fade, in % of the distance to the corners",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [],
+   "slots": [],
+   "methods": [],
+   "ui": "gb",
+   "cssProperties": [
+    {
+     "name": "--tc-grid-background-reveal",
+     "value": "1.6s",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-ease-out",
+    "--tc-fill-default",
+    "--tc-grid-background-dx",
+    "--tc-grid-background-dy",
+    "--tc-grid-background-fade",
+    "--tc-grid-background-line",
+    "--tc-grid-background-passes",
+    "--tc-grid-background-r",
+    "--tc-grid-background-size",
+    "--tc-grid-background-speed"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "GridBackgroundOwn",
+   "exported": false,
+   "props": [
+    {
+     "name": "children",
+     "type": "React.ReactNode",
+     "optional": true,
+     "description": "Content rendered above the grid"
+    },
+    {
+     "name": "size",
+     "type": "number",
+     "optional": true,
+     "description": "Cell size in px"
+    },
+    {
+     "name": "color",
+     "type": "string",
+     "optional": true,
+     "description": "Line color – defaults to a faint black, or a faint white in dark mode"
+    },
+    {
+     "name": "speed",
+     "type": "number",
+     "optional": true,
+     "description": "Seconds per cell; 0 keeps the grid still"
+    },
+    {
+     "name": "playFor",
+     "type": "number",
+     "optional": true,
+     "description": "Seconds the grid drifts before it rests; Infinity never stops – then give users a way to pause it (WCAG 2.2.2)"
+    },
+    {
+     "name": "direction",
+     "type": "GridDirection",
+     "optional": true,
+     "description": "Drift direction; \"diagonal\" runs from top right to bottom left"
+    },
+    {
+     "name": "reveal",
+     "type": "boolean",
+     "optional": true,
+     "description": "Uncover the grid with a growing circle when it first comes into view"
+    },
+    {
+     "name": "fade",
+     "type": "number",
+     "optional": true,
+     "description": "Radius of the edge fade, in % of the distance to the corners"
+    },
+    {
+     "name": "className",
+     "type": "string",
+     "optional": true,
+     "description": "Class names for the root element"
+    },
+    {
+     "name": "ref",
+     "type": "React.Ref<TcGridBackground>",
+     "optional": true,
+     "description": "The root element"
+    }
+   ],
+   "hides": []
+  },
+  {
+   "component": "GridBackground",
+   "exported": true,
+   "props": [
+    {
+     "name": "children",
+     "type": "React.ReactNode",
+     "optional": true,
+     "description": "Content rendered above the grid"
+    },
+    {
+     "name": "size",
+     "type": "number",
+     "optional": true,
+     "description": "Cell size in px"
+    },
+    {
+     "name": "color",
+     "type": "string",
+     "optional": true,
+     "description": "Line color – defaults to a faint black, or a faint white in dark mode"
+    },
+    {
+     "name": "speed",
+     "type": "number",
+     "optional": true,
+     "description": "Seconds per cell; 0 keeps the grid still"
+    },
+    {
+     "name": "playFor",
+     "type": "number",
+     "optional": true,
+     "description": "Seconds the grid drifts before it rests; Infinity never stops – then give users a way to pause it (WCAG 2.2.2)"
+    },
+    {
+     "name": "direction",
+     "type": "GridDirection",
+     "optional": true,
+     "description": "Drift direction; \"diagonal\" runs from top right to bottom left"
+    },
+    {
+     "name": "reveal",
+     "type": "boolean",
+     "optional": true,
+     "description": "Uncover the grid with a growing circle when it first comes into view"
+    },
+    {
+     "name": "fade",
+     "type": "number",
+     "optional": true,
+     "description": "Radius of the edge fade, in % of the distance to the corners"
+    },
+    {
+     "name": "className",
+     "type": "string",
+     "optional": true,
+     "description": "Class names for the root element"
+    },
+    {
+     "name": "ref",
+     "type": "React.Ref<TcGridBackground>",
+     "optional": true,
+     "description": "The root element"
+    }
+   ],
+   "hides": []
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 12742,
+  "gzip": 4805
+ }
+}

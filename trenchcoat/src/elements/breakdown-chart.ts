@@ -4,6 +4,7 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { repeat } from "lit/directives/repeat.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { SmoothHeightController } from "./internal/controllers";
 import type { Look } from "./internal/look";
 
@@ -132,6 +133,9 @@ type Option = { value: string; label: string };
 
 let uid = 0;
 
+// The header icon: stacked columns
+const chartIcon = svg`<path d="M11 13H7"></path><path d="M19 9h-4"></path><path d="M3 3v16a2 2 0 0 0 2 2h16"></path><rect x="15" y="5" width="4" height="12" rx="1"></rect><rect x="7" y="8" width="4" height="9" rx="1"></rect>`;
+
 /**
  * A stacked bar chart with a linked table: pick the measure, the slice and the segment; legend chips hide segments.
  * @tag tc-breakdown-chart
@@ -145,8 +149,11 @@ export class TcBreakdownChart extends TcElement {
 
   /** The heading, and the region's name */
   @property() accessor heading = "Workload";
+  /** The rows to chart – one object per item, with a value for each dimension key and each measure field */
   @property({ attribute: false }) accessor records: BreakdownRecord[] = [];
+  /** The fields people can slice and segment by, with their values in display order */
   @property({ attribute: false }) accessor dimensions: BreakdownDimension[] = [];
+  /** What the bars can measure – a count of records, or the sum of a field */
   @property({ attribute: false }) accessor measures: BreakdownMeasure[] = [];
   /** Measure key; unset is the first measure */
   @property() accessor measure: string | undefined = undefined;
@@ -521,10 +528,11 @@ export class TcBreakdownChart extends TcElement {
     `;
 
     return html`
-      <header class="ui-bc__head">
-        <span class="ui-bc__title">${this.heading}</span>
-        <span class="ui-bc__total"><strong>${fmt(grand)}</strong> ${measure.unit}</span>
-      </header>
+      ${cardHead({
+        icon: chartIcon,
+        title: this.heading,
+        aside: html`<span class="ui-bc__total"><strong>${fmt(grand)}</strong> ${measure.unit}</span>`,
+      })}
 
       ${look === "clean" ? body : html`<div class="ui-bc__card">${body}</div>`}
 
@@ -577,13 +585,9 @@ export class TcBreakdownChart extends TcElement {
 :where([data-ui="bc"]) button { margin: 0; padding: 0; border: 0; background: none; font: inherit; color: inherit; cursor: pointer; }
 :where([data-ui="bc"]) svg { display: block; flex: none; }
 [data-ui="bc"] button:focus-visible, .ui-bc__table-wrap:focus-visible { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
-/* Title and total */
-.ui-bc__head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--tc-space-3); }
-:where([data-look="standard"], [data-look="standard"] *).ui-bc__head { padding: var(--tc-space-3) var(--tc-space-4-5) var(--tc-space-2-5); font-size: var(--tc-font-size-lg); line-height: var(--tc-line-height-normal); }
-:where([data-look="clean"], [data-look="clean"] *).ui-bc__head { padding: var(--tc-space-3-5) var(--tc-space-4) 0; }
-.ui-bc__title { font-weight: var(--tc-font-weight-medium); }
-:where([data-look="clean"], [data-look="clean"] *).ui-bc__title { min-width: 0; overflow: hidden; font-size: var(--tc-font-size-lg-plus); line-height: var(--tc-line-height-loose); color: var(--tc-text-strong); white-space: nowrap; text-overflow: ellipsis; }
+/* The total, beside the title */
 .ui-bc__total { color: var(--tc-text-muted); }
+:where([data-look="standard"], [data-look="standard"] *).ui-bc__total { font-size: var(--tc-font-size-lg); line-height: var(--tc-line-height-normal); }
 :where([data-look="clean"], [data-look="clean"] *).ui-bc__total { flex: none; font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); }
 .ui-bc__total strong { font-size: var(--tc-font-size-lg-plus); font-weight: var(--tc-font-weight-strong); color: var(--tc-text-primary); }
 :where([data-look="clean"], [data-look="clean"] *).ui-bc__total strong { line-height: var(--tc-line-height-loose); }
@@ -591,7 +595,7 @@ export class TcBreakdownChart extends TcElement {
 /* Pickers: select fields with a label above */
 .ui-bc__controls { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
 :where([data-look="standard"], [data-look="standard"] *).ui-bc__controls { gap: var(--tc-space-2-5); padding: var(--tc-space-4) var(--tc-space-4-5) var(--tc-space-1); }
-:where([data-look="clean"], [data-look="clean"] *).ui-bc__controls { gap: var(--tc-space-2); padding: var(--tc-space-3) var(--tc-space-4) 0; }
+:where([data-look="clean"], [data-look="clean"] *).ui-bc__controls { gap: var(--tc-space-2); padding: 0 var(--tc-space-4); }
 .ui-bc__select { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); min-width: 0; }
 :where([data-look="standard"], [data-look="standard"] *).ui-bc__select { gap: var(--tc-space-1-5); }
 :where([data-look="clean"], [data-look="clean"] *).ui-bc__select { gap: var(--tc-space-1); }
@@ -815,18 +819,20 @@ export class TcBreakdownChart extends TcElement {
 .ui-bc__hint { padding-left: var(--tc-space-2); color: var(--tc-text-muted); }
 :where([data-look="standard"], [data-look="standard"] *).ui-bc__hint { font-size: var(--tc-font-size-sm); }
 :where([data-look="clean"], [data-look="clean"] *).ui-bc__hint { font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); }
+/* Reset: Button's ghost, small */
 .ui-bc__reset {
   flex: none;
   height: var(--tc-control-h-sm);
-  padding: 0 var(--tc-space-2-5);
+  padding: 0 var(--tc-control-px-sm);
   border-radius: var(--tc-control-radius-sm);
-  font-weight: var(--tc-font-weight-medium);
+  font-size: var(--tc-control-font-size);
+  font-weight: var(--tc-control-font-weight);
+  line-height: var(--tc-line-height-normal);
+  color: var(--tc-action-ghost-fg);
   transition: background-color var(--tc-duration-fast) var(--tc-ease-standard);
 }
-:where([data-look="standard"], [data-look="standard"] *).ui-bc__reset { font-size: var(--tc-font-size-sm); color: var(--tc-accent-text); }
-:where([data-look="standard"], [data-look="standard"] *).ui-bc__reset:hover { background: var(--tc-accent-subtle); }
-:where([data-look="clean"], [data-look="clean"] *).ui-bc__reset { font-size: var(--tc-font-size-md); line-height: var(--tc-line-height-normal); color: var(--tc-text-primary); animation: ui-bc-pop var(--tc-duration-fast) var(--tc-ease-standard); }
-:where([data-look="clean"], [data-look="clean"] *).ui-bc__reset:hover { background: var(--tc-fill-subtle); }
+.ui-bc__reset:hover { background: var(--tc-action-ghost-bg-hover); color: var(--tc-text-primary); }
+:where([data-look="clean"], [data-look="clean"] *).ui-bc__reset { animation: ui-bc-pop var(--tc-duration-fast) var(--tc-ease-standard); }
 @keyframes ui-bc-drop { from { opacity: 0; transform: translateY(-4px) scale(0.98); } }
 @keyframes ui-bc-pop { from { opacity: 0; } }
 @keyframes ui-bc-pill { from { opacity: 0; transform: translate(-50%, -50%) scale(0.92); } }
@@ -835,8 +841,7 @@ export class TcBreakdownChart extends TcElement {
 .ui-bc__morph[data-smooth] { transition: height var(--tc-duration-slower) var(--tc-ease-move); }
 /* Narrow (phones): tighter padding, smaller bars */
 @container (max-width: 420px) {
-:where([data-look="clean"], [data-look="clean"] *).ui-bc__head { padding: var(--tc-space-3) var(--tc-space-3) 0; }
-:where([data-look="clean"], [data-look="clean"] *).ui-bc__controls { gap: var(--tc-space-1-5); padding: var(--tc-space-2-5) var(--tc-space-3) 0; }
+:where([data-look="clean"], [data-look="clean"] *).ui-bc__controls { gap: var(--tc-space-1-5); padding: 0 var(--tc-space-3); }
 :where([data-look="clean"], [data-look="clean"] *).ui-bc__select-btn { padding: 0 var(--tc-space-1) 0 var(--tc-space-2); }
 :where([data-look="clean"], [data-look="clean"] *).ui-bc__chart { padding: var(--tc-space-4-5) var(--tc-space-3) var(--tc-space-2); }
 :where([data-look="clean"], [data-look="clean"] *).ui-bc__plot { height: 168px; }

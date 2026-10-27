@@ -7,6 +7,7 @@ import { styleMap } from "lit/directives/style-map.js";
 import { easeOutQuart } from "../internal/ease";
 import { reducedMotion } from "../internal/reduced-motion";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController } from "./internal/controllers";
 
 /*
@@ -77,7 +78,8 @@ const stateOf = (l: BudgetLimit, warnAt: number): BudgetGuardState => {
 
 /* ---------- Icons ---------- */
 
-const shieldIcon = html`<svg viewBox="0 0 16 16" aria-hidden="true">${svg`<path d="M8 2.2 3.2 4v3.6c0 3 2 5 4.8 6.2 2.8-1.2 4.8-3.2 4.8-6.2V4z"></path>`}</svg>`;
+// The header icon: a shield
+const shieldIcon = svg`<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path>`;
 const warnIcon = html`<svg viewBox="0 0 16 16" aria-hidden="true">${svg`<path d="M8 2.6 1.9 13.1h12.2z"></path><path d="M8 6.6v3M8 11.4h.01"></path>`}</svg>`;
 const stopIcon = html`<svg viewBox="0 0 16 16" aria-hidden="true">${svg`<circle cx="8" cy="8" r="5.8"></circle><path d="M6.2 6.2h3.6v3.6H6.2z"></path>`}</svg>`;
 const upIcon = html`<svg viewBox="0 0 16 16" aria-hidden="true">${svg`<path d="M8 12.5v-9M4.5 7 8 3.5 11.5 7"></path>`}</svg>`;
@@ -378,17 +380,18 @@ export class TcBudgetGuard extends TcElement {
     const [hero, ...rest] = this.limits;
     const st = this.guardState;
     const pill = st === "stop" ? "Stopped" : this.status === "done" ? "Done" : this.status === "paused" ? "Paused" : st === "warn" ? "Near cap" : "Live";
+    const head = cardHead({
+      icon: shieldIcon,
+      title: this.heading,
+      subtitle: this.task,
+      id: `${this.uid}-title`,
+      aside: html`<span class="ui-bgd__pill" data-pill=${st === "ok" ? this.status : st}>${pill === "Live" ? html`<span class="ui-bgd__pulse" aria-hidden="true"></span>` : nothing}${pill}</span>`,
+    });
+    // Standard: the header sits on the tray above the card; Clean: the host is the card, the header its first row
     return html`
+      ${head}
       <div class="ui-bgd__card">
         <div class="ui-bgd__inner">
-          <header class="ui-bgd__head">
-            <span class="ui-bgd__icon" aria-hidden="true">${shieldIcon}</span>
-            <div class="ui-bgd__heading">
-              <h3 class="ui-bgd__title" id=${`${this.uid}-title`}>${this.heading}</h3>
-              ${this.task ? html`<p class="ui-bgd__sub">${this.task}</p>` : nothing}
-            </div>
-            <span class="ui-bgd__pill" data-pill=${st === "ok" ? this.status : st}>${pill === "Live" ? html`<span class="ui-bgd__pulse" aria-hidden="true"></span>` : nothing}${pill}</span>
-          </header>
           ${hero ? this.renderMeter(hero, true) : html`<p class="ui-bgd__empty">No limits set for this run</p>`}
           ${rest.length
             ? html`<ul class="ui-bgd__limits" aria-label="Other limits">
@@ -447,7 +450,7 @@ export class TcBudgetGuard extends TcElement {
 }
 [data-ui="bgd"] *, [data-ui="bgd"] *::before, [data-ui="bgd"] *::after { box-sizing: border-box; }
 [data-ui="bgd"] { grid-template-columns: minmax(0, 1fr); }
-[data-ui="bgd"] svg { display: block; width: 100%; height: 100%; overflow: visible; }
+[data-ui="bgd"] svg:where(:not(.tc-head__icon > svg)) { display: block; width: 100%; height: 100%; overflow: visible; }
 :where([data-ui="bgd"]) button { margin: 0; padding: 0; border: 0; background: none; font: inherit; color: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 :where([data-ui="bgd"]) :is(h3, p, ul) { margin: 0; padding: 0; }
 :where([data-ui="bgd"]) ul { list-style: none; }
@@ -459,20 +462,8 @@ export class TcBudgetGuard extends TcElement {
 /* The white card (Clean: the body of the one card) */
 :where([data-look="standard"], [data-look="standard"] *).ui-bgd__card { border-radius: var(--tc-card-radius); background: var(--tc-surface-raised); box-shadow: var(--tc-card-shadow); }
 :where([data-look="standard"], [data-look="standard"] *).ui-bgd__inner { padding: var(--tc-space-3-5) var(--tc-space-4) var(--tc-space-4); }
-:where([data-look="clean"], [data-look="clean"] *).ui-bgd__inner { padding: var(--tc-space-4); }
-/* Head: the shield, title and task, the run's pill */
-.ui-bgd__head { display: flex; align-items: flex-start; gap: var(--tc-space-2-5); }
-.ui-bgd__icon { display: grid; flex: none; place-items: center; width: 28px; height: 28px; border-radius: var(--tc-avatar-radius-agent); background: var(--tc-surface-raised); color: var(--tc-text-secondary); fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; }
-.ui-bgd__icon svg { width: 16px; height: 16px; }
-:where([data-look="standard"], [data-look="standard"] *).ui-bgd__icon { box-shadow: var(--tc-shadow-raised); stroke-width: 1.5; }
-:where([data-look="clean"], [data-look="clean"] *).ui-bgd__icon { box-shadow: var(--tc-shadow-raised); color: var(--tc-icon-muted); stroke-width: 1.1; }
-.ui-bgd__heading { flex: 1; min-width: 0; }
-.ui-bgd__title { overflow: hidden; font-weight: var(--tc-font-weight-strong); white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="standard"], [data-look="standard"] *).ui-bgd__title { font-size: var(--tc-font-size-lg); line-height: var(--tc-line-height-normal); color: var(--tc-text-primary); }
-:where([data-look="clean"], [data-look="clean"] *).ui-bgd__title { font-size: var(--tc-font-size-lg-plus); line-height: var(--tc-line-height-loose); color: var(--tc-text-strong); }
-.ui-bgd__sub { overflow: hidden; font-size: var(--tc-font-size-sm); color: var(--tc-text-muted); white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="clean"], [data-look="clean"] *).ui-bgd__sub { line-height: var(--tc-line-height-tight); }
-/* The run's pill – trace-waterfall's */
+:where([data-look="clean"], [data-look="clean"] *).ui-bgd__inner { padding: 0 var(--tc-space-4) var(--tc-space-4); }
+/* The run's pill, beside the title – trace-waterfall's */
 .ui-bgd__pill { display: inline-flex; flex: none; align-items: center; gap: var(--tc-space-1-5); height: var(--tc-pill-h-lg); padding: 0 var(--tc-pill-px-lg); border-radius: var(--tc-pill-radius); background: var(--tc-fill-default); font-size: var(--tc-pill-font-size-lg); font-weight: var(--tc-pill-font-weight); line-height: var(--tc-line-height-tight); color: var(--tc-text-secondary); white-space: nowrap; transition: background-color var(--tc-duration-moderate) var(--tc-ease-standard), color var(--tc-duration-moderate) var(--tc-ease-standard); }
 .ui-bgd__pill[data-pill="running"] { background: var(--tc-accent-subtle); color: var(--tc-accent-text); }
 .ui-bgd__pill[data-pill="done"] { background: var(--tc-status-success-bg); color: var(--tc-status-success-fg); }
@@ -565,13 +556,10 @@ export class TcBudgetGuard extends TcElement {
 /* Narrow: the limits stack, tighter gutters */
 @container (max-width: 400px) {
   :where([data-look="standard"], [data-look="standard"] *).ui-bgd__inner { padding: var(--tc-space-3) var(--tc-space-3-5) var(--tc-space-3-5); }
-  :where([data-look="clean"], [data-look="clean"] *).ui-bgd__inner { padding: var(--tc-space-3-5); }
+  :where([data-look="clean"], [data-look="clean"] *).ui-bgd__inner { padding: 0 var(--tc-space-3-5) var(--tc-space-3-5); }
   :where([data-look="clean"], [data-look="clean"] *).ui-bgd__foot { padding: 0 var(--tc-space-2) 0 var(--tc-space-3-5); }
   :where([data-look="standard"], [data-look="standard"] *).ui-bgd__big { font-size: var(--tc-font-size-3xl); }
   .ui-bgd__raise-label { flex-basis: 100%; }
-}
-@container (max-width: 300px) {
-  .ui-bgd__icon { display: none; }
 }
 /* Touch screens: bigger targets */
 @media (hover: none) and (pointer: coarse) {

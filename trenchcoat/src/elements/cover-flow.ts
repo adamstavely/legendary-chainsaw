@@ -81,11 +81,13 @@ export class TcCoverFlow extends TcElement {
   static override ui = "cf";
   static override looks = false;
 
+  /** The covers, in order: an image or your own content each, with a title and subtitle for the caption */
   @property({ attribute: false }) accessor items: CoverFlowItem[] = [];
   /** The front cover; unset starts on the middle one */
   @property({ type: Number }) accessor index: number | undefined = undefined;
   /** Cover size in px – scales down on narrow containers */
   @property({ type: Number, attribute: "item-width" }) accessor itemWidth = 280;
+  /** Cover height in px – scales down with the width */
   @property({ type: Number, attribute: "item-height" }) accessor itemHeight = 280;
   /** How far the side covers turn away, in degrees */
   @property({ type: Number }) accessor angle = 50;
@@ -503,7 +505,7 @@ export class TcCoverFlow extends TcElement {
   gap: var(--tc-space-1, 4px);
   width: 100%;
   min-width: 0;
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--tc-font-sans, "Inter", "InterVariable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif);
   -webkit-font-smoothing: antialiased;
 }
 

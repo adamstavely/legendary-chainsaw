@@ -3,7 +3,7 @@ import { property, state } from "lit/decorators.js";
 import { keyed } from "lit/directives/keyed.js";
 import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
-import { OffScreenController } from "./internal/controllers";
+import { OffScreenController, ToolbarController } from "./internal/controllers";
 import type { Look } from "./internal/look";
 import "./voice-orb";
 
@@ -102,8 +102,6 @@ export class TcVoiceMode extends TcElement {
 
   /** @internal What screen readers hear: finished turns, one update per change */
   @state() accessor said = "";
-  /** @internal The toolbar button that Tab lands on */
-  @state() accessor toolIndex = 0;
 
   private announced = new Set<string>();
   private stick = true;
@@ -173,25 +171,7 @@ export class TcVoiceMode extends TcElement {
 
   /* ---------- Toolbar keyboard (WAI-ARIA toolbar: one tab stop, arrows move) ---------- */
 
-  private onBarKey = (e: KeyboardEvent) => {
-    const tools = this.tools;
-    const at = tools.indexOf(e.target as HTMLButtonElement);
-    if (at < 0) return;
-    const to =
-      e.key === "ArrowRight" ? (at + 1) % tools.length
-      : e.key === "ArrowLeft" ? (at - 1 + tools.length) % tools.length
-      : e.key === "Home" ? 0
-      : e.key === "End" ? tools.length - 1
-      : -1;
-    if (to < 0) return;
-    e.preventDefault();
-    this.toolIndex = to;
-    tools[to].focus();
-  };
-  private onBarFocus = (e: FocusEvent) => {
-    const at = this.tools.indexOf(e.target as HTMLButtonElement);
-    if (at >= 0) this.toolIndex = at;
-  };
+  private toolbar = new ToolbarController(this, { items: () => this.tools });
 
   /* ---------- Render ---------- */
 
@@ -205,14 +185,13 @@ export class TcVoiceMode extends TcElement {
 
   private renderBar(look: Look) {
     const p = PATHS[look];
-    const tab = (i: number) => (i === Math.min(this.toolIndex, 3) ? 0 : -1);
     const canInterrupt = this.canInterrupt;
-    return html`<div class="ui-vm__bar" role="toolbar" aria-label="Voice controls" @keydown=${this.onBarKey} @focusin=${this.onBarFocus}>
+    return html`<div class="ui-vm__bar" role="toolbar" aria-label="Voice controls" @keydown=${this.toolbar.onKeyDown} @focusin=${this.toolbar.onFocusIn}>
       <div class="ui-vm__toggles">
-        <button type="button" class="ui-vm__tool" aria-label="Mute" aria-pressed=${this.muted ? "true" : "false"} tabindex=${tab(0)} @click=${() => this.toggleMuted()}>
+        <button type="button" class="ui-vm__tool" aria-label="Mute" aria-pressed=${this.muted ? "true" : "false"} @click=${() => this.toggleMuted()}>
           ${this.muted ? icon(look, p.mic, p.slash) : icon(look, p.mic)}
         </button>
-        <button type="button" class="ui-vm__tool" aria-label="Captions" aria-pressed=${this.captions ? "true" : "false"} tabindex=${tab(1)} @click=${() => this.toggleCaptions()}>
+        <button type="button" class="ui-vm__tool" aria-label="Captions" aria-pressed=${this.captions ? "true" : "false"} @click=${() => this.toggleCaptions()}>
           ${icon(look, p.captions)}
         </button>
       </div>
@@ -222,10 +201,10 @@ export class TcVoiceMode extends TcElement {
           class="ui-vm__interrupt"
           aria-disabled=${canInterrupt ? "false" : "true"}
           aria-keyshortcuts="Escape"
-          tabindex=${tab(2)}
+         
           @click=${() => this.interrupt()}
         ><span class="ui-vm__stop" aria-hidden="true"></span>Interrupt</button>
-        <button type="button" class="ui-vm__end" tabindex=${tab(3)} @click=${() => this.end()}>${icon(look, p.end)}End</button>
+        <button type="button" class="ui-vm__end" @click=${() => this.end()}>${icon(look, p.end)}End</button>
       </div>
     </div>`;
   }
@@ -308,8 +287,7 @@ export class TcVoiceMode extends TcElement {
 :where([data-look="standard"], [data-look="standard"] *).ui-vm__card { background: var(--tc-surface-on-tray); }
 :where([data-look="standard"], [data-look="standard"] *).ui-vm__body { padding: var(--tc-space-5) var(--tc-space-5) var(--tc-space-4); }
 :where([data-look="clean"], [data-look="clean"] *).ui-vm__body { padding: var(--tc-space-4) var(--tc-space-4) var(--tc-space-3); }
-:where([data-look="standard"], [data-look="standard"] *).ui-vm__heading { margin: 0; font-size: var(--tc-font-size-lg-plus); font-weight: var(--tc-font-weight-semibold); line-height: var(--tc-line-height-relaxed); color: var(--tc-text-primary); }
-:where([data-look="clean"], [data-look="clean"] *).ui-vm__heading { margin: 0; font-size: var(--tc-font-size-lg); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-normal); color: var(--tc-text-strong); }
+.ui-vm__heading { margin: 0; color: var(--tc-title-color); font-size: var(--tc-title-font-size); font-weight: var(--tc-title-font-weight); line-height: var(--tc-title-line-height); letter-spacing: var(--tc-title-tracking); }
 
 /* ----- The orb and the state under it ----- */
 .ui-vm__stage { display: grid; justify-items: center; gap: var(--tc-space-1); }

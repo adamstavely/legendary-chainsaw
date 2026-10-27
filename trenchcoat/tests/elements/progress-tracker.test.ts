@@ -39,6 +39,17 @@ describe("tc-progress-tracker", () => {
     expect(el.hasAttribute("data-complete")).toBe(false);
   });
 
+  test("the header comes first – on the tray above the card in Standard, the card's first row in Clean – and holds the count", async () => {
+    for (const look of ["standard", "clean"] as const) {
+      const el = await fixture<TcProgressTracker>(html`<tc-progress-tracker look=${look} .steps=${steps}></tc-progress-tracker>`);
+      const head = el.querySelector(":scope > .tc-head:first-child")!;
+      expect(head.querySelector("h3.tc-head__title")!.textContent).toBe("Getting started");
+      expect(head.querySelector(".tc-head__aside .ui-progress__count")!.textContent).toBe("1/2");
+      expect(el.querySelector(":scope > .tc-head + .ui-progress__body > [role='progressbar'] + .ui-progress__list")).toBeTruthy();
+      cleanup();
+    }
+  });
+
   test("a toggle fires tc-done-change once with the ids and every step's flag", async () => {
     const el = await fixture<TcProgressTracker>(html`<tc-progress-tracker .steps=${steps}></tc-progress-tracker>`);
     const onChange = vi.fn();

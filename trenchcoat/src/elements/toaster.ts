@@ -572,7 +572,10 @@ export class TcToaster extends TcElement {
       if (this.announced.get(key) === t.version) continue;
       this.announced.set(key, t.version);
       const node = this.toastNodes().find((el) => el.dataset.toastKey === key);
-      const text = node?.querySelector(".ui-ts__copy:not(.ui-ts__ghost)")?.textContent?.trim();
+      // Title and description as separate sentences – their text run together reads as one word ("sentINV-2041")
+      const copy = node?.querySelector(".ui-ts__copy:not(.ui-ts__ghost)");
+      const parts = copy ? [...copy.children].map((c) => c.textContent?.trim() ?? "").filter(Boolean) : [];
+      const text = (parts.length ? parts.map((p) => (/[.!?…]$/.test(p) ? p : `${p}.`)).join(" ") : copy?.textContent?.trim())?.replace(/\.$/, "");
       if (!text) continue;
       // A trailing no-break space that alternates makes the same message count as new
       if (t.type === "error") this.assertive = this.assertive === text ? `${text} ` : text;
@@ -716,7 +719,7 @@ export class TcToaster extends TcElement {
   max-width: calc(100% - 2 * var(--tc-toaster-offset));
   margin: 0;
   padding: 0;
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-md);
   line-height: var(--tc-line-height-normal);
   color: var(--tc-text-secondary);

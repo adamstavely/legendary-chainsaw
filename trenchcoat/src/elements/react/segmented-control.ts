@@ -20,11 +20,13 @@ const RawSegmentedControl = createComponent({
 });
 type RawSegmentedControlProps = React.ComponentProps<typeof RawSegmentedControl>;
 export type SegmentedControlProps<T extends string = string> = Omit<RawSegmentedControlProps, "value" | "options" | "onTcValueChange" | "onChange" | "defaultValue"> & {
+  /** The options to switch between, in order – two to six read best */
   options: SegmentOption<T>[];
   /** Controlled value */
   value?: T;
   /** Starting value when uncontrolled – defaults to the first enabled option */
   defaultValue?: T;
+  /** Called with the picked value each time the user picks an option */
   onChange?: (value: T) => void;
 };
 

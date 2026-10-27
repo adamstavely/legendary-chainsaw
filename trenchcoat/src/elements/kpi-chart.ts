@@ -4,11 +4,13 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { repeat } from "lit/directives/repeat.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 
 /*
  * <tc-kpi-chart> – the Lit port of src/components/kpi-chart.tsx: a metric card with a multi-line chart and a hover
- * tooltip. Clean is one white card with hairline shadows; the title, value and chart sit in its body and the footer
- * in the card's last row.
+ * tooltip. Standard puts the header on the gray tray above the white card that holds the value, chart and footer;
+ * Clean is one white card with hairline shadows: the header is its first row, the value and chart sit in its body and
+ * the footer in the card's last row.
  *
  *   <tc-kpi-chart heading="Revenue" value="$96.4k" .labels=${["Mar 3", "Mar 4"]} .series=${series}></tc-kpi-chart>
  *
@@ -81,6 +83,7 @@ export class TcKpiChart extends TcElement {
   @property({ attribute: false }) accessor labels: string[] = [];
   /** Longer labels for the tooltip header, e.g. "Tue, Mar 4" – falls back to `labels` */
   @property({ attribute: false }) accessor tooltipLabels: string[] | undefined = undefined;
+  /** The lines, each with a label, a colour and one value per label – every line also gets its own stroke pattern */
   @property({ attribute: false }) accessor series: KpiSeries[] = [];
   /** Formats the axis, tooltip and delta values */
   @property({ attribute: false }) accessor format: (n: number) => string = compact;
@@ -195,7 +198,6 @@ export class TcKpiChart extends TcElement {
     const axis = [0, Math.round(count / 2 - 0.5), count - 1].filter((v, i, a) => a.indexOf(v) === i);
 
     const body = html`
-      <h3 class="ui-kpi__title">${this.heading}</h3>
       <p class="ui-kpi__value">${this.value}${delta !== undefined && delta !== 0 && !Number.isNaN(delta)
           ? html`<span class="ui-kpi__delta" data-trend=${delta > 0 ? "up" : "down"}>${delta > 0 ? "+" : "−"}${format(Math.abs(delta))}</span>`
           : nothing}</p>
@@ -267,7 +269,12 @@ export class TcKpiChart extends TcElement {
       <span class="ui-kpi__sr" role="status">${this.spoken}</span>
     `;
 
-    return html`${clean ? html`<div class="ui-kpi__body">${body}</div>` : body}${this.footer ? html`<p class="ui-kpi__footer">${this.footer}</p>` : nothing}`;
+    // The header (.tc-head): on the tray above the card in Standard, the card's first row in Clean
+    const head = cardHead({ icon: svg`<path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 6-7"/>`, title: this.heading });
+    const footer = this.footer ? html`<p class="ui-kpi__footer">${this.footer}</p>` : nothing;
+    return clean
+      ? html`${head}<div class="ui-kpi__body">${body}</div>${footer}`
+      : html`${head}<div class="ui-kpi__card">${body}${footer}</div>`;
   }
 
   static override css = /* css */ `
@@ -275,12 +282,11 @@ export class TcKpiChart extends TcElement {
   box-sizing: border-box;
   width: 100%;
   max-width: 460px;
-  padding: var(--tc-space-5) var(--tc-space-5) var(--tc-space-4-5);
-  /* The card pattern – its ring is the shadow, no border */
-  background: var(--tc-surface-raised);
-  border-radius: var(--tc-card-radius);
-  box-shadow: var(--tc-card-shadow);
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  /* A gray tray: the header on it, the white card below */
+  padding: var(--tc-tray-inset);
+  border-radius: var(--tc-tray-radius);
+  background: var(--tc-surface-tray);
+  font-family: var(--tc-font-sans);
   color: var(--tc-text-primary);
   -webkit-font-smoothing: antialiased;
   font-variant-numeric: tabular-nums;
@@ -305,22 +311,22 @@ export class TcKpiChart extends TcElement {
   font-variant-numeric: tabular-nums;
 }
 [data-ui="kpi"] *, [data-ui="kpi"] *::before, [data-ui="kpi"] *::after { box-sizing: border-box; }
-:where([data-look="standard"], [data-look="standard"] *).ui-kpi__title {
-  margin: 0;
-  font-size: var(--tc-font-size-lg);
-  font-weight: var(--tc-font-weight-regular);
-  line-height: var(--tc-line-height-normal);
-  color: var(--tc-text-muted);
+/* The card pattern – its ring is the shadow, no border */
+.ui-kpi__card {
+  padding: var(--tc-space-5) var(--tc-space-5) var(--tc-space-4-5);
+  border-radius: var(--tc-card-radius);
+  background: var(--tc-surface-on-tray);
+  box-shadow: var(--tc-card-shadow);
 }
 :where([data-look="standard"], [data-look="standard"] *).ui-kpi__value {
   display: flex;
   align-items: baseline;
   gap: var(--tc-space-2-5);
-  margin: var(--tc-space-2) 0 0;
+  margin: 0;
   font-size: var(--tc-font-size-4xl);
   font-weight: var(--tc-font-weight-medium);
   line-height: var(--tc-line-height-display);
-  letter-spacing: -0.02em;
+  letter-spacing: var(--tc-tracking-tight);
 }
 :where([data-look="standard"], [data-look="standard"] *).ui-kpi__delta {
   font-size: var(--tc-font-size-lg);
@@ -348,27 +354,17 @@ export class TcKpiChart extends TcElement {
   text-align: right;
   color: var(--tc-text-muted);
 }
-:where([data-look="clean"], [data-look="clean"] *).ui-kpi__body { padding: var(--tc-space-3-5) var(--tc-space-4) var(--tc-space-3); }
-/* Title, the big number and the change as a tinted badge */
-:where([data-look="clean"], [data-look="clean"] *).ui-kpi__title {
-  margin: 0;
-  overflow: hidden;
-  font-size: var(--tc-font-size-lg-plus);
-  font-weight: var(--tc-font-weight-medium);
-  line-height: var(--tc-line-height-loose);
-  color: var(--tc-text-strong);
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
+:where([data-look="clean"], [data-look="clean"] *).ui-kpi__body { padding: 0 var(--tc-space-4) var(--tc-space-3); }
+/* The big number and the change as a tinted badge */
 :where([data-look="clean"], [data-look="clean"] *).ui-kpi__value {
   display: flex;
   align-items: center;
   gap: var(--tc-space-2);
-  margin: var(--tc-space-1-5) 0 0;
+  margin: 0;
   font-size: var(--tc-font-size-3xl);
   font-weight: var(--tc-font-weight-medium);
   line-height: var(--tc-line-height-display);
-  letter-spacing: -0.02em;
+  letter-spacing: var(--tc-tracking-tight);
   color: var(--tc-text-strong);
 }
 :where([data-look="clean"], [data-look="clean"] *).ui-kpi__delta {
@@ -676,7 +672,7 @@ export class TcKpiChart extends TcElement {
   align-self: stretch;
   max-width: none;
 }
-[data-ui="kpi"][data-fill] > .ui-kpi__body { display: flex; flex: 1 0 auto; flex-direction: column; }
+[data-ui="kpi"][data-fill] > :is(.ui-kpi__body, .ui-kpi__card) { display: flex; flex: 1 0 auto; flex-direction: column; }
 [data-ui="kpi"][data-fill] .ui-kpi__chart { flex: 1 0 auto; }
 :where([data-look="standard"], [data-look="standard"] *)[data-ui="kpi"][data-fill] .ui-kpi__chart { grid-template-rows: minmax(116px, 1fr) 20px; }
 :where([data-look="clean"], [data-look="clean"] *)[data-ui="kpi"][data-fill] .ui-kpi__chart { grid-template-rows: minmax(124px, 1fr) 16px; }
@@ -686,7 +682,7 @@ export class TcKpiChart extends TcElement {
 }
 /* Narrow (phones): tighter padding, a slightly shorter plot */
 @container (max-width: 360px) {
-:where([data-look="clean"], [data-look="clean"] *).ui-kpi__body { padding: var(--tc-space-3) var(--tc-space-3) var(--tc-space-2-5); }
+:where([data-look="clean"], [data-look="clean"] *).ui-kpi__body { padding: 0 var(--tc-space-3) var(--tc-space-2-5); }
 :where([data-look="clean"], [data-look="clean"] *).ui-kpi__chart { grid-template-rows: 112px 16px; column-gap: var(--tc-space-2); }
 :where([data-look="clean"], [data-look="clean"] *)[data-ui="kpi"][data-fill] .ui-kpi__chart { grid-template-rows: minmax(112px, 1fr) 16px; }
 :where([data-look="clean"], [data-look="clean"] *).ui-kpi__footer { padding: var(--tc-space-2-5) var(--tc-space-3); }

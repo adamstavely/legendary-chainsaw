@@ -1,0 +1,290 @@
+{
+ "elements": [
+  {
+   "tag": "tc-smart-recommendation",
+   "className": "TcSmartRecommendation",
+   "description": "A suggestion with a confidence signal, alternatives and one-click accept and undo.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Smart recommendation\"",
+     "description": "The heading, and the region's name",
+     "readonly": false
+    },
+    {
+     "name": "options",
+     "attribute": null,
+     "type": "Recommendation[]",
+     "default": "[]",
+     "description": "The first entry is the recommendation, the rest are offered as alternatives. A new set starts over",
+     "readonly": false
+    },
+    {
+     "name": "value",
+     "attribute": "value",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Id of the option on show; empty shows the recommendation",
+     "readonly": false
+    },
+    {
+     "name": "accepted",
+     "attribute": null,
+     "type": "string | null",
+     "default": "null",
+     "description": "Id of the accepted option, or null",
+     "readonly": false
+    },
+    {
+     "name": "open",
+     "attribute": "open",
+     "type": "boolean",
+     "default": "true",
+     "description": "Whether the reason is unfolded",
+     "readonly": false
+    },
+    {
+     "name": "acceptOption",
+     "attribute": null,
+     "type": "RecommendationAction | undefined",
+     "default": "undefined",
+     "description": "Called to accept an option; a returned promise keeps the button pending, a rejection says so",
+     "readonly": false
+    },
+    {
+     "name": "undoOption",
+     "attribute": null,
+     "type": "RecommendationAction | undefined",
+     "default": "undefined",
+     "description": "Called to take an acceptance back, like acceptOption",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-value-change",
+     "detail": "",
+     "description": "An option was picked from the Alternatives menu, or a new set of options went back to the recommendation ({ value: string, reset: boolean }); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-accepted-change",
+     "detail": "",
+     "description": "An option was accepted, or the acceptance taken back ({ accepted: string | null, reset: boolean }); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-open-change",
+     "detail": "",
+     "description": "The reason was folded or unfolded ({ open: boolean }); cancelable",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "sr",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-active",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-border-strong",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-md",
+    "--tc-control-radius-md",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-instant",
+    "--tc-duration-moderate",
+    "--tc-duration-slow",
+    "--tc-ease-decelerate",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-strong",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-menu-bg",
+    "--tc-menu-item-font-size",
+    "--tc-menu-item-h",
+    "--tc-menu-item-hover",
+    "--tc-menu-item-px",
+    "--tc-menu-item-radius",
+    "--tc-menu-item-selected-fg",
+    "--tc-menu-padding",
+    "--tc-menu-radius",
+    "--tc-menu-shadow",
+    "--tc-pill-font-size",
+    "--tc-pill-font-size-lg",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-h-lg",
+    "--tc-pill-px",
+    "--tc-pill-px-lg",
+    "--tc-pill-radius",
+    "--tc-radius-2xs",
+    "--tc-radius-sm",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-status-danger-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-success-solid",
+    "--tc-status-warning-solid",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-sunken",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tone-violet-bg",
+    "--tc-tone-violet-fg",
+    "--tc-tray-inset",
+    "--tc-tray-radius",
+    "--tc-z-dropdown"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "SmartRecommendation",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading, and the region's name – \"Smart recommendation\" by default"
+    },
+    {
+     "name": "options",
+     "type": "Recommendation[]",
+     "optional": false,
+     "description": "First entry is the recommendation, the rest are offered as alternatives. A new set of options starts over\n(uncontrolled choice and acceptance go back to the recommendation); an empty list shows the card with nothing to accept"
+    },
+    {
+     "name": "value",
+     "type": "string",
+     "optional": true,
+     "description": "Id of the option on show (controlled when defined) – the recommendation or an alternative"
+    },
+    {
+     "name": "defaultValue",
+     "type": "string",
+     "optional": true,
+     "description": "The option on show at first when uncontrolled – defaults to the recommendation"
+    },
+    {
+     "name": "onValueChange",
+     "type": "(id: string) => void",
+     "optional": true,
+     "description": "Called when an alternative (or the recommendation again) is picked from the menu"
+    },
+    {
+     "name": "accepted",
+     "type": "string | null",
+     "optional": true,
+     "description": "Id of the accepted option, or null (controlled when defined). onAccept / onUndo report the changes"
+    },
+    {
+     "name": "defaultAccepted",
+     "type": "string | null",
+     "optional": true,
+     "description": "The accepted option at first when uncontrolled – null by default"
+    },
+    {
+     "name": "onAccept",
+     "type": "(option: Recommendation) => void | Promise<unknown>",
+     "optional": true,
+     "description": "Accepts the option. Return a promise to keep the button pending until it settles: the option counts as\naccepted once it resolves, and a rejection says so and lets you try again"
+    },
+    {
+     "name": "onUndo",
+     "type": "(option: Recommendation) => void | Promise<unknown>",
+     "optional": true,
+     "description": "Takes the acceptance back – may return a promise, like onAccept"
+    },
+    {
+     "name": "open",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether the reason is unfolded (controlled when defined)"
+    },
+    {
+     "name": "defaultOpen",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether the reason starts unfolded when uncontrolled – true by default"
+    },
+    {
+     "name": "onOpenChange",
+     "type": "(open: boolean) => void",
+     "optional": true,
+     "description": "Called when the reason is folded or unfolded"
+    }
+   ],
+   "hides": [
+    "heading",
+    "options",
+    "value",
+    "accepted",
+    "open",
+    "acceptOption",
+    "undoOption",
+    "defaultValue"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 38077,
+  "gzip": 9615
+ }
+}

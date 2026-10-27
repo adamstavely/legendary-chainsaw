@@ -7,6 +7,7 @@ import { styleMap } from "lit/directives/style-map.js";
 import { reducedMotion } from "../internal/reduced-motion";
 import { TcElement } from "./internal/base";
 import { AriaForwardController } from "./internal/controllers";
+import { initials } from "./internal/util";
 
 /*
  * <tc-combobox> – the Lit port of src/components/combobox.tsx (pilot component, audit/lit-port-plan.md).
@@ -69,11 +70,6 @@ const icons = {
 };
 const glyph = (d: string, cls = "") => html`<svg viewBox="0 0 24 24" class=${`ui-cbx__glyph ${cls}`.trim()} aria-hidden="true">${svg`<path d=${d}></path>`}</svg>`;
 
-const initials = (label: string) => {
-  const words = label.trim().split(/\s+/);
-  return ((words[0]?.[0] ?? "") + (words.length > 1 ? words[words.length - 1][0] : "")).toUpperCase();
-};
-
 /** The typed text, marked where it matches */
 function highlight(text: string, query: string): TemplateResult {
   const i = query ? text.toLowerCase().indexOf(query.toLowerCase()) : -1;
@@ -111,6 +107,7 @@ export class TcCombobox extends TcElement {
   @property({ type: Boolean }) accessor single = false;
   /** Whether the list is open. Changed by the user unless a tc-open-change listener calls preventDefault() */
   @property({ type: Boolean, reflect: true }) accessor open = false;
+  /** Text in the empty input */
   @property() accessor placeholder = "Search…";
   /** Offer "Create “…”" when nothing matches the typed text exactly */
   @property({ type: Boolean }) accessor creatable = false;
@@ -127,6 +124,7 @@ export class TcCombobox extends TcElement {
   @property({ attribute: "empty-text" }) accessor emptyText = "No results";
   /** Submitted with the form: one entry per picked value */
   @property({ reflect: true }) accessor name = "";
+  /** Can't be changed or focused; also disabled inside a disabled <fieldset> */
   @property({ type: Boolean, reflect: true }) accessor disabled = false;
   /** At least one value must be picked before the form submits */
   @property({ type: Boolean, reflect: true }) accessor required = false;
@@ -253,7 +251,18 @@ export class TcCombobox extends TcElement {
       this.active = o.value;
       this.pick(o);
     };
-    const result = this.createOption?.(text);
+    const failed = () => {
+      if (!this.isConnected) return;
+      this.creating = { text, failed: true };
+      this.announce = `Couldn't create “${text}”`;
+    };
+    let result: ReturnType<NonNullable<typeof this.createOption>>;
+    try {
+      result = this.createOption?.(text);
+    } catch {
+      failed();
+      return;
+    }
     if (!(result instanceof Promise)) {
       made(result || { value: text, label: text });
       return;
@@ -265,11 +274,7 @@ export class TcCombobox extends TcElement {
         this.creating = null;
         made(o || { value: text, label: text });
       },
-      () => {
-        if (!this.isConnected) return;
-        this.creating = { text, failed: true };
-        this.announce = `Couldn't create “${text}”`;
-      },
+      failed,
     );
   }
 
@@ -859,6 +864,8 @@ export class TcCombobox extends TcElement {
   width: 100%;
   max-width: 440px;
   container-type: inline-size;
+  /* Initials inside the 16–18px avatar of a chip – below the type scale so they fit their circle */
+  --tc-combobox-chip-initial-size: 8.5px;
   font-family: var(--tc-font-sans);
   line-height: var(--tc-line-height-normal);
   font-weight: var(--tc-font-weight-regular);
@@ -873,6 +880,7 @@ export class TcCombobox extends TcElement {
 :where([data-look="clean"], [data-look="clean"] *)[data-ui="cbx"] {
   /* The chip a second Backspace will remove */
   --tc-combobox-chip-border-armed: light-dark(rgba(0, 0, 0, 0.27), rgba(255, 255, 255, 0.3));
+  --tc-combobox-chip-initial-size: 7px;
   font-size: var(--tc-font-size-md);
   color: var(--tc-text-primary);
 }
@@ -947,12 +955,12 @@ export class TcCombobox extends TcElement {
 :where([data-look="standard"], [data-look="standard"] *).ui-cbx__chip-x { width: 20px; height: 20px; border-radius: var(--tc-radius-sm); color: var(--tc-text-muted); }
 :where([data-look="standard"], [data-look="standard"] *).ui-cbx__chip-x:hover { background: var(--tc-fill-strong); }
 :where([data-look="standard"], [data-look="standard"] *).ui-cbx__chip-x .ui-cbx__glyph { width: 13px; height: 13px; stroke-width: 2; }
-:where([data-look="standard"], [data-look="standard"] *).ui-cbx__chip .ui-cbx__avatar { width: 18px; height: 18px; font-size: 8.5px; }
+:where([data-look="standard"], [data-look="standard"] *).ui-cbx__chip .ui-cbx__avatar { width: 18px; height: 18px; font-size: var(--tc-combobox-chip-initial-size); }
 :where([data-look="standard"], [data-look="standard"] *).ui-cbx__chip .ui-cbx__dot { margin: 0 var(--tc-space-0-5); }
 :where([data-look="clean"], [data-look="clean"] *).ui-cbx__chip-x { width: 18px; height: 18px; border-radius: var(--tc-radius-xs); color: var(--tc-icon-muted); }
 :where([data-look="clean"], [data-look="clean"] *).ui-cbx__chip-x:hover { background: var(--tc-fill-default); }
 :where([data-look="clean"], [data-look="clean"] *).ui-cbx__chip-x .ui-cbx__glyph { width: 12px; height: 12px; stroke-width: 1.9; }
-:where([data-look="clean"], [data-look="clean"] *).ui-cbx__chip .ui-cbx__avatar { width: 16px; height: 16px; font-size: 7px; background: var(--tc-surface-raised); box-shadow: 0 0 0 var(--tc-hairline) var(--tc-border-default); }
+:where([data-look="clean"], [data-look="clean"] *).ui-cbx__chip .ui-cbx__avatar { width: 16px; height: 16px; font-size: var(--tc-combobox-chip-initial-size); background: var(--tc-surface-raised); box-shadow: 0 0 0 var(--tc-hairline) var(--tc-border-default); }
 :where([data-look="clean"], [data-look="clean"] *).ui-cbx__chip .ui-cbx__dot { margin: 0 1px 0 var(--tc-space-0-5); }
 :where([data-look="clean"], [data-look="clean"] *).ui-cbx__chip .ui-cbx__icon { width: 16px; height: 16px; }
 /* "+3": folds open and closed like a chip, the number rolls; it names the hidden ones and opens the list */
@@ -998,7 +1006,7 @@ export class TcCombobox extends TcElement {
   font-size: var(--tc-avatar-font-size);
   line-height: var(--tc-line-height-none);
   font-weight: var(--tc-avatar-font-weight);
-  letter-spacing: 0.02em;
+  letter-spacing: var(--tc-tracking-normal);
 }
 :where([data-look="standard"], [data-look="standard"] *).ui-cbx__avatar { width: var(--tc-avatar-md); height: var(--tc-avatar-md); background: var(--tc-fill-strong); }
 :where([data-look="clean"], [data-look="clean"] *).ui-cbx__avatar { width: var(--tc-avatar-sm); height: var(--tc-avatar-sm); background: var(--tc-fill-default); }

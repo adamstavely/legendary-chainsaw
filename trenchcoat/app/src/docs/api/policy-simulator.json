@@ -1,0 +1,367 @@
+{
+ "elements": [
+  {
+   "tag": "tc-policy-simulator",
+   "className": "TcPolicySimulator",
+   "description": "A dry run of an action against a policy set: the decision, the rule that decided it, the reason and a step-by-step\nrule trace. Nothing executes.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Policy simulator\"",
+     "description": "The heading, and the form's name",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "One line under the heading",
+     "readonly": false
+    },
+    {
+     "name": "action",
+     "attribute": "action",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The action to try, in words or as a tool call, e.g. \"Send the Q3 report to an external address\"",
+     "readonly": false
+    },
+    {
+     "name": "ruleClass",
+     "attribute": "rule-class",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The id of the picked rule class; unset picks the first",
+     "readonly": false
+    },
+    {
+     "name": "context",
+     "attribute": "context",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Optional context the rules can read, e.g. \"amount: 4,800 · recipient: outside the company\"",
+     "readonly": false
+    },
+    {
+     "name": "ruleClasses",
+     "attribute": null,
+     "type": "PolicyRuleClass[]",
+     "default": "[ { id: \"read\", label: \"Read\", description: \"Looks something up; changes nothing\" }, { id: \"write\", label: \"Write\", description: \"Creates or changes records\" }, { id: \"communicate\", label: \"Communicate\", description: \"Sends something to a person or another system\" }, { id: \"spend\", label: \"Spend\", description: \"Moves money or commits to a cost\" }, { id: \"delete\", label: \"Delete\", description: \"Removes something that may not come back\" }, ]",
+     "description": "The rule classes to pick from",
+     "readonly": false
+    },
+    {
+     "name": "examples",
+     "attribute": null,
+     "type": "PolicySimExample[]",
+     "default": "[]",
+     "description": "Ready-made actions shown as chips above the form; [] hides them",
+     "readonly": false
+    },
+    {
+     "name": "evaluate",
+     "attribute": null,
+     "type": "((input: PolicySimInput) => PolicySimResult | Promise<PolicySimResult>) | undefined",
+     "default": "undefined",
+     "description": "Runs the dry run: return the result, or a promise of it. Nothing in the element executes the action",
+     "readonly": false
+    },
+    {
+     "name": "result",
+     "attribute": null,
+     "type": "PolicySimResult | undefined",
+     "default": "undefined",
+     "description": "The result shown – set by a run, or by the app (after preventing tc-simulate)",
+     "readonly": false
+    },
+    {
+     "name": "decisionLabels",
+     "attribute": null,
+     "type": "Partial<Record<PolicyDecision, string>>",
+     "default": "{}",
+     "description": "The decisions' names, merged over the defaults (Allow, Needs approval, Deny, Hard stop)",
+     "readonly": false
+    },
+    {
+     "name": "actionLabel",
+     "attribute": "action-label",
+     "type": "string",
+     "default": "\"Action\"",
+     "description": "The action field's label",
+     "readonly": false
+    },
+    {
+     "name": "actionPlaceholder",
+     "attribute": "action-placeholder",
+     "type": "string",
+     "default": "\"What should the agent do?\"",
+     "description": "The action field's placeholder",
+     "readonly": false
+    },
+    {
+     "name": "classLabel",
+     "attribute": "class-label",
+     "type": "string",
+     "default": "\"Rule class\"",
+     "description": "The rule class field's label",
+     "readonly": false
+    },
+    {
+     "name": "contextLabel",
+     "attribute": "context-label",
+     "type": "string",
+     "default": "\"Context\"",
+     "description": "The context field's label; the field is optional",
+     "readonly": false
+    },
+    {
+     "name": "contextPlaceholder",
+     "attribute": "context-placeholder",
+     "type": "string",
+     "default": "\"Anything the rules should know – amount, recipient, environment\"",
+     "description": "The context field's placeholder",
+     "readonly": false
+    },
+    {
+     "name": "simulateLabel",
+     "attribute": "simulate-label",
+     "type": "string",
+     "default": "\"Simulate\"",
+     "description": "The Simulate button's text",
+     "readonly": false
+    },
+    {
+     "name": "requiredLabel",
+     "attribute": "required-label",
+     "type": "string",
+     "default": "\"Describe the action to simulate.\"",
+     "description": "Shown when Simulate is pressed with no action",
+     "readonly": false
+    },
+    {
+     "name": "errorLabel",
+     "attribute": "error-label",
+     "type": "string",
+     "default": "\"Couldn't run the simulation. Try again.\"",
+     "description": "Shown when `evaluate` throws or its promise rejects",
+     "readonly": false
+    },
+    {
+     "name": "dryRunLabel",
+     "attribute": "dry-run-label",
+     "type": "string",
+     "default": "\"Dry run – nothing is executed\"",
+     "description": "The reminder next to Simulate that nothing runs",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-input-change",
+     "detail": "",
+     "description": "The action, the rule class or the context changed, or an example filled them ({ input, field }: PolicySimInputChange); cancelable – prevented, the fields keep their values",
+     "cancelable": true
+    },
+    {
+     "name": "tc-simulate",
+     "detail": "",
+     "description": "Simulate was pressed with a described action ({ input }: PolicySimRun); cancelable – prevented, `evaluate` isn't called and the app sets `result` itself",
+     "cancelable": true
+    },
+    {
+     "name": "tc-result",
+     "detail": "",
+     "description": "`evaluate` returned a result ({ input, result }: PolicySimResultEvent)",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "psim",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-active",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-border-default",
+    "--tc-border-strong",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-px-md",
+    "--tc-control-radius-md",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-quick",
+    "--tc-duration-shimmer",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-font-size",
+    "--tc-field-h",
+    "--tc-field-px",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-field-shadow-hover",
+    "--tc-field-shadow-invalid",
+    "--tc-fill-default",
+    "--tc-fill-strong",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-mono",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-radius-xs",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-7",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-danger-solid",
+    "--tc-status-info-bg",
+    "--tc-status-info-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-on-accent",
+    "--tc-text-placeholder",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-title-color",
+    "--tc-title-font-size",
+    "--tc-title-font-weight",
+    "--tc-title-line-height",
+    "--tc-title-tracking",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "defaultPolicyRuleClasses",
+   "signature": "defaultPolicyRuleClasses: PolicyRuleClass[]",
+   "description": "The rule classes used when the page gives none"
+  },
+  {
+   "name": "defaultPolicyDecisionLabels",
+   "signature": "defaultPolicyDecisionLabels: Record<PolicyDecision, string>",
+   "description": "The decisions' names used when the page gives none"
+  }
+ ],
+ "react": [
+  {
+   "component": "PolicySimulator",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading, and the form's name"
+    },
+    {
+     "name": "value",
+     "type": "Partial<PolicySimInput>",
+     "optional": true,
+     "description": "The action, rule class and context – controlled when given"
+    },
+    {
+     "name": "defaultValue",
+     "type": "Partial<PolicySimInput>",
+     "optional": true,
+     "description": "The inputs on mount when `value` isn't controlled"
+    },
+    {
+     "name": "onChange",
+     "type": "(input: PolicySimInput, field: PolicySimInputChange[\"field\"]) => void",
+     "optional": true,
+     "description": "A field changed or an example filled the form"
+    },
+    {
+     "name": "evaluate",
+     "type": "(input: PolicySimInput) => PolicySimResult | Promise<PolicySimResult>",
+     "optional": true,
+     "description": "Runs the dry run: return the result, or a promise of it"
+    },
+    {
+     "name": "result",
+     "type": "PolicySimResult",
+     "optional": true,
+     "description": "The result shown – controlled when given; otherwise the last result `evaluate` returned"
+    },
+    {
+     "name": "onSimulate",
+     "type": "(input: PolicySimInput) => boolean | void",
+     "optional": true,
+     "description": "Simulate was pressed. Return false to skip `evaluate` and set `result` yourself"
+    },
+    {
+     "name": "onResult",
+     "type": "(result: PolicySimResult, input: PolicySimInput) => void",
+     "optional": true,
+     "description": "`evaluate` returned a result"
+    }
+   ],
+   "hides": []
+  }
+ ],
+ "changelog": [
+  "**Trust & calibration**, from THEMIS and built domain-neutral: - claims and their reliability: `tc-claim-answer`, `tc-verification-queue`, `tc-reflection-gate`, `tc-reliance-gauge`, `tc-disagreement-banner`, `tc-synthesis-notes`; - where outputs came from: `tc-lineage-graph`, `tc-validity-badge`, `tc-provenance-summary`, `tc-correction-propagation`, `tc-attestation-check`, `tc-run-manifest`; - policy and control: `tc-policy-simulator`, `tc-gate-config`, `tc-coverage-matrix`, `tc-kill-switch`, `tc-playbook-canvas`."
+ ],
+ "size": {
+  "min": 41299,
+  "gzip": 11565
+ }
+}
