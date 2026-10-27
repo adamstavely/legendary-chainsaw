@@ -372,7 +372,9 @@
    }
   }
  ],
- "changelog": [],
+ "changelog": [
+  "**Feedback and onboarding:** - `tc-stories`: a gradient ring for new updates that opens a modal viewer; - `tc-background-tasks`."
+ ],
  "frameworks": [
   {
    "tag": "tc-background-tasks",

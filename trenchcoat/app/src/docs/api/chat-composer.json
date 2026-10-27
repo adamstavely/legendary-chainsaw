@@ -588,6 +588,7 @@
   }
  ],
  "changelog": [
+  "**`tc-chat-composer` toolbar:** - model picker, settings and prompt library; - page context you can connect and disconnect; - a disclaimer line under the input; - `hide*` props for each piece.",
   "chat-composer (the Lit element and `trenchcoat/react`): opt-in `mentions` (a `tc-mention-picker` on the message) and `context` / `context-limit` (a `tc-context-tray` above it). Without them it renders as before."
  ],
  "frameworks": [
@@ -1191,7 +1192,7 @@
   "windowed": false
  },
  "size": {
-  "min": 347622,
-  "gzip": 79171
+  "min": 347610,
+  "gzip": 79170
  }
 }
