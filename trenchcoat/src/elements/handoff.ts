@@ -4,6 +4,7 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { live } from "lit/directives/live.js";
 import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController, rescueFocus } from "./internal/controllers";
 import { isMac, tokenMs } from "./internal/util";
 
@@ -15,8 +16,9 @@ import { isMac, tokenMs } from "./internal/util";
  *   · active: you have control – the needs become a checklist, a note for the agent, "Hand back" (⌘↵) with how many
  *     are still open
  *   · returned: the card folds into one line – "Back with Coder · 3 of 3 done" – with "Take over again"
- * Standard: a white card on a gray tray, the buttons on the tray. Clean: one quiet white card, the buttons in its last
- * row under a hairline.
+ * A short header ("Handoff", with why it stopped or that it's yours as a pill) sits above the sentence. Standard: the
+ * header on a gray tray, then the white card, then the buttons on the tray. Clean: one quiet white card – the header is
+ * its first row, the buttons its last under a hairline.
  *
  *   <tc-handoff .agent=${{ name: "Coder" }} ask="sign in to Stripe" blocker="Sign-in required"
  *     reason="The dashboard asks for a one-time code sent to your phone." .needs=${[…]}></tc-handoff>
@@ -319,11 +321,6 @@ export class TcHandoff extends TcElement {
                 ? html`<span class="ui-hand__sub">${sub || agent.model}</span>`
                 : nothing}
           </span>
-          ${active
-            ? html`<span class="ui-hand__pill" data-tone="info"><span class="ui-hand__dot" aria-hidden="true"></span>Yours</span>`
-            : this.blocker
-              ? html`<span class="ui-hand__pill" data-tone="warning">${handIcon()}${this.blocker}</span>`
-              : nothing}
         </header>
         ${this.reason ? html`<p class="ui-hand__why" id=${`${uid}-why`}>${this.reason}</p>` : nothing}
         ${this.done.length || this.needs.length
@@ -371,10 +368,23 @@ export class TcHandoff extends TcElement {
 
   protected override render() {
     const returned = this.status === "returned";
+    const active = this.status === "active";
+    // The header (.tc-head): on the tray above the white card in Standard, the card's first row in Clean
+    const head = cardHead({
+      icon: svg`<path d="M18 11V6a2 2 0 0 0-4 0v5"/><path d="M14 10V4a2 2 0 0 0-4 0v6"/><path d="M10 10.5V6a2 2 0 0 0-4 0v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/>`,
+      title: "Handoff",
+      aside: returned
+        ? undefined
+        : active
+          ? html`<span class="ui-hand__pill" data-tone="info"><span class="ui-hand__dot" aria-hidden="true"></span>Yours</span>`
+          : this.blocker
+            ? html`<span class="ui-hand__pill" data-tone="warning">${handIcon()}${this.blocker}</span>`
+            : undefined,
+    });
     return html`
       <span class="ui-hand__sr" role="status">${this.announce}</span>
       <div class="ui-hand__card" tabindex="-1" @keydown=${this.onKey}>
-        ${returned ? this.renderReturned() : this.renderMain()}
+        ${head}${returned ? this.renderReturned() : this.renderMain()}
       </div>
     `;
   }
@@ -394,7 +404,6 @@ export class TcHandoff extends TcElement {
   font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-lg);
   line-height: var(--tc-line-height-normal);
-  letter-spacing: -0.006em;
   color: var(--tc-text-muted);
   text-align: left;
   -webkit-font-smoothing: antialiased;
@@ -432,22 +441,22 @@ export class TcHandoff extends TcElement {
 /* ----- Who needs what ----- */
 .ui-hand__head { display: flex; align-items: center; }
 :where([data-look="standard"], [data-look="standard"] *).ui-hand__head { gap: var(--tc-space-3); padding: var(--tc-space-4) var(--tc-space-4) 0; }
-:where([data-look="clean"], [data-look="clean"] *).ui-hand__head { gap: var(--tc-space-2-5); padding: var(--tc-space-3-5) var(--tc-space-3-5) 0 var(--tc-space-4); }
+:where([data-look="clean"], [data-look="clean"] *).ui-hand__head { gap: var(--tc-space-2-5); padding: 0 var(--tc-space-3-5) 0 var(--tc-space-4); }
 .ui-hand__avatar { display: grid; flex: none; place-items: center; background: var(--tc-surface-raised); box-shadow: var(--tc-shadow-raised); font-weight: var(--tc-avatar-font-weight); }
 :where([data-look="standard"], [data-look="standard"] *).ui-hand__avatar { width: 32px; height: 32px; border-radius: var(--tc-radius-lg); font-size: var(--tc-font-size-sm); color: var(--tc-text-muted); }
 :where([data-look="standard"], [data-look="standard"] *).ui-hand__avatar[data-logo] > svg { width: 18px; height: 18px; }
 :where([data-look="clean"], [data-look="clean"] *).ui-hand__avatar { width: 28px; height: 28px; border-radius: var(--tc-avatar-radius-agent); font-size: var(--tc-font-size-xs); color: var(--tc-text-secondary); }
 :where([data-look="clean"], [data-look="clean"] *).ui-hand__avatar[data-logo] > svg { width: 16px; height: 16px; }
 .ui-hand__heading { display: grid; flex: 1; min-width: 0; }
-.ui-hand__title b { font-weight: var(--tc-font-weight-strong); }
+/* The title is a sentence: the agent's name at the title weight, the rest of it quieter */
+.ui-hand__title { font-size: var(--tc-title-font-size); line-height: var(--tc-title-line-height); letter-spacing: var(--tc-title-tracking); }
+.ui-hand__title b { font-weight: var(--tc-title-font-weight); }
 :where([data-look="standard"], [data-look="standard"] *).ui-hand__title { color: var(--tc-text-muted); }
-:where([data-look="standard"], [data-look="standard"] *).ui-hand__title b { color: var(--tc-text-primary); }
+:where([data-look="standard"], [data-look="standard"] *).ui-hand__title b { color: var(--tc-title-color); }
 :where([data-look="clean"], [data-look="clean"] *).ui-hand__title { color: var(--tc-text-secondary); }
-:where([data-look="clean"], [data-look="clean"] *).ui-hand__title b { color: var(--tc-text-strong); }
+:where([data-look="clean"], [data-look="clean"] *).ui-hand__title b { color: var(--tc-title-color); }
 .ui-hand__title-ask { color: var(--tc-text-muted); }
-.ui-hand__sub { min-width: 0; overflow: hidden; color: var(--tc-text-muted); white-space: nowrap; text-overflow: ellipsis; font-size: var(--tc-font-size-sm); }
-:where([data-look="standard"], [data-look="standard"] *).ui-hand__sub { line-height: var(--tc-line-height-snug); }
-:where([data-look="clean"], [data-look="clean"] *).ui-hand__sub { line-height: var(--tc-line-height-tight); }
+.ui-hand__sub { min-width: 0; overflow: hidden; font-size: var(--tc-subtitle-font-size); line-height: var(--tc-subtitle-line-height); color: var(--tc-subtitle-color); white-space: nowrap; text-overflow: ellipsis; }
 /* Why it stopped – or that it's yours now: a header pill on a status tone */
 .ui-hand__pill { display: inline-flex; flex: none; align-self: start; align-items: center; gap: var(--tc-space-1); height: var(--tc-pill-h-lg); padding: 0 var(--tc-pill-px-lg); border-radius: var(--tc-pill-radius); font-size: var(--tc-pill-font-size-lg); font-weight: var(--tc-pill-font-weight); line-height: var(--tc-line-height-tight); white-space: nowrap; }
 .ui-hand__pill[data-tone="warning"] { background: var(--tc-status-warning-bg); color: var(--tc-status-warning-fg); }
@@ -555,12 +564,6 @@ export class TcHandoff extends TcElement {
 /* Narrow containers: the reason loses its indent, the main button takes the width, no keyboard hints */
 @container (max-width: 380px) {
   [data-ui="hand"] .ui-hand__why { margin-left: var(--tc-space-4) !important; }
-  /* The pill moves under the heading, so the heading keeps its width */
-  .ui-hand__head { flex-wrap: wrap; row-gap: var(--tc-space-2); }
-  .ui-hand__heading { flex-basis: 70%; }
-  .ui-hand__pill { order: 3; }
-  :where([data-look="standard"], [data-look="standard"] *).ui-hand__pill { margin-left: calc(var(--tc-space-10) + var(--tc-space-1)); }
-  :where([data-look="clean"], [data-look="clean"] *).ui-hand__pill { margin-left: calc(var(--tc-space-8) + var(--tc-space-1-5)); }
   .ui-hand__again { display: none; }
   [data-ui="hand"] .ui-hand__btn { flex: 1; }
   [data-ui="hand"] .ui-hand__hint { flex-basis: 100%; }

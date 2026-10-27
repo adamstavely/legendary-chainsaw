@@ -25,7 +25,7 @@ chart. The direction of the arrow and the tone are separate, so a rise can be ba
 
 ## Anatomy
 
-1. **Heading** `.ui-cs__title` – the icon and the title, which also names the region
+1. **Header** – the shared card header: a boxed icon and the title, which also names the region
 2. **Period** `.ui-cs__period` – the time the changes cover
 3. **Row** `.ui-cs__row` – one metric and its change
 4. **Label** `.ui-cs__label` – the metric's name
@@ -34,9 +34,9 @@ chart. The direction of the arrow and the tone are separate, so a rise can be ba
 
 ## Looks
 
-Standard puts the heading, in the accent colour, on a gray tray and the rows on a white card inside it, with larger
-text and a little more height per row. Clean is one white card with hairline shadows: the heading is its first row
-with a muted icon, the strokes are thinner and the trend marks are smaller tinted squares. In both, the rows fade
+Standard puts the header on a gray tray and the rows on a white card inside it, with larger
+text and a little more height per row. Clean is one white card with hairline shadows: the header is its first
+row, the strokes are thinner and the trend marks are smaller tinted squares. In both, the rows fade
 in one after another, and below 400px wide each metric stacks above its change so the text wraps instead of being
 cut off.
 

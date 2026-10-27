@@ -117,12 +117,10 @@
     "--tc-focus-ring-offset",
     "--tc-font-sans",
     "--tc-font-size-lg",
-    "--tc-font-size-lg-plus",
     "--tc-font-size-md",
     "--tc-font-size-sm",
     "--tc-font-weight-medium",
     "--tc-font-weight-regular",
-    "--tc-font-weight-semibold",
     "--tc-hairline",
     "--tc-icon-muted",
     "--tc-kbd-bg",
@@ -133,9 +131,7 @@
     "--tc-kbd-px",
     "--tc-kbd-radius",
     "--tc-kbd-shadow",
-    "--tc-line-height-loose",
     "--tc-line-height-normal",
-    "--tc-line-height-relaxed",
     "--tc-line-height-tight",
     "--tc-radius-lg",
     "--tc-radius-sm",
@@ -160,7 +156,6 @@
     "--tc-text-on-inverse",
     "--tc-text-primary",
     "--tc-text-secondary",
-    "--tc-text-strong",
     "--tc-tray-inset",
     "--tc-tray-radius"
    ]
@@ -235,7 +230,7 @@
   "filter-menu renders only the rows near the viewport in groups over 60 options (tested with 5,000)."
  ],
  "size": {
-  "min": 40418,
-  "gzip": 10704
+  "min": 42278,
+  "gzip": 11392
  }
 }

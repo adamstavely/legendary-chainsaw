@@ -505,10 +505,10 @@ export class TcConversationBranches extends TcElement {
 .ui-cvb__row--user .ui-cvb__foot { margin-right: calc(-1 * var(--tc-space-1)); }
 [data-ui="cvb"] .ui-cvb__actions { flex: 1 1 0; min-width: 0; }
 /* Edit: quiet until the message is hovered or something in it is focused, like the message-actions bar */
-:where([data-look="standard"], [data-look="standard"] *).ui-cvb__edit { display: grid; place-items: center; width: 30px; height: 30px; border-radius: var(--tc-control-radius-sm); color: var(--tc-icon-muted); transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard), opacity var(--tc-duration-base) var(--tc-ease-standard); }
-:where([data-look="standard"], [data-look="standard"] *).ui-cvb__edit:hover { background: var(--tc-fill-hover); color: var(--tc-text-primary); }
-:where([data-look="clean"], [data-look="clean"] *).ui-cvb__edit { display: grid; place-items: center; width: 28px; height: 28px; border-radius: var(--tc-control-radius-sm); color: var(--tc-icon-muted); transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard), opacity var(--tc-duration-base) var(--tc-ease-standard); }
-:where([data-look="clean"], [data-look="clean"] *).ui-cvb__edit:hover { background: var(--tc-fill-subtle); color: var(--tc-text-primary); }
+:where([data-look="standard"], [data-look="standard"] *).ui-cvb__edit { display: grid; place-items: center; width: var(--tc-control-h-sm); height: var(--tc-control-h-sm); border-radius: var(--tc-control-radius-sm); color: var(--tc-icon-muted); transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard), opacity var(--tc-duration-base) var(--tc-ease-standard); }
+:where([data-look="standard"], [data-look="standard"] *).ui-cvb__edit:hover { background: var(--tc-action-ghost-bg-hover); color: var(--tc-text-primary); }
+:where([data-look="clean"], [data-look="clean"] *).ui-cvb__edit { display: grid; place-items: center; width: var(--tc-control-h-md); height: var(--tc-control-h-md); border-radius: var(--tc-control-radius-md); color: var(--tc-icon-muted); transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard), opacity var(--tc-duration-base) var(--tc-ease-standard); }
+:where([data-look="clean"], [data-look="clean"] *).ui-cvb__edit:hover { background: var(--tc-action-ghost-bg-hover); color: var(--tc-text-primary); }
 @media (hover: hover) {
   .ui-cvb__row--user:not(:hover, :focus-within) .ui-cvb__edit { opacity: 0; }
 }
@@ -533,10 +533,9 @@ export class TcConversationBranches extends TcElement {
 :where([data-look="clean"], [data-look="clean"] *).ui-cvb__input { font-size: var(--tc-font-size-md); color: var(--tc-text-strong); }
 .ui-cvb__editor-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--tc-space-1-5); }
 .ui-cvb__note { flex: 1 1 180px; min-width: 0; font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); color: var(--tc-text-muted); }
-:where([data-look="standard"], [data-look="standard"] *).ui-cvb__btn { display: inline-flex; flex: none; align-items: center; height: var(--tc-control-h-sm); padding: 0 var(--tc-control-px-sm); border-radius: var(--tc-control-radius-sm); font-size: var(--tc-control-font-size); font-weight: var(--tc-control-font-weight); color: var(--tc-text-secondary); white-space: nowrap; transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard), opacity var(--tc-duration-fast) var(--tc-ease-standard); }
-:where([data-look="standard"], [data-look="standard"] *).ui-cvb__btn:hover { background: var(--tc-fill-hover); color: var(--tc-text-primary); }
-:where([data-look="clean"], [data-look="clean"] *).ui-cvb__btn { display: inline-flex; flex: none; align-items: center; height: var(--tc-control-h-sm); padding: 0 var(--tc-space-2-5); border-radius: var(--tc-radius-sm); font-size: var(--tc-font-size-md); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-normal); color: var(--tc-text-secondary); white-space: nowrap; transition: background-color var(--tc-duration-instant) var(--tc-ease-standard), color var(--tc-duration-instant) var(--tc-ease-standard), opacity var(--tc-duration-fast) var(--tc-ease-standard); }
-:where([data-look="clean"], [data-look="clean"] *).ui-cvb__btn:hover { background: var(--tc-fill-default); color: var(--tc-text-primary); }
+/* Cancel: Button's ghost, small; Save: the primary */
+.ui-cvb__btn { display: inline-flex; flex: none; align-items: center; height: var(--tc-control-h-sm); padding: 0 var(--tc-control-px-sm); border-radius: var(--tc-control-radius-sm); font-size: var(--tc-control-font-size); font-weight: var(--tc-control-font-weight); line-height: var(--tc-line-height-normal); color: var(--tc-action-ghost-fg); white-space: nowrap; transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard), opacity var(--tc-duration-fast) var(--tc-ease-standard); }
+.ui-cvb__btn:hover { background: var(--tc-action-ghost-bg-hover); color: var(--tc-text-primary); }
 .ui-cvb__btn--main, .ui-cvb__btn--main:hover { background: var(--tc-action-primary-bg); box-shadow: var(--tc-action-primary-shadow); color: var(--tc-action-primary-fg); }
 .ui-cvb__btn--main:hover:not(:disabled) { background: var(--tc-action-primary-bg-hover); }
 .ui-cvb__btn:disabled { cursor: default; opacity: 0.32; }

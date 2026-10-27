@@ -27,7 +27,7 @@ the correction's reach has been handled.
 
 ## Anatomy
 
-1. **Bar** `.ui-cpr__bar` – the heading, how many items cite the claim and how many are released
+1. **Header** `.tc-head` – the heading, how many items cite the claim and how many are released
 2. **Correction** `.ui-cpr__fix` – the old wording struck through, the new one, why and who
 3. **Progress** `.ui-cpr__progress` – how many are handled, as a meter split by state
 4. **Group** `.ui-cpr__group` – released packages, then artifacts
@@ -36,8 +36,8 @@ the correction's reach has been handled.
 
 ## Looks
 
-Standard sets the card on a gray tray with the bar above it, and the actions are raised secondary buttons. Clean is
-one white card under a plain bar: captions in small capitals, thinner icons and hairline-outlined actions. Both strike
+Standard sets the card on a gray tray with the header above it, and the actions are raised secondary buttons. Clean is
+one white card with the header as its first row: captions in small capitals, thinner icons and hairline-outlined actions. Both strike
 the old wording through in red and mark released packages with a violet tag.
 
 ## Keyboard

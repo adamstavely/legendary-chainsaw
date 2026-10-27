@@ -1,0 +1,352 @@
+{
+ "elements": [
+  {
+   "tag": "tc-knowledge-source-manager",
+   "className": "TcKnowledgeSourceManager",
+   "description": "The sources a knowledge base answers from – ingestion state and progress, documents and chunks, last sync and\nschedule, stale and duplicate warnings – with add, resync, pause, remove and a handoff to chunk review.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Knowledge sources\"",
+     "description": "The heading",
+     "readonly": false
+    },
+    {
+     "name": "sources",
+     "attribute": null,
+     "type": "KnowledgeSource[]",
+     "default": "[]",
+     "description": "The sources. Changed by the user (remove, schedule) unless a tc-sources-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "schedules",
+     "attribute": null,
+     "type": "KnowledgeSchedule[]",
+     "default": "[ { id: \"manual\", label: \"Manually\" }, { id: \"hourly\", label: \"Every hour\" }, { id: \"daily\", label: \"Daily\" }, { id: \"weekly\", label: \"Weekly\" }, ]",
+     "description": "The sync schedules a source can be set to",
+     "readonly": false
+    },
+    {
+     "name": "selected",
+     "attribute": "selected",
+     "type": "string | null",
+     "default": "null",
+     "description": "The id of the open source, or null",
+     "readonly": false
+    },
+    {
+     "name": "show",
+     "attribute": "show",
+     "type": "KnowledgeShow",
+     "default": "\"all\"",
+     "description": "Which sources show: \"all\", or \"attention\" – the failed, stale and duplicate ones",
+     "readonly": false
+    },
+    {
+     "name": "now",
+     "attribute": "now",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The moment last syncs are counted to, in epoch ms; unset shows their dates",
+     "readonly": false
+    },
+    {
+     "name": "addLabel",
+     "attribute": "add-label",
+     "type": "string",
+     "default": "\"Add source\"",
+     "description": "The Add source button's text",
+     "readonly": false
+    },
+    {
+     "name": "noAdd",
+     "attribute": "no-add",
+     "type": "boolean",
+     "default": "false",
+     "description": "Hides Add source, for a read-only view",
+     "readonly": false
+    },
+    {
+     "name": "noReview",
+     "attribute": "no-review",
+     "type": "boolean",
+     "default": "false",
+     "description": "Hides Review chunks, when the app has no chunk review",
+     "readonly": false
+    },
+    {
+     "name": "maxHeight",
+     "attribute": "max-height",
+     "type": "number",
+     "default": "420",
+     "description": "The list's height before it scrolls, in px",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-sources-change",
+     "detail": "",
+     "description": "A source was removed or its schedule changed ({ sources, change: { type, source } }: KnowledgeSourcesChange); cancelable – prevent it to control `sources`",
+     "cancelable": true
+    },
+    {
+     "name": "tc-selected-change",
+     "detail": "",
+     "description": "A source was picked or the open one closed ({ selected, source }: KnowledgeSelectedChange); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-show-change",
+     "detail": "",
+     "description": "All or Needs attention was picked ({ show }: KnowledgeShowChange); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-add",
+     "detail": "",
+     "description": "Add source was pressed – open your own picker (no detail)",
+     "cancelable": false
+    },
+    {
+     "name": "tc-resync",
+     "detail": "",
+     "description": "Resync (or Retry, for a failed source) was pressed ({ source }: KnowledgeSourceEvent)",
+     "cancelable": false
+    },
+    {
+     "name": "tc-pause",
+     "detail": "",
+     "description": "Pause or Resume was pressed ({ source, paused }: KnowledgePauseEvent – `paused` is what was asked for)",
+     "cancelable": false
+    },
+    {
+     "name": "tc-review-chunks",
+     "detail": "",
+     "description": "Review chunks was pressed – open your chunk review for the source ({ source }: KnowledgeSourceEvent)",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "ksm",
+   "cssProperties": [
+    {
+     "name": "--tc-knowledge-source-manager-row",
+     "value": "60px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-knowledge-source-manager-side",
+     "value": "340px",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-action-danger-bg",
+    "--tc-action-danger-bg-hover",
+    "--tc-action-danger-fg",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-action-primary-shadow",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-border-default",
+    "--tc-border-subtle",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-sm",
+    "--tc-control-px-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-duration-slow",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-font-size",
+    "--tc-field-h",
+    "--tc-field-px",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-field-shadow-hover",
+    "--tc-fill-default",
+    "--tc-fill-selected",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-h-lg",
+    "--tc-pill-px",
+    "--tc-pill-px-lg",
+    "--tc-pill-radius",
+    "--tc-radius-full",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-seg-pad",
+    "--tc-seg-thumb-bg",
+    "--tc-seg-thumb-shadow",
+    "--tc-seg-track-bg",
+    "--tc-seg-track-radius",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-6",
+    "--tc-space-7",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-info-bg",
+    "--tc-status-info-fg",
+    "--tc-status-info-solid",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tone-teal-bg",
+    "--tc-tone-teal-fg",
+    "--tc-tone-violet-bg",
+    "--tc-tone-violet-fg",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "KnowledgeSourceManager",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading"
+    },
+    {
+     "name": "sources",
+     "type": "KnowledgeSource[]",
+     "optional": true,
+     "description": "The sources – controlled when given"
+    },
+    {
+     "name": "defaultSources",
+     "type": "KnowledgeSource[]",
+     "optional": true,
+     "description": "The sources on mount when `sources` isn't controlled"
+    },
+    {
+     "name": "onSourcesChange",
+     "type": "(sources: KnowledgeSource[], change: KnowledgeSourcesChange[\"change\"]) => void",
+     "optional": true,
+     "description": "The sources changed: one was removed or its schedule changed"
+    },
+    {
+     "name": "selected",
+     "type": "string | null",
+     "optional": true,
+     "description": "The open source's id – controlled when given (null for none)"
+    },
+    {
+     "name": "onSelectedChange",
+     "type": "(selected: string | null) => void",
+     "optional": true,
+     "description": "A source was picked or the open one closed"
+    },
+    {
+     "name": "show",
+     "type": "KnowledgeShow",
+     "optional": true,
+     "description": "Which sources show – controlled when given"
+    },
+    {
+     "name": "onShowChange",
+     "type": "(show: KnowledgeShow) => void",
+     "optional": true,
+     "description": "All or Needs attention was picked"
+    },
+    {
+     "name": "onAdd",
+     "type": "() => void",
+     "optional": true,
+     "description": "Add source was pressed – open your picker; without it there's no Add source button"
+    },
+    {
+     "name": "onResync",
+     "type": "(source: KnowledgeSource) => void",
+     "optional": true,
+     "description": "Resync or Retry was pressed"
+    },
+    {
+     "name": "onPauseChange",
+     "type": "(source: KnowledgeSource, paused: boolean) => void",
+     "optional": true,
+     "description": "Pause or Resume was pressed; `paused` is what was asked for"
+    },
+    {
+     "name": "onReviewChunks",
+     "type": "(source: KnowledgeSource) => void",
+     "optional": true,
+     "description": "Review chunks was pressed – open your chunk review; without it there's no Review chunks button"
+    }
+   ],
+   "hides": []
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 43931,
+  "gzip": 12940
+ }
+}

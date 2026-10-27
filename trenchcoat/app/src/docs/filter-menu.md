@@ -25,7 +25,7 @@ remove one by one, or all at once with Clear all. Every part works from the keyb
 
 ## Anatomy
 
-1. **Head** `.ui-fm__head` – the heading and Clear all
+1. **Header** `.tc-head` – a funnel icon, the heading and Clear all
 2. **Chip** `.ui-fm__chips > .ui-fm__chip` – an active filter, with × to remove it
 3. **Group** `.ui-fm__group-head` – a facet: its name, how many options it has and how many are picked
 4. **Option** `.ui-fm__option` – a checkbox for one value of the facet
@@ -33,8 +33,8 @@ remove one by one, or all at once with Clear all. Every part works from the keyb
 
 ## Looks
 
-Standard sets the menu in a white card on a gray tray, with the keyboard hints on the tray below, dark checkboxes and
-chips that wrap onto as many lines as they need. Clean is one white card: chips stay on one line – as many as fit,
+Standard sets the menu in a white card on a gray tray, with the header on the tray above it and the keyboard hints below, dark checkboxes and
+chips that wrap onto as many lines as they need. Clean is one white card with the header as its first row: chips stay on one line – as many as fit,
 then a “+N” button that shows the rest – checkboxes are smaller and blue, and the hints are the card's last row.
 
 ## Keyboard

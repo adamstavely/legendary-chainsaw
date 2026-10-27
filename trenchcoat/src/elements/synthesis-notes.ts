@@ -3,6 +3,7 @@ import { property, state } from "lit/decorators.js";
 import { live } from "lit/directives/live.js";
 import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController, rescueFocus } from "./internal/controllers";
 
 /*
@@ -68,7 +69,8 @@ const short = (t: string) => (t.length > 48 ? `${t.slice(0, 47).trimEnd()}…` :
 
 /* ---------- Icons (Lucide, ISC – lucide.dev) ---------- */
 const icon = (paths: string, cls = "ui-syn__glyph") => html`<svg class=${cls} viewBox="0 0 24 24" aria-hidden="true">${svg`<path d=${paths}></path>`}</svg>`;
-const pen = icon("M12 20h9M16.4 3.6a2.1 2.1 0 1 1 3 3L7 19l-4 1 1-4Z", "ui-syn__mark-svg");
+/* The header's icon: a pen */
+const pen = svg`<path d="M12 20h9M16.4 3.6a2.1 2.1 0 1 1 3 3L7 19l-4 1 1-4Z"></path>`;
 const grip = html`<svg class="ui-syn__glyph" viewBox="0 0 24 24" aria-hidden="true">${svg`<circle cx="9" cy="6" r="1.4"></circle><circle cx="15" cy="6" r="1.4"></circle><circle cx="9" cy="12" r="1.4"></circle><circle cx="15" cy="12" r="1.4"></circle><circle cx="9" cy="18" r="1.4"></circle><circle cx="15" cy="18" r="1.4"></circle>`}</svg>`;
 const editIcon = icon("M16.4 3.6a2.1 2.1 0 1 1 3 3L7 19l-4 1 1-4ZM14 6l4 4");
 const removeIcon = icon("M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2M6 6l1 14a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-14");
@@ -430,14 +432,18 @@ export class TcSynthesisNotes extends TcElement {
         : html`<span class="ui-syn__line">${provenance}</span>`}
     </div>`;
     return html`
-      <div class="ui-syn__bar">
-        <span class="ui-syn__mark">${pen}</span>
-        <span class="ui-syn__title" id=${`${this.uid}-title`}>${this.heading}</span>
-        ${this.ownLabel ? html`<span class="ui-syn__own">${this.ownLabel}</span>` : nothing}
-        ${this.noExport
-          ? nothing
-          : html`<button type="button" class="ui-syn__btn ui-syn__btn--export" ?disabled=${!total} @click=${() => this.exportNotes()}>${exportIcon}Export</button>`}
-      </div>
+      ${/* The header (.tc-head): on the tray in Standard, the card's first row in Clean; "Written by you" and Export at the right */ cardHead({
+        icon: pen,
+        title: this.heading,
+        id: `${this.uid}-title`,
+        level: 2,
+        aside:
+          this.ownLabel || !this.noExport
+            ? html`${this.ownLabel ? html`<span class="ui-syn__own">${this.ownLabel}</span>` : nothing}${this.noExport
+                ? nothing
+                : html`<button type="button" class="ui-syn__btn ui-syn__btn--export" ?disabled=${!total} @click=${() => this.exportNotes()}>${exportIcon}Export</button>`}`
+            : undefined,
+      })}
       <div class="ui-syn__card">
         ${this.sections.map((s, i) => this.sectionPart(s, i))}
         ${cleanLook ? foot : nothing}
@@ -462,7 +468,6 @@ export class TcSynthesisNotes extends TcElement {
   font-size: var(--tc-font-size-md);
   font-weight: var(--tc-font-weight-regular);
   line-height: var(--tc-line-height-normal);
-  letter-spacing: -0.006em;
   color: var(--tc-text-secondary);
   text-align: left;
   -webkit-font-smoothing: antialiased;
@@ -474,22 +479,14 @@ export class TcSynthesisNotes extends TcElement {
   border-radius: var(--tc-card-radius);
   background: var(--tc-surface-raised);
   box-shadow: var(--tc-card-shadow);
-  letter-spacing: normal;
 }
 [data-ui="syn"] *, [data-ui="syn"] *::before, [data-ui="syn"] *::after { box-sizing: border-box; }
 [data-ui="syn"] svg { display: block; flex: none; }
-:where([data-ui="syn"]) :is(p, h3, ol) { margin: 0; }
+:where([data-ui="syn"]) :is(p, h2, h3, ol) { margin: 0; }
 :where([data-ui="syn"]) button { margin: 0; padding: 0; border: 0; background: none; font: inherit; color: inherit; letter-spacing: inherit; text-align: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 [data-ui="syn"] button:focus-visible { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
 .ui-syn__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-/* ----- The header: the mark, the heading, "Written by you" and Export ----- */
-.ui-syn__bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-1) var(--tc-space-2); min-width: 0; padding: var(--tc-space-1-5) var(--tc-space-1) var(--tc-space-2) var(--tc-space-3); }
-:where([data-look="clean"], [data-look="clean"] *).ui-syn__bar { padding: var(--tc-space-2) var(--tc-space-2) var(--tc-space-2) var(--tc-space-4); border-bottom: var(--tc-hairline) solid var(--tc-divider); }
-.ui-syn__mark { display: grid; flex: none; place-items: center; width: 16px; color: var(--tc-accent-text); }
-.ui-syn__mark-svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-:where([data-look="clean"], [data-look="clean"] *).ui-syn__mark-svg { stroke-width: 1.5; }
-.ui-syn__title { min-width: 0; overflow: hidden; font-weight: var(--tc-font-weight-semibold); color: var(--tc-text-strong); white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="clean"], [data-look="clean"] *).ui-syn__title { font-weight: var(--tc-font-weight-medium); }
+/* ----- The header's right: "Written by you" and Export ----- */
 /* Set apart from the model's output: the person's own words */
 .ui-syn__own { flex: none; height: var(--tc-pill-h); padding: 0 var(--tc-pill-px); border-radius: var(--tc-pill-radius); background: var(--tc-accent-subtle); font-size: var(--tc-pill-font-size); font-weight: var(--tc-pill-font-weight); line-height: var(--tc-pill-h); color: var(--tc-accent-text); white-space: nowrap; }
 .ui-syn__btn { display: inline-flex; flex: none; align-items: center; gap: var(--tc-space-1-5); height: var(--tc-control-h-sm); padding: 0 var(--tc-control-px-sm); border-radius: var(--tc-control-radius-sm); background: var(--tc-action-secondary-bg); box-shadow: var(--tc-action-secondary-shadow); font-size: var(--tc-control-font-size); font-weight: var(--tc-control-font-weight); color: var(--tc-action-secondary-fg); white-space: nowrap; transition: box-shadow var(--tc-duration-fast) var(--tc-ease-standard), transform var(--tc-duration-fast) var(--tc-ease-move), opacity var(--tc-duration-base) var(--tc-ease-standard); }
@@ -497,14 +494,13 @@ export class TcSynthesisNotes extends TcElement {
 [data-ui="syn"] .ui-syn__btn:hover:not(:disabled) { box-shadow: var(--tc-action-secondary-shadow-hover); }
 .ui-syn__btn:active:not(:disabled) { transform: scale(0.97); }
 .ui-syn__btn:disabled { cursor: default; opacity: 0.45; }
-.ui-syn__btn--export { margin-left: auto; }
 /* ----- The card: one section per list, under hairlines ----- */
 .ui-syn__card { display: grid; min-width: 0; border-radius: var(--tc-card-radius); background: var(--tc-surface-on-tray); box-shadow: var(--tc-card-shadow); }
-:where([data-look="clean"], [data-look="clean"] *).ui-syn__card { border-radius: 0 0 var(--tc-card-radius) var(--tc-card-radius); background: none; box-shadow: none; }
+:where([data-look="clean"], [data-look="clean"] *).ui-syn__card { border-top: var(--tc-hairline) solid var(--tc-divider); border-radius: 0 0 var(--tc-card-radius) var(--tc-card-radius); background: none; box-shadow: none; }
 .ui-syn__section { display: grid; gap: var(--tc-space-1); min-width: 0; padding: var(--tc-space-3) var(--tc-space-2) var(--tc-space-2); }
 .ui-syn__section + .ui-syn__section { border-top: var(--tc-hairline) solid var(--tc-divider); }
 :where([data-look="clean"], [data-look="clean"] *).ui-syn__section { padding: var(--tc-space-3) var(--tc-space-2-5) var(--tc-space-2); }
-.ui-syn__heading { display: flex; align-items: center; gap: var(--tc-space-1-5); padding: 0 var(--tc-space-2); font-size: var(--tc-font-size-sm); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-snug); color: var(--tc-text-secondary); }
+.ui-syn__heading { display: flex; align-items: center; gap: var(--tc-space-1-5); padding: 0 var(--tc-space-2); font-size: var(--tc-caption-font-size); font-weight: var(--tc-caption-font-weight); line-height: var(--tc-caption-line-height); letter-spacing: var(--tc-caption-tracking); text-transform: var(--tc-caption-transform); color: var(--tc-caption-color); }
 .ui-syn__dot { flex: none; width: 6px; height: 6px; border-radius: var(--tc-radius-full); background: var(--tc-accent); }
 .ui-syn__section[data-tone="1"] .ui-syn__dot { background: var(--tc-tone-amber-solid); }
 .ui-syn__section[data-tone="2"] .ui-syn__dot { background: var(--tc-tone-teal-solid); }

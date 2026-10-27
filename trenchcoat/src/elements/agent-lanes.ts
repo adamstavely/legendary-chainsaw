@@ -4,6 +4,7 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { repeat } from "lit/directives/repeat.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController, rescueFocus } from "./internal/controllers";
 
 /*
@@ -90,7 +91,8 @@ const xCss = (left: number | "now") => (left === "now" ? "100" : `min(100, ${lef
 
 /* ---------- Icons ---------- */
 
-const sparkIcon = html`<svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">${svg`<path d="M7 1.2c.4 2.9 1.9 4.4 4.8 4.8-2.9.4-4.4 1.9-4.8 4.8C6.6 7.9 5.1 6.4 2.2 6 5.1 5.6 6.6 4.1 7 1.2Z" fill="currentColor"></path><circle cx="11.6" cy="11.4" r="1.1" fill="currentColor" opacity="0.55"></circle>`}</svg>`;
+// The header icon: lanes of work against a "now" line
+const lanesIcon = svg`<path d="M3 6h9M7 12h11M5 18h8"></path><path d="M21 3v18"></path>`;
 const failIcon = html`<svg width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">${svg`<path d="M2.5 2.5l5 5M7.5 2.5l-5 5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>`}</svg>`;
 const pauseIcon = (paused: boolean) =>
   html`<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">${paused ? svg`<path d="M3.5 2.2v7.6L9.8 6 3.5 2.2Z" fill="currentColor"></path>` : svg`<path d="M3.5 2.5v7M8.5 2.5v7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path>`}</svg>`;
@@ -394,16 +396,16 @@ export class TcAgentLanes extends TcElement {
 
   private bar(running: number, needs: number) {
     const paused = this.paused;
-    return html`<header class="ui-al__bar">
-      <span class="ui-al__spark">${sparkIcon}</span>
-      <span class="ui-al__title">${this.heading}</span>
-      <span class="ui-al__summary"><span data-kind="running">${running} running</span>${needs > 0 ? html`<span data-kind="needs">${needs} need you</span>` : nothing}</span>
-      <span class="ui-al__window">Last ${mins(this.span)}</span>
-      ${this.speed > 0
-        ? // One button for both states, so focus stays on it (2.2.2)
-          html`<button type="button" class="ui-al__pause" aria-pressed=${paused ? "true" : "false"} aria-label="Pause timeline" title=${paused ? "Resume timeline" : "Pause timeline"} @click=${() => this.setPaused(!this.paused)}>${pauseIcon(paused)}</button>`
-        : nothing}
-    </header>`;
+    return cardHead({
+      icon: lanesIcon,
+      title: this.heading,
+      aside: html`<span class="ui-al__summary"><span data-kind="running">${running} running</span>${needs > 0 ? html`<span data-kind="needs">${needs} need you</span>` : nothing}</span>
+        <span class="ui-al__window">Last ${mins(this.span)}</span>
+        ${this.speed > 0
+          ? // One button for both states, so focus stays on it (2.2.2)
+            html`<button type="button" class="ui-al__pause" aria-pressed=${paused ? "true" : "false"} aria-label="Pause timeline" title=${paused ? "Resume timeline" : "Pause timeline"} @click=${() => this.setPaused(!this.paused)}>${pauseIcon(paused)}</button>`
+          : nothing}`,
+    });
   }
 
   private agentColumn(list: LaneTask[]) {
@@ -528,7 +530,7 @@ export class TcAgentLanes extends TcElement {
     const needs = list.filter((t) => t.status === "waiting").length;
     const running = list.filter((t) => t.status === "running").length;
     const look = this.resolvedLook;
-    // The summary bar: on the tray above the card (Standard) or inside the card, on top (Clean)
+    // The header: on the tray above the card (Standard) or inside the card, on top (Clean)
     const bar = this.bar(running, needs);
     const openLane = openTask ? row(openTask.agentId) : -1;
 
@@ -602,11 +604,11 @@ export class TcAgentLanes extends TcElement {
   border-radius: var(--tc-tray-radius);
   background: var(--tc-surface-sunken);
   container-type: inline-size;
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-regular);
   line-height: var(--tc-line-height-normal);
-  letter-spacing: -0.006em;
+  letter-spacing: var(--tc-tracking-normal);
   color: var(--tc-text-muted);
   text-align: left;
   -webkit-font-smoothing: antialiased;
@@ -642,16 +644,10 @@ export class TcAgentLanes extends TcElement {
 .ui-al__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 /* The white card holds the lanes */
 .ui-al__card { border-radius: var(--tc-card-radius); background: var(--tc-surface-raised); box-shadow: var(--tc-card-shadow); }
-/* ----- Bar ----- */
-/* ----- On the tray: what is going on ----- */
-:where([data-look="standard"], [data-look="standard"] *).ui-al__bar { display: flex; align-items: center; gap: var(--tc-space-2-5); min-width: 0; padding: var(--tc-space-2-5) var(--tc-space-2-5) var(--tc-space-3) var(--tc-space-3-5); }
-/* One white card – the edge is a shadow, not a border */
-/* ----- Bar ----- */
-:where([data-look="clean"], [data-look="clean"] *).ui-al__bar { display: flex; align-items: center; gap: var(--tc-space-2-5); min-width: 0; padding: var(--tc-space-3-5) var(--tc-space-4); border-bottom: var(--tc-hairline) solid var(--tc-divider); }
-.ui-al__spark { display: grid; flex: none; place-items: center; width: 16px; color: var(--tc-accent); }
-:where([data-look="standard"], [data-look="standard"] *).ui-al__title { font-weight: var(--tc-font-weight-semibold); color: var(--tc-text-strong); white-space: nowrap; }
-:where([data-look="clean"], [data-look="clean"] *).ui-al__title { font-weight: var(--tc-font-weight-medium); color: var(--tc-text-strong); white-space: nowrap; }
-.ui-al__summary { display: flex; flex: 1; gap: var(--tc-space-3); min-width: 0; overflow: hidden; font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); color: var(--tc-text-muted); white-space: nowrap; }
+/* ----- Header: on the tray (Standard) or the card's first row (Clean); its aside says what is going on ----- */
+/* Clean: a hairline between the header and the lanes */
+:where([data-look="clean"], [data-look="clean"] *).ui-al__body { border-top: var(--tc-hairline) solid var(--tc-divider); }
+.ui-al__summary { display: flex; gap: var(--tc-space-3); min-width: 0; overflow: hidden; font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); color: var(--tc-text-muted); white-space: nowrap; }
 .ui-al__summary span { display: inline-flex; align-items: center; gap: var(--tc-space-1-5); }
 .ui-al__summary span::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--tc-agent-lanes-run-fg); }
 .ui-al__summary [data-kind="needs"] { color: var(--tc-status-warning-fg); }
@@ -669,7 +665,7 @@ export class TcAgentLanes extends TcElement {
 :where([data-look="standard"], [data-look="standard"] *).ui-al__avatar { color: var(--tc-text-muted); }
 :where([data-look="clean"], [data-look="clean"] *).ui-al__avatar { color: var(--tc-text-secondary); }
 /* Agents are rounded squares (people would be circles) – the avatar pattern */
-.ui-al__avatar { display: grid; flex: none; place-items: center; width: var(--tc-avatar-md); height: var(--tc-avatar-md); overflow: hidden; border-radius: var(--tc-avatar-radius-agent); background: var(--tc-fill-default); font-size: var(--tc-avatar-font-size); font-weight: var(--tc-avatar-font-weight); letter-spacing: 0.3px; }
+.ui-al__avatar { display: grid; flex: none; place-items: center; width: var(--tc-avatar-md); height: var(--tc-avatar-md); overflow: hidden; border-radius: var(--tc-avatar-radius-agent); background: var(--tc-fill-default); font-size: var(--tc-avatar-font-size); font-weight: var(--tc-avatar-font-weight); letter-spacing: var(--tc-tracking-normal); }
 /* A logo sits on a small white tile */
 .ui-al__avatar[data-logo] { background: var(--tc-surface-raised); box-shadow: var(--tc-shadow-raised); }
 .ui-al__avatar > svg { width: 14px; height: 14px; }

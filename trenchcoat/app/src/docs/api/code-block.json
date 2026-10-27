@@ -152,70 +152,70 @@
    "cssProperties": [
     {
      "name": "--tc-code-block-keyword",
-     "value": "var(--tc-tone-violet-fg)",
+     "value": "var(--tc-syntax-keyword)",
      "looks": [
       "both"
      ]
     },
     {
      "name": "--tc-code-block-string",
-     "value": "var(--tc-status-success-fg)",
+     "value": "var(--tc-syntax-string)",
      "looks": [
       "both"
      ]
     },
     {
      "name": "--tc-code-block-number",
-     "value": "var(--tc-tone-amber-fg)",
+     "value": "var(--tc-syntax-number)",
      "looks": [
       "both"
      ]
     },
     {
      "name": "--tc-code-block-comment",
-     "value": "var(--tc-text-muted)",
+     "value": "var(--tc-syntax-comment)",
      "looks": [
       "both"
      ]
     },
     {
      "name": "--tc-code-block-function",
-     "value": "var(--tc-status-info-fg)",
+     "value": "var(--tc-syntax-function)",
      "looks": [
       "both"
      ]
     },
     {
      "name": "--tc-code-block-type",
-     "value": "var(--tc-tone-pink-fg)",
+     "value": "var(--tc-syntax-type)",
      "looks": [
       "both"
      ]
     },
     {
      "name": "--tc-code-block-property",
-     "value": "var(--tc-tone-rose-fg)",
+     "value": "var(--tc-syntax-property)",
      "looks": [
       "both"
      ]
     },
     {
      "name": "--tc-code-block-tag",
-     "value": "var(--tc-tone-pink-fg)",
+     "value": "var(--tc-syntax-tag)",
      "looks": [
       "both"
      ]
     },
     {
      "name": "--tc-code-block-punctuation",
-     "value": "var(--tc-text-muted)",
+     "value": "var(--tc-syntax-punctuation)",
      "looks": [
       "both"
      ]
     },
     {
      "name": "--tc-code-block-text",
-     "value": "var(--tc-text-primary)",
+     "value": "var(--tc-syntax-text)",
      "looks": [
       "both"
      ]
@@ -274,19 +274,25 @@
     "--tc-space-4",
     "--tc-status-danger-bg",
     "--tc-status-danger-fg",
-    "--tc-status-info-fg",
     "--tc-status-success-bg",
     "--tc-status-success-fg",
     "--tc-surface-on-tray",
     "--tc-surface-raised",
     "--tc-surface-tray",
+    "--tc-syntax-comment",
+    "--tc-syntax-function",
+    "--tc-syntax-keyword",
+    "--tc-syntax-number",
+    "--tc-syntax-property",
+    "--tc-syntax-punctuation",
+    "--tc-syntax-string",
+    "--tc-syntax-tag",
+    "--tc-syntax-text",
+    "--tc-syntax-type",
     "--tc-text-muted",
     "--tc-text-primary",
     "--tc-text-secondary",
-    "--tc-tone-amber-fg",
-    "--tc-tone-pink-fg",
-    "--tc-tone-rose-fg",
-    "--tc-tone-violet-fg",
+    "--tc-tracking-normal",
     "--tc-tray-inset",
     "--tc-tray-radius"
    ]
@@ -357,7 +363,7 @@
   "`tc-artifact-panel` – what a run produced: a list, a preview per kind (Markdown text, code through `tc-code-block`, images, tables from CSV), versions with a diff against the one before, and download (a Blob by default, cancelable)."
  ],
  "size": {
-  "min": 81833,
-  "gzip": 22288
+  "min": 83845,
+  "gzip": 22720
  }
 }

@@ -5,6 +5,7 @@ import { keyed } from "lit/directives/keyed.js";
 import { repeat } from "lit/directives/repeat.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { RollingController } from "./internal/controllers";
 
 /*
@@ -56,6 +57,9 @@ const DEFAULT_LEVELS: Record<RelianceReviewLevel, string> = { routine: "Routine 
 const BANDS: Record<RelianceBand, string> = { calibrated: "Calibrated", drifting: "Drifting", miscalibrated: "Miscalibrated" };
 /** Reliance and accuracy closer than this read as matched */
 const MATCHED = 0.05;
+
+/* After Lucide: gauge – the header's icon */
+const headIcon = svg`<path d="m12 14 4-4"></path><path d="M3.34 19a10 10 0 1 1 17.32 0"></path>`;
 
 let instances = 0;
 
@@ -497,16 +501,20 @@ export class TcRelianceGauge extends TcElement {
   protected override render() {
     const v = this.value;
     const band = v === undefined ? undefined : this.bandOf(v);
+    // The header (.tc-head): on the tray in Standard, the card's first row in Clean
+    const clean = this.resolvedLook === "clean";
+    const head = cardHead({
+      icon: headIcon,
+      title: this.heading,
+      subtitle: this.scope || undefined,
+      id: `${this.uid}-title`,
+      aside: band ? html`<span class="ui-rlg__pill" data-band=${band}>${BANDS[band]}</span>` : undefined,
+    });
     return html`
+      ${clean ? nothing : head}
       <div class="ui-rlg__card">
+        ${clean ? head : nothing}
         <div class="ui-rlg__inner">
-          <header class="ui-rlg__head">
-            <div class="ui-rlg__heading">
-              <h3 class="ui-rlg__title" id=${`${this.uid}-title`}>${this.heading}</h3>
-              ${this.scope ? html`<p class="ui-rlg__sub">${this.scope}</p>` : nothing}
-            </div>
-            ${band ? html`<span class="ui-rlg__pill" data-band=${band}>${BANDS[band]}</span>` : nothing}
-          </header>
           <div class="ui-rlg__figure">${this.renderDial(v)}${this.renderLean()}${this.renderTrend()}</div>
           ${this.renderEpisodes()}${this.renderSignals()}${this.renderAdvice()}
         </div>
@@ -564,16 +572,9 @@ export class TcRelianceGauge extends TcElement {
 .ui-rlg__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 /* The white card (Clean: the body of the one card) */
 :where([data-look="standard"], [data-look="standard"] *).ui-rlg__card { border-radius: var(--tc-card-radius); background: var(--tc-surface-raised); box-shadow: var(--tc-card-shadow); }
-:where([data-look="standard"], [data-look="standard"] *).ui-rlg__inner { padding: var(--tc-space-3-5) var(--tc-space-4) var(--tc-space-4); }
-:where([data-look="clean"], [data-look="clean"] *).ui-rlg__inner { padding: var(--tc-space-4); }
-/* Head: title and scope, the band's pill */
-.ui-rlg__head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--tc-space-3); }
-.ui-rlg__heading { min-width: 0; }
-.ui-rlg__title { overflow: hidden; font-weight: var(--tc-font-weight-strong); white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="standard"], [data-look="standard"] *).ui-rlg__title { font-size: var(--tc-font-size-lg); line-height: var(--tc-line-height-normal); color: var(--tc-text-primary); }
-:where([data-look="clean"], [data-look="clean"] *).ui-rlg__title { font-size: var(--tc-font-size-lg-plus); line-height: var(--tc-line-height-loose); color: var(--tc-text-strong); }
-.ui-rlg__sub { overflow: hidden; font-size: var(--tc-font-size-sm); color: var(--tc-text-muted); white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="clean"], [data-look="clean"] *).ui-rlg__sub { line-height: var(--tc-line-height-tight); }
+:where([data-look="standard"], [data-look="standard"] *).ui-rlg__inner { padding: var(--tc-space-4); }
+:where([data-look="clean"], [data-look="clean"] *).ui-rlg__inner { padding: 0 var(--tc-space-4) var(--tc-space-4); }
+/* The band's pill, at the header's right */
 .ui-rlg__pill { display: inline-flex; flex: none; align-items: center; height: var(--tc-pill-h-lg); padding: 0 var(--tc-pill-px-lg); border-radius: var(--tc-pill-radius); background: var(--tc-fill-default); font-size: var(--tc-pill-font-size-lg); font-weight: var(--tc-pill-font-weight); line-height: var(--tc-line-height-tight); color: var(--tc-text-secondary); white-space: nowrap; transition: background-color var(--tc-duration-moderate) var(--tc-ease-standard), color var(--tc-duration-moderate) var(--tc-ease-standard); }
 .ui-rlg__pill[data-band="calibrated"] { background: var(--tc-status-success-bg); color: var(--tc-status-success-fg); }
 .ui-rlg__pill[data-band="drifting"] { background: var(--tc-status-warning-bg); color: var(--tc-status-warning-fg); }
@@ -583,8 +584,6 @@ export class TcRelianceGauge extends TcElement {
 .ui-rlg__trend { grid-column: 1 / -1; }
 /* Without reliance and accuracy, the trend sits beside the dial */
 .ui-rlg__dial + .ui-rlg__trend { grid-column: auto; }
-:where([data-look="standard"], [data-look="standard"] *).ui-rlg__figure { margin-top: var(--tc-space-4); }
-:where([data-look="clean"], [data-look="clean"] *).ui-rlg__figure { margin-top: var(--tc-space-3-5); }
 .ui-rlg__dial { position: relative; width: 132px; }
 .ui-rlg__arc { width: 100%; height: auto; }
 .ui-rlg__arc path { fill: none; stroke-linecap: round; }
@@ -699,8 +698,8 @@ button.ui-rlg__ep:hover { background: var(--tc-fill-hover); }
 @keyframes ui-rlg-pop { 0% { transform: scale(0.3); } 60% { transform: scale(1.25); } 100% { transform: scale(1); } }
 /* Narrow: the dial above its side column, tighter gutters */
 @container (max-width: 400px) {
-  :where([data-look="standard"], [data-look="standard"] *).ui-rlg__inner { padding: var(--tc-space-3) var(--tc-space-3-5) var(--tc-space-3-5); }
-  :where([data-look="clean"], [data-look="clean"] *).ui-rlg__inner { padding: var(--tc-space-3-5); }
+  :where([data-look="standard"], [data-look="standard"] *).ui-rlg__inner { padding: var(--tc-space-3-5); }
+  :where([data-look="clean"], [data-look="clean"] *).ui-rlg__inner { padding: 0 var(--tc-space-3-5) var(--tc-space-3-5); }
   :where([data-look="clean"], [data-look="clean"] *).ui-rlg__foot { padding: 0 var(--tc-space-2) 0 var(--tc-space-3-5); }
   .ui-rlg__figure { column-gap: var(--tc-space-3); }
   .ui-rlg__dial { width: 116px; }

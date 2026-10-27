@@ -27,8 +27,8 @@ the app, which does.
 
 ## Anatomy
 
-1. **Posture** `.ui-ks__head` – how things stand, in a sentence, with its icon
-2. **Posture badge** `.ui-ks__posture` – Normal, Elevated or Stopped
+1. **Header** `.tc-head` – a power icon, the title and how things stand, in a sentence
+2. **Posture badge** `.ui-ks__posture` – Normal, Elevated or Stopped, at the header's right
 3. **Active stop** `.ui-ks__stop-row` – what's halted, by whom, when and why, with Resume
 4. **Running item** `.ui-ks__item` – an agent, schedule or queue with its kind and a quiet detail
 5. **Stop** `.ui-ks__stop` – halts one item, after confirming
@@ -36,8 +36,8 @@ the app, which does.
 
 ## Looks
 
-Standard is a white card on a gray tray, with the note and Stop everything on the tray below it. Clean is one white
-card with Stop everything in its last row, quieter text and thinner icons. The confirmation dialog is the same in
+Standard puts the header on a gray tray above a white card, with the note and Stop everything on the tray below it.
+Clean is one white card with the header as its first row and Stop everything in its last row, quieter text and thinner icons. The confirmation dialog is the same in
 both.
 
 ## Keyboard

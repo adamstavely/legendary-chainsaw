@@ -1,0 +1,312 @@
+{
+ "elements": [
+  {
+   "tag": "tc-provider-connection",
+   "className": "TcProviderConnection",
+   "description": "A connection to a model provider: provider, endpoint, deployment and a masked credential reference, with an\napp-run connection test, its health, when it was checked and the models the endpoint reports.",
+   "properties": [
+    {
+     "name": "value",
+     "attribute": null,
+     "type": "ProviderConnectionValue",
+     "default": "{ provider: \"\", endpoint: \"\", deployment: \"\", credentialRef: \"\" }",
+     "description": "The connection. Changed by the user unless a tc-value-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "providers",
+     "attribute": null,
+     "type": "ProviderConnectionOption[]",
+     "default": "[]",
+     "description": "The providers to choose from; with none, the Provider row is hidden",
+     "readonly": false
+    },
+    {
+     "name": "credentials",
+     "attribute": null,
+     "type": "ProviderConnectionCredential[]",
+     "default": "[]",
+     "description": "The credential references to choose from; with none, the reference is typed in",
+     "readonly": false
+    },
+    {
+     "name": "check",
+     "attribute": null,
+     "type": "ProviderConnectionCheck | null",
+     "default": "null",
+     "description": "The app's answer to the last test; setting it ends Testing…",
+     "readonly": false
+    },
+    {
+     "name": "stateLabels",
+     "attribute": null,
+     "type": "Partial<Record<ProviderConnectionState, string>>",
+     "default": "{}",
+     "description": "The states' short names, merged over PROVIDER_CONNECTION_LABELS",
+     "readonly": false
+    },
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Model provider\"",
+     "description": "Names the group, shown at the top",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string",
+     "default": "\"\"",
+     "description": "A quieter line under the heading",
+     "readonly": false
+    },
+    {
+     "name": "testLabel",
+     "attribute": "test-label",
+     "type": "string",
+     "default": "\"Test connection\"",
+     "description": "The test button's text",
+     "readonly": false
+    },
+    {
+     "name": "originLabel",
+     "attribute": "origin-label",
+     "type": "string",
+     "default": "\"Your app\"",
+     "description": "The first stop on the path, before the endpoint",
+     "readonly": false
+    },
+    {
+     "name": "name",
+     "attribute": "name",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Submitted with the form: the connection as JSON",
+     "readonly": false
+    },
+    {
+     "name": "disabled",
+     "attribute": "disabled",
+     "type": "boolean",
+     "default": "false",
+     "description": "Turns every control off and leaves the connection out of the form; a disabled fieldset does the same",
+     "readonly": false
+    },
+    {
+     "name": "health",
+     "attribute": null,
+     "type": "ProviderConnectionState",
+     "default": null,
+     "description": "The health shown now",
+     "readonly": true
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-value-change",
+     "detail": "",
+     "description": "The connection changed ({ value: ProviderConnectionValue }); cancelable – prevent it to control `value`",
+     "cancelable": true
+    },
+    {
+     "name": "tc-test",
+     "detail": "",
+     "description": "Test connection was pressed ({ value, signal }: ProviderConnectionTestEvent); try the connection and set `check`. Cancelable – prevented, nothing shows as testing",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [
+    {
+     "name": "test",
+     "params": "",
+     "returns": "void",
+     "description": "Asks the app to test the connection, as Test connection does"
+    },
+    {
+     "name": "cancel",
+     "params": "",
+     "returns": "void",
+     "description": "Stops a test in progress: its signal aborts"
+    }
+   ],
+   "ui": "prv",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-border-default",
+    "--tc-border-strong",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-sm",
+    "--tc-control-px-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-quick",
+    "--tc-duration-shimmer",
+    "--tc-duration-slowest",
+    "--tc-ease-in-out",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-font-size",
+    "--tc-field-h",
+    "--tc-field-px",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-field-shadow-hover",
+    "--tc-field-shadow-invalid",
+    "--tc-fill-default",
+    "--tc-fill-hover",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-mono",
+    "--tc-font-sans",
+    "--tc-font-size-2xs",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-badge",
+    "--tc-radius-full",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-shadow-raised",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-12",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-5",
+    "--tc-space-7",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-border",
+    "--tc-status-danger-fg",
+    "--tc-status-danger-solid",
+    "--tc-status-info-bg",
+    "--tc-status-info-fg",
+    "--tc-status-info-solid",
+    "--tc-status-success-bg",
+    "--tc-status-success-border",
+    "--tc-status-success-fg",
+    "--tc-status-success-solid",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-border",
+    "--tc-status-warning-fg",
+    "--tc-status-warning-solid",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-placeholder",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tracking-normal",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "PROVIDER_CONNECTION_LABELS",
+   "signature": "PROVIDER_CONNECTION_LABELS: Record<ProviderConnectionState, string>",
+   "description": "The states' short names, for the pill"
+  }
+ ],
+ "react": [
+  {
+   "component": "ProviderConnection",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "Shown at the top; names the group"
+    },
+    {
+     "name": "value",
+     "type": "ProviderConnectionValue",
+     "optional": true,
+     "description": "The connection (controlled)"
+    },
+    {
+     "name": "defaultValue",
+     "type": "ProviderConnectionValue",
+     "optional": true,
+     "description": "The connection to start with when uncontrolled"
+    },
+    {
+     "name": "onChange",
+     "type": "(value: ProviderConnectionValue) => void",
+     "optional": true,
+     "description": "Called with the whole connection after every change"
+    },
+    {
+     "name": "onTest",
+     "type": "(value: ProviderConnectionValue, signal: AbortSignal) => void",
+     "optional": true,
+     "description": "Test connection was pressed: try `value`, stop when `signal` aborts, then set `check`"
+    }
+   ],
+   "hides": [
+    "value",
+    "defaultValue",
+    "heading",
+    "onChange"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 47431,
+  "gzip": 12910
+ }
+}

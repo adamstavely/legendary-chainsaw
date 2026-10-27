@@ -17,7 +17,9 @@ const RawDecisionInbox = createComponent({
   },
 });
 type RawDecisionInboxProps = React.ComponentProps<typeof RawDecisionInbox>;
-export type DecisionInboxProps = Omit<RawDecisionInboxProps, "answers" | "decide" | "onTcAnswersChange" | "onTcDecide"> & {
+export type DecisionInboxProps = Omit<RawDecisionInboxProps, "title" | "heading" | "answers" | "decide" | "onTcAnswersChange" | "onTcDecide"> & {
+  /** The inbox's name, in the header (default "Decisions") */
+  title?: string;
   /** The answers given so far, by decision id. Controlled when defined – pair it with `onAnswersChange` */
   answers?: Record<string, DecisionAnswer>;
   /** Answers already given on mount when `answers` isn't controlled – those rows start folded away */
@@ -30,10 +32,11 @@ export type DecisionInboxProps = Omit<RawDecisionInboxProps, "answers" | "decide
    */
   onDecide?: (decision: InboxDecision, answer: DecisionAnswer) => void | Promise<unknown>;
 };
-export function DecisionInbox({ answers, defaultAnswers = NO_ANSWERS, onAnswersChange, onDecide, ...props }: DecisionInboxProps) {
+export function DecisionInbox({ title, answers, defaultAnswers = NO_ANSWERS, onAnswersChange, onDecide, ...props }: DecisionInboxProps) {
   const a = useControlled(answers, defaultAnswers, onAnswersChange);
   return h(RawDecisionInbox, {
     ...props,
+    ...(title !== undefined ? { heading: title } : {}),
     answers: a.value,
     decide: onDecide,
     onTcAnswersChange: (e: CustomEvent<DecisionAnswersChange>) => a.handler(e.detail.answers, e),

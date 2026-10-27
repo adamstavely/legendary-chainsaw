@@ -24,7 +24,7 @@ smooth with thousands of chats: long lists render only the rows near the viewpor
 
 ## Anatomy
 
-1. **Header** `.ui-chh__head` – the heading, the number of chats and New chat
+1. **Header** – the shared card header: a boxed icon, the heading, the number of chats and New chat
 2. **Search** `.ui-chh__search` – filters by title and marks the match
 3. **Group** `.ui-chh__head-row` – a date, a folder or Pinned, with its count; folds and opens
 4. **Chat** `.ui-chh__item` – one conversation; the open one is highlighted, Pin and More show on hover

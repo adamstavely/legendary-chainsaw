@@ -659,7 +659,7 @@ export class TcDateRangePicker extends TcElement {
   position: relative;
   display: inline-block;
   max-width: 100%;
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-md);
   line-height: 1.4;
   color: var(--tc-text-secondary);
@@ -695,7 +695,7 @@ export class TcDateRangePicker extends TcElement {
   align-items: center;
   overflow: hidden;
   max-width: 100%;
-  min-height: 38px;
+  min-height: var(--tc-field-h);
   padding: var(--tc-space-1) var(--tc-space-2) var(--tc-space-1) var(--tc-space-3);
   border-radius: var(--tc-field-radius);
   background: var(--tc-field-bg);
@@ -848,7 +848,7 @@ button:where([data-look="clean"], [data-look="clean"] *).ui-drp__preset:hover:no
 .ui-drp__grid { display: grid; gap: var(--tc-space-0-5); }
 .ui-drp__weekdays, .ui-drp__week { display: grid; grid-template-columns: repeat(7, 32px); }
 :where([data-look="standard"], [data-look="standard"] *).ui-drp__weekday { height: 26px; font-size: var(--tc-font-size-xs); font-weight: var(--tc-font-weight-medium); line-height: 26px; text-align: center; color: var(--tc-text-muted); }
-:where([data-look="clean"], [data-look="clean"] *).ui-drp__weekday { height: 24px; font-size: var(--tc-font-size-2xs); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-loose); letter-spacing: 0.5px; text-transform: uppercase; text-align: center; color: var(--tc-text-muted); }
+:where([data-look="clean"], [data-look="clean"] *).ui-drp__weekday { height: 24px; font-size: var(--tc-font-size-2xs); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-loose); letter-spacing: var(--tc-tracking-caps); text-transform: uppercase; text-align: center; color: var(--tc-text-muted); }
 /* A day: the band sits behind the number and runs on into its neighbours */
 .ui-drp__day { position: relative; display: grid; height: 32px; }
 :where([data-look="standard"], [data-look="standard"] *).ui-drp__day::before { content: ""; position: absolute; inset: 2px 0; transition: background-color var(--tc-duration-base) var(--tc-ease-standard), border-radius var(--tc-duration-base) var(--tc-ease-move), left var(--tc-duration-base) var(--tc-ease-move), right var(--tc-duration-base) var(--tc-ease-move); }

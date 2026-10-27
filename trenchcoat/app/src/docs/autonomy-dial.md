@@ -28,7 +28,7 @@ before they live with it.
 
 ## Anatomy
 
-1. **Heading** `.ui-ad__head` – the agent's name and a line on what the setting covers
+1. **Header** – the shared card header: a boxed gauge icon, the agent's name and a line on what the setting covers
 2. **Levels** `.ui-ad__segmented` – Always ask, If risky, Full auto
 3. **Group** `.ui-ad__group` – “Runs on its own” or “Asks you first”, with a rolling count
 4. **Action** `.ui-ad__row` – an icon, the label, a risk tag and what it touches
@@ -36,8 +36,8 @@ before they live with it.
 
 ## Looks
 
-Standard puts the heading and levels in a white card on a gray tray, with a pill that glides under the chosen
-level, and lays the two groups on the tray below. Clean is one white card with the groups inside it; the levels are
+Standard puts the header on a gray tray above a white card with the levels, with a pill that glides under the chosen
+level, and lays the two groups on the tray below. Clean is one white card, the header its first row and the groups inside it; the levels are
 three equal buttons and the chosen one is raised with a border. Actions glide between the groups the same way in
 both.
 

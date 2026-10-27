@@ -276,17 +276,15 @@ export class TcGuardrailNotice extends TcElement {
 :where([data-look="clean"], [data-look="clean"] *)[data-ui="grn"] { --tc-guardrail-notice-icon: 24px; }
 :where([data-look="clean"], [data-look="clean"] *).ui-grn__icon { border-radius: var(--tc-radius-sm); background: none; }
 .ui-grn__titles { display: flex; flex: 1; flex-wrap: wrap; align-items: center; column-gap: var(--tc-space-2); row-gap: var(--tc-space-0-5); min-width: 0; min-height: var(--tc-guardrail-notice-icon); }
-.ui-grn__title { font-weight: var(--tc-font-weight-medium); color: var(--tc-text-primary); }
-:where([data-look="standard"], [data-look="standard"] *).ui-grn__title { font-weight: var(--tc-font-weight-strong); }
-:where([data-look="clean"], [data-look="clean"] *).ui-grn__title { color: var(--tc-text-strong); }
+.ui-grn__title { font-size: var(--tc-title-font-size); font-weight: var(--tc-title-font-weight); line-height: var(--tc-title-line-height); letter-spacing: var(--tc-title-tracking); color: var(--tc-title-color); }
 /* The policy: a quiet pill with a shield */
 .ui-grn__policy { display: inline-flex; align-items: center; gap: var(--tc-space-1); min-width: 0; max-width: 100%; height: var(--tc-pill-h); padding: 0 var(--tc-pill-px); border-radius: var(--tc-pill-radius); background: var(--tc-fill-default); font-size: var(--tc-pill-font-size); font-weight: var(--tc-pill-font-weight); line-height: var(--tc-line-height-tight); color: var(--tc-text-secondary); white-space: nowrap; }
 .ui-grn__policy-link { overflow: hidden; color: inherit; text-decoration: underline; text-decoration-color: var(--tc-border-strong); text-underline-offset: 2px; text-overflow: ellipsis; }
 .ui-grn__policy-link:hover { color: var(--tc-text-primary); text-decoration-color: currentColor; }
 .ui-grn__close { display: grid; flex: none; place-items: center; width: var(--tc-control-h-sm); height: var(--tc-control-h-sm); margin: calc(var(--tc-space-0-5) * -1) calc(var(--tc-space-1) * -1) 0 0; border-radius: var(--tc-control-radius-sm); color: var(--tc-action-ghost-fg); transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard); }
 .ui-grn__close:hover { background: var(--tc-action-ghost-bg-hover); color: var(--tc-text-primary); }
-.ui-grn__reason { padding: var(--tc-space-1-5) var(--tc-space-4) 0 calc(var(--tc-space-3-5) + var(--tc-guardrail-notice-icon) + var(--tc-space-2-5)); font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-snug); color: var(--tc-text-muted); text-wrap: pretty; }
-:where([data-look="clean"], [data-look="clean"] *).ui-grn__reason { padding-left: calc(var(--tc-space-4) + var(--tc-guardrail-notice-icon) + var(--tc-space-2-5)); color: var(--tc-text-secondary); }
+.ui-grn__reason { padding: var(--tc-space-1-5) var(--tc-space-4) 0 calc(var(--tc-space-3-5) + var(--tc-guardrail-notice-icon) + var(--tc-space-2-5)); font-size: var(--tc-subtitle-font-size); line-height: var(--tc-subtitle-line-height); color: var(--tc-subtitle-color); text-wrap: pretty; }
+:where([data-look="clean"], [data-look="clean"] *).ui-grn__reason { padding-left: calc(var(--tc-space-4) + var(--tc-guardrail-notice-icon) + var(--tc-space-2-5)); }
 :where([data-look="standard"], [data-look="standard"] *)[layout="inline"] .ui-grn__card:not(:has(> .ui-grn__changes:not([hidden]))) { padding-bottom: var(--tc-space-3); }
 /* ----- What changed: the original and what went out, side by side ----- */
 .ui-grn__changes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--tc-space-2); margin-top: var(--tc-space-3); padding: var(--tc-space-3); border-top: var(--tc-hairline) solid var(--tc-divider); animation: ui-grn-in var(--tc-duration-moderate) var(--tc-ease-move) both; }
@@ -299,7 +297,7 @@ export class TcGuardrailNotice extends TcElement {
 .ui-grn__mark[data-mark="removed"] { background: var(--tc-status-danger-bg); color: var(--tc-status-danger-fg); text-decoration: line-through; text-decoration-color: color-mix(in srgb, currentColor 60%, transparent); }
 .ui-grn__mark[data-mark="added"] { background: var(--tc-status-success-bg); color: var(--tc-status-success-fg); }
 /* Masked personal data: a dark pill, monospaced, so it reads as withheld rather than as text */
-.ui-grn__mark[data-mark="masked"] { background: var(--tc-surface-inverse); white-space: nowrap; font-family: var(--tc-font-mono); font-size: 0.92em; letter-spacing: var(--tc-tracking-snug); color: var(--tc-text-on-inverse); }
+.ui-grn__mark[data-mark="masked"] { background: var(--tc-surface-inverse); white-space: nowrap; font-family: var(--tc-font-mono); font-size: var(--tc-font-size-xs); letter-spacing: var(--tc-tracking-snug); color: var(--tc-text-on-inverse); }
 /* ----- The buttons: on the tray (Standard), the card's last row (Clean) ----- */
 .ui-grn__actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-1); min-width: 0; }
 :where([data-look="standard"], [data-look="standard"] *).ui-grn__actions { min-height: 40px; padding: var(--tc-space-1) var(--tc-space-0-5) 0; }
@@ -328,7 +326,6 @@ export class TcGuardrailNotice extends TcElement {
 .ui-grn__row > .ui-grn__close { grid-column: 4; grid-row: 1; margin: 0; }
 :where([data-look="standard"], [data-look="standard"] *)[data-ui="grn"][layout="banner"] { --tc-guardrail-notice-icon: 24px; }
 :where([data-look="standard"], [data-look="standard"] *)[layout="banner"] .ui-grn__icon { background: none; }
-:where([data-look="standard"], [data-look="standard"] *)[layout="banner"] .ui-grn__reason { color: var(--tc-text-secondary); }
 :where([data-look="standard"], [data-look="standard"] *)[layout="banner"] .ui-grn__policy { background: color-mix(in srgb, var(--tc-surface-raised) 70%, transparent); }
 :where([data-look="standard"], [data-look="standard"] *)[layout="banner"] .ui-grn__toggle { color: var(--tc-text-secondary); }
 [layout="banner"] .ui-grn__changes { margin-top: 0; }

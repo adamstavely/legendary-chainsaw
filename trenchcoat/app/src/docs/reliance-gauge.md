@@ -29,7 +29,7 @@ app supplies every number – the card reads no clock and computes no statistics
 
 ## Anatomy
 
-1. **Heading** `.ui-rlg__head` – the title, what the numbers cover, and the band's pill (Calibrated, Drifting, Miscalibrated)
+1. **Header** `.tc-head` – the icon, the title, what the numbers cover, and the band's pill (Calibrated, Drifting, Miscalibrated)
 2. **Dial** `.ui-rlg__dial` – the index from 0 to 1, with cuts where the drifting and calibrated bands start
 3. **Lean** `.ui-rlg__lean` – which way trust leans, with reliance and accuracy side by side
 4. **Trend** `.ui-rlg__plot` – the index over recent windows, with the two band lines behind it

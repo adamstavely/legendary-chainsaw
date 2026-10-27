@@ -26,7 +26,7 @@ can all be asynchronous; failures say so in place and keep what people entered.
 
 ## Anatomy
 
-1. **Service** `.ui-is__head` – the logo, name, count and status line
+1. **Header** `.tc-head` – the service's logo in the icon box, its name and status line, and the count and switch at the right
 2. **Switch** `.ui-is__switch` – pauses or resumes the sync, and saves at once
 3. **API key** `.ui-is__generate` – generates a key; then the key with Show, Copy and Regenerate
 4. **Site address** `.ui-is__field` – the domain after a fixed https://, checked as it's typed

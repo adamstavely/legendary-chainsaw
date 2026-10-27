@@ -175,6 +175,13 @@
      ]
     },
     {
+     "name": "--tc-agent-graph-glyph-size",
+     "value": "7.5px",
+     "looks": [
+      "standard"
+     ]
+    },
+    {
      "name": "--tc-agent-graph-tray-bg",
      "value": "var(--tc-surface-tray)",
      "looks": [
@@ -286,9 +293,7 @@
     "--tc-font-weight-semibold",
     "--tc-hairline",
     "--tc-icon-muted",
-    "--tc-line-height-loose",
     "--tc-line-height-normal",
-    "--tc-line-height-relaxed",
     "--tc-line-height-snug",
     "--tc-line-height-tight",
     "--tc-menu-radius",
@@ -334,6 +339,7 @@
     "--tc-text-primary",
     "--tc-text-secondary",
     "--tc-text-strong",
+    "--tc-tracking-normal",
     "--tc-tray-inset",
     "--tc-tray-radius"
    ]
@@ -411,7 +417,7 @@
  ],
  "changelog": [],
  "size": {
-  "min": 87944,
-  "gzip": 21826
+  "min": 89082,
+  "gzip": 22426
  }
 }

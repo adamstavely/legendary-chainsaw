@@ -27,7 +27,7 @@ to the active step right away.
 
 ## Anatomy
 
-1. **Header** `.ui-st__head` – the task, the agent, “Step 2 of 5”, the run clock and Pause / Resume
+1. **Header** – the shared card header: the task, the agent, “Step 2 of 5”, and on the right the run clock and Pause / Resume
 2. **Plan** `.ui-st__plan` – the steps, done, active and to come; notes the agent took in sit under their step
 3. **Active step** `.ui-st__step[data-status="active"]` – the step running now, with a spinner and its own clock
 4. **Queue** `.ui-st__queue` – notes waiting for the next step, each with “Now” and ✕
@@ -36,8 +36,8 @@ to the active step right away.
 
 ## Looks
 
-Standard puts the run and plan on a white card in a soft gray tray, with the queue and the field on the tray below
-it. Clean is one white card: the queued notes and the field sit inside it, at the bottom. Both glide a taken-in note
+Standard puts the header on a soft gray tray above a white card with the plan, with the queue and the field on the tray below
+it. Clean is one white card with the header as its first row: the queued notes and the field sit inside it, at the bottom. Both glide a taken-in note
 from the queue into the plan the same way.
 
 ## Keyboard

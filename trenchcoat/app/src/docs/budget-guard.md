@@ -29,7 +29,7 @@ the run's status.
 
 ## Anatomy
 
-1. **Heading** `.ui-bgd__head` – the title, the task line and the run's pill (Live, Near cap, Stopped, Paused, Done)
+1. **Header** – the shared card header: a boxed shield icon, the title, the task line and the run's pill `.ui-bgd__pill` (Live, Near cap, Stopped, Paused, Done)
 2. **Amount** `.ui-bgd__figure` – the first limit's used amount against its cap, and the percentage
 3. **Meter** `.ui-bgd__bar` – the first limit's bar, with the notch where the warning starts
 4. **Other limits** `.ui-bgd__limits` – thin meters for the rest
@@ -38,8 +38,8 @@ the run's status.
 
 ## Looks
 
-Standard sets a white card in the gray tray, with the footer on the tray below it. Clean is one white card with a
-shadow and a little more room in the heading and the amount. Both show the same meters, warning and stop.
+Standard sets the header on the gray tray above a white card, with the footer on the tray below it. Clean is one
+white card with a shadow, the header its first row and a little more room in the amount. Both show the same meters, warning and stop.
 
 ## Keyboard
 

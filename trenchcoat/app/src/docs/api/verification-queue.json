@@ -158,7 +158,8 @@
    "cssProperties": [],
    "tokens": [
     "--tc-accent",
-    "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
     "--tc-action-primary-bg",
     "--tc-action-primary-bg-hover",
     "--tc-action-primary-fg",
@@ -175,6 +176,7 @@
     "--tc-control-h-md",
     "--tc-control-h-sm",
     "--tc-control-px-md",
+    "--tc-control-px-sm",
     "--tc-control-radius-md",
     "--tc-control-radius-sm",
     "--tc-divider",
@@ -190,7 +192,6 @@
     "--tc-focus-ring-width",
     "--tc-font-sans",
     "--tc-font-size-2xs",
-    "--tc-font-size-lg",
     "--tc-font-size-md",
     "--tc-font-size-sm",
     "--tc-font-size-xs",
@@ -208,7 +209,6 @@
     "--tc-radius-full",
     "--tc-radius-lg",
     "--tc-radius-md",
-    "--tc-radius-sm",
     "--tc-radius-xs",
     "--tc-shadow-raised",
     "--tc-source-grounded-bg",
@@ -225,7 +225,6 @@
     "--tc-space-3",
     "--tc-space-3-5",
     "--tc-space-4",
-    "--tc-space-4-5",
     "--tc-space-6",
     "--tc-status-danger-bg",
     "--tc-status-danger-fg",
@@ -241,7 +240,6 @@
     "--tc-text-muted",
     "--tc-text-primary",
     "--tc-text-secondary",
-    "--tc-text-strong",
     "--tc-tray-inset",
     "--tc-tray-radius",
     "--tc-verification-queue-bg",
@@ -321,9 +319,11 @@
    ]
   }
  ],
- "changelog": [],
+ "changelog": [
+  "**Trust & calibration**, from THEMIS and built domain-neutral: - claims and their reliability: `tc-claim-answer`, `tc-verification-queue`, `tc-reflection-gate`, `tc-reliance-gauge`, `tc-disagreement-banner`, `tc-synthesis-notes`; - where outputs came from: `tc-lineage-graph`, `tc-validity-badge`, `tc-provenance-summary`, `tc-correction-propagation`, `tc-attestation-check`, `tc-run-manifest`; - policy and control: `tc-policy-simulator`, `tc-gate-config`, `tc-coverage-matrix`, `tc-kill-switch`, `tc-playbook-canvas`."
+ ],
  "size": {
-  "min": 37843,
-  "gzip": 11267
+  "min": 40001,
+  "gzip": 11969
  }
 }

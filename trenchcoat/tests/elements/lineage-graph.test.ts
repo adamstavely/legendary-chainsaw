@@ -58,6 +58,9 @@ describe("tc-lineage-graph", () => {
       expect(el.getAttribute("role")).toBe("region");
       expect(document.getElementById(el.getAttribute("aria-labelledby")!)!.textContent).toBe("Memo lineage");
       expect(el.querySelector(".ui-lng__sum")!.textContent!.replace(/\s+/g, " ").trim()).toBe("8 steps 1 weak link");
+      // The header: on the tray above the card in Standard, the card's first row in Clean; counts and view at its right
+      expect(el.querySelector(look === "clean" ? ":scope > .ui-lng__card > .tc-head:first-child" : ":scope > .tc-head + .ui-lng__card")).toBeTruthy();
+      expect(el.querySelector(".tc-head__aside > .ui-lng__sum + .ui-lng__tabs")).toBeTruthy();
     });
   }
 
@@ -283,7 +286,7 @@ describe("tc-lineage-graph", () => {
     await act(async () => settle());
     await act(async () => rerender(1));
     await settle();
-    expect(el.querySelector(".ui-lng__title")!.textContent).toBe("Lineage 1");
+    expect(el.querySelector(".tc-head__title")!.textContent).toBe("Lineage 1");
     expect(el.selected).toBe("c1");
     expect(el.view).toBe("chain");
     expect(picks).toEqual(["c1"]);

@@ -151,11 +151,13 @@
     "--tc-duration-slowest",
     "--tc-ease-in-out",
     "--tc-ease-standard",
+    "--tc-font-sans",
     "--tc-font-weight-medium",
     "--tc-shadow-raised",
     "--tc-surface-overlay",
     "--tc-text-muted",
-    "--tc-text-primary"
+    "--tc-text-primary",
+    "--tc-tracking-snug"
    ]
   }
  ],
@@ -198,7 +200,7 @@
  ],
  "changelog": [],
  "size": {
-  "min": 16645,
-  "gzip": 6158
+  "min": 18560,
+  "gzip": 6673
  }
 }

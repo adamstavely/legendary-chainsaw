@@ -221,7 +221,7 @@ section:not(.stage *) + section:not(.stage *) { margin-top: 36px; }
 
 /* Home */
 .home { max-width: 1180px; }
-.home section + section { margin-top: 48px; }
+.home > section + section { margin-top: 48px; }
 .hero { padding: 24px 0 8px; }
 .hero h1 { font-size: 44px; letter-spacing: -0.03em; margin: 0 0 12px; }
 .lede { font-size: 17px; line-height: 1.55; color: #3f3f46; max-width: 720px; margin: 0; }
@@ -306,9 +306,9 @@ section:not(.stage *) + section:not(.stage *) { margin-top: 36px; }
 
 .docs-section { padding: 28px 0 8px; scroll-margin-top: 72px; }
 .docs-section + .docs-section { border-top: 1px solid var(--line); }
-.docs-section h2 { position: relative; margin: 0 0 14px; font-size: 21px; letter-spacing: -0.01em; }
+.docs-section > h2 { position: relative; margin: 0 0 14px; font-size: 21px; letter-spacing: -0.01em; }
 .docs-anchor { position: absolute; left: -22px; padding-right: 6px; color: var(--muted); opacity: 0; transition: opacity 0.12s; }
-.docs-section h2:hover .docs-anchor, .docs-anchor:focus-visible { opacity: 1; }
+.docs-section > h2:hover .docs-anchor, .docs-anchor:focus-visible { opacity: 1; }
 .docs-sub { margin: 22px 0 10px; font-size: 15px; }
 .docs-api h4 { margin: 20px 0 8px; font-size: 13px; font-weight: 600; color: #3f3f46; }
 .docs-hint { margin: 4px 0 12px; font-size: 13px; line-height: 1.5; }
@@ -338,7 +338,8 @@ section:not(.stage *) + section:not(.stage *) { margin-top: 36px; }
 .docs-example-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
 .docs-example-bar .ghost.on { background: #eef2ff; color: #4338ca; }
 .docs-example-stage { position: relative; }
-.docs-example-inner[data-narrow] .stage > * { width: var(--docs-w); max-width: var(--docs-w); }
+.docs-example-inner[data-narrow] .stage > :not(tc-look-provider),
+.docs-example-inner[data-narrow] .stage > tc-look-provider > * { width: var(--docs-w); max-width: var(--docs-w); }  /* the provider has no box of its own */
 .cardhead.slim { padding: 6px 10px; border-bottom: 1px solid var(--line); }
 .docs-pin-box { position: absolute; z-index: 5; border: 1.5px dashed #6366f1; border-radius: 6px; pointer-events: none; }
 .docs-pin-box .docs-pin { position: absolute; top: -10px; left: -10px; }

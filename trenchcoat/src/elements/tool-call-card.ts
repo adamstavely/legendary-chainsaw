@@ -480,10 +480,9 @@ export class TcToolCallCard extends TcElement {
   box-sizing: border-box;
   min-width: 0;
   color: var(--tc-text-muted);
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-md);
-  line-height: 1.4;
-  letter-spacing: -0.006em;
+  line-height: var(--tc-line-height-normal);
   -webkit-font-smoothing: antialiased;
 }
 /* Colors and motion as variables – override them on [data-ui="tc"] / [data-ui="tc-group"] */
@@ -751,7 +750,7 @@ export class TcToolCallCard extends TcElement {
   gap: var(--tc-space-2);
   min-height: 24px;
 }
-:where([data-look="standard"], [data-look="standard"] *).ui-tc__label { color: var(--tc-text-muted); font-size: var(--tc-font-size-sm); font-weight: var(--tc-font-weight-medium); }
+.ui-tc__label { color: var(--tc-caption-color); font-size: var(--tc-caption-font-size); font-weight: var(--tc-caption-font-weight); line-height: var(--tc-caption-line-height); letter-spacing: var(--tc-caption-tracking); text-transform: var(--tc-caption-transform); }
 :where([data-look="standard"], [data-look="standard"] *).ui-tc__pending { margin: 0; color: var(--tc-text-muted); font-size: var(--tc-font-size-sm); }
 :where([data-look="standard"], [data-look="standard"] *).ui-tc__copy {
   all: unset;
@@ -782,15 +781,6 @@ export class TcToolCallCard extends TcElement {
   justify-content: space-between;
   gap: var(--tc-space-2);
   min-height: 28px;
-}
-/* Tiny uppercase labels: "ARGUMENTS", "RESULT" */
-:where([data-look="clean"], [data-look="clean"] *).ui-tc__label {
-  color: var(--tc-text-muted);
-  font-size: var(--tc-font-size-2xs);
-  line-height: var(--tc-line-height-tight);
-  font-weight: var(--tc-font-weight-medium);
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
 }
 :where([data-look="clean"], [data-look="clean"] *).ui-tc__pending { margin: 0; color: var(--tc-text-muted); font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); }
 /* Copy: a small white icon button with the card's hairline */

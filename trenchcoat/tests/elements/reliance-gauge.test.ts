@@ -40,7 +40,7 @@ describe("tc-reliance-gauge", () => {
       expect(el.dataset.look).toBe(look);
       expect(el.getAttribute("role")).toBe("region");
       expect(document.getElementById(el.getAttribute("aria-labelledby")!)!.textContent).toBe("Reliance");
-      expect(el.querySelector(".ui-rlg__sub")!.textContent).toBe("Last 30 days");
+      expect(el.querySelector(".tc-head__sub")!.textContent).toBe("Last 30 days");
       expect(el.querySelector(".ui-rlg__index")!.textContent).toBe("0.83");
       expect(el.querySelector(".ui-rlg__pill")!.textContent).toBe("Drifting");
       expect(el.dataset.band).toBe("drifting");

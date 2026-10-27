@@ -25,7 +25,7 @@ or settings without leaving the product.
 
 ## Anatomy
 
-1. **Prompt** `.ui-arena__prompt` – the prompt both models answered
+1. **Header** – the shared card header: a boxed icon and the prompt both models answered, as the title
 2. **Answer** `.ui-arena__pane` – one side's answer, streaming with a caret, and a meta line once done
 3. **Model** `.ui-arena__head` – the side's glyph and name – “Model A” in blind mode until the vote
 4. **Vote** `.ui-arena__votes` – A is better, Tie, B is better
@@ -34,7 +34,7 @@ or settings without leaving the product.
 ## Looks
 
 Standard sets the prompt, then the two answers as white cards, then the vote, all on a gray tray. Clean is one white
-card split by hairlines: the prompt with a small-capitals label on top, the answers side by side, the vote as the
+card split by hairlines: the prompt as the header row on top, the answers side by side, the vote as the
 last row. Both stack the answers in containers narrower than 560 px.
 
 ## Keyboard

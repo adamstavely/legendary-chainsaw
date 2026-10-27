@@ -7,11 +7,12 @@ import { repeat } from "lit/directives/repeat.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { reducedMotion } from "../internal/reduced-motion";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController, rescueFocus } from "./internal/controllers";
 
 /*
  * <tc-decision-tree> – the Lit port of src/components/decision-tree.tsx: an agent that is stuck on a decision lays it
- * out as a tree. A white card on a soft gray tray, a quiet bar on top: how many decisions wait and where you are.
+ * out as a tree. A white card on a soft gray tray, the header on top: how many decisions wait and where you are.
  *   · on the left the question, with the agent, its model and how risky the call is
  *   · from it the options as branches, each with what it leads to – the agent's own pick marked
  *   · risky consequences are marked – point at one (or press F) for the agent's note and its source
@@ -19,7 +20,7 @@ import { FocusRescueController, rescueFocus } from "./internal/controllers";
  *   · options carry the logo of the tool they run with, consequences the logos of the systems they touch
  *   · pick one (click or 1–4) and the others fade, the path draws on to its outcome and the next decision grows in
  *   · "Other…" opens a field that grows with what you write – your own instruction, Enter sends it
- * Narrow containers draw the tree top to bottom. Clean is one quiet white card with hairlines.
+ * Narrow containers draw the tree top to bottom. Clean is one quiet white card with hairlines, the header its first row.
  *
  *   <tc-decision-tree heading="Waiting on you" .decisions=${decisions} .onChoose=${(d, choice) => api.answer(d, choice)}>
  *   </tc-decision-tree>
@@ -95,7 +96,8 @@ const effectsOf = (d: TreeDecision) => d.options.flatMap((o) => (o.next ? o.next
 const tick = html`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${svg`<path d="M20 6 9 17l-5-5"></path>`}</svg>`;
 const alert = html`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${svg`<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"></path><path d="M12 9v4" stroke-width="2"></path><path d="M12 17h.01" stroke-width="2.4"></path>`}</svg>`;
 /* A small branching mark for the title (drawn for Trenchcoat) */
-const branches = html`<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">${svg`<circle cx="3.5" cy="8" r="2" stroke="currentColor" stroke-width="1.4"></circle><circle cx="12.5" cy="3.5" r="2" stroke="currentColor" stroke-width="1.4"></circle><circle cx="12.5" cy="12.5" r="2" stroke="currentColor" stroke-width="1.4"></circle><path d="M5.5 8H7.5C8.3 8 8.5 7.6 8.5 6.8V5C8.5 4 9 3.5 10 3.5H10.5M8.5 8.2V11C8.5 12 9 12.5 10 12.5H10.5" stroke="currentColor" stroke-linecap="round" stroke-width="1.4"></path>`}</svg>`;
+/** A fork: one question, branching into its options (Lucide git-fork, ISC) */
+const branches = svg`<circle cx="12" cy="18" r="3"></circle><circle cx="6" cy="6" r="3"></circle><circle cx="18" cy="6" r="3"></circle><path d="M18 9v2c0 .6-.4 1-1 1H7c-.6 0-1-.4-1-1V9"></path><path d="M12 12v3"></path>`;
 const badge = html`<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${svg`<path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"></path><path d="m16 9-5.5 5.5L8 12"></path>`}</svg>`;
 const chevron = (d: string) =>
   html`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${svg`<path d=${d}></path>`}</svg>`;
@@ -843,10 +845,10 @@ export class TcDecisionTree extends TcElement {
     const count = current ? current.options.length + (this.allowOther ? 1 : 0) : 0;
 
     return html`
-      <header class="ui-dct__head">
-        <span class="ui-dct__mark">${branches}</span>
-        <span class="ui-dct__heading">${this.heading}</span>
-        <span class="ui-dct__count">${list.length ? `${list.length} waiting for you` : `${decided} of ${total} decided`}</span>
+      ${cardHead({
+        icon: branches,
+        title: this.heading,
+        aside: html`<span class="ui-dct__count">${list.length ? `${list.length} waiting for you` : `${decided} of ${total} decided`}</span>
         ${showPager
           ? html`<span class="ui-dct__pager">
               <span class="ui-dct__dots" aria-hidden="true">${repeat(
@@ -860,8 +862,8 @@ export class TcDecisionTree extends TcElement {
                 <button type="button" class="ui-dct__step" aria-label="Next decision" aria-keyshortcuts="ArrowRight J" aria-disabled=${ifDefined(locked ? "true" : undefined)} @click=${() => !locked && this.move(1)}>${chevron("m9 18 6-6-6-6")}</button>
               </span>
             </span>`
-          : nothing}
-      </header>
+          : nothing}`,
+      })}
 
       <div class="ui-dct__body" ?data-narrow=${this.narrow}>
         ${current
@@ -912,8 +914,7 @@ export class TcDecisionTree extends TcElement {
   padding: var(--tc-tray-inset);
   border-radius: var(--tc-tray-radius);
   background: var(--tc-surface-tray);
-  letter-spacing: -0.006em;
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-lg);
 }
 /* Colors, sizes and motion as variables – override them on [data-ui="dct"] */
@@ -961,16 +962,11 @@ export class TcDecisionTree extends TcElement {
 [data-ui="dct"] svg { display: block; flex: none; }
 .ui-dct__kbd { display: inline-grid; place-items: center; min-width: var(--tc-kbd-h); height: var(--tc-kbd-h); padding: 0 var(--tc-kbd-px); border-radius: var(--tc-kbd-radius); background: var(--tc-kbd-bg); box-shadow: var(--tc-kbd-shadow); font-family: inherit; font-size: var(--tc-kbd-font-size); font-weight: var(--tc-kbd-font-weight); line-height: var(--tc-line-height-none); color: var(--tc-kbd-fg); letter-spacing: 0; }
 .ui-dct__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-/* ----- The bar: what this is, how many wait, where you are ----- */
-.ui-dct__head { display: flex; align-items: center; gap: var(--tc-space-2); min-width: 0; }
-:where([data-look="standard"], [data-look="standard"] *).ui-dct__head { padding: var(--tc-space-2) var(--tc-space-3-5) var(--tc-space-3) var(--tc-space-3); }
-:where([data-look="clean"], [data-look="clean"] *).ui-dct__head { margin-bottom: var(--tc-space-4); }
-.ui-dct__mark { display: grid; flex: none; place-items: center; width: 16px; color: var(--tc-accent-text); }
-.ui-dct__heading { flex: none; font-weight: var(--tc-font-weight-strong); color: var(--tc-text-strong); }
-.ui-dct__count { flex: 1; min-width: 0; overflow: hidden; color: var(--tc-text-muted); white-space: nowrap; text-overflow: ellipsis; font-variant-numeric: tabular-nums; }
+/* ----- The header (cardHead): what this is, with how many wait and where you are at its right ----- */
+.ui-dct__count { color: var(--tc-text-muted); white-space: nowrap; text-overflow: ellipsis; font-variant-numeric: tabular-nums; }
 :where([data-look="standard"], [data-look="standard"] *).ui-dct__count { font-size: var(--tc-font-size-md); }
 :where([data-look="clean"], [data-look="clean"] *).ui-dct__count { font-size: var(--tc-font-size-sm); }
-.ui-dct__pager { display: inline-flex; flex: none; align-items: center; gap: var(--tc-space-2-5); margin-left: auto; font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); color: var(--tc-text-muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.ui-dct__pager { display: inline-flex; flex: none; align-items: center; gap: var(--tc-space-2-5); font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); color: var(--tc-text-muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
 .ui-dct__dots { display: flex; gap: var(--tc-space-1); }
 .ui-dct__dots > span { width: 5px; height: 5px; border-radius: 50%; background: var(--tc-border-strong); transition: background-color var(--tc-duration-moderate) var(--tc-ease-standard), transform var(--tc-duration-moderate) var(--tc-ease-move); }
 :where([data-look="clean"], [data-look="clean"] *).ui-dct__dots > span { border-radius: var(--tc-radius-2xs); }
@@ -983,7 +979,9 @@ export class TcDecisionTree extends TcElement {
 /* ----- The card with the tree ----- */
 .ui-dct__body { position: relative; display: flex; align-items: center; justify-content: center; min-height: var(--tc-decision-tree-height); }
 :where([data-look="standard"], [data-look="standard"] *).ui-dct__body { padding: 44px var(--tc-space-7) var(--tc-space-14); border-radius: var(--tc-card-radius); background: var(--tc-surface-on-tray); box-shadow: var(--tc-card-shadow); }
-:where([data-look="clean"], [data-look="clean"] *).ui-dct__body { padding: var(--tc-space-7) 0 44px; }
+/* Clean: one white card – the header is its first row, the tree below it */
+:where([data-look="clean"], [data-look="clean"] *)[data-ui="dct"] { border-radius: var(--tc-card-radius); background: var(--tc-surface-raised); box-shadow: var(--tc-card-shadow); }
+:where([data-look="clean"], [data-look="clean"] *).ui-dct__body { padding: var(--tc-space-6) var(--tc-space-4) 44px; }
 .ui-dct__tree { position: relative; isolation: isolate; display: grid; align-items: center; width: 100%; transition: opacity var(--tc-duration-moderate) var(--tc-ease-standard); }
 :where([data-look="standard"], [data-look="standard"] *).ui-dct__tree { grid-template-columns: minmax(0, 210px) minmax(0, 1fr); column-gap: 44px; max-width: 860px; }
 :where([data-look="clean"], [data-look="clean"] *).ui-dct__tree { grid-template-columns: minmax(0, 204px) minmax(0, 1fr); column-gap: var(--tc-space-7); max-width: 900px; }
@@ -1025,9 +1023,7 @@ export class TcDecisionTree extends TcElement {
 :where([data-look="clean"], [data-look="clean"] *).ui-dct__risk { position: absolute; bottom: calc(100% + 6px); left: 2px; }
 [data-ui="dct"] [data-risk="high"] { --tc-decision-tree-risk-bg: var(--tc-status-danger-bg); --tc-decision-tree-risk-fg: var(--tc-status-danger-fg); }
 [data-ui="dct"] [data-risk="medium"] { --tc-decision-tree-risk-bg: var(--tc-status-warning-bg); --tc-decision-tree-risk-fg: var(--tc-status-warning-fg); }
-.ui-dct__q { font-weight: var(--tc-font-weight-strong); line-height: var(--tc-line-height-normal); color: var(--tc-text-strong); text-wrap: pretty; }
-:where([data-look="standard"], [data-look="standard"] *).ui-dct__q { font-size: var(--tc-font-size-lg); }
-:where([data-look="clean"], [data-look="clean"] *).ui-dct__q { font-size: var(--tc-font-size-md); }
+.ui-dct__q { font-size: var(--tc-title-font-size); font-weight: var(--tc-title-font-weight); line-height: var(--tc-title-line-height); letter-spacing: var(--tc-title-tracking); color: var(--tc-title-color); text-wrap: pretty; }
 .ui-dct__context { margin-top: -4px; font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-snug); color: var(--tc-text-muted); text-wrap: pretty; }
 /* The branches: an option card, then its consequences in muted text */
 .ui-dct__branches { display: grid; gap: var(--tc-space-3-5); }
@@ -1116,7 +1112,7 @@ button.ui-dct__sopt[data-pick]:hover:not(:disabled),
 .ui-dct__typing > span:nth-child(3) { animation-delay: calc(var(--tc-duration-fast) * 2); }
 .ui-dct__hint { position: absolute; display: inline-flex; align-items: center; gap: var(--tc-space-1); font-size: var(--tc-font-size-sm); color: var(--tc-text-muted); pointer-events: none; animation: ui-dct-fade var(--tc-duration-slow) var(--tc-ease-standard) calc(var(--tc-duration-base) * 3) backwards; }
 :where([data-look="standard"], [data-look="standard"] *).ui-dct__hint { bottom: 16px; left: 24px; }
-:where([data-look="clean"], [data-look="clean"] *).ui-dct__hint { bottom: 8px; left: 0; }
+:where([data-look="clean"], [data-look="clean"] *).ui-dct__hint { bottom: 12px; left: 16px; }
 .ui-dct__hint > span { margin: 0 var(--tc-space-1); color: var(--tc-text-disabled); }
 .ui-dct__hint--failed { color: var(--tc-status-danger-fg); }
 /* The agent's note on a flagged part – it can be hovered (to read or select it) and closes with Escape */
@@ -1139,7 +1135,7 @@ button.ui-dct__sopt[data-pick]:hover:not(:disabled),
 /* ----- Narrow: top to bottom – the question, then each branch hanging off a rail with its consequences under it ----- */
 @container ui-dct (max-width: 639px) {
 :where([data-look="standard"], [data-look="standard"] *).ui-dct__body { min-height: 0; padding: var(--tc-space-5) var(--tc-space-4) var(--tc-space-12); }
-:where([data-look="clean"], [data-look="clean"] *).ui-dct__body { min-height: 0; padding: var(--tc-space-6) 0 var(--tc-space-10); }
+:where([data-look="clean"], [data-look="clean"] *).ui-dct__body { min-height: 0; padding: var(--tc-space-6) var(--tc-space-4) var(--tc-space-10); }
 .ui-dct__count { display: none; }
 .ui-dct__tree { grid-template-columns: minmax(0, 1fr); row-gap: var(--tc-space-4-5); }
 .ui-dct__branches { padding-left: 34px; }

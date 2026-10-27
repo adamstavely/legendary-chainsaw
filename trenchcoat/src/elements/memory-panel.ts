@@ -4,6 +4,7 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { keyed } from "lit/directives/keyed.js";
 import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController, rescueFocus } from "./internal/controllers";
 
 /*
@@ -809,16 +810,22 @@ export class TcMemoryPanel extends TcElement {
           : nothing}
     </div>`;
 
-    return html`
-      <div class="ui-mp__card">
-        <div class="ui-mp__head">
-          <span id="${this.uid}-title" class="ui-mp__title">${this.heading}</span>
-          <span class="ui-mp__count" aria-hidden="true" data-roll="total">${total}</span>
+    // The header (.tc-head): on the tray above the card in Standard, the card's first row in Clean
+    const head = cardHead({
+      icon: svg`<path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"></path><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"></path><path d="M12 5v13"></path>`,
+      title: this.heading,
+      id: `${this.uid}-title`,
+      aside: html`<span class="ui-mp__count" aria-hidden="true" data-roll="total">${total}</span>
           <button type="button" role="switch" aria-checked=${this.enabled ? "true" : "false"} aria-controls="${this.uid}-note" class="ui-mp__switch" @click=${() => this.setEnabled(!this.enabled)}>
             <span class="ui-mp__switch-label">Use memory</span>
             <span class="ui-mp__track" aria-hidden="true"><span class="ui-mp__knob"></span></span>
-          </button>
-        </div>
+          </button>`,
+    });
+
+    return html`
+      ${clean ? nothing : head}
+      <div class="ui-mp__card">
+        ${clean ? head : nothing}
         <div id="${this.uid}-note" class="ui-mp__fold" ?data-open=${!this.enabled} .inert=${this.enabled}>
           <div class="ui-mp__clip">
             <p class="ui-mp__note">${icons.info}<span>The assistant won't use or save memories in new chats. Nothing here is deleted.</span></p>
@@ -854,10 +861,11 @@ export class TcMemoryPanel extends TcElement {
   max-width: 380px;
   min-width: 0;
   container-type: inline-size;
-  padding: var(--tc-space-1);
-  border-radius: var(--tc-radius-3xl);
-  background: var(--tc-surface-sunken);
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  /* A gray tray: the header on it, the white card, the line below */
+  padding: var(--tc-tray-inset);
+  border-radius: var(--tc-tray-radius);
+  background: var(--tc-surface-tray);
+  font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-md);
   line-height: var(--tc-line-height-normal);
   color: var(--tc-text-secondary);
@@ -891,7 +899,7 @@ export class TcMemoryPanel extends TcElement {
 .ui-mp__search:focus-within, .ui-mp__item:has(.ui-mp__edit:focus) { box-shadow: var(--tc-field-shadow-focus); }
 :where([data-look="clean"], [data-look="clean"] *):where([data-ui="mp"]) svg { display: block; flex: none; }
 [data-ui="mp"] b { font-weight: var(--tc-font-weight-medium); color: var(--tc-text-primary); }
-:where([data-look="standard"], [data-look="standard"] *).ui-mp__card { border-radius: var(--tc-radius-2xl); background: var(--tc-surface-raised); box-shadow: var(--tc-shadow-raised); }
+:where([data-look="standard"], [data-look="standard"] *).ui-mp__card { padding-top: var(--tc-space-2-5); border-radius: var(--tc-card-radius); background: var(--tc-surface-on-tray); box-shadow: var(--tc-card-shadow); }
 /* Everything that opens or goes does it the same quiet way: it unfolds or folds and fades, nothing travels */
 .ui-mp__fold { display: grid; grid-template-rows: 0fr; opacity: 0; transition: grid-template-rows var(--tc-duration-slower) var(--tc-ease-move), opacity var(--tc-duration-base) var(--tc-ease-standard); }
 .ui-mp__fold[data-open] { grid-template-rows: 1fr; opacity: 1; transition: grid-template-rows var(--tc-duration-slower) var(--tc-ease-move), opacity var(--tc-duration-slow) var(--tc-ease-standard) 80ms; }
@@ -901,11 +909,9 @@ export class TcMemoryPanel extends TcElement {
 /* One white card – the edge is a shadow, not a border */
 :where([data-look="clean"], [data-look="clean"] *).ui-mp__card { border-radius: var(--tc-radius-lg); background: var(--tc-surface-raised); box-shadow: var(--tc-shadow-raised); }
 .ui-mp__clip { min-height: 0; overflow: hidden; }
-/* ----- Head ----- */
-:where([data-look="standard"], [data-look="standard"] *).ui-mp__head { display: flex; align-items: center; gap: var(--tc-space-2); height: 48px; padding: 0 var(--tc-space-3) 0 var(--tc-space-3-5); }
-:where([data-look="standard"], [data-look="standard"] *).ui-mp__title { min-width: 0; overflow: hidden; font-size: var(--tc-font-size-md); font-weight: var(--tc-font-weight-semibold); color: var(--tc-text-primary); white-space: nowrap; text-overflow: ellipsis; }
+/* ----- In the header's aside: the count and the switch ----- */
 :where([data-look="standard"], [data-look="standard"] *).ui-mp__count { flex: none; min-width: 20px; height: 20px; padding: 0 var(--tc-space-1-5); border-radius: var(--tc-radius-xs); background: var(--tc-memory-panel-well); font-size: var(--tc-font-size-sm); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-normal); text-align: center; color: var(--tc-text-muted); font-variant-numeric: tabular-nums; }
-:where([data-look="standard"], [data-look="standard"] *).ui-mp__switch { display: inline-flex; flex: none; align-items: center; gap: var(--tc-space-2); height: 28px; margin-left: auto; padding: 0 var(--tc-space-0-5) 0 var(--tc-space-2); border-radius: var(--tc-radius-md); font-size: var(--tc-font-size-sm); color: var(--tc-text-secondary); transition: background-color var(--tc-duration-fast) var(--tc-ease-standard); }
+:where([data-look="standard"], [data-look="standard"] *).ui-mp__switch { display: inline-flex; flex: none; align-items: center; gap: var(--tc-space-2); height: 28px; padding: 0 var(--tc-space-0-5) 0 var(--tc-space-2); border-radius: var(--tc-radius-md); font-size: var(--tc-font-size-sm); color: var(--tc-text-secondary); transition: background-color var(--tc-duration-fast) var(--tc-ease-standard); }
 :where([data-look="standard"], [data-look="standard"] *).ui-mp__switch:hover { background: var(--tc-memory-panel-well); }
 .ui-mp__track { position: relative; width: var(--tc-switch-w); height: var(--tc-switch-h); border-radius: var(--tc-switch-radius); background: var(--tc-switch-off); transition: background-color var(--tc-duration-moderate) var(--tc-ease-standard); }
 .ui-mp__knob { position: absolute; top: calc((var(--tc-switch-h) - var(--tc-switch-knob)) / 2); left: calc((var(--tc-switch-h) - var(--tc-switch-knob)) / 2); width: var(--tc-switch-knob); height: var(--tc-switch-knob); border-radius: calc(var(--tc-switch-radius) - 2px); background: var(--tc-switch-knob-bg); box-shadow: var(--tc-shadow-control); transition: transform var(--tc-duration-moderate) var(--tc-ease-move); }
@@ -915,17 +921,15 @@ export class TcMemoryPanel extends TcElement {
 :where([data-look="standard"], [data-look="standard"] *).ui-mp__note svg { margin-top: var(--tc-space-0-5); color: var(--tc-text-muted); }
 /* ----- Filters ----- */
 :where([data-look="standard"], [data-look="standard"] *).ui-mp__filters { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--tc-space-1); padding: 0 var(--tc-space-2-5) var(--tc-space-2-5) var(--tc-space-3); }
-/* ----- Head ----- */
-:where([data-look="clean"], [data-look="clean"] *).ui-mp__head { display: flex; align-items: center; gap: var(--tc-space-2); padding: var(--tc-space-3) var(--tc-space-2-5) 0 var(--tc-space-4); }
-:where([data-look="clean"], [data-look="clean"] *).ui-mp__title { min-width: 0; overflow: hidden; font-size: 15px; font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-loose); color: var(--tc-text-strong); white-space: nowrap; text-overflow: ellipsis; }
+/* ----- In the header's aside: the count and the switch ----- */
 :where([data-look="clean"], [data-look="clean"] *).ui-mp__count { flex: none; min-width: 20px; height: 18px; padding: 0 var(--tc-space-1); border-radius: var(--tc-radius-badge); background: var(--tc-fill-default); font-size: var(--tc-font-size-xs); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-snug); text-align: center; color: var(--tc-text-secondary); font-variant-numeric: tabular-nums; }
-:where([data-look="clean"], [data-look="clean"] *).ui-mp__switch { display: inline-flex; flex: none; align-items: center; gap: var(--tc-space-2); height: 28px; margin-left: auto; padding: 0 var(--tc-space-1-5) 0 var(--tc-space-2); border-radius: var(--tc-radius-sm); color: var(--tc-text-secondary); transition: background-color var(--tc-duration-instant) var(--tc-ease-standard), color var(--tc-duration-instant) var(--tc-ease-standard); }
+:where([data-look="clean"], [data-look="clean"] *).ui-mp__switch { display: inline-flex; flex: none; align-items: center; gap: var(--tc-space-2); height: 28px; padding: 0 var(--tc-space-1-5) 0 var(--tc-space-2); border-radius: var(--tc-radius-sm); color: var(--tc-text-secondary); transition: background-color var(--tc-duration-instant) var(--tc-ease-standard), color var(--tc-duration-instant) var(--tc-ease-standard); }
 :where([data-look="clean"], [data-look="clean"] *).ui-mp__switch:hover { background: var(--tc-fill-subtle); color: var(--tc-text-primary); }
 /* The note while memory is off: a soft gray fill, no stroke */
 :where([data-look="clean"], [data-look="clean"] *).ui-mp__note { display: flex; gap: var(--tc-space-2); margin: var(--tc-space-2-5) var(--tc-space-3) 0 var(--tc-space-4) !important; padding: var(--tc-space-2) var(--tc-space-2-5); border-radius: var(--tc-radius-md); background: var(--tc-fill-subtle); font-size: var(--tc-font-size-sm) !important; line-height: var(--tc-line-height-tight) !important; color: var(--tc-text-secondary); }
 :where([data-look="clean"], [data-look="clean"] *).ui-mp__note .ui-mp__glyph { color: var(--tc-icon-muted); }
 /* ----- Filters: the button-switch look ----- */
-:where([data-look="clean"], [data-look="clean"] *).ui-mp__filters { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--tc-space-2); padding: var(--tc-space-3) var(--tc-space-2-5) var(--tc-space-3) var(--tc-space-4); border-bottom: 0.5px solid var(--tc-border-default); transition: opacity var(--tc-duration-slow) var(--tc-ease-standard); }
+:where([data-look="clean"], [data-look="clean"] *).ui-mp__filters { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--tc-space-2); padding: 0 var(--tc-space-2-5) var(--tc-space-3) var(--tc-space-4); border-bottom: 0.5px solid var(--tc-border-default); transition: opacity var(--tc-duration-slow) var(--tc-ease-standard); }
 .ui-mp__chips, .ui-mp__search { grid-area: 1 / 1; transition: opacity var(--tc-duration-base) var(--tc-ease-standard), filter var(--tc-duration-base) var(--tc-ease-standard); }
 :where([data-look="standard"], [data-look="standard"] *).ui-mp__chips { display: flex; gap: var(--tc-space-1); min-width: 0; margin: -2px -4px; padding: var(--tc-space-0-5) var(--tc-space-1); overflow-x: auto; scrollbar-width: none; mask-image: linear-gradient(90deg, #000 calc(100% - 14px), transparent); }
 :where([data-look="clean"], [data-look="clean"] *).ui-mp__chips { display: flex; gap: var(--tc-space-1); min-width: 0; margin: -3px; padding: var(--tc-space-1); overflow-x: auto; scrollbar-width: none; }
@@ -960,11 +964,11 @@ export class TcMemoryPanel extends TcElement {
 /* ----- List ----- */
 :where([data-look="clean"], [data-look="clean"] *).ui-mp__list { max-height: var(--tc-memory-panel-max); padding: var(--tc-space-0-5) var(--tc-space-1-5) var(--tc-space-1-5); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: var(--tc-fill-strong) transparent; transition: opacity var(--tc-duration-slow) var(--tc-ease-standard); }
 :where([data-look="standard"], [data-look="standard"] *).ui-mp__filters { transition: opacity var(--tc-duration-slow) var(--tc-ease-standard); }
-:where([data-look="standard"], [data-look="standard"] *).ui-mp__group { padding: var(--tc-space-2-5) var(--tc-space-2) var(--tc-space-0-5); font-size: var(--tc-font-size-sm) !important; font-weight: var(--tc-font-weight-medium) !important; line-height: var(--tc-line-height-snug) !important; color: var(--tc-text-muted); }
+:where([data-look="standard"], [data-look="standard"] *).ui-mp__group { padding: var(--tc-space-2-5) var(--tc-space-2) var(--tc-space-0-5); font-size: var(--tc-caption-font-size) !important; font-weight: var(--tc-caption-font-weight) !important; line-height: var(--tc-caption-line-height) !important; color: var(--tc-caption-color); letter-spacing: var(--tc-caption-tracking); text-transform: var(--tc-caption-transform); }
 :where([data-look="standard"], [data-look="standard"] *).ui-mp__item { padding: var(--tc-space-1-5) var(--tc-space-2) var(--tc-space-1); border-radius: var(--tc-radius-lg); transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), opacity var(--tc-duration-base) var(--tc-ease-standard); }
 :where([data-look="standard"], [data-look="standard"] *).ui-mp__item[data-hot],
 :where([data-look="standard"], [data-look="standard"] *).ui-mp__item[data-editing] { background: var(--tc-memory-panel-well); }
-:where([data-look="clean"], [data-look="clean"] *).ui-mp__group { padding: var(--tc-space-3) var(--tc-space-2-5) var(--tc-space-1); font-size: 10px !important; font-weight: var(--tc-font-weight-medium) !important; line-height: var(--tc-line-height-tight) !important; letter-spacing: 0.5px; text-transform: uppercase; color: var(--tc-text-muted); }
+:where([data-look="clean"], [data-look="clean"] *).ui-mp__group { padding: var(--tc-space-3) var(--tc-space-2-5) var(--tc-space-1); font-size: var(--tc-caption-font-size) !important; font-weight: var(--tc-caption-font-weight) !important; line-height: var(--tc-caption-line-height) !important; letter-spacing: var(--tc-caption-tracking); text-transform: var(--tc-caption-transform); color: var(--tc-caption-color); }
 /* The hovered row gets a soft wash – short and crisp, and gone when the pointer leaves */
 :where([data-look="clean"], [data-look="clean"] *).ui-mp__item { padding: var(--tc-space-2) var(--tc-space-2-5) var(--tc-space-2); border-radius: var(--tc-radius-md); transition: background-color var(--tc-duration-instant) var(--tc-ease-decelerate), opacity var(--tc-duration-base) var(--tc-ease-standard); }
 :where([data-look="clean"], [data-look="clean"] *).ui-mp__item[data-hot],
@@ -984,21 +988,21 @@ export class TcMemoryPanel extends TcElement {
 :where([data-look="standard"], [data-look="standard"] *).ui-mp__acts { display: inline-flex; flex: none; align-items: center; gap: var(--tc-space-0-5); margin: -1px -4px -1px auto; opacity: 0; transition: opacity var(--tc-duration-base) var(--tc-ease-standard); }
 :where([data-look="clean"], [data-look="clean"] *).ui-mp__acts { display: inline-flex; flex: none; align-items: center; gap: var(--tc-space-0-5); margin: -4px -6px -4px auto; opacity: 0; transition: opacity var(--tc-duration-quick) var(--tc-ease-standard); }
 .ui-mp__item:is([data-hot], :focus-within) .ui-mp__acts, .ui-mp__acts--edit { opacity: 1; }
-:where([data-look="standard"], [data-look="standard"] *).ui-mp__icon { display: grid; flex: none; place-items: center; width: 26px; height: 26px; border-radius: var(--tc-radius-md); color: var(--tc-text-muted); transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard), opacity var(--tc-duration-base) var(--tc-ease-standard); }
+:where([data-look="standard"], [data-look="standard"] *).ui-mp__icon { display: grid; flex: none; place-items: center; width: var(--tc-control-h-sm); height: var(--tc-control-h-sm); border-radius: var(--tc-control-radius-sm); color: var(--tc-text-muted); transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard), opacity var(--tc-duration-base) var(--tc-ease-standard); }
 :where([data-look="standard"], [data-look="standard"] *).ui-mp__icon:hover { background: var(--tc-fill-hover); color: var(--tc-text-primary); }
 :where([data-look="standard"], [data-look="standard"] *).ui-mp__icon--forget:hover { background: var(--tc-status-danger-bg); color: var(--tc-status-danger-fg); }
 :where([data-look="clean"], [data-look="clean"] *).ui-mp__acts--edit { gap: var(--tc-space-1); margin-top: var(--tc-space-1); margin-right: -2px; margin-bottom: 0; }
 :where([data-look="clean"], [data-look="clean"] *).ui-mp__item[data-editing] { padding-bottom: var(--tc-space-2); }
 /* Ghost icon button */
-:where([data-look="clean"], [data-look="clean"] *).ui-mp__icon { display: grid; flex: none; place-items: center; width: 28px; height: 28px; border-radius: var(--tc-radius-sm); color: var(--tc-icon-muted); transition: background-color var(--tc-duration-instant) var(--tc-ease-standard), color var(--tc-duration-instant) var(--tc-ease-standard), opacity var(--tc-duration-base) var(--tc-ease-standard); }
+:where([data-look="clean"], [data-look="clean"] *).ui-mp__icon { display: grid; flex: none; place-items: center; width: var(--tc-control-h-md); height: var(--tc-control-h-md); border-radius: var(--tc-control-radius-md); color: var(--tc-icon-muted); transition: background-color var(--tc-duration-instant) var(--tc-ease-standard), color var(--tc-duration-instant) var(--tc-ease-standard), opacity var(--tc-duration-base) var(--tc-ease-standard); }
 :where([data-look="clean"], [data-look="clean"] *).ui-mp__icon:hover { background: var(--tc-fill-subtle); color: var(--tc-text-primary); }
 :where([data-look="clean"], [data-look="clean"] *).ui-mp__item .ui-mp__icon:hover { background: var(--tc-fill-default); }
 :where([data-look="clean"], [data-look="clean"] *).ui-mp__item .ui-mp__icon--forget:hover { background: var(--tc-status-danger-bg); color: var(--tc-status-danger-fg); }
 .ui-mp__icon-swap { display: grid; animation: ui-mp-in var(--tc-duration-moderate) var(--tc-ease-standard) both; }
-:where([data-look="standard"], [data-look="standard"] *).ui-mp__text-btn { display: inline-flex; align-items: center; height: 26px; padding: 0 var(--tc-space-2); border-radius: var(--tc-radius-md); font-size: var(--tc-font-size-sm); font-weight: var(--tc-font-weight-medium); color: var(--tc-text-secondary); transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard), opacity var(--tc-duration-fast) var(--tc-ease-standard); }
-:where([data-look="standard"], [data-look="standard"] *).ui-mp__text-btn:hover { background: var(--tc-fill-hover); color: var(--tc-text-primary); }
-:where([data-look="standard"], [data-look="standard"] *).ui-mp__text-btn--main { background: var(--tc-text-primary); color: var(--tc-surface-raised); }
-:where([data-look="standard"], [data-look="standard"] *).ui-mp__text-btn--main:hover { background: var(--tc-text-primary); color: var(--tc-surface-raised); opacity: 0.86; }
+:where([data-look="standard"], [data-look="standard"] *).ui-mp__text-btn { display: inline-flex; align-items: center; height: var(--tc-control-h-sm); padding: 0 var(--tc-control-px-sm); border-radius: var(--tc-control-radius-sm); font-size: var(--tc-control-font-size); font-weight: var(--tc-control-font-weight); color: var(--tc-action-ghost-fg); transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard), opacity var(--tc-duration-fast) var(--tc-ease-standard); }
+:where([data-look="standard"], [data-look="standard"] *).ui-mp__text-btn:hover { background: var(--tc-action-ghost-bg-hover); color: var(--tc-text-primary); }
+[data-ui="mp"] .ui-mp__text-btn--main { background: var(--tc-action-primary-bg); box-shadow: var(--tc-action-primary-shadow); color: var(--tc-action-primary-fg); }
+[data-ui="mp"] .ui-mp__text-btn--main:hover { background: var(--tc-action-primary-bg-hover); color: var(--tc-action-primary-fg); }
 :where([data-look="standard"], [data-look="standard"] *).ui-mp__text-btn:disabled { cursor: default; opacity: 0.35; }
 :where([data-look="standard"], [data-look="standard"] *).ui-mp__edit { display: block; width: 100%; min-height: 20px; margin: 0; padding: 0; border: 0; background: none; font: inherit; color: var(--tc-text-primary); resize: none; overflow: hidden; outline: none; }
 :where([data-look="standard"], [data-look="standard"] *).ui-mp__edit::placeholder { color: var(--tc-text-placeholder); }
@@ -1017,11 +1021,8 @@ export class TcMemoryPanel extends TcElement {
 :where([data-look="standard"], [data-look="standard"] *).ui-mp__foot { display: flex; align-items: center; gap: var(--tc-space-2); min-height: 38px; padding: var(--tc-space-1) var(--tc-space-1) 0 var(--tc-space-2-5); }
 :where([data-look="standard"], [data-look="standard"] *).ui-mp__caption { flex: 1; min-width: 0; overflow: hidden; font-size: var(--tc-font-size-sm); color: var(--tc-text-muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
 /* Cancel: ghost text; Save: the dark chip */
-:where([data-look="clean"], [data-look="clean"] *).ui-mp__text-btn { display: inline-flex; flex: none; align-items: center; height: 28px; padding: 0 var(--tc-space-2-5); border-radius: var(--tc-radius-sm); font-size: var(--tc-font-size-md); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-normal); color: var(--tc-text-secondary); white-space: nowrap; transition: background-color var(--tc-duration-instant) var(--tc-ease-standard), color var(--tc-duration-instant) var(--tc-ease-standard), opacity var(--tc-duration-fast) var(--tc-ease-standard); }
-:where([data-look="clean"], [data-look="clean"] *).ui-mp__text-btn:hover { background: var(--tc-fill-default); color: var(--tc-text-primary); }
-:where([data-look="clean"], [data-look="clean"] *).ui-mp__text-btn--main,
-:where([data-look="clean"], [data-look="clean"] *).ui-mp__text-btn--main:hover { background: var(--tc-surface-inverse); color: var(--tc-text-on-inverse); }
-:where([data-look="clean"], [data-look="clean"] *).ui-mp__text-btn--main:hover { opacity: 0.88; }
+:where([data-look="clean"], [data-look="clean"] *).ui-mp__text-btn { display: inline-flex; flex: none; align-items: center; height: var(--tc-control-h-md); padding: 0 var(--tc-control-px-md); border-radius: var(--tc-control-radius-md); font-size: var(--tc-control-font-size); font-weight: var(--tc-control-font-weight); color: var(--tc-action-ghost-fg); white-space: nowrap; transition: background-color var(--tc-duration-instant) var(--tc-ease-standard), color var(--tc-duration-instant) var(--tc-ease-standard), opacity var(--tc-duration-fast) var(--tc-ease-standard); }
+:where([data-look="clean"], [data-look="clean"] *).ui-mp__text-btn:hover { background: var(--tc-action-ghost-bg-hover); color: var(--tc-text-primary); }
 :where([data-look="clean"], [data-look="clean"] *).ui-mp__text-btn:disabled { cursor: default; opacity: 0.3; }
 :where([data-look="clean"], [data-look="clean"] *).ui-mp__edit { display: block; width: 100%; min-height: 20px; margin: 0; padding: 0; border: 0; background: none; font: inherit; color: var(--tc-text-strong); caret-color: var(--tc-accent); resize: none; overflow: hidden; outline: none; }
 :where([data-look="clean"], [data-look="clean"] *).ui-mp__edit::placeholder { color: var(--tc-text-placeholder); opacity: 1; }
@@ -1049,13 +1050,13 @@ export class TcMemoryPanel extends TcElement {
 .ui-mp__forgot { display: flex; min-width: 0; }
 .ui-mp__flat { flex: none; white-space: pre; }
 .ui-mp__quote { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
-:where([data-look="standard"], [data-look="standard"] *).ui-mp__action { display: inline-flex; flex: none; align-items: center; gap: var(--tc-space-1); height: 26px; padding: 0 var(--tc-space-2); border-radius: var(--tc-radius-lg); font-size: var(--tc-font-size-sm); font-weight: var(--tc-font-weight-medium); color: var(--tc-text-secondary); white-space: nowrap; animation: ui-mp-swap-in var(--tc-duration-slow) var(--tc-ease-standard) both; transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard); }
+:where([data-look="standard"], [data-look="standard"] *).ui-mp__action { display: inline-flex; flex: none; align-items: center; gap: var(--tc-space-1); height: var(--tc-control-h-sm); padding: 0 var(--tc-control-px-sm); border-radius: var(--tc-control-radius-sm); font-size: var(--tc-control-font-size); font-weight: var(--tc-control-font-weight); color: var(--tc-action-ghost-fg); white-space: nowrap; animation: ui-mp-swap-in var(--tc-duration-slow) var(--tc-ease-standard) both; transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard); }
 :where([data-look="standard"], [data-look="standard"] *).ui-mp__action:hover { background: var(--tc-surface-raised); color: var(--tc-text-primary); }
 :where([data-look="standard"], [data-look="standard"] *).ui-mp__action--undo { padding: 0 var(--tc-space-2) 0 var(--tc-space-2); background: var(--tc-action-secondary-bg); color: var(--tc-action-secondary-fg); box-shadow: var(--tc-action-secondary-shadow); }
 :where([data-look="standard"], [data-look="standard"] *).ui-mp__action:not(.ui-mp__action--undo) svg { transition: transform var(--tc-duration-base) var(--tc-ease-move); }
 :where([data-look="standard"], [data-look="standard"] *).ui-mp__action:not(.ui-mp__action--undo):hover svg { transform: translateX(2px); }
 /* The action button: ghost text with an arrow */
-:where([data-look="clean"], [data-look="clean"] *).ui-mp__action { display: inline-flex; flex: none; align-items: center; gap: var(--tc-space-1); height: 28px; padding: 0 var(--tc-space-1-5) 0 var(--tc-space-2-5); border-radius: var(--tc-radius-sm); font-size: var(--tc-font-size-md); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-normal); color: var(--tc-text-secondary); white-space: nowrap; animation: ui-mp-swap-in var(--tc-duration-slow) var(--tc-ease-standard) both; transition: background-color var(--tc-duration-instant) var(--tc-ease-standard), color var(--tc-duration-instant) var(--tc-ease-standard); }
+:where([data-look="clean"], [data-look="clean"] *).ui-mp__action { display: inline-flex; flex: none; align-items: center; gap: var(--tc-space-1); height: var(--tc-control-h-md); padding: 0 var(--tc-space-1-5) 0 var(--tc-space-2-5); border-radius: var(--tc-control-radius-md); font-size: var(--tc-control-font-size); font-weight: var(--tc-control-font-weight); color: var(--tc-action-ghost-fg); white-space: nowrap; animation: ui-mp-swap-in var(--tc-duration-slow) var(--tc-ease-standard) both; transition: background-color var(--tc-duration-instant) var(--tc-ease-standard), color var(--tc-duration-instant) var(--tc-ease-standard); }
 :where([data-look="clean"], [data-look="clean"] *).ui-mp__action .ui-mp__glyph { color: var(--tc-icon-muted); transition: transform var(--tc-duration-base) var(--tc-ease-move), color var(--tc-duration-instant) var(--tc-ease-standard); }
 :where([data-look="clean"], [data-look="clean"] *).ui-mp__action:hover { background: var(--tc-fill-subtle); color: var(--tc-text-primary); }
 :where([data-look="clean"], [data-look="clean"] *).ui-mp__action:not(.ui-mp__action--undo):hover .ui-mp__glyph { transform: translateX(2px); color: var(--tc-text-primary); }
@@ -1065,14 +1066,10 @@ export class TcMemoryPanel extends TcElement {
 @keyframes ui-mp-in { from { opacity: 0; transform: scale(0.9); } }
 @keyframes ui-mp-swap-in { from { opacity: 0; filter: blur(2px); } }
 @keyframes ui-mp-swap-out { from { opacity: 1; } to { opacity: 0; filter: blur(2px); } }
-/* Narrow panels: chips drop their counts and the switch keeps only its track, so the filters fit */
+/* Narrow panels: chips drop their counts, so the filters fit */
 @container (max-width: 340px) {
 :where([data-look="standard"], [data-look="standard"] *).ui-mp__chip-count { display: none; }
 :where([data-look="standard"], [data-look="standard"] *).ui-mp__chip { padding: 0 var(--tc-space-2); }
-}
-@container (max-width: 320px) {
-:where([data-look="standard"], [data-look="standard"] *).ui-mp__switch-label { display: none; }
-:where([data-look="standard"], [data-look="standard"] *).ui-mp__switch { padding: 0 var(--tc-space-0-5); }
 }
 @media (pointer: coarse) {
 :where([data-look="standard"], [data-look="standard"] *).ui-mp__acts { opacity: 1; }
@@ -1085,17 +1082,14 @@ export class TcMemoryPanel extends TcElement {
 :where([data-look="standard"], [data-look="standard"] *).ui-mp__add { height: 36px; }
 :where([data-look="standard"], [data-look="standard"] *).ui-mp__action { height: 30px; }
 }
-/* Narrow panels: chips drop their counts and the switch keeps only its track, so the filters fit */
+/* Narrow panels: chips drop their counts, so the filters fit */
 @container (max-width: 360px) {
 :where([data-look="clean"], [data-look="clean"] *).ui-mp__chip-count { display: none; }
-:where([data-look="clean"], [data-look="clean"] *).ui-mp__head { padding-left: var(--tc-space-3-5); }
 :where([data-look="clean"], [data-look="clean"] *).ui-mp__filters { padding-left: var(--tc-space-3-5); }
 :where([data-look="clean"], [data-look="clean"] *).ui-mp__foot { padding-left: var(--tc-space-3-5); }
 :where([data-look="clean"], [data-look="clean"] *).ui-mp__note { margin-left: var(--tc-space-3-5) !important; }
 }
 @container (max-width: 320px) {
-:where([data-look="clean"], [data-look="clean"] *).ui-mp__switch-label { display: none; }
-:where([data-look="clean"], [data-look="clean"] *).ui-mp__switch { padding: 0 var(--tc-space-1-5); }
 :where([data-look="clean"], [data-look="clean"] *).ui-mp__chip { padding: var(--tc-space-1) var(--tc-space-2); }
 }
 /* Touch screens: actions always visible, taller targets */

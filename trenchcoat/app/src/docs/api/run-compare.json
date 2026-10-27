@@ -198,7 +198,6 @@
     "--tc-text-muted",
     "--tc-text-primary",
     "--tc-text-secondary",
-    "--tc-text-strong",
     "--tc-tray-inset",
     "--tc-tray-radius"
    ]
@@ -258,7 +257,7 @@
   "`tc-run-compare` – two runs or prompt versions side by side: outputs and prompts word-diffed with inline-diff's Myers diff, steps aligned and marked Added / Dropped / Changed, cost, time and tokens marked better or worse. Tabs; `tc-view-change`, `tc-pick`."
  ],
  "size": {
-  "min": 76510,
-  "gzip": 19176
+  "min": 77893,
+  "gzip": 19638
  }
 }

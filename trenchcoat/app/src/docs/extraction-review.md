@@ -34,7 +34,7 @@ field from the keyboard while the page view follows; a correction keeps the extr
 
 ## Looks
 
-Standard puts the page and the fields on a white card in the gray tray, with the progress and Confirm on the tray
+Standard puts the header on the gray tray above a white card with the page and the fields, and the progress and Confirm on the tray
 below. Clean is one white card with hairline dividers, a lighter value weight and thinner icons; the progress is its
 last row, and the active field is tinted with the accent rather than gray.
 

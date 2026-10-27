@@ -27,7 +27,7 @@ record; switch to the event chain to read the same steps in the order they happe
 
 ## Anatomy
 
-1. **Bar** `.ui-lng__bar` – the heading, how many steps and weak links, and the view
+1. **Header** `.tc-head` – a branching icon, the heading, and at its right how many steps and weak links and the view
 2. **View** `.ui-lng__tabs` – Graph or Event chain
 3. **Column** `.ui-lng__head` – a column's heading and how many steps it holds
 4. **Step** `.ui-lng__node` – one node: its column's mark, what it is and a quieter detail
@@ -36,8 +36,8 @@ record; switch to the event chain to read the same steps in the order they happe
 
 ## Looks
 
-Standard sets the graph in a white card on a gray tray, with the bar on the tray; nodes are raised cards with
-semibold titles. Clean drops the tray: the bar sits above one white card, column headings follow the caption style,
+Standard sets the graph in a white card on a gray tray, with the header on the tray; nodes are raised cards with
+semibold titles. Clean drops the tray: the header is the first row of one white card, column headings follow the caption style,
 and links and icons are drawn thinner. Both colour each column's mark the same way and dash weak links.
 
 ## Keyboard

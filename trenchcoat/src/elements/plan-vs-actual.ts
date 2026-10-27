@@ -498,7 +498,7 @@ export class TcPlanVsActual extends TcElement {
 /* ----- The bar on top: what the run is for, how far it is, and how late ----- */
 .ui-pvac__head { display: flex; align-items: center; gap: 8px; min-width: 0; padding: 12px 14px 12px 16px; border-bottom: var(--tc-hairline, 0.5px) solid var(--tc-divider, light-dark(rgba(0, 0, 0, 0.06), rgba(255, 255, 255, 0.08))); }
 .ui-pvac__mark { display: grid; flex: none; place-items: center; width: 16px; color: var(--tc-accent-text, light-dark(#0058cf, #70b8ff)); }
-.ui-pvac__title { flex: none; font-weight: var(--tc-font-weight-medium, 500); color: var(--tc-text-strong, light-dark(#000000, #ffffff)); }
+.ui-pvac__title { flex: none; font-size: var(--tc-title-font-size); font-weight: var(--tc-title-font-weight); line-height: var(--tc-title-line-height); letter-spacing: var(--tc-title-tracking); color: var(--tc-title-color); }
 .ui-pvac__task { flex: 1; min-width: 0; overflow: hidden; color: var(--tc-text-muted, light-dark(rgba(0, 0, 0, 0.56), rgba(255, 255, 255, 0.52))); white-space: nowrap; text-overflow: ellipsis; }
 /* Time and cost so far against the plan – the numbers turn amber once they pass it */
 .ui-pvac__stats { display: flex; flex: none; align-items: center; gap: 14px; margin: 0 4px 0 0; font-size: var(--tc-font-size-sm, 12px); line-height: var(--tc-line-height-tight, 16px); font-variant-numeric: tabular-nums; white-space: nowrap; }

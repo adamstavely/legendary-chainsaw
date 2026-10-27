@@ -1,0 +1,278 @@
+{
+ "elements": [
+  {
+   "tag": "tc-retrieval-settings",
+   "className": "TcRetrievalSettings",
+   "description": "Chunking, top-k, a score threshold, keyword ↔ vector balance, reranking, metadata filters and how many chunks go\ninto context – with the pipeline they make and the cost and latency the app reports.",
+   "properties": [
+    {
+     "name": "value",
+     "attribute": null,
+     "type": "RetrievalSettingsValue",
+     "default": "{ chunkSize: 512, chunkOverlap: 64, topK: 40, threshold: 0.3, hybrid: 0.7, rerank: true, rerankModel: \"\", topN: 8, filters: [] }",
+     "description": "The config. Changed by the user unless a tc-value-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "filterFields",
+     "attribute": null,
+     "type": "RetrievalFilterField[]",
+     "default": "[]",
+     "description": "The metadata fields filters can test; without any, a filter's field is typed in",
+     "readonly": false
+    },
+    {
+     "name": "rerankModels",
+     "attribute": null,
+     "type": "RetrievalRerankModel[]",
+     "default": "[]",
+     "description": "The reranking models to offer; without any, Rerank is a switch only",
+     "readonly": false
+    },
+    {
+     "name": "indexed",
+     "attribute": null,
+     "type": "{ chunkSize: number; chunkOverlap: number } | undefined",
+     "default": "undefined",
+     "description": "The chunking the sources are indexed with now – a different size or overlap says the sources will be re-indexed",
+     "readonly": false
+    },
+    {
+     "name": "estimate",
+     "attribute": null,
+     "type": "RetrievalEstimate | undefined",
+     "default": "undefined",
+     "description": "Per-query cost and latency from the app, shown on the pipeline and at the foot; unset shows none",
+     "readonly": false
+    },
+    {
+     "name": "stage",
+     "attribute": "stage",
+     "type": "RetrievalStage",
+     "default": "\"retrieve\"",
+     "description": "The stage whose settings show under the pipeline: \"retrieve\", \"filter\", \"rerank\" or \"context\"",
+     "readonly": false
+    },
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Retrieval\"",
+     "description": "The heading; also names the group",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string",
+     "default": "\"\"",
+     "description": "A quieter line under the heading, e.g. which index this is",
+     "readonly": false
+    },
+    {
+     "name": "flat",
+     "attribute": "flat",
+     "type": "boolean",
+     "default": "false",
+     "description": "Drops the tray and the card, for settings inside another card",
+     "readonly": false
+    },
+    {
+     "name": "name",
+     "attribute": "name",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Submitted with the form: the config as JSON",
+     "readonly": false
+    },
+    {
+     "name": "disabled",
+     "attribute": "disabled",
+     "type": "boolean",
+     "default": "false",
+     "description": "Turns every control off and leaves the config out of the form; a disabled fieldset does the same",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-value-change",
+     "detail": "",
+     "description": "The config changed ({ value: RetrievalSettingsValue }); cancelable – prevent it to control `value`",
+     "cancelable": true
+    },
+    {
+     "name": "tc-stage-change",
+     "detail": "",
+     "description": "A stage of the pipeline was opened for editing ({ stage }: RetrievalStageChange); cancelable",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "rset",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-border-control",
+    "--tc-border-default",
+    "--tc-border-strong",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-sm",
+    "--tc-control-px-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-font-size",
+    "--tc-field-h",
+    "--tc-field-px",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-field-shadow-hover",
+    "--tc-field-shadow-invalid",
+    "--tc-fill-default",
+    "--tc-fill-strong",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-2xs",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-radius-2xs",
+    "--tc-radius-full",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-radius-xs",
+    "--tc-shadow-control",
+    "--tc-shadow-raised",
+    "--tc-shadow-raised-hover",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-7",
+    "--tc-status-danger-fg",
+    "--tc-status-danger-solid",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-surface-well",
+    "--tc-switch-h",
+    "--tc-switch-knob",
+    "--tc-switch-knob-bg",
+    "--tc-switch-off",
+    "--tc-switch-on",
+    "--tc-switch-radius",
+    "--tc-switch-w",
+    "--tc-text-muted",
+    "--tc-text-placeholder",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "retrievalSettingsProblem",
+   "signature": "retrievalSettingsProblem(v: RetrievalSettingsValue): [string, \"overlap\" | \"context\" | \"filters\"] | null",
+   "description": "The first problem with a config, if any: [message, the part it's about]"
+  }
+ ],
+ "react": [
+  {
+   "component": "RetrievalSettings",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "Shown at the top; names the group"
+    },
+    {
+     "name": "value",
+     "type": "RetrievalSettingsValue",
+     "optional": true,
+     "description": "The config (controlled)"
+    },
+    {
+     "name": "defaultValue",
+     "type": "RetrievalSettingsValue",
+     "optional": true,
+     "description": "The config to start with when uncontrolled"
+    },
+    {
+     "name": "onChange",
+     "type": "(value: RetrievalSettingsValue) => void",
+     "optional": true,
+     "description": "Called with the whole config after every change"
+    },
+    {
+     "name": "stage",
+     "type": "RetrievalStage",
+     "optional": true,
+     "description": "The stage whose settings show – controlled when given"
+    },
+    {
+     "name": "onStageChange",
+     "type": "(stage: RetrievalStage) => void",
+     "optional": true,
+     "description": "A stage was opened for editing"
+    }
+   ],
+   "hides": [
+    "value",
+    "defaultValue",
+    "heading",
+    "stage",
+    "onChange"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 42764,
+  "gzip": 12354
+ }
+}

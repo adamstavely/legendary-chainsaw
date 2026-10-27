@@ -26,7 +26,7 @@ viewport render, so it stays quick with thousands of rows.
 
 ## Anatomy
 
-1. **Title** `.ui-dt__head` – the icon, the name, and Undo and Redo
+1. **Header** `.tc-head` – the icon (a table unless you give one), the name, and Undo and Redo
 2. **Column header** `.ui-dt__th` – the column's icon and label; click to sort
 3. **Checkbox** `.ui-dt__check` – checks a row; the one in the header checks them all
 4. **Title cell** `.ui-dt__name` – the row's logo and name

@@ -44,7 +44,7 @@ describe("tc-provenance-summary", () => {
       expect(el.dataset.look).toBe(look);
       expect(el.getAttribute("role")).toBe("region");
       expect(document.getElementById(el.getAttribute("aria-labelledby")!)!.textContent).toBe("Provenance");
-      expect(el.querySelector(".ui-pvs__sub")!.textContent).toBe("Market brief");
+      expect(el.querySelector(".tc-head__sub")!.textContent).toBe("Market brief");
       expect([...el.querySelectorAll(".ui-pvs__key")].map((k) => plain(k.textContent))).toEqual(["From sources 40%", "AI synthesis 30%", "Original writing 30%"]);
     });
   }
@@ -136,6 +136,14 @@ describe("tc-provenance-summary", () => {
       { section: null, kind: "sourced", amount: 400, share: 0.4 },
       { section: "market", kind: "sourced", amount: 300, share: 0.75 },
     ]);
+  });
+
+  test("the footer names the section with the smallest share from sources", async () => {
+    const el = await summary();
+    expect(plain(el.querySelector(".ui-pvs__foot")!.textContent)).toBe("Least from sources: Risks 0%");
+    el.sections = SECTIONS.slice(0, 1);
+    await settle();
+    expect(el.querySelector(".ui-pvs__foot")).toBeNull();
   });
 
   test("kind labels, unit, total label and locale are properties", async () => {

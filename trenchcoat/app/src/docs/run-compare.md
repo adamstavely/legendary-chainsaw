@@ -27,7 +27,7 @@ new prompt or model. A candidate that is still running streams in, and the compa
 
 ## Anatomy
 
-1. **Header** `.ui-rc__bar` – the heading, the number of differences and the tabs
+1. **Header** `.tc-head` – the icon, the heading, the number of differences and the tabs
 2. **Tabs** `.ui-rc__tabs` – Output, Steps and Prompt, each with its count of differences
 3. **Run** `.ui-rc__run` – one side's label, model, status and numbers
 4. **Numbers** `.ui-rc__nums` – time, cost, tokens, steps and score, with the candidate's change

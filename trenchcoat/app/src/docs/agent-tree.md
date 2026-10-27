@@ -28,7 +28,7 @@ retry ones that failed, without hunting for them in the tree.
 
 ## Anatomy
 
-1. **Header** `.ui-agt__bar` – the run's name and its summary
+1. **Header** `.ui-agt__bar` – the shared card header: a boxed icon, the run’s name and, on the right, its summary
 2. **Summary** `.ui-agt__sum` – agents, how many are running, “needs you”, “failed” and the total cost
 3. **Agent** `.ui-agt__node` – one agent's card
 4. **Status** `.ui-agt__status` – Queued, Running, Needs you, Done, Failed or Stopped

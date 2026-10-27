@@ -5,6 +5,7 @@ import { live } from "lit/directives/live.js";
 import { repeat } from "lit/directives/repeat.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController } from "./internal/controllers";
 
 /*
@@ -12,8 +13,9 @@ import { FocusRescueController } from "./internal/controllers";
  * (the app's, one URL per page) sits on the left with a box around every field's place on it; the fields sit on the
  * right, each with the extracted value, how confident the extraction was, and Accept / Correct / Reject. The active
  * field's box is highlighted and the page view follows it – to its page, scrolled so the box is in view. A
- * correction keeps the extracted value beside the new one ("was 1,204.00"). Clean drops the gray tray: one white card
- * whose last row holds the progress and Confirm.
+ * correction keeps the extracted value beside the new one ("was 1,204.00"). Standard puts the header on the gray tray
+ * above the white card; Clean drops the tray: one white card, the header its first row and the progress and Confirm
+ * its last.
  *
  *   <tc-extraction-review heading="Invoice INV-2041" .pages=${pages} .fields=${fields}></tc-extraction-review>
  *
@@ -25,6 +27,9 @@ import { FocusRescueController } from "./internal/controllers";
  * ← → between the field and its three buttons. A accepts and R rejects (then on to the next field to review); Enter
  * or F2 corrects – Enter saves and moves on, Escape cancels.
  */
+
+/** Text in a scan frame: fields read off a document (Lucide scan-text, ISC) */
+const scanIcon = svg`<path d="M3 7V5a2 2 0 0 1 2-2h2"></path><path d="M17 3h2a2 2 0 0 1 2 2v2"></path><path d="M21 17v2a2 2 0 0 1-2 2h-2"></path><path d="M7 21H5a2 2 0 0 1-2-2v-2"></path><path d="M7 8h8"></path><path d="M7 12h10"></path><path d="M7 16h6"></path>`;
 
 export type ExtractionFieldStatus = "pending" | "accepted" | "corrected" | "rejected";
 
@@ -539,14 +544,16 @@ export class TcExtractionReview extends TcElement {
 
   protected override render() {
     const clean = this.resolvedLook === "clean";
-    const head = html`<div class="ui-xrev__head">
-      <div class="ui-xrev__title" id=${`${this.uid}-title`}>${this.heading}</div>
-      ${this.source ? html`<div class="ui-xrev__source">${glyph(icons.doc)}<span>${this.source}</span></div>` : nothing}
-    </div>`;
+    const head = cardHead({
+      icon: scanIcon,
+      title: this.heading,
+      id: `${this.uid}-title`,
+      subtitle: this.source ? html`<span class="ui-xrev__source">${glyph(icons.doc)}<span>${this.source}</span></span>` : nothing,
+    });
     const body = html`<div class="ui-xrev__body">${this.renderPage()}${this.renderFields()}</div>`;
     const foot = this.renderFoot();
     return html`
-      ${clean ? html`<div class="ui-xrev__card">${head}${body}${foot}</div>` : html`<div class="ui-xrev__card">${head}${body}</div>${foot}`}
+      ${clean ? html`<div class="ui-xrev__card">${head}${body}${foot}</div>` : html`${head}<div class="ui-xrev__card">${body}</div>${foot}`}
       <span class="ui-xrev__sr" id=${`${this.uid}-keys`}>A accept, R reject, Enter correct, arrows move between fields</span>
       <span class="ui-xrev__sr" role="status">${this.said}</span>
     `;
@@ -606,11 +613,9 @@ export class TcExtractionReview extends TcElement {
 /* The white card */
 :where([data-look="standard"], [data-look="standard"] *).ui-xrev__card { min-width: 0; overflow: hidden; border-radius: var(--tc-card-radius); background: var(--tc-surface-on-tray); box-shadow: var(--tc-card-shadow); }
 :where([data-look="clean"], [data-look="clean"] *).ui-xrev__card { min-width: 0; overflow: hidden; border-radius: var(--tc-card-radius); background: var(--tc-surface-raised); box-shadow: var(--tc-shadow-raised); }
-/* ----- Heading and source ----- */
-.ui-xrev__head { display: flex; align-items: baseline; flex-wrap: wrap; column-gap: var(--tc-space-3); row-gap: var(--tc-space-0-5); padding: var(--tc-space-3) var(--tc-space-4); border-bottom: var(--tc-hairline) solid var(--tc-divider); }
-.ui-xrev__title { min-width: 0; font-weight: var(--tc-font-weight-medium); color: var(--tc-text-primary); }
-:where([data-look="clean"], [data-look="clean"] *).ui-xrev__title { color: var(--tc-text-strong); }
-.ui-xrev__source { display: inline-flex; align-items: center; gap: var(--tc-space-1); min-width: 0; overflow: hidden; font-size: var(--tc-font-size-sm); color: var(--tc-text-muted); }
+/* ----- The header (cardHead): on the tray in Standard, the card's first row in Clean; the source is its quiet line ----- */
+:where([data-look="clean"], [data-look="clean"] *).ui-xrev__card > .tc-head + .ui-xrev__body { border-top: var(--tc-hairline) solid var(--tc-divider); }
+.ui-xrev__source { display: inline-flex; align-items: center; gap: var(--tc-space-1); max-width: 100%; min-width: 0; overflow: hidden; vertical-align: top; }
 .ui-xrev__source > span { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .ui-xrev__source .ui-xrev__glyph { width: 14px; height: 14px; }
 /* ----- The two panes: the page, the fields ----- */
@@ -703,7 +708,6 @@ export class TcExtractionReview extends TcElement {
   .ui-xrev__sheet { margin-top: var(--tc-space-3); }
 }
 @container (max-width: 380px) {
-  .ui-xrev__head { padding: var(--tc-space-3); }
   .ui-xrev__meter { display: none; }
   .ui-xrev__progress { display: none; }
 }

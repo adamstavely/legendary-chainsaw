@@ -27,7 +27,7 @@ the big number to that part's value.
 
 ## Anatomy
 
-1. **Heading** `.ui-cb__title` – names the card and the group
+1. **Header** `.tc-head` – a pie icon and the heading, which names the card and the group
 2. **Period switch** `.ui-cb__switch` – the periods, with a pill that slides to the chosen one
 3. **Total** `.ui-cb__big` – the big number, with the change against the previous period beside it
 4. **Bar** `.ui-cb__bar` – every part's share as a segment
@@ -36,8 +36,8 @@ the big number to that part's value.
 
 ## Looks
 
-Standard sets the card in white on a gray tray, with the footer line in the tray below it. Clean is a single white
-card with hairline shadows and the footer as its last row. The numbers, the bar and the ranking move the same way
+Standard sets the card in white on a gray tray, with the header in the tray above it and the footer line below. Clean is a single white
+card with hairline shadows, the header as its first row and the footer as its last. The numbers, the bar and the ranking move the same way
 in both.
 
 ## Keyboard

@@ -427,13 +427,13 @@ export class TcSegmentedControl extends TcElement {
   vertical-align: middle;
   border-radius: var(--tc-segmented-control-radius);
   background: var(--tc-seg-track-bg);
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--tc-font-sans);
   font-size: var(--tc-segmented-control-fs);
   line-height: var(--tc-line-height-none);
   color: var(--tc-text-muted);
   -webkit-font-smoothing: antialiased;
 }
-:where([data-look="standard"], [data-look="standard"] *)[data-ui="seg"][data-size="sm"] { --tc-segmented-control-h: 26px; --tc-segmented-control-px: var(--tc-control-px-sm); --tc-segmented-control-fs: var(--tc-font-size-sm); --tc-segmented-control-icon: 14px; --tc-segmented-control-gap: 16px; }
+:where([data-look="standard"], [data-look="standard"] *)[data-ui="seg"][data-size="sm"] { --tc-segmented-control-h: var(--tc-control-h-sm); --tc-segmented-control-px: var(--tc-control-px-sm); --tc-segmented-control-fs: var(--tc-font-size-sm); --tc-segmented-control-icon: 14px; --tc-segmented-control-gap: 16px; }
 :where([data-look="standard"], [data-look="standard"] *)[data-ui="seg"][data-size="lg"] { --tc-segmented-control-h: var(--tc-control-h-lg); --tc-segmented-control-px: var(--tc-control-px-lg); --tc-segmented-control-fs: var(--tc-font-size-lg); --tc-segmented-control-icon: 16px; --tc-segmented-control-gap: 24px; }
 :where([data-look="clean"], [data-look="clean"] *)[data-ui="seg"] {
   /* Size: md – control-height chips */

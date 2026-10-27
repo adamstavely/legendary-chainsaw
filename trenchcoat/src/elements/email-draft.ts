@@ -5,6 +5,7 @@ import { keyed } from "lit/directives/keyed.js";
 import { live } from "lit/directives/live.js";
 import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController, SmoothHeightController, rescueFocus } from "./internal/controllers";
 
 /*
@@ -24,6 +25,9 @@ import { FocusRescueController, SmoothHeightController, rescueFocus } from "./in
  * control `recipient` or `tone` yourself. `onSend` sends the email – return a promise to keep the card in its sending
  * state until it settles. Discard fires `tc-discard`; Undo fires `tc-undo` ({ action }).
  */
+
+/** An envelope: the email (Lucide mail, ISC) */
+const mailIcon = svg`<path d="m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7"></path><rect x="2" y="4" width="20" height="16" rx="2"></rect>`;
 
 export type DraftContact = { name: string; email: string };
 
@@ -498,14 +502,12 @@ export class TcEmailDraft extends TcElement {
     const hint = html`<span class="ui-ed__hint">⌘ Enter to send</span>`;
 
     return html`
-      <div class="ui-ed__record">
-        <div class="ui-ed__ref">
-          <span class="ui-ed__id">${this.reference}</span>
-          <span class="ui-ed__status">${this.status}</span>
-          <span class="ui-ed__amount">${this.amount}</span>
-        </div>
-        <span class="ui-ed__account">${this.account}</span>
-      </div>
+      ${cardHead({
+        icon: mailIcon,
+        title: this.reference,
+        subtitle: this.account,
+        aside: html`<span class="ui-ed__status">${this.status}</span><span class="ui-ed__amount">${this.amount}</span>`,
+      })}
 
       <div class="ui-ed__outer" ?data-menu=${this.menu}>
         <div>
@@ -544,7 +546,9 @@ export class TcEmailDraft extends TcElement {
   padding: var(--tc-tray-inset);
   border-radius: var(--tc-tray-radius);
   background: var(--tc-surface-tray);
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--tc-font-sans);
+  font-size: var(--tc-font-size-md);
+  line-height: var(--tc-line-height-normal);
   color: var(--tc-text-primary);
   -webkit-font-smoothing: antialiased;
 }
@@ -569,13 +573,12 @@ export class TcEmailDraft extends TcElement {
   -webkit-font-smoothing: antialiased;
 }
 [data-ui="ed"] *, [data-ui="ed"] *::before, [data-ui="ed"] *::after { box-sizing: border-box; }
-:where([data-look="standard"], [data-look="standard"] *)[data-ui="ed"] button { font: inherit; color: inherit; margin: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+:where([data-look="standard"], [data-look="standard"] *):where([data-ui="ed"]) button { font: inherit; color: inherit; margin: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 [data-ui="ed"] button:focus-visible,
 [data-ui="ed"] a:focus-visible,
 .ui-ed__receipt:focus-visible { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
 :where([data-look="standard"], [data-look="standard"] *)[data-ui="ed"] svg { width: 15px; height: 15px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
-/* ---------- Record on the tray ---------- */
-:where([data-look="standard"], [data-look="standard"] *).ui-ed__record { display: grid; gap: var(--tc-space-0-5); padding: var(--tc-space-2) var(--tc-space-2-5) var(--tc-space-2-5); }
+/* ---------- The record it's about: the header (cardHead) – on the tray in Standard, heading the card in Clean ---------- */
 :where([data-look="clean"], [data-look="clean"] *):where([data-ui="ed"]) button {
   appearance: none;
   margin: 0;
@@ -598,10 +601,8 @@ export class TcEmailDraft extends TcElement {
   stroke-linecap: round;
   stroke-linejoin: round;
 }
-/* ---------- The record, heading the card ---------- */
-:where([data-look="clean"], [data-look="clean"] *).ui-ed__record { display: grid; padding: var(--tc-space-3) var(--tc-space-4); border-bottom: var(--tc-hairline) solid var(--tc-divider); }
-.ui-ed__ref { display: flex; align-items: center; gap: var(--tc-space-2); min-width: 0; }
-:where([data-look="standard"], [data-look="standard"] *).ui-ed__id { font-size: var(--tc-font-size-lg-plus); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-relaxed); letter-spacing: -0.01em; }
+/* Clean: a hairline between the record and the email */
+:where([data-look="clean"], [data-look="clean"] *).ui-ed__outer { border-top: var(--tc-hairline) solid var(--tc-divider); }
 /* Status and badge: the pill pattern */
 .ui-ed__status,
 .ui-ed__badge {
@@ -620,20 +621,8 @@ export class TcEmailDraft extends TcElement {
   text-overflow: ellipsis;
 }
 .ui-ed__status { flex: 0 1 auto; min-width: 0; background: var(--tc-status-warning-bg); color: var(--tc-status-warning-fg); }
-:where([data-look="standard"], [data-look="standard"] *).ui-ed__amount { flex: none; margin-left: auto; font-size: var(--tc-font-size-lg-plus); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-relaxed); font-variant-numeric: tabular-nums; }
-:where([data-look="standard"], [data-look="standard"] *).ui-ed__account { font-size: var(--tc-font-size-md); color: var(--tc-text-muted); }
+.ui-ed__amount { flex: none; font-size: var(--tc-title-font-size); font-weight: var(--tc-title-font-weight); line-height: var(--tc-title-line-height); color: var(--tc-title-color); font-variant-numeric: tabular-nums; }
 :where([data-look="standard"], [data-look="standard"] *).ui-ed__outer { position: relative; }
-:where([data-look="clean"], [data-look="clean"] *).ui-ed__id { flex: none; font-size: var(--tc-font-size-lg-plus); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-loose); color: var(--tc-text-strong); }
-:where([data-look="clean"], [data-look="clean"] *).ui-ed__amount {
-  flex: none;
-  margin-left: auto;
-  font-size: var(--tc-font-size-lg-plus);
-  font-weight: var(--tc-font-weight-medium);
-  line-height: var(--tc-line-height-loose);
-  font-variant-numeric: tabular-nums;
-  color: var(--tc-text-strong);
-}
-:where([data-look="clean"], [data-look="clean"] *).ui-ed__account { font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); color: var(--tc-text-secondary); }
 /* ---------- The email: only this part changes height ---------- */
 :where([data-look="clean"], [data-look="clean"] *).ui-ed__outer { position: relative; overflow: hidden; overflow: clip; }
 /* The recipient menu may reach out of the card while it's open – the height doesn't move then */
@@ -759,7 +748,7 @@ export class TcEmailDraft extends TcElement {
   border-radius: 50%;
   background: var(--tc-fill-default);
   box-shadow: inset 0 0 0 1px var(--tc-border-default);
-  font-size: 10.5px;
+  font-size: var(--tc-font-size-2xs);
   font-weight: var(--tc-font-weight-semibold);
   color: var(--tc-text-secondary);
 }
@@ -774,7 +763,7 @@ export class TcEmailDraft extends TcElement {
   background: var(--tc-fill-default);
   font-size: var(--tc-font-size-2xs);
   font-weight: var(--tc-font-weight-medium);
-  letter-spacing: 0.5px;
+  letter-spacing: var(--tc-tracking-caps);
   color: var(--tc-text-secondary);
 }
 .ui-ed__menu-text { display: grid; flex: 1; min-width: 0; }
@@ -1119,7 +1108,6 @@ export class TcEmailDraft extends TcElement {
 :where([data-look="standard"], [data-look="standard"] *).ui-ed__tones button { padding: 0 var(--tc-space-2); }
 }
 @container (max-width: 380px) {
-:where([data-look="clean"], [data-look="clean"] *).ui-ed__record { padding: var(--tc-space-3) var(--tc-space-3-5); }
 :where([data-look="clean"], [data-look="clean"] *).ui-ed__meta,
 :where([data-look="clean"], [data-look="clean"] *).ui-ed__tune,
 :where([data-look="clean"], [data-look="clean"] *).ui-ed__receipt,

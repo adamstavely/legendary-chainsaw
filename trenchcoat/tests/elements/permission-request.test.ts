@@ -36,6 +36,9 @@ describe("tc-permission-request", () => {
     const card = el.querySelector(".ui-pr__card")!;
     expect(card.getAttribute("role")).toBe("group");
     expect(document.getElementById(card.getAttribute("aria-labelledby")!)!.textContent).toBe("Coder wants to push to main");
+    // A short header above the sentence, the risk pill at its right
+    expect(card.querySelector(":scope > .tc-head:first-child h3.tc-head__title")!.textContent).toBe("Permission");
+    expect(card.querySelector('.tc-head__aside > .ui-pr__risk[data-risk="risky"]')).toBeTruthy();
   });
 
   for (const look of ["standard", "clean"] as const) {

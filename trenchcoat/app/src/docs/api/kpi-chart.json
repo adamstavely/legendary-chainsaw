@@ -141,7 +141,6 @@
     "--tc-font-size-3xl",
     "--tc-font-size-4xl",
     "--tc-font-size-lg",
-    "--tc-font-size-lg-plus",
     "--tc-font-size-md",
     "--tc-font-size-sm",
     "--tc-font-size-xs",
@@ -150,7 +149,6 @@
     "--tc-hairline",
     "--tc-kpi-chart-shift",
     "--tc-line-height-display",
-    "--tc-line-height-loose",
     "--tc-line-height-normal",
     "--tc-line-height-snug",
     "--tc-line-height-tight",
@@ -177,11 +175,16 @@
     "--tc-status-danger-fg",
     "--tc-status-success-bg",
     "--tc-status-success-fg",
+    "--tc-surface-on-tray",
     "--tc-surface-raised",
+    "--tc-surface-tray",
     "--tc-text-muted",
     "--tc-text-primary",
     "--tc-text-secondary",
-    "--tc-text-strong"
+    "--tc-text-strong",
+    "--tc-tracking-tight",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
    ]
   }
  ],
@@ -237,10 +240,11 @@
   }
  ],
  "changelog": [
+  "kpi-chart, progress-tracker, setup-guide and writing-assistant now sit on the Standard tray.",
   "kpi-chart `fill`, inline-diff `fill`, usage-meter `layout=\"wide\"` – what screens used to force by overriding internals."
  ],
  "size": {
-  "min": 27218,
-  "gzip": 7631
+  "min": 29462,
+  "gzip": 8384
  }
 }

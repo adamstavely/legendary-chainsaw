@@ -1,0 +1,307 @@
+{
+ "elements": [
+  {
+   "tag": "tc-tool-configuration",
+   "className": "TcToolConfiguration",
+   "description": "A tool as its API reference entry: the name as the title, the signature and description, a doc table of the\nparameters edited in place, an example call, the JSON Schema on request, a validation strip and the approval a\ncall needs.",
+   "properties": [
+    {
+     "name": "value",
+     "attribute": null,
+     "type": "ToolConfigurationValue",
+     "default": "{ name: \"\", description: \"\", parameters: [], approval: \"inherit\" }",
+     "description": "The definition. Changed by the user unless a tc-value-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "approvals",
+     "attribute": null,
+     "type": "ToolApprovalOption[]",
+     "default": "[ { id: \"inherit\", label: \"Follows tool permissions\", description: \"Each agent's access is set where tool permissions are managed\" }, { id: \"ask\", label: \"Ask every time\", description: \"A person approves each call before it runs\" }, { id: \"auto\", label: \"Runs on its own\", description: \"For tools that only read – lookups and searches\" }, ]",
+     "description": "The approvals offered in the head's picker; empty hides it",
+     "readonly": false
+    },
+    {
+     "name": "types",
+     "attribute": null,
+     "type": "{ id: ToolParameterType; label: string }[]",
+     "default": "[ { id: \"string\", label: \"Text\" }, { id: \"number\", label: \"Number\" }, { id: \"integer\", label: \"Integer\" }, { id: \"boolean\", label: \"Yes / no\" }, { id: \"array\", label: \"List\" }, { id: \"object\", label: \"Object\" }, ]",
+     "description": "The parameter types offered, with their labels",
+     "readonly": false
+    },
+    {
+     "name": "example",
+     "attribute": null,
+     "type": "Record<string, unknown> | undefined",
+     "default": "undefined",
+     "description": "The arguments Example call shows; unset, they're made from the parameters (toolExampleCall)",
+     "readonly": false
+    },
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"New tool\"",
+     "description": "The title while the tool has no name; the tool's name replaces it",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string",
+     "default": "\"\"",
+     "description": "A quieter line under the title",
+     "readonly": false
+    },
+    {
+     "name": "showSchema",
+     "attribute": "show-schema",
+     "type": "boolean",
+     "default": "true",
+     "description": "Shows the JSON Schema disclosure",
+     "readonly": false
+    },
+    {
+     "name": "showExample",
+     "attribute": "show-example",
+     "type": "boolean",
+     "default": "true",
+     "description": "Shows the Example call panel",
+     "readonly": false
+    },
+    {
+     "name": "name",
+     "attribute": "name",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Submitted with the form: the definition as JSON",
+     "readonly": false
+    },
+    {
+     "name": "disabled",
+     "attribute": "disabled",
+     "type": "boolean",
+     "default": "false",
+     "description": "Turns every control off and leaves the definition out of the form; a disabled fieldset does the same",
+     "readonly": false
+    },
+    {
+     "name": "issues",
+     "attribute": null,
+     "type": "ToolIssue[]",
+     "default": null,
+     "description": "What's wrong or missing, as the strip lists it",
+     "readonly": true
+    },
+    {
+     "name": "schema",
+     "attribute": null,
+     "type": "Record<string, unknown>",
+     "default": null,
+     "description": "The JSON Schema the parameters produce",
+     "readonly": true
+    },
+    {
+     "name": "exampleCall",
+     "attribute": null,
+     "type": "Record<string, unknown>",
+     "default": null,
+     "description": "The arguments Example call shows: `example`, or ones made from the parameters",
+     "readonly": true
+    },
+    {
+     "name": "signature",
+     "attribute": null,
+     "type": "string",
+     "default": null,
+     "description": "The tool as the model sees it: name(param: type, optional?: type)",
+     "readonly": true
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-value-change",
+     "detail": "",
+     "description": "The definition changed ({ value: ToolConfigurationValue }); cancelable – prevent it to control `value`",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "tdef",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-highlight",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-border-default",
+    "--tc-border-strong",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-sm",
+    "--tc-control-px-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-quick",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-font-size",
+    "--tc-field-h",
+    "--tc-field-h-sm",
+    "--tc-field-px",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-field-shadow-hover",
+    "--tc-field-shadow-invalid",
+    "--tc-fill-default",
+    "--tc-fill-hover",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-mono",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-line-height-relaxed",
+    "--tc-line-height-snug",
+    "--tc-pill-h",
+    "--tc-pill-h-lg",
+    "--tc-pill-radius",
+    "--tc-radius-badge",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-radius-xs",
+    "--tc-shadow-control",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-5",
+    "--tc-space-6",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-border",
+    "--tc-status-danger-fg",
+    "--tc-status-danger-solid",
+    "--tc-status-success-fg",
+    "--tc-status-warning-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-surface-well",
+    "--tc-syntax-function",
+    "--tc-syntax-keyword",
+    "--tc-syntax-number",
+    "--tc-syntax-property",
+    "--tc-syntax-punctuation",
+    "--tc-syntax-string",
+    "--tc-syntax-text",
+    "--tc-syntax-type",
+    "--tc-text-muted",
+    "--tc-text-placeholder",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tracking-normal",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "toolInputSchema",
+   "signature": "toolInputSchema(value: ToolConfigurationValue): Record<string, unknown>",
+   "description": "The JSON Schema for a tool's input: an object with one property per parameter"
+  },
+  {
+   "name": "toolExampleCall",
+   "signature": "toolExampleCall(value: ToolConfigurationValue): Record<string, unknown>",
+   "description": "Arguments a call could carry: the first allowed value, else a placeholder of the right type (\"<name>\", 1, 1.5, true, [], {})"
+  },
+  {
+   "name": "validateTool",
+   "signature": "validateTool(value: ToolConfigurationValue): ToolIssue[]",
+   "description": "What's wrong with a definition (errors) and what would make it better (warnings)"
+  }
+ ],
+ "react": [
+  {
+   "component": "ToolConfiguration",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The title while the tool has no name – the tool's name replaces it"
+    },
+    {
+     "name": "value",
+     "type": "ToolConfigurationValue",
+     "optional": true,
+     "description": "The definition (controlled)"
+    },
+    {
+     "name": "defaultValue",
+     "type": "ToolConfigurationValue",
+     "optional": true,
+     "description": "The definition to start with when uncontrolled"
+    },
+    {
+     "name": "onChange",
+     "type": "(value: ToolConfigurationValue) => void",
+     "optional": true,
+     "description": "Called with the whole definition after every change"
+    }
+   ],
+   "hides": [
+    "value",
+    "defaultValue",
+    "heading",
+    "onChange"
+   ]
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 58408,
+  "gzip": 15067
+ }
+}

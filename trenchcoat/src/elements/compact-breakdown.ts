@@ -7,6 +7,7 @@ import { styleMap } from "lit/directives/style-map.js";
 import { easeOutQuart } from "../internal/ease";
 import { reducedMotion } from "../internal/reduced-motion";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 
 /*
  * <tc-compact-breakdown> – the Lit port of src/components/compact-breakdown.tsx: one total split into its parts, in a
@@ -18,7 +19,7 @@ import { TcElement } from "./internal/base";
  *   </tc-compact-breakdown>
  *
  * The host is the group (role="group"), named by the heading. Standard sets a white card on a gray tray that holds the
- * footer line; Clean is one white card with hairline shadows, the footer as its last row.
+ * header above it and the footer line below; Clean is one white card with hairline shadows, the footer as its last row.
  */
 
 export type BreakdownItem = {
@@ -34,6 +35,9 @@ export type BreakdownPeriod = { id: string; label: string };
 
 /** Detail of tc-period-change */
 export type BreakdownPeriodChange = { period: string };
+
+/** A pie: one total split into its parts */
+const breakdownIcon = svg`<path d="M21 12c.552 0 1.005-.449.95-.998a10 10 0 0 0-8.953-8.951c-.55-.055-.998.398-.998.95v8a1 1 0 0 0 1 1z"></path><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>`;
 
 const INTEGER = new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 });
 const defaultFormat = (n: number) => INTEGER.format(n);
@@ -283,10 +287,11 @@ export class TcCompactBreakdown extends TcElement {
     const footer = this.footer;
 
     return html`
-      <div class=${clean ? "ui-cb__body" : "ui-cb__card"}>
-        <header class="ui-cb__head">
-          <h3 id="${this.uid}-title" class="ui-cb__title">${this.heading}</h3>
-          ${periods && periods.length > 1
+      ${cardHead({
+        icon: breakdownIcon,
+        title: this.heading,
+        id: `${this.uid}-title`,
+        aside: periods && periods.length > 1
             ? html`<div class="ui-cb__switch" role="radiogroup" aria-label="Period" @keydown=${this.onSwitchKey}>
                 <span class="ui-cb__pill" aria-hidden="true"></span>
                 ${repeat(
@@ -302,9 +307,9 @@ export class TcCompactBreakdown extends TcElement {
                   >${p.label}</button>`,
                 )}
               </div>`
-            : nothing}
-        </header>
-
+          : nothing,
+      })}
+      <div class=${clean ? "ui-cb__body" : "ui-cb__card"}>
         <div class="ui-cb__figure">
           <p class="ui-cb__big" aria-hidden="true">${format(shown["#figure"] ?? 0)}</p>
           ${delta !== undefined && !activeRow
@@ -393,7 +398,7 @@ export class TcCompactBreakdown extends TcElement {
   padding: var(--tc-tray-inset);
   border-radius: var(--tc-tray-radius);
   background: var(--tc-surface-tray);
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-md);
   line-height: 1.45;
   color: var(--tc-text-secondary);
@@ -433,9 +438,7 @@ export class TcCompactBreakdown extends TcElement {
 [data-ui="cb"] b { font-weight: var(--tc-font-weight-medium); color: var(--tc-text-primary); }
 .ui-cb__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 :where([data-look="standard"], [data-look="standard"] *).ui-cb__card { border-radius: var(--tc-card-radius); background: var(--tc-surface-on-tray); box-shadow: var(--tc-card-shadow); padding: var(--tc-space-3) var(--tc-space-3-5) var(--tc-space-2); }
-/* Head: title, the period switch on the right */
-:where([data-look="standard"], [data-look="standard"] *).ui-cb__head { display: flex; align-items: center; justify-content: space-between; gap: var(--tc-space-2-5); min-height: 30px; }
-:where([data-look="standard"], [data-look="standard"] *).ui-cb__title { overflow: hidden; font-size: var(--tc-font-size-md); font-weight: var(--tc-font-weight-semibold); line-height: var(--tc-line-height-normal); color: var(--tc-text-primary); white-space: nowrap; text-overflow: ellipsis; }
+/* The header (cardHead) is on the tray above the card; the period switch sits at its right */
 /* The period switch: the segmented-control recipe – a track with a raised thumb that slides to the chosen option */
 :where([data-look="standard"], [data-look="standard"] *).ui-cb__switch { position: relative; display: grid; grid-auto-columns: auto; grid-auto-flow: column; flex: none; padding: var(--tc-seg-pad); border-radius: var(--tc-seg-track-radius); background: var(--tc-seg-track-bg); }
 :where([data-look="standard"], [data-look="standard"] *).ui-cb__pill {
@@ -455,8 +458,7 @@ export class TcCompactBreakdown extends TcElement {
 :where([data-look="standard"], [data-look="standard"] *).ui-cb__option[aria-checked="true"] { color: var(--tc-text-primary); font-weight: var(--tc-font-weight-strong); }
 /* The big number and the change against the period before */
 .ui-cb__figure { display: flex; align-items: center; gap: var(--tc-space-2); }
-:where([data-look="standard"], [data-look="standard"] *).ui-cb__figure { margin-top: var(--tc-space-3); }
-:where([data-look="standard"], [data-look="standard"] *).ui-cb__big { font-size: 26px; font-weight: var(--tc-font-weight-semibold); line-height: var(--tc-line-height-display); letter-spacing: -0.02em; color: var(--tc-text-primary); font-variant-numeric: tabular-nums; }
+:where([data-look="standard"], [data-look="standard"] *).ui-cb__big { font-size: var(--tc-font-size-3xl); font-weight: var(--tc-font-weight-semibold); line-height: var(--tc-line-height-display); letter-spacing: var(--tc-tracking-tight); color: var(--tc-text-primary); font-variant-numeric: tabular-nums; }
 /* A status pill (header size) */
 .ui-cb__delta {
   display: inline-flex;
@@ -473,10 +475,8 @@ export class TcCompactBreakdown extends TcElement {
   font-variant-numeric: tabular-nums;
   animation: ui-cb-pop var(--tc-duration-slower) var(--tc-ease-move) both;
 }
-:where([data-look="clean"], [data-look="clean"] *).ui-cb__body { padding: var(--tc-space-4) var(--tc-space-4) var(--tc-space-2-5); }
-/* Head: title, the period switch on the right */
-:where([data-look="clean"], [data-look="clean"] *).ui-cb__head { display: flex; align-items: center; justify-content: space-between; gap: var(--tc-space-3); min-height: 28px; }
-:where([data-look="clean"], [data-look="clean"] *).ui-cb__title { overflow: hidden; font-size: var(--tc-font-size-lg-plus); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-loose); color: var(--tc-text-strong); white-space: nowrap; text-overflow: ellipsis; }
+:where([data-look="clean"], [data-look="clean"] *).ui-cb__body { padding: 0 var(--tc-space-4) var(--tc-space-2-5); }
+/* The header (cardHead) is the card's first row; the period switch sits at its right */
 /* The "button switch": separate chips with a hairline; the light-gray fill slides to the chosen one */
 :where([data-look="clean"], [data-look="clean"] *).ui-cb__switch { position: relative; display: grid; grid-auto-columns: auto; grid-auto-flow: column; gap: var(--tc-space-1); flex: none; }
 :where([data-look="clean"], [data-look="clean"] *).ui-cb__pill {
@@ -509,8 +509,7 @@ export class TcCompactBreakdown extends TcElement {
 :where([data-look="clean"], [data-look="clean"] *).ui-cb__option[aria-checked="false"]:hover { background: var(--tc-fill-subtle); }
 }
 /* The big number and the change against the period before */
-:where([data-look="clean"], [data-look="clean"] *).ui-cb__figure { margin-top: var(--tc-space-3-5); }
-:where([data-look="clean"], [data-look="clean"] *).ui-cb__big { font-size: var(--tc-font-size-3xl); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-display); letter-spacing: -0.02em; color: var(--tc-text-strong); font-variant-numeric: tabular-nums; }
+:where([data-look="clean"], [data-look="clean"] *).ui-cb__big { font-size: var(--tc-font-size-3xl); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-display); letter-spacing: var(--tc-tracking-tight); color: var(--tc-text-strong); font-variant-numeric: tabular-nums; }
 .ui-cb__delta[data-up] { background: var(--tc-status-success-bg); color: var(--tc-status-success-fg); }
 .ui-cb__delta svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; }
 :where([data-look="standard"], [data-look="standard"] *).ui-cb__delta svg { stroke-width: 1.6; }
@@ -606,7 +605,7 @@ export class TcCompactBreakdown extends TcElement {
 }
 /* Narrow cards: tighter chips, then the share column goes and the values stay */
 @container (max-width: 320px) {
-:where([data-look="clean"], [data-look="clean"] *).ui-cb__body { padding: var(--tc-space-3-5) var(--tc-space-3-5) var(--tc-space-2); }
+:where([data-look="clean"], [data-look="clean"] *).ui-cb__body { padding: 0 var(--tc-space-3-5) var(--tc-space-2); }
 :where([data-look="clean"], [data-look="clean"] *).ui-cb__foot { padding: 0 var(--tc-space-3-5); }
 :where([data-look="clean"], [data-look="clean"] *).ui-cb__switch { gap: var(--tc-space-0-5); }
 :where([data-look="clean"], [data-look="clean"] *).ui-cb__option { padding: var(--tc-space-1) var(--tc-space-2); }

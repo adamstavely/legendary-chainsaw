@@ -1,0 +1,246 @@
+{
+ "elements": [
+  {
+   "tag": "tc-prompt-starters",
+   "className": "TcPromptStarters",
+   "description": "Suggestions for an empty chat and follow-ups after an answer, as a list that fills the composer or sends.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Suggestions\"",
+     "description": "The heading above the list, and the list's accessible name",
+     "readonly": false
+    },
+    {
+     "name": "variant",
+     "attribute": "variant",
+     "type": "\"starters\" | \"follow-ups\"",
+     "default": "\"starters\"",
+     "description": "\"starters\" for an empty chat (icon tiles and hints), or \"follow-ups\" after an answer (compact rows)",
+     "readonly": false
+    },
+    {
+     "name": "groups",
+     "attribute": null,
+     "type": "PromptStarterGroup[]",
+     "default": "[]",
+     "description": "Suggestions in groups, each with a heading and an icon",
+     "readonly": false
+    },
+    {
+     "name": "items",
+     "attribute": null,
+     "type": "PromptStarter[]",
+     "default": "[]",
+     "description": "Suggestions without groups – shown after any groups",
+     "readonly": false
+    },
+    {
+     "name": "mode",
+     "attribute": "mode",
+     "type": "PromptStarterMode",
+     "default": "\"send\"",
+     "description": "What choosing a suggestion does unless it says otherwise: \"send\" it, or \"fill\" the composer to edit first",
+     "readonly": false
+    },
+    {
+     "name": "loading",
+     "attribute": "loading",
+     "type": "boolean",
+     "default": "false",
+     "description": "The suggestions are being worked out: placeholder rows instead of the list",
+     "readonly": false
+    },
+    {
+     "name": "hints",
+     "attribute": "hints",
+     "type": "boolean",
+     "default": "true",
+     "description": "Show the key hints under the list (↵ and →)",
+     "readonly": false
+    },
+    {
+     "name": "sendLabel",
+     "attribute": "send-label",
+     "type": "string",
+     "default": "\"Ask\"",
+     "description": "The word for sending in the key hint and the screen-reader text",
+     "readonly": false
+    },
+    {
+     "name": "fillLabel",
+     "attribute": "fill-label",
+     "type": "string",
+     "default": "\"Edit first\"",
+     "description": "The word for filling the composer in the key hint and the screen-reader text",
+     "readonly": false
+    },
+    {
+     "name": "emptyText",
+     "attribute": "empty-text",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Text when there are no suggestions (and not loading); empty hides the element's list entirely",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-send",
+     "detail": "",
+     "description": "A suggestion was chosen to send as it is ({ text, item, group })",
+     "cancelable": false
+    },
+    {
+     "name": "tc-fill",
+     "detail": "",
+     "description": "A suggestion was chosen to put in the composer and edit first ({ text, item, group })",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "pst",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-avatar-md",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-h-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-duration-instant",
+    "--tc-duration-quick",
+    "--tc-duration-shimmer",
+    "--tc-duration-slow",
+    "--tc-ease-in-out",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-focus-ring",
+    "--tc-focus-ring-width",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-kbd-bg",
+    "--tc-kbd-fg",
+    "--tc-kbd-font-size",
+    "--tc-kbd-font-weight",
+    "--tc-kbd-h",
+    "--tc-kbd-px",
+    "--tc-kbd-radius",
+    "--tc-kbd-shadow",
+    "--tc-line-height-normal",
+    "--tc-line-height-tight",
+    "--tc-menu-item-font-size",
+    "--tc-menu-item-h",
+    "--tc-menu-item-hover",
+    "--tc-menu-item-px",
+    "--tc-menu-item-radius",
+    "--tc-menu-padding",
+    "--tc-radius-badge",
+    "--tc-radius-full",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-shadow-raised",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-status-info-bg",
+    "--tc-status-info-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tone-amber-bg",
+    "--tc-tone-amber-fg",
+    "--tc-tone-pink-bg",
+    "--tc-tone-pink-fg",
+    "--tc-tone-teal-bg",
+    "--tc-tone-teal-fg",
+    "--tc-tone-violet-bg",
+    "--tc-tone-violet-fg",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "PromptStarters",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading above the list, and the list's accessible name"
+    },
+    {
+     "name": "groups",
+     "type": "PromptStarterGroup[]",
+     "optional": true,
+     "description": "Suggestions in groups, each with a heading and an icon"
+    },
+    {
+     "name": "items",
+     "type": "PromptStarter[]",
+     "optional": true,
+     "description": "Suggestions without groups – shown after any groups"
+    },
+    {
+     "name": "onSend",
+     "type": "(text: string, item: PromptStarter) => void",
+     "optional": true,
+     "description": "Called with the text when a suggestion is chosen to send as it is"
+    },
+    {
+     "name": "onFill",
+     "type": "(text: string, item: PromptStarter) => void",
+     "optional": true,
+     "description": "Called with the text when a suggestion is chosen to fill the composer – put it there and focus it"
+    }
+   ],
+   "hides": [
+    "heading",
+    "groups",
+    "items"
+   ]
+  }
+ ],
+ "changelog": [
+  "**Quality, retrieval, safety, structured output and conversation:** `tc-eval-scorecard`, `tc-feedback-rubric`, `tc-retrieval-inspector`, `tc-extraction-review`, `tc-guardrail-notice`, `tc-clarifying-questions`, `tc-structured-output`, `tc-generated-ui` and `tc-prompt-starters`."
+ ],
+ "size": {
+  "min": 23981,
+  "gzip": 8194
+ }
+}

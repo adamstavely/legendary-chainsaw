@@ -226,13 +226,12 @@
     "--tc-font-size-2xs",
     "--tc-font-size-md",
     "--tc-font-size-sm",
+    "--tc-font-size-xs",
     "--tc-font-weight-medium",
     "--tc-font-weight-regular",
-    "--tc-font-weight-strong",
     "--tc-hairline",
     "--tc-line-height-normal",
     "--tc-line-height-relaxed",
-    "--tc-line-height-snug",
     "--tc-line-height-tight",
     "--tc-pill-font-size",
     "--tc-pill-font-weight",
@@ -264,6 +263,9 @@
     "--tc-status-warning-bg",
     "--tc-status-warning-border",
     "--tc-status-warning-fg",
+    "--tc-subtitle-color",
+    "--tc-subtitle-font-size",
+    "--tc-subtitle-line-height",
     "--tc-surface-inverse",
     "--tc-surface-on-tray",
     "--tc-surface-raised",
@@ -273,7 +275,11 @@
     "--tc-text-on-inverse",
     "--tc-text-primary",
     "--tc-text-secondary",
-    "--tc-text-strong",
+    "--tc-title-color",
+    "--tc-title-font-size",
+    "--tc-title-font-weight",
+    "--tc-title-line-height",
+    "--tc-title-tracking",
     "--tc-tracking-caps",
     "--tc-tracking-snug",
     "--tc-tray-inset",
@@ -373,9 +379,11 @@
    ]
   }
  ],
- "changelog": [],
+ "changelog": [
+  "**Quality, retrieval, safety, structured output and conversation:** `tc-eval-scorecard`, `tc-feedback-rubric`, `tc-retrieval-inspector`, `tc-extraction-review`, `tc-guardrail-notice`, `tc-clarifying-questions`, `tc-structured-output`, `tc-generated-ui` and `tc-prompt-starters`."
+ ],
  "size": {
-  "min": 28048,
-  "gzip": 8196
+  "min": 29762,
+  "gzip": 8631
  }
 }

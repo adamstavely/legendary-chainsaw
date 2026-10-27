@@ -257,7 +257,6 @@
     "--tc-font-size-xs",
     "--tc-font-weight-medium",
     "--tc-font-weight-regular",
-    "--tc-font-weight-semibold",
     "--tc-font-weight-strong",
     "--tc-hairline",
     "--tc-kbd-on-inverse-bg",
@@ -274,7 +273,6 @@
     "--tc-radius-sm",
     "--tc-shadow-overlay",
     "--tc-shimmer",
-    "--tc-space-0-5",
     "--tc-space-1",
     "--tc-space-1-5",
     "--tc-space-2",
@@ -298,7 +296,6 @@
     "--tc-text-on-inverse",
     "--tc-text-primary",
     "--tc-text-secondary",
-    "--tc-text-strong",
     "--tc-tooltip-font-size",
     "--tc-tooltip-px",
     "--tc-tooltip-py",
@@ -380,7 +377,7 @@
   "`tc-live-view` – the agent's screen (frames, a live video or canvas, or your own content) with its pointer, clicks, typing and keys drawn on top, a step caption, and Pause / Take over; your clicks are reported in frame pixels while you have control."
  ],
  "size": {
-  "min": 32725,
-  "gzip": 10492
+  "min": 34498,
+  "gzip": 11168
  }
 }

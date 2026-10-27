@@ -128,7 +128,6 @@
     "--tc-font-sans",
     "--tc-font-size-2xs",
     "--tc-font-size-lg",
-    "--tc-font-size-lg-plus",
     "--tc-font-size-md",
     "--tc-font-size-sm",
     "--tc-font-weight-medium",
@@ -153,7 +152,6 @@
     "--tc-space-2",
     "--tc-space-2-5",
     "--tc-space-3",
-    "--tc-space-3-5",
     "--tc-space-4",
     "--tc-space-5",
     "--tc-surface-control",
@@ -208,7 +206,7 @@
   "`tc-answer-arena` – two models' answers streamed side by side, then A / B / tie with a reason; blind mode reveals the names after the vote. `tc-value-change` (cancelable)."
  ],
  "size": {
-  "min": 28311,
-  "gzip": 8299
+  "min": 29852,
+  "gzip": 8947
  }
 }

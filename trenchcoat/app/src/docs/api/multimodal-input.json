@@ -1,0 +1,311 @@
+{
+ "elements": [
+  {
+   "tag": "tc-multimodal-input",
+   "className": "TcMultimodalInput",
+   "description": "A message box that takes images, audio, video and documents: upload state and progress, previews, format and size\nchecks, and the app's token estimates per attachment and in total.",
+   "properties": [
+    {
+     "name": "value",
+     "attribute": null,
+     "type": "MultimodalAttachment[]",
+     "default": "[]",
+     "description": "The attachments. Changed by the user unless a tc-value-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "text",
+     "attribute": "text",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The message. Changed by the user unless a tc-text-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "placeholder",
+     "attribute": "placeholder",
+     "type": "string",
+     "default": "\"Write a message, or drop files here\"",
+     "description": "The message's placeholder",
+     "readonly": false
+    },
+    {
+     "name": "label",
+     "attribute": "label",
+     "type": "string",
+     "default": "\"Message\"",
+     "description": "Names the message box for screen readers",
+     "readonly": false
+    },
+    {
+     "name": "accept",
+     "attribute": null,
+     "type": "string[] | undefined",
+     "default": "undefined",
+     "description": "What it accepts: extensions (\".pdf\"), MIME types (\"image/png\") or families (\"audio/*\"); unset accepts any file",
+     "readonly": false
+    },
+    {
+     "name": "maxSize",
+     "attribute": "max-size",
+     "type": "",
+     "default": null,
+     "description": "The largest file, in bytes, for any kind without its own limit",
+     "readonly": false
+    },
+    {
+     "name": "limits",
+     "attribute": null,
+     "type": "Partial<Record<MultimodalKind, number>>",
+     "default": "{}",
+     "description": "The largest file per kind, in bytes – { video: 200 * 1024 * 1024 }",
+     "readonly": false
+    },
+    {
+     "name": "maxFiles",
+     "attribute": "max-files",
+     "type": "number",
+     "default": "10",
+     "description": "How many attachments fit",
+     "readonly": false
+    },
+    {
+     "name": "budget",
+     "attribute": "budget",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The token budget for the attachments; over it, Send waits. Unset shows the total alone",
+     "readonly": false
+    },
+    {
+     "name": "sendLabel",
+     "attribute": "send-label",
+     "type": "string",
+     "default": "\"Send\"",
+     "description": "The Send button's name",
+     "readonly": false
+    },
+    {
+     "name": "disabled",
+     "attribute": "disabled",
+     "type": "boolean",
+     "default": "false",
+     "description": "Turns the box off",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-value-change",
+     "detail": "",
+     "description": "The attachments changed ({ value, change }: MultimodalValueChange – change is { type: \"add\", files } with each new File, { type: \"remove\", attachment } or { type: \"clear\" } after a send); cancelable – prevent it to control `value`",
+     "cancelable": true
+    },
+    {
+     "name": "tc-text-change",
+     "detail": "",
+     "description": "The message was edited ({ text }: MultimodalTextChange); cancelable – prevent it to control `text`",
+     "cancelable": true
+    },
+    {
+     "name": "tc-send",
+     "detail": "",
+     "description": "Send was pressed, or Enter in the message ({ text, attachments }: MultimodalSend); cancelable – prevented, the box keeps its text and attachments",
+     "cancelable": true
+    },
+    {
+     "name": "tc-retry",
+     "detail": "",
+     "description": "Retry was pressed on an attachment that failed ({ attachment, file }: MultimodalRetry – `file` when it was added here)",
+     "cancelable": false
+    },
+    {
+     "name": "tc-reject",
+     "detail": "",
+     "description": "Files were turned away ({ rejections }: MultimodalReject)",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [
+    {
+     "name": "addFiles",
+     "params": "files: Iterable<File>",
+     "returns": "void",
+     "description": "Adds files as if they were dropped: checks each, turns away what doesn't fit, and fires tc-value-change for the rest"
+    }
+   ],
+   "ui": "mmi",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-border-default",
+    "--tc-border-subtle",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-radius-md",
+    "--tc-control-radius-sm",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-quick",
+    "--tc-duration-slow",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-strong",
+    "--tc-fill-subtle",
+    "--tc-focus-halo",
+    "--tc-focus-halo-width",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-2xs",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-hairline",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-meter-fill",
+    "--tc-meter-track",
+    "--tc-radius-full",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-radius-xs",
+    "--tc-shadow-color-strong",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-border",
+    "--tc-status-danger-fg",
+    "--tc-status-danger-solid",
+    "--tc-status-info-bg",
+    "--tc-status-info-fg",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-surface-inverse",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-on-inverse",
+    "--tc-text-placeholder",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tone-amber-bg",
+    "--tc-tone-amber-fg",
+    "--tc-tone-pink-bg",
+    "--tc-tone-pink-fg",
+    "--tc-tone-violet-bg",
+    "--tc-tone-violet-fg",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "multimodalKind",
+   "signature": "multimodalKind(file: { name: string; type?: string }): MultimodalKind",
+   "description": "What kind of attachment a file is: from its MIME type, else its extension"
+  },
+  {
+   "name": "formatBytes",
+   "signature": "formatBytes(bytes: number): void",
+   "description": "\"840 KB\", \"2.4 MB\" – number and unit joined by a no-break space"
+  }
+ ],
+ "react": [
+  {
+   "component": "MultimodalInput",
+   "exported": true,
+   "props": [
+    {
+     "name": "value",
+     "type": "MultimodalAttachment[]",
+     "optional": true,
+     "description": "The attachments – controlled when given"
+    },
+    {
+     "name": "defaultValue",
+     "type": "MultimodalAttachment[]",
+     "optional": true,
+     "description": "The attachments on mount when `value` isn't controlled"
+    },
+    {
+     "name": "onChange",
+     "type": "(value: MultimodalAttachment[], change: MultimodalChange) => void",
+     "optional": true,
+     "description": "The attachments changed; `change.files` holds the new File objects to upload"
+    },
+    {
+     "name": "text",
+     "type": "string",
+     "optional": true,
+     "description": "The message – controlled when given"
+    },
+    {
+     "name": "defaultText",
+     "type": "string",
+     "optional": true,
+     "description": "The message on mount when `text` isn't controlled"
+    },
+    {
+     "name": "onTextChange",
+     "type": "(text: string) => void",
+     "optional": true,
+     "description": "The message was edited"
+    },
+    {
+     "name": "onSend",
+     "type": "(text: string, attachments: MultimodalAttachment[]) => void",
+     "optional": true,
+     "description": "Send was pressed, or Enter in the message; the box then clears unless it's controlled"
+    },
+    {
+     "name": "onRetry",
+     "type": "(attachment: MultimodalAttachment, file?: File) => void",
+     "optional": true,
+     "description": "Retry was pressed on an attachment that failed; `file` when it was added in this box"
+    },
+    {
+     "name": "onReject",
+     "type": "(rejections: MultimodalRejection[]) => void",
+     "optional": true,
+     "description": "Files were turned away, with the reasons"
+    }
+   ],
+   "hides": []
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 34338,
+  "gzip": 10934
+ }
+}

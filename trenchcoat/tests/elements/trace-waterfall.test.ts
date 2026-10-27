@@ -59,7 +59,7 @@ describe("tc-trace-waterfall", () => {
     expect(el.dataset.ui).toBe("tw");
     expect(el.dataset.look).toBe("standard");
     expect(el.querySelector('[role="tree"]')!.getAttribute("aria-label")).toBe("Agent trace");
-    expect(el.querySelector(".ui-tw__heading")!.textContent).toBe("Agent trace");
+    expect(el.querySelector(".tc-head__title")!.textContent).toBe("Agent trace");
     expect(el.querySelector(".ui-tw__pill")!.textContent).toBe("Done");
     expect(el.hasAttribute("data-live")).toBe(false);
   });

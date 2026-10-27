@@ -233,8 +233,6 @@
     "--tc-space-2",
     "--tc-space-2-5",
     "--tc-space-3",
-    "--tc-space-4",
-    "--tc-space-4-5",
     "--tc-space-7",
     "--tc-status-danger-bg",
     "--tc-status-danger-fg",
@@ -250,6 +248,7 @@
     "--tc-text-primary",
     "--tc-text-secondary",
     "--tc-text-strong",
+    "--tc-tracking-normal",
     "--tc-tray-inset",
     "--tc-tray-radius",
     "--tc-z-dropdown"
@@ -317,7 +316,7 @@
  ],
  "changelog": [],
  "size": {
-  "min": 55213,
-  "gzip": 14648
+  "min": 57142,
+  "gzip": 15274
  }
 }

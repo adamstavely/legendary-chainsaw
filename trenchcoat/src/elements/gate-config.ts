@@ -4,6 +4,7 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { live } from "lit/directives/live.js";
 import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import "./segmented-control";
 import type { SegmentOption, SegmentValueChange } from "./segmented-control";
 
@@ -118,7 +119,8 @@ const check = (clean: boolean) =>
   clean ? html`<svg viewBox="0 0 16 16">${svg`<path d="m4.25 8.25 2.5 2.5 5-5.5"></path>`}</svg>` : html`<svg viewBox="0 0 24 24">${svg`<path d="m6 12.5 4 4 8-9"></path>`}</svg>`;
 const chevronDown = html`<svg class="ui-gc__chevron" viewBox="0 0 16 16" aria-hidden="true">${svg`<path d="M4.5 6.25 8 9.75l3.5-3.5"></path>`}</svg>`;
 /* hand: a raised palm – a person steps in */
-const gateIcon = html`<svg class="ui-gc__mark" viewBox="0 0 16 16" aria-hidden="true">${svg`<rect x="3" y="2.5" width="3" height="11" rx="1"></rect><rect x="10" y="2.5" width="3" height="11" rx="1"></rect>`}</svg>`;
+/** A pause: the run stops here for a person */
+const gateIcon = svg`<rect x="6" y="4.5" width="4" height="15" rx="1"></rect><rect x="14" y="4.5" width="4" height="15" rx="1"></rect>`;
 const sentenceIcon = html`<svg class="ui-gc__sentence-icon" viewBox="0 0 16 16" aria-hidden="true">${svg`<circle cx="8" cy="5.25" r="2.5"></circle><path d="M3.25 13.5c.6-2.5 2.5-3.75 4.75-3.75s4.15 1.25 4.75 3.75"></path>`}</svg>`;
 
 let instances = 0;
@@ -345,15 +347,15 @@ export class TcGateConfig extends TcElement {
     const clean = look === "clean";
     const v = this.value;
     const count = this.conditions.filter((c) => v.triggers.includes(c.id)).length;
+    const head = this.flat
+      ? nothing
+      : cardHead({
+          icon: gateIcon,
+          title: this.heading,
+          subtitle: this.description,
+          aside: html`<span class="ui-gc__pill" data-state=${count ? "on" : "off"}>${count ? `Pauses on ${count} of ${this.conditions.length}` : "Never pauses"}</span>`,
+        });
     const body = html`
-      <div class="ui-gc__head">
-        <span class="ui-gc__mark-tile">${gateIcon}</span>
-        <span class="ui-gc__heading">
-          <span class="ui-gc__title">${this.heading}</span>
-          ${this.description ? html`<span class="ui-gc__sub">${this.description}</span>` : nothing}
-        </span>
-        <span class="ui-gc__pill" data-state=${count ? "on" : "off"}>${count ? `Pauses on ${count} of ${this.conditions.length}` : "Never pauses"}</span>
-      </div>
       <div class="ui-gc__rows">
         ${this.row("when", "Pauses when", this.renderConditions())}
         ${this.row("who", "Reviewer", this.renderReviewer())}
@@ -377,7 +379,7 @@ export class TcGateConfig extends TcElement {
     `;
     return html`
       <span class="ui-gc__sr" role="status">${this.announcement}</span>
-      ${clean || this.flat ? body : html`<div class="ui-gc__card">${body}</div>`}
+      ${head}${clean || this.flat ? body : html`<div class="ui-gc__card">${body}</div>`}
     `;
   }
 
@@ -400,7 +402,7 @@ export class TcGateConfig extends TcElement {
 [data-ui="gcfg"] *, [data-ui="gcfg"] *::before, [data-ui="gcfg"] *::after { box-sizing: border-box; }
 :where([data-ui="gcfg"]) :is(p, ul) { margin: 0; padding: 0; }
 :where([data-ui="gcfg"]) ul { list-style: none; }
-/* Standard: a gray tray around a white card */
+/* Standard: a gray tray with the header on it, above a white card */
 :where([data-look="standard"], [data-look="standard"] *)[data-ui="gcfg"]:not([flat]) {
   padding: var(--tc-tray-inset);
   border-radius: var(--tc-tray-radius);
@@ -412,7 +414,7 @@ export class TcGateConfig extends TcElement {
   background: var(--tc-surface-on-tray);
   box-shadow: var(--tc-card-shadow);
 }
-/* Clean: one white card with hairline shadows */
+/* Clean: one white card with hairline shadows; the header is its first row */
 :where([data-look="clean"], [data-look="clean"] *)[data-ui="gcfg"]:not([flat]) {
   border-radius: var(--tc-card-radius);
   background: var(--tc-surface-raised);
@@ -432,24 +434,13 @@ export class TcGateConfig extends TcElement {
 .ui-gc__switch:focus-visible, .ui-gc__check:focus-visible { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
 .ui-gc__switch:disabled, .ui-gc__check:disabled, .ui-gc__input:disabled { cursor: not-allowed; opacity: 0.55; }
 
-/* ---------- Header: a mark, the title and how often it pauses ---------- */
-.ui-gc__head { display: flex; align-items: center; gap: var(--tc-space-3); padding: var(--tc-space-4) var(--tc-space-4) var(--tc-space-1); }
-[data-ui="gcfg"][flat] .ui-gc__head { display: none; }
-.ui-gc__mark-tile { display: grid; flex: none; place-items: center; width: 28px; height: 28px; background: var(--tc-surface-raised); box-shadow: var(--tc-shadow-raised); color: var(--tc-text-secondary); }
-:where([data-look="standard"], [data-look="standard"] *).ui-gc__mark-tile { border-radius: var(--tc-radius-lg); }
-:where([data-look="clean"], [data-look="clean"] *).ui-gc__mark-tile { border-radius: var(--tc-avatar-radius-agent); color: var(--tc-icon-muted); }
-.ui-gc__mark { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.4; }
-:where([data-look="clean"], [data-look="clean"] *).ui-gc__mark { stroke-width: 1.2; }
-.ui-gc__heading { display: grid; flex: 1; min-width: 0; }
-.ui-gc__title { color: var(--tc-text-strong); font-size: var(--tc-font-size-lg-plus); line-height: var(--tc-line-height-relaxed); overflow-wrap: anywhere; }
-:where([data-look="standard"], [data-look="standard"] *).ui-gc__title { font-weight: var(--tc-font-weight-semibold); letter-spacing: -0.01em; }
-:where([data-look="clean"], [data-look="clean"] *).ui-gc__title { font-weight: var(--tc-font-weight-medium); }
-.ui-gc__sub { color: var(--tc-text-muted); font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-snug); }
-.ui-gc__pill { display: inline-flex; flex: none; align-items: center; align-self: start; height: var(--tc-pill-h); margin-top: var(--tc-space-0-5); padding: 0 var(--tc-pill-px); border-radius: var(--tc-pill-radius); background: var(--tc-status-warning-bg); color: var(--tc-status-warning-fg); font-size: var(--tc-pill-font-size); font-weight: var(--tc-pill-font-weight); line-height: var(--tc-line-height-tight); white-space: nowrap; font-variant-numeric: tabular-nums; }
+/* ---------- Header (cardHead): how often it pauses, at the right ---------- */
+.ui-gc__pill { display: inline-flex; flex: none; align-items: center; height: var(--tc-pill-h); padding: 0 var(--tc-pill-px); border-radius: var(--tc-pill-radius); background: var(--tc-status-warning-bg); color: var(--tc-status-warning-fg); font-size: var(--tc-pill-font-size); font-weight: var(--tc-pill-font-weight); line-height: var(--tc-line-height-tight); white-space: nowrap; font-variant-numeric: tabular-nums; }
 .ui-gc__pill[data-state="off"] { background: var(--tc-fill-default); color: var(--tc-text-muted); }
 
 /* ---------- Rows: a label column and the controls ---------- */
-.ui-gc__rows { display: grid; gap: var(--tc-space-4); padding: var(--tc-space-3) var(--tc-space-4) var(--tc-space-4); }
+.ui-gc__rows { display: grid; gap: var(--tc-space-4); padding: var(--tc-space-4); }
+:where([data-look="clean"], [data-look="clean"] *)[data-ui="gcfg"]:not([flat]) .ui-gc__rows { padding-top: var(--tc-space-1); }
 [data-ui="gcfg"][flat] .ui-gc__rows { padding: 0 0 var(--tc-space-3); }
 .ui-gc__row { display: grid; grid-template-columns: 92px minmax(0, 1fr); align-items: start; gap: var(--tc-space-3); }
 .ui-gc__label { display: flex; align-items: center; min-height: var(--tc-control-h-sm); color: var(--tc-text-secondary); font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-normal); font-weight: var(--tc-font-weight-medium); }
@@ -494,15 +485,15 @@ export class TcGateConfig extends TcElement {
 /* A hit area of at least 24 × 24 around the small switch */
 .ui-gc__switch::after { content: ""; position: absolute; inset: -8px -6px; }
 
-/* Reviewer: the field recipe at control height, a native select */
+/* Reviewer: the field recipe, a native select */
 .ui-gc__input {
   width: 100%;
   min-width: 0;
-  height: var(--tc-control-h-sm);
+  height: var(--tc-field-h);
   margin: 0;
-  padding: 0 var(--tc-space-2-5);
+  padding: 0 var(--tc-field-px);
   border: 0;
-  border-radius: var(--tc-control-radius-sm);
+  border-radius: var(--tc-field-radius);
   outline: 0;
   background: var(--tc-field-bg);
   box-shadow: var(--tc-field-shadow);
@@ -577,7 +568,7 @@ export class TcGateConfig extends TcElement {
 @container (max-width: 420px) {
   .ui-gc__row { grid-template-columns: minmax(0, 1fr); gap: var(--tc-space-1); }
   .ui-gc__label { min-height: 0; }
-  .ui-gc__head, .ui-gc__rows { padding-left: var(--tc-space-3); padding-right: var(--tc-space-3); }
+  .ui-gc__rows { padding-left: var(--tc-space-3); padding-right: var(--tc-space-3); }
   .ui-gc__summary { margin-left: var(--tc-space-3); margin-right: var(--tc-space-3); }
   .ui-gc__pill { display: none; }
 }

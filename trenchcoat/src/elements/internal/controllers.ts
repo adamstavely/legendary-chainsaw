@@ -36,15 +36,29 @@ export class OffScreenController implements ReactiveController {
  * friends aren't allowed; the inner control is what assistive technology reaches. Attributes set later (a framework
  * re-rendering) are moved too.
  */
+const ariaControllers = new WeakMap<HTMLElement, AriaForwardController>();
+
+/** The host no longer holds moved attributes, so native removal alone cannot clear the inner control. */
+export function clearForwardedAria(host: HTMLElement, name: string) {
+  ariaControllers.get(host)?.clear(name.toLowerCase());
+}
+
 export class AriaForwardController implements ReactiveController {
   static readonly ATTRS = ["aria-label", "aria-labelledby", "aria-describedby", "aria-description", "aria-controls", "aria-expanded", "aria-haspopup", "aria-pressed", "aria-current", "aria-keyshortcuts"];
   private mo?: MutationObserver;
+  private forwarded = new Set<string>();
 
   constructor(
     private host: Host,
     private target: () => HTMLElement | null,
   ) {
     host.addController(this);
+    ariaControllers.set(host, this);
+  }
+
+  clear(name: string) {
+    if (!this.forwarded.delete(name)) return;
+    this.target()?.removeAttribute(name);
   }
 
   private move = () => {
@@ -54,7 +68,9 @@ export class AriaForwardController implements ReactiveController {
       const value = this.host.getAttribute(name);
       if (value === null) continue;
       to.setAttribute(name, value);
-      this.host.removeAttribute(name);
+      this.forwarded.add(name);
+      // Bypass the public removal hook: this is a move, not a caller clearing the attribute.
+      HTMLElement.prototype.removeAttribute.call(this.host, name);
     }
   };
 

@@ -28,7 +28,7 @@ the app passes it.
 
 ## Anatomy
 
-1. **Heading** `.ui-rmf__head` – the title, the run id with its copy button, the time, and the model badge
+1. **Header** `.tc-head` – the icon, the title, the run id with its copy button, the time, and the model badge
 2. **Hash** `.ui-rmf__hash` – the instruction's hash, shortened, with a copy button for the full value
 3. **Sources** `.ui-rmf__sources` – the sources and corpus, the first few with Show all
 4. **Intent** `.ui-rmf__intent` – what the session set out to do, in the person's words

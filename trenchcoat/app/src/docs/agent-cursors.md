@@ -27,7 +27,7 @@ you give it: you move the agents by updating `cursors`, `blocks`, `suggestions` 
 
 ## Anatomy
 
-1. **Header** `.ui-agc__bar` – the document's title, the agents' faces, a count and the total cost
+1. **Header** `.ui-agc__bar` – the shared card header: a boxed icon and the document's title, with the agents' faces, a count, the total cost and Accept all on its right
 2. **Face** `.ui-agc__face` – one agent; press it to follow that agent
 3. **Page** `.ui-agc__sheet` – the document, block by block
 4. **Pointer** `.ui-agc__flag` – an agent's name flag, with what it is doing; its arrow and caret sit beside it

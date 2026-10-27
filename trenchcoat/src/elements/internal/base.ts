@@ -2,7 +2,9 @@ import { consume } from "@lit/context";
 import { LitElement, type PropertyValues } from "lit";
 import { property } from "lit/decorators.js";
 import { lookContext, type Look } from "./look";
+import { cardHeadCss } from "./card-head";
 import { adoptStyles } from "./styles";
+import { clearForwardedAria } from "./controllers";
 
 /*
  * The base of every Trenchcoat element (audit/lit-port-plan.md, decisions L4 and L6):
@@ -54,6 +56,7 @@ export abstract class TcElement extends LitElement {
     // Custom elements are inline by default; the React roots were block elements (div, section) – an element's own
     // CSS overrides this zero-specificity default (Button is inline-flex)
     adoptStyles("tc-base", ":where([data-ui]) { display: block; }", this.ownerDocument);
+    adoptStyles("tc-head", cardHeadCss, this.ownerDocument);
     adoptStyles(`ui-${type.ui}`, type.css, this.ownerDocument);
     this.dataset.ui = type.ui;
     super.connectedCallback();
@@ -63,6 +66,21 @@ export abstract class TcElement extends LitElement {
     super.willUpdate(changed);
     if (!(this.constructor as typeof TcElement).looks) delete this.dataset.look;
     else if (this.dataset.look !== this.resolvedLook) this.dataset.look = this.resolvedLook;
+  }
+
+  override removeAttribute(name: string) {
+    clearForwardedAria(this, name);
+    super.removeAttribute(name);
+  }
+
+  override removeAttributeNS(namespace: string | null, name: string) {
+    if (namespace === null || namespace === "") clearForwardedAria(this, name);
+    super.removeAttributeNS(namespace, name);
+  }
+
+  override toggleAttribute(name: string, force?: boolean) {
+    if (force === false) clearForwardedAria(this, name);
+    return super.toggleAttribute(name, force);
   }
 
   /** Dispatches a bubbling, composed event; returns false when a listener called preventDefault() */

@@ -2,6 +2,7 @@ import { html, nothing, svg, type PropertyValues } from "lit";
 import { property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController, rescueFocus, SmoothHeightController } from "./internal/controllers";
 import type { Look } from "./internal/look";
 
@@ -72,6 +73,9 @@ const icon = (look: Look, d: string, size = 16) =>
   look === "clean"
     ? html`<svg viewBox="0 0 16 16" class="ui-ct__glyph" aria-hidden="true">${svg`<path d=${d}></path>`}</svg>`
     : html`<svg viewBox="0 0 16 16" width=${size} height=${size} fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${svg`<path d=${d}></path>`}</svg>`;
+
+// The header icon: two overlapping speech bubbles (a conversation)
+const threadIcon = svg`<path d="M14 9a2 2 0 0 1-2 2H6l-3 3V5a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2z"></path><path d="M18 9h1a2 2 0 0 1 2 2v9l-3-3h-6a2 2 0 0 1-2-2v-1"></path>`;
 
 /**
  * One comment with its replies, an assistant's status lines and a reply field.
@@ -299,15 +303,16 @@ export class TcCommentThread extends TcElement {
     const messages = this.thread;
     const assistant = this.assistant;
     return html`
-      <header class="ui-ct__head">
-        <h3 class="ui-ct__title">${this.heading}</h3>
-        <span class="ui-ct__count">${messages.length} ${messages.length === 1 ? "message" : "messages"}</span>
-        ${this.closable
-          ? html`<button type="button" class="ui-ct__icon-btn" aria-label="Close comment" @click=${() => this.emit("tc-close", null)}>
-              ${icon(look, clean ? "m4.5 4.5 7 7M11.5 4.5l-7 7" : "m4 4 8 8M12 4l-8 8")}
-            </button>`
-          : nothing}
-      </header>
+      ${cardHead({
+        icon: threadIcon,
+        title: this.heading,
+        aside: html`<span class="ui-ct__count">${messages.length} ${messages.length === 1 ? "message" : "messages"}</span>
+          ${this.closable
+            ? html`<button type="button" class="ui-ct__icon-btn" aria-label="Close comment" @click=${() => this.emit("tc-close", null)}>
+                ${icon(look, clean ? "m4.5 4.5 7 7M11.5 4.5l-7 7" : "m4 4 8 8M12 4l-8 8")}
+              </button>`
+            : nothing}`,
+      })}
       <div class=${clean ? "ui-ct__morph" : "ui-ct__card ui-ct__morph"}>
         <div class="ui-ct__scroll" role="region" aria-label="Messages" tabindex="0">
           ${messages.map((m) => this.message(m, look))}
@@ -370,7 +375,7 @@ export class TcCommentThread extends TcElement {
   padding: var(--tc-tray-inset);
   border-radius: var(--tc-tray-radius);
   background: var(--tc-surface-tray);
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--tc-font-sans);
 }
 /* Clean: no tray – one card with hairline shadows */
 :where([data-look="clean"], [data-look="clean"] *)[data-ui="ct"] {
@@ -398,11 +403,7 @@ export class TcCommentThread extends TcElement {
 :where([data-look="clean"], [data-look="clean"] *):where([data-ui="ct"]) svg { display: block; flex: none; }
 :where([data-look="clean"], [data-look="clean"] *).ui-ct__glyph { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.1; stroke-linecap: round; stroke-linejoin: round; }
 /* ---------- Header ---------- */
-.ui-ct__head { display: flex; align-items: center; gap: var(--tc-space-2-5); min-height: 46px; padding: var(--tc-space-1-5) var(--tc-space-2-5) var(--tc-space-1-5) var(--tc-space-4-5); }
-:where([data-look="clean"], [data-look="clean"] *).ui-ct__head { gap: var(--tc-space-2); min-height: 48px; padding: var(--tc-space-2-5) var(--tc-space-2-5) var(--tc-space-2-5) var(--tc-space-4); border-bottom: var(--tc-hairline) solid var(--tc-divider); }
-.ui-ct__title { margin: 0; font-size: var(--tc-font-size-lg-plus); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-relaxed); }
-:where([data-look="clean"], [data-look="clean"] *).ui-ct__title { font-size: var(--tc-font-size-md); line-height: var(--tc-line-height-normal); color: var(--tc-text-strong); }
-.ui-ct__count { margin-right: auto; font-size: var(--tc-font-size-sm); color: var(--tc-text-muted); font-variant-numeric: tabular-nums; }
+.ui-ct__count { font-size: var(--tc-font-size-sm); color: var(--tc-text-muted); font-variant-numeric: tabular-nums; }
 :where([data-look="clean"], [data-look="clean"] *).ui-ct__count { font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); }
 /* Close: a ghost icon button */
 .ui-ct__icon-btn { display: grid; place-items: center; flex: none; width: var(--tc-control-h-sm); height: var(--tc-control-h-sm); border-radius: var(--tc-control-radius-sm); color: var(--tc-icon-muted); transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard); }
@@ -472,15 +473,16 @@ img.ui-ct__avatar { box-shadow: 0 0 0 var(--tc-hairline) var(--tc-comment-thread
   align-items: center;
   gap: var(--tc-space-2);
   max-width: 100%;
-  height: 26px;
+  height: var(--tc-control-h-sm);
   padding: 0 var(--tc-space-1-5) 0 var(--tc-space-2);
-  border-radius: var(--tc-radius-md);
-  font-size: var(--tc-font-size-lg);
+  border-radius: var(--tc-control-radius-sm);
+  font-size: var(--tc-control-font-size);
+  font-weight: var(--tc-control-font-weight);
   transition: background-color var(--tc-duration-fast) var(--tc-ease-standard);
 }
 /* The button reset sets margin: 0 – shift the row so the check icon sits centered under the avatars */
 :where([data-look="standard"], [data-look="standard"] *)[data-ui="ct"] .ui-ct__status-btn { margin-left: -4px; }
-:where([data-look="clean"], [data-look="clean"] *).ui-ct__status-btn { gap: var(--tc-space-1-5); height: var(--tc-control-h-md); padding: 0 var(--tc-space-1) 0 var(--tc-space-1-5); border-radius: var(--tc-radius-sm); font-size: var(--tc-font-size-md); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-normal); color: var(--tc-text-primary); }
+:where([data-look="clean"], [data-look="clean"] *).ui-ct__status-btn { gap: var(--tc-space-1-5); height: var(--tc-control-h-md); padding: 0 var(--tc-space-1) 0 var(--tc-space-1-5); border-radius: var(--tc-control-radius-md); line-height: var(--tc-line-height-normal); color: var(--tc-text-primary); }
 .ui-ct__status-btn:hover:not(:disabled) { background: var(--tc-action-ghost-bg-hover); }
 .ui-ct__status-btn:disabled { cursor: default; }
 :where([data-look="standard"], [data-look="standard"] *).ui-ct__check { display: grid; place-items: center; width: 16px; height: 16px; border-radius: 50%; background: var(--tc-status-success-solid); color: #fff; }
@@ -610,11 +612,10 @@ img.ui-ct__avatar { box-shadow: 0 0 0 var(--tc-hairline) var(--tc-comment-thread
 [data-ui="ct"] { position: relative; }
 /* Height changes glide instead of jumping */
 .ui-ct__morph { overflow: hidden; }
-:where([data-look="clean"], [data-look="clean"] *).ui-ct__morph { flex: none; }
+:where([data-look="clean"], [data-look="clean"] *).ui-ct__morph { flex: none; border-top: var(--tc-hairline) solid var(--tc-divider); }
 .ui-ct__morph[data-smooth] { transition: height var(--tc-duration-slower) var(--tc-ease-move); }
 /* Narrow containers: a little less padding */
 @container (max-width: 340px) {
-:where([data-look="clean"], [data-look="clean"] *).ui-ct__head { padding-left: var(--tc-space-3); }
 :where([data-look="clean"], [data-look="clean"] *).ui-ct__scroll { padding-left: var(--tc-space-3); padding-right: var(--tc-space-3); }
 :where([data-look="clean"], [data-look="clean"] *).ui-ct__composer { padding-left: var(--tc-space-3); }
 }

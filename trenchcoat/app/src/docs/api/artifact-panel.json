@@ -181,9 +181,9 @@
     "--tc-text-muted",
     "--tc-text-primary",
     "--tc-text-secondary",
-    "--tc-text-strong",
     "--tc-tone-pink-fg",
     "--tc-tone-violet-fg",
+    "--tc-tracking-normal",
     "--tc-tray-inset",
     "--tc-tray-radius"
    ]
@@ -290,7 +290,7 @@
   "`tc-artifact-panel` – what a run produced: a list, a preview per kind (Markdown text, code through `tc-code-block`, images, tables from CSV), versions with a diff against the one before, and download (a Blob by default, cancelable)."
  ],
  "size": {
-  "min": 115131,
-  "gzip": 29309
+  "min": 117046,
+  "gzip": 30034
  }
 }

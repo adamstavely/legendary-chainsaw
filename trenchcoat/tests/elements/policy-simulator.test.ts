@@ -51,6 +51,8 @@ describe("tc-policy-simulator", () => {
       expect(el.dataset.look).toBe(look);
       const form = el.querySelector("form")!;
       expect(document.getElementById(form.getAttribute("aria-labelledby")!)!.textContent).toBe("Policy simulator");
+      // The header first: on the tray above the form card in Standard, the first row in Clean
+      expect(el.querySelector(":scope > .ui-psim__sr + .tc-head + .ui-psim__card")).toBeTruthy();
       // Every field is named by its label
       expect(actionField(el).labels![0].textContent).toBe("Action");
       expect(select(el).labels![0].textContent).toBe("Rule class");
@@ -236,7 +238,7 @@ describe("tc-policy-simulator", () => {
     await act(async () => root.render(React.createElement(App)));
     await settle();
     const el = host.querySelector("tc-policy-simulator")!;
-    expect(el.querySelector(".ui-psim__title")!.textContent).toBe("Try the policy");
+    expect(el.querySelector(".tc-head__title")!.textContent).toBe("Try the policy");
     expect(select(el).value).toBe("spend");
     type(actionField(el), "Refund $2,400");
     await settle();

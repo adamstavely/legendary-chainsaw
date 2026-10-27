@@ -61,7 +61,7 @@ describe("tc-chat-history", () => {
     await settle();
     expect(el.querySelector(".ui-chh__card")).toBeNull();
     expect(el.querySelector('.ui-chh__glyph[viewBox="0 0 16 16"]')).toBeTruthy();
-    expect(el.querySelector(".ui-chh__title-text")!.textContent).toBe("History");
+    expect(el.querySelector(".tc-head__title")!.textContent).toBe("History");
   });
 
   test("groups: Pinned, the folders, then Today / Yesterday / Previous 7 days / Previous 30 days / months, relative to `now`", async () => {
@@ -356,10 +356,11 @@ describe("tc-chat-history", () => {
     expect(row(el, last.key).getAttribute("aria-setsize")).toBe(String(el.visibleRows.filter((r) => r.kind === "chat" && r.group === last.group).length));
     // Scrolling the list renders the rows it brings into view
     list.scrollTop = 4000 * h;
-    await new Promise((r) => setTimeout(r, 100));
-    await settle();
-    const keys = [...el.querySelectorAll<HTMLElement>(".ui-chh__row")].map((r) => el.visibleRows.findIndex((v) => v.key === r.dataset.key));
-    expect(keys.some((i) => Math.abs(i - 4000) < 30)).toBe(true);
+    // Scroll events and the following animation frame can be delayed while the browser suite is busy.
+    await expect.poll(() => {
+      const keys = [...el.querySelectorAll<HTMLElement>(".ui-chh__row")].map((r) => el.visibleRows.findIndex((v) => v.key === r.dataset.key));
+      return keys.some((i) => Math.abs(i - 4000) < 30);
+    }, { timeout: 3000 }).toBe(true);
     // The focused row stays rendered while it's out of the window, placed where it would be; the scroll position holds
     const kept = row(el, `c:m${N - 1}`);
     expect(kept.hasAttribute("data-float")).toBe(true);
@@ -395,7 +396,7 @@ describe("tc-chat-history", () => {
     await act(async () => root.render(React.createElement(App)));
     await settle();
     const el = host.querySelector<TcChatHistory>("tc-chat-history")!;
-    expect(el.querySelector(".ui-chh__title-text")!.textContent).toBe("Your chats");
+    expect(el.querySelector(".tc-head__title")!.textContent).toBe("Your chats");
     await act(async () => row(el, "c:y1").click());
     await act(async () => {
       row(el, "c:w1").focus();

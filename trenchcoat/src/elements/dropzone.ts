@@ -778,6 +778,8 @@ export class TcDropzone extends TcElement {
 :where([data-look="standard"], [data-look="standard"] *)[data-ui="dz"] {
   /* The drop area: a faint well with a dashed edge that darkens on hover */
   --tc-dropzone-area-bg: light-dark(#fafafa, #1d1d20);
+  /* The file type printed on the little sheet icon ("PDF"): illustration-sized, below the type scale on purpose */
+  --tc-dropzone-badge-font-size: 7px;
   --tc-dropzone-area-border-hover: light-dark(#b5b5b5, #5c5c63);
   box-sizing: border-box;
   container-type: inline-size;
@@ -787,7 +789,7 @@ export class TcDropzone extends TcElement {
   padding: var(--tc-space-1);
   border-radius: var(--tc-radius-3xl);
   background: var(--tc-surface-sunken);
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-md);
   line-height: 1.45;
   color: var(--tc-text-secondary);
@@ -797,6 +799,7 @@ export class TcDropzone extends TcElement {
 :where([data-look="clean"], [data-look="clean"] *)[data-ui="dz"] {
   /* The drop area's dashed edge darkens on hover */
   --tc-dropzone-area-border-hover: light-dark(rgba(0, 0, 0, 0.2), rgba(255, 255, 255, 0.26));
+  --tc-dropzone-badge-font-size: 6.5px;
   /* Strokes are shadows: a 0.5px hairline plus a soft lift */
   position: relative;
   box-sizing: border-box;
@@ -922,10 +925,10 @@ export class TcDropzone extends TcElement {
 :where([data-look="clean"], [data-look="clean"] *).ui-dz__area[data-dragging] .ui-dz__sheet-r { transform: translate(28px, 0) rotate(16deg); }
 :where([data-look="clean"], [data-look="clean"] *).ui-dz__area[data-dragging] .ui-dz__sheet-m { transform: translateY(-8px) scale(1.05); }
 .ui-dz__area[data-dragging] .ui-dz__sheet-m .ui-dz__glyph { color: var(--tc-accent-text); animation: ui-dz-bob 900ms ease-in-out infinite; }
-:where([data-look="standard"], [data-look="standard"] *).ui-dz__title { font-size: 14.5px; font-weight: var(--tc-font-weight-medium); color: var(--tc-text-primary); animation: ui-dz-in var(--tc-duration-moderate) var(--tc-ease-move) both; }
+:where([data-look="standard"], [data-look="standard"] *).ui-dz__title { font-size: var(--tc-font-size-lg); font-weight: var(--tc-font-weight-medium); color: var(--tc-text-primary); animation: ui-dz-in var(--tc-duration-moderate) var(--tc-ease-move) both; }
 :where([data-look="clean"], [data-look="clean"] *).ui-dz__badge-sheet { fill: var(--tc-surface-raised); stroke: var(--tc-border-strong); stroke-width: 0.9; }
 :where([data-look="clean"], [data-look="clean"] *).ui-dz__badge-fold { fill: none; stroke: var(--tc-border-strong); stroke-width: 0.9; stroke-linejoin: round; }
-:where([data-look="clean"], [data-look="clean"] *).ui-dz__badge-text { font-family: inherit; font-size: 6.5px; font-weight: var(--tc-font-weight-medium); letter-spacing: 0.04em; }
+:where([data-look="clean"], [data-look="clean"] *).ui-dz__badge-text { font-family: inherit; font-size: var(--tc-dropzone-badge-font-size); font-weight: var(--tc-font-weight-medium); letter-spacing: var(--tc-tracking-caps); }
 :where([data-look="clean"], [data-look="clean"] *).ui-dz__title { font-size: var(--tc-font-size-md); line-height: var(--tc-line-height-normal); font-weight: var(--tc-font-weight-medium); color: var(--tc-text-primary); animation: ui-dz-in var(--tc-duration-moderate) var(--tc-ease-move) both; }
 .ui-dz__browse { color: var(--tc-accent-text); }
 :where([data-look="standard"], [data-look="standard"] *).ui-dz__hint { margin-top: var(--tc-space-1); font-size: var(--tc-font-size-sm); color: var(--tc-text-muted); }
@@ -948,7 +951,7 @@ export class TcDropzone extends TcElement {
 :where([data-look="standard"], [data-look="standard"] *).ui-dz__badge { width: 28px; height: 34px; }
 :where([data-look="standard"], [data-look="standard"] *).ui-dz__badge-sheet { fill: var(--tc-surface-overlay); stroke: var(--tc-border-strong); stroke-width: 1.2; }
 :where([data-look="standard"], [data-look="standard"] *).ui-dz__badge-fold { fill: none; stroke: var(--tc-border-strong); stroke-width: 1.2; stroke-linejoin: round; }
-:where([data-look="standard"], [data-look="standard"] *).ui-dz__badge-text { font-family: inherit; font-size: 7px; font-weight: 700; letter-spacing: 0.03em; }
+:where([data-look="standard"], [data-look="standard"] *).ui-dz__badge-text { font-family: inherit; font-size: var(--tc-dropzone-badge-font-size); font-weight: 700; letter-spacing: var(--tc-tracking-caps); }
 :where([data-look="clean"], [data-look="clean"] *).ui-dz__row + .ui-dz__row .ui-dz__row-inner { border-top: 0.5px solid var(--tc-border-default); }
 /* The 16px file icon, aligned with the name */
 :where([data-look="clean"], [data-look="clean"] *).ui-dz__file { align-self: flex-start; width: 16px; height: 16px; margin-top: var(--tc-space-0-5); overflow: visible; }
@@ -1081,7 +1084,6 @@ export class TcDropzone extends TcElement {
 /* Narrow (phones) */
 @container (max-width: 420px) {
 :where([data-look="standard"], [data-look="standard"] *).ui-dz__area { padding: 22px var(--tc-space-4) var(--tc-space-4-5); }
-:where([data-look="standard"], [data-look="standard"] *).ui-dz__title { font-size: var(--tc-font-size-lg); }
 }
 @keyframes ui-dz-sweep { from { background-position: 100% 0; } to { background-position: 0% 0; } }
 /* Narrow (phones) */

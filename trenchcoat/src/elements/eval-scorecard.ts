@@ -4,6 +4,7 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { repeat } from "lit/directives/repeat.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController, RowWindowController, ToolbarController } from "./internal/controllers";
 import { compact } from "./internal/format";
 import { diffWords, type DiffSegment } from "./inline-diff";
@@ -109,7 +110,8 @@ const ICONS: Record<EvalOutcome | "none", TemplateResult> = {
   none: glyph(svg`<path d="M8 12h8"></path>`),
 };
 /* A clipboard with a check – the scorecard's mark */
-const mark = html`<svg class="ui-evs__mark-svg" viewBox="0 0 24 24" aria-hidden="true">${svg`<rect x="5" y="4" width="14" height="17" rx="2"></rect><path d="M9 4.5h6M9 12.5l2 2 4-4"></path>`}</svg>`;
+/** A clipboard with a tick: a test run, scored */
+const mark = svg`<rect x="5" y="4" width="14" height="17" rx="2"></rect><path d="M9 4.5h6M9 12.5l2 2 4-4"></path>`;
 const closeIcon = html`<svg class="ui-evs__glyph" viewBox="0 0 24 24" aria-hidden="true">${svg`<path d="M7 7l10 10M17 7L7 17"></path>`}</svg>`;
 
 /** The windowed grid renders rows near the scroll position above this many cases */
@@ -514,11 +516,12 @@ export class TcEvalScorecard extends TcElement {
     const filtered = view.length !== this.cases.length;
     const opened = !!this.opened;
     return html`
-      <div class="ui-evs__bar">
-        <span class="ui-evs__mark">${mark}</span>
-        <span class="ui-evs__title" id=${titleId}>${this.heading}</span>
-        <span class="ui-evs__summary">${filtered ? `${compact(view.length)} of ${plural(this.cases.length, "case")}` : plural(this.cases.length, "case")} · ${plural(versions.length, "version")}</span>
-      </div>
+      ${cardHead({
+        icon: mark,
+        title: this.heading,
+        id: titleId,
+        subtitle: html`<span class="ui-evs__summary">${filtered ? `${compact(view.length)} of ${plural(this.cases.length, "case")}` : plural(this.cases.length, "case")} · ${plural(versions.length, "version")}</span>`,
+      })}
       <div class="ui-evs__card">
         ${this.trend()}
         ${this.filters()}
@@ -575,7 +578,6 @@ export class TcEvalScorecard extends TcElement {
   font-size: var(--tc-font-size-md);
   font-weight: var(--tc-font-weight-regular);
   line-height: var(--tc-line-height-normal);
-  letter-spacing: -0.006em;
   color: var(--tc-text-secondary);
   text-align: left;
   -webkit-font-smoothing: antialiased;
@@ -599,18 +601,11 @@ export class TcEvalScorecard extends TcElement {
 .ui-evs__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .ui-evs__glyph { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
 :where([data-look="clean"], [data-look="clean"] *) .ui-evs__glyph { stroke-width: 2; }
-/* ----- The header on the tray ----- */
-.ui-evs__bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-1) var(--tc-space-2); min-width: 0; padding: var(--tc-space-1-5) var(--tc-space-1) var(--tc-space-2) var(--tc-space-3); }
-:where([data-look="clean"], [data-look="clean"] *).ui-evs__bar { padding: var(--tc-space-3) var(--tc-space-3) var(--tc-space-3) var(--tc-space-3-5); border-bottom: var(--tc-hairline) solid var(--tc-divider); }
-.ui-evs__mark { display: grid; flex: none; place-items: center; width: 16px; color: var(--tc-accent-text); }
-.ui-evs__mark-svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-:where([data-look="clean"], [data-look="clean"] *).ui-evs__mark-svg { stroke-width: 1.4; }
-.ui-evs__title { flex: none; max-width: 100%; overflow: hidden; font-weight: var(--tc-font-weight-semibold); color: var(--tc-text-strong); white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="clean"], [data-look="clean"] *).ui-evs__title { font-weight: var(--tc-font-weight-medium); }
-.ui-evs__summary { min-width: 0; color: var(--tc-text-muted); font-variant-numeric: tabular-nums; }
+/* ----- The header (cardHead): on the tray in Standard, the card's first row in Clean; the counts are its quiet line ----- */
+.ui-evs__summary { font-variant-numeric: tabular-nums; }
 /* ----- The card ----- */
 .ui-evs__card { overflow: hidden; border-radius: var(--tc-card-radius); background: var(--tc-surface-on-tray); box-shadow: var(--tc-card-shadow); }
-:where([data-look="clean"], [data-look="clean"] *).ui-evs__card { border-radius: 0 0 var(--tc-card-radius) var(--tc-card-radius); background: none; box-shadow: none; }
+:where([data-look="clean"], [data-look="clean"] *).ui-evs__card { border-top: var(--tc-hairline) solid var(--tc-divider); border-radius: 0 0 var(--tc-card-radius) var(--tc-card-radius); background: none; box-shadow: none; }
 /* ----- The trend: one column per version, the line through their pass rates ----- */
 .ui-evs__trend { position: relative; padding: var(--tc-space-3) var(--tc-space-2) var(--tc-space-3-5); border-bottom: var(--tc-hairline) solid var(--tc-divider); }
 .ui-evs__plot { position: relative; height: 36px; margin: 0 0 var(--tc-space-2-5); }
@@ -698,8 +693,7 @@ export class TcEvalScorecard extends TcElement {
 .ui-evs__pill[data-outcome="pending"] { background: var(--tc-accent-subtle); color: var(--tc-accent-text); }
 .ui-evs__score { color: var(--tc-text-muted); font-variant-numeric: tabular-nums; }
 .ui-evs__reason { flex: 1 1 100%; color: var(--tc-text-secondary); }
-.ui-evs__label { display: block; margin-bottom: var(--tc-space-1); font-size: var(--tc-font-size-xs); font-weight: var(--tc-font-weight-medium); color: var(--tc-text-muted); }
-:where([data-look="clean"], [data-look="clean"] *).ui-evs__label { font-size: var(--tc-caption-font-size); font-weight: var(--tc-caption-font-weight); letter-spacing: var(--tc-caption-tracking); text-transform: var(--tc-caption-transform); color: var(--tc-caption-color); }
+.ui-evs__label { display: block; margin-bottom: var(--tc-space-1); font-size: var(--tc-caption-font-size); font-weight: var(--tc-caption-font-weight); line-height: var(--tc-caption-line-height); letter-spacing: var(--tc-caption-tracking); text-transform: var(--tc-caption-transform); color: var(--tc-caption-color); }
 .ui-evs__input { padding: var(--tc-space-2) var(--tc-space-2-5); border-radius: var(--tc-radius-md); background: var(--tc-surface-well); }
 .ui-evs__text { color: var(--tc-text-primary); line-height: var(--tc-line-height-relaxed); white-space: pre-line; overflow-wrap: anywhere; }
 .ui-evs__input .ui-evs__text { font-size: var(--tc-font-size-sm); color: var(--tc-text-secondary); line-height: var(--tc-line-height-normal); }

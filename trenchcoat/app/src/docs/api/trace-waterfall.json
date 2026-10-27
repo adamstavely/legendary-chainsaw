@@ -409,6 +409,7 @@
     "--tc-trace-waterfall-span-edge",
     "--tc-trace-waterfall-span-ink",
     "--tc-trace-waterfall-span-mark",
+    "--tc-tracking-normal",
     "--tc-tracking-snug",
     "--tc-tray-inset",
     "--tc-tray-radius"
@@ -483,7 +484,7 @@
   "trace-waterfall `now` without `startedAt` → `elapsed`"
  ],
  "size": {
-  "min": 66218,
-  "gzip": 17381
+  "min": 67276,
+  "gzip": 17867
  }
 }

@@ -109,6 +109,12 @@
     "--tc-action-secondary-fg",
     "--tc-action-secondary-shadow",
     "--tc-action-secondary-shadow-hover",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
     "--tc-card-radius",
     "--tc-card-shadow",
     "--tc-control-font-size",
@@ -134,11 +140,9 @@
     "--tc-font-size-sm",
     "--tc-font-weight-medium",
     "--tc-font-weight-regular",
-    "--tc-font-weight-semibold",
     "--tc-hairline",
     "--tc-icon-muted",
     "--tc-line-height-normal",
-    "--tc-line-height-snug",
     "--tc-pill-font-size",
     "--tc-pill-font-weight",
     "--tc-pill-h",
@@ -164,7 +168,6 @@
     "--tc-text-placeholder",
     "--tc-text-primary",
     "--tc-text-secondary",
-    "--tc-text-strong",
     "--tc-tone-amber-solid",
     "--tc-tone-teal-solid",
     "--tc-tone-violet-solid",
@@ -224,9 +227,11 @@
    ]
   }
  ],
- "changelog": [],
+ "changelog": [
+  "**Trust & calibration**, from THEMIS and built domain-neutral: - claims and their reliability: `tc-claim-answer`, `tc-verification-queue`, `tc-reflection-gate`, `tc-reliance-gauge`, `tc-disagreement-banner`, `tc-synthesis-notes`; - where outputs came from: `tc-lineage-graph`, `tc-validity-badge`, `tc-provenance-summary`, `tc-correction-propagation`, `tc-attestation-check`, `tc-run-manifest`; - policy and control: `tc-policy-simulator`, `tc-gate-config`, `tc-coverage-matrix`, `tc-kill-switch`, `tc-playbook-canvas`."
+ ],
  "size": {
-  "min": 31102,
-  "gzip": 9415
+  "min": 32572,
+  "gzip": 9997
  }
 }

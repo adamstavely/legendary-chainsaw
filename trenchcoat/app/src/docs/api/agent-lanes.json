@@ -127,7 +127,6 @@
    "ui": "al",
    "cssProperties": [],
    "tokens": [
-    "--tc-accent",
     "--tc-accent-text",
     "--tc-action-ghost-bg-hover",
     "--tc-action-ghost-fg",
@@ -182,7 +181,6 @@
     "--tc-font-size-xs",
     "--tc-font-weight-medium",
     "--tc-font-weight-regular",
-    "--tc-font-weight-semibold",
     "--tc-hairline",
     "--tc-line-height-normal",
     "--tc-line-height-snug",
@@ -226,6 +224,7 @@
     "--tc-tooltip-px",
     "--tc-tooltip-py",
     "--tc-tooltip-radius",
+    "--tc-tracking-normal",
     "--tc-tray-inset",
     "--tc-tray-radius"
    ]
@@ -327,7 +326,7 @@
   "agent-lanes `rate`: how fast its clock runs, in clock ms per real ms (0 with `now`, 1 without – as before)."
  ],
  "size": {
-  "min": 42302,
-  "gzip": 12521
+  "min": 43710,
+  "gzip": 13025
  }
 }

@@ -95,7 +95,7 @@ describe("tc-extraction-review", () => {
     const el = await fixture<TcExtractionReview>(html`<tc-extraction-review threshold="0.95" confirm-label="Send to accounts" .fields=${FIELDS}></tc-extraction-review>`);
     expect(el.querySelectorAll(".ui-xrev__low")).toHaveLength(4);
     expect(el.querySelector(".ui-xrev__confirm")!.textContent).toBe("Send to accounts");
-    expect(el.querySelector(".ui-xrev__title")!.textContent).toBe("Review extracted fields");
+    expect(el.querySelector(".tc-head__title")!.textContent).toBe("Review extracted fields");
   });
 
   test("boxes in page pixels, placed in percent; the active field's is highlighted with its name", async () => {
@@ -320,13 +320,13 @@ describe("tc-extraction-review", () => {
     await settle();
     const el = host.querySelector("tc-extraction-review")!;
     expect(el.classList.contains("consumer")).toBe(true);
-    expect(el.querySelector(".ui-xrev__title")!.textContent).toBe("Run 1");
+    expect(el.querySelector(".tc-head__title")!.textContent).toBe("Run 1");
     await act(async () => btn(el, "Accept Invoice number").click());
     expect(onFieldsChange).toHaveBeenCalledWith([expect.objectContaining({ id: "number", status: "accepted" })], expect.objectContaining({ id: "number" }), "accept");
     await act(async () => draw(2));
     await settle();
     expect(el.fields[0].status).toBe("accepted");
-    expect(el.querySelector(".ui-xrev__title")!.textContent).toBe("Run 2");
+    expect(el.querySelector(".tc-head__title")!.textContent).toBe("Run 2");
     el.querySelector<HTMLButtonElement>(".ui-xrev__confirm")!.click();
     expect(onConfirm).toHaveBeenCalledWith([expect.objectContaining({ status: "accepted" })]);
     await act(async () => root.unmount());

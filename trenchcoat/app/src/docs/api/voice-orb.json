@@ -114,6 +114,7 @@
     "--tc-focus-ring",
     "--tc-focus-ring-offset",
     "--tc-focus-ring-width",
+    "--tc-font-sans",
     "--tc-font-size-md",
     "--tc-font-weight-medium",
     "--tc-line-height-normal",
@@ -146,7 +147,7 @@
   "`tc-voice-mode` – a voice conversation: `tc-voice-orb` for the state, live captions that announce finished turns once, and Mute / Captions / Interrupt / End in a toolbar; Esc interrupts. The audio stays the app's."
  ],
  "size": {
-  "min": 16484,
-  "gzip": 6939
+  "min": 18615,
+  "gzip": 7526
  }
 }

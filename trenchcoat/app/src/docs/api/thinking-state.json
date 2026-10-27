@@ -221,7 +221,7 @@
   "thinking-state no longer reports `onOpenChange(true)` on mount when `open` is held false; date-range-picker doesn't flash its \"Last 30 days\" stand-in before reading today; memory-panel with `undoFor={Infinity}` keeps a failure message instead of clearing it at once; dropzone keeps focus on a row while another row folds away (the React version lost it in real browsers)."
  ],
  "size": {
-  "min": 37663,
-  "gzip": 9689
+  "min": 39567,
+  "gzip": 10157
  }
 }

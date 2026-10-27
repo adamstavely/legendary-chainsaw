@@ -4,6 +4,7 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { keyed } from "lit/directives/keyed.js";
 import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController, rescueFocus, SmoothHeightController } from "./internal/controllers";
 import type { Look } from "./internal/look";
 
@@ -107,6 +108,9 @@ const avatar = (author: CommentAuthor, look: Look) => {
 };
 
 let uidCount = 0;
+
+// The header icon: a speech bubble with lines of text (comments)
+const commentsIcon = svg`<path d="M21 15a2 2 0 0 1-2 2H8l-4 4V5a2 2 0 0 1 2-2h13a2 2 0 0 1 2 2z"></path><path d="M8 8h9M8 12h6"></path>`;
 
 /**
  * A comment feed with filters, sort, runnable /edit commands, resolving and a composer.
@@ -523,12 +527,13 @@ export class TcCommentsPanel extends TcElement {
         </ul>
       </div>`;
     return html`
-      <header class="ui-cp__head">
-        <h3 class="ui-cp__title">${this.heading}</h3>
-        ${this.closable
+      ${cardHead({
+        icon: commentsIcon,
+        title: this.heading,
+        aside: this.closable
           ? html`<button type="button" class="ui-cp__icon-btn" aria-label=${`Close ${this.heading.toLowerCase()}`} @click=${() => this.emit("tc-close", null)}>${icon("close", look)}</button>`
-          : nothing}
-      </header>
+          : nothing,
+      })}
       ${clean ? rows : html`<div class="ui-cp__card">${rows}</div>`}
       <form
         class="ui-cp__composer"
@@ -574,7 +579,7 @@ export class TcCommentsPanel extends TcElement {
   padding: var(--tc-tray-inset);
   border-radius: var(--tc-tray-radius);
   background: var(--tc-surface-tray);
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--tc-font-sans);
   color: var(--tc-text-primary);
   -webkit-font-smoothing: antialiased;
 }
@@ -602,29 +607,22 @@ export class TcCommentsPanel extends TcElement {
   -webkit-font-smoothing: antialiased;
 }
 [data-ui="cp"] *, [data-ui="cp"] *::before, [data-ui="cp"] *::after { box-sizing: border-box; }
-:where([data-look="standard"], [data-look="standard"] *)[data-ui="cp"] button { margin: 0; font: inherit; color: inherit; cursor: pointer; }
+/* The reset stays at element specificity, so the buttons' own type wins */
+:where([data-look="standard"], [data-look="standard"] *):where([data-ui="cp"]) button { margin: 0; font: inherit; color: inherit; cursor: pointer; }
 [data-ui="cp"] button:focus-visible { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
-:where([data-look="standard"], [data-look="standard"] *).ui-cp__head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  min-height: 46px;
-  padding: var(--tc-space-1-5) var(--tc-space-2-5) var(--tc-space-1-5) var(--tc-space-4-5);
-}
-:where([data-look="standard"], [data-look="standard"] *).ui-cp__title { margin: 0; font-size: var(--tc-font-size-lg-plus); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-relaxed); }
 :where([data-look="standard"], [data-look="standard"] *).ui-cp__icon-btn {
   display: grid;
   place-items: center;
-  width: 28px;
-  height: 28px;
+  width: var(--tc-control-h-sm);
+  height: var(--tc-control-h-sm);
   padding: 0;
   border: 0;
-  border-radius: var(--tc-radius-md);
+  border-radius: var(--tc-control-radius-sm);
   background: transparent;
-  color: var(--tc-text-muted) !important;
+  color: var(--tc-action-ghost-fg) !important;
   transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard);
 }
-:where([data-look="standard"], [data-look="standard"] *).ui-cp__icon-btn:hover { background: var(--tc-fill-hover); color: var(--tc-text-primary) !important; }
+:where([data-look="standard"], [data-look="standard"] *).ui-cp__icon-btn:hover { background: var(--tc-action-ghost-bg-hover); color: var(--tc-text-primary) !important; }
 :where([data-look="standard"], [data-look="standard"] *).ui-cp__card {
   overflow: hidden;
   border-radius: var(--tc-card-radius);
@@ -736,28 +734,19 @@ export class TcCommentsPanel extends TcElement {
 :where([data-look="clean"], [data-look="clean"] *):where([data-ui="cp"]) svg { display: block; flex: none; }
 :where([data-look="clean"], [data-look="clean"] *).ui-cp__glyph { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.1; stroke-linecap: round; stroke-linejoin: round; }
 :where([data-look="clean"], [data-look="clean"] *).ui-cp__glyph[data-solid] { fill: currentColor; stroke: none; }
-/* Heading row */
-:where([data-look="clean"], [data-look="clean"] *).ui-cp__head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--tc-space-3);
-  padding: var(--tc-space-3) var(--tc-space-3) 0 var(--tc-space-4);
-}
-:where([data-look="clean"], [data-look="clean"] *).ui-cp__title { margin: 0; font-size: var(--tc-font-size-lg-plus); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-loose); color: var(--tc-text-strong); }
 /* Ghost icon button */
 :where([data-look="clean"], [data-look="clean"] *).ui-cp__icon-btn {
   display: grid;
   place-items: center;
   flex: none;
-  width: 28px;
-  height: 28px;
-  border-radius: var(--tc-radius-sm);
+  width: var(--tc-control-h-md);
+  height: var(--tc-control-h-md);
+  border-radius: var(--tc-control-radius-md);
   color: var(--tc-icon-muted);
   transition: background-color var(--tc-duration-quick) var(--tc-ease-standard), color var(--tc-duration-quick) var(--tc-ease-standard);
 }
 :where([data-look="clean"], [data-look="clean"] *).ui-cp__icon-btn:hover,
-:where([data-look="clean"], [data-look="clean"] *).ui-cp__icon-btn[aria-expanded="true"] { background: var(--tc-fill-subtle); color: var(--tc-text-primary); }
+:where([data-look="clean"], [data-look="clean"] *).ui-cp__icon-btn[aria-expanded="true"] { background: var(--tc-action-ghost-bg-hover); color: var(--tc-text-primary); }
 /* Filter tabs: the button-switch look */
 :where([data-look="clean"], [data-look="clean"] *).ui-cp__bar {
   display: flex;
@@ -1103,7 +1092,6 @@ export class TcCommentsPanel extends TcElement {
 }
 /* Narrow: tighter edges, smaller tab gaps */
 @container (max-width: 360px) {
-:where([data-look="clean"], [data-look="clean"] *).ui-cp__head { padding-left: var(--tc-space-3-5); }
 :where([data-look="clean"], [data-look="clean"] *).ui-cp__bar { padding-left: var(--tc-space-3-5); padding-right: var(--tc-space-2-5); }
 :where([data-look="clean"], [data-look="clean"] *).ui-cp__tabs { gap: var(--tc-space-1); }
 :where([data-look="clean"], [data-look="clean"] *).ui-cp__tab { padding: var(--tc-space-1) var(--tc-space-2); }

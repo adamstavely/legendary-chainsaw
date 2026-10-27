@@ -27,17 +27,18 @@ take it back early. Destructive actions can never be allowed for always.
 
 ## Anatomy
 
-1. **Request** `.ui-pr__head` – the agent's avatar, “who wants to do what”, the target and the risk pill
-2. **Reason** `.ui-pr__why` – why the agent needs it, in its own words
-3. **Preview** `.ui-pr__preview` – what will happen, with a count and “N more”
-4. **How long** `.ui-pr__scopes` – just once, for a while or always
-5. **Answer** `.ui-pr__buttons` – Deny and Allow, with their keys
+1. **Header** `.tc-head` – a key icon and “Permission”, with the risk pill at the right
+2. **Request** `.ui-pr__head` – the agent's avatar, “who wants to do what” and the target
+3. **Reason** `.ui-pr__why` – why the agent needs it, in its own words
+4. **Preview** `.ui-pr__preview` – what will happen, with a count and “N more”
+5. **How long** `.ui-pr__scopes` – just once, for a while or always
+6. **Answer** `.ui-pr__buttons` – Deny and Allow, with their keys
 
 ## Looks
 
-Standard puts the request on a white card inside a gray tray, with the answer on the tray below; the scope picker is a
-segmented track with the chosen option raised in white, and the buttons are large. Clean is one quiet white card,
-smaller and lighter: the title is in the secondary colour with the names in strong text, the scopes are separate
+Standard puts the header on a gray tray and the request on a white card below it, with the answer on the tray under that; the scope picker is a
+segmented track with the chosen option raised in white, and the buttons are large. Clean is one quiet white card
+with the header as its first row, smaller and lighter: the title is in the secondary colour with the names in strong text, the scopes are separate
 chips and the buttons are medium. Both fold to the same one-line result, with a thin draining bar for a timed right.
 
 ## Keyboard

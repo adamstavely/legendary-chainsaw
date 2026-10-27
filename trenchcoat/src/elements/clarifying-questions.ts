@@ -4,6 +4,7 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { live } from "lit/directives/live.js";
 import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController } from "./internal/controllers";
 
 /*
@@ -365,11 +366,11 @@ export class TcClarifyingQuestions extends TcElement {
   }
 
   private renderSent() {
-    return html`<div class="ui-clq__card" tabindex="-1" aria-labelledby=${`${this.uid}-sent`} role="group">
-      <div class="ui-clq__head">
-        <span class="ui-clq__icon ui-clq__icon--sent">${glyph(icons.sent)}</span>
-        <div class="ui-clq__titles"><span class="ui-clq__title" id=${`${this.uid}-sent`}>Answers sent</span></div>
-      </div>
+    const head = cardHead({ icon: svg`<path d=${icons.sent}></path>`, title: "Answers sent", id: `${this.uid}-sent` });
+    const clean = this.resolvedLook === "clean";
+    // The card is the focus target once sent; in Standard the header sits on the tray above it
+    return html`${clean ? nothing : head}<div class="ui-clq__card" tabindex="-1" aria-labelledby=${`${this.uid}-sent`} role="group">
+      ${clean ? head : nothing}
       <dl class="ui-clq__answers">
         ${this.questions.map((q) => {
           const a = this.answerOf(q);
@@ -395,16 +396,10 @@ export class TcClarifyingQuestions extends TcElement {
     const status = html`<span class="ui-clq__sr" role="status">${this.said}</span>`;
     if (this.sent) return html`${this.renderSent()}${status}`;
     const clean = this.resolvedLook === "clean";
-    const card = html`<div class="ui-clq__head">
-        <span class="ui-clq__icon">${glyph(icons.ask)}</span>
-        <div class="ui-clq__titles">
-          <span class="ui-clq__title" id=${`${this.uid}-title`}>${this.heading}</span>
-          ${this.intro ? html`<p class="ui-clq__intro">${this.intro}</p>` : nothing}
-        </div>
-      </div>
-      <div class="ui-clq__list">${this.questions.map((q, i) => this.renderQuestion(q, i))}</div>`;
+    const head = cardHead({ icon: svg`<path d=${icons.ask}></path>`, title: this.heading, subtitle: this.intro, id: `${this.uid}-title` });
+    const list = html`<div class="ui-clq__list">${this.questions.map((q, i) => this.renderQuestion(q, i))}</div>`;
     return html`<div class="ui-clq__form" role="form" aria-labelledby=${`${this.uid}-title`}>
-        ${clean ? html`<div class="ui-clq__card">${card}${this.renderFoot()}</div>` : html`<div class="ui-clq__card">${card}</div>${this.renderFoot()}`}
+        ${clean ? html`<div class="ui-clq__card">${head}${list}${this.renderFoot()}</div>` : html`${head}<div class="ui-clq__card">${list}</div>${this.renderFoot()}`}
       </div>
       ${status}`;
   }
@@ -415,9 +410,8 @@ export class TcClarifyingQuestions extends TcElement {
   position: relative;
   box-sizing: border-box;
   width: 100%;
-  /* The question number's size (the answers line up after it) and the heading icon's */
+  /* The question number's size (the answers line up after it) */
   --tc-clarifying-questions-num: 20px;
-  --tc-clarifying-questions-icon: 28px;
   max-width: 520px;
   padding: var(--tc-tray-inset);
   border-radius: var(--tc-tray-radius);
@@ -436,7 +430,6 @@ export class TcClarifyingQuestions extends TcElement {
   box-sizing: border-box;
   width: 100%;
   --tc-clarifying-questions-num: 20px;
-  --tc-clarifying-questions-icon: 24px;
   max-width: 500px;
   container-type: inline-size;
   font-family: var(--tc-font-sans);
@@ -459,15 +452,6 @@ export class TcClarifyingQuestions extends TcElement {
 :where([data-look="standard"], [data-look="standard"] *).ui-clq__card { overflow: hidden; border-radius: var(--tc-card-radius); background: var(--tc-surface-on-tray); box-shadow: var(--tc-card-shadow); }
 :where([data-look="clean"], [data-look="clean"] *).ui-clq__card { overflow: hidden; border-radius: var(--tc-card-radius); background: var(--tc-surface-raised); box-shadow: var(--tc-shadow-raised); }
 .ui-clq__card:focus-visible { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
-.ui-clq__head { display: flex; align-items: flex-start; gap: var(--tc-space-2-5); padding: var(--tc-space-3-5) var(--tc-space-4) 0; }
-.ui-clq__icon { display: grid; flex: none; place-items: center; width: var(--tc-clarifying-questions-icon); height: var(--tc-clarifying-questions-icon); border-radius: var(--tc-radius-md); background: var(--tc-accent-subtle); color: var(--tc-accent-text); }
-:where([data-look="clean"], [data-look="clean"] *).ui-clq__icon { border-radius: var(--tc-radius-sm); background: none; }
-.ui-clq__icon--sent { background: var(--tc-status-success-bg); color: var(--tc-status-success-fg); }
-.ui-clq__titles { display: grid; gap: var(--tc-space-0-5); min-width: 0; padding-top: var(--tc-space-0-5); }
-.ui-clq__title { font-weight: var(--tc-font-weight-medium); color: var(--tc-text-primary); }
-:where([data-look="standard"], [data-look="standard"] *).ui-clq__title { font-weight: var(--tc-font-weight-strong); }
-:where([data-look="clean"], [data-look="clean"] *).ui-clq__title { color: var(--tc-text-strong); }
-.ui-clq__intro { font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-snug); color: var(--tc-text-muted); text-wrap: pretty; }
 /* ----- The questions ----- */
 .ui-clq__list { display: grid; padding: var(--tc-space-2) var(--tc-space-2) var(--tc-space-2); }
 .ui-clq__q { display: grid; gap: var(--tc-space-2); padding: var(--tc-space-3) var(--tc-space-2) var(--tc-space-3-5); border-radius: var(--tc-radius-lg); transition: background-color var(--tc-duration-fast) var(--tc-ease-standard); }
@@ -541,7 +525,7 @@ export class TcClarifyingQuestions extends TcElement {
 .ui-clq__btn--primary:active { background: var(--tc-action-primary-bg-active); }
 .ui-clq__kbd { display: grid; place-items: center; min-width: var(--tc-kbd-h); height: var(--tc-kbd-h); padding: 0 var(--tc-kbd-px); border-radius: var(--tc-kbd-radius); background: var(--tc-kbd-on-inverse-bg); font-family: inherit; font-size: var(--tc-kbd-font-size); font-weight: var(--tc-kbd-font-weight); line-height: var(--tc-line-height-none); color: inherit; }
 /* ----- Sent: the answers as the reply ----- */
-.ui-clq__answers { display: grid; padding: var(--tc-space-2) var(--tc-space-4) var(--tc-space-3-5) calc(var(--tc-space-4) + var(--tc-clarifying-questions-icon) + var(--tc-space-2-5)); }
+.ui-clq__answers { display: grid; padding: var(--tc-space-2) var(--tc-space-4) var(--tc-space-3-5) calc(var(--tc-space-4) + var(--tc-head-icon-size) + var(--tc-head-gap)); }
 .ui-clq__answer { display: grid; gap: var(--tc-space-0-5); padding: var(--tc-space-2) 0; }
 .ui-clq__answer + .ui-clq__answer { border-top: var(--tc-hairline) solid var(--tc-divider); }
 .ui-clq__answer dt { font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-snug); color: var(--tc-text-muted); }

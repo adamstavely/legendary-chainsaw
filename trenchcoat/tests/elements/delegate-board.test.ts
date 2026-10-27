@@ -38,8 +38,8 @@ for (const look of ["standard", "clean"] as const) {
       const el = await fixture<TcDelegateBoard>(html`<tc-delegate-board look=${look} heading="Hand off" .agents=${agents} .tasks=${task(null)} .now=${0}></tc-delegate-board>`);
       expect(el.dataset.ui).toBe("db");
       expect(el.dataset.look).toBe(look);
-      expect(el.querySelector(".ui-db__title")!.textContent).toBe("Hand off");
-      expect(!!el.querySelector(look === "clean" ? ".ui-db__card > .ui-db__bar" : ":scope > .ui-db__bar")).toBe(true);
+      expect(el.querySelector(".tc-head__title")!.textContent).toBe("Hand off");
+      expect(!!el.querySelector(look === "clean" ? ".ui-db__card > .tc-head" : ":scope > .tc-head")).toBe(true);
     });
 
     test("a listening tc-assign doesn't freeze the board, and `tasks` wins once it changes", async () => {

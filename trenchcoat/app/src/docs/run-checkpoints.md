@@ -26,7 +26,7 @@ commit to it.
 
 ## Anatomy
 
-1. **Head** `.ui-rcp__head` – how many checkpoints, the run's status and its goal
+1. **Header** `.tc-head` – the run's goal, how many checkpoints, and the run's status
 2. **Timeline** `.ui-rcp__strip` – the run as a line, a dot per checkpoint; what going back discards is hatched
 3. **Step** `.ui-rcp__row` – one checkpoint: its number, the step, a detail, the tool and when it was taken
 4. **Details** `.ui-rcp__panel` – what the picked checkpoint captured and what going back discards

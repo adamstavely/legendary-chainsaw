@@ -26,7 +26,7 @@ question.
 
 ## Anatomy
 
-1. **Header** `.ui-bc__head` – the title and the grand total with its unit
+1. **Header** – the shared card header: a boxed chart icon, the title, and the grand total `.ui-bc__total` with its unit
 2. **Pickers** `.ui-bc__controls` – Measure, Slice and Segment
 3. **Bar** `.ui-bc__col` – one slice value, stacked by segment; hover or focus shows its breakdown
 4. **Breakdown** `.ui-bc__tooltip` – the bar's total and each segment's share, largest first

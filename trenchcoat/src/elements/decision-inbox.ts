@@ -3,12 +3,13 @@ import { property, state } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController } from "./internal/controllers";
 
 /*
  * <tc-decision-inbox> – the Lit port of src/components/decision-inbox.tsx: open decisions with two quick actions
  * each. Answering a decision confirms it briefly, then folds it away and the count goes down. Standard sits in a gray
- * tray with a white card; Clean is one white card with a heading row and solid glyphs.
+ * tray with the header above a white card; Clean is one white card with the header as its first row and solid glyphs.
  *
  *   <tc-decision-inbox .decisions=${[{ id: "d1", title: "Merge it?", primary: "Merge", secondary: "Hold" }]}>
  *   </tc-decision-inbox>
@@ -39,10 +40,8 @@ export type DecisionAnswersChangeEvent = CustomEvent<DecisionAnswersChange>;
 const CONFIRM_MS = 1100;
 
 // Solid glyphs – the cut-out mark takes the surface colour (CSS), so it works in dark mode too
-const alertIcon = (clean: boolean) =>
-  clean
-    ? html`<svg class="ui-di__glyph" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">${svg`<path d="M6.7 2.3a1.5 1.5 0 0 1 2.6 0l5.4 9.4A1.5 1.5 0 0 1 13.4 14H2.6a1.5 1.5 0 0 1-1.3-2.3Z" fill="currentColor"></path><path class="ui-di__cut" d="M8 5.8v3.2" stroke-width="1.4" stroke-linecap="round" fill="none"></path><circle class="ui-di__cut-dot" cx="8" cy="11.3" r="0.8"></circle>`}</svg>`
-    : html`<svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">${svg`<path d="M6.7 2.3a1.5 1.5 0 0 1 2.6 0l5.4 9.4A1.5 1.5 0 0 1 13.4 14H2.6a1.5 1.5 0 0 1-1.3-2.3Z" fill="currentColor"></path><path class="ui-di__cut" d="M8 5.6v3.6" stroke-width="1.5" stroke-linecap="round" fill="none"></path><circle class="ui-di__cut-dot" cx="8" cy="11.4" r="0.85"></circle>`}</svg>`;
+/** An inbox: decisions waiting for a person (Lucide inbox, ISC) */
+const inboxIcon = svg`<polyline points="22 12 16 12 14 15 10 15 8 12 2 12"></polyline><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path>`;
 const doneIcon = (clean: boolean) =>
   clean
     ? html`<svg class="ui-di__glyph" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">${svg`<circle cx="8" cy="8" r="6.5" fill="currentColor"></circle><path class="ui-di__cut" d="m5.3 8.2 1.8 1.8 3.6-3.8" fill="none" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path>`}</svg>`
@@ -59,6 +58,8 @@ let instances = 0;
 export class TcDecisionInbox extends TcElement {
   static override ui = "di";
 
+  /** The inbox's name, in the header; the line under it says how many need input */
+  @property() accessor heading = "Decisions";
   /** The decisions to show – new ones join as they're passed, answered ones fold away */
   @property({ attribute: false }) accessor decisions: InboxDecision[] = [];
   /** The answers given so far, by decision id. Answers present on first render start folded away. Changed by the
@@ -180,12 +181,10 @@ export class TcDecisionInbox extends TcElement {
   protected override render() {
     const clean = this.resolvedLook === "clean";
     const open = this.openCount;
+    const count = open > 0 ? `${open} ${open === 1 ? "needs" : "need"} your input` : "All caught up";
     return html`
-      <header class="ui-di__head" aria-live="polite">
-        ${open > 0
-          ? html`${alertIcon(clean)}<span>${open} ${open === 1 ? "needs" : "need"} your input</span>`
-          : html`${doneIcon(clean)}<span>All caught up</span>`}
-      </header>
+      ${cardHead({ icon: inboxIcon, title: this.heading, subtitle: count })}
+      <span class="ui-di__sr" role="status">${count}</span>
       <div class="ui-di__card">
         ${repeat(
           this.decisions,
@@ -262,7 +261,7 @@ export class TcDecisionInbox extends TcElement {
   color: var(--tc-text-primary);
   -webkit-font-smoothing: antialiased;
 }
-/* Like the Chat Composer: a tray with the heading, the card sits on top of it */
+/* Like the Chat Composer: a tray with the header, the card sits on top of it */
 :where([data-look="standard"], [data-look="standard"] *)[data-ui="di"] {
   background: var(--tc-surface-tray);
   padding: var(--tc-tray-inset);
@@ -288,44 +287,16 @@ export class TcDecisionInbox extends TcElement {
 .ui-di__done:focus:not(:focus-visible) { outline: none; }
 /* Solid glyphs: the mark is cut out in the colour of the surface under it */
 .ui-di__cut { fill: none; stroke: var(--tc-surface-raised); }
-.ui-di__cut-dot { fill: var(--tc-surface-raised); }
+.ui-di__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 :where([data-look="standard"], [data-look="standard"] *)[data-ui="di"] .ui-di__cut { stroke: var(--tc-surface-on-tray); }
-:where([data-look="standard"], [data-look="standard"] *)[data-ui="di"] .ui-di__cut-dot { fill: var(--tc-surface-on-tray); }
 :where([data-look="clean"], [data-look="clean"] *).ui-di__glyph { width: 16px; height: 16px; }
-:where([data-look="standard"], [data-look="standard"] *).ui-di__head {
-  display: flex;
-  align-items: center;
-  gap: var(--tc-space-2);
-  padding: var(--tc-space-3) var(--tc-space-4-5) var(--tc-space-2-5);
-  font-size: var(--tc-font-size-lg);
-  font-weight: var(--tc-font-weight-medium);
-  line-height: var(--tc-line-height-normal);
-  color: var(--tc-status-warning-fg);
-  transition: color var(--tc-duration-slow) var(--tc-ease-standard);
-}
-:where([data-look="standard"], [data-look="standard"] *)[data-ui="di"][data-clear] .ui-di__head { color: var(--tc-status-success-fg); }
 :where([data-look="standard"], [data-look="standard"] *).ui-di__card {
   overflow: hidden;
   background: var(--tc-surface-on-tray);
   border-radius: var(--tc-card-radius);
   box-shadow: var(--tc-card-shadow);
 }
-/* The heading row at the top of the card: an amber mark while something waits, a green one when all is done */
-:where([data-look="clean"], [data-look="clean"] *).ui-di__head {
-  display: flex;
-  align-items: center;
-  gap: var(--tc-space-2);
-  min-height: 44px;
-  padding: 0 var(--tc-space-4);
-  border-bottom: var(--tc-hairline) solid var(--tc-divider);
-  font-size: var(--tc-font-size-md);
-  font-weight: var(--tc-font-weight-medium);
-  line-height: var(--tc-line-height-normal);
-  color: var(--tc-text-primary);
-}
-:where([data-look="clean"], [data-look="clean"] *).ui-di__head .ui-di__glyph { color: var(--tc-status-warning-solid); animation: ui-di-pop var(--tc-duration-slow) var(--tc-ease-move) both; }
-:where([data-look="clean"], [data-look="clean"] *)[data-ui="di"][data-clear] .ui-di__head .ui-di__glyph { color: var(--tc-status-success-fg); }
-:where([data-look="clean"], [data-look="clean"] *).ui-di__head span { animation: ui-di-in var(--tc-duration-slow) var(--tc-ease-move) both; }
+/* The header (cardHead): the count of open decisions – on the tray in Standard, the card's first row in Clean */
 /* Rows fold away with a height transition once answered */
 .ui-di__row {
   display: grid;
@@ -342,32 +313,36 @@ export class TcDecisionInbox extends TcElement {
   display: block;
   width: 100%;
   margin: 0;
-  font-weight: var(--tc-font-weight-medium);
-  line-height: var(--tc-line-height-normal);
+  font-size: var(--tc-title-font-size);
+  font-weight: var(--tc-title-font-weight);
+  line-height: var(--tc-title-line-height);
+  letter-spacing: var(--tc-title-tracking);
+  color: var(--tc-title-color);
   text-align: left;
 }
 :where([data-look="standard"], [data-look="standard"] *).ui-di__title {
   padding: 0;
   border: 0;
   background: none;
-  font-size: var(--tc-font-size-lg);
-  color: var(--tc-text-primary);
 }
+/* A folded decision is a row, not a title: the body size, muted */
+.ui-di__title--folded { letter-spacing: var(--tc-tracking-normal); }
 :where([data-look="standard"], [data-look="standard"] *).ui-di__title--folded {
+  font-size: var(--tc-font-size-lg);
+  font-weight: var(--tc-font-weight-medium);
+  line-height: var(--tc-line-height-normal);
   color: var(--tc-text-muted);
   transition: color var(--tc-duration-fast) var(--tc-ease-standard);
 }
 :where([data-look="standard"], [data-look="standard"] *).ui-di__title--folded:hover { color: var(--tc-text-secondary); }
 :where([data-look="clean"], [data-look="clean"] *).ui-di__item { padding: var(--tc-space-3-5) var(--tc-space-4) var(--tc-space-4); }
 :where([data-look="clean"], [data-look="clean"] *).ui-di__item:not([data-open]) { padding: 0; }
-:where([data-look="clean"], [data-look="clean"] *).ui-di__title {
-  font-size: var(--tc-font-size-md);
-  color: var(--tc-text-strong);
-}
 /* A folded decision: one muted line that opens on click */
 :where([data-ui="di"]) :where([data-look="clean"], [data-look="clean"] *).ui-di__title--folded {
   padding: var(--tc-space-3-5) var(--tc-space-4);
+  font-size: var(--tc-font-size-md);
   font-weight: var(--tc-font-weight-regular);
+  line-height: var(--tc-line-height-normal);
   color: var(--tc-text-muted);
   transition: color var(--tc-duration-fast) var(--tc-ease-standard), background-color var(--tc-duration-fast) var(--tc-ease-standard);
 }
@@ -454,12 +429,8 @@ export class TcDecisionInbox extends TcElement {
 @keyframes ui-di-in {
   from { opacity: 0; transform: translateY(3px); }
 }
-@keyframes ui-di-pop {
-  from { opacity: 0; transform: scale(0.6); }
-}
 /* Narrow cards (phones) */
 @container (max-width: 340px) {
-:where([data-look="clean"], [data-look="clean"] *).ui-di__head { padding: 0 var(--tc-space-3-5); }
 :where([data-look="clean"], [data-look="clean"] *).ui-di__item { padding: var(--tc-space-3) var(--tc-space-3-5) var(--tc-space-3-5); }
 :where([data-ui="di"]) :where([data-look="clean"], [data-look="clean"] *).ui-di__title--folded { padding: var(--tc-space-3-5) var(--tc-space-3-5); }
 :where([data-look="clean"], [data-look="clean"] *).ui-di__empty { padding: var(--tc-space-3-5); }
@@ -475,9 +446,7 @@ export class TcDecisionInbox extends TcElement {
 .ui-di__row,
 .ui-di__body { transition: none; }
 .ui-di__done,
-.ui-di__empty,
-.ui-di__head .ui-di__glyph,
-.ui-di__head span { animation: none !important; }
+.ui-di__empty { animation: none !important; }
 }
 `;
 }

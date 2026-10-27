@@ -232,6 +232,8 @@ export class TcOtpInput extends TcElement {
   }
 
   formResetCallback() {
+    this.checks.forEach((check) => check.abort());
+    this.checks.clear();
     this.value = this.initialValue ?? "";
     this.idx = 0;
     this.ownStatus = "idle";

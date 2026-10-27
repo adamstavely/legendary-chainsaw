@@ -4,6 +4,7 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { repeat } from "lit/directives/repeat.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController, RowWindowController } from "./internal/controllers";
 import "./validity-badge";
 import type { ValidityProfile, ValidityProfileName, ValidityTime } from "./validity-badge";
@@ -84,7 +85,8 @@ const escape = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 /* ---------- Icons (Lucide, ISC – lucide.dev) ---------- */
 const glyph = (d: TemplateResult, cls = "ui-rti__glyph") => html`<svg class=${cls} viewBox="0 0 24 24" aria-hidden="true">${d}</svg>`;
 /* A stack of pages with a magnifier – what was retrieved */
-const mark = glyph(svg`<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h4"></path><path d="M9 8h6M9 12h3"></path><circle cx="16.5" cy="16.5" r="3"></circle><path d="M18.7 18.7L21 21"></path>`, "ui-rti__mark-svg");
+/* The header's icon: a page under a magnifier */
+const mark = svg`<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h4"></path><path d="M9 8h6M9 12h3"></path><circle cx="16.5" cy="16.5" r="3"></circle><path d="M18.7 18.7L21 21"></path>`;
 const openIcon = glyph(svg`<path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"></path>`);
 const missIcon = glyph(svg`<circle cx="12" cy="12" r="8.5"></circle><path d="M8.5 12h7"></path>`);
 
@@ -423,11 +425,12 @@ export class TcRetrievalInspector extends TcElement {
       ["Missed", String(this.misses.length), this.misses.length ? "missed" : undefined],
     ];
     return html`
-      <div class="ui-rti__bar-head">
-        <span class="ui-rti__mark">${mark}</span>
-        <span class="ui-rti__title" id=${titleId}>${this.heading}</span>
-        ${this.query ? html`<span class="ui-rti__query" title=${this.query}>“${this.query}”</span>` : nothing}
-      </div>
+      ${/* The header (.tc-head): on the tray in Standard, the card's first row in Clean */ cardHead({
+        icon: mark,
+        title: this.heading,
+        id: titleId,
+        subtitle: this.query ? html`<span class="ui-rti__query" title=${this.query}>“${this.query}”</span>` : undefined,
+      })}
       <div class="ui-rti__card">
         <dl class="ui-rti__stats">
           ${stats.map(([label, value, kind]) => html`<div class="ui-rti__stat" data-kind=${ifDefined(kind)}><dt>${label}</dt><dd>${value}</dd></div>`)}
@@ -489,7 +492,6 @@ export class TcRetrievalInspector extends TcElement {
   font-size: var(--tc-font-size-md);
   font-weight: var(--tc-font-weight-regular);
   line-height: var(--tc-line-height-normal);
-  letter-spacing: -0.006em;
   color: var(--tc-text-secondary);
   text-align: left;
   -webkit-font-smoothing: antialiased;
@@ -512,18 +514,11 @@ export class TcRetrievalInspector extends TcElement {
 .ui-rti__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .ui-rti__glyph { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 :where([data-look="clean"], [data-look="clean"] *) .ui-rti__glyph { stroke-width: 1.6; }
-/* ----- The header on the tray: what was asked ----- */
-.ui-rti__bar-head { display: flex; align-items: center; gap: var(--tc-space-2); min-width: 0; padding: var(--tc-space-1-5) var(--tc-space-1) var(--tc-space-2) var(--tc-space-3); }
-:where([data-look="clean"], [data-look="clean"] *).ui-rti__bar-head { padding: var(--tc-space-3) var(--tc-space-3-5) var(--tc-space-3) var(--tc-space-4); border-bottom: var(--tc-hairline) solid var(--tc-divider); }
-.ui-rti__mark { display: grid; flex: none; place-items: center; width: 16px; color: var(--tc-accent-text); }
-.ui-rti__mark-svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-:where([data-look="clean"], [data-look="clean"] *).ui-rti__mark-svg { stroke-width: 1.4; }
-.ui-rti__title { flex: none; font-weight: var(--tc-font-weight-semibold); color: var(--tc-text-strong); }
-:where([data-look="clean"], [data-look="clean"] *).ui-rti__title { font-weight: var(--tc-font-weight-medium); }
-.ui-rti__query { flex: 1; min-width: 0; overflow: hidden; color: var(--tc-text-muted); white-space: nowrap; text-overflow: ellipsis; }
+/* ----- The header: what was asked, under the title on one line ----- */
+.ui-rti__query { display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 /* ----- The card: the numbers, the filter, the list ----- */
 .ui-rti__card { overflow: hidden; border-radius: var(--tc-card-radius); background: var(--tc-surface-on-tray); box-shadow: var(--tc-card-shadow); }
-:where([data-look="clean"], [data-look="clean"] *).ui-rti__card { border-radius: 0 0 var(--tc-card-radius) var(--tc-card-radius); background: none; box-shadow: none; }
+:where([data-look="clean"], [data-look="clean"] *).ui-rti__card { border-top: var(--tc-hairline) solid var(--tc-divider); border-radius: 0 0 var(--tc-card-radius) var(--tc-card-radius); background: none; box-shadow: none; }
 .ui-rti__stats { display: grid; grid-auto-columns: minmax(0, 1fr); grid-auto-flow: column; padding: var(--tc-space-3) 0; border-bottom: var(--tc-hairline) solid var(--tc-divider); }
 .ui-rti__stat { display: grid; gap: var(--tc-space-0-5); min-width: 0; padding: 0 var(--tc-space-4); }
 .ui-rti__stat + .ui-rti__stat { border-left: var(--tc-hairline) solid var(--tc-divider); }

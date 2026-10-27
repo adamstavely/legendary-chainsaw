@@ -195,7 +195,8 @@
     "--tc-status-danger-bg",
     "--tc-status-danger-fg",
     "--tc-status-danger-solid",
-    "--tc-text-primary"
+    "--tc-text-primary",
+    "--tc-tracking-snug"
    ]
   }
  ],
@@ -240,7 +241,7 @@
   "Lit 3 web components: `tc-button`, `tc-combobox` and `tc-data-table` (the pilot), `tc-look-provider` for an app-wide default look, the shared controllers (row window, focus rescue, smooth height, off-screen, on-screen, ARIA forwarding, hotkeys, rolling numbers). Pixel-identical to the React components in both looks and themes."
  ],
  "size": {
-  "min": 18299,
-  "gzip": 6166
+  "min": 20407,
+  "gzip": 6755
  }
 }

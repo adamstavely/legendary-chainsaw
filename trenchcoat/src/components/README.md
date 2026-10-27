@@ -72,7 +72,6 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Mention Picker** (`mention-picker.tsx`) – The / and @ picker inside a composer – grouped results, arrow keys and Enter, and the pick lands as a chip
 - **Message Actions** (`message-actions.tsx`) – The quiet bar under an AI message – copy turns into a check, regenerate spins and unfolds a version switcher, thumbs pop and ask why, read aloud becomes a tiny equalizer
 - **Model Picker** (`model-picker.tsx`) – The model menu of an AI chat – point at a model and its speed, quality and cost bars fill, switch on extended thinking and its effort unfolds, while the tray rolls the first-token time and price
-- **Model Settings** (`model-settings.tsx`) – How the model should work – an analysis posture, where its knowledge comes from, sampling with presets and the instruction it follows
 - **Notification Stack** (`notification-stack.tsx`) – Notice cards stacked behind each other – dismiss the front one to reveal the next
 - **OTP Input** (`otp-input.tsx`) – The verification code field done right – a gliding focus ring, paste and SMS autofill, a calm shake on errors and a morph into Verified
 - **Parallel Attempts** (`parallel-attempts.tsx`) – An agent tries the same task several ways at once and the best one wins – every attempt races as a row with its model, approach and live bar, then gets a score; the best is marked and picked, and you can switch to another
@@ -114,5 +113,49 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Verification Queue** (`verification-queue.tsx`) – Every claim worth checking from a session in one queue – verified, can't verify, incorrect or dismissed, with its source, before anything is exported
 - **Voice Mode** (`voice-mode.tsx`) – A spoken conversation with the model – live transcript, listening and speaking states, interrupt, mute and end, with captions for every turn
 - **Writing Assistant** (`writing-assistant.tsx`) – AI chat card with a soft gradient glow, suggestions, streaming replies and live voice dictation
+
+- **Number Field** (`number-field.tsx`) – A bounded numeric input with native validation
+
+- **Slider Field** (`slider-field.tsx`) – A synchronized slider and numeric input
+
+- **Switch** (`switch.tsx`) – An accessible on/off setting
+
+- **Checkbox** (`checkbox.tsx`) – A form-associated boolean choice
+
+- **Radio Group** (`radio-group.tsx`) – A native keyboard-operated single choice
+
+- **Secret Field** (`secret-field.tsx`) – A masked credential input with an explicit reveal control
+
+- **Dialog** (`dialog.tsx`) – A native modal with interactive content and restored focus
+
+- **Tooltip** (`tooltip.tsx`) – Keyboard, pointer and touch help text
+
+- **Model Settings** (`model-settings.tsx`) – The parameters a model supports, explained, with presets, a value signature, incompatible-setting feedback and what differs from the defaults
+
+- **Instruction Editor** (`instruction-editor.tsx`) – System and developer instructions with variable chips, missing and unused warnings, an app-supplied token count, versions and a word diff
+
+- **Output Schema Builder** (`output-schema-builder.tsx`) – Build a structured-output schema as a tree beside a rendered preview of the answer – types visible, problems flagged on their rows – with raw JSON and the JSON Schema as tabs
+
+- **Tool Configuration** (`tool-configuration.tsx`) – A tool as its API reference entry: name as the title, signature and description, a doc table of parameters edited in place, an example call and the JSON Schema, with the approval it needs
+
+- **Knowledge Source Manager** (`knowledge-source-manager.tsx`) – Sources a knowledge base answers from – ingestion state and progress, docs and chunks, sync schedule, stale and duplicate warnings, and a handoff to chunk review
+
+- **Retrieval Settings** (`retrieval-settings.tsx`) – Chunking, top-k, a score threshold, keyword ↔ vector balance, reranking and metadata filters, edited on a picture of the pipeline, with the app's cost and latency
+
+- **Evaluation Dataset Editor** (`evaluation-dataset-editor.tsx`) – Edit an eval set's cases, checks, tags and splits, compare it with an earlier version, and import or export it as JSON Lines
+
+- **Model Routing** (`model-routing.tsx`) – Routing rules as a route with a fallback chain, target health, breakers and residency, and a route test that lights up the path taken
+
+- **Provider connection** (`provider-connection.tsx`) – A model provider connection read as a path – endpoint, credential, deployment – with each hop's health from an app-run test, the last check and the models it reports
+
+- **Configuration release control** (`configuration-release-control.tsx`) – A configuration version moving through environments: the pipeline, a gate on evidence and approvals, confirmed promote and rollback
+
+- **MCP connection manager** (`mcp-connection-manager.tsx`) – MCP servers at a glance – status and what each exposes; add one (transport, auth, test), inspect its tools, resources and prompts, connect, retry and remove
+
+- **Data handling policy** (`data-handling-policy.tsx`) – Organization data handling as a lifecycle – retention, logs and redaction, memory, training, deletion – led by the effective policy, with locked stages and deletion requests
+
+- **Conversation annotation** (`conversation-annotation.tsx`) – Label and redact spans in a conversation, rate turns, correct answers as a diff, and send the reviewed example to a dataset
+
+- **Multimodal input** (`multimodal-input.tsx`) – Attach mixed media with local previews, upload state, format limits, and token estimates.
 
 Live previews: run `npm run dev` and open the gallery.

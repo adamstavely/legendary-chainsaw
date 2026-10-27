@@ -27,7 +27,7 @@ judgement travels with the work instead of being mixed into what the AI said.
 
 ## Anatomy
 
-1. **Header** `.ui-syn__bar` – the heading, the “Written by you” tag and Export
+1. **Header** `.tc-head` – the icon, the heading, the “Written by you” tag and Export
 2. **List** `.ui-syn__section` – one of the lists, with its heading and count
 3. **Note** `.ui-syn__item` – the grip, the text, and Edit and Remove on hover or focus
 4. **Grip** `.ui-syn__handle` – moves the note from the keyboard

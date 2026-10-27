@@ -26,7 +26,7 @@ act on right away and then forget about.
 
 ## Anatomy
 
-1. **Header** `.ui-tp__head` – the heading and the done count
+1. **Header** `.tc-head` – the icon, the heading and the done count
 2. **Count** `.ui-tp__count` – “2/6 done”
 3. **Tip** `.ui-tp__tip` – a title, a short description and its action
 4. **Primary action** `.ui-tp__btn--primary` – the dark button, for the one tip that matters most

@@ -222,7 +222,6 @@
     "--tc-font-size-sm",
     "--tc-font-weight-medium",
     "--tc-font-weight-regular",
-    "--tc-font-weight-strong",
     "--tc-hairline",
     "--tc-icon-muted",
     "--tc-kbd-bg",
@@ -270,6 +269,7 @@
     "--tc-text-primary",
     "--tc-text-secondary",
     "--tc-text-strong",
+    "--tc-tracking-normal",
     "--tc-tray-inset",
     "--tc-tray-radius"
    ]
@@ -342,7 +342,7 @@
  ],
  "changelog": [],
  "size": {
-  "min": 46735,
-  "gzip": 12088
+  "min": 46976,
+  "gzip": 12575
  }
 }

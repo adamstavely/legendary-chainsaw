@@ -28,7 +28,7 @@ and the last decision can be undone.
 
 ## Anatomy
 
-1. **Header** `.ui-rvc__head` – the heading, progress (“12 of 20 reviewed”), the oldest wait and the Undo chip
+1. **Header** `.tc-head` – the icon, the heading, progress (“12 of 20 reviewed”), the oldest wait and the Undo chip
 2. **Filters** `.ui-rvc__filters` – All, High risk and Unsure, with counts
 3. **Queue** `.ui-rvc__list` – the waiting items, current one marked
 4. **Proposal** `.ui-rvc__proposal` – the fields, text, diff or plan to decide on

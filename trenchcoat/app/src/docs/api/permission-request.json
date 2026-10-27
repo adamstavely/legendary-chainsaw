@@ -166,6 +166,12 @@
     "--tc-avatar-radius-agent",
     "--tc-border-default",
     "--tc-border-selected",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
     "--tc-card-radius",
     "--tc-card-shadow",
     "--tc-control-font-size",
@@ -243,6 +249,9 @@
     "--tc-status-success-fg",
     "--tc-status-warning-bg",
     "--tc-status-warning-fg",
+    "--tc-subtitle-color",
+    "--tc-subtitle-font-size",
+    "--tc-subtitle-line-height",
     "--tc-surface-on-tray",
     "--tc-surface-raised",
     "--tc-surface-tray",
@@ -251,6 +260,11 @@
     "--tc-text-primary",
     "--tc-text-secondary",
     "--tc-text-strong",
+    "--tc-title-color",
+    "--tc-title-font-size",
+    "--tc-title-font-weight",
+    "--tc-title-line-height",
+    "--tc-title-tracking",
     "--tc-tray-inset",
     "--tc-tray-radius"
    ]
@@ -334,7 +348,7 @@
  ],
  "changelog": [],
  "size": {
-  "min": 40508,
-  "gzip": 10711
+  "min": 43160,
+  "gzip": 11557
  }
 }

@@ -41,7 +41,7 @@ describe("tc-billing-schedule", () => {
         const el = await fixture<TcBillingSchedule>(html`<tc-billing-schedule look=${look}></tc-billing-schedule>`);
         expect(el.dataset.ui).toBe("bs");
         expect(el.dataset.look).toBe(look);
-        expect(q(el, ".ui-bs__title").textContent).toBe("Create a billing schedule");
+        expect(q(el, ".tc-head__title").textContent).toBe("Create a billing schedule");
         expect(!!el.querySelector(".ui-bs__card")).toBe(look === "standard");
       });
 

@@ -253,6 +253,9 @@
     "--tc-status-success-fg",
     "--tc-status-warning-bg",
     "--tc-status-warning-fg",
+    "--tc-subtitle-color",
+    "--tc-subtitle-font-size",
+    "--tc-subtitle-line-height",
     "--tc-surface-raised",
     "--tc-surface-sunken",
     "--tc-text-muted",
@@ -260,6 +263,11 @@
     "--tc-text-primary",
     "--tc-text-secondary",
     "--tc-text-strong",
+    "--tc-title-color",
+    "--tc-title-font-size",
+    "--tc-title-font-weight",
+    "--tc-title-line-height",
+    "--tc-title-tracking",
     "--tc-tone-violet-bg",
     "--tc-tone-violet-fg",
     "--tc-tray-inset",
@@ -393,7 +401,7 @@
  ],
  "changelog": [],
  "size": {
-  "min": 45543,
-  "gzip": 11055
+  "min": 47193,
+  "gzip": 11474
  }
 }

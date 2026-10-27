@@ -297,7 +297,11 @@
     "--tc-text-muted",
     "--tc-text-primary",
     "--tc-text-secondary",
-    "--tc-text-strong"
+    "--tc-title-color",
+    "--tc-title-font-size",
+    "--tc-title-font-weight",
+    "--tc-title-line-height",
+    "--tc-title-tracking"
    ]
   }
  ],
@@ -329,7 +333,7 @@
  ],
  "changelog": [],
  "size": {
-  "min": 41818,
-  "gzip": 11677
+  "min": 43844,
+  "gzip": 12185
  }
 }

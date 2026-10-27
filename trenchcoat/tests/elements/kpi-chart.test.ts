@@ -24,13 +24,15 @@ const key = async (target: Element, k: string) => {
 };
 
 describe("tc-kpi-chart", () => {
-  test("the host is the root, in either look", async () => {
+  test("the host is the root: a tray in Standard, the card in Clean", async () => {
     for (const look of ["standard", "clean"] as const) {
       const el = await fixture<TcKpiChart>(html`<tc-kpi-chart look=${look} heading="Revenue" value="$9k" .labels=${labels} .series=${one} footer="Last 3 days"></tc-kpi-chart>`);
       expect(el.dataset.ui).toBe("kpi");
       expect(el.dataset.look).toBe(look);
-      expect(el.querySelector(".ui-kpi__title")!.textContent).toBe("Revenue");
+      // The header comes first: on the tray above the card in Standard, the card's first row in Clean
+      expect(el.querySelector(":scope > .tc-head:first-child h3.tc-head__title")!.textContent).toBe("Revenue");
       expect(!!el.querySelector(":scope > .ui-kpi__body")).toBe(look === "clean");
+      expect(!!el.querySelector(":scope > .ui-kpi__card > .ui-kpi__footer")).toBe(look === "standard");
       expect(el.querySelector(".ui-kpi__footer")!.textContent).toBe("Last 3 days");
       cleanup();
     }

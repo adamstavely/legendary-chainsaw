@@ -182,6 +182,7 @@
     "--tc-focus-outline",
     "--tc-focus-ring-offset",
     "--tc-font-sans",
+    "--tc-font-size-2xs",
     "--tc-font-size-md",
     "--tc-font-size-sm",
     "--tc-font-size-xs",
@@ -217,6 +218,8 @@
     "--tc-status-info-fg",
     "--tc-status-success-bg",
     "--tc-status-success-fg",
+    "--tc-subtitle-color",
+    "--tc-subtitle-font-size",
     "--tc-surface-inverse",
     "--tc-surface-raised",
     "--tc-surface-tray",
@@ -226,6 +229,11 @@
     "--tc-text-primary",
     "--tc-text-secondary",
     "--tc-text-strong",
+    "--tc-title-color",
+    "--tc-title-font-size",
+    "--tc-title-font-weight",
+    "--tc-title-line-height",
+    "--tc-title-tracking",
     "--tc-tone-amber-bg",
     "--tc-tone-amber-fg",
     "--tc-tone-violet-bg",
@@ -333,7 +341,7 @@
  ],
  "changelog": [],
  "size": {
-  "min": 40036,
-  "gzip": 10464
+  "min": 41693,
+  "gzip": 10901
  }
 }

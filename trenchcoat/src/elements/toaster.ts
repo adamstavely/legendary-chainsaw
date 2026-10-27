@@ -719,7 +719,7 @@ export class TcToaster extends TcElement {
   max-width: calc(100% - 2 * var(--tc-toaster-offset));
   margin: 0;
   padding: 0;
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-md);
   line-height: var(--tc-line-height-normal);
   color: var(--tc-text-secondary);

@@ -371,9 +371,9 @@ export class TcThinkingState extends TcElement {
 
   width: 100%;
   max-width: 440px;
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-lg);
-  line-height: 1.45;
+  line-height: var(--tc-line-height-normal);
   color: var(--tc-text-secondary);
   -webkit-font-smoothing: antialiased;
 }

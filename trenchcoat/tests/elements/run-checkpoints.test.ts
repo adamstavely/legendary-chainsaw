@@ -45,7 +45,7 @@ describe("tc-run-checkpoints", () => {
       expect(el.dataset.status).toBe("running");
       expect(el.getAttribute("role")).toBe("region");
       expect(document.getElementById(el.getAttribute("aria-labelledby")!)!.textContent).toBe("Move billing to Postgres");
-      expect(el.querySelector(".ui-rcp__state-label")!.textContent).toBe("Checkpoints · 5");
+      expect(el.querySelector(".ui-rcp__count")!.textContent).toBe("Checkpoints · 5");
       expect(plain(el.querySelector(".ui-rcp__pill")!.textContent)).toBe("Live run");
       // Standard: the foot sits on the tray, below the card · Clean: the card's last row
       const foot = el.querySelector(".ui-rcp__foot")!;

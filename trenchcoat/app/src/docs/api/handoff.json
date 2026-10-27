@@ -262,7 +262,6 @@
     "--tc-space-0-5",
     "--tc-space-1",
     "--tc-space-1-5",
-    "--tc-space-10",
     "--tc-space-12",
     "--tc-space-14",
     "--tc-space-2",
@@ -276,6 +275,9 @@
     "--tc-status-success-fg",
     "--tc-status-warning-bg",
     "--tc-status-warning-fg",
+    "--tc-subtitle-color",
+    "--tc-subtitle-font-size",
+    "--tc-subtitle-line-height",
     "--tc-surface-control",
     "--tc-surface-on-tray",
     "--tc-surface-raised",
@@ -286,6 +288,11 @@
     "--tc-text-primary",
     "--tc-text-secondary",
     "--tc-text-strong",
+    "--tc-title-color",
+    "--tc-title-font-size",
+    "--tc-title-font-weight",
+    "--tc-title-line-height",
+    "--tc-title-tracking",
     "--tc-tray-inset",
     "--tc-tray-radius"
    ]
@@ -371,7 +378,7 @@
   "`tc-handoff` – the agent hands the task to a person: what it did, why it stopped, what it needs; Take over turns the needs into a checklist with a note, Hand back folds it to one line. ⌘/Ctrl+Enter; `tc-status-change`, `tc-checked-change`, `tc-note-change`, `tc-return`."
  ],
  "size": {
-  "min": 39447,
-  "gzip": 10297
+  "min": 41838,
+  "gzip": 10963
  }
 }

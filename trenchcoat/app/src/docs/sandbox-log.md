@@ -26,7 +26,7 @@ view.
 
 ## Anatomy
 
-1. **Head** `.ui-sbl__top` – the heading and the environment it ran in
+1. **Header** `.tc-head` – the icon, the heading and the environment it ran in
 2. **Search** `.ui-sbl__search` – finds text across every step, with a match count and Previous / Next
 3. **Copy log** `.ui-sbl__copy-all` – copies every command and its output as plain text
 4. **Step** `.ui-sbl__toggle` – the status, the command, its label, exit code and time; opens and closes the output

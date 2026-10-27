@@ -58,7 +58,7 @@ describe("tc-eval-scorecard", () => {
       expect(el.dataset.ui).toBe("evs");
       expect(el.dataset.look).toBe(look);
       expect(getComputedStyle(el).display).toBe("block");
-      expect(el.querySelector(".ui-evs__title")!.textContent).toBe("Support");
+      expect(el.querySelector(".tc-head__title")!.textContent).toBe("Support");
       expect(text(el.querySelector(".ui-evs__summary"))).toBe("4 cases · 2 versions");
       const vers = [...el.querySelectorAll(".ui-evs__ver")];
       expect(vers.map((v) => text(v.querySelector(".ui-evs__rate")))).toEqual(["50%", "67%"]);

@@ -118,7 +118,7 @@ export class TcGlassFolder extends TcElement {
   aspect-ratio: 3 / 2;
   overflow: hidden;
   container-type: inline-size;
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  font-family: var(--tc-font-sans, "Inter", "InterVariable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif);
 }
 
 /* The folder is drawn on a 600 × 500 grid; cqw keeps every detail in proportion */

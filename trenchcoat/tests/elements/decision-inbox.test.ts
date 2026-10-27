@@ -18,7 +18,7 @@ afterEach(() => {
 const d1: InboxDecision = { id: "d1", title: "Merge it?", primary: "Merge", secondary: "Hold" };
 const d2: InboxDecision = { id: "d2", title: "Refund it?", primary: "Refund", secondary: "Ask" };
 const d3: InboxDecision = { id: "d3", title: "Rotate it?", primary: "Rotate", secondary: "Later", collapsed: true };
-const head = (el: Element) => el.querySelector(".ui-di__head")!.textContent!.replace(/\s+/g, " ").trim();
+const head = (el: Element) => el.querySelector(".tc-head__sub")!.textContent!.replace(/\s+/g, " ").trim();
 const button = (el: Element, name: string) => [...el.querySelectorAll("button")].find((b) => b.textContent!.trim() === name) ?? null;
 /** Lets the fold-away timer run, then waits for the render and the focus rescue */
 const advance = async (ms: number) => {
@@ -164,7 +164,7 @@ for (const look of ["standard", "clean"] as const) {
 
     test("WCAG 4.1.3: the count is a live region from the first render", async () => {
       const el = await fixture<TcDecisionInbox>(html`<tc-decision-inbox look=${look}></tc-decision-inbox>`);
-      expect(el.querySelector(".ui-di__head")!.getAttribute("aria-live")).toBe("polite");
+      expect(el.querySelector('.ui-di__sr[role="status"]')!.textContent).toBe("All caught up");
       expect(head(el)).toBe("All caught up");
     });
 

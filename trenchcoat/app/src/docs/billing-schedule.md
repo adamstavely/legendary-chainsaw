@@ -26,7 +26,7 @@ the minimum applies. It is a form field: with `name`, the schedule is submitted 
 
 ## Anatomy
 
-1. **Heading** `.ui-bs__title` – what's being set up
+1. **Header** – the shared card header: a boxed receipt icon and what's being set up
 2. **Phase summary** `.ui-bs__summary` – the editable phase name, the start date and where the phase ends
 3. **Dates** `.ui-bs__fields` – the start date and the duration menu
 4. **Line** `.ui-bs__row[data-line]` – a product with its repeat, price and billing timing; or the discount or minimum
@@ -35,8 +35,8 @@ the minimum applies. It is a form field: with `name`, the schedule is submitted 
 
 ## Looks
 
-Standard sets the heading and the totals on the gray tray around a white card that holds the form. Clean is one white
-card with hairline shadows: the heading and the phase summary share its top, and the totals are its last row, each
+Standard sets the header and the totals on the gray tray around a white card that holds the form. Clean is one white
+card with hairline shadows: the header is its first row with the phase summary under it, and the totals are its last row, each
 with its own label.
 
 ## Keyboard

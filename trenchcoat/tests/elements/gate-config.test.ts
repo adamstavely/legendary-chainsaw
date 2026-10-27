@@ -55,7 +55,9 @@ describe("tc-gate-config", () => {
     expect(el.getAttribute("role")).toBe("group");
     expect(el.getAttribute("aria-label")).toBe("Review gate");
     expect(el.querySelector(".ui-gc__card")).toBeTruthy();
-    expect(el.querySelector(".ui-gc__pill")!.textContent).toBe("Pauses on 2 of 5");
+    // Standard: the header sits on the tray, above the card
+    expect(el.querySelector(".tc-head + .ui-gc__card")).toBeTruthy();
+    expect(el.querySelector(".tc-head__aside .ui-gc__pill")!.textContent).toBe("Pauses on 2 of 5");
     el.look = "clean";
     el.heading = "Before refunds go out";
     el.description = "Step 4 · Review";
@@ -63,13 +65,14 @@ describe("tc-gate-config", () => {
     expect(el.dataset.look).toBe("clean");
     expect(el.querySelector(".ui-gc__card")).toBeNull();
     expect(el.getAttribute("aria-label")).toBe("Before refunds go out");
-    expect(el.querySelector(".ui-gc__sub")!.textContent).toBe("Step 4 · Review");
+    expect(el.querySelector(".tc-head__sub")!.textContent).toBe("Step 4 · Review");
     expect(el.querySelector<HTMLElement>("tc-segmented-control")!.dataset.look).toBe("clean");
     el.look = "standard";
     el.flat = true;
     await settle();
     expect(el.hasAttribute("flat")).toBe(true);
     expect(el.querySelector(".ui-gc__card")).toBeNull();
+    expect(el.querySelector(".tc-head")).toBeNull();
     // A page's own name is kept
     const named = await fixture<TcGateConfig>(html`<tc-gate-config aria-label="Gate 2"></tc-gate-config>`);
     expect(named.getAttribute("aria-label")).toBe("Gate 2");

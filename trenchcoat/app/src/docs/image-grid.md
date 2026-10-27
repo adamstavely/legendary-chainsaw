@@ -26,7 +26,7 @@ each other with a divider to drag between them.
 
 ## Anatomy
 
-1. **Heading** `.ui-igrid__head` – the grid's name and the prompt the images came from
+1. **Header** `.tc-head` – an image icon, the grid's name and the prompt the images came from
 2. **Tile** `.ui-igrid__tile` – one variation: pending, done or failed, numbered in its corner
 3. **Actions** `.ui-igrid__tools` – Regenerate, Upscale, Compare and Download, over a done tile on hover or focus
 4. **Alt text** `.ui-igrid__alt` – the image's description, with a button to edit it
@@ -34,8 +34,8 @@ each other with a divider to drag between them.
 
 ## Looks
 
-Standard sets the heading and grid on a white card in the gray tray, with the summary on the tray below it. Clean
-drops the tray: one white card whose last row holds the summary. Both use the same tiles, shimmer and compare view.
+Standard puts the header on the gray tray, the grid on a white card below it and the summary on the tray under that.
+Clean drops the tray: one white card whose first row is the header and whose last row holds the summary. Both use the same tiles, shimmer and compare view.
 
 ## Keyboard
 

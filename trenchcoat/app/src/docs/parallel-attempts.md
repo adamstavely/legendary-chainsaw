@@ -27,7 +27,7 @@ together.
 
 ## Anatomy
 
-1. **Bar** `.ui-pa__bar` – the heading, the task, “2 of 4 done” and the total cost
+1. **Header** `.tc-head` – a lanes icon, the heading and the task, with “2 of 4 done” and the total cost at the right
 2. **Attempt** `.ui-pa__row` – one try: its mark, name, model, approach and current step or outcome
 3. **Mark** `.ui-pa__icon` – the model maker's logo, or the attempt's first letter
 4. **Lane** `.ui-pa__lane` – the bar that fills as the attempt runs
@@ -35,8 +35,8 @@ together.
 
 ## Looks
 
-Standard stacks a white card per attempt on the gray tray, with the bar on the tray above them. Clean drops the tray:
-the bar sits above the list and every attempt is a quiet card with hairline shadows. Both race the same bars, fade
+Standard stacks a white card per attempt on the gray tray, with the header on the tray above them. Clean drops the
+tray: the header sits above the list and every attempt is a quiet card with hairline shadows. Both race the same bars, fade
 the attempts not in use, and mark the best one green.
 
 ## Keyboard

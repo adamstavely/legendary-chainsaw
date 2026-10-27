@@ -185,6 +185,9 @@
     "--tc-ease-standard",
     "--tc-field-bg",
     "--tc-field-font-size",
+    "--tc-field-h",
+    "--tc-field-px",
+    "--tc-field-radius",
     "--tc-field-shadow",
     "--tc-field-shadow-focus",
     "--tc-field-shadow-hover",
@@ -197,7 +200,6 @@
     "--tc-focus-ring-offset",
     "--tc-focus-ring-width",
     "--tc-font-sans",
-    "--tc-font-size-lg-plus",
     "--tc-font-size-md",
     "--tc-font-size-sm",
     "--tc-font-size-xs",
@@ -217,7 +219,6 @@
     "--tc-kbd-shadow",
     "--tc-line-height-none",
     "--tc-line-height-normal",
-    "--tc-line-height-relaxed",
     "--tc-line-height-snug",
     "--tc-line-height-tight",
     "--tc-menu-shadow",
@@ -345,9 +346,11 @@
    ]
   }
  ],
- "changelog": [],
+ "changelog": [
+  "**Trust & calibration**, from THEMIS and built domain-neutral: - claims and their reliability: `tc-claim-answer`, `tc-verification-queue`, `tc-reflection-gate`, `tc-reliance-gauge`, `tc-disagreement-banner`, `tc-synthesis-notes`; - where outputs came from: `tc-lineage-graph`, `tc-validity-badge`, `tc-provenance-summary`, `tc-correction-propagation`, `tc-attestation-check`, `tc-run-manifest`; - policy and control: `tc-policy-simulator`, `tc-gate-config`, `tc-coverage-matrix`, `tc-kill-switch`, `tc-playbook-canvas`."
+ ],
  "size": {
-  "min": 79869,
-  "gzip": 21360
+  "min": 80089,
+  "gzip": 21810
  }
 }

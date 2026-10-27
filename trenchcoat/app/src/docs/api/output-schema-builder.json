@@ -1,0 +1,333 @@
+{
+ "elements": [
+  {
+   "tag": "tc-output-schema-builder",
+   "className": "TcOutputSchemaBuilder",
+   "description": "The shape of a model's structured answer, built as a tree of fields beside a rendered preview of the answer, its\nraw JSON and the JSON Schema it makes.",
+   "properties": [
+    {
+     "name": "value",
+     "attribute": null,
+     "type": "OutputSchemaField[]",
+     "default": "[]",
+     "description": "The output object's fields, in order. Changed by the user unless a tc-value-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Output schema\"",
+     "description": "The heading – what the output is for",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string",
+     "default": "\"\"",
+     "description": "A quieter line under the heading",
+     "readonly": false
+    },
+    {
+     "name": "preview",
+     "attribute": "preview",
+     "type": "OutputSchemaPreview",
+     "default": "\"output\"",
+     "description": "What the preview shows: the rendered answer (\"output\"), its raw JSON (\"sample\") or the JSON Schema (\"schema\")",
+     "readonly": false
+    },
+    {
+     "name": "flat",
+     "attribute": "flat",
+     "type": "boolean",
+     "default": "false",
+     "description": "Drops the tray and the card, for a builder inside another card",
+     "readonly": false
+    },
+    {
+     "name": "name",
+     "attribute": "name",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Submitted with the form: the generated JSON Schema, as JSON",
+     "readonly": false
+    },
+    {
+     "name": "disabled",
+     "attribute": "disabled",
+     "type": "boolean",
+     "default": "false",
+     "description": "Turns editing off and leaves the schema out of the form; a disabled fieldset does the same",
+     "readonly": false
+    },
+    {
+     "name": "schema",
+     "attribute": null,
+     "type": "OutputJsonSchema",
+     "default": null,
+     "description": "The JSON Schema the fields generate",
+     "readonly": true
+    },
+    {
+     "name": "sample",
+     "attribute": null,
+     "type": "Record<string, unknown>",
+     "default": null,
+     "description": "A sample object of the schema's shape",
+     "readonly": true
+    },
+    {
+     "name": "issues",
+     "attribute": null,
+     "type": "OutputSchemaIssue[]",
+     "default": null,
+     "description": "Every problem with the fields, errors and warnings",
+     "readonly": true
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-value-change",
+     "detail": "",
+     "description": "The fields changed ({ value: OutputSchemaField[] }); cancelable – prevent it to control `value`",
+     "cancelable": true
+    },
+    {
+     "name": "tc-preview-change",
+     "detail": "",
+     "description": "Output, JSON or Schema was picked ({ preview: \"output\" | \"sample\" | \"schema\" }); cancelable",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [
+    {
+     "name": "checkValidity",
+     "params": "",
+     "returns": "void",
+     "description": "Whether the fields make a valid schema (no errors; warnings are fine)"
+    }
+   ],
+   "ui": "osb",
+   "cssProperties": [
+    {
+     "name": "--tc-output-schema-builder-key",
+     "value": "var(--tc-syntax-property)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-output-schema-builder-indent",
+     "value": "var(--tc-space-5)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-output-schema-builder-guide",
+     "value": "var(--tc-border-default)",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-border-default",
+    "--tc-border-subtle",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-sm",
+    "--tc-control-px-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-font-size",
+    "--tc-field-h",
+    "--tc-field-px",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-field-shadow-hover",
+    "--tc-fill-default",
+    "--tc-fill-hover",
+    "--tc-fill-selected",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-mono",
+    "--tc-font-sans",
+    "--tc-font-size-2xs",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-h-lg",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-full",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-xs",
+    "--tc-shadow-control",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-5",
+    "--tc-space-6",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-warning-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-surface-well",
+    "--tc-switch-h",
+    "--tc-switch-knob",
+    "--tc-switch-knob-bg",
+    "--tc-switch-off",
+    "--tc-switch-on",
+    "--tc-switch-radius",
+    "--tc-switch-w",
+    "--tc-syntax-keyword",
+    "--tc-syntax-number",
+    "--tc-syntax-property",
+    "--tc-syntax-punctuation",
+    "--tc-syntax-string",
+    "--tc-syntax-type",
+    "--tc-text-muted",
+    "--tc-text-placeholder",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "schemaIssues",
+   "signature": "schemaIssues(fields: OutputSchemaField[], parent: number[]): OutputSchemaIssue[]",
+   "description": "Every problem in the tree, depth first: missing or repeated names, empty or repeated allowed values, empty objects"
+  },
+  {
+   "name": "schemaFieldError",
+   "signature": "schemaFieldError(fields: OutputSchemaField[]): string",
+   "description": "The first error's message, or \"\" when the fields make a valid schema"
+  },
+  {
+   "name": "schemaFromFields",
+   "signature": "schemaFromFields(fields: OutputSchemaField[]): OutputJsonSchema",
+   "description": "The JSON Schema for an object with these fields: every object closed (additionalProperties: false)"
+  },
+  {
+   "name": "sampleFromFields",
+   "signature": "sampleFromFields(fields: OutputSchemaField[]): Record<string, unknown>",
+   "description": "A sample object of this shape: the first allowed value, \"text\", 1.5, 1, true; one item per list"
+  },
+  {
+   "name": "validateOutputSample",
+   "signature": "validateOutputSample(value: unknown, schema: OutputJsonSchema, path: unknown, depth: unknown): string[]",
+   "description": "Checks a value against a schema from schemaFromFields; one message per problem, \"$.path: …\""
+  }
+ ],
+ "react": [
+  {
+   "component": "OutputSchemaBuilder",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading – what the output is for"
+    },
+    {
+     "name": "value",
+     "type": "OutputSchemaField[]",
+     "optional": true,
+     "description": "The output object's fields (controlled)"
+    },
+    {
+     "name": "defaultValue",
+     "type": "OutputSchemaField[]",
+     "optional": true,
+     "description": "The fields to start with when uncontrolled"
+    },
+    {
+     "name": "onChange",
+     "type": "(value: OutputSchemaField[]) => void",
+     "optional": true,
+     "description": "Called with every change to the fields"
+    },
+    {
+     "name": "preview",
+     "type": "OutputSchemaPreview",
+     "optional": true,
+     "description": "What the preview shows (controlled): the rendered answer (\"output\"), its raw JSON (\"sample\") or the JSON Schema (\"schema\")"
+    },
+    {
+     "name": "defaultPreview",
+     "type": "OutputSchemaPreview",
+     "optional": true,
+     "description": "What the preview shows first when uncontrolled"
+    },
+    {
+     "name": "onPreviewChange",
+     "type": "(preview: OutputSchemaPreview) => void",
+     "optional": true,
+     "description": "Called when Output, JSON or Schema is picked"
+    }
+   ],
+   "hides": []
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 51247,
+  "gzip": 14765
+ }
+}

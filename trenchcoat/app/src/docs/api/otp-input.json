@@ -314,7 +314,7 @@
   "otp-input, dropzone and stepper-form's tags and choices are form controls (ElementInternals): they submit under `name`, honour `required`, reset and a disabled fieldset, and are named by a page `<label for>`."
  ],
  "size": {
-  "min": 43221,
-  "gzip": 11557
+  "min": 45367,
+  "gzip": 12109
  }
 }

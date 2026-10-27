@@ -73,7 +73,6 @@
    "ui": "ad",
    "cssProperties": [],
    "tokens": [
-    "--tc-accent-text",
     "--tc-action-ghost-bg-hover",
     "--tc-border-selected",
     "--tc-card-radius",
@@ -140,6 +139,7 @@
     "--tc-text-primary",
     "--tc-text-secondary",
     "--tc-text-strong",
+    "--tc-tracking-normal",
     "--tc-tray-inset",
     "--tc-tray-radius"
    ]
@@ -216,7 +216,7 @@
  ],
  "changelog": [],
  "size": {
-  "min": 28370,
-  "gzip": 8404
+  "min": 29251,
+  "gzip": 8857
  }
 }

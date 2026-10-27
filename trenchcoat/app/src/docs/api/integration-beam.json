@@ -58,6 +58,7 @@
     "--tc-ease-in-out",
     "--tc-ease-standard",
     "--tc-focus-outline",
+    "--tc-font-sans",
     "--tc-font-size-md",
     "--tc-font-size-sm",
     "--tc-font-weight-medium",
@@ -131,7 +132,7 @@
  ],
  "changelog": [],
  "size": {
-  "min": 30383,
-  "gzip": 11200
+  "min": 32435,
+  "gzip": 11765
  }
 }

@@ -30,9 +30,9 @@ describe("tc-feedback-rubric", () => {
       expect(el.dataset.ui).toBe("fbr");
       expect(el.dataset.look).toBe(look);
       expect(getComputedStyle(el).display).toBe("block");
-      expect(el.querySelector(".ui-fbr__title")!.textContent).toBe("Rate this answer");
+      expect(el.querySelector(".tc-head__title")!.textContent).toBe("Rate this answer");
       expect(el.querySelector(".ui-fbr__card")!.getAttribute("role")).toBe("group");
-      expect(el.querySelector(".ui-fbr__card")!.getAttribute("aria-labelledby")).toBe(el.querySelector(".ui-fbr__title")!.id);
+      expect(el.querySelector(".ui-fbr__card")!.getAttribute("aria-labelledby")).toBe(el.querySelector(".tc-head__title")!.id);
       expect(text(el.querySelector(".ui-fbr__quote"))).toBe(ANSWER);
       expect(text(el.querySelector(".ui-fbr__progress"))).toBe("0 of 3 scored");
       const groups = [...el.querySelectorAll('[role="radiogroup"]')];

@@ -478,6 +478,10 @@
     "--tc-text-primary",
     "--tc-text-secondary",
     "--tc-text-strong",
+    "--tc-tracking-caps",
+    "--tc-tracking-normal",
+    "--tc-tracking-snug",
+    "--tc-tracking-tight",
     "--tc-tray-inset",
     "--tc-tray-radius"
    ]
@@ -584,7 +588,7 @@
  ],
  "changelog": [],
  "size": {
-  "min": 98139,
-  "gzip": 22346
+  "min": 98621,
+  "gzip": 22870
  }
 }

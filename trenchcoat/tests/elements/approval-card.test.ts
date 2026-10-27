@@ -338,7 +338,7 @@ describe("tc-approval-card", () => {
         { label: "Scheduled", value: strong },
       ]}
     ></tc-approval-card>`);
-    expect(el.querySelector(".ui-ap__icon svg[data-mine]")).toBeTruthy();
+    expect(el.querySelector(".tc-head__icon svg[data-mine]")).toBeTruthy();
     expect(el.querySelector(".ui-ap__label")!.textContent).toBe("Step 4 · gmail.send");
     expect(el.hasAttribute("data-label")).toBe(true);
     expect([...el.querySelectorAll(".ui-ap__detail")].map((d) => d.textContent)).toEqual(["SubjectHello", "ScheduledNow"]);

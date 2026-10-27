@@ -554,6 +554,165 @@ WebKit; the forced-colours script; update budgets; every element in the examples
 Windowed lists tested at 10,000 rows (verification-queue, retrieval-inspector, eval-scorecard). VoiceOver remains
 for a person, with claim-answer, verification-queue, lineage-graph and playbook-canvas added to the list.
 
+## Part 6 – Text selection, and the rest of THEMIS
+
+Asked for on 2026-10-26, to start once the card-header sweep (`audit/style-drift.md`) has landed. Sources:
+- **6.2–6.4:** a second pass over THEMIS – the ATHENA Intervention Catalog, `athena_drawer.html`,
+  `trust-cell-reference.html`, the 60 console screenshots, the ConOps and the ADRs. 6.2 lists every candidate it
+  found, ranked by value.
+- **6.1:** the user's own requests.
+
+Every new component follows the briefs Part 5 used: `new-component-brief.md`, `docs-brief.md`, `part5-brief.md` and
+`style-drift.md`, including the card header. All are domain-neutral (decision M), and all are documented as they
+are built. Their gallery categories:
+- 6.1 goes in "AI & chat", except the text annotator and ISBN details, which go in "Inputs & controls", and stories and
+  background tasks, which go in "Feedback & onboarding";
+- 6.2 goes in "Trust & calibration".
+
+### 6.0 Foundations
+
+- **`internal/selection.ts`.** A controller that follows a text selection inside a host, by pointer and by
+  keyboard (Shift + arrows, or a caret mode for read-only text). It reports the selected text, its offsets in the
+  host's text and its rectangle. The three selection components below share it. The offsets survive a re-render
+  because they are stored as text positions, not DOM ranges.
+- **`internal/popover.ts`.** A floating toolbar or card anchored to a rectangle or an element. It flips at the
+  viewport edges, uses `--tc-z-popover`, closes on Escape and returns focus. The selection toolbar, the
+  translation card and the ISBN hover card use it.
+- **Highlight colours:** `--tc-highlight-*` tokens (yellow, green, blue, pink, purple), each a fill plus an ink,
+  valued per look and theme and checked by `check:contrast`. conversation-annotation's label colours move onto
+  them.
+
+### 6.1 Text selection
+
+| Component | What it is | Builds on |
+|---|---|---|
+| `tc-text-annotator` | Select text in any document with the pointer or keyboard, then highlight it in a colour, add a comment, or copy it. Highlights are marks in the text; comments sit in a margin rail beside their highlight (below it when narrow). An annotation can be edited, resolved or removed, and the list can be filtered by colour or author. The value is `{ id, start, end, color, comment?, author?, at? }[]`. | 6.0, comment-thread, conversation-annotation's marks |
+| `tc-response-selection` | In a model's answer, select a passage and act on it: Reply (quotes the passage into the composer), Ask why, or Request an edit (shorter, simpler, more formal, or your own words). The edit comes back as an inline diff the person accepts or rejects. Several quoted passages can go into one message. The app sends the request and returns the new text; the component never calls a model. | 6.0, ai-answer, inline-diff, chat-composer |
+| `tc-selection-translate` | Select text and choose Translate: a card shows the translation for the chosen target language (remembered), the detected source language, Copy, Replace in place (when the text is editable) and Show original. The app translates through a cancelable event with an AbortSignal; the component shows loading, error and retry. | 6.0, the popover |
+| `tc-isbn-details` | Finds ISBN-10 and ISBN-13 numbers in its text, with or without hyphens, and validates their check digits so lookalikes aren't marked. Each valid one becomes a focusable mark. Hovering or focusing it opens a card with the cover, title, authors, publisher, year, pages and the ISBN in both forms. The app supplies the details through an event or a resolver function; the component makes no network call and caches by ISBN. Invalid or unknown numbers show "No details for this ISBN". Also exports `parseIsbn()` / `isValidIsbn()`. | the popover |
+| `tc-stories` | A row of story avatars like Instagram's. A gradient ring means there's something new; a quiet gray ring means it's been seen; there's an optional "add" tile. Activating one opens a modal viewer:<br>– segmented progress bars across the top;<br>– auto-advance, paused while held or focused;<br>– tap or click left / right, or ← →, to step through; Escape closes;<br>– swipe down to close on touch;<br>– it moves on to the next person's stories at the end.<br>Items can be an image, a video or a text card. Seen state is a property the app owns (cancelable `tc-seen-change`). The gradient is a token (`--tc-story-ring`), and reduced motion stops the auto-advance animation. | dialog's focus handling, the popover's layer |
+| `tc-background-tasks` | Work that keeps running while the person does something else, such as an export, an upload, an agent run or a reindex. It has two parts:<br>– **an indicator** for the app's header: an icon with a count and a ring showing overall progress, which turns to a check or an alert when tasks finish or fail;<br>– **a panel** that opens from it, listing running, queued, done and failed tasks.<br>Each task shows its label, progress (or "working…" when the app doesn't know the progress), the time left as the app reports it, and its actions: cancel, retry, or open the result. Also: Clear finished, and finished tasks announced politely ("Export ready"). The app owns the tasks; the actions are cancelable events. Large lists are windowed. Unlike agent-queue, it isn't a throughput view of agent workers: it's the person's own jobs, at a glance. | the popover, progress-tracker's bars, notification-stack's announcements |
+
+### 6.2 Trust & calibration – new components
+
+Ranked by how many AI products outside THEMIS would use each one.
+
+| Component | What it is | THEMIS source | Value |
+|---|---|---|---|
+| `tc-agreement-tracker` | How often the AI agreed with the person's framing versus pushed back, in this session. It turns amber after two or more agreements in a row and points to the counter-argument. | Catalog #12; trust-cell "Agreement rate" | High |
+| `tc-confidence-brief` | A plain-language summary of an answer for people who weren't in the session:<br>– what we conclude;<br>– the kind of uncertainty;<br>– what would change it;<br>– the key assumptions;<br>– signs to watch;<br>– the track record on similar questions;<br>– a link to the provenance record. | v13 Consumer Package; UCS three-sentence translation | High |
+| `tc-capability-notice` | A request falls where the AI is only partly proven (amber) or not proven (red). It can cap the confidence shown, show that someone was notified, and fold out a distance-from-usual score. | trust-cell Competence Axis | High |
+| `tc-transcript-review` | Recorded audio or video with a transcript that follows playback. It shows timestamps, speakers, speech-recognition and translation confidence, and low-confidence segments marked, with "Send segment to verification". | screenshot 50; Catalog #10 | High |
+| `tc-version-history` | The version timeline of an agent, prompt or workflow. Each version shows draft / active / deprecated, its author and time, and its changes listed by behaviour (+ added, − removed, ~ changed). | screenshot 42 | High |
+| `tc-session-context-bar` | A strip that stays on screen with the session's declared terms – intent, knowledge mode, scope, review, posture, release limit, deadline and budget – with "+N more". | screenshots 10/11; Catalog #1, #2, #26 | Medium |
+| `tc-reasoning-flags` | An inline marker on an answer for detected weak reasoning: circular reasoning, a hedge followed by a confident conclusion, self-contradiction, or more certainty than the evidence supports. It opens to explain. | trust-cell reasoning patterns | Medium |
+| `tc-evidence-coverage` | For each source category: current, stale (with its age) or no coverage, with "Request coverage". It shows what an answer couldn't see. | athena_drawer collection status; ConOps §7 | Medium |
+| `tc-review-conflict` | Two reviewers gave opposing verdicts. Both are shown, with who gave them, and a third person resolves the conflict with a reason or overrides it. A blind mode tells the reviewers only that a conflict exists. | Catalog #27, #28 | Medium |
+| `tc-handoff-brief` | Work passing from one person to another: a summary, unresolved items and commitments made, each acknowledged by the receiver. The handoff is blocked if the receiver lacks access. | Catalog #27 | Medium |
+| `tc-engagement-quality` | Whether reviews are genuine: an index built from reused boilerplate, time spent on the source before a verdict, batch dismissals and repeated commitments. It is presented as quality, not as a violation. | Catalog #25 | Medium |
+| `tc-knowledge-promotion` | Promote a verified fact into shared team knowledge against a checklist (sign-off, no open dispute, a second reviewer, a confidence threshold). Disputed facts stay visible side by side. | trust-cell Memory | Low |
+| `tc-friction-profile` | A mode switch (standard, elevated, deadline) that previews how each safeguard changes: shortened, deferred or tightened. | Catalog #26 | Low |
+
+### 6.3 Enhancements to existing components
+
+| Component | Enhancement | Source |
+|---|---|---|
+| claim-answer | Media source types (transcript, video, audio, image, OCR with its %) and memory source types (earlier session, team knowledge, agent finding), each with a confidence ceiling; a question-type tag (factual, analytical, predictive, opinion) | Catalog #7, #10; trust-cell Memory |
+| verification-queue | Verdicts per source type, e.g. "Misrepresents source", "OCR misread" | Catalog #14 |
+| reliance-gauge | A per-domain calibration table (well calibrated / over-confident / under-confident) and an agent ranking | IMG_9298; screenshot 21 |
+| permission-request | Emergency scope: a required justification, an urgency window, a countdown banner and a review due afterwards | trust-cell Break-Glass |
+| validity-badge | A "source changed since you used it" state | ConOps §6.2 |
+| configuration-release-control | Gate suites (pass / fail / conditional), linked open findings, and waivers that expire | screenshot 58 |
+| reflection-gate | A short single-field version for deadline mode | Catalog #26 |
+| chat-history | Load an earlier session's structured summary as context, showing exactly what is active | trust-cell Memory |
+| chat-composer | A toolbar row under the input, each part optional:<br>– a **model** switcher (model-picker's menu);<br>– **settings** (model-settings in a popover);<br>– the **prompt library** (prompt-library in a popover; picking one fills the input);<br>– a **page context** chip that connects or disconnects what's on the page, showing what's attached and that the model can see it;<br>– a one-line **disclaimer** under the input (`disclaimer`, e.g. "AI can make mistakes. Check important info."). | The user, 2026-10-26 |
+
+### 6.4 Blocks
+
+React blocks in `blocks/`, built on the Lit components through `trenchcoat/react` (decision O).
+
+| Block | Composed of | Source |
+|---|---|---|
+| AI side pane | A chat drawer docked beside the page, with a thread about what's on it. It has a header (title, new chat, history, close), the conversation (ai-answer and claim-answer), and the extended chat-composer: model, settings, prompts, page context connected or disconnected, and the disclaimer. It resizes, collapses to a rail, opens with a shortcut, and works as an overlay sheet on narrow screens. Reflection-gate is available for high-stakes answers. | The user, 2026-10-26; athena_drawer.html |
+| Red-team finding | Severity, failed invariants, scenario, evidence and a response timeline (agent-ledger) | screenshots 27/56 |
+| Publish readiness | dialog and progress-tracker: what must pass before something is released | screenshot 44 |
+| Uncertainty mix | breakdown-chart of where an answer's uncertainty comes from | IMG_9298 |
+| Evidence gallery | image-grid with attestation state and linked-claim counts | screenshot 49 |
+| Oversight home | kpi-chart and data-table: a role's home dashboard and service posture | screenshots 02–07, 30 |
+
+### 6.5 Docs: every framework, browser support, size and performance
+
+The pages lean on React:
+- the Usage tabs default to React;
+- there's a React section but none for any other framework;
+- the header shows only the React import.
+
+They also say nothing about which browsers work, and give sizes without the cost that matters. Every page gains
+the following, as generated data, so it stays true. The parts that touch the docs files run alongside 6.0: they
+change `app/src/docs/`, `scripts/gen-docs.mjs` and the foundations, not components.
+
+- **Frameworks, equal footing:**
+  - The header shows how to install and import in each framework. The Usage tabs remember the reader's choice and
+    have no React default.
+  - The React section becomes **Frameworks**, with a tab for each of React / Next.js, Vue / Nuxt, Angular,
+    Svelte and HTML. Each tab shows:
+    - how to pass data properties;
+    - how to listen to the component's events, by their real names;
+    - the controlled pattern, by calling `preventDefault()`, and two-way binding (`v-model`, `[(…)]`, `bind:`) for
+      form components;
+    - slots and children;
+    - SSR notes for Next.js and Nuxt;
+    - TypeScript typing.
+  - The snippets are generated from the manifest, as now (`usage.ts`), and each framework's snippet is
+    type-checked or compiled in its `examples/` app so they can't rot.
+  - A new **Frameworks** foundations page covers setup once per framework: CUSTOM_ELEMENTS_SCHEMA, Vue's
+    `isCustomElement`, Svelte's typing, and Next's `"use client"`.
+- **Browser support:**
+  - Each page gets a **Browser support** table: Chrome / Edge, Firefox and Safari (macOS and iOS), with the minimum
+    version that renders and works fully.
+  - It's computed by a script that scans each component's CSS and code for the platform features it uses:
+    `light-dark()`, container queries, `:has()`, `ElementInternals` form association, `adoptedStyleSheets` (with
+    its fallback), `field-sizing`, `@starting-style`, `inert`, `<dialog>`, and so on. Each feature's floor comes
+    from a checked-in table of feature to version, from MDN's browser-compat-data.
+  - Features with a fallback (field-sizing grows a textarea and falls back to a fixed height) are listed as
+    **progressive**, with what changes without them.
+  - The three engines the tests run in (Chromium, Firefox, WebKit) are named as tested.
+  - A **Browser support** foundations page gives the library-wide floor and the reasoning.
+- **Size and performance:** a **Performance** section with:
+  - **Bundle:** min and gzip for the component alone; the shared code it pulls in (Lit, `internal/*` and other
+    components it renders, such as code-block inside tool-configuration); and the total cost of adding it to a
+    page that already has Lit.
+  - **Rendering:** first render and a typical update, measured in Chromium against `tests/render-budgets.json` and
+    shown with the budget, plus how it scales. Windowed lists say how many rows were tested (10,000), and others say
+    where they stop being practical.
+  - **Runtime notes:** timers and animation loops (stopped when idle or hidden, and under reduced motion),
+    observers, and whether it reads the clock.
+  - The numbers come from a measured, checked-in data file regenerated by `npm run measure:perf`. Pages show when
+    they were measured.
+  - A **Performance** foundations page explains the measurements and the budgets.
+- **Checks:** `check:docs` fails when a page's browser, framework or performance data is missing or stale. The
+  browser feature table has a test that each listed feature is actually detected in at least one component.
+
+### 6.6 Order
+
+1. **6.0 Foundations,** then all of 6.1. The four selection components, stories and background tasks are
+   the user's own requests.
+2. **6.2, from the top of the table down.** transcript-review and version-history are the large ones.
+3. **6.3.** Each enhancement is an optional property, so nothing breaks. chat-composer's toolbar goes first:
+   the AI side pane needs it.
+4. **6.4,** last, because the blocks compose finished components.
+
+6.5 runs alongside steps 1–3: it changes the docs tooling and foundations, not components. New components pick up
+its sections when their pages are generated.
+
+### 6.7 Verification
+
+As in 5.8:
+- axe in three engines, forced colours, and docs pages through `check-docs`;
+- the selection components tested by keyboard alone, and with screen-reader announcements for the toolbar and
+  card;
+- `parseIsbn` unit-tested against valid and invalid ISBN-10 and ISBN-13 numbers, including an X check digit.
+
 ## Decisions (2026-10-25)
 
 | | Question | Decision |
@@ -571,6 +730,8 @@ for a person, with claim-answer, verification-queue, lineage-graph and playbook-
 | B | Which way do the half-step font sizes fold? | **Round down:** 11.5 → 11, 12.5 → 12, 13.5 → 13 px, in both looks |
 | M | THEMIS vocabulary | **Domain-neutral.** Source types default to Sourced / Model knowledge / Inferred (THEMIS's GRND / PARAM / SYNTH as an option), the reliance index and thresholds are properties, and legal or intelligence terms are demo data only (2026-10-26) |
 | N | Playbook canvas scope | **A component, built last** in Part 5 – an editor of phases and steps, not a free-form canvas; if it outgrows a component it moves to the blocks phase (2026-10-26) |
+| O | New blocks | **React blocks on the Lit components** through `trenchcoat/react`, not on the frozen React versions (2026-10-26) |
+| P | Card header | **On the tray in Standard, with a boxed 28 px icon on every card title**, through `internal/card-head.ts` (2026-10-26) |
 | C | The judgement calls in item 15 | **As recommended:** fix breakdown-chart's palette, the fan-out-grid and agent-queue targets and the date-range band; keep context-map's tiles as they are (name and kind are in the hover/focus card) |
 
 ## Order and rough size

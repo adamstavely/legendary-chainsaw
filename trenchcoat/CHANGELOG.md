@@ -1,5 +1,65 @@
 # Changelog
 
+## Unreleased – remediation Part 5 (more AI components, trust & calibration), the AI configuration rebuild and one card style
+
+See `audit/remediation-plan.md`, Part 5; `audit/ai-config-brief.md`; and `audit/style-drift.md`. Every new or
+rebuilt component is a Lit element with both looks, a React wrapper, tests in Chromium, Firefox and WebKit, a
+gallery demo and a docs page.
+
+### Added
+
+- **Quality, retrieval, safety, structured output and conversation:** `tc-eval-scorecard`, `tc-feedback-rubric`,
+  `tc-retrieval-inspector`, `tc-extraction-review`, `tc-guardrail-notice`, `tc-clarifying-questions`,
+  `tc-structured-output`, `tc-generated-ui` and `tc-prompt-starters`.
+- **Trust & calibration**, from THEMIS and built domain-neutral:
+  - claims and their reliability: `tc-claim-answer`, `tc-verification-queue`, `tc-reflection-gate`,
+    `tc-reliance-gauge`, `tc-disagreement-banner`, `tc-synthesis-notes`;
+  - where outputs came from: `tc-lineage-graph`, `tc-validity-badge`, `tc-provenance-summary`,
+    `tc-correction-propagation`, `tc-attestation-check`, `tc-run-manifest`;
+  - policy and control: `tc-policy-simulator`, `tc-gate-config`, `tc-coverage-matrix`, `tc-kill-switch`,
+    `tc-playbook-canvas`.
+- `tc-approval-card` gains decision detail: why you're seeing it, what each choice does, editable arguments and
+  evidence chips.
+- **Shared code:**
+  - helpers: `ToolbarController`, `internal/util.ts`, `internal/format.ts` and `internal/layered-graph.ts`;
+  - tokens: source, validity, syntax and teal tones, and danger action tokens;
+  - `internal/card-head.ts`, the shared card header.
+- **New style tokens:**
+  - the card title and the line under it: `--tc-title-*`, `--tc-subtitle-*`;
+  - the card header: `--tc-head-*`;
+  - the compact field: `--tc-field-h-sm`.
+- **New ratchet counters:** literal font-family, font-size and letter-spacing.
+- `check-prefixes` checks that every element's `ui` prefix is unique.
+
+### Changed
+
+- **AI configuration** – provider-connection, mcp-connection-manager, tool-configuration, model-settings,
+  model-routing, instruction-editor, knowledge-source-manager, retrieval-settings, multimodal-input,
+  output-schema-builder, evaluation-dataset-editor, conversation-annotation, configuration-release-control and
+  data-handling-policy:
+  - Each was rebuilt from one generic form into a purpose-built view led by its state: a connection path, a route
+    that lights up, a retrieval pipeline you edit, a data lifecycle, a release pipeline with its gate, an API
+    reference entry, a schema tree beside its rendered answer, and inline annotation.
+  - Their APIs changed; see each page.
+- **One card style.** Every card's title uses the title tokens in ink, never accent or gray. In Standard the
+  header sits on the gray tray with a boxed icon; in Clean it is the card's first row.
+- **Type and controls.** Font families, sizes and tracking moved to tokens, and buttons and fields to the control
+  and field tokens, across about 150 elements. Seventeen plain-text titles became real headings.
+- kpi-chart, progress-tracker, setup-guide and writing-assistant now sit on the Standard tray.
+- decision-inbox has a `heading` (React `title`), default "Decisions"; the count moved to the line under it.
+- The form primitives' shared `internal/settings.ts` lost its unused panel and field helpers.
+
+### Fixed
+
+- **Buttons at the wrong size and weight:** in email-draft, filter-menu, integration-settings, billing-schedule,
+  comments-panel, smart-recommendation, writing-assistant and setup-guide, a button reset outranked the control
+  styles. Their buttons rendered at the page's 16px in the regular weight.
+- **stepper-form error contrast:** its error messages were 3.9:1; they now use the danger text colour.
+- **Gallery styles leaking into components:** the docs page's `h2` and the home page's section spacing were
+  styling headings and sections inside components.
+- **Stale gallery modules:** a long-running dev server served old modules (mcp-connection-manager failed to
+  render). This was fixed by restarting the server; no source change was needed.
+
 ## Unreleased – remediation Part 4 (a design-system page for every component)
 
 See `audit/remediation-plan.md`, Part 4.

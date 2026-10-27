@@ -32,8 +32,8 @@ describe("tc-agent-steering", () => {
     expect(el.dataset.ui).toBe("st");
     expect(el.dataset.look).toBe("standard");
     expect(el.dataset.status).toBe("running");
-    expect(el.querySelector(".ui-st__title")!.textContent).toBe("Migrate users");
-    expect(el.querySelector(".ui-st__sub")!.textContent).toMatch(/Opus.*Step 1 of 1/);
+    expect(el.querySelector(".tc-head__title")!.textContent).toBe("Migrate users");
+    expect(el.querySelector(".tc-head__sub")!.textContent).toMatch(/Opus.*Step 1 of 1/);
     el.status = "done";
     await settle();
     expect(el.dataset.status).toBe("done");

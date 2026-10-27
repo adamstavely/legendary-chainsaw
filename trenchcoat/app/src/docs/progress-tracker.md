@@ -25,7 +25,7 @@ state – and stops as soon as someone interacts.
 
 ## Anatomy
 
-1. **Heading** `.ui-progress__title` – what the checklist is for; it also names the bar
+1. **Header** `.tc-head` – a checklist icon and the heading, what the checklist is for; it also names the bar
 2. **Count** `.ui-progress__count` – done out of total, the number rolling when it changes
 3. **Bar** `.ui-progress__bar` – the progress, with a shine each time it grows
 4. **Step** `.ui-progress__step` – a check, the label and an optional icon
@@ -33,9 +33,9 @@ state – and stops as soon as someone interacts.
 
 ## Looks
 
-Standard has a larger heading, a thick dark bar and dark checks, with roomier padding. Clean is a narrower white card
-with hairline shadows and quieter gray type; the bar is thin and blue, the checks blue, and a long heading is cut
-with an ellipsis.
+Standard puts the header on a gray tray above a white card with a thick dark bar and dark checks, with roomier
+padding. Clean is a narrower white card with the header as its first row, hairline shadows and quieter gray type; the
+bar is thin and blue and the checks blue.
 
 ## Keyboard
 

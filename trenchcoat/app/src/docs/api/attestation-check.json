@@ -215,7 +215,7 @@
     "--tc-text-placeholder",
     "--tc-text-primary",
     "--tc-text-secondary",
-    "--tc-text-strong",
+    "--tc-tracking-normal",
     "--tc-tray-inset",
     "--tc-tray-radius"
    ]
@@ -261,9 +261,11 @@
    "hides": []
   }
  ],
- "changelog": [],
+ "changelog": [
+  "**Trust & calibration**, from THEMIS and built domain-neutral: - claims and their reliability: `tc-claim-answer`, `tc-verification-queue`, `tc-reflection-gate`, `tc-reliance-gauge`, `tc-disagreement-banner`, `tc-synthesis-notes`; - where outputs came from: `tc-lineage-graph`, `tc-validity-badge`, `tc-provenance-summary`, `tc-correction-propagation`, `tc-attestation-check`, `tc-run-manifest`; - policy and control: `tc-policy-simulator`, `tc-gate-config`, `tc-coverage-matrix`, `tc-kill-switch`, `tc-playbook-canvas`."
+ ],
  "size": {
-  "min": 35244,
-  "gzip": 9884
+  "min": 36775,
+  "gzip": 10490
  }
 }

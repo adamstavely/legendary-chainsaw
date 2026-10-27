@@ -155,7 +155,7 @@
     },
     {
      "name": "--tc-agent-plan-accent",
-     "value": "light-dark(rgba(0, 96, 226, 0.765), #4d8dff)",
+     "value": "var(--tc-accent-solid)",
      "looks": [
       "clean"
      ]
@@ -169,6 +169,7 @@
     }
    ],
    "tokens": [
+    "--tc-accent-solid",
     "--tc-action-ghost-bg-hover",
     "--tc-action-ghost-fg",
     "--tc-action-primary-bg",
@@ -208,6 +209,7 @@
     "--tc-focus-ring",
     "--tc-focus-ring-offset",
     "--tc-focus-ring-width",
+    "--tc-font-mono",
     "--tc-font-sans",
     "--tc-font-size-lg",
     "--tc-font-size-md",
@@ -215,12 +217,9 @@
     "--tc-font-size-xs",
     "--tc-font-weight-medium",
     "--tc-font-weight-regular",
-    "--tc-font-weight-semibold",
     "--tc-icon-muted",
-    "--tc-line-height-loose",
     "--tc-line-height-none",
     "--tc-line-height-normal",
-    "--tc-line-height-relaxed",
     "--tc-line-height-snug",
     "--tc-line-height-tight",
     "--tc-radius-3xl",
@@ -241,7 +240,6 @@
     "--tc-space-3",
     "--tc-space-3-5",
     "--tc-space-4",
-    "--tc-space-4-5",
     "--tc-status-danger-bg",
     "--tc-status-danger-border",
     "--tc-status-danger-fg",
@@ -252,7 +250,7 @@
     "--tc-text-on-accent",
     "--tc-text-primary",
     "--tc-text-secondary",
-    "--tc-text-strong"
+    "--tc-tracking-normal"
    ]
   }
  ],
@@ -316,7 +314,7 @@
  ],
  "changelog": [],
  "size": {
-  "min": 69913,
-  "gzip": 15099
+  "min": 69805,
+  "gzip": 15584
  }
 }

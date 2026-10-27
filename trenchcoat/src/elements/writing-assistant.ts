@@ -3,6 +3,7 @@ import { property, state } from "lit/decorators.js";
 import { live } from "lit/directives/live.js";
 import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { OffScreenController } from "./internal/controllers";
 
 /*
@@ -26,6 +27,8 @@ export type ChatDraftChange = { draft: string };
 export type WritingAssistantRespond = (message: string, context: { signal: AbortSignal; history: ChatMessage[] }) => string | Promise<string>;
 
 const NO_MESSAGES: ChatMessage[] = [];
+/* The header's icon: a sparkle with a small one beside it */
+const headIcon = svg`<path d="M10 3.5c.5 3.6 2 5.1 5.6 5.6-3.6.5-5.1 2-5.6 5.6-.5-3.6-2-5.1-5.6-5.6 3.6-.5 5.1-2 5.6-5.6Z"></path><path d="M18 14v6M15 17h6"></path>`;
 
 const sampleReply = (message: string) => {
   const m = message.toLowerCase();
@@ -395,19 +398,16 @@ export class TcWritingAssistant extends TcElement {
 
   /* ---------- Render ---------- */
 
+  /** The header (.tc-head): on the tray in Standard, the card's first row in Clean; New chat at the right */
   private header(clean: boolean, chatting: boolean) {
-    const g = this.gradientId;
-    return html`<header class="ui-wa__head">
-      <div class="ui-wa__id">
-        <h3 class="ui-wa__name">${clean
-          ? html`<svg class="ui-wa__mark" viewBox="0 0 16 16" aria-hidden="true">${svg`<defs><linearGradient id=${g} x1="2" y1="2" x2="14" y2="14" gradientUnits="userSpaceOnUse"><stop stop-color="var(--tc-tone-pink-solid)"></stop><stop offset="0.5" stop-color="var(--tc-tone-violet-solid)"></stop><stop offset="1" stop-color="var(--tc-accent)"></stop></linearGradient></defs><path fill=${`url(#${g})`} d="M8 1.5c.3 2.9 1.6 4.2 4.5 4.5-2.9.3-4.2 1.6-4.5 4.5-.3-2.9-1.6-4.2-4.5-4.5 2.9-.3 4.2-1.6 4.5-4.5Z"></path><path fill=${`url(#${g})`} d="M12.25 10c.13 1.3.7 1.87 2 2-1.3.13-1.87.7-2 2-.13-1.3-.7-1.87-2-2 1.3-.13 1.87-.7 2-2Z"></path>`}</svg>`
-          : nothing}${this.name}</h3>
-        <p class="ui-wa__tagline">${this.tagline}</p>
-      </div>
-      <button type="button" class="ui-wa__new" aria-label="New chat" @click=${() => this.reset()} tabindex=${chatting ? 0 : -1}>
+    return cardHead({
+      icon: headIcon,
+      title: this.name,
+      subtitle: this.tagline || undefined,
+      aside: html`<button type="button" class="ui-wa__new" aria-label="New chat" @click=${() => this.reset()} tabindex=${chatting ? 0 : -1}>
         <svg viewBox="0 0 24 24" aria-hidden="true">${clean ? svg`<path d="M12 5v14M5 12h14"></path>` : svg`<path d="M12 5.5v13M5.5 12h13"></path>`}</svg>
-      </button>
-    </header>`;
+      </button>`,
+    });
   }
 
   /** The messages – the reply streaming in shows the words so far – or the welcome with suggestions */
@@ -527,15 +527,14 @@ export class TcWritingAssistant extends TcElement {
   --tc-writing-assistant-bubble-bg: light-dark(rgba(255, 255, 255, 0.85), rgba(42, 42, 45, 0.85));
   /* The library's gradient: Pro pink, violet and accent blue */
   --tc-writing-assistant-glow: 0.28;
-  --tc-writing-assistant-shadow: 0 1px 2px light-dark(rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0.4)), 0 12px 32px light-dark(rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.3));
   width: 100%;
   max-width: 380px;
-  padding: var(--tc-space-2);
-  border: 1px solid var(--tc-border-default);
-  border-radius: 32px;
-  background: var(--tc-surface-raised);
-  box-shadow: var(--tc-writing-assistant-shadow);
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  /* The gray tray: the header on it, the panel (the white card) under it */
+  padding: var(--tc-tray-inset);
+  border-radius: var(--tc-tray-radius);
+  background: var(--tc-surface-tray);
+  font-family: var(--tc-font-sans);
+  font-size: var(--tc-font-size-md);
   color: var(--tc-text-primary);
   -webkit-font-smoothing: antialiased;
 }
@@ -567,13 +566,10 @@ export class TcWritingAssistant extends TcElement {
   -webkit-tap-highlight-color: transparent;
 }
 [data-ui="wa"] *, [data-ui="wa"] *::before, [data-ui="wa"] *::after { box-sizing: border-box; }
-:where([data-look="standard"], [data-look="standard"] *)[data-ui="wa"] button { font: inherit; color: inherit; margin: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+:where([data-look="standard"], [data-look="standard"] *):where([data-ui="wa"]) button { font: inherit; color: inherit; margin: 0; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 [data-ui="wa"] :focus-visible:not(textarea) { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
 .ui-wa__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-/* ---------- Header ---------- */
-:where([data-look="standard"], [data-look="standard"] *).ui-wa__head { display: flex; align-items: flex-start; justify-content: space-between; padding: var(--tc-space-4-5) var(--tc-space-4-5) var(--tc-space-4); }
-:where([data-look="standard"], [data-look="standard"] *).ui-wa__name { margin: 0; font-size: var(--tc-font-size-2xl); font-weight: var(--tc-font-weight-medium); letter-spacing: -0.02em; }
-:where([data-look="standard"], [data-look="standard"] *).ui-wa__tagline { margin: var(--tc-space-1) 0 0; font-size: var(--tc-font-size-md); color: var(--tc-text-muted); }
+/* ---------- New chat, at the header's right ---------- */
 :where([data-look="standard"], [data-look="standard"] *).ui-wa__new {
   display: grid;
   place-items: center;
@@ -601,36 +597,6 @@ export class TcWritingAssistant extends TcElement {
   -webkit-tap-highlight-color: transparent;
 }
 :where([data-look="clean"], [data-look="clean"] *):where([data-ui="wa"]) svg { display: block; flex: none; }
-/* ---------- Header ---------- */
-:where([data-look="clean"], [data-look="clean"] *).ui-wa__head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--tc-space-3);
-  padding: var(--tc-space-3) var(--tc-space-3) var(--tc-space-3) var(--tc-space-4);
-  border-bottom: 0.5px solid var(--tc-border-default);
-}
-:where([data-look="clean"], [data-look="clean"] *).ui-wa__id { min-width: 0; }
-:where([data-look="clean"], [data-look="clean"] *).ui-wa__name {
-  display: flex;
-  align-items: center;
-  gap: var(--tc-space-1-5);
-  margin: 0;
-  font-size: var(--tc-font-size-md);
-  font-weight: var(--tc-font-weight-medium);
-  line-height: var(--tc-line-height-normal);
-  color: var(--tc-text-strong);
-}
-:where([data-look="clean"], [data-look="clean"] *).ui-wa__mark { width: 16px; height: 16px; }
-:where([data-look="clean"], [data-look="clean"] *).ui-wa__tagline {
-  margin: 0;
-  overflow: hidden;
-  font-size: var(--tc-font-size-sm);
-  line-height: var(--tc-line-height-tight);
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  color: var(--tc-text-secondary);
-}
 /* New chat: a ghost icon button that shows up once there's a conversation */
 :where([data-look="clean"], [data-look="clean"] *).ui-wa__new {
   display: grid;
@@ -652,10 +618,9 @@ export class TcWritingAssistant extends TcElement {
 :where([data-look="standard"], [data-look="standard"] *).ui-wa__panel {
   position: relative;
   overflow: hidden;
-  /* Card radius 32 minus its 8px padding, so the corners run parallel */
-  border-radius: 24px;
-  background: var(--tc-surface-raised);
-  box-shadow: inset 0 0 0 1px var(--tc-border-default);
+  border-radius: var(--tc-card-radius);
+  background: var(--tc-surface-on-tray);
+  box-shadow: var(--tc-card-shadow);
 }
 :where([data-look="standard"], [data-look="standard"] *).ui-wa__glow { position: absolute; inset: 0; pointer-events: none; }
 /* The glow sits in the lower part and keeps moving – clearly visible, never still */
@@ -683,16 +648,17 @@ export class TcWritingAssistant extends TcElement {
 :where([data-look="standard"], [data-look="standard"] *).ui-wa__welcome { display: grid; gap: var(--tc-space-3-5); padding: 0 var(--tc-space-1); animation: ui-wa-in var(--tc-duration-slower) var(--tc-ease-move) both; }
 :where([data-look="standard"], [data-look="standard"] *).ui-wa__greeting {
   margin: 0;
+  /* Display-sized on purpose: the welcome greeting is the panel's hero line, not its title */
   font-size: var(--tc-font-size-3xl);
   font-weight: var(--tc-font-weight-medium);
-  line-height: 1.15;
-  letter-spacing: -0.025em;
+  line-height: var(--tc-line-height-display-sm);
+  letter-spacing: var(--tc-tracking-tight);
   color: var(--tc-text-primary);
 }
 :where([data-look="clean"], [data-look="clean"] *).ui-wa__new:hover { background: var(--tc-fill-subtle); color: var(--tc-text-primary); }
 :where([data-look="clean"], [data-look="clean"] *).ui-wa__new svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; }
 /* ---------- Body: content above, the prompt as the last row ---------- */
-:where([data-look="clean"], [data-look="clean"] *).ui-wa__body { position: relative; display: flex; flex-direction: column; height: max(340px, 21.25rem); overflow: hidden; }
+:where([data-look="clean"], [data-look="clean"] *).ui-wa__body { position: relative; display: flex; flex-direction: column; height: max(340px, 21.25rem); overflow: hidden; border-top: 0.5px solid var(--tc-border-default); }
 :where([data-look="clean"], [data-look="clean"] *).ui-wa__content {
   position: relative;
   flex: 1;
@@ -717,15 +683,16 @@ export class TcWritingAssistant extends TcElement {
 :where([data-look="clean"], [data-look="clean"] *).ui-wa__blob--blue { left: 22%; bottom: -22%; width: 62%; height: 40%; background: var(--tc-accent); animation-name: ui-wa-drift-c; animation-duration: 5.5s; }
 /* Welcome */
 :where([data-look="clean"], [data-look="clean"] *).ui-wa__welcome { position: relative; display: grid; gap: var(--tc-space-3); padding: var(--tc-space-4); animation: ui-wa-in var(--tc-duration-slower) var(--tc-ease-move) both; }
-:where([data-look="clean"], [data-look="clean"] *).ui-wa__greeting { margin: 0; font-size: 15px; font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-loose); color: var(--tc-text-strong); }
+:where([data-look="clean"], [data-look="clean"] *).ui-wa__greeting { margin: 0; font-size: var(--tc-font-size-lg-plus); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-loose); color: var(--tc-text-strong); }
 .ui-wa__chips { display: flex; flex-wrap: wrap; gap: var(--tc-space-1-5); }
 :where([data-look="standard"], [data-look="standard"] *).ui-wa__chip {
-  height: 32px;
-  padding: 0 var(--tc-space-3);
+  height: var(--tc-control-h-md);
+  padding: 0 var(--tc-control-px-md);
   border: 0;
   border-radius: var(--tc-radius-full);
   background: var(--tc-fill-default);
-  font-size: var(--tc-font-size-md);
+  font-size: var(--tc-control-font-size);
+  font-weight: var(--tc-control-font-weight);
   color: var(--tc-text-secondary) !important;
   backdrop-filter: blur(8px);
   transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), transform var(--tc-duration-fast) var(--tc-ease-standard);
@@ -822,7 +789,7 @@ export class TcWritingAssistant extends TcElement {
   outline: none;
   resize: none;
   font: inherit;
-  font-size: 14.5px;
+  font-size: var(--tc-font-size-lg);
   line-height: var(--tc-line-height-normal);
   color: var(--tc-text-primary);
   overflow-y: auto;
@@ -1055,7 +1022,6 @@ export class TcWritingAssistant extends TcElement {
 }
 /* Narrow containers: a little less padding */
 @container (max-width: 330px) {
-:where([data-look="clean"], [data-look="clean"] *).ui-wa__head { padding-left: var(--tc-space-3); }
 :where([data-look="clean"], [data-look="clean"] *).ui-wa__welcome,
 :where([data-look="clean"], [data-look="clean"] *).ui-wa__messages { padding-left: var(--tc-space-3); padding-right: var(--tc-space-3); }
 :where([data-look="clean"], [data-look="clean"] *).ui-wa__row { padding-left: var(--tc-space-3); }

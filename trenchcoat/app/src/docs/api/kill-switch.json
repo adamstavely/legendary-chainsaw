@@ -145,6 +145,9 @@
    "ui": "ks",
    "cssProperties": [],
    "tokens": [
+    "--tc-action-danger-bg",
+    "--tc-action-danger-bg-hover",
+    "--tc-action-danger-fg",
     "--tc-action-primary-shadow",
     "--tc-action-secondary-bg",
     "--tc-action-secondary-fg",
@@ -182,14 +185,11 @@
     "--tc-focus-outline",
     "--tc-focus-ring-offset",
     "--tc-font-sans",
-    "--tc-font-size-lg",
     "--tc-font-size-md",
     "--tc-font-size-sm",
     "--tc-font-size-xs",
     "--tc-font-weight-medium",
     "--tc-font-weight-regular",
-    "--tc-font-weight-strong",
-    "--tc-gray-950",
     "--tc-hairline",
     "--tc-line-height-none",
     "--tc-line-height-normal",
@@ -206,7 +206,6 @@
     "--tc-radius-badge",
     "--tc-radius-lg",
     "--tc-radius-md",
-    "--tc-red-600",
     "--tc-scrim",
     "--tc-shadow-overlay",
     "--tc-space-0-5",
@@ -214,7 +213,6 @@
     "--tc-space-1-5",
     "--tc-space-2",
     "--tc-space-3",
-    "--tc-space-3-5",
     "--tc-space-4",
     "--tc-space-5",
     "--tc-status-danger-bg",
@@ -230,10 +228,13 @@
     "--tc-surface-raised",
     "--tc-surface-tray",
     "--tc-text-muted",
-    "--tc-text-on-accent",
     "--tc-text-primary",
     "--tc-text-secondary",
-    "--tc-text-strong",
+    "--tc-title-color",
+    "--tc-title-font-size",
+    "--tc-title-font-weight",
+    "--tc-title-line-height",
+    "--tc-title-tracking",
     "--tc-tray-inset",
     "--tc-tray-radius"
    ]
@@ -291,9 +292,11 @@
    "hides": []
   }
  ],
- "changelog": [],
+ "changelog": [
+  "**Trust & calibration**, from THEMIS and built domain-neutral: - claims and their reliability: `tc-claim-answer`, `tc-verification-queue`, `tc-reflection-gate`, `tc-reliance-gauge`, `tc-disagreement-banner`, `tc-synthesis-notes`; - where outputs came from: `tc-lineage-graph`, `tc-validity-badge`, `tc-provenance-summary`, `tc-correction-propagation`, `tc-attestation-check`, `tc-run-manifest`; - policy and control: `tc-policy-simulator`, `tc-gate-config`, `tc-coverage-matrix`, `tc-kill-switch`, `tc-playbook-canvas`."
+ ],
  "size": {
-  "min": 32551,
-  "gzip": 9262
+  "min": 33073,
+  "gzip": 9625
  }
 }

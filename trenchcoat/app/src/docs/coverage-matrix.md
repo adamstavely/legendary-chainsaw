@@ -37,8 +37,8 @@ missing and the evidence behind it.
 
 ## Looks
 
-Standard is a white card on a gray tray, with medium-weight labels. Clean is one white card with quieter labels and
-thinner marks. The tiles, totals and detail are the same in both.
+Standard is a white card on a gray tray, with the header on the tray above it and medium-weight labels. Clean is one
+white card with the header as its first row, quieter labels and thinner marks. The tiles, totals and detail are the same in both.
 
 ## Keyboard
 

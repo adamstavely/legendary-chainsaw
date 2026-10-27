@@ -177,11 +177,9 @@
     "--tc-focus-ring-offset",
     "--tc-font-sans",
     "--tc-font-size-lg",
-    "--tc-font-size-lg-plus",
     "--tc-font-size-md",
     "--tc-font-weight-medium",
     "--tc-font-weight-regular",
-    "--tc-font-weight-semibold",
     "--tc-hairline",
     "--tc-icon-muted",
     "--tc-line-height-normal",
@@ -207,6 +205,11 @@
     "--tc-text-primary",
     "--tc-text-secondary",
     "--tc-text-strong",
+    "--tc-title-color",
+    "--tc-title-font-size",
+    "--tc-title-font-weight",
+    "--tc-title-line-height",
+    "--tc-title-tracking",
     "--tc-tray-inset",
     "--tc-tray-radius"
    ]
@@ -280,7 +283,7 @@
   "`tc-voice-mode` – a voice conversation: `tc-voice-orb` for the state, live captions that announce finished turns once, and Mute / Captions / Interrupt / End in a toolbar; Esc interrupts. The audio stays the app's."
  ],
  "size": {
-  "min": 23947,
-  "gzip": 7656
+  "min": 26127,
+  "gzip": 8291
  }
 }

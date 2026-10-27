@@ -4,6 +4,7 @@ import { keyed } from "lit/directives/keyed.js";
 import { repeat } from "lit/directives/repeat.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController, RowWindowController } from "./internal/controllers";
 import type { Look } from "./internal/look";
 
@@ -103,6 +104,9 @@ const marked = (text: string, query: string) => {
   parts.push(text.slice(at));
   return parts;
 };
+
+// The header icon: a clock with a back-turning arrow (past chats)
+const historyIcon = svg`<path d="M3 12a9 9 0 1 0 3-6.7L3 8"></path><path d="M3 3v5h5"></path><path d="M12 7v5l3 2"></path>`;
 
 /**
  * The conversation list: search, pinning, folders, rename and delete with Undo, grouped by date; windowed.
@@ -782,11 +786,13 @@ export class TcChatHistory extends TcElement {
     this.build();
     const q = this.query.trim();
     const total = this.conversations.length;
-    const head = html`<div class="ui-chh__head">
-      <span class="ui-chh__title-text" id="${this.uid}-title">${this.heading}</span>
-      <span class="ui-chh__count" aria-hidden="true">${total.toLocaleString(this.locale)}</span>
-      <button type="button" class="ui-chh__icon" aria-label="New chat" title="New chat" @click=${() => this.emit("tc-new-chat", null)}>${icons.compose}</button>
-    </div>`;
+    const head = cardHead({
+      icon: historyIcon,
+      title: this.heading,
+      id: `${this.uid}-title`,
+      aside: html`<span class="ui-chh__count" aria-hidden="true">${total.toLocaleString(this.locale)}</span>
+        <button type="button" class="ui-chh__icon" aria-label="New chat" title="New chat" @click=${() => this.emit("tc-new-chat", null)}>${icons.compose}</button>`,
+    });
     const empty = !this.rows.length || (q && !this.groups.some((g) => g.items.length));
     const body = html`
       <div class="ui-chh__search">
@@ -873,28 +879,19 @@ export class TcChatHistory extends TcElement {
 :where([data-look="standard"], [data-look="standard"] *).ui-chh__glyph { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 :where([data-look="clean"], [data-look="clean"] *).ui-chh__glyph { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.1; stroke-linecap: round; stroke-linejoin: round; }
 :where([data-look="clean"], [data-look="clean"] *).ui-chh__glyph[data-solid] { fill: currentColor; stroke: none; }
-/* ----- Head: on the tray (Standard), the card's first row (Clean) ----- */
-.ui-chh__head { display: flex; align-items: center; gap: var(--tc-space-2); }
-:where([data-look="standard"], [data-look="standard"] *).ui-chh__head { min-height: 44px; padding: var(--tc-space-1) var(--tc-space-2) var(--tc-space-1) var(--tc-space-3-5); }
-:where([data-look="clean"], [data-look="clean"] *).ui-chh__head { min-height: 48px; padding: var(--tc-space-2) var(--tc-space-2-5) 0 var(--tc-space-4); }
-:where([data-look="standard"], [data-look="standard"] *).ui-chh__title-text { min-width: 0; overflow: hidden; font-size: var(--tc-font-size-lg-plus); font-weight: var(--tc-font-weight-semibold); line-height: var(--tc-line-height-relaxed); letter-spacing: -0.01em; white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="clean"], [data-look="clean"] *).ui-chh__title-text { min-width: 0; overflow: hidden; font-size: var(--tc-font-size-lg-plus); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-loose); color: var(--tc-text-strong); white-space: nowrap; text-overflow: ellipsis; }
 :where([data-look="standard"], [data-look="standard"] *).ui-chh__count { flex: none; min-width: 20px; height: 20px; padding: 0 var(--tc-space-1-5); border-radius: var(--tc-radius-xs); background: var(--tc-fill-default); font-size: var(--tc-font-size-sm); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-normal); text-align: center; color: var(--tc-text-muted); font-variant-numeric: tabular-nums; }
 :where([data-look="clean"], [data-look="clean"] *).ui-chh__count { flex: none; min-width: 20px; height: 18px; padding: 0 var(--tc-space-1-5); border-radius: var(--tc-radius-badge); background: var(--tc-fill-default); font-size: var(--tc-font-size-xs); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-snug); text-align: center; color: var(--tc-text-secondary); font-variant-numeric: tabular-nums; }
-.ui-chh__head .ui-chh__icon { margin-left: auto; }
 /* Ghost icon buttons */
-:where([data-look="standard"], [data-look="standard"] *).ui-chh__icon { display: grid; flex: none; place-items: center; width: 30px; height: 30px; border-radius: var(--tc-control-radius-sm); color: var(--tc-text-muted); transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard); }
-:where([data-look="standard"], [data-look="standard"] *).ui-chh__icon:hover { background: var(--tc-fill-hover); color: var(--tc-text-primary); }
-:where([data-look="clean"], [data-look="clean"] *).ui-chh__icon { display: grid; flex: none; place-items: center; width: 28px; height: 28px; border-radius: var(--tc-radius-sm); color: var(--tc-icon-muted); transition: background-color var(--tc-duration-instant) var(--tc-ease-standard), color var(--tc-duration-instant) var(--tc-ease-standard); }
-:where([data-look="clean"], [data-look="clean"] *).ui-chh__icon:hover { background: var(--tc-fill-subtle); color: var(--tc-text-primary); }
+.ui-chh__icon { display: grid; flex: none; place-items: center; width: var(--tc-control-h-md); height: var(--tc-control-h-md); border-radius: var(--tc-control-radius-md); color: var(--tc-action-ghost-fg); transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard); }
+.ui-chh__icon:hover { background: var(--tc-action-ghost-bg-hover); color: var(--tc-text-primary); }
 :where([data-look="standard"], [data-look="standard"] *).ui-chh__card { overflow: hidden; border-radius: var(--tc-card-radius); background: var(--tc-surface-on-tray); box-shadow: var(--tc-card-shadow); }
 /* ----- Search: the field pattern ----- */
-.ui-chh__search { display: flex; align-items: center; gap: var(--tc-space-1-5); height: 32px; padding: 0 var(--tc-space-0-5) 0 var(--tc-space-2-5); border-radius: var(--tc-field-radius); background: var(--tc-field-bg-sunken); box-shadow: var(--tc-field-shadow); color: var(--tc-icon-muted); transition: box-shadow var(--tc-duration-fast) var(--tc-ease-standard); }
+.ui-chh__search { display: flex; align-items: center; gap: var(--tc-space-1-5); height: var(--tc-field-h); padding: 0 var(--tc-space-0-5) 0 var(--tc-field-px); border-radius: var(--tc-field-radius); background: var(--tc-field-bg-sunken); box-shadow: var(--tc-field-shadow); color: var(--tc-icon-muted); transition: box-shadow var(--tc-duration-fast) var(--tc-ease-standard); }
 .ui-chh__search:hover { box-shadow: var(--tc-field-shadow-hover); }
 .ui-chh__search:focus-within { box-shadow: var(--tc-field-shadow-focus); }
 :where([data-look="standard"], [data-look="standard"] *).ui-chh__search { margin: var(--tc-space-2-5) var(--tc-space-2-5) var(--tc-space-1); }
 :where([data-look="clean"], [data-look="clean"] *).ui-chh__search { margin: var(--tc-space-2) var(--tc-space-3) var(--tc-space-1); }
-.ui-chh__input { flex: 1; min-width: 0; height: 30px; margin: 0; padding: 0; border: 0; background: none; font: inherit; font-size: var(--tc-field-font-size); color: var(--tc-text-primary); caret-color: var(--tc-accent); outline: none; }
+.ui-chh__input { flex: 1; min-width: 0; height: 100%; margin: 0; padding: 0; border: 0; background: none; font: inherit; font-size: var(--tc-field-font-size); color: var(--tc-text-primary); caret-color: var(--tc-accent); outline: none; }
 .ui-chh__input::placeholder { color: var(--tc-text-placeholder); opacity: 1; }
 .ui-chh__search .ui-chh__clear { width: 26px; height: 26px; }
 /* ----- The list: a scroller with the tree inside ----- */
@@ -913,7 +910,7 @@ export class TcChatHistory extends TcElement {
 /* Group rows: the label sits low, so it reads as the head of what follows */
 .ui-chh__head-row { align-items: flex-end; padding-bottom: var(--tc-space-1-5) !important; color: var(--tc-text-muted); }
 :where([data-look="standard"], [data-look="standard"] *).ui-chh__group-label { min-width: 0; overflow: hidden; font-size: var(--tc-font-size-sm); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-tight); white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="clean"], [data-look="clean"] *).ui-chh__group-label { min-width: 0; overflow: hidden; font-size: var(--tc-font-size-2xs); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-tight); letter-spacing: 0.5px; text-transform: uppercase; white-space: nowrap; text-overflow: ellipsis; }
+:where([data-look="clean"], [data-look="clean"] *).ui-chh__group-label { min-width: 0; overflow: hidden; font-size: var(--tc-font-size-2xs); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-tight); letter-spacing: var(--tc-tracking-caps); text-transform: uppercase; white-space: nowrap; text-overflow: ellipsis; }
 .ui-chh__head-row[data-kind="folder"] .ui-chh__group-label { color: var(--tc-text-secondary); text-transform: none; letter-spacing: 0; }
 :where([data-look="clean"], [data-look="clean"] *).ui-chh__head-row[data-kind="folder"] .ui-chh__group-label { font-size: var(--tc-font-size-sm); }
 .ui-chh__group-count { margin-left: auto; padding-right: var(--tc-space-1-5); font-size: var(--tc-font-size-xs); line-height: var(--tc-line-height-tight); color: var(--tc-text-muted); font-variant-numeric: tabular-nums; opacity: 0; transition: opacity var(--tc-duration-fast) var(--tc-ease-standard); }
@@ -955,8 +952,9 @@ export class TcChatHistory extends TcElement {
 .ui-chh__hint kbd + kbd { margin-left: calc(-1 * var(--tc-space-0-5)); }
 .ui-chh__deleted { display: flex; flex: 1; min-width: 0; animation: ui-chh-in var(--tc-duration-slow) var(--tc-ease-standard) both; }
 .ui-chh__deleted-text { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="standard"], [data-look="standard"] *).ui-chh__undo { display: inline-flex; flex: none; align-items: center; gap: var(--tc-space-1); height: 26px; padding: 0 var(--tc-space-2); border-radius: var(--tc-radius-lg); background: var(--tc-action-secondary-bg); box-shadow: var(--tc-action-secondary-shadow); font-size: var(--tc-font-size-sm); font-weight: var(--tc-font-weight-medium); color: var(--tc-action-secondary-fg); white-space: nowrap; animation: ui-chh-in var(--tc-duration-slow) var(--tc-ease-standard) both; }
-:where([data-look="clean"], [data-look="clean"] *).ui-chh__undo { display: inline-flex; flex: none; align-items: center; gap: var(--tc-space-1-5); height: 28px; padding: 0 var(--tc-space-2-5) 0 var(--tc-space-2); border-radius: var(--tc-radius-sm); background: var(--tc-action-secondary-bg); box-shadow: var(--tc-action-secondary-shadow); font-size: var(--tc-font-size-md); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-normal); color: var(--tc-action-secondary-fg); white-space: nowrap; animation: ui-chh-in var(--tc-duration-slow) var(--tc-ease-standard) both; }
+/* Undo: Button's secondary (small in Standard, the default size in Clean) */
+.ui-chh__undo { display: inline-flex; flex: none; align-items: center; gap: var(--tc-space-1); height: var(--tc-control-h-sm); padding: 0 var(--tc-control-px-sm) 0 var(--tc-space-2); border-radius: var(--tc-control-radius-sm); background: var(--tc-action-secondary-bg); box-shadow: var(--tc-action-secondary-shadow); font-size: var(--tc-control-font-size); font-weight: var(--tc-control-font-weight); line-height: var(--tc-line-height-normal); color: var(--tc-action-secondary-fg); white-space: nowrap; animation: ui-chh-in var(--tc-duration-slow) var(--tc-ease-standard) both; }
+:where([data-look="clean"], [data-look="clean"] *).ui-chh__undo { gap: var(--tc-space-1-5); height: var(--tc-control-h-md); padding: 0 var(--tc-control-px-md) 0 var(--tc-space-2); border-radius: var(--tc-control-radius-md); }
 .ui-chh__undo:hover { box-shadow: var(--tc-action-secondary-shadow-hover); }
 .ui-chh__undo .ui-chh__glyph { width: 14px; height: 14px; }
 /* ----- The actions menu: the menu pattern, hung from the row ----- */

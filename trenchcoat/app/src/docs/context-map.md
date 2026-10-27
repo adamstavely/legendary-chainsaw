@@ -25,17 +25,18 @@ is taking the room. After a compaction, Before and After show what was kept, fol
 
 ## Anatomy
 
-1. **Bar** `.ui-cxm__bar` – the title, the agent or model, and how full the window is
-2. **Agent menu** `.ui-cxm__agent` – the current agent and its window size; opens a menu of the others
-3. **Total** `.ui-cxm__sum` – tokens used out of the window and the share; Before and After join it after a compaction
-4. **Tile** `.ui-cxm__tile` – one block of the context, sized by its tokens
-5. **Free space** `.ui-cxm__tile[data-kind="free"]` – what's left of the window, dashed
-6. **Compaction line** `.ui-cxm__fates` – adds up the last compaction: kept, summarized and dropped
+1. **Header** `.tc-head` – a treemap icon, the title, and the status while there is one
+2. **Bar** `.ui-cxm__bar` – the agent or model, and how full the window is
+3. **Agent menu** `.ui-cxm__agent` – the current agent and its window size; opens a menu of the others
+4. **Total** `.ui-cxm__sum` – tokens used out of the window and the share; Before and After join it after a compaction
+5. **Tile** `.ui-cxm__tile` – one block of the context, sized by its tokens
+6. **Free space** `.ui-cxm__tile[data-kind="free"]` – what's left of the window, dashed
+7. **Compaction line** `.ui-cxm__fates` – adds up the last compaction: kept, summarized and dropped
 
 ## Looks
 
-Standard sets the bar and the map in a gray tray, the map inset as a white card. Clean drops the tray: the bar sits
-on top and the map is one hairline-bordered area below. Both colour the
+Standard sets the header, the bar and the map in a gray tray, the map inset as a white card. Clean drops the tray:
+one white card, with the header as its first row, then the bar and the map as a hairline-bordered area. Both colour the
 percentage amber from 80% and red from 95%, and behave the same.
 
 ## Keyboard

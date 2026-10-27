@@ -4,6 +4,7 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { keyed } from "lit/directives/keyed.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController, OnScreenController, rescueFocus } from "./internal/controllers";
 import type { Look } from "./internal/look";
 
@@ -19,6 +20,9 @@ import type { Look } from "./internal/look";
  * The typing is written straight to the DOM (data-on on each word): the element re-renders only when a new paragraph
  * or list item begins.
  */
+
+// The header icon: a speech bubble with a sparkle – an assistant's answer
+const answerIcon = svg`<path d="M20 12.5a7.5 7.5 0 0 1-11.1 6.6L4 20l.9-4.4A7.5 7.5 0 1 1 20 12.5Z"></path><path d="M12.5 8.5l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7Z"></path>`;
 
 export type AnswerSource = {
   /** Headline of the page, message or document */
@@ -644,7 +648,6 @@ export class TcAiAnswer extends TcElement {
     const icons = clean ? cleanIcons : standardIcons;
 
     const content = html`<div class="ui-ans__inner">
-      ${this.question ? html`<h3 class="ui-ans__question">${this.question}</h3>` : nothing}
       ${this.renderSources(lit)}
       <div class="ui-ans__label">
         ${clean ? sparkleMark : cloudMark(this.uid)}
@@ -663,9 +666,11 @@ export class TcAiAnswer extends TcElement {
         : nothing}
     </div>`;
     const footer = this.renderFooter(status);
+    // The question is the card's title; with no question there's no header
+    const head = this.question ? cardHead({ icon: answerIcon, title: this.question }) : nothing;
 
     return html`
-      ${clean ? html`<div class="ui-ans__card"><div class="ui-ans__body">${content}</div>${footer}</div>` : html`<div class="ui-ans__card">${content}</div>${footer}`}
+      ${clean ? html`<div class="ui-ans__card">${head}<div class="ui-ans__body">${content}</div>${footer}</div>` : html`${head}<div class="ui-ans__card">${content}</div>${footer}`}
       <span class="ui-ans__sr" role="status">${finished && !failed ? status : ""}</span>
       <span class="ui-ans__sr" role="alert">${finished && failed ? status : ""}</span>
       ${this.renderPop()}
@@ -728,7 +733,7 @@ export class TcAiAnswer extends TcElement {
   transition: height var(--tc-duration-slow) var(--tc-ease-move);
 }
 :where([data-look="standard"], [data-look="standard"] *).ui-ans__inner { display: flow-root; padding: 22px var(--tc-space-6) var(--tc-space-5); }
-:where([data-look="standard"], [data-look="standard"] *).ui-ans__question { margin: 0 0 var(--tc-space-4); font-size: 18px; font-weight: var(--tc-font-weight-semibold); line-height: 1.35; letter-spacing: -0.012em; color: var(--tc-text-primary); }
+/* The question leads the answer: deliberately a step above the card-title size in Standard */
 /* Sources: a row of small cards that scrolls sideways */
 :where([data-look="standard"], [data-look="standard"] *).ui-ans__sources {
   display: flex;
@@ -750,7 +755,6 @@ export class TcAiAnswer extends TcElement {
 }
 :where([data-look="clean"], [data-look="clean"] *).ui-ans__body { overflow: hidden; transition: height var(--tc-duration-slow) var(--tc-ease-move); }
 :where([data-look="clean"], [data-look="clean"] *).ui-ans__inner { display: flow-root; padding: var(--tc-space-5) var(--tc-space-5) var(--tc-space-4); }
-:where([data-look="clean"], [data-look="clean"] *).ui-ans__question { margin: 0 0 var(--tc-space-3-5); font-size: var(--tc-font-size-lg-plus); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-loose); color: var(--tc-text-strong); }
 /* Sources: small white cards in a row that scrolls sideways */
 :where([data-look="clean"], [data-look="clean"] *).ui-ans__sources {
   display: flex;
@@ -809,7 +813,7 @@ a:where([data-look="clean"], [data-look="clean"] *).ui-ans__source:hover { backg
   border-radius: var(--tc-radius-xs);
   box-shadow: 0 0 0 1px light-dark(rgba(0, 0, 0, 0.06), rgba(255, 255, 255, 0.08));
 }
-:where([data-look="clean"], [data-look="clean"] *).ui-ans__num { flex: none; font-size: var(--tc-font-size-2xs); line-height: var(--tc-line-height-tight); font-weight: var(--tc-font-weight-medium); letter-spacing: 0.5px; font-variant-numeric: tabular-nums; color: var(--tc-text-muted); }
+:where([data-look="clean"], [data-look="clean"] *).ui-ans__num { flex: none; font-size: var(--tc-font-size-2xs); line-height: var(--tc-line-height-tight); font-weight: var(--tc-font-weight-medium); letter-spacing: var(--tc-tracking-caps); font-variant-numeric: tabular-nums; color: var(--tc-text-muted); }
 :where([data-look="clean"], [data-look="clean"] *).ui-ans__favicon {
   display: grid;
   flex: none;
@@ -1135,6 +1139,7 @@ a:where([data-look="clean"], [data-look="clean"] *).ui-ans__source:hover { backg
   padding: 0 var(--tc-control-px-md) 0 var(--tc-control-px-sm);
   border-radius: var(--tc-control-radius-sm);
   font-size: var(--tc-control-font-size);
+  font-weight: var(--tc-control-font-weight);
   color: var(--tc-action-ghost-fg);
   transition: background-color var(--tc-duration-fast) var(--tc-ease-standard);
   animation: ui-ans-fade var(--tc-duration-moderate) var(--tc-ease-move) both;
@@ -1165,30 +1170,22 @@ a:where([data-look="clean"], [data-look="clean"] *).ui-ans__source:hover { backg
 /* 4px of room above (taken back with the margin) so the outline and focus ring of the chips aren't cut off */
 :where([data-look="standard"], [data-look="standard"] *).ui-ans__reasons > div { display: flex; flex-wrap: wrap; gap: var(--tc-space-1-5); min-height: 0; overflow: hidden; margin-top: -4px; padding: var(--tc-space-1) var(--tc-space-1-5) 0; }
 :where([data-look="standard"], [data-look="standard"] *).ui-ans__reasons[data-open="true"] > div { padding-bottom: var(--tc-space-2); }
-:where([data-look="standard"], [data-look="standard"] *).ui-ans__reasons button {
+/* Reasons: Button's secondary (small in Standard, the default size in Clean) */
+.ui-ans__reasons button {
   height: var(--tc-control-h-sm);
   padding: 0 var(--tc-control-px-sm);
   border-radius: var(--tc-control-radius-sm);
   background: var(--tc-action-secondary-bg);
   box-shadow: var(--tc-action-secondary-shadow);
-  font-size: var(--tc-font-size-sm);
-  color: var(--tc-text-secondary);
+  font-size: var(--tc-control-font-size);
+  font-weight: var(--tc-control-font-weight);
+  color: var(--tc-action-secondary-fg);
   transition: color var(--tc-duration-fast) var(--tc-ease-standard), box-shadow var(--tc-duration-fast) var(--tc-ease-standard);
 }
-:where([data-look="standard"], [data-look="standard"] *).ui-ans__reasons button:hover { color: var(--tc-text-primary); box-shadow: var(--tc-action-secondary-shadow-hover); }
+.ui-ans__reasons button:hover { box-shadow: var(--tc-action-secondary-shadow-hover); }
 :where([data-look="clean"], [data-look="clean"] *).ui-ans__reasons > div { display: flex; flex-wrap: wrap; gap: var(--tc-space-2); min-height: 0; overflow: hidden; margin-top: -4px; padding: var(--tc-space-1) var(--tc-space-3) 0; }
 :where([data-look="clean"], [data-look="clean"] *).ui-ans__reasons[data-open="true"] > div { padding-bottom: var(--tc-space-3); }
-:where([data-look="clean"], [data-look="clean"] *).ui-ans__reasons button {
-  height: var(--tc-control-h-md);
-  padding: 0 var(--tc-control-px-md);
-  border-radius: var(--tc-control-radius-md);
-  box-shadow: inset 0 0 0 0.5px var(--tc-border-default);
-  font-size: var(--tc-font-size-md);
-  font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-text-secondary);
-  transition: color var(--tc-duration-fast) var(--tc-ease-standard), background-color var(--tc-duration-fast) var(--tc-ease-standard);
-}
-:where([data-look="clean"], [data-look="clean"] *).ui-ans__reasons button:hover { color: var(--tc-text-primary); background: var(--tc-fill-default); }
+:where([data-look="clean"], [data-look="clean"] *).ui-ans__reasons button { height: var(--tc-control-h-md); padding: 0 var(--tc-control-px-md); border-radius: var(--tc-control-radius-md); }
 /* Shine over the working label: a soft band (a mask) moves across by transform while the light copy of the text
    inside it moves back, so the letters stay put – composited, no repaint per frame */
 .ui-ans__shine {
@@ -1218,9 +1215,8 @@ a:where([data-look="clean"], [data-look="clean"] *).ui-ans__source:hover { backg
 @container (max-width: 480px) {
 :where([data-look="standard"], [data-look="standard"] *).ui-ans__inner { padding: var(--tc-space-4-5) var(--tc-space-4-5) var(--tc-space-4); }
 :where([data-look="standard"], [data-look="standard"] *).ui-ans__sources { margin: 0 -18px; padding: 0 var(--tc-space-4-5) var(--tc-space-0-5); scroll-padding: 0 18px; }
-:where([data-look="standard"], [data-look="standard"] *).ui-ans__question { font-size: 16.5px; }
 :where([data-look="standard"], [data-look="standard"] *).ui-ans__source { width: 152px; }
-:where([data-look="standard"], [data-look="standard"] *).ui-ans__answer { font-size: 14.5px; }
+:where([data-look="standard"], [data-look="standard"] *).ui-ans__answer { font-size: var(--tc-font-size-lg); }
 }
 /* Touch screens: bigger tap targets – the citation chips keep their size but get a larger invisible hit area */
 @media (hover: none) and (pointer: coarse) {

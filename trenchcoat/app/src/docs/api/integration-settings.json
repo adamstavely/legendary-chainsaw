@@ -168,9 +168,9 @@
     "--tc-focus-ring",
     "--tc-focus-ring-offset",
     "--tc-focus-ring-width",
+    "--tc-font-mono",
     "--tc-font-sans",
     "--tc-font-size-lg",
-    "--tc-font-size-lg-plus",
     "--tc-font-size-md",
     "--tc-font-size-sm",
     "--tc-font-size-xl",
@@ -178,9 +178,7 @@
     "--tc-font-weight-regular",
     "--tc-hairline",
     "--tc-icon-muted",
-    "--tc-line-height-loose",
     "--tc-line-height-normal",
-    "--tc-line-height-relaxed",
     "--tc-line-height-snug",
     "--tc-line-height-tight",
     "--tc-menu-bg",
@@ -201,7 +199,6 @@
     "--tc-radius-lg",
     "--tc-radius-md",
     "--tc-radius-sm",
-    "--tc-radius-xl",
     "--tc-shadow-control",
     "--tc-shadow-raised",
     "--tc-space-0-5",
@@ -232,7 +229,6 @@
     "--tc-text-placeholder",
     "--tc-text-primary",
     "--tc-text-secondary",
-    "--tc-text-strong",
     "--tc-tray-inset",
     "--tc-tray-radius",
     "--tc-z-dropdown"
@@ -418,7 +414,7 @@
  ],
  "changelog": [],
  "size": {
-  "min": 52336,
-  "gzip": 13039
+  "min": 52196,
+  "gzip": 13466
  }
 }

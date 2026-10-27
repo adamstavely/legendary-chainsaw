@@ -164,16 +164,13 @@
     "--tc-focus-ring-width",
     "--tc-font-sans",
     "--tc-font-size-lg",
-    "--tc-font-size-lg-plus",
     "--tc-font-size-md",
     "--tc-font-size-sm",
     "--tc-font-weight-medium",
     "--tc-font-weight-regular",
     "--tc-hairline",
     "--tc-icon-muted",
-    "--tc-line-height-loose",
     "--tc-line-height-normal",
-    "--tc-line-height-relaxed",
     "--tc-line-height-tight",
     "--tc-menu-bg",
     "--tc-menu-item-font-size",
@@ -204,7 +201,6 @@
     "--tc-space-3",
     "--tc-space-3-5",
     "--tc-space-4",
-    "--tc-space-4-5",
     "--tc-space-6",
     "--tc-status-danger-bg",
     "--tc-status-danger-fg",
@@ -221,7 +217,6 @@
     "--tc-text-on-inverse",
     "--tc-text-primary",
     "--tc-text-secondary",
-    "--tc-text-strong",
     "--tc-tone-amber-bg",
     "--tc-tone-amber-fg",
     "--tc-tone-pink-bg",
@@ -344,7 +339,7 @@
   "data-table renders only the rows in view above 200 rows (spacer rows keep the scroll height; `aria-rowcount` and `aria-rowindex` are set on every row)."
  ],
  "size": {
-  "min": 60390,
-  "gzip": 15378
+  "min": 61608,
+  "gzip": 15974
  }
 }

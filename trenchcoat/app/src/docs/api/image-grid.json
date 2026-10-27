@@ -191,7 +191,6 @@
     "--tc-pill-px",
     "--tc-pill-radius",
     "--tc-radius-2xl",
-    "--tc-radius-3xl",
     "--tc-radius-full",
     "--tc-radius-lg",
     "--tc-radius-md",
@@ -206,7 +205,6 @@
     "--tc-space-2",
     "--tc-space-2-5",
     "--tc-space-3",
-    "--tc-space-3-5",
     "--tc-space-4",
     "--tc-space-8",
     "--tc-status-danger-bg",
@@ -215,14 +213,16 @@
     "--tc-status-warning-fg",
     "--tc-surface-overlay",
     "--tc-surface-raised",
-    "--tc-surface-sunken",
+    "--tc-surface-tray",
+    "--tc-surface-well",
     "--tc-text-disabled",
     "--tc-text-muted",
     "--tc-text-placeholder",
     "--tc-text-primary",
     "--tc-text-secondary",
-    "--tc-text-strong",
-    "--tc-tracking-caps"
+    "--tc-tracking-caps",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
    ]
   }
  ],
@@ -417,7 +417,7 @@
   "`tc-image-grid` – generated images as a grid: pending, done and failed tiles, regenerate, upscale, download (saves by default), compare two with a keyboard slider, and required, editable alt text. WAI-ARIA grid."
  ],
  "size": {
-  "min": 48350,
-  "gzip": 13409
+  "min": 50053,
+  "gzip": 14116
  }
 }

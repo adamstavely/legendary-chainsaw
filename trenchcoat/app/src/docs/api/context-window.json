@@ -253,6 +253,7 @@
     "--tc-text-primary",
     "--tc-text-secondary",
     "--tc-text-strong",
+    "--tc-tracking-tight",
     "--tc-tray-inset",
     "--tc-tray-radius"
    ]
@@ -314,7 +315,7 @@
   "context-window: Clean's \"Compacting…\" shine runs 3 times and rests, like every other shimmer (it ran endlessly)."
  ],
  "size": {
-  "min": 52332,
-  "gzip": 12912
+  "min": 53940,
+  "gzip": 13585
  }
 }

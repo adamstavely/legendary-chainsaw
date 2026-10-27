@@ -26,7 +26,7 @@ thread reads as a conversation.
 
 ## Anatomy
 
-1. **Heading** `.ui-clq__head` – the agent's question, and what it will do once it knows
+1. **Header** – the shared card header: a boxed icon, the agent's question, and what it will do once it knows
 2. **Question** `.ui-clq__q` – numbered, with an optional hint; the number turns into a check once answered
 3. **Answers** `.ui-clq__choices` – chips or, when they have descriptions, cards; “You decide” is dashed with a spark
 4. **Short answer** `.ui-clq__text` – a field, with You decide beside it
@@ -34,8 +34,8 @@ thread reads as a conversation.
 
 ## Looks
 
-Standard sets the questions on a white card in the gray tray, with answers as white chips and the progress and Send
-on the tray below. Clean is one white card: answers are flat gray chips, the radio and check marks are thinner, and
+Standard puts the header on the gray tray and the questions on a white card below it, with answers as white chips and the progress and Send
+on the tray below. Clean is one white card with the header as its first row: answers are flat gray chips, the radio and check marks are thinner, and
 Send sits in the card's last row. In both, the picked answer is tinted with the accent and ringed.
 
 ## Keyboard

@@ -26,7 +26,8 @@ through, their dependents a beat after each other, and Redo brings them back.
 
 ## Anatomy
 
-1. **Bar** `.ui-alg__bar` – the heading, the agent and the count of changes and undone ones
+1. **Header** – the shared card header: a boxed icon, the heading with the agent under it, and the count of changes
+   and undone ones at the right
 2. **Row** `.ui-alg__row` – one change; new ones slide in at the top as the agent works
 3. **Logo** `.ui-alg__icon` – the system's logo, or its first letter
 4. **Change** `.ui-alg__change` – before → after, or one line of detail
@@ -35,7 +36,7 @@ through, their dependents a beat after each other, and Redo brings them back.
 ## Looks
 
 Standard sets a soft gray tray with the agent and the count above a white card of rows, and Undo / Redo as raised
-pills. Clean drops the tray for a plain bar over one quiet white panel: smaller logo tiles, medium weights, 0.5 px
+pills. Clean drops the tray for one quiet white card with the header as its first row: smaller logo tiles, medium weights, 0.5 px
 dividers, and Undo / Redo as flat text buttons. Both preview the same chain and use the same keys.
 
 ## Keyboard

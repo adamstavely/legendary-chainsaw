@@ -33,7 +33,7 @@ describe("tc-agent-plan", () => {
     expect(el.dataset.ui).toBe("pl");
     expect(el.dataset.look).toBe("standard");
     expect(el.dataset.status).toBe("draft");
-    expect(el.querySelector(".ui-pl__title")!.textContent).toBe("Ship it");
+    expect(el.querySelector(".tc-head__title")!.textContent).toBe("Ship it");
     expect(el.querySelector(".ui-pl__list")!.getAttribute("aria-label")).toBe("Plan: Ship it");
     expect(el.querySelector(".ui-pl__state-label")!.textContent).toBe("Plan · 2 steps");
     expect(el.querySelector(".ui-pl__estimate")!.textContent).toBe("Estimated time ~2 min");

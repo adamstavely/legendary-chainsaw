@@ -229,6 +229,7 @@
     "--tc-text-primary",
     "--tc-text-secondary",
     "--tc-text-strong",
+    "--tc-tracking-caps",
     "--tc-tray-inset",
     "--tc-tray-radius",
     "--tc-z-dropdown"
@@ -311,7 +312,7 @@
  ],
  "changelog": [],
  "size": {
-  "min": 61239,
-  "gzip": 13178
+  "min": 63214,
+  "gzip": 13639
  }
 }

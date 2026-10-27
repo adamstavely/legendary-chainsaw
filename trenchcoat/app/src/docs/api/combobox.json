@@ -160,6 +160,14 @@
    "ui": "cbx",
    "cssProperties": [
     {
+     "name": "--tc-combobox-chip-initial-size",
+     "value": "7px",
+     "looks": [
+      "both",
+      "clean"
+     ]
+    },
+    {
      "name": "--tc-combobox-chip-border-armed",
      "value": "light-dark(rgba(0, 0, 0, 0.27), rgba(255, 255, 255, 0.3))",
      "looks": [
@@ -254,6 +262,7 @@
     "--tc-text-placeholder",
     "--tc-text-primary",
     "--tc-text-secondary",
+    "--tc-tracking-normal",
     "--tc-tray-inset",
     "--tc-tray-radius",
     "--tc-z-dropdown"
@@ -329,7 +338,7 @@
   "combobox `invalid`, otp-input `labelledBy`, stepper-form tags `autoComplete`, decision-tree Previous/Next buttons, inline-diff \"Undo last decision\", agent-plan Move up/down buttons, delegate-board click-to-assign."
  ],
  "size": {
-  "min": 47653,
-  "gzip": 13653
+  "min": 50071,
+  "gzip": 14288
  }
 }

@@ -90,7 +90,7 @@
      "attribute": "heading",
      "type": "string",
      "default": "\"Fan-out\"",
-     "description": "The title on the bar",
+     "description": "The title in the header",
      "readonly": false
     },
     {
@@ -98,7 +98,7 @@
      "attribute": null,
      "type": "Element | undefined",
      "default": "undefined",
-     "description": "A small mark before the title (cloned); unset shows the default",
+     "description": "The header's icon (cloned); unset shows the default",
      "readonly": false
     },
     {
@@ -150,7 +150,6 @@
     }
    ],
    "tokens": [
-    "--tc-accent-text",
     "--tc-action-secondary-bg",
     "--tc-action-secondary-shadow",
     "--tc-action-secondary-shadow-hover",
@@ -163,6 +162,7 @@
     "--tc-control-h-md",
     "--tc-control-h-sm",
     "--tc-control-px-md",
+    "--tc-control-px-sm",
     "--tc-control-radius-md",
     "--tc-control-radius-sm",
     "--tc-duration-base",
@@ -237,7 +237,6 @@
     "--tc-text-muted",
     "--tc-text-primary",
     "--tc-text-secondary",
-    "--tc-text-strong",
     "--tc-tray-inset",
     "--tc-tray-radius"
    ]
@@ -330,7 +329,7 @@
   "fan-out-grid cells and agent-queue backlog squares stay 12 px but sit 24 px apart, and each takes clicks across 24 px (WCAG 2.5.8) – the grids show fewer items per row."
  ],
  "size": {
-  "min": 38152,
-  "gzip": 11259
+  "min": 39513,
+  "gzip": 11770
  }
 }

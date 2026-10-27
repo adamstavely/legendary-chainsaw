@@ -910,7 +910,7 @@ export class TcStructuredOutput extends TcElement {
 .ui-so__title { display: flex; flex: 1; align-items: center; gap: var(--tc-space-2); min-width: 0; }
 .ui-so__head-icon { flex: none; width: 14px; height: 14px; fill: none; stroke: var(--tc-icon-muted); stroke-linecap: round; stroke-linejoin: round; }
 :where([data-look="clean"], [data-look="clean"] *).ui-so__head-icon { width: 16px; height: 16px; }
-.ui-so__heading { min-width: 0; overflow: hidden; color: var(--tc-text-primary); font-weight: var(--tc-font-weight-medium); white-space: nowrap; text-overflow: ellipsis; }
+.ui-so__heading { min-width: 0; overflow: hidden; color: var(--tc-title-color); font-size: var(--tc-title-font-size); font-weight: var(--tc-title-font-weight); line-height: var(--tc-title-line-height); letter-spacing: var(--tc-title-tracking); white-space: nowrap; text-overflow: ellipsis; }
 .ui-so__status {
   display: inline-flex;
   flex: none;

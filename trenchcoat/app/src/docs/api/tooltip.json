@@ -1,0 +1,55 @@
+{
+ "elements": [
+  {
+   "tag": "tc-tooltip",
+   "className": "TcTooltip",
+   "description": "Text help available by pointer, focus and touch.",
+   "properties": [
+    {
+     "name": "label",
+     "attribute": "label",
+     "type": "string",
+     "default": "\"More information\"",
+     "description": "Accessible name of the help trigger.",
+     "readonly": false
+    },
+    {
+     "name": "text",
+     "attribute": "text",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Plain-text help content.",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [],
+   "slots": [],
+   "methods": [],
+   "ui": "tooltip",
+   "cssProperties": [],
+   "tokens": []
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "Tooltip",
+   "exported": false,
+   "props": [],
+   "hides": []
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 22496,
+  "gzip": 6316
+ }
+}

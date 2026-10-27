@@ -144,6 +144,7 @@
     "--tc-caption-color",
     "--tc-caption-font-size",
     "--tc-caption-font-weight",
+    "--tc-caption-line-height",
     "--tc-caption-tracking",
     "--tc-caption-transform",
     "--tc-card-radius",
@@ -308,9 +309,11 @@
    ]
   }
  ],
- "changelog": [],
+ "changelog": [
+  "**Quality, retrieval, safety, structured output and conversation:** `tc-eval-scorecard`, `tc-feedback-rubric`, `tc-retrieval-inspector`, `tc-extraction-review`, `tc-guardrail-notice`, `tc-clarifying-questions`, `tc-structured-output`, `tc-generated-ui` and `tc-prompt-starters`."
+ ],
  "size": {
-  "min": 86525,
-  "gzip": 21573
+  "min": 87813,
+  "gzip": 22180
  }
 }

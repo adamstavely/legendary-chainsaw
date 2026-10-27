@@ -622,10 +622,7 @@ ${Array.from({ length: CHART_COLOURS }, (_, i) => `[data-ui="gui"] polyline[stro
 .ui-gui__text { margin: 0; color: var(--tc-text-primary); text-wrap: pretty; white-space: pre-line; overflow-wrap: anywhere; }
 .ui-gui__text[data-muted] { color: var(--tc-text-muted); }
 :where([data-look="clean"], [data-look="clean"] *).ui-gui__text:not([data-muted]) { color: var(--tc-text-secondary); }
-.ui-gui__heading, .ui-gui__group-title, .ui-gui__form-title { margin: 0; color: var(--tc-text-primary); font-size: var(--tc-font-size-lg); font-weight: var(--tc-font-weight-semibold); line-height: var(--tc-line-height-snug); }
-:where([data-look="clean"], [data-look="clean"] *).ui-gui__heading,
-:where([data-look="clean"], [data-look="clean"] *).ui-gui__group-title,
-:where([data-look="clean"], [data-look="clean"] *).ui-gui__form-title { color: var(--tc-text-strong); font-weight: var(--tc-font-weight-medium); }
+.ui-gui__heading, .ui-gui__group-title, .ui-gui__form-title { margin: 0; font-size: var(--tc-title-font-size); font-weight: var(--tc-title-font-weight); line-height: var(--tc-title-line-height); letter-spacing: var(--tc-title-tracking); color: var(--tc-title-color); }
 .ui-gui__group { display: grid; gap: var(--tc-space-2-5); min-width: 0; }
 .ui-gui__heading + *, .ui-gui__group-title + * { margin-top: calc(var(--tc-space-1) * -1); }
 /* Metric tiles: change-summary's trend marks on a tile – the tray in Standard, a hairline card in Clean */
@@ -656,15 +653,13 @@ ${Array.from({ length: CHART_COLOURS }, (_, i) => `[data-ui="gui"] polyline[stro
 /* Forms: stepper-form's fields on its tray and card */
 .ui-gui__form { display: grid; min-width: 0; margin: 0; }
 :where([data-look="standard"], [data-look="standard"] *).ui-gui__form { padding: var(--tc-tray-inset); border-radius: var(--tc-tray-radius); background: var(--tc-surface-tray); }
-:where([data-look="standard"], [data-look="standard"] *).ui-gui__form-title { padding: var(--tc-space-2) var(--tc-space-3) var(--tc-space-2-5); font-size: var(--tc-font-size-md); font-weight: var(--tc-font-weight-medium); }
+:where([data-look="standard"], [data-look="standard"] *).ui-gui__form-title { padding: var(--tc-space-2) var(--tc-space-3) var(--tc-space-2-5); }
 :where([data-look="standard"], [data-look="standard"] *).ui-gui__form-card { border-radius: var(--tc-card-radius); background: var(--tc-surface-on-tray); box-shadow: var(--tc-card-shadow); }
 :where([data-look="clean"], [data-look="clean"] *).ui-gui__form { overflow: hidden; border-radius: var(--tc-radius-lg); background: var(--tc-surface-raised); box-shadow: var(--tc-shadow-raised); }
-:where([data-look="clean"], [data-look="clean"] *).ui-gui__form-title { padding: var(--tc-space-3) var(--tc-space-4); border-bottom: var(--tc-hairline) solid var(--tc-divider); font-size: var(--tc-font-size-md); }
+:where([data-look="clean"], [data-look="clean"] *).ui-gui__form-title { padding: var(--tc-space-3) var(--tc-space-4); border-bottom: var(--tc-hairline) solid var(--tc-divider); }
 .ui-gui__fields { display: grid; gap: var(--tc-space-3-5); padding: var(--tc-space-4); }
 .ui-gui__form-foot { display: flex; justify-content: flex-end; padding: 0 var(--tc-space-4) var(--tc-space-4); }
 :where([data-look="clean"], [data-look="clean"] *).ui-gui__form-foot { padding: var(--tc-space-2-5) var(--tc-space-3); border-top: var(--tc-hairline) solid var(--tc-divider); }
-/* stepper-form's messages use the solid danger colour, under 4.5:1 on white at this size – the text colour here */
-[data-ui="gui"] .ui-sf__msg { color: var(--tc-status-danger-fg); }
 /* Textareas and selects take the field pattern, like tc-stepper-input */
 .ui-gui__control {
   width: 100%;
@@ -687,7 +682,7 @@ ${Array.from({ length: CHART_COLOURS }, (_, i) => `[data-ui="gui"] polyline[stro
 .ui-gui__textarea::placeholder { color: var(--tc-text-placeholder); }
 .ui-gui__select-wrap { position: relative; display: block; }
 .ui-gui__select-wrap::after { content: ""; position: absolute; top: 50%; right: var(--tc-field-px); width: 6px; height: 6px; border-right: 1.5px solid var(--tc-icon-muted); border-bottom: 1.5px solid var(--tc-icon-muted); transform: translateY(-75%) rotate(45deg); pointer-events: none; }
-.ui-gui__select { height: var(--tc-field-h); padding: 0 calc(var(--tc-field-px) * 2 + 6px) 0 var(--tc-field-px); appearance: none; cursor: pointer; }
+.ui-gui__select { height: var(--tc-field-h); padding: 0 calc(var(--tc-field-px) * 2 + var(--tc-space-1-5)) 0 var(--tc-field-px); appearance: none; cursor: pointer; }
 /* Buttons: Button's secondary and primary recipes */
 .ui-gui__actions { display: flex; flex-wrap: wrap; gap: var(--tc-space-2); }
 .ui-gui__btn {

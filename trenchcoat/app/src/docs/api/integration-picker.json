@@ -216,12 +216,10 @@
     "--tc-focus-ring-width",
     "--tc-font-sans",
     "--tc-font-size-lg",
-    "--tc-font-size-lg-plus",
     "--tc-font-size-md",
     "--tc-font-size-sm",
     "--tc-font-weight-medium",
     "--tc-font-weight-regular",
-    "--tc-font-weight-strong",
     "--tc-hairline",
     "--tc-icon-muted",
     "--tc-integration-picker-brand",
@@ -235,9 +233,7 @@
     "--tc-kbd-px",
     "--tc-kbd-radius",
     "--tc-kbd-shadow",
-    "--tc-line-height-loose",
     "--tc-line-height-normal",
-    "--tc-line-height-relaxed",
     "--tc-line-height-snug",
     "--tc-line-height-tight",
     "--tc-pill-font-size",
@@ -266,6 +262,9 @@
     "--tc-status-success-bg",
     "--tc-status-success-fg",
     "--tc-status-success-solid",
+    "--tc-subtitle-color",
+    "--tc-subtitle-font-size",
+    "--tc-subtitle-line-height",
     "--tc-surface-inverse",
     "--tc-surface-on-tray",
     "--tc-surface-raised",
@@ -283,7 +282,11 @@
     "--tc-text-primary",
     "--tc-text-secondary",
     "--tc-text-strong",
-    "--tc-tracking-snug",
+    "--tc-title-color",
+    "--tc-title-font-size",
+    "--tc-title-font-weight",
+    "--tc-title-line-height",
+    "--tc-title-tracking",
     "--tc-tray-inset",
     "--tc-tray-radius"
    ]
@@ -520,7 +523,7 @@
  ],
  "changelog": [],
  "size": {
-  "min": 56443,
-  "gzip": 16192
+  "min": 58062,
+  "gzip": 16687
  }
 }

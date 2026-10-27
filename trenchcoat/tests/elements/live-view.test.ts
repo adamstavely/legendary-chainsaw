@@ -35,8 +35,8 @@ describe("tc-live-view", () => {
       expect(getComputedStyle(el).display).toBe("grid");
       const img = el.querySelector<HTMLImageElement>(".ui-lv__screen img")!;
       expect(img.alt).toBe("Checkout page");
-      expect(el.querySelector(".ui-lv__title")!.textContent).toBe("Booking");
-      expect(el.querySelector(".ui-lv__state")!.textContent!.trim()).toBe("Live");
+      expect(el.querySelector(".tc-head__title")!.textContent).toBe("Booking");
+      expect(el.querySelector(".tc-head__aside > .ui-lv__state")!.textContent!.trim()).toBe("Live");
       expect(el.querySelector(".ui-lv__screen")!.getAttribute("aria-label")).toBe("The agent's screen – Booking");
     });
 

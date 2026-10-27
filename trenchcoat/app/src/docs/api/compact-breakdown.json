@@ -157,7 +157,6 @@
     "--tc-focus-ring-offset",
     "--tc-font-sans",
     "--tc-font-size-3xl",
-    "--tc-font-size-lg-plus",
     "--tc-font-size-md",
     "--tc-font-size-sm",
     "--tc-font-weight-medium",
@@ -166,7 +165,6 @@
     "--tc-font-weight-strong",
     "--tc-hairline",
     "--tc-line-height-display",
-    "--tc-line-height-loose",
     "--tc-line-height-normal",
     "--tc-line-height-snug",
     "--tc-line-height-tight",
@@ -203,6 +201,7 @@
     "--tc-text-primary",
     "--tc-text-secondary",
     "--tc-text-strong",
+    "--tc-tracking-tight",
     "--tc-tray-inset",
     "--tc-tray-radius"
    ]
@@ -261,7 +260,7 @@
  ],
  "changelog": [],
  "size": {
-  "min": 32663,
-  "gzip": 9052
+  "min": 34271,
+  "gzip": 9746
  }
 }

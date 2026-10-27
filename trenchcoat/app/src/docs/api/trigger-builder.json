@@ -123,6 +123,12 @@
     "--tc-action-secondary-bg",
     "--tc-action-secondary-shadow",
     "--tc-action-secondary-shadow-hover",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
     "--tc-card-radius",
     "--tc-card-shadow",
     "--tc-control-font-size",
@@ -145,17 +151,13 @@
     "--tc-focus-outline",
     "--tc-focus-ring-offset",
     "--tc-font-sans",
-    "--tc-font-size-2xs",
-    "--tc-font-size-lg-plus",
     "--tc-font-size-md",
     "--tc-font-size-sm",
     "--tc-font-weight-medium",
     "--tc-font-weight-regular",
-    "--tc-font-weight-semibold",
     "--tc-hairline",
     "--tc-icon-muted",
     "--tc-line-height-normal",
-    "--tc-line-height-relaxed",
     "--tc-line-height-tight",
     "--tc-radius-lg",
     "--tc-radius-md",
@@ -245,7 +247,7 @@
   "`tc-trigger-builder` – an event or a schedule, an active window, conditions with all/any, a plain-language summary and the next run times; form-associated (JSON under `name`, validity, reset). Built from combobox, date-range-picker and segmented-control."
  ],
  "size": {
-  "min": 95771,
-  "gzip": 22733
+  "min": 97931,
+  "gzip": 23432
  }
 }

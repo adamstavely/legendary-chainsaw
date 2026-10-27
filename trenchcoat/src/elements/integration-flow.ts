@@ -184,7 +184,10 @@ const css = /* css */ `
   aspect-ratio: 2400 / 1490;
   overflow: hidden;
   background: var(--tc-integration-flow-bg);
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  /* The card labels are drawn on the 2400 × 1490 stage and scaled down with it: display sizes off the type scale */
+  --tc-integration-flow-title-size: 37px;
+  --tc-integration-flow-sub-size: 33.5px;
+  font-family: var(--tc-font-sans, "Inter", "InterVariable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif);
   -webkit-font-smoothing: antialiased;
 }
 [data-ui="if"] *, [data-ui="if"] *::before, [data-ui="if"] *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -494,8 +497,8 @@ const css = /* css */ `
   width: 424px;
 }
 /* Inter runs ~10% wider than the SF Pro of the design: slightly smaller and tighter, so the cards keep their exact widths */
-.ui-if-title { display: block; font-size: 37px; line-height: 40px; letter-spacing: -0.02em; font-weight: 400; }
-.ui-if-sub { display: block; font-size: 33.5px; line-height: 36px; letter-spacing: -0.02em; font-weight: 380; }
+.ui-if-title { display: block; font-size: var(--tc-integration-flow-title-size); line-height: 40px; letter-spacing: -0.02em; font-weight: 400; }
+.ui-if-sub { display: block; font-size: var(--tc-integration-flow-sub-size); line-height: 36px; letter-spacing: -0.02em; font-weight: 380; }
 .ui-if-hub .ui-if-title { color: var(--tc-integration-flow-ink-title); }
 .ui-if-hub .ui-if-sub { color: var(--tc-integration-flow-ink-sub); }
 

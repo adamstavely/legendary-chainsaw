@@ -53,7 +53,9 @@ describe("tc-playbook-canvas", () => {
     expect(el.dataset.ui).toBe("pb");
     expect(el.getAttribute("role")).toBe("region");
     expect(el.getAttribute("aria-label")).toBe("Refunds");
-    expect(el.querySelector(".ui-pb__card")).toBeTruthy();
+    // Standard: the header on the tray, above the card; Versions and Dry run at its right
+    expect(el.querySelector(":scope > .tc-head + .ui-pb__card")).toBeTruthy();
+    expect(el.querySelector(".tc-head__aside .ui-pb__btn--primary")).toBeTruthy();
     expect([...el.querySelectorAll(".ui-pb__phase-title")].map((h) => h.textContent)).toEqual(["Trigger", "Intake", "Context", "Analysis", "Review"]);
     expect(el.querySelector(".ui-pb__meta")!.textContent!.replace(/\s+/g, " ").trim()).toBe("v2 · 6 steps · 1 review gate");
     // Each phase is a listbox of its steps, named by the phase
@@ -69,6 +71,7 @@ describe("tc-playbook-canvas", () => {
     await settle();
     expect(el.dataset.look).toBe("clean");
     expect(el.querySelector(".ui-pb__card")).toBeNull();
+    expect(el.querySelector(":scope > .ui-pb__sr + .tc-head")).toBeTruthy();
     // An empty phase says so
     el.value = { steps: STEPS.filter((s) => s.phase !== "context") };
     await settle();

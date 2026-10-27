@@ -60,7 +60,7 @@ describe("tc-agent-queue", () => {
     expect(el.dataset.ui).toBe("agq");
     expect(el.dataset.look).toBe("standard");
     expect(el.dataset.state).toBe("live");
-    expect(el.querySelector(".ui-agq__title")!.textContent).toBe("Queue");
+    expect(el.querySelector(".tc-head__title")!.textContent).toBe("Queue");
     expect(el.querySelector(".ui-agq__jobs")!.getAttribute("aria-label")).toBe("Jobs: 1 running, 5 waiting");
     el.look = "clean";
     await settle();

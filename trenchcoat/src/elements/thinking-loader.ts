@@ -223,7 +223,7 @@ export class TcThinkingLoader extends TcElement {
   font-size: var(--tc-thinking-loader-font);
   font-weight: var(--tc-font-weight-regular);
   line-height: var(--tc-line-height-none);
-  letter-spacing: -0.006em;
+  letter-spacing: var(--tc-tracking-normal);
   vertical-align: middle;
   -webkit-font-smoothing: antialiased;
 }
@@ -261,7 +261,7 @@ export class TcThinkingLoader extends TcElement {
   font-size: var(--tc-thinking-loader-font);
   font-weight: var(--tc-font-weight-medium);
   line-height: var(--tc-thinking-loader-lh);
-  letter-spacing: -0.003em;
+  letter-spacing: var(--tc-tracking-normal);
   vertical-align: middle;
   -webkit-font-smoothing: antialiased;
 }

@@ -26,7 +26,7 @@ version or a different tone, without a full chat screen.
 
 ## Anatomy
 
-1. **Header** `.ui-wa__head` – the assistant's name, its tagline and New chat
+1. **Header** `.tc-head` – the icon, the assistant's name, its tagline and New chat
 2. **Welcome** `.ui-wa__welcome` – the greeting and the suggestion chips, before the first message
 3. **Suggestion** `.ui-wa__chip` – a starting prompt; picking it sends it
 4. **Prompt field** `.ui-wa__field` – grows to four lines, then scrolls
@@ -34,9 +34,9 @@ version or a different tone, without a full chat screen.
 
 ## Looks
 
-Standard is a rounded card with an inner panel: a large greeting over a strong pink-violet-blue glow, a pill-shaped
+Standard puts the header on a gray tray above a white panel: a large greeting over a strong pink-violet-blue glow, a pill-shaped
 field with Send inside it, a round mic beside it, and three dots while a reply is on its way. Clean is a quieter white
-card with a hairline under the header and a gradient mark beside the name; the greeting is smaller, the glow fainter,
+card with a hairline under the header; the greeting is smaller, the glow fainter,
 the mic and Send sit in the field's row, and a shimmering “Writing…” replaces the dots.
 
 ## Keyboard

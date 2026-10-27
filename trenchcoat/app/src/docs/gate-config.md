@@ -26,7 +26,7 @@ control: with `name` it submits the config as JSON.
 
 ## Anatomy
 
-1. **Header** `.ui-gc__head` – the gate's name, an optional line under it, and how many conditions pause it
+1. **Header** `.tc-head` – a pause icon, the gate's name, an optional line under it, and how many conditions pause it
 2. **Conditions** `.ui-gc__conds` – one switch per condition that can pause the run
 3. **Reviewer** `.ui-gc__select` – who reviews, a native select
 4. **What they see** `.ui-gc__view` – a segmented control, with a line describing the picked view
@@ -35,8 +35,8 @@ control: with `name` it submits the config as JSON.
 
 ## Looks
 
-Standard is a white card on a gray tray, with a square mark tile and filled checkboxes in ink. Clean is one white
-card with hairline shadows, a rounded mark, smaller blue checkboxes, separate chips for the views and an accent-tinted
+Standard puts the header on a gray tray above a white card, with filled checkboxes in ink. Clean is one white
+card with hairline shadows and the header as its first row, smaller blue checkboxes, separate chips for the views and an accent-tinted
 sentence. With `flat` either look drops the tray and the card, for a gate inside another card. In a narrow container
 the labels sit above their controls and the pause count is hidden.
 

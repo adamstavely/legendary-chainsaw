@@ -303,7 +303,7 @@
   "chat-composer (the Lit element and `trenchcoat/react`): opt-in `mentions` (a `tc-mention-picker` on the message) and `context` / `context-limit` (a `tc-context-tray` above it). Without them it renders as before."
  ],
  "size": {
-  "min": 31802,
-  "gzip": 10626
+  "min": 33802,
+  "gzip": 11119
  }
 }

@@ -26,7 +26,7 @@ without rewriting it from scratch.
 
 ## Anatomy
 
-1. **Record** `.ui-ed__record` – the reference, status, amount and account the email is about
+1. **Header** `.tc-head` – the record the email is about: its reference, account, status and amount
 2. **Recipient** `.ui-ed__recipient` – who it goes to; opens the list of contacts
 3. **Attachment** `.ui-ed__file` – the attached file, with × to remove it
 4. **Text** `.ui-ed__body` – the email; click it (or the pencil) to edit

@@ -28,7 +28,7 @@ is doing, its latest calls and its cost.
 
 ## Anatomy
 
-1. **Bar** `.ui-agg__bar` – the heading, chips for agents that need you or failed, and the totals
+1. **Header** – the shared card header: a boxed icon and the heading, with chips for agents that need you or failed, the totals and Pause on its right (narrow, the chips and totals move to a row `.ui-agg__bar` under it)
 2. **Totals** `.ui-agg__sum` – agents, tools, calls per minute and the total cost
 3. **Pause** `.ui-agg__still` – stops and restarts all motion
 4. **Lead agent** `.ui-agg__node[data-lead] .ui-agg__disc` – the agent in the middle; the other agents sit on the inner ring

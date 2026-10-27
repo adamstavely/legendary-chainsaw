@@ -228,7 +228,7 @@ describe("tc-attestation-check", () => {
     await act(async () => settle());
     await act(async () => rerender(1));
     await settle();
-    expect(el.querySelector(".ui-atc__title")!.textContent).toBe("Check 1");
+    expect(el.querySelector(".tc-head__title")!.textContent).toBe("Check 1");
     expect(el.result).toEqual(VALID);
     expect(calls).toEqual(["start:hash", "result:true:hash"]);
     await act(async () => root.unmount());

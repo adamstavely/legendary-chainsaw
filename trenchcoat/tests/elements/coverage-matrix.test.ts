@@ -213,7 +213,7 @@ describe("tc-coverage-matrix", () => {
     await act(async () => root.render(React.createElement(App)));
     await settle();
     const el = host.querySelector("tc-coverage-matrix")!;
-    expect(el.querySelector(".ui-cov__title")!.textContent).toBe("Red-team coverage");
+    expect(el.querySelector(".tc-head__title")!.textContent).toBe("Red-team coverage");
     cell(el, 0, 1).click();
     await settle();
     await act(async () => bump());

@@ -29,7 +29,7 @@ if it fails.
 
 ## Anatomy
 
-1. **Count** `.ui-di__head` – how many decisions need input, or “All caught up”
+1. **Header** `.tc-head` – an inbox icon and how many decisions need input, or “All caught up”
 2. **Decision** `.ui-di__item` – the title, its context and two answers
 3. **Context** `.ui-di__detail` – one line under the title
 4. **Answers** `.ui-di__actions` – the dark primary and the light secondary button
@@ -37,9 +37,9 @@ if it fails.
 
 ## Looks
 
-Standard sets the decisions in a white card inside a gray tray, with the count above them in the tray. Clean is a
-single white card whose heading row carries the count, with solid glyphs for the warning and the tick. Both fold
-answered rows the same way and turn the count green when everything is answered.
+Standard sets the decisions in a white card inside a gray tray, with the header and its count above them in the tray.
+Clean is a single white card whose first row is the header, with a solid glyph for the tick. Both fold answered rows
+the same way.
 
 ## Keyboard
 

@@ -58,7 +58,7 @@ describe("tc-integration-settings", () => {
     expect(el.dataset.look).toBe("standard");
     expect(el.getAttribute("role")).toBe("region");
     expect(el.getAttribute("aria-label")).toBe("Shopify settings");
-    expect(el.querySelector(".ui-is__logo svg[data-logo]")).toBeTruthy();
+    expect(el.querySelector(".tc-head__icon svg[data-logo]")).toBeTruthy();
     expect(logo.isConnected).toBe(false);
     expect(el.querySelector(".ui-is__count")!.textContent).toBe("1,284");
     expect(el.querySelector(".ui-is__meta")!.textContent!.trim()).toBe("Connected");
@@ -304,7 +304,7 @@ describe("tc-integration-settings", () => {
     await render({ siteUrl: "" });
     await settle();
     const el = host.querySelector("tc-integration-settings")!;
-    expect(el.querySelector(".ui-is__logo i")).toBeTruthy();
+    expect(el.querySelector(".tc-head__icon i")).toBeTruthy();
     await render({ siteUrl: "shop.example.com" });
     await settle();
     expect(site(el).value).toBe("shop.example.com");

@@ -113,7 +113,7 @@ const css = /* css */ `
   position: relative;
   width: 100%;
   container-type: inline-size;
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-family: var(--tc-font-sans, "Inter", "InterVariable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif);
   font-size: var(--tc-font-size-md, 13px);
   color: var(--tc-text-secondary, light-dark(#404040, #c8c8cc));
   -webkit-tap-highlight-color: transparent;

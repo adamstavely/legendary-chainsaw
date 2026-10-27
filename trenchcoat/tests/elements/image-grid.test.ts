@@ -48,14 +48,16 @@ const listen = <T>(el: Element, name: string, prevent = false) => {
 const finishAnimations = () => document.getAnimations().forEach((a) => a.effect?.getComputedTiming().iterations !== Infinity && a.finish());
 
 describe("tc-image-grid", () => {
-  test("the host is the root, in both looks; Clean puts the summary inside the card", async () => {
+  test("the host is the root, in both looks; Clean puts the header and the summary inside the card", async () => {
     const el = await grid();
     expect(el.dataset.ui).toBe("igrid");
     expect(el.dataset.look).toBe("standard");
+    expect(el.querySelector(":scope > .tc-head:first-child + .ui-igrid__card")).not.toBeNull();
     expect(el.querySelector(":scope > .ui-igrid__foot")).not.toBeNull();
     el.look = "clean";
     await settle();
     expect(el.dataset.look).toBe("clean");
+    expect(el.querySelector(":scope > .ui-igrid__card > .tc-head:first-child")).not.toBeNull();
     expect(el.querySelector(":scope > .ui-igrid__card > .ui-igrid__foot")).not.toBeNull();
     const provided = await fixture(html`<tc-look-provider look="clean"><tc-image-grid .tiles=${TILES}></tc-image-grid></tc-look-provider>`);
     expect(provided.querySelector("tc-image-grid")!.dataset.look).toBe("clean");
@@ -421,7 +423,7 @@ describe("tc-image-grid", () => {
     await settle();
     const el = host.querySelector("tc-image-grid")!;
     expect(el.classList.contains("consumer")).toBe(true);
-    expect(el.querySelector(".ui-igrid__title")!.textContent).toBe("Run 1");
+    expect(el.querySelector(".tc-head__title")!.textContent).toBe("Run 1");
     btn(el, "Add alt text for Variation 2").click();
     await settle();
     const input = active() as HTMLInputElement;
@@ -432,7 +434,7 @@ describe("tc-image-grid", () => {
     await act(async () => draw(2));
     await settle();
     expect(el.tiles[1].alt).toBe("Kept");
-    expect(el.querySelector(".ui-igrid__title")!.textContent).toBe("Run 2");
+    expect(el.querySelector(".tc-head__title")!.textContent).toBe("Run 2");
     btn(el, "Regenerate Variation 2").click();
     expect(onRegenerate).toHaveBeenCalledWith(expect.objectContaining({ id: "b", alt: "Kept" }), 1);
     btn(el, "Download Variation 1").click();

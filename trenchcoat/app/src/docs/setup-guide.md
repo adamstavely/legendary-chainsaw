@@ -25,14 +25,14 @@ and the next unfinished one opens. People can minimise the guide to its header a
 
 ## Anatomy
 
-1. **Header** `.ui-sg__head` – the title, Edit, Minimise and Close
+1. **Header** `.tc-head` – the icon, the title, Edit, Minimise and Close
 2. **Progress** `.ui-sg__track` – how many of all the tasks are done
 3. **Group** `.ui-sg__group-head` – a group's title, which opens and closes it
 4. **Task** `.ui-sg__task` – a tick box and the task; struck through when done, waiting when locked
 
 ## Looks
 
-Standard is a white card with a meter-style progress bar across it; the current task's tick box has a visible edge and
+Standard puts the header on a gray tray above a white card with a meter-style progress bar across it; the current task's tick box has a visible edge and
 a finished group's title has a line drawn through it. Clean is one white card with hairline shadows, a thin blue
 progress line with a “4/9” count next to it, an open ring for the current task, a dashed ring for locked ones and a
 hairline through finished titles. Groups fold open and closed the same way in both.

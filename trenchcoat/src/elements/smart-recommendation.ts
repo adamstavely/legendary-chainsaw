@@ -3,6 +3,7 @@ import { property, state } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { keyed } from "lit/directives/keyed.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController, rescueFocus } from "./internal/controllers";
 
 /*
@@ -32,12 +33,8 @@ const isPromise = (value: unknown): value is Promise<unknown> => !!value && type
 const signalText = ["No signal", "Weak signal", "Good signal", "Strong signal"];
 let uidCount = 0;
 
-/** Standard's mark: a box with a plus */
-const sparkIcon = () =>
-  html`<svg class="ui-sr__spark" viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${svg`<path d="M9 3.5H4A1.5 1.5 0 0 0 2.5 5v7A1.5 1.5 0 0 0 4 13.5h7a1.5 1.5 0 0 0 1.5-1.5V8"></path><path d="M12.5 1.5v4M10.5 3.5h4"></path>`}</svg>`;
-/** Clean's mark: a solid blue sparkle with a small one beside it */
-const sparkMark = () =>
-  html`<svg viewBox="0 0 16 16" class="ui-sr__mark" aria-hidden="true">${svg`<path d="M6.5 2.2c.2 0 .36.14.4.33.53 2.6 1.4 3.48 4 4.02a.4.4 0 0 1 0 .79c-2.6.53-3.47 1.4-4 4a.4.4 0 0 1-.8 0c-.53-2.6-1.4-3.47-4-4a.4.4 0 0 1 0-.79c2.6-.54 3.47-1.42 4-4.02a.4.4 0 0 1 .4-.33Z"></path><path d="M12 9.6c.12 0 .22.08.25.2.28 1.3.72 1.75 2.03 2.03a.25.25 0 0 1 0 .49c-1.31.28-1.75.72-2.03 2.03a.25.25 0 0 1-.5 0c-.28-1.31-.72-1.75-2.03-2.03a.25.25 0 0 1 0-.49c1.31-.28 1.75-.73 2.03-2.03a.25.25 0 0 1 .25-.2Z"></path>`}</svg>`;
+/* The header's icon: a sparkle with a small one beside it */
+const sparkIcon = svg`<path d="M10 3.5c.5 3.6 2 5.1 5.6 5.6-3.6.5-5.1 2-5.6 5.6-.5-3.6-2-5.1-5.6-5.6 3.6-.5 5.1-2 5.6-5.6Z"></path><path d="M18 14v6M15 17h6"></path>`;
 /** Line icons – Clean draws them thinner */
 const icon = (d: string, clean: boolean, size = 16) =>
   html`<svg viewBox="0 0 16 16" width=${size} height=${size} fill="none" stroke="currentColor" stroke-width=${clean ? "1.1" : "1.5"} stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${svg`<path d=${d}></path>`}</svg>`;
@@ -72,6 +69,7 @@ export class TcSmartRecommendation extends TcElement {
   @state() private accessor failed: string | null = null;
 
   private menuId = `tc-sr-${++uidCount}-menu`;
+  private whyId = `tc-sr-${uidCount}-why`;
   private optionsKey: string | null = null;
   /** The page named the region itself (aria-label or aria-labelledby on the host) */
   private ownName = false;
@@ -79,7 +77,7 @@ export class TcSmartRecommendation extends TcElement {
   constructor() {
     super();
     // Accept ⇄ Undo swap their buttons and a pick closes the menu: focus lands on the action that is there now
-    new FocusRescueController(this, () => this.querySelector(".ui-sr__btn--primary") ?? this.querySelector(".ui-sr__actions .ui-sr__btn") ?? this.querySelector(".ui-sr__head"));
+    new FocusRescueController(this, () => this.querySelector(".ui-sr__btn--primary") ?? this.querySelector(".ui-sr__actions .ui-sr__btn") ?? this.querySelector(".ui-sr__toggle"));
   }
 
   override connectedCallback() {
@@ -241,19 +239,28 @@ export class TcSmartRecommendation extends TcElement {
     const signal = current?.signal ?? 0;
     const busy = this.pending ? "true" : null;
 
-    const head = html`<button type="button" class="ui-sr__head" aria-expanded=${this.open ? "true" : "false"} @click=${() => this.setOpen(!this.open)}>
-      ${clean ? sparkMark() : sparkIcon()}
-      <span class="ui-sr__title">${this.heading}</span>
-      ${!isRecommended ? html`<span class="ui-sr__pill">Alternative</span>` : nothing}
-      <span class="ui-sr__chevron">${icon("m4.5 6.25 3.5 3.5 3.5-3.5", clean)}</span>
-    </button>`;
+    // The header (.tc-head): on the tray in Standard, the card's first row in Clean. "Alternative" and the fold at the right
+    const head = cardHead({
+      icon: sparkIcon,
+      title: this.heading,
+      aside: html`${!isRecommended ? html`<span class="ui-sr__pill">Alternative</span>` : nothing}<button
+          type="button"
+          class="ui-sr__toggle"
+          aria-label="Why"
+          aria-expanded=${this.open ? "true" : "false"}
+          aria-controls=${this.whyId}
+          @click=${() => this.setOpen(!this.open)}
+        >
+          <span class="ui-sr__chevron">${icon("m4.5 6.25 3.5 3.5 3.5-3.5", clean)}</span>
+        </button>`,
+    });
     const reason = current ? (typeof current.reason === "string" ? current.reason : current.reason.cloneNode(true)) : "No recommendation right now.";
-    const body = html`<div class="ui-sr__body" data-open=${ifDefined(this.open ? "true" : undefined)} .inert=${!this.open}>
+    const body = html`<div class="ui-sr__body" id=${this.whyId} data-open=${ifDefined(this.open ? "true" : undefined)} .inert=${!this.open}>
       ${keyed(current?.id, html`<p class="ui-sr__reason">${reason}</p>`)}
     </div>`;
 
     return html`
-      ${clean ? html`${head}${body}` : html`<div class="ui-sr__card">${head}${body}</div>`}
+      ${head}${clean ? body : html`<div class="ui-sr__card" ?data-open=${this.open}>${body}</div>`}
       <footer class="ui-sr__foot">
         ${this.failed
           ? html`<span class="ui-sr__signal ui-sr__error" role="alert">${this.failed}</span>`
@@ -303,7 +310,7 @@ export class TcSmartRecommendation extends TcElement {
   /* The gray tray frames the white card on every side – the tray recipe */
   padding: var(--tc-tray-inset);
   border-radius: var(--tc-tray-radius);
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--tc-font-sans);
   color: var(--tc-text-primary);
   -webkit-font-smoothing: antialiased;
 }
@@ -327,31 +334,18 @@ export class TcSmartRecommendation extends TcElement {
   -webkit-font-smoothing: antialiased;
 }
 [data-ui="sr"] *, [data-ui="sr"] *::before, [data-ui="sr"] *::after { box-sizing: border-box; }
-:where([data-look="standard"], [data-look="standard"] *)[data-ui="sr"] button { margin: 0; font: inherit; color: inherit; cursor: pointer; }
+:where([data-look="standard"], [data-look="standard"] *):where([data-ui="sr"]) button { margin: 0; font: inherit; color: inherit; cursor: pointer; }
 [data-ui="sr"] button:focus-visible { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
 :where([data-look="standard"], [data-look="standard"] *).ui-sr__card {
-  padding: var(--tc-space-1-5) var(--tc-space-2) var(--tc-space-2);
-  /* The card on the tray */
+  /* The card on the tray; folded, it has nothing to show */
   background: var(--tc-surface-on-tray);
   border-radius: var(--tc-card-radius);
   box-shadow: var(--tc-card-shadow);
 }
-:where([data-look="standard"], [data-look="standard"] *).ui-sr__head {
-  display: flex;
-  align-items: center;
-  gap: var(--tc-space-2-5);
-  width: 100%;
-  height: 40px;
-  padding: 0 var(--tc-space-2-5);
-  border: 0;
-  border-radius: var(--tc-radius-xl);
-  background: transparent;
-  text-align: left;
-  transition: background-color var(--tc-duration-fast) var(--tc-ease-standard);
-}
-:where([data-look="standard"], [data-look="standard"] *).ui-sr__head:hover { background: var(--tc-fill-hover); }
-:where([data-look="standard"], [data-look="standard"] *).ui-sr__spark { flex: none; color: var(--tc-accent-text); }
-:where([data-look="standard"], [data-look="standard"] *).ui-sr__title { font-size: var(--tc-font-size-lg-plus); font-weight: var(--tc-font-weight-medium); }
+:where([data-look="standard"], [data-look="standard"] *).ui-sr__card:not([data-open]) { box-shadow: none; }
+/* The fold: a ghost icon button at the header's right */
+.ui-sr__toggle { display: grid; flex: none; place-items: center; width: var(--tc-control-h-sm); height: var(--tc-control-h-sm); padding: 0; border: 0; border-radius: var(--tc-control-radius-sm); background: none; color: var(--tc-icon-muted); transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard); }
+.ui-sr__toggle:hover { background: var(--tc-action-ghost-bg-hover); color: var(--tc-text-primary); }
 :where([data-look="standard"], [data-look="standard"] *).ui-sr__pill {
   display: inline-flex;
   align-items: center;
@@ -363,25 +357,9 @@ export class TcSmartRecommendation extends TcElement {
   font-weight: var(--tc-pill-font-weight);
   color: var(--tc-tone-violet-fg);
 }
-:where([data-look="standard"], [data-look="standard"] *).ui-sr__chevron { display: grid; margin-left: auto; color: var(--tc-text-muted); transition: transform var(--tc-duration-moderate) var(--tc-ease-move); }
+:where([data-look="standard"], [data-look="standard"] *).ui-sr__chevron { display: grid; transition: transform var(--tc-duration-moderate) var(--tc-ease-move); }
 :where([data-look="clean"], [data-look="clean"] *):where([data-ui="sr"]) button { margin: 0; padding: 0; border: 0; background: none; font: inherit; color: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 :where([data-look="clean"], [data-look="clean"] *):where([data-ui="sr"]) svg { display: block; flex: none; }
-/* The heading row folds the reason in and out */
-:where([data-look="clean"], [data-look="clean"] *).ui-sr__head {
-  display: flex;
-  align-items: center;
-  gap: var(--tc-space-2);
-  width: 100%;
-  height: 44px;
-  padding: 0 var(--tc-space-3) 0 var(--tc-space-4);
-  border-radius: var(--tc-radius-lg) var(--tc-radius-lg) 0 0;
-  text-align: left;
-  transition: background-color var(--tc-duration-fast) var(--tc-ease-standard);
-}
-:where([data-look="clean"], [data-look="clean"] *).ui-sr__head:hover { background: var(--tc-fill-subtle); }
-:where([data-look="clean"], [data-look="clean"] *)[data-ui="sr"] button.ui-sr__head:focus-visible { outline-offset: -2px; }
-:where([data-look="clean"], [data-look="clean"] *).ui-sr__mark { width: 16px; height: 16px; fill: var(--tc-accent); }
-:where([data-look="clean"], [data-look="clean"] *).ui-sr__title { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-weight: var(--tc-font-weight-medium); color: var(--tc-text-strong); }
 :where([data-look="clean"], [data-look="clean"] *).ui-sr__pill {
   display: inline-flex;
   flex: none;
@@ -402,12 +380,9 @@ export class TcSmartRecommendation extends TcElement {
   flex: none;
   width: 20px;
   height: 20px;
-  margin-left: auto;
-  color: var(--tc-icon-muted);
-  transition: transform var(--tc-duration-moderate) var(--tc-ease-move), color var(--tc-duration-fast) var(--tc-ease-standard);
+  transition: transform var(--tc-duration-moderate) var(--tc-ease-move);
 }
-:where([data-look="clean"], [data-look="clean"] *).ui-sr__head:hover .ui-sr__chevron { color: var(--tc-text-primary); }
-.ui-sr__head[aria-expanded="false"] .ui-sr__chevron { transform: rotate(-90deg); }
+.ui-sr__toggle[aria-expanded="false"] .ui-sr__chevron { transform: rotate(-90deg); }
 .ui-sr__body {
   display: grid;
   grid-template-rows: 0fr;
@@ -418,13 +393,13 @@ export class TcSmartRecommendation extends TcElement {
   min-height: 0;
   overflow: hidden;
   margin: 0;
-  padding: 0 var(--tc-space-2-5);
+  padding: 0 var(--tc-space-4);
   font-size: var(--tc-font-size-lg);
   line-height: var(--tc-line-height-normal);
   color: var(--tc-text-secondary);
   animation: ui-sr-swap var(--tc-duration-slow) var(--tc-ease-move);
 }
-:where([data-look="standard"], [data-look="standard"] *).ui-sr__body[data-open] .ui-sr__reason { padding-bottom: var(--tc-space-2); }
+:where([data-look="standard"], [data-look="standard"] *).ui-sr__body[data-open] .ui-sr__reason { padding-block: var(--tc-space-3); }
 :where([data-look="clean"], [data-look="clean"] *).ui-sr__reason {
   min-height: 0;
   overflow: hidden;
@@ -684,13 +659,12 @@ export class TcSmartRecommendation extends TcElement {
 }
 /* Narrow cards (phones) */
 @container (max-width: 340px) {
-:where([data-look="clean"], [data-look="clean"] *).ui-sr__head { padding: 0 var(--tc-space-2-5) 0 var(--tc-space-3-5); }
 :where([data-look="clean"], [data-look="clean"] *).ui-sr__reason { padding: 0 var(--tc-space-3-5); }
 :where([data-look="clean"], [data-look="clean"] *).ui-sr__foot { padding: var(--tc-space-2-5) var(--tc-space-2-5) var(--tc-space-2-5) var(--tc-space-3-5); }
 }
 /* Touch screens: bigger tap targets */
 @media (pointer: coarse) {
-:where([data-look="clean"], [data-look="clean"] *).ui-sr__head { height: 48px; }
+:where([data-look="clean"], [data-look="clean"] *).ui-sr__toggle { width: 36px; height: 36px; }
 :where([data-look="clean"], [data-look="clean"] *).ui-sr__btn,
 :where([data-look="clean"], [data-look="clean"] *).ui-sr__done { height: 36px; }
 :where([data-look="clean"], [data-look="clean"] *).ui-sr__btn { padding: 0 var(--tc-space-3-5); }

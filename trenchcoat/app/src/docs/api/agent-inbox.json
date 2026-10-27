@@ -122,6 +122,7 @@
     "--tc-accent-subtle",
     "--tc-accent-text",
     "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
     "--tc-action-primary-bg",
     "--tc-action-primary-bg-active",
     "--tc-action-primary-bg-hover",
@@ -159,6 +160,7 @@
     "--tc-fill-default",
     "--tc-focus-outline",
     "--tc-focus-ring-offset",
+    "--tc-font-sans",
     "--tc-font-size-lg",
     "--tc-font-size-md",
     "--tc-font-size-sm",
@@ -206,6 +208,7 @@
     "--tc-text-muted",
     "--tc-text-primary",
     "--tc-text-secondary",
+    "--tc-tracking-normal",
     "--tc-tray-inset",
     "--tc-tray-radius"
    ]
@@ -283,7 +286,7 @@
  ],
  "changelog": [],
  "size": {
-  "min": 44731,
-  "gzip": 11108
+  "min": 46600,
+  "gzip": 11839
  }
 }

@@ -186,7 +186,6 @@
     "--tc-font-size-xs",
     "--tc-font-weight-medium",
     "--tc-font-weight-regular",
-    "--tc-font-weight-semibold",
     "--tc-hairline",
     "--tc-line-height-normal",
     "--tc-line-height-relaxed",
@@ -203,7 +202,6 @@
     "--tc-space-2",
     "--tc-space-2-5",
     "--tc-space-3",
-    "--tc-space-3-5",
     "--tc-space-4",
     "--tc-status-danger-fg",
     "--tc-status-danger-solid",
@@ -215,7 +213,6 @@
     "--tc-text-muted",
     "--tc-text-primary",
     "--tc-text-secondary",
-    "--tc-text-strong",
     "--tc-tray-inset",
     "--tc-tray-radius"
    ]
@@ -273,9 +270,11 @@
    ]
   }
  ],
- "changelog": [],
+ "changelog": [
+  "**Quality, retrieval, safety, structured output and conversation:** `tc-eval-scorecard`, `tc-feedback-rubric`, `tc-retrieval-inspector`, `tc-extraction-review`, `tc-guardrail-notice`, `tc-clarifying-questions`, `tc-structured-output`, `tc-generated-ui` and `tc-prompt-starters`."
+ ],
  "size": {
-  "min": 74522,
-  "gzip": 18552
+  "min": 76029,
+  "gzip": 19123
  }
 }

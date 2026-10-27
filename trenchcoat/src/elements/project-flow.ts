@@ -296,7 +296,7 @@ const scenes: Record<"light" | "dark", string> = {
   </div>
   <div class="pf-g pf-g-roles">
   <div class="pf-card pf-shadow-sm-card" style="left:1497px; top:783px; width:272px; height:89px; border-radius:24px;"></div>
-  <p class="pf-abs" style="left:1633px; top:814px; transform:translateX(-50%); font-weight:500; font-size:26.333px; line-height:26.333px; letter-spacing:-0.2633px; color:var(--tc-project-flow-sub); text-align:center; white-space:nowrap;">Assigned Roles</p>
+  <p class="pf-abs" style="left:1633px; top:814px; transform:translateX(-50%); font-weight:500; font-size:var(--tc-project-flow-sub-size); line-height:26.333px; letter-spacing:var(--tc-tracking-snug); color:var(--tc-project-flow-sub); text-align:center; white-space:nowrap;">Assigned Roles</p>
   </div>
   <div class="pf-abs" style="left:662px; top:686px; width:471.041px; height:105.368px;">
     <svg width="473.129" height="108.519" viewBox="0 0 473.129 108.519" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block; overflow:visible;">
@@ -556,7 +556,7 @@ const scenes: Record<"light" | "dark", string> = {
   </div>
   <div class="pf-g pf-g-roles">
   <div class="pf-card pf-shadow-sm-card" style="left:1497px; top:783px; width:272px; height:89px; border-radius:24px;"></div>
-  <p class="pf-abs" style="left:1633px; top:814px; transform:translateX(-50%); font-weight:500; font-size:26.333px; line-height:26.333px; letter-spacing:-0.2633px; color:var(--tc-project-flow-sub); text-align:center; white-space:nowrap;">Assigned Roles</p>
+  <p class="pf-abs" style="left:1633px; top:814px; transform:translateX(-50%); font-weight:500; font-size:var(--tc-project-flow-sub-size); line-height:26.333px; letter-spacing:var(--tc-tracking-snug); color:var(--tc-project-flow-sub); text-align:center; white-space:nowrap;">Assigned Roles</p>
   </div>
   <div class="pf-abs" style="left:662px; top:686px; width:471.041px; height:105.368px;">
     <svg width="473.129" height="108.519" viewBox="0 0 473.129 108.519" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:block; overflow:visible;">
@@ -724,7 +724,11 @@ export class TcProjectFlow extends TcElement {
   width: 100%;
   aspect-ratio: 2312 / 1644;
   overflow: hidden;
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  /* Type inside the 2312 px stage, which is scaled down to fit – illustration sizes, not the UI scale */
+  --tc-project-flow-title-size: 37.618px;
+  --tc-project-flow-sub-size: 26.333px;
+  --tc-project-flow-pill-size: 20.674px;
+  font-family: var(--tc-font-sans);
   /* Read by the component to pick the scene that matches the theme in use */
   color: var(--tc-text-primary, light-dark(#171717, #ededed));
 }
@@ -779,17 +783,17 @@ export class TcProjectFlow extends TcElement {
   }
 [data-ui="pf"] .pf-t-title {
     font-weight: 500;
-    font-size: 37.618px;
+    font-size: var(--tc-project-flow-title-size);
     line-height: 37.618px;
-    letter-spacing: -0.7524px;
+    letter-spacing: var(--tc-tracking-tight);
     color: var(--tc-project-flow-title);
     white-space: nowrap;
   }
 [data-ui="pf"] .pf-t-sub {
     font-weight: 400;
-    font-size: 26.333px;
+    font-size: var(--tc-project-flow-sub-size);
     line-height: 26.333px;
-    letter-spacing: -0.5267px;
+    letter-spacing: var(--tc-tracking-tight);
     color: var(--tc-project-flow-sub);
     white-space: nowrap;
   }
@@ -806,9 +810,9 @@ export class TcProjectFlow extends TcElement {
   }
 [data-ui="pf"] .pf-pill span {
     font-weight: var(--tc-project-flow-pill-weight);
-    font-size: 20.674px;
+    font-size: var(--tc-project-flow-pill-size);
     line-height: 20.674px;
-    letter-spacing: -0.4135px;
+    letter-spacing: var(--tc-tracking-tight);
     color: var(--tc-project-flow-pill-text);
     white-space: nowrap;
   }

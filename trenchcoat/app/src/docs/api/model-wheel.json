@@ -62,7 +62,8 @@
     "--tc-radius-lg",
     "--tc-space-2-5",
     "--tc-text-muted",
-    "--tc-text-primary"
+    "--tc-text-primary",
+    "--tc-tracking-snug"
    ]
   }
  ],
@@ -85,7 +86,7 @@
   "model-wheel's `defaultModels` is `modelWheelDefaults` (chat-composer's wrapper exports `defaultModels`)."
  ],
  "size": {
-  "min": 21161,
-  "gzip": 9741
+  "min": 23180,
+  "gzip": 10320
  }
 }

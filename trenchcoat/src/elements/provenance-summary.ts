@@ -1,9 +1,10 @@
-import { html, nothing, type PropertyValues } from "lit";
+import { html, nothing, svg, type PropertyValues } from "lit";
 import { property, state } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { repeat } from "lit/directives/repeat.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 
 /*
  * <tc-provenance-summary> – what a document is made of: how much of it came from sources, from AI synthesis and from
@@ -35,6 +36,8 @@ export type ProvenanceSection = {
 /** Detail of tc-lineage-open: the section (null for the whole document), the kind, and its amount and share */
 export type ProvenanceLineageOpen = { section: string | null; kind: ProvenanceKind; amount: number; share: number };
 
+/* After Lucide: layers – the header's icon */
+const headIcon = svg`<path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"></path><path d="m2 12.65 9.17 4.16a2 2 0 0 0 1.66 0L22 12.65M2 17.65l9.17 4.16a2 2 0 0 0 1.66 0L22 17.65"></path>`;
 const KINDS: ProvenanceKind[] = ["sourced", "synthesis", "original"];
 const DEFAULT_LABELS: Record<ProvenanceKind, string> = { sourced: "From sources", synthesis: "AI synthesis", original: "Original writing" };
 
@@ -261,13 +264,14 @@ export class TcProvenanceSummary extends TcElement {
     const rows = this.rows;
     const total = rows[0];
     const kind = this.active?.kind;
+    // The header (.tc-head): on the tray in Standard, the card's first row in Clean
+    const clean = this.resolvedLook === "clean";
+    const head = cardHead({ icon: headIcon, title: this.heading, subtitle: this.scope || undefined, id: `${this.uid}-title` });
     return html`
+      ${clean ? nothing : head}
       <div class="ui-pvs__card">
+        ${clean ? head : nothing}
         <div class="ui-pvs__inner">
-          <header class="ui-pvs__head">
-            <h3 class="ui-pvs__heading" id=${`${this.uid}-title`}>${this.heading}</h3>
-            ${this.scope ? html`<p class="ui-pvs__sub">${this.scope}</p>` : nothing}
-          </header>
           <ul class="ui-pvs__legend" aria-label="In total" ?data-active=${!!kind}>
             ${KINDS.map(
               (k) => html`<li class="ui-pvs__key" data-kind=${k} ?data-active=${kind === k}>
@@ -364,17 +368,10 @@ export class TcProvenanceSummary extends TcElement {
 [data-ui="pvs"] b { font-weight: var(--tc-font-weight-medium); color: var(--tc-text-primary); }
 /* The white card (Clean: the one card) */
 :where([data-look="standard"], [data-look="standard"] *).ui-pvs__card { border-radius: var(--tc-card-radius); background: var(--tc-surface-raised); box-shadow: var(--tc-card-shadow); }
-:where([data-look="standard"], [data-look="standard"] *).ui-pvs__inner { padding: var(--tc-space-3-5) var(--tc-space-4) var(--tc-space-4); }
-:where([data-look="clean"], [data-look="clean"] *).ui-pvs__inner { padding: var(--tc-space-4); }
-/* Head */
-.ui-pvs__head { min-width: 0; }
-.ui-pvs__heading { overflow: hidden; font-weight: var(--tc-font-weight-strong); white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="standard"], [data-look="standard"] *).ui-pvs__heading { font-size: var(--tc-font-size-lg); line-height: var(--tc-line-height-normal); color: var(--tc-text-primary); }
-:where([data-look="clean"], [data-look="clean"] *).ui-pvs__heading { font-size: var(--tc-font-size-lg-plus); line-height: var(--tc-line-height-loose); color: var(--tc-text-strong); }
-.ui-pvs__sub { overflow: hidden; font-size: var(--tc-font-size-sm); color: var(--tc-text-muted); white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="clean"], [data-look="clean"] *).ui-pvs__sub { line-height: var(--tc-line-height-tight); }
+:where([data-look="standard"], [data-look="standard"] *).ui-pvs__inner { padding: var(--tc-space-4); }
+:where([data-look="clean"], [data-look="clean"] *).ui-pvs__inner { padding: 0 var(--tc-space-4) var(--tc-space-4); }
 /* The legend: each kind's share of the whole document */
-.ui-pvs__legend { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--tc-space-3); margin-top: var(--tc-space-4); }
+.ui-pvs__legend { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--tc-space-3); }
 .ui-pvs__key { display: grid; gap: var(--tc-space-0-5); min-width: 0; }
 /* The other kinds step back – the swatch fades, the text stays readable */
 .ui-pvs__swatch, .ui-pvs__key-share { transition: opacity var(--tc-duration-base) var(--tc-ease-standard), color var(--tc-duration-base) var(--tc-ease-standard); }
@@ -425,8 +422,8 @@ export class TcProvenanceSummary extends TcElement {
 .ui-pvs__empty { margin-top: var(--tc-space-4); font-size: var(--tc-font-size-sm); color: var(--tc-text-muted); }
 @keyframes ui-pvs-in { from { opacity: 0; transform: translateY(2px); } to { opacity: 1; transform: none; } }
 @container (max-width: 400px) {
-  :where([data-look="standard"], [data-look="standard"] *).ui-pvs__inner { padding: var(--tc-space-3) var(--tc-space-3-5) var(--tc-space-3-5); }
-  :where([data-look="clean"], [data-look="clean"] *).ui-pvs__inner { padding: var(--tc-space-3-5); }
+  :where([data-look="standard"], [data-look="standard"] *).ui-pvs__inner { padding: var(--tc-space-3-5); }
+  :where([data-look="clean"], [data-look="clean"] *).ui-pvs__inner { padding: 0 var(--tc-space-3-5) var(--tc-space-3-5); }
   :where([data-look="standard"], [data-look="standard"] *).ui-pvs__key-share { font-size: var(--tc-font-size-xl); }
   .ui-pvs__legend { gap: var(--tc-space-2); }
   /* Long names wrap rather than clip; the shares stay on one line */

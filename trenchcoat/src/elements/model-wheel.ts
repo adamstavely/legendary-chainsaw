@@ -104,7 +104,7 @@ const css = /* css */ `
   backface-visibility: hidden;
   font-size: var(--tc-font-size-xl, 16px);
   font-weight: 450;
-  letter-spacing: -0.01em;
+  letter-spacing: var(--tc-tracking-snug);
   color: var(--tc-text-muted, light-dark(#646464, #9a9aa1));
   will-change: transform, opacity;
 }

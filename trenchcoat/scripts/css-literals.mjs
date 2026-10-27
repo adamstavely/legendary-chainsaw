@@ -7,6 +7,10 @@
 //                          (-timing-function) – use --tc-ease-* (linear and steps() are allowed)
 //   z-index ≥ 7            a literal stacking value of 7 or more – use --tc-z-* (0–6 are fine inside an isolated root)
 //   literal font-weight    a numeric / bold weight – use --tc-font-weight-* (or -strong)
+//   literal font-family    a font stack written out – use --tc-font-sans / --tc-font-mono
+//   literal font-size      a px / rem size – use --tc-font-size-* or a pattern token (--tc-title-*, --tc-caption-* …);
+//                          em sizes relative to the parent are allowed
+//   literal letter-spacing a non-zero tracking – use --tc-tracking-* or a pattern token
 //   literal line-height    a numeric line height – use --tc-line-height-*
 //   literal border-radius  a radius other than 0 / 50% / 100% (also in --tc-<comp>-…radius… tokens) – use
 //                          --tc-radius-* or a pattern token (calc() of tokens is fine)
@@ -72,6 +76,9 @@ export const TOKEN_RULES = {
   "literal easing": (s) => values(blankTokens(s), MOTION).reduce((n, v) => n + (v.match(/(?<![\w-])(?:ease(?:-in-out|-in|-out)?|cubic-bezier\()(?![\w-])/g)?.length ?? 0), 0),
   "z-index ≥ 7": (s) => values(blankTokens(s), both(["z-index"])).filter((v) => /^\s*["']?(\d+)/.test(v) && +v.match(/(\d+)/)[1] >= 7).length,
   "literal font-weight": (s) => values(blankTokens(s), both(["font-weight"])).filter((v) => /^\s*["']?(?:\d{3}|bold|bolder|lighter)\b/.test(v)).length,
+  "literal font-family": (s) => values(blankTokens(s), both(["font-family"])).filter((v) => /^\s*["']?[\w"']/.test(v) && !/^\s*["']?(?:VAR|inherit|initial|unset|monospace|sans-serif)\b/.test(v)).length,
+  "literal font-size": (s) => values(blankTokens(s), both(["font-size"])).filter((v) => /^\s*["']?\d*\.?\d+(?:px|rem)\b/.test(v)).length,
+  "literal letter-spacing": (s) => values(blankTokens(s), both(["letter-spacing"])).filter((v) => /^\s*["']?-?\d*\.?\d*[1-9]\d*(?:em|px)\b/.test(v)).length,
   "literal line-height": (s) => values(blankTokens(s), both(["line-height"])).filter((v) => /^\s*["']?\d*\.?\d/.test(v)).length,
   "literal border-radius": (s) => {
     const blank = blankTokens(s);

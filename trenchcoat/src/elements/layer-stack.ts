@@ -237,7 +237,7 @@ export class TcLayerStack extends TcElement {
   width: 100%;
   aspect-ratio: 3 / 2;
   container-type: inline-size;
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  font-family: var(--tc-font-sans);
   -webkit-font-smoothing: antialiased;
 }
 [data-ui="lyr"] *, [data-ui="lyr"] *::before, [data-ui="lyr"] *::after { box-sizing: border-box; }
@@ -344,7 +344,7 @@ export class TcLayerStack extends TcElement {
   font-size: calc(14 * var(--tc-layer-stack-u));
   font-weight: var(--tc-font-weight-medium, 500);
   line-height: 1.3;
-  letter-spacing: -0.01em;
+  letter-spacing: var(--tc-tracking-snug);
   white-space: nowrap;
   text-overflow: ellipsis;
   color: var(--tc-text-primary, light-dark(#171717, #ededed));

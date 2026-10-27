@@ -213,6 +213,7 @@
     "--tc-focus-outline",
     "--tc-focus-ring",
     "--tc-focus-ring-offset",
+    "--tc-font-sans",
     "--tc-font-size-lg-plus",
     "--tc-font-size-md",
     "--tc-font-weight-semibold",
@@ -290,7 +291,7 @@
  ],
  "changelog": [],
  "size": {
-  "min": 26271,
-  "gzip": 8913
+  "min": 28312,
+  "gzip": 9459
  }
 }

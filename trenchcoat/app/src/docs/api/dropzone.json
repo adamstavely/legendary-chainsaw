@@ -114,6 +114,14 @@
      ]
     },
     {
+     "name": "--tc-dropzone-badge-font-size",
+     "value": "6.5px",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
      "name": "--tc-dropzone-area-border-hover",
      "value": "light-dark(rgba(0, 0, 0, 0.2), rgba(255, 255, 255, 0.26))",
      "looks": [
@@ -196,7 +204,8 @@
     "--tc-text-disabled",
     "--tc-text-muted",
     "--tc-text-primary",
-    "--tc-text-secondary"
+    "--tc-text-secondary",
+    "--tc-tracking-caps"
    ]
   }
  ],
@@ -365,7 +374,7 @@
   "dropzone reports progress through `onChange` at most once a second (status changes are still reported at once)."
  ],
  "size": {
-  "min": 52497,
-  "gzip": 14328
+  "min": 54572,
+  "gzip": 14846
  }
 }

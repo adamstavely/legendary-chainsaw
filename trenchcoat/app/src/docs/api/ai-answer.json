@@ -207,7 +207,6 @@
     "--tc-font-weight-semibold",
     "--tc-hairline",
     "--tc-icon-muted",
-    "--tc-line-height-loose",
     "--tc-line-height-normal",
     "--tc-line-height-tight",
     "--tc-menu-bg",
@@ -249,6 +248,7 @@
     "--tc-text-primary",
     "--tc-text-secondary",
     "--tc-text-strong",
+    "--tc-tracking-caps",
     "--tc-tray-inset",
     "--tc-tray-radius",
     "--tc-z-dropdown"
@@ -332,7 +332,7 @@
  ],
  "changelog": [],
  "size": {
-  "min": 64629,
-  "gzip": 15460
+  "min": 66435,
+  "gzip": 16230
  }
 }

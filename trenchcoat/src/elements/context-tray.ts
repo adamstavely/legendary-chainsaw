@@ -6,6 +6,7 @@ import { repeat } from "lit/directives/repeat.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { reducedMotion } from "../internal/reduced-motion";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController, RollingController, rescueFocus } from "./internal/controllers";
 
 /*
@@ -22,9 +23,12 @@ import { FocusRescueController, RollingController, rescueFocus } from "./interna
  * between their buttons, Home / End jump, Delete or Backspace removes the chip in focus, ⌘Z / Ctrl Z undoes the last
  * removal while focus is in the tray.
  *
- * Standard is a white card on a gray tray that holds the caption and Undo; Clean is one white card with hairline
+ * Standard is a white card on a gray tray that holds the header above it and the caption and Undo below; Clean is one white card with hairline
  * shadows, the caption as its last row, quieter chips and thinner icons. The host is the group, named by the heading.
  */
+
+/** Paperclip: what's attached to the conversation */
+const trayIcon = svg`<path d="m16 6-8.414 8.586a2 2 0 0 0 2.829 2.829l8.414-8.586a4 4 0 1 0-5.657-5.657l-8.379 8.551a6 6 0 1 0 8.485 8.485l8.379-8.551"></path>`;
 
 export type ContextTrayItem = {
   id: string;
@@ -408,15 +412,17 @@ export class TcContextTray extends TcElement {
     </div>`;
 
     return html`
-      <div class="ui-ctt__card">
-        <div class="ui-ctt__head">
-          <span id=${`${this.uid}-title`} class="ui-ctt__title">${this.heading}</span>
-          <span class="ui-ctt__count" aria-hidden="true">${live.length}</span>
+      ${cardHead({
+        icon: trayIcon,
+        title: this.heading,
+        id: `${this.uid}-title`,
+        aside: html`<span class="ui-ctt__count" aria-hidden="true">${live.length}</span>
           <span class="ui-ctt__total">
             <span class="ui-ctt__used" aria-hidden="true">${plain(rolled)}</span>${this.limit > 0 ? html`<span class="ui-ctt__of" aria-hidden="true">&nbsp;/ ${plain(this.limit)}</span>` : nothing}
             <span class="ui-ctt__sr">${plain(used)} ${this.limit > 0 ? `of ${plain(this.limit)} tokens used, ${Math.round((used / this.limit) * 100)} percent` : "tokens"}, ${live.length} ${live.length === 1 ? "item" : "items"}</span>
-          </span>
-        </div>
+          </span>`,
+      })}
+      <div class="ui-ctt__card">
         ${this.limit > 0
           ? html`<div class="ui-ctt__meter" aria-hidden="true" ?data-hot=${!!this.hot}>
               ${this.reserved > 0 ? html`<span class="ui-ctt__seg" data-kind="reserved" style=${styleMap({ width: `${(this.reserved / scale) * 100}%` })}></span>` : nothing}
@@ -490,14 +496,12 @@ export class TcContextTray extends TcElement {
 :where([data-look="clean"], [data-look="clean"] *).ui-ctt__glyph { stroke-width: 1.4; }
 /* The white card */
 :where([data-look="standard"], [data-look="standard"] *).ui-ctt__card { position: relative; padding: var(--tc-space-3) var(--tc-space-3) var(--tc-space-3) var(--tc-space-3-5); border-radius: var(--tc-card-radius); background: var(--tc-surface-on-tray); box-shadow: var(--tc-card-shadow); }
-:where([data-look="clean"], [data-look="clean"] *).ui-ctt__card { position: relative; padding: var(--tc-space-3-5) var(--tc-space-4) 0; }
-/* Head: the title, how many, and the total against the window */
-.ui-ctt__head { display: flex; align-items: center; gap: var(--tc-space-2); min-height: 22px; }
-.ui-ctt__title { overflow: hidden; font-weight: var(--tc-font-weight-medium); white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="standard"], [data-look="standard"] *).ui-ctt__title { color: var(--tc-text-secondary); }
-:where([data-look="clean"], [data-look="clean"] *).ui-ctt__title { color: var(--tc-text-strong); }
+:where([data-look="clean"], [data-look="clean"] *).ui-ctt__card { position: relative; padding: 0 var(--tc-space-4); }
+.ui-ctt__card > :first-child { margin-top: 0; }
+/* The header (cardHead) sits above the card – on the tray in Standard, the first row in Clean – with how many and the
+   total against the window at its right */
 .ui-ctt__count { display: inline-grid; place-items: center; flex: none; min-width: var(--tc-pill-h); height: var(--tc-pill-h); padding: 0 var(--tc-space-1-5); border-radius: var(--tc-pill-radius); background: var(--tc-fill-default); font-size: var(--tc-pill-font-size); font-weight: var(--tc-pill-font-weight); line-height: var(--tc-line-height-none); color: var(--tc-text-secondary); font-variant-numeric: tabular-nums; }
-.ui-ctt__total { display: inline-flex; align-items: baseline; margin-left: auto; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.ui-ctt__total { display: inline-flex; align-items: baseline; white-space: nowrap; font-variant-numeric: tabular-nums; }
 .ui-ctt__used { font-weight: var(--tc-font-weight-medium); color: var(--tc-text-primary); }
 .ui-ctt__of { font-size: var(--tc-font-size-sm); color: var(--tc-text-muted); }
 [data-ui="ctt"][data-level="warn"] .ui-ctt__used { color: var(--tc-status-warning-fg); }

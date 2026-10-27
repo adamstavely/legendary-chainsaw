@@ -276,6 +276,8 @@
     }
    ],
    "tokens": [
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
     "--tc-action-primary-bg",
     "--tc-action-primary-bg-active",
     "--tc-action-primary-bg-hover",
@@ -320,12 +322,12 @@
     "--tc-ease-move",
     "--tc-ease-standard",
     "--tc-fill-default",
-    "--tc-fill-hover",
     "--tc-fill-strong",
     "--tc-fill-subtle",
     "--tc-focus-outline",
     "--tc-focus-ring-offset",
     "--tc-focus-ring-width",
+    "--tc-font-mono",
     "--tc-font-sans",
     "--tc-font-size-2xl",
     "--tc-font-size-2xs",
@@ -339,7 +341,6 @@
     "--tc-font-weight-semibold",
     "--tc-font-weight-strong",
     "--tc-hairline",
-    "--tc-icon-muted",
     "--tc-line-height-display-sm",
     "--tc-line-height-loose",
     "--tc-line-height-none",
@@ -401,6 +402,9 @@
     "--tc-tooltip-px",
     "--tc-tooltip-py",
     "--tc-tooltip-radius",
+    "--tc-tracking-normal",
+    "--tc-tracking-snug",
+    "--tc-tracking-tight",
     "--tc-tray-inset",
     "--tc-tray-radius"
    ]
@@ -505,7 +509,7 @@
  ],
  "changelog": [],
  "size": {
-  "min": 81922,
-  "gzip": 21240
+  "min": 83710,
+  "gzip": 21882
  }
 }

@@ -112,6 +112,8 @@
    "cssProperties": [],
    "tokens": [
     "--tc-accent",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
     "--tc-action-primary-bg",
     "--tc-action-primary-bg-hover",
     "--tc-action-primary-fg",
@@ -120,13 +122,14 @@
     "--tc-card-shadow",
     "--tc-control-font-size",
     "--tc-control-font-weight",
+    "--tc-control-h-md",
     "--tc-control-h-sm",
     "--tc-control-px-sm",
+    "--tc-control-radius-md",
     "--tc-control-radius-sm",
     "--tc-divider",
     "--tc-duration-base",
     "--tc-duration-fast",
-    "--tc-duration-instant",
     "--tc-duration-reveal-slow",
     "--tc-duration-slow",
     "--tc-duration-slower",
@@ -154,7 +157,6 @@
     "--tc-line-height-tight",
     "--tc-radius-2xl",
     "--tc-radius-lg",
-    "--tc-radius-sm",
     "--tc-radius-xl",
     "--tc-shadow-raised",
     "--tc-space-0-5",
@@ -172,7 +174,6 @@
     "--tc-text-disabled",
     "--tc-text-muted",
     "--tc-text-primary",
-    "--tc-text-secondary",
     "--tc-text-strong",
     "--tc-tray-inset",
     "--tc-tray-radius"
@@ -239,7 +240,7 @@
   "`tc-conversation-branches` – edit a past message to fork the conversation; a 2 / 3 switcher on the edited message, each branch's replies (with `tc-message-actions`) below, and `tc-edit` answered with the new replies or a promise of them."
  ],
  "size": {
-  "min": 30790,
-  "gzip": 9042
+  "min": 32085,
+  "gzip": 9513
  }
 }

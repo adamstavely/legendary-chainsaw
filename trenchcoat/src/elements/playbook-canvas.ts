@@ -5,6 +5,7 @@ import { live } from "lit/directives/live.js";
 import { repeat } from "lit/directives/repeat.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController, ToolbarController } from "./internal/controllers";
 import { GATE_ACTIONS, GATE_CONDITIONS, GATE_REVIEWERS, GATE_VIEWS } from "./gate-config";
 import type { GateActionOption, GateCondition, GateConfigValue, GateReviewer, GateValueChange, GateView } from "./gate-config";
@@ -851,16 +852,16 @@ export class TcPlaybookCanvas extends TcElement {
     const current = this.versions.find((v) => v.id === this.currentVersion);
     const edited = this.loaded !== null && this.loaded !== this.value;
     const dry = !!this.dryRun && this.dryFor === this.value;
-    const head = html`<div class="ui-pb__head">
-      <div class="ui-pb__heading">
-        <h3 class="ui-pb__title">${this.heading}</h3>
-        <span class="ui-pb__meta">
+    // The header (.tc-head): on the tray above the card in Standard, the card's first row in Clean
+    const head = cardHead({
+      icon: svg`<rect width="8" height="8" x="3" y="3" rx="2"></rect><path d="M7 11v4a2 2 0 0 0 2 2h4"></path><rect width="8" height="8" x="13" y="13" rx="2"></rect>`,
+      title: this.heading,
+      subtitle: html`<span class="ui-pb__meta">
           ${current ? html`<span class="ui-pb__meta-version">${current.label}</span>` : nothing}
           ${edited ? html`<span class="ui-pb__edited">Edited</span>` : nothing}
           <span>${current ? "· " : ""}${plural(steps.length, "step")} · ${plural(gates, "review gate")}</span>
-        </span>
-      </div>
-      <div class="ui-pb__actions">
+        </span>`,
+      aside: html`<div class="ui-pb__actions">
         ${this.versions.length || this.currentVersion
           ? html`<button type="button" class="ui-pb__btn" aria-expanded=${this.versionsOpen ? "true" : "false"} aria-controls=${ifDefined(this.versionsOpen ? `${this.uid}-versions` : undefined)} @click=${() => (this.versionsOpen = !this.versionsOpen)}>
               ${historyIcon}<span>Versions</span>
@@ -869,15 +870,15 @@ export class TcPlaybookCanvas extends TcElement {
         <button type="button" class="ui-pb__btn ui-pb__btn--primary" ?disabled=${!steps.length} aria-busy=${ifDefined(this.dryPending ? "true" : undefined)} @click=${this.requestDryRun}>
           ${playIcon}<span>${this.dryPending ? "Running…" : "Dry run"}</span>
         </button>
-      </div>
-    </div>`;
+      </div>`,
+    });
     const body = html`
-      ${head} ${this.renderVersions()} ${this.renderDryBar()} ${this.renderBoard(dry)} ${this.renderPanel(look)}
+      ${clean ? head : nothing} ${this.renderVersions()} ${this.renderDryBar()} ${this.renderBoard(dry)} ${this.renderPanel(look)}
       ${clean ? this.renderHints() : nothing}
     `;
     return html`
       <span class="ui-pb__sr" role="status">${this.message}</span>
-      ${clean ? body : html`<div class="ui-pb__card">${body}</div>${this.renderHints()}`}
+      ${clean ? body : html`${head}<div class="ui-pb__card">${body}</div>${this.renderHints()}`}
     `;
   }
 
@@ -924,7 +925,7 @@ export class TcPlaybookCanvas extends TcElement {
   border-radius: var(--tc-tray-radius);
   background: var(--tc-surface-tray);
 }
-.ui-pb__card { display: flow-root; border-radius: var(--tc-card-radius); background: var(--tc-surface-on-tray); box-shadow: var(--tc-card-shadow); }
+.ui-pb__card { display: flow-root; padding-top: var(--tc-space-3); border-radius: var(--tc-card-radius); background: var(--tc-surface-on-tray); box-shadow: var(--tc-card-shadow); }
 /* Clean: one white card with hairline shadows */
 :where([data-look="clean"], [data-look="clean"] *)[data-ui="pb"] {
   border-radius: var(--tc-card-radius);
@@ -932,13 +933,8 @@ export class TcPlaybookCanvas extends TcElement {
   box-shadow: var(--tc-card-shadow);
 }
 
-/* ---------- Header: the name, the version and the counts; Versions and Dry run ---------- */
-.ui-pb__head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-3); padding: var(--tc-space-4) var(--tc-space-4) var(--tc-space-3); }
-.ui-pb__heading { display: grid; flex: 1 1 200px; gap: var(--tc-space-0-5); min-width: 0; }
-.ui-pb__title { color: var(--tc-text-strong); font-size: var(--tc-font-size-lg-plus); line-height: var(--tc-line-height-relaxed); overflow-wrap: anywhere; }
-:where([data-look="standard"], [data-look="standard"] *).ui-pb__title { font-weight: var(--tc-font-weight-semibold); letter-spacing: -0.01em; }
-:where([data-look="clean"], [data-look="clean"] *).ui-pb__title { font-weight: var(--tc-font-weight-medium); }
-.ui-pb__meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-2); color: var(--tc-text-muted); font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); font-variant-numeric: tabular-nums; }
+/* ---------- In the header: the version and the counts under the name; Versions and Dry run at its right ---------- */
+.ui-pb__meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-2); font-variant-numeric: tabular-nums; }
 .ui-pb__meta-version { color: var(--tc-text-secondary); font-weight: var(--tc-font-weight-medium); }
 .ui-pb__edited, .ui-pb__current, .ui-pb__pause {
   display: inline-flex;
@@ -1105,7 +1101,7 @@ export class TcPlaybookCanvas extends TcElement {
 .ui-pb__tool--danger:hover:not(:disabled) { background: var(--tc-status-danger-bg); color: var(--tc-status-danger-fg); }
 .ui-pb__rows { display: grid; gap: var(--tc-space-3); max-width: 720px; }
 .ui-pb__row { display: grid; grid-template-columns: 92px minmax(0, 1fr); align-items: start; gap: var(--tc-space-3); }
-.ui-pb__label { display: flex; align-items: center; min-height: var(--tc-control-h-sm); color: var(--tc-text-secondary); font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-normal); font-weight: var(--tc-font-weight-medium); }
+.ui-pb__label { display: flex; align-items: center; min-height: var(--tc-field-h); color: var(--tc-text-secondary); font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-normal); font-weight: var(--tc-font-weight-medium); }
 :where([data-look="clean"], [data-look="clean"] *).ui-pb__label { color: var(--tc-text-muted); }
 .ui-pb__control { display: grid; min-width: 0; }
 .ui-pb__hint { color: var(--tc-text-muted); font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-snug); }
@@ -1113,11 +1109,11 @@ export class TcPlaybookCanvas extends TcElement {
 .ui-pb__input {
   width: 100%;
   min-width: 0;
-  height: var(--tc-control-h-sm);
+  height: var(--tc-field-h);
   margin: 0;
-  padding: 0 var(--tc-space-2-5);
+  padding: 0 var(--tc-field-px);
   border: 0;
-  border-radius: var(--tc-control-radius-sm);
+  border-radius: var(--tc-field-radius);
   outline: 0;
   background: var(--tc-field-bg);
   box-shadow: var(--tc-field-shadow);
@@ -1158,7 +1154,7 @@ export class TcPlaybookCanvas extends TcElement {
 }
 /* Narrow: labels above their controls, no keyboard hints, no step numbers */
 @container (max-width: 480px) {
-  .ui-pb__head, .ui-pb__panel { padding-left: var(--tc-space-3); padding-right: var(--tc-space-3); }
+  .ui-pb__panel { padding-left: var(--tc-space-3); padding-right: var(--tc-space-3); }
   .ui-pb__board { padding-left: var(--tc-space-2); padding-right: var(--tc-space-2); }
   .ui-pb__versions, .ui-pb__dry { margin-left: var(--tc-space-3); margin-right: var(--tc-space-3); }
   .ui-pb__row { grid-template-columns: minmax(0, 1fr); gap: var(--tc-space-1); }

@@ -424,7 +424,7 @@ export class TcProjectCard extends TcElement {
   padding: var(--tc-tray-inset);
   border-radius: var(--tc-tray-radius);
   background: var(--tc-surface-tray);
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-md);
   line-height: var(--tc-line-height-normal);
   color: var(--tc-text-secondary);
@@ -493,10 +493,9 @@ export class TcProjectCard extends TcElement {
 :where([data-look="standard"], [data-look="standard"] *).ui-pc__num { font-size: var(--tc-font-size-xs); color: var(--tc-text-primary); }
 :where([data-look="clean"], [data-look="clean"] *).ui-pc__num { font-size: var(--tc-font-size-sm); color: var(--tc-text-strong); }
 .ui-pc__titles { display: grid; grid-template-columns: minmax(0, 1fr); flex: 1; min-width: 0; }
-:where([data-look="standard"], [data-look="standard"] *).ui-pc__name { overflow: hidden; font-size: var(--tc-font-size-md); font-weight: var(--tc-font-weight-strong); color: var(--tc-text-primary); white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="clean"], [data-look="clean"] *).ui-pc__name { overflow: hidden; font-size: var(--tc-font-size-md); line-height: var(--tc-line-height-normal); font-weight: var(--tc-font-weight-strong); color: var(--tc-text-strong); white-space: nowrap; text-overflow: ellipsis; }
+.ui-pc__name { overflow: hidden; font-size: var(--tc-title-font-size); font-weight: var(--tc-title-font-weight); color: var(--tc-title-color); white-space: nowrap; text-overflow: ellipsis; line-height: var(--tc-title-line-height); letter-spacing: var(--tc-title-tracking); }
 /* The sub line keeps its 20px; the status button inside reaches 2px above and below it (a 24px target) */
-.ui-pc__sub { display: flex; align-items: center; gap: var(--tc-space-1-5); min-width: 0; height: 24px; overflow: hidden; font-size: var(--tc-font-size-sm); color: var(--tc-text-muted); white-space: nowrap; }
+.ui-pc__sub { display: flex; align-items: center; gap: var(--tc-space-1-5); min-width: 0; height: 24px; overflow: hidden; font-size: var(--tc-subtitle-font-size); color: var(--tc-subtitle-color); white-space: nowrap; }
 :where([data-look="standard"], [data-look="standard"] *).ui-pc__sub { margin: -1px 0 -2px; line-height: var(--tc-line-height-normal); }
 :where([data-look="clean"], [data-look="clean"] *).ui-pc__sub { margin: -2px 0; line-height: var(--tc-line-height-tight); }
 .ui-pc__status { display: inline-flex; flex: none; align-items: center; height: 24px; }
@@ -566,7 +565,7 @@ export class TcProjectCard extends TcElement {
 :where([data-look="clean"], [data-look="clean"] *).ui-pc__task[data-hot] { background: var(--tc-fill-subtle); }
 .ui-pc__task[data-dim] { opacity: 0.35; }
 .ui-pc__label { flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-.ui-pc__task .ui-pc__avatar { width: 18px; height: 18px; font-size: 8px; opacity: 0; transform: translateX(4px); transition: opacity var(--tc-duration-base) var(--tc-ease-standard), transform var(--tc-duration-moderate) var(--tc-ease-emphasized); }
+.ui-pc__task .ui-pc__avatar { width: 18px; height: 18px; font-size: var(--tc-font-size-2xs); opacity: 0; transform: translateX(4px); transition: opacity var(--tc-duration-base) var(--tc-ease-standard), transform var(--tc-duration-moderate) var(--tc-ease-emphasized); }
 .ui-pc__task:is([data-hot], :focus-visible) .ui-pc__avatar { opacity: 1; transform: none; }
 /* The checkbox: its ring is a control edge (≥ 3:1); ticked, it fills – ink in Standard, the accent in Clean */
 .ui-pc__ring { fill: none; stroke: var(--tc-border-control); transition: stroke var(--tc-duration-fast) var(--tc-ease-standard); }

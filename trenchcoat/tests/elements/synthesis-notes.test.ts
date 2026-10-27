@@ -59,7 +59,7 @@ describe("tc-synthesis-notes", () => {
       expect(el.dataset.look).toBe(look);
       expect(getComputedStyle(el).display).toBe("block");
       expect(el.getAttribute("role")).toBe("group");
-      expect(el.getAttribute("aria-labelledby")).toBe(el.querySelector(".ui-syn__title")!.id);
+      expect(el.getAttribute("aria-labelledby")).toBe(el.querySelector(".tc-head__title")!.id);
       expect(text(el.querySelector(".ui-syn__own"))).toBe("Written by you");
       expect([...el.querySelectorAll(".ui-syn__heading")].map((h) => text(h))).toEqual(["Conclusions, 2 notes", "Assumptions, 1 note", "Still to verify, 1 note"]);
       expect(texts(el, "conclusions")).toEqual([NOTES[0].text, NOTES[1].text]);

@@ -3,6 +3,7 @@ import { property, state } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { live } from "lit/directives/live.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController, rescueFocus } from "./internal/controllers";
 
 /*
@@ -23,6 +24,9 @@ import { FocusRescueController, rescueFocus } from "./internal/controllers";
  * turns the text details into fields (each change fires a cancelable tc-details-change); `evidence` – chips that open
  * the sources the request rests on.
  */
+
+// The header icon: a shield with a check – a request to approve
+const shieldIcon = svg`<path d="M12 3 5 5.8v5.4c0 4.3 2.9 8.2 7 9.8 4.1-1.6 7-5.5 7-9.8V5.8L12 3Z"></path><path d="m9.2 12.2 2 2 3.8-4"></path>`;
 
 export type ApprovalStatus = "pending" | "approved" | "denied";
 export type ApprovalRisk = "low" | "medium" | "high";
@@ -547,6 +551,33 @@ export class TcApprovalCard extends TcElement {
     const details = this.details;
     const body = this.preview;
     const risk = this.risk;
+    const clean = this.resolvedLook === "clean";
+    const head = cardHead({
+      icon: this.icon ? svg`${this.icon.cloneNode(true)}` : shieldIcon,
+      title: this.heading,
+      id: leaving ? undefined : `${id}-title`,
+      subtitle: this.description ? html`<span id=${ifDefined(leaving ? undefined : `${id}-desc`)}>${content(this.description)}</span>` : nothing,
+      aside: risk
+        ? html`<span class="ui-ap__risk" data-risk=${risk}><span class="ui-ap__risk-dot" aria-hidden="true"></span>${RISK_LABEL[risk]}<span class="ui-ap__risk-word"> risk</span></span>`
+        : nothing,
+    });
+    const why = this.why
+      ? html`<div class="ui-ap__why">
+          <span class="ui-ap__why-label">${infoIcon}${this.whyLabel}</span>
+          <p class="ui-ap__why-text" id=${ifDefined(leaving ? undefined : `${id}-why`)}>${this.why}</p>
+        </div>`
+      : nothing;
+    const preview =
+      body || details?.length
+        ? html`<div class="ui-ap__preview">
+            ${body ? html`<div class="ui-ap__custom">${content(body)}</div>` : nothing}
+            ${details?.length ? this.renderDetails(details, leaving) : nothing}
+          </div>`
+        : nothing;
+    const outcomes = this.renderConsequences();
+    const evidence = this.renderEvidence();
+    // The white card holds the request's content; with none (no preview, no checkbox, buttons on the tray) it's left out
+    const hasBody = [why, preview, outcomes, evidence, alwaysBox].some((part) => part !== nothing) || actions === "card";
     return html`<div
       class="ui-ap__pending"
       data-leaving=${ifDefined(leaving ? "" : undefined)}
@@ -559,40 +590,22 @@ export class TcApprovalCard extends TcElement {
         if (this.entering) this.entering = false;
       }}
     >
-      <div class="ui-ap__card">
-        <div class="ui-ap__head">
-          <span class="ui-ap__icon" aria-hidden="true">${this.icon
-            ? this.icon.cloneNode(true)
-            : html`<svg viewBox="0 0 24 24">${svg`<path d="M12 3 5 5.8v5.4c0 4.3 2.9 8.2 7 9.8 4.1-1.6 7-5.5 7-9.8V5.8L12 3Z"></path><path d="m9.2 12.2 2 2 3.8-4"></path>`}</svg>`}</span>
-          <div class="ui-ap__titles">
-            <h3 class="ui-ap__title" id=${ifDefined(leaving ? undefined : `${id}-title`)}>${this.heading}</h3>
-            ${this.description ? html`<p class="ui-ap__desc" id=${ifDefined(leaving ? undefined : `${id}-desc`)}>${content(this.description)}</p>` : nothing}
-          </div>
-          ${risk
-            ? html`<span class="ui-ap__risk" data-risk=${risk}><span class="ui-ap__risk-dot" aria-hidden="true"></span>${RISK_LABEL[risk]}<span class="ui-ap__risk-word"> risk</span></span>`
-            : nothing}
-        </div>
-
-        ${this.why
-          ? html`<div class="ui-ap__why">
-              <span class="ui-ap__why-label">${infoIcon}${this.whyLabel}</span>
-              <p class="ui-ap__why-text" id=${ifDefined(leaving ? undefined : `${id}-why`)}>${this.why}</p>
-            </div>`
-          : nothing}
-
-        ${body || details?.length
-          ? html`<div class="ui-ap__preview">
-              ${body ? html`<div class="ui-ap__custom">${content(body)}</div>` : nothing}
-              ${details?.length ? this.renderDetails(details, leaving) : nothing}
-            </div>`
-          : nothing}
-
-        ${this.renderConsequences()}
-        ${this.renderEvidence()}
-
-        ${alwaysBox}
-        ${actions === "card" ? foot : nothing}
-      </div>
+      ${clean ? nothing : head}
+      ${clean || hasBody
+        ? html`<div class="ui-ap__card">
+            ${clean ? head : nothing}
+            ${hasBody
+              ? html`<div class="ui-ap__body">
+                  ${why}
+                  ${preview}
+                  ${outcomes}
+                  ${evidence}
+                  ${alwaysBox}
+                  ${actions === "card" ? foot : nothing}
+                </div>`
+              : nothing}
+          </div>`
+        : nothing}
 
       ${actions === "tray" ? foot : nothing}
 
@@ -722,7 +735,6 @@ export class TcApprovalCard extends TcElement {
 /* Colors and motion as variables – override them on [data-ui="ap"]. The card sits on the gray tray (Standard, and Clean
    with actions="tray"); Clean's default actions="card" drops the tray. */
 [data-ui="ap"] {
-  --tc-approval-card-icon-bg: light-dark(#f4f4f4, #1f1f22);
   /* The shortcut chip's text inside the ink primary button */
   --tc-approval-card-primary-kbd-fg: light-dark(rgba(255, 255, 255, 0.72), rgba(25, 25, 27, 0.6));
   --tc-approval-card-spin: 800ms;
@@ -736,10 +748,10 @@ export class TcApprovalCard extends TcElement {
   border-radius: var(--tc-tray-radius);
   background: var(--tc-surface-tray);
   color: var(--tc-text-muted);
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-md);
   line-height: var(--tc-line-height-snug);
-  letter-spacing: -0.006em;
+  letter-spacing: var(--tc-tracking-normal);
   text-align: left;
   -webkit-font-smoothing: antialiased;
   transition: height var(--tc-duration-slowest) var(--tc-ease-move);
@@ -757,8 +769,15 @@ export class TcApprovalCard extends TcElement {
   box-shadow: var(--tc-card-shadow);
 }
 /* ---------- Pending ---------- */
-.ui-ap__pending > .ui-ap__card {
+.ui-ap__body {
   padding: var(--tc-space-4);
+}
+.ui-ap__body > :first-child {
+  margin-top: 0;
+}
+/* Clean: the header is the card's first row, so the content starts right under it */
+:where([data-look="clean"], [data-look="clean"] *).ui-ap__card > .ui-ap__body {
+  padding-top: 0;
 }
 .ui-ap__pending[data-leaving] {
   position: absolute;
@@ -774,64 +793,12 @@ export class TcApprovalCard extends TcElement {
 [data-ui="ap"][data-busy] .ui-ap__pending {
   pointer-events: none;
 }
-.ui-ap__head {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: start;
-  gap: var(--tc-space-3);
-}
-.ui-ap__icon {
-  display: grid;
-  place-items: center;
-  width: 32px;
-  height: 32px;
-  border-radius: var(--tc-radius-lg);
-  background: var(--tc-approval-card-icon-bg);
-  box-shadow: inset 0 0 0 var(--tc-hairline) var(--tc-border-default);
-  color: var(--tc-text-primary);
-}
-:where([data-look="clean"], [data-look="clean"] *).ui-ap__icon {
-  background: transparent;
-}
-.ui-ap__icon svg {
-  width: 16px;
-  height: 16px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.7;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-.ui-ap__titles {
-  min-width: 0;
-  padding-top: 1px;
-}
-.ui-ap__title {
-  margin: 0;
-  overflow: hidden;
-  color: var(--tc-text-primary);
-  font-size: var(--tc-font-size-lg);
-  font-weight: var(--tc-font-weight-strong);
-  line-height: var(--tc-line-height-normal);
-  letter-spacing: -0.011em;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-.ui-ap__desc {
-  margin: 1px 0 0;
-  overflow: hidden;
-  font-size: var(--tc-font-size-md);
-  line-height: var(--tc-line-height-snug);
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
 /* The risk badge: a status pill with its dot in both looks */
 .ui-ap__risk {
   display: inline-flex;
   align-items: center;
   gap: var(--tc-space-1-5);
   height: var(--tc-pill-h-lg);
-  margin-top: 1px;
   padding: 0 var(--tc-pill-px-lg);
   border-radius: var(--tc-pill-radius);
   background: var(--tc-fill-default);
@@ -986,15 +953,15 @@ export class TcApprovalCard extends TcElement {
 /* The leaving request is laid over the resolved row – below the label when there is one */
 [data-ui="ap"][data-label] .ui-ap__pending[data-leaving] { top: 30px; }
 /* actions="card": the buttons close the white card instead of sitting on the tray */
-:where([data-look="standard"], [data-look="standard"] *).ui-ap__card > .ui-ap__foot { min-height: 0; margin-top: var(--tc-space-3-5); padding: 0; }
+:where([data-look="standard"], [data-look="standard"] *).ui-ap__body > .ui-ap__foot { min-height: 0; margin-top: var(--tc-space-3-5); padding: 0; }
 /* actions="card" (the default): one clean white card – no gray tray around it, the decision is its last row */
 :where([data-look="clean"], [data-look="clean"] *)[data-ui="ap"][data-actions="card"] { padding: 0; border-radius: var(--tc-card-radius); background: transparent; }
 :where([data-look="clean"], [data-look="clean"] *)[data-ui="ap"][data-actions="card"] .ui-ap__card { background: var(--tc-surface-raised); }
 :where([data-look="clean"], [data-look="clean"] *)[data-ui="ap"][data-actions="card"] .ui-ap__pending[data-leaving] { top: 0; left: 0; right: 0; }
 :where([data-look="clean"], [data-look="clean"] *)[data-ui="ap"][data-actions="card"][data-label] .ui-ap__pending[data-leaving] { top: 26px; }
 :where([data-look="clean"], [data-look="clean"] *)[data-ui="ap"][data-actions="card"] .ui-ap__label { padding-left: var(--tc-space-0-5); }
-:where([data-look="clean"], [data-look="clean"] *).ui-ap__card > .ui-ap__foot { min-height: 0; margin-top: var(--tc-space-4); padding: var(--tc-space-3-5) 0 0; border-top: var(--tc-hairline) solid var(--tc-divider); }
-:where([data-look="clean"], [data-look="clean"] *).ui-ap__card > .ui-ap__foot .ui-ap__always { margin-top: 0; }
+:where([data-look="clean"], [data-look="clean"] *).ui-ap__body > .ui-ap__foot { min-height: 0; margin-top: var(--tc-space-4); padding: var(--tc-space-3-5) 0 0; border-top: var(--tc-hairline) solid var(--tc-divider); }
+:where([data-look="clean"], [data-look="clean"] *).ui-ap__body > .ui-ap__foot .ui-ap__always { margin-top: 0; }
 /* The tray below the card: countdown on the left, buttons on the right */
 .ui-ap__foot {
   display: flex;
@@ -1390,8 +1357,7 @@ export class TcApprovalCard extends TcElement {
   }
 }
 @container (max-width: 340px) {
-  .ui-ap__pending > .ui-ap__card { padding: var(--tc-space-3-5); }
-  .ui-ap__head { gap: var(--tc-space-2-5); }
+  .ui-ap__body { padding: var(--tc-space-3-5); }
   .ui-ap__risk-word { display: none; }
   .ui-ap__row-time { display: none; }
   .ui-ap__details { column-gap: var(--tc-space-3); }

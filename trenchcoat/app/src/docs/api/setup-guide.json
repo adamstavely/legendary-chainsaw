@@ -116,7 +116,6 @@
    ],
    "tokens": [
     "--tc-accent",
-    "--tc-accent-text",
     "--tc-action-ghost-bg-hover",
     "--tc-action-ghost-fg",
     "--tc-border-control",
@@ -145,7 +144,6 @@
     "--tc-focus-ring-offset",
     "--tc-font-sans",
     "--tc-font-size-lg",
-    "--tc-font-size-lg-plus",
     "--tc-font-size-md",
     "--tc-font-size-sm",
     "--tc-font-weight-medium",
@@ -153,9 +151,7 @@
     "--tc-font-weight-semibold",
     "--tc-hairline",
     "--tc-icon-muted",
-    "--tc-line-height-loose",
     "--tc-line-height-normal",
-    "--tc-line-height-relaxed",
     "--tc-line-height-tight",
     "--tc-meter-fill",
     "--tc-meter-h",
@@ -173,11 +169,15 @@
     "--tc-space-2-5",
     "--tc-space-3",
     "--tc-space-4",
+    "--tc-surface-on-tray",
     "--tc-surface-raised",
+    "--tc-surface-tray",
     "--tc-text-disabled",
     "--tc-text-muted",
     "--tc-text-primary",
-    "--tc-text-strong"
+    "--tc-text-strong",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
    ]
   }
  ],
@@ -279,7 +279,7 @@
   "setup-guide `onChange` → `onDoneChange` (same arguments)"
  ],
  "size": {
-  "min": 32914,
-  "gzip": 8118
+  "min": 34579,
+  "gzip": 8692
  }
 }

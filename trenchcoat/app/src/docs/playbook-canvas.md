@@ -28,7 +28,7 @@ runs for real. It is an editor of phases and steps, not a free-form canvas.
 
 ## Anatomy
 
-1. **Header** `.ui-pb__head` – the name, the version and Edited, the step and gate counts, Versions and Dry run
+1. **Header** `.tc-head` – a workflow icon, the name, the version and Edited, the step and gate counts, Versions and Dry run
 2. **Phase** `.ui-pb__phase` – a column (or a row, when narrow) with its number, name, line and Add step
 3. **Step** `.ui-pb__step` – one step: its grip, type icon, title, type and the dry run's mark
 4. **Dry run** `.ui-pb__dry` – the result in one line, or that it's out of date

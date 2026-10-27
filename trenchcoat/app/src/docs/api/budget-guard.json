@@ -107,7 +107,6 @@
     "--tc-action-secondary-fg",
     "--tc-action-secondary-shadow",
     "--tc-action-secondary-shadow-hover",
-    "--tc-avatar-radius-agent",
     "--tc-card-radius",
     "--tc-card-shadow",
     "--tc-control-font-size",
@@ -134,17 +133,13 @@
     "--tc-font-sans",
     "--tc-font-size-3xl",
     "--tc-font-size-4xl",
-    "--tc-font-size-lg",
-    "--tc-font-size-lg-plus",
     "--tc-font-size-md",
     "--tc-font-size-sm",
     "--tc-font-weight-medium",
     "--tc-font-weight-regular",
     "--tc-font-weight-strong",
     "--tc-hairline",
-    "--tc-icon-muted",
     "--tc-line-height-display",
-    "--tc-line-height-loose",
     "--tc-line-height-normal",
     "--tc-line-height-snug",
     "--tc-line-height-tight",
@@ -160,7 +155,6 @@
     "--tc-pill-radius",
     "--tc-radius-lg",
     "--tc-radius-md",
-    "--tc-shadow-raised",
     "--tc-space-0-5",
     "--tc-space-1",
     "--tc-space-1-5",
@@ -249,7 +243,7 @@
   "`tc-budget-guard` – spend and token caps for a live run: a big meter and thin ones, the pace to the cap, a warning with Raise to buttons at `warnAt`, and a hard stop with an alert. `tc-limits-change` (cancelable), `tc-cap-reach` once per cap, `tc-stop`."
  ],
  "size": {
-  "min": 35049,
-  "gzip": 9716
+  "min": 35859,
+  "gzip": 10296
  }
 }

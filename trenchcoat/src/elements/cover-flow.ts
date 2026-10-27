@@ -505,7 +505,7 @@ export class TcCoverFlow extends TcElement {
   gap: var(--tc-space-1, 4px);
   width: 100%;
   min-width: 0;
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--tc-font-sans, "Inter", "InterVariable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif);
   -webkit-font-smoothing: antialiased;
 }
 

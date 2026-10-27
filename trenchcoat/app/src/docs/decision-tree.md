@@ -26,7 +26,7 @@ the next decision takes its place.
 
 ## Anatomy
 
-1. **Bar** `.ui-dct__head` – the heading, how many decisions wait and where you are
+1. **Header** `.tc-head` – a fork icon, the heading, how many decisions wait and where you are
 2. **Question** `.ui-dct__root` – who asks, on which model, how risky the call is, and the question
 3. **Branch** `.ui-dct__opt` – one option with its number key; the agent's pick is marked
 4. **Consequences** `.ui-dct__leaf` – what the branch leads to, one line each
@@ -36,9 +36,9 @@ the next decision takes its place.
 
 ## Looks
 
-Standard sets a white card on a soft gray tray with the bar above it, the risk tag under the agent's name and each
-branch's consequences in an outlined card. Clean drops the tray – the bar and the tree sit on the page – puts the
-risk tag above the question and sets consequences on a gray fill. Both draw the tree top to bottom in containers
+Standard sets a white card on a soft gray tray with the header above it, the risk tag under the agent's name and each
+branch's consequences in an outlined card. Clean drops the tray – one white card, the header as its first row and the
+tree below – puts the risk tag above the question and sets consequences on a gray fill. Both draw the tree top to bottom in containers
 narrower than 640 px.
 
 ## Keyboard

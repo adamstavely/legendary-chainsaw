@@ -37,7 +37,7 @@ rests on). Left unset, the card looks exactly as it always has.
 ## Anatomy
 
 1. **Label** `.ui-ap__label` – where the request comes from, e.g. “Step 4 · gmail.send”
-2. **Header** `.ui-ap__head` – the icon, the action, a line of context and the risk badge
+2. **Header** – the shared card header: a boxed icon, the action, a line of context and the risk badge
 3. **Preview** `.ui-ap__preview` – custom content and the key-value details
 4. **Always allow** `.ui-ap__always` – approve this action from now on
 5. **Countdown** `.ui-ap__timer` – the time left, and Stop
@@ -45,8 +45,8 @@ rests on). Left unset, the card looks exactly as it always has.
 
 ## Looks
 
-Standard is a white card – header, preview, “Always allow” – on a gray tray, with the countdown and buttons on the
-tray below it. In Standard the preview sits in its own gray box. Clean is one white card: the preview
+Standard puts the header on a gray tray, above a white card with the preview and “Always allow”, and the countdown
+and buttons on the tray below it. In Standard the preview sits in its own gray box. Clean is one white card with the header as its first row: the preview
 as plain rows under a hairline, then “Always allow” and the countdown, with Edit, Deny and Approve at the bottom. `actions="tray"` or `actions="card"` moves the buttons
 in either look.
 

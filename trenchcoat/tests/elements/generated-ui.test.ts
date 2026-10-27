@@ -10,7 +10,7 @@ import { act } from "react";
 import { createRoot } from "react-dom/client";
 import { afterEach, describe, expect, test, vi } from "vitest";
 import "../../src/elements/generated-ui";
-import type { GeneratedUiActionDetail, GeneratedUiIssue, GeneratedUiSpec, TcGeneratedUi } from "../../src/elements/generated-ui";
+import type { GeneratedUiActionDetail, GeneratedUiForm, GeneratedUiIssue, GeneratedUiSpec, TcGeneratedUi } from "../../src/elements/generated-ui";
 import type { TcDataTable } from "../../src/elements/data-table";
 import type { TcKpiChart } from "../../src/elements/kpi-chart";
 import { GeneratedUi } from "../../src/elements/react/generated-ui";
@@ -26,7 +26,7 @@ const make = (spec: unknown, attrs: { streaming?: boolean; showIssues?: boolean;
 const blocks = (el: Element) => [...el.querySelector(".ui-gui__blocks")!.children];
 const text = (el: Element | null) => el!.textContent!.replace(/\s+/g, " ").trim();
 
-const FORM = {
+const FORM: GeneratedUiForm = {
   type: "form",
   id: "invite",
   title: "Invite",

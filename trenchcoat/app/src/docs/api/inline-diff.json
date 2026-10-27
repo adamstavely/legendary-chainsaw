@@ -239,7 +239,6 @@
     "--tc-pill-font-size",
     "--tc-radius-badge",
     "--tc-radius-lg",
-    "--tc-radius-sm",
     "--tc-radius-xs",
     "--tc-shadow-overlay",
     "--tc-space-0-5",
@@ -329,7 +328,7 @@
   "inline-diff: `diffWords` uses Myers' O(ND) diff instead of a capped LCS table. Long texts stay word by word (a 3,000-word text with 150 edits gives 150 changes, where anything over ~1,500 words used to become one replacement), and the work grows with the edits, not the length squared. Its third argument is now a work budget (tokens × edits); past it the middle is still one replacement."
  ],
  "size": {
-  "min": 47707,
-  "gzip": 11983
+  "min": 49759,
+  "gzip": 12434
  }
 }

@@ -140,14 +140,14 @@
     },
     {
      "name": "--tc-sandbox-log-cyan",
-     "value": "light-dark(#0f7b6c, #5fd4b8)",
+     "value": "var(--tc-tone-teal-fg)",
      "looks": [
       "both"
      ]
     },
     {
      "name": "--tc-sandbox-log-cyan-bg",
-     "value": "light-dark(rgba(15, 123, 108, 0.1), rgba(95, 212, 184, 0.14))",
+     "value": "var(--tc-tone-teal-bg)",
      "looks": [
       "both"
      ]
@@ -199,7 +199,6 @@
     "--tc-focus-ring-width",
     "--tc-font-mono",
     "--tc-font-sans",
-    "--tc-font-size-lg-plus",
     "--tc-font-size-md",
     "--tc-font-size-sm",
     "--tc-font-weight-medium",
@@ -208,7 +207,6 @@
     "--tc-hairline",
     "--tc-icon-muted",
     "--tc-line-height-normal",
-    "--tc-line-height-relaxed",
     "--tc-line-height-tight",
     "--tc-radius-2xs",
     "--tc-radius-md",
@@ -237,6 +235,8 @@
     "--tc-text-primary",
     "--tc-text-secondary",
     "--tc-text-strong",
+    "--tc-tone-teal-bg",
+    "--tc-tone-teal-fg",
     "--tc-tone-violet-bg",
     "--tc-tone-violet-fg",
     "--tc-tray-inset",
@@ -324,7 +324,7 @@
   "`tc-sandbox-log` – sandbox command output: a block per step with command, exit code and time; ANSI colours (16, 256 and true colour) mapped to tokens, never parsed as HTML; incremental parsing while it streams; copy and search; windowed (50,000 lines render under 400 rows)."
  ],
  "size": {
-  "min": 43436,
-  "gzip": 13493
+  "min": 45047,
+  "gzip": 14093
  }
 }

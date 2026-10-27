@@ -48,7 +48,7 @@ describe("tc-filter-menu", () => {
       const el = await fixture<TcFilterMenu>(html`<tc-filter-menu look=${look} heading="Filter leads" .groups=${GROUPS}></tc-filter-menu>`);
       expect(el.dataset.ui).toBe("fm");
       expect(el.dataset.look).toBe(look);
-      expect(el.querySelector(".ui-fm__title")!.textContent).toBe("Filter leads");
+      expect(el.querySelector(".tc-head__title")!.textContent).toBe("Filter leads");
       expect(!!el.querySelector(":scope > .ui-fm__card")).toBe(look === "standard");
       expect(el.querySelector(".ui-fm__hints")).toBeTruthy();
       el.hints = false;
@@ -325,7 +325,7 @@ describe("tc-filter-menu", () => {
     await act(async () => root.render(React.createElement(App)));
     await settle();
     const el = host.querySelector("tc-filter-menu")!;
-    expect(el.querySelector(".ui-fm__title")!.textContent).toBe("Filter leads");
+    expect(el.querySelector(".tc-head__title")!.textContent).toBe("Filter leads");
     await act(async () => head(el, "Region").click());
     await settle();
     expect(head(el, "Region").getAttribute("aria-expanded")).toBe("true");

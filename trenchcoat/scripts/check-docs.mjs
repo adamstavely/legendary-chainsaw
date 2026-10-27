@@ -57,10 +57,11 @@ for (const slug of slugs) {
   const meta = Object.fromEntries([...(source.match(/^---\n([\s\S]*?)\n---/)?.[1] ?? "").matchAll(/^(\w[\w-]*):\s*(.*)$/gm)].map((m) => [m[1], m[2].trim()]));
   for (const r of (meta.related ?? "").split(",").map((x) => x.trim()).filter(Boolean)) if (!library.has(r)) add(slug, `related "${r}" isn't a component`);
 
-  // Anatomy selectors: every class they name must appear in the element's or the wrapper's source
+  // Anatomy selectors: every class they name must appear in the element's or the wrapper's source (or be the shared
+  // card header's, .tc-head*, which internal/card-head.ts renders)
   const code = [`src/elements/${slug}.ts`, `src/elements/react/${slug}.ts`].filter(existsSync).map((f) => readFileSync(f, "utf8")).join("\n");
   for (const m of source.matchAll(/^\d+\.\s+\*\*.+?\*\*\s+`([^`]+)`/gm))
-    for (const cls of m[1].match(/\.([\w-]+)/g) ?? []) if (!code.includes(cls.slice(1))) add(slug, `anatomy selector ${m[1]} names ${cls}, which the element never renders`);
+    for (const cls of m[1].match(/\.([\w-]+)/g) ?? []) if (!cls.startsWith(".tc-head") && !code.includes(cls.slice(1))) add(slug, `anatomy selector ${m[1]} names ${cls}, which the element never renders`);
 
   const tsx = source.match(/## Example[\s\S]*?```tsx\n([\s\S]*?)```/)?.[1];
   if (library.get(slug) === "components" && !UTILITIES.has(slug) && !tsx) add(slug, "the Example has no ```tsx block");

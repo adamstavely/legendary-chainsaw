@@ -305,13 +305,6 @@
    "ui": "ap",
    "cssProperties": [
     {
-     "name": "--tc-approval-card-icon-bg",
-     "value": "light-dark(#f4f4f4, #1f1f22)",
-     "looks": [
-      "both"
-     ]
-    },
-    {
      "name": "--tc-approval-card-primary-kbd-fg",
      "value": "light-dark(rgba(255, 255, 255, 0.72), rgba(25, 25, 27, 0.6))",
      "looks": [
@@ -374,11 +367,10 @@
     "--tc-focus-outline",
     "--tc-focus-ring-offset",
     "--tc-focus-ring-width",
-    "--tc-font-size-lg",
+    "--tc-font-sans",
     "--tc-font-size-md",
     "--tc-font-size-sm",
     "--tc-font-weight-medium",
-    "--tc-font-weight-strong",
     "--tc-hairline",
     "--tc-icon-muted",
     "--tc-kbd-bg",
@@ -391,7 +383,6 @@
     "--tc-kbd-radius",
     "--tc-kbd-shadow",
     "--tc-line-height-none",
-    "--tc-line-height-normal",
     "--tc-line-height-snug",
     "--tc-line-height-tight",
     "--tc-pill-font-size",
@@ -427,6 +418,7 @@
     "--tc-text-on-inverse",
     "--tc-text-primary",
     "--tc-text-secondary",
+    "--tc-tracking-normal",
     "--tc-tray-inset",
     "--tc-tray-radius"
    ]
@@ -534,9 +526,11 @@
    ]
   }
  ],
- "changelog": [],
+ "changelog": [
+  "`tc-approval-card` gains decision detail: why you're seeing it, what each choice does, editable arguments and evidence chips."
+ ],
  "size": {
-  "min": 49893,
-  "gzip": 13805
+  "min": 51283,
+  "gzip": 14457
  }
 }

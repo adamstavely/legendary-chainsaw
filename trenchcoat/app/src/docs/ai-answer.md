@@ -29,7 +29,7 @@ list, `**bold**` is bold and `[1]` or `[1,3]` cite sources.
 
 ## Anatomy
 
-1. **Question** `.ui-ans__question` – what was asked
+1. **Header** – the shared card header: a boxed icon and the question that was asked (none when there is no question)
 2. **Sources** `.ui-ans__sources` – numbered cards, each with its site, logo and title
 3. **Label** `.ui-ans__label` – the assistant's mark and what it's doing: reading, writing, or done
 4. **Answer** `.ui-ans__answer` – the streamed text, with paragraphs, lists and bold
@@ -38,9 +38,9 @@ list, `**bold**` is bold and `[1]` or `[1,3]` cite sources.
 
 ## Looks
 
-Standard sets the answer on a white card in a gray tray, with the footer on the tray below it, and its assistant is
+Standard sets the question on a gray tray, the answer on a white card below it and the footer on the tray, and its assistant is
 a small blue cloud whose eyes scan the sources and follow the text. Clean has no tray: one white card holds
-everything, the footer as its last row, and the assistant is a blue sparkle; its icons are smaller and thinner. Both
+everything, the question as its first row and the footer as its last, and the assistant is a blue sparkle; its icons are smaller and thinner. Both
 stream, cite and preview the same way.
 
 ## Keyboard

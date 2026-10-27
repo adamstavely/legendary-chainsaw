@@ -931,7 +931,7 @@ export class TcCodeBlock extends TcElement {
   font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-md);
   line-height: var(--tc-line-height-normal);
-  letter-spacing: -0.006em;
+  letter-spacing: var(--tc-tracking-normal);
 }
 :where([data-look="clean"], [data-look="clean"] *)[data-ui="cblk"] {
   color: var(--tc-text-primary);

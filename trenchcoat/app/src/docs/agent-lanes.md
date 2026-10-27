@@ -27,7 +27,8 @@ any other block opens a short summary of what got done.
 
 ## Anatomy
 
-1. **Bar** `.ui-al__bar` – the title, how many tasks run and need you, the window (“Last 30m”) and Pause
+1. **Header** – the shared card header: a boxed icon, the title, and at the right how many tasks run and need you,
+   the window (“Last 30m”) and Pause
 2. **Agent** `.ui-al__agent` – the lane's avatar, name, model and current state
 3. **Block** `.ui-al__block` – one task across the time it took; opens its details or decision
 4. **Time scale** `.ui-al__grid` – minutes ago, along the top and down the lanes
@@ -37,8 +38,8 @@ any other block opens a short summary of what got done.
 
 ## Looks
 
-Standard puts the summary bar on the gray tray above a white card with the lanes. Clean is one white card with the
-bar inside it, on top. Both slide the same timeline, use the same colours for running, waiting and failed tasks,
+Standard puts the header on the gray tray above a white card with the lanes. Clean is one white card with the
+header as its first row. Both slide the same timeline, use the same colours for running, waiting and failed tasks,
 and open the same decision and details.
 
 ## Keyboard

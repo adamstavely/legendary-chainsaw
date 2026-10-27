@@ -71,7 +71,7 @@ describe("tc-clarifying-questions", () => {
     const el = await ask();
     const form = el.querySelector('[role="form"]')!;
     expect(document.getElementById(form.getAttribute("aria-labelledby")!)!.textContent).toBe("A few questions before I start");
-    expect(el.querySelector(".ui-clq__intro")!.textContent).toBe("I'll draft once I know.");
+    expect(el.querySelector(".tc-head__sub")!.textContent).toBe("I'll draft once I know.");
     expect(document.getElementById(q(el, 0).getAttribute("aria-labelledby")!)!.textContent).toBe("How long?");
     // One choice: a radiogroup with You decide at the end; several: checkboxes
     const radios = q(el, 0).querySelectorAll('[role="radiogroup"] [role="radio"]');
@@ -256,7 +256,7 @@ describe("tc-clarifying-questions", () => {
     expect(el.sent).toBe(false);
     expect(decide(el, 0).textContent!.trim()).toBe("Your call");
     expect(btn(el, "Just start")).toBeTruthy();
-    expect(el.querySelector(".ui-clq__title")!.textContent).toBe("Quick check");
+    expect(el.querySelector(".tc-head__title")!.textContent).toBe("Quick check");
     el.sent = true;
     await settle();
     expect(el.querySelector(".ui-clq__answer dd")!.textContent).toBe("Your call");
@@ -272,13 +272,13 @@ describe("tc-clarifying-questions", () => {
     await settle();
     const el = host.querySelector("tc-clarifying-questions")!;
     expect(el.classList.contains("consumer")).toBe(true);
-    expect(el.querySelector(".ui-clq__title")!.textContent).toBe("Ask 1");
+    expect(el.querySelector(".tc-head__title")!.textContent).toBe("Ask 1");
     await act(async () => choice(el, 0, "short").click());
     expect(onChange).toHaveBeenCalledWith({ length: { values: ["short"] } });
     await act(async () => draw(2));
     await settle();
     expect(choice(el, 0, "short").getAttribute("aria-checked")).toBe("true");
-    expect(el.querySelector(".ui-clq__title")!.textContent).toBe("Ask 2");
+    expect(el.querySelector(".tc-head__title")!.textContent).toBe("Ask 2");
     await act(async () => btn(el, "Skip, you decide")!.click());
     await settle();
     expect(onSend).toHaveBeenCalledWith({ length: { decide: true }, areas: { decide: true }, avoid: { decide: true } }, expect.any(Event));

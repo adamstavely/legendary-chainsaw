@@ -9,7 +9,7 @@
  *      --tc-status-*, --tc-tone-*, --tc-chart-*, --tc-shadow-*, plus the look-level scale choices
  *      (--tc-hairline, --tc-font-weight-strong, --tc-ease-move, --tc-radius-badge …).
  *   3. Patterns    --tc-control-*, --tc-action-*, --tc-field-*, --tc-menu-*, --tc-pill-*, --tc-kbd-*, --tc-switch-*,
- *      --tc-seg-*, --tc-card-*, --tc-tray-*, --tc-avatar-*, --tc-caption-*, --tc-eyebrow-*, --tc-meter-*,
+ *      --tc-seg-*, --tc-card-*, --tc-tray-*, --tc-title-*, --tc-subtitle-*, --tc-head-*, --tc-avatar-*, --tc-caption-*, --tc-eyebrow-*, --tc-meter-*,
  *      --tc-tooltip-*. One recipe per UI pattern, valued per look. Which to use where: CONTRIBUTING.md.
  *
  * Selection:
@@ -323,6 +323,10 @@
   --tc-tone-teal-bg: light-dark(var(--tc-teal-50), rgba(79, 209, 197, 0.14));
   --tc-tone-teal-solid: light-dark(var(--tc-teal-500), var(--tc-teal-400));
   --tc-tone-teal-border: color-mix(in srgb, var(--tc-tone-teal-solid) 40%, transparent);
+  /* Destructive actions filled with red: white text keeps 4.5:1 in both themes (status-danger-solid doesn't) */
+  --tc-action-danger-bg: var(--tc-red-600);
+  --tc-action-danger-bg-hover: color-mix(in srgb, var(--tc-red-600) 88%, var(--tc-gray-950));
+  --tc-action-danger-fg: #ffffff;
   /* An accent you can fill a mark with (a step marker, a picked dot) – Clean's is a touch lighter than its text */
   --tc-accent-solid: var(--tc-accent);
   /* A recessed well inside a card: token chips, an image's backdrop */
@@ -407,6 +411,7 @@
   --tc-action-ghost-bg-hover: var(--tc-fill-default);
   /* Patterns – fields (text inputs, selects, search) */
   --tc-field-h: 36px;
+  --tc-field-h-sm: var(--tc-control-h-sm); /* the compact field, inside a dense toolbar or table row */
   --tc-field-radius: var(--tc-radius-lg);
   --tc-field-px: 12px;
   --tc-field-font-size: var(--tc-font-size-md);
@@ -472,6 +477,26 @@
   --tc-avatar-font-size: 9px;
   --tc-avatar-font-weight: var(--tc-font-weight-semibold);
   --tc-avatar-radius-agent: var(--tc-radius-sm);
+  /* Patterns – the card header (internal/card-head.ts): a boxed icon, the title, the line under it. Standard puts it
+     on the tray above the card */
+  --tc-head-gap: var(--tc-space-2-5);
+  --tc-head-pad: var(--tc-space-2) var(--tc-space-2-5) var(--tc-space-2-5);
+  --tc-head-icon-size: 28px;
+  --tc-head-icon-radius: var(--tc-radius-md);
+  --tc-head-icon-bg: var(--tc-surface-on-tray);
+  --tc-head-icon-shadow: var(--tc-shadow-control);
+  --tc-head-icon-fg: var(--tc-text-secondary);
+  --tc-head-glyph: 16px;
+  --tc-head-glyph-stroke: 1.75;
+  /* Patterns – a card's title and the quiet line under it (one style for every component's header) */
+  --tc-title-font-size: var(--tc-font-size-lg);
+  --tc-title-font-weight: var(--tc-font-weight-strong);
+  --tc-title-line-height: var(--tc-line-height-normal);
+  --tc-title-tracking: -0.006em;
+  --tc-title-color: var(--tc-text-primary);
+  --tc-subtitle-font-size: var(--tc-font-size-sm);
+  --tc-subtitle-line-height: var(--tc-line-height-tight);
+  --tc-subtitle-color: var(--tc-text-secondary);
   /* Patterns – section captions (group labels) and eyebrows (uppercase kicker above a title) */
   --tc-caption-font-size: var(--tc-font-size-sm);
   --tc-caption-font-weight: var(--tc-font-weight-medium);
@@ -592,6 +617,10 @@
   --tc-tone-teal-bg: light-dark(var(--tc-teal-50), rgba(79, 209, 197, 0.14));
   --tc-tone-teal-solid: light-dark(var(--tc-teal-500), var(--tc-teal-400));
   --tc-tone-teal-border: color-mix(in srgb, var(--tc-tone-teal-solid) 40%, transparent);
+  /* Destructive actions filled with red: white text keeps 4.5:1 in both themes (status-danger-solid doesn't) */
+  --tc-action-danger-bg: var(--tc-red-600);
+  --tc-action-danger-bg-hover: color-mix(in srgb, var(--tc-red-600) 88%, var(--tc-gray-950));
+  --tc-action-danger-fg: #ffffff;
   /* An accent you can fill a mark with (a step marker, a picked dot) – Clean's is a touch lighter than its text */
   --tc-accent-solid: light-dark(rgba(0, 96, 226, 0.765), #4d8dff);
   /* A recessed well inside a card: token chips, an image's backdrop */
@@ -676,6 +705,7 @@
   --tc-action-ghost-bg-hover: var(--tc-fill-subtle);
   /* Patterns – fields */
   --tc-field-h: 32px;
+  --tc-field-h-sm: var(--tc-control-h-sm); /* the compact field, inside a dense toolbar or table row */
   --tc-field-radius: var(--tc-radius-md);
   --tc-field-px: 10px;
   --tc-field-font-size: var(--tc-font-size-md);
@@ -741,6 +771,25 @@
   --tc-avatar-font-size: 9px;
   --tc-avatar-font-weight: var(--tc-font-weight-medium);
   --tc-avatar-radius-agent: var(--tc-radius-sm);
+  /* Patterns – the card header (Clean: the card's first row, the icon in a hairline box) */
+  --tc-head-gap: var(--tc-space-2-5);
+  --tc-head-pad: var(--tc-space-4) var(--tc-space-4) var(--tc-space-3);
+  --tc-head-icon-size: 28px;
+  --tc-head-icon-radius: var(--tc-radius-md);
+  --tc-head-icon-bg: var(--tc-surface-control);
+  --tc-head-icon-shadow: var(--tc-shadow-control);
+  --tc-head-icon-fg: var(--tc-text-secondary);
+  --tc-head-glyph: 15px;
+  --tc-head-glyph-stroke: 1.5;
+  /* Patterns – a card's title and the quiet line under it (Clean: a size up, medium weight) */
+  --tc-title-font-size: var(--tc-font-size-lg-plus);
+  --tc-title-font-weight: var(--tc-font-weight-strong);
+  --tc-title-line-height: var(--tc-line-height-loose);
+  --tc-title-tracking: var(--tc-tracking-snug);
+  --tc-title-color: var(--tc-text-primary);
+  --tc-subtitle-font-size: var(--tc-font-size-sm);
+  --tc-subtitle-line-height: var(--tc-line-height-tight);
+  --tc-subtitle-color: var(--tc-text-secondary);
   /* Patterns – section captions and eyebrows (Clean: the same uppercase 10/500/0.5px style) */
   --tc-caption-font-size: var(--tc-font-size-2xs);
   --tc-caption-font-weight: var(--tc-font-weight-medium);

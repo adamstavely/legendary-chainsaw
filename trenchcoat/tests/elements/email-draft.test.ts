@@ -72,8 +72,8 @@ describe("tc-email-draft", () => {
       expect(el.dataset.ui).toBe("ed");
       expect(el.dataset.look).toBe(look);
       expect(el.dataset.phase).toBe("draft");
-      expect(el.querySelector(".ui-ed__id")!.textContent).toBe("INV-1");
-      expect(el.querySelector(".ui-ed__account")!.textContent).toBe("Lumen");
+      expect(el.querySelector(".tc-head__title")!.textContent).toBe("INV-1");
+      expect(el.querySelector(".tc-head__sub")!.textContent).toBe("Lumen");
       expect(el.querySelector(".ui-ed__agent")!.textContent).toBe("Collections agent");
       expect(el.querySelector(".ui-ed__badge")!.textContent).toBe("Ready for review");
       expect(el.querySelector(".ui-ed__text")!.textContent).toBe(

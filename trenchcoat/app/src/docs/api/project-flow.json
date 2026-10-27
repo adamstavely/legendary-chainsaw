@@ -174,13 +174,36 @@
      "looks": [
       "both"
      ]
+    },
+    {
+     "name": "--tc-project-flow-title-size",
+     "value": "37.618px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-project-flow-sub-size",
+     "value": "26.333px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-project-flow-pill-size",
+     "value": "20.674px",
+     "looks": [
+      "both"
+     ]
     }
    ],
    "tokens": [
+    "--tc-font-sans",
     "--tc-space-1-5",
     "--tc-space-2",
     "--tc-space-4",
-    "--tc-text-primary"
+    "--tc-text-primary",
+    "--tc-tracking-tight"
    ]
   }
  ],
@@ -200,7 +223,7 @@
  ],
  "changelog": [],
  "size": {
-  "min": 91620,
-  "gzip": 25423
+  "min": 93944,
+  "gzip": 26095
  }
 }

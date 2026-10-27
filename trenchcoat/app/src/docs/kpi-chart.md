@@ -25,7 +25,7 @@ and can step through the points with the keyboard.
 
 ## Anatomy
 
-1. **Title** `.ui-kpi__title` – what the metric is
+1. **Header** `.tc-head` – a chart icon and the title, what the metric is
 2. **Value** `.ui-kpi__value` – the headline number, already formatted
 3. **Change** `.ui-kpi__delta` – up in green, down in red
 4. **Plot** `.ui-kpi__plot` – the lines on three gridlines, with the axis values beside them
@@ -34,8 +34,9 @@ and can step through the points with the keyboard.
 
 ## Looks
 
-Both are one white card. Standard has roomier padding, the change as coloured text after the value, and the footer
-as a muted line under the chart. Clean has hairline shadows, the change as a tinted pill, and the footer as the
+Standard puts the header on a gray tray above the white card, with roomier padding, the change as coloured text after
+the value, and the footer as a muted line under the chart. Clean is one white card with the header as its first row,
+hairline shadows, the change as a tinted pill, and the footer as the
 card's last row under a divider.
 
 ## Keyboard

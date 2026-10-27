@@ -779,12 +779,9 @@ export class TcIntegrationPicker extends TcElement {
 @keyframes ui-ip-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
 .ui-ip__title { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--tc-space-3); }
 .ui-ip__title > div { display: grid; min-width: 0; }
-.ui-ip__title h3 { margin: 0; overflow: hidden; font-size: var(--tc-font-size-lg-plus); font-weight: var(--tc-font-weight-strong); white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="standard"], [data-look="standard"] *).ui-ip__title h3 { line-height: var(--tc-line-height-relaxed); letter-spacing: var(--tc-tracking-snug); color: var(--tc-text-primary); }
-:where([data-look="clean"], [data-look="clean"] *).ui-ip__title h3 { line-height: var(--tc-line-height-loose); color: var(--tc-text-strong); }
-.ui-ip__domain { color: var(--tc-text-muted); }
-:where([data-look="standard"], [data-look="standard"] *).ui-ip__domain { font-size: var(--tc-font-size-md); }
-:where([data-look="clean"], [data-look="clean"] *).ui-ip__domain { display: flex; align-items: center; gap: var(--tc-space-1-5); min-width: 0; font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); }
+.ui-ip__title h3 { margin: 0; overflow: hidden; font-size: var(--tc-title-font-size); font-weight: var(--tc-title-font-weight); line-height: var(--tc-title-line-height); letter-spacing: var(--tc-title-tracking); color: var(--tc-title-color); white-space: nowrap; text-overflow: ellipsis; }
+.ui-ip__domain { font-size: var(--tc-subtitle-font-size); line-height: var(--tc-subtitle-line-height); color: var(--tc-subtitle-color); }
+:where([data-look="clean"], [data-look="clean"] *).ui-ip__domain { display: flex; align-items: center; gap: var(--tc-space-1-5); min-width: 0; }
 /* "Connected": a small success tag */
 :where([data-look="clean"], [data-look="clean"] *).ui-ip__state { display: inline-flex; align-items: center; height: var(--tc-pill-h); padding: 0 var(--tc-pill-px); border-radius: var(--tc-pill-radius); background: var(--tc-status-success-bg); font-size: var(--tc-pill-font-size); font-weight: var(--tc-pill-font-weight); line-height: var(--tc-line-height-tight); color: var(--tc-status-success-fg); animation: ui-ip-in var(--tc-duration-moderate) var(--tc-ease-move); }
 .ui-ip__desc { margin: var(--tc-space-2) 0 0; font-size: var(--tc-font-size-md); color: var(--tc-text-secondary); }

@@ -28,7 +28,7 @@ first.
 
 ## Anatomy
 
-1. **Bar** `.ui-db__bar` – the heading, a hint about what to do, and the Auto switch
+1. **Header** `.tc-head` – the heading, a hint about what to do under it, and the Auto switch
 2. **Unassigned** `.ui-db__pile` – the tasks waiting for an agent, with their count
 3. **Task** `.ui-db__task` – one waiting task: title, tool logos and rough minutes
 4. **Agent** `.ui-db__agent` – an agent's mark, name, model and rate, and the number key that picks it
@@ -37,8 +37,8 @@ first.
 
 ## Looks
 
-Standard puts the bar on the gray tray above a white card that holds the two columns. Clean is one card with the bar
-as its first row. Both drag, preview and glide the same way.
+Standard puts the header on the gray tray above a white card that holds the two columns. Clean is one card with the
+header as its first row. Both drag, preview and glide the same way.
 
 ## Keyboard
 

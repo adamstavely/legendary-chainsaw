@@ -27,17 +27,18 @@ agent, and “Hand back” returns the task with what was done and what's still 
 
 ## Anatomy
 
-1. **Header** `.ui-hand__head` – the agent's avatar, “Scout needs you to sign in to TAP Air” and the step and task
+1. **Header** `.tc-head` – a hand icon and “Handoff”, with the blocker pill at the right
 2. **Blocker** `.ui-hand__pill` – why it stopped (“Sign-in required”); “Yours” once you have control
-3. **Reason** `.ui-hand__why` – the agent's own words on why it stopped
-4. **What I did** `.ui-hand__section[data-kind="done"]` – the steps so far, the first few then “2 more”
-5. **What I need** `.ui-hand__section[data-kind="needs"]` – numbered while waiting, a checklist once you take over
-6. **Main button** `.ui-hand__btn--primary` – “Take over”, then “Hand back to Scout”, with the ⌘↵ hint
+3. **Ask** `.ui-hand__head` – the agent's avatar, “Scout needs you to sign in to TAP Air” and the step and task
+4. **Reason** `.ui-hand__why` – the agent's own words on why it stopped
+5. **What I did** `.ui-hand__section[data-kind="done"]` – the steps so far, the first few then “2 more”
+6. **What I need** `.ui-hand__section[data-kind="needs"]` – numbered while waiting, a checklist once you take over
+7. **Main button** `.ui-hand__btn--primary` – “Take over”, then “Hand back to Scout”, with the ⌘↵ hint
 
 ## Looks
 
-Standard is a white card on a gray tray, with the main button on the tray below it. Clean is one quiet white card
-with the buttons in its last row under a hairline. Both fold to the same one-line result when the task is handed
+Standard puts the header on a gray tray, then the white card, then the main button on the tray below it. Clean is one
+quiet white card with the header as its first row and the buttons in its last row under a hairline. Both fold to the same one-line result when the task is handed
 back, and grow back when someone takes over again.
 
 ## Keyboard

@@ -28,7 +28,8 @@ cancel it, and pause the queue or change the number of workers.
 
 ## Anatomy
 
-1. **Header** `.ui-agq__head` – the heading, the Live / Paused / Rate limited state, Pause and the worker stepper
+1. **Header** – the shared card header: a boxed icon, the heading and the queue's name, and at the right the
+   Live / Paused / Rate limited state, Pause and the worker stepper
 2. **Numbers** `.ui-agq__stats` – Waiting, Running, Throughput and Wait p95
 3. **Job** `.ui-agq__job` – a waiting card or a running bar; the rest of the backlog is a heap of squares
 4. **Worker** `.ui-agq__slot` – one worker and the job it's running, or Idle / Paused

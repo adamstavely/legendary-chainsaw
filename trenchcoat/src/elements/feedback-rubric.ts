@@ -3,6 +3,7 @@ import { property, state } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { live } from "lit/directives/live.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController } from "./internal/controllers";
 import { diffWords } from "./inline-diff";
 
@@ -16,7 +17,8 @@ import { diffWords } from "./inline-diff";
  *     (Inline Diff's diffWords)
  *   · "What gets sent" shows the payload as JSON; Send fires tc-submit with all of it, after checking every
  *     required criterion has a score
- * Standard is a gray tray with the rubric on a white card; Clean is one white card with hairline dividers.
+ * Standard is a gray tray with the header on it and the rubric on a white card; Clean is one white card with hairline
+ * dividers, the header its first row.
  *
  *   <tc-feedback-rubric .answer=${text} .meta=${{ messageId: "msg_81" }}></tc-feedback-rubric>
  *
@@ -95,7 +97,8 @@ const plural = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? o
 
 /* ---------- Icons (Lucide, ISC – lucide.dev) ---------- */
 const glyph = (d: TemplateResult, cls = "ui-fbr__glyph") => html`<svg class=${cls} viewBox="0 0 24 24" aria-hidden="true">${d}</svg>`;
-const rubricMark = glyph(svg`<path d="M4 6h10M4 12h7M4 18h10"></path><path d="M16.5 10.5l2 2 3.5-4"></path>`, "ui-fbr__mark-svg");
+/** A list with a tick: a rubric, scored */
+const rubricMark = svg`<path d="M4 6h10M4 12h7M4 18h10"></path><path d="M16.5 10.5l2 2 3.5-4"></path>`;
 const checkIcon = glyph(svg`<path d="M5 12.5l4.5 4.5L19 7.5"></path>`);
 const chevron = glyph(svg`<path d="M9 6l6 6-6 6"></path>`, "ui-fbr__chev");
 const pencil = glyph(svg`<path d="M4 20h4L19 9l-4-4L4 16v4z"></path><path d="M13.5 6.5l4 4"></path>`);
@@ -348,11 +351,7 @@ export class TcFeedbackRubric extends TcElement {
     const scored = this.criteria.filter((c) => v.scores[c.id] !== undefined).length;
     const sent = this.sent;
     return html`
-      <div class="ui-fbr__bar">
-        <span class="ui-fbr__mark">${rubricMark}</span>
-        <span class="ui-fbr__title" id=${titleId}>${this.heading}</span>
-        <span class="ui-fbr__progress">${scored} of ${this.criteria.length} scored</span>
-      </div>
+      ${cardHead({ icon: rubricMark, title: this.heading, id: titleId, aside: html`<span class="ui-fbr__progress">${scored} of ${this.criteria.length} scored</span>` })}
       <div class="ui-fbr__card" role="group" aria-labelledby=${titleId}>
         ${this.answer
           ? html`<figure class="ui-fbr__answer" ?data-expanded=${this.expanded}>
@@ -413,7 +412,6 @@ export class TcFeedbackRubric extends TcElement {
   font-size: var(--tc-font-size-md);
   font-weight: var(--tc-font-weight-regular);
   line-height: var(--tc-line-height-normal);
-  letter-spacing: -0.006em;
   color: var(--tc-text-secondary);
   text-align: left;
   -webkit-font-smoothing: antialiased;
@@ -436,18 +434,11 @@ export class TcFeedbackRubric extends TcElement {
 .ui-fbr__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .ui-fbr__glyph { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 :where([data-look="clean"], [data-look="clean"] *) .ui-fbr__glyph { stroke-width: 1.6; }
-/* ----- The header on the tray ----- */
-.ui-fbr__bar { display: flex; align-items: center; gap: var(--tc-space-2); min-width: 0; padding: var(--tc-space-1-5) var(--tc-space-1) var(--tc-space-2) var(--tc-space-3); }
-:where([data-look="clean"], [data-look="clean"] *).ui-fbr__bar { padding: var(--tc-space-3) var(--tc-space-3-5) var(--tc-space-3) var(--tc-space-4); border-bottom: var(--tc-hairline) solid var(--tc-divider); }
-.ui-fbr__mark { display: grid; flex: none; place-items: center; width: 16px; color: var(--tc-accent-text); }
-.ui-fbr__mark-svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-:where([data-look="clean"], [data-look="clean"] *).ui-fbr__mark-svg { stroke-width: 1.4; }
-.ui-fbr__title { flex: 1; min-width: 0; overflow: hidden; font-weight: var(--tc-font-weight-semibold); color: var(--tc-text-strong); white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="clean"], [data-look="clean"] *).ui-fbr__title { font-weight: var(--tc-font-weight-medium); }
+/* ----- The header (cardHead): on the tray in Standard, the card's first row in Clean; how many are scored at its right ----- */
 .ui-fbr__progress { flex: none; color: var(--tc-text-muted); font-variant-numeric: tabular-nums; }
 /* ----- The card ----- */
 .ui-fbr__card { overflow: hidden; border-radius: var(--tc-card-radius); background: var(--tc-surface-on-tray); box-shadow: var(--tc-card-shadow); }
-:where([data-look="clean"], [data-look="clean"] *).ui-fbr__card { border-radius: 0 0 var(--tc-card-radius) var(--tc-card-radius); background: none; box-shadow: none; }
+:where([data-look="clean"], [data-look="clean"] *).ui-fbr__card { border-top: var(--tc-hairline) solid var(--tc-divider); border-radius: 0 0 var(--tc-card-radius) var(--tc-card-radius); background: none; box-shadow: none; }
 .ui-fbr__label { display: block; margin-bottom: var(--tc-space-1-5); font-size: var(--tc-font-size-sm); font-weight: var(--tc-font-weight-medium); color: var(--tc-text-primary); }
 :where([data-look="clean"], [data-look="clean"] *).ui-fbr__label { font-size: var(--tc-caption-font-size); font-weight: var(--tc-caption-font-weight); line-height: var(--tc-caption-line-height); letter-spacing: var(--tc-caption-tracking); text-transform: var(--tc-caption-transform); color: var(--tc-caption-color); }
 .ui-fbr__optional { font-weight: var(--tc-font-weight-regular); color: var(--tc-text-muted); text-transform: none; letter-spacing: normal; }

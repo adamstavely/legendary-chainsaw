@@ -106,7 +106,7 @@
    "cssProperties": [
     {
      "name": "--tc-run-checkpoints-accent",
-     "value": "light-dark(rgba(0, 96, 226, 0.765), #4d8dff)",
+     "value": "var(--tc-accent-solid)",
      "looks": [
       "standard",
       "clean"
@@ -146,6 +146,7 @@
     }
    ],
    "tokens": [
+    "--tc-accent-solid",
     "--tc-accent-subtle",
     "--tc-accent-text",
     "--tc-action-primary-bg",
@@ -199,16 +200,13 @@
     "--tc-font-mono",
     "--tc-font-sans",
     "--tc-font-size-lg",
-    "--tc-font-size-lg-plus",
     "--tc-font-size-md",
     "--tc-font-size-sm",
     "--tc-font-size-xs",
     "--tc-font-weight-medium",
     "--tc-font-weight-regular",
-    "--tc-font-weight-semibold",
     "--tc-hairline",
     "--tc-icon-muted",
-    "--tc-line-height-loose",
     "--tc-line-height-none",
     "--tc-line-height-normal",
     "--tc-line-height-relaxed",
@@ -235,7 +233,6 @@
     "--tc-space-3",
     "--tc-space-3-5",
     "--tc-space-4",
-    "--tc-space-4-5",
     "--tc-space-5",
     "--tc-space-6",
     "--tc-status-danger-bg",
@@ -251,7 +248,6 @@
     "--tc-text-placeholder",
     "--tc-text-primary",
     "--tc-text-secondary",
-    "--tc-text-strong",
     "--tc-tray-inset",
     "--tc-tray-radius"
    ]
@@ -307,7 +303,7 @@
   "`tc-run-checkpoints` – a run's restore points as a list and a timeline: what each point captured, what going back discards (steps, file changes, tokens, cost), a note for the retry, and `restorer` that may return a promise. Listbox keyboard; `tc-selected-change`, `tc-restore`."
  ],
  "size": {
-  "min": 43639,
-  "gzip": 11889
+  "min": 43749,
+  "gzip": 12300
  }
 }

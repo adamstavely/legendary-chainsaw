@@ -25,7 +25,7 @@ the composer at the bottom. Times read “4min ago” and stay current while the
 
 ## Anatomy
 
-1. **Heading** `.ui-cp__head` – the title and an optional close button
+1. **Header** – the shared card header: a boxed icon, the title and an optional close button
 2. **Filters** `.ui-cp__tabs` – All, Questions and Edits, with the number of edits to run
 3. **Sort** `.ui-cp__sort` – a menu with Newest first and Oldest first
 4. **Comment** `.ui-cp__item` – avatar, name, time, Resolve and the text

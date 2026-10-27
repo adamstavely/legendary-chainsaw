@@ -2,6 +2,7 @@ import { html, nothing, svg, type PropertyValues } from "lit";
 import { property, state } from "lit/decorators.js";
 import { keyed } from "lit/directives/keyed.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController, OffScreenController } from "./internal/controllers";
 import type { Look } from "./internal/look";
 
@@ -19,6 +20,9 @@ import type { Look } from "./internal/look";
  *
  * Keyboard: the three vote buttons are a toolbar – Tab reaches it once, ← → Home End move, Enter or Space votes.
  */
+
+// The header icon: a balance – two answers weighed against each other
+const arenaIcon = svg`<path d="M12 4v16M8 20h8M5 7h14"></path><path d="M5 7l-2.5 6a2.5 2.5 0 0 0 5 0Z"></path><path d="M19 7l-2.5 6a2.5 2.5 0 0 0 5 0Z"></path>`;
 
 /** One side of the arena */
 export type ArenaAnswer = {
@@ -252,8 +256,9 @@ export class TcAnswerArena extends TcElement {
 
   protected override render() {
     const look = this.resolvedLook;
-    const prompt = this.prompt ? html`<div class="ui-arena__prompt"><span class="ui-arena__label">Prompt</span><p class="ui-arena__prompt-text">${this.prompt}</p></div>` : nothing;
-    const panes = html`<div class="ui-arena__panes">${SIDES.map((s) => this.renderPane(s, look))}</div>`;
+    // The prompt is the card's title; "Prompt" is said, the icon shows it
+    const prompt = this.prompt ? cardHead({ icon: arenaIcon, title: html`<span class="ui-arena__sr">Prompt: </span>${this.prompt}` }) : nothing;
+    const panes = html`<div class="ui-arena__panes" ?data-headed=${!!this.prompt}>${SIDES.map((s) => this.renderPane(s, look))}</div>`;
     return html`
       ${look === "clean" ? html`<div class="ui-arena__card">${prompt}${panes}${this.renderVote(look)}</div>` : html`${prompt}${panes}${this.renderVote(look)}`}
       <span class="ui-arena__sr" role="status">${this.said}</span>
@@ -301,13 +306,9 @@ export class TcAnswerArena extends TcElement {
 :where([data-look="clean"], [data-look="clean"] *).ui-arena__card { overflow: hidden; border-radius: var(--tc-card-radius); background: var(--tc-surface-raised); box-shadow: var(--tc-card-shadow); }
 
 /* ----- The prompt ----- */
-.ui-arena__prompt { display: grid; gap: var(--tc-space-0-5); }
-:where([data-look="standard"], [data-look="standard"] *).ui-arena__prompt { padding: var(--tc-space-2-5) var(--tc-space-3) var(--tc-space-3); }
-:where([data-look="clean"], [data-look="clean"] *).ui-arena__prompt { padding: var(--tc-space-4) var(--tc-space-4) var(--tc-space-3-5); border-bottom: var(--tc-hairline) solid var(--tc-divider); }
-.ui-arena__label, .ui-arena__why { font-size: var(--tc-caption-font-size); font-weight: var(--tc-caption-font-weight); line-height: var(--tc-caption-line-height); letter-spacing: var(--tc-caption-tracking); text-transform: var(--tc-caption-transform); color: var(--tc-caption-color); }
-.ui-arena__prompt-text { margin: 0; overflow-wrap: anywhere; }
-:where([data-look="standard"], [data-look="standard"] *).ui-arena__prompt-text { font-size: var(--tc-font-size-lg-plus); font-weight: var(--tc-font-weight-semibold); line-height: var(--tc-line-height-relaxed); color: var(--tc-text-primary); }
-:where([data-look="clean"], [data-look="clean"] *).ui-arena__prompt-text { font-size: var(--tc-font-size-lg); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-normal); color: var(--tc-text-strong); }
+/* Clean: a hairline between the header row and the answers */
+:where([data-look="clean"], [data-look="clean"] *).ui-arena__panes[data-headed] { border-top: var(--tc-hairline) solid var(--tc-divider); }
+.ui-arena__why { font-size: var(--tc-caption-font-size); font-weight: var(--tc-caption-font-weight); line-height: var(--tc-caption-line-height); letter-spacing: var(--tc-caption-tracking); text-transform: var(--tc-caption-transform); color: var(--tc-caption-color); }
 
 /* ----- The two panes: side by side, stacked when narrow ----- */
 .ui-arena__panes { display: grid; grid-template-columns: 1fr 1fr; align-content: start; }
@@ -435,14 +436,14 @@ export class TcAnswerArena extends TcElement {
   height: var(--tc-control-h-sm);
   padding: 0 var(--tc-control-px-sm);
   border-radius: var(--tc-control-radius-sm);
-  font-size: var(--tc-font-size-sm);
-  color: var(--tc-text-secondary);
+  background: var(--tc-action-secondary-bg);
+  box-shadow: var(--tc-action-secondary-shadow);
+  font-size: var(--tc-control-font-size);
+  font-weight: var(--tc-control-font-weight);
+  color: var(--tc-action-secondary-fg);
   transition: color var(--tc-duration-fast) var(--tc-ease-standard), box-shadow var(--tc-duration-fast) var(--tc-ease-standard), background-color var(--tc-duration-fast) var(--tc-ease-standard);
 }
-:where([data-look="standard"], [data-look="standard"] *).ui-arena__reason { background: var(--tc-action-secondary-bg); box-shadow: var(--tc-action-secondary-shadow); }
-:where([data-look="standard"], [data-look="standard"] *).ui-arena__reason:hover { color: var(--tc-text-primary); box-shadow: var(--tc-action-secondary-shadow-hover); }
-:where([data-look="clean"], [data-look="clean"] *).ui-arena__reason { box-shadow: inset 0 0 0 0.5px var(--tc-border-default); }
-:where([data-look="clean"], [data-look="clean"] *).ui-arena__reason:hover { color: var(--tc-text-primary); background: var(--tc-fill-default); }
+.ui-arena__reason:hover { box-shadow: var(--tc-action-secondary-shadow-hover); }
 .ui-arena__reason[aria-pressed="true"] { background: var(--tc-fill-selected); box-shadow: inset 0 0 0 1px var(--tc-border-selected); color: var(--tc-accent-text); }
 
 @keyframes ui-arena-in { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: none; } }

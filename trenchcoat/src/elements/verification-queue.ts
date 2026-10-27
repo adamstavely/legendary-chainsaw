@@ -5,6 +5,7 @@ import { repeat } from "lit/directives/repeat.js";
 import { styleMap } from "lit/directives/style-map.js";
 import type { AnswerClaim, ClaimSource, ClaimSourceType } from "./claim-answer";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController, RowWindowController, ToolbarController } from "./internal/controllers";
 import type { Look } from "./internal/look";
 import "./validity-badge";
@@ -43,6 +44,8 @@ export type VerificationExportDetail = { claims: VerificationClaim[]; counts: Ve
 export type VerificationFilter = "open" | "reviewed" | "all";
 export type VerificationFilterChange = { filter: VerificationFilter };
 
+/* After Lucide: file-check – the header's icon */
+const headIcon = svg`<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="m9 15 2 2 4-4"></path>`;
 const VERDICTS: Exclude<VerificationStatus, "pending">[] = ["verified", "unverifiable", "incorrect", "dismissed"];
 const STATUSES: VerificationStatus[] = ["pending", ...VERDICTS];
 const DEFAULT_STATUS_LABELS: Record<VerificationStatus, string> = {
@@ -306,14 +309,19 @@ export class TcVerificationQueue extends TcElement {
     const counts = this.counts;
     const reviewed = total - counts.pending;
     const pct = total ? Math.round((reviewed / total) * 100) : 0;
-    return html`<header class="ui-vq__head">
-      <span class="ui-vq__title">${this.heading}</span>
-      <span class="ui-vq__progress-text">${reviewed} of ${total} reviewed</span>
-      <span class="ui-vq__progress" .role=${"progressbar"} aria-label="Reviewed" aria-valuemin="0" aria-valuemax="100" aria-valuenow=${pct} aria-valuetext=${`${reviewed} of ${total} reviewed`}>
-        ${VERDICTS.map((s) => (counts[s] ? html`<span class="ui-vq__progress-part" data-status=${s} style=${styleMap({ flexGrow: String(counts[s]) })}></span>` : nothing))}
-        ${counts.pending ? html`<span class="ui-vq__progress-rest" style=${styleMap({ flexGrow: String(counts.pending) })}></span>` : nothing}
-      </span>
-    </header>`;
+    // The header (.tc-head): on the tray in Standard, the card's first row in Clean; under the title, how many are
+    // reviewed, as a bar coloured by verdict and in words
+    return cardHead({
+      icon: headIcon,
+      title: this.heading,
+      subtitle: html`<span class="ui-vq__reviewed">
+        <span class="ui-vq__progress" .role=${"progressbar"} aria-label="Reviewed" aria-valuemin="0" aria-valuemax="100" aria-valuenow=${pct} aria-valuetext=${`${reviewed} of ${total} reviewed`}>
+          ${VERDICTS.map((s) => (counts[s] ? html`<span class="ui-vq__progress-part" data-status=${s} style=${styleMap({ flexGrow: String(counts[s]) })}></span>` : nothing))}
+          ${counts.pending ? html`<span class="ui-vq__progress-rest" style=${styleMap({ flexGrow: String(counts.pending) })}></span>` : nothing}
+        </span>
+        <span class="ui-vq__progress-text">${reviewed} of ${total} reviewed</span>
+      </span>`,
+    });
   }
 
   private filters() {
@@ -513,22 +521,19 @@ export class TcVerificationQueue extends TcElement {
 .ui-vq__cut { stroke: var(--tc-surface-raised); }
 :where([data-look="standard"], [data-look="standard"] *)[data-ui="vq"] .ui-vq__cut { stroke: var(--tc-surface-on-tray); }
 
-/* ----- Head: heading, progress ----- */
-.ui-vq__head { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--tc-space-2) var(--tc-space-3); }
-:where([data-look="standard"], [data-look="standard"] *).ui-vq__head { padding: var(--tc-space-3) var(--tc-space-4-5) var(--tc-space-3); }
-:where([data-look="clean"], [data-look="clean"] *).ui-vq__head { padding: var(--tc-space-3-5) var(--tc-space-4) var(--tc-space-3); border-bottom: var(--tc-hairline) solid var(--tc-divider); }
-:where([data-look="standard"], [data-look="standard"] *).ui-vq__title { font-size: var(--tc-font-size-lg); font-weight: var(--tc-font-weight-medium); color: var(--tc-accent-text); }
-:where([data-look="clean"], [data-look="clean"] *).ui-vq__title { font-weight: var(--tc-font-weight-medium); color: var(--tc-text-strong); }
-.ui-vq__progress-text { font-size: var(--tc-font-size-sm); color: var(--tc-text-muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
-.ui-vq__progress { grid-column: 1 / -1; display: flex; gap: var(--tc-space-0-5); height: 4px; overflow: hidden; border-radius: var(--tc-radius-full); background: var(--tc-fill-default); }
+/* ----- The header's line under the title: the progress bar and how many are reviewed ----- */
+.ui-vq__reviewed { display: flex; align-items: center; gap: var(--tc-space-2-5); }
+.ui-vq__progress-text { flex: none; font-variant-numeric: tabular-nums; white-space: nowrap; }
+:where([data-look="clean"], [data-look="clean"] *).ui-vq__body { border-top: var(--tc-hairline) solid var(--tc-divider); }
+.ui-vq__progress { flex: 1; display: flex; gap: var(--tc-space-0-5); height: 4px; overflow: hidden; border-radius: var(--tc-radius-full); background: var(--tc-fill-default); }
 .ui-vq__progress-part { flex: 0 1 0; min-width: 2px; background: var(--tc-verification-queue-fg); transition: flex-grow var(--tc-duration-slow) var(--tc-ease-move); }
 .ui-vq__progress-rest { flex: 0 1 0; }
 
 /* ----- The card ----- */
 :where([data-look="standard"], [data-look="standard"] *).ui-vq__card { overflow: hidden; border-radius: var(--tc-card-radius); background: var(--tc-surface-on-tray); box-shadow: var(--tc-card-shadow); }
 .ui-vq__filters { display: flex; gap: var(--tc-space-1); padding: var(--tc-space-2) var(--tc-space-2-5); border-bottom: var(--tc-hairline) solid var(--tc-divider); }
-.ui-vq__filter { display: inline-flex; align-items: center; gap: var(--tc-space-1-5); height: 26px; padding: 0 var(--tc-space-2-5); border-radius: var(--tc-radius-sm); font-size: var(--tc-font-size-sm); font-weight: var(--tc-font-weight-medium); color: var(--tc-text-secondary); white-space: nowrap; transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard); }
-.ui-vq__filter:hover { background: var(--tc-fill-subtle); color: var(--tc-text-primary); }
+.ui-vq__filter { display: inline-flex; align-items: center; gap: var(--tc-space-1-5); height: var(--tc-control-h-sm); padding: 0 var(--tc-control-px-sm); border-radius: var(--tc-control-radius-sm); font-size: var(--tc-control-font-size); font-weight: var(--tc-control-font-weight); color: var(--tc-action-ghost-fg); white-space: nowrap; transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard); }
+.ui-vq__filter:hover { background: var(--tc-action-ghost-bg-hover); color: var(--tc-text-primary); }
 .ui-vq__filter[aria-pressed="true"] { background: var(--tc-fill-default); color: var(--tc-text-primary); }
 .ui-vq__filter-n { font-size: var(--tc-font-size-xs); font-weight: var(--tc-font-weight-regular); color: var(--tc-text-muted); font-variant-numeric: tabular-nums; }
 

@@ -2,6 +2,7 @@ import { html, nothing, svg } from "lit";
 import { property } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import type { Look } from "./internal/look";
 
 /*
@@ -26,9 +27,8 @@ export type MetricChange = {
   direction?: "up" | "down";
 };
 
-// Clean: thinner lines
-const changesIcon = (look: Look) =>
-  html`<svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width=${look === "clean" ? 1.1 : 1.5} stroke-linecap="round" aria-hidden="true">${svg`<path d="M2.5 4h4M2.5 8h8M6.5 12h7M9.5 4h1"></path>`}</svg>`;
+// The header icon: a rising trend line
+const changesIcon = svg`<path d="M3 17l6-6 4 4 8-8"></path><path d="M14 7h7v7"></path>`;
 const arrowIcon = (look: Look, down: boolean) =>
   html`<svg viewBox="0 0 12 12" width="12" height="12" fill="none" stroke="currentColor" stroke-width=${look === "clean" ? 1.25 : 1.6} stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${down ? svg`<path d="M6 2.5v7M3 6.5l3 3 3-3"></path>` : svg`<path d="M6 9.5v-7M3 5.5l3-3 3 3"></path>`}</svg>`;
 const dashIcon = (look: Look) =>
@@ -67,14 +67,12 @@ export class TcChangeSummary extends TcElement {
   protected override render() {
     const look = this.resolvedLook;
     const clean = look === "clean";
-    const headIcon = this.icon ? this.icon.cloneNode(true) : changesIcon(look);
     return html`
-      <header class="ui-cs__head">
-        <span class="ui-cs__title">
-          ${clean ? html`<span class="ui-cs__icon">${headIcon}</span><span class="ui-cs__title-text" title=${this.heading}>${this.heading}</span>` : html`${headIcon}${this.heading}`}
-        </span>
-        ${this.period ? html`<span class="ui-cs__period">${this.period}</span>` : nothing}
-      </header>
+      ${cardHead({
+        icon: this.icon ? svg`${this.icon.cloneNode(true)}` : changesIcon,
+        title: this.heading,
+        aside: this.period ? html`<span class="ui-cs__period">${this.period}</span>` : nothing,
+      })}
       <dl class=${clean ? "ui-cs__list" : "ui-cs__card"}>
         ${this.changes.map((c, i) => {
           const tone = c.tone ?? "neutral";
@@ -126,22 +124,6 @@ export class TcChangeSummary extends TcElement {
   -webkit-font-smoothing: antialiased;
 }
 [data-ui="cs"] *, [data-ui="cs"] *::before, [data-ui="cs"] *::after { box-sizing: border-box; }
-:where([data-look="standard"], [data-look="standard"] *).ui-cs__head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--tc-space-3);
-  padding: var(--tc-space-3) var(--tc-space-4-5) var(--tc-space-2-5);
-  font-size: var(--tc-font-size-lg);
-  line-height: var(--tc-line-height-normal);
-}
-:where([data-look="standard"], [data-look="standard"] *).ui-cs__title {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--tc-space-2);
-  font-weight: var(--tc-font-weight-medium);
-  color: var(--tc-accent-text);
-}
 :where([data-look="standard"], [data-look="standard"] *).ui-cs__period { font-size: var(--tc-font-size-md); color: var(--tc-text-muted); }
 :where([data-look="standard"], [data-look="standard"] *).ui-cs__card {
   margin: 0;
@@ -181,26 +163,6 @@ export class TcChangeSummary extends TcElement {
   color: var(--tc-text-muted);
 }
 :where([data-ui="cs"][data-look="clean"]) svg { display: block; flex: none; }
-/* Heading row: icon + title, the period on the right */
-:where([data-look="clean"], [data-look="clean"] *).ui-cs__head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--tc-space-3);
-  height: 44px;
-  padding: 0 var(--tc-space-4);
-}
-:where([data-look="clean"], [data-look="clean"] *).ui-cs__title {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--tc-space-2);
-  min-width: 0;
-  font-weight: var(--tc-font-weight-medium);
-  white-space: nowrap;
-  color: var(--tc-text-strong);
-}
-:where([data-look="clean"], [data-look="clean"] *).ui-cs__title-text { overflow: hidden; text-overflow: ellipsis; }
-:where([data-look="clean"], [data-look="clean"] *).ui-cs__icon { display: grid; place-items: center; flex: none; width: 16px; height: 16px; color: var(--tc-icon-muted); }
 :where([data-look="clean"], [data-look="clean"] *).ui-cs__period { flex: none; font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); color: var(--tc-text-muted); }
 /* One row per metric, each under a hairline */
 :where([data-look="clean"], [data-look="clean"] *).ui-cs__list { margin: 0; }
@@ -265,7 +227,6 @@ export class TcChangeSummary extends TcElement {
 :where([data-look="clean"], [data-look="clean"] *).ui-cs__trend[data-tone="neutral"] { background: var(--tc-fill-subtle); color: var(--tc-icon-muted); }
 /* Narrow: each metric stacks above its change, so the text wraps instead of being cut off */
 @container (max-width: 400px) {
-:where([data-look="clean"], [data-look="clean"] *).ui-cs__head { padding: 0 var(--tc-space-3-5); }
 :where([data-look="clean"], [data-look="clean"] *).ui-cs__row { grid-template-columns: minmax(0, 1fr); gap: var(--tc-space-1); padding: var(--tc-space-2-5) var(--tc-space-3-5); }
 :where([data-look="clean"], [data-look="clean"] *).ui-cs__label,
 :where([data-look="clean"], [data-look="clean"] *).ui-cs__text { white-space: normal; }

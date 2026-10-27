@@ -4,6 +4,7 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { keyed } from "lit/directives/keyed.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { dollars, duration as tookText } from "./internal/format";
 import { OffScreenController } from "./internal/controllers";
 
@@ -50,7 +51,8 @@ export type ParallelAttemptPick = { picked: string; attempt: ParallelAttempt; au
 const STATUS: Record<ParallelAttemptStatus, string> = { running: "Running", done: "Done", failed: "Failed" };
 
 /* Three lanes and a finish mark for the title (drawn for Trenchcoat) */
-const raceMark = html`<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">${svg`<rect x="1.5" y="2.5" width="9" height="2.4" rx="1.2" fill="currentColor"></rect><rect x="1.5" y="6.8" width="12" height="2.4" rx="1.2" fill="currentColor" opacity="0.55"></rect><rect x="1.5" y="11.1" width="6" height="2.4" rx="1.2" fill="currentColor" opacity="0.3"></rect>`}</svg>`;
+/* The header's mark: three lanes of different lengths – a race */
+const raceMark = svg`<path d="M4 6h11"></path><path d="M4 12h16"></path><path d="M4 18h7"></path>`;
 /* check: Lucide (ISC, lucide.dev) */
 const tick = html`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${svg`<path d="M20 6 9 17l-5-5"></path>`}</svg>`;
 
@@ -145,16 +147,18 @@ export class TcParallelAttempts extends TcElement {
     const status = !settled ? "" : `${finished.length} of ${attempts.length} done${best ? `, best: ${best.name}` : ""}.${pickedAttempt ? ` Using ${pickedAttempt.name}.` : ""}`;
     const formatCost = this.formatCost;
 
+    // The header (.tc-head): on the tray above the attempts' cards in Standard, above the cards in Clean
     return html`
-      <header class="ui-pa__bar">
-        <span class="ui-pa__mark">${raceMark}</span>
-        <span class="ui-pa__title" id=${this.labelId}>${this.heading ?? `Best of ${attempts.length}`}</span>
-        ${this.task ? html`<span class="ui-pa__task">${this.task}</span>` : nothing}
-        <span class="ui-pa__sum">
+      ${cardHead({
+        icon: raceMark,
+        title: this.heading ?? `Best of ${attempts.length}`,
+        id: this.labelId,
+        subtitle: this.task || undefined,
+        aside: html`<span class="ui-pa__sum">
           <span><b>${finished.length}</b> of ${attempts.length} done</span>
           <span><b>${formatCost(cost)}</b></span>
-        </span>
-      </header>
+        </span>`,
+      })}
 
       <span class="ui-pa__sr" role="status">${status}</span>
 
@@ -237,7 +241,6 @@ export class TcParallelAttempts extends TcElement {
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-regular);
   line-height: var(--tc-line-height-normal);
-  letter-spacing: -0.006em;
   color: var(--tc-text-muted);
   text-align: left;
   -webkit-font-smoothing: antialiased;
@@ -269,21 +272,13 @@ export class TcParallelAttempts extends TcElement {
 :where([data-look="clean"], [data-look="clean"] *):where([data-ui="pa"]) button { margin: 0; padding: 0; border: 0; background: none; font: inherit; color: inherit; text-align: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 [data-ui="pa"] button:focus-visible { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
 [data-ui="pa"] svg { display: block; flex: none; }
-/* ----- On the tray: what they try, how many are through ----- */
-:where([data-look="standard"], [data-look="standard"] *).ui-pa__bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-1) var(--tc-space-2); min-width: 0; padding: var(--tc-space-2) var(--tc-space-3) var(--tc-space-3); }
-/* ----- The bar: what they try, how many are through ----- */
-:where([data-look="clean"], [data-look="clean"] *).ui-pa__bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-1) var(--tc-space-2); min-width: 0; margin-bottom: var(--tc-space-4); }
-.ui-pa__mark { display: grid; flex: none; place-items: center; width: 16px; color: var(--tc-accent-text); }
-:where([data-look="standard"], [data-look="standard"] *).ui-pa__title { flex: none; font-weight: var(--tc-font-weight-semibold); color: var(--tc-text-strong); }
-:where([data-look="standard"], [data-look="standard"] *).ui-pa__task { min-width: 0; overflow: hidden; font-size: var(--tc-font-size-md); color: var(--tc-text-muted); white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="standard"], [data-look="standard"] *).ui-pa__sum { display: flex; align-items: center; gap: var(--tc-space-3-5); margin-left: auto; font-size: var(--tc-font-size-md); line-height: var(--tc-line-height-snug); color: var(--tc-text-muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+/* ----- In the header's aside: how many are through, what it cost ----- */
+:where([data-look="standard"], [data-look="standard"] *).ui-pa__sum { display: flex; align-items: center; gap: var(--tc-space-3-5); font-size: var(--tc-font-size-md); line-height: var(--tc-line-height-snug); color: var(--tc-text-muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
 :where([data-look="standard"], [data-look="standard"] *).ui-pa__sum b { font-weight: var(--tc-font-weight-semibold); color: var(--tc-text-primary); }
 /* ----- One white card per attempt, stacked on the tray ----- */
 :where([data-look="standard"], [data-look="standard"] *).ui-pa__panel { display: grid; gap: var(--tc-space-1); }
 :where([data-look="standard"], [data-look="standard"] *).ui-pa__row { position: relative; display: grid; grid-template-columns: 32px minmax(0, 1fr) minmax(120px, 36%) 100px; align-items: center; column-gap: var(--tc-space-3-5); padding: var(--tc-space-3-5) var(--tc-space-4-5) var(--tc-space-3-5) var(--tc-space-3-5); border-radius: var(--tc-card-radius); background: var(--tc-surface-on-tray); box-shadow: var(--tc-card-shadow); transition: opacity var(--tc-duration-slow) var(--tc-ease-standard), background-color var(--tc-duration-slowest) var(--tc-ease-standard), box-shadow var(--tc-duration-slow) var(--tc-ease-standard); animation: ui-pa-in var(--tc-duration-slower) var(--tc-ease-move) calc(var(--i, 0) * var(--tc-duration-instant)) backwards; }
-:where([data-look="clean"], [data-look="clean"] *).ui-pa__title { flex: none; font-weight: var(--tc-font-weight-medium); color: var(--tc-text-strong); }
-:where([data-look="clean"], [data-look="clean"] *).ui-pa__task { min-width: 0; overflow: hidden; color: var(--tc-text-muted); white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="clean"], [data-look="clean"] *).ui-pa__sum { display: flex; align-items: center; gap: var(--tc-space-3-5); margin-left: auto; font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); color: var(--tc-text-muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+:where([data-look="clean"], [data-look="clean"] *).ui-pa__sum { display: flex; align-items: center; gap: var(--tc-space-3-5); font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); color: var(--tc-text-muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
 :where([data-look="clean"], [data-look="clean"] *).ui-pa__sum b { font-weight: var(--tc-font-weight-medium); color: var(--tc-text-primary); }
 /* ----- The white panel: one row per attempt ----- */
 /* One card per attempt, a little space between them */
@@ -354,9 +349,8 @@ export class TcParallelAttempts extends TcElement {
 [data-ui="pa"] [data-status="running"] { --tc-parallel-attempts-status-bg: var(--tc-status-info-bg); --tc-parallel-attempts-status-edge: var(--tc-status-info-border); --tc-parallel-attempts-status-ink: var(--tc-status-info-fg); }
 [data-ui="pa"] [data-status="done"] { --tc-parallel-attempts-status-bg: var(--tc-status-success-bg); --tc-parallel-attempts-status-edge: var(--tc-status-success-border); --tc-parallel-attempts-status-ink: var(--tc-status-success-fg); }
 [data-ui="pa"] [data-status="failed"] { --tc-parallel-attempts-status-bg: var(--tc-status-danger-bg); --tc-parallel-attempts-status-edge: var(--tc-status-danger-border); --tc-parallel-attempts-status-ink: var(--tc-status-danger-fg); }
-/* ----- Narrow: the bar under the name, the score beside it ----- */
+/* ----- Narrow: the lane under the name, the score beside it ----- */
 @container ui-pa (max-width: 560px) {
-:where([data-look="standard"], [data-look="standard"] *).ui-pa__sum { flex-basis: 100%; justify-content: space-between; margin-left: 0; }
 :where([data-look="standard"], [data-look="standard"] *).ui-pa__row { grid-template-columns: 32px minmax(0, 1fr) 88px; grid-template-areas: "icon who end" "lane lane lane"; row-gap: var(--tc-space-3); column-gap: var(--tc-space-3); padding: var(--tc-space-3-5) var(--tc-space-4) var(--tc-space-4) var(--tc-space-3-5); }
 :where([data-look="standard"], [data-look="standard"] *).ui-pa__icon { grid-area: icon; }
 :where([data-look="standard"], [data-look="standard"] *).ui-pa__who { grid-area: who; }
@@ -367,9 +361,8 @@ export class TcParallelAttempts extends TcElement {
 :where([data-look="standard"], [data-look="standard"] *).ui-pa__line { display: -webkit-box; min-height: 38px; white-space: normal; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
 }
 :where([data-look="clean"], [data-look="clean"] *).ui-pa__row[data-best] { --tc-parallel-attempts-status-bg: var(--tc-parallel-attempts-best-bg); --tc-parallel-attempts-status-edge: var(--tc-parallel-attempts-best-edge); }
-/* ----- Narrow: the bar under the name, the score beside it ----- */
+/* ----- Narrow: the lane under the name, the score beside it ----- */
 @container ui-pa (max-width: 560px) {
-:where([data-look="clean"], [data-look="clean"] *).ui-pa__sum { flex-basis: 100%; justify-content: space-between; margin-left: 0; }
 :where([data-look="clean"], [data-look="clean"] *).ui-pa__row { grid-template-columns: 28px minmax(0, 1fr) 84px; grid-template-areas: "icon who end" "lane lane lane"; row-gap: var(--tc-space-3); column-gap: var(--tc-space-3); padding: var(--tc-space-3) var(--tc-space-3-5) var(--tc-space-3-5) var(--tc-space-3); }
 :where([data-look="clean"], [data-look="clean"] *).ui-pa__icon { grid-area: icon; }
 :where([data-look="clean"], [data-look="clean"] *).ui-pa__who { grid-area: who; }

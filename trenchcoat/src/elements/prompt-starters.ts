@@ -3,6 +3,7 @@ import { property, state } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController } from "./internal/controllers";
 import type { Look } from "./internal/look";
 
@@ -74,6 +75,8 @@ const ICONS: Record<PromptStarterIconName, TemplateResult> = {
   calendar: svg`<rect x="2.25" y="3" width="11.5" height="10.75" rx="1.5"></rect><path d="M5.25 1.75v2.5M10.75 1.75v2.5M2.25 6.5h11.5"></path>`,
 };
 const followIcon = svg`<path d="M3.5 2.75v4.5a2 2 0 0 0 2 2h7"></path><path d="m10 6.25 3 3-3 3"></path>`;
+/* After Lucide: lightbulb, for the header */
+const headIcon = svg`<path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"></path><path d="M9 18h6M10 22h4"></path>`;
 const glyph = (body: TemplateResult, look: Look) => html`<svg class="ui-pst__glyph" viewBox="0 0 16 16" aria-hidden="true" stroke-width=${look === "clean" ? 1.2 : 1.5}>${body}</svg>`;
 
 type Row = { key: string; item: PromptStarter; group: PromptStarterGroup | null; index: number };
@@ -160,7 +163,7 @@ export class TcPromptStarters extends TcElement {
   private focusRow(r: Row | undefined) {
     if (!r) return;
     this.active = r.key;
-    void this.updateComplete.then(() => this.querySelector<HTMLElement>(`.ui-pst__option[data-key="${CSS.escape(r.key)}"]`)?.focus());
+    void this.updateComplete.then(() => this.querySelector<HTMLElement>(`#${this.uid}-o${r.index}`)?.focus());
   }
 
   private onKey(e: KeyboardEvent, r: Row) {
@@ -239,7 +242,8 @@ export class TcPromptStarters extends TcElement {
   protected override render() {
     const look = this.resolvedLook;
     const headId = `${this.uid}-h`;
-    const head = html`<div class="ui-pst__head"><span class="ui-pst__heading" id=${headId}>${this.heading}</span></div>`;
+    // The header (.tc-head): on the tray in Standard, the card's first row in Clean
+    const head = cardHead({ icon: headIcon, title: this.heading, id: headId });
     let body: TemplateResult;
     if (this.loading)
       body = html`<div class="ui-pst__list" role="listbox" aria-labelledby=${headId} aria-busy="true">
@@ -288,12 +292,6 @@ export class TcPromptStarters extends TcElement {
 .ui-pst__card { min-width: 0; overflow: hidden; }
 :where([data-look="standard"], [data-look="standard"] *).ui-pst__card { border-radius: var(--tc-card-radius); background: var(--tc-surface-on-tray); box-shadow: var(--tc-card-shadow); }
 :where([data-look="clean"], [data-look="clean"] *).ui-pst__card { border-radius: var(--tc-radius-lg); background: var(--tc-surface-raised); box-shadow: var(--tc-shadow-raised); }
-/* Head */
-.ui-pst__head { display: flex; align-items: center; min-width: 0; }
-:where([data-look="standard"], [data-look="standard"] *).ui-pst__head { padding: var(--tc-space-1-5) var(--tc-space-2-5) var(--tc-space-2); }
-:where([data-look="clean"], [data-look="clean"] *).ui-pst__head { padding: var(--tc-space-3) var(--tc-space-4) var(--tc-space-1); }
-.ui-pst__heading { overflow: hidden; color: var(--tc-text-primary); font-weight: var(--tc-font-weight-medium); white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="clean"], [data-look="clean"] *).ui-pst__heading { color: var(--tc-text-strong); }
 /* The list */
 .ui-pst__list { display: grid; padding: var(--tc-menu-padding); }
 .ui-pst__group { display: grid; }

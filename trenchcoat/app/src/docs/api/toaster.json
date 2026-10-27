@@ -229,7 +229,7 @@
   "toaster: when several toasters share the hotkey, the newest one with a toast takes it; Ctrl/⌘ + the key no longer triggers it."
  ],
  "size": {
-  "min": 39707,
-  "gzip": 12315
+  "min": 41588,
+  "gzip": 12772
  }
 }

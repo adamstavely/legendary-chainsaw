@@ -288,9 +288,10 @@
     }
    ],
    "tokens": [
-    "--tc-accent-text",
     "--tc-border-default",
     "--tc-border-strong",
+    "--tc-card-radius",
+    "--tc-card-shadow",
     "--tc-context-map-tile-bg",
     "--tc-context-map-tile-edge",
     "--tc-context-map-tile-ink",
@@ -369,7 +370,7 @@
     "--tc-text-muted",
     "--tc-text-primary",
     "--tc-text-secondary",
-    "--tc-text-strong",
+    "--tc-tracking-normal",
     "--tc-z-dropdown"
    ]
   }
@@ -473,7 +474,7 @@
  ],
  "changelog": [],
  "size": {
-  "min": 64912,
-  "gzip": 15270
+  "min": 67246,
+  "gzip": 15900
  }
 }

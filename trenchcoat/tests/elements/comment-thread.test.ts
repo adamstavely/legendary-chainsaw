@@ -49,7 +49,7 @@ for (const look of ["standard", "clean"] as const) {
       el.heading = "Pricing";
       await settle();
       expect(el.getAttribute("aria-label")).toBe("Pricing");
-      expect(el.querySelector(".ui-ct__title")!.textContent).toBe("Pricing");
+      expect(el.querySelector(".tc-head__title")!.textContent).toBe("Pricing");
       expect(el.querySelector(".ui-ct__count")!.textContent).toBe("1 message");
     });
 

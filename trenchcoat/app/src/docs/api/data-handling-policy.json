@@ -1,0 +1,340 @@
+{
+ "elements": [
+  {
+   "tag": "tc-data-handling-policy",
+   "className": "TcDataHandlingPolicy",
+   "description": "Organization-level data handling as a lifecycle – conversations, logs, memory, training, deletion – led by the policy\nin effect, each stage edited in place, locked stages marked, and deletion requests with their status.",
+   "properties": [
+    {
+     "name": "value",
+     "attribute": null,
+     "type": "DataHandlingPolicyValue",
+     "default": "{ retention: \"30d\", memory: \"conversation\", logging: \"metadata\", redact: [\"personal\", \"financial\", \"credentials\"], training: false }",
+     "description": "The chosen policy. Changed by the user unless a tc-value-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "effective",
+     "attribute": null,
+     "type": "Partial<DataHandlingPolicyValue> | undefined",
+     "default": "undefined",
+     "description": "The policy the app reports as applied; a missing field reads \"Not reported\"",
+     "readonly": false
+    },
+    {
+     "name": "locks",
+     "attribute": null,
+     "type": "DataPolicyLock[]",
+     "default": "[]",
+     "description": "Settings fixed higher up; they can't be edited here and say who set them",
+     "readonly": false
+    },
+    {
+     "name": "retentionOptions",
+     "attribute": null,
+     "type": "DataPolicyOption[]",
+     "default": "[ { id: \"7d\", label: \"7 days\" }, { id: \"30d\", label: \"30 days\" }, { id: \"90d\", label: \"90 days\" }, { id: \"1y\", label: \"1 year\" }, { id: \"forever\", label: \"Until deleted\" }, ]",
+     "description": "How long conversations can be kept",
+     "readonly": false
+    },
+    {
+     "name": "memoryOptions",
+     "attribute": null,
+     "type": "DataPolicyOption[]",
+     "default": "[ { id: \"off\", label: \"Off\", description: \"Nothing is remembered between messages beyond the conversation itself.\" }, { id: \"conversation\", label: \"This conversation\", description: \"Remembered facts are forgotten when the conversation ends.\" }, { id: \"persistent\", label: \"Across conversations\", description: \"Remembered facts are kept until someone deletes them.\" }, ]",
+     "description": "How memory can persist",
+     "readonly": false
+    },
+    {
+     "name": "loggingOptions",
+     "attribute": null,
+     "type": "DataPolicyOption[]",
+     "default": "[ { id: \"off\", label: \"Off\", description: \"Nothing is logged.\" }, { id: \"metadata\", label: \"Metadata\", description: \"Timing, model and token counts – no message content.\" }, { id: \"content\", label: \"Full content\", description: \"Messages and responses, with the categories below redacted.\" }, ]",
+     "description": "How much can be logged",
+     "readonly": false
+    },
+    {
+     "name": "categories",
+     "attribute": null,
+     "type": "DataPolicyCategory[]",
+     "default": "[ { id: \"personal\", label: \"Personal details\", description: \"Names, email addresses, phone numbers\" }, { id: \"financial\", label: \"Payment details\", description: \"Card and bank account numbers\" }, { id: \"credentials\", label: \"Credentials\", description: \"Passwords, keys and tokens\" }, { id: \"health\", label: \"Health information\", description: \"Conditions, treatments, records\" }, ]",
+     "description": "The kinds of data that can be redacted from logs",
+     "readonly": false
+    },
+    {
+     "name": "deletionScopes",
+     "attribute": null,
+     "type": "DataPolicyOption[]",
+     "default": "[ { id: \"conversations\", label: \"Conversations\", description: \"Every conversation and its attachments.\" }, { id: \"memory\", label: \"Memory\", description: \"Everything remembered across conversations.\" }, { id: \"logs\", label: \"Logs\", description: \"Logged messages and metadata.\" }, ]",
+     "description": "What a deletion request can cover; empty hides Request deletion",
+     "readonly": false
+    },
+    {
+     "name": "deletions",
+     "attribute": null,
+     "type": "DataPolicyDeletion[]",
+     "default": "[]",
+     "description": "Deletion requests and their status, as the app reports them",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "Partial<Record<DataPolicyField, string>>",
+     "default": "{}",
+     "description": "The stages' and settings' names, merged over the defaults (Conversations, Logs, Memory, Training, Redact from logs)",
+     "readonly": false
+    },
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Data handling\"",
+     "description": "The heading",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string",
+     "default": "\"\"",
+     "description": "A quieter line under the heading, e.g. which workspace this is",
+     "readonly": false
+    },
+    {
+     "name": "deletedLabel",
+     "attribute": "deleted-label",
+     "type": "string",
+     "default": "\"Deleted\"",
+     "description": "The last stage's name",
+     "readonly": false
+    },
+    {
+     "name": "trainingLabel",
+     "attribute": "training-label",
+     "type": "string",
+     "default": "\"Allow conversations to be used to train models\"",
+     "description": "The training switch's label",
+     "readonly": false
+    },
+    {
+     "name": "organization",
+     "attribute": "organization",
+     "type": "string",
+     "default": "\"your organization\"",
+     "description": "Who a lock without `by` was set by",
+     "readonly": false
+    },
+    {
+     "name": "deletionNote",
+     "attribute": "deletion-note",
+     "type": "string",
+     "default": "\"Deletion can't be undone. It can take a while; the request's status shows here.\"",
+     "description": "Said in the deletion dialog, under the scope",
+     "readonly": false
+    },
+    {
+     "name": "name",
+     "attribute": "name",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Submitted with the form: the policy as JSON",
+     "readonly": false
+    },
+    {
+     "name": "disabled",
+     "attribute": "disabled",
+     "type": "boolean",
+     "default": "false",
+     "description": "Turns every control off and leaves the policy out of the form; a disabled fieldset does the same",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-value-change",
+     "detail": "",
+     "description": "A setting changed ({ value, field }: DataPolicyChange); cancelable – prevent it to control `value`",
+     "cancelable": true
+    },
+    {
+     "name": "tc-deletion-request",
+     "detail": "",
+     "description": "A deletion was confirmed ({ scope }: DataPolicyDeletionEvent); cancelable – prevented, no pending request is shown",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "dhp",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-subtle",
+    "--tc-action-danger-bg",
+    "--tc-action-danger-bg-hover",
+    "--tc-action-danger-fg",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-action-primary-shadow",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-border-control",
+    "--tc-border-selected",
+    "--tc-border-subtle",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-md",
+    "--tc-control-px-sm",
+    "--tc-control-radius-md",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-quick",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-hover",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-none",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-pill-font-size",
+    "--tc-pill-font-size-lg",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-h-lg",
+    "--tc-pill-px",
+    "--tc-pill-px-lg",
+    "--tc-pill-radius",
+    "--tc-radius-badge",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-radius-xs",
+    "--tc-scrim",
+    "--tc-shadow-control",
+    "--tc-shadow-overlay",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-5",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-info-bg",
+    "--tc-status-info-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-surface-control",
+    "--tc-surface-inverse",
+    "--tc-surface-on-tray",
+    "--tc-surface-overlay",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-switch-h",
+    "--tc-switch-knob",
+    "--tc-switch-knob-bg",
+    "--tc-switch-off",
+    "--tc-switch-on",
+    "--tc-switch-radius",
+    "--tc-switch-w",
+    "--tc-text-muted",
+    "--tc-text-on-accent",
+    "--tc-text-on-inverse",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tracking-normal",
+    "--tc-tracking-snug",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "DataHandlingPolicy",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading"
+    },
+    {
+     "name": "value",
+     "type": "DataHandlingPolicyValue",
+     "optional": true,
+     "description": "The chosen policy (controlled)"
+    },
+    {
+     "name": "defaultValue",
+     "type": "DataHandlingPolicyValue",
+     "optional": true,
+     "description": "The policy to start with when uncontrolled"
+    },
+    {
+     "name": "onChange",
+     "type": "(value: DataHandlingPolicyValue, field: DataPolicyField) => void",
+     "optional": true,
+     "description": "Called with the whole policy and the setting that changed, after every change"
+    },
+    {
+     "name": "onDeletionRequest",
+     "type": "(scope: DataPolicyOption, event: CustomEvent<DataPolicyDeletionEvent>) => void",
+     "optional": true,
+     "description": "A deletion was confirmed: send the request. Call `event.preventDefault()` if it can't be sent, so no pending request shows"
+    }
+   ],
+   "hides": []
+  }
+ ],
+ "changelog": [],
+ "size": {
+  "min": 51043,
+  "gzip": 13669
+ }
+}

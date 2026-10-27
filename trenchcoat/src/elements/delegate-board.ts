@@ -6,6 +6,7 @@ import { repeat } from "lit/directives/repeat.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { reducedMotion } from "../internal/reduced-motion";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController, rescueFocus } from "./internal/controllers";
 
 /*
@@ -89,7 +90,8 @@ const relative = (r: DOMRect, origin: DOMRect): Box => ({ left: r.left - origin.
 
 /* ---------- Icons ---------- */
 
-const spark = html`<svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">${svg`<path d="M7 1.2c.4 2.9 1.9 4.4 4.8 4.8-2.9.4-4.4 1.9-4.8 4.8C6.6 7.9 5.1 6.4 2.2 6 5.1 5.6 6.6 4.1 7 1.2Z" fill="currentColor"></path><circle cx="11.6" cy="11.4" r="1.1" fill="currentColor" opacity="0.55"></circle>`}</svg>`;
+/** People: the agents you hand work to (Lucide users, ISC) */
+const agentsIcon = svg`<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path>`;
 const grip = html`<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">${[3, 6, 9].map((y) => [4.3, 7.7].map((x) => svg`<circle cx=${x} cy=${y} r="0.95" fill="currentColor"></circle>`))}</svg>`;
 const spinner = html`<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true" class="ui-db__spin">${svg`<circle cx="6" cy="6" r="4.6" fill="none" stroke="currentColor" stroke-opacity="0.25" stroke-width="1.6"></circle><path d="M6 1.4a4.6 4.6 0 0 1 4.6 4.6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path>`}</svg>`;
 
@@ -677,16 +679,16 @@ export class TcDelegateBoard extends TcElement {
     }, null);
     const auto = this.mode === "auto";
 
-    // The bar: on the tray above the card (Standard), or the card's first row (Clean)
-    const bar = html`<header class="ui-db__bar">
-      <span class="ui-db__spark">${spark}</span>
-      <span class="ui-db__title">${this.heading}</span>
-      <span class="ui-db__hint">${this.picked ? "Click an agent to hand it over" : auto ? "New tasks go to whoever is free first" : "Drag a task onto an agent"}</span>
-      <button type="button" role="switch" aria-checked=${auto ? "true" : "false"} class="ui-db__auto" @click=${() => this.setMode(auto ? "manual" : "auto")}>
+    // The header: on the tray above the card (Standard), or the card's first row (Clean); the hint is its quiet line
+    const bar = cardHead({
+      icon: agentsIcon,
+      title: this.heading,
+      subtitle: html`<span class="ui-db__hint">${this.picked ? "Click an agent to hand it over" : auto ? "New tasks go to whoever is free first" : "Drag a task onto an agent"}</span>`,
+      aside: html`<button type="button" role="switch" aria-checked=${auto ? "true" : "false"} class="ui-db__auto" @click=${() => this.setMode(auto ? "manual" : "auto")}>
         <span class="ui-db__auto-label">Auto</span>
         <span class="ui-db__switch" aria-hidden="true"><span></span></span>
-      </button>
-    </header>`;
+      </button>`,
+    });
 
     return html`
       ${clean ? nothing : bar}
@@ -746,8 +748,7 @@ export class TcDelegateBoard extends TcElement {
   border-radius: var(--tc-tray-radius);
   background: var(--tc-surface-tray);
   container-type: inline-size;
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  letter-spacing: -0.006em;
+  font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-md);
   font-weight: var(--tc-font-weight-regular);
   line-height: var(--tc-line-height-normal);
@@ -782,12 +783,8 @@ export class TcDelegateBoard extends TcElement {
 .ui-db__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 /* The white card holds the pile and the agents */
 .ui-db__card { border-radius: var(--tc-card-radius); background: var(--tc-surface-raised); box-shadow: var(--tc-card-shadow); }
-/* ----- On the tray ----- */
-:where([data-look="standard"], [data-look="standard"] *).ui-db__bar { display: flex; align-items: center; gap: var(--tc-space-2-5); min-width: 0; padding: var(--tc-space-2) var(--tc-space-1-5) var(--tc-space-2-5) var(--tc-space-3-5); }
-:where([data-look="clean"], [data-look="clean"] *).ui-db__bar { display: flex; align-items: center; gap: var(--tc-space-2-5); min-width: 0; padding: var(--tc-space-3) var(--tc-space-3) var(--tc-space-3) var(--tc-space-4); border-bottom: var(--tc-hairline) solid var(--tc-divider); }
-.ui-db__spark { display: grid; flex: none; place-items: center; width: 16px; color: var(--tc-accent-text); }
-.ui-db__title { font-weight: var(--tc-font-weight-strong); color: var(--tc-text-strong); white-space: nowrap; }
-.ui-db__hint { flex: 1; min-width: 0; overflow: hidden; font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); color: var(--tc-text-muted); white-space: nowrap; text-overflow: ellipsis; }
+/* ----- The header (cardHead): on the tray in Standard, the card's first row in Clean (a hairline under it) ----- */
+:where([data-look="clean"], [data-look="clean"] *).ui-db__card > .tc-head + .ui-db__body { border-top: var(--tc-hairline) solid var(--tc-divider); }
 /* Auto: a label and a switch – on, the word is strong and the track filled; off, the word is muted */
 .ui-db__auto { display: inline-flex; flex: none; align-items: center; gap: var(--tc-space-2); min-height: 28px; padding: 0 var(--tc-space-0-5) 0 var(--tc-space-1-5); border-radius: var(--tc-control-radius-sm); }
 :where([data-look="standard"], [data-look="standard"] *).ui-db__auto-label { font-size: var(--tc-font-size-md); font-weight: var(--tc-font-weight-medium); color: var(--tc-text-strong); transition: color var(--tc-duration-base) var(--tc-ease-standard); }

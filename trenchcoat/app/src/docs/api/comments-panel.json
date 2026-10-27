@@ -148,6 +148,8 @@
    ],
    "tokens": [
     "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
     "--tc-action-primary-bg",
     "--tc-action-primary-bg-hover",
     "--tc-action-primary-fg",
@@ -184,7 +186,6 @@
     "--tc-field-radius",
     "--tc-field-shadow-focus",
     "--tc-fill-default",
-    "--tc-fill-hover",
     "--tc-fill-strong",
     "--tc-fill-subtle",
     "--tc-focus-outline",
@@ -192,7 +193,6 @@
     "--tc-font-sans",
     "--tc-font-size-2xs",
     "--tc-font-size-lg",
-    "--tc-font-size-lg-plus",
     "--tc-font-size-md",
     "--tc-font-size-sm",
     "--tc-font-size-xs",
@@ -202,10 +202,8 @@
     "--tc-font-weight-strong",
     "--tc-hairline",
     "--tc-icon-muted",
-    "--tc-line-height-loose",
     "--tc-line-height-none",
     "--tc-line-height-normal",
-    "--tc-line-height-relaxed",
     "--tc-line-height-tight",
     "--tc-menu-bg",
     "--tc-menu-item-font-size",
@@ -236,7 +234,6 @@
     "--tc-space-3",
     "--tc-space-3-5",
     "--tc-space-4",
-    "--tc-space-4-5",
     "--tc-space-7",
     "--tc-status-danger-fg",
     "--tc-status-success-bg",
@@ -328,7 +325,7 @@
  ],
  "changelog": [],
  "size": {
-  "min": 48741,
-  "gzip": 12442
+  "min": 50423,
+  "gzip": 13079
  }
 }

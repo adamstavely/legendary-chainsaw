@@ -108,7 +108,8 @@
    "tokens": [
     "--tc-duration-slow",
     "--tc-ease-in-out",
-    "--tc-ease-out"
+    "--tc-ease-out",
+    "--tc-font-sans"
    ]
   }
  ],
@@ -123,7 +124,7 @@
  ],
  "changelog": [],
  "size": {
-  "min": 12462,
-  "gzip": 4798
+  "min": 14461,
+  "gzip": 5392
  }
 }

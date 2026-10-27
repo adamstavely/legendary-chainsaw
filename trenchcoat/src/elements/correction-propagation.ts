@@ -3,6 +3,7 @@ import { property, state } from "lit/decorators.js";
 import { repeat } from "lit/directives/repeat.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController } from "./internal/controllers";
 
 /*
@@ -20,6 +21,9 @@ import { FocusRescueController } from "./internal/controllers";
  * `tc-supersede` and `tc-dismiss`, so the app can open the item, issue a superseding notice, or log the dismissal.
  * Undo puts an item back to pending.
  */
+
+/** Waves going out: a correction's reach */
+const reachIcon = svg`<path d="M16.247 7.761a6 6 0 0 1 0 8.478"></path><path d="M19.075 4.933a10 10 0 0 1 0 14.134"></path><path d="M4.925 19.067a10 10 0 0 1 0-14.134"></path><path d="M7.753 16.239a6 6 0 0 1 0-8.478"></path><circle cx="12" cy="12" r="2"></circle>`;
 
 export type CorrectionState = "pending" | "reviewed" | "superseded" | "dismissed";
 export type CorrectionCandidateKind = "artifact" | "package";
@@ -53,8 +57,7 @@ const DONE_TEXT: Record<Exclude<CorrectionState, "pending">, string> = { reviewe
 /* ---------- Icons ---------- */
 
 /** Ripples out from a point – the title mark (drawn for Trenchcoat) */
-const reachMark = html`<svg class="ui-cpr__mark-svg" viewBox="0 0 16 16" aria-hidden="true">${svg`<circle cx="8" cy="8" r="1.8" fill="currentColor" stroke="none"></circle><path d="M4.6 4.6a4.8 4.8 0 0 0 0 6.8M11.4 4.6a4.8 4.8 0 0 1 0 6.8"></path><path d="M2.4 2.4a8 8 0 0 0 0 11.2M13.6 2.4a8 8 0 0 1 0 11.2" opacity="0.5"></path>`}</svg>`;
-/* file-text, package, check, undo-2, x: Lucide (ISC, lucide.dev) */
+/* radio, file-text, package, check, undo-2, x: Lucide (ISC, lucide.dev) */
 const docIcon = html`<svg class="ui-cpr__glyph" viewBox="0 0 24 24" aria-hidden="true">${svg`<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v4a2 2 0 0 0 2 2h4"></path><path d="M10 13H8M16 17H8"></path>`}</svg>`;
 const packageIcon = html`<svg class="ui-cpr__glyph" viewBox="0 0 24 24" aria-hidden="true">${svg`<path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"></path><path d="M12 22V12"></path><path d="m3.3 7 8.7 5 8.7-5"></path>`}</svg>`;
 const checkIcon = html`<svg class="ui-cpr__glyph" viewBox="0 0 24 24" aria-hidden="true">${svg`<path d="M20 6 9 17l-5-5"></path>`}</svg>`;
@@ -206,16 +209,21 @@ export class TcCorrectionPropagation extends TcElement {
     const artifacts = list.filter((c) => c.kind !== "package");
     const titleId = `${this.uid}-title`;
     const share = (n: number) => `${total ? (n / total) * 100 : 0}%`;
+    const clean = this.resolvedLook === "clean";
+    const head = cardHead({
+      icon: reachIcon,
+      title: this.heading,
+      id: titleId,
+      aside: html`<span class="ui-cpr__sum">
+        <span><b>${total}</b> ${total === 1 ? "cites it" : "cite it"}</span>
+        ${packages.length ? html`<span><b>${packages.length}</b> released</span>` : nothing}
+      </span>`,
+    });
+    // Standard: the header on the tray above the card; Clean: the card's first row
     return html`
-      <div class="ui-cpr__bar">
-        <span class="ui-cpr__mark">${reachMark}</span>
-        <span class="ui-cpr__title" id=${titleId}>${this.heading}</span>
-        <span class="ui-cpr__sum">
-          <span><b>${total}</b> ${total === 1 ? "cites it" : "cite it"}</span>
-          ${packages.length ? html`<span><b>${packages.length}</b> released</span>` : nothing}
-        </span>
-      </div>
+      ${clean ? nothing : head}
       <div class="ui-cpr__card">
+        ${clean ? head : nothing}
         ${this.claim || this.correction
           ? html`<div class="ui-cpr__fix">
               <h4 class="ui-cpr__caption">Corrected claim</h4>
@@ -259,7 +267,6 @@ export class TcCorrectionPropagation extends TcElement {
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-regular);
   line-height: var(--tc-line-height-normal);
-  letter-spacing: -0.006em;
   color: var(--tc-text-muted);
   text-align: left;
   -webkit-font-smoothing: antialiased;
@@ -290,16 +297,8 @@ export class TcCorrectionPropagation extends TcElement {
 .ui-cpr__glyph { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; }
 :where([data-look="standard"], [data-look="standard"] *).ui-cpr__glyph { stroke-width: 1.8; }
 :where([data-look="clean"], [data-look="clean"] *).ui-cpr__glyph { stroke-width: 1.4; }
-/* ----- The bar ----- */
-.ui-cpr__bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-1) var(--tc-space-2); min-width: 0; }
-:where([data-look="standard"], [data-look="standard"] *).ui-cpr__bar { padding: var(--tc-space-2) var(--tc-space-3) var(--tc-space-3); }
-:where([data-look="clean"], [data-look="clean"] *).ui-cpr__bar { margin-bottom: var(--tc-space-3); }
-.ui-cpr__mark { display: grid; flex: none; place-items: center; width: 16px; color: var(--tc-accent-text); }
-.ui-cpr__mark-svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.3; stroke-linecap: round; }
-.ui-cpr__title { flex: none; color: var(--tc-text-strong); }
-:where([data-look="standard"], [data-look="standard"] *).ui-cpr__title { font-weight: var(--tc-font-weight-semibold); }
-:where([data-look="clean"], [data-look="clean"] *).ui-cpr__title { font-weight: var(--tc-font-weight-medium); }
-.ui-cpr__sum { display: flex; align-items: center; gap: var(--tc-space-3-5); margin-left: auto; color: var(--tc-text-muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+/* ----- The header (cardHead): how many cite the claim at its right ----- */
+.ui-cpr__sum { display: flex; align-items: center; gap: var(--tc-space-3-5); color: var(--tc-text-muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
 :where([data-look="standard"], [data-look="standard"] *).ui-cpr__sum { font-size: var(--tc-font-size-md); line-height: var(--tc-line-height-snug); }
 :where([data-look="clean"], [data-look="clean"] *).ui-cpr__sum { font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); }
 .ui-cpr__sum b { color: var(--tc-text-primary); }
@@ -311,6 +310,8 @@ export class TcCorrectionPropagation extends TcElement {
 /* The correction: the old wording struck through, the new one, why */
 .ui-cpr__fix { display: grid; gap: var(--tc-space-1); padding: var(--tc-space-4) var(--tc-space-4) var(--tc-space-3-5); }
 .ui-cpr__fix .ui-cpr__caption { margin-bottom: var(--tc-space-0-5); }
+/* Clean: right under the header row */
+:where([data-look="clean"], [data-look="clean"] *).ui-cpr__card > .tc-head + .ui-cpr__fix { padding-top: var(--tc-space-1); }
 .ui-cpr__before { color: var(--tc-text-muted); overflow-wrap: anywhere; }
 .ui-cpr__before del { text-decoration-color: var(--tc-status-danger-solid); text-decoration-thickness: 1px; }
 .ui-cpr__after { color: var(--tc-text-strong); overflow-wrap: anywhere; }
@@ -360,18 +361,13 @@ export class TcCorrectionPropagation extends TcElement {
 .ui-cpr__row[data-state="superseded"] .ui-cpr__item-title { text-decoration: line-through; text-decoration-color: var(--tc-text-disabled); }
 .ui-cpr__end { grid-area: end; display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--tc-space-1-5); }
 /* Actions: Button's secondary recipe, small (Standard); ghost (Clean) */
-.ui-cpr__btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--tc-space-1-5); height: var(--tc-control-h-sm); padding: 0 var(--tc-control-px-sm); border-radius: var(--tc-control-radius-sm); font-size: var(--tc-control-font-size); font-weight: var(--tc-control-font-weight); white-space: nowrap; transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), box-shadow var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard); animation: ui-cpr-in var(--tc-duration-moderate) var(--tc-ease-move) both; }
-:where([data-look="standard"], [data-look="standard"] *).ui-cpr__btn { background: var(--tc-action-secondary-bg); box-shadow: var(--tc-action-secondary-shadow); color: var(--tc-action-secondary-fg); }
-:where([data-look="standard"], [data-look="standard"] *).ui-cpr__btn:hover { box-shadow: var(--tc-action-secondary-shadow-hover); }
-:where([data-look="clean"], [data-look="clean"] *).ui-cpr__btn { box-shadow: inset 0 0 0 var(--tc-hairline) var(--tc-border-default); color: var(--tc-action-ghost-fg); }
-:where([data-look="clean"], [data-look="clean"] *).ui-cpr__btn:hover { background: var(--tc-action-ghost-bg-hover); }
+.ui-cpr__btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--tc-space-1-5); height: var(--tc-control-h-sm); padding: 0 var(--tc-control-px-sm); border-radius: var(--tc-control-radius-sm); font-size: var(--tc-control-font-size); font-weight: var(--tc-control-font-weight); background: var(--tc-action-secondary-bg); box-shadow: var(--tc-action-secondary-shadow); color: var(--tc-action-secondary-fg); white-space: nowrap; transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), box-shadow var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard); animation: ui-cpr-in var(--tc-duration-moderate) var(--tc-ease-move) both; }
+.ui-cpr__btn:hover { box-shadow: var(--tc-action-secondary-shadow-hover); }
 .ui-cpr__btn[data-kind="dismiss"] { grid-area: dismiss; width: var(--tc-control-h-sm); margin-left: var(--tc-space-1-5); padding: 0; color: var(--tc-icon-muted); }
-:where([data-look="standard"], [data-look="standard"] *).ui-cpr__btn[data-kind="dismiss"] { background: none; box-shadow: none; }
-:where([data-look="clean"], [data-look="clean"] *).ui-cpr__btn[data-kind="dismiss"] { box-shadow: none; }
+.ui-cpr__btn[data-kind="dismiss"] { background: none; box-shadow: none; }
 .ui-cpr__btn[data-kind="dismiss"]:hover { background: var(--tc-action-ghost-bg-hover); color: var(--tc-text-primary); }
 .ui-cpr__btn[data-kind="undo"] { color: var(--tc-text-secondary); }
-:where([data-look="standard"], [data-look="standard"] *).ui-cpr__btn[data-kind="undo"] { background: none; box-shadow: none; }
-:where([data-look="clean"], [data-look="clean"] *).ui-cpr__btn[data-kind="undo"] { box-shadow: none; }
+.ui-cpr__btn[data-kind="undo"] { background: none; box-shadow: none; }
 .ui-cpr__btn[data-kind="undo"]:hover { background: var(--tc-action-ghost-bg-hover); color: var(--tc-text-primary); }
 .ui-cpr__btn .ui-cpr__glyph { width: 13px; height: 13px; }
 .ui-cpr__state { display: inline-flex; align-items: center; gap: var(--tc-space-1); height: var(--tc-pill-h-lg); padding: 0 var(--tc-pill-px-lg); border-radius: var(--tc-pill-radius); font-size: var(--tc-pill-font-size-lg); font-weight: var(--tc-pill-font-weight); line-height: var(--tc-line-height-tight); white-space: nowrap; animation: ui-cpr-in var(--tc-duration-moderate) var(--tc-ease-move) both; }

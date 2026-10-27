@@ -38,10 +38,10 @@ describe("tc-retrieval-inspector", () => {
       expect(el.dataset.ui).toBe("rti");
       expect(el.dataset.look).toBe(look);
       expect(getComputedStyle(el).display).toBe("block");
-      expect(text(el.querySelector(".ui-rti__title"))).toBe("Retrieval");
+      expect(text(el.querySelector(".tc-head__title"))).toBe("Retrieval");
       expect(text(el.querySelector(".ui-rti__query"))).toBe("“refund window”");
       expect([...el.querySelectorAll(".ui-rti__stat")].map(pair)).toEqual(["Retrieved 3", "Used 1", "Below cutoff 1", "Missed 1"]);
-      expect(list(el).getAttribute("aria-labelledby")).toBe(el.querySelector(".ui-rti__title")!.id);
+      expect(list(el).getAttribute("aria-labelledby")).toBe(el.querySelector(".tc-head__title")!.id);
       const opts = options(el);
       expect(opts).toHaveLength(3);
       expect(opts.map((o) => [o.getAttribute("aria-posinset"), o.getAttribute("aria-setsize")])).toEqual([["1", "3"], ["2", "3"], ["3", "3"]]);

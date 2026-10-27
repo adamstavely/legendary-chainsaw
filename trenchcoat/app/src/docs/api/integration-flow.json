@@ -167,6 +167,20 @@
      "looks": [
       "both"
      ]
+    },
+    {
+     "name": "--tc-integration-flow-title-size",
+     "value": "37px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-integration-flow-sub-size",
+     "value": "33.5px",
+     "looks": [
+      "both"
+     ]
     }
    ],
    "tokens": [
@@ -174,6 +188,7 @@
     "--tc-ease-decelerate",
     "--tc-ease-in",
     "--tc-ease-in-out",
+    "--tc-font-sans",
     "--tc-integration-flow-delay",
     "--tc-integration-flow-dur",
     "--tc-integration-flow-dx",
@@ -211,7 +226,7 @@
  ],
  "changelog": [],
  "size": {
-  "min": 57556,
-  "gzip": 18608
+  "min": 59820,
+  "gzip": 19278
  }
 }

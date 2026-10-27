@@ -212,7 +212,6 @@
     "--tc-text-muted",
     "--tc-text-primary",
     "--tc-text-secondary",
-    "--tc-text-strong",
     "--tc-tray-inset",
     "--tc-tray-radius"
    ]
@@ -291,7 +290,7 @@
   "chat-composer (the Lit element and `trenchcoat/react`): opt-in `mentions` (a `tc-mention-picker` on the message) and `context` / `context-limit` (a `tc-context-tray` above it). Without them it renders as before."
  ],
  "size": {
-  "min": 32740,
-  "gzip": 10045
+  "min": 35055,
+  "gzip": 10833
  }
 }

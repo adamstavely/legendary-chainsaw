@@ -3,6 +3,7 @@ import { property, state } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController } from "./internal/controllers";
 
 /*
@@ -13,7 +14,8 @@ import { FocusRescueController } from "./internal/controllers";
  *   · the confirmation is a modal dialog: focus moves to Cancel, Tab and Shift+Tab stay inside it, Escape cancels, and
  *     focus returns to the button that opened it (or the new stop's Resume when that button is gone)
  *   · posture follows the active stops unless the app sets it: a stop on everything → stopped, any stop → elevated
- * Standard: a white card on a gray tray, Stop everything on the tray. Clean: one white card, the button in its last row.
+ * Standard: the header on a gray tray, then a white card, then Stop everything on the tray. Clean: one white card – the
+ * header is its first row, the button its last.
  *
  *   <tc-kill-switch .running=${running} .stops=${stops}></tc-kill-switch>
  */
@@ -57,17 +59,11 @@ const TIME = new Intl.DateTimeFormat(undefined, { hour: "2-digit", minute: "2-di
 const when = (at: KillStop["at"]) => (at === undefined || at === "" ? "" : typeof at === "string" ? at : TIME.format(at));
 let uidCount = 0;
 
-/* Octagon-x, shield-check, shield-alert, play: Lucide (ISC, lucide.dev) */
+/* Octagon-x, play, power (the header): Lucide (ISC, lucide.dev) */
 const lucide = (size: number, body: ReturnType<typeof svg>) =>
   html`<svg width=${size} height=${size} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${body}</svg>`;
 const octagon = (size: number) =>
   lucide(size, svg`<path d="M2.586 16.726A2 2 0 0 1 2 15.312V8.688a2 2 0 0 1 .586-1.414l4.688-4.688A2 2 0 0 1 8.688 2h6.624a2 2 0 0 1 1.414.586l4.688 4.688A2 2 0 0 1 22 8.688v6.624a2 2 0 0 1-.586 1.414l-4.688 4.688a2 2 0 0 1-1.414.586H8.688a2 2 0 0 1-1.414-.586z"></path><path d="m15 9-6 6"></path><path d="m9 9 6 6"></path>`);
-const shield = "M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z";
-const POSTURE_ICON: Record<KillPosture, () => ReturnType<typeof lucide>> = {
-  normal: () => lucide(16, svg`<path d=${shield}></path><path d="m9 12 2 2 4-4"></path>`),
-  elevated: () => lucide(16, svg`<path d=${shield}></path><path d="M12 8v4"></path><path d="M12 16h.01"></path>`),
-  stopped: () => octagon(16),
-};
 const playIcon = () => lucide(14, svg`<polygon points="6 3 20 12 6 21 6 3"></polygon>`);
 
 /**
@@ -386,15 +382,14 @@ export class TcKillSwitch extends TcElement {
     const canStopAll = !this.allStopped;
     return html`
       <span class="ui-ks__sr" role="status">${this.announce}</span>
+      ${cardHead({
+        icon: svg`<path d="M12 2v10"/><path d="M18.4 6.6a9 9 0 1 1-12.77.04"/>`,
+        title: this.heading,
+        id: `${id}-title`,
+        subtitle: this.postureNote ?? POSTURE_LINE[posture],
+        aside: html`<span class="ui-ks__posture" data-posture=${posture}><span class="ui-ks__sr">Posture: </span><span class="ui-ks__posture-dot" aria-hidden="true"></span>${this.label(posture)}</span>`,
+      })}
       <div class="ui-ks__card">
-        <header class="ui-ks__head" data-posture=${posture}>
-          <span class="ui-ks__posture-icon" aria-hidden="true">${POSTURE_ICON[posture]()}</span>
-          <div class="ui-ks__titles">
-            <h3 class="ui-ks__title" id=${`${id}-title`}>${this.heading}</h3>
-            <p class="ui-ks__note">${this.postureNote ?? POSTURE_LINE[posture]}</p>
-          </div>
-          <span class="ui-ks__posture" data-posture=${posture}><span class="ui-ks__sr">Posture: </span><span class="ui-ks__posture-dot" aria-hidden="true"></span>${this.label(posture)}</span>
-        </header>
         ${this.renderStops()} ${this.renderRunning()}
       </div>
       <div class="ui-ks__foot">
@@ -424,7 +419,6 @@ export class TcKillSwitch extends TcElement {
   font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-md);
   line-height: var(--tc-line-height-normal);
-  letter-spacing: -0.006em;
   color: var(--tc-text-muted);
   text-align: left;
   -webkit-font-smoothing: antialiased;
@@ -457,18 +451,7 @@ export class TcKillSwitch extends TcElement {
 .ui-ks__sr { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 :where([data-look="standard"], [data-look="standard"] *).ui-ks__card { overflow: hidden; border-radius: var(--tc-card-radius); background: var(--tc-surface-on-tray); box-shadow: var(--tc-card-shadow); }
 /* ----- Posture ----- */
-.ui-ks__head { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: start; gap: var(--tc-space-3); padding: var(--tc-space-4); }
-:where([data-look="clean"], [data-look="clean"] *).ui-ks__head { padding: var(--tc-space-3-5) var(--tc-space-4); }
-.ui-ks__posture-icon { display: grid; place-items: center; width: 32px; height: 32px; border-radius: var(--tc-radius-lg); }
-.ui-ks__head[data-posture="normal"] .ui-ks__posture-icon { background: var(--tc-status-success-bg); color: var(--tc-status-success-fg); }
-.ui-ks__head[data-posture="elevated"] .ui-ks__posture-icon { background: var(--tc-status-warning-bg); color: var(--tc-status-warning-fg); }
-.ui-ks__head[data-posture="stopped"] .ui-ks__posture-icon { background: var(--tc-status-danger-bg); color: var(--tc-status-danger-fg); }
-.ui-ks__titles { display: grid; gap: var(--tc-space-0-5); min-width: 0; }
-.ui-ks__title { font-size: var(--tc-font-size-lg); font-weight: var(--tc-font-weight-strong); line-height: var(--tc-line-height-normal); letter-spacing: -0.011em; }
-:where([data-look="standard"], [data-look="standard"] *).ui-ks__title { color: var(--tc-text-primary); }
-:where([data-look="clean"], [data-look="clean"] *).ui-ks__title { color: var(--tc-text-strong); }
-.ui-ks__note { line-height: var(--tc-line-height-snug); color: var(--tc-text-muted); }
-:where([data-look="clean"], [data-look="clean"] *).ui-ks__note { font-size: var(--tc-font-size-sm); }
+/* The posture pill, in the header's aside */
 .ui-ks__posture { display: inline-flex; align-items: center; gap: var(--tc-space-1-5); height: var(--tc-pill-h-lg); padding: 0 var(--tc-pill-px-lg); border-radius: var(--tc-pill-radius); font-size: var(--tc-pill-font-size-lg); font-weight: var(--tc-pill-font-weight); line-height: var(--tc-line-height-none); white-space: nowrap; }
 .ui-ks__posture-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
 .ui-ks__posture[data-posture="normal"] { background: var(--tc-status-success-bg); color: var(--tc-status-success-fg); }
@@ -476,6 +459,8 @@ export class TcKillSwitch extends TcElement {
 .ui-ks__posture[data-posture="stopped"] { background: var(--tc-status-danger-bg); color: var(--tc-status-danger-fg); }
 /* ----- Running and the active stops ----- */
 .ui-ks__section { padding: var(--tc-space-3) var(--tc-space-2) var(--tc-space-2); border-top: var(--tc-hairline) solid var(--tc-divider); }
+/* Standard: the card's first part needs no divider above it */
+.ui-ks__card > :first-child { border-top: 0; }
 .ui-ks__label { display: flex; align-items: center; gap: var(--tc-space-1-5); margin: 0 var(--tc-space-2) var(--tc-space-1) !important; font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-snug); color: var(--tc-text-muted); }
 :where([data-look="standard"], [data-look="standard"] *).ui-ks__label { font-weight: var(--tc-font-weight-medium); }
 .ui-ks__count { display: grid; place-items: center; min-width: 18px; height: 18px; padding: 0 var(--tc-space-1); border-radius: var(--tc-radius-badge); background: var(--tc-fill-default); font-size: var(--tc-font-size-xs); color: var(--tc-text-muted); font-variant-numeric: tabular-nums; }
@@ -500,9 +485,9 @@ export class TcKillSwitch extends TcElement {
 .ui-ks__btn--secondary:hover { box-shadow: var(--tc-action-secondary-shadow-hover); }
 .ui-ks__btn--ghost { height: var(--tc-control-h-sm); padding: 0 var(--tc-control-px-sm); border-radius: var(--tc-control-radius-sm); color: var(--tc-status-danger-fg); }
 .ui-ks__btn--ghost:hover { background: var(--tc-status-danger-bg); }
-/* The emergency stop: white on a deep red (--tc-red-600 keeps 4.5:1 in both themes) */
-.ui-ks__btn--danger { background: var(--tc-red-600); box-shadow: var(--tc-action-primary-shadow); color: var(--tc-text-on-accent); }
-.ui-ks__btn--danger:hover { background: color-mix(in srgb, var(--tc-red-600) 88%, var(--tc-gray-950)); }
+/* The emergency stop: the danger action fill */
+.ui-ks__btn--danger { background: var(--tc-action-danger-bg); box-shadow: var(--tc-action-primary-shadow); color: var(--tc-action-danger-fg); }
+.ui-ks__btn--danger:hover { background: var(--tc-action-danger-bg-hover); }
 .ui-ks__btn--danger[aria-disabled="true"] { background: var(--tc-fill-strong); box-shadow: none; color: var(--tc-text-muted); cursor: not-allowed; transform: none; }
 .ui-ks__resume { height: var(--tc-control-h-sm); padding: 0 var(--tc-control-px-sm); border-radius: var(--tc-control-radius-sm); }
 .ui-ks__resume > svg { color: var(--tc-status-success-fg); }
@@ -519,7 +504,7 @@ export class TcKillSwitch extends TcElement {
 .ui-ks__dlg { display: grid; gap: var(--tc-space-4); padding: var(--tc-space-5); }
 .ui-ks__dlg-head { display: flex; align-items: center; gap: var(--tc-space-3); }
 .ui-ks__dlg-icon { display: grid; place-items: center; width: 36px; height: 36px; border-radius: var(--tc-radius-lg); background: var(--tc-status-danger-bg); color: var(--tc-status-danger-fg); }
-.ui-ks__dlg-title { font-size: var(--tc-font-size-lg); font-weight: var(--tc-font-weight-strong); line-height: var(--tc-line-height-snug); letter-spacing: -0.011em; color: var(--tc-text-primary); }
+.ui-ks__dlg-title { font-size: var(--tc-title-font-size); font-weight: var(--tc-title-font-weight); line-height: var(--tc-title-line-height); letter-spacing: var(--tc-title-tracking); color: var(--tc-title-color); }
 .ui-ks__dlg-desc { display: grid; gap: var(--tc-space-2); }
 .ui-ks__dlg-lead { color: var(--tc-text-primary); line-height: var(--tc-line-height-snug); }
 .ui-ks__halts { display: grid; max-height: 12rem; overflow: auto; padding: var(--tc-space-1) var(--tc-space-3) !important; border-radius: var(--tc-radius-lg); background: var(--tc-fill-subtle); box-shadow: inset 0 0 0 var(--tc-hairline) var(--tc-border-default); }
@@ -540,8 +525,6 @@ export class TcKillSwitch extends TcElement {
 @keyframes ui-ks-in { from { opacity: 0; transform: translateY(3px); } }
 @keyframes ui-ks-pop { from { opacity: 0; transform: translateY(6px) scale(0.98); } }
 @container (max-width: 400px) {
-  .ui-ks__head { grid-template-columns: auto minmax(0, 1fr); }
-  .ui-ks__posture { grid-column: 2; justify-self: start; }
   .ui-ks__foot .ui-ks__btn { flex: 1 1 100%; }
 }
 @media (max-width: 400px) {

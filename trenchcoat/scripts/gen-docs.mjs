@@ -41,7 +41,7 @@ const text = (t) => t?.text?.replace(/\s+/g, " ").trim();
 /** The element's public API from its manifest declaration */
 function api(decl) {
   const fields = (decl.members ?? []).filter(
-    (m) => m.kind === "field" && !m.static && !m.privacy && (!m.inheritedFrom || m.name === "look") && !/^_/.test(m.name),
+    (m) => m.kind === "field" && !m.static && !m.privacy && (!m.inheritedFrom || m.name === "look" || m.inheritedFrom.name === "TcSettingsElement") && !/^_/.test(m.name),
   );
   const attrOf = new Map((decl.attributes ?? []).filter((a) => a.fieldName).map((a) => [a.fieldName, a.name]));
   return {
@@ -59,7 +59,7 @@ function api(decl) {
     events: (decl.events ?? []).filter((e) => e.name && e.name !== "name").map((e) => ({ name: e.name, detail: text(e.type) ?? "", description: e.description ?? "", cancelable: /cancelable/i.test(e.description ?? "") })),
     slots: (decl.slots ?? []).map((s) => ({ name: s.name || "(default)", description: s.description ?? "" })),
     methods: (decl.members ?? [])
-      .filter((m) => m.kind === "method" && !m.privacy && !m.static && !m.inheritedFrom && !HOOKS.test(m.name))
+      .filter((m) => m.kind === "method" && !m.privacy && !m.static && (!m.inheritedFrom || m.inheritedFrom.name === "TcSettingsElement") && !HOOKS.test(m.name))
       .map((m) => ({ name: m.name, params: (m.parameters ?? []).map((p) => `${p.name}${p.optional ? "?" : ""}: ${text(p.type) ?? "unknown"}`).join(", "), returns: text(m.return?.type) ?? "void", description: m.description ?? "" })),
   };
 }

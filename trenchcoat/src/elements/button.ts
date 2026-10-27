@@ -191,7 +191,7 @@ export class TcButton extends TcElement {
     opacity var(--tc-duration-fast) var(--tc-ease-standard);
 }
 :where([data-look="standard"], [data-look="standard"] *)[data-ui="button"] {
-  letter-spacing: -0.01em;
+  letter-spacing: var(--tc-tracking-snug);
 }
 /* The native button holds the label and takes every click on the chip (its ::after covers the host) */
 [data-ui="button"] > .ui-button__hit {

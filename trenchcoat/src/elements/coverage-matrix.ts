@@ -3,6 +3,7 @@ import { property, state } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController } from "./internal/controllers";
 import { isMac } from "./internal/util";
 
@@ -15,12 +16,15 @@ import { isMac } from "./internal/util";
  *     ⌘/Ctrl+Home / End to the first and last cell, Page Up / Down five rows; Enter or Space opens a cell's detail,
  *     Escape closes it; Tab leaves the grid
  *   · a total is the share covered, with partial counting as `partialWeight` (half by default)
- * Standard: a white card on a gray tray. Clean: one white card.
+ * Standard: the header on a gray tray above a white card. Clean: one white card, the header its first row.
  *
  *   <tc-coverage-matrix .checks=${checks} .parts=${parts} .coverage=${coverage}></tc-coverage-matrix>
  */
 
 /** "none": the check doesn't apply to the part – left out of the totals */
+/** A grid: checks against parts */
+const matrixIcon = svg`<rect width="18" height="18" x="3" y="3" rx="2"></rect><path d="M3 9h18"></path><path d="M3 15h18"></path><path d="M9 3v18"></path><path d="M15 3v18"></path>`;
+
 export type CoverageStatus = "covered" | "partial" | "gap" | "none";
 export type CoverageCheck = {
   id: string;
@@ -329,14 +333,14 @@ export class TcCoverageMatrix extends TcElement {
     return html`
       <span class="ui-cov__sr" role="status">${this.announce}</span>
       <span class="ui-cov__sr" id=${`${id}-keys`}>Arrow keys move between cells; Enter opens a cell's detail</span>
+      ${cardHead({
+        icon: matrixIcon,
+        title: this.heading,
+        subtitle: this.description,
+        id: `${id}-title`,
+        aside: empty ? nothing : html`<span class="ui-cov__overall"><span class="ui-cov__overall-num">${pct(this.score(this.allCells))}</span><span class="ui-cov__overall-label">${this.totalLabel.toLowerCase()}</span></span>`,
+      })}
       <div class="ui-cov__card">
-        <header class="ui-cov__head">
-          <div class="ui-cov__titles">
-            <h3 class="ui-cov__title" id=${`${id}-title`}>${this.heading}</h3>
-            ${this.description ? html`<p class="ui-cov__desc">${this.description}</p>` : nothing}
-          </div>
-          ${empty ? nothing : html`<span class="ui-cov__overall"><span class="ui-cov__overall-num">${pct(this.score(this.allCells))}</span><span class="ui-cov__overall-label">${this.totalLabel.toLowerCase()}</span></span>`}
-        </header>
         ${empty
           ? html`<p class="ui-cov__empty">No checks or parts to show yet.</p>`
           : html`<ul class="ui-cov__legend" aria-label="Legend">
@@ -362,7 +366,6 @@ export class TcCoverageMatrix extends TcElement {
   font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-md);
   line-height: var(--tc-line-height-normal);
-  letter-spacing: -0.006em;
   color: var(--tc-text-muted);
   text-align: left;
   -webkit-font-smoothing: antialiased;
@@ -394,20 +397,13 @@ export class TcCoverageMatrix extends TcElement {
 :where([data-look="clean"], [data-look="clean"] *)[data-ui="cov"] svg[stroke-width] { stroke-width: 1.6; }
 .ui-cov__sr { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 :where([data-look="standard"], [data-look="standard"] *).ui-cov__card { overflow: hidden; border-radius: var(--tc-card-radius); background: var(--tc-surface-on-tray); box-shadow: var(--tc-card-shadow); }
-/* ----- Heading, overall share and the legend ----- */
-.ui-cov__head { display: flex; align-items: flex-start; gap: var(--tc-space-3); }
-:where([data-look="standard"], [data-look="standard"] *).ui-cov__head { padding: var(--tc-space-4) var(--tc-space-4) 0; }
-:where([data-look="clean"], [data-look="clean"] *).ui-cov__head { padding: var(--tc-space-3-5) var(--tc-space-4) 0; }
-.ui-cov__titles { display: grid; flex: 1; gap: var(--tc-space-0-5); min-width: 0; }
-.ui-cov__title { font-size: var(--tc-font-size-lg); font-weight: var(--tc-font-weight-strong); line-height: var(--tc-line-height-normal); letter-spacing: -0.011em; }
-:where([data-look="standard"], [data-look="standard"] *).ui-cov__title { color: var(--tc-text-primary); }
-:where([data-look="clean"], [data-look="clean"] *).ui-cov__title { color: var(--tc-text-strong); }
-.ui-cov__desc { color: var(--tc-text-muted); line-height: var(--tc-line-height-snug); }
-:where([data-look="clean"], [data-look="clean"] *).ui-cov__desc { font-size: var(--tc-font-size-sm); }
+/* ----- The header (cardHead, with the overall share at its right) – on the tray in Standard, the card's first row in
+   Clean – then the legend ----- */
 .ui-cov__overall { display: grid; flex: none; justify-items: end; }
-.ui-cov__overall-num { font-size: var(--tc-font-size-xl); font-weight: var(--tc-font-weight-strong); line-height: var(--tc-line-height-tight); letter-spacing: -0.02em; color: var(--tc-text-primary); font-variant-numeric: tabular-nums; }
+.ui-cov__overall-num { font-size: var(--tc-font-size-xl); font-weight: var(--tc-font-weight-strong); line-height: var(--tc-line-height-tight); letter-spacing: var(--tc-tracking-tight); color: var(--tc-text-primary); font-variant-numeric: tabular-nums; }
 .ui-cov__overall-label { font-size: var(--tc-font-size-xs); line-height: var(--tc-line-height-tight); color: var(--tc-text-muted); }
-.ui-cov__legend { display: flex; flex-wrap: wrap; gap: var(--tc-space-1-5) var(--tc-space-4); padding: var(--tc-space-3) var(--tc-space-4) 0 !important; font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); color: var(--tc-text-secondary); }
+.ui-cov__legend { display: flex; flex-wrap: wrap; gap: var(--tc-space-1-5) var(--tc-space-4); padding: var(--tc-space-4) var(--tc-space-4) 0 !important; font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); color: var(--tc-text-secondary); }
+:where([data-look="clean"], [data-look="clean"] *).ui-cov__legend { padding-top: var(--tc-space-1) !important; }
 .ui-cov__legend-item { display: inline-flex; align-items: center; gap: var(--tc-space-1-5); }
 .ui-cov__legend-count { color: var(--tc-text-muted); font-variant-numeric: tabular-nums; }
 .ui-cov__legend .ui-cov__swatch { width: 16px; height: 16px; border-radius: var(--tc-radius-xs); }

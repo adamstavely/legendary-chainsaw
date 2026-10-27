@@ -271,7 +271,6 @@ export class TcDisagreementBanner extends TcElement {
   font-size: var(--tc-font-size-md);
   font-weight: var(--tc-font-weight-regular);
   line-height: var(--tc-line-height-normal);
-  letter-spacing: -0.006em;
   color: var(--tc-text-secondary);
   text-align: left;
   -webkit-font-smoothing: antialiased;
@@ -303,9 +302,8 @@ export class TcDisagreementBanner extends TcElement {
 .ui-dsb__mark-svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 :where([data-look="clean"], [data-look="clean"] *).ui-dsb__mark-svg { stroke-width: 1.7; }
 .ui-dsb__head { display: grid; flex: 1; gap: var(--tc-space-0-5); min-width: 0; }
-.ui-dsb__title { font-weight: var(--tc-font-weight-semibold); color: var(--tc-text-strong); text-wrap: pretty; }
-:where([data-look="clean"], [data-look="clean"] *).ui-dsb__title { font-weight: var(--tc-font-weight-medium); }
-.ui-dsb__question { min-width: 0; font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-snug); color: var(--tc-text-muted); overflow-wrap: anywhere; }
+.ui-dsb__title { font-size: var(--tc-title-font-size); font-weight: var(--tc-title-font-weight); line-height: var(--tc-title-line-height); letter-spacing: var(--tc-title-tracking); color: var(--tc-title-color); text-wrap: pretty; }
+.ui-dsb__question { min-width: 0; font-size: var(--tc-subtitle-font-size); line-height: var(--tc-subtitle-line-height); color: var(--tc-subtitle-color); overflow-wrap: anywhere; }
 .ui-dsb__count { flex: none; height: var(--tc-pill-h); padding: 0 var(--tc-pill-px); border-radius: var(--tc-pill-radius); background: var(--tc-status-warning-bg); font-size: var(--tc-pill-font-size); font-weight: var(--tc-pill-font-weight); line-height: var(--tc-pill-h); color: var(--tc-status-warning-fg); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .ui-dsb__icon { display: grid; flex: none; place-items: center; width: var(--tc-control-h-sm); height: var(--tc-control-h-sm); margin-top: calc(-1 * var(--tc-space-1)); border-radius: var(--tc-control-radius-sm); color: var(--tc-icon-muted); transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard); }
 [data-ui="dsb"] .ui-dsb__icon:hover { background: var(--tc-action-ghost-bg-hover); color: var(--tc-text-primary); }

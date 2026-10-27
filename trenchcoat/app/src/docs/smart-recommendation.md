@@ -25,7 +25,7 @@ made, and says so if it fails.
 
 ## Anatomy
 
-1. **Head** `.ui-sr__head` – the mark and heading; folds the reason away
+1. **Header** `.tc-head` – the icon and heading, with the button that folds the reason away
 2. **Reason** `.ui-sr__reason` – one sentence on why
 3. **Signal** `.ui-sr__signal` – how sure the suggestion is, from “No signal” to “Strong signal”
 4. **Alternatives** `.ui-sr__alt` – a menu of every option, the recommendation first

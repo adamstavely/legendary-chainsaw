@@ -371,8 +371,8 @@ export class TcNotificationStack extends TcElement {
 :where([data-look="standard"], [data-look="standard"] *).ui-ns__close {
   display: grid;
   place-items: center;
-  width: 28px;
-  height: 28px;
+  width: var(--tc-control-h-sm);
+  height: var(--tc-control-h-sm);
   margin: -2px -6px 0 0;
   padding: 0;
   border: 0;
@@ -383,12 +383,13 @@ export class TcNotificationStack extends TcElement {
   transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard);
 }
 :where([data-look="standard"], [data-look="standard"] *).ui-ns__close:hover { background: var(--tc-fill-default); color: var(--tc-text-primary); }
-:where([data-look="standard"], [data-look="standard"] *).ui-ns__title {
+.ui-ns__title {
   margin: 0;
-  font-size: var(--tc-font-size-xl);
-  font-weight: var(--tc-font-weight-medium);
-  line-height: var(--tc-line-height-relaxed);
-  letter-spacing: -0.01em;
+  font-size: var(--tc-title-font-size);
+  font-weight: var(--tc-title-font-weight);
+  line-height: var(--tc-title-line-height);
+  letter-spacing: var(--tc-title-tracking);
+  color: var(--tc-title-color);
 }
 :where([data-look="standard"], [data-look="standard"] *).ui-ns__text {
   margin: var(--tc-space-1-5) 0 0;
@@ -442,21 +443,14 @@ export class TcNotificationStack extends TcElement {
 :where([data-look="clean"], [data-look="clean"] *).ui-ns__close {
   display: grid;
   place-items: center;
-  width: 28px;
-  height: 28px;
-  border-radius: var(--tc-control-radius-sm);
+  width: var(--tc-control-h-md);
+  height: var(--tc-control-h-md);
+  border-radius: var(--tc-control-radius-md);
   transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard);
 }
 :where([data-ui="ns"]) :where([data-look="clean"], [data-look="clean"] *).ui-ns__close { color: var(--tc-icon-muted); }
 :where([data-look="clean"], [data-look="clean"] *).ui-ns__close:hover { background: var(--tc-fill-subtle); color: var(--tc-text-primary); }
-:where([data-look="clean"], [data-look="clean"] *).ui-ns__title {
-  margin: 0;
-  padding-right: var(--tc-space-1);
-  font-size: var(--tc-font-size-lg-plus);
-  font-weight: var(--tc-font-weight-medium);
-  line-height: var(--tc-line-height-loose);
-  color: var(--tc-text-strong);
-}
+:where([data-look="clean"], [data-look="clean"] *).ui-ns__title { padding-right: var(--tc-space-1); }
 :where([data-look="clean"], [data-look="clean"] *).ui-ns__text {
   margin: var(--tc-space-0-5) 0 0;
   padding-right: var(--tc-space-1);

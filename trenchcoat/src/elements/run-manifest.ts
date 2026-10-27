@@ -3,6 +3,7 @@ import { property, state } from "lit/decorators.js";
 import { repeat } from "lit/directives/repeat.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { ToolbarController } from "./internal/controllers";
 import { copyText } from "./internal/util";
 
@@ -74,6 +75,9 @@ function shortHash(hash: string) {
   const body = hash.slice(prefix.length);
   return body.length > 14 ? `${prefix}${body.slice(0, 8)}…${body.slice(-4)}` : hash;
 }
+
+/* After Lucide: clipboard-list – the header's icon */
+const headIcon = svg`<rect width="8" height="4" x="8" y="2" rx="1"></rect><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><path d="M12 11h4M12 16h4M8 11h.01M8 16h.01"></path>`;
 
 let instances = 0;
 
@@ -295,24 +299,30 @@ export class TcRunManifest extends TcElement {
   }
 
   protected override render() {
+    // The header (.tc-head): on the tray in Standard, the card's first row in Clean. The run id and when under the
+    // title, the model badge at the right
+    const clean = this.resolvedLook === "clean";
+    const head = cardHead({
+      icon: headIcon,
+      title: this.heading,
+      id: `${this.uid}-title`,
+      subtitle:
+        this.runId || this.timestamp
+          ? html`<span class="ui-rmf__sub">
+              ${this.runId ? html`<code class="ui-rmf__run">${this.runId}</code>${this.copyButton("run")}` : nothing}${this.runId && this.timestamp
+                ? html`<span class="ui-rmf__sep" aria-hidden="true">·</span>`
+                : nothing}${this.timestamp ? html`<span>${this.timestamp}</span>` : nothing}
+            </span>`
+          : undefined,
+      aside: this.model
+        ? html`<span class="ui-rmf__model">${this.modelIcon ? html`<span class="ui-rmf__model-icon">${this.modelIcon.cloneNode(true)}</span>` : nothing}<span>${this.model}</span></span>`
+        : undefined,
+    });
     return html`
+      ${clean ? nothing : head}
       <div class="ui-rmf__card">
+        ${clean ? head : nothing}
         <div class="ui-rmf__inner">
-          <header class="ui-rmf__head">
-            <div class="ui-rmf__heading">
-              <h3 class="ui-rmf__title" id=${`${this.uid}-title`}>${this.heading}</h3>
-              ${this.runId || this.timestamp
-                ? html`<p class="ui-rmf__sub">
-                    ${this.runId ? html`<code class="ui-rmf__run">${this.runId}</code>${this.copyButton("run")}` : nothing}${this.runId && this.timestamp
-                      ? html`<span class="ui-rmf__sep" aria-hidden="true">·</span>`
-                      : nothing}${this.timestamp ? html`<span>${this.timestamp}</span>` : nothing}
-                  </p>`
-                : nothing}
-            </div>
-            ${this.model
-              ? html`<span class="ui-rmf__model">${this.modelIcon ? html`<span class="ui-rmf__model-icon">${this.modelIcon.cloneNode(true)}</span>` : nothing}<span>${this.model}</span></span>`
-              : nothing}
-          </header>
           <dl class="ui-rmf__list">
             ${this.modelId || this.model
               ? html`<div class="ui-rmf__row">
@@ -395,8 +405,8 @@ export class TcRunManifest extends TcElement {
 [data-ui="rmf"] *, [data-ui="rmf"] *::before, [data-ui="rmf"] *::after { box-sizing: border-box; }
 [data-ui="rmf"] { grid-template-columns: minmax(0, 1fr); }
 [data-ui="rmf"] svg { display: block; flex: none; width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; }
-:where([data-look="standard"], [data-look="standard"] *)[data-ui="rmf"] svg { stroke-width: 1.5; }
-:where([data-look="clean"], [data-look="clean"] *)[data-ui="rmf"] svg { stroke-width: 1.2; }
+:where([data-look="standard"], [data-look="standard"] *)[data-ui="rmf"] svg:where(:not(.tc-head__icon > svg)) { stroke-width: 1.5; }
+:where([data-look="clean"], [data-look="clean"] *)[data-ui="rmf"] svg:where(:not(.tc-head__icon > svg)) { stroke-width: 1.2; }
 :where([data-ui="rmf"]) button { margin: 0; padding: 0; border: 0; background: none; font: inherit; color: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 :where([data-ui="rmf"]) :is(h3, p, ul, dl, dd) { margin: 0; padding: 0; }
 :where([data-ui="rmf"]) ul { list-style: none; }
@@ -405,17 +415,10 @@ export class TcRunManifest extends TcElement {
 .ui-rmf__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 /* The white card (Clean: the body of the one card) */
 :where([data-look="standard"], [data-look="standard"] *).ui-rmf__card { border-radius: var(--tc-card-radius); background: var(--tc-surface-raised); box-shadow: var(--tc-card-shadow); }
-:where([data-look="standard"], [data-look="standard"] *).ui-rmf__inner { padding: var(--tc-space-3-5) var(--tc-space-4) var(--tc-space-4); }
-:where([data-look="clean"], [data-look="clean"] *).ui-rmf__inner { padding: var(--tc-space-4); }
-/* Head: title, the run id and when; the model badge – context-window's */
-.ui-rmf__head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, max-content); align-items: center; column-gap: var(--tc-space-3); }
-/* The title and the badge share the first line; the run id and time get the full width below */
-.ui-rmf__heading { display: contents; }
-.ui-rmf__model { grid-column: 2; grid-row: 1; }
-.ui-rmf__title { overflow: hidden; font-weight: var(--tc-font-weight-strong); white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="standard"], [data-look="standard"] *).ui-rmf__title { font-size: var(--tc-font-size-lg); line-height: var(--tc-line-height-normal); color: var(--tc-text-primary); }
-:where([data-look="clean"], [data-look="clean"] *).ui-rmf__title { font-size: var(--tc-font-size-lg-plus); line-height: var(--tc-line-height-loose); color: var(--tc-text-strong); }
-.ui-rmf__sub { display: flex; grid-column: 1 / -1; align-items: center; min-width: 0; font-size: var(--tc-font-size-sm); color: var(--tc-text-muted); white-space: nowrap; }
+:where([data-look="standard"], [data-look="standard"] *).ui-rmf__inner { padding: var(--tc-space-2) var(--tc-space-4) var(--tc-space-4); }
+:where([data-look="clean"], [data-look="clean"] *).ui-rmf__inner { padding: 0 var(--tc-space-4) var(--tc-space-4); }
+/* The header's line under the title: the run id and when; the model badge at its right – context-window's */
+.ui-rmf__sub { display: flex; align-items: center; min-width: 0; white-space: nowrap; }
 .ui-rmf__sub > :last-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .ui-rmf__run { font-family: var(--tc-font-mono); font-size: var(--tc-font-size-xs); }
 .ui-rmf__sep { margin: 0 var(--tc-space-1-5); color: var(--tc-text-disabled); }
@@ -426,7 +429,7 @@ export class TcRunManifest extends TcElement {
 .ui-rmf__model-icon { display: grid; flex: none; place-items: center; width: 12px; height: 12px; }
 .ui-rmf__model-icon > * { width: 12px; height: 12px; }
 /* The record: label on the left, value on the right; stacked when narrow */
-.ui-rmf__list { display: grid; margin-top: var(--tc-space-3-5); }
+.ui-rmf__list { display: grid; }
 .ui-rmf__row { display: grid; grid-template-columns: 92px minmax(0, 1fr); column-gap: var(--tc-space-3); padding: var(--tc-space-2-5) 0; border-top: var(--tc-hairline) solid var(--tc-divider); }
 .ui-rmf__row:first-child { border-top: 0; padding-top: 0; }
 .ui-rmf__row:last-child { padding-bottom: 0; }
@@ -488,8 +491,8 @@ export class TcRunManifest extends TcElement {
 @keyframes ui-rmf-in { from { opacity: 0; transform: translateY(2px); } to { opacity: 1; transform: none; } }
 /* Narrow: labels above their values, tighter gutters */
 @container (max-width: 400px) {
-  :where([data-look="standard"], [data-look="standard"] *).ui-rmf__inner { padding: var(--tc-space-3) var(--tc-space-3-5) var(--tc-space-3-5); }
-  :where([data-look="clean"], [data-look="clean"] *).ui-rmf__inner { padding: var(--tc-space-3-5); }
+  :where([data-look="standard"], [data-look="standard"] *).ui-rmf__inner { padding: var(--tc-space-2) var(--tc-space-3-5) var(--tc-space-3-5); }
+  :where([data-look="clean"], [data-look="clean"] *).ui-rmf__inner { padding: 0 var(--tc-space-3-5) var(--tc-space-3-5); }
   :where([data-look="clean"], [data-look="clean"] *).ui-rmf__foot { padding: 0 var(--tc-space-2) 0 var(--tc-space-3-5); }
   .ui-rmf__row { grid-template-columns: minmax(0, 1fr); row-gap: var(--tc-space-1); }
   .ui-rmf__key { padding-top: 0; }

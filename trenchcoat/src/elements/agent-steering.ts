@@ -3,6 +3,7 @@ import { property, state } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { live } from "lit/directives/live.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController, OnScreenController, rescueFocus } from "./internal/controllers";
 
 /*
@@ -64,7 +65,8 @@ let uidSeq = 0;
 
 /* ---------- Icons ---------- */
 
-const spark = html`<svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">${svg`<path d="M7 1.2c.4 2.9 1.9 4.4 4.8 4.8-2.9.4-4.4 1.9-4.8 4.8C6.6 7.9 5.1 6.4 2.2 6 5.1 5.6 6.6 4.1 7 1.2Z" fill="currentColor"></path><circle cx="11.6" cy="11.4" r="1.1" fill="currentColor" opacity="0.55"></circle>`}</svg>`;
+// The header icon: a steering wheel
+const steerIcon = svg`<circle cx="12" cy="12" r="9"></circle><circle cx="12" cy="12" r="2.5"></circle><path d="M12 14.5V21M9.6 11.2 3.3 9.8M14.4 11.2l6.3-1.4"></path>`;
 const stepIcon = (status: SteerStepStatus) =>
   html`<span class="ui-st__step-icon" data-status=${status} aria-hidden="true">${status === "done"
     ? html`<svg width="16" height="16" viewBox="0 0 16 16">${svg`<circle cx="8" cy="8" r="6.5" fill="currentColor"></circle><path d="m5.4 8.2 1.8 1.8 3.4-3.7" fill="none" stroke="currentColor" class="ui-st__step-check" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>`}</svg>`
@@ -186,10 +188,12 @@ export class TcAgentSteering extends TcElement {
 
   private paint = () => {
     const { runTime, stepTime } = this.times(Date.now());
-    const stateEl = this.querySelector(".ui-st__state");
-    const text = stateEl ? [...stateEl.childNodes].reverse().find((n) => n.nodeType === 3) : undefined;
     const label = runLabel(this.status, runTime);
-    if (text && text.nodeValue !== label) text.nodeValue = label;
+    // The status shows in the header's right side, or under the title in narrow containers – both tick
+    for (const stateEl of this.querySelectorAll(".ui-st__state")) {
+      const text = [...stateEl.childNodes].reverse().find((n) => n.nodeType === 3);
+      if (text && text.nodeValue !== label) text.nodeValue = label;
+    }
     if (this.status !== "running") return;
     for (const s of this.steps) {
       if (s.status !== "active") continue;
@@ -441,25 +445,27 @@ export class TcAgentSteering extends TcElement {
     // What's rendered is the clocks at the first-seen snapshot; updated() paints the real time before the browser does
     const { runTime, stepTime } = this.times(this.firstSeen ?? 0);
     const showToggle = (status === "running" && this.pausable) || (status === "paused" && this.resumable);
+    const state = (where: "aside" | "sub") =>
+      html`<span class="ui-st__state ui-st__state--${where}" data-status=${status}><span class="ui-st__pulse" aria-hidden="true"></span>${runLabel(status, runTime)}</span>`;
+    const head = cardHead({
+      icon: steerIcon,
+      title: this.heading,
+      subtitle: html`${this.agent ? html`${this.agent}<span class="ui-st__dot" aria-hidden="true">·</span>` : nothing}${status === "done" ? `${steps.length} steps` : `Step ${Math.min(done + 1, steps.length)} of ${steps.length}`}${state("sub")}`,
+      aside: html`${state("aside")}
+        ${showToggle
+          ? html`<button
+              type="button"
+              class="ui-st__icon-btn"
+              aria-label=${status === "running" ? "Pause the run" : "Resume the run"}
+              title=${status === "running" ? "Pause" : "Resume"}
+              @click=${() => this.emit(this.status === "running" ? "tc-pause" : "tc-resume", null)}
+            >${status === "running" ? pauseIcon : playIcon}</button>`
+          : nothing}`,
+    });
     return html`
+      ${look === "standard" ? head : nothing}
       <div class="ui-st__card">
-        <header class="ui-st__head">
-          <span class="ui-st__spark">${spark}</span>
-          <div class="ui-st__heading">
-            <span class="ui-st__title" title=${this.heading}>${this.heading}</span>
-            <span class="ui-st__sub">${this.agent ? html`${this.agent}<span class="ui-st__dot" aria-hidden="true">·</span>` : nothing}${status === "done" ? `${steps.length} steps` : `Step ${Math.min(done + 1, steps.length)} of ${steps.length}`}</span>
-          </div>
-          <span class="ui-st__state" data-status=${status}><span class="ui-st__pulse" aria-hidden="true"></span>${runLabel(status, runTime)}</span>
-          ${showToggle
-            ? html`<button
-                type="button"
-                class="ui-st__icon-btn"
-                aria-label=${status === "running" ? "Pause the run" : "Resume the run"}
-                title=${status === "running" ? "Pause" : "Resume"}
-                @click=${() => this.emit(this.status === "running" ? "tc-pause" : "tc-resume", null)}
-              >${status === "running" ? pauseIcon : playIcon}</button>`
-            : nothing}
-        </header>
+        ${look === "clean" ? head : nothing}
         <ol class="ui-st__plan" aria-label="Plan">
           ${steps.map((s) => {
             const st = s.status ?? "pending";
@@ -504,10 +510,10 @@ export class TcAgentSteering extends TcElement {
   border-radius: var(--tc-tray-radius);
   background: var(--tc-surface-tray);
   container-type: inline-size;
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-lg);
   line-height: var(--tc-line-height-normal);
-  letter-spacing: -0.006em;
+  letter-spacing: var(--tc-tracking-normal);
   color: var(--tc-text-muted);
   text-align: left;
   -webkit-font-smoothing: antialiased;
@@ -540,16 +546,6 @@ export class TcAgentSteering extends TcElement {
 .ui-st__card { position: relative; border-radius: var(--tc-card-radius); background: var(--tc-surface-raised); box-shadow: var(--tc-card-shadow); }
 :where([data-look="clean"], [data-look="clean"] *).ui-st__card { overflow: hidden; }
 /* ----- The run ----- */
-:where([data-look="standard"], [data-look="standard"] *).ui-st__head { display: flex; align-items: center; gap: var(--tc-space-3); min-width: 0; padding: var(--tc-space-3-5) var(--tc-space-3-5) var(--tc-space-3) var(--tc-space-4); }
-:where([data-look="clean"], [data-look="clean"] *).ui-st__head { display: flex; align-items: center; gap: var(--tc-space-2-5); min-width: 0; padding: var(--tc-space-3) var(--tc-space-3) var(--tc-space-3) var(--tc-space-3-5); }
-.ui-st__spark { display: grid; flex: none; place-items: center; width: 16px; color: var(--tc-agent-steering-accent); }
-[data-ui="st"][data-status="paused"] .ui-st__spark { color: var(--tc-status-warning-solid); }
-[data-ui="st"][data-status="done"] .ui-st__spark { color: var(--tc-status-success-solid); }
-.ui-st__heading { display: grid; flex: 1; min-width: 0; }
-:where([data-look="standard"], [data-look="standard"] *).ui-st__title { overflow: hidden; font-weight: var(--tc-font-weight-strong); color: var(--tc-text-primary); white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="standard"], [data-look="standard"] *).ui-st__sub { overflow: hidden; font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-snug); color: var(--tc-text-muted); white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="clean"], [data-look="clean"] *).ui-st__title { overflow: hidden; font-weight: var(--tc-font-weight-strong); color: var(--tc-text-strong); white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="clean"], [data-look="clean"] *).ui-st__sub { overflow: hidden; font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); color: var(--tc-text-muted); white-space: nowrap; text-overflow: ellipsis; }
 .ui-st__dot { margin: 0 var(--tc-space-1-5); color: var(--tc-text-disabled); }
 /* The run's state: a large status pill in Standard, plain text in Clean */
 :where([data-look="standard"], [data-look="standard"] *).ui-st__state { display: inline-flex; flex: none; align-items: center; gap: var(--tc-space-2); height: var(--tc-pill-h-lg); padding: 0 var(--tc-pill-px-lg); border-radius: var(--tc-pill-radius); background: var(--tc-fill-default); font-size: var(--tc-pill-font-size-lg); font-weight: var(--tc-pill-font-weight); color: var(--tc-text-muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
@@ -560,11 +556,14 @@ export class TcAgentSteering extends TcElement {
 .ui-st__state[data-status="paused"] .ui-st__pulse { background: var(--tc-status-warning-solid); }
 .ui-st__state[data-status="done"] .ui-st__pulse { background: var(--tc-status-success-solid); }
 .ui-st__state:not([data-status="running"]) .ui-st__pulse::after { display: none; }
+/* One copy of the status at a time (display: none keeps the other from screen readers): on the right, or under the
+   title in narrow containers so the title keeps the width */
+[data-ui="st"] .ui-st__state--sub { display: none; }
 /* Pause / Resume: a secondary icon button, like Button */
 .ui-st__icon-btn { display: grid; flex: none; place-items: center; width: var(--tc-control-h-md); height: var(--tc-control-h-md); border-radius: var(--tc-control-radius-md); background: var(--tc-action-secondary-bg); box-shadow: var(--tc-action-secondary-shadow); color: var(--tc-action-secondary-fg); transition: box-shadow var(--tc-duration-fast) var(--tc-ease-standard); }
 .ui-st__icon-btn:hover { box-shadow: var(--tc-action-secondary-shadow-hover); }
 /* ----- The plan: a quiet timeline under a divider ----- */
-:where([data-look="standard"], [data-look="standard"] *).ui-st__plan { display: grid; grid-template-columns: minmax(0, 1fr); padding: var(--tc-space-2-5) var(--tc-space-4) var(--tc-space-3-5) !important; border-top: var(--tc-hairline) solid var(--tc-divider); }
+:where([data-look="standard"], [data-look="standard"] *).ui-st__plan { display: grid; grid-template-columns: minmax(0, 1fr); padding: var(--tc-space-3) var(--tc-space-4) var(--tc-space-3-5) !important; }
 :where([data-look="clean"], [data-look="clean"] *).ui-st__plan { display: grid; grid-template-columns: minmax(0, 1fr); padding: var(--tc-space-2-5) var(--tc-space-3-5) var(--tc-space-3) !important; border-top: var(--tc-hairline) solid var(--tc-divider); }
 :where([data-look="standard"], [data-look="standard"] *).ui-st__step { position: relative; padding: var(--tc-space-1-5) 0; }
 :where([data-look="clean"], [data-look="clean"] *).ui-st__step { position: relative; padding: var(--tc-space-1) 0; }
@@ -659,16 +658,11 @@ export class TcAgentSteering extends TcElement {
 @keyframes ui-st-pulse { from { opacity: 0.45; transform: scale(0.6); } to { opacity: 0; transform: scale(1.8); } }
 @keyframes ui-st-land { 0%, 30% { background-color: var(--tc-accent-subtle); box-shadow: inset 0 0 0 1px var(--tc-accent-subtle); } }
 @keyframes ui-st-land-clean { 0%, 30% { background-color: var(--tc-accent-subtle); box-shadow: inset 0 0 0 var(--tc-hairline) var(--tc-focus-ring); } }
-/* Narrow containers: the status moves under the title, so the title gets the full width */
+/* Narrow containers: the status moves under the title, and tighter side padding */
 @container (max-width: 380px) {
-  [data-ui="st"] .ui-st__head { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; row-gap: var(--tc-space-2); }
-  .ui-st__spark { grid-row: 1; align-self: center; }
-  .ui-st__heading { grid-column: 2; grid-row: 1; }
-  [data-ui="st"] .ui-st__state { grid-column: 2; grid-row: 2; justify-self: start; }
-  .ui-st__head > .ui-st__icon-btn { grid-column: 3; grid-row: 1; }
-  :where([data-look="standard"], [data-look="standard"] *).ui-st__head { padding-left: var(--tc-space-3-5); }
+  [data-ui="st"] .ui-st__state--aside { display: none; }
+  [data-ui="st"] .ui-st__state--sub { display: flex; width: fit-content; margin-top: var(--tc-space-1-5); }
   :where([data-look="standard"], [data-look="standard"] *).ui-st__plan { padding-left: var(--tc-space-3-5); padding-right: var(--tc-space-3-5); }
-  :where([data-look="clean"], [data-look="clean"] *).ui-st__head { padding-left: var(--tc-space-3); }
   :where([data-look="clean"], [data-look="clean"] *).ui-st__plan,
   :where([data-look="clean"], [data-look="clean"] *).ui-st__queue,
   :where([data-look="clean"], [data-look="clean"] *).ui-st__compose { padding-left: var(--tc-space-3); padding-right: var(--tc-space-3); }

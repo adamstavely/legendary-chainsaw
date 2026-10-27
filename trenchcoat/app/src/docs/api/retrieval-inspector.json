@@ -1,0 +1,345 @@
+{
+ "elements": [
+  {
+   "tag": "tc-retrieval-inspector",
+   "className": "TcRetrievalInspector",
+   "description": "The chunks retrieved for an answer – score, source and place, freshness, whether the answer used them – and the\nmisses the app reports.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Retrieval\"",
+     "description": "The heading",
+     "readonly": false
+    },
+    {
+     "name": "query",
+     "attribute": "query",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The query the chunks were retrieved for",
+     "readonly": false
+    },
+    {
+     "name": "chunks",
+     "attribute": null,
+     "type": "RetrievalChunk[]",
+     "default": "[]",
+     "description": "The chunks, in rank order – the first is the best match",
+     "readonly": false
+    },
+    {
+     "name": "misses",
+     "attribute": null,
+     "type": "RetrievalMiss[]",
+     "default": "[]",
+     "description": "Chunks the app reports should have been retrieved and weren't",
+     "readonly": false
+    },
+    {
+     "name": "cutoff",
+     "attribute": "cutoff",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The score below which chunks are left out of the prompt – marked on every score bar; unset marks none",
+     "readonly": false
+    },
+    {
+     "name": "maxScore",
+     "attribute": "max-score",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The top of the score scale – defaults to 1, or the highest score when that is higher",
+     "readonly": false
+    },
+    {
+     "name": "show",
+     "attribute": "show",
+     "type": "RetrievalShow",
+     "default": "\"all\"",
+     "description": "Which chunks show: \"all\", \"used\" (by the answer) or \"unused\"",
+     "readonly": false
+    },
+    {
+     "name": "selected",
+     "attribute": "selected",
+     "type": "string | null",
+     "default": "null",
+     "description": "The id of the open chunk, or null",
+     "readonly": false
+    },
+    {
+     "name": "profile",
+     "attribute": null,
+     "type": "ValidityProfileName | ValidityProfile",
+     "default": "\"standard\"",
+     "description": "How fast sources go stale, for chunks without their own `profile` – see tc-validity-badge",
+     "readonly": false
+    },
+    {
+     "name": "now",
+     "attribute": "now",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The moment freshness is counted to, in epoch ms – defaults to when each badge connected",
+     "readonly": false
+    },
+    {
+     "name": "openHandled",
+     "attribute": "open-handled",
+     "type": "boolean",
+     "default": "false",
+     "description": "Open source fires tc-open-source and the link doesn't navigate on its own; chunks without a url get the button",
+     "readonly": false
+    },
+    {
+     "name": "maxHeight",
+     "attribute": "max-height",
+     "type": "number",
+     "default": "392",
+     "description": "The list's height before it scrolls, in px",
+     "readonly": false
+    },
+    {
+     "name": "formatScore",
+     "attribute": null,
+     "type": "(score: number) => string",
+     "default": "twoPlaces",
+     "description": "Formats a score – defaults to two decimals, e.g. \"0.82\"",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-show-change",
+     "detail": "",
+     "description": "All, Used or Not used was picked ({ show }: RetrievalShowChange); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-selected-change",
+     "detail": "",
+     "description": "A chunk was picked or the open one closed ({ selected, chunk }: RetrievalSelectedChange); cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-open-source",
+     "detail": "",
+     "description": "Open source was pressed, or Enter on a chunk with a source to open ({ chunk }: RetrievalOpenSource)",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "rti",
+   "cssProperties": [
+    {
+     "name": "--tc-retrieval-inspector-row",
+     "value": "54px",
+     "looks": [
+      "both",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-retrieval-inspector-bar",
+     "value": "56px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-retrieval-inspector-fill",
+     "value": "var(--tc-accent)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-retrieval-inspector-cut",
+     "value": "var(--tc-status-warning-solid)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-retrieval-inspector-side",
+     "value": "380px",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-highlight",
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-avatar-radius-agent",
+    "--tc-border-default",
+    "--tc-border-subtle",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-sm",
+    "--tc-control-px-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-selected",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-sans",
+    "--tc-font-size-2xs",
+    "--tc-font-size-lg-plus",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xl",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-loose",
+    "--tc-line-height-normal",
+    "--tc-line-height-relaxed",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-2xs",
+    "--tc-radius-full",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-radius-xs",
+    "--tc-seg-pad",
+    "--tc-seg-thumb-bg",
+    "--tc-seg-thumb-shadow",
+    "--tc-seg-track-bg",
+    "--tc-seg-track-radius",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-5",
+    "--tc-status-warning-border",
+    "--tc-status-warning-fg",
+    "--tc-status-warning-solid",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-surface-well",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "RetrievalInspector",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading – defaults to \"Retrieval\""
+    },
+    {
+     "name": "show",
+     "type": "RetrievalShow",
+     "optional": true,
+     "description": "Which chunks show – \"all\", \"used\" or \"unused\". Controlled when defined; otherwise the component keeps it"
+    },
+    {
+     "name": "defaultShow",
+     "type": "RetrievalShow",
+     "optional": true,
+     "description": "Which chunks show at first when `show` isn't controlled"
+    },
+    {
+     "name": "onShowChange",
+     "type": "(show: RetrievalShow) => void",
+     "optional": true,
+     "description": "Called with the filter the user picked, controlled or not"
+    },
+    {
+     "name": "selected",
+     "type": "string | null",
+     "optional": true,
+     "description": "The id of the open chunk, or null. Controlled when defined"
+    },
+    {
+     "name": "defaultSelected",
+     "type": "string | null",
+     "optional": true,
+     "description": "The chunk open at first when `selected` isn't controlled"
+    },
+    {
+     "name": "onSelectedChange",
+     "type": "(id: string | null, chunk?: RetrievalChunk) => void",
+     "optional": true,
+     "description": "Called with the chunk picked (or null when it closes), controlled or not"
+    },
+    {
+     "name": "onOpenSource",
+     "type": "(chunk: RetrievalChunk) => void",
+     "optional": true,
+     "description": "Called by Open source. With it the link doesn't navigate on its own – open the document yourself"
+    }
+   ],
+   "hides": [
+    "heading",
+    "show",
+    "selected",
+    "openHandled"
+   ]
+  }
+ ],
+ "changelog": [
+  "**Quality, retrieval, safety, structured output and conversation:** `tc-eval-scorecard`, `tc-feedback-rubric`, `tc-retrieval-inspector`, `tc-extraction-review`, `tc-guardrail-notice`, `tc-clarifying-questions`, `tc-structured-output`, `tc-generated-ui` and `tc-prompt-starters`."
+ ],
+ "size": {
+  "min": 39988,
+  "gzip": 11601
+ }
+}

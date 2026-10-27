@@ -28,7 +28,7 @@ running or done.
 
 ## Anatomy
 
-1. **Header** `.ui-pl__head` – the step count, the estimate and the goal
+1. **Header** – the shared card header: a boxed icon, the goal with the step count under it, and the estimate
 2. **Step** `.ui-pl__step` – a number or status mark, the title, a detail line and the tool
 3. **Grip** `.ui-pl__grip` – drag to reorder; shows on hover or focus, in review only
 4. **Step buttons** `.ui-pl__aside` – move up, move down and remove on hover or focus in review; the timer or duration while running
@@ -37,9 +37,10 @@ running or done.
 
 ## Looks
 
-Standard is a white card on a gray tray, with the footer – the hint, Cancel and Run plan, later the run's status – on
-the tray below it. Clean keeps everything in one white card, the footer as its last row with a secondary Cancel; a
-running status line shimmers, and the done and failed marks sit in round badges.
+Standard is a white card on a gray tray, with the header on the tray above it and the footer – the hint, Cancel and
+Run plan, later the run's status – on the tray below it. Clean keeps everything in one white card, the header as its
+first row and the footer as its last with a secondary Cancel; a running status line shimmers, and the done and failed
+marks sit in round badges.
 
 ## Keyboard
 

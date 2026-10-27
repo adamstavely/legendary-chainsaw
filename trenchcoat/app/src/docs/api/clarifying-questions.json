@@ -111,14 +111,6 @@
       "standard",
       "clean"
      ]
-    },
-    {
-     "name": "--tc-clarifying-questions-icon",
-     "value": "24px",
-     "looks": [
-      "standard",
-      "clean"
-     ]
     }
    ],
    "tokens": [
@@ -177,8 +169,9 @@
     "--tc-font-size-xs",
     "--tc-font-weight-medium",
     "--tc-font-weight-regular",
-    "--tc-font-weight-strong",
     "--tc-hairline",
+    "--tc-head-gap",
+    "--tc-head-icon-size",
     "--tc-kbd-font-size",
     "--tc-kbd-font-weight",
     "--tc-kbd-h",
@@ -198,7 +191,6 @@
     "--tc-radius-full",
     "--tc-radius-lg",
     "--tc-radius-md",
-    "--tc-radius-sm",
     "--tc-shadow-raised",
     "--tc-space-0-5",
     "--tc-space-1",
@@ -328,9 +320,11 @@
    ]
   }
  ],
- "changelog": [],
+ "changelog": [
+  "**Quality, retrieval, safety, structured output and conversation:** `tc-eval-scorecard`, `tc-feedback-rubric`, `tc-retrieval-inspector`, `tc-extraction-review`, `tc-guardrail-notice`, `tc-clarifying-questions`, `tc-structured-output`, `tc-generated-ui` and `tc-prompt-starters`."
+ ],
  "size": {
-  "min": 33399,
-  "gzip": 9379
+  "min": 34372,
+  "gzip": 9886
  }
 }

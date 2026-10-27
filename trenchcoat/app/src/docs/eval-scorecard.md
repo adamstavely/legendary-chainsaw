@@ -37,7 +37,7 @@ a change ships, and it stays fast with 10,000 cases.
 
 ## Looks
 
-Standard puts the heading on a gray tray and the scorecard on a white card inside it. Clean is one white card with
+Standard puts the header on a gray tray and the scorecard on a white card inside it. Clean is one white card, the header as its first row, with
 hairline dividers, uppercase captions on the grid and the open case, and plain text on its marked words. Wide (from
 860 px), the open case sits beside the grid; narrower, it opens below, the columns tighten and the case's tags give
 way.

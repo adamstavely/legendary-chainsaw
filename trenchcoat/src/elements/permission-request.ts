@@ -5,6 +5,7 @@ import { keyed } from "lit/directives/keyed.js";
 import { repeat } from "lit/directives/repeat.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController, rescueFocus } from "./internal/controllers";
 
 /*
@@ -15,7 +16,9 @@ import { FocusRescueController, rescueFocus } from "./internal/controllers";
  *   · Allow or Deny – Enter and Esc work while the card has focus
  *   · then the card folds into one line: "Allowed for 1 hour" with a bar that drains until the right expires, and
  *     Revoke to take it back; destructive actions can never be allowed for always
- * Standard: a white card on a gray tray. Clean: one quiet white card, smaller and lighter throughout.
+ * A short header ("Permission", with the risk as a pill) sits above the sentence. Standard: the header on a gray tray,
+ * then a white card, then the answer on the tray. Clean: one quiet white card – the header is its first row – smaller
+ * and lighter throughout.
  *
  *   <tc-permission-request .agent=${{ name: "Coder" }} action="push to main" risk="risky"></tc-permission-request>
  */
@@ -417,7 +420,6 @@ export class TcPermissionRequest extends TcElement {
               ? html`<span class="ui-pr__sub">${this.toolIcon ? html`<span class="ui-pr__tool">${clone(this.toolIcon)}</span>` : nothing}${target ?? agent.model}</span>`
               : nothing}
           </span>
-          ${risk !== "safe" ? html`<span class="ui-pr__risk" data-risk=${risk}>${risk === "risky" ? riskyIcon() : destructiveIcon()}${RISK[risk]}</span>` : nothing}
         </header>
         ${reason ? html`<p class="ui-pr__why" id=${`${uid}-why`}>${reason}</p>` : nothing}
         ${this.preview.length > 0 ? this.renderPreview() : nothing}
@@ -467,6 +469,7 @@ export class TcPermissionRequest extends TcElement {
                   : "Always allowed"
         }: ${this.agent.name} ${d.allow && !expired ? "may" : "may not"} ${this.action}`
       : "";
+    // The header (.tc-head): on the tray above the white card in Standard, the card's first row in Clean
     return html`
       <span class="ui-pr__sr" role="status">${announcement}</span>
       <div
@@ -477,6 +480,14 @@ export class TcPermissionRequest extends TcElement {
         aria-describedby=${ifDefined(d || !this.reason ? undefined : `${this.uid}-why`)}
         @keydown=${this.onKey}
       >
+        ${cardHead({
+          icon: svg`<path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"></path><circle cx="16.5" cy="7.5" r=".5" fill="currentColor"></circle>`,
+          title: "Permission",
+          aside:
+            !d && this.risk !== "safe"
+              ? html`<span class="ui-pr__risk" data-risk=${this.risk}>${this.risk === "risky" ? riskyIcon() : destructiveIcon()}${RISK[this.risk]}</span>`
+              : undefined,
+        })}
         ${d ? this.renderDecided(d) : this.renderAsk()}
       </div>
     `;
@@ -497,7 +508,6 @@ export class TcPermissionRequest extends TcElement {
   font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-lg);
   line-height: var(--tc-line-height-normal);
-  letter-spacing: -0.006em;
   color: var(--tc-text-muted);
   text-align: left;
   -webkit-font-smoothing: antialiased;
@@ -531,25 +541,23 @@ export class TcPermissionRequest extends TcElement {
 /* ----- Who asks for what ----- */
 .ui-pr__head { display: flex; align-items: center; }
 :where([data-look="standard"], [data-look="standard"] *).ui-pr__head { gap: var(--tc-space-3); padding: var(--tc-space-4) var(--tc-space-4) 0; }
-:where([data-look="clean"], [data-look="clean"] *).ui-pr__head { gap: var(--tc-space-2-5); padding: var(--tc-space-3-5) var(--tc-space-3-5) 0 var(--tc-space-4); }
+:where([data-look="clean"], [data-look="clean"] *).ui-pr__head { gap: var(--tc-space-2-5); padding: 0 var(--tc-space-3-5) 0 var(--tc-space-4); }
 .ui-pr__avatar { display: grid; flex: none; place-items: center; background: var(--tc-surface-raised); box-shadow: var(--tc-shadow-raised); font-weight: var(--tc-avatar-font-weight); }
 :where([data-look="standard"], [data-look="standard"] *).ui-pr__avatar { width: 32px; height: 32px; border-radius: var(--tc-radius-lg); font-size: var(--tc-font-size-sm); color: var(--tc-text-muted); }
 :where([data-look="standard"], [data-look="standard"] *).ui-pr__avatar[data-logo] > svg { width: 18px; height: 18px; }
 :where([data-look="clean"], [data-look="clean"] *).ui-pr__avatar { width: 28px; height: 28px; border-radius: var(--tc-avatar-radius-agent); font-size: var(--tc-font-size-xs); color: var(--tc-text-secondary); }
 :where([data-look="clean"], [data-look="clean"] *).ui-pr__avatar[data-logo] > svg { width: 16px; height: 16px; }
 .ui-pr__heading { display: grid; flex: 1; min-width: 0; }
-.ui-pr__title b { font-weight: var(--tc-font-weight-strong); }
+/* The title is a sentence: the agent and the action in the title colour, the words between them quieter */
+.ui-pr__title { font-size: var(--tc-title-font-size); line-height: var(--tc-title-line-height); letter-spacing: var(--tc-title-tracking); }
+.ui-pr__title b { font-weight: var(--tc-title-font-weight); color: var(--tc-title-color); }
 :where([data-look="standard"], [data-look="standard"] *).ui-pr__title { color: var(--tc-text-muted); }
-:where([data-look="standard"], [data-look="standard"] *).ui-pr__title b { color: var(--tc-text-primary); }
 :where([data-look="clean"], [data-look="clean"] *).ui-pr__title { color: var(--tc-text-secondary); }
-:where([data-look="clean"], [data-look="clean"] *).ui-pr__title b { color: var(--tc-text-strong); }
-.ui-pr__sub { display: flex; align-items: center; gap: var(--tc-space-1); min-width: 0; overflow: hidden; color: var(--tc-text-muted); white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="standard"], [data-look="standard"] *).ui-pr__sub { font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-snug); }
-:where([data-look="clean"], [data-look="clean"] *).ui-pr__sub { font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); }
+.ui-pr__sub { display: flex; align-items: center; gap: var(--tc-space-1); min-width: 0; overflow: hidden; font-size: var(--tc-subtitle-font-size); line-height: var(--tc-subtitle-line-height); color: var(--tc-subtitle-color); white-space: nowrap; text-overflow: ellipsis; }
 .ui-pr__tool { display: grid; flex: none; place-items: center; width: 12px; height: 12px; }
 .ui-pr__tool > svg { width: 12px; height: 12px; }
 /* Risk: a header pill – glyph and word on a status tone */
-.ui-pr__risk { display: inline-flex; flex: none; align-self: start; align-items: center; gap: var(--tc-space-1); height: var(--tc-pill-h-lg); margin-top: 1px; padding: 0 var(--tc-pill-px-lg) 0 calc(var(--tc-pill-px-lg) - 2px); border-radius: var(--tc-pill-radius); background: var(--tc-status-warning-bg); font-size: var(--tc-pill-font-size-lg); font-weight: var(--tc-pill-font-weight); line-height: var(--tc-line-height-tight); color: var(--tc-status-warning-fg); }
+.ui-pr__risk { display: inline-flex; flex: none; align-items: center; gap: var(--tc-space-1); height: var(--tc-pill-h-lg); padding: 0 var(--tc-pill-px-lg) 0 calc(var(--tc-pill-px-lg) - 2px); border-radius: var(--tc-pill-radius); background: var(--tc-status-warning-bg); font-size: var(--tc-pill-font-size-lg); font-weight: var(--tc-pill-font-weight); line-height: var(--tc-line-height-tight); color: var(--tc-status-warning-fg); }
 .ui-pr__risk[data-risk="destructive"] { background: var(--tc-status-danger-bg); color: var(--tc-status-danger-fg); }
 /* The agent's reason: a quiet line with a rule on the left */
 .ui-pr__why { padding-left: var(--tc-space-2-5); }
@@ -559,9 +567,9 @@ export class TcPermissionRequest extends TcElement {
 .ui-pr__preview { margin-top: var(--tc-space-3-5); border-top: var(--tc-hairline) solid var(--tc-divider); }
 :where([data-look="standard"], [data-look="standard"] *).ui-pr__preview { padding: var(--tc-space-3) var(--tc-space-2) var(--tc-space-1-5); }
 :where([data-look="clean"], [data-look="clean"] *).ui-pr__preview { padding: var(--tc-space-3) var(--tc-space-2-5) var(--tc-space-1); }
-.ui-pr__label { display: flex; align-items: center; gap: var(--tc-space-1-5); color: var(--tc-text-muted); }
-:where([data-look="standard"], [data-look="standard"] *).ui-pr__label { margin: 0 var(--tc-space-2) var(--tc-space-1) !important; font-size: var(--tc-font-size-sm); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-snug); }
-:where([data-look="clean"], [data-look="clean"] *).ui-pr__label { margin: 0 var(--tc-space-1-5) var(--tc-space-1) !important; font-size: var(--tc-font-size-sm); font-weight: var(--tc-font-weight-regular); line-height: var(--tc-line-height-tight); }
+.ui-pr__label { display: flex; align-items: center; gap: var(--tc-space-1-5); font-size: var(--tc-caption-font-size); font-weight: var(--tc-caption-font-weight); line-height: var(--tc-caption-line-height); letter-spacing: var(--tc-caption-tracking); text-transform: var(--tc-caption-transform); color: var(--tc-caption-color); }
+:where([data-look="standard"], [data-look="standard"] *).ui-pr__label { margin: 0 var(--tc-space-2) var(--tc-space-1) !important; }
+:where([data-look="clean"], [data-look="clean"] *).ui-pr__label { margin: 0 var(--tc-space-1-5) var(--tc-space-1) !important; }
 /* The count: a badge */
 .ui-pr__count { display: grid; place-items: center; border-radius: var(--tc-radius-badge); font-variant-numeric: tabular-nums; }
 :where([data-look="standard"], [data-look="standard"] *).ui-pr__count { min-width: 18px; height: 18px; padding: 0 var(--tc-space-1); background: var(--tc-fill-default); font-size: var(--tc-font-size-xs); color: var(--tc-text-muted); }

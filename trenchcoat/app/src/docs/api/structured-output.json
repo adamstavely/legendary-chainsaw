@@ -212,7 +212,6 @@
     "--tc-font-size-md",
     "--tc-font-size-sm",
     "--tc-font-size-xs",
-    "--tc-font-weight-medium",
     "--tc-font-weight-regular",
     "--tc-hairline",
     "--tc-icon-muted",
@@ -253,6 +252,11 @@
     "--tc-text-muted",
     "--tc-text-primary",
     "--tc-text-secondary",
+    "--tc-title-color",
+    "--tc-title-font-size",
+    "--tc-title-font-weight",
+    "--tc-title-line-height",
+    "--tc-title-tracking",
     "--tc-tray-inset",
     "--tc-tray-radius"
    ]
@@ -314,9 +318,11 @@
    ]
   }
  ],
- "changelog": [],
+ "changelog": [
+  "**Quality, retrieval, safety, structured output and conversation:** `tc-eval-scorecard`, `tc-feedback-rubric`, `tc-retrieval-inspector`, `tc-extraction-review`, `tc-guardrail-notice`, `tc-clarifying-questions`, `tc-structured-output`, `tc-generated-ui` and `tc-prompt-starters`."
+ ],
  "size": {
-  "min": 40044,
-  "gzip": 13137
+  "min": 42101,
+  "gzip": 13631
  }
 }

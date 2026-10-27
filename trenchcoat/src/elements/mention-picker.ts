@@ -781,7 +781,6 @@ export class TcMentionPicker extends TcElement {
   font-size: var(--tc-avatar-font-size);
   line-height: var(--tc-line-height-none);
   font-weight: var(--tc-avatar-font-weight);
-  letter-spacing: 0.02em;
 }
 :where([data-look="standard"], [data-look="standard"] *).ui-mnp__avatar { width: var(--tc-avatar-md); height: var(--tc-avatar-md); background: var(--tc-fill-strong); }
 :where([data-look="clean"], [data-look="clean"] *).ui-mnp__avatar { width: var(--tc-avatar-sm); height: var(--tc-avatar-sm); background: var(--tc-fill-default); }

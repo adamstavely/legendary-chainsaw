@@ -4,6 +4,7 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { keyed } from "lit/directives/keyed.js";
 import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController, OnScreenController, rescueFocus } from "./internal/controllers";
 
 /*
@@ -94,7 +95,8 @@ const spinner = html`<svg class="ui-pl__spinner" viewBox="0 0 16 16">${Array.fro
   { length: 8 },
   (_, i) => svg`<line x1="8" y1="1.75" x2="8" y2="4.75" transform=${`rotate(${i * 45} 8 8)`} style=${`animation-delay: ${(i - 8) * 100}ms`}></line>`,
 )}</svg>`;
-const listIcon = html`<svg viewBox="0 0 16 16">${svg`<path d="M6.5 4.5h7M6.5 8h7M6.5 11.5h7"></path><circle cx="3.25" cy="4.5" r=".6"></circle><circle cx="3.25" cy="8" r=".6"></circle><circle cx="3.25" cy="11.5" r=".6"></circle>`}</svg>`;
+// The header icon: a checklist
+const planIcon = svg`<path d="m3 7 2 2 4-4"></path><path d="m3 17 2 2 4-4"></path><path d="M13 6h8M13 12h8M13 18h8"></path>`;
 const clockIcon = html`<svg viewBox="0 0 16 16" aria-hidden="true">${svg`<circle cx="8" cy="8" r="6"></circle><path d="M8 5v3.2l2 1.3"></path>`}</svg>`;
 const gripIcon = html`<svg viewBox="0 0 16 16">${svg`<circle cx="6" cy="4" r="1.1"></circle><circle cx="10" cy="4" r="1.1"></circle><circle cx="6" cy="8" r="1.1"></circle><circle cx="10" cy="8" r="1.1"></circle><circle cx="6" cy="12" r="1.1"></circle><circle cx="10" cy="12" r="1.1"></circle>`}</svg>`;
 const doneMark = html`<svg viewBox="0 0 16 16" class="ui-pl__mark">${svg`<path d="M4.2 8.4 6.8 11l5-5.6" pathLength="1" class="ui-pl__draw"></path>`}</svg>`;
@@ -734,18 +736,19 @@ export class TcAgentPlan extends TcElement {
     const clean = this.resolvedLook === "clean";
     const foot = this.renderFoot(clean);
     const estimate = draft ? this.estimate : "";
+    const count = html`<span class="ui-pl__state-label">Plan · ${n} ${n === 1 ? "step" : "steps"}</span>`;
+    // The goal is the title and the step count the line under it; with no goal, the count is the title
+    const head = cardHead({
+      icon: planIcon,
+      title: this.heading || count,
+      subtitle: this.heading ? count : undefined,
+      aside: estimate ? html`<span class="ui-pl__estimate">${clockIcon}<span><span class="ui-pl__sr">Estimated time </span>${estimate}</span></span>` : undefined,
+    });
+    // Standard: the header on the tray above the white card. Clean: the card's first row
     return html`
+      ${clean ? nothing : head}
       <div class="ui-pl__card">
-        <div class="ui-pl__head">
-          <div class="ui-pl__meta">
-            <span class="ui-pl__state">
-              <span class="ui-pl__state-icon" aria-hidden="true">${listIcon}</span>
-              <span class="ui-pl__state-label">Plan · ${n} ${n === 1 ? "step" : "steps"}</span>
-            </span>
-            ${estimate ? html`<span class="ui-pl__estimate">${clockIcon}<span><span class="ui-pl__sr">Estimated time </span>${estimate}</span></span>` : nothing}
-          </div>
-          ${this.heading ? html`<h3 class="ui-pl__title">${this.heading}</h3>` : nothing}
-        </div>
+        ${clean ? head : nothing}
         <p id=${this.hintId} class="ui-pl__sr">Press Enter to rename, Alt plus arrow keys to move, Delete to remove.</p>
         <ol class="ui-pl__list" aria-label=${this.heading ? `Plan: ${this.heading}` : "Plan"}>
           ${repeat(
@@ -799,7 +802,7 @@ export class TcAgentPlan extends TcElement {
   font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-lg);
   line-height: var(--tc-line-height-normal);
-  letter-spacing: -0.006em;
+  letter-spacing: var(--tc-tracking-normal);
   text-align: left;
   -webkit-font-smoothing: antialiased;
 }
@@ -856,7 +859,8 @@ export class TcAgentPlan extends TcElement {
 [data-ui="pl"] *::after {
   box-sizing: border-box;
 }
-[data-ui="pl"] svg {
+/* Zero specificity, so the header icon keeps its own size */
+:where([data-ui="pl"]) svg {
   display: block;
   width: 100%;
   height: 100%;
@@ -883,55 +887,12 @@ export class TcAgentPlan extends TcElement {
   white-space: nowrap;
   border: 0;
 }
-/* Header: a quiet status line, then the goal */
-:where([data-look="standard"], [data-look="standard"] *).ui-pl__head {
-  display: grid;
-  gap: var(--tc-space-1);
-  padding: var(--tc-space-4) var(--tc-space-4-5) var(--tc-space-2);
-}
-:where([data-look="standard"], [data-look="standard"] *).ui-pl__meta {
-  display: flex;
-  align-items: center;
-  gap: var(--tc-space-2-5);
-  min-height: 18px;
-  font-size: var(--tc-font-size-sm);
-  line-height: var(--tc-line-height-snug);
-  color: var(--tc-text-muted);
-}
-:where([data-look="standard"], [data-look="standard"] *).ui-pl__state {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--tc-space-2);
-  min-width: 0;
-}
-/* Header: a quiet meta line, then the goal */
-:where([data-look="clean"], [data-look="clean"] *).ui-pl__head {
-  display: grid;
-  gap: var(--tc-space-1);
-  padding: var(--tc-space-4) var(--tc-space-4) var(--tc-space-2-5);
-}
-:where([data-look="clean"], [data-look="clean"] *).ui-pl__meta {
-  display: flex;
-  align-items: center;
-  gap: var(--tc-space-2-5);
-  min-height: 16px;
-  font-size: var(--tc-font-size-sm);
-  line-height: var(--tc-line-height-tight);
-  color: var(--tc-text-muted);
-}
-:where([data-look="clean"], [data-look="clean"] *).ui-pl__state {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--tc-space-1-5);
-  min-width: 0;
-}
 .ui-pl__state-label {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
 }
-:where([data-look="standard"], [data-look="standard"] *).ui-pl__state-icon,
 :where([data-look="standard"], [data-look="standard"] *).ui-pl__status-icon {
   flex: none;
   width: 13px;
@@ -942,25 +903,13 @@ export class TcAgentPlan extends TcElement {
   stroke-linecap: round;
   stroke-linejoin: round;
 }
-:where([data-look="clean"], [data-look="clean"] *).ui-pl__state-icon {
-  flex: none;
-  width: 16px;
-  height: 16px;
-  color: var(--tc-icon-muted);
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.1;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-.ui-pl__state-icon circle[r=".6"] {
-  fill: currentColor;
-}
 :where([data-look="standard"], [data-look="standard"] *).ui-pl__estimate {
   display: inline-flex;
   align-items: center;
   gap: var(--tc-space-1);
-  margin-left: auto;
+  font-size: var(--tc-font-size-sm);
+  line-height: var(--tc-line-height-snug);
+  color: var(--tc-text-muted);
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
 }
@@ -972,15 +921,6 @@ export class TcAgentPlan extends TcElement {
   stroke-width: 1.4;
   stroke-linecap: round;
   stroke-linejoin: round;
-}
-:where([data-look="standard"], [data-look="standard"] *).ui-pl__title {
-  margin: 0;
-  color: var(--tc-text-primary);
-  font-size: 15px;
-  font-weight: var(--tc-font-weight-semibold);
-  line-height: var(--tc-line-height-relaxed);
-  letter-spacing: -0.012em;
-  text-wrap: balance;
 }
 /* Steps */
 :where([data-look="standard"], [data-look="standard"] *).ui-pl__list {
@@ -1013,7 +953,9 @@ export class TcAgentPlan extends TcElement {
   display: inline-flex;
   align-items: center;
   gap: var(--tc-space-1-5);
-  margin-left: auto;
+  font-size: var(--tc-font-size-sm);
+  line-height: var(--tc-line-height-snug);
+  color: var(--tc-text-muted);
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
 }
@@ -1026,14 +968,6 @@ export class TcAgentPlan extends TcElement {
   stroke-width: 1.1;
   stroke-linecap: round;
   stroke-linejoin: round;
-}
-:where([data-look="clean"], [data-look="clean"] *).ui-pl__title {
-  margin: 0;
-  color: var(--tc-text-strong);
-  font-size: 15px;
-  font-weight: var(--tc-font-weight-medium);
-  line-height: var(--tc-line-height-loose);
-  text-wrap: balance;
 }
 /* Steps */
 :where([data-look="clean"], [data-look="clean"] *).ui-pl__list {
@@ -1328,7 +1262,7 @@ export class TcAgentPlan extends TcElement {
   border-radius: var(--tc-radius-sm);
   background: var(--tc-fill-default);
   color: var(--tc-text-secondary);
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-family: var(--tc-font-mono);
   font-size: var(--tc-font-size-xs);
   line-height: var(--tc-line-height-tight);
   letter-spacing: 0;
@@ -1354,7 +1288,7 @@ export class TcAgentPlan extends TcElement {
   border-radius: var(--tc-radius-badge);
   background: var(--tc-fill-default);
   color: var(--tc-text-secondary);
-  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-family: var(--tc-font-mono);
   font-size: var(--tc-font-size-xs);
   line-height: var(--tc-line-height-tight);
   letter-spacing: 0;
@@ -1965,9 +1899,6 @@ export class TcAgentPlan extends TcElement {
   }
 }
 @container (max-width: 340px) {
-:where([data-look="standard"], [data-look="standard"] *).ui-pl__head {
-    padding: var(--tc-space-3-5) var(--tc-space-3-5) var(--tc-space-2);
-}
 :where([data-look="standard"], [data-look="standard"] *).ui-pl__list {
     padding-inline: var(--tc-space-1);
 }
@@ -1987,9 +1918,6 @@ export class TcAgentPlan extends TcElement {
 }
 }
 @container (max-width: 340px) {
-:where([data-look="clean"], [data-look="clean"] *).ui-pl__head {
-    padding: var(--tc-space-3-5) var(--tc-space-3-5) var(--tc-space-2-5);
-}
 :where([data-look="clean"], [data-look="clean"] *).ui-pl__list {
     padding-inline: var(--tc-space-1);
 }

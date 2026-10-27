@@ -26,7 +26,7 @@ move to the next, and long sessions stay fast – the list renders only the rows
 
 ## Anatomy
 
-1. **Progress** `.ui-vq__progress` – how many claims are reviewed, coloured by verdict
+1. **Progress** `.ui-vq__progress` – under the heading: how many claims are reviewed, coloured by verdict
 2. **Filters** `.ui-vq__filters` – To review, Reviewed or All, with counts
 3. **List** `.ui-vq__rows` – the claims, each with its status, origin and source type
 4. **Claim** `.ui-vq__row` – one claim; the one you're on is marked

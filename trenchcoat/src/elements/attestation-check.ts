@@ -2,6 +2,7 @@ import { html, nothing, svg, type PropertyValues } from "lit";
 import { property, state } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController } from "./internal/controllers";
 import { copyText } from "./internal/util";
 
@@ -71,7 +72,8 @@ const shortHash = (h: string) => {
 
 /* shield, shield-check, shield-x, upload, check, x, minus, copy, rotate-ccw: Lucide (ISC, lucide.dev) */
 const shieldPath = svg`<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path>`;
-const shieldMark = html`<svg class="ui-atc__mark-svg" viewBox="0 0 24 24" aria-hidden="true">${shieldPath}${svg`<path d="m9 12 2 2 4-4"></path>`}</svg>`;
+// The header icon: a shield with a check
+const shieldMark = svg`${shieldPath}<path d="m9 12 2 2 4-4"></path>`;
 const shieldOk = html`<svg class="ui-atc__verdict-svg" viewBox="0 0 24 24" aria-hidden="true">${shieldPath}${svg`<path d="m9 12 2 2 4-4"></path>`}</svg>`;
 const shieldBad = html`<svg class="ui-atc__verdict-svg" viewBox="0 0 24 24" aria-hidden="true">${shieldPath}${svg`<path d="m14.5 9.5-5 5"></path><path d="m9.5 9.5 5 5"></path>`}</svg>`;
 const uploadIcon = html`<svg class="ui-atc__glyph" viewBox="0 0 24 24" aria-hidden="true">${svg`<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><path d="m17 8-5-5-5 5"></path><path d="M12 3v12"></path>`}</svg>`;
@@ -393,12 +395,13 @@ export class TcAttestationCheck extends TcElement {
     if (this.phase === "checking") body = this.renderChecking();
     else if (r) body = this.renderResult(r);
     else body = html`${this.phase === "error" ? this.renderError() : nothing}${this.renderForm()}`;
+    // Standard: the header sits on the tray above the card; Clean: it's the card's first row
+    const clean = this.resolvedLook === "clean";
+    const head = cardHead({ icon: shieldMark, title: this.heading, id: titleId });
     return html`
-      <div class="ui-atc__bar">
-        <span class="ui-atc__mark">${shieldMark}</span>
-        <span class="ui-atc__title" id=${titleId}>${this.heading}</span>
-      </div>
+      ${clean ? nothing : head}
       <div class="ui-atc__card">
+        ${clean ? head : nothing}
         <div class="ui-atc__body">${body}</div>
         ${r && this.phase !== "checking"
           ? html`<div class="ui-atc__foot">
@@ -430,7 +433,7 @@ export class TcAttestationCheck extends TcElement {
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-regular);
   line-height: var(--tc-line-height-normal);
-  letter-spacing: -0.006em;
+  letter-spacing: var(--tc-tracking-normal);
   color: var(--tc-text-muted);
   text-align: left;
   -webkit-font-smoothing: antialiased;
@@ -462,15 +465,6 @@ export class TcAttestationCheck extends TcElement {
 .ui-atc__glyph { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; }
 :where([data-look="standard"], [data-look="standard"] *).ui-atc__glyph { stroke-width: 1.8; }
 :where([data-look="clean"], [data-look="clean"] *).ui-atc__glyph { stroke-width: 1.4; }
-/* ----- The bar ----- */
-.ui-atc__bar { display: flex; align-items: center; gap: var(--tc-space-2); min-width: 0; }
-:where([data-look="standard"], [data-look="standard"] *).ui-atc__bar { padding: var(--tc-space-2) var(--tc-space-3) var(--tc-space-3); }
-:where([data-look="clean"], [data-look="clean"] *).ui-atc__bar { margin-bottom: var(--tc-space-3); }
-.ui-atc__mark { display: grid; flex: none; place-items: center; width: 16px; color: var(--tc-accent-text); }
-.ui-atc__mark-svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-.ui-atc__title { min-width: 0; color: var(--tc-text-strong); }
-:where([data-look="standard"], [data-look="standard"] *).ui-atc__title { font-weight: var(--tc-font-weight-semibold); }
-:where([data-look="clean"], [data-look="clean"] *).ui-atc__title { font-weight: var(--tc-font-weight-medium); }
 /* ----- The white card ----- */
 .ui-atc__card { overflow: hidden; border-radius: var(--tc-card-radius); background: var(--tc-attestation-check-panel-bg); box-shadow: var(--tc-card-shadow); }
 .ui-atc__body { display: grid; padding: var(--tc-space-3); }

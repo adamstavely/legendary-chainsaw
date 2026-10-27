@@ -606,7 +606,6 @@ export class TcReflectionGate extends TcElement {
   font-size: var(--tc-font-size-md);
   font-weight: var(--tc-font-weight-regular);
   line-height: var(--tc-line-height-normal);
-  letter-spacing: -0.006em;
   color: var(--tc-text-secondary);
   text-align: left;
   -webkit-font-smoothing: antialiased;
@@ -634,9 +633,8 @@ export class TcReflectionGate extends TcElement {
 .ui-rg__mark-svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 :where([data-look="clean"], [data-look="clean"] *).ui-rg__mark-svg { stroke-width: 1.5; }
 .ui-rg__head { display: grid; gap: var(--tc-space-0-5); min-width: 0; }
-.ui-rg__title { font-weight: var(--tc-font-weight-semibold); color: var(--tc-text-strong); }
-:where([data-look="clean"], [data-look="clean"] *).ui-rg__title { font-weight: var(--tc-font-weight-medium); }
-.ui-rg__desc { font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-snug); color: var(--tc-text-muted); text-wrap: pretty; }
+.ui-rg__title { font-size: var(--tc-title-font-size); font-weight: var(--tc-title-font-weight); line-height: var(--tc-title-line-height); letter-spacing: var(--tc-title-tracking); color: var(--tc-title-color); }
+.ui-rg__desc { font-size: var(--tc-subtitle-font-size); line-height: var(--tc-subtitle-line-height); color: var(--tc-subtitle-color); text-wrap: pretty; }
 /* ----- The card ----- */
 .ui-rg__card { display: grid; min-width: 0; border-radius: var(--tc-card-radius); background: var(--tc-surface-on-tray); box-shadow: var(--tc-card-shadow); }
 :where([data-look="clean"], [data-look="clean"] *).ui-rg__card { border-radius: 0 0 var(--tc-card-radius) var(--tc-card-radius); background: none; box-shadow: none; }
@@ -688,7 +686,7 @@ export class TcReflectionGate extends TcElement {
 [data-ui="rg"] .ui-rg__choices--seg .ui-rg__choice:is(:hover, [aria-checked="true"]) .ui-rg__choice-title { color: var(--tc-text-primary); }
 /* ----- The answer: a quote on a well; hidden, a veil of placeholder lines ----- */
 .ui-rg__answer { display: grid; gap: var(--tc-space-1); min-width: 0; padding: var(--tc-space-2-5) var(--tc-space-3); border-radius: var(--tc-radius-lg); background: var(--tc-surface-well); box-shadow: inset 0 0 0 var(--tc-hairline) var(--tc-border-subtle); }
-.ui-rg__caption { font-size: var(--tc-font-size-xs); font-weight: var(--tc-font-weight-medium); color: var(--tc-text-muted); }
+.ui-rg__caption { font-size: var(--tc-caption-font-size); font-weight: var(--tc-caption-font-weight); line-height: var(--tc-caption-line-height); letter-spacing: var(--tc-caption-tracking); text-transform: var(--tc-caption-transform); color: var(--tc-caption-color); }
 .ui-rg__quote { color: var(--tc-text-primary); line-height: var(--tc-line-height-relaxed); white-space: pre-line; overflow-wrap: anywhere; }
 .ui-rg__miss { padding: 0 var(--tc-space-0-5); border-radius: var(--tc-radius-xs); background: var(--tc-status-warning-bg); color: var(--tc-status-warning-fg); text-decoration: underline dotted; text-underline-offset: 3px; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
 .ui-rg__veil { display: grid; gap: var(--tc-space-2-5); padding: var(--tc-space-3); border-radius: var(--tc-radius-lg); background: var(--tc-surface-well); box-shadow: inset 0 0 0 var(--tc-hairline) var(--tc-border-subtle); }

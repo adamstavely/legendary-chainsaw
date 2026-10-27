@@ -25,7 +25,7 @@ memory off without deleting anything, and “New memory” adds one by hand.
 
 ## Anatomy
 
-1. **Head** `.ui-mp__head` – the title, the count and the “Use memory” switch
+1. **Header** `.tc-head` – a brain icon and the title, with the count and the “Use memory” switch at the right
 2. **Filters** `.ui-mp__chips` – All and one chip per category, with counts; search sits beside them
 3. **Memory** `.ui-mp__item` – the fact, where it came from and when, and Paused
 4. **Actions** `.ui-mp__acts` – Edit, Pause or Resume, and Forget

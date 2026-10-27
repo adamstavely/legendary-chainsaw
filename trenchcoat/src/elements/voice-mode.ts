@@ -287,8 +287,7 @@ export class TcVoiceMode extends TcElement {
 :where([data-look="standard"], [data-look="standard"] *).ui-vm__card { background: var(--tc-surface-on-tray); }
 :where([data-look="standard"], [data-look="standard"] *).ui-vm__body { padding: var(--tc-space-5) var(--tc-space-5) var(--tc-space-4); }
 :where([data-look="clean"], [data-look="clean"] *).ui-vm__body { padding: var(--tc-space-4) var(--tc-space-4) var(--tc-space-3); }
-:where([data-look="standard"], [data-look="standard"] *).ui-vm__heading { margin: 0; font-size: var(--tc-font-size-lg-plus); font-weight: var(--tc-font-weight-semibold); line-height: var(--tc-line-height-relaxed); color: var(--tc-text-primary); }
-:where([data-look="clean"], [data-look="clean"] *).ui-vm__heading { margin: 0; font-size: var(--tc-font-size-lg); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-normal); color: var(--tc-text-strong); }
+.ui-vm__heading { margin: 0; color: var(--tc-title-color); font-size: var(--tc-title-font-size); font-weight: var(--tc-title-font-weight); line-height: var(--tc-title-line-height); letter-spacing: var(--tc-title-tracking); }
 
 /* ----- The orb and the state under it ----- */
 .ui-vm__stage { display: grid; justify-items: center; gap: var(--tc-space-1); }

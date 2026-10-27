@@ -182,7 +182,8 @@
     "--tc-surface-raised",
     "--tc-text-muted",
     "--tc-text-primary",
-    "--tc-text-secondary"
+    "--tc-text-secondary",
+    "--tc-tracking-normal"
    ]
   }
  ],
@@ -219,7 +220,7 @@
  ],
  "changelog": [],
  "size": {
-  "min": 18149,
-  "gzip": 6008
+  "min": 20120,
+  "gzip": 6543
  }
 }

@@ -4,6 +4,7 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { repeat } from "lit/directives/repeat.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController, OnScreenController } from "./internal/controllers";
 
 /*
@@ -19,8 +20,8 @@ import { FocusRescueController, OnScreenController } from "./internal/controller
  *   <tc-agent-ledger agent="Launch agent" .entries=${[{ id: "a", action: "Changed price", system: "Stripe", at }]}>
  *   </tc-agent-ledger>
  *
- * Clean drops the gray tray for a plain bar above one quiet white panel: smaller logo tiles, medium weights, 0.5px
- * dividers, and Undo / Redo as flat text buttons instead of raised pills.
+ * Clean drops the gray tray for one quiet white card with the header as its first row: smaller logo tiles, medium
+ * weights, 0.5px dividers, and Undo / Redo as flat text buttons instead of raised pills.
  */
 
 export type LedgerEntry = {
@@ -98,7 +99,8 @@ const chainsOf = (entries: LedgerEntry[]) => {
 /* ---------- Icons ---------- */
 
 /* A small ledger mark for the title (drawn for Trenchcoat) */
-const ledgerMark = html`<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">${svg`<rect x="2" y="1.8" width="12" height="12.4" rx="2.6" stroke="currentColor" stroke-width="1.3"></rect><path d="M5 5.4h6M5 8h6M5 10.6h3.6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"></path>`}</svg>`;
+// The header icon: a ledger page
+const ledgerIcon = svg`<rect x="4" y="3" width="16" height="18" rx="2.5"></rect><path d="M8 8h8M8 12h8M8 16h5"></path>`;
 /* undo-2, redo-2 and lock: Lucide (ISC, lucide.dev) */
 const undoIcon = html`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${svg`<path d="M9 14 4 9l5-5"></path><path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5a5.5 5.5 0 0 1-5.5 5.5H11"></path>`}</svg>`;
 const redoIcon = html`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${svg`<path d="m15 14 5-5-5-5"></path><path d="M20 9H9.5A5.5 5.5 0 0 0 4 14.5A5.5 5.5 0 0 0 9.5 20H13"></path>`}</svg>`;
@@ -286,19 +288,25 @@ export class TcAgentLedger extends TcElement {
     const undoneCount = this.entries.filter((e) => undone.has(e.id)).length;
     const initial = this.initial ?? new Set<string>();
 
-    return html`
-      <header class="ui-alg__bar">
-        <span class="ui-alg__mark">${ledgerMark}</span>
-        <span class="ui-alg__title" id=${this.label}>${this.heading}</span>
-        ${this.agent ? html`<span class="ui-alg__agent" title=${this.agent}>${this.agent}</span>` : nothing}
-        <span class="ui-alg__sum">
-          <span><b>${count}</b> ${count === 1 ? "change" : "changes"}</span>
-          ${undoneCount > 0 ? html`<span class="ui-alg__sum-undone"><b>${undoneCount}</b> undone</span>` : nothing}
-          ${this.failed ? html`<span class="ui-alg__error" role="alert">${this.failed === "undo" ? "Couldn't undo" : "Couldn't redo"} – try again</span>` : nothing}
-        </span>
-        <span class="ui-alg__sr" role="status">${this.said}</span>
-      </header>
+    const head = cardHead({
+      icon: ledgerIcon,
+      title: this.heading,
+      id: this.label,
+      subtitle:
+        this.agent || this.failed
+          ? html`${this.agent ? html`<span class="ui-alg__agent" title=${this.agent}>${this.agent}</span>` : nothing}${this.failed
+              ? html`<span class="ui-alg__error" role="alert">${this.failed === "undo" ? "Couldn't undo" : "Couldn't redo"} – try again</span>`
+              : nothing}`
+          : undefined,
+      aside: html`<span class="ui-alg__sum">
+        <span><b>${count}</b> ${count === 1 ? "change" : "changes"}</span>
+        ${undoneCount > 0 ? html`<span class="ui-alg__sum-undone"><b>${undoneCount}</b> undone</span>` : nothing}
+      </span>`,
+    });
+    const status = html`<span class="ui-alg__sr" role="status">${this.said}</span>`;
 
+    // Standard: the header on the tray, the list is the white card. Clean: one card, the header its first row
+    const list = html`
       <ol class="ui-alg__panel" aria-labelledby=${this.label}>
         ${repeat(
           sorted,
@@ -355,8 +363,8 @@ export class TcAgentLedger extends TcElement {
             </li>`;
           },
         )}
-      </ol>
-    `;
+      </ol>`;
+    return this.resolvedLook === "clean" ? html`<div class="ui-alg__card">${head}${list}</div>${status}` : html`${head}${list}${status}`;
   }
 
   static override css = /* css */ `
@@ -380,11 +388,11 @@ export class TcAgentLedger extends TcElement {
   border-radius: var(--tc-tray-radius);
   background: var(--tc-agent-ledger-tray-bg);
   container: ui-alg / inline-size;
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-regular);
   line-height: var(--tc-line-height-normal);
-  letter-spacing: -0.006em;
+  letter-spacing: var(--tc-tracking-normal);
   color: var(--tc-text-muted);
   text-align: left;
   -webkit-font-smoothing: antialiased;
@@ -418,21 +426,13 @@ export class TcAgentLedger extends TcElement {
 [data-ui="alg"] button:focus-visible { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
 .ui-alg__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 [data-ui="alg"] svg { display: block; flex: none; }
-/* ----- On the tray: whose changes, how many ----- */
-:where([data-look="standard"], [data-look="standard"] *).ui-alg__bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-1) var(--tc-space-2); min-width: 0; padding: var(--tc-space-2) var(--tc-space-3) var(--tc-space-3); }
-/* ----- The bar: whose changes, how many ----- */
-:where([data-look="clean"], [data-look="clean"] *).ui-alg__bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-1) var(--tc-space-2); min-width: 0; margin-bottom: var(--tc-space-4); }
-.ui-alg__mark { display: grid; flex: none; place-items: center; width: 16px; color: var(--tc-accent-text); }
-:where([data-look="standard"], [data-look="standard"] *).ui-alg__title { flex: none; font-weight: var(--tc-font-weight-semibold); color: var(--tc-text-strong); }
-:where([data-look="standard"], [data-look="standard"] *).ui-alg__agent { min-width: 0; overflow: hidden; font-size: var(--tc-font-size-md); color: var(--tc-text-muted); white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="standard"], [data-look="standard"] *).ui-alg__sum { display: flex; align-items: center; gap: var(--tc-space-3-5); margin-left: auto; font-size: var(--tc-font-size-md); line-height: var(--tc-line-height-snug); color: var(--tc-text-muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+:where([data-look="standard"], [data-look="standard"] *).ui-alg__sum { display: flex; align-items: center; gap: var(--tc-space-3-5); font-size: var(--tc-font-size-md); line-height: var(--tc-line-height-snug); color: var(--tc-text-muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
 :where([data-look="standard"], [data-look="standard"] *).ui-alg__sum b { font-weight: var(--tc-font-weight-semibold); color: var(--tc-text-primary); }
-:where([data-look="clean"], [data-look="clean"] *).ui-alg__title { flex: none; font-weight: var(--tc-font-weight-medium); color: var(--tc-text-strong); }
-:where([data-look="clean"], [data-look="clean"] *).ui-alg__agent { min-width: 0; overflow: hidden; color: var(--tc-text-muted); white-space: nowrap; text-overflow: ellipsis; }
-:where([data-look="clean"], [data-look="clean"] *).ui-alg__sum { display: flex; align-items: center; gap: var(--tc-space-3-5); margin-left: auto; font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); color: var(--tc-text-muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+:where([data-look="clean"], [data-look="clean"] *).ui-alg__sum { display: flex; align-items: center; gap: var(--tc-space-3-5); font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); color: var(--tc-text-muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
 :where([data-look="clean"], [data-look="clean"] *).ui-alg__sum b { font-weight: var(--tc-font-weight-medium); color: var(--tc-text-primary); }
 .ui-alg__sum-undone { animation: ui-alg-fade var(--tc-duration-moderate) var(--tc-ease-standard) both; }
-.ui-alg__error { color: var(--tc-status-danger-fg); animation: ui-alg-fade var(--tc-duration-moderate) var(--tc-ease-standard) both; }
+/* Under the title, on a line of its own */
+.ui-alg__error { display: block; color: var(--tc-status-danger-fg); animation: ui-alg-fade var(--tc-duration-moderate) var(--tc-ease-standard) both; }
 .ui-alg__row[data-pending] .ui-alg__act { cursor: progress; opacity: 0.6; }
 /* ----- The white card: one row per change, newest first ----- */
 :where([data-look="standard"], [data-look="standard"] *).ui-alg__panel { display: grid; margin: 0; padding: var(--tc-space-1-5); overflow: hidden; border-radius: var(--tc-card-radius); background: var(--tc-agent-ledger-panel-bg); box-shadow: var(--tc-card-shadow); list-style: none; }
@@ -440,7 +440,9 @@ export class TcAgentLedger extends TcElement {
 /* A new change opens its row – the card grows smoothly instead of jumping – and then fades in */
 :where([data-look="standard"], [data-look="standard"] *).ui-alg__row > * { animation: ui-alg-in var(--tc-duration-slower) var(--tc-ease-move) var(--tc-duration-fast) backwards; }
 /* ----- The white panel: one row per change, newest first ----- */
-:where([data-look="clean"], [data-look="clean"] *).ui-alg__panel { display: grid; margin: 0; padding: var(--tc-space-1); overflow: hidden; border-radius: var(--tc-card-radius); background: var(--tc-surface-raised); box-shadow: var(--tc-card-shadow); list-style: none; }
+/* Clean: one card – the header is its first row, the rows sit under a hairline */
+:where([data-look="clean"], [data-look="clean"] *).ui-alg__card { overflow: hidden; border-radius: var(--tc-card-radius); background: var(--tc-surface-raised); box-shadow: var(--tc-card-shadow); }
+:where([data-look="clean"], [data-look="clean"] *).ui-alg__panel { display: grid; margin: 0; padding: var(--tc-space-1); border-top: var(--tc-hairline) solid var(--tc-divider); list-style: none; }
 :where([data-look="clean"], [data-look="clean"] *).ui-alg__row { position: relative; display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; align-items: center; column-gap: var(--tc-space-3); min-height: var(--tc-agent-ledger-row); padding: var(--tc-space-2) var(--tc-space-3) var(--tc-space-2) var(--tc-space-2-5); border-radius: var(--tc-radius-sm); transition: background-color var(--tc-duration-base) var(--tc-ease-standard); animation: ui-alg-grow var(--tc-duration-slowest) var(--tc-ease-move) backwards; }
 /* A new change opens its row – the panel grows smoothly instead of jumping – and then fades in */
 :where([data-look="clean"], [data-look="clean"] *).ui-alg__row > * { animation: ui-alg-in var(--tc-duration-slower) var(--tc-ease-move) var(--tc-duration-fast) backwards; }
@@ -504,7 +506,6 @@ export class TcAgentLedger extends TcElement {
 .ui-alg__flag[data-kind="kept"] { background: var(--tc-status-warning-bg); color: var(--tc-status-warning-fg); }
 /* ----- Narrow: smaller gaps, the time stands alone ----- */
 @container ui-alg (max-width: 480px) {
-:where([data-look="standard"], [data-look="standard"] *).ui-alg__sum { flex-basis: 100%; justify-content: space-between; margin-left: 0; }
 :where([data-look="standard"], [data-look="standard"] *).ui-alg__row { column-gap: var(--tc-space-2-5); padding: var(--tc-space-2-5) var(--tc-space-2) var(--tc-space-2-5) var(--tc-space-2); }
 :where([data-look="standard"], [data-look="standard"] *).ui-alg__row + .ui-alg__row::before { left: 50px; right: 8px; }
 :where([data-look="standard"], [data-look="standard"] *).ui-alg__end { min-width: 76px; }
@@ -519,7 +520,6 @@ export class TcAgentLedger extends TcElement {
 :where([data-look="clean"], [data-look="clean"] *).ui-alg__act:hover { background: var(--tc-action-ghost-bg-hover); }
 /* ----- Narrow: smaller gaps, the system's name drops from the time ----- */
 @container ui-alg (max-width: 480px) {
-:where([data-look="clean"], [data-look="clean"] *).ui-alg__sum { flex-basis: 100%; justify-content: space-between; margin-left: 0; }
 :where([data-look="clean"], [data-look="clean"] *).ui-alg__row { column-gap: var(--tc-space-2-5); padding: var(--tc-space-2) var(--tc-space-2) var(--tc-space-2) var(--tc-space-2); }
 :where([data-look="clean"], [data-look="clean"] *).ui-alg__row + .ui-alg__row::before { left: 46px; right: 8px; }
 :where([data-look="clean"], [data-look="clean"] *).ui-alg__end { min-width: 64px; }

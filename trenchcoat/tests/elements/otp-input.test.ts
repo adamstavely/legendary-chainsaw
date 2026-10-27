@@ -22,6 +22,36 @@ const type = (el: Element, value: string) => {
 };
 
 describe("tc-otp-input", () => {
+  test.each(["resolve", "reject"] as const)("form reset invalidates a pending check that later %ss", async (outcome) => {
+    let resolve!: () => void;
+    let reject!: () => void;
+    let signal!: AbortSignal;
+    const onComplete = (_code: string, options: { signal: AbortSignal }) => {
+      signal = options.signal;
+      return new Promise<void>((ok, fail) => {
+        resolve = ok;
+        reject = () => fail(new Error("Old check"));
+      });
+    };
+    const form = await fixture<HTMLFormElement>(html`<form><tc-otp-input length="4" .onComplete=${onComplete}></tc-otp-input></form>`);
+    const el = form.querySelector<TcOtpInput>("tc-otp-input")!;
+    type(el, "1234");
+    await settle();
+    expect(el.dataset.status).toBe("verifying");
+    form.reset();
+    await settle();
+    expect(signal.aborted).toBe(true);
+    expect(el.value).toBe("");
+    type(el, "5");
+    await settle();
+    if (outcome === "resolve") resolve();
+    else reject();
+    await settle();
+    expect(el.dataset.status).toBe("idle");
+    expect(el.value).toBe("5");
+    expect(inputOf(el).readOnly).toBe(false);
+  });
+
   test("the host is the root; one box per character; the separator", async () => {
     const el = await fixture<TcOtpInput>(html`<tc-otp-input separator></tc-otp-input>`);
     expect(el.dataset.ui).toBe("otp");

@@ -3,6 +3,7 @@ import { property, state } from "lit/decorators.js";
 import { repeat } from "lit/directives/repeat.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController } from "./internal/controllers";
 import { duration } from "./internal/format";
 import { layoutColumns, type PlacedEdge, type PlacedNode } from "./internal/layered-graph";
@@ -111,7 +112,8 @@ const names = (list: string[]) => (list.length <= 3 ? list.join(", ") : `${list.
 /* ---------- Icons ---------- */
 
 /** Three columns of nodes, linked – the title mark (drawn for Trenchcoat) */
-const lineageMark = html`<svg class="ui-lng__mark-svg" viewBox="0 0 16 16" aria-hidden="true">${svg`<path d="M4 8h1.5c1.6 0 1.6-3.5 3.2-3.5H10M5.5 8c1.6 0 1.6 3.5 3.2 3.5H10" fill="none"></path><circle cx="3" cy="8" r="1.8"></circle><circle cx="12" cy="4.5" r="1.8"></circle><circle cx="12" cy="11.5" r="1.8"></circle>`}</svg>`;
+/* The header's mark: a source branching into what it feeds */
+const lineageMark = svg`<circle cx="5" cy="12" r="2"></circle><circle cx="19" cy="6" r="2"></circle><circle cx="19" cy="18" r="2"></circle><path d="M7 12h2c3 0 3-6 6.5-6H17"></path><path d="M9 12c3 0 3 6 6.5 6H17"></path>`;
 /* x, arrow-left, arrow-right: Lucide (ISC, lucide.dev) */
 const closeIcon = html`<svg class="ui-lng__glyph" viewBox="0 0 24 24" aria-hidden="true">${svg`<path d="M18 6 6 18"></path><path d="m6 6 12 12"></path>`}</svg>`;
 const fromIcon = html`<svg class="ui-lng__glyph" viewBox="0 0 24 24" aria-hidden="true">${svg`<path d="m12 19-7-7 7-7"></path><path d="M19 12H5"></path>`}</svg>`;
@@ -609,11 +611,12 @@ export class TcLineageGraph extends TcElement {
     const first = view === "chain" ? this.chain[0]?.id : [...this.layout.nodes.values()].sort((a, b) => a.column - b.column || a.row - b.row)[0]?.id;
     const tabbable = this.cursor ?? this.selected ?? first;
     const titleId = `${this.uid}-title`;
-    return html`
-      <div class="ui-lng__bar">
-        <span class="ui-lng__mark">${lineageMark}</span>
-        <span class="ui-lng__title" id=${titleId}>${this.heading}</span>
-        <span class="ui-lng__sum">
+    // The header (.tc-head): on the tray above the card in Standard, the card's first row in Clean
+    const head = cardHead({
+      icon: lineageMark,
+      title: this.heading,
+      id: titleId,
+      aside: html`<span class="ui-lng__sum">
           <span><b>${count}</b> ${count === 1 ? "step" : "steps"}</span>
           ${weak ? html`<span class="ui-lng__sum-weak"><b>${weak}</b> weak ${weak === 1 ? "link" : "links"}</span>` : nothing}
         </span>
@@ -632,9 +635,13 @@ export class TcLineageGraph extends TcElement {
                 >${VIEWS[v]}</button>`,
               )}
             </div>`
-          : nothing}
-      </div>
+          : nothing}`,
+    });
+    const clean = this.resolvedLook === "clean";
+    return html`
+      ${clean ? nothing : head}
       <div class="ui-lng__card">
+        ${clean ? head : nothing}
         ${count
           ? html`<div
                 class="ui-lng__panel"
@@ -682,7 +689,6 @@ export class TcLineageGraph extends TcElement {
   font-size: var(--tc-font-size-lg);
   font-weight: var(--tc-font-weight-regular);
   line-height: var(--tc-line-height-normal);
-  letter-spacing: -0.006em;
   color: var(--tc-text-muted);
   text-align: left;
   -webkit-font-smoothing: antialiased;
@@ -724,15 +730,7 @@ export class TcLineageGraph extends TcElement {
 [data-ui="lng"] [data-tone="amber"] { --tc-lineage-graph-tone: var(--tc-tone-amber-solid); --tc-lineage-graph-tone-fg: var(--tc-tone-amber-fg); --tc-lineage-graph-tone-bg: var(--tc-tone-amber-bg); }
 [data-ui="lng"] [data-tone="pink"] { --tc-lineage-graph-tone: var(--tc-tone-pink-solid); --tc-lineage-graph-tone-fg: var(--tc-tone-pink-fg); --tc-lineage-graph-tone-bg: var(--tc-tone-pink-bg); }
 [data-ui="lng"] [data-tone="rose"] { --tc-lineage-graph-tone: var(--tc-tone-rose-solid); --tc-lineage-graph-tone-fg: var(--tc-tone-rose-fg); --tc-lineage-graph-tone-bg: var(--tc-tone-rose-bg); }
-/* ----- The bar: the heading, how many steps and weak links, the view ----- */
-.ui-lng__bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-1) var(--tc-space-2); min-width: 0; }
-:where([data-look="standard"], [data-look="standard"] *).ui-lng__bar { padding: var(--tc-space-1-5) var(--tc-space-1-5) var(--tc-space-2) var(--tc-space-3); }
-:where([data-look="clean"], [data-look="clean"] *).ui-lng__bar { margin-bottom: var(--tc-space-3); }
-.ui-lng__mark { display: grid; flex: none; place-items: center; width: 16px; color: var(--tc-accent-text); }
-.ui-lng__mark-svg { width: 16px; height: 16px; fill: currentColor; stroke: currentColor; stroke-width: 1.3; stroke-linecap: round; }
-.ui-lng__title { flex: none; color: var(--tc-text-strong); }
-:where([data-look="standard"], [data-look="standard"] *).ui-lng__title { font-weight: var(--tc-font-weight-semibold); }
-:where([data-look="clean"], [data-look="clean"] *).ui-lng__title { font-weight: var(--tc-font-weight-medium); }
+/* ----- In the header's aside: how many steps and weak links, the view ----- */
 .ui-lng__sum { display: flex; align-items: center; gap: var(--tc-space-3); color: var(--tc-text-muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
 :where([data-look="standard"], [data-look="standard"] *).ui-lng__sum { font-size: var(--tc-font-size-md); line-height: var(--tc-line-height-snug); }
 :where([data-look="clean"], [data-look="clean"] *).ui-lng__sum { font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); }

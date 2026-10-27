@@ -3,6 +3,7 @@ import { property, state } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { live } from "lit/directives/live.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController, ToolbarController } from "./internal/controllers";
 import { duration } from "./internal/format";
 
@@ -416,13 +417,16 @@ export class TcPolicySimulator extends TcElement {
   }
 
   protected override render() {
+    // The header (.tc-head): on the tray above the form card in Standard, the first row in Clean
     return html`
       <span class="ui-psim__sr" role="status">${this.announce}</span>
+      ${cardHead({
+        icon: svg`<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path>`,
+        title: this.heading,
+        id: `${this.uid}-title`,
+        subtitle: this.description || undefined,
+      })}
       <div class="ui-psim__card">
-        <header class="ui-psim__head">
-          <h3 class="ui-psim__title" id=${`${this.uid}-title`}>${this.heading}</h3>
-          ${this.description ? html`<p class="ui-psim__desc">${this.description}</p>` : nothing}
-        </header>
         ${this.renderExamples()}
         ${this.renderForm()}
       </div>
@@ -443,7 +447,6 @@ export class TcPolicySimulator extends TcElement {
   font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-md);
   line-height: var(--tc-line-height-normal);
-  letter-spacing: -0.006em;
   color: var(--tc-text-muted);
   text-align: left;
   -webkit-font-smoothing: antialiased;
@@ -475,15 +478,7 @@ export class TcPolicySimulator extends TcElement {
 :where([data-look="clean"], [data-look="clean"] *)[data-ui="psim"] svg[stroke-width] { stroke-width: 1.5; }
 .ui-psim__sr { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 :where([data-look="standard"], [data-look="standard"] *).ui-psim__card { border-radius: var(--tc-card-radius); background: var(--tc-surface-on-tray); box-shadow: var(--tc-card-shadow); }
-/* ----- Heading and examples ----- */
-.ui-psim__head { display: grid; gap: var(--tc-space-0-5); }
-:where([data-look="standard"], [data-look="standard"] *).ui-psim__head { padding: var(--tc-space-4) var(--tc-space-4) 0; }
-:where([data-look="clean"], [data-look="clean"] *).ui-psim__head { padding: var(--tc-space-3-5) var(--tc-space-4) 0; }
-.ui-psim__title { font-size: var(--tc-font-size-lg); font-weight: var(--tc-font-weight-strong); line-height: var(--tc-line-height-normal); letter-spacing: -0.011em; }
-:where([data-look="standard"], [data-look="standard"] *).ui-psim__title { color: var(--tc-text-primary); }
-:where([data-look="clean"], [data-look="clean"] *).ui-psim__title { color: var(--tc-text-strong); }
-.ui-psim__desc { color: var(--tc-text-muted); line-height: var(--tc-line-height-snug); }
-:where([data-look="clean"], [data-look="clean"] *).ui-psim__desc { font-size: var(--tc-font-size-sm); }
+/* ----- Examples ----- */
 .ui-psim__examples-row { display: flex; align-items: flex-start; gap: var(--tc-space-2); padding: var(--tc-space-3) var(--tc-space-4) 0; }
 .ui-psim__examples-label { flex: none; padding: var(--tc-space-1) 0; font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); color: var(--tc-text-muted); }
 :where([data-look="standard"], [data-look="standard"] *).ui-psim__examples-label { font-weight: var(--tc-font-weight-medium); }
@@ -535,7 +530,7 @@ export class TcPolicySimulator extends TcElement {
 .ui-psim__verdict[data-decision="deny"] .ui-psim__verdict-icon { background: var(--tc-status-danger-bg); color: var(--tc-status-danger-fg); }
 .ui-psim__verdict[data-decision="hard-stop"] .ui-psim__verdict-icon { background: var(--tc-status-danger-solid); color: var(--tc-text-on-accent); }
 .ui-psim__verdict-text { display: grid; gap: var(--tc-space-0-5); min-width: 0; }
-.ui-psim__verdict-label { font-size: var(--tc-font-size-lg); font-weight: var(--tc-font-weight-strong); line-height: var(--tc-line-height-normal); letter-spacing: -0.011em; color: var(--tc-text-primary); }
+.ui-psim__verdict-label { font-size: var(--tc-title-font-size); font-weight: var(--tc-title-font-weight); line-height: var(--tc-title-line-height); letter-spacing: var(--tc-title-tracking); color: var(--tc-title-color); }
 .ui-psim__verdict[data-decision="deny"] .ui-psim__verdict-label, .ui-psim__verdict[data-decision="hard-stop"] .ui-psim__verdict-label { color: var(--tc-status-danger-fg); }
 .ui-psim__reason { line-height: var(--tc-line-height-snug); color: var(--tc-text-secondary); }
 .ui-psim__stale { margin-top: var(--tc-space-3) !important; padding: var(--tc-space-1-5) var(--tc-space-2-5); border-radius: var(--tc-radius-md); background: var(--tc-status-warning-bg); font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-snug); color: var(--tc-status-warning-fg); }

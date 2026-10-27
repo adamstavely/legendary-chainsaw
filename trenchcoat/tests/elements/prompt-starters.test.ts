@@ -120,7 +120,7 @@ describe("tc-prompt-starters", () => {
     expect(filled).toEqual(["Which deals are most at risk?", "Draft a follow-up to "]);
     expect(options(el).find((o) => o.tabIndex === 0)!.querySelector(".ui-pst__label")!.textContent).toBe("Draft a follow-up…");
     // The key hint follows the active suggestion's mode
-    expect(el.querySelector(".ui-pst__foot")!.textContent!.replace(/\s+/g, " ").trim()).toBe("↑ ↓ to move ↵ Edit first");
+    expect([...el.querySelectorAll(".ui-pst__foot .ui-pst__keys > *")].map((part) => part.textContent)).toEqual(["↑", "↓", "to move", "↵", "Edit first"]);
   });
 
   test("type-ahead takes several letters typed quickly", async () => {

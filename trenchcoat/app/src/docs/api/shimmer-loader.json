@@ -277,7 +277,7 @@
   "The 22 illustrations and 8 motion pieces as elements (step 2.7), 105 tags in all; shimmer-loader is two (`tc-skeleton`, `tc-shimmer-text`). Same React names and props through `trenchcoat/react`; parity with the React versions at 0.00 % except voice-orb's canvas particles (timing) and tilt-card, which drops 3 px of line space under its inline-block root."
  ],
  "size": {
-  "min": 10383,
-  "gzip": 4096
+  "min": 12385,
+  "gzip": 4707
  }
 }

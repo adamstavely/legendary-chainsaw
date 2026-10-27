@@ -28,7 +28,7 @@ model, tokens, cost, input, output and error.
 
 ## Anatomy
 
-1. **Header** `.ui-tw__bar-head` – the heading, the task and the run's status (Live, Done, Failed)
+1. **Header** `.tc-head` – the icon, the heading, the task and the run's status (Live, Done, Failed)
 2. **Totals** `.ui-tw__stats` – duration, cost, tokens, LLM calls, tool calls and errors
 3. **Axis** `.ui-tw__layer` – the time ticks and, while the run goes on, the “now” line
 4. **Span** `.ui-tw__row` – one span: its name, detail, duration and cost on the left, its bar on the right

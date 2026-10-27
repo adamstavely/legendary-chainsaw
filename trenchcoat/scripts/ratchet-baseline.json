@@ -1,11 +1,19 @@
 {
   "src/components/agent-plan.tsx": {
     "clock/environment read": 6,
+    "literal font-family": 2,
+    "literal font-size": 2,
+    "literal letter-spacing": 2,
     "literal spacing": 30
   },
   "src/components/approval-card.tsx": {
     "clock/environment read": 1,
+    "literal font-family": 1,
+    "literal letter-spacing": 2,
     "literal spacing": 4
+  },
+  "src/components/button.tsx": {
+    "literal letter-spacing": 1
   },
   "src/components/chat-composer.tsx": {
     "literal border-radius": 6,
@@ -13,35 +21,49 @@
   },
   "src/components/combobox.tsx": {
     "unexplained eslint-disable": 1,
+    "literal font-size": 2,
+    "literal letter-spacing": 1,
     "literal spacing": 7
   },
   "src/components/data-table.tsx": {
     "clock/environment read": 1,
+    "literal font-family": 1,
+    "literal letter-spacing": 1,
     "literal spacing": 1
   },
   "src/components/filter-menu.tsx": {
     "literal duration": 1,
+    "literal font-family": 1,
+    "literal letter-spacing": 1,
     "literal spacing": 7
   },
   "src/components/inline-diff.tsx": {
+    "literal font-family": 1,
+    "literal letter-spacing": 3,
     "literal spacing": 3
   },
   "src/components/kpi-chart.tsx": {
+    "literal font-family": 1,
+    "literal letter-spacing": 2,
     "literal spacing": 8
   },
   "src/components/segmented-control.tsx": {
+    "literal font-family": 1,
     "literal line-height": 1
   },
   "src/components/setup-guide.tsx": {
+    "literal font-family": 1,
     "literal spacing": 1
   },
   "src/components/thinking-loader.tsx": {
-    "clock/environment read": 3
+    "clock/environment read": 3,
+    "literal letter-spacing": 2
   },
   "src/components/thinking-state.tsx": {
     "clock/environment read": 3,
     "literal duration": 3,
     "literal easing": 3,
+    "literal font-family": 1,
     "literal line-height": 1,
     "literal border-radius": 2,
     "literal spacing": 5,
@@ -50,6 +72,8 @@
   "src/components/tool-call-card.tsx": {
     "clock/environment read": 2,
     "literal duration": 3,
+    "literal font-family": 1,
+    "literal letter-spacing": 2,
     "literal line-height": 3,
     "literal border-radius": 1,
     "literal spacing": 8,
@@ -58,6 +82,7 @@
   "src/components/usage-meter.tsx": {
     "unexplained eslint-disable": 2,
     "clock/environment read": 1,
+    "literal font-family": 1,
     "literal spacing": 2
   },
   "src/elements/agent-cursors.ts": {
@@ -114,13 +139,13 @@
     "clock/environment read": 4,
     "literal duration": 4,
     "literal easing": 7,
-    "literal line-height": 8,
+    "literal line-height": 7,
     "literal border-radius": 1,
     "literal spacing": 13
   },
   "src/elements/approval-card.ts": {
     "clock/environment read": 1,
-    "literal spacing": 4
+    "literal spacing": 1
   },
   "src/elements/autonomy-dial.ts": {
     "literal spacing": 1
@@ -176,6 +201,7 @@
   },
   "src/elements/cover-flow.ts": {
     "clock/environment read": 3,
+    "literal letter-spacing": 1,
     "literal line-height": 2
   },
   "src/elements/data-table.ts": {
@@ -223,6 +249,7 @@
     "literal spacing": 7
   },
   "src/elements/ghosted-chat.ts": {
+    "literal letter-spacing": 1,
     "literal line-height": 4,
     "literal border-radius": 2,
     "literal spacing": 2
@@ -248,6 +275,7 @@
   },
   "src/elements/integration-flow.ts": {
     "literal font-weight": 2,
+    "literal letter-spacing": 2,
     "literal line-height": 2,
     "literal border-radius": 2,
     "literal blurred shadow": 1,
@@ -298,12 +326,13 @@
   },
   "src/elements/otp-input.ts": {
     "literal duration": 6,
+    "literal letter-spacing": 1,
     "literal border-radius": 6
   },
   "src/elements/permission-request.ts": {
     "clock/environment read": 1,
     "literal line-height": 1,
-    "literal spacing": 9
+    "literal spacing": 8
   },
   "src/elements/plan-vs-actual.ts": {
     "clock/environment read": 1,
@@ -311,9 +340,6 @@
   },
   "src/elements/profile-menu.ts": {
     "literal spacing": 4
-  },
-  "src/elements/progress-tracker.ts": {
-    "literal spacing": 1
   },
   "src/elements/project-card.ts": {
     "literal duration": 1,
@@ -342,16 +368,13 @@
   },
   "src/elements/review-center.ts": {
     "clock/environment read": 4,
-    "literal spacing": 31
+    "literal spacing": 28
   },
   "src/elements/segmented-control.ts": {
     "literal line-height": 1
   },
-  "src/elements/setup-guide.ts": {
-    "literal spacing": 1
-  },
   "src/elements/stepper-form.ts": {
-    "literal spacing": 14
+    "literal spacing": 12
   },
   "src/elements/text-reveal.ts": {
     "literal spacing": 1
@@ -363,7 +386,6 @@
     "clock/environment read": 3,
     "literal duration": 3,
     "literal easing": 3,
-    "literal line-height": 1,
     "literal border-radius": 2,
     "literal spacing": 5,
     "background-position animation": 1
@@ -375,7 +397,7 @@
   "src/elements/tool-call-card.ts": {
     "clock/environment read": 1,
     "literal duration": 3,
-    "literal line-height": 3,
+    "literal line-height": 2,
     "literal border-radius": 1,
     "literal spacing": 8,
     "background-position animation": 1
@@ -391,6 +413,9 @@
     "clock/environment read": 1,
     "literal spacing": 2
   },
+  "src/elements/validity-badge.ts": {
+    "clock/environment read": 1
+  },
   "src/elements/voice-orb.ts": {
     "clock/environment read": 3,
     "literal border-radius": 1,
@@ -402,13 +427,16 @@
   "src/elements/writing-assistant.ts": {
     "literal duration": 10,
     "literal easing": 5,
-    "literal line-height": 4,
-    "literal border-radius": 6,
+    "literal line-height": 3,
+    "literal border-radius": 4,
     "literal blurred shadow": 4,
     "literal spacing": 4,
     "background-position animation": 1
   },
   "blocks/agent-gallery.tsx": {
+    "literal font-family": 1,
+    "literal font-size": 5,
+    "literal letter-spacing": 5,
     "literal spacing": 57
   },
   "blocks/ai-workspace.tsx": {
@@ -425,13 +453,19 @@
     "literal spacing": 88
   },
   "blocks/invoice-credit.tsx": {
+    "literal font-size": 2,
+    "literal letter-spacing": 1,
     "literal spacing": 54
   },
   "blocks/kpi-board.tsx": {
     "clock/environment read": 1,
+    "literal font-family": 1,
+    "literal letter-spacing": 2,
     "literal spacing": 44
   },
   "blocks/logo-marquee.tsx": {
+    "literal font-family": 1,
+    "literal letter-spacing": 1,
     "literal spacing": 4
   },
   "blocks/metrics-dashboard.tsx": {
@@ -439,16 +473,22 @@
     "literal spacing": 54
   },
   "blocks/pricing-plans.tsx": {
+    "literal font-family": 1,
+    "literal letter-spacing": 4,
     "literal spacing": 26
   },
   "blocks/task-board.tsx": {
     "clock/environment read": 1,
+    "literal font-size": 1,
     "literal spacing": 54
   },
   "blocks/testimonial-wall.tsx": {
+    "literal font-family": 1,
+    "literal letter-spacing": 2,
     "literal spacing": 13
   },
   "screens/agent-chat.tsx": {
+    "literal letter-spacing": 1,
     "literal spacing": 86
   },
   "screens/agent-run.tsx": {
@@ -456,6 +496,8 @@
     "literal spacing": 40
   },
   "screens/analytics.tsx": {
+    "literal font-size": 2,
+    "literal letter-spacing": 1,
     "literal spacing": 37
   },
   "screens/app-shell-flat.tsx": {
@@ -465,19 +507,23 @@
     "literal spacing": 9
   },
   "screens/app-shell.tsx": {
+    "literal letter-spacing": 2,
     "literal border-radius": 1,
     "literal blurred shadow": 2,
     "literal spacing": 135
   },
   "screens/assistant-home.tsx": {
     "clock/environment read": 1,
+    "literal letter-spacing": 1,
     "literal border-radius": 1,
     "literal spacing": 53
   },
   "screens/crm.tsx": {
+    "literal font-family": 1,
     "literal spacing": 53
   },
   "screens/evals.tsx": {
+    "literal font-family": 2,
     "literal spacing": 44
   },
   "screens/files.tsx": {
@@ -491,12 +537,16 @@
   },
   "screens/onboarding.tsx": {
     "literal duration": 4,
+    "literal letter-spacing": 1,
     "literal spacing": 106
   },
   "screens/settings-billing.tsx": {
+    "literal font-family": 1,
+    "literal letter-spacing": 1,
     "literal spacing": 79
   },
   "illustrations/glass-folder.tsx": {
+    "literal font-family": 1,
     "literal border-radius": 2
   }
 }

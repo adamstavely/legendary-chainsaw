@@ -114,7 +114,6 @@
     }
    ],
    "tokens": [
-    "--tc-accent-text",
     "--tc-avatar-radius-agent",
     "--tc-card-radius",
     "--tc-card-shadow",
@@ -176,7 +175,6 @@
     "--tc-text-muted",
     "--tc-text-primary",
     "--tc-text-secondary",
-    "--tc-text-strong",
     "--tc-tray-inset",
     "--tc-tray-radius"
    ]
@@ -228,7 +226,7 @@
  ],
  "changelog": [],
  "size": {
-  "min": 35056,
-  "gzip": 8514
+  "min": 35526,
+  "gzip": 8951
  }
 }

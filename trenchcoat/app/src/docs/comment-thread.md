@@ -25,7 +25,7 @@ fails, the thread says so and offers Try again. Times read as “12min ago” an
 
 ## Anatomy
 
-1. **Header** `.ui-ct__head` – the heading, the message count and the close button
+1. **Header** – the shared card header: a boxed icon, the heading, the message count and the close button
 2. **Message** `.ui-ct__msg` – avatar, name, time and text
 3. **Status line** `.ui-ct__status-btn` – what the assistant did; folds open its details
 4. **Reply field** `.ui-ct__composer` – the input and the send button

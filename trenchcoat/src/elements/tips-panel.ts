@@ -2,6 +2,7 @@ import { html, nothing, svg } from "lit";
 import { property, state } from "lit/decorators.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController } from "./internal/controllers";
 import type { Look } from "./internal/look";
 
@@ -32,6 +33,8 @@ export type TipsPanelTip = {
 
 export type TipsPanelDoneChange = { done: string[]; tip: TipsPanelTip };
 
+/* After Lucide: lightbulb – the header's icon */
+const headIcon = svg`<path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"></path><path d="M9 18h6M10 22h4"></path>`;
 const checkIcon = (look: Look) =>
   html`<svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">${look === "clean"
     ? svg`<circle cx="8" cy="8" r="6.5" fill="currentColor"></circle><path d="m5.6 8.1 1.7 1.7 3.2-3.4" fill="none" stroke="#fff" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"></path>`
@@ -93,10 +96,11 @@ export class TcTipsPanel extends TcElement {
     const done = new Set(this.done);
     const doneCount = this.tips.filter((t) => done.has(t.id)).length;
     return html`
-      <header class="ui-tp__head">
-        <h3 class="ui-tp__title">${this.heading}</h3>
-        <span class="ui-tp__count">${doneCount}/${this.tips.length} done</span>
-      </header>
+      ${/* The header (.tc-head): on the tray in Standard, the card's first row in Clean; the done count at the right */ cardHead({
+        icon: headIcon,
+        title: this.heading,
+        aside: html`<span class="ui-tp__count">${doneCount}/${this.tips.length} done</span>`,
+      })}
       <div class="ui-tp__card">
         <ul class="ui-tp__grid">
           ${this.tips.map((tip, i) => {
@@ -158,20 +162,6 @@ export class TcTipsPanel extends TcElement {
 }
 [data-ui="tp"] *, [data-ui="tp"] *::before, [data-ui="tp"] *::after { box-sizing: border-box; }
 :where([data-look="standard"], [data-look="standard"] *):where([data-ui="tp"]) button { margin: 0; font: inherit; cursor: pointer; }
-:where([data-look="standard"], [data-look="standard"] *).ui-tp__head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--tc-space-3);
-  padding: var(--tc-space-3) var(--tc-space-5) var(--tc-space-3);
-}
-:where([data-look="standard"], [data-look="standard"] *).ui-tp__title {
-  margin: 0;
-  font-size: var(--tc-font-size-xl);
-  font-weight: var(--tc-font-weight-semibold);
-  line-height: var(--tc-line-height-relaxed);
-  letter-spacing: -0.01em;
-}
 :where([data-look="standard"], [data-look="standard"] *).ui-tp__count {
   font-size: var(--tc-font-size-md);
   font-variant-numeric: tabular-nums;
@@ -198,22 +188,7 @@ export class TcTipsPanel extends TcElement {
 [data-ui="tp"] button:focus-visible,
 .ui-tp__done:focus-visible { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
 :where([data-look="clean"], [data-look="clean"] *):where([data-ui="tp"]) svg { display: block; flex: none; }
-/* ----- Head ----- */
-:where([data-look="clean"], [data-look="clean"] *).ui-tp__head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--tc-space-3);
-  padding: var(--tc-space-3) var(--tc-space-4);
-  border-bottom: var(--tc-hairline) solid var(--tc-divider);
-}
-:where([data-look="clean"], [data-look="clean"] *).ui-tp__title {
-  margin: 0;
-  font-size: var(--tc-font-size-lg-plus);
-  font-weight: var(--tc-font-weight-medium);
-  line-height: var(--tc-line-height-loose);
-  color: var(--tc-text-strong);
-}
+/* ----- The done count, at the header's right ----- */
 :where([data-look="clean"], [data-look="clean"] *).ui-tp__count {
   font-size: var(--tc-font-size-sm);
   line-height: var(--tc-line-height-tight);
@@ -227,6 +202,7 @@ export class TcTipsPanel extends TcElement {
   max-height: var(--tc-tips-panel-max-height);
   overflow-y: auto;
   scrollbar-width: thin;
+  border-top: var(--tc-hairline) solid var(--tc-divider);
 }
 :where([data-look="clean"], [data-look="clean"] *).ui-tp__grid {
   display: grid;

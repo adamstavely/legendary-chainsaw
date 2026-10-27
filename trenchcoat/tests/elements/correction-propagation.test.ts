@@ -186,7 +186,7 @@ describe("tc-correction-propagation", () => {
     await act(async () => settle());
     await act(async () => rerender(1));
     await settle();
-    expect(el.querySelector(".ui-cpr__title")!.textContent).toBe("Reach 1");
+    expect(el.querySelector(".tc-head__title")!.textContent).toBe("Reach 1");
     expect(row(el, "p1").dataset.state).toBe("superseded");
     btn(el, "a1", "dismiss")!.click();
     await act(async () => settle());

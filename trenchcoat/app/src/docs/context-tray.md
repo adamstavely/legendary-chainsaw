@@ -25,7 +25,7 @@ what's no longer needed – and undo a removal from the tray or with ⌘Z. The t
 
 ## Anatomy
 
-1. **Heading** `.ui-ctt__head` – the title, the number of chips and the total against the window
+1. **Header** `.tc-head` – a paperclip, the title, the number of chips and the total against the window
 2. **Meter** `.ui-ctt__meter` – the window, one segment per chip plus the reserved part
 3. **Chip** `.ui-ctt__chip` – one file, person or source with its token weight
 4. **Pin** `.ui-ctt__pin` – the chip's icon; pins it to keep it through compaction
@@ -34,8 +34,9 @@ what's no longer needed – and undo a removal from the tray or with ⌘Z. The t
 
 ## Looks
 
-Standard is a white card on a gray tray, with the caption and Undo in the tray below the card. Clean is one white
-card with a hairline shadow, quieter chips and thinner icons, and the caption as its last row. In both, hovering a
+Standard is a white card on a gray tray, with the header in the tray above the card and the caption and Undo below
+it. Clean is one white card with a hairline shadow, the header as its first row, quieter chips and thinner icons, and
+the caption as its last row. In both, hovering a
 chip lights its segment in the meter, and a removed chip folds away.
 
 ## Keyboard

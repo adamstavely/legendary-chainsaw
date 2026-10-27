@@ -98,6 +98,7 @@
     "--tc-accent",
     "--tc-accent-subtle",
     "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
     "--tc-action-primary-bg",
     "--tc-action-primary-bg-active",
     "--tc-action-primary-bg-hover",
@@ -113,8 +114,10 @@
     "--tc-control-font-size",
     "--tc-control-font-weight",
     "--tc-control-h-md",
+    "--tc-control-h-sm",
     "--tc-control-px-md",
     "--tc-control-radius-md",
+    "--tc-control-radius-sm",
     "--tc-divider",
     "--tc-duration-base",
     "--tc-duration-fast",
@@ -124,7 +127,6 @@
     "--tc-ease-decelerate",
     "--tc-ease-move",
     "--tc-ease-standard",
-    "--tc-fill-hover",
     "--tc-fill-strong",
     "--tc-fill-subtle",
     "--tc-focus-outline",
@@ -132,7 +134,6 @@
     "--tc-focus-ring-width",
     "--tc-font-sans",
     "--tc-font-size-lg",
-    "--tc-font-size-lg-plus",
     "--tc-font-size-md",
     "--tc-font-size-sm",
     "--tc-font-weight-medium",
@@ -161,9 +162,7 @@
     "--tc-pill-px-lg",
     "--tc-pill-radius",
     "--tc-radius-2xs",
-    "--tc-radius-lg",
     "--tc-radius-sm",
-    "--tc-radius-xl",
     "--tc-space-0-5",
     "--tc-space-1",
     "--tc-space-1-5",
@@ -184,7 +183,6 @@
     "--tc-text-muted",
     "--tc-text-primary",
     "--tc-text-secondary",
-    "--tc-text-strong",
     "--tc-tone-violet-bg",
     "--tc-tone-violet-fg",
     "--tc-tray-inset",
@@ -286,7 +284,7 @@
  ],
  "changelog": [],
  "size": {
-  "min": 37685,
-  "gzip": 9251
+  "min": 38077,
+  "gzip": 9615
  }
 }

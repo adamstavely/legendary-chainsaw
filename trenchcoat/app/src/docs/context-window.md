@@ -27,7 +27,7 @@ the window nears its limit, and the caption says how much is left.
 
 ## Anatomy
 
-1. **Heading** `.ui-cw__head` – the title and the model tag
+1. **Header** `.tc-head` – a gauge icon, the title and the model tag
 2. **Figure** `.ui-cw__figure` – tokens used, “of 200K tokens” and the percentage
 3. **Field** `.ui-cw__field` – the cells, coloured by part, empty for the room left
 4. **Parts** `.ui-cw__parts` – one row per part, with its swatch, Compact and size
@@ -36,9 +36,9 @@ the window nears its limit, and the caption says how much is left.
 
 ## Looks
 
-Standard is a white card on a gray tray: the caption and the action sit on the tray below the card, the percentage
-is a pill, and the icons are 12px. Clean is one white card with hairline shadows: the caption and the action are its
-last row, the percentage is a tag, the icons are 16px with finer strokes, and “Compacting…” shimmers. In a narrow
+Standard is a white card on a gray tray: the header sits on the tray above the card, the caption and the action below it, the percentage
+is a pill, and the icons are 12px. Clean is one white card with hairline shadows: the header is its first row, the
+caption and the action its last row, the percentage is a tag, the icons are 16px with finer strokes, and “Compacting…” shimmers. In a narrow
 container both lay the field out with two thirds as many columns.
 
 ## Keyboard

@@ -40,8 +40,10 @@ describe("tc-kill-switch", () => {
       expect(el.dataset.ui).toBe("ks");
       expect(el.dataset.look).toBe(look);
       expect(el.dataset.posture).toBe("normal");
-      expect(el.querySelector(".ui-ks__posture")!.textContent).toBe("Posture: Normal");
-      expect(el.querySelector(".ui-ks__note")!.textContent).toBe("Everything is running normally.");
+      // The header first (on the tray in Standard, the card's first row in Clean), the posture pill at its right
+      expect(el.querySelector(":scope > .ui-ks__sr + .tc-head + .ui-ks__card")).toBeTruthy();
+      expect(el.querySelector(".tc-head__aside > .ui-ks__posture")!.textContent).toBe("Posture: Normal");
+      expect(el.querySelector(".tc-head__sub")!.textContent).toBe("Everything is running normally.");
       const section = el.querySelector<HTMLElement>(".ui-ks__section")!;
       expect(document.getElementById(section.getAttribute("aria-labelledby")!)!.textContent).toBe("Running3");
       expect([...el.querySelectorAll(".ui-ks__item-name")].map((n) => n.textContent)).toEqual(["Support agentAgent", "Billing agent", "Nightly syncSchedule"]);
@@ -68,7 +70,7 @@ describe("tc-kill-switch", () => {
     el.postureLabels = { elevated: "Watch" };
     await settle();
     expect(el.dataset.posture).toBe("elevated");
-    expect(el.querySelector(".ui-ks__note")!.textContent).toBe("Unusual tool use flagged");
+    expect(el.querySelector(".tc-head__sub")!.textContent).toBe("Unusual tool use flagged");
     expect(el.querySelector(".ui-ks__posture")!.textContent).toBe("Posture: Watch");
     // A disabled Stop everything doesn't open anything
     el.posture = undefined;
@@ -220,7 +222,7 @@ describe("tc-kill-switch", () => {
     await act(async () => root.render(React.createElement(App)));
     await settle();
     const el = host.querySelector("tc-kill-switch")!;
-    expect(el.querySelector(".ui-ks__title")!.textContent).toBe("Agents");
+    expect(el.querySelector(".tc-head__title")!.textContent).toBe("Agents");
     stopBtn(el, "sync")!.click();
     await settle();
     dialog(el).querySelector<HTMLButtonElement>(".ui-ks__confirm")!.click();

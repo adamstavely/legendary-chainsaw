@@ -37,8 +37,9 @@ puts the finished prompt on the clipboard. Search narrows the list by title, cat
 
 ## Looks
 
-Standard puts the list and the template on a white card in the gray tray, with the caption, Copy and Use on the
-tray below it. Clean drops the tray: one white card whose last row holds the caption, Copy and Use. Both
+Standard puts the header on the gray tray, the list and the template on a white card below it, and the caption, Copy
+and Use on the tray under that. Clean drops the tray: one white card whose first row is the header and whose last row
+holds the caption, Copy and Use. Both
 highlight the part that just changed, roll the token count and pulse Use once when the last variable is filled.
 
 ## Keyboard

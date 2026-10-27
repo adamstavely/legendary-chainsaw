@@ -221,7 +221,6 @@
     "--tc-icon-muted",
     "--tc-line-height-loose",
     "--tc-line-height-normal",
-    "--tc-line-height-relaxed",
     "--tc-line-height-snug",
     "--tc-line-height-tight",
     "--tc-menu-bg",
@@ -266,6 +265,11 @@
     "--tc-text-primary",
     "--tc-text-secondary",
     "--tc-text-strong",
+    "--tc-title-color",
+    "--tc-title-font-size",
+    "--tc-title-font-weight",
+    "--tc-title-line-height",
+    "--tc-tracking-caps",
     "--tc-tray-inset",
     "--tc-tray-radius",
     "--tc-z-dropdown"
@@ -337,7 +341,7 @@
  ],
  "changelog": [],
  "size": {
-  "min": 55779,
-  "gzip": 12908
+  "min": 56855,
+  "gzip": 13500
  }
 }

@@ -45,7 +45,7 @@ describe("tc-review-center", () => {
         expect(el.dataset.look).toBe(look);
         expect(el.tabIndex).toBe(-1);
         for (const m of ["approve", "reject", "edit", "setDraft", "save", "cancel", "skip", "next", "previous", "undo", "peek", "select"] as const) expect(typeof el[m]).toBe("function");
-        expect(el.querySelector(".ui-rvc__heading")!.textContent).toBe("Review center");
+        expect(el.querySelector(".tc-head__title")!.textContent).toBe("Review center");
       });
 
       test("an id that leaves items and comes back is pending again", async () => {

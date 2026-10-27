@@ -120,18 +120,16 @@
    ],
    "slots": [],
    "methods": [],
-   "ui": "gc",
+   "ui": "gcfg",
    "cssProperties": [],
    "tokens": [
     "--tc-accent",
     "--tc-accent-subtle",
     "--tc-accent-text",
-    "--tc-avatar-radius-agent",
     "--tc-border-control",
     "--tc-card-radius",
     "--tc-card-shadow",
     "--tc-control-h-sm",
-    "--tc-control-radius-sm",
     "--tc-divider",
     "--tc-duration-base",
     "--tc-duration-fast",
@@ -140,6 +138,9 @@
     "--tc-ease-standard",
     "--tc-field-bg",
     "--tc-field-font-size",
+    "--tc-field-h",
+    "--tc-field-px",
+    "--tc-field-radius",
     "--tc-field-shadow",
     "--tc-field-shadow-focus",
     "--tc-field-shadow-hover",
@@ -149,16 +150,13 @@
     "--tc-focus-outline",
     "--tc-focus-ring-offset",
     "--tc-font-sans",
-    "--tc-font-size-lg-plus",
     "--tc-font-size-md",
     "--tc-font-size-sm",
     "--tc-font-weight-medium",
     "--tc-font-weight-regular",
-    "--tc-font-weight-semibold",
     "--tc-hairline",
     "--tc-icon-muted",
     "--tc-line-height-normal",
-    "--tc-line-height-relaxed",
     "--tc-line-height-snug",
     "--tc-line-height-tight",
     "--tc-pill-font-size",
@@ -171,7 +169,6 @@
     "--tc-radius-sm",
     "--tc-radius-xs",
     "--tc-shadow-control",
-    "--tc-shadow-raised",
     "--tc-space-0-5",
     "--tc-space-1",
     "--tc-space-1-5",
@@ -202,7 +199,6 @@
     "--tc-text-placeholder",
     "--tc-text-primary",
     "--tc-text-secondary",
-    "--tc-text-strong",
     "--tc-tray-inset",
     "--tc-tray-radius"
    ]
@@ -253,9 +249,11 @@
    ]
   }
  ],
- "changelog": [],
+ "changelog": [
+  "**Trust & calibration**, from THEMIS and built domain-neutral: - claims and their reliability: `tc-claim-answer`, `tc-verification-queue`, `tc-reflection-gate`, `tc-reliance-gauge`, `tc-disagreement-banner`, `tc-synthesis-notes`; - where outputs came from: `tc-lineage-graph`, `tc-validity-badge`, `tc-provenance-summary`, `tc-correction-propagation`, `tc-attestation-check`, `tc-run-manifest`; - policy and control: `tc-policy-simulator`, `tc-gate-config`, `tc-coverage-matrix`, `tc-kill-switch`, `tc-playbook-canvas`."
+ ],
  "size": {
-  "min": 30165,
-  "gzip": 9157
+  "min": 31129,
+  "gzip": 9691
  }
 }

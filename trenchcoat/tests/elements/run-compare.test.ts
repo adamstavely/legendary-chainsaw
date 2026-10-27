@@ -66,7 +66,7 @@ describe("tc-run-compare", () => {
       expect(el.dataset.ui).toBe("rc");
       expect(el.dataset.look).toBe(look);
       expect(getComputedStyle(el).display).toBe("block");
-      expect(el.querySelector(".ui-rc__title")!.textContent).toBe("Refund reply");
+      expect(el.querySelector(".tc-head__title")!.textContent).toBe("Refund reply");
       const [left, right] = el.querySelectorAll(".ui-rc__body > .ui-rc__cell");
       expect([...left.querySelectorAll("del")].map((d) => d.textContent)).toEqual(["5"]);
       expect(left.querySelector("ins")).toBeNull();
@@ -83,7 +83,7 @@ describe("tc-run-compare", () => {
       const views: string[] = [];
       el.addEventListener("tc-view-change", (e) => views.push((e as CustomEvent<RunCompareViewChange>).detail.view));
       const list = el.querySelector('[role="tablist"]')!;
-      expect(list.getAttribute("aria-labelledby")).toBe(el.querySelector(".ui-rc__title")!.id);
+      expect(list.getAttribute("aria-labelledby")).toBe(el.querySelector(".tc-head__title")!.id);
       expect(tabs(el).map((t) => t.tabIndex)).toEqual([0, -1, -1]);
       const panel = el.querySelector('[role="tabpanel"]')!;
       expect(panel.getAttribute("aria-labelledby")).toBe(tab(el, "Output").id);

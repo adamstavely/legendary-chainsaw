@@ -136,7 +136,8 @@
    ],
    "tokens": [
     "--tc-duration-slowest",
-    "--tc-ease-emphasized"
+    "--tc-ease-emphasized",
+    "--tc-font-sans"
    ]
   }
  ],
@@ -153,7 +154,7 @@
   "glass-folder has an `open` property: the look its hover gives, on demand."
  ],
  "size": {
-  "min": 12427,
-  "gzip": 4645
+  "min": 14488,
+  "gzip": 5285
  }
 }

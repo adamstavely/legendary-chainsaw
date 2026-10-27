@@ -255,8 +255,6 @@
     "--tc-font-sans",
     "--tc-font-size-3xl",
     "--tc-font-size-4xl",
-    "--tc-font-size-lg",
-    "--tc-font-size-lg-plus",
     "--tc-font-size-md",
     "--tc-font-size-sm",
     "--tc-font-weight-medium",
@@ -264,7 +262,6 @@
     "--tc-font-weight-strong",
     "--tc-hairline",
     "--tc-line-height-display",
-    "--tc-line-height-loose",
     "--tc-line-height-normal",
     "--tc-line-height-snug",
     "--tc-line-height-tight",
@@ -384,7 +381,7 @@
   "usage-meter: the `--tc-usage-meter-track`, `-fill` and `-action-bg-hover` custom properties are gone; it uses the meter and action tokens."
  ],
  "size": {
-  "min": 52082,
-  "gzip": 13690
+  "min": 53295,
+  "gzip": 14339
  }
 }

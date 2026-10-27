@@ -6,6 +6,14 @@
    "description": "Open decisions with two quick answers each; answered ones confirm, then fold away.",
    "properties": [
     {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Decisions\"",
+     "description": "The inbox's name, in the header; the line under it says how many need input",
+     "readonly": false
+    },
+    {
      "name": "decisions",
      "attribute": null,
      "type": "InboxDecision[]",
@@ -103,15 +111,18 @@
     "--tc-status-danger-fg",
     "--tc-status-success-bg",
     "--tc-status-success-fg",
-    "--tc-status-warning-fg",
-    "--tc-status-warning-solid",
     "--tc-surface-on-tray",
     "--tc-surface-raised",
     "--tc-surface-tray",
     "--tc-text-muted",
     "--tc-text-primary",
     "--tc-text-secondary",
-    "--tc-text-strong",
+    "--tc-title-color",
+    "--tc-title-font-size",
+    "--tc-title-font-weight",
+    "--tc-title-line-height",
+    "--tc-title-tracking",
+    "--tc-tracking-normal",
     "--tc-tray-inset",
     "--tc-tray-radius"
    ]
@@ -123,6 +134,12 @@
    "component": "DecisionInbox",
    "exported": true,
    "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The inbox's name, in the header (default \"Decisions\")"
+    },
     {
      "name": "answers",
      "type": "Record<string, DecisionAnswer>",
@@ -149,14 +166,18 @@
     }
    ],
    "hides": [
+    "title",
+    "heading",
     "answers",
     "decide"
    ]
   }
  ],
- "changelog": [],
+ "changelog": [
+  "decision-inbox has a `heading` (React `title`), default \"Decisions\"; the count moved to the line under it."
+ ],
  "size": {
-  "min": 24072,
-  "gzip": 7033
+  "min": 24664,
+  "gzip": 7676
  }
 }

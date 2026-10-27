@@ -27,8 +27,8 @@ Live, Paused or “You're in control”, with Pause and Take over at hand at eve
 
 ## Anatomy
 
-1. **State** `.ui-lv__state` – Live, Paused, You're in control, Finished or Connecting
-2. **Title** `.ui-lv__title` – what the agent is doing overall
+1. **Header** `.tc-head` – a screen icon and what the agent is doing overall (“Live view” when there's no heading)
+2. **State** `.ui-lv__state` – Live, Paused, You're in control, Finished or Connecting, at the header's right
 3. **Toolbar** `.ui-lv__tools` – Pause or Resume, and Take over or Hand back
 4. **Screen** `.ui-lv__screen` – the stream, in the frame's shape
 5. **Pointer** `.ui-lv__ptr` – the agent's pointer, which glides to each action and presses in on a click

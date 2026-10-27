@@ -137,6 +137,12 @@
     "--tc-avatar-radius-agent",
     "--tc-border-selected",
     "--tc-border-strong",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
     "--tc-card-radius",
     "--tc-card-shadow",
     "--tc-control-font-size",
@@ -161,13 +167,11 @@
     "--tc-focus-ring-offset",
     "--tc-font-sans",
     "--tc-font-size-2xs",
-    "--tc-font-size-lg",
     "--tc-font-size-md",
     "--tc-font-size-sm",
     "--tc-font-size-xs",
     "--tc-font-weight-medium",
     "--tc-font-weight-regular",
-    "--tc-font-weight-strong",
     "--tc-hairline",
     "--tc-icon-muted",
     "--tc-kbd-font-size",
@@ -289,7 +293,7 @@
   "`tc-tool-permissions` – a grid of agents × tool scopes, allow / ask / deny per cell (a destructive scope never offers allow), presets, a Custom state, and a summary of changes against `saved`. WAI-ARIA grid; `tc-value-change` with the cause, `tc-save`."
  ],
  "size": {
-  "min": 41752,
-  "gzip": 10998
+  "min": 43349,
+  "gzip": 11725
  }
 }

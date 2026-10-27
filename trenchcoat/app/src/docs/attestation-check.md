@@ -25,7 +25,7 @@ never leaves the page: the element hands it to `verify` and nothing else.
 
 ## Anatomy
 
-1. **Bar** `.ui-atc__bar` – the heading
+1. **Header** – the shared card header: a boxed shield icon and the heading
 2. **Drop area** `.ui-atc__area` – drop a package file or browse for one; says where it's checked
 3. **Hash** `.ui-atc__hash` – paste a hash and Verify
 4. **Verdict** `.ui-atc__verdict` – valid or invalid, and the package's name
@@ -34,8 +34,8 @@ never leaves the page: the element hands it to `verify` and nothing else.
 
 ## Looks
 
-Standard sets the card on a gray tray with a dashed, recessed drop area; the verdict is a tinted panel with a bold
-title. Clean is one white card under a plain bar, with a hairline-dashed drop area, thinner icons and medium weights.
+Standard puts the header on a gray tray above the card, with a dashed, recessed drop area; the verdict is a tinted panel with a bold
+title. Clean is one white card with the header as its first row, a hairline-dashed drop area, thinner icons and medium weights.
 Both colour the verdict green or red and mark each check with a tick, a cross or a dash.
 
 ## Keyboard

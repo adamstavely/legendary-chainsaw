@@ -27,7 +27,7 @@ People see the shape of a large run at once and can still find the one task that
 
 ## Anatomy
 
-1. **Bar** `.ui-fog__bar` – the title, the job, done of total, the cost and the time left
+1. **Header** `.tc-head` – the icon, the title, the job, done of total, the cost and the time left
 2. **Grid** `.ui-fog__grid` – every task as a cell, tinted by its state
 3. **Cell** `.ui-fog__cell` – one task; hover, focus or click shows its details
 4. **Details** `.ui-fog__tip` – the task's label and state, worker, time, cost, attempts, and its result or error
@@ -36,9 +36,9 @@ People see the shape of a large run at once and can still find the one task that
 
 ## Looks
 
-Standard puts the grid on a white card in the gray tray, with the counts and Retry on the tray under it. Clean has
-no tray: a bar on top and one white panel holding the grid, with the counts as a quiet line inside it, under the
-grid. The cells, states and keys are the same in both.
+Standard puts the header on the gray tray above the grid's white card, with the counts and Retry on the tray under it.
+Clean has no tray: one white card, the header as its first row, then the grid with the counts as a quiet line under
+it. The cells, states and keys are the same in both.
 
 ## Keyboard
 

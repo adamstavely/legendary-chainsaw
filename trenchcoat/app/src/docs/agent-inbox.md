@@ -27,7 +27,7 @@ shows it where it is first, then glides to its new column, so people can follow 
 
 ## Anatomy
 
-1. **Bar** `.ui-ai__bar` – the heading, the action button (Standard) and the Board / List switch
+1. **Header** – the shared card header: a boxed icon, the heading (Agents / title), and on the right the action button (Standard) and the Board / List switch
 2. **Board / List** `.ui-ai__views` – the layout
 3. **Column** `.ui-ai__lane` – Needs you, Running or Done, with its count
 4. **Card** `.ui-ai__card-main` – the task's title, description, state, clock and counts; click to unfold
@@ -36,7 +36,7 @@ shows it where it is first, then glides to its new column, so people can follow 
 ## Looks
 
 Both set white cards in quiet gray columns. Standard shows each card's state as a tinted pill (“Waiting for you ·
-4m 12s”) and can put an action button (“New task”) in the bar. Clean has no bar button, writes the column names in
+4m 12s”) and can put an action button (“New task”) in the header. Clean has no header button, writes the column names in
 small capitals and the state as plain text beside its glyph. In both, List stacks the columns one after another, and
 a container narrower than 620px stacks them whichever layout is picked.
 

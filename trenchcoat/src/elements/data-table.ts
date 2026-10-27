@@ -4,6 +4,7 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { repeat } from "lit/directives/repeat.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
+import { cardHead } from "./internal/card-head";
 import { FocusRescueController, RowWindowController, SmoothHeightController, rescueFocus } from "./internal/controllers";
 import type { Look } from "./internal/look";
 
@@ -110,6 +111,17 @@ export const numberColumnIcon = (look?: Look) => columnIcon("M6 2.5 4.5 13.5M11.
 export const dateColumnIcon = (look?: Look) => columnIcon("M3 4.5h10v9H3zM3 7.5h10M6 2.5v3M10 2.5v3", look);
 
 const clone = (n: Element | undefined) => (n ? n.cloneNode(true) : nothing);
+
+/** The header's default icon: a table (Lucide table, ISC) */
+const tableIcon = svg`<rect x="3" y="3" width="18" height="18" rx="2"></rect><path d="M3 9h18"></path><path d="M9 3v18"></path>`;
+const icons = new WeakMap<Element, Node>();
+/** The app's own `icon`, cloned once, else the table icon */
+const headIcon = (el: Element | undefined) => {
+  if (!el) return tableIcon;
+  let copy = icons.get(el);
+  if (!copy) icons.set(el, (copy = el.cloneNode(true)));
+  return copy as Element;
+};
 
 /**
  * A database-style table that works like a small spreadsheet.
@@ -586,16 +598,16 @@ export class TcDataTable extends TcElement {
       n > 0 ? html`<tr class="ui-dt__spacer" aria-hidden="true"><td colspan=${columns.length + 1} style=${styleMap({ height: `${n * rowH}px`, padding: "0", border: "0" })}></td></tr>` : nothing;
 
     return html`
-      <header class="ui-dt__head">
-        ${this.icon ? html`<span class="ui-dt__title-icon">${clone(this.icon)}</span>` : nothing}
-        <h3 class="ui-dt__title">${this.heading}</h3>
-        ${this.editable
+      ${cardHead({
+        icon: headIcon(this.icon),
+        title: this.heading,
+        aside: this.editable
           ? html`<div class="ui-dt__tools">
               <button type="button" class="ui-dt__tool" aria-label=${`Undo (${mod} Z)`} title=${`Undo · ${mod} Z`} ?disabled=${!this.history.past} @click=${this.undo}>${undoIcon(look)}</button>
               <button type="button" class="ui-dt__tool" aria-label=${`Redo (${mod} Shift Z)`} title=${`Redo · ${mod} ⇧ Z`} ?disabled=${!this.history.future} @click=${this.redo}>${redoIcon(look)}</button>
             </div>`
-          : nothing}
-      </header>
+          : nothing,
+      })}
       <div class=${clean ? "ui-dt__body" : "ui-dt__card"}>
         <div class="ui-dt__morph">
           <div
@@ -827,7 +839,7 @@ export class TcDataTable extends TcElement {
   /* The gray tray frames the white card on every side – the tray recipe */
   padding: var(--tc-tray-inset);
   border-radius: var(--tc-tray-radius);
-  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--tc-font-sans);
   color: var(--tc-text-primary);
   -webkit-font-smoothing: antialiased;
 }
@@ -853,49 +865,14 @@ export class TcDataTable extends TcElement {
 }
 [data-ui="dt"] *, [data-ui="dt"] *::before, [data-ui="dt"] *::after { box-sizing: border-box; }
 :where([data-look="standard"], [data-look="standard"] *)[data-ui="dt"] button { margin: 0; font: inherit; color: inherit; cursor: pointer; }
-:where([data-look="standard"], [data-look="standard"] *).ui-dt__head {
-  display: flex;
-  align-items: center;
-  gap: var(--tc-space-2-5);
-  padding: var(--tc-space-2) var(--tc-space-2-5) var(--tc-space-2) var(--tc-space-4-5);
-  min-height: 46px;
-}
-:where([data-look="standard"], [data-look="standard"] *).ui-dt__title {
-  margin: 0;
-  font-size: var(--tc-font-size-lg-plus);
-  font-weight: var(--tc-font-weight-medium);
-  line-height: var(--tc-line-height-relaxed);
-  letter-spacing: -0.01em;
-}
-:where([data-look="standard"], [data-look="standard"] *).ui-dt__title-icon { display: grid; }
 :where([data-ui="dt"][data-look="clean"]) button { margin: 0; padding: 0; border: 0; background: none; font: inherit; color: inherit; cursor: pointer; }
 :where([data-ui="dt"][data-look="clean"]) svg { display: block; flex: none; }
 :where([data-look="clean"], [data-look="clean"] *)[data-ui="dt"] button:focus-visible,
 :where([data-look="clean"], [data-look="clean"] *)[data-ui="dt"] a:focus-visible { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
-/* Title row: icon, name, undo and redo */
-:where([data-look="clean"], [data-look="clean"] *).ui-dt__head {
-  display: flex;
-  align-items: center;
-  gap: var(--tc-space-2);
-  min-height: 52px;
-  padding: var(--tc-space-3) var(--tc-space-3) var(--tc-space-3) var(--tc-space-4);
-}
-:where([data-look="clean"], [data-look="clean"] *).ui-dt__title {
-  margin: 0;
-  overflow: hidden;
-  font-size: var(--tc-font-size-lg-plus);
-  font-weight: var(--tc-font-weight-medium);
-  line-height: var(--tc-line-height-loose);
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  color: var(--tc-text-strong);
-}
-:where([data-look="clean"], [data-look="clean"] *).ui-dt__title-icon { display: grid; flex: none; }
-.ui-dt__title-icon svg { width: 18px; height: 18px; }
+/* The header (cardHead): on the tray in Standard, the card's first row in Clean; Undo and Redo at its right */
 .ui-dt__tools {
   display: flex;
   gap: var(--tc-space-0-5);
-  margin-left: auto;
 }
 :where([data-look="standard"], [data-look="standard"] *).ui-dt__tool {
   display: grid;
@@ -1408,7 +1385,6 @@ export class TcDataTable extends TcElement {
 }
 /* Narrow screens: tighter sides, the hint in the last row gives way first */
 @media (max-width: 480px) {
-:where([data-look="clean"], [data-look="clean"] *).ui-dt__head { padding-left: var(--tc-space-3-5); }
 :where([data-look="clean"], [data-look="clean"] *).ui-dt__foot { padding-right: var(--tc-space-3-5); }
 }
 /* Touch screens: bigger tap targets */

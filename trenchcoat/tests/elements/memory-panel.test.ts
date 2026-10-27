@@ -42,6 +42,9 @@ for (const look of ["standard", "clean"] as const) {
       expect(el.dataset.x).toBe("1");
       expect(el.getAttribute("role")).toBe("group");
       expect(document.getElementById(el.getAttribute("aria-labelledby")!)!.textContent).toBe("Memory");
+      // The header: on the tray above the card in Standard, the card's first row in Clean; count and switch at its right
+      expect(el.querySelector(look === "clean" ? ":scope > .ui-mp__card > .tc-head:first-child" : ":scope > .tc-head + .ui-mp__card")).toBeTruthy();
+      expect(el.querySelector(".tc-head__aside > .ui-mp__count + .ui-mp__switch")).toBeTruthy();
       expect(el.style.getPropertyValue("--tc-memory-panel-max")).toBe("200px");
     });
 
