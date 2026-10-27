@@ -59,15 +59,21 @@ const TRIGGERS: MentionTrigger[] = [
     char: "/",
     atLineStart: true,
     label: "Commands",
+    // Commands read as "/name" with what they do on a second line; the last one used comes first
+    showChar: true,
+    recent: ["compact"],
+    noun: ["command", "commands"],
+    emptyText: "No commands match",
+    emptyHint: "Try another word, or press Esc to type it as text",
     groups: [
       {
         id: "commands",
         label: "Commands",
         items: [
-          { id: "summarize", label: "summarize", hint: "Sum up the thread so far", icon: spark, token: "/summarize" },
-          { id: "explain", label: "explain", hint: "Walk through the selected code", icon: spark, token: "/explain" },
-          { id: "tests", label: "tests", hint: "Write tests for a file", icon: wrench, token: "/tests" },
-          { id: "compact", label: "compact", hint: "Shrink the conversation", icon: shrink, token: "/compact" },
+          { id: "summarize", label: "summarize", description: "Sum up the thread so far", icon: spark, token: "/summarize" },
+          { id: "explain", label: "explain", description: "Walk through the selected code", icon: spark, token: "/explain" },
+          { id: "tests", label: "tests", description: "Write tests for a file", icon: wrench, token: "/tests", keywords: "spec" },
+          { id: "compact", label: "compact", description: "Shrink the conversation", icon: shrink, token: "/compact" },
         ],
       },
     ],

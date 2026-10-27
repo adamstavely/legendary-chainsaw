@@ -7,7 +7,7 @@ import axe from "axe-core";
 import { afterEach, describe, expect, test, vi } from "vitest";
 import { userEvent } from "vitest/browser";
 import "../../src/elements/chat-composer";
-import { TcChatComposer, type ChatDictationSession, type ChatModel, type ChatPageContext } from "../../src/elements/chat-composer";
+import { TcChatComposer, type ChatDictationSession, type ChatModel, type ChatPageContext, type ChatSkill, type ChatSkillChange } from "../../src/elements/chat-composer";
 import { cleanup, fixture, settle } from "./helpers";
 import * as React from "react";
 import { act } from "react";
@@ -202,8 +202,8 @@ for (const look of ["standard", "clean"] as const) {
       expect(onSend).not.toHaveBeenCalled();
       key(message(el), "Enter");
       await settle();
-      expect(onSend).toHaveBeenCalledWith("Hi", { model: "auto" });
-      expect(sent).toEqual([{ message: "Hi", model: "auto" }]);
+      expect(onSend).toHaveBeenCalledWith("Hi", { model: "auto", skill: null, args: "Hi" });
+      expect(sent).toEqual([{ message: "Hi", model: "auto", skill: null, args: "Hi" }]);
       expect(message(el).value).toBe("");
       expect(el.querySelector('[aria-live="polite"]')!.textContent).toBe("Message sent.");
     });
@@ -214,7 +214,7 @@ for (const look of ["standard", "clean"] as const) {
       const el = await fixture<TcChatComposer>(html`<tc-chat-composer look=${look} demo value="Ship it" .onSend=${onSend}></tc-chat-composer>`);
       button(el, "Send message")!.click();
       await settle();
-      expect(onSend).toHaveBeenCalledWith("Ship it", { model: "auto" });
+      expect(onSend).toHaveBeenCalledWith("Ship it", { model: "auto", skill: null, args: "Ship it" });
       expect(message(el).value).toBe("Ship it");
       expect(button(el, "Send message")!.disabled).toBe(true);
       settleSend.reject(new Error("offline"));
@@ -856,4 +856,435 @@ describe("tc-chat-composer: the toolbar row and the disclaimer (Part 6.3)", () =
       const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
       expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
     });
+});
+
+describe("tc-chat-composer: skills (Part 7.2)", () => {
+  const SKILLS: ChatSkill[] = [
+    { id: "translate", name: "translate", description: "Translate the message into another language", source: "Built-in", argumentHint: "<language>", keywords: "localise language" },
+    { id: "summarize", name: "summarize", description: "Sum up the conversation so far", source: "Built-in" },
+    { id: "thread", name: "thread-summary", description: "Post a summary of this thread to the team", source: "Your team" },
+    { id: "review", name: "review-pr", description: "Review a pull request", source: "Your team", argumentHint: "<pr number>" },
+    { id: "digest", name: "digest", description: "A weekly summary of what shipped", source: "Linear" },
+  ];
+  const picker = (el: Element) => el.querySelector<HTMLElement & { open: boolean; sync(): void }>("tc-mention-picker")!;
+  const options = (el: Element) => [...el.querySelectorAll<HTMLElement>('tc-mention-picker [role="option"]')];
+  const rows = (el: Element) => options(el).map((o) => o.querySelector(".ui-mnp__name")!.textContent);
+  const labels = (el: Element) => [...el.querySelectorAll<HTMLElement>(".ui-mnp__label")].map((l) => l.textContent);
+  const said = (el: Element) => el.querySelector('tc-mention-picker [role="status"]')!.textContent!.trim();
+  const status = (el: Element) => el.querySelector('.ui-chat-composer__sr-only[aria-live="polite"]')!.textContent;
+  /** Types at the caret, the way a user would: text, caret after it, an input event */
+  const typeIn = async (el: Element, text: string) => {
+    const t = message(el);
+    t.focus();
+    const at = t.selectionStart ?? t.value.length;
+    t.setRangeText(text, at, t.selectionEnd ?? at, "end");
+    t.dispatchEvent(new InputEvent("input", { bubbles: true, inputType: "insertText", data: text }));
+    await settle();
+  };
+  const changes = (el: Element) => {
+    const list: ChatSkillChange[] = [];
+    el.addEventListener("tc-skill-change", (e) => list.push((e as CustomEvent<ChatSkillChange>).detail));
+    return list;
+  };
+  const setup = async (look: "standard" | "clean", extra: Partial<TcChatComposer> = {}) => {
+    const el = await fixture<TcChatComposer>(html`<tc-chat-composer look=${look} demo .skills=${SKILLS} placeholder="Ask anything…"></tc-chat-composer>`);
+    Object.assign(el, extra);
+    await settle();
+    return el;
+  };
+
+  test("off unless skills are set: no / button, the placeholder as given, no picker", async () => {
+    const el = await fixture<TcChatComposer>(html`<tc-chat-composer demo placeholder="Ask anything…"></tc-chat-composer>`);
+    expect(button(el, "Use a skill")).toBeNull();
+    expect(message(el).placeholder).toBe("Ask anything…");
+    expect(el.querySelector("tc-mention-picker")).toBeNull();
+  });
+
+  for (const look of ["standard", "clean"] as const) {
+    describe(look, () => {
+      test("the message is the combobox; the placeholder mentions /; / at the start lists recent skills, then by source", async () => {
+        const el = await setup(look, { recentSkills: ["review", "digest"] });
+        const t = message(el);
+        expect(t.placeholder).toBe("Ask anything · / for skills");
+        expect(t.getAttribute("aria-autocomplete")).toBe("list");
+        expect(button(el, "Use a skill")).toBeTruthy();
+        await typeIn(el, "/");
+        expect(picker(el).open).toBe(true);
+        expect(document.getElementById(t.getAttribute("aria-controls")!)!.getAttribute("aria-label")).toBe("Skills");
+        expect(labels(el)).toEqual(["Recent", "Built-in", "Your team"]);
+        expect(rows(el)).toEqual(["/review-pr", "/digest", "/translate", "/summarize", "/thread-summary"]);
+        // Each row: /name, and the description under it
+        const first = options(el)[0];
+        expect(first.hasAttribute("data-two")).toBe(true);
+        expect(first.querySelector(".ui-mnp__desc")!.textContent).toBe("Review a pull request");
+        expect(said(el)).toBe("5 skills");
+        expect(document.getElementById(t.getAttribute("aria-activedescendant")!)!.textContent).toContain("/review-pr");
+      });
+
+      test("typing ranks one list across sources: name start, then a word's start, then the description – marked where it matched", async () => {
+        const el = await setup(look);
+        await typeIn(el, "/sum");
+        expect(rows(el)).toEqual(["/summarize", "/thread-summary", "/digest"]);
+        expect(labels(el)).toEqual([]);
+        expect([...el.querySelectorAll(".ui-mnp__tag")].map((x) => x.textContent)).toEqual(["Built-in", "Your team", "Linear"]);
+        const marks = options(el).flatMap((o) => [...o.querySelectorAll("mark")].map((m) => m.textContent));
+        expect(marks).toEqual(["sum", "Sum", "sum", "sum", "sum"]);
+        // The mark in "thread-summary" is on the word that matched
+        expect(options(el)[1].querySelector(".ui-mnp__name mark")!.previousSibling!.textContent).toBe("thread-");
+        // Keywords find a skill too
+        await typeIn(el, " ");
+        message(el).value = "";
+        await typeIn(el, "/loc");
+        expect(rows(el)).toEqual(["/translate"]);
+        expect(said(el)).toBe("1 skill");
+      });
+
+      test("nothing matches: says so with a hint; Esc closes and leaves the text", async () => {
+        const el = await setup(look);
+        await typeIn(el, "/zzz");
+        const empty = el.querySelector(".ui-mnp__empty")!;
+        expect(empty.textContent).toContain("No skills match for “zzz”");
+        expect(empty.querySelector(".ui-mnp__empty-hint")!.textContent).toBe("Try another word, or press Esc to type it as text");
+        expect(said(el)).toBe("No skills match");
+        key(message(el), "Escape");
+        await settle();
+        expect(picker(el).open).toBe(false);
+        expect(el.value).toBe("/zzz");
+      });
+
+      test("a pick puts the token at the start with its argument hint; typing hides the hint; tc-skill-change says why", async () => {
+        const el = await setup(look);
+        const seen = changes(el);
+        const mentioned = vi.fn();
+        el.addEventListener("tc-pick", mentioned);
+        await typeIn(el, "/tra");
+        key(message(el), "Enter");
+        await settle();
+        expect(mentioned).not.toHaveBeenCalled();
+        expect(el.value).toBe("/translate ");
+        expect(el.skill).toBe("translate");
+        expect(el.pickedSkill!.name).toBe("translate");
+        expect(seen).toEqual([{ skill: SKILLS[0], previous: null, reason: "pick" }]);
+        expect(message(el).selectionStart).toBe("/translate ".length);
+        const mirror = el.querySelector(".ui-chat-composer__mirror")!;
+        expect(mirror.getAttribute("aria-hidden")).toBe("true");
+        expect(mirror.querySelector(".ui-chat-composer__token")!.textContent).toBe("/translate");
+        expect(mirror.querySelector(".ui-chat-composer__arg")!.textContent).toBe("<language>");
+        expect(status(el)).toBe("/translate added. Then type language.");
+        // A screen reader hears the token and the hint with the message
+        const note = document.getElementById(message(el).getAttribute("aria-describedby")!.split(" ")[0])!;
+        expect(note.textContent).toBe("Skill /translate: Translate the message into another language. Type language.");
+        await typeIn(el, "French");
+        expect(el.querySelector(".ui-chat-composer__arg")).toBeNull();
+        expect(note.isConnected && document.getElementById(note.id)!.textContent).toBe("Skill /translate: Translate the message into another language.");
+        // The token and the text start at the same place: the tint sits under the slash
+        const token = el.querySelector<HTMLElement>(".ui-chat-composer__token")!.getBoundingClientRect();
+        const box = message(el).getBoundingClientRect();
+        expect(Math.abs(token.left - box.left)).toBeLessThan(look === "clean" ? 2 : 8);
+      });
+
+      test("Backspace after the token removes it whole; Delete before it too; preventing keeps it", async () => {
+        const el = await setup(look);
+        const seen = changes(el);
+        await typeIn(el, "/sum");
+        key(message(el), "Enter");
+        await settle();
+        expect(el.value).toBe("/summarize ");
+        key(message(el), "Backspace");
+        await settle();
+        expect(el.value).toBe("");
+        expect(el.skill).toBe("");
+        expect(seen.map((c) => c.reason)).toEqual(["pick", "remove"]);
+        expect(status(el)).toBe("/summarize removed.");
+        // Prevented: the token stays
+        await typeIn(el, "/sum");
+        key(message(el), "Enter");
+        await settle();
+        await typeIn(el, "this");
+        el.addEventListener("tc-skill-change", (e) => e.preventDefault(), { once: true });
+        message(el).setSelectionRange(0, 0);
+        const del = new KeyboardEvent("keydown", { key: "Delete", bubbles: true, cancelable: true });
+        message(el).dispatchEvent(del);
+        await settle();
+        expect(del.defaultPrevented).toBe(true);
+        expect(el.value).toBe("/summarize this");
+        expect(el.skill).toBe("summarize");
+        message(el).setSelectionRange(0, 0);
+        key(message(el), "Delete");
+        await settle();
+        expect(el.value).toBe("this");
+        expect(el.skill).toBe("");
+      });
+
+      test("tc-send carries the skill and its arguments; the message keeps the token; sending clears the skill", async () => {
+        const sent: unknown[] = [];
+        const onSend = vi.fn();
+        const el = await setup(look, { onSend });
+        el.addEventListener("tc-send", (e) => sent.push((e as CustomEvent).detail));
+        const seen = changes(el);
+        await typeIn(el, "/tra");
+        key(message(el), "Enter");
+        await settle();
+        await typeIn(el, "French  ");
+        key(message(el), "Enter");
+        await settle();
+        expect(sent).toEqual([{ message: "/translate French", model: "auto", skill: { id: "translate", name: "translate" }, args: "French" }]);
+        expect(onSend).toHaveBeenCalledWith("/translate French", { model: "auto", skill: { id: "translate", name: "translate" }, args: "French" });
+        expect(el.value).toBe("");
+        expect(el.skill).toBe("");
+        expect(seen.map((c) => c.reason)).toEqual(["pick", "send"]);
+      });
+
+      test("a pick the page prevents leaves the text; the page can set the skill itself", async () => {
+        const el = await setup(look);
+        el.addEventListener("tc-skill-change", (e) => e.preventDefault(), { once: true });
+        await typeIn(el, "/dig");
+        key(message(el), "Enter");
+        await settle();
+        expect(el.value).toBe("/dig");
+        expect(el.skill).toBe("");
+        expect(picker(el).open).toBe(false);
+        el.skill = "digest";
+        await settle();
+        expect(el.value).toBe("/digest ");
+        expect(el.querySelector(".ui-chat-composer__token")!.textContent).toBe("/digest");
+        // …and clear it
+        el.skill = "";
+        await settle();
+        expect(el.value).toBe("");
+      });
+
+      test("one skill per message: / on a later line offers to replace it; / before the token too, and Esc puts it back", async () => {
+        const el = await setup(look);
+        const seen = changes(el);
+        await typeIn(el, "/tra");
+        key(message(el), "Enter");
+        await settle();
+        await typeIn(el, "German\n/");
+        expect(picker(el).open).toBe(true);
+        expect(el.querySelector(".ui-mnp__note")!.textContent).toBe("Picking one replaces /translate");
+        expect(said(el)).toBe("5 skills. Picking one replaces /translate");
+        await typeIn(el, "rev");
+        key(message(el), "Enter");
+        await settle();
+        expect(el.value).toBe("/review-pr German\n");
+        expect(seen.at(-1)).toMatchObject({ skill: { id: "review" }, previous: { id: "translate" }, reason: "replace" });
+        expect(status(el)).toBe("/review-pr replaces /translate.");
+        // "/" typed before the token: a "/" takes its place and the list opens; Esc brings the token back
+        message(el).setSelectionRange(0, 0);
+        const slash = new KeyboardEvent("keydown", { key: "/", bubbles: true, cancelable: true });
+        message(el).dispatchEvent(slash);
+        await settle();
+        expect(slash.defaultPrevented).toBe(true);
+        expect(el.value).toBe("/ German\n");
+        expect(picker(el).open).toBe(true);
+        expect(el.skill).toBe("review");
+        key(message(el), "Escape");
+        await settle();
+        expect(el.value).toBe("/review-pr German\n");
+        expect(el.skill).toBe("review");
+        expect(seen).toHaveLength(2);
+      });
+
+      test("the / button puts a / at the start and opens the list; closing it takes the / away", async () => {
+        const el = await setup(look);
+        el.value = "hello there";
+        await settle();
+        button(el, "Use a skill")!.click();
+        await settle();
+        expect(el.value).toBe("/hello there");
+        expect(document.activeElement).toBe(message(el));
+        expect(picker(el).open).toBe(true);
+        key(message(el), "Escape");
+        await settle();
+        expect(el.value).toBe("hello there");
+        // A pick puts the token before the text
+        button(el, "Use a skill")!.click();
+        await settle();
+        key(message(el), "ArrowDown");
+        key(message(el), "Enter");
+        await settle();
+        expect(el.value).toBe("/summarize hello there");
+        expect(el.skill).toBe("summarize");
+      });
+
+      test("recents: without recentSkills the composer remembers its picks, most recent first", async () => {
+        const el = await setup(look);
+        for (const q of ["dig", "rev"]) {
+          await typeIn(el, `/${q}`);
+          key(message(el), "Enter");
+          await settle();
+          key(message(el), "Backspace");
+          await settle();
+        }
+        expect(el.value).toBe("");
+        await typeIn(el, "/");
+        expect(labels(el)[0]).toBe("Recent");
+        expect(rows(el).slice(0, 2)).toEqual(["/review-pr", "/digest"]);
+      });
+
+      test("editing the token drops the skill; typing a skill's name in full makes it one", async () => {
+        const el = await setup(look);
+        const seen = changes(el);
+        await typeIn(el, "/sum");
+        key(message(el), "Enter");
+        await settle();
+        type(el, "/summarise this");
+        await settle();
+        expect(el.skill).toBe("");
+        expect(el.querySelector(".ui-chat-composer__mirror")).toBeNull();
+        type(el, "/digest now");
+        await settle();
+        expect(el.skill).toBe("digest");
+        expect(seen.map((c) => [c.reason, c.skill?.id ?? null])).toEqual([
+          ["pick", "summarize"],
+          ["edit", null],
+          ["edit", "digest"],
+        ]);
+      });
+
+      test("typing inside the token lands after it", async () => {
+        const el = await setup(look);
+        await typeIn(el, "/sum");
+        key(message(el), "Enter");
+        await settle();
+        message(el).setSelectionRange(3, 3);
+        await userEvent.keyboard("x");
+        await settle();
+        expect(el.value).toBe("/summarize x");
+        expect(el.skill).toBe("summarize");
+      });
+
+      test("async searchSkills: loading, results, a failure that ↵ retries", async () => {
+        let fail = true;
+        const resolvers: ((s: ChatSkill[]) => void)[] = [];
+        const searchSkills = vi.fn((q: string) => {
+          if (q === "x") return fail ? Promise.reject(new Error("offline")) : Promise.resolve([SKILLS[4]]);
+          return new Promise<ChatSkill[]>((r) => resolvers.push(r));
+        });
+        const el = await fixture<TcChatComposer>(html`<tc-chat-composer look=${look} demo .searchSkills=${searchSkills}></tc-chat-composer>`);
+        await settle();
+        expect(button(el, "Use a skill")).toBeTruthy();
+        await typeIn(el, "/t");
+        expect(el.querySelector('.ui-mnp__empty[data-state="loading"]')).toBeTruthy();
+        resolvers[0]([SKILLS[0], SKILLS[2]]);
+        await settle();
+        expect(rows(el)).toEqual(["/translate", "/thread-summary"]);
+        key(message(el), "Enter");
+        await settle();
+        expect(el.value).toBe("/translate ");
+        expect(el.pickedSkill!.argumentHint).toBe("<language>");
+        key(message(el), "Backspace");
+        await settle();
+        await typeIn(el, "/x");
+        await settle();
+        expect(el.querySelector('.ui-mnp__empty[data-state="failed"]')!.textContent).toContain("Press ↵ to try again");
+        fail = false;
+        expect(key(message(el), "Enter")).toBe(false);
+        await settle();
+        await settle();
+        expect(rows(el)).toEqual(["/digest"]);
+      });
+
+      test("@ mentions and / skills share one list", async () => {
+        const mentions = [{ char: "@", label: "People", groups: [{ id: "p", label: "People", items: [{ id: "ana", label: "Ana Lima" }] }] }, { char: "/", groups: [] }];
+        const el = await setup(look, { mentions });
+        expect(el.querySelectorAll("tc-mention-picker")).toHaveLength(1);
+        await typeIn(el, "/rev");
+        key(message(el), "Enter");
+        await settle();
+        const picked = vi.fn();
+        el.addEventListener("tc-pick", (e) => picked((e as CustomEvent).detail.token));
+        await typeIn(el, "with @an");
+        key(message(el), "Enter");
+        await settle();
+        expect(picked).toHaveBeenCalledWith("@Ana Lima");
+        expect(el.value).toBe("/review-pr with @Ana Lima ");
+        expect(el.skill).toBe("review");
+      });
+
+      test("hundreds of skills: the list shows the first 50 and says how many match", async () => {
+        const many = Array.from({ length: 600 }, (_, i) => ({ id: `s${i}`, name: `skill-${i}`, description: `Does thing ${i}`, source: i % 2 ? "Odd" : "Even" }));
+        const el = await setup(look, { skills: many });
+        const t0 = performance.now();
+        await typeIn(el, "/");
+        expect(rows(el)).toHaveLength(50);
+        expect(el.querySelector(".ui-mnp__more")!.textContent).toBe("50 of 600 shown – type to narrow them down");
+        await typeIn(el, "skill-59");
+        // The exact name first, then the rest that start with it
+        expect(rows(el)[0]).toBe("/skill-59");
+        expect(rows(el).sort()).toEqual(["/skill-59", ...Array.from({ length: 10 }, (_, i) => `/skill-59${i}`)]);
+        expect(performance.now() - t0).toBeLessThan(1500);
+      });
+
+      test("hide-skills-button leaves the button out; skills-placeholder words the placeholder", async () => {
+        const el = await setup(look, { hideSkillsButton: true, skillsPlaceholder: "Ask, or type / for a skill" });
+        expect(button(el, "Use a skill")).toBeNull();
+        expect(message(el).placeholder).toBe("Ask, or type / for a skill");
+      });
+    });
+  }
+
+  test("React: skills, onSkillChange and onSend's details; a controlled skill", async () => {
+    const host = document.body.appendChild(document.createElement("div"));
+    const root = createRoot(host);
+    const calls: string[] = [];
+    const onSend = vi.fn();
+    function App() {
+      const [skill, setSkill] = React.useState("");
+      return React.createElement(ChatComposer, {
+        demo: true,
+        skills: SKILLS.map((s) => (s.id === "digest" ? { ...s, icon: React.createElement("svg", { "data-mine": "" }) } : s)),
+        recentSkills: ["digest"],
+        skill,
+        onSkillChange: (s: { id: string } | null, reason: string) => {
+          calls.push(`${reason}:${s?.id ?? "none"}`);
+          setSkill(s?.id ?? "");
+        },
+        onSend,
+      });
+    }
+    await act(async () => root.render(React.createElement(App)));
+    await settle();
+    const el = host.querySelector<TcChatComposer>("tc-chat-composer")!;
+    await act(async () => typeIn(el, "/"));
+    await settle();
+    expect(el.querySelector(".ui-mnp__icon svg[data-mine]")).toBeTruthy();
+    // Controlled: the pick is prevented, the parent sets the skill and the composer puts the token in
+    await act(async () => void key(message(el), "Enter"));
+    await settle();
+    expect(el.value).toBe("/digest ");
+    expect(el.skill).toBe("digest");
+    await act(async () => typeIn(el, "this week"));
+    await act(async () => void key(message(el), "Enter"));
+    await settle();
+    expect(onSend).toHaveBeenCalledWith("/digest this week", { model: "auto", skill: { id: "digest", name: "digest" }, args: "this week" });
+    expect(calls).toEqual(["pick:digest", "send:none"]);
+    expect(el.skill).toBe("");
+    expect(el.value).toBe("");
+    await act(async () => root.unmount());
+  });
+
+  for (const theme of ["light", "dark"] as const)
+    for (const look of ["standard", "clean"] as const)
+      test(`axe: the list open, then a token with its hint (${look}, ${theme})`, async () => {
+        const wrap = await fixture<HTMLElement>(html`<div data-tc-theme=${theme} style="background: ${theme === "dark" ? "#0e0e10" : "#fff"}; padding: 8px 8px 360px; width: 560px">
+          <tc-chat-composer look=${look} demo .skills=${SKILLS} .recentSkills=${["review"]}></tc-chat-composer>
+        </div>`);
+        const el = wrap.querySelector<TcChatComposer>("tc-chat-composer")!;
+        const run = async () => {
+          for (const a of document.getAnimations()) a.finish();
+          // The list scrolls with ↑ ↓ from the message (its rows are the message's active descendant), so it takes no
+          // focus of its own – the gallery's axe suite turns this rule off for the same reason
+          const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, rules: { "scrollable-region-focusable": { enabled: false } }, resultTypes: ["violations"] });
+          expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
+        };
+        await typeIn(el, "/");
+        await run();
+        await typeIn(el, "tr");
+        key(message(el), "Enter");
+        await settle();
+        expect(el.querySelector(".ui-chat-composer__arg")).toBeTruthy();
+        await run();
+      });
 });

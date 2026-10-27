@@ -1,8 +1,9 @@
 /*
- * <tc-stories> in real browsers: the row (rings, names, the add tile, roving focus), the viewer (opening on the first
- * unseen item, stepping by key, tap and button, moving between people, closing by Escape, swipe and the last item,
- * focus in, trapped and restored), auto-advance and what pauses it, seen and open as cancelable values, reply, video
- * mute, the React wrapper and axe in both looks and both themes.
+ * <tc-stories> in real browsers: the row (rings, names, people and accounts, the add tile, roving focus), the brief
+ * (a native modal named by the entry, the count line, the summary, a tile per kind with the New marker, the bento
+ * packing at three columns and one at 320 px), moving between entries by key and button, closing by Escape, Close and
+ * the browser's cancel with focus back on the avatar, seen and open as cancelable values (one seen batch per opening),
+ * tc-action, reply, the React wrapper and axe in both looks and both themes.
  */
 import { html } from "lit";
 import axe from "axe-core";
@@ -10,55 +11,64 @@ import * as React from "react";
 import { act } from "react";
 import { createRoot } from "react-dom/client";
 import { afterEach, describe, expect, test } from "vitest";
+import { page } from "vitest/browser";
 import "../../src/elements/stories";
-import type { StoryOpen, StoryOpenChangeEvent, StoryPerson, StoryReplyEvent, StorySeen, StorySeenChangeEvent, TcStories } from "../../src/elements/stories";
+import type { StoryActionEvent, StoryEntry, StoryOpen, StoryOpenChangeEvent, StoryReplyEvent, StorySeen, StorySeenChangeEvent, TcStories } from "../../src/elements/stories";
 import { Stories } from "../../src/elements/react/stories";
 import { cleanup, fixture, settle } from "./helpers";
 
 afterEach(cleanup);
 
-const IMG = `data:image/svg+xml;charset=utf-8,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 9 16"><rect width="9" height="16" fill="#335"/></svg>')}`;
-const people: StoryPerson[] = [
+const IMG = `data:image/svg+xml;charset=utf-8,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 9"><rect width="16" height="9" fill="#335"/></svg>')}`;
+const entries: StoryEntry[] = [
   {
     id: "maya",
     name: "Maya Chen",
     avatar: IMG,
-    items: [
-      { id: "m1", kind: "image", src: IMG, text: "A sunrise", at: "2h" },
-      { id: "m2", kind: "text", text: "Onboarding is live", tone: "teal", at: "1h" },
-      { id: "m3", kind: "text", text: "Third", at: "40m" },
+    since: "Tue 09:41",
+    summary: "Conversion is up and pricing is in review.",
+    summaryGenerated: true,
+    updates: [
+      { id: "m-conv", kind: "metric", title: "Conversion", value: "8.4%", delta: 1.2, deltaUnit: " pts", context: "vs last week", trend: [7, 7.4, 8.4] },
+      { id: "m-price", kind: "status", title: "Pricing page", from: "Draft", to: "In review", toTone: "info", text: "Waiting on legal.", at: "2h" },
+      { id: "m-note", kind: "note", title: "Note", text: "Second pair of eyes, please.", author: "Maya Chen", at: "1h" },
+      { id: "m-report", kind: "link", title: "Report", text: "Funnel by step.", label: "Open report", href: "#report" },
+      { id: "m-setup", kind: "metric", title: "Setup time", value: "6m 40s", delta: -48, deltaUnit: "s", lowerIsBetter: true },
     ],
   },
-  { id: "empty", name: "Nobody", items: [] },
+  { id: "empty", name: "Nobody", updates: [] },
   {
-    id: "priya",
-    name: "Priya Shah",
-    items: [
-      { id: "p1", kind: "text", text: "On call", at: "5h" },
-      { id: "p2", kind: "text", text: "Billing", tone: "amber", at: "4h" },
+    id: "northwind",
+    name: "Northwind",
+    kind: "account",
+    updates: [
+      { id: "n-members", kind: "list", title: "New members", items: ["Priya Shah", { label: "Tom Ellis", meta: "Viewer" }, "Ana Ruiz", "Jun Park", "Lee Wu"], total: 7 },
+      { id: "n-seats", kind: "metric", title: "Seats", value: 42, delta: 7, neutral: true },
+      { id: "n-review", kind: "link", title: "Access requests", label: "Review" },
     ],
   },
-  { id: "ana", name: "Ana Ruiz", items: [{ id: "a1", kind: "text", text: "Peaks", at: "Yesterday" }] },
+  {
+    id: "leo",
+    name: "Leo Park",
+    updates: [
+      { id: "l-launch", kind: "status", title: "Search v2", from: "Beta", to: "Live", toTone: "success" },
+      { id: "l-shot", kind: "image", title: "Results page", src: IMG, alt: "Three results under a search field", caption: "Titles first." },
+    ],
+  },
 ];
-const SEEN = () => new Set(["p1", "a1"]);
+const SEEN = () => new Set(["m-setup", "l-launch", "l-shot"]);
 
-const make = (opts: { look?: "standard" | "clean"; seen?: StorySeen; autoplay?: boolean; duration?: number; addable?: boolean; replyable?: boolean; list?: StoryPerson[] } = {}) =>
-  fixture<TcStories>(html`<tc-stories
-    look=${opts.look ?? "standard"}
-    .people=${opts.list ?? people}
-    .seen=${opts.seen ?? SEEN()}
-    .autoplay=${opts.autoplay ?? false}
-    .duration=${opts.duration ?? 5000}
-    ?addable=${opts.addable}
-    ?replyable=${opts.replyable}
-  ></tc-stories>`);
+const make = (opts: { look?: "standard" | "clean"; seen?: StorySeen; addable?: boolean; replyable?: boolean; list?: StoryEntry[] } = {}) =>
+  fixture<TcStories>(html`<tc-stories look=${opts.look ?? "standard"} .entries=${opts.list ?? entries} .seen=${opts.seen ?? SEEN()} ?addable=${opts.addable} ?replyable=${opts.replyable}></tc-stories>`);
 const avatars = (el: Element) => [...el.querySelectorAll<HTMLButtonElement>(".ui-sty__row > .ui-sty__person")];
-const avatarOf = (el: Element, id: string) => el.querySelector<HTMLButtonElement>(`.ui-sty__person[data-person="${id}"]`)!;
+const avatarOf = (el: Element, id: string) => el.querySelector<HTMLButtonElement>(`.ui-sty__person[data-entry="${id}"]`)!;
 const dialog = (el: Element) => el.querySelector<HTMLDialogElement>(".ui-sty__viewer")!;
-const media = (el: Element) => el.querySelector<HTMLElement>(".ui-sty__media")!;
-const live = (el: Element) => el.querySelector(".ui-sty__sr")!.textContent;
+const name = (el: Element) => document.getElementById(dialog(el).getAttribute("aria-labelledby")!)!.textContent;
+const sub = (el: Element) => dialog(el).querySelector(".tc-head__sub")!.textContent;
+const tiles = (el: Element) => [...el.querySelectorAll<HTMLElement>(".ui-sty__tile")];
+const tile = (el: Element, title: string) => tiles(el).find((t) => t.querySelector("h3")!.textContent === title)!;
+const live = (el: Element) => el.querySelector(".ui-sty__sr[role=status]")!.textContent;
 const key = (target: Element, k: string, init: KeyboardEventInit = {}) => target.dispatchEvent(new KeyboardEvent("keydown", { key: k, bubbles: true, cancelable: true, ...init }));
-const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
 const finish = async (root: Element) => {
   for (const a of root.getAnimations?.({ subtree: true }) ?? []) a.finish();
   for (const a of document.getAnimations?.() ?? []) a.finish();
@@ -68,36 +78,27 @@ const openOn = async (el: TcStories, id: string) => {
   avatarOf(el, id).click();
   await settle();
 };
-const pointer = (target: Element, type: string, x: number, y: number, init: PointerEventInit = {}) =>
-  target.dispatchEvent(new PointerEvent(type, { clientX: x, clientY: y, pointerId: 7, bubbles: true, cancelable: true, isPrimary: true, button: 0, ...init }));
-/** Presses and releases at a fraction of the stage's width */
-const tap = async (el: TcStories, fx: number, init: PointerEventInit = {}) => {
-  const box = media(el).getBoundingClientRect();
-  const x = box.left + box.width * fx;
-  const y = box.top + box.height / 2;
-  pointer(media(el), "pointerdown", x, y, init);
-  pointer(media(el), "pointerup", x, y, init);
-  await settle();
-};
 
 describe("tc-stories", () => {
   for (const look of ["standard", "clean"] as const) {
-    test(`${look}: the host, the rings and the names`, async () => {
+    test(`${look}: the host, the rings, people and accounts`, async () => {
       const el = await make({ look });
       expect(el.dataset.ui).toBe("sty");
       expect(el.dataset.look).toBe(look);
       const row = el.querySelector(".ui-sty__row")!;
       expect(row.getAttribute("role")).toBe("toolbar");
-      expect(row.getAttribute("aria-label")).toBe("Stories");
-      // People with no items are left out
-      expect(avatars(el).map((b) => b.getAttribute("aria-label"))).toEqual(["Maya Chen, 3 new", "Priya Shah, 1 new", "Ana Ruiz, seen"]);
+      expect(row.getAttribute("aria-label")).toBe("Updates");
+      // Entries with no updates are left out
+      expect(avatars(el).map((b) => b.getAttribute("aria-label"))).toEqual(["Maya Chen, 4 new", "Northwind, 3 new", "Leo Park, seen"]);
       expect(avatars(el).map((b) => b.dataset.state)).toEqual(["new", "new", "seen"]);
-      expect(avatars(el).map((b) => b.querySelector(".ui-sty__label")!.textContent)).toEqual(["Maya Chen", "Priya Shah", "Ana Ruiz"]);
+      expect(avatars(el).map((b) => b.dataset.kind)).toEqual(["person", "account", "person"]);
       expect(avatarOf(el, "maya").getAttribute("aria-haspopup")).toBe("dialog");
-      // An image avatar, else initials
       expect(avatarOf(el, "maya").querySelector("img.ui-sty__img")!.getAttribute("alt")).toBe("");
-      expect(avatarOf(el, "priya").querySelector(".ui-sty__initials")!.textContent).toBe("PS");
-      expect(el.querySelector(".tc-head")).toBeNull();
+      expect(avatarOf(el, "leo").querySelector(".ui-sty__initials")!.textContent).toBe("LP");
+      // A person is round, an account square
+      expect(getComputedStyle(avatarOf(el, "maya").querySelector(".ui-sty__ring")!).borderTopLeftRadius).toBe("50%");
+      expect(getComputedStyle(avatarOf(el, "northwind").querySelector(".ui-sty__ring")!).borderTopLeftRadius).toMatch(/px$/);
+      expect(el.querySelector(".ui-sty__row .tc-head")).toBeNull();
       expect(dialog(el).open).toBe(false);
     });
   }
@@ -106,25 +107,26 @@ describe("tc-stories", () => {
     const el = await make();
     const ring = getComputedStyle(avatarOf(el, "maya").querySelector(".ui-sty__ring")!);
     expect(ring.backgroundImage).toContain("conic-gradient");
-    const seen = getComputedStyle(avatarOf(el, "ana").querySelector(".ui-sty__ring")!);
-    expect(seen.backgroundImage).toBe("none");
+    expect(getComputedStyle(avatarOf(el, "leo").querySelector(".ui-sty__ring")!).backgroundImage).toBe("none");
     el.style.setProperty("--tc-story-ring", "linear-gradient(red, blue)");
     expect(getComputedStyle(avatarOf(el, "maya").querySelector(".ui-sty__ring")!).backgroundImage).toContain("linear-gradient");
     const clean = await make({ look: "clean" });
     expect(parseFloat(getComputedStyle(avatarOf(clean, "maya").querySelector(".ui-sty__ring")!).paddingTop)).toBeLessThan(parseFloat(ring.paddingTop));
   });
 
-  test("seen can be a record; the add tile comes first and fires tc-add; the empty state", async () => {
-    const el = await make({ seen: { m1: true, m2: true, m3: true }, addable: true });
+  test("seen can be a record; `people` is the same list; the add tile fires tc-add; the empty state", async () => {
+    const all = Object.fromEntries(entries.flatMap((e) => e.updates.map((u) => [u.id, true])));
+    const el = await fixture<TcStories>(html`<tc-stories addable .people=${entries} .seen=${all}></tc-stories>`);
+    expect(el.entries).toBe(el.people);
     expect(avatars(el)[0].classList.contains("ui-sty__add")).toBe(true);
-    expect(avatars(el)[0].textContent!.trim()).toBe("Add story");
+    expect(avatars(el)[0].textContent!.trim()).toBe("Add update");
     expect(avatarOf(el, "maya").getAttribute("aria-label")).toBe("Maya Chen, seen");
     let added = 0;
     el.addEventListener("tc-add", () => added++);
     avatars(el)[0].click();
     expect(added).toBe(1);
     const none = await fixture<TcStories>(html`<tc-stories></tc-stories>`);
-    expect(none.querySelector(".ui-sty__empty")!.textContent).toBe("No stories yet.");
+    expect(none.querySelector(".ui-sty__empty")!.textContent).toBe("Nothing new yet.");
     expect(none.querySelector(".ui-sty__row")).toBeNull();
   });
 
@@ -146,208 +148,191 @@ describe("tc-stories", () => {
     key(items[0], "ArrowRight");
     await settle();
     expect(items.map((b) => b.tabIndex)).toEqual([-1, 0, -1, -1]);
+    // Enter opens: it's a button
+    expect(items[1].localName).toBe("button");
   });
 
-  test("opening: a modal named by the person, on their first unseen item; seen and open change", async () => {
+  test("opening: a modal named by the entry, its count line and summary; one seen batch; new tiles first, marked New", async () => {
     const el = await make();
     const opens: StoryOpen[] = [];
     const seens: StorySeenChangeEvent[] = [];
     el.addEventListener("tc-open-change", (e) => opens.push((e as CustomEvent<StoryOpenChangeEvent>).detail.open));
     el.addEventListener("tc-seen-change", (e) => seens.push((e as CustomEvent<StorySeenChangeEvent>).detail));
-    await openOn(el, "priya");
+    await openOn(el, "maya");
     const d = dialog(el);
     expect(d.open).toBe(true);
     expect(d.matches(":modal")).toBe(true);
-    expect(document.getElementById(d.getAttribute("aria-labelledby")!)!.textContent).toBe("Priya Shah");
-    expect(opens).toEqual([{ person: "priya", item: "p2" }]);
-    expect(el.open).toEqual({ person: "priya", item: "p2" });
-    expect(seens.map((s) => s.item.id)).toEqual(["p2"]);
-    expect([...(el.seen as Set<string>)].sort()).toEqual(["a1", "p1", "p2"]);
-    expect(live(el)).toBe("Priya Shah, 2 of 2");
-    expect(el.querySelector(".ui-sty__at")!.textContent).toBe("4h");
-    expect(el.querySelector(".ui-sty__card")!.getAttribute("data-tone")).toBe("amber");
-    // Focus moves inside; the bars: one per item, the first done
-    expect(d.contains(document.activeElement)).toBe(true);
-    const bars = [...el.querySelectorAll(".ui-sty__bar")];
-    expect(bars).toHaveLength(2);
-    expect(bars[0].hasAttribute("data-done")).toBe(true);
-    expect(bars[1].hasAttribute("data-current")).toBe(true);
-    await settle();
-    expect(avatarOf(el, "priya").getAttribute("aria-label")).toBe("Priya Shah, seen");
+    expect(name(el)).toBe("Maya Chen");
+    expect(d.querySelector("h2")!.id).toBe(d.getAttribute("aria-labelledby"));
+    expect(sub(el)).toBe("4 updates since you last looked · Tue 09:41");
+    // The header's avatar is the entry's picture, round for a person
+    expect(d.querySelector(".tc-head__icon")!.getAttribute("data-picture")).toBe("round");
+    expect(d.querySelector(".tc-head__icon img")).not.toBeNull();
+    expect(opens).toEqual(["maya"]);
+    expect(el.open).toBe("maya");
+    // One batch for the opening, with every unseen update
+    expect(seens).toHaveLength(1);
+    expect(seens[0].entry.id).toBe("maya");
+    expect(seens[0].updates.map((u) => u.id)).toEqual(["m-conv", "m-price", "m-note", "m-report"]);
+    expect([...(el.seen as Set<string>)].sort()).toEqual(["l-launch", "l-shot", "m-conv", "m-note", "m-price", "m-report", "m-setup"]);
+    expect(avatarOf(el, "maya").getAttribute("aria-label")).toBe("Maya Chen, seen");
+    // The summary, marked as generated
+    expect(d.querySelector(".ui-sty__summary-text")!.textContent).toBe("Conversion is up and pricing is in review.");
+    expect(d.querySelector(".ui-sty__generated")!.textContent!.trim()).toBe("AI summary");
+    // New first, each with a heading and the marker; the seen one last, unmarked – and they keep it while open
+    expect(tiles(el).map((t) => t.querySelector("h3")!.textContent)).toEqual(["Conversion", "Pricing page", "Note", "Report", "Setup time"]);
+    expect(tiles(el).map((t) => t.hasAttribute("data-new"))).toEqual([true, true, true, true, false]);
+    expect(tiles(el).map((t) => t.querySelector(".ui-sty__new")?.textContent ?? "")).toEqual(["New", "New", "New", "New", ""]);
+    expect(d.querySelector(".ui-sty__grid")!.getAttribute("role")).toBe("list");
+    // Focus starts on the content, inside the modal
+    expect(document.activeElement).toBe(d.querySelector(".ui-sty__body"));
   });
 
-  test("← → step through items and people; the last item closes and focus returns to that person's avatar", async () => {
+  test("tiles: a metric, a status move, a note, a list, an image and a link, each designed for its kind", async () => {
+    const el = await make({ seen: new Set() });
+    await openOn(el, "maya");
+    const conv = tile(el, "Conversion");
+    expect(conv.dataset.kind).toBe("metric");
+    expect(conv.dataset.size).toBe("small");
+    expect(conv.querySelector(".ui-sty__value")!.textContent).toBe("8.4%");
+    const delta = conv.querySelector<HTMLElement>(".ui-sty__delta")!;
+    expect(delta.dataset.tone).toBe("good");
+    expect(delta.textContent!.replace(/\s+/g, " ").trim()).toBe("+1.2 pts, better");
+    expect(conv.querySelector(".ui-sty__context")!.textContent).toBe("vs last week");
+    expect(conv.querySelector("svg.ui-sty__spark")!.getAttribute("aria-hidden")).toBe("true");
+    expect(getComputedStyle(delta).color).not.toBe(getComputedStyle(conv.querySelector(".ui-sty__context")!).color);
+    // A drop where lower is better is good
+    const setup = tile(el, "Setup time").querySelector<HTMLElement>(".ui-sty__delta")!;
+    expect(setup.dataset.tone).toBe("good");
+    expect(setup.textContent!.replace(/\s+/g, " ").trim()).toBe("−48s, better");
+    // Status: from → to, with tones and a word between for screen readers
+    const price = tile(el, "Pricing page");
+    const states = [...price.querySelectorAll<HTMLElement>(".ui-sty__state")];
+    expect(states.map((s) => [s.textContent, s.dataset.tone, s.hasAttribute("data-from")])).toEqual([
+      ["Draft", "neutral", true],
+      ["In review", "info", false],
+    ]);
+    expect(price.querySelector(".ui-sty__move")!.textContent!.replace(/\s+/g, " ").trim()).toBe("Draft to In review");
+    expect(price.querySelector(".ui-sty__at")!.textContent).toBe("2h");
+    expect(price.querySelector(".ui-sty__text")!.textContent).toBe("Waiting on legal.");
+    // Note: the text and the byline (its time goes in the byline, not the corner)
+    const note = tile(el, "Note");
+    expect(note.dataset.size).toBe("wide");
+    expect(note.querySelector(".ui-sty__note")!.textContent).toBe("Second pair of eyes, please.");
+    expect(note.querySelector(".ui-sty__byline")!.textContent).toBe("Maya Chen · 1h");
+    expect(note.querySelector(".ui-sty__at")).toBeNull();
+    // Link: an anchor that fires a cancelable tc-action; prevented, it doesn't navigate
+    const link = tile(el, "Report").querySelector<HTMLAnchorElement>("a.ui-sty__action")!;
+    expect(link.getAttribute("href")).toBe("#report");
+    expect(link.textContent!.trim()).toBe("Open report");
+    const acts: StoryActionEvent[] = [];
+    el.addEventListener("tc-action", (e) => {
+      acts.push((e as CustomEvent<StoryActionEvent>).detail);
+      e.preventDefault();
+    });
+    const before = location.hash;
+    link.click();
+    expect(location.hash).toBe(before);
+    expect(acts.map((a) => [a.entry.id, a.update.id])).toEqual([["maya", "m-report"]]);
+    // A list with +N more, a neutral metric and a button action (Northwind); an image with its caption (Leo)
+    key(dialog(el), "ArrowRight");
+    await settle();
+    const members = tile(el, "New members");
+    expect(members.dataset.size).toBe("tall");
+    expect([...members.querySelectorAll(".ui-sty__item-label")].map((i) => i.textContent)).toEqual(["Priya Shah", "Tom Ellis", "Ana Ruiz", "Jun Park"]);
+    expect(members.querySelector(".ui-sty__item-meta")!.textContent).toBe("Viewer");
+    expect(members.querySelector(".ui-sty__more")!.textContent).toBe("+3 more");
+    const seats = tile(el, "Seats");
+    expect(seats.querySelector(".ui-sty__value")!.textContent).toBe("42");
+    expect(seats.querySelector<HTMLElement>(".ui-sty__delta")!.dataset.tone).toBe("neutral");
+    expect(seats.querySelector(".ui-sty__delta")!.textContent!.trim()).toBe("+7");
+    const review = tile(el, "Access requests").querySelector<HTMLButtonElement>("button.ui-sty__action")!;
+    review.click();
+    expect(acts.at(-1)!.update.id).toBe("n-review");
+    // The account's header avatar is square
+    expect(dialog(el).querySelector(".tc-head__icon")!.getAttribute("data-picture")).toBe("square");
+    key(dialog(el), "ArrowRight");
+    await settle();
+    const shot = tile(el, "Results page");
+    expect(shot.querySelector("img")!.alt).toBe("Three results under a search field");
+    expect(shot.querySelector("figcaption")!.textContent).toBe("Titles first.");
+  });
+
+  test("tiles aren't tab stops; Tab runs through Close, the tiles' links and actions, then the foot", async () => {
+    const el = await make({ replyable: true });
+    await openOn(el, "maya");
+    const d = dialog(el);
+    expect(tiles(el).every((t) => t.tabIndex < 0)).toBe(true);
+    const order = [...d.querySelectorAll<HTMLElement>("a[href], button, input")].filter((x) => x.tabIndex >= 0).map((x) => x.className.match(/ui-sty__\w+/g)!.at(-1));
+    expect(order).toEqual(["ui-sty__close", "ui-sty__action", "ui-sty__field", "ui-sty__send", "ui-sty__prev", "ui-sty__next"]);
+    // Only the content takes focus on opening, and it's not in the tab order
+    expect(d.querySelector<HTMLElement>(".ui-sty__body")!.tabIndex).toBe(-1);
+  });
+
+  test("← → and Previous / Next move between entries, with the neighbours' names; nothing past either end", async () => {
     const el = await make();
     await openOn(el, "maya");
     const d = dialog(el);
-    expect(live(el)).toBe("Maya Chen, 1 of 3");
-    expect(el.querySelector<HTMLImageElement>(".ui-sty__photo")!.alt).toBe("A sunrise");
-    key(d, "ArrowRight");
-    await settle();
-    expect(el.open).toEqual({ person: "maya", item: "m2" });
-    expect(live(el)).toBe("2 of 3");
+    const prev = () => el.querySelector<HTMLButtonElement>(".ui-sty__prev")!;
+    const next = () => el.querySelector<HTMLButtonElement>(".ui-sty__next")!;
+    expect(prev().getAttribute("aria-disabled")).toBe("true");
+    expect(prev().textContent!.replace(/\s+/g, " ").trim()).toBe("Previous");
+    expect(next().textContent!.replace(/\s+/g, " ").trim()).toBe("Next Northwind");
+    expect(el.querySelector(".ui-sty__where")!.textContent).toBe("1 / 3");
     key(d, "ArrowLeft");
     await settle();
-    expect(el.open).toEqual({ person: "maya", item: "m1" });
-    // Back from the very first item stays put
-    key(d, "ArrowLeft");
-    await settle();
-    expect(el.open).toEqual({ person: "maya", item: "m1" });
-    key(d, "ArrowRight");
+    expect(el.open).toBe("maya");
     key(d, "ArrowRight");
     await settle();
+    expect(el.open).toBe("northwind");
+    expect(name(el)).toBe("Northwind");
+    expect(live(el)).toBe("Northwind, 3 updates since you last looked");
+    expect(prev().textContent!.replace(/\s+/g, " ").trim()).toBe("Previous Maya Chen");
+    next().focus();
+    next().click();
+    await settle();
+    expect(el.open).toBe("leo");
+    // Leo's were all seen: nothing new, no markers, no seen event
+    expect(sub(el)).toBe("2 updates, nothing new since you last looked");
+    expect(tiles(el).some((t) => t.hasAttribute("data-new"))).toBe(false);
+    expect(next().getAttribute("aria-disabled")).toBe("true");
+    // Focus stays on Next, unavailable now, rather than being lost
+    expect(document.activeElement).toBe(next());
+    next().click();
     key(d, "ArrowRight");
     await settle();
-    // On to Priya, at her first unseen item
-    expect(el.open).toEqual({ person: "priya", item: "p2" });
-    expect(live(el)).toBe("Priya Shah, 2 of 2");
-    expect(document.getElementById(d.getAttribute("aria-labelledby")!)!.textContent).toBe("Priya Shah");
-    // Back from a person's first item goes to the previous person's last
-    key(d, "ArrowLeft");
+    expect(el.open).toBe("leo");
+    prev().click();
     await settle();
-    expect(el.open).toEqual({ person: "priya", item: "p1" });
-    key(d, "ArrowLeft");
-    await settle();
-    expect(el.open).toEqual({ person: "maya", item: "m3" });
-    key(d, "ArrowRight");
-    await settle();
-    key(d, "ArrowRight");
-    await settle();
-    key(d, "ArrowRight");
-    await settle();
-    expect(el.open).toEqual({ person: "ana", item: "a1" });
-    key(d, "ArrowRight");
-    await settle();
-    expect(el.open).toBeNull();
-    expect(d.open).toBe(false);
-    expect(document.activeElement).toBe(avatarOf(el, "ana"));
-    expect(avatarOf(el, "ana").tabIndex).toBe(0);
+    expect(el.open).toBe("northwind");
+    // A new entry starts at its top
+    expect(el.querySelector<HTMLElement>(".ui-sty__body")!.scrollTop).toBe(0);
   });
 
-  test("Escape and Close close; Previous and Next buttons step; Tab stays inside", async () => {
-    const el = await make({ replyable: true });
+  test("Escape, Close and the browser's cancel close; focus returns to the avatar of the entry last viewed", async () => {
+    const el = await make();
     await openOn(el, "maya");
-    el.querySelector<HTMLButtonElement>(".ui-sty__next")!.click();
+    key(dialog(el), "ArrowRight");
     await settle();
-    expect(el.open!.item).toBe("m2");
-    el.querySelector<HTMLButtonElement>(".ui-sty__prev")!.click();
+    key(dialog(el), "Escape");
     await settle();
-    expect(el.open!.item).toBe("m1");
-    // Tab wraps
-    const d = dialog(el);
-    const focusables = [...d.querySelectorAll<HTMLElement>("button, input")];
-    focusables[focusables.length - 1].focus();
-    key(focusables[focusables.length - 1], "Tab");
-    expect(document.activeElement).toBe(focusables[0]);
-    key(focusables[0], "Tab", { shiftKey: true });
-    expect(document.activeElement).toBe(focusables[focusables.length - 1]);
-    key(d, "Escape");
-    await settle();
-    expect(d.open).toBe(false);
-    expect(document.activeElement).toBe(avatarOf(el, "maya"));
+    expect(dialog(el).open).toBe(false);
+    expect(el.open).toBeNull();
+    expect(document.activeElement).toBe(avatarOf(el, "northwind"));
+    expect(avatarOf(el, "northwind").tabIndex).toBe(0);
     await openOn(el, "maya");
     el.querySelector<HTMLButtonElement>(".ui-sty__close")!.click();
     await settle();
     expect(dialog(el).open).toBe(false);
-    // The native cancel (Escape from the browser) closes too
-    await openOn(el, "maya");
+    expect(document.activeElement).toBe(avatarOf(el, "maya"));
+    await openOn(el, "leo");
     dialog(el).dispatchEvent(new Event("cancel", { cancelable: true }));
     await settle();
     expect(dialog(el).open).toBe(false);
+    expect(document.activeElement).toBe(avatarOf(el, "leo"));
   });
 
-  test("tap the left or right third to step; a hold pauses and doesn't step; swipe down closes on touch", async () => {
-    const el = await make();
-    await openOn(el, "maya");
-    await tap(el, 0.9);
-    expect(el.open!.item).toBe("m2");
-    await tap(el, 0.1);
-    expect(el.open!.item).toBe("m1");
-    await tap(el, 0.5);
-    expect(el.open!.item).toBe("m1");
-    // Held: the stage says so; released after a long press, nothing steps
-    const box = media(el).getBoundingClientRect();
-    pointer(media(el), "pointerdown", box.right - 4, box.top + 40);
-    await settle();
-    expect(el.querySelector(".ui-sty__stage")!.hasAttribute("data-held")).toBe(true);
-    await wait(300);
-    pointer(media(el), "pointerup", box.right - 4, box.top + 40);
-    await settle();
-    expect(el.querySelector(".ui-sty__stage")!.hasAttribute("data-held")).toBe(false);
-    expect(el.open!.item).toBe("m1");
-    // A mouse drag down doesn't close; a touch swipe down does
-    pointer(media(el), "pointerdown", box.left + 100, box.top + 50);
-    pointer(media(el), "pointerup", box.left + 100, box.top + 250);
-    await settle();
-    expect(dialog(el).open).toBe(true);
-    pointer(media(el), "pointerdown", box.left + 100, box.top + 50, { pointerType: "touch" });
-    pointer(media(el), "pointermove", box.left + 100, box.top + 150, { pointerType: "touch" });
-    expect(el.querySelector<HTMLElement>(".ui-sty__stage")!.style.getPropertyValue("--dy")).toBe("100px");
-    pointer(media(el), "pointerup", box.left + 102, box.top + 250, { pointerType: "touch" });
-    await settle();
-    expect(dialog(el).open).toBe(false);
-  });
-
-  test("auto-advance: each item for its duration, on to the next person, then closed", async () => {
-    const list: StoryPerson[] = [
-      { id: "a", name: "Ann", items: [{ id: "a1", kind: "text", text: "One", duration: 120 }, { id: "a2", kind: "text", text: "Two", duration: 120 }] },
-      { id: "b", name: "Ben", items: [{ id: "b1", kind: "text", text: "Three", duration: 120 }] },
-    ];
-    const el = await make({ list, seen: new Set(), autoplay: true });
-    const opened: StoryOpen[] = [];
-    el.addEventListener("tc-open-change", (e) => opened.push((e as CustomEvent<StoryOpenChangeEvent>).detail.open));
-    await openOn(el, "a");
-    expect(el.querySelector(".ui-sty__play")!.getAttribute("aria-label")).toBe("Pause");
-    await expect.poll(() => opened.length, { timeout: 3000 }).toBe(4);
-    expect(opened).toEqual([{ person: "a", item: "a1" }, { person: "a", item: "a2" }, { person: "b", item: "b1" }, null]);
-    await settle();
-    expect(dialog(el).open).toBe(false);
-    expect(document.activeElement).toBe(avatarOf(el, "b"));
-  });
-
-  test("Pause, a hold and focus in the reply field each stop auto-advance", async () => {
-    const list: StoryPerson[] = [{ id: "a", name: "Ann", items: [{ id: "a1", kind: "text", text: "One" }, { id: "a2", kind: "text", text: "Two" }] }];
-    const el = await make({ list, seen: new Set(), autoplay: true, duration: 150, replyable: true });
-    await openOn(el, "a");
-    const play = el.querySelector<HTMLButtonElement>(".ui-sty__play")!;
-    play.click();
-    await settle();
-    expect(play.getAttribute("aria-label")).toBe("Play");
-    await wait(400);
-    expect(el.open!.item).toBe("a1");
-    play.click();
-    await settle();
-    // Focus in the reply field pauses
-    el.querySelector<HTMLInputElement>(".ui-sty__field")!.focus();
-    await settle();
-    await wait(400);
-    expect(el.open!.item).toBe("a1");
-    play.focus();
-    await settle();
-    // Held pauses
-    const box = media(el).getBoundingClientRect();
-    pointer(media(el), "pointerdown", box.left + box.width / 2, box.top + 100);
-    await settle();
-    await wait(400);
-    expect(el.open!.item).toBe("a1");
-    pointer(media(el), "pointerup", box.left + box.width / 2, box.top + 100);
-    await expect.poll(() => el.open?.item, { timeout: 2000 }).toBe("a2");
-  });
-
-  test("without autoplay (as with reduced motion) nothing advances: the bars show where you are", async () => {
-    const el = await make({ seen: new Set(), duration: 50 });
-    await openOn(el, "maya");
-    await wait(300);
-    expect(el.open!.item).toBe("m1");
-    expect(el.querySelector(".ui-sty__play")).toBeNull();
-    expect(el.querySelector<HTMLElement>(".ui-sty__bar[data-current] .ui-sty__fill")!.style.getPropertyValue("--p")).toBe("1");
-    key(dialog(el), "ArrowRight");
-    await settle();
-    const fills = [...el.querySelectorAll<HTMLElement>(".ui-sty__fill")].map((f) => f.style.getPropertyValue("--p"));
-    expect(fills).toEqual(["1", "1", "0"]);
-  });
-
-  test("controlled: a prevented tc-open-change keeps it closed; a prevented tc-seen-change keeps seen", async () => {
+  test("controlled: a prevented tc-open-change keeps it closed; a prevented tc-seen-change keeps seen and the markers", async () => {
     const el = await make();
     const stop = (e: Event) => e.preventDefault();
     el.addEventListener("tc-open-change", stop);
@@ -355,21 +340,36 @@ describe("tc-stories", () => {
     await settle();
     expect(dialog(el).open).toBe(false);
     expect(el.open).toBeNull();
-    el.removeEventListener("tc-open-change", stop);
-    // The app opens it by setting open; prevents seen
+    // The app opens it by setting open; Escape asks but stays open while prevented
     el.addEventListener("tc-seen-change", stop);
-    el.open = { person: "maya", item: "m2" };
+    el.open = "maya";
     await settle();
     expect(dialog(el).open).toBe(true);
-    expect(live(el)).toBe("Maya Chen, 2 of 3");
-    expect((el.seen as Set<string>).has("m2")).toBe(false);
+    expect((el.seen as Set<string>).has("m-conv")).toBe(false);
+    expect(tiles(el).filter((t) => t.hasAttribute("data-new"))).toHaveLength(4);
+    key(dialog(el), "Escape");
+    await settle();
+    expect(dialog(el).open).toBe(true);
+    el.removeEventListener("tc-open-change", stop);
     el.open = null;
     await settle();
     expect(dialog(el).open).toBe(false);
-    expect(avatarOf(el, "maya").getAttribute("aria-label")).toBe("Maya Chen, 3 new");
+    expect(avatarOf(el, "maya").getAttribute("aria-label")).toBe("Maya Chen, 4 new");
   });
 
-  test("reply: sends tc-reply with the text and clears the field", async () => {
+  test("updates that arrive while the brief is open are marked New and seen in a second batch", async () => {
+    const el = await make({ seen: new Set() });
+    const seens: StorySeenChangeEvent[] = [];
+    el.addEventListener("tc-seen-change", (e) => seens.push((e as CustomEvent<StorySeenChangeEvent>).detail));
+    await openOn(el, "leo");
+    expect(seens.map((s) => s.updates.length)).toEqual([2]);
+    el.entries = entries.map((e) => (e.id === "leo" ? { ...e, updates: [...e.updates, { id: "l-new", kind: "note" as const, title: "Later", text: "One more thing." }] } : e));
+    await settle();
+    expect(seens.map((s) => s.updates.map((u) => u.id))).toEqual([["l-launch", "l-shot"], ["l-new"]]);
+    expect(tile(el, "Later").hasAttribute("data-new")).toBe(true);
+  });
+
+  test("reply: sends tc-reply with the text and clears the field; arrows in the field don't move", async () => {
     const el = await make({ replyable: true });
     const replies: StoryReplyEvent[] = [];
     el.addEventListener("tc-reply", (e) => replies.push((e as CustomEvent<StoryReplyEvent>).detail));
@@ -379,28 +379,58 @@ describe("tc-stories", () => {
     field.value = "  Looks great  ";
     el.querySelector<HTMLButtonElement>(".ui-sty__send")!.click();
     await settle();
-    expect(replies.map((r) => [r.text, r.person.id, r.item.id])).toEqual([["Looks great", "maya", "m1"]]);
+    expect(replies.map((r) => [r.text, r.entry.id])).toEqual([["Looks great", "maya"]]);
     expect(field.value).toBe("");
-    // Arrows in the field move the caret, not the story
     key(field, "ArrowRight");
     await settle();
-    expect(el.open!.item).toBe("m1");
+    expect(el.open).toBe("maya");
   });
 
-  test("video: muted by default with a mute toggle, and Pause even without autoplay", async () => {
-    const list: StoryPerson[] = [{ id: "v", name: "Vid", items: [{ id: "v1", kind: "video", src: "", text: "A clip" }] }];
-    const el = await make({ list, seen: new Set() });
-    await openOn(el, "v");
-    const video = el.querySelector<HTMLVideoElement>(".ui-sty__video")!;
-    expect(video.muted).toBe(true);
-    expect(video.getAttribute("aria-label")).toBe("A clip");
-    const mute = el.querySelector<HTMLButtonElement>(".ui-sty__mute")!;
-    expect(mute.getAttribute("aria-label")).toBe("Unmute");
-    mute.click();
+  test("the bento: tiles placed by size with no holes at three columns; one column filling the viewport at 320 px", async () => {
+    await page.viewport(1280, 900);
+    const el = await make({ seen: new Set() });
+    await openOn(el, "leo");
+    await finish(el);
+    // Leo: a small status and a wide image share the row and fill it
+    const [status, image] = tiles(el).map((t) => t.getBoundingClientRect());
+    const grid = el.querySelector(".ui-sty__grid")!.getBoundingClientRect();
+    expect(getComputedStyle(el.querySelector(".ui-sty__grid")!).gridTemplateColumns.split(" ")).toHaveLength(3);
+    expect([Math.round(status.left), Math.round(image.right), Math.round(status.top)]).toEqual([Math.round(grid.left), Math.round(grid.right), Math.round(image.top)]);
+    expect(image.width).toBeGreaterThan(status.width * 1.8);
+    // Two small tiles: the second grows into the row's empty third column
+    const two = await make({ list: [{ id: "x", name: "Two", updates: entries[3].updates.map((u) => ({ ...u, kind: "status" as const, from: "A", to: "B" })) }] });
+    await openOn(two, "x");
+    await finish(two);
+    const [a, b] = tiles(two).map((t) => t.getBoundingClientRect());
+    expect(Math.round(b.width)).toBeGreaterThan(Math.round(a.width * 1.8));
+    expect(Math.round(b.right)).toBe(Math.round(two.querySelector(".ui-sty__grid")!.getBoundingClientRect().right));
+    two.open = null;
     await settle();
-    expect(video.muted).toBe(false);
-    expect(mute.getAttribute("aria-label")).toBe("Mute");
-    expect(el.querySelector(".ui-sty__play")).not.toBeNull();
+    key(dialog(el), "ArrowLeft");
+    await settle();
+    // Northwind: the tall list takes two rows; the small tiles beside it grow down to meet it, leaving no hole
+    expect(tile(el, "New members").style.getPropertyValue("--r3").trim()).toBe("1 / span 2");
+    const members = tile(el, "New members").getBoundingClientRect();
+    const seats = tile(el, "Seats").getBoundingClientRect();
+    expect(Math.round(seats.bottom)).toBe(Math.round(members.bottom));
+    await page.viewport(320, 700);
+    try {
+      await settle();
+      await finish(el);
+      const box = dialog(el).getBoundingClientRect();
+      expect(Math.round(box.left)).toBe(16);
+      expect(Math.round(box.right)).toBe(304);
+      expect(getComputedStyle(el.querySelector(".ui-sty__grid")!).gridTemplateColumns.split(" ")).toHaveLength(1);
+      const widths = tiles(el).map((t) => Math.round(t.getBoundingClientRect().width));
+      expect(new Set(widths).size).toBe(1);
+      expect(dialog(el).scrollWidth).toBeLessThanOrEqual(Math.ceil(box.width));
+      // Close stays on the title's line
+      const close = el.querySelector(".ui-sty__close")!.getBoundingClientRect();
+      const title = dialog(el).querySelector("h2")!.getBoundingClientRect();
+      expect(close.top).toBeLessThan(title.bottom);
+    } finally {
+      await page.viewport(1280, 900);
+    }
   });
 
   test("React wrapper: uncontrolled seen and open survive re-renders; callbacks fire", async () => {
@@ -414,13 +444,16 @@ describe("tc-stories", () => {
       const [n, setN] = React.useState(0);
       bump = () => setN((x) => x + 1);
       return React.createElement(Stories, {
-        people,
+        entries,
         defaultSeen: SEEN(),
-        autoplay: false,
-        onSeenChange: (_s, item, person) => void log.push(["seen", person.id, item.id]),
-        onOpenChange: (o) => void log.push(["open", o?.item ?? null]),
+        onSeenChange: (_s, updates, entry) => void log.push(["seen", entry.id, updates.length]),
+        onOpenChange: (o) => void log.push(["open", o]),
+        onAction: (update, _entry, event) => {
+          event.preventDefault();
+          log.push(["action", update.id]);
+        },
         onAdd: () => void log.push(["add"]),
-        onReply: (text) => void log.push(["reply", text]),
+        onReply: (text, entry) => void log.push(["reply", text, entry.id]),
         "data-n": n,
       } as React.ComponentProps<typeof Stories>);
     }
@@ -428,48 +461,48 @@ describe("tc-stories", () => {
     await settle();
     const el = host.querySelector("tc-stories")!;
     expect(el.addable).toBe(true);
+    expect(el.replyable).toBe(true);
     avatars(el)[0].click();
     avatarOf(el, "maya").click();
     await settle();
     await act(async () => bump());
     await settle();
     expect(dialog(el).open).toBe(true);
+    el.querySelector<HTMLAnchorElement>("a.ui-sty__action")!.click();
     key(dialog(el), "ArrowRight");
     await settle();
     await act(async () => bump());
     await settle();
-    expect(el.open).toEqual({ person: "maya", item: "m2" });
-    expect(el.querySelector(".ui-sty__field")).not.toBeNull();
+    expect(el.open).toBe("northwind");
     key(dialog(el), "Escape");
     await settle();
     await act(async () => bump());
     await settle();
     expect(dialog(el).open).toBe(false);
-    expect(avatarOf(el, "maya").getAttribute("aria-label")).toBe("Maya Chen, 1 new");
-    expect(log).toEqual([["add"], ["open", "m1"], ["seen", "maya", "m1"], ["open", "m2"], ["seen", "maya", "m2"], ["open", null]]);
+    expect(avatarOf(el, "maya").getAttribute("aria-label")).toBe("Maya Chen, seen");
+    expect(log).toEqual([["add"], ["open", "maya"], ["seen", "maya", 4], ["action", "m-report"], ["open", "northwind"], ["seen", "northwind", 3], ["open", null]]);
     await act(async () => root.unmount());
   });
 
-  test("React wrapper: controlled open and seen stay until the parent changes them", async () => {
+  test("React wrapper: controlled open and seen stay until the parent changes them; `people` still works", async () => {
     (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
     const host = document.createElement("div");
     document.body.append(host);
     const root = createRoot(host);
     const asked: StoryOpen[] = [];
-    const render = (open: StoryOpen) =>
-      act(async () => root.render(React.createElement(Stories, { people, seen: SEEN(), open, autoplay: false, onOpenChange: (o) => void asked.push(o) })));
+    const render = (open: StoryOpen) => act(async () => root.render(React.createElement(Stories, { people: entries, seen: SEEN(), open, onOpenChange: (o) => void asked.push(o) })));
     await render(null);
     await settle();
     const el = host.querySelector("tc-stories")!;
     avatarOf(el, "maya").click();
     await settle();
-    expect(asked).toEqual([{ person: "maya", item: "m1" }]);
+    expect(asked).toEqual(["maya"]);
     expect(dialog(el).open).toBe(false);
-    await render({ person: "maya", item: "m1" });
+    await render("maya");
     await settle();
     expect(dialog(el).open).toBe(true);
     // Seen is controlled: the element asks but doesn't change it
-    expect((el.seen as Set<string>).has("m1")).toBe(false);
+    expect((el.seen as Set<string>).has("m-conv")).toBe(false);
     await render(null);
     await settle();
     expect(dialog(el).open).toBe(false);
@@ -477,17 +510,26 @@ describe("tc-stories", () => {
   });
 
   for (const theme of ["light", "dark"] as const) {
-    test(`axe (${theme}): no violations in either look, with the viewer open`, async () => {
-      const wrap = await fixture(html`<div data-tc-theme=${theme} style="padding: 16px; background: var(--tc-surface-base)">
-        <tc-stories addable replyable .people=${people} .seen=${SEEN()} .autoplay=${false}></tc-stories>
-        <tc-stories look="clean" .people=${people} .seen=${SEEN()} .autoplay=${false}></tc-stories>
-      </div>`);
-      const [a] = wrap.querySelectorAll<TcStories>("tc-stories");
-      await openOn(a, "maya");
-      await finish(wrap);
-      const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
-      expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
-      dialog(a).close();
-    });
+    for (const look of ["standard", "clean"] as const) {
+      test(`axe (${look}, ${theme}): no violations in the row or the open brief`, async () => {
+        const wrap = await fixture(html`<div data-tc-theme=${theme} style="padding: 16px; background: var(--tc-surface-base)">
+          <tc-stories look=${look} addable replyable .entries=${entries} .seen=${new Set(["m-setup"])}></tc-stories>
+        </div>`);
+        const el = wrap.querySelector<TcStories>("tc-stories")!;
+        await openOn(el, "maya");
+        await finish(wrap);
+        const run = () => axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
+        const report = (r: axe.AxeResults) => r.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`);
+        expect(report(await run())).toEqual([]);
+        // Northwind: a list, a neutral metric and a button; Leo: a status and an image, all seen
+        key(dialog(el), "ArrowRight");
+        await finish(wrap);
+        expect(report(await run())).toEqual([]);
+        key(dialog(el), "ArrowRight");
+        await finish(wrap);
+        expect(report(await run())).toEqual([]);
+        dialog(el).close();
+      });
+    }
   }
 });

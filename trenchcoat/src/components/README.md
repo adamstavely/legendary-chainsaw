@@ -16,6 +16,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Agreement Tracker** (`agreement-tracker.tsx`) – How often the AI agreed with you versus pushed back this session – it turns amber on a run of agreement and points to the counter-argument
 - **AI Answer** (`ai-answer.tsx`) – Streamed answer with source cards, citation chips that preview their source, copy, regenerate, feedback and follow-ups
 - **Answer Arena** (`answer-arena.tsx`) – Two models answer the same prompt side by side, streaming together – then A is better, B is better or a tie, with a reason
+- **App Picker** (`app-picker.tsx`) – The app launcher for a suite header – a grid button that opens your apps as tiles, with pinned and recent apps, search, the current app marked and arrow keys that move in two dimensions
 - **Approval Card** (`approval-card.tsx`) – An agent asks before it acts – risk badge, preview, Approve and Deny with shortcuts, a pausing countdown, and a smooth morph into a resolved row
 - **Artifact Panel** (`artifact-panel.tsx`) – Everything a run produced in one place – files, code, documents and images with a preview for each, versions you can diff, and download
 - **Attestation Check** (`attestation-check.tsx`) – Verify a signed evidence package by its hash or file – signature, chain integrity and what it covers, checked locally
@@ -95,6 +96,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Model Settings** (`model-settings.tsx`) – The parameters a model supports, explained, with presets, a value signature, incompatible-setting feedback and what differs from the defaults
 - **Multimodal input** (`multimodal-input.tsx`) – Attach mixed media with local previews, upload state, format limits, and token estimates.
 - **Notification Stack** (`notification-stack.tsx`) – Notice cards stacked behind each other – dismiss the front one to reveal the next
+- **Notifications** (`notifications.tsx`) – The notification center – a bell with an unread badge that opens a panel of notifications grouped by day, with tabs, read state, inline actions, Mark all as read and Load more
 - **Number Field** (`number-field.tsx`) – A bounded numeric input with native validation
 - **OTP Input** (`otp-input.tsx`) – The verification code field done right – a gliding focus ring, paste and SMS autofill, a calm shake on errors and a morph into Verified
 - **Output Schema Builder** (`output-schema-builder.tsx`) – Build a structured-output schema as a tree beside a rendered preview of the answer – types visible, problems flagged on their rows – with raw JSON and the JSON Schema as tabs
@@ -132,10 +134,11 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Slider Field** (`slider-field.tsx`) – A synchronized slider and numeric input
 - **Smart Recommendation** (`smart-recommendation.tsx`) – Suggestion card with a confidence signal, alternatives to switch to and accept with undo
 - **Stepper Form** (`stepper-form.tsx`) – A multi-step flow for onboarding and setup – steps that fill and check off, sliding steps, a card that morphs to each step, inline validation and a success state
-- **Stories** (`stories.tsx`) – Story avatars with a gradient ring for something new – open one for a full-screen viewer with progress bars, auto-advance and swipe
+- **Stories** (`stories.tsx`) – Avatars for people and accounts with a gradient ring for something new – open one for a "what changed" brief: a bento grid of metric, status, note, list, image and link tiles
 - **Structured Output** (`structured-output.tsx`) – Streaming JSON as a typed tree, checked against its schema as it arrives – missing and invalid fields flagged, copy as JSON or code
 - **Switch** (`switch.tsx`) – An accessible on/off setting
 - **Synthesis Notes** (`synthesis-notes.tsx`) – Your own conclusions, assumptions and open questions, kept apart from the model's output and exported with where they came from
+- **Terms Dialog** (`terms-dialog.tsx`) – Agreeing to terms in a modal designed for reading – version and date, a jump list, what changed since you last agreed, required and optional consents, and Accept that says why it waits
 - **Text Annotator** (`text-annotator.tsx`) – Highlight text in a document in a colour and comment on it – marks in the text, comments in the margin, edit, resolve and filter
 - **Thinking Loader** (`thinking-loader.tsx`) – A small working pill for AI replies – an eight-ray spinner and a shimmering label that rolls through phases and settles on a check
 - **Thinking State** (`thinking-state.tsx`) – AI working panel with a live timer, searched sources and thinking steps that appear one by one

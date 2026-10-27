@@ -129,6 +129,12 @@
      "params": "",
      "returns": "void",
      "description": "Closes the list (it opens again when the next trigger is typed)"
+    },
+    {
+     "name": "sync",
+     "params": "",
+     "returns": "void",
+     "description": "Reads the field again after a script changed its text or caret – opening the list on a trigger there, even one\nthat Esc closed"
     }
    ],
    "ui": "mnp",
@@ -163,6 +169,7 @@
     "--tc-font-sans",
     "--tc-font-size-md",
     "--tc-font-size-sm",
+    "--tc-font-size-xs",
     "--tc-font-weight-medium",
     "--tc-font-weight-regular",
     "--tc-hairline",
@@ -309,6 +316,7 @@
   }
  ],
  "changelog": [
+  "**`tc-mention-picker`:** item descriptions, recents, ranking across groups, word-match highlighting and per-trigger search. It stays backwards-compatible.",
   "`tc-mention-picker` – the / and @ picker for a textarea, input or contenteditable: grouped, scored results, the field keeps focus (aria-activedescendant), ↵ / Tab insert a token or a chip, and the composer's Enter-to-send never sees that ↵. `search` may be async.",
   "chat-composer (the Lit element and `trenchcoat/react`): opt-in `mentions` (a `tc-mention-picker` on the message) and `context` / `context-limit` (a `tc-context-tray` above it). Without them it renders as before."
  ],
@@ -368,7 +376,7 @@
   "floor": {
    "chrome": "123",
    "edge": "123",
-   "firefox": "120",
+   "firefox": "121",
    "safari": "17.5",
    "safari_ios": "17.5"
   },
@@ -380,7 +388,7 @@
     "light-dark"
    ],
    "firefox": [
-    "light-dark"
+    "has"
    ],
    "safari": [
     "light-dark"
@@ -439,6 +447,23 @@
     "why": "Focus rings for keyboard users.",
     "via": [
      "internal/kit"
+    ]
+   },
+   {
+    "id": "has",
+    "name": ":has()",
+    "bcd": "css.selectors.has",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "121",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Layout and state that depend on what's inside a part (an icon present, a focused field).",
+    "via": [
+     "itself"
     ]
    },
    {
@@ -604,7 +629,7 @@
   "windowed": false
  },
  "size": {
-  "min": 35419,
-  "gzip": 11470
+  "min": 40379,
+  "gzip": 12933
  }
 }

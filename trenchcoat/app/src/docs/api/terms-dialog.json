@@ -1,0 +1,925 @@
+{
+ "elements": [
+  {
+   "tag": "tc-terms-dialog",
+   "className": "TcTermsDialog",
+   "description": "A modal for agreeing to terms – the text in sections with a jump list, what changed since the reader last agreed,\nrequired and optional consents, and Accept held until they're met.",
+   "properties": [
+    {
+     "name": "open",
+     "attribute": "open",
+     "type": "boolean",
+     "default": "false",
+     "description": "Whether the modal is open",
+     "readonly": false
+    },
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Terms of Service\"",
+     "description": "The title, and the dialog's accessible name",
+     "readonly": false
+    },
+    {
+     "name": "version",
+     "attribute": "version",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The version being agreed to, e.g. \"4.0\"; it travels on tc-accept",
+     "readonly": false
+    },
+    {
+     "name": "effectiveDate",
+     "attribute": "effective-date",
+     "type": "string",
+     "default": "\"\"",
+     "description": "When this version takes effect or was last updated, shown as given: \"1 November 2026\"",
+     "readonly": false
+    },
+    {
+     "name": "dateLabel",
+     "attribute": "date-label",
+     "type": "string",
+     "default": "\"Effective\"",
+     "description": "The word before the date – \"Effective\", or \"Last updated\"",
+     "readonly": false
+    },
+    {
+     "name": "previousVersion",
+     "attribute": "previous-version",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The version the reader agreed to before; set, the dialog asks them to agree again and says what changed",
+     "readonly": false
+    },
+    {
+     "name": "previousDate",
+     "attribute": "previous-date",
+     "type": "string",
+     "default": "\"\"",
+     "description": "When the reader agreed to `previousVersion`, shown as given",
+     "readonly": false
+    },
+    {
+     "name": "changes",
+     "attribute": null,
+     "type": "TermsChange[]",
+     "default": "[]",
+     "description": "What changed since `previousVersion`, a sentence each, shown above the text",
+     "readonly": false
+    },
+    {
+     "name": "sections",
+     "attribute": null,
+     "type": "TermsSection[]",
+     "default": "[]",
+     "description": "The text, as sections with headings; the jump list is made from them",
+     "readonly": false
+    },
+    {
+     "name": "content",
+     "attribute": null,
+     "type": "unknown",
+     "default": "undefined",
+     "description": "The text as one template or DOM node, when it isn't in `sections`; its h2 and h3 headings make the jump list",
+     "readonly": false
+    },
+    {
+     "name": "consents",
+     "attribute": null,
+     "type": "TermsConsent[]",
+     "default": "[]",
+     "description": "The boxes to check – each required or optional",
+     "readonly": false
+    },
+    {
+     "name": "checked",
+     "attribute": null,
+     "type": "TermsConsents",
+     "default": "{}",
+     "description": "Which consents are checked, by id",
+     "readonly": false
+    },
+    {
+     "name": "requireScroll",
+     "attribute": "require-scroll",
+     "type": "boolean",
+     "default": "false",
+     "description": "Accept also waits until the text has been scrolled to the end",
+     "readonly": false
+    },
+    {
+     "name": "blocking",
+     "attribute": "blocking",
+     "type": "boolean",
+     "default": "false",
+     "description": "A must-accept flow: no close button, and Escape doesn't close",
+     "readonly": false
+    },
+    {
+     "name": "canDecline",
+     "attribute": "can-decline",
+     "type": "boolean",
+     "default": "true",
+     "description": "Decline is offered (default true)",
+     "readonly": false
+    },
+    {
+     "name": "printable",
+     "attribute": "printable",
+     "type": "boolean",
+     "default": "false",
+     "description": "Shows Print, which fires tc-print",
+     "readonly": false
+    },
+    {
+     "name": "downloadable",
+     "attribute": "downloadable",
+     "type": "boolean",
+     "default": "false",
+     "description": "Shows Download, which fires tc-download",
+     "readonly": false
+    },
+    {
+     "name": "pending",
+     "attribute": "pending",
+     "type": "boolean",
+     "default": "false",
+     "description": "The app is recording the acceptance: Accept shows `pendingLabel` and nothing else can be pressed",
+     "readonly": false
+    },
+    {
+     "name": "error",
+     "attribute": "error",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The app couldn't record the acceptance: this message shows with Try again",
+     "readonly": false
+    },
+    {
+     "name": "recordAcceptance",
+     "attribute": null,
+     "type": "TermsRecorder | undefined",
+     "default": "undefined",
+     "description": "Records the acceptance after tc-accept; while it runs Accept shows Saving…, it closes the dialog when it resolves",
+     "readonly": false
+    },
+    {
+     "name": "describeBlocked",
+     "attribute": null,
+     "type": "((blocked: TermsBlocked) => string) | undefined",
+     "default": "undefined",
+     "description": "Says why Accept is held, in place of the built-in sentences",
+     "readonly": false
+    },
+    {
+     "name": "acceptLabel",
+     "attribute": "accept-label",
+     "type": "string",
+     "default": "\"Accept\"",
+     "description": "The accept button",
+     "readonly": false
+    },
+    {
+     "name": "declineLabel",
+     "attribute": "decline-label",
+     "type": "string",
+     "default": "\"Not now\"",
+     "description": "The decline button – \"Not now\", or \"Decline\"",
+     "readonly": false
+    },
+    {
+     "name": "pendingLabel",
+     "attribute": "pending-label",
+     "type": "string",
+     "default": "\"Saving…\"",
+     "description": "Accept while the acceptance is recorded",
+     "readonly": false
+    },
+    {
+     "name": "errorLabel",
+     "attribute": "error-label",
+     "type": "string",
+     "default": "\"Couldn't record your acceptance. Your choices are kept.\"",
+     "description": "The error when `recordAcceptance` fails",
+     "readonly": false
+    },
+    {
+     "name": "retryLabel",
+     "attribute": "retry-label",
+     "type": "string",
+     "default": "\"Try again\"",
+     "description": "The retry button",
+     "readonly": false
+    },
+    {
+     "name": "contentsLabel",
+     "attribute": "contents-label",
+     "type": "string",
+     "default": "\"Contents\"",
+     "description": "The jump list's name",
+     "readonly": false
+    },
+    {
+     "name": "changesLabel",
+     "attribute": "changes-label",
+     "type": "string",
+     "default": "\"What's changed\"",
+     "description": "The heading over what changed",
+     "readonly": false
+    },
+    {
+     "name": "closeLabel",
+     "attribute": "close-label",
+     "type": "string",
+     "default": "\"Close\"",
+     "description": "The close button's name",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-open-change",
+     "detail": "",
+     "description": "Asks to open or close; detail `{ open }`. Cancelable – prevented, `open` stays.",
+     "cancelable": true
+    },
+    {
+     "name": "tc-accept",
+     "detail": "",
+     "description": "Accept was pressed with every requirement met; detail `{ version, consents }` (TermsAcceptDetail). Cancelable – prevented, the dialog stays open and nothing is recorded.",
+     "cancelable": true
+    },
+    {
+     "name": "tc-decline",
+     "detail": "",
+     "description": "Decline was pressed; detail `{ version }` (TermsDeclineDetail). Cancelable – not prevented, the dialog closes.",
+     "cancelable": true
+    },
+    {
+     "name": "tc-consent-change",
+     "detail": "",
+     "description": "A consent was checked or unchecked; detail `{ id, checked, consents }` (TermsConsentChangeDetail). Cancelable – prevented, `checked` stays.",
+     "cancelable": true
+    },
+    {
+     "name": "tc-print",
+     "detail": "",
+     "description": "Print was pressed; detail `{ version }`. The app prints.",
+     "cancelable": false
+    },
+    {
+     "name": "tc-download",
+     "detail": "",
+     "description": "Download was pressed; detail `{ version }`. The app provides the file.",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "tdlg",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-solid",
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-border-control",
+    "--tc-border-control-hover",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-lg",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-md",
+    "--tc-control-radius-md",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-shimmer",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-strong",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-mono",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-hairline",
+    "--tc-line-height-normal",
+    "--tc-line-height-relaxed",
+    "--tc-line-height-tight",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-radius-xs",
+    "--tc-scrim",
+    "--tc-shadow-control",
+    "--tc-shadow-overlay",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-5",
+    "--tc-space-6",
+    "--tc-space-8",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-info-bg",
+    "--tc-status-info-fg",
+    "--tc-status-info-solid",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-status-warning-solid",
+    "--tc-surface-control",
+    "--tc-surface-on-tray",
+    "--tc-surface-overlay",
+    "--tc-surface-tray",
+    "--tc-surface-well",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-on-accent",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tracking-normal",
+    "--tc-tracking-snug",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "describeBlocked",
+   "signature": "describeBlocked({ unread, missing }: TermsBlocked): string",
+   "description": "The default reason Accept is held, in a sentence"
+  }
+ ],
+ "react": [
+  {
+   "component": "TermsDialog",
+   "exported": true,
+   "props": [
+    {
+     "name": "open",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether the modal is open – controlled when defined; pair it with `onOpenChange`"
+    },
+    {
+     "name": "defaultOpen",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether an uncontrolled modal starts open"
+    },
+    {
+     "name": "onOpenChange",
+     "type": "(open: boolean) => void",
+     "optional": true,
+     "description": "Called when the dialog asks to open or close (Escape, the close button, Accept, Decline)"
+    },
+    {
+     "name": "checked",
+     "type": "TermsConsents",
+     "optional": true,
+     "description": "Which consents are checked, by id – controlled when defined"
+    },
+    {
+     "name": "defaultChecked",
+     "type": "TermsConsents",
+     "optional": true,
+     "description": "Which consents start checked, when `checked` isn't controlled"
+    },
+    {
+     "name": "onCheckedChange",
+     "type": "(consents: TermsConsents) => void",
+     "optional": true,
+     "description": "Called with every consent after one is checked or unchecked"
+    },
+    {
+     "name": "sections",
+     "type": "TermsDialogSection[]",
+     "optional": true,
+     "description": "The text as sections; a body can be text, a DOM node or React content"
+    },
+    {
+     "name": "children",
+     "type": "React.ReactNode",
+     "optional": true,
+     "description": "The text as React content, when it isn't in `sections`; its h2 and h3 headings make the jump list"
+    },
+    {
+     "name": "onAccept",
+     "type": "(detail: TermsAcceptDetail, event: CustomEvent<TermsAcceptDetail>) => void",
+     "optional": true,
+     "description": "Called when Accept is pressed with every requirement met; `event.preventDefault()` keeps the dialog open and records nothing"
+    },
+    {
+     "name": "onDecline",
+     "type": "(detail: TermsDeclineDetail, event: CustomEvent<TermsDeclineDetail>) => void",
+     "optional": true,
+     "description": "Called when Decline is pressed; `event.preventDefault()` keeps the dialog open"
+    },
+    {
+     "name": "onPrint",
+     "type": "(detail: TermsFileDetail) => void",
+     "optional": true,
+     "description": "Called when Print is pressed (shown with `printable`)"
+    },
+    {
+     "name": "onDownload",
+     "type": "(detail: TermsFileDetail) => void",
+     "optional": true,
+     "description": "Called when Download is pressed (shown with `downloadable`)"
+    }
+   ],
+   "hides": [
+    "open",
+    "checked",
+    "defaultChecked",
+    "sections",
+    "content",
+    "children"
+   ],
+   "events": {
+    "tc-open-change": "onOpenChange",
+    "tc-accept": "onAccept",
+    "tc-decline": "onDecline",
+    "tc-consent-change": "onCheckedChange",
+    "tc-print": "onPrint",
+    "tc-download": "onDownload"
+   }
+  }
+ ],
+ "changelog": [
+  "**`tc-terms-dialog`:** terms to agree to. - **Changed terms:** re-acceptance opens with a \"What's changed\" summary, and changed sections are marked. - **Reading:** a jump list that folds into a Contents button. - **Accepting:** required and optional consents; Accept can wait for the end of the text, and says why it's waiting. - **Other actions:** Decline, print and download, plus a blocking mode. - **Saving:** app-driven saving with error and retry.",
+  "**Shared code:** - `internal/modal.ts`, the `ModalController` that `tc-dialog`, `tc-terms-dialog` and `tc-stories` share; - `cardHead()` gains `picture`, `pictureShape` and `keepAside`."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-terms-dialog",
+   "className": "TcTermsDialog",
+   "module": "trenchcoat/terms-dialog",
+   "data": [
+    "changes",
+    "sections",
+    "content",
+    "consents",
+    "checked",
+    "recordAcceptance",
+    "describeBlocked"
+   ],
+   "attributes": [
+    {
+     "name": "open",
+     "attribute": "open"
+    },
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "version",
+     "attribute": "version"
+    },
+    {
+     "name": "effectiveDate",
+     "attribute": "effective-date"
+    },
+    {
+     "name": "dateLabel",
+     "attribute": "date-label"
+    },
+    {
+     "name": "previousVersion",
+     "attribute": "previous-version"
+    },
+    {
+     "name": "previousDate",
+     "attribute": "previous-date"
+    },
+    {
+     "name": "requireScroll",
+     "attribute": "require-scroll"
+    },
+    {
+     "name": "blocking",
+     "attribute": "blocking"
+    },
+    {
+     "name": "canDecline",
+     "attribute": "can-decline"
+    },
+    {
+     "name": "printable",
+     "attribute": "printable"
+    },
+    {
+     "name": "downloadable",
+     "attribute": "downloadable"
+    },
+    {
+     "name": "pending",
+     "attribute": "pending"
+    },
+    {
+     "name": "error",
+     "attribute": "error"
+    },
+    {
+     "name": "acceptLabel",
+     "attribute": "accept-label"
+    },
+    {
+     "name": "declineLabel",
+     "attribute": "decline-label"
+    },
+    {
+     "name": "pendingLabel",
+     "attribute": "pending-label"
+    },
+    {
+     "name": "errorLabel",
+     "attribute": "error-label"
+    },
+    {
+     "name": "retryLabel",
+     "attribute": "retry-label"
+    },
+    {
+     "name": "contentsLabel",
+     "attribute": "contents-label"
+    },
+    {
+     "name": "changesLabel",
+     "attribute": "changes-label"
+    },
+    {
+     "name": "closeLabel",
+     "attribute": "close-label"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-open-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-accept",
+     "cancelable": true
+    },
+    {
+     "name": "tc-decline",
+     "cancelable": true
+    },
+    {
+     "name": "tc-consent-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-print",
+     "cancelable": false
+    },
+    {
+     "name": "tc-download",
+     "cancelable": false
+    }
+   ],
+   "controlled": [
+    {
+     "property": "open",
+     "event": "tc-open-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "dialog",
+    "name": "<dialog> and showModal()",
+    "bcd": "api.HTMLDialogElement.showModal",
+    "versions": {
+     "chrome": "37",
+     "edge": "79",
+     "firefox": "98",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Modals trap focus, close on Escape and sit in the top layer.",
+    "via": [
+     "itself",
+     "internal/modal"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "resize-observer",
+    "name": "ResizeObserver",
+    "bcd": "api.ResizeObserver",
+    "versions": {
+     "chrome": "64",
+     "edge": "79",
+     "firefox": "69",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "scrollbar-color",
+    "name": "scrollbar-color",
+    "bcd": "css.properties.scrollbar-color",
+    "versions": {
+     "chrome": "121",
+     "edge": "121",
+     "firefox": "64",
+     "safari": "26.2",
+     "safari_ios": "26.2"
+    },
+    "progressive": true,
+    "without": "Scrollbars keep the browser's default colours.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "scrollbar-width",
+    "name": "scrollbar-width",
+    "bcd": "css.properties.scrollbar-width",
+    "versions": {
+     "chrome": "121",
+     "edge": "121",
+     "firefox": "64",
+     "safari": "18.2",
+     "safari_ios": "18.2"
+    },
+    "progressive": true,
+    "without": "Scrollbars keep the browser's default width.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "overscroll-contain",
+    "name": "overscroll-behavior: contain",
+    "bcd": "css.properties.overscroll-behavior.contain",
+    "versions": {
+     "chrome": "63",
+     "edge": "18",
+     "firefox": "59",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "Scrolling past the end of a list carries on scrolling the page.",
+    "via": [
+     "itself"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [
+   "requestAnimationFrame, cancelled"
+  ],
+  "animations": 2,
+  "observers": [
+   "ResizeObserver",
+   "MutationObserver",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "script",
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 50471,
+  "gzip": 13981
+ }
+}

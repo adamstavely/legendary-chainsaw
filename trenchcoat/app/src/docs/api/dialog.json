@@ -141,7 +141,10 @@
    }
   }
  ],
- "changelog": [],
+ "changelog": [
+  "**Shared code:** - `internal/modal.ts`, the `ModalController` that `tc-dialog`, `tc-terms-dialog` and `tc-stories` share; - `cardHead()` gains `picture`, `pictureShape` and `keepAside`.",
+  "**`tc-dialog`** uses the shared `ModalController`. If the browser closes it on its own, focus now goes back to the button that opened it."
+ ],
  "frameworks": [
   {
    "tag": "tc-dialog",
@@ -303,7 +306,8 @@
     "progressive": false,
     "why": "Modals trap focus, close on Escape and sit in the top layer.",
     "via": [
-     "itself"
+     "itself",
+     "internal/modal"
     ]
    },
    {
@@ -383,7 +387,7 @@
   "windowed": false
  },
  "size": {
-  "min": 26342,
-  "gzip": 7244
+  "min": 28000,
+  "gzip": 7801
  }
 }

@@ -321,6 +321,9 @@
   "src/elements/notification-stack.ts": {
     "literal spacing": 6
   },
+  "src/elements/notifications.ts": {
+    "clock/environment read": 1
+  },
   "src/elements/number-ticker.ts": {
     "literal spacing": 1
   },

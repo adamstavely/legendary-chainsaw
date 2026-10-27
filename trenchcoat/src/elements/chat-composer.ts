@@ -8,7 +8,7 @@ import "./context-tray";
 import type { ContextTrayItem, ContextTrayItemsChange } from "./context-tray";
 import { TcElement } from "./internal/base";
 import "./mention-picker";
-import type { MentionPickerTrigger } from "./mention-picker";
+import type { MentionPickerGroup, MentionPickerItem, MentionPickerOpenChange, MentionPickerPick, MentionPickerTrigger, TcMentionPicker } from "./mention-picker";
 import "./model-picker";
 import type { PickerModel } from "./model-picker";
 import "./model-settings";
@@ -46,6 +46,20 @@ import { PopoverController } from "./internal/popover";
  * Keyboard: the row is a WAI-ARIA toolbar – one Tab stop, ← → Home End. Popovers close on Escape and give focus back.
  * When the row doesn't fit (and always at 400px or less) the settings and prompts buttons and the model switch keep
  * only their icons (their names stay); when it still doesn't fit, settings and prompts move into a "More" menu.
+ *
+ * Skills (remediation 7.2) – `skills` (ChatSkill[]) turns on slash commands, through the same tc-mention-picker as
+ * `mentions` (one popup; with both, @ mentions and / skills share it, and a "/" trigger in `mentions` gives way):
+ *   · typing / at the start of a line opens the list – recent skills first (`recentSkills`, or the picks made in this
+ *     composer), then the rest grouped by `source`; typing ranks one list by name start, word start, description
+ *   · a pick puts "/name " at the start of the message, drawn as a token behind the text (a mirror layer under the
+ *     text area), with the skill's `argumentHint` greyed after it until arguments are typed. Backspace right after
+ *     the token, or Delete before it, removes it whole; typing inside it moves on past it
+ *   · one skill per message: / on a later line, or / before the token, offers to replace it; closing that list
+ *     without a pick puts the old token back
+ *   · tc-skill-change is cancelable for picks, replacements and removals; tc-send and onSend carry `skill` and `args`
+ *   · a "/" button by the attach button (hide-skills-button leaves it out) opens the list for people who don't know
+ *     the shortcut; `searchSkills` finds skills on the app's side, with loading and error states
+ * The text area stays the combobox; the token and the hint are read with it (aria-describedby) and picks are said.
  */
 
 type Step = "idle" | "loading" | "done";
@@ -87,6 +101,45 @@ export type ChatPromptPick = { prompt: string; template: PromptTemplate; values:
 export type ChatSettingsChange = ModelSettingsChange;
 
 type Panel = "" | "settings" | "prompts" | "page" | "more";
+
+/** An agent skill – a slash command a message can start with */
+export type ChatSkill = {
+  id: string;
+  /** What follows the slash, e.g. "translate" – no spaces */
+  name: string;
+  /** One line on what it does */
+  description?: string;
+  /** Where it comes from – "Built-in", "Your team", a plugin's name. The list groups by it */
+  source?: string;
+  /** More words that should find it */
+  keywords?: string;
+  /** What to type after it, greyed after the token until something is typed, e.g. "<language>" */
+  argumentHint?: string;
+  /** An icon element, cloned per row */
+  icon?: Element;
+};
+/** The picked skill as tc-send and onSend carry it */
+export type ChatSkillRef = { id: string; name: string };
+/** tc-skill-change: the skill now (null: none), the one before, and why. Cancelable for pick, replace and remove */
+export type ChatSkillChange = { skill: ChatSkill | null; previous: ChatSkill | null; reason: "pick" | "replace" | "remove" | "edit" | "send" };
+/** Finds skills for what's typed after the slash, on the app's side. The signal aborts when the query changes or the list closes */
+export type ChatSkillSearch = (query: string, options: { signal: AbortSignal }) => ChatSkill[] | Promise<ChatSkill[]>;
+/** tc-send's detail, and onSend's details plus the message: `message` is the whole text, the token included */
+export type ChatSend = { message: string; model: string; skill: ChatSkillRef | null; args: string };
+/** What onSend gets after the message */
+export type ChatSendDetails = Omit<ChatSend, "message">;
+
+/** The token a skill puts at the start of the message */
+const tokenOf = (s: { name: string }) => `/${s.name}`;
+/** Whether the text starts with the skill's token, followed by white space or nothing */
+const hasToken = (text: string, s: { name: string }) => {
+  const t = tokenOf(s);
+  return text.startsWith(t) && (text.length === t.length || /\s/.test(text[t.length]));
+};
+/** An argument hint as a screen reader should say it: "<language>" → "language" */
+const spoken = (hint: string) => hint.replace(/[<>[\]{}]/g, "").trim();
+/** How many recent skills lead the list */
+const RECENT_SKILLS = 5;
 
 /** A live speech-to-text session: push the transcript and the input level; stop when `signal` aborts */
 export type ChatDictationSession = {
@@ -186,6 +239,10 @@ const TOOL_PATHS = {
 const toolIcon = (name: keyof typeof TOOL_PATHS, clean: boolean) =>
   html`<svg class="ui-chat-composer__tool-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=${clean ? 1.5 : 1.75} stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${TOOL_PATHS[name]}</svg>`;
 
+/** The skills button: a slash in a rounded square (Lucide square-slash, ISC) – Clean draws a thinner line */
+const slashIcon = (clean: boolean) =>
+  html`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=${clean ? 1.6 : 1.5} stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4"></rect><path d="M9.5 15.5 14.5 8.5"></path></svg>`;
+
 /** The model picker's name in its trigger – hidden (for sight only) when the toolbar is narrow */
 const PICKER_NAME = ".ui-mdp__name";
 
@@ -230,7 +287,8 @@ let uid = 0;
  * @tag tc-chat-composer
  * @fires tc-value-change - The message changed (`{ value: string }`) – typing, dictation, clearing after a send; cancelable – prevent it to keep `value` (controlled use)
  * @fires tc-model-change - A model was picked in the menu (`{ model: string; choice: ChatModel }`); cancelable
- * @fires tc-send - A message was sent (`{ message: string; model: string }`); `onSend` may return a promise to keep it until it settles
+ * @fires tc-send - A message was sent (`ChatSend`: `{ message, model, skill, args }` – `skill` is the picked skill's `{ id, name }` or null, `args` the text after its token); `onSend` may return a promise to keep it until it settles
+ * @fires tc-skill-change - The message's skill changed (`ChatSkillChange`: `{ skill, previous, reason }`); cancelable when it was picked, replaced or removed – prevent it to keep the message as it is
  * @fires tc-attach - The plus button was pressed – open your own file or folder picker here
  * @fires tc-connect-apps - "Connect apps" was pressed; `onConnectApps` may return a promise it waits for
  * @fires tc-request-approval - "Request approval" was pressed; `onRequestApproval` may return a promise it waits for
@@ -270,9 +328,10 @@ export class TcChatComposer extends TcElement {
   @property({ attribute: false }) accessor onDictate: ((session: ChatDictationSession) => void | Promise<unknown>) | undefined = undefined;
   /**
    * Sends the message. Return a promise to keep the message (and a pending send button) until it settles: it is
-   * cleared when it resolves and kept, with an error, when it rejects
+   * cleared when it resolves and kept, with an error, when it rejects. `details` has the model, and the skill and its
+   * arguments when the message starts with one
    */
-  @property({ attribute: false }) accessor onSend: ((message: string, details: { model: string }) => void | Promise<unknown>) | undefined = undefined;
+  @property({ attribute: false }) accessor onSend: ((message: string, details: ChatSendDetails) => void | Promise<unknown>) | undefined = undefined;
   /** Connects the user's apps; "Connect apps" keeps loading until a returned promise settles. Without it connecting is simulated */
   @property({ attribute: false }) accessor onConnectApps: (() => void | Promise<unknown>) | undefined = undefined;
   /** Requests unrestricted access – resolves, rejects and is simulated like onConnectApps */
@@ -280,6 +339,19 @@ export class TcChatComposer extends TcElement {
 
   /** Opt-in: the / and @ picker on the message (tc-mention-picker). Its tc-pick bubbles from the composer */
   @property({ attribute: false }) accessor mentions: MentionPickerTrigger[] | undefined = undefined;
+  /** Opt-in: the skills (slash commands) a message can start with – / at the start of a line opens them */
+  @property({ attribute: false }) accessor skills: ChatSkill[] | undefined = undefined;
+  /** Ids of the skills used last, most recent first – listed first before anything is typed. Unset, the composer
+   *  remembers the picks made in it */
+  @property({ attribute: false }) accessor recentSkills: string[] | undefined = undefined;
+  /** Finds skills on the app's side in place of the built-in filter over `skills` (see ChatSkillSearch) */
+  @property({ attribute: false }) accessor searchSkills: ChatSkillSearch | undefined = undefined;
+  /** Id of the message's skill ("" for none). Setting it puts that skill's token at the start of the message */
+  @property() accessor skill = "";
+  /** Leave out the "/" button that opens the skills list */
+  @property({ type: Boolean, attribute: "hide-skills-button" }) accessor hideSkillsButton = false;
+  /** The empty message's placeholder while skills are on – default: the placeholder plus "/ for skills" */
+  @property({ attribute: "skills-placeholder" }) accessor skillsPlaceholder = "";
   /** Opt-in: what's in context, as chips above the composer (tc-context-tray). Changes come as tc-items-change; the
    *  composer keeps the new list unless a listener prevents it */
   @property({ attribute: false }) accessor context: ContextTrayItem[] | undefined = undefined;
@@ -325,6 +397,8 @@ export class TcChatComposer extends TcElement {
   /** @internal */ @state() accessor fill = { y: 0, h: 0, glide: false };
   /** @internal The fill only shows while the pointer is over a row (or the keyboard moves through the list) */
   @state() accessor shown = false;
+  /** @internal Skills picked here, most recent first – the recent ones when `recentSkills` is unset */
+  @state() accessor remembered: string[] = [];
 
   private uid = `tc-cc-${++uid}`;
   private timers: number[] = [];
@@ -368,6 +442,15 @@ export class TcChatComposer extends TcElement {
   private needs = [0, 0];
   /** Where a prompt goes: the caret (or selection) in the message when the prompt library opened */
   private caret: [number, number] | null = null;
+  /** Every skill seen – in `skills` or in a search's results – by id, so a pick or an id finds its skill */
+  private known = new Map<string, ChatSkill>();
+  /** The skill `skill` was last set to from inside – a different value came from the page */
+  private appliedSkill = "";
+  /** A "/" the composer put at the start (the button, or / before the token): what to put back if the list closes
+   *  without a pick – the old token, or nothing */
+  private slash: { rest: string; restore: string } | null = null;
+  /** A pick the page prevented: the typed "/query", removed if the page then sets `skill` */
+  private prevented: { start: number; text: string } | null = null;
 
   constructor() {
     super();
@@ -431,6 +514,7 @@ export class TcChatComposer extends TcElement {
   }
 
   private setMessage(next: string) {
+    this.followText(next);
     if (this.emit("tc-value-change", { value: next }, { cancelable: true })) {
       this.typed = null;
       this.value = next;
@@ -579,13 +663,16 @@ export class TcChatComposer extends TcElement {
 
   private async send() {
     if (!this.canSend) return;
-    const message = this.message.trim();
-    const details = { model: this.current.id };
-    this.emit("tc-send", { message, ...details });
+    const text = this.message;
+    const message = text.trim();
+    const picked = this.pickedSkill;
+    const skill = picked && hasToken(text, picked) ? picked : null;
+    const details: ChatSendDetails = { model: this.current.id, skill: skill ? { id: skill.id, name: skill.name } : null, args: skill ? text.slice(tokenOf(skill).length).trim() : message };
+    this.emit<ChatSend>("tc-send", { message, ...details });
     const result = this.onSend?.(message, details);
     this.textarea?.focus();
     if (!result || typeof (result as Promise<unknown>).then !== "function") {
-      this.setMessage("");
+      this.clearSent();
       this.status = "Message sent.";
       return;
     }
@@ -596,13 +683,229 @@ export class TcChatComposer extends TcElement {
     try {
       await result;
       if (!this.isConnected) return;
-      this.setMessage("");
+      this.clearSent();
       this.status = "Message sent.";
     } catch {
       if (!this.isConnected) return;
       this.fail("Your message wasn't sent. Try again.");
     } finally {
       if (this.isConnected) this.sending = false;
+    }
+  }
+
+  /** After a send: the message is cleared, and its skill with it */
+  private clearSent() {
+    if (this.skill) this.changeSkill(null, "send", null);
+    this.setMessage("");
+  }
+
+  /* ---------- Skills ---------- */
+
+  private get hasSkills() {
+    return !!this.skills?.length || !!this.searchSkills;
+  }
+
+  /** The message's skill, from its id – a skill the composer hasn't seen is named by its id */
+  get pickedSkill(): ChatSkill | null {
+    const id = this.skill;
+    if (!id) return null;
+    return this.known.get(id) ?? this.skills?.find((s) => s.id === id) ?? { id, name: id };
+  }
+
+  private skillByName(name: string) {
+    return this.skills?.find((s) => s.name === name) ?? [...this.known.values()].find((s) => s.name === name);
+  }
+
+  /**
+   * Changes the skill, and with `text` the message too (the caret at `caret`, default after the token). Returns false
+   * when a listener prevented a cancelable change
+   */
+  private changeSkill(next: ChatSkill | null, reason: ChatSkillChange["reason"], text: string | null, caret?: number) {
+    const previous = this.pickedSkill;
+    const cancelable = reason === "pick" || reason === "replace" || reason === "remove";
+    if (!this.emit<ChatSkillChange>("tc-skill-change", { skill: next, previous, reason }, { cancelable }) && cancelable) return false;
+    if (next) {
+      this.known.set(next.id, next);
+      if (reason === "pick" || reason === "replace") this.remembered = [next.id, ...this.remembered.filter((id) => id !== next.id)].slice(0, 20);
+    }
+    this.skill = this.appliedSkill = next?.id ?? "";
+    this.prevented = null;
+    if (text !== null) {
+      this.setMessage(text);
+      const at = caret ?? (next ? tokenOf(next).length + 1 : 0);
+      void this.updateComplete.then(() => this.textarea?.setSelectionRange(at, at));
+    }
+    if (reason === "pick") this.status = `${tokenOf(next!)} added.${next!.argumentHint ? ` Then type ${spoken(next!.argumentHint)}.` : ""}`;
+    else if (reason === "replace") this.status = `${tokenOf(next!)} replaces ${tokenOf(previous!)}.`;
+    else if (reason === "remove" && previous) this.status = `${tokenOf(previous)} removed.`;
+    return true;
+  }
+
+  /** The text changed: a broken token drops its skill; "/name " typed out in full becomes that skill */
+  private followText(text: string) {
+    if (!this.hasSkills || this.slash) return;
+    const s = this.pickedSkill;
+    if (s) {
+      if (!hasToken(text, s)) this.changeSkill(null, "edit", null);
+      return;
+    }
+    const typed = /^\/(\S+)\s/.exec(text);
+    const found = typed && this.skillByName(typed[1]);
+    if (found) this.changeSkill(found, "edit", null);
+  }
+
+  /** The page set `skill`: its token goes at the start of the message, in place of the old one */
+  private applySkill() {
+    const next = this.pickedSkill;
+    const previous = this.appliedSkill ? (this.known.get(this.appliedSkill) ?? this.skills?.find((s) => s.id === this.appliedSkill) ?? null) : null;
+    this.appliedSkill = this.skill;
+    let text = this.message;
+    // A pick the page prevented and then made itself: the typed "/query" goes
+    const p = this.prevented;
+    if (p && text.slice(p.start, p.start + p.text.length) === p.text) text = text.slice(0, p.start) + text.slice(p.start + p.text.length);
+    this.prevented = null;
+    if (next && hasToken(text, next)) return text === this.message ? undefined : this.setMessage(text);
+    if (previous && hasToken(text, previous)) text = text.slice(tokenOf(previous).length);
+    text = text.replace(/^[ \t]+/, "");
+    this.setMessage(next ? `${tokenOf(next)} ${text}` : text);
+  }
+
+  /** The list's / trigger: grouped by source, recent ones first, with a note when picking would replace the skill */
+  private triggerCache: { deps: unknown[]; trigger: MentionPickerTrigger } | null = null;
+  private itemCache = new WeakMap<ChatSkill, MentionPickerItem>();
+  private item(s: ChatSkill) {
+    let it = this.itemCache.get(s);
+    if (!it) this.itemCache.set(s, (it = { id: s.id, label: s.name, description: s.description, keywords: s.keywords, icon: s.icon, token: tokenOf(s) }));
+    return it;
+  }
+  private groupsOf(list: ChatSkill[]): MentionPickerGroup[] {
+    const groups = new Map<string, MentionPickerGroup>();
+    for (const s of list) {
+      this.known.set(s.id, s);
+      const label = s.source ?? "Skills";
+      let g = groups.get(label);
+      if (!g) groups.set(label, (g = { id: `source:${label}`, label, items: [] }));
+      g.items.push(this.item(s));
+    }
+    return [...groups.values()];
+  }
+  private get skillTrigger(): MentionPickerTrigger | null {
+    if (!this.hasSkills) return null;
+    const recent = (this.recentSkills ?? this.remembered).slice(0, RECENT_SKILLS);
+    const current = this.pickedSkill;
+    const deps = [this.skills, this.searchSkills, recent.join("\u0000"), current?.name];
+    const cached = this.triggerCache;
+    if (cached && cached.deps.every((d, i) => d === deps[i])) return cached.trigger;
+    const trigger: MentionPickerTrigger = {
+      char: "/",
+      atLineStart: true,
+      label: "Skills",
+      groups: this.groupsOf(this.skills ?? []),
+      recent,
+      showChar: true,
+      rankAcrossGroups: true,
+      noun: ["skill", "skills"],
+      emptyText: "No skills match",
+      emptyHint: "Try another word, or press Esc to type it as text",
+      note: current ? `Picking one replaces ${tokenOf(current)}` : undefined,
+      search: this.searchSkills ? this.findSkills : undefined,
+    };
+    this.triggerCache = { deps, trigger };
+    return trigger;
+  }
+  /** The app's search, its results turned into the picker's groups */
+  private findSkills = (query: string, _char: string, options: { signal: AbortSignal }) => {
+    const found = this.searchSkills!(query, options);
+    return found instanceof Promise ? found.then((list) => this.groupsOf(list)) : this.groupsOf(found);
+  };
+
+  /** What the picker offers: the mentions, and the skills on / (a / in `mentions` gives way to them) */
+  private triggersCache: { mentions: unknown; skills: unknown; triggers: MentionPickerTrigger[] } | null = null;
+  private get triggers(): MentionPickerTrigger[] {
+    const mentions = this.mentions ?? [];
+    const skills = this.skillTrigger;
+    const c = this.triggersCache;
+    if (c && c.mentions === mentions && c.skills === skills) return c.triggers;
+    const triggers = skills ? [...mentions.filter((t) => t.char !== "/"), skills] : mentions;
+    this.triggersCache = { mentions, skills, triggers };
+    return triggers;
+  }
+  private get picker() {
+    return this.querySelector<TcMentionPicker>("tc-mention-picker");
+  }
+
+  /** A skill picked in the list: the typed "/query" goes, and the skill's token takes the start of the message */
+  private onPick = (e: CustomEvent<MentionPickerPick>) => {
+    if (!this.hasSkills || e.detail.trigger !== "/") return;
+    // Not a mention: the composer inserts it, and says so with tc-skill-change
+    e.stopPropagation();
+    e.preventDefault();
+    const skill = this.known.get(e.detail.item.id);
+    if (!skill) return;
+    const text = this.message;
+    const typed = `/${e.detail.query}`;
+    const caret = this.textarea?.selectionEnd ?? text.length;
+    const start = text.slice(caret - typed.length, caret) === typed ? caret - typed.length : text.lastIndexOf(typed, caret);
+    let rest = start < 0 ? text : text.slice(0, start) + text.slice(start + typed.length);
+    const previous = this.pickedSkill;
+    if (previous && hasToken(rest, previous)) rest = rest.slice(tokenOf(previous).length);
+    rest = rest.replace(/^[ \t]+/, "");
+    const slash = this.slash;
+    this.slash = null;
+    if (!this.changeSkill(skill, previous ? "replace" : "pick", `${tokenOf(skill)} ${rest}`)) {
+      this.slash = slash;
+      if (start >= 0) this.prevented = { start, text: typed };
+    }
+  };
+
+  /** The list closed: a "/" the composer put there and nothing typed after it goes back to what was there */
+  private onPickerOpen = (e: CustomEvent<MentionPickerOpenChange>) => {
+    if (e.detail.open || !this.slash) return;
+    const { rest, restore } = this.slash;
+    this.slash = null;
+    if (this.message === `/${rest}`) {
+      this.setMessage(restore + rest);
+      void this.updateComplete.then(() => this.textarea?.setSelectionRange(restore.length + (restore ? 1 : 0), restore.length + (restore ? 1 : 0)));
+    } else this.followText(this.message);
+  };
+
+  /** "/" at the very start – from the button, or typed before the token: a "/" takes the token's place and the list opens */
+  private startSlash() {
+    const t = this.textarea;
+    if (!t) return;
+    const text = this.message;
+    const current = this.pickedSkill;
+    const restore = current && hasToken(text, current) ? tokenOf(current) : "";
+    const rest = text.slice(restore.length);
+    this.slash = { rest, restore };
+    t.focus();
+    this.setMessage(`/${rest}`);
+    void this.updateComplete.then(() => {
+      t.setSelectionRange(1, 1);
+      this.picker?.sync();
+    });
+  }
+  private openSkills = () => this.startSlash();
+
+  /** Keys around the token: Backspace after it or Delete before it removes it whole; typing inside it moves past it */
+  private onTokenKey(event: KeyboardEvent) {
+    const s = this.pickedSkill;
+    const t = event.target as HTMLTextAreaElement;
+    const text = this.message;
+    if (!s || !hasToken(text, s) || t.selectionStart !== t.selectionEnd || event.ctrlKey || event.metaKey || event.altKey) return;
+    const at = t.selectionStart;
+    const token = tokenOf(s);
+    const after = text[token.length] === " " ? token.length + 1 : token.length;
+    if ((event.key === "Backspace" && at > 0 && at <= after && at >= token.length) || (event.key === "Delete" && at === 0)) {
+      event.preventDefault();
+      this.changeSkill(null, "remove", text.slice(after), 0);
+    } else if (event.key === "/" && at === 0) {
+      event.preventDefault();
+      this.startSlash();
+    } else if (event.key.length === 1 && at <= token.length) {
+      // Inside the token (or right after it with no space): the key lands after the token and its space
+      if (after === token.length) t.setRangeText(" ", token.length, token.length, "end");
+      t.setSelectionRange(token.length + 1, token.length + 1);
     }
   }
 
@@ -812,6 +1115,9 @@ export class TcChatComposer extends TcElement {
     super.willUpdate(changed);
     // The page answered with what was typed
     if (changed.has("value") && this.value === this.typed) this.typed = null;
+    // The page set the skill: its token takes the start of the message. Then text the page set may break or make one
+    if (changed.has("skill") && this.skill !== this.appliedSkill) this.applySkill();
+    if (changed.has("value") && this.typed === null) this.followText(this.value);
     // Turning the page context on or off is said, whoever does it (the chip, or the page through `pageContext`)
     const before = changed.get("pageContext");
     const pc = this.pageContext;
@@ -820,7 +1126,7 @@ export class TcChatComposer extends TcElement {
 
   protected override firstUpdated() {
     // The picker attaches to the message, which exists only after the first render
-    if (this.mentions?.length) this.requestUpdate();
+    if (this.triggers.length) this.requestUpdate();
     // The model button's width is kept current, so it's only measured when the model changes
     const el = this.modelButton;
     if (!el) return;
@@ -838,6 +1144,7 @@ export class TcChatComposer extends TcElement {
 
   protected override updated(changed: PropertyValues<this>) {
     this.watchBar(changed);
+    this.onMessageScroll();
     // The toolbar's model picker renders its trigger after this update – the toolbar's tab stop is set again then
     const picker = this.querySelector<HTMLElement & { hasUpdated: boolean; updateComplete: Promise<unknown> }>(".ui-chat-composer__picker");
     if (picker && !picker.hasUpdated) void picker.updateComplete.then(() => this.requestUpdate());
@@ -920,6 +1227,12 @@ export class TcChatComposer extends TcElement {
     event.preventDefault();
     this.textarea?.focus();
   };
+  /** The token's layer scrolls with the text */
+  private onMessageScroll = () => {
+    const mirror = this.querySelector<HTMLElement>(".ui-chat-composer__mirror");
+    const t = this.textarea;
+    if (mirror && t && mirror.scrollTop !== t.scrollTop) mirror.scrollTop = t.scrollTop;
+  };
   private onBodyKey = (event: KeyboardEvent) => {
     if (event.key === "Escape" && this.recording) {
       event.preventDefault();
@@ -927,6 +1240,8 @@ export class TcChatComposer extends TcElement {
     }
   };
   private onMessageKey = (event: KeyboardEvent) => {
+    if (this.skill && !event.isComposing) this.onTokenKey(event);
+    if (event.defaultPrevented) return;
     if (event.key === "Enter" && !event.shiftKey && !event.isComposing) {
       event.preventDefault();
       void this.send();
@@ -937,18 +1252,37 @@ export class TcChatComposer extends TcElement {
     return m.logo ? m.logo.cloneNode(true) : BUILT_IN.get(m)?.(clean);
   }
 
+  /** The placeholder: with skills on, it says / opens them */
+  private get shownPlaceholder() {
+    if (!this.hasSkills) return this.placeholder;
+    return this.skillsPlaceholder || `${this.placeholder.replace(/[\s.…]+$/, "")} · / for skills`;
+  }
+
+  /** The skill's token, drawn behind the text it starts with, and its argument hint greyed after it until typed over */
+  private mirror(message: string) {
+    const s = this.pickedSkill;
+    if (!s || !hasToken(message, s)) return nothing;
+    const token = tokenOf(s);
+    const rest = message.slice(token.length);
+    const hint = s.argumentHint && !rest.trim() ? html`${rest ? "" : " "}<span class="ui-chat-composer__arg">${s.argumentHint}</span>` : nothing;
+    return html`<div class="ui-chat-composer__mirror" aria-hidden="true"><span class="ui-chat-composer__token">${token}</span>${rest}${hint}</div>`;
+  }
+
   /** The message and, while recording, the heard words in gray behind the confirmed text */
   private writing() {
     const message = this.message;
     const heard = this.heard;
-    return html`<textarea
+    const s = this.pickedSkill;
+    const described = [s && hasToken(message, s) ? `${this.uid}-skill` : "", this.disclaimer ? `${this.uid}-disclaimer` : ""].filter(Boolean).join(" ");
+    return html`${this.mirror(message)}<textarea
         class="ui-chat-composer__message"
         .value=${live(message)}
         @input=${(e: Event) => this.setMessage((e.target as HTMLTextAreaElement).value)}
         @keydown=${this.onMessageKey}
-        placeholder=${this.placeholder}
+        @scroll=${this.onMessageScroll}
+        placeholder=${this.shownPlaceholder}
         aria-label="Message"
-        aria-describedby=${ifDefined(this.disclaimer ? `${this.uid}-disclaimer` : undefined)}
+        aria-describedby=${ifDefined(described || undefined)}
         spellcheck="false"
         ?readonly=${this.recording || this.sending}
       ></textarea>
@@ -1036,6 +1370,14 @@ export class TcChatComposer extends TcElement {
 
   private attach = () => this.emit("tc-attach", null);
 
+  /** "/" next to attach: opens the skills list for people who don't know the shortcut */
+  private skillsButton(clean: boolean) {
+    if (!this.hasSkills || this.hideSkillsButton) return nothing;
+    return html`<button type="button" class="ui-chat-composer__icon-btn ui-chat-composer__skills" aria-label="Use a skill" @click=${this.openSkills}>
+      ${clean ? slashIcon(true) : html`<span class="ui-chat-composer__icon">${slashIcon(false)}</span>`}
+    </button>`;
+  }
+
   /** Clean: the message on top, the tools in a row below it, and a last row for apps and the project */
   private cleanLayout(i: ReturnType<typeof iconsFor>) {
     return html`<div class="ui-chat-composer__write" @pointerdown=${this.focusMessage}>
@@ -1043,7 +1385,7 @@ export class TcChatComposer extends TcElement {
         <div class="ui-chat-composer__tools">
           <div class="ui-chat-composer__group">
             <button type="button" class="ui-chat-composer__icon-btn" aria-label="Add attachment" @click=${this.attach}>${i.plus}</button>
-            ${this.approvalButton(true, i)}
+            ${this.skillsButton(true)}${this.approvalButton(true, i)}
           </div>
           <div class="ui-chat-composer__swap">
             <div class="ui-chat-composer__group ui-chat-composer__group--end" .inert=${this.recording}>
@@ -1069,7 +1411,7 @@ export class TcChatComposer extends TcElement {
         ${this.writing()}
         <div class="ui-chat-composer__toolbar">
           <button type="button" class="ui-chat-composer__icon-btn" aria-label="Add attachment" @click=${this.attach}><span class="ui-chat-composer__icon">${i.plus}</span></button>
-          ${this.approvalButton(false, i)}
+          ${this.skillsButton(false)}${this.approvalButton(false, i)}
         </div>
         <div class="ui-chat-composer__toolbar ui-chat-composer__toolbar--end" .inert=${this.recording}>
           ${this.modelSwitcher === "toolbar" ? nothing : this.modelButtonTemplate(false, i)}
@@ -1295,10 +1637,19 @@ export class TcChatComposer extends TcElement {
       ${this.disclaimer ? html`<p class="ui-chat-composer__disclaimer" id=${`${this.uid}-disclaimer`}>${this.disclaimer}</p>` : nothing}
       <p class="ui-chat-composer__sr-only" aria-live="polite">${this.status}</p>
       <span id=${`${this.uid}-heard`} hidden>${heard ? `Heard so far: ${heard}` : "Nothing heard yet."}</span>
-      ${this.mentions?.length
-        ? html`<tc-mention-picker look=${this.resolvedLook} .target=${this.textarea} .triggers=${this.mentions}></tc-mention-picker>`
+      ${this.skillNote()}
+      ${this.triggers.length
+        ? html`<tc-mention-picker look=${this.resolvedLook} .target=${this.textarea} .triggers=${this.triggers} @tc-pick=${this.onPick} @tc-open-change=${this.onPickerOpen}></tc-mention-picker>`
         : nothing}
     `;
+  }
+
+  /** What a screen reader hears with the message while it starts with a skill: the token and what to type after it */
+  private skillNote() {
+    const s = this.pickedSkill;
+    if (!s || !hasToken(this.message, s)) return nothing;
+    const hint = s.argumentHint ? spoken(s.argumentHint) : "";
+    return html`<span id=${`${this.uid}-skill`} hidden>Skill ${tokenOf(s)}${s.description ? `: ${s.description}` : ""}.${hint && !this.message.slice(tokenOf(s).length).trim() ? ` Type ${hint}.` : ""}</span>`;
   }
 
   /** The tray's change reaches the page first (it bubbles); the composer keeps it unless the page prevented it */
@@ -2433,6 +2784,36 @@ export class TcChatComposer extends TcElement {
     clip-path: inset(50%);
     white-space: nowrap;
 }
+}
+
+/* ---------- Skills: the token behind the text and the argument hint after it ----------
+   The mirror sits under the text area with the same box and type; its text is transparent, so only the token's tint
+   and the hint (where the text area has no text yet) show through */
+:where([data-look="standard"], [data-look="standard"] *).ui-chat-composer__mirror {
+  position: absolute;
+  /* The text area's box, widened by the padding that lets the token's tint show at its edge */
+  left: calc(66 * var(--u) - var(--tc-space-1));
+  right: calc(69 * var(--u) - var(--tc-space-1));
+  padding: 0 var(--tc-space-1);
+  top: calc(83.2 * var(--u));
+  height: calc((106.424 + var(--tc-chat-composer-grow, 0)) * var(--u));
+  transition: height var(--tc-chat-composer-swap) var(--tc-chat-composer-ease-swap);
+  font-size: calc(73.396 * var(--u));
+  line-height: calc(106.424 * var(--u));
+  letter-spacing: calc(-1.4679 * var(--u));
+}
+:where([data-look="clean"], [data-look="clean"] *).ui-chat-composer__mirror { position: absolute; inset: 0; padding: 0 var(--tc-space-1); font-size: var(--tc-font-size-md); line-height: var(--tc-line-height-normal); }
+/* Clean: the text area is positioned too, so it paints over the mirror before it */
+:where([data-look="clean"], [data-look="clean"] *).ui-chat-composer__message { position: relative; }
+.ui-chat-composer__mirror { overflow: hidden; color: transparent; white-space: pre-wrap; overflow-wrap: break-word; pointer-events: none; }
+.ui-chat-composer__body[data-recording="true"] .ui-chat-composer__mirror { visibility: hidden; }
+/* The token: a tint behind "/name" – a spread shadow widens it without moving the text */
+.ui-chat-composer__token { border-radius: var(--tc-radius-xs); background: var(--tc-accent-subtle); box-shadow: 0 0 0 var(--tc-space-0-5) var(--tc-accent-subtle); }
+.ui-chat-composer__mirror { box-sizing: border-box; }
+.ui-chat-composer__arg { color: var(--tc-text-placeholder); }
+@media (forced-colors: active) {
+  .ui-chat-composer__token { outline: var(--tc-hairline) solid CanvasText; }
+  .ui-chat-composer__arg { color: GrayText; }
 }
 
 /* ---------- Toolbar row under the composer (opt-in): model, settings, prompts, page context ---------- */

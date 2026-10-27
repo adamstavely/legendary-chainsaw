@@ -11,31 +11,31 @@
    "features": [
     "light-dark"
    ],
-   "elements": 180
+   "elements": 183
   },
   "edge": {
    "features": [
     "light-dark"
    ],
-   "elements": 180
+   "elements": 183
   },
   "firefox": {
    "features": [
     "has"
    ],
-   "elements": 54
+   "elements": 56
   },
   "safari": {
    "features": [
     "light-dark"
    ],
-   "elements": 180
+   "elements": 183
   },
   "safari_ios": {
    "features": [
     "light-dark"
    ],
-   "elements": 180
+   "elements": 183
   }
  },
  "features": [
@@ -52,7 +52,7 @@
    },
    "progressive": false,
    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
-   "elements": 180
+   "elements": 183
   },
   {
    "id": "color-mix",
@@ -67,7 +67,7 @@
    },
    "progressive": false,
    "why": "Tints and washes mixed from the tokens.",
-   "elements": 180
+   "elements": 183
   },
   {
    "id": "is-where",
@@ -82,7 +82,7 @@
    },
    "progressive": false,
    "why": "Every rule is keyed on :where() so the page can override it.",
-   "elements": 180
+   "elements": 183
   },
   {
    "id": "focus-visible",
@@ -97,7 +97,7 @@
    },
    "progressive": false,
    "why": "Focus rings for keyboard users.",
-   "elements": 179
+   "elements": 182
   },
   {
    "id": "container-size",
@@ -112,7 +112,7 @@
    },
    "progressive": false,
    "why": "Components adapt to the width they're given, not the window's.",
-   "elements": 137
+   "elements": 140
   },
   {
    "id": "inert",
@@ -127,7 +127,7 @@
    },
    "progressive": false,
    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
-   "elements": 103
+   "elements": 105
   },
   {
    "id": "inset",
@@ -141,7 +141,7 @@
     "safari_ios": "14.1"
    },
    "progressive": false,
-   "elements": 94
+   "elements": 96
   },
   {
    "id": "resize-observer",
@@ -155,7 +155,7 @@
     "safari_ios": "13.4"
    },
    "progressive": false,
-   "elements": 83
+   "elements": 86
   },
   {
    "id": "intersection-observer",
@@ -169,7 +169,7 @@
     "safari_ios": "12.2"
    },
    "progressive": false,
-   "elements": 66
+   "elements": 67
   },
   {
    "id": "has",
@@ -184,7 +184,7 @@
    },
    "progressive": false,
    "why": "Layout and state that depend on what's inside a part (an icon present, a focused field).",
-   "elements": 54
+   "elements": 56
   },
   {
    "id": "mask",
@@ -199,7 +199,7 @@
    },
    "progressive": false,
    "note": "with the -webkit- prefix",
-   "elements": 34
+   "elements": 35
   },
   {
    "id": "individual-transforms",
@@ -275,20 +275,6 @@
    "elements": 16
   },
   {
-   "id": "structured-clone",
-   "name": "structuredClone()",
-   "bcd": "api.structuredClone",
-   "versions": {
-    "chrome": "98",
-    "edge": "98",
-    "firefox": "94",
-    "safari": "15.4",
-    "safari_ios": "15.4"
-   },
-   "progressive": false,
-   "elements": 7
-  },
-  {
    "id": "dialog",
    "name": "<dialog> and showModal()",
    "bcd": "api.HTMLDialogElement.showModal",
@@ -301,6 +287,20 @@
    },
    "progressive": false,
    "why": "Modals trap focus, close on Escape and sit in the top layer.",
+   "elements": 8
+  },
+  {
+   "id": "structured-clone",
+   "name": "structuredClone()",
+   "bcd": "api.structuredClone",
+   "versions": {
+    "chrome": "98",
+    "edge": "98",
+    "firefox": "94",
+    "safari": "15.4",
+    "safari_ios": "15.4"
+   },
+   "progressive": false,
    "elements": 7
   },
   {
@@ -387,7 +387,7 @@
    },
    "progressive": true,
    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
-   "elements": 180
+   "elements": 183
   },
   {
    "id": "adopted-stylesheets",
@@ -402,7 +402,7 @@
    },
    "progressive": true,
    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
-   "elements": 179
+   "elements": 182
   },
   {
    "id": "scrollbar-width",
@@ -417,7 +417,7 @@
    },
    "progressive": true,
    "without": "Scrollbars keep the browser's default width.",
-   "elements": 40
+   "elements": 42
   },
   {
    "id": "overscroll-contain",
@@ -432,7 +432,7 @@
    },
    "progressive": true,
    "without": "Scrolling past the end of a list carries on scrolling the page.",
-   "elements": 36
+   "elements": 39
   },
   {
    "id": "at-property",
@@ -462,6 +462,21 @@
    },
    "progressive": true,
    "without": "Paragraphs may end on a single short word.",
+   "elements": 12
+  },
+  {
+   "id": "popover",
+   "name": "Popover API",
+   "bcd": "api.HTMLElement.popover",
+   "versions": {
+    "chrome": "114",
+    "edge": "114",
+    "firefox": "125",
+    "safari": "17",
+    "safari_ios": "18.3"
+   },
+   "progressive": true,
+   "without": "Lists open fixed to the window instead of in the top layer, so a clipping ancestor or a modal can cover them.",
    "elements": 11
   },
   {
@@ -480,19 +495,19 @@
    "elements": 11
   },
   {
-   "id": "popover",
-   "name": "Popover API",
-   "bcd": "api.HTMLElement.popover",
+   "id": "scrollbar-color",
+   "name": "scrollbar-color",
+   "bcd": "css.properties.scrollbar-color",
    "versions": {
-    "chrome": "114",
-    "edge": "114",
-    "firefox": "125",
-    "safari": "17",
-    "safari_ios": "18.3"
+    "chrome": "121",
+    "edge": "121",
+    "firefox": "64",
+    "safari": "26.2",
+    "safari_ios": "26.2"
    },
    "progressive": true,
-   "without": "Lists open fixed to the window instead of in the top layer, so a clipping ancestor or a modal can cover them.",
-   "elements": 9
+   "without": "Scrollbars keep the browser's default colours.",
+   "elements": 8
   },
   {
    "id": "backdrop-filter",
@@ -511,21 +526,6 @@
    "elements": 7
   },
   {
-   "id": "scrollbar-color",
-   "name": "scrollbar-color",
-   "bcd": "css.properties.scrollbar-color",
-   "versions": {
-    "chrome": "121",
-    "edge": "121",
-    "firefox": "64",
-    "safari": "26.2",
-    "safari_ios": "26.2"
-   },
-   "progressive": true,
-   "without": "Scrollbars keep the browser's default colours.",
-   "elements": 6
-  },
-  {
    "id": "text-wrap-balance",
    "name": "text-wrap: balance",
    "bcd": "css.properties.text-wrap.balance",
@@ -538,7 +538,7 @@
    },
    "progressive": true,
    "without": "Titles break where the line fills up instead of into even lines.",
-   "elements": 5
+   "elements": 4
   },
   {
    "id": "scrollbar-gutter",

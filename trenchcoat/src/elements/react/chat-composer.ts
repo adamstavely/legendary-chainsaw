@@ -2,12 +2,31 @@ import { createComponent, type EventName } from "@lit/react";
 import { render as litRender } from "lit";
 import * as React from "react";
 import { flushSync } from "react-dom";
-import { TcChatComposer, chatModelLogo, defaultChatModels, type ChatModel as ElementModel, type ChatPageContext, type ChatPageContextChange, type ChatPromptPick, type ChatSettingsChange } from "../chat-composer";
+import {
+  TcChatComposer,
+  chatModelLogo,
+  defaultChatModels,
+  type ChatModel as ElementModel,
+  type ChatPageContext,
+  type ChatPageContextChange,
+  type ChatPromptPick,
+  type ChatSendDetails,
+  type ChatSettingsChange,
+  type ChatSkill as ElementSkill,
+  type ChatSkillChange as ElementSkillChange,
+} from "../chat-composer";
 import type { ContextTrayChange, ContextTrayItem } from "../context-tray";
 import type { MentionPickerPick } from "../mention-picker";
 import type { ModelSettingsValue } from "../model-settings";
-import { h, useControlled, useStaged } from "./internal";
-export type { ChatPageContext, ChatPageContextChange, ChatPromptPick, ChatSettingsChange } from "../chat-composer";
+import { h, isNode, useControlled, useStaged } from "./internal";
+export type { ChatPageContext, ChatPageContextChange, ChatPromptPick, ChatSend, ChatSendDetails, ChatSettingsChange, ChatSkillRef } from "../chat-composer";
+
+/** A skill (slash command) in the composer; `icon` may be a React node */
+export type ChatSkill = Omit<ElementSkill, "icon"> & { icon?: React.ReactNode | Element };
+/** Why the skill changed – `pick`, `replace` and `remove` can be prevented through the event */
+export type ChatSkillChangeReason = ElementSkillChange["reason"];
+/** Finds skills on the app's side; the signal aborts when the query changes or the list closes */
+export type ChatSkillSearch = (query: string, options: { signal: AbortSignal }) => ChatSkill[] | Promise<ChatSkill[]>;
 
 /** A model in the picker; `Logo` is a React component, as before */
 export type ChatModel = {
@@ -56,6 +75,7 @@ const RawChatComposer = createComponent({
     onTcSettingsChange: "tc-settings-change" as EventName<CustomEvent<ChatSettingsChange>>,
     onTcPromptPick: "tc-prompt-pick" as EventName<CustomEvent<ChatPromptPick>>,
     onTcPageContextChange: "tc-page-context-change" as EventName<CustomEvent<ChatPageContextChange>>,
+    onTcSkillChange: "tc-skill-change" as EventName<CustomEvent<ElementSkillChange>>,
   },
 });
 type RawChatComposerProps = React.ComponentProps<typeof RawChatComposer>;
@@ -66,6 +86,11 @@ type Own =
   | "context"
   | "settings"
   | "pageContext"
+  | "skills"
+  | "searchSkills"
+  | "skill"
+  | "onSend"
+  | "onTcSkillChange"
   | "onTcValueChange"
   | "onTcModelChange"
   | "onTcAttach"
@@ -119,6 +144,21 @@ export type ChatComposerProps = Omit<RawChatComposerProps, Own> & {
   defaultPageContext?: ChatPageContext;
   /** The chip was toggled or an attached item removed: the next page context and what changed */
   onPageContextChange?: (pageContext: ChatPageContext, change: ChatPageContextChange["change"]) => void;
+  /**
+   * Sends the message – `details` has the model, and the skill and its arguments when the message starts with one.
+   * Return a promise to keep the message until it settles
+   */
+  onSend?: (message: string, details: ChatSendDetails) => void | Promise<unknown>;
+  /** Opt-in: the skills (slash commands) a message can start with – / at the start of a line opens them */
+  skills?: ChatSkill[];
+  /** Finds skills on the app's side in place of the built-in filter over `skills` */
+  searchSkills?: ChatSkillSearch;
+  /** Id of the message's skill (controlled; "" for none). Leave undefined to let the composer keep it */
+  skill?: string;
+  /** Id of the skill to start with when uncontrolled */
+  defaultSkill?: string;
+  /** The message's skill changed: the skill now (null: none) and why – picked, replaced, removed, edited away or sent */
+  onSkillChange?: (skill: ChatSkill | null, reason: ChatSkillChangeReason) => void;
 };
 
 export function ChatComposer({
@@ -142,6 +182,12 @@ export function ChatComposer({
   pageContext,
   defaultPageContext,
   onPageContextChange,
+  onSend,
+  skills,
+  searchSkills,
+  skill,
+  defaultSkill = "",
+  onSkillChange,
   ...props
 }: ChatComposerProps) {
   // Logos given as React components render in the staging box; the element gets their DOM nodes
@@ -155,8 +201,41 @@ export function ChatComposer({
   const s = useControlled<ModelSettingsValue | undefined>(settings, defaultSettings, (next) => next && onSettingsChange?.(next, lastChanged.current));
   const lastPage = React.useRef<ChatPageContextChange["change"]>("connect");
   const p = useControlled<ChatPageContext | undefined>(pageContext, defaultPageContext, (next) => next && onPageContextChange?.(next, lastPage.current));
-  return h(React.Fragment, null, stage, h(RawChatComposer, {
+  // Skills: icons given as React nodes render in a second staging box; the element gets the skills with their DOM nodes
+  const skillNodes: [string, React.ReactNode][] = (skills ?? []).filter((s) => isNode(s.icon)).map((s) => [s.id, s.icon as React.ReactNode]);
+  const icons = useStaged(skillNodes);
+  const bySkill = React.useRef(new WeakMap<ChatSkill, ElementSkill>());
+  const toElement = React.useCallback(
+    (s: ChatSkill): ElementSkill => {
+      const icon = isNode(s.icon) ? icons.els[s.id] : (s.icon as Element | undefined);
+      const made = bySkill.current.get(s);
+      if (made && made.icon === icon) return made;
+      const next = { ...s, icon };
+      bySkill.current.set(s, next);
+      return next;
+    },
+    [icons.els],
+  );
+  const skillList = React.useMemo(() => skills?.map(toElement), [skills, toElement]);
+  const fromElement = React.useCallback((s: ElementSkill | null) => (s ? (skills?.find((x) => x.id === s.id) ?? (s as ChatSkill)) : null), [skills]);
+  const search = React.useMemo(() => (searchSkills ? (query: string, options: { signal: AbortSignal }) => {
+    const found = searchSkills(query, options);
+    return found instanceof Promise ? found.then((list) => list.map(toElement)) : found.map(toElement);
+  } : undefined), [searchSkills, toElement]);
+  const lastReason = React.useRef<ChatSkillChangeReason>("pick");
+  const lastSkill = React.useRef<ChatSkill | null>(null);
+  const sk = useControlled<string>(skill, defaultSkill, () => onSkillChange?.(lastSkill.current, lastReason.current));
+  return h(React.Fragment, null, stage, icons.stage, h(RawChatComposer, {
     ...props,
+    onSend,
+    skills: skillList,
+    searchSkills: search,
+    skill: sk.value,
+    onTcSkillChange: (e: CustomEvent<ElementSkillChange>) => {
+      lastReason.current = e.detail.reason;
+      lastSkill.current = fromElement(e.detail.skill);
+      sk.handler(e.detail.skill?.id ?? "", e);
+    },
     value: v.value,
     models: list,
     model: m.value,

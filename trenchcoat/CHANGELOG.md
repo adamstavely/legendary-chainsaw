@@ -1,5 +1,58 @@
 # Changelog
 
+## Unreleased – remediation Part 7 (terms dialog, skills in the composer, app picker, notifications, header nav)
+
+See `audit/remediation-plan.md`, Part 7. Every new component is a Lit element with both looks, a React wrapper,
+tests in Chromium, Firefox and WebKit, a gallery demo and a docs page.
+
+### Added
+
+- **`tc-terms-dialog`:** terms to agree to.
+  - **Changed terms:** re-acceptance opens with a "What's changed" summary, and changed sections are marked.
+  - **Reading:** a jump list that folds into a Contents button.
+  - **Accepting:** required and optional consents; Accept can wait for the end of the text, and says why it's waiting.
+  - **Other actions:** Decline, print and download, plus a blocking mode.
+  - **Saving:** app-driven saving with error and retry.
+- **`tc-app-picker`:** the app launcher.
+  - **Sections:** Pinned, Recent and All apps, or your own groups.
+  - **Finding and opening:** search; real links; arrow keys across the grid.
+  - **Pins and states:** an "Edit pins" mode, loading and error states, and an inline panel layout.
+- **`tc-notifications`:** the notification center.
+  - **Bell:** an unread badge.
+  - **List:** All / Unread and category tabs, with items grouped by day.
+  - **Per item:** read toggle, actions and dismiss; "Mark all as read".
+  - **More:** load more or infinite scroll, polite announcements of new arrivals, and an inline mode. Every change is
+    a cancelable event.
+- **Skills in `tc-chat-composer`:** `skills`, `recentSkills`, `searchSkills`, `skill`.
+  - **Typeahead:** typing `/` at the start of a message opens a ranked typeahead, grouped by source, with recent skills
+    first.
+  - **Token:** a pick adds a tinted `/skill` token with its argument hint.
+  - **Events:** `tc-send` gains `skill` and `args`, and there is a new `tc-skill-change`.
+  - **Toolbar:** an optional "/" button.
+- **`tc-mention-picker`:** item descriptions, recents, ranking across groups, word-match highlighting and per-trigger
+  search. It stays backwards-compatible.
+- **Header Nav block:** notifications, app picker and the account avatar for the right end of an app header, with
+  one popover open at a time.
+- **Shared code:**
+  - `internal/modal.ts`, the `ModalController` that `tc-dialog`, `tc-terms-dialog` and `tc-stories` share;
+  - `cardHead()` gains `picture`, `pictureShape` and `keepAside`.
+- **`standalone/trenchcoat-gallery.html`:** the whole gallery in one HTML file that opens from disk, with no server
+  and no network.
+
+### Changed
+
+- **`tc-stories`:** opens a "what changed" brief instead of a story player.
+  - **The row stays:** the gradient ring still means something new.
+  - **The brief:** a light modal with an optional summary, then a bento of update tiles (metric, status move, note,
+    list, image, link), new ones first. Previous and Next move between entries.
+  - **Entries:** `entries`, which can be people or accounts; `people` still works.
+  - **Removed:** the timers, video and swipe.
+- **`tc-dialog`** uses the shared `ModalController`. If the browser closes it on its own, focus now goes back to the
+  button that opened it.
+- **`tc-profile-menu`:** Standard rounds a photo avatar, as Clean does.
+- **Gallery:** "Feedback & onboarding" moved up the sidebar; it was listed after Utilities.
+- **Tests:** a new `parkPointer()` helper keeps the real pointer from leaking between test files.
+
 ## Unreleased – remediation Part 6 (text selection, the rest of THEMIS, blocks, docs for every framework)
 
 See `audit/remediation-plan.md`, Part 6, and `audit/part6-brief.md`. Every new component is a Lit element with

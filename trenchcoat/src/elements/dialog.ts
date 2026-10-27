@@ -1,6 +1,7 @@
 import { html, nothing, type PropertyValues } from "lit";
 import { property } from "lit/decorators.js";
 import { TcElement } from "./internal/base";
+import { ModalController } from "./internal/modal";
 import { settingsCss } from "./internal/settings";
 let next = 0;
 /** How the built-in Close button shows: "auto" is primary on its own and secondary beside app actions. */
@@ -44,26 +45,16 @@ export class TcDialog extends TcElement {
   /** The built-in button's text, e.g. "Cancel" beside a primary action. */
   @property({ attribute: "close-label" }) accessor closeLabel = "Close";
   private readonly uid = `tc-dialog-${++next}`;
-  private previous: HTMLElement | null = null;
+  // Top layer, inert page, focus return and closing on disconnect (shared with tc-terms-dialog)
+  private readonly modal = new ModalController(this, {
+    dialog: () => this.querySelector("dialog"),
+  });
   private setOpen(open: boolean) {
     if (this.emit("tc-open-change", { open }, { cancelable: true }))
       this.open = open;
   }
   protected override updated(_changed: PropertyValues) {
-    const dialog = this.querySelector("dialog");
-    if (!dialog || !this.isConnected) return;
-    if (this.open && !dialog.open) {
-      this.previous = document.activeElement as HTMLElement;
-      dialog.showModal();
-    } else if (!this.open && dialog.open) {
-      dialog.close();
-      this.previous?.focus();
-    }
-  }
-  override disconnectedCallback() {
-    super.disconnectedCallback();
-    this.querySelector("dialog")?.close?.();
-    this.previous?.focus();
+    this.modal.sync(this.open);
   }
   protected override render() {
     const hasActions = this.actions != null && this.actions !== "";
