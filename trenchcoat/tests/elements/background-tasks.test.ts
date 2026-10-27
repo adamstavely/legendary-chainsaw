@@ -293,11 +293,10 @@ describe("tc-background-tasks", () => {
     await wait(100);
     await settle();
     expect(rows(el).length).toBeLessThan(120);
-    expect(document.activeElement).toBe(row(el, "t0"));
+    await expect.poll(() => document.activeElement).toBe(row(el, "t0"));
     await userEvent.keyboard("{End}");
-    await settle();
-    await settle();
-    expect(document.activeElement).toBe(row(el, "t299"));
+    // The window scrolls, renders the last rows, then focuses – a few frames when the machine is busy
+    await expect.poll(() => document.activeElement, { timeout: 3000 }).toBe(row(el, "t299"));
   });
 
   test("reduced motion stops the ring's spin and the indeterminate bars", () => {

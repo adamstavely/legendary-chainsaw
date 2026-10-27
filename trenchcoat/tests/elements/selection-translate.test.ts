@@ -212,10 +212,12 @@ describe("tc-selection-translate", () => {
   test("closing the card aborts the request; a stale answer is ignored", async () => {
     const el = await make({ noResolver: true });
     const seen: SelectionTranslateRequest[] = [];
+    // The answer comes only once the card is closed, however slow the browser is
+    let release!: () => void;
     el.addEventListener("tc-translate", (e) => {
       const d = (e as CustomEvent<SelectionTranslateRequest>).detail;
       seen.push(d);
-      d.respondWith(new Promise((r) => setTimeout(() => r({ text: "late" }), 80)));
+      d.respondWith(new Promise((r) => (release = () => r({ text: "late" }))));
     });
     await translate(el);
     card(el)!.querySelector<HTMLButtonElement>(".ui-strn__close")!.click();
@@ -223,6 +225,7 @@ describe("tc-selection-translate", () => {
     expect(seen[0].signal.aborted).toBe(true);
     expect(card(el)).toBeNull();
     expect(document.activeElement).toBe(root(el));
+    release();
     await answered(el);
     expect(card(el)).toBeNull();
     expect(el.querySelector(".ui-strn__mark")).toBeNull();

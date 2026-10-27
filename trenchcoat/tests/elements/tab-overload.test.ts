@@ -12,7 +12,7 @@ import { userEvent } from "vitest/browser";
 import "../../src/elements/tab-overload";
 import { TcTabOverload } from "../../src/elements/tab-overload";
 import { TabOverload } from "../../src/elements/react/tab-overload";
-import { cleanup, fixture, settle } from "./helpers";
+import { cleanup, fixture, parkPointer, settle } from "./helpers";
 
 afterEach(cleanup);
 
@@ -62,7 +62,7 @@ describe("tc-tab-overload", () => {
     await expect.poll(() => opacity(".ui-to-front-1"), { timeout: 2000 }).toBe("1");
     await expect.poll(() => opacity(".ui-to-front-3"), { timeout: 2000 }).toBe("0");
     await expect.poll(() => opacity(".ui-to-content-3"), { timeout: 2000 }).toBe("0.2");
-    await userEvent.unhover(el.querySelector(".ui-to-tab-1")!);
+    await parkPointer();
   });
 
   test("off screen the shimmer holds (data-paused), and runs on when it's back", async () => {

@@ -315,7 +315,8 @@ describe("tc-trace-waterfall", () => {
       <tc-trace-waterfall .root=${done} elapsed="3000" open-id="b"></tc-trace-waterfall>
       <tc-trace-waterfall look="clean" heading="Clean trace" .root=${running} elapsed="1500"></tc-trace-waterfall>
     </div>`);
-    await Promise.all(document.getAnimations().filter((a) => a.effect?.getTiming().iterations !== Infinity).map((a) => a.finished));
+    // An animation cancelled by a re-render rejects `finished` (WebKit); that one is done too
+    await Promise.all(document.getAnimations().filter((a) => a.effect?.getTiming().iterations !== Infinity).map((a) => a.finished.catch(() => {})));
     const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
     expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
   });
