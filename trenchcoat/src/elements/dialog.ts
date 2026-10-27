@@ -72,7 +72,7 @@ export class TcDialog extends TcElement {
         this.setOpen(false);
       }}
       @close=${() => {
-        if (this.open) this.setOpen(false);
+        if (!this.modal.ownClose() && this.open) this.setOpen(false);
       }}
     >
       <div class="tc-settings tc-settings-card">

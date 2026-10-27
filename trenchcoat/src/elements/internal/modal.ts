@@ -50,6 +50,8 @@ export class ModalController implements ReactiveController {
   private previous: HTMLElement | null = null;
   private locked = false;
   private shown = false;
+  /** Closes this controller made whose `close` event hasn't arrived yet – the event comes a task later */
+  private pendingCloses = 0;
   constructor(
     private readonly host: ReactiveControllerHost & HTMLElement,
     private readonly options: ModalOptions,
@@ -82,6 +84,16 @@ export class ModalController implements ReactiveController {
     }
   }
 
+  /**
+   * Call first in the dialog's `close` handler: true when the event is the echo of a close this controller made, which
+   * the host already knows about. Without it, a brief reopened before the echo arrives would be closed by it
+   */
+  ownClose() {
+    if (this.pendingCloses === 0) return false;
+    this.pendingCloses--;
+    return true;
+  }
+
   /** Re-shows a dialog the browser closed on its own (a second Escape) while the host still wants it open */
   reopen() {
     const dialog = this.options.dialog();
@@ -94,8 +106,10 @@ export class ModalController implements ReactiveController {
   private shut(dialog: HTMLDialogElement | null) {
     this.shown = false;
     if (dialog?.open) {
-      if (typeof dialog.close === "function") dialog.close();
-      else dialog.removeAttribute("open");
+      if (typeof dialog.close === "function") {
+        this.pendingCloses++;
+        dialog.close();
+      } else dialog.removeAttribute("open");
     }
     if (this.locked) {
       unlock(this.host.ownerDocument);
@@ -104,6 +118,11 @@ export class ModalController implements ReactiveController {
     const back = this.previous;
     this.previous = null;
     if (back?.isConnected) back.focus();
+  }
+
+  hostConnected() {
+    // A close whose event never arrived (the element left first) mustn't swallow a real one later
+    this.pendingCloses = 0;
   }
 
   hostDisconnected() {

@@ -334,6 +334,20 @@ describe("tc-stories", () => {
     expect(document.activeElement).toBe(avatarOf(el, "leo"));
   });
 
+  test("a brief reopened before the last close's event arrives stays open", async () => {
+    const el = await make();
+    await openOn(el, "maya");
+    // Closing queues the dialog's close event for a later task; reopening first must not be undone by it
+    el.open = null;
+    await el.updateComplete;
+    el.open = "leo";
+    await el.updateComplete;
+    await settle();
+    await settle();
+    expect(dialog(el).open).toBe(true);
+    expect(el.open).toBe("leo");
+  });
+
   test("controlled: a prevented tc-open-change keeps it closed; a prevented tc-seen-change keeps seen and the markers", async () => {
     const el = await make();
     const stop = (e: Event) => e.preventDefault();
