@@ -35,17 +35,21 @@ const DICT: Record<string, Record<string, string>> = {
   en: { [SENTENCE]: "The power cable was missing.", "Le colis": "The parcel" },
   es: { [SENTENCE]: "Faltaba el cable de alimentación." },
 };
-/** A resolver that answers from DICT a tick later, and records its calls */
-const resolver = (calls: string[], fail = false) => (text: string, target: string, signal: AbortSignal) =>
+/** A resolver that answers from DICT a tick later (or once `gate` settles), and records its calls */
+const resolver = (calls: string[], fail = false, gate?: Promise<unknown>) => (text: string, target: string, signal: AbortSignal) =>
   new Promise<SelectionTranslation>((resolve, reject) => {
     calls.push(`${target}:${text}`);
-    const t = setTimeout(() => (fail ? reject(new Error("Service unavailable")) : resolve({ text: DICT[target]?.[text] ?? `[${target}] ${text}`, source: "fr" })), 80);
+    const answer = () => (fail ? reject(new Error("Service unavailable")) : resolve({ text: DICT[target]?.[text] ?? `[${target}] ${text}`, source: "fr" }));
+    let t = 0;
+    void (gate ?? Promise.resolve()).then(() => {
+      if (!signal.aborted) t = window.setTimeout(answer, 80);
+    });
     signal.addEventListener("abort", () => clearTimeout(t));
   });
 
-const make = (o: { look?: string; editable?: boolean; calls?: string[]; fail?: boolean; noResolver?: boolean } = {}) =>
+const make = (o: { look?: string; editable?: boolean; calls?: string[]; fail?: boolean; noResolver?: boolean; gate?: Promise<unknown> } = {}) =>
   fixture<TcSelectionTranslate>(
-    html`<tc-selection-translate style="width: 360px" lang="fr" look=${o.look ?? "standard"} ?editable=${!!o.editable} .text=${TEXT} .resolveTranslate=${o.noResolver ? undefined : resolver(o.calls ?? [], o.fail)}></tc-selection-translate>`,
+    html`<tc-selection-translate style="width: 360px" lang="fr" look=${o.look ?? "standard"} ?editable=${!!o.editable} .text=${TEXT} .resolveTranslate=${o.noResolver ? undefined : resolver(o.calls ?? [], o.fail, o.gate)}></tc-selection-translate>`,
   );
 const root = (el: Element) => el.querySelector<HTMLElement>(".ui-strn__text")!;
 const pop = (el: Element) => el.querySelector<HTMLElement>(".ui-strn__pop");
@@ -88,7 +92,9 @@ describe("tc-selection-translate", () => {
 
   test("a selection opens a toolbar with Translate; Translate opens the card, loading, then the translation", async () => {
     const calls: string[] = [];
-    const el = await make({ calls });
+    // The answer waits until the loading state has been checked, however slow the browser is
+    let release!: () => void;
+    const el = await make({ calls, gate: new Promise<void>((r) => (release = r)) });
     await pick(el, at(SENTENCE).start, at(SENTENCE).end);
     const bar = pop(el)!;
     expect(bar.getAttribute("role")).toBe("toolbar");
@@ -108,6 +114,7 @@ describe("tc-selection-translate", () => {
     // The passage is marked while the card is open
     expect(plain(el.querySelector(".ui-strn__mark")!.textContent)).toBe(`Translating: ${SENTENCE}`);
     expect(textOf(root(el))).toBe(TEXT);
+    release();
     await answered(el);
     expect(calls).toEqual([`en:${SENTENCE}`]);
     expect(card(el)!.getAttribute("aria-busy")).toBe("false");

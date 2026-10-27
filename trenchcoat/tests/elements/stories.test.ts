@@ -77,6 +77,8 @@ const finish = async (root: Element) => {
 const openOn = async (el: TcStories, id: string) => {
   avatarOf(el, id).click();
   await settle();
+  // The brief renders once the modal has opened – a frame or two later in a busy Firefox
+  await expect.poll(() => !!el.querySelector(".ui-sty__close")).toBe(true);
 };
 
 describe("tc-stories", () => {
