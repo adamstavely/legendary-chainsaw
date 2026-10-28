@@ -189,6 +189,7 @@
     "--tc-font-size-md",
     "--tc-font-size-sm",
     "--tc-font-size-xs",
+    "--tc-font-weight-strong",
     "--tc-hairline",
     "--tc-icon-muted",
     "--tc-kbd-bg",
@@ -238,7 +239,6 @@
     "--tc-switch-on",
     "--tc-switch-radius",
     "--tc-switch-w",
-    "--tc-text-disabled",
     "--tc-text-muted",
     "--tc-text-on-accent",
     "--tc-text-on-inverse",
@@ -665,7 +665,7 @@
   "windowed": false
  },
  "size": {
-  "min": 34032,
-  "gzip": 9694
+  "min": 37015,
+  "gzip": 10273
  }
 }

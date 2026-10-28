@@ -1,5 +1,18 @@
 # Changelog
 
+## Unreleased – coordinates in text, and a sharper search family
+
+- **Coordinate Details** (`tc-coordinate-details`) – the geospatial partner to ISBN Details. Coordinates in a passage
+  (decimal, hemisphere-lettered or DMS) are found, range-checked and marked; hovering, focusing or right-clicking one
+  opens a card with the place (from your `resolve` or a `tc-coordinate-lookup` listener), decimal and DMS with Copy,
+  "Open in" mapping links and a map that loads only when asked. `trigger` picks hover, right-click or both.
+- **AI Search** – suggestions take a `hint`, pick out what's typed, show ↵ on the highlighted one and the move / search
+  / close keys beneath; Send appears once there's something to send.
+- **Search History** – each search leads with an icon for how it ran (AI mode, builder, search), its scopes, results
+  and time read as one line, and a row's actions show on hover or focus (a saved search keeps its star).
+- **Query Builder** – the AND / OR switch is set in the UI font, the "Where / and / or" words show down to 500 px, and
+  the date picker's button is quieter. **Routine Form**'s time picker button matches.
+
 ## Unreleased – colour picker, NPS / CSAT, coordinates, access requests, reading aloud
 
 - `tc-color-picker` – a saturation and brightness square, hue and opacity sliders, HEX / RGB / CMYK fields, an
