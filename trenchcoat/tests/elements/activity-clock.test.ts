@@ -166,7 +166,6 @@ describe("tc-activity-clock", () => {
 
   test("keyboard: ← → move an hour, ↑ ↓ a day, Page keys between AM and PM, Home/End and ⌘/Ctrl+Home/End to the ends", async () => {
     const el = await make();
-    const mac = /Mac|iPhone|iPad/.test(navigator.platform);
     const at = () => document.activeElement?.getAttribute("data-hour");
     seg(el, 0, 0).focus();
     const press = async (k: string, init: KeyboardEventInit = {}) => {
@@ -193,9 +192,9 @@ describe("tc-activity-clock", () => {
     expect(at()).toBe("1:0");
     await press("ArrowUp");
     expect(at()).toBe("0:0");
-    await press("End", mac ? { metaKey: true } : { ctrlKey: true });
+    await press("End", { ctrlKey: true, metaKey: true });
     expect(at()).toBe("1:23");
-    await press("Home", mac ? { metaKey: true } : { ctrlKey: true });
+    await press("Home", { ctrlKey: true, metaKey: true });
     expect(at()).toBe("0:0");
     expect(seg(el, 0, 0).getAttribute("tabindex")).toBe("0");
   });

@@ -137,7 +137,6 @@ describe("tc-activity-calendar", () => {
 
   test("keyboard: ↑ ↓ a day, ← → a week, Page keys four weeks, Home/End along the row, ⌘/Ctrl+Home/End to the ends", async () => {
     const el = await make();
-    const mac = /Mac|iPhone|iPad/.test(navigator.platform);
     const at = () => document.activeElement?.getAttribute("data-cell");
     cellOn(el, day(10, 27)).focus();
     const press = async (k: string, init: KeyboardEventInit = {}) => {
@@ -164,9 +163,9 @@ describe("tc-activity-calendar", () => {
     expect(at()).toBe("0:2");
     await press("End");
     expect(at()).toBe("5:2");
-    await press("Home", mac ? { metaKey: true } : { ctrlKey: true });
+    await press("Home", { ctrlKey: true, metaKey: true });
     expect(at()).toBe("0:0");
-    await press("End", mac ? { metaKey: true } : { ctrlKey: true });
+    await press("End", { ctrlKey: true, metaKey: true });
     expect(at()).toBe("5:2");
   });
 
