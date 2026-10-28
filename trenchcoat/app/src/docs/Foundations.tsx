@@ -99,6 +99,26 @@ function Tokens() {
           <code>light-dark()</code> pairs, so the browser resolves them where they're used. Override any of them with a plain rule:{" "}
           <code>{":root { --tc-accent: … }"}</code>.
         </p>
+        <p className="docs-lede">
+          For design tools, the same tokens ship in the Design Tokens Community Group format (DTCG 2025.10), in{" "}
+          <code>trenchcoat/tokens/dtcg/</code>:
+        </p>
+        <ul className="docs-lede">
+          <li>
+            <code>primitives.json</code> holds the primitives.
+          </li>
+          <li>
+            One file per look and theme holds the semantic and pattern tokens, as aliases where the CSS points at another token:{" "}
+            <code>standard-light.json</code>, <code>standard-dark.json</code>, <code>clean-light.json</code> and <code>clean-dark.json</code>.
+          </li>
+          <li>
+            <code>$themes.json</code> pairs each mode with the primitives for Tokens Studio. Style Dictionary reads the files as they are.
+          </li>
+          <li>
+            Five tokens have no DTCG type (em letter-spacing, <code>uppercase</code>, a padding shorthand). They're listed with their CSS under{" "}
+            <code>$extensions</code>.
+          </li>
+        </ul>
         <input className="search docs-token-search" type="search" placeholder="Filter tokens…" value={q} onChange={(e) => setQ(e.target.value)} aria-label="Filter tokens" />
       </header>
       {layers.map((layer) => {

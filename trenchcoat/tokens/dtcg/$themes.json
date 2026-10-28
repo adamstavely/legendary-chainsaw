@@ -1,0 +1,38 @@
+[
+  {
+    "id": "standard-light",
+    "name": "Standard · Light",
+    "group": "Trenchcoat",
+    "selectedTokenSets": {
+      "primitives": "source",
+      "standard-light": "enabled"
+    }
+  },
+  {
+    "id": "standard-dark",
+    "name": "Standard · Dark",
+    "group": "Trenchcoat",
+    "selectedTokenSets": {
+      "primitives": "source",
+      "standard-dark": "enabled"
+    }
+  },
+  {
+    "id": "clean-light",
+    "name": "Clean · Light",
+    "group": "Trenchcoat",
+    "selectedTokenSets": {
+      "primitives": "source",
+      "clean-light": "enabled"
+    }
+  },
+  {
+    "id": "clean-dark",
+    "name": "Clean · Dark",
+    "group": "Trenchcoat",
+    "selectedTokenSets": {
+      "primitives": "source",
+      "clean-dark": "enabled"
+    }
+  }
+]

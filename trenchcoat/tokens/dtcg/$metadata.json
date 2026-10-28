@@ -1,0 +1,9 @@
+{
+  "tokenSetOrder": [
+    "primitives",
+    "standard-light",
+    "standard-dark",
+    "clean-light",
+    "clean-dark"
+  ]
+}

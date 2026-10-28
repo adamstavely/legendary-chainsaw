@@ -1,5 +1,23 @@
 # Changelog
 
+## Unreleased – Phase 2: DTCG token export
+
+### Added
+
+- **`tokens/dtcg/`** (also `trenchcoat/tokens/dtcg/*`): the token dictionary in the Design Tokens Community Group
+  format (DTCG 2025.10), for design tools. Generated from `tokens/tokens.css` by `scripts/tokens-dtcg.mjs`.
+  - **Primitives:** `primitives.json` holds the 165 primitives.
+  - **Modes:** `standard-light`, `standard-dark`, `clean-light` and `clean-dark` each hold every semantic and
+    pattern token. A token that the CSS points at another is an alias (`{gray.900}`); anything else is the value
+    resolved for that look and theme.
+  - **Tokens Studio:** `$themes.json` and `$metadata.json` pair each mode with the primitives.
+  - **Types:** colour (sRGB components and hex), dimension, duration, cubic Bézier, font family and weight, number,
+    shadow and border.
+  - **CSS-only:** the few values with no DTCG type (em letter-spacing, `uppercase`, a padding shorthand) are listed
+    with their CSS under `$extensions`.
+- **`check:tokens`:** also fails when the export is out of date, when an alias doesn't resolve, or when a token,
+  resolved through the export, differs from the CSS in any look and theme.
+
 ## Unreleased – Phase 2: Angular wrappers
 
 ### Added
