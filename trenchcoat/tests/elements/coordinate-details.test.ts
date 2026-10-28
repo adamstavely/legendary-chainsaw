@@ -364,14 +364,17 @@ describe("tc-coordinate-details", () => {
 
   test("Show map loads the embed only when pressed; it's sandboxed and resets for the next place", async () => {
     const el = await make({ resolve: resolver([]) });
+    // OpenStreetMap by default; the test loads a stand-in, so a real map page doesn't tie up the browser for later tests
+    expect(el.embedSrc).toContain("openstreetmap.org/export/embed.html");
+    el.embedSrc = el.embedSrc.replace(/^https:\/\/[^/]+/, "https://maps.example.invalid");
     marksOf(el)[0].focus();
     await opened(el);
     expect(document.querySelector("iframe")).toBeNull();
-    expect(plain(card(el)!.querySelector(".ui-crd__map-note")!.textContent)).toBe("Loads from openstreetmap.org");
+    expect(plain(card(el)!.querySelector(".ui-crd__map-note")!.textContent)).toBe("Loads from maps.example.invalid");
     card(el)!.querySelector<HTMLButtonElement>(".ui-crd__show")!.click();
     await el.updateComplete;
     const f = card(el)!.querySelector("iframe")!;
-    expect(f.src).toContain("openstreetmap.org/export/embed.html");
+    expect(f.src).toContain("maps.example.invalid/export/embed.html");
     expect(f.src).toContain("marker=57.041200,-3.612700");
     expect(f.getAttribute("sandbox")).toBe("allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox");
     expect(f.title).toBe("Map of North weather mast");
