@@ -1,0 +1,2442 @@
+{
+  "$description": "Trenchcoat primitives: raw values, the same in every look and theme. Components use the semantic and pattern tokens in the look and theme sets, which point here.",
+  "gray": {
+    "0": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          1,
+          1,
+          1
+        ],
+        "hex": "#ffffff"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-gray-0"
+        }
+      }
+    },
+    "25": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9804,
+          0.9804,
+          0.9804
+        ],
+        "hex": "#fafafa"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-gray-25"
+        }
+      }
+    },
+    "50": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9608,
+          0.9608,
+          0.9608
+        ],
+        "hex": "#f5f5f5"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-gray-50"
+        }
+      }
+    },
+    "100": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9412,
+          0.9412,
+          0.9412
+        ],
+        "hex": "#f0f0f0"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-gray-100"
+        }
+      }
+    },
+    "150": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9255,
+          0.9255,
+          0.9255
+        ],
+        "hex": "#ececec"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-gray-150"
+        }
+      }
+    },
+    "200": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.898,
+          0.898,
+          0.898
+        ],
+        "hex": "#e5e5e5"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-gray-200"
+        }
+      }
+    },
+    "250": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.8706,
+          0.8706,
+          0.8706
+        ],
+        "hex": "#dedede"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-gray-250"
+        }
+      }
+    },
+    "300": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.8314,
+          0.8314,
+          0.8314
+        ],
+        "hex": "#d4d4d4"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-gray-300"
+        }
+      }
+    },
+    "400": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.6392,
+          0.6392,
+          0.6392
+        ],
+        "hex": "#a3a3a3"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-gray-400"
+        }
+      }
+    },
+    "450": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.5216,
+          0.5216,
+          0.5216
+        ],
+        "hex": "#858585"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-gray-450"
+        }
+      }
+    },
+    "500": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.3922,
+          0.3922,
+          0.3922
+        ],
+        "hex": "#646464"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-gray-500"
+        }
+      }
+    },
+    "600": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.3216,
+          0.3216,
+          0.3216
+        ],
+        "hex": "#525252"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-gray-600"
+        }
+      }
+    },
+    "700": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.251,
+          0.251,
+          0.251
+        ],
+        "hex": "#404040"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-gray-700"
+        }
+      }
+    },
+    "800": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.149,
+          0.149,
+          0.149
+        ],
+        "hex": "#262626"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-gray-800"
+        }
+      }
+    },
+    "900": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.0902,
+          0.0902,
+          0.0902
+        ],
+        "hex": "#171717"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-gray-900"
+        }
+      }
+    },
+    "950": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.0392,
+          0.0392,
+          0.0392
+        ],
+        "hex": "#0a0a0a"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-gray-950"
+        }
+      }
+    }
+  },
+  "zinc": {
+    "50": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9608,
+          0.9608,
+          0.9608
+        ],
+        "hex": "#f5f5f5"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-zinc-50"
+        }
+      }
+    },
+    "100": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9294,
+          0.9294,
+          0.9294
+        ],
+        "hex": "#ededed"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-zinc-100"
+        }
+      }
+    },
+    "300": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.7843,
+          0.7843,
+          0.8
+        ],
+        "hex": "#c8c8cc"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-zinc-300"
+        }
+      }
+    },
+    "450": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.6039,
+          0.6039,
+          0.6314
+        ],
+        "hex": "#9a9aa1"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-zinc-450"
+        }
+      }
+    },
+    "475": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.5569,
+          0.5569,
+          0.5843
+        ],
+        "hex": "#8e8e95"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-zinc-475"
+        }
+      }
+    },
+    "500": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.4863,
+          0.4863,
+          0.5098
+        ],
+        "hex": "#7c7c82"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-zinc-500"
+        }
+      }
+    },
+    "600": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.3608,
+          0.3608,
+          0.3882
+        ],
+        "hex": "#5c5c63"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-zinc-600"
+        }
+      }
+    },
+    "700": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.2275,
+          0.2275,
+          0.251
+        ],
+        "hex": "#3a3a40"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-zinc-700"
+        }
+      }
+    },
+    "750": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.2039,
+          0.2039,
+          0.2275
+        ],
+        "hex": "#34343a"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-zinc-750"
+        }
+      }
+    },
+    "800": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.1647,
+          0.1647,
+          0.1804
+        ],
+        "hex": "#2a2a2e"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-zinc-800"
+        }
+      }
+    },
+    "850": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.1373,
+          0.1373,
+          0.149
+        ],
+        "hex": "#232326"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-zinc-850"
+        }
+      }
+    },
+    "875": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.1098,
+          0.1098,
+          0.1176
+        ],
+        "hex": "#1c1c1e"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-zinc-875"
+        }
+      }
+    },
+    "900": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.098,
+          0.098,
+          0.1059
+        ],
+        "hex": "#19191b"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-zinc-900"
+        }
+      }
+    },
+    "925": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.0863,
+          0.0863,
+          0.0941
+        ],
+        "hex": "#161618"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-zinc-925"
+        }
+      }
+    },
+    "950": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.0667,
+          0.0667,
+          0.0745
+        ],
+        "hex": "#111113"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-zinc-950"
+        }
+      }
+    }
+  },
+  "blue": {
+    "50": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9176,
+          0.9451,
+          1
+        ],
+        "hex": "#eaf1ff"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-blue-50"
+        }
+      }
+    },
+    "300": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.5412,
+          0.7059,
+          1
+        ],
+        "hex": "#8ab4ff"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-blue-300"
+        }
+      }
+    },
+    "400": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.4196,
+          0.5843,
+          1
+        ],
+        "hex": "#6b95ff"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-blue-400"
+        }
+      }
+    },
+    "500": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.1843,
+          0.4078,
+          1
+        ],
+        "hex": "#2f68ff"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-blue-500"
+        }
+      }
+    },
+    "600": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.1412,
+          0.3373,
+          0.8392
+        ],
+        "hex": "#2456d6"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-blue-600"
+        }
+      }
+    },
+    "950": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.0863,
+          0.1412,
+          0.2471
+        ],
+        "hex": "#16243f"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-blue-950"
+        }
+      }
+    }
+  },
+  "cobalt": {
+    "300": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.4392,
+          0.7216,
+          1
+        ],
+        "hex": "#70b8ff"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-cobalt-300"
+        }
+      }
+    },
+    "400": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.3569,
+          0.6039,
+          1
+        ],
+        "hex": "#5b9aff"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-cobalt-400"
+        }
+      }
+    },
+    "450": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.102,
+          0.4235,
+          0.9412
+        ],
+        "hex": "#1a6cf0"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-cobalt-450"
+        }
+      }
+    },
+    "500": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0,
+          0.3765,
+          0.8863
+        ],
+        "hex": "#0060e2"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-cobalt-500"
+        }
+      }
+    },
+    "600": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0,
+          0.3451,
+          0.8118
+        ],
+        "hex": "#0058cf"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-cobalt-600"
+        }
+      }
+    }
+  },
+  "green": {
+    "50": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.902,
+          0.9647,
+          0.9255
+        ],
+        "hex": "#e6f6ec"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-green-50"
+        }
+      }
+    },
+    "300": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.2392,
+          0.8392,
+          0.549
+        ],
+        "hex": "#3dd68c"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-green-300"
+        }
+      }
+    },
+    "400": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.2431,
+          0.7608,
+          0.4784
+        ],
+        "hex": "#3ec27a"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-green-400"
+        }
+      }
+    },
+    "500": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.1216,
+          0.5412,
+          0.298
+        ],
+        "hex": "#1f8a4c"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-green-500"
+        }
+      }
+    },
+    "600": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.0941,
+          0.4745,
+          0.3059
+        ],
+        "hex": "#18794e"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-green-600"
+        }
+      }
+    },
+    "950": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.0706,
+          0.1882,
+          0.1216
+        ],
+        "hex": "#12301f"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-green-950"
+        }
+      }
+    }
+  },
+  "teal": {
+    "50": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.8902,
+          0.9647,
+          0.9569
+        ],
+        "hex": "#e3f6f4"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-teal-50"
+        }
+      }
+    },
+    "300": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.3098,
+          0.8196,
+          0.7725
+        ],
+        "hex": "#4fd1c5"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-teal-300"
+        }
+      }
+    },
+    "400": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.1686,
+          0.702,
+          0.651
+        ],
+        "hex": "#2bb3a6"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-teal-400"
+        }
+      }
+    },
+    "500": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.0549,
+          0.5412,
+          0.502
+        ],
+        "hex": "#0e8a80"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-teal-500"
+        }
+      }
+    },
+    "600": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.0431,
+          0.4353,
+          0.4039
+        ],
+        "hex": "#0b6f67"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-teal-600"
+        }
+      }
+    },
+    "950": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.0588,
+          0.1804,
+          0.1686
+        ],
+        "hex": "#0f2e2b"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-teal-950"
+        }
+      }
+    }
+  },
+  "amber": {
+    "50": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          1,
+          0.9529,
+          0.8784
+        ],
+        "hex": "#fff3e0"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-amber-50"
+        }
+      }
+    },
+    "300": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          1,
+          0.6275,
+          0.3412
+        ],
+        "hex": "#ffa057"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-amber-300"
+        }
+      }
+    },
+    "400": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9608,
+          0.6471,
+          0.1412
+        ],
+        "hex": "#f5a524"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-amber-400"
+        }
+      }
+    },
+    "500": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.7608,
+          0.4431,
+          0.0471
+        ],
+        "hex": "#c2710c"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-amber-500"
+        }
+      }
+    },
+    "600": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.6392,
+          0.3216,
+          0
+        ],
+        "hex": "#a35200"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-amber-600"
+        }
+      }
+    },
+    "950": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.2275,
+          0.1412,
+          0.0627
+        ],
+        "hex": "#3a2410"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-amber-950"
+        }
+      }
+    }
+  },
+  "red": {
+    "50": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9922,
+          0.9255,
+          0.9176
+        ],
+        "hex": "#fdecea"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-red-50"
+        }
+      }
+    },
+    "300": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          1,
+          0.5922,
+          0.4902
+        ],
+        "hex": "#ff977d"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-red-300"
+        }
+      }
+    },
+    "400": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          1,
+          0.3882,
+          0.4118
+        ],
+        "hex": "#ff6369"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-red-400"
+        }
+      }
+    },
+    "500": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.898,
+          0.2824,
+          0.302
+        ],
+        "hex": "#e5484d"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-red-500"
+        }
+      }
+    },
+    "600": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.7608,
+          0.2,
+          0.1216
+        ],
+        "hex": "#c2331f"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-red-600"
+        }
+      }
+    },
+    "950": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.2314,
+          0.0902,
+          0.0784
+        ],
+        "hex": "#3b1714"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-red-950"
+        }
+      }
+    }
+  },
+  "rose": {
+    "50": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          1,
+          0.9412,
+          0.9529
+        ],
+        "hex": "#fff0f3"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-rose-50"
+        }
+      }
+    },
+    "300": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9922,
+          0.6431,
+          0.6863
+        ],
+        "hex": "#fda4af"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-rose-300"
+        }
+      }
+    },
+    "400": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9843,
+          0.4431,
+          0.5216
+        ],
+        "hex": "#fb7185"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-rose-400"
+        }
+      }
+    },
+    "500": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.8824,
+          0.1137,
+          0.2824
+        ],
+        "hex": "#e11d48"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-rose-500"
+        }
+      }
+    },
+    "600": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.7451,
+          0.0706,
+          0.2353
+        ],
+        "hex": "#be123c"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-rose-600"
+        }
+      }
+    },
+    "950": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.2471,
+          0.0745,
+          0.1255
+        ],
+        "hex": "#3f1320"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-rose-950"
+        }
+      }
+    }
+  },
+  "violet": {
+    "50": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9412,
+          0.9255,
+          0.9765
+        ],
+        "hex": "#f0ecf9"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-violet-50"
+        }
+      }
+    },
+    "300": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.7255,
+          0.6353,
+          0.9608
+        ],
+        "hex": "#b9a2f5"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-violet-300"
+        }
+      }
+    },
+    "400": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.6549,
+          0.5451,
+          0.9804
+        ],
+        "hex": "#a78bfa"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-violet-400"
+        }
+      }
+    },
+    "500": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.5451,
+          0.3608,
+          0.9647
+        ],
+        "hex": "#8b5cf6"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-violet-500"
+        }
+      }
+    },
+    "600": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.4118,
+          0.2549,
+          0.7765
+        ],
+        "hex": "#6941c6"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-violet-600"
+        }
+      }
+    },
+    "950": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.149,
+          0.1137,
+          0.2471
+        ],
+        "hex": "#261d3f"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-violet-950"
+        }
+      }
+    }
+  },
+  "pink": {
+    "50": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9922,
+          0.9294,
+          0.9608
+        ],
+        "hex": "#fdedf5"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-pink-50"
+        }
+      }
+    },
+    "300": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9765,
+          0.6588,
+          0.8314
+        ],
+        "hex": "#f9a8d4"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-pink-300"
+        }
+      }
+    },
+    "400": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9569,
+          0.4471,
+          0.7137
+        ],
+        "hex": "#f472b6"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-pink-400"
+        }
+      }
+    },
+    "500": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.9255,
+          0.2824,
+          0.6
+        ],
+        "hex": "#ec4899"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-pink-500"
+        }
+      }
+    },
+    "600": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.7451,
+          0.0941,
+          0.3647
+        ],
+        "hex": "#be185d"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-pink-600"
+        }
+      }
+    },
+    "950": {
+      "$type": "color",
+      "$value": {
+        "colorSpace": "srgb",
+        "components": [
+          0.2275,
+          0.0784,
+          0.1569
+        ],
+        "hex": "#3a1428"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-pink-950"
+        }
+      }
+    }
+  },
+  "radius": {
+    "2xs": {
+      "$type": "dimension",
+      "$value": {
+        "value": 2,
+        "unit": "px"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-radius-2xs"
+        }
+      }
+    },
+    "xs": {
+      "$type": "dimension",
+      "$value": {
+        "value": 4,
+        "unit": "px"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-radius-xs"
+        }
+      }
+    },
+    "sm": {
+      "$type": "dimension",
+      "$value": {
+        "value": 6,
+        "unit": "px"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-radius-sm"
+        }
+      }
+    },
+    "md": {
+      "$type": "dimension",
+      "$value": {
+        "value": 8,
+        "unit": "px"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-radius-md"
+        }
+      }
+    },
+    "lg": {
+      "$type": "dimension",
+      "$value": {
+        "value": 10,
+        "unit": "px"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-radius-lg"
+        }
+      }
+    },
+    "xl": {
+      "$type": "dimension",
+      "$value": {
+        "value": 12,
+        "unit": "px"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-radius-xl"
+        }
+      }
+    },
+    "2xl": {
+      "$type": "dimension",
+      "$value": {
+        "value": 16,
+        "unit": "px"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-radius-2xl"
+        }
+      }
+    },
+    "3xl": {
+      "$type": "dimension",
+      "$value": {
+        "value": 20,
+        "unit": "px"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-radius-3xl"
+        }
+      }
+    },
+    "full": {
+      "$type": "dimension",
+      "$value": {
+        "value": 999,
+        "unit": "px"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-radius-full"
+        }
+      }
+    }
+  },
+  "space": {
+    "1": {
+      "$type": "dimension",
+      "$value": {
+        "value": 4,
+        "unit": "px"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-space-1"
+        }
+      }
+    },
+    "2": {
+      "$type": "dimension",
+      "$value": {
+        "value": 8,
+        "unit": "px"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-space-2"
+        }
+      }
+    },
+    "3": {
+      "$type": "dimension",
+      "$value": {
+        "value": 12,
+        "unit": "px"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-space-3"
+        }
+      }
+    },
+    "4": {
+      "$type": "dimension",
+      "$value": {
+        "value": 16,
+        "unit": "px"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-space-4"
+        }
+      }
+    },
+    "5": {
+      "$type": "dimension",
+      "$value": {
+        "value": 20,
+        "unit": "px"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-space-5"
+        }
+      }
+    },
+    "6": {
+      "$type": "dimension",
+      "$value": {
+        "value": 24,
+        "unit": "px"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-space-6"
+        }
+      }
+    },
+    "7": {
+      "$type": "dimension",
+      "$value": {
+        "value": 28,
+        "unit": "px"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-space-7"
+        }
+      }
+    },
+    "8": {
+      "$type": "dimension",
+      "$value": {
+        "value": 32,
+        "unit": "px"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-space-8"
+        }
+      }
+    },
+    "10": {
+      "$type": "dimension",
+      "$value": {
+        "value": 40,
+        "unit": "px"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-space-10"
+        }
+      }
+    },
+    "12": {
+      "$type": "dimension",
+      "$value": {
+        "value": 48,
+        "unit": "px"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-space-12"
+        }
+      }
+    },
+    "14": {
+      "$type": "dimension",
+      "$value": {
+        "value": 56,
+        "unit": "px"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-space-14"
+        }
+      }
+    },
+    "16": {
+      "$type": "dimension",
+      "$value": {
+        "value": 64,
+        "unit": "px"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-space-16"
+        }
+      }
+    },
+    "0-5": {
+      "$type": "dimension",
+      "$value": {
+        "value": 2,
+        "unit": "px"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-space-0-5"
+        }
+      }
+    },
+    "1-5": {
+      "$type": "dimension",
+      "$value": {
+        "value": 6,
+        "unit": "px"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-space-1-5"
+        }
+      }
+    },
+    "2-5": {
+      "$type": "dimension",
+      "$value": {
+        "value": 10,
+        "unit": "px"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-space-2-5"
+        }
+      }
+    },
+    "3-5": {
+      "$type": "dimension",
+      "$value": {
+        "value": 14,
+        "unit": "px"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-space-3-5"
+        }
+      }
+    },
+    "4-5": {
+      "$type": "dimension",
+      "$value": {
+        "value": 18,
+        "unit": "px"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-space-4-5"
+        }
+      }
+    }
+  },
+  "duration": {
+    "instant": {
+      "$type": "duration",
+      "$value": {
+        "value": 90,
+        "unit": "ms"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-duration-instant"
+        }
+      }
+    },
+    "quick": {
+      "$type": "duration",
+      "$value": {
+        "value": 120,
+        "unit": "ms"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-duration-quick"
+        }
+      }
+    },
+    "fast": {
+      "$type": "duration",
+      "$value": {
+        "value": 150,
+        "unit": "ms"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-duration-fast"
+        }
+      }
+    },
+    "base": {
+      "$type": "duration",
+      "$value": {
+        "value": 200,
+        "unit": "ms"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-duration-base"
+        }
+      }
+    },
+    "moderate": {
+      "$type": "duration",
+      "$value": {
+        "value": 260,
+        "unit": "ms"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-duration-moderate"
+        }
+      }
+    },
+    "slow": {
+      "$type": "duration",
+      "$value": {
+        "value": 320,
+        "unit": "ms"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-duration-slow"
+        }
+      }
+    },
+    "slower": {
+      "$type": "duration",
+      "$value": {
+        "value": 420,
+        "unit": "ms"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-duration-slower"
+        }
+      }
+    },
+    "slowest": {
+      "$type": "duration",
+      "$value": {
+        "value": 560,
+        "unit": "ms"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-duration-slowest"
+        }
+      }
+    },
+    "reveal": {
+      "$type": "duration",
+      "$value": {
+        "value": 700,
+        "unit": "ms"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-duration-reveal"
+        }
+      }
+    },
+    "reveal-slow": {
+      "$type": "duration",
+      "$value": {
+        "value": 900,
+        "unit": "ms"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-duration-reveal-slow"
+        }
+      }
+    },
+    "shimmer": {
+      "$type": "duration",
+      "$value": {
+        "value": 1600,
+        "unit": "ms"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-duration-shimmer"
+        }
+      }
+    }
+  },
+  "ease": {
+    "standard": {
+      "$type": "cubicBezier",
+      "$value": [
+        0.25,
+        0.1,
+        0.25,
+        1
+      ],
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-ease-standard"
+        }
+      }
+    },
+    "out": {
+      "$type": "cubicBezier",
+      "$value": [
+        0.22,
+        1,
+        0.36,
+        1
+      ],
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-ease-out"
+        }
+      }
+    },
+    "decelerate": {
+      "$type": "cubicBezier",
+      "$value": [
+        0,
+        0,
+        0.58,
+        1
+      ],
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-ease-decelerate"
+        }
+      }
+    },
+    "emphasized": {
+      "$type": "cubicBezier",
+      "$value": [
+        0.32,
+        0.72,
+        0.24,
+        1
+      ],
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-ease-emphasized"
+        }
+      }
+    },
+    "in-out": {
+      "$type": "cubicBezier",
+      "$value": [
+        0.65,
+        0,
+        0.35,
+        1
+      ],
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-ease-in-out"
+        }
+      }
+    },
+    "in": {
+      "$type": "cubicBezier",
+      "$value": [
+        0.4,
+        0,
+        1,
+        1
+      ],
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-ease-in"
+        }
+      }
+    },
+    "spring": {
+      "$type": "cubicBezier",
+      "$value": [
+        0.34,
+        1.56,
+        0.64,
+        1
+      ],
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-ease-spring"
+        }
+      }
+    }
+  },
+  "font": {
+    "sans": {
+      "$type": "fontFamily",
+      "$value": [
+        "Inter",
+        "InterVariable",
+        "ui-sans-serif",
+        "system-ui",
+        "-apple-system",
+        "Segoe UI",
+        "Roboto",
+        "sans-serif"
+      ],
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-font-sans"
+        }
+      }
+    },
+    "mono": {
+      "$type": "fontFamily",
+      "$value": [
+        "ui-monospace",
+        "SF Mono",
+        "SFMono-Regular",
+        "JetBrains Mono",
+        "Menlo",
+        "Consolas",
+        "monospace"
+      ],
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-font-mono"
+        }
+      }
+    }
+  },
+  "font-size": {
+    "2xs": {
+      "$type": "dimension",
+      "$value": {
+        "value": 10,
+        "unit": "px"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-font-size-2xs"
+        }
+      }
+    },
+    "xs": {
+      "$type": "dimension",
+      "$value": {
+        "value": 11,
+        "unit": "px"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-font-size-xs"
+        }
+      }
+    },
+    "xs-plus": {
+      "$type": "dimension",
+      "$value": {
+        "value": 11.5,
+        "unit": "px"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-font-size-xs-plus"
+        }
+      }
+    },
+    "sm": {
+      "$type": "dimension",
+      "$value": {
+        "value": 12,
+        "unit": "px"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-font-size-sm"
+        }
+      }
+    },
+    "sm-plus": {
+      "$type": "dimension",
+      "$value": {
+        "value": 12.5,
+        "unit": "px"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-font-size-sm-plus"
+        }
+      }
+    },
+    "md": {
+      "$type": "dimension",
+      "$value": {
+        "value": 13,
+        "unit": "px"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-font-size-md"
+        }
+      }
+    },
+    "md-plus": {
+      "$type": "dimension",
+      "$value": {
+        "value": 13.5,
+        "unit": "px"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-font-size-md-plus"
+        }
+      }
+    },
+    "lg": {
+      "$type": "dimension",
+      "$value": {
+        "value": 14,
+        "unit": "px"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-font-size-lg"
+        }
+      }
+    },
+    "lg-plus": {
+      "$type": "dimension",
+      "$value": {
+        "value": 15,
+        "unit": "px"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-font-size-lg-plus"
+        }
+      }
+    },
+    "xl": {
+      "$type": "dimension",
+      "$value": {
+        "value": 16,
+        "unit": "px"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-font-size-xl"
+        }
+      }
+    },
+    "2xl": {
+      "$type": "dimension",
+      "$value": {
+        "value": 20,
+        "unit": "px"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-font-size-2xl"
+        }
+      }
+    },
+    "3xl": {
+      "$type": "dimension",
+      "$value": {
+        "value": 24,
+        "unit": "px"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-font-size-3xl"
+        }
+      }
+    },
+    "4xl": {
+      "$type": "dimension",
+      "$value": {
+        "value": 28,
+        "unit": "px"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-font-size-4xl"
+        }
+      }
+    }
+  },
+  "font-weight": {
+    "regular": {
+      "$type": "fontWeight",
+      "$value": 400,
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-font-weight-regular"
+        }
+      }
+    },
+    "medium": {
+      "$type": "fontWeight",
+      "$value": 500,
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-font-weight-medium"
+        }
+      }
+    },
+    "semibold": {
+      "$type": "fontWeight",
+      "$value": 600,
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-font-weight-semibold"
+        }
+      }
+    }
+  },
+  "line-height": {
+    "none": {
+      "$type": "number",
+      "$value": 1,
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-line-height-none"
+        }
+      }
+    },
+    "tight": {
+      "$type": "dimension",
+      "$value": {
+        "value": 16,
+        "unit": "px"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-line-height-tight"
+        }
+      }
+    },
+    "snug": {
+      "$type": "dimension",
+      "$value": {
+        "value": 18,
+        "unit": "px"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-line-height-snug"
+        }
+      }
+    },
+    "normal": {
+      "$type": "dimension",
+      "$value": {
+        "value": 20,
+        "unit": "px"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-line-height-normal"
+        }
+      }
+    },
+    "relaxed": {
+      "$type": "dimension",
+      "$value": {
+        "value": 22,
+        "unit": "px"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-line-height-relaxed"
+        }
+      }
+    },
+    "loose": {
+      "$type": "dimension",
+      "$value": {
+        "value": 24,
+        "unit": "px"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-line-height-loose"
+        }
+      }
+    },
+    "display-sm": {
+      "$type": "dimension",
+      "$value": {
+        "value": 28,
+        "unit": "px"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-line-height-display-sm"
+        }
+      }
+    },
+    "display": {
+      "$type": "dimension",
+      "$value": {
+        "value": 32,
+        "unit": "px"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-line-height-display"
+        }
+      }
+    }
+  },
+  "tracking": {
+    "normal": {
+      "$type": "dimension",
+      "$value": {
+        "value": 0,
+        "unit": "px"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-tracking-normal"
+        }
+      }
+    }
+  },
+  "z": {
+    "sticky": {
+      "$type": "number",
+      "$value": 10,
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-z-sticky"
+        }
+      }
+    },
+    "dropdown": {
+      "$type": "number",
+      "$value": 30,
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-z-dropdown"
+        }
+      }
+    },
+    "popover": {
+      "$type": "number",
+      "$value": 35,
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-z-popover"
+        }
+      }
+    },
+    "drawer-scrim": {
+      "$type": "number",
+      "$value": 40,
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-z-drawer-scrim"
+        }
+      }
+    },
+    "drawer": {
+      "$type": "number",
+      "$value": 50,
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-z-drawer"
+        }
+      }
+    },
+    "modal-scrim": {
+      "$type": "number",
+      "$value": 60,
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-z-modal-scrim"
+        }
+      }
+    },
+    "modal": {
+      "$type": "number",
+      "$value": 70,
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-z-modal"
+        }
+      }
+    },
+    "toast": {
+      "$type": "number",
+      "$value": 80,
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-z-toast"
+        }
+      }
+    },
+    "drag": {
+      "$type": "number",
+      "$value": 90,
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-z-drag"
+        }
+      }
+    }
+  },
+  "focus": {
+    "halo-width": {
+      "$type": "dimension",
+      "$value": {
+        "value": 3,
+        "unit": "px"
+      },
+      "$extensions": {
+        "com.trenchcoat": {
+          "css": "--tc-focus-halo-width"
+        }
+      }
+    }
+  },
+  "$extensions": {
+    "com.trenchcoat": {
+      "cssOnly": {
+        "--tc-tracking-tight": "-0.02em",
+        "--tc-tracking-snug": "-0.01em",
+        "--tc-tracking-caps": "0.05em"
+      }
+    }
+  }
+}
