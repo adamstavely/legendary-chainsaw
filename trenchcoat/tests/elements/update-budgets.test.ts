@@ -35,11 +35,14 @@ describe("update budgets", () => {
       original.call(this, changed);
     };
     try {
-      for (const tag of tags) {
-        counts[tag] = 0;
-        document.body.append(document.createElement(tag));
+      // Mounted in batches, each settled before the next: all at once is the peak a two-core CI runner struggles with
+      for (let i = 0; i < tags.length; i += 40) {
+        for (const tag of tags.slice(i, i + 40)) {
+          counts[tag] = 0;
+          document.body.append(document.createElement(tag));
+        }
+        await settle();
       }
-      await settle();
       await new Promise((r) => setTimeout(r, 300));
       counting = true;
       await new Promise((r) => setTimeout(r, IDLE_MS));
@@ -59,6 +62,6 @@ describe("update budgets", () => {
       .map(({ tag, n, budget }) => `${tag}: ${n} idle updates in ${IDLE_MS} ms (budget ${budget})`);
     expect(over).toEqual([]);
     expect(Object.keys(counts).length, "every element was mounted").toBeGreaterThan(100);
-    // Every element at once: slow on a two-core CI runner, in WebKit above all
-  }, 120_000);
+    // Every element on one page: slow on a two-core CI runner, in WebKit above all
+  }, 240_000);
 });

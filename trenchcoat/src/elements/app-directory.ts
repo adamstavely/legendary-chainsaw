@@ -190,11 +190,15 @@ export class TcAppDirectory extends TcElement {
   /* ---------- Motion: connect widths and the results' height glide ---------- */
 
   #syncConnect() {
-    for (const b of this.querySelectorAll<HTMLElement>(".ui-adir__connect")) {
+    const buttons = this.querySelectorAll<HTMLElement>(".ui-adir__connect");
+    if (!buttons.length) return;
+    // Every connect button has the same padding: read it once, not once per card
+    const cs = getComputedStyle(buttons[0]);
+    const pad = parseFloat(cs.paddingLeft || "0") + parseFloat(cs.paddingRight || "0");
+    for (const b of buttons) {
       const label = b.firstElementChild as HTMLElement | null;
       if (!label) continue;
-      const cs = getComputedStyle(b);
-      const width = `${label.offsetWidth + parseFloat(cs.paddingLeft || "0") + parseFloat(cs.paddingRight || "0")}px`;
+      const width = `${label.offsetWidth + pad}px`;
       if (b.style.width !== width) b.style.width = width;
       // Transitions switch on after the first measurement, so the first render doesn't animate
       if (!b.hasAttribute("data-smooth")) this.#frame(() => b.setAttribute("data-smooth", ""));
