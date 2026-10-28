@@ -47,6 +47,8 @@ is under Data & charts and File Summary under AI & chat.
 ### Changed
 
 - **CI:** WebKit runs across eight machines instead of six, after a sixth ran out of memory.
+- **`tc-model-settings`:** the signature panel above the controls is now opt-in with `signature`. It drew every
+  parameter a second time, so the card read as having two of each setting.
 
 ## Unreleased – activity clock and activity calendar
 

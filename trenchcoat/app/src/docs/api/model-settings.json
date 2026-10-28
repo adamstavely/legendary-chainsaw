@@ -70,6 +70,14 @@
      "readonly": false
     },
     {
+     "name": "signature",
+     "attribute": "signature",
+     "type": "boolean",
+     "default": "false",
+     "description": "Shows the signature above the controls: every value on its range with the default and presets marked. Off by\ndefault – the controls already show each value, so it's for pages that want the at-a-glance picture too",
+     "readonly": false
+    },
+    {
      "name": "supported",
      "attribute": null,
      "type": "ModelParam[]",
@@ -274,7 +282,9 @@
    }
   }
  ],
- "changelog": [],
+ "changelog": [
+  "**`tc-model-settings`:** the signature panel above the controls is now opt-in with `signature`. It drew every parameter a second time, so the card read as having two of each setting."
+ ],
  "frameworks": [
   {
    "tag": "tc-model-settings",
@@ -299,6 +309,10 @@
     {
      "name": "disabled",
      "attribute": "disabled"
+    },
+    {
+     "name": "signature",
+     "attribute": "signature"
     }
    ],
    "events": [
@@ -618,7 +632,7 @@
   "windowed": false
  },
  "size": {
-  "min": 72191,
-  "gzip": 17503
+  "min": 72319,
+  "gzip": 17551
  }
 }
