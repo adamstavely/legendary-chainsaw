@@ -28,7 +28,7 @@ all. It is a form control: with `name` it submits the supported values as JSON.
 ## Anatomy
 
 1. **Header** `.tc-head` – a sliders icon, the title and the model with its one-line description
-2. **Signature** `.ui-mset__profile` – each value on its range, the default as a tick, presets as letters
+2. **Signature** `.ui-mset__profile` – with `signature` set: each value on its range, the default as a tick, presets as letters
 3. **Presets** `.ui-mset__presets` – Precise, Balanced, Creative, or Custom once a value moves
 4. **Parameter** `.ui-mset__param` – the label, its value, what it does and the control, with Reset when changed
 5. **Feedback** `.ui-mset__issues` – conflicting settings and values the model ignores

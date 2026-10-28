@@ -112,8 +112,12 @@ describe("tc-model-settings", () => {
     expect(el.querySelector('[role="status"]')!.textContent).toBe("Temperature reset to 1.0");
   });
 
-  test("the signature: each shown value against its range, with the default and the presets marked", async () => {
+  test("the signature, when asked for: each shown value against its range, with the default and the presets marked", async () => {
     const el = await mount({ temperature: 0.2 });
+    // Off by default – the controls already show every value once
+    expect(el.querySelector(".ui-mset__profile")).toBeNull();
+    el.signature = true;
+    await settle();
     const profile = el.querySelector(".ui-mset__profile")!;
     expect(profile.getAttribute("aria-hidden")).toBe("true");
     const rows = [...profile.querySelectorAll<HTMLElement>(".ui-mset__sig-row")];

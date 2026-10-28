@@ -180,6 +180,9 @@ export class TcModelSettings extends TcElement {
   @property({ reflect: true }) accessor name = "";
   /** Turns every control off and leaves the settings out of the form; a disabled fieldset does the same */
   @property({ type: Boolean, reflect: true }) accessor disabled = false;
+  /** Shows the signature above the controls: every value on its range with the default and presets marked. Off by
+   *  default – the controls already show each value, so it's for pages that want the at-a-glance picture too */
+  @property({ type: Boolean }) accessor signature = false;
 
   @state() private accessor formDisabled = false;
   @state() private accessor announcement = "";
@@ -499,7 +502,7 @@ export class TcModelSettings extends TcElement {
       subtitle: this.model ? html`<span class="ui-mset__model-name">${this.model.label}</span>${this.model.description ? html` · ${this.model.description}` : nothing}` : undefined,
     });
     const body = html`
-      ${this.renderProfile()} ${this.renderPresets(look)}
+      ${this.signature ? this.renderProfile() : nothing} ${this.renderPresets(look)}
       ${shown.length
         ? html`<ul class="ui-mset__params" aria-label="Parameters">
             ${repeat(
