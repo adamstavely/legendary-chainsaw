@@ -1,0 +1,87 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-agent-gallery.json",
+  "title": "tc-agent-gallery",
+  "description": "A showcase of agents as slim gradient panels, one open in the middle with its product screen.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the carousel's name"
+    },
+    "subtitle": {
+      "type": "string",
+      "description": "The line under the heading"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/GalleryItem"
+      },
+      "description": "The agents"
+    },
+    "index": {
+      "type": "number",
+      "description": "The open agent's index – unset, the middle one. The gallery glides there the short way round"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "GalleryItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "colors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 2,
+          "maxItems": 2,
+          "description": "Two colours for the gradient artwork – strong, then soft"
+        },
+        "trigger": {
+          "type": "string",
+          "description": "What the agent reacts to"
+        },
+        "steps": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Steps shown under Instructions"
+        },
+        "skills": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Skills shown as chips"
+        },
+        "guardrail": {
+          "type": "string",
+          "description": "A rule shown under Guardrails"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "description",
+        "colors",
+        "trigger",
+        "steps",
+        "skills",
+        "guardrail"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

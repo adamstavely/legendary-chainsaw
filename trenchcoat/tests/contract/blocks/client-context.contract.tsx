@@ -11,15 +11,11 @@ const client = (id: string, name: string) => ({
 });
 const clients = [client("north", "Northwind"), client("acme", "Acme")];
 
+// The block is <tc-client-context> through trenchcoat/react. jsdom loads @lit/react's node build, which never sets an element's
+// properties, so its controlled state is checked in a real browser (tests/elements/client-context.test.ts)
 export const spec: ContractSpec = {
+  root: "tc-client-context",
   component: "ClientContext",
   props: { clients },
   ref: "root",
-  controlled: [
-    {
-      prop: "client",
-      values: ["north", "acme"],
-      read: (root) => clients.find((c) => c.name === root.querySelector(".ui-cx__name")?.textContent)?.id,
-    },
-  ],
 };

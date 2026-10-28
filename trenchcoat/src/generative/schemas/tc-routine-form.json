@@ -1,0 +1,253 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-routine-form.json",
+  "title": "tc-routine-form",
+  "description": "A form that creates or edits a routine – name, frequency and start time in a time zone with the next run worked out,\nfirst run now or on schedule, email notifications and instructions, with Dismiss and Create routine.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading; by default \"Create a routine\", or \"Edit routine\" in edit mode"
+    },
+    "description": {
+      "type": "string",
+      "description": "The line under the heading, before the Routines link; by default the labels' description"
+    },
+    "value": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "firstRun": {
+          "$ref": "#/definitions/RoutineFirstRun"
+        },
+        "notify": {
+          "$ref": "#/definitions/RoutineNotify"
+        },
+        "instructions": {
+          "type": "string"
+        },
+        "frequency": {
+          "$ref": "#/definitions/RoutineFrequency"
+        },
+        "time": {
+          "type": "string",
+          "description": "\"13:45\", 24-hour, in the routine's time zone; hourly runs use only its minutes"
+        },
+        "weekday": {
+          "type": "number",
+          "description": "Weekly: the day, 0 = Sunday … 6 = Saturday"
+        },
+        "dayOfMonth": {
+          "type": "number",
+          "description": "Monthly: the day of the month, 1–31 (a shorter month runs on its last day)"
+        }
+      },
+      "required": [
+        "firstRun",
+        "frequency",
+        "instructions",
+        "name",
+        "notify",
+        "time"
+      ],
+      "description": "The form's contents. Changed by the user unless a tc-value-change listener calls preventDefault()"
+    },
+    "mode": {
+      "type": "string",
+      "enum": [
+        "edit",
+        "create"
+      ],
+      "description": "\"create\" for a new routine, \"edit\" for one that exists – it names the heading and the main button"
+    },
+    "routinesHref": {
+      "type": "string",
+      "description": "Where the Routines link in the description goes; without it, the link is a button that fires tc-open-routines"
+    },
+    "timeZone": {
+      "type": "string",
+      "description": "The routine's time zone, an IANA name such as \"America/Los_Angeles\"; by default the browser's"
+    },
+    "now": {
+      "type": "number",
+      "description": "The time now, epoch ms, for the next run; by default the element's own clock"
+    },
+    "busy": {
+      "type": "boolean",
+      "description": "While the page saves the routine: the buttons wait and the main one says \"Creating…\""
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for days and times, e.g. \"en-GB\"; by default the browser's"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "heading": {
+          "type": "string"
+        },
+        "editHeading": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "routines": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "namePlaceholder": {
+          "type": "string"
+        },
+        "frequency": {
+          "type": "string"
+        },
+        "startTime": {
+          "type": "string"
+        },
+        "timeZone": {
+          "type": "string"
+        },
+        "nextRun": {
+          "type": "string"
+        },
+        "firstRunThen": {
+          "type": "string"
+        },
+        "firstRun": {
+          "type": "string"
+        },
+        "atScheduledTime": {
+          "type": "string"
+        },
+        "rightAway": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "instructions": {
+          "type": "string"
+        },
+        "instructionsPlaceholder": {
+          "type": "string"
+        },
+        "dismiss": {
+          "type": "string"
+        },
+        "create": {
+          "type": "string"
+        },
+        "save": {
+          "type": "string"
+        },
+        "creating": {
+          "type": "string"
+        },
+        "saving": {
+          "type": "string"
+        },
+        "nameRequired": {
+          "type": "string"
+        },
+        "instructionsRequired": {
+          "type": "string"
+        },
+        "dayOfMonth": {
+          "type": "string"
+        },
+        "pastHour": {
+          "type": "string"
+        },
+        "frequencies": {
+          "type": "object",
+          "properties": {
+            "hourly": {
+              "type": "string"
+            },
+            "daily": {
+              "type": "string"
+            },
+            "weekdays": {
+              "type": "string"
+            },
+            "weekly": {
+              "type": "string"
+            },
+            "monthly": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "hourly",
+            "daily",
+            "weekdays",
+            "weekly",
+            "monthly"
+          ],
+          "additionalProperties": false
+        },
+        "notify": {
+          "type": "object",
+          "properties": {
+            "never": {
+              "type": "string"
+            },
+            "every-run": {
+              "type": "string"
+            },
+            "updates": {
+              "type": "string"
+            },
+            "failures": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "never",
+            "every-run",
+            "updates",
+            "failures"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false,
+      "description": "The form's words, merged over defaultRoutineLabels"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "RoutineFirstRun": {
+      "type": "string",
+      "enum": [
+        "scheduled",
+        "now"
+      ]
+    },
+    "RoutineNotify": {
+      "type": "string",
+      "enum": [
+        "never",
+        "every-run",
+        "updates",
+        "failures"
+      ]
+    },
+    "RoutineFrequency": {
+      "type": "string",
+      "enum": [
+        "hourly",
+        "daily",
+        "weekdays",
+        "weekly",
+        "monthly"
+      ]
+    }
+  }
+}

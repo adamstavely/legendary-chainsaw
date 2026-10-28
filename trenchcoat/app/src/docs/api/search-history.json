@@ -62,6 +62,14 @@
      "readonly": false
     },
     {
+     "name": "schedulable",
+     "attribute": "schedulable",
+     "type": "boolean",
+     "default": "false",
+     "description": "Whether saved searches offer Schedule, to run them as routines (tc-schedule)",
+     "readonly": false
+    },
+    {
      "name": "look",
      "attribute": "look",
      "type": "Look | undefined",
@@ -100,6 +108,12 @@
      "detail": "",
      "description": "The tab changed ({ tab }: SearchHistoryTabChange); cancelable – prevented, `tab` stays as it was",
      "cancelable": true
+    },
+    {
+     "name": "tc-schedule",
+     "detail": "",
+     "description": "Schedule was pressed on a saved search, with `schedulable` ({ id, search }: SearchHistorySchedule) – open your routine form here; cancelable – prevented, nothing is announced",
+     "cancelable": true
     }
    ],
    "slots": [],
@@ -117,20 +131,19 @@
     "--tc-caption-transform",
     "--tc-card-radius",
     "--tc-card-shadow",
+    "--tc-control-h-md",
     "--tc-control-h-sm",
     "--tc-control-radius-sm",
     "--tc-duration-fast",
     "--tc-duration-moderate",
     "--tc-ease-move",
     "--tc-ease-standard",
-    "--tc-field-bg-sunken",
-    "--tc-field-h-sm",
+    "--tc-field-bg",
     "--tc-field-px",
     "--tc-field-radius",
-    "--tc-field-shadow",
     "--tc-field-shadow-focus",
-    "--tc-field-shadow-hover",
     "--tc-fill-default",
+    "--tc-fill-hover",
     "--tc-fill-subtle",
     "--tc-focus-outline",
     "--tc-focus-ring-offset",
@@ -233,6 +246,12 @@
      "type": "(search: SearchHistoryEntry) => void",
      "optional": true,
      "description": "A search was picked to run again"
+    },
+    {
+     "name": "onSchedule",
+     "type": "(search: SearchHistoryEntry) => void",
+     "optional": true,
+     "description": "Schedule was pressed on a saved search (with `schedulable`) – open your routine form"
     }
    ],
    "hides": [
@@ -246,7 +265,8 @@
     "tc-saved-change": null,
     "tc-remove": null,
     "tc-restore": null,
-    "tc-tab-change": null
+    "tc-tab-change": null,
+    "tc-schedule": "onSchedule"
    }
   }
  ],
@@ -286,6 +306,10 @@
     {
      "name": "locale",
      "attribute": "locale"
+    },
+    {
+     "name": "schedulable",
+     "attribute": "schedulable"
     }
    ],
    "events": [
@@ -307,6 +331,10 @@
     },
     {
      "name": "tc-tab-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-schedule",
      "cancelable": true
     }
    ],
@@ -496,6 +524,7 @@
   "frames": [],
   "animations": 0,
   "observers": [
+   "MutationObserver (internal/base › TcElement)",
    "MutationObserver (internal/controllers › AriaForwardController)"
   ],
   "clock": [
@@ -513,7 +542,7 @@
   "windowed": false
  },
  "size": {
-  "min": 27478,
-  "gzip": 8859
+  "min": 29529,
+  "gzip": 9409
  }
 }

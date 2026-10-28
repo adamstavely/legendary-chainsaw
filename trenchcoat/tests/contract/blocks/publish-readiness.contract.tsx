@@ -6,18 +6,11 @@ const checks = [
   { id: "lead", label: "Lead signs off", state: "manual" },
 ];
 
+// The block is <tc-publish-readiness> through trenchcoat/react. jsdom loads @lit/react's node build, which never sets an element's
+// properties, so its controlled state is checked in a real browser (tests/elements/publish-readiness.test.ts)
 export const spec: ContractSpec = {
+  root: "tc-publish-readiness",
   component: "PublishReadiness",
   props: { subject: "Digest", checks },
   ref: "root",
-  controlled: [
-    {
-      prop: "confirmed",
-      values: [["owner"], ["owner", "lead"]],
-      read: (root) => {
-        const passed = Number(root.querySelector(".ui-prd__count b")?.textContent);
-        return passed === 2 ? ["owner"] : passed === 3 ? ["owner", "lead"] : [];
-      },
-    },
-  ],
 };

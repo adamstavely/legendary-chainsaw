@@ -1,0 +1,663 @@
+{
+ "elements": [
+  {
+   "tag": "tc-testimonial-wall",
+   "className": "TcTestimonialWall",
+   "description": "The landing-page wall of quotes: columns that scroll endlessly in opposite directions, ease to a stop on hover and pause for good.",
+   "properties": [
+    {
+     "name": "items",
+     "attribute": null,
+     "type": "Testimonial[]",
+     "default": "[]",
+     "description": "The quotes",
+     "readonly": false
+    },
+    {
+     "name": "columns",
+     "attribute": "columns",
+     "type": "1 | 2 | 3",
+     "default": "3",
+     "description": "Most columns on a wide container – narrower containers use fewer (2 below 740 px, 1 below 480 px)",
+     "readonly": false
+    },
+    {
+     "name": "speed",
+     "attribute": "speed",
+     "type": "number",
+     "default": "28",
+     "description": "Pixels per second of the first column; the others run a little slower and faster",
+     "readonly": false
+    },
+    {
+     "name": "pauseOnHover",
+     "attribute": "pause-on-hover",
+     "type": "boolean",
+     "default": "true",
+     "description": "Ease a column to a stop while the pointer is over it or a card in it has keyboard focus",
+     "readonly": false
+    },
+    {
+     "name": "paused",
+     "attribute": "paused",
+     "type": "boolean",
+     "default": "false",
+     "description": "Stopped for good (the Pause / Play button's state)",
+     "readonly": false
+    },
+    {
+     "name": "pauseButton",
+     "attribute": "pause-button",
+     "type": "boolean",
+     "default": "true",
+     "description": "Show the Pause / Play button (on by default – moving content needs a way to stop it, WCAG 2.2.2)",
+     "readonly": false
+    },
+    {
+     "name": "label",
+     "attribute": "label",
+     "type": "string",
+     "default": "\"What customers say\"",
+     "description": "Accessible name of the wall",
+     "readonly": false
+    },
+    {
+     "name": "buttonLabels",
+     "attribute": null,
+     "type": "{ pause: string; play: string }",
+     "default": "{ pause: \"Pause testimonials\", play: \"Play testimonials\" }",
+     "description": "The Pause button's name, and the Play button's",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-paused-change",
+     "detail": "",
+     "description": "The Pause / Play button was pressed ({ paused }: TestimonialPausedChange); cancelable – prevented, `paused` stays as it is (controlled use)",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "twl",
+   "cssProperties": [
+    {
+     "name": "--tc-twl-star",
+     "value": "light-dark(#a3a3a8, #7a7a82)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-twl-star-off",
+     "value": "light-dark(#e2e2e5, #2f2f34)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-twl-avatar-ring",
+     "value": "light-dark(rgba(0, 0, 0, 0.05), rgba(255, 255, 255, 0.06))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-twl-gap",
+     "value": "16px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-twl-fade",
+     "value": "96px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-twl-dim",
+     "value": "0.62",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-twl-avatar",
+     "value": "36px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-twl-card-pad",
+     "value": "18px 20px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-twl-card-gap",
+     "value": "14px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-twl-name-gap",
+     "value": "5px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-twl-id-gap",
+     "value": "1px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-twl-cols",
+     "value": "3",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    },
+    {
+     "name": "--tc-testimonial-wall-height",
+     "value": "600px",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    }
+   ],
+   "tokens": [
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-card-shadow-hover",
+    "--tc-duration-slow",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-lg-plus",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-semibold",
+    "--tc-icon-muted",
+    "--tc-line-height-loose",
+    "--tc-line-height-relaxed",
+    "--tc-line-height-snug",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-surface-raised",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tracking-snug"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "testimonialColumns",
+   "signature": "testimonialColumns(width: number, max: number): void",
+   "description": "Container width → column count, at most `max`: 3 from 740 px, 2 from 480 px, else 1"
+  },
+  {
+   "name": "dealTestimonials",
+   "signature": "dealTestimonials(items: T[], count: number): T[][]",
+   "description": "The quotes dealt into `count` columns: 1, 2, 3, 1, 2, 3 … so short and long ones mix in every column"
+  }
+ ],
+ "react": [
+  {
+   "component": "TestimonialWallOwn",
+   "exported": false,
+   "props": [
+    {
+     "name": "paused",
+     "type": "boolean",
+     "optional": true,
+     "description": "Stopped (controlled) – pass `onPausedChange` with it. Leave undefined to start at `defaultPaused`"
+    },
+    {
+     "name": "defaultPaused",
+     "type": "boolean",
+     "optional": true,
+     "description": "Stopped at first when uncontrolled"
+    },
+    {
+     "name": "onPausedChange",
+     "type": "(paused: boolean) => void",
+     "optional": true,
+     "description": "Called when the Pause / Play button is pressed"
+    }
+   ],
+   "hides": [],
+   "events": {
+    "tc-paused-change": "onTcPausedChange"
+   }
+  },
+  {
+   "component": "TestimonialWall",
+   "exported": true,
+   "props": [
+    {
+     "name": "paused",
+     "type": "boolean",
+     "optional": true,
+     "description": "Stopped (controlled) – pass `onPausedChange` with it. Leave undefined to start at `defaultPaused`"
+    },
+    {
+     "name": "defaultPaused",
+     "type": "boolean",
+     "optional": true,
+     "description": "Stopped at first when uncontrolled"
+    },
+    {
+     "name": "onPausedChange",
+     "type": "(paused: boolean) => void",
+     "optional": true,
+     "description": "Called when the Pause / Play button is pressed"
+    }
+   ],
+   "hides": [
+    "children"
+   ],
+   "events": {
+    "tc-paused-change": "onPausedChange"
+   }
+  }
+ ],
+ "changelog": [
+  "All 18 blocks are now elements – `tc-agent-gallery`, `tc-ai-side-pane`, `tc-ai-workspace`, `tc-app-directory`, `tc-client-context`, `tc-evidence-gallery`, `tc-header-nav`, `tc-invoice-credit`, `tc-kpi-board`, `tc-logo-marquee`, `tc-metrics-dashboard`, `tc-oversight-home`, `tc-pricing-plans`, `tc-publish-readiness`, `tc-red-team-finding`, `tc-task-board`, `tc-testimonial-wall`, `tc-uncertainty-mix` – so Angular (`trenchcoat/angular`), Vue, Svelte, plain HTML and generative UI get them like any component, with docs pages."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-testimonial-wall",
+   "className": "TcTestimonialWall",
+   "module": "trenchcoat/testimonial-wall",
+   "data": [
+    "items",
+    "buttonLabels"
+   ],
+   "attributes": [
+    {
+     "name": "columns",
+     "attribute": "columns"
+    },
+    {
+     "name": "speed",
+     "attribute": "speed"
+    },
+    {
+     "name": "pauseOnHover",
+     "attribute": "pause-on-hover"
+    },
+    {
+     "name": "paused",
+     "attribute": "paused"
+    },
+    {
+     "name": "pauseButton",
+     "attribute": "pause-button"
+    },
+    {
+     "name": "label",
+     "attribute": "label"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-paused-change",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "paused",
+     "event": "tc-paused-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "121",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "has"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "itself",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "button",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "inert",
+    "name": "inert",
+    "bcd": "api.HTMLElement.inert",
+    "versions": {
+     "chrome": "102",
+     "edge": "102",
+     "firefox": "112",
+     "safari": "15.5",
+     "safari_ios": "15.5"
+    },
+    "progressive": false,
+    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "button",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "has",
+    "name": ":has()",
+    "bcd": "css.selectors.has",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "121",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Layout and state that depend on what's inside a part (an icon present, a focused field).",
+    "via": [
+     "itself",
+     "button"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "button"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "button",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "resize-observer",
+    "name": "ResizeObserver",
+    "bcd": "api.ResizeObserver",
+    "versions": {
+     "chrome": "64",
+     "edge": "79",
+     "firefox": "69",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "via": [
+     "itself",
+     "button"
+    ]
+   },
+   {
+    "id": "intersection-observer",
+    "name": "IntersectionObserver",
+    "bcd": "api.IntersectionObserver",
+    "versions": {
+     "chrome": "51",
+     "edge": "15",
+     "firefox": "55",
+     "safari": "12.1",
+     "safari_ios": "12.2"
+    },
+    "progressive": false,
+    "via": [
+     "itself",
+     "internal/controllers"
+    ]
+   },
+   {
+    "id": "mask",
+    "name": "CSS masks",
+    "bcd": "css.properties.mask-image",
+    "versions": {
+     "chrome": "1",
+     "edge": "79",
+     "firefox": "53",
+     "safari": "4",
+     "safari_ios": "3.2"
+    },
+    "progressive": false,
+    "note": "with the -webkit- prefix",
+    "via": [
+     "itself",
+     "button"
+    ]
+   },
+   {
+    "id": "text-wrap-pretty",
+    "name": "text-wrap: pretty",
+    "bcd": "css.properties.text-wrap.pretty",
+    "versions": {
+     "chrome": "117",
+     "edge": "117",
+     "firefox": null,
+     "safari": "26",
+     "safari_ios": "26"
+    },
+    "progressive": true,
+    "without": "Paragraphs may end on a single short word.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setTimeout"
+  ],
+  "frames": [
+   "requestAnimationFrame, cancelled"
+  ],
+  "animations": 3,
+  "observers": [
+   "ResizeObserver",
+   "IntersectionObserver",
+   "ResizeObserver (button)",
+   "MutationObserver (button)",
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)",
+   "IntersectionObserver (internal/controllers › OffScreenController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [
+    "itself",
+    "button",
+    "internal/controllers › OffScreenController"
+   ],
+   "hidden": [],
+   "reducedMotion": [
+    "script",
+    "CSS",
+    "CSS (button)",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 39580,
+  "gzip": 12665
+ }
+}

@@ -617,6 +617,7 @@
   ],
   "animations": 3,
   "observers": [
+   "MutationObserver (internal/base › TcElement)",
    "MutationObserver (internal/controllers › AriaForwardController)",
    "ResizeObserver (internal/popover › PopoverController)",
    "ResizeObserver (inline-diff)"
@@ -639,7 +640,7 @@
   "windowed": false
  },
  "size": {
-  "min": 102840,
-  "gzip": 27294
+  "min": 103328,
+  "gzip": 27423
  }
 }

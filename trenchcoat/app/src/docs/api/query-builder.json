@@ -103,7 +103,16 @@
    "slots": [],
    "methods": [],
    "ui": "qb",
-   "cssProperties": [],
+   "cssProperties": [
+    {
+     "name": "--tc-qb-conj",
+     "value": "var(--tc-space-12)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    }
+   ],
    "tokens": [
     "--tc-action-ghost-bg-hover",
     "--tc-action-primary-bg",
@@ -112,6 +121,7 @@
     "--tc-action-primary-fg",
     "--tc-action-primary-shadow",
     "--tc-border-control",
+    "--tc-border-default",
     "--tc-border-selected",
     "--tc-border-strong",
     "--tc-caption-color",
@@ -166,10 +176,13 @@
     "--tc-space-0-5",
     "--tc-space-1",
     "--tc-space-1-5",
+    "--tc-space-12",
     "--tc-space-2",
     "--tc-space-2-5",
     "--tc-space-3",
+    "--tc-space-3-5",
     "--tc-space-4",
+    "--tc-space-7",
     "--tc-surface-on-tray",
     "--tc-surface-raised",
     "--tc-surface-sunken",
@@ -494,6 +507,7 @@
   "frames": [],
   "animations": 0,
   "observers": [
+   "MutationObserver (internal/base › TcElement)",
    "MutationObserver (internal/controllers › AriaForwardController)"
   ],
   "clock": [],
@@ -509,7 +523,7 @@
   "windowed": false
  },
  "size": {
-  "min": 31454,
-  "gzip": 9632
+  "min": 34091,
+  "gzip": 10259
  }
 }

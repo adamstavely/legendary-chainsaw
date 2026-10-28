@@ -1,0 +1,386 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-multi-calendar.json",
+  "title": "tc-multi-calendar",
+  "description": "A calendar of calendars – many people's events from many accounts in one Day, Week, Month, Agenda or People view,\nwith show/hide per calendar, conflicts across a person's calendars, and create, edit, move and delete.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "calendars": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/CalendarSource"
+      },
+      "description": "The calendars, from every account and person, in the order the sidebar lists them"
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/CalendarEvent"
+      },
+      "description": "The events of every calendar, in any order. Changed by the user (create, edit, move, delete) unless the event's listener calls preventDefault()"
+    },
+    "view": {
+      "type": "string",
+      "enum": [
+        "people",
+        "day",
+        "week",
+        "month",
+        "agenda"
+      ],
+      "description": "The view: \"day\", \"week\", \"month\", \"agenda\" or \"people\". Changed by the user unless a tc-view-change listener calls preventDefault()"
+    },
+    "date": {
+      "type": "number",
+      "description": "The day in focus, as epoch ms of any moment in it; by default today. Changed by the user unless a tc-date-change listener calls preventDefault()"
+    },
+    "visible": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The ids of the calendars shown; by default each calendar's own `visible`. Changed by the user unless a tc-visible-change listener calls preventDefault()"
+    },
+    "pending": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Ids of events being saved: drawn as saving, and not editable until they leave the list"
+    },
+    "groupBy": {
+      "type": "string",
+      "enum": [
+        "person",
+        "provider"
+      ],
+      "description": "How the sidebar groups calendars: \"person\" or \"provider\" (the account)"
+    },
+    "timeZone": {
+      "type": "string",
+      "description": "The IANA time zone the calendar shows, e.g. \"America/Los_Angeles\"; by default the browser's"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for dates and times, e.g. \"en-GB\"; by default the browser's"
+    },
+    "weekStart": {
+      "type": "number",
+      "description": "The first day of the week: 0 Sunday, 1 Monday … 6 Saturday"
+    },
+    "workingHours": {
+      "type": "object",
+      "properties": {
+        "start": {
+          "type": "number"
+        },
+        "end": {
+          "type": "number"
+        },
+        "days": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        }
+      },
+      "required": [
+        "start",
+        "end"
+      ],
+      "additionalProperties": false,
+      "description": "Working hours; time outside them is shaded"
+    },
+    "agendaDays": {
+      "type": "number",
+      "description": "How many days Agenda lists from the day in focus"
+    },
+    "readonly": {
+      "type": "boolean",
+      "description": "View only: no creating, editing, moving or deleting anywhere"
+    },
+    "now": {
+      "type": "number",
+      "description": "The current time, epoch ms – for a fixed clock (tests, screenshots); by default the element keeps its own"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "today": {
+          "type": "string"
+        },
+        "previous": {
+          "type": "string"
+        },
+        "next": {
+          "type": "string"
+        },
+        "newEvent": {
+          "type": "string"
+        },
+        "calendars": {
+          "type": "string"
+        },
+        "groupBy": {
+          "type": "string"
+        },
+        "byPerson": {
+          "type": "string"
+        },
+        "byProvider": {
+          "type": "string"
+        },
+        "onlyThis": {
+          "type": "string"
+        },
+        "showAll": {
+          "type": "string"
+        },
+        "view": {
+          "type": "string"
+        },
+        "day": {
+          "type": "string"
+        },
+        "week": {
+          "type": "string"
+        },
+        "month": {
+          "type": "string"
+        },
+        "agenda": {
+          "type": "string"
+        },
+        "people": {
+          "type": "string"
+        },
+        "allDay": {
+          "type": "string"
+        },
+        "time": {
+          "type": "string"
+        },
+        "readOnly": {
+          "type": "string"
+        },
+        "readOnlyReason": {
+          "type": "string"
+        },
+        "tentative": {
+          "type": "string"
+        },
+        "cancelled": {
+          "type": "string"
+        },
+        "conflict": {
+          "type": "string"
+        },
+        "conflictWith": {
+          "type": "string"
+        },
+        "saving": {
+          "type": "string"
+        },
+        "more": {
+          "type": "string"
+        },
+        "noEvents": {
+          "type": "string"
+        },
+        "noCalendars": {
+          "type": "string"
+        },
+        "edit": {
+          "type": "string"
+        },
+        "delete": {
+          "type": "string"
+        },
+        "close": {
+          "type": "string"
+        },
+        "save": {
+          "type": "string"
+        },
+        "cancel": {
+          "type": "string"
+        },
+        "create": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "untitled": {
+          "type": "string"
+        },
+        "calendar": {
+          "type": "string"
+        },
+        "starts": {
+          "type": "string"
+        },
+        "ends": {
+          "type": "string"
+        },
+        "location": {
+          "type": "string"
+        },
+        "attendees": {
+          "type": "string"
+        },
+        "repeats": {
+          "type": "string"
+        },
+        "needTitle": {
+          "type": "string"
+        },
+        "endBeforeStart": {
+          "type": "string"
+        },
+        "noWritable": {
+          "type": "string"
+        },
+        "free": {
+          "type": "string"
+        },
+        "events": {
+          "type": "string"
+        },
+        "event": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Any of the words it shows (see defaultMultiCalendarLabels)"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "CalendarSource": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string",
+          "description": "The calendar's name, e.g. \"Work\" or \"Team holidays\""
+        },
+        "owner": {
+          "$ref": "#/definitions/CalendarOwner"
+        },
+        "provider": {
+          "type": "string",
+          "description": "The account or service it comes from: \"Google\", \"Outlook\", \"Exchange\", \"iCal feed\""
+        },
+        "color": {
+          "type": "number",
+          "description": "Its colour, 1–6 – the library's chart colours; by default the next one in turn"
+        },
+        "readOnly": {
+          "type": "boolean",
+          "description": "Shown but can't be changed (a shared or subscribed calendar): no create, edit, move or delete"
+        },
+        "visible": {
+          "type": "boolean",
+          "description": "Shown at first; false starts it hidden (ignored when the element's `visible` is set)"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "owner"
+      ],
+      "additionalProperties": false,
+      "description": "One calendar from one account"
+    },
+    "CalendarOwner": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "avatar": {
+          "type": "string",
+          "description": "A picture URL; initials are drawn without one"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "additionalProperties": false,
+      "description": "The person a calendar belongs to"
+    },
+    "CalendarEvent": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "calendarId": {
+          "type": "string",
+          "description": "The calendar it's on"
+        },
+        "title": {
+          "type": "string"
+        },
+        "start": {
+          "type": "number",
+          "description": "Epoch ms"
+        },
+        "end": {
+          "type": "number",
+          "description": "Epoch ms; for an all-day event the midnight after its last day"
+        },
+        "allDay": {
+          "type": "boolean"
+        },
+        "location": {
+          "type": "string"
+        },
+        "attendees": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Who else is invited, as names"
+        },
+        "recurring": {
+          "type": "string",
+          "description": "How it repeats, in words – \"Every weekday\" (shown, not expanded: pass each occurrence as an event)"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "confirmed",
+            "tentative",
+            "cancelled"
+          ],
+          "description": "Tentative events have a dashed edge; cancelled ones are struck through. Default \"confirmed\""
+        }
+      },
+      "required": [
+        "id",
+        "calendarId",
+        "title",
+        "start",
+        "end"
+      ],
+      "additionalProperties": false,
+      "description": "One event"
+    }
+  }
+}

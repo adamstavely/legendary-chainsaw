@@ -1,0 +1,779 @@
+{
+ "elements": [
+  {
+   "tag": "tc-invoice-credit",
+   "className": "TcInvoiceCredit",
+   "description": "An invoice and its credit note stacked like paper – switch between them, pick lines to credit, adjust amounts and issue.",
+   "properties": [
+    {
+     "name": "seller",
+     "attribute": null,
+     "type": "DocParty",
+     "default": "{ name: \"Lumen Labs, Inc.\", lines: [\"48 Harbour Street\", \"Bristol\", \"BS1 4RN\", \"United Kingdom\"] }",
+     "description": "Who sends the invoice",
+     "readonly": false
+    },
+    {
+     "name": "buyer",
+     "attribute": null,
+     "type": "DocParty",
+     "default": "{ name: \"Northwind Logistics GmbH\", lines: [\"Speicherstraße 12\", \"Hamburg\", \"20457\", \"Germany\"] }",
+     "description": "Who pays it",
+     "readonly": false
+    },
+    {
+     "name": "invoiceNo",
+     "attribute": "invoice-no",
+     "type": "string",
+     "default": "\"INV-2041\"",
+     "description": "The invoice's number",
+     "readonly": false
+    },
+    {
+     "name": "creditNo",
+     "attribute": "credit-no",
+     "type": "string",
+     "default": "\"CN-0117\"",
+     "description": "The credit note's number",
+     "readonly": false
+    },
+    {
+     "name": "invoiceDate",
+     "attribute": "invoice-date",
+     "type": "string",
+     "default": "\"1 Oct 2026\"",
+     "description": "The date of the invoice (and of issue for the credit note), as written",
+     "readonly": false
+    },
+    {
+     "name": "dueDate",
+     "attribute": "due-date",
+     "type": "string",
+     "default": "\"31 Oct 2026\"",
+     "description": "When the invoice is due, as written",
+     "readonly": false
+    },
+    {
+     "name": "period",
+     "attribute": "period",
+     "type": "string",
+     "default": "\"1 Sep – 30 Sep 2026\"",
+     "description": "The billing period, as written",
+     "readonly": false
+    },
+    {
+     "name": "lines",
+     "attribute": null,
+     "type": "InvoiceLine[]",
+     "default": "[ { id: \"plan\", name: \"Growth plan\", qty: 1, rate: 1250, tax: 0.2 }, { id: \"seats\", name: \"Extra seats\", qty: 12, rate: 40, tax: 0.2 }, { id: \"api\", name: \"API calls (per 1k)\", qty: 18420, rate: 0.42, tax: 0.2, group: \"Metered usage\" }, ]",
+     "description": "The invoice's lines – lines with a `group` are listed under it",
+     "readonly": false
+    },
+    {
+     "name": "currency",
+     "attribute": "currency",
+     "type": "string",
+     "default": "\"$\"",
+     "description": "The currency sign before amounts",
+     "readonly": false
+    },
+    {
+     "name": "currencyCode",
+     "attribute": "currency-code",
+     "type": "string",
+     "default": "\"USD\"",
+     "description": "The currency code after the amount applied to the invoice",
+     "readonly": false
+    },
+    {
+     "name": "payHref",
+     "attribute": "pay-href",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Where \"Pay online\" goes; unset, the link only fires tc-pay",
+     "readonly": false
+    },
+    {
+     "name": "view",
+     "attribute": "view",
+     "type": "InvoiceView",
+     "default": "\"invoice\"",
+     "description": "The sheet in front",
+     "readonly": false
+    },
+    {
+     "name": "onIssue",
+     "attribute": null,
+     "type": "InvoiceIssueHandler | undefined",
+     "default": "undefined",
+     "description": "Issues the credit note, with the credited amount per line (before tax). Return a promise to show Issuing… until it\nsettles; a rejection keeps the note editable and shows its message so it can be issued again",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-view-change",
+     "detail": "",
+     "description": "The other sheet was brought forward (`{ view }`: InvoiceViewChange); cancelable – prevented, `view` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-issue",
+     "detail": "",
+     "description": "The credit note was issued (`{ credits, total }`: InvoiceIssue) – after `onIssue`'s promise resolves, when it returns one",
+     "cancelable": false
+    },
+    {
+     "name": "tc-pdf",
+     "detail": "",
+     "description": "The PDF button was pressed; detail: null",
+     "cancelable": false
+    },
+    {
+     "name": "tc-pay",
+     "detail": "",
+     "description": "\"Pay online\" was pressed (detail: null); cancelable – prevented, the link doesn't open",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "iv",
+   "cssProperties": [
+    {
+     "name": "--tc-iv-figure-size",
+     "value": "2.5rem",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-iv-figure-size-narrow",
+     "value": "1.875rem",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-iv-space-44px",
+     "value": "44px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-iv-space-36px",
+     "value": "36px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-iv-space-9px",
+     "value": "9px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-iv-space-7px",
+     "value": "7px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-iv-space-22px",
+     "value": "22px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-iv-track--0_035em",
+     "value": "-0.035em",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-text",
+    "--tc-border-control",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-duration-slowest",
+    "--tc-ease-in-out",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-font-size",
+    "--tc-field-h",
+    "--tc-field-px",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-field-shadow-hover",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-lg-plus",
+    "--tc-font-size-md",
+    "--tc-font-size-xl",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-semibold",
+    "--tc-hairline",
+    "--tc-line-height-none",
+    "--tc-line-height-relaxed",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-sm",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-10",
+    "--tc-space-12",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-5",
+    "--tc-space-6",
+    "--tc-space-7",
+    "--tc-status-danger-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-surface-control",
+    "--tc-surface-on-tray",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-on-accent",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "defaultInvoiceLines",
+   "signature": "defaultInvoiceLines: InvoiceLine[]",
+   "description": "The default lines: a plan, seats and metered API calls"
+  }
+ ],
+ "react": [
+  {
+   "component": "InvoiceCredit",
+   "exported": true,
+   "props": [
+    {
+     "name": "view",
+     "type": "InvoiceView",
+     "optional": true,
+     "description": "The sheet in front (controlled)"
+    },
+    {
+     "name": "defaultView",
+     "type": "InvoiceView",
+     "optional": true,
+     "description": "The sheet in front at first, when `view` isn't set – the invoice by default"
+    },
+    {
+     "name": "onViewChange",
+     "type": "(view: InvoiceView) => void",
+     "optional": true,
+     "description": "Called with the sheet brought forward"
+    }
+   ],
+   "hides": [
+    "view",
+    "children"
+   ],
+   "events": {
+    "tc-view-change": null,
+    "tc-issue": "onTcIssue",
+    "tc-pdf": "onTcPdf",
+    "tc-pay": "onTcPay"
+   }
+  }
+ ],
+ "changelog": [
+  "All 18 blocks are now elements – `tc-agent-gallery`, `tc-ai-side-pane`, `tc-ai-workspace`, `tc-app-directory`, `tc-client-context`, `tc-evidence-gallery`, `tc-header-nav`, `tc-invoice-credit`, `tc-kpi-board`, `tc-logo-marquee`, `tc-metrics-dashboard`, `tc-oversight-home`, `tc-pricing-plans`, `tc-publish-readiness`, `tc-red-team-finding`, `tc-task-board`, `tc-testimonial-wall`, `tc-uncertainty-mix` – so Angular (`trenchcoat/angular`), Vue, Svelte, plain HTML and generative UI get them like any component, with docs pages."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-invoice-credit",
+   "className": "TcInvoiceCredit",
+   "module": "trenchcoat/invoice-credit",
+   "data": [
+    "seller",
+    "buyer",
+    "lines",
+    "onIssue"
+   ],
+   "attributes": [
+    {
+     "name": "invoiceNo",
+     "attribute": "invoice-no"
+    },
+    {
+     "name": "creditNo",
+     "attribute": "credit-no"
+    },
+    {
+     "name": "invoiceDate",
+     "attribute": "invoice-date"
+    },
+    {
+     "name": "dueDate",
+     "attribute": "due-date"
+    },
+    {
+     "name": "period",
+     "attribute": "period"
+    },
+    {
+     "name": "currency",
+     "attribute": "currency"
+    },
+    {
+     "name": "currencyCode",
+     "attribute": "currency-code"
+    },
+    {
+     "name": "payHref",
+     "attribute": "pay-href"
+    },
+    {
+     "name": "view",
+     "attribute": "view"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-view-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-issue",
+     "cancelable": false
+    },
+    {
+     "name": "tc-pdf",
+     "cancelable": false
+    },
+    {
+     "name": "tc-pay",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "view",
+     "event": "tc-view-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "121",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "has"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "itself",
+     "button",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "inert",
+    "name": "inert",
+    "bcd": "api.HTMLElement.inert",
+    "versions": {
+     "chrome": "102",
+     "edge": "102",
+     "firefox": "112",
+     "safari": "15.5",
+     "safari_ios": "15.5"
+    },
+    "progressive": false,
+    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "button",
+     "internal/kit",
+     "segmented-control"
+    ]
+   },
+   {
+    "id": "has",
+    "name": ":has()",
+    "bcd": "css.selectors.has",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "121",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Layout and state that depend on what's inside a part (an icon present, a focused field).",
+    "via": [
+     "button"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "button"
+    ]
+   },
+   {
+    "id": "individual-transforms",
+    "name": "translate, scale and rotate properties",
+    "bcd": "css.properties.translate",
+    "versions": {
+     "chrome": "104",
+     "edge": "104",
+     "firefox": "72",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "segmented-control"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "button",
+     "internal/base",
+     "segmented-control",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "resize-observer",
+    "name": "ResizeObserver",
+    "bcd": "api.ResizeObserver",
+    "versions": {
+     "chrome": "64",
+     "edge": "79",
+     "firefox": "69",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "via": [
+     "button",
+     "segmented-control"
+    ]
+   },
+   {
+    "id": "conic-gradient",
+    "name": "conic-gradient()",
+    "bcd": "css.types.gradient.conic-gradient",
+    "versions": {
+     "chrome": "69",
+     "edge": "79",
+     "firefox": "83",
+     "safari": "12.1",
+     "safari_ios": "12.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "intersection-observer",
+    "name": "IntersectionObserver",
+    "bcd": "api.IntersectionObserver",
+    "versions": {
+     "chrome": "51",
+     "edge": "15",
+     "firefox": "55",
+     "safari": "12.1",
+     "safari_ios": "12.2"
+    },
+    "progressive": false,
+    "via": [
+     "internal/controllers"
+    ]
+   },
+   {
+    "id": "mask",
+    "name": "CSS masks",
+    "bcd": "css.properties.mask-image",
+    "versions": {
+     "chrome": "1",
+     "edge": "79",
+     "firefox": "53",
+     "safari": "4",
+     "safari_ios": "3.2"
+    },
+    "progressive": false,
+    "note": "with the -webkit- prefix",
+    "via": [
+     "itself",
+     "button",
+     "segmented-control"
+    ]
+   },
+   {
+    "id": "scrollbar-width",
+    "name": "scrollbar-width",
+    "bcd": "css.properties.scrollbar-width",
+    "versions": {
+     "chrome": "121",
+     "edge": "121",
+     "firefox": "64",
+     "safari": "18.2",
+     "safari_ios": "18.2"
+    },
+    "progressive": true,
+    "without": "Scrollbars keep the browser's default width.",
+    "via": [
+     "segmented-control"
+    ]
+   },
+   {
+    "id": "at-property",
+    "name": "@property",
+    "bcd": "css.at-rules.property",
+    "versions": {
+     "chrome": "85",
+     "edge": "85",
+     "firefox": "128",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "The registered custom properties don't interpolate, so the transitions and spins they drive jump to their end state.",
+    "via": [
+     "segmented-control"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "overscroll-contain",
+    "name": "overscroll-behavior: contain",
+    "bcd": "css.properties.overscroll-behavior.contain",
+    "versions": {
+     "chrome": "63",
+     "edge": "18",
+     "firefox": "59",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "Scrolling past the end of a list carries on scrolling the page.",
+    "via": [
+     "segmented-control"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setTimeout (segmented-control)"
+  ],
+  "frames": [
+   "requestAnimationFrame, cancelled (segmented-control)"
+  ],
+  "animations": 3,
+  "observers": [
+   "ResizeObserver (button)",
+   "MutationObserver (button)",
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)",
+   "IntersectionObserver (internal/controllers › OffScreenController)",
+   "ResizeObserver (segmented-control)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [
+    "button",
+    "internal/controllers › OffScreenController"
+   ],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (button)",
+    "CSS (internal/kit › kitCss)",
+    "CSS (segmented-control)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 79944,
+  "gzip": 19745
+ }
+}

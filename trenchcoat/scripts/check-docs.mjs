@@ -30,6 +30,8 @@ const library = new Map([
   ...readme("src/components/README.md").map((s) => [s, "components"]),
   ...readme("illustrations/README.md").map((s) => [s, "illustrations"]),
   ...readme("motion/README.md").map((s) => [s, "motion"]),
+  // Blocks are elements too (tc-<slug>), held to the components' sections
+  ...readme("blocks/README.md").map((s) => [s, "components"]),
 ]);
 const slugs = [...library.keys()].filter((s) => existsSync(join(API, `${s}.json`))).filter((s) => !only.length || only.includes(s));
 

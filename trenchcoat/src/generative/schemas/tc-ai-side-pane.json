@@ -1,0 +1,811 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-ai-side-pane.json",
+  "title": "tc-ai-side-pane",
+  "description": "An assistant docked beside a page: a conversation about what's on it, with history, starters, a reflection gate for\nhigh-stakes answers and the full chat composer. Resizable, collapses to a rail, a sheet on narrow screens.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The pane's title, its landmark's and dialog's name"
+    },
+    "messages": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/SidePaneMessage"
+      },
+      "description": "The conversation, oldest first. The app owns it"
+    },
+    "reflectionSkippable": {
+      "type": "boolean",
+      "description": "Lets people skip the reflection gate"
+    },
+    "starters": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/PromptStarter"
+      },
+      "description": "Suggestions before the first message – derive them from what's on the page"
+    },
+    "startersTitle": {
+      "type": "string",
+      "description": "The heading over the suggestions – unset reads \"From <page>\" or \"Suggestions\""
+    },
+    "conversations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ChatConversation"
+      },
+      "description": "Past conversations for the History panel – unset hides History"
+    },
+    "conversation": {
+      "type": "string",
+      "description": "The open conversation's id"
+    },
+    "pageContext": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "connected": {
+          "type": "boolean"
+        },
+        "count": {
+          "type": "number"
+        },
+        "tokens": {
+          "type": "number"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ContextTrayItem"
+          }
+        }
+      },
+      "required": [
+        "title",
+        "connected"
+      ],
+      "additionalProperties": false,
+      "description": "What's on the page – the composer's page-context chip; unset shows no chip"
+    },
+    "disclaimer": {
+      "type": "string",
+      "description": "The line under the composer; \"\" hides it"
+    },
+    "placeholder": {
+      "type": "string",
+      "description": "The composer's placeholder"
+    },
+    "models": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ChatModel"
+      },
+      "description": "The models in the toolbar's menu – the composer's defaults when unset"
+    },
+    "model": {
+      "type": "string",
+      "description": "The picked model's id – the first model when empty"
+    },
+    "settings": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/ModelParamValue"
+      },
+      "description": "The model settings in the toolbar's settings popover"
+    },
+    "settingsModel": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "supports": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "defaults": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/ModelParamValue"
+          }
+        },
+        "ignores": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "supports"
+      ],
+      "additionalProperties": false,
+      "description": "Which settings the model supports – the settings button shows only with it"
+    },
+    "prompts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/PromptTemplate"
+      },
+      "description": "Templates for the toolbar's prompt library – the prompts button shows only with them"
+    },
+    "selectProject": {
+      "type": "boolean",
+      "description": "Shows \"Select a project\" in the composer's menu (it fires tc-select-project)"
+    },
+    "demo": {
+      "type": "boolean",
+      "description": "The composer's demo mode: dictation and approval are simulated"
+    },
+    "open": {
+      "type": "boolean",
+      "description": "Open"
+    },
+    "collapsed": {
+      "type": "boolean",
+      "description": "Collapsed to the rail"
+    },
+    "width": {
+      "type": "number",
+      "description": "The docked width in px"
+    },
+    "defaultWidth": {
+      "type": "number",
+      "description": "The width Enter and a double-click on the edge go back to, in px"
+    },
+    "minWidth": {
+      "type": "number",
+      "description": "The narrowest the pane can be dragged, in px"
+    },
+    "maxWidth": {
+      "type": "number",
+      "description": "The widest the pane can be dragged, in px"
+    },
+    "shortcut": {
+      "type": "string",
+      "description": "Opens the pane (or moves focus into it; pressed inside, closes it). \"mod\" is ⌘ on a Mac and Ctrl elsewhere; \"\" turns it off"
+    },
+    "breakpoint": {
+      "type": "number",
+      "description": "Below this width of the element, in px, the pane is an overlay sheet instead of docked"
+    },
+    "side": {
+      "type": "string",
+      "enum": [
+        "left",
+        "right"
+      ],
+      "description": "Which side it docks on"
+    },
+    "launcher": {
+      "type": "boolean",
+      "description": "A floating \"Ask AI\" button while the pane is closed – false if your page has its own"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "SidePaneMessage": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string",
+          "enum": [
+            "user",
+            "assistant"
+          ]
+        },
+        "text": {
+          "type": "string",
+          "description": "What the person wrote, or the answer – may grow while `streaming` is set"
+        },
+        "context": {
+          "type": "string",
+          "description": "User messages: what was attached from the page, shown under the message, e.g. \"Q3 report\""
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AnswerSource"
+          },
+          "description": "Assistant: the sources the answer cites ([1] in the text is the first) – shown with ai-answer"
+        },
+        "claims": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AnswerClaim"
+          },
+          "description": "Assistant: the answer as claims – when given, it's shown with claim-answer instead of ai-answer"
+        },
+        "claimSources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ClaimSource"
+          },
+          "description": "Assistant: the passages the claims rest on"
+        },
+        "counter": {
+          "type": "string",
+          "description": "Assistant (claims): the strongest case against the answer"
+        },
+        "followUps": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Assistant: follow-up questions offered under the finished answer"
+        },
+        "streaming": {
+          "type": "boolean",
+          "description": "Assistant: more text is still coming"
+        },
+        "reflect": {
+          "$ref": "#/definitions/ReflectionMode",
+          "description": "Assistant: a high-stakes answer – the reflection gate asks for this pause before it's relied on. \"prior\" hides the answer until the person has said what they expect"
+        },
+        "error": {
+          "type": "string",
+          "description": "Assistant: the answer failed – shown as an alert with Try again"
+        }
+      },
+      "required": [
+        "id",
+        "role",
+        "text"
+      ],
+      "additionalProperties": false
+    },
+    "AnswerSource": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "description": "Headline of the page, message or document"
+        },
+        "name": {
+          "type": "string",
+          "description": "Short name shown on the citation chip, e.g. \"Notion\""
+        },
+        "href": {
+          "type": "string",
+          "description": "Opens in a new tab"
+        },
+        "snippet": {
+          "type": "string",
+          "description": "The passage the answer relies on – shown in the preview"
+        }
+      },
+      "required": [
+        "title",
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "AnswerClaim": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string",
+          "description": "The claim's words. Spaces at the start or end are kept outside the mark"
+        },
+        "source": {
+          "$ref": "#/definitions/ClaimSourceType",
+          "description": "Where it came from; leave it out for connecting text that claims nothing"
+        },
+        "confidence": {
+          "type": "number",
+          "description": "How sure the model is, 0–1 – shown no higher than the type's ceiling and the `recognition`"
+        },
+        "recognition": {
+          "type": "number",
+          "description": "Media types: how well the medium was read, 0–1 – OCR or speech-recognition confidence, shown beside the type (\"OCR 87%\"); the claim's confidence is shown no higher"
+        },
+        "uncertainty": {
+          "$ref": "#/definitions/ClaimUncertainty",
+          "description": "Why it can't be certain, when that applies"
+        },
+        "note": {
+          "type": "string",
+          "description": "A sentence on the uncertainty or the inference, e.g. \"Only two studies, both small\""
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Ids of the sources it rests on"
+        },
+        "paragraph": {
+          "type": "boolean",
+          "description": "Starts a new paragraph"
+        }
+      },
+      "required": [
+        "id",
+        "text"
+      ],
+      "additionalProperties": false,
+      "description": "One claim of the answer – or, without `source`, plain text between claims"
+    },
+    "ClaimSourceType": {
+      "anyOf": [
+        {
+          "type": "string",
+          "const": "grounded"
+        },
+        {
+          "type": "string",
+          "const": "model"
+        },
+        {
+          "type": "string",
+          "const": "inferred"
+        },
+        {
+          "$ref": "#/definitions/ClaimMediaType"
+        },
+        {
+          "$ref": "#/definitions/ClaimMemoryType"
+        }
+      ],
+      "description": "Where a claim came from: a retrieved source, the model's own knowledge, an inference from other claims – or a medium, or memory"
+    },
+    "ClaimMediaType": {
+      "type": "string",
+      "enum": [
+        "transcript",
+        "video",
+        "audio",
+        "image",
+        "ocr"
+      ],
+      "description": "Read from a medium rather than a text: a machine transcript, a video, a recording, an image, or text read off a scan (OCR)"
+    },
+    "ClaimMemoryType": {
+      "type": "string",
+      "enum": [
+        "session",
+        "team",
+        "agent"
+      ],
+      "description": "Remembered rather than retrieved now: an earlier session, the team's shared knowledge, or another agent's finding"
+    },
+    "ClaimUncertainty": {
+      "type": "string",
+      "enum": [
+        "unsettled",
+        "evidence",
+        "beyond"
+      ],
+      "description": "Why a claim can't be certain: the world hasn't decided · the evidence is thin · it's beyond what the model can know"
+    },
+    "ClaimSource": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string",
+          "description": "Headline of the page or document"
+        },
+        "site": {
+          "type": "string",
+          "description": "Short name, e.g. \"Field survey\""
+        },
+        "url": {
+          "type": "string"
+        },
+        "date": {
+          "type": "string",
+          "description": "Ready-to-show date, e.g. \"Sep 12, 2026\""
+        },
+        "quote": {
+          "type": "string",
+          "description": "The passage the claim relies on"
+        },
+        "validity": {
+          "$ref": "#/definitions/ValidityInfo",
+          "description": "How fresh the source is – shown as a tc-validity-badge"
+        }
+      },
+      "required": [
+        "id",
+        "title"
+      ],
+      "additionalProperties": false,
+      "description": "A passage a claim rests on"
+    },
+    "ValidityInfo": {
+      "type": "object",
+      "properties": {
+        "observed": {
+          "$ref": "#/definitions/ValidityTime",
+          "description": "When the evidence was observed or published"
+        },
+        "profile": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ValidityProfileName"
+            },
+            {
+              "$ref": "#/definitions/ValidityProfile"
+            }
+          ],
+          "description": "How fast it decays (default \"standard\")"
+        },
+        "band": {
+          "$ref": "#/definitions/ValidityBand",
+          "description": "The band, set outright – `observed` and the profile are then ignored"
+        },
+        "contested": {
+          "type": "boolean",
+          "description": "Other evidence disputes it"
+        },
+        "superseded": {
+          "type": "boolean",
+          "description": "Something newer replaces it"
+        },
+        "changed": {
+          "type": "boolean",
+          "description": "The source has changed since it was used – the app compares what was relied on with what is there now"
+        },
+        "label": {
+          "type": "string",
+          "description": "Strip: what the paragraph is called in its tooltip and to screen readers (default \"Paragraph 2\")"
+        }
+      },
+      "additionalProperties": false,
+      "description": "What a piece of evidence says about its freshness – one paragraph of a strip, or a source in tc-claim-answer"
+    },
+    "ValidityTime": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "string",
+          "format": "date-time"
+        }
+      ],
+      "description": "A moment: epoch ms, an ISO date string or a Date"
+    },
+    "ValidityProfileName": {
+      "type": "string",
+      "enum": [
+        "fast",
+        "standard",
+        "slow",
+        "lasting"
+      ],
+      "description": "Built-in decay profiles – fast: hours and days (prices, status, news) · standard: weeks and months · slow: years (reference material) · lasting: never decays"
+    },
+    "ValidityProfile": {
+      "type": "object",
+      "properties": {
+        "high": {
+          "type": "number"
+        },
+        "good": {
+          "type": "number"
+        },
+        "aging": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "high",
+        "good",
+        "aging"
+      ],
+      "additionalProperties": false,
+      "description": "The band boundaries, as an age in days: younger than `high` is high, than `good` good, than `aging` aging; older is stale"
+    },
+    "ValidityBand": {
+      "type": "string",
+      "enum": [
+        "high",
+        "good",
+        "aging",
+        "stale"
+      ]
+    },
+    "ReflectionMode": {
+      "type": "string",
+      "enum": [
+        "intent",
+        "prior",
+        "reformulate",
+        "checkpoint"
+      ]
+    },
+    "PromptStarter": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string",
+          "description": "What's sent, or put in the composer"
+        },
+        "label": {
+          "type": "string",
+          "description": "What the row shows, when shorter than the text – defaults to the text"
+        },
+        "hint": {
+          "type": "string",
+          "description": "A lighter line after the label, e.g. where the suggestion comes from: “From your last report”"
+        },
+        "icon": {
+          "$ref": "#/definitions/PromptStarterIconName",
+          "description": "A built-in icon's name or an Element (cloned) – defaults to the group's"
+        },
+        "mode": {
+          "$ref": "#/definitions/PromptStarterMode",
+          "description": "Overrides the list's `mode` for this suggestion – \"fill\" for prompts with a blank to complete"
+        }
+      },
+      "required": [
+        "id",
+        "text"
+      ],
+      "additionalProperties": false
+    },
+    "PromptStarterIconName": {
+      "type": "string",
+      "enum": [
+        "sparkle",
+        "chart",
+        "document",
+        "search",
+        "write",
+        "code",
+        "list",
+        "question",
+        "lightbulb",
+        "calendar"
+      ],
+      "description": "Built-in icons, by name"
+    },
+    "PromptStarterMode": {
+      "type": "string",
+      "enum": [
+        "send",
+        "fill"
+      ],
+      "description": "What choosing a suggestion does: send it as it is, or put it in the composer to edit first"
+    },
+    "ChatConversation": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "string",
+              "format": "date-time"
+            }
+          ],
+          "description": "Last activity: epoch ms, an ISO string or a Date"
+        },
+        "pinned": {
+          "type": "boolean"
+        },
+        "folder": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The id of the folder it's in"
+        },
+        "summary": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ChatSummaryItem"
+          },
+          "description": "The session's structured summary – findings, open questions, next steps – which can be loaded as context"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "updatedAt"
+      ],
+      "additionalProperties": false
+    },
+    "ChatSummaryItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string",
+          "description": "What kind of item, e.g. \"Finding\", \"Open question\", \"Next step\""
+        }
+      },
+      "required": [
+        "id",
+        "text"
+      ],
+      "additionalProperties": false,
+      "description": "One part of a session's structured summary"
+    },
+    "ContextTrayItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "tokens": {
+          "type": "number",
+          "description": "Tokens this item takes in the window"
+        },
+        "kind": {
+          "type": "string",
+          "description": "\"file\", \"mention\", \"source\" – or your own (it picks the icon and the meter colour)"
+        },
+        "pinned": {
+          "type": "boolean",
+          "description": "Kept in context when the conversation is compacted"
+        },
+        "hint": {
+          "type": "string",
+          "description": "Shown as the chip's tooltip, e.g. a path or a URL"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "tokens"
+      ],
+      "additionalProperties": false
+    },
+    "ChatModel": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "speed": {
+          "type": "number",
+          "description": "In the toolbar's model menu: strengths from 1 to 5 (cost 5 is the most expensive)"
+        },
+        "quality": {
+          "type": "number"
+        },
+        "cost": {
+          "type": "number"
+        },
+        "latencyMs": {
+          "type": "number",
+          "description": "In the toolbar's model menu: typical time to the first token, in milliseconds"
+        },
+        "pricePerM": {
+          "type": "number",
+          "description": "In the toolbar's model menu: price per million output tokens, in dollars"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "description"
+      ],
+      "additionalProperties": false
+    },
+    "ModelParamValue": {
+      "type": [
+        "number",
+        "string"
+      ],
+      "description": "A value a parameter can take"
+    },
+    "PromptTemplate": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string",
+          "description": "Small tag next to the title, e.g. \"Sales\""
+        },
+        "tone": {
+          "$ref": "#/definitions/PromptTone",
+          "description": "Color of the tag – by default each category gets its own color in the order they appear"
+        },
+        "body": {
+          "type": "string",
+          "description": "The prompt with variables in curly braces, e.g. \"Summarize this for {audience}\""
+        },
+        "variables": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/PromptVariable"
+          },
+          "description": "Optional details per variable name"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "body"
+      ],
+      "additionalProperties": false
+    },
+    "PromptTone": {
+      "type": "string",
+      "enum": [
+        "blue",
+        "violet",
+        "amber",
+        "green",
+        "red",
+        "gray"
+      ]
+    },
+    "PromptVariable": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "What to put in – shown on the tray while the field is focused or hovered"
+        },
+        "default": {
+          "type": "string",
+          "description": "Starts filled with this value"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

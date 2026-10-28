@@ -1,10 +1,11 @@
 # Trenchcoat – blocks
 
-Every file is a single, self-contained React component (React is the only dependency).
-Copy a file into your project, e.g. `components/ui/`, and import it from there.
-Some files import another Trenchcoat component from `@/components/ui/<name>` – copy that one alongside (AI Workspace uses `chat-composer`).
-Every block takes `className`, other DOM props and a `ref` on its root; state a parent may want follows `x` / `defaultX` / `onXChange`.
-Newer blocks are built on the Lit components through `trenchcoat/react` (install `trenchcoat` instead of copying components); they follow the nearest `LookProvider`, or take a `look` prop.
+Every block is a Lit element – `tc-<slug>` in `src/elements/<slug>.ts` – so it works in any framework: React, Vue, Angular
+(`trenchcoat/angular`), Svelte or plain HTML, with the same docs, events and both looks as the components.
+Each file here is the block's thin React wrapper over that element: install `trenchcoat`, then copy the file into your
+project, e.g. `components/ui/`, or import the element's wrapper from `trenchcoat/react` directly.
+Every block takes `className`, other DOM props and a `ref` (now the `tc-<slug>` element) on its root; state a parent may
+want follows `x` / `defaultX` / `onXChange`. Blocks follow the nearest `LookProvider`, or take a `look` prop.
 
 - **Agent Gallery** (`agent-gallery.tsx`) – Slim gradient panels with one open product screen in the middle – pick a panel and it glides open (uses `button`)
 - **AI Side Pane** (`ai-side-pane.tsx`) – An assistant docked beside a page with a chat about what's on it – resizable, collapses to a rail, opens with ⌘. and becomes a sheet on narrow screens; model, settings, prompts and page context in the composer (uses `chat-composer`, `ai-answer`, `claim-answer`, `message-actions`, `prompt-starters`, `chat-history`, `reflection-gate`, `button`)

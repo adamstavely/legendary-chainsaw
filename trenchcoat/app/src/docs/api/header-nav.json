@@ -1,0 +1,683 @@
+{
+ "elements": [
+  {
+   "tag": "tc-header-nav",
+   "className": "TcHeaderNav",
+   "description": "The right end of an app header: the page's bell and app picker, and the person's avatar with their account card.",
+   "properties": [
+    {
+     "name": "user",
+     "attribute": null,
+     "type": "HeaderNavUser",
+     "default": "{ name: \"\", email: \"\" }",
+     "description": "The signed-in person",
+     "readonly": false
+    },
+    {
+     "name": "accountItems",
+     "attribute": null,
+     "type": "ProfileMenuItem[] | undefined",
+     "default": "undefined",
+     "description": "The account card's actions; unset shows Settings, Language, Docs and Sign out",
+     "readonly": false
+    },
+    {
+     "name": "setup",
+     "attribute": null,
+     "type": "ProfileSetup | undefined",
+     "default": "undefined",
+     "description": "Profile setup progress in the account card – unset hides it",
+     "readonly": false
+    },
+    {
+     "name": "accountLabel",
+     "attribute": "account-label",
+     "type": "string",
+     "default": "\"Account\"",
+     "description": "The account popover's name, and the start of the avatar's (\"Account\")",
+     "readonly": false
+    },
+    {
+     "name": "panel",
+     "attribute": "panel",
+     "type": "HeaderNavPanel | null",
+     "default": "null",
+     "description": "The open popover, or null for none",
+     "readonly": false
+    },
+    {
+     "name": "separator",
+     "attribute": "separator",
+     "type": "boolean",
+     "default": "true",
+     "description": "The hairline before the avatar (default true; separator=\"false\" hides it)",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-panel-change",
+     "detail": "",
+     "description": "A popover is opening or closing ({ panel }: HeaderNavPanelChange, null when none); cancelable – prevented, `panel` stays as it is (controlled use)",
+     "cancelable": true
+    },
+    {
+     "name": "tc-account-select",
+     "detail": "",
+     "description": "An account action was picked ({ id }: HeaderNavAccountSelect); cancelable – prevented, the card stays open",
+     "cancelable": true
+    },
+    {
+     "name": "tc-setup-continue",
+     "detail": "",
+     "description": "The setup's next step was picked in the account card ({ next }: HeaderNavSetupContinue); cancelable – prevented, the card stays open",
+     "cancelable": true
+    }
+   ],
+   "slots": [
+    {
+     "name": "(default)",
+     "description": "The page's <tc-notifications> and <tc-app-picker>, in that order"
+    }
+   ],
+   "methods": [],
+   "ui": "hn",
+   "cssProperties": [
+    {
+     "name": "--tc-hn-ring",
+     "value": "var(--tc-surface-raised)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-hn-dot",
+     "value": "8px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-hn-from",
+     "value": "translateY(-4px)",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    }
+   ],
+   "tokens": [
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-ghost-fg",
+    "--tc-border-default",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-duration-fast",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-semibold",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-none",
+    "--tc-menu-radius",
+    "--tc-radius-full",
+    "--tc-shadow-overlay",
+    "--tc-space-1",
+    "--tc-space-2",
+    "--tc-space-5",
+    "--tc-status-danger-solid",
+    "--tc-status-success-solid",
+    "--tc-status-warning-solid",
+    "--tc-surface-raised",
+    "--tc-text-primary",
+    "--tc-tone-amber-bg",
+    "--tc-tone-amber-fg",
+    "--tc-tone-pink-bg",
+    "--tc-tone-pink-fg",
+    "--tc-tone-rose-bg",
+    "--tc-tone-rose-fg",
+    "--tc-tone-teal-bg",
+    "--tc-tone-teal-fg",
+    "--tc-tone-violet-bg",
+    "--tc-tone-violet-fg",
+    "--tc-tray-radius",
+    "--tc-z-popover"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "headerNavInitials",
+   "signature": "headerNavInitials(name: string): void",
+   "description": "One or two initials from a name: \"Ada Lovelace\" → \"AL\""
+  },
+  {
+   "name": "headerNavTone",
+   "signature": "headerNavTone(name: string): HeaderNavTone",
+   "description": "The tone a name gets when the user has none – the same every time"
+  },
+  {
+   "name": "headerNavDefaultItems",
+   "signature": "headerNavDefaultItems(): ProfileMenuItem[]",
+   "description": "The account card's actions when `accountItems` is unset: Settings, Language, Docs and Sign out"
+  }
+ ],
+ "react": [
+  {
+   "component": "HeaderNavOwn",
+   "exported": false,
+   "props": [
+    {
+     "name": "notifications",
+     "type": "Omit<NotificationsProps, \"open\" | \"defaultOpen\" | \"inline\">",
+     "optional": true,
+     "description": "The bell: <Notifications> props – the app's items and handlers. Unset hides the bell"
+    },
+    {
+     "name": "apps",
+     "type": "Omit<AppPickerProps, \"open\" | \"defaultOpen\" | \"layout\">",
+     "optional": true,
+     "description": "The app picker: <AppPicker> props – the app's apps, pins and handlers. Unset hides the picker"
+    },
+    {
+     "name": "accountItems",
+     "type": "ProfileMenuItem[]",
+     "optional": true,
+     "description": "The account card's actions; unset shows Settings, Language, Docs and Sign out. Icons may be React nodes"
+    },
+    {
+     "name": "onAccountSelect",
+     "type": "(id: string) => void",
+     "optional": true,
+     "description": "An account action was picked (the popover closes and focus returns to the avatar)"
+    },
+    {
+     "name": "setup",
+     "type": "ProfileSetup",
+     "optional": true,
+     "description": "Profile setup progress in the account card – unset hides it"
+    },
+    {
+     "name": "onSetupContinue",
+     "type": "(next: string) => void",
+     "optional": true,
+     "description": "The setup's next step was picked"
+    },
+    {
+     "name": "open",
+     "type": "HeaderNavPanel | null",
+     "optional": true,
+     "description": "The open popover (controlled), null for none"
+    },
+    {
+     "name": "defaultOpen",
+     "type": "HeaderNavPanel | null",
+     "optional": true,
+     "description": "The popover open at first when uncontrolled"
+    },
+    {
+     "name": "onOpenChange",
+     "type": "(open: HeaderNavPanel | null) => void",
+     "optional": true,
+     "description": "A popover opened (its name) or closed (null)"
+    }
+   ],
+   "hides": [],
+   "events": {
+    "tc-panel-change": "onTcPanelChange",
+    "tc-account-select": "onTcAccountSelect",
+    "tc-setup-continue": "onTcSetupContinue"
+   }
+  },
+  {
+   "component": "HeaderNav",
+   "exported": true,
+   "props": [
+    {
+     "name": "notifications",
+     "type": "Omit<NotificationsProps, \"open\" | \"defaultOpen\" | \"inline\">",
+     "optional": true,
+     "description": "The bell: <Notifications> props – the app's items and handlers. Unset hides the bell"
+    },
+    {
+     "name": "apps",
+     "type": "Omit<AppPickerProps, \"open\" | \"defaultOpen\" | \"layout\">",
+     "optional": true,
+     "description": "The app picker: <AppPicker> props – the app's apps, pins and handlers. Unset hides the picker"
+    },
+    {
+     "name": "accountItems",
+     "type": "ProfileMenuItem[]",
+     "optional": true,
+     "description": "The account card's actions; unset shows Settings, Language, Docs and Sign out. Icons may be React nodes"
+    },
+    {
+     "name": "onAccountSelect",
+     "type": "(id: string) => void",
+     "optional": true,
+     "description": "An account action was picked (the popover closes and focus returns to the avatar)"
+    },
+    {
+     "name": "setup",
+     "type": "ProfileSetup",
+     "optional": true,
+     "description": "Profile setup progress in the account card – unset hides it"
+    },
+    {
+     "name": "onSetupContinue",
+     "type": "(next: string) => void",
+     "optional": true,
+     "description": "The setup's next step was picked"
+    },
+    {
+     "name": "open",
+     "type": "HeaderNavPanel | null",
+     "optional": true,
+     "description": "The open popover (controlled), null for none"
+    },
+    {
+     "name": "defaultOpen",
+     "type": "HeaderNavPanel | null",
+     "optional": true,
+     "description": "The popover open at first when uncontrolled"
+    },
+    {
+     "name": "onOpenChange",
+     "type": "(open: HeaderNavPanel | null) => void",
+     "optional": true,
+     "description": "A popover opened (its name) or closed (null)"
+    }
+   ],
+   "hides": [
+    "panel",
+    "children",
+    "open",
+    "defaultOpen",
+    "inline",
+    "open",
+    "defaultOpen",
+    "layout"
+   ],
+   "events": {
+    "tc-panel-change": null,
+    "tc-account-select": "onAccountSelect",
+    "tc-setup-continue": "onSetupContinue"
+   }
+  }
+ ],
+ "changelog": [
+  "All 18 blocks are now elements – `tc-agent-gallery`, `tc-ai-side-pane`, `tc-ai-workspace`, `tc-app-directory`, `tc-client-context`, `tc-evidence-gallery`, `tc-header-nav`, `tc-invoice-credit`, `tc-kpi-board`, `tc-logo-marquee`, `tc-metrics-dashboard`, `tc-oversight-home`, `tc-pricing-plans`, `tc-publish-readiness`, `tc-red-team-finding`, `tc-task-board`, `tc-testimonial-wall`, `tc-uncertainty-mix` – so Angular (`trenchcoat/angular`), Vue, Svelte, plain HTML and generative UI get them like any component, with docs pages."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-header-nav",
+   "className": "TcHeaderNav",
+   "module": "trenchcoat/header-nav",
+   "data": [
+    "user",
+    "accountItems",
+    "setup"
+   ],
+   "attributes": [
+    {
+     "name": "accountLabel",
+     "attribute": "account-label"
+    },
+    {
+     "name": "panel",
+     "attribute": "panel"
+    },
+    {
+     "name": "separator",
+     "attribute": "separator"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-panel-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-account-select",
+     "cancelable": true
+    },
+    {
+     "name": "tc-setup-continue",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "panel",
+     "event": "tc-panel-change"
+    }
+   ],
+   "form": null,
+   "slots": [
+    "(default)"
+   ]
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "121",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "has"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "profile-menu"
+    ]
+   },
+   {
+    "id": "inert",
+    "name": "inert",
+    "bcd": "api.HTMLElement.inert",
+    "versions": {
+     "chrome": "102",
+     "edge": "102",
+     "firefox": "112",
+     "safari": "15.5",
+     "safari_ios": "15.5"
+    },
+    "progressive": false,
+    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
+    "via": [
+     "internal/popover"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "profile-menu",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "has",
+    "name": ":has()",
+    "bcd": "css.selectors.has",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "121",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Layout and state that depend on what's inside a part (an icon present, a focused field).",
+    "via": [
+     "profile-menu"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself",
+     "internal/popover"
+    ]
+   },
+   {
+    "id": "individual-transforms",
+    "name": "translate, scale and rotate properties",
+    "bcd": "css.properties.translate",
+    "versions": {
+     "chrome": "104",
+     "edge": "104",
+     "firefox": "72",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "profile-menu"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "profile-menu",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "resize-observer",
+    "name": "ResizeObserver",
+    "bcd": "api.ResizeObserver",
+    "versions": {
+     "chrome": "64",
+     "edge": "79",
+     "firefox": "69",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "via": [
+     "internal/popover"
+    ]
+   },
+   {
+    "id": "intersection-observer",
+    "name": "IntersectionObserver",
+    "bcd": "api.IntersectionObserver",
+    "versions": {
+     "chrome": "51",
+     "edge": "15",
+     "firefox": "55",
+     "safari": "12.1",
+     "safari_ios": "12.2"
+    },
+    "progressive": false,
+    "via": [
+     "profile-menu"
+    ]
+   },
+   {
+    "id": "popover",
+    "name": "Popover API",
+    "bcd": "api.HTMLElement.popover",
+    "versions": {
+     "chrome": "114",
+     "edge": "114",
+     "firefox": "125",
+     "safari": "17",
+     "safari_ios": "18.3"
+    },
+    "progressive": true,
+    "without": "Lists open fixed to the window instead of in the top layer, so a clipping ancestor or a modal can cover them.",
+    "via": [
+     "internal/popover"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "internal/popover",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setTimeout (internal/popover › PopoverController)"
+  ],
+  "frames": [
+   "requestAnimationFrame, cancelled (internal/popover › PopoverController)"
+  ],
+  "animations": 0,
+  "observers": [
+   "MutationObserver",
+   "IntersectionObserver (profile-menu)",
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)",
+   "ResizeObserver (internal/popover › PopoverController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [
+    "profile-menu"
+   ],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (profile-menu)",
+    "CSS (internal/kit › kitCss)",
+    "CSS (internal/popover › popoverCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 48442,
+  "gzip": 14189
+ }
+}

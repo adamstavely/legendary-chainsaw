@@ -35,6 +35,7 @@ import type { TcQueryBuilder } from "trenchcoat/query-builder";
 import type { TcRadioGroup } from "trenchcoat/radio-group";
 import type { TcReflectionGate } from "trenchcoat/reflection-gate";
 import type { TcRetrievalSettings } from "trenchcoat/retrieval-settings";
+import type { TcRoutineForm } from "trenchcoat/routine-form";
 import type { TcSecretField } from "trenchcoat/secret-field";
 import type { TcSegmentedControl } from "trenchcoat/segmented-control";
 import type { TcSliderField } from "trenchcoat/slider-field";
@@ -319,6 +320,14 @@ export class ReflectionGateValueAccessor extends ValueAccessor<TcReflectionGate>
 })
 export class RetrievalSettingsValueAccessor extends ValueAccessor<TcRetrievalSettings> {}
 
+/** ngModel, formControl and formControlName on <tc-routine-form> */
+@Directive({
+  selector: "tc-routine-form[ngModel], tc-routine-form[formControl], tc-routine-form[formControlName]",
+  standalone: true,
+  providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => RoutineFormValueAccessor), multi: true }],
+})
+export class RoutineFormValueAccessor extends ValueAccessor<TcRoutineForm> {}
+
 /** ngModel, formControl and formControlName on <tc-secret-field> */
 @Directive({
   selector: "tc-secret-field[ngModel], tc-secret-field[formControl], tc-secret-field[formControlName]",
@@ -408,4 +417,4 @@ export class ToolPermissionsValueAccessor extends ValueAccessor<TcToolPermission
 export class TriggerBuilderValueAccessor extends ValueAccessor<TcTriggerBuilder> {}
 
 /** Every value accessor, for a standalone component's imports */
-export const TRENCHCOAT_FORMS = [AnswerArenaValueAccessor, ChatComposerValueAccessor, ChatHistoryValueAccessor, CheckboxValueAccessor, ClarifyingQuestionsValueAccessor, ComboboxValueAccessor, ConversationAnnotationValueAccessor, DataHandlingPolicyValueAccessor, DateRangePickerValueAccessor, DropzoneValueAccessor, EvaluationDatasetEditorValueAccessor, FeedbackRubricValueAccessor, FilterMenuValueAccessor, GateConfigValueAccessor, InstructionEditorValueAccessor, McpConnectionManagerValueAccessor, ModelPickerValueAccessor, ModelRoutingValueAccessor, ModelSettingsValueAccessor, MultimodalInputValueAccessor, NumberFieldValueAccessor, OtpInputValueAccessor, OutputSchemaBuilderValueAccessor, PlaybookCanvasValueAccessor, PromptLibraryValueAccessor, ProviderConnectionValueAccessor, QueryBuilderValueAccessor, RadioGroupValueAccessor, ReflectionGateValueAccessor, RetrievalSettingsValueAccessor, SecretFieldValueAccessor, SegmentedControlValueAccessor, SliderFieldValueAccessor, SmartRecommendationValueAccessor, StepperTagsValueAccessor, StepperChoicesValueAccessor, SwitchValueAccessor, TextAnnotatorValueAccessor, ToolConfigurationValueAccessor, ToolPermissionsValueAccessor, TriggerBuilderValueAccessor] as const;
+export const TRENCHCOAT_FORMS = [AnswerArenaValueAccessor, ChatComposerValueAccessor, ChatHistoryValueAccessor, CheckboxValueAccessor, ClarifyingQuestionsValueAccessor, ComboboxValueAccessor, ConversationAnnotationValueAccessor, DataHandlingPolicyValueAccessor, DateRangePickerValueAccessor, DropzoneValueAccessor, EvaluationDatasetEditorValueAccessor, FeedbackRubricValueAccessor, FilterMenuValueAccessor, GateConfigValueAccessor, InstructionEditorValueAccessor, McpConnectionManagerValueAccessor, ModelPickerValueAccessor, ModelRoutingValueAccessor, ModelSettingsValueAccessor, MultimodalInputValueAccessor, NumberFieldValueAccessor, OtpInputValueAccessor, OutputSchemaBuilderValueAccessor, PlaybookCanvasValueAccessor, PromptLibraryValueAccessor, ProviderConnectionValueAccessor, QueryBuilderValueAccessor, RadioGroupValueAccessor, ReflectionGateValueAccessor, RetrievalSettingsValueAccessor, RoutineFormValueAccessor, SecretFieldValueAccessor, SegmentedControlValueAccessor, SliderFieldValueAccessor, SmartRecommendationValueAccessor, StepperTagsValueAccessor, StepperChoicesValueAccessor, SwitchValueAccessor, TextAnnotatorValueAccessor, ToolConfigurationValueAccessor, ToolPermissionsValueAccessor, TriggerBuilderValueAccessor] as const;

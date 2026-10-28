@@ -10,7 +10,7 @@ import { act } from "react";
 import { createRoot } from "react-dom/client";
 import { afterEach, describe, expect, test } from "vitest";
 import "../../src/elements/search-history";
-import type { SearchHistoryEntry, SearchHistoryRemove, SearchHistorySavedChange, SearchHistorySelect, TcSearchHistory } from "../../src/elements/search-history";
+import type { SearchHistoryEntry, SearchHistoryRemove, SearchHistorySavedChange, SearchHistorySchedule, SearchHistorySelect, TcSearchHistory } from "../../src/elements/search-history";
 import { SearchHistory } from "../../src/elements/react/search-history";
 import { cleanup, finish, fixture, settle } from "./helpers";
 
@@ -127,6 +127,61 @@ describe("tc-search-history", () => {
     expect(el.querySelectorAll('.ui-shis__list [tabindex="0"]')).toHaveLength(1);
   });
 
+  test("schedulable: saved searches offer Schedule, with tc-schedule; ← → and ↑ ↓ keep to each row's actions", async () => {
+    const plain = await make();
+    expect(plain.querySelector(".ui-shis__schedule")).toBeNull();
+    const el = await fixture<TcSearchHistory>(html`<tc-search-history schedulable .now=${NOW} .searches=${SEARCHES}></tc-search-history>`);
+    // Only the saved ones: b and d
+    expect(rows(el).map((r) => !!r.querySelector(".ui-shis__schedule"))).toEqual([false, true, false, true]);
+    const button = rows(el)[1].querySelector<HTMLButtonElement>(".ui-shis__schedule")!;
+    expect(button.getAttribute("aria-label")).toBe("Schedule “Who approved the Q3 budget?”");
+    const got: SearchHistorySchedule[] = [];
+    el.addEventListener("tc-schedule", (e) => got.push((e as CustomEvent<SearchHistorySchedule>).detail));
+    button.click();
+    await settle();
+    expect(got.map((d) => d.id)).toEqual(["b"]);
+    expect(got[0].search.query).toBe("Who approved the Q3 budget?");
+    expect(el.querySelector('[role="status"]')!.textContent).toBe("Scheduling “Who approved the Q3 budget?”");
+    // Prevented: nothing is announced
+    el.addEventListener("tc-schedule", (e) => e.preventDefault(), { once: true });
+    rows(el)[3].querySelector<HTMLButtonElement>(".ui-shis__schedule")!.click();
+    await settle();
+    expect(el.querySelector('[role="status"]')!.textContent).toBe("Scheduling “Who approved the Q3 budget?”");
+    // Keyboard: row 1 has Run, Schedule, Star, Remove
+    const at = () => (document.activeElement as HTMLElement | null)?.className;
+    const press = async (k: string) => {
+      key(document.activeElement!, k);
+      await settle();
+    };
+    rows(el)[1].querySelector<HTMLElement>(".ui-shis__run")!.focus();
+    await press("ArrowRight");
+    await expect.poll(at).toBe("ui-shis__schedule");
+    await press("ArrowRight");
+    await expect.poll(at).toBe("ui-shis__star");
+    // Up to a search without Schedule: the star stays the star
+    await press("ArrowUp");
+    await expect.poll(() => (document.activeElement as HTMLElement).closest<HTMLElement>(".ui-shis__row")!.dataset.id).toBe("a");
+    expect(at()).toBe("ui-shis__star");
+    await press("ArrowDown");
+    await press("ArrowLeft");
+    await expect.poll(at).toBe("ui-shis__schedule");
+    // From Schedule to a row without it: its star
+    await press("ArrowDown");
+    await expect.poll(at).toBe("ui-shis__star");
+    expect(el.querySelectorAll('.ui-shis__list [tabindex="0"]')).toHaveLength(1);
+  });
+
+  test("unsaving a search whose Schedule holds the tab stop keeps one tab stop in its row", async () => {
+    const el = await fixture<TcSearchHistory>(html`<tc-search-history schedulable .now=${NOW} .searches=${SEARCHES}></tc-search-history>`);
+    rows(el)[1].querySelector<HTMLElement>(".ui-shis__remove")!.focus();
+    await settle();
+    rows(el)[1].querySelector<HTMLButtonElement>(".ui-shis__star")!.click();
+    await settle();
+    expect(rows(el)[1].querySelector(".ui-shis__schedule")).toBeNull();
+    expect(el.querySelectorAll('.ui-shis__list [tabindex="0"]')).toHaveLength(1);
+    expect(rows(el)[1].querySelector('[tabindex="0"]')).not.toBeNull();
+  });
+
   test("the tab stop and focus stay on their search when a newer search arrives", async () => {
     const el = await make();
     const cell = el.querySelector<HTMLElement>('.ui-shis__row[data-id="b"] [data-cell$=":0"]')!;
@@ -200,6 +255,8 @@ describe("tc-search-history", () => {
         defaultSearches: SEARCHES,
         onSearchesChange: (next) => void lists.push(next),
         onRunAgain: (s) => void runs.push(s.id),
+        schedulable: true,
+        onSchedule: (s) => void runs.push(`schedule:${s.id}`),
         "data-n": n,
       } as React.ComponentProps<typeof SearchHistory>);
     }
@@ -216,6 +273,8 @@ describe("tc-search-history", () => {
     expect(lists[0].find((s) => s.id === "a")!.saved).toBe(true);
     rows(el)[1].querySelector<HTMLButtonElement>(".ui-shis__run")!.click();
     expect(runs).toEqual(["b"]);
+    rows(el)[1].querySelector<HTMLButtonElement>(".ui-shis__schedule")!.click();
+    expect(runs).toEqual(["b", "schedule:b"]);
     await act(async () => root.unmount());
   });
 
@@ -239,7 +298,7 @@ describe("tc-search-history", () => {
   for (const theme of ["light", "dark"] as const) {
     test(`axe (${theme}): no violations in either look`, async () => {
       const wrap = await fixture(html`<div data-tc-theme=${theme} style="padding: 16px; background: var(--tc-surface-base)">
-        <tc-search-history description="What you looked for." .now=${NOW} .searches=${SEARCHES}></tc-search-history>
+        <tc-search-history description="What you looked for." schedulable .now=${NOW} .searches=${SEARCHES}></tc-search-history>
         <tc-search-history look="clean" tab="saved" .now=${NOW} .searches=${SEARCHES}></tc-search-history>
       </div>`);
       await finish(wrap);

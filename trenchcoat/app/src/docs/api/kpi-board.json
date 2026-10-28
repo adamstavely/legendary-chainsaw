@@ -1,0 +1,785 @@
+{
+ "elements": [
+  {
+   "tag": "tc-kpi-board",
+   "className": "TcKpiBoard",
+   "description": "A dashboard's top: a date range, three trend cards, an overview that compares two periods, and a focus card.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Heading on the left of the bar above the cards – none by default",
+     "readonly": false
+    },
+    {
+     "name": "data",
+     "attribute": null,
+     "type": "Record<string, KpiBoardData>",
+     "default": "{}",
+     "description": "One data set per range id",
+     "readonly": false
+    },
+    {
+     "name": "ranges",
+     "attribute": null,
+     "type": "KpiOption[]",
+     "default": "[]",
+     "description": "The date ranges, e.g. Last 7 / 30 / 90 days",
+     "readonly": false
+    },
+    {
+     "name": "range",
+     "attribute": "range",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The range shown – unset, the first one",
+     "readonly": false
+    },
+    {
+     "name": "segments",
+     "attribute": null,
+     "type": "KpiOption[] | undefined",
+     "default": "undefined",
+     "description": "A filter inside the overview card, e.g. All plans / Pro / Team – it only switches the overview's lines",
+     "readonly": false
+    },
+    {
+     "name": "segment",
+     "attribute": "segment",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The segment shown – unset, the first one",
+     "readonly": false
+    },
+    {
+     "name": "compareLabel",
+     "attribute": "compare-label",
+     "type": "string",
+     "default": "\"vs. last period\"",
+     "description": "Words after every change, e.g. \"vs. last month\"",
+     "readonly": false
+    },
+    {
+     "name": "currentLabel",
+     "attribute": "current-label",
+     "type": "string",
+     "default": "\"This period\"",
+     "description": "Name of this period's line",
+     "readonly": false
+    },
+    {
+     "name": "previousLabel",
+     "attribute": "previous-label",
+     "type": "string",
+     "default": "\"Last period\"",
+     "description": "Name of the last period's line",
+     "readonly": false
+    },
+    {
+     "name": "formatMoney",
+     "attribute": null,
+     "type": "(value: number) => string",
+     "default": "kpiMoney",
+     "description": "Formats money amounts – \"$1,234.50\" by default",
+     "readonly": false
+    },
+    {
+     "name": "icon",
+     "attribute": null,
+     "type": "Element | TemplateResult | undefined",
+     "default": "undefined",
+     "description": "Icon in the focus card: a DOM node (cloned) or a Lit template – a box by default",
+     "readonly": false
+    },
+    {
+     "name": "setup",
+     "attribute": null,
+     "type": "KpiButton | undefined",
+     "default": "undefined",
+     "description": "The small button at the top right of the focus card, e.g. Set up",
+     "readonly": false
+    },
+    {
+     "name": "action",
+     "attribute": null,
+     "type": "KpiButton | undefined",
+     "default": "undefined",
+     "description": "The button at the bottom of the focus card",
+     "readonly": false
+    },
+    {
+     "name": "rangeId",
+     "attribute": null,
+     "type": "",
+     "default": null,
+     "description": "The range in effect: `range`, else the first",
+     "readonly": true
+    },
+    {
+     "name": "segmentId",
+     "attribute": null,
+     "type": "",
+     "default": null,
+     "description": "The segment in effect: `segment`, else the first (\"\" when there is no filter)",
+     "readonly": true
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-range-change",
+     "detail": "",
+     "description": "Another date range was picked (`{ range }`: KpiRangeChange); cancelable – prevented, `range` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-segment-change",
+     "detail": "",
+     "description": "Another overview segment was picked (`{ segment }`: KpiSegmentChange); cancelable – prevented, `segment` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-setup",
+     "detail": "",
+     "description": "The focus card's setup button was pressed; detail: null",
+     "cancelable": false
+    },
+    {
+     "name": "tc-action",
+     "detail": "",
+     "description": "The focus card's action button was pressed; detail: null",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "kb",
+   "cssProperties": [
+    {
+     "name": "--tc-kb-space-5px",
+     "value": "5px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-kb-space-0_5px",
+     "value": "0.5px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-kb-space-7px",
+     "value": "7px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-kb-space-9px",
+     "value": "9px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-kb-space-11px",
+     "value": "11px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-kb-space-3px",
+     "value": "3px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-kpi-board-well",
+     "value": "light-dark(#f6f6f8, #202024)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-kpi-board-stagger",
+     "value": "60ms",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-kpi-board-series-soft",
+     "value": "light-dark(#a9c4ff, #37508f)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-kpi-board-tip-bg",
+     "value": "light-dark(#1c1c20, #2c2c32)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-kpi-board-tip-fg",
+     "value": "rgba(255, 255, 255, 0.72)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-kpi-board-tip-strong",
+     "value": "#ffffff",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-kpi-board-tip-total",
+     "value": "#4ade9b",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-kpi-board-tip-series",
+     "value": "#7ea2ff",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-kpi-board-tip-series-soft",
+     "value": "#8c9bc4",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent-text",
+    "--tc-border-default",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-chart-1",
+    "--tc-chart-neutral",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-reveal-slow",
+    "--tc-duration-slowest",
+    "--tc-ease-emphasized",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-font-size",
+    "--tc-field-h",
+    "--tc-field-px",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-hover",
+    "--tc-focus-outline",
+    "--tc-focus-ring",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-sans",
+    "--tc-font-size-2xl",
+    "--tc-font-size-3xl",
+    "--tc-font-size-lg",
+    "--tc-font-size-lg-plus",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xl",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-semibold",
+    "--tc-hairline",
+    "--tc-line-height-display",
+    "--tc-line-height-display-sm",
+    "--tc-line-height-loose",
+    "--tc-line-height-normal",
+    "--tc-line-height-tight",
+    "--tc-menu-bg",
+    "--tc-menu-item-font-size",
+    "--tc-menu-item-h",
+    "--tc-menu-item-hover",
+    "--tc-menu-item-px",
+    "--tc-menu-item-radius",
+    "--tc-menu-item-selected-fg",
+    "--tc-menu-padding",
+    "--tc-menu-radius",
+    "--tc-menu-shadow",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-shadow-overlay",
+    "--tc-shadow-raised",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-status-danger-fg",
+    "--tc-status-success-fg",
+    "--tc-surface-raised",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tracking-snug",
+    "--tc-tracking-tight",
+    "--tc-z-dropdown"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "kpiMoney",
+   "signature": "kpiMoney(n: number): void",
+   "description": "\"$1,234.50\" under ten thousand, \"$12,345\" above"
+  },
+  {
+   "name": "kpiResample",
+   "signature": "kpiResample(values: number[] | undefined, n: number): number[]",
+   "description": "A series stretched or squeezed to a fixed number of points, so lines of different lengths can glide into each other"
+  },
+  {
+   "name": "kpiTrace",
+   "signature": "kpiTrace(values: number[], lo: number, hi: number, top: unknown, bottom: unknown): void",
+   "description": "Straight segments through evenly spaced points in a 0–100 box: the line, and the same shape closed to the floor"
+  }
+ ],
+ "react": [
+  {
+   "component": "KpiBoard",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "Heading on the left of the bar above the cards"
+    },
+    {
+     "name": "range",
+     "type": "string",
+     "optional": true,
+     "description": "The range shown (controlled)"
+    },
+    {
+     "name": "defaultRange",
+     "type": "string",
+     "optional": true,
+     "description": "The range at first, when `range` isn't set – the first by default"
+    },
+    {
+     "name": "onRangeChange",
+     "type": "(id: string) => void",
+     "optional": true,
+     "description": "Called with the picked range id"
+    },
+    {
+     "name": "segment",
+     "type": "string",
+     "optional": true,
+     "description": "The overview's segment (controlled)"
+    },
+    {
+     "name": "defaultSegment",
+     "type": "string",
+     "optional": true,
+     "description": "The segment at first, when `segment` isn't set – the first by default"
+    },
+    {
+     "name": "onSegmentChange",
+     "type": "(id: string) => void",
+     "optional": true,
+     "description": "Called with the picked segment id"
+    },
+    {
+     "name": "icon",
+     "type": "React.ReactNode",
+     "optional": true,
+     "description": "Icon in the focus card – a React node"
+    }
+   ],
+   "hides": [
+    "heading",
+    "range",
+    "segment",
+    "icon",
+    "children"
+   ],
+   "events": {
+    "tc-range-change": null,
+    "tc-segment-change": null,
+    "tc-setup": "onTcSetup",
+    "tc-action": "onTcAction"
+   }
+  }
+ ],
+ "changelog": [
+  "All 18 blocks are now elements – `tc-agent-gallery`, `tc-ai-side-pane`, `tc-ai-workspace`, `tc-app-directory`, `tc-client-context`, `tc-evidence-gallery`, `tc-header-nav`, `tc-invoice-credit`, `tc-kpi-board`, `tc-logo-marquee`, `tc-metrics-dashboard`, `tc-oversight-home`, `tc-pricing-plans`, `tc-publish-readiness`, `tc-red-team-finding`, `tc-task-board`, `tc-testimonial-wall`, `tc-uncertainty-mix` – so Angular (`trenchcoat/angular`), Vue, Svelte, plain HTML and generative UI get them like any component, with docs pages."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-kpi-board",
+   "className": "TcKpiBoard",
+   "module": "trenchcoat/kpi-board",
+   "data": [
+    "data",
+    "ranges",
+    "segments",
+    "formatMoney",
+    "icon",
+    "setup",
+    "action"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "range",
+     "attribute": "range"
+    },
+    {
+     "name": "segment",
+     "attribute": "segment"
+    },
+    {
+     "name": "compareLabel",
+     "attribute": "compare-label"
+    },
+    {
+     "name": "currentLabel",
+     "attribute": "current-label"
+    },
+    {
+     "name": "previousLabel",
+     "attribute": "previous-label"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-range-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-segment-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-setup",
+     "cancelable": false
+    },
+    {
+     "name": "tc-action",
+     "cancelable": false
+    }
+   ],
+   "controlled": [
+    {
+     "property": "range",
+     "event": "tc-range-change"
+    },
+    {
+     "property": "segment",
+     "event": "tc-segment-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "121",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "has"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "itself",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "button",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "button",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "has",
+    "name": ":has()",
+    "bcd": "css.selectors.has",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "121",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Layout and state that depend on what's inside a part (an icon present, a focused field).",
+    "via": [
+     "button"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself",
+     "button"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "button",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "resize-observer",
+    "name": "ResizeObserver",
+    "bcd": "api.ResizeObserver",
+    "versions": {
+     "chrome": "64",
+     "edge": "79",
+     "firefox": "69",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "via": [
+     "button"
+    ]
+   },
+   {
+    "id": "intersection-observer",
+    "name": "IntersectionObserver",
+    "bcd": "api.IntersectionObserver",
+    "versions": {
+     "chrome": "51",
+     "edge": "15",
+     "firefox": "55",
+     "safari": "12.1",
+     "safari_ios": "12.2"
+    },
+    "progressive": false,
+    "via": [
+     "internal/controllers"
+    ]
+   },
+   {
+    "id": "mask",
+    "name": "CSS masks",
+    "bcd": "css.properties.mask-image",
+    "versions": {
+     "chrome": "1",
+     "edge": "79",
+     "firefox": "53",
+     "safari": "4",
+     "safari_ios": "3.2"
+    },
+    "progressive": false,
+    "note": "with the -webkit- prefix",
+    "via": [
+     "button"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [
+   "requestAnimationFrame, cancelled"
+  ],
+  "animations": 3,
+  "observers": [
+   "ResizeObserver (button)",
+   "MutationObserver (button)",
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)",
+   "IntersectionObserver (internal/controllers › OffScreenController)"
+  ],
+  "clock": [],
+  "listeners": [
+   "document pointerdown"
+  ],
+  "pauses": {
+   "offscreen": [
+    "button",
+    "internal/controllers › OffScreenController"
+   ],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (button)",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 55641,
+  "gzip": 15906
+ }
+}

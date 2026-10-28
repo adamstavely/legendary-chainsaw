@@ -1,0 +1,180 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-app-directory.json",
+  "title": "tc-app-directory",
+  "description": "Browse, search and connect integrations – categories, a filter menu and app cards with a connect flow.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the region's name"
+    },
+    "subtitle": {
+      "type": "string",
+      "description": "The line under the heading"
+    },
+    "learnMoreHref": {
+      "type": "string",
+      "description": "Where \"Learn more\" goes; unset, the link only fires tc-learn-more"
+    },
+    "apps": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/DirectoryApp"
+      },
+      "description": "The apps"
+    },
+    "categories": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/DirectoryCategory"
+      },
+      "description": "The categories in the side list – \"essentials\" (apps marked essential) and \"all\" are built in"
+    },
+    "connected": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Ids of the connected apps; unset, it starts from each app's `connected`"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "DirectoryApp": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "vendor": {
+          "type": "string",
+          "description": "Who builds the integration, shown under the name"
+        },
+        "description": {
+          "type": "string"
+        },
+        "categories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "logo": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/TemplateResult"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "tile": {
+          "type": "string",
+          "description": "Brand colour behind the logo – leave empty for a white tile with a thin edge"
+        },
+        "essential": {
+          "type": "boolean",
+          "description": "Shown in the Essentials section"
+        },
+        "connected": {
+          "type": "boolean",
+          "description": "Connected at the start, when `connected` isn't set"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "vendor",
+        "description",
+        "categories"
+      ],
+      "additionalProperties": false
+    },
+    "TemplateResult": {
+      "$ref": "#/definitions/UncompiledTemplateResult%3Calias-1972059497-7043-7124-1972059497-0-25140%3E",
+      "description": "The return type of the template tag functions,  {@linkcode  html }  and  {@linkcode  svg } .\n\nA `TemplateResult` object holds all the information about a template expression required to render it: the template strings, expression values, and type of template (html or svg).\n\n`TemplateResult` objects do not create any DOM on their own. To create or update DOM you need to render the `TemplateResult`. See [Rendering](https://lit.dev/docs/components/rendering) for more information.\n\nIn Lit 4, this type will be an alias of MaybeCompiledTemplateResult, so that code will get type errors if it assumes that Lit templates are not compiled. When deliberately working with only one, use either  {@linkcode  CompiledTemplateResult }  or  {@linkcode  UncompiledTemplateResult }  explicitly."
+    },
+    "UncompiledTemplateResult<alias-1972059497-7043-7124-1972059497-0-25140>": {
+      "type": "object",
+      "properties": {
+        "_$litType$": {
+          "type": "number",
+          "enum": [
+            1,
+            2,
+            3
+          ]
+        },
+        "strings": {
+          "type": "object",
+          "properties": {
+            "length": {
+              "type": "number"
+            },
+            "raw": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "length",
+            "raw"
+          ],
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "values": {
+          "type": "array",
+          "items": {}
+        }
+      },
+      "required": [
+        "_$litType$",
+        "strings",
+        "values"
+      ],
+      "additionalProperties": false,
+      "description": "The return type of the template tag functions,  {@linkcode  html }  and  {@linkcode  svg }  when it hasn't been compiled by"
+    },
+    "DirectoryCategory": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "icon": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/TemplateResult"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

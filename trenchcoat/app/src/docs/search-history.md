@@ -1,7 +1,7 @@
 ---
 pattern: tabs
 status: new
-related: ai-search, query-builder, chat-history, prompt-library
+related: ai-search, query-builder, routine-form, chat-history, prompt-library
 ---
 
 ## Overview
@@ -9,7 +9,8 @@ related: ai-search, query-builder, chat-history, prompt-library
 The searches someone ran and the ones they kept. Two tabs, Recent and Saved, show their counts; a filter box narrows
 either one by query or scope. Searches are grouped by day – Today, Yesterday, then the date – and each shows its query,
 its scope as chips (“Files”, “AI mode”), how many results it found and when it ran. Each search can be run again,
-starred to keep it, or removed – which leaves “Removed · Undo” at the top until the next removal.
+starred to keep it, or removed – which leaves “Removed · Undo” at the top until the next removal. With `schedulable`,
+saved searches also offer Schedule, for a page that runs them as routines.
 
 ## When to use
 
@@ -31,13 +32,15 @@ starred to keep it, or removed – which leaves “Removed · Undo” at the top
 3. **Removed** `.ui-shis__removed` – the last removal, with Undo
 4. **Day** `.ui-shis__day-name` – Today, Yesterday, then the date
 5. **Search** `.ui-shis__run` – the query, its scopes, results and time; runs it again
-6. **Star** `.ui-shis__star` – saves or unsaves the search
-7. **Remove** `.ui-shis__remove` – takes the search out of the history
+6. **Schedule** `.ui-shis__schedule` – on saved searches, with `schedulable`: asks the page to run it as a routine
+7. **Star** `.ui-shis__star` – saves or unsaves the search
+8. **Remove** `.ui-shis__remove` – takes the search out of the history
 
 ## Looks
 
 Standard is a white card on a gray tray, with the header and tabs on the tray above it. Clean is one white card with
-the header as its first row. The rows, chips and actions are the same in both.
+the header as its first row. The rows, chips and actions are the same in both. The filter is a quiet field – a soft
+fill, with the field's ring only when it has focus.
 
 ## Keyboard
 
@@ -46,8 +49,8 @@ The tabs are one tab stop and the searches' buttons another.
 | Key | What it does |
 |---|---|
 | ← / → on the tabs | Switches between Recent and Saved |
-| ↑ / ↓ | Moves to the same action on the previous or next search |
-| ← / → in the list | Moves between a search's Run, Star and Remove |
+| ↑ / ↓ | Moves to the same action on the previous or next search (from Schedule to a search without one: its Star) |
+| ← / → in the list | Moves between a search's Run, Schedule, Star and Remove |
 | Home / End | Moves to the first or last search |
 | Enter / Space | Runs, stars or removes, as focused |
 | Tab | Leaves the list |
@@ -58,7 +61,8 @@ Removing a search moves focus to Undo; Undo returns it to the search.
 
 The tabs are a `tablist` labelled “Searches”, and the list a `tabpanel`. Days are sections named by the day. A search's
 button reads its query, scopes, results and time, then “run again”. The star is a toggle button, “Save “invoice 7741””,
-pressed when saved; Remove says what it removes. Saving, removing and Undo are confirmed in a polite status message.
+pressed when saved; Schedule and Remove say which search they act on. Saving, removing, scheduling and Undo are
+confirmed in a polite status message.
 
 ## Content
 
@@ -70,6 +74,7 @@ pressed when saved; Remove says what it removes. Saving, removing and Undo are c
 
 - Keep `searches` in your store and pass the next list from the events, so stars and removals persist.
 - Use the page's clock for `now` when times must match other parts of the page.
+- With `schedulable`, open a `routine-form` from tc-schedule, its name and instructions filled in from the search.
 
 ## Don't
 
@@ -101,6 +106,14 @@ import "trenchcoat/tokens.css";
 
 export function History({ initial }: { initial: SearchHistoryEntry[] }) {
   const [searches, setSearches] = useState(initial);
-  return <SearchHistory searches={searches} onSearchesChange={setSearches} onRunAgain={(s) => console.log(s.query)} />;
+  return (
+    <SearchHistory
+      searches={searches}
+      onSearchesChange={setSearches}
+      onRunAgain={(s) => console.log(s.query)}
+      schedulable
+      onSchedule={(s) => console.log("schedule", s.query)}
+    />
+  );
 }
 ```

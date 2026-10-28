@@ -472,6 +472,9 @@ export class TcChatComposer extends TcElement {
     this.ro?.disconnect();
     this.ro = undefined;
     this.watchedModel = null;
+    this.textRo?.disconnect();
+    this.textRo = undefined;
+    this.watchedText = null;
     document.removeEventListener("pointerdown", this.onDocDown);
     if (this.revert) cancelAnimationFrame(this.revert);
     this.revert = 0;
@@ -1153,8 +1156,34 @@ export class TcChatComposer extends TcElement {
     this.ro.observe(el);
   }
 
+  /** The message's lines depend on its width too: when the width changes (a resized pane, a sheet that opens), it's
+   *  measured again. Watched from updated(), like the model button */
+  private textRo?: ResizeObserver;
+  private watchedText: HTMLElement | null = null;
+  private textWidth = 0;
+  private watchText() {
+    const el = this.textarea;
+    if (el === this.watchedText) return;
+    this.textRo?.disconnect();
+    this.textRo = undefined;
+    this.watchedText = el;
+    this.textWidth = 0;
+    if (!el || typeof ResizeObserver === "undefined") return;
+    this.textRo = new ResizeObserver(([entry]) => {
+      const width = entry.contentRect.width;
+      if (Math.abs(width - this.textWidth) < 0.5) return;
+      const first = this.textWidth === 0;
+      this.textWidth = width;
+      if (first) return;
+      this.hasMeasured = false;
+      this.requestUpdate();
+    });
+    this.textRo.observe(el);
+  }
+
   protected override updated(changed: PropertyValues<this>) {
     this.watchModel();
+    this.watchText();
     this.watchBar(changed);
     this.onMessageScroll();
     // The toolbar's model picker renders its trigger after this update – the toolbar's tab stop is set again then

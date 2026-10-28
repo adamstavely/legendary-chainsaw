@@ -13,15 +13,11 @@ const finding = (id: string, code: string) => ({
 });
 const findings = [finding("a", "F-1"), finding("b", "F-2")];
 
+// The block is <tc-red-team-finding> through trenchcoat/react. jsdom loads @lit/react's node build, which never sets an element's
+// properties, so its controlled state is checked in a real browser (tests/elements/red-team-finding.test.ts)
 export const spec: ContractSpec = {
+  root: "tc-red-team-finding",
   component: "RedTeamFinding",
   props: { findings },
   ref: "root",
-  controlled: [
-    {
-      prop: "finding",
-      values: ["a", "b"],
-      read: (root) => findings.find((f) => f.code === root.querySelector('[role="option"][aria-selected="true"] .ui-rtf__code')?.textContent)?.id,
-    },
-  ],
 };

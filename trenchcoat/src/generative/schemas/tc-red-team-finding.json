@@ -1,0 +1,291 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-red-team-finding.json",
+  "title": "tc-red-team-finding",
+  "description": "What an adversarial test broke and the response: a findings listbox and the picked finding's invariants, scenario, evidence and undoable response timeline.",
+  "type": "object",
+  "properties": {
+    "findings": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Finding"
+      },
+      "description": "The findings, in list order"
+    },
+    "finding": {
+      "type": "string",
+      "description": "Id of the finding on show – the first one when unset or unknown"
+    },
+    "now": {
+      "type": "number",
+      "description": "The clock for the ledger's \"2m ago\", in epoch ms – the ledger's own clock when unset"
+    },
+    "responder": {
+      "type": "string",
+      "description": "Who made the responses, shown in the ledger's header – e.g. \"Response agent\""
+    },
+    "openEvidence": {
+      "type": "boolean",
+      "description": "Evidence rows are buttons that fire tc-evidence-open; otherwise they're plain text"
+    },
+    "rerun": {
+      "type": "boolean",
+      "description": "Shows \"Run again\" in the detail, which fires tc-rerun"
+    },
+    "severityLabels": {
+      "type": "object",
+      "properties": {
+        "critical": {
+          "type": "string"
+        },
+        "high": {
+          "type": "string"
+        },
+        "medium": {
+          "type": "string"
+        },
+        "low": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Words for the severities – merged over the plain-English defaults"
+    },
+    "statusLabels": {
+      "type": "object",
+      "properties": {
+        "open": {
+          "type": "string"
+        },
+        "resolved": {
+          "type": "string"
+        },
+        "investigating": {
+          "type": "string"
+        },
+        "mitigated": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Words for the statuses – merged over the plain-English defaults"
+    },
+    "heading": {
+      "type": "string",
+      "description": "The list's heading – \"Findings\" by default"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "Finding": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "code": {
+          "type": "string",
+          "description": "Short code shown before everything else, e.g. \"F-001\" – the id by default"
+        },
+        "title": {
+          "type": "string"
+        },
+        "severity": {
+          "$ref": "#/definitions/FindingSeverity"
+        },
+        "status": {
+          "$ref": "#/definitions/FindingStatus"
+        },
+        "opened": {
+          "type": "string",
+          "description": "When it was opened, already formatted – e.g. \"2h ago\""
+        },
+        "area": {
+          "type": "string",
+          "description": "One area tag in the list, e.g. \"policy\""
+        },
+        "summary": {
+          "type": "string",
+          "description": "What happened, in a sentence or three"
+        },
+        "affected": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The parts of the system it touched"
+        },
+        "invariants": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "rule": {
+                "type": "string"
+              },
+              "detail": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "rule"
+            ],
+            "additionalProperties": false
+          },
+          "description": "The invariants that failed – rule ids or short sentences"
+        },
+        "scenario": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "tags": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "id",
+            "description"
+          ],
+          "additionalProperties": false,
+          "description": "The scenario that found it"
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FindingEvidence"
+          }
+        },
+        "responses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LedgerEntry"
+          },
+          "description": "What was done in response – shown in the agent ledger, with undo"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "severity",
+        "status",
+        "opened",
+        "summary",
+        "invariants",
+        "scenario"
+      ],
+      "additionalProperties": false
+    },
+    "FindingSeverity": {
+      "type": "string",
+      "enum": [
+        "critical",
+        "high",
+        "medium",
+        "low"
+      ]
+    },
+    "FindingStatus": {
+      "type": "string",
+      "enum": [
+        "open",
+        "investigating",
+        "mitigated",
+        "resolved"
+      ]
+    },
+    "FindingEvidence": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "What it is, e.g. \"Run trace\" or \"Evidence package EP-4471\""
+        },
+        "detail": {
+          "type": "string",
+          "description": "A line under it, e.g. \"Sealed · ready to export\""
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "LedgerEntry": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "action": {
+          "type": "string",
+          "description": "What was done, in a few words – e.g. \"Changed price\""
+        },
+        "target": {
+          "type": "string",
+          "description": "To what – e.g. \"Pro plan\""
+        },
+        "system": {
+          "type": "string",
+          "description": "Where – e.g. \"Stripe\"; shown after the time and in the labels"
+        },
+        "at": {
+          "type": "number",
+          "description": "When it happened (epoch ms)"
+        },
+        "change": {
+          "type": "array",
+          "minItems": 2,
+          "items": [
+            {
+              "type": "string",
+              "title": "before"
+            },
+            {
+              "type": "string",
+              "title": "after"
+            }
+          ],
+          "maxItems": 2,
+          "description": "Before and after – e.g. [\"$29\", \"$34\"]; or a single line of detail"
+        },
+        "detail": {
+          "type": "string"
+        },
+        "reversible": {
+          "type": "boolean",
+          "description": "False for changes that can't be taken back – a sent email, a payout (default true)"
+        },
+        "dependsOn": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Ids of the changes this one builds on – undoing one of those undoes this one too"
+        }
+      },
+      "required": [
+        "id",
+        "action",
+        "system",
+        "at"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

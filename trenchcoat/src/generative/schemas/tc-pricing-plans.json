@@ -1,0 +1,158 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-pricing-plans.json",
+  "title": "tc-pricing-plans",
+  "description": "A pricing section: a Monthly / Yearly switch and a card per plan with limits, a call to action and collapsible details.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading – \"Choose your plan\" by default"
+    },
+    "subtitle": {
+      "type": "string",
+      "description": "The line under the heading"
+    },
+    "plans": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/PricingPlan"
+      },
+      "description": "The plans; unset shows three example plans"
+    },
+    "billing": {
+      "type": "string",
+      "enum": [
+        "monthly",
+        "yearly"
+      ],
+      "description": "The billing period shown"
+    },
+    "details": {
+      "type": "boolean",
+      "description": "Whether every card's details are open"
+    },
+    "currency": {
+      "type": "string",
+      "description": "Put before the amount – \"$\" by default"
+    },
+    "billingLabel": {
+      "type": "string",
+      "description": "The billing switch's accessible name"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "PricingPlan": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "price": {
+          "type": "object",
+          "properties": {
+            "monthly": {
+              "type": "number"
+            },
+            "yearly": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "monthly",
+            "yearly"
+          ],
+          "additionalProperties": false,
+          "description": "Price per month, billed monthly and billed yearly"
+        },
+        "limits": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PricingLimit"
+          }
+        },
+        "sync": {
+          "type": "string",
+          "description": "How often data syncs, shown as a chip next to the integrations heading"
+        },
+        "pick": {
+          "type": "number",
+          "description": "Number of integrations people can pick"
+        },
+        "features": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PricingFeature"
+          }
+        },
+        "cta": {
+          "type": "string",
+          "description": "The call to action – \"Start free trial\" by default"
+        },
+        "badge": {
+          "type": "string",
+          "description": "Small pill next to the name, e.g. \"Popular\" – the card gets a soft accent"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "price",
+        "limits",
+        "sync",
+        "pick",
+        "features"
+      ],
+      "additionalProperties": false
+    },
+    "PricingLimit": {
+      "type": "object",
+      "properties": {
+        "icon": {
+          "$ref": "#/definitions/PricingIconName",
+          "description": "A built-in icon's name, or an icon element (cloned)"
+        },
+        "label": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "label",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "PricingIconName": {
+      "type": "string",
+      "enum": [
+        "visitors",
+        "seats",
+        "workspaces"
+      ],
+      "description": "The built-in limit icons"
+    },
+    "PricingFeature": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "included": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "label",
+        "included"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

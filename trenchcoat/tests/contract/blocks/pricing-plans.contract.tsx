@@ -1,15 +1,10 @@
 import type { ContractSpec } from "../../contract.test";
 
+// The block is <tc-pricing-plans> through trenchcoat/react. jsdom loads @lit/react's node build, which never sets an element's
+// properties, so its controlled state is checked in a real browser (tests/elements/pricing-plans.test.ts)
 export const spec: ContractSpec = {
   component: "PricingPlans",
   props: {},
-  root: ".ui-pp",
+  root: "tc-pricing-plans",
   ref: "root",
-  controlled: [
-    {
-      prop: "billing",
-      values: ["monthly", "yearly"],
-      read: (root) => root.querySelector(".ui-pp__switch")?.getAttribute("data-billing"),
-    },
-  ],
 };

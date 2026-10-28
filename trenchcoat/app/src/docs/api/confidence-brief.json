@@ -598,6 +598,7 @@
   "frames": [],
   "animations": 0,
   "observers": [
+   "MutationObserver (internal/base › TcElement)",
    "MutationObserver (internal/controllers › AriaForwardController)"
   ],
   "clock": [],
@@ -613,7 +614,7 @@
   "windowed": false
  },
  "size": {
-  "min": 28984,
-  "gzip": 9036
+  "min": 29472,
+  "gzip": 9190
  }
 }

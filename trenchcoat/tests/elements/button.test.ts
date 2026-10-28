@@ -1,7 +1,7 @@
 /*
  * <tc-button> in real browsers (Chromium, Firefox, WebKit) – the pilot's Button checks (audit/lit-port-plan.md).
  */
-import { html } from "lit";
+import { html, render } from "lit";
 import axe from "axe-core";
 import { afterEach, describe, expect, test, vi } from "vitest";
 import "../../src/elements/button";
@@ -150,5 +150,27 @@ describe("tc-button", () => {
     </div>`);
     const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
     expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
+  });
+});
+
+describe("tc-button – a Lit parent that swaps its icon", () => {
+  afterEach(cleanup);
+  test("the button keeps rendering when the parent's last child changes", async () => {
+    const host = document.createElement("div");
+    document.body.append(host);
+    const view = (on: boolean) =>
+      html`<tc-button label="Play">${on ? html`<svg slot="icon" data-icon="pause"></svg>` : html`<svg slot="icon" data-icon="play"></svg>`}</tc-button>`;
+    render(view(false), host);
+    const el = host.querySelector("tc-button") as HTMLElement & { updateComplete: Promise<unknown> };
+    await el.updateComplete;
+    expect(el.querySelector(".ui-button__hit")).not.toBeNull();
+    render(view(true), host);
+    await expect.poll(() => el.querySelector(".ui-button__hit")?.textContent?.trim()).toBe("Play");
+    expect(el.querySelector("[data-icon='pause']")).not.toBeNull();
+    expect(el.querySelector("[data-icon='play']")).toBeNull();
+    render(view(false), host);
+    await expect.poll(() => el.querySelectorAll(".ui-button__hit").length).toBe(1);
+    expect(el.querySelector("[data-icon='play']")).not.toBeNull();
+    host.remove();
   });
 });

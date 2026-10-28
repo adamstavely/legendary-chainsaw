@@ -45,11 +45,33 @@ export abstract class TcElement extends LitElement {
     // framework appended after the first render. An end marker keeps them outside it: Lit renders up to the marker,
     // later children go after it.
     if (!this.renderOptions.renderBefore) {
+      // A Lit parent whose template ends inside this host (`<tc-button>${icon}</tc-button>`) owns a part that runs to
+      // the host's end – past the marker – and swapping its value clears this element's content too. Watched for that
+      // case only: when the marker goes, the element starts a fresh range and renders again
+      const last = this.lastChild;
+      if (last?.nodeType === Node.COMMENT_NODE && (last as Comment).data.startsWith("?lit$")) {
+        this.parentRange = new MutationObserver(() => {
+          if (this.renderOptions.renderBefore?.parentNode !== this) this.requestUpdate();
+        });
+        this.parentRange.observe(this, { childList: true });
+      }
       const end = document.createComment("tc-end");
       this.append(end);
       this.renderOptions.renderBefore = end;
     }
     return this;
+  }
+
+  private parentRange?: MutationObserver;
+
+  protected override update(changed: PropertyValues) {
+    // The range was cleared from outside (see createRenderRoot): a new marker, so Lit renders into a new part
+    if (this.hasUpdated && this.renderOptions.renderBefore && this.renderOptions.renderBefore.parentNode !== this) {
+      const end = document.createComment("tc-end");
+      this.append(end);
+      this.renderOptions.renderBefore = end;
+    }
+    super.update(changed);
   }
 
   override connectedCallback() {

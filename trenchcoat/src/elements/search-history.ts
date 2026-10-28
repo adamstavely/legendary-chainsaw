@@ -13,6 +13,7 @@ import { formatDate } from "./internal/util";
  *   · the rows' buttons are one tab stop: ↑ / ↓ move between searches, ← / → between a search's actions, Home / End
  *     to the first and last search; Tab leaves the list
  *   · saving and removing fire cancelable events – prevent them to keep `searches` yourself
+ *   · with `schedulable`, saved searches also offer Schedule (tc-schedule), for a page that runs them as routines
  *   · times are relative to `now`, or to the element's own clock, refreshed every minute
  * Standard: the header on a gray tray above a white card. Clean: one white card, the header its first row.
  *
@@ -39,12 +40,13 @@ export type SearchHistorySelect = { id: string; search: SearchHistoryEntry };
 export type SearchHistorySavedChange = { id: string; saved: boolean; searches: SearchHistoryEntry[] };
 export type SearchHistoryRemove = { id: string; search: SearchHistoryEntry; searches: SearchHistoryEntry[] };
 export type SearchHistoryTabChange = { tab: SearchHistoryTab };
+export type SearchHistorySchedule = { id: string; search: SearchHistoryEntry };
 
 const MIN = 60_000;
 const DAY = 86_400_000;
 let uidCount = 0;
 
-/* history, search, star, x, rotate-ccw: Lucide (ISC, lucide.dev) */
+/* history, search, star, x, rotate-ccw, calendar-clock: Lucide (ISC, lucide.dev) */
 const lucide = (size: number, body: ReturnType<typeof svg>, fill = "none") =>
   html`<svg width=${size} height=${size} viewBox="0 0 24 24" fill=${fill} stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${body}</svg>`;
 const historyIcon = svg`<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path><path d="M12 7v5l4 2"></path>`;
@@ -52,6 +54,8 @@ const searchIcon = () => lucide(14, svg`<circle cx="11" cy="11" r="8"></circle><
 const starPath = svg`<path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"></path>`;
 const starIcon = (on: boolean) => lucide(15, starPath, on ? "currentColor" : "none");
 const xIcon = () => lucide(14, svg`<path d="M18 6 6 18"></path><path d="m6 6 12 12"></path>`);
+const scheduleIcon = () =>
+  lucide(15, svg`<path d="M21 7.5V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h3.5"></path><path d="M16 2v4"></path><path d="M8 2v4"></path><path d="M3 10h5"></path><path d="M17.5 17.5 16 16.3V14"></path><circle cx="16" cy="16" r="6"></circle>`);
 
 /** Local midnight of the day `ms` falls in */
 const dayStart = (ms: number) => {
@@ -68,6 +72,7 @@ const dayStart = (ms: number) => {
  * @fires tc-remove - A search was removed ({ id, search, searches }: SearchHistoryRemove); cancelable – prevented, it stays until the page takes it out of `searches`
  * @fires tc-restore - A removed search was put back with Undo ({ id, search, searches }: SearchHistoryRemove); cancelable – prevented, it comes back when the page puts it in `searches`
  * @fires tc-tab-change - The tab changed ({ tab }: SearchHistoryTabChange); cancelable – prevented, `tab` stays as it was
+ * @fires tc-schedule - Schedule was pressed on a saved search, with `schedulable` ({ id, search }: SearchHistorySchedule) – open your routine form here; cancelable – prevented, nothing is announced
  */
 export class TcSearchHistory extends TcElement {
   static override ui = "shis";
@@ -86,6 +91,8 @@ export class TcSearchHistory extends TcElement {
   @property({ type: Number }) accessor now: number | undefined = undefined;
   /** The language for times and numbers, e.g. "en-GB"; by default the browser's */
   @property() accessor locale: string | undefined = undefined;
+  /** Whether saved searches offer Schedule, to run them as routines (tc-schedule) */
+  @property({ type: Boolean }) accessor schedulable = false;
 
   @state() private accessor clock = 0;
   @state() private accessor removed: { search: SearchHistoryEntry; index: number } | null = null;
@@ -179,6 +186,14 @@ export class TcSearchHistory extends TcElement {
   private run(s: SearchHistoryEntry) {
     this.emit<SearchHistorySelect>("tc-select", { id: s.id, search: s });
   }
+  private schedule(s: SearchHistoryEntry) {
+    if (!this.emit<SearchHistorySchedule>("tc-schedule", { id: s.id, search: s }, { cancelable: true })) return;
+    this.announce = `Scheduling “${s.query}”`;
+  }
+  /** A search's actions, left to right: run again, Schedule (saved, with `schedulable`), the star, remove */
+  private actions(s: SearchHistoryEntry | undefined) {
+    return ["run", ...(s && this.schedulable && s.saved ? ["schedule"] : []), "star", "remove"];
+  }
   private toggleSaved(s: SearchHistoryEntry) {
     const saved = !s.saved;
     const next = this.searches.map((x) => (x.id === s.id ? { ...x, saved } : x));
@@ -240,7 +255,12 @@ export class TcSearchHistory extends TcElement {
     if (!m) return;
     e.preventDefault();
     const r = Math.max(0, Math.min(last, m[0]));
-    const c = Math.max(0, Math.min(2, m[1]));
+    // Up and down keep the kind of action (the star stays on stars); one a row lacks falls back by position
+    const shown = this.shown;
+    const kind = this.actions(shown[row])[col];
+    const there = this.actions(shown[r]);
+    const same = r !== row ? there.indexOf(kind) : -1;
+    const c = Math.max(0, Math.min(there.length - 1, same >= 0 ? same : m[1]));
     this.setActive(r, c);
     void this.updateComplete.then(() => this.cell(r, c)?.focus());
   };
@@ -277,9 +297,13 @@ export class TcSearchHistory extends TcElement {
   }
 
   private renderRow(s: SearchHistoryEntry, row: number) {
-    const stop = (col: number) => (this.active.row === row && this.active.col === col ? 0 : -1);
-    const focus = (col: number) => () => this.setActive(row, col);
     const results = s.results === undefined ? "" : `${new Intl.NumberFormat(this.locale).format(s.results)} ${s.results === 1 ? "result" : "results"}`;
+    const cols = this.actions(s);
+    const col = (kind: string) => cols.indexOf(kind);
+    // The stop's column, kept inside this row's actions (unsaving a search takes its Schedule away)
+    const stopCol = Math.min(this.active.col, cols.length - 1);
+    const stop = (c: number) => (this.active.row === row && stopCol === c ? 0 : -1);
+    const focus = (c: number) => () => this.setActive(row, c);
     return html`<li class="ui-shis__row" data-id=${s.id}>
       <button type="button" class="ui-shis__run" data-cell=${`${row}:0`} tabindex=${stop(0)} @focus=${focus(0)} @click=${() => this.run(s)}>
         <span class="ui-shis__glyph" aria-hidden="true">${searchIcon()}</span>
@@ -293,18 +317,30 @@ export class TcSearchHistory extends TcElement {
         </span>
         <span class="tc-sr-only">, run again</span>
       </button>
+      ${col("schedule") > 0
+        ? html`<button
+            type="button"
+            class="ui-shis__schedule"
+            data-cell=${`${row}:${col("schedule")}`}
+            tabindex=${stop(col("schedule"))}
+            aria-label=${`Schedule “${s.query}”`}
+            title="Schedule"
+            @focus=${focus(col("schedule"))}
+            @click=${() => this.schedule(s)}
+          >${scheduleIcon()}</button>`
+        : nothing}
       <button
         type="button"
         class="ui-shis__star"
-        data-cell=${`${row}:1`}
-        tabindex=${stop(1)}
+        data-cell=${`${row}:${col("star")}`}
+        tabindex=${stop(col("star"))}
         aria-pressed=${s.saved ? "true" : "false"}
         aria-label=${`Save “${s.query}”`}
         title=${s.saved ? "Saved" : "Save"}
-        @focus=${focus(1)}
+        @focus=${focus(col("star"))}
         @click=${() => this.toggleSaved(s)}
       >${starIcon(!!s.saved)}</button>
-      <button type="button" class="ui-shis__remove" data-cell=${`${row}:2`} tabindex=${stop(2)} aria-label=${`Remove “${s.query}”`} title="Remove" @focus=${focus(2)} @click=${() => this.removeSearch(s, row)}>${xIcon()}</button>
+      <button type="button" class="ui-shis__remove" data-cell=${`${row}:${col("remove")}`} tabindex=${stop(col("remove"))} aria-label=${`Remove “${s.query}”`} title="Remove" @focus=${focus(col("remove"))} @click=${() => this.removeSearch(s, row)}>${xIcon()}</button>
     </li>`;
   }
 
@@ -416,10 +452,12 @@ export class TcSearchHistory extends TcElement {
 .ui-shis__filter { position: relative; display: block; margin: var(--tc-space-3) var(--tc-space-3) var(--tc-space-1); }
 :where([data-look="clean"], [data-look="clean"] *).ui-shis__filter { margin-top: var(--tc-space-1); }
 .ui-shis__filter-icon { position: absolute; top: 50%; left: var(--tc-space-2-5); color: var(--tc-icon-muted); transform: translateY(-50%); pointer-events: none; }
-.ui-shis__filter-input { width: 100%; height: var(--tc-field-h-sm); padding: 0 var(--tc-field-px) 0 calc(var(--tc-space-2-5) + var(--tc-space-5)); border: 0; border-radius: var(--tc-field-radius); background: var(--tc-field-bg-sunken); box-shadow: var(--tc-field-shadow); font: inherit; font-size: var(--tc-font-size-sm); color: var(--tc-text-primary); outline: none; }
+/* A quiet field: a soft fill at rest, the field's own ring only on focus */
+.ui-shis__filter-input { width: 100%; height: var(--tc-control-h-md); padding: 0 var(--tc-field-px) 0 calc(var(--tc-space-2-5) + var(--tc-space-5)); border: 0; border-radius: var(--tc-field-radius); background: var(--tc-fill-subtle); font: inherit; font-size: var(--tc-font-size-sm); color: var(--tc-text-primary); outline: none; transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), box-shadow var(--tc-duration-fast) var(--tc-ease-standard); }
 .ui-shis__filter-input::placeholder { color: var(--tc-text-placeholder); }
-.ui-shis__filter-input:hover { box-shadow: var(--tc-field-shadow-hover); }
-.ui-shis__filter-input:focus-visible { box-shadow: var(--tc-field-shadow-focus); }
+.ui-shis__filter-input::-webkit-search-cancel-button { display: none; }
+.ui-shis__filter-input:hover { background: var(--tc-fill-hover); }
+.ui-shis__filter-input:focus-visible { background: var(--tc-field-bg); box-shadow: var(--tc-field-shadow-focus); }
 /* ----- Days and rows ----- */
 .ui-shis__panel { padding: var(--tc-space-1) 0 var(--tc-space-2); }
 .ui-shis__day + .ui-shis__day { margin-top: var(--tc-space-1); }
@@ -433,8 +471,8 @@ export class TcSearchHistory extends TcElement {
 .ui-shis__meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-1) var(--tc-space-2); font-size: var(--tc-font-size-xs); line-height: var(--tc-line-height-tight); color: var(--tc-text-muted); }
 .ui-shis__scope { display: inline-flex; align-items: center; height: var(--tc-pill-h); padding: 0 var(--tc-pill-px); border-radius: var(--tc-pill-radius); background: var(--tc-fill-default); font-size: var(--tc-pill-font-size); font-weight: var(--tc-pill-font-weight); color: var(--tc-text-secondary); }
 .ui-shis__results, .ui-shis__time { font-variant-numeric: tabular-nums; }
-.ui-shis__star, .ui-shis__remove { display: grid; flex: none; place-items: center; width: var(--tc-control-h-sm); height: var(--tc-control-h-sm); border-radius: var(--tc-control-radius-sm); color: var(--tc-icon-muted); transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard); }
-.ui-shis__star:hover, .ui-shis__remove:hover { background: var(--tc-action-ghost-bg-hover); color: var(--tc-text-primary); }
+.ui-shis__star, .ui-shis__remove, .ui-shis__schedule { display: grid; flex: none; place-items: center; width: var(--tc-control-h-sm); height: var(--tc-control-h-sm); border-radius: var(--tc-control-radius-sm); color: var(--tc-icon-muted); transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard); }
+.ui-shis__star:hover, .ui-shis__remove:hover, .ui-shis__schedule:hover { background: var(--tc-action-ghost-bg-hover); color: var(--tc-text-primary); }
 .ui-shis__star[aria-pressed="true"] { color: var(--tc-status-warning-fg); }
 .ui-shis__removed { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-1); margin: var(--tc-space-2) var(--tc-space-3) 0; padding: var(--tc-space-2) var(--tc-space-3); border-radius: var(--tc-radius-md); background: var(--tc-fill-subtle); font-size: var(--tc-font-size-sm); color: var(--tc-text-secondary); animation: ui-shis-in var(--tc-duration-moderate) var(--tc-ease-move) both; }
 .ui-shis__undo { font-weight: var(--tc-font-weight-medium); color: var(--tc-accent-text); text-decoration: underline; text-underline-offset: var(--tc-space-0-5); }
@@ -445,6 +483,7 @@ export class TcSearchHistory extends TcElement {
 }
 @media (forced-colors: active) {
   .ui-shis__tab[aria-selected="true"] { outline: 2px solid Highlight; }
+  .ui-shis__filter-input { border: 1px solid ButtonText; }
 }
 @media (prefers-reduced-motion: reduce) {
   [data-ui="shis"] *, [data-ui="shis"] *::before, [data-ui="shis"] *::after { animation: none !important; transition: none !important; }

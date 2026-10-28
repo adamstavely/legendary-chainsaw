@@ -1,31 +1,19 @@
-/* blocks/uncertainty-mix: the reading leads with the kind that weighs most and follows hidden kinds. */
+/*
+ * blocks/uncertainty-mix: the block is the <tc-uncertainty-mix> element through trenchcoat/react, so its behaviour – including every
+ * regression this file used to cover – is tested in real browsers: tests/elements/uncertainty-mix.test.ts. In jsdom the Lit
+ * wrappers don't receive their properties or attributes, so this only checks that the block still renders
+ * the element.
+ */
 import { render } from "@testing-library/react";
+import type { ComponentType } from "react";
 import { describe, expect, test } from "vitest";
-import { UncertaintyMix } from "@blocks/uncertainty-mix";
-
-const sources = [
-  { part: "Baseline", kind: "gap", amount: 2 },
-  { part: "Forecast", kind: "model", amount: 6 },
-  { part: "Forecast", kind: "chance", amount: 2 },
-];
-const reading = (c: HTMLElement) => c.querySelector(".ui-umix__reading")?.textContent ?? "";
+import * as block from "@blocks/uncertainty-mix";
+import { spec } from "../contract/blocks/uncertainty-mix.contract";
 
 describe("blocks/uncertainty-mix", () => {
-  test("shares and the reading", () => {
-    const { container } = render(<UncertaintyMix sources={sources} />);
-    expect([...container.querySelectorAll(".ui-umix__share")].map((e) => e.textContent)).toEqual(["20%", "20%", "60%"]);
-    expect(reading(container)).toContain("Most of the uncertainty – 60% – is model limits.");
-    expect(reading(container)).toContain("Forecast carries the most (80%)");
-  });
-
-  test("hidden kinds leave the mix and the reading", () => {
-    const { container } = render(<UncertaintyMix sources={sources} hidden={["model"]} onHiddenChange={() => {}} />);
-    expect(container.querySelector(".ui-umix__bar")?.getAttribute("aria-label")).toBe("Missing information 50%, Inherent uncertainty 50%");
-    expect(reading(container)).not.toContain("model limits");
-  });
-
-  test("empty", () => {
-    const { container } = render(<UncertaintyMix sources={[]} />);
-    expect(container.textContent).toContain("No uncertainty recorded for this answer.");
+  test("renders <tc-uncertainty-mix>", () => {
+    const Block = (block as unknown as Record<string, ComponentType<Record<string, unknown>>>)[spec.component];
+    const { container } = render(<Block {...spec.props} />);
+    expect(container.querySelector("tc-uncertainty-mix")).not.toBeNull();
   });
 });

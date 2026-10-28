@@ -1,0 +1,193 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-task-board.json",
+  "title": "tc-task-board",
+  "description": "A kanban board: columns per status, cards to drag, a detail panel to edit a card, search, a label filter and a\ncompact view.",
+  "type": "object",
+  "properties": {
+    "tasks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Task"
+      },
+      "description": "The cards"
+    },
+    "statuses": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/TaskStatus"
+      },
+      "description": "The columns, in order"
+    },
+    "labels": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/TaskLabel"
+      },
+      "description": "The labels a card can carry, with their colours"
+    },
+    "people": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/TaskPerson"
+      },
+      "description": "The people a card can be assigned to"
+    },
+    "path": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Breadcrumb above the board; its steps also name the board"
+    },
+    "compact": {
+      "type": "boolean",
+      "description": "Shows cards without their properties and dates"
+    },
+    "now": {
+      "type": "number",
+      "description": "The day new cards are created, as epoch ms – today by default"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "Task": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "key": {
+          "type": "string",
+          "description": "Short reference, e.g. \"NW-214\""
+        },
+        "title": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "priority": {
+          "type": "number",
+          "enum": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "description": "0 none · 1 low · 2 medium · 3 high · 4 urgent"
+        },
+        "estimate": {
+          "type": "string",
+          "enum": [
+            "XS",
+            "S",
+            "M",
+            "L",
+            "XL"
+          ]
+        },
+        "labels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "assignee": {
+          "type": "string"
+        },
+        "dueIn": {
+          "type": "number",
+          "description": "Days until due – negative when overdue"
+        },
+        "subtasks": {
+          "type": "array",
+          "minItems": 2,
+          "items": [
+            {
+              "type": "number",
+              "title": "done"
+            },
+            {
+              "type": "number",
+              "title": "total"
+            }
+          ],
+          "maxItems": 2
+        },
+        "pullRequest": {
+          "type": "number"
+        },
+        "created": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "key",
+        "title",
+        "status",
+        "priority",
+        "labels",
+        "created"
+      ],
+      "additionalProperties": false
+    },
+    "TaskStatus": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "TaskLabel": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "color": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "color"
+      ],
+      "additionalProperties": false
+    },
+    "TaskPerson": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "avatar": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "additionalProperties": false
+    }
+  }
+}
