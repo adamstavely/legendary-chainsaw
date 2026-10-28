@@ -38,16 +38,16 @@
     "colorNames": {
       "type": "object",
       "properties": {
-        "blue": {
-          "type": "string"
-        },
-        "pink": {
-          "type": "string"
-        },
         "green": {
           "type": "string"
         },
+        "blue": {
+          "type": "string"
+        },
         "yellow": {
+          "type": "string"
+        },
+        "pink": {
           "type": "string"
         },
         "purple": {
@@ -55,10 +55,10 @@
         }
       },
       "required": [
-        "blue",
-        "pink",
         "green",
+        "blue",
         "yellow",
+        "pink",
         "purple"
       ],
       "additionalProperties": false,

@@ -9,6 +9,109 @@
   "runs": 7
  },
  "pieces": {
+  "access-request": {
+   "measuredAt": "2026-10-28",
+   "hash": "57e0c92e1f22a394",
+   "bundle": {
+    "own": {
+     "min": 30728,
+     "gzip": 9009
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 18958
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2968
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1868
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 444
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 436
+     },
+     {
+      "name": "internal/util",
+      "kind": "internal",
+      "min": 306
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     }
+    ],
+    "withoutLit": {
+     "min": 38475,
+     "gzip": 11200
+    },
+    "withLit": {
+     "min": 58504,
+     "gzip": 17726
+    }
+   },
+   "render": {
+    "tag": "tc-access-request",
+    "source": "demo",
+    "runs": 7,
+    "cold": 12.9,
+    "first": 1,
+    "update": 0.3,
+    "updateKind": "one item of fields replaced",
+    "nodes": 81,
+    "scale": {
+     "property": "fields",
+     "demoItems": 6,
+     "points": [
+      {
+       "items": 100,
+       "first": 2.9,
+       "update": 0.4,
+       "nodes": 363
+      },
+      {
+       "items": 1000,
+       "first": 12.5,
+       "update": 1.4,
+       "nodes": 3063
+      }
+     ]
+    },
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
   "account-list": {
    "measuredAt": "2026-10-28",
    "hash": "d2412b2f39006e22",
@@ -2374,11 +2477,11 @@
   },
   "app-directory": {
    "measuredAt": "2026-10-28",
-   "hash": "e776679a0c29ecb2",
+   "hash": "5231f59ce9cf22d5",
    "bundle": {
     "own": {
-     "min": 56313,
-     "gzip": 20100
+     "min": 56352,
+     "gzip": 20133
     },
     "shared": [
      {
@@ -2438,19 +2541,19 @@
      }
     ],
     "withoutLit": {
-     "min": 77651,
-     "gzip": 25568
+     "min": 77690,
+     "gzip": 25596
     },
     "withLit": {
-     "min": 99973,
-     "gzip": 32503
+     "min": 100012,
+     "gzip": 32528
     }
    },
    "render": {
     "tag": "tc-app-directory",
     "source": "defaults",
     "runs": 7,
-    "cold": 16.9,
+    "cold": 17.4,
     "first": 2.4,
     "update": 0.4,
     "updateKind": "re-render with the same data",
@@ -5419,6 +5522,109 @@
     "updateKind": "re-render with the same data",
     "nodes": 50,
     "scale": null,
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
+  "color-picker": {
+   "measuredAt": "2026-10-28",
+   "hash": "1a699804a15fc957",
+   "bundle": {
+    "own": {
+     "min": 29260,
+     "gzip": 10025
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 21859
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2968
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1868
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 892
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 444
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 436
+     },
+     {
+      "name": "segmented-control",
+      "kind": "element",
+      "min": 30547
+     }
+    ],
+    "withoutLit": {
+     "min": 68305,
+     "gzip": 18445
+    },
+    "withLit": {
+     "min": 91163,
+     "gzip": 26025
+    }
+   },
+   "render": {
+    "tag": "tc-color-picker",
+    "source": "demo",
+    "runs": 7,
+    "cold": 16.4,
+    "first": 1.4,
+    "update": 0.4,
+    "updateKind": "one item of swatches replaced",
+    "nodes": 69,
+    "scale": {
+     "property": "swatches",
+     "demoItems": 7,
+     "points": [
+      {
+       "items": 100,
+       "first": 1.4,
+       "update": 0.2,
+       "nodes": 69
+      },
+      {
+       "items": 1000,
+       "first": 1.1,
+       "update": 0.2,
+       "nodes": 69
+      }
+     ]
+    },
     "idle": {
      "visible": {
       "frames": 0,
@@ -10502,7 +10708,7 @@
   },
   "generated-ui": {
    "measuredAt": "2026-10-28",
-   "hash": "53d18f4ded635f8c",
+   "hash": "bdc805dc79b822b2",
    "bundle": {
     "own": {
      "min": 34126,
@@ -10627,7 +10833,7 @@
      {
       "name": "project-flow",
       "kind": "element",
-      "min": 87116
+      "min": 87132
      },
      {
       "name": "multi-calendar",
@@ -10702,7 +10908,7 @@
      {
       "name": "app-directory",
       "kind": "element",
-      "min": 54394
+      "min": 54433
      },
      {
       "name": "integration-flow",
@@ -10862,7 +11068,7 @@
      {
       "name": "provider-connection",
       "kind": "element",
-      "min": 40664
+      "min": 40710
      },
      {
       "name": "text-annotator",
@@ -10972,7 +11178,7 @@
      {
       "name": "project-card",
       "kind": "element",
-      "min": 34305
+      "min": 34361
      },
      {
       "name": "instruction-editor",
@@ -11100,6 +11306,11 @@
       "min": 29053
      },
      {
+      "name": "access-request",
+      "kind": "element",
+      "min": 28783
+     },
+     {
       "name": "attestation-check",
       "kind": "element",
       "min": 28736
@@ -11113,6 +11324,11 @@
       "name": "budget-guard",
       "kind": "element",
       "min": 27757
+     },
+     {
+      "name": "color-picker",
+      "kind": "element",
+      "min": 27202
      },
      {
       "name": "compact-breakdown",
@@ -11210,9 +11426,19 @@
       "min": 23913
      },
      {
+      "name": "text-to-speech",
+      "kind": "element",
+      "min": 23697
+     },
+     {
       "name": "run-manifest",
       "kind": "element",
       "min": 23676
+     },
+     {
+      "name": "pricing-plans",
+      "kind": "element",
+      "min": 23580
      },
      {
       "name": "coverage-matrix",
@@ -11223,11 +11449,6 @@
       "name": "review-conflict",
       "kind": "element",
       "min": 23551
-     },
-     {
-      "name": "pricing-plans",
-      "kind": "element",
-      "min": 23543
      },
      {
       "name": "friction-profile",
@@ -11280,9 +11501,14 @@
       "min": 22048
      },
      {
+      "name": "speed-reader",
+      "kind": "element",
+      "min": 21757
+     },
+     {
       "name": "progress-tracker",
       "kind": "element",
-      "min": 21579
+      "min": 21628
      },
      {
       "name": "answer-arena",
@@ -11322,7 +11548,12 @@
      {
       "name": "priority-list",
       "kind": "element",
-      "min": 20510
+      "min": 20583
+     },
+     {
+      "name": "score-summary",
+      "kind": "element",
+      "min": 20475
      },
      {
       "name": "search-history",
@@ -11333,6 +11564,11 @@
       "name": "confidence-brief",
       "kind": "element",
       "min": 19793
+     },
+     {
+      "name": "geo-location",
+      "kind": "element",
+      "min": 19695
      },
      {
       "name": "alert-feed",
@@ -11355,6 +11591,11 @@
       "min": 18942
      },
      {
+      "name": "score-survey",
+      "kind": "element",
+      "min": 18801
+     },
+     {
       "name": "disagreement-banner",
       "kind": "element",
       "min": 18713
@@ -11370,14 +11611,14 @@
       "min": 18379
      },
      {
+      "name": "profile-header",
+      "kind": "element",
+      "min": 18374
+     },
+     {
       "name": "profile-menu",
       "kind": "element",
       "min": 18350
-     },
-     {
-      "name": "profile-header",
-      "kind": "element",
-      "min": 18310
      },
      {
       "name": "red-team-finding",
@@ -11392,7 +11633,7 @@
      {
       "name": "provenance-summary",
       "kind": "element",
-      "min": 17391
+      "min": 17432
      },
      {
       "name": "activity-calendar",
@@ -11477,7 +11718,7 @@
      {
       "name": "publish-readiness",
       "kind": "element",
-      "min": 15854
+      "min": 15855
      },
      {
       "name": "investment-balance",
@@ -11672,7 +11913,7 @@
      {
       "name": "src/generative/registry.ts",
       "kind": "other",
-      "min": 34922
+      "min": 36174
      },
      {
       "name": "src/generative/schemas/tc-ai-side-pane.json",
@@ -11828,6 +12069,11 @@
       "name": "src/generative/schemas/tc-oversight-home.json",
       "kind": "other",
       "min": 3593
+     },
+     {
+      "name": "src/generative/schemas/tc-access-request.json",
+      "kind": "other",
+      "min": 3512
      },
      {
       "name": "src/generative/schemas/tc-evidence-list.json",
@@ -12000,6 +12246,11 @@
       "min": 2909
      },
      {
+      "name": "src/generative/schemas/tc-color-picker.json",
+      "kind": "other",
+      "min": 2878
+     },
+     {
       "name": "src/generative/schemas/tc-alert-feed.json",
       "kind": "other",
       "min": 2870
@@ -12113,6 +12364,11 @@
       "name": "src/generative/schemas/tc-message-actions.json",
       "kind": "other",
       "min": 2601
+     },
+     {
+      "name": "src/generative/schemas/tc-geo-location.json",
+      "kind": "other",
+      "min": 2585
      },
      {
       "name": "src/generative/schemas/tc-asset-list.json",
@@ -12233,6 +12489,11 @@
       "name": "src/generative/schemas/tc-ops-overview.json",
       "kind": "other",
       "min": 2266
+     },
+     {
+      "name": "src/generative/schemas/tc-score-summary.json",
+      "kind": "other",
+      "min": 2261
      },
      {
       "name": "src/generative/schemas/tc-task-board.json",
@@ -12363,6 +12624,11 @@
       "name": "src/generative/schemas/tc-capacity-bars.json",
       "kind": "other",
       "min": 2029
+     },
+     {
+      "name": "src/generative/schemas/tc-score-survey.json",
+      "kind": "other",
+      "min": 2019
      },
      {
       "name": "src/generative/schemas/tc-synthesis-notes.json",
@@ -12580,6 +12846,11 @@
       "min": 1320
      },
      {
+      "name": "src/generative/schemas/tc-text-to-speech.json",
+      "kind": "other",
+      "min": 1288
+     },
+     {
       "name": "src/generative/schemas/tc-stepper-form.json",
       "kind": "other",
       "min": 1262
@@ -12618,6 +12889,11 @@
       "name": "src/generative/schemas/tc-radio-group.json",
       "kind": "other",
       "min": 1107
+     },
+     {
+      "name": "src/generative/schemas/tc-speed-reader.json",
+      "kind": "other",
+      "min": 1098
      },
      {
       "name": "src/generative/schemas/tc-change-summary.json",
@@ -12736,24 +13012,132 @@
      }
     ],
     "withoutLit": {
-     "min": 7204262,
-     "gzip": 1770794
+     "min": 7383657,
+     "gzip": 1814060
     },
     "withLit": {
-     "min": 7173068,
-     "gzip": 1759257
+     "min": 7350793,
+     "gzip": 1801904
     }
    },
    "render": {
     "tag": "tc-generated-ui",
     "source": "demo",
     "runs": 7,
-    "cold": 2,
-    "first": 0.5,
+    "cold": 2.3,
+    "first": 0.6,
     "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 9,
     "scale": null,
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
+  "geo-location": {
+   "measuredAt": "2026-10-28",
+   "hash": "e05fcef1de1f6c0b",
+   "bundle": {
+    "own": {
+     "min": 21801,
+     "gzip": 7572
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 21081
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2968
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1868
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 444
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 436
+     },
+     {
+      "name": "internal/safe-url",
+      "kind": "internal",
+      "min": 343
+     },
+     {
+      "name": "internal/util",
+      "kind": "internal",
+      "min": 270
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     }
+    ],
+    "withoutLit": {
+     "min": 29820,
+     "gzip": 9942
+    },
+    "withLit": {
+     "min": 52113,
+     "gzip": 17329
+    }
+   },
+   "render": {
+    "tag": "tc-geo-location",
+    "source": "demo",
+    "runs": 7,
+    "cold": 8.8,
+    "first": 0.9,
+    "update": 0.3,
+    "updateKind": "one item of providers replaced",
+    "nodes": 76,
+    "scale": {
+     "property": "providers",
+     "demoItems": 4,
+     "points": [
+      {
+       "items": 100,
+       "first": 3.2,
+       "update": 0.6,
+       "nodes": 748
+      },
+      {
+       "items": 1000,
+       "first": 24.7,
+       "update": 6.3,
+       "nodes": 7048
+      }
+     ]
+    },
     "idle": {
      "visible": {
       "frames": 0,
@@ -22042,6 +22426,190 @@
     "errors": []
    }
   },
+  "score-summary": {
+   "measuredAt": "2026-10-28",
+   "hash": "d49813c5a168710a",
+   "bundle": {
+    "own": {
+     "min": 22495,
+     "gzip": 7337
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 19976
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2968
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1868
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 1166
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 444
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 436
+     },
+     {
+      "name": "score-survey",
+      "kind": "element",
+      "min": 18452
+     }
+    ],
+    "withoutLit": {
+     "min": 49676,
+     "gzip": 13638
+    },
+    "withLit": {
+     "min": 70672,
+     "gzip": 20502
+    }
+   },
+   "render": {
+    "tag": "tc-score-summary",
+    "source": "demo",
+    "runs": 7,
+    "cold": 9.9,
+    "first": 1.4,
+    "update": 0.5,
+    "updateKind": "one item of responses replaced",
+    "nodes": 127,
+    "scale": {
+     "property": "responses",
+     "demoItems": 11,
+     "points": [
+      {
+       "items": 100,
+       "first": 1.3,
+       "update": 0.4,
+       "nodes": 127
+      },
+      {
+       "items": 1000,
+       "first": 1.4,
+       "update": 0.4,
+       "nodes": 127
+      }
+     ]
+    },
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
+  "score-survey": {
+   "measuredAt": "2026-10-28",
+   "hash": "4669e4b5728776e5",
+   "bundle": {
+    "own": {
+     "min": 20884,
+     "gzip": 6790
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 19962
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2968
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1868
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 1166
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 444
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 436
+     }
+    ],
+    "withoutLit": {
+     "min": 29348,
+     "gzip": 9264
+    },
+    "withLit": {
+     "min": 50523,
+     "gzip": 16180
+    }
+   },
+   "render": {
+    "tag": "tc-score-survey",
+    "source": "demo",
+    "runs": 7,
+    "cold": 12.6,
+    "first": 0.9,
+    "update": 0.2,
+    "updateKind": "re-render with the same data",
+    "nodes": 59,
+    "scale": null,
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
   "search-history": {
    "measuredAt": "2026-10-28",
    "hash": "669f8130096c7032",
@@ -23183,6 +23751,87 @@
       }
      ]
     },
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
+  "speed-reader": {
+   "measuredAt": "2026-10-28",
+   "hash": "66afbb0422508b86",
+   "bundle": {
+    "own": {
+     "min": 23816,
+     "gzip": 7551
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 19961
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2971
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1868
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 1101
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 444
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 436
+     }
+    ],
+    "withoutLit": {
+     "min": 32215,
+     "gzip": 9992
+    },
+    "withLit": {
+     "min": 53450,
+     "gzip": 16892
+    }
+   },
+   "render": {
+    "tag": "tc-speed-reader",
+    "source": "demo",
+    "runs": 7,
+    "cold": 13.5,
+    "first": 1.3,
+    "update": 0.3,
+    "updateKind": "re-render with the same data",
+    "nodes": 69,
+    "scale": null,
     "idle": {
      "visible": {
       "frames": 0,
@@ -24474,6 +25123,87 @@
     "update": 0.5,
     "updateKind": "re-render with the same data",
     "nodes": 26,
+    "scale": null,
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
+  "text-to-speech": {
+   "measuredAt": "2026-10-28",
+   "hash": "42199b3ba6d35d76",
+   "bundle": {
+    "own": {
+     "min": 25728,
+     "gzip": 7996
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 19967
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2971
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1868
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 1101
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 444
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 436
+     }
+    ],
+    "withoutLit": {
+     "min": 34134,
+     "gzip": 10414
+    },
+    "withLit": {
+     "min": 55371,
+     "gzip": 17338
+    }
+   },
+   "render": {
+    "tag": "tc-text-to-speech",
+    "source": "demo",
+    "runs": 7,
+    "cold": 13.2,
+    "first": 3.8,
+    "update": 0.6,
+    "updateKind": "re-render with the same data",
+    "nodes": 354,
     "scale": null,
     "idle": {
      "visible": {

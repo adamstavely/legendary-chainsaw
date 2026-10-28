@@ -85,6 +85,9 @@
     "literal font-family": 1,
     "literal spacing": 2
   },
+  "src/elements/access-request.ts": {
+    "clock/environment read": 1
+  },
   "src/elements/agent-cursors.ts": {
     "clock/environment read": 2,
     "literal line-height": 3,

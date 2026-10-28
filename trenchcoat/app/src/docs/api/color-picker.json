@@ -1,0 +1,743 @@
+{
+ "elements": [
+  {
+   "tag": "tc-color-picker",
+   "className": "TcColorPicker",
+   "description": "Pick a colour – a saturation and brightness square, hue and opacity sliders, HEX / RGB / CMYK fields, an eyedropper,\nswatches and Copy.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The heading; by default the labels' heading, \"Colour\"",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "A line under the heading",
+     "readonly": false
+    },
+    {
+     "name": "value",
+     "attribute": "value",
+     "type": "string",
+     "default": "\"#000000\"",
+     "description": "The colour, \"#rrggbb\" – \"#rrggbbaa\" with `alpha`. Changed by the user unless a tc-value-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "previous",
+     "attribute": "previous",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The colour shown beside the new one, which the chip puts back; by default the value when the element first rendered",
+     "readonly": false
+    },
+    {
+     "name": "format",
+     "attribute": "format",
+     "type": "ColorPickerFormat",
+     "default": "\"hex\"",
+     "description": "Which fields show: \"hex\", \"rgb\" or \"cmyk\". Changed by the user unless a tc-format-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "alpha",
+     "attribute": "alpha",
+     "type": "boolean",
+     "default": "false",
+     "description": "Adds an opacity slider and field; the value then carries alpha (\"#rrggbbaa\")",
+     "readonly": false
+    },
+    {
+     "name": "eyedropper",
+     "attribute": "eyedropper",
+     "type": "boolean",
+     "default": "true",
+     "description": "Shows the eyedropper where the browser has one (Chromium); set false to hide it everywhere",
+     "readonly": false
+    },
+    {
+     "name": "swatches",
+     "attribute": null,
+     "type": "ColorPickerSwatch[]",
+     "default": "[]",
+     "description": "Colours to pick from in one press: hex strings, or { value, name }",
+     "readonly": false
+    },
+    {
+     "name": "disabled",
+     "attribute": "disabled",
+     "type": "boolean",
+     "default": "false",
+     "description": "Nothing can be changed or focused except Copy",
+     "readonly": false
+    },
+    {
+     "name": "readonly",
+     "attribute": "readonly",
+     "type": "boolean",
+     "default": "false",
+     "description": "The colour shows and can be copied, but not changed",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "Partial<ColorPickerLabels>",
+     "default": "{}",
+     "description": "The picker's words, merged over defaultColorPickerLabels",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-value-change",
+     "detail": "",
+     "description": "The colour changed ({ value, rgb, cmyk }: ColorPickerValueChange); cancelable – prevented, `value` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-format-change",
+     "detail": "",
+     "description": "Another format was picked ({ format }: ColorPickerFormatChange); cancelable – prevented, `format` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-copy",
+     "detail": "",
+     "description": "Copy was pressed ({ text, format }: ColorPickerCopy); cancelable – prevented, nothing is written to the clipboard",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "clp",
+   "cssProperties": [
+    {
+     "name": "--tc-clp-max-w",
+     "value": "360px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-clp-area-h",
+     "value": "176px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-clp-thumb",
+     "value": "16px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-clp-track-h",
+     "value": "12px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-clp-chip",
+     "value": "40px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-clp-check",
+     "value": "8px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-clp-ring",
+     "value": "2px",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-action-ghost-bg-hover",
+    "--tc-border-selected",
+    "--tc-border-subtle",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-h-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-duration-quick",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-h-sm",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-field-shadow-hover",
+    "--tc-field-shadow-invalid",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-mono",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-radius-full",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-shadow-color-strong",
+    "--tc-shadow-control",
+    "--tc-space-1",
+    "--tc-space-12",
+    "--tc-space-16",
+    "--tc-space-2",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-status-danger-fg",
+    "--tc-status-success-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-sunken",
+    "--tc-surface-tray",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "parseColorHex",
+   "signature": "parseColorHex(text: string | null | undefined): ColorPickerRgb | null",
+   "description": "\"#3a6df0\", \"3a6df0\", \"#36f\", \"#3a6df080\" → rgb with alpha 0–1, or null when it isn't a hex colour"
+  },
+  {
+   "name": "colorToHex",
+   "signature": "colorToHex({ r, g, b, a }: ColorPickerRgb, withAlpha: unknown): void",
+   "description": "rgb → \"#rrggbb\", or \"#rrggbbaa\" when `withAlpha`"
+  },
+  {
+   "name": "colorRgbToCmyk",
+   "signature": "colorRgbToCmyk({ r, g, b }: Pick<ColorPickerRgb, \"r\" | \"g\" | \"b\">): ColorPickerCmyk",
+   "description": "sRGB → CMYK percentages – a plain conversion, not a print profile"
+  },
+  {
+   "name": "colorCmykToRgb",
+   "signature": "colorCmykToRgb({ c, m, y, k }: ColorPickerCmyk): ColorPickerRgb",
+   "description": "CMYK percentages → sRGB, alpha 1"
+  }
+ ],
+ "react": [
+  {
+   "component": "ColorPicker",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading; by default \"Colour\""
+    },
+    {
+     "name": "value",
+     "type": "string",
+     "optional": true,
+     "description": "The colour, \"#rrggbb\" (\"#rrggbbaa\" with `alpha`) – controlled when given"
+    },
+    {
+     "name": "defaultValue",
+     "type": "string",
+     "optional": true,
+     "description": "The colour on mount when `value` isn't controlled; by default black"
+    },
+    {
+     "name": "onValueChange",
+     "type": "(value: string, detail: ColorPickerValueChange) => void",
+     "optional": true,
+     "description": "The colour changed; `detail` has it as rgb and CMYK too"
+    },
+    {
+     "name": "format",
+     "type": "ColorPickerFormat",
+     "optional": true,
+     "description": "Which fields show – controlled when given"
+    },
+    {
+     "name": "defaultFormat",
+     "type": "ColorPickerFormat",
+     "optional": true,
+     "description": "The fields on mount when `format` isn't controlled; by default \"hex\""
+    },
+    {
+     "name": "onFormatChange",
+     "type": "(format: ColorPickerFormat) => void",
+     "optional": true,
+     "description": "Another format was picked"
+    },
+    {
+     "name": "onCopyColor",
+     "type": "(text: string, format: ColorPickerFormat) => void | false",
+     "optional": true,
+     "description": "Copy was pressed with the colour as text; return false to copy it yourself"
+    }
+   ],
+   "hides": [
+    "heading",
+    "value",
+    "defaultValue",
+    "format",
+    "children"
+   ],
+   "events": {
+    "tc-value-change": null,
+    "tc-format-change": null,
+    "tc-copy": "onCopyColor"
+   }
+  }
+ ],
+ "changelog": [
+  "`tc-color-picker` – a saturation and brightness square, hue and opacity sliders, HEX / RGB / CMYK fields, an eyedropper where the browser has one (`EyeDropper`), swatches and Copy. A form control, so Angular gets a ValueAccessor. CMYK is a plain device-independent conversion, not an ICC print profile."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-color-picker",
+   "className": "TcColorPicker",
+   "module": "trenchcoat/color-picker",
+   "data": [
+    "swatches",
+    "labels"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    },
+    {
+     "name": "value",
+     "attribute": "value"
+    },
+    {
+     "name": "previous",
+     "attribute": "previous"
+    },
+    {
+     "name": "format",
+     "attribute": "format"
+    },
+    {
+     "name": "alpha",
+     "attribute": "alpha"
+    },
+    {
+     "name": "eyedropper",
+     "attribute": "eyedropper"
+    },
+    {
+     "name": "disabled",
+     "attribute": "disabled"
+    },
+    {
+     "name": "readonly",
+     "attribute": "readonly"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-value-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-format-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-copy",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "value",
+     "event": "tc-value-change"
+    },
+    {
+     "property": "format",
+     "event": "tc-format-change"
+    }
+   ],
+   "form": {
+    "property": "value",
+    "event": "tc-value-change",
+    "formAssociated": false
+   },
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "segmented-control",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "individual-transforms",
+    "name": "translate, scale and rotate properties",
+    "bcd": "css.properties.translate",
+    "versions": {
+     "chrome": "104",
+     "edge": "104",
+     "firefox": "72",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "segmented-control"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "segmented-control",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "clipboard",
+    "name": "Async Clipboard (writeText)",
+    "bcd": "api.Clipboard.writeText",
+    "versions": {
+     "chrome": "66",
+     "edge": "79",
+     "firefox": "63",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "why": "Copy buttons.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "resize-observer",
+    "name": "ResizeObserver",
+    "bcd": "api.ResizeObserver",
+    "versions": {
+     "chrome": "64",
+     "edge": "79",
+     "firefox": "69",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "via": [
+     "segmented-control"
+    ]
+   },
+   {
+    "id": "conic-gradient",
+    "name": "conic-gradient()",
+    "bcd": "css.types.gradient.conic-gradient",
+    "versions": {
+     "chrome": "69",
+     "edge": "79",
+     "firefox": "83",
+     "safari": "12.1",
+     "safari_ios": "12.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "mask",
+    "name": "CSS masks",
+    "bcd": "css.properties.mask-image",
+    "versions": {
+     "chrome": "1",
+     "edge": "79",
+     "firefox": "53",
+     "safari": "4",
+     "safari_ios": "3.2"
+    },
+    "progressive": false,
+    "note": "with the -webkit- prefix",
+    "via": [
+     "segmented-control"
+    ]
+   },
+   {
+    "id": "scrollbar-width",
+    "name": "scrollbar-width",
+    "bcd": "css.properties.scrollbar-width",
+    "versions": {
+     "chrome": "121",
+     "edge": "121",
+     "firefox": "64",
+     "safari": "18.2",
+     "safari_ios": "18.2"
+    },
+    "progressive": true,
+    "without": "Scrollbars keep the browser's default width.",
+    "via": [
+     "segmented-control"
+    ]
+   },
+   {
+    "id": "at-property",
+    "name": "@property",
+    "bcd": "css.at-rules.property",
+    "versions": {
+     "chrome": "85",
+     "edge": "85",
+     "firefox": "128",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "The registered custom properties don't interpolate, so the transitions and spins they drive jump to their end state.",
+    "via": [
+     "segmented-control"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "overscroll-contain",
+    "name": "overscroll-behavior: contain",
+    "bcd": "css.properties.overscroll-behavior.contain",
+    "versions": {
+     "chrome": "63",
+     "edge": "18",
+     "firefox": "59",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "Scrolling past the end of a list carries on scrolling the page.",
+    "via": [
+     "segmented-control"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setTimeout",
+   "setTimeout (segmented-control)"
+  ],
+  "frames": [
+   "requestAnimationFrame, cancelled (segmented-control)"
+  ],
+  "animations": 0,
+  "observers": [
+   "ResizeObserver (segmented-control)",
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (segmented-control)",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 68305,
+  "gzip": 18323
+ }
+}

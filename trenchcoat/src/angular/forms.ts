@@ -10,6 +10,7 @@ import type { TcChatComposer } from "trenchcoat/chat-composer";
 import type { TcChatHistory } from "trenchcoat/chat-history";
 import type { TcCheckbox } from "trenchcoat/checkbox";
 import type { TcClarifyingQuestions } from "trenchcoat/clarifying-questions";
+import type { TcColorPicker } from "trenchcoat/color-picker";
 import type { TcCombobox } from "trenchcoat/combobox";
 import type { TcConversationAnnotation } from "trenchcoat/conversation-annotation";
 import type { TcDataHandlingPolicy } from "trenchcoat/data-handling-policy";
@@ -119,6 +120,14 @@ export class CheckboxValueAccessor extends ValueAccessor<TcCheckbox> {}
   providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => ClarifyingQuestionsValueAccessor), multi: true }],
 })
 export class ClarifyingQuestionsValueAccessor extends ValueAccessor<TcClarifyingQuestions> {}
+
+/** ngModel, formControl and formControlName on <tc-color-picker> */
+@Directive({
+  selector: "tc-color-picker[ngModel], tc-color-picker[formControl], tc-color-picker[formControlName]",
+  standalone: true,
+  providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => ColorPickerValueAccessor), multi: true }],
+})
+export class ColorPickerValueAccessor extends ValueAccessor<TcColorPicker> {}
 
 /** ngModel, formControl and formControlName on <tc-combobox> */
 @Directive({
@@ -417,4 +426,4 @@ export class ToolPermissionsValueAccessor extends ValueAccessor<TcToolPermission
 export class TriggerBuilderValueAccessor extends ValueAccessor<TcTriggerBuilder> {}
 
 /** Every value accessor, for a standalone component's imports */
-export const TRENCHCOAT_FORMS = [AnswerArenaValueAccessor, ChatComposerValueAccessor, ChatHistoryValueAccessor, CheckboxValueAccessor, ClarifyingQuestionsValueAccessor, ComboboxValueAccessor, ConversationAnnotationValueAccessor, DataHandlingPolicyValueAccessor, DateRangePickerValueAccessor, DropzoneValueAccessor, EvaluationDatasetEditorValueAccessor, FeedbackRubricValueAccessor, FilterMenuValueAccessor, GateConfigValueAccessor, InstructionEditorValueAccessor, McpConnectionManagerValueAccessor, ModelPickerValueAccessor, ModelRoutingValueAccessor, ModelSettingsValueAccessor, MultimodalInputValueAccessor, NumberFieldValueAccessor, OtpInputValueAccessor, OutputSchemaBuilderValueAccessor, PlaybookCanvasValueAccessor, PromptLibraryValueAccessor, ProviderConnectionValueAccessor, QueryBuilderValueAccessor, RadioGroupValueAccessor, ReflectionGateValueAccessor, RetrievalSettingsValueAccessor, RoutineFormValueAccessor, SecretFieldValueAccessor, SegmentedControlValueAccessor, SliderFieldValueAccessor, SmartRecommendationValueAccessor, StepperTagsValueAccessor, StepperChoicesValueAccessor, SwitchValueAccessor, TextAnnotatorValueAccessor, ToolConfigurationValueAccessor, ToolPermissionsValueAccessor, TriggerBuilderValueAccessor] as const;
+export const TRENCHCOAT_FORMS = [AnswerArenaValueAccessor, ChatComposerValueAccessor, ChatHistoryValueAccessor, CheckboxValueAccessor, ClarifyingQuestionsValueAccessor, ColorPickerValueAccessor, ComboboxValueAccessor, ConversationAnnotationValueAccessor, DataHandlingPolicyValueAccessor, DateRangePickerValueAccessor, DropzoneValueAccessor, EvaluationDatasetEditorValueAccessor, FeedbackRubricValueAccessor, FilterMenuValueAccessor, GateConfigValueAccessor, InstructionEditorValueAccessor, McpConnectionManagerValueAccessor, ModelPickerValueAccessor, ModelRoutingValueAccessor, ModelSettingsValueAccessor, MultimodalInputValueAccessor, NumberFieldValueAccessor, OtpInputValueAccessor, OutputSchemaBuilderValueAccessor, PlaybookCanvasValueAccessor, PromptLibraryValueAccessor, ProviderConnectionValueAccessor, QueryBuilderValueAccessor, RadioGroupValueAccessor, ReflectionGateValueAccessor, RetrievalSettingsValueAccessor, RoutineFormValueAccessor, SecretFieldValueAccessor, SegmentedControlValueAccessor, SliderFieldValueAccessor, SmartRecommendationValueAccessor, StepperTagsValueAccessor, StepperChoicesValueAccessor, SwitchValueAccessor, TextAnnotatorValueAccessor, ToolConfigurationValueAccessor, ToolPermissionsValueAccessor, TriggerBuilderValueAccessor] as const;

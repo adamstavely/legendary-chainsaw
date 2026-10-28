@@ -4,6 +4,7 @@ One source per component, with both looks: the `look` prop picks Standard (the d
 the helpers in `src/internal/` and read their values from `tokens/tokens.css`, which an app loads once. These React
 components are being ported to Lit web components (`audit/lit-port-plan.md`); the package build follows.
 
+- **Access Request** (`access-request.tsx`) – Ask for access to one piece of data – the resource with its owner and classification in words, the level, how long, a required justification and the fields needed – then where it stands: pending with who decides, approved with the time left, denied with the reason, or expired
 - **Account List** (`account-list.tsx`) – The financial accounts linked to a person or a company – institution, type, an IBAN-style identifier masked until shown one at a time, a balance or flagged amount and a status each (Monitored, Flagged, Under review, Closed or your own), with your own stats above
 - **Activity Calendar** (`activity-calendar.tsx`) – A year of activity at a glance – a square per day in a column per week, shaded by how much happened, with month and weekday names, the total, and any day's value on hover or focus
 - **Activity Clock** (`activity-clock.tsx`) – When activity happens, a clock per day – an AM ring and a PM ring of hour segments shaded by how busy each hour was, the weekday and date in the middle, and any hour's value there on hover or focus
@@ -49,6 +50,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Clarifying Questions** (`clarifying-questions.tsx`) – The agent asks before it starts – two or three quick questions with choices or a short answer, sent back as one reply
 - **Co-Occurrence** (`co-occurrence.tsx`) – Who keeps turning up alongside a subject – accounts, cards, devices or people ranked by shared events, each with a strength in words and bars, a score, the share of events, a count per source and when last seen, opening onto the shared events themselves
 - **Code Block** (`code-block.tsx`) – Code that streams in with syntax colours from the theme – Copy, Apply, and a diff against the current file before you apply it
+- **Color Picker** (`color-picker.tsx`) – Pick a colour – a saturation and brightness square, hue and opacity sliders, HEX / RGB / CMYK fields that convert as you type, an eyedropper where the browser has one, swatches, Copy, and the previous colour one press away
 - **Combobox** (`combobox.tsx`) – Pick one or many from a searchable, grouped list – chips with avatars, highlighted matches, create-on-the-fly and full keyboard support
 - **Command Menu** (`command-menu.tsx`) – Search and run anything from one field – tool actions with logos and ⌘1–⌘5, everyday commands with icons
 - **Comment Thread** (`comment-thread.tsx`) – One comment with replies – an assistant reports what it did, folds open details and answers @mentions
@@ -96,6 +98,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Gap Exposure** (`gap-exposure.tsx`) – Gaps or risks and whether anyone is working on them – severity in words and a mark, the item and its priority, coverage, owner and what's invested, with the severe uncovered ones called out, grouping by priority or severity and an uncovered-only switch
 - **Gate Config** (`gate-config.tsx`) – When a person decides – the conditions that pause a run, who reviews, what they see, and what they're allowed to do
 - **Generated UI** (`generated-ui.tsx`) – A model's answer drawn as real components – tables, charts, metrics, forms and callouts from a spec, checked as it arrives, with plain text for anything unknown
+- **Geo Location** (`geo-location.tsx`) – Coordinates made useful – decimal or degrees-minutes-seconds, Copy, Open in Google Maps, Apple Maps, OpenStreetMap, Bing or your own tools, and an embedded map that loads nothing until Show map
 - **Grade Distribution** (`grade-distribution.tsx`) – How a set of assessments came out – a count over each grade (Outstanding to Dissatisfactory, or your own), how many were assessed, empty grades muted, an optional bar in proportion and a grade picked as a filter
 - **Guardrail Notice** (`guardrail-notice.tsx`) – When a policy blocks, redacts or rewrites content – which policy, why, what changed with personal data masked, and a way to ask for review
 - **Handoff Brief** (`handoff-brief.tsx`) – Work passing from one person to another – summary, open items and commitments, each acknowledged by the receiver, blocked when they lack access
@@ -164,6 +167,8 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Run Compare** (`run-compare.tsx`) – Two runs or two prompt versions side by side – outputs, steps, cost and time, with every difference highlighted
 - **Run Manifest** (`run-manifest.tsx`) – What it takes to reproduce a run – model, settings, instruction hash, sources, intent and the verification summary, ready to export
 - **Sandbox Log** (`sandbox-log.tsx`) – Command output from the agent's sandbox – a block per step with the command, exit code and time, streaming text in colour, copy and search, fast with long logs
+- **Score Summary** (`score-summary.tsx`) – NPS or CSAT results – the score in big type, the change since last time with a sparkline, the target, the bands with shares and counts, and a bar per score you can pick to filter comments
+- **Score Survey** (`score-survey.tsx`) – The NPS or CSAT question a person answers – eleven numbers with the bands shown quietly, or five faces with words; number keys pick, a follow-up per band, Submit and a thank-you with Change answer
 - **Search History** (`search-history.tsx`) – Recent and saved searches – tabs with counts, a filter, searches grouped by day with scope chips, result counts and times, and Run again, a save star and Remove with Undo on each
 - **Secret Field** (`secret-field.tsx`) – A masked credential input with an explicit reveal control
 - **Segmented Control** (`segmented-control.tsx`) – Switch between two to six options – a raised pill or underline that glides, stretches a little and can be dragged across, with icons, counts and badges
@@ -174,6 +179,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **SLA Status** (`sla-status.tsx`) – How well service levels are met – the share on time, a Met / At risk / Breached split in words and marks, a weekly trend, a bar per type of request with a readout, and a period chooser
 - **Slider Field** (`slider-field.tsx`) – A synchronized slider and numeric input
 - **Smart Recommendation** (`smart-recommendation.tsx`) – Suggestion card with a confidence signal, alternatives to switch to and accept with undo
+- **Speed Reader** (`speed-reader.tsx`) – Speed reading one word at a time in a fixed frame – the recognition point on a guide mark, longer pauses at sentence ends, 100–1000 words a minute, 1–3 words at a time, a scrubber with the time left, and the sentence around the word when paused
 - **Status Tracker** (`status-tracker.tsx`) – Where work stands in a fixed sequence of steps – gates or stages on a line, each cleared, pending, blocked or not reached in words and marks, the line filling as they clear, the current step marked, a legend, and a step's evidence record on click
 - **Stepper Form** (`stepper-form.tsx`) – A multi-step flow for onboarding and setup – steps that fill and check off, sliding steps, a card that morphs to each step, inline validation and a success state
 - **Stories** (`stories.tsx`) – Avatars for people and accounts with a gradient ring for something new – open one for a "what changed" brief: a bento grid of metric, status, note, list, image and link tiles
@@ -182,6 +188,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Synthesis Notes** (`synthesis-notes.tsx`) – Your own conclusions, assumptions and open questions, kept apart from the model's output and exported with where they came from
 - **Terms Dialog** (`terms-dialog.tsx`) – Agreeing to terms in a modal designed for reading – version and date, a jump list, what changed since you last agreed, required and optional consents, and Accept that says why it waits
 - **Text Annotator** (`text-annotator.tsx`) – Highlight text in a document in a colour and comment on it – marks in the text, comments in the margin, edit, resolve and filter
+- **Text To Speech** (`text-to-speech.tsx`) – Reads a passage aloud with the browser's voices – the sentence and the spoken word marked as it goes, click a sentence to read from there, play, pause, skip and stop, and a voice, speed and pitch picker
 - **Thinking Loader** (`thinking-loader.tsx`) – A small working pill for AI replies – an eight-ray spinner and a shimmering label that rolls through phases and settles on a check
 - **Thinking State** (`thinking-state.tsx`) – AI working panel with a live timer, searched sources and thinking steps that appear one by one
 - **Tips Panel** (`tips-panel.tsx`) – Grid of short tips with one action each – taken tips turn into a done state

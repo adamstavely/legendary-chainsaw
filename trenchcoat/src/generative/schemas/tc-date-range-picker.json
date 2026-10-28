@@ -38,8 +38,8 @@
     "compareMode": {
       "type": "string",
       "enum": [
-        "off",
         "previous",
+        "off",
         "year"
       ],
       "description": "The applied comparison"

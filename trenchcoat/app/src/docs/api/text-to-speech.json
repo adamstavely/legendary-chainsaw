@@ -1,0 +1,621 @@
+{
+ "elements": [
+  {
+   "tag": "tc-text-to-speech",
+   "className": "TcTextToSpeech",
+   "description": "Reads a passage aloud – the sentence and word being spoken marked in the text, with play, pause, stop, sentence\nskips, a voice picker, speed and pitch.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Read aloud\"",
+     "description": "The heading",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string",
+     "default": "\"\"",
+     "description": "A quiet line under the heading – the source or what the passage is",
+     "readonly": false
+    },
+    {
+     "name": "text",
+     "attribute": "text",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The passage to read: plain text; a blank line starts a new paragraph",
+     "readonly": false
+    },
+    {
+     "name": "rate",
+     "attribute": "rate",
+     "type": "number",
+     "default": "1",
+     "description": "Speaking speed from 0.5 to 2 (1 is normal). Changed by the element unless a tc-rate-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "pitch",
+     "attribute": "pitch",
+     "type": "number",
+     "default": "1",
+     "description": "Pitch from 0 to 2 (1 is normal). Changed by the element unless a tc-pitch-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "voice",
+     "attribute": "voice",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The chosen voice's `voiceURI`, or \"\" for the browser's default. Changed unless a tc-voice-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "lang",
+     "attribute": "lang",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The passage's language (a BCP 47 tag) – picks a default voice and splits sentences; unset, the browser decides",
+     "readonly": false
+    },
+    {
+     "name": "state",
+     "attribute": null,
+     "type": "TextToSpeechState",
+     "default": null,
+     "description": "Whether it's reading, paused or idle",
+     "readonly": true
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-rate-change",
+     "detail": "",
+     "description": "The speed was changed ({ rate }: TextToSpeechRateChange); cancelable – prevented, `rate` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-pitch-change",
+     "detail": "",
+     "description": "The pitch was changed ({ pitch }: TextToSpeechPitchChange); cancelable – prevented, `pitch` stays",
+     "cancelable": true
+    },
+    {
+     "name": "tc-voice-change",
+     "detail": "",
+     "description": "A voice was picked ({ voice }: TextToSpeechVoiceChange); cancelable – prevented, `voice` stays",
+     "cancelable": true
+    },
+    {
+     "name": "tc-start",
+     "detail": "",
+     "description": "Reading began ({ sentence }: TextToSpeechStart)",
+     "cancelable": false
+    },
+    {
+     "name": "tc-end",
+     "detail": "",
+     "description": "Reading stopped, at the end or by Stop ({ completed, sentence }: TextToSpeechEnd)",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [
+    {
+     "name": "play",
+     "params": "from: unknown",
+     "returns": "void",
+     "description": "Starts reading from a sentence (0-based), or from the current one"
+    },
+    {
+     "name": "pause",
+     "params": "",
+     "returns": "void",
+     "description": "Pauses; Resume starts the sentence again"
+    },
+    {
+     "name": "stop",
+     "params": "",
+     "returns": "void",
+     "description": "Stops and goes back to the start"
+    }
+   ],
+   "ui": "tts",
+   "cssProperties": [
+    {
+     "name": "--tc-tts-passage-h",
+     "value": "260px",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-solid",
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-active",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-border-control",
+    "--tc-border-selected",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-lg",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-md",
+    "--tc-control-px-sm",
+    "--tc-control-radius-md",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-font-size",
+    "--tc-field-h",
+    "--tc-field-px",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-field-shadow-hover",
+    "--tc-fill-hover",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-line-height-relaxed",
+    "--tc-line-height-snug",
+    "--tc-meter-fill",
+    "--tc-meter-h",
+    "--tc-meter-radius",
+    "--tc-meter-track",
+    "--tc-radius-2xs",
+    "--tc-radius-full",
+    "--tc-radius-md",
+    "--tc-radius-xs",
+    "--tc-shadow-control",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-5",
+    "--tc-space-8",
+    "--tc-status-info-bg",
+    "--tc-status-info-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-switch-knob-bg",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-on-accent",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "splitSentences",
+   "signature": "splitSentences(text: string, locale?: string): Sentence[]",
+   "description": "Splits a passage into paragraphs (blank lines) and sentences, with each word's place in its sentence"
+  }
+ ],
+ "react": [
+  {
+   "component": "TextToSpeech",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading; \"Read aloud\" by default"
+    },
+    {
+     "name": "rate",
+     "type": "number",
+     "optional": true,
+     "description": "Speaking speed from 0.5 to 2 – controlled when given"
+    },
+    {
+     "name": "defaultRate",
+     "type": "number",
+     "optional": true,
+     "description": "The speed on mount when `rate` isn't controlled"
+    },
+    {
+     "name": "onRateChange",
+     "type": "(rate: number) => void",
+     "optional": true,
+     "description": "The speed was changed"
+    },
+    {
+     "name": "pitch",
+     "type": "number",
+     "optional": true,
+     "description": "Pitch from 0 to 2 – controlled when given"
+    },
+    {
+     "name": "defaultPitch",
+     "type": "number",
+     "optional": true,
+     "description": "The pitch on mount when `pitch` isn't controlled"
+    },
+    {
+     "name": "onPitchChange",
+     "type": "(pitch: number) => void",
+     "optional": true,
+     "description": "The pitch was changed"
+    },
+    {
+     "name": "voice",
+     "type": "string",
+     "optional": true,
+     "description": "The voice's `voiceURI`, \"\" for the browser's default – controlled when given"
+    },
+    {
+     "name": "defaultVoice",
+     "type": "string",
+     "optional": true,
+     "description": "The voice on mount when `voice` isn't controlled"
+    },
+    {
+     "name": "onVoiceChange",
+     "type": "(voice: string) => void",
+     "optional": true,
+     "description": "A voice was picked"
+    },
+    {
+     "name": "onReadStart",
+     "type": "(sentence: number) => void",
+     "optional": true,
+     "description": "Reading began at a sentence (0-based)"
+    },
+    {
+     "name": "onReadEnd",
+     "type": "(completed: boolean, sentence: number) => void",
+     "optional": true,
+     "description": "Reading stopped – `completed` when it reached the end"
+    }
+   ],
+   "hides": [
+    "heading",
+    "onRateChange",
+    "rate",
+    "pitch",
+    "voice",
+    "children"
+   ],
+   "events": {
+    "tc-rate-change": "onRateChange",
+    "tc-pitch-change": "onPitchChange",
+    "tc-voice-change": "onVoiceChange",
+    "tc-start": "onReadStart",
+    "tc-end": "onReadEnd"
+   }
+  }
+ ],
+ "changelog": [
+  "`tc-text-to-speech` – reads a passage aloud with the browser's voices, marking the sentence and word."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-text-to-speech",
+   "className": "TcTextToSpeech",
+   "module": "trenchcoat/text-to-speech",
+   "data": [],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    },
+    {
+     "name": "text",
+     "attribute": "text"
+    },
+    {
+     "name": "rate",
+     "attribute": "rate"
+    },
+    {
+     "name": "pitch",
+     "attribute": "pitch"
+    },
+    {
+     "name": "voice",
+     "attribute": "voice"
+    },
+    {
+     "name": "lang",
+     "attribute": "lang"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-rate-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-pitch-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-voice-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-start",
+     "cancelable": false
+    },
+    {
+     "name": "tc-end",
+     "cancelable": false
+    }
+   ],
+   "controlled": [
+    {
+     "property": "rate",
+     "event": "tc-rate-change"
+    },
+    {
+     "property": "pitch",
+     "event": "tc-pitch-change"
+    },
+    {
+     "property": "voice",
+     "event": "tc-voice-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "scrollbar-width",
+    "name": "scrollbar-width",
+    "bcd": "css.properties.scrollbar-width",
+    "versions": {
+     "chrome": "121",
+     "edge": "121",
+     "firefox": "64",
+     "safari": "18.2",
+     "safari_ios": "18.2"
+    },
+    "progressive": true,
+    "without": "Scrollbars keep the browser's default width.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "overscroll-contain",
+    "name": "overscroll-behavior: contain",
+    "bcd": "css.properties.overscroll-behavior.contain",
+    "versions": {
+     "chrome": "63",
+     "edge": "18",
+     "firefox": "59",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "Scrolling past the end of a list carries on scrolling the page.",
+    "via": [
+     "itself"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setTimeout"
+  ],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 34134,
+  "gzip": 10358
+ }
+}

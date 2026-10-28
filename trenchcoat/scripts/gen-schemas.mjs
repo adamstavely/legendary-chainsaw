@@ -34,6 +34,9 @@ const DENY = new Set([
 const NOT_JSON = /\b(Element|HTMLElement|Node|DocumentFragment|File|FileList|Blob|AbortSignal|Promise|Function|TemplateResult|Map|Set|WeakMap|Look)\b|=>/;
 /** Properties every element has that a model shouldn't set: the look is the page's */
 const SKIP_PROPS = new Set(["look"]);
+/** Per-element properties a model shouldn't set: geo-location's map stays behind "Show map", so a generated map
+ *  never loads from a third party by itself, whatever allowedOrigins says */
+const SKIP_ELEMENT_PROPS = { "tc-geo-location": new Set(["embed", "embedSrc"]) };
 
 execSync("npx cem analyze --config custom-elements-manifest.config.mjs", { stdio: "ignore" });
 const manifest = JSON.parse(readFileSync("custom-elements.json", "utf8"));
@@ -46,7 +49,7 @@ for (const mod of manifest.modules) {
     const slug = mod.path.slice("src/elements/".length, -3);
     const seen = new Set();
     const props = (decl.members ?? []).filter(
-      (f) => f.kind === "field" && !f.static && !f.privacy && !f.readonly && /^[a-z]\w*$/i.test(f.name) && !SKIP_PROPS.has(f.name) && !NOT_JSON.test(f.type?.text ?? "") && !seen.has(f.name) && seen.add(f.name),
+      (f) => f.kind === "field" && !f.static && !f.privacy && !f.readonly && /^[a-z]\w*$/i.test(f.name) && !SKIP_PROPS.has(f.name) && !SKIP_ELEMENT_PROPS[decl.tagName]?.has(f.name) && !NOT_JSON.test(f.type?.text ?? "") && !seen.has(f.name) && seen.add(f.name),
     );
     if (!props.length) continue;
     elements.push({ slug, tag: decl.tagName, cls: decl.name, name: decl.name.replace(/^Tc/, ""), description: (decl.description ?? "").trim(), props, events: (decl.events ?? []).map((e) => e.name).filter(Boolean) });
