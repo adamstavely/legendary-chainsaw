@@ -27,19 +27,6 @@ const instant = () => {
   const real = window.matchMedia.bind(window);
   vi.stubGlobal("matchMedia", (q: string) => (q.includes("reduced-motion") ? { matches: true, media: q, addEventListener() {}, removeEventListener() {} } : real(q)));
 };
-/** Waits until the spring has settled */
-async function rest(el: Element, ms = 2500) {
-  const end = performance.now() + ms;
-  let last = "";
-  while (performance.now() < end) {
-    await new Promise((r) => setTimeout(r, 100));
-    const now = el.querySelector('[role="status"]')!.textContent ?? "";
-    if (now && now === last) break;
-    last = now;
-  }
-  await settle();
-}
-
 describe("tc-cover-flow", () => {
   test("the host is the root; the carousel region, slides and a status region from the start", async () => {
     const el = await fixture<TcCoverFlow>(html`<tc-cover-flow .items=${items} label="Albums"></tc-cover-flow>`);
@@ -62,11 +49,11 @@ describe("tc-cover-flow", () => {
     const fronts: number[] = [];
     el.addEventListener("tc-front-change", (e) => fronts.push((e as CustomEvent<CoverFlowIndexChange>).detail.index));
     key(viewport(el), "End");
-    await rest(el);
+    // The spring settles in its own time – slower on a busy WebKit runner – so wait for where it ends, not a while
+    await expect.poll(() => el.querySelector('[role="status"]')!.textContent, { timeout: 10_000 }).toBe("5 of 5: Five");
     expect(front(el)).toBe("5 of 5: Five");
     expect(fronts).toEqual([1, 2, 3, 4]);
     expect(el.index).toBe(4);
-    expect(el.querySelector('[role="status"]')!.textContent).toBe("5 of 5: Five");
   });
 
   test("controlled: a key press is asked for with a cancelable event, not applied; setting index moves", async () => {

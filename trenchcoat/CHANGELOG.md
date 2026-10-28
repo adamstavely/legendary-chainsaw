@@ -1,5 +1,53 @@
 # Changelog
 
+## Unreleased – people and profiles, and file summaries
+
+Ten new Lit elements, each with both looks, a React wrapper, tests in Chromium, Firefox and WebKit, a gallery demo,
+a docs page and an overview thumbnail. Eight sit in a new **People & profiles** section of the gallery; Day Rhythm
+is under Data & charts and File Summary under AI & chat.
+
+### Added
+
+- **`tc-profile-header`:** the top of a person's or an account's page.
+  - **Identity:** picture or initials, name, a status and tags.
+  - **Details:** other names as chips, and a line of key facts.
+  - **Actions and tabs:** the page's actions with an overflow button, and a row of section tabs (WAI-ARIA tabs).
+- **`tc-person-links`:** the people linked to someone.
+  - **Each person:** role, an ID or second line, and the link's strength in words and bars.
+  - **List:** a count, "View network" and "Show all". Selecting a person fires a cancelable event.
+- **`tc-fact-sheet`:** facts in sections, each value tagged with its source and an Admiralty grade (A1–F6).
+  - **Confidence:** the tag is tinted and marked by confidence band.
+  - **Uncertainty:** conflicting readings appear side by side, unknowns are stated, and a "How grades work" scale is
+    one click away.
+- **`tc-document-list`:** identity and record documents.
+  - **Each document:** type, country, a masked number shown one at a time, expiry, and a status pill (Verified,
+    Active, Expired, Flagged, Fraudulent, or your own).
+  - **List:** counts in the header, and View per row.
+- **`tc-fingerprint-card`:** a ten-print card in ANSI/NIST finger positions.
+  - **Each finger:** a drawn print and its status: captured with NFIQ quality, poor, not captured, unable to print,
+    or bandaged.
+  - **Interaction:** arrow keys move across both hands, and a finger's detail opens below the card.
+- **`tc-biometric-status`:** enrolment across face, fingerprints, iris, DNA, voice, gait and more.
+  - **Each record:** a status pill and a quality meter.
+  - **Summary:** the count enrolled, and an optional match score.
+- **`tc-day-rhythm`:** a typical day as a strip of blocks by kind of place or activity.
+  - **Layout:** one row per kind of day, with hour ticks, a now marker and a legend.
+  - **Interaction:** the block under the pointer or focus is named in full.
+- **`tc-watchlist`:** what a team is watching, most at risk first.
+  - **Each row:** avatar, reference, case tag, and a risk badge in words.
+  - **List:** filters by risk, a count and View all.
+- **`tc-alert-feed`:** a live feed of alerts.
+  - **Each alert:** a category, severity shown as an edge, a mark and a word, and a relative time that stays fresh.
+  - **Actions:** Escalate and Acknowledge.
+  - **Pausing:** Pause feed holds new alerts back, and arrivals are announced politely.
+- **`tc-file-summary`:** an AI summary of a file that streams in.
+  - **Content:** key points citing their pages or times, plus the people, organisations, dates and amounts mentioned.
+  - **Controls:** Short / Detailed, coverage, and Copy, Regenerate and Open file.
+
+### Changed
+
+- **CI:** WebKit runs across eight machines instead of six, after a sixth ran out of memory.
+
 ## Unreleased – activity clock and activity calendar
 
 Both are Lit elements with both looks, a React wrapper, tests in Chromium, Firefox and WebKit, a gallery demo and a

@@ -17,6 +17,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Agent Tree** (`agent-tree.tsx`) – Who started whom – an orchestrator and its sub-agents as a live tree, with status, cost and time on every card, costs rolling up each branch, and branches that fold to one line
 - **Agreement Tracker** (`agreement-tracker.tsx`) – How often the AI agreed with you versus pushed back this session – it turns amber on a run of agreement and points to the counter-argument
 - **AI Answer** (`ai-answer.tsx`) – Streamed answer with source cards, citation chips that preview their source, copy, regenerate, feedback and follow-ups
+- **Alert Feed** (`alert-feed.tsx`) – A live feed of alerts, newest first – category, severity as an edge, mark and word, a fresh relative time, Escalate and Acknowledge on each, Pause feed with new alerts held back, and polite announcements
 - **Answer Arena** (`answer-arena.tsx`) – Two models answer the same prompt side by side, streaming together – then A is better, B is better or a tie, with a reason
 - **App Picker** (`app-picker.tsx`) – The app launcher for a suite header – a grid button that opens your apps as tiles, with pinned and recent apps, search, the current app marked and arrow keys that move in two dimensions
 - **Approval Card** (`approval-card.tsx`) – An agent asks before it acts – risk badge, preview, Approve and Deny with shortcuts, a pausing countdown, and a smooth morph into a resolved row
@@ -25,6 +26,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Autonomy Dial** (`autonomy-dial.tsx`) – How much an agent may do on its own – a three-stop dial, and its real actions gliding between “Runs on its own” and “Asks you first”, with a lock for what always asks
 - **Background Tasks** (`background-tasks.tsx`) – Your long-running jobs at a glance – a header indicator with overall progress, and a panel of running, queued, done and failed tasks with cancel, retry and open
 - **Billing Schedule** (`billing-schedule.tsx`) – Build a billing phase – start date, duration, products with repeats and timing, discount, minimum and live totals
+- **Biometric Status** (`biometric-status.tsx`) – Where someone's biometric enrolment stands – face, fingerprints, iris, voice and more, each with its status, detail and quality meter, the count enrolled and an optional match score
 - **Breakdown Chart** (`breakdown-chart.tsx`) – Stacked bar chart with measure, slice and segment pickers, a hover breakdown and a linked table
 - **Budget Guard** (`budget-guard.tsx`) – Spend and token limits for a live run – progress against the cap, a warning as it nears it, a hard stop at it, and raising the cap right from the warning
 - **Button** (`button.tsx`) – Primary, secondary, ghost and destructive buttons with icons, sizes and a shimmering loading state
@@ -54,11 +56,13 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Data handling policy** (`data-handling-policy.tsx`) – Organization data handling as a lifecycle – retention, logs and redaction, memory, training, deletion – led by the effective policy, with locked stages and deletion requests
 - **Data Table** (`data-table.tsx`) – Spreadsheet-style table: select cells and ranges, edit in place, copy and paste, undo and sort
 - **Date Range Picker** (`date-range-picker.tsx`) – Presets and two calendars with a hover preview, comparison with the previous period or year, full keyboard control
+- **Day Rhythm** (`day-rhythm.tsx`) – A typical day as a strip of blocks by kind of place or activity – Home, Work, Transit – one row per kind of day, with hour ticks, a now marker, a legend and the block under the pointer named in full
 - **Decision Inbox** (`decision-inbox.tsx`) – Open decisions with two quick answers each – answered ones confirm and fold away
 - **Decision Tree** (`decision-tree.tsx`) – An agent stuck on a decision lays out its options as a tree – the consequences of each branch, the risky ones marked, its own pick highlighted – and you choose a path or write your own
 - **Delegate Board** (`delegate-board.tsx`) – Hand work to your agents by dragging it onto them – each agent previews its new “busy until” time, or switch to Auto and every new task goes to whoever is free first
 - **Dialog** (`dialog.tsx`) – A native modal with interactive content and restored focus
 - **Disagreement Banner** (`disagreement-banner.tsx`) – When today's answer contradicts an earlier one on the same question – both side by side, the difference marked
+- **Document List** (`document-list.tsx`) – Identity and record documents at a glance – type, country, masked numbers shown one at a time, expiry and a status each (Verified, Expired, Flagged, Fraudulent or your own), counted in the header, with View per row
 - **Dropzone** (`dropzone.tsx`) – Drag files in and watch them upload – fanning documents, colored type badges, progress with time left, errors with retry
 - **Email Draft** (`email-draft.tsx`) – Agent-written email for review – switch recipient and tone, edit inline, remove the attachment, send or discard with undo
 - **Engagement Quality** (`engagement-quality.tsx`) – Whether reviews are genuine – an index from reused text, time on the source, batch dismissals and repeated commitments, shown as quality, not a violation
@@ -67,9 +71,12 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Evidence Coverage** (`evidence-coverage.tsx`) – What an answer could and couldn't see – each source category current, stale or missing, with a request for coverage
 - **Experiment Card** (`experiment-card.tsx`) – An A/B test in two lines that quietly unfolds on hover – variants linked to a tiny chart, a metric switch with rolling numbers, and a winner you pick with a click
 - **Extraction Review** (`extraction-review.tsx`) – Fields pulled from a document, each linked to its place on the page – confidence per field, accept, correct or reject, field by field from the keyboard
+- **Fact Sheet** (`fact-sheet.tsx`) – What's known and how far to trust it – facts in sections, each value tagged with its source and an Admiralty grade, tinted and marked by confidence, with conflicting readings side by side and unknowns said plainly
 - **Fan-out Grid** (`fan-out-grid.tsx`) – One agent hands a big job to many workers – every task a cell on a live grid that fills in as they get through it, with retries, failures, cost and the time left, and the details of any task on hover
 - **Feedback Rubric** (`feedback-rubric.tsx`) – Rate an answer the useful way – rubric criteria, what kind of failure it was, and the answer it should have been, ready for training and evals
+- **File Summary** (`file-summary.tsx`) – What's in a file without opening it – an AI summary that streams in, key points citing their pages or times, the people, organisations, dates and amounts it mentions, and Copy, Regenerate and Open file
 - **Filter Menu** (`filter-menu.tsx`) – Grouped filters with removable chips, collapsible checkbox groups, Clear all and full keyboard control
+- **Fingerprint Card** (`fingerprint-card.tsx`) – A ten-print card – each finger's print and status in ANSI/NIST positions, captured with its NFIQ quality, poor, not captured, unable to print or bandaged, and a finger's detail
 - **Friction Profile** (`friction-profile.tsx`) – Switch between standard, elevated and deadline modes and see how each safeguard changes – shortened, deferred or tightened
 - **Gate Config** (`gate-config.tsx`) – When a person decides – the conditions that pause a run, who reviews, what they see, and what they're allowed to do
 - **Generated UI** (`generated-ui.tsx`) – A model's answer drawn as real components – tables, charts, metrics, forms and callouts from a spec, checked as it arrives, with plain text for anything unknown
@@ -104,9 +111,11 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Output Schema Builder** (`output-schema-builder.tsx`) – Build a structured-output schema as a tree beside a rendered preview of the answer – types visible, problems flagged on their rows – with raw JSON and the JSON Schema as tabs
 - **Parallel Attempts** (`parallel-attempts.tsx`) – An agent tries the same task several ways at once and the best one wins – every attempt races as a row with its model, approach and live bar, then gets a score; the best is marked and picked, and you can switch to another
 - **Permission Request** (`permission-request.tsx`) – An agent asks for one specific right – who, why and exactly what will happen – and you allow it once, for an hour or always; then it folds into one line with the time left and Revoke
+- **Person Links** (`person-links.tsx`) – The people linked to a person or an account – role, an ID or second line, and how strong each link is in words and bars, with a count, a "View network" action and "Show all"
 - **Plan vs Actual (Clean only)** (`plan-vs-actual.tsx`) – An agent's plan against what really happens – every step's bar grows over its dashed planned ghost, overruns turn amber, the steps after it slide right, and the expected finish moves away from the planned one
 - **Playbook Canvas** (`playbook-canvas.tsx`) – An agent workflow, phase by phase – triggers, intake, context, analysis and review as steps you add and order, with review gates, versions and a dry run
 - **Policy Simulator** (`policy-simulator.tsx`) – Try an action against the policy before it's real – allow, needs approval, deny or hard stop, the rule that decided it and why
+- **Profile Header** (`profile-header.tsx`) – The top of a person's or an account's page – picture or initials, name, status and tags, other names as chips, a line of key facts, the page's actions and a row of section tabs
 - **Profile Menu** (`profile-menu.tsx`) – Account card with the signed-in user, menu actions and profile setup progress
 - **Progress Tracker** (`progress-tracker.tsx`) – Onboarding checklist with an animated progress bar, ticks that draw themselves and auto play
 - **Project Card** (`project-card.tsx`) – A two-line project summary that quietly unfolds on hover – a progress ring with one segment per subtask, a people filter and a status picker, all linked by hover
@@ -158,6 +167,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Verification Queue** (`verification-queue.tsx`) – Every claim worth checking from a session in one queue – verified, can't verify, incorrect or dismissed, with its source, before anything is exported
 - **Version History** (`version-history.tsx`) – The versions of an agent, prompt or workflow – draft, active or deprecated, who and when, and what changed in behaviour
 - **Voice Mode** (`voice-mode.tsx`) – A spoken conversation with the model – live transcript, listening and speaking states, interrupt, mute and end, with captions for every turn
+- **Watchlist** (`watchlist.tsx`) – The people, accounts or entities a team is watching, most at risk first – avatar, reference, case tag and a risk badge in words, with a count, filters by risk and View all
 - **Writing Assistant** (`writing-assistant.tsx`) – AI chat card with a soft gradient glow, suggestions, streaming replies and live voice dictation
 
 Live previews: run `npm run dev` and open the gallery.
