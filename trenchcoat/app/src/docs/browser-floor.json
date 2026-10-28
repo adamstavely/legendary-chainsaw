@@ -11,13 +11,13 @@
    "features": [
     "light-dark"
    ],
-   "elements": 185
+   "elements": 195
   },
   "edge": {
    "features": [
     "light-dark"
    ],
-   "elements": 185
+   "elements": 195
   },
   "firefox": {
    "features": [
@@ -29,13 +29,13 @@
    "features": [
     "light-dark"
    ],
-   "elements": 185
+   "elements": 195
   },
   "safari_ios": {
    "features": [
     "light-dark"
    ],
-   "elements": 185
+   "elements": 195
   }
  },
  "features": [
@@ -52,7 +52,7 @@
    },
    "progressive": false,
    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
-   "elements": 185
+   "elements": 195
   },
   {
    "id": "color-mix",
@@ -67,7 +67,7 @@
    },
    "progressive": false,
    "why": "Tints and washes mixed from the tokens.",
-   "elements": 185
+   "elements": 195
   },
   {
    "id": "is-where",
@@ -82,7 +82,7 @@
    },
    "progressive": false,
    "why": "Every rule is keyed on :where() so the page can override it.",
-   "elements": 185
+   "elements": 195
   },
   {
    "id": "focus-visible",
@@ -97,7 +97,7 @@
    },
    "progressive": false,
    "why": "Focus rings for keyboard users.",
-   "elements": 184
+   "elements": 194
   },
   {
    "id": "container-size",
@@ -112,7 +112,7 @@
    },
    "progressive": false,
    "why": "Components adapt to the width they're given, not the window's.",
-   "elements": 142
+   "elements": 152
   },
   {
    "id": "inert",
@@ -127,7 +127,7 @@
    },
    "progressive": false,
    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
-   "elements": 105
+   "elements": 107
   },
   {
    "id": "inset",
@@ -141,7 +141,7 @@
     "safari_ios": "14.1"
    },
    "progressive": false,
-   "elements": 97
+   "elements": 100
   },
   {
    "id": "resize-observer",
@@ -169,7 +169,7 @@
     "safari_ios": "12.2"
    },
    "progressive": false,
-   "elements": 67
+   "elements": 68
   },
   {
    "id": "has",
@@ -199,7 +199,7 @@
    },
    "progressive": false,
    "note": "with the -webkit- prefix",
-   "elements": 35
+   "elements": 36
   },
   {
    "id": "individual-transforms",
@@ -227,7 +227,7 @@
     "safari_ios": "15"
    },
    "progressive": false,
-   "elements": 25
+   "elements": 26
   },
   {
    "id": "form-associated",
@@ -257,7 +257,7 @@
    },
    "progressive": false,
    "why": "Copy buttons.",
-   "elements": 22
+   "elements": 24
   },
   {
    "id": "container-units",
@@ -387,7 +387,7 @@
    },
    "progressive": true,
    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
-   "elements": 185
+   "elements": 195
   },
   {
    "id": "adopted-stylesheets",
@@ -402,7 +402,7 @@
    },
    "progressive": true,
    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
-   "elements": 184
+   "elements": 194
   },
   {
    "id": "scrollbar-width",
@@ -417,7 +417,7 @@
    },
    "progressive": true,
    "without": "Scrollbars keep the browser's default width.",
-   "elements": 43
+   "elements": 44
   },
   {
    "id": "overscroll-contain",
