@@ -1,0 +1,29 @@
+{
+  // The Angular wrappers (src/angular, from scripts/gen-angular.mjs), compiled by ngc in partial mode into dist/angular
+  // so any Angular 19+ app links them. "trenchcoat/*" resolves to the package's own element types, built first by
+  // build:package; in the published files it stays a package import.
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ES2022",
+    "moduleResolution": "bundler",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "strict": true,
+    "declaration": true,
+    "sourceMap": true,
+    "experimentalDecorators": true,
+    "useDefineForClassFields": false,
+    "skipLibCheck": true,
+    "noUnusedLocals": true,
+    "rootDir": "src/angular",
+    "outDir": "dist/angular",
+    "baseUrl": ".",
+    "paths": { "trenchcoat/look-provider": ["dist/types/elements/internal/look.d.ts"], "trenchcoat/*": ["dist/types/elements/*"] },
+    "types": []
+  },
+  "angularCompilerOptions": {
+    "compilationMode": "partial",
+    "strictInjectionParameters": true,
+    "strictInputAccessModifiers": true
+  },
+  "include": ["src/angular/**/*.ts"]
+}

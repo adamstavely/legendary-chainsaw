@@ -1,10 +1,13 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, signal } from "@angular/core";
-import "trenchcoat";
+import { Component, signal } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { Button, Combobox, DataTable, LookProvider, Switch } from "trenchcoat/angular";
+import { SwitchValueAccessor } from "trenchcoat/angular/forms";
 import type { ComboboxOption, DataColumn, DataRow } from "trenchcoat";
 
 @Component({
   selector: "app-root",
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  // The wrappers: no CUSTOM_ELEMENTS_SCHEMA, and every binding below is type-checked
+  imports: [Button, Combobox, DataTable, LookProvider, Switch, SwitchValueAccessor, FormsModule],
   template: `
     <main>
       <tc-button id="save" label="Save" (click)="clicks.set(clicks() + 1)"></tc-button>
@@ -17,6 +20,10 @@ import type { ComboboxOption, DataColumn, DataRow } from "trenchcoat";
       <output id="value">{{ json(who()) }}</output>
       <output id="submitted">{{ submitted() ? json(submitted()) : "" }}</output>
       <tc-data-table id="table" heading="Accounts" [columns]="columns" [rows]="rows()" [renderCell]="renderCell" (tc-rows-change)="onRows($event)"></tc-data-table>
+      <!-- Angular only: a handler runs once per change, and ngModel drives an element -->
+      <output id="changes">{{ changes() }}</output>
+      <tc-switch id="notify" label="Notify me" [(ngModel)]="notify"></tc-switch>
+      <output id="notify-value">{{ notify }}</output>
       <tc-look-provider look="clean">
         <tc-button id="clean" variant="ghost" label="Clean"></tc-button>
       </tc-look-provider>
@@ -43,15 +50,18 @@ export class AppComponent {
   who = signal<string[]>([]);
   submitted = signal<string[] | null>(null);
   json = (v: unknown) => JSON.stringify(v);
+  changes = signal(0);
+  notify = true;
 
   // Controlled: the app keeps the value and passes it back
-  onWho(e: Event) {
+  onWho(e: CustomEvent<{ value: string[] }>) {
     e.preventDefault();
-    this.who.set((e as CustomEvent<{ value: string[] }>).detail.value);
+    this.changes.update((n) => n + 1);
+    this.who.set(e.detail.value);
   }
-  onRows(e: Event) {
+  onRows(e: CustomEvent<{ rows: DataRow[] }>) {
     e.preventDefault();
-    this.rows.set((e as CustomEvent<{ rows: DataRow[] }>).detail.rows);
+    this.rows.set(e.detail.rows);
   }
   submit(e: Event) {
     e.preventDefault();

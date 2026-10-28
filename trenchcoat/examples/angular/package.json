@@ -1,7 +1,24 @@
 {
   "name": "trenchcoat-example-angular",
   "private": true,
-  "scripts": { "build": "ng build", "serve": "node ../static-serve.mjs dist/browser" },
-  "dependencies": { "@angular/common": "21.2.25", "@angular/compiler": "21.2.25", "@angular/core": "21.2.25", "@angular/platform-browser": "21.2.25", "rxjs": "7.8.2", "trenchcoat": "file:../.packed/trenchcoat.tgz", "tslib": "2.8.1" },
-  "devDependencies": { "@angular/build": "21.2.28", "@angular/cli": "21.2.28", "@angular/compiler-cli": "21.2.25", "typescript": "5.9.3" }
+  "scripts": {
+    "build": "ng build",
+    "serve": "node ../static-serve.mjs dist/browser"
+  },
+  "dependencies": {
+    "@angular/common": "21.2.25",
+    "@angular/compiler": "21.2.25",
+    "@angular/core": "21.2.25",
+    "@angular/forms": "21.2.25",
+    "@angular/platform-browser": "21.2.25",
+    "rxjs": "7.8.2",
+    "trenchcoat": "file:../.packed/trenchcoat.tgz",
+    "tslib": "2.8.1"
+  },
+  "devDependencies": {
+    "@angular/build": "21.2.28",
+    "@angular/cli": "21.2.28",
+    "@angular/compiler-cli": "21.2.25",
+    "typescript": "5.9.3"
+  }
 }

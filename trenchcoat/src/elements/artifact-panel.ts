@@ -61,7 +61,8 @@ export type Artifact = {
   versions: ArtifactVersion[];
 };
 export type ArtifactPanelView = "preview" | "diff";
-export type ArtifactSelectedChange = { id: string };
+/** `selected` is the same as `id`, named like every other tc-selected-change */
+export type ArtifactSelectedChange = { id: string; selected: string };
 export type ArtifactVersionChange = { artifact: string; version: string };
 export type ArtifactViewChange = { view: ArtifactPanelView };
 export type ArtifactDownload = { artifact: Artifact; version: ArtifactVersion };
@@ -245,7 +246,7 @@ let instances = 0;
 /**
  * The files, code and documents a run produced: a list, a preview per type, versions with a diff, download.
  * @tag tc-artifact-panel
- * @fires tc-selected-change - An artifact was picked in the list ({ id: string }); cancelable
+ * @fires tc-selected-change - An artifact was picked in the list ({ id, selected }: ArtifactSelectedChange – both the artifact's id); cancelable
  * @fires tc-version-change - A version was picked, or picking another artifact went back to its latest ({ artifact: string, version: string }); cancelable
  * @fires tc-view-change - Compare was turned on or off ({ view: "preview" | "diff" }); cancelable
  * @fires tc-download - Download was pressed ({ artifact: Artifact, version: ArtifactVersion }); cancelable – unless prevented, the element saves the file
@@ -317,7 +318,7 @@ export class TcArtifactPanel extends TcElement {
       if (focus) this.focusOption(id);
       return;
     }
-    if (!this.emit<ArtifactSelectedChange>("tc-selected-change", { id }, { cancelable: true })) return;
+    if (!this.emit<ArtifactSelectedChange>("tc-selected-change", { id, selected: id }, { cancelable: true })) return;
     this.selected = id;
     // Another artifact starts at its latest version
     if (this.version && this.emit<ArtifactVersionChange>("tc-version-change", { artifact: id, version: "" }, { cancelable: true })) this.version = "";

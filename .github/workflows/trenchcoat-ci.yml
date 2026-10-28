@@ -46,6 +46,9 @@ jobs:
         run: npm run check:contrast
       - name: Generated element entry points
         run: node scripts/gen-elements.mjs --check
+      # The wrappers are current, build with ngc, and strict templates check them (and catch five common mistakes)
+      - name: Angular wrappers
+        run: npm run check:angular
       - name: Dead CSS
         run: npm run check:dead-css
       - name: Docs pages

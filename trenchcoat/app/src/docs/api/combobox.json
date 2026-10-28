@@ -338,6 +338,7 @@
   }
  ],
  "changelog": [
+  "**`trenchcoat/angular`:** a standalone directive for every element, named after it (`tc-combobox` → `Combobox`), plus `TRENCHCOAT` for all of them. Generated from the elements' JSDoc by `scripts/gen-angular.mjs` and built by `ngc` in partial mode for Angular 19 and later. - **No schema:** no `CUSTOM_ELEMENTS_SCHEMA`, and strict templates check every binding. - **Inputs:** typed from the element's properties. Plain boolean and numeric attributes are accepted (`required`, `value=\"0.6\"`). - **Events:** typed, so `$event` is the event's `CustomEvent<…>`. Each handler runs once per event.",
   "Lit 3 web components: `tc-button`, `tc-combobox` and `tc-data-table` (the pilot), `tc-look-provider` for an app-wide default look, the shared controllers (row window, focus rescue, smooth height, off-screen, on-screen, ARIA forwarding, hotkeys, rolling numbers). Pixel-identical to the React components in both looks and themes.",
   "combobox `invalid`, otp-input `labelledBy`, stepper-form tags `autoComplete`, decision-tree Previous/Next buttons, inline-diff \"Undo last decision\", agent-plan Move up/down buttons, delegate-board click-to-assign."
  ],

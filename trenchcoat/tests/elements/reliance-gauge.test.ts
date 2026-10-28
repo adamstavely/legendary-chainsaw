@@ -202,7 +202,7 @@ describe("tc-reliance-gauge", () => {
     el.addEventListener("tc-review-level-change", (e) => seen.push((e as CustomEvent).detail));
     btn.click();
     await settle();
-    expect(seen).toEqual([{ level: "mandatory", previous: "routine" }]);
+    expect(seen).toEqual([{ level: "mandatory", reviewLevel: "mandatory", previous: "routine" }]);
     expect(el.reviewLevel).toBe("mandatory");
     expect(el.querySelector(".ui-rlg__btn")).toBeNull();
     expect(el.querySelector(".ui-rlg__match")!.textContent).toBe("As recommended");

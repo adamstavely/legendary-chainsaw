@@ -1,5 +1,38 @@
 # Changelog
 
+## Unreleased – Phase 2: Angular wrappers
+
+### Added
+
+- **`trenchcoat/angular`:** a standalone directive for every element, named after it (`tc-combobox` → `Combobox`),
+  plus `TRENCHCOAT` for all of them. Generated from the elements' JSDoc by `scripts/gen-angular.mjs` and built by
+  `ngc` in partial mode for Angular 19 and later.
+  - **No schema:** no `CUSTOM_ELEMENTS_SCHEMA`, and strict templates check every binding.
+  - **Inputs:** typed from the element's properties. Plain boolean and numeric attributes are accepted
+    (`required`, `value="0.6"`).
+  - **Events:** typed, so `$event` is the event's `CustomEvent<…>`. Each handler runs once per event.
+- **`trenchcoat/angular/forms`:** a `ControlValueAccessor` for each of the 41 elements that hold a `value`, for
+  `[(ngModel)]`, `[formControl]` and `formControlName`. It also provides `TRENCHCOAT_FORMS`. `@angular/forms` is an
+  optional peer.
+- **`npm run check:angular`:** checks the wrappers in CI.
+  - **Up to date:** confirms the generated wrappers are current.
+  - **Strict compile:** builds them, and compiles an app against them with strict templates.
+  - **Mistakes caught:** confirms five common mistakes fail the build.
+
+### Changed
+
+- **`examples/angular`:** uses the directives with no schema, and checks two things in Chromium: a handler runs once
+  per event, and `[(ngModel)]` drives `tc-switch`.
+- **Docs:** every page's Angular quick start and controlled example use the directives, and `check:snippets` now
+  type-checks their bindings and `$event`.
+- **Event details:** four change events gained a field named after the property they change. The existing fields
+  stay. The docs' controlled examples read these names, which the events lacked; the new Angular type check caught
+  it.
+  - `tc-artifact-panel`'s `tc-selected-change`: `selected`.
+  - `tc-email-draft`'s `tc-recipient-change`: `recipient`.
+  - `tc-reliance-gauge`'s `tc-review-level-change`: `reviewLevel`.
+  - `tc-transcript-review`'s `tc-translation-mode-change`: `translationMode`.
+
 ## Unreleased – Phase 1: records, investigations and search
 
 Fourteen new Lit elements. Each comes with both looks, a React wrapper, tests in Chromium, Firefox and WebKit, a

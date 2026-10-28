@@ -64,6 +64,9 @@ export type ApiPage = {
 };
 
 export type Framework = "html" | "react" | "vue" | "angular" | "svelte";
+
+/** The element's Angular directive in trenchcoat/angular: its class name without "Tc" (TcCombobox → Combobox) */
+export const angularName = (f: { className: string }) => f.className.replace(/^Tc/, "");
 /** [key, tab label, long label, code language] – HTML first: it's the one every other framework builds on */
 export const FRAMEWORKS: [Framework, string, string, string][] = [
   ["html", "HTML", "HTML", "html"],
@@ -158,16 +161,17 @@ ${data.length ? `${typeImport}\n\n${props}` : "\n"}${event ? `const ${handler(ev
   <${f.tag}${data.map((p) => ` :${p}="${p}"`).join("")}${event ? ` @${event}="${handler(event)}"` : ""}></${f.tag}>
 </template>`;
 
-  const angular = `import { Component, CUSTOM_ELEMENTS_SCHEMA${data.length ? ", input" : ""} } from "@angular/core";
-import "${f.module}";
+  const directive = angularName(f);
+  const angular = `import { Component${data.length ? ", input" : ""} } from "@angular/core";
+import { ${directive} } from "trenchcoat/angular";
 ${data.length ? `${typeImport}\n` : ""}
 @Component({
   selector: "app-${slug}-example",
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  imports: [${directive}],
   template: \`<${f.tag}${data.map((p) => ` [${p}]="${p}()"`).join("")}${event ? ` (${event})="${handler(event)}($event)"` : ""}></${f.tag}>\`,
 })
 export class ${name}Example {
-${data.map((p) => `  readonly ${p} = input.required<${typeOf(f, p)}>();\n`).join("")}${event ? `  ${handler(event)}(e: Event) {\n    console.log((e as CustomEvent).detail);\n  }\n` : ""}}`;
+${data.map((p) => `  readonly ${p} = input.required<${typeOf(f, p)}>();\n`).join("")}${event ? `  ${handler(event)}(e: CustomEvent) {\n    console.log(e.detail);\n  }\n` : ""}}`;
 
   const svelte = `<script lang="ts">
   import "${f.module}";
@@ -251,22 +255,22 @@ const ${on} = (e: ${detail}) => {
   <${f.tag} :${p}="${p}" @${event}="${on}"></${f.tag}>
 </template>`;
 
-  const angular = `import { Component, CUSTOM_ELEMENTS_SCHEMA, input, linkedSignal } from "@angular/core";
-import "${f.module}";
+  const angular = `import { Component, input, linkedSignal } from "@angular/core";
+import { ${angularName(f)} } from "trenchcoat/angular";
 ${typeImport}
 
 @Component({
   selector: "app-controlled-${slug}",
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  imports: [${angularName(f)}],
   template: \`<${f.tag} [${p}]="${p}()" (${event})="${on}($event)"></${f.tag}>\`,
 })
 export class Controlled${name} {
   readonly initial = input.required<${t}>();
   readonly ${p} = linkedSignal(() => this.initial());
   // Controlled: the element proposes, the app decides
-  ${on}(e: Event) {
+  ${on}(e: ${detail}) {
     e.preventDefault();
-    this.${p}.set((e as ${detail}).detail.${p});
+    this.${p}.set(e.detail.${p});
   }
 }`;
 

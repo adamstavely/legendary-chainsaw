@@ -79,7 +79,8 @@ export type RelianceAgent = {
 };
 
 /** Details of the events */
-export type RelianceReviewLevelChange = { level: RelianceReviewLevel; previous: RelianceReviewLevel };
+/** `reviewLevel` is the same as `level`, named after the property it changes */
+export type RelianceReviewLevelChange = { level: RelianceReviewLevel; reviewLevel: RelianceReviewLevel; previous: RelianceReviewLevel };
 export type RelianceEpisodesOpen = { kind: RelianceEpisodeKind };
 
 const RANK: Record<RelianceReviewLevel, number> = { routine: 0, "spot-check": 1, mandatory: 2 };
@@ -127,7 +128,7 @@ const downIcon = html`<svg viewBox="0 0 16 16" aria-hidden="true">${svg`<path d=
  * Whether trust in an AI matches its performance: a reliance–accuracy dial with its trend, signals against review
  * thresholds, overtrust and undertrust episodes, and the recommended review level.
  * @tag tc-reliance-gauge
- * @fires tc-review-level-change - The footer's switch was pressed (detail: { level: "routine" | "spot-check" | "mandatory", previous: same }); cancelable – prevent it to keep `reviewLevel` yourself
+ * @fires tc-review-level-change - The footer's switch was pressed ({ level, reviewLevel, previous }: RelianceReviewLevelChange – reviewLevel is the new level); cancelable – prevent it to keep `reviewLevel` yourself
  * @fires tc-episodes-open - An episode count was pressed, with `browsable` set (detail: { kind: "overtrust" | "undertrust" })
  */
 export class TcRelianceGauge extends TcElement {
@@ -323,7 +324,7 @@ export class TcRelianceGauge extends TcElement {
   private switchLevel(level: RelianceReviewLevel) {
     const previous = this.reviewLevel;
     if (!previous || previous === level) return;
-    if (!this.emit<RelianceReviewLevelChange>("tc-review-level-change", { level, previous }, { cancelable: true })) return;
+    if (!this.emit<RelianceReviewLevelChange>("tc-review-level-change", { level, reviewLevel: level, previous }, { cancelable: true })) return;
     this.reviewLevel = level;
     this.announce(`Review level set to ${this.label(level).toLowerCase()}.`);
   }

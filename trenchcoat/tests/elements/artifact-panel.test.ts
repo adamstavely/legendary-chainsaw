@@ -86,7 +86,12 @@ describe("tc-artifact-panel", () => {
   test("picking: click and keys (arrows, Home, End, type-ahead) move selection and focus; preventDefault keeps it", async () => {
     const el = await fixture<TcArtifactPanel>(html`<tc-artifact-panel .artifacts=${artifacts()}></tc-artifact-panel>`);
     const picked: string[] = [];
-    el.addEventListener("tc-selected-change", (e) => picked.push((e as CustomEvent).detail.id));
+    el.addEventListener("tc-selected-change", (e) => {
+      const d = (e as CustomEvent<{ id: string; selected: string }>).detail;
+      // selected says the same as id, like every other tc-selected-change
+      expect(d.selected).toBe(d.id);
+      picked.push(d.id);
+    });
     options(el)[2].click();
     await settle();
     expect(el.selected).toBe("table");

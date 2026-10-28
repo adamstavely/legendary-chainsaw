@@ -208,7 +208,7 @@ describe("tc-email-draft", () => {
       });
       await click(trigger(el));
       await click(option(el, /Lena Hart/));
-      expect(recipients).toEqual([{ email: "lena@northwind.io", contact: people[1] }]);
+      expect(recipients).toEqual([{ email: "lena@northwind.io", recipient: "lena@northwind.io", contact: people[1] }]);
       expect(trigger(el).textContent).toContain("jonas@northwind.io");
       await click(button(el, "Short")!);
       expect(tones).toEqual(["short"]);

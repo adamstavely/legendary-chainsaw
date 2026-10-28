@@ -56,7 +56,7 @@ with your framework's property binding.
 |---|---|
 | React 19, Next.js | `import { Combobox } from "trenchcoat/react"` – wrappers with React props and callbacks. In Next.js, load them in a client component with `dynamic(() => import(…), { ssr: false })` (no server rendering in this version). |
 | Vue 3, Nuxt | Use the tags; tell the compiler that tags starting with `tc-` are custom elements (`compilerOptions.isCustomElement`). Bind with `:options="…"` and listen with `@tc-value-change`. In Nuxt, wrap them in `<ClientOnly>`. Types: `trenchcoat/vue`. |
-| Angular | Add `CUSTOM_ELEMENTS_SCHEMA`; bind with `[options]="…"` and `(tc-value-change)="…"`. |
+| Angular | Import the directives from `trenchcoat/angular` into `imports`; bind with `[options]="…"` and `(tc-value-change)="…"`, or `[(ngModel)]` with `trenchcoat/angular/forms`. |
 | Svelte 5 | Use the tags; pass properties as attributes (`{options}`) and listen with `addEventListener` in an effect. Types: `trenchcoat/svelte`. |
 | Plain HTML | Import the module and use the tag. |
 
