@@ -1,5 +1,29 @@
 # Changelog
 
+## Unreleased – activity clock and activity calendar
+
+Both are Lit elements with both looks, a React wrapper, tests in Chromium, Firefox and WebKit, a gallery demo and a
+docs page, listed under Data & charts. They share one shading scale (`internal/activity-scale.ts`).
+
+### Added
+
+- **`tc-activity-clock`:** activity by hour, a clock per day.
+  - **Rings:** an inner AM ring and an outer PM ring of twelve hour segments, labelled at 12 o'clock, with 12 at the top.
+  - **Shading:** each segment shaded by its value in `levels` steps, scaled to the busiest hour shown or `max`. An
+    hour with no data is outlined, not shaded.
+  - **Middle:** the weekday and date, or the hour under the pointer or focus and its value.
+  - **Header and selection:** the busiest hour in the header, and a selected hour reported with a cancelable
+    `tc-selected-change`.
+  - **Keyboard:** a grid with a row per day; ← → move an hour, ↑ ↓ a day, Page keys switch between AM and PM.
+- **`tc-activity-calendar`:** a year of activity, contribution-graph style.
+  - **Layout:** a column per week and a row per weekday, ending on `end`, with `weeks` and `week-start` settings.
+  - **Labels:** month names along the top, and weekday names pinned down the side while the weeks scroll. The newest
+    week starts in view.
+  - **Values:** a missing day counts as 0, and null is outlined as no data.
+  - **Header, footer and selection:** the total in the header; the footer reads out the day under the pointer or
+    focus. A selected day is reported with a cancelable `tc-selected-change`.
+  - **Keyboard:** ↑ ↓ move a day, ← → a week, Page keys four weeks.
+
 ## Unreleased – remediation Part 7 (terms dialog, skills in the composer, app picker, notifications, header nav)
 
 See `audit/remediation-plan.md`, Part 7. Every new component is a Lit element with both looks, a React wrapper,

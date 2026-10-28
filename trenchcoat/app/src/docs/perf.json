@@ -9,6 +9,222 @@
   "runs": 7
  },
  "pieces": {
+  "activity-calendar": {
+   "measuredAt": "2026-10-28",
+   "hash": "19f0062a0485f31e",
+   "bundle": {
+    "own": {
+     "min": 19464,
+     "gzip": 6740
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 18964
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2968
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1342
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 444
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 436
+     },
+     {
+      "name": "internal/activity-scale",
+      "kind": "internal",
+      "min": 181
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     },
+     {
+      "name": "internal/util",
+      "kind": "internal",
+      "min": 113
+     }
+    ],
+    "withoutLit": {
+     "min": 26592,
+     "gzip": 8927
+    },
+    "withLit": {
+     "min": 46623,
+     "gzip": 15466
+    }
+   },
+   "render": {
+    "tag": "tc-activity-calendar",
+    "source": "demo",
+    "runs": 7,
+    "cold": 11.8,
+    "first": 17,
+    "update": 12.8,
+    "updateKind": "one item of days replaced",
+    "nodes": 964,
+    "scale": {
+     "property": "days",
+     "demoItems": 371,
+     "points": [
+      {
+       "items": 100,
+       "first": 15.7,
+       "update": 12.3,
+       "nodes": 962
+      },
+      {
+       "items": 1000,
+       "first": 16.4,
+       "update": 13.2,
+       "nodes": 964
+      }
+     ]
+    },
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
+  "activity-clock": {
+   "measuredAt": "2026-10-28",
+   "hash": "d60fff8bcf77f02b",
+   "bundle": {
+    "own": {
+     "min": 18642,
+     "gzip": 6437
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 21090
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2968
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1342
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 444
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 436
+     },
+     {
+      "name": "internal/activity-scale",
+      "kind": "internal",
+      "min": 181
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     },
+     {
+      "name": "internal/util",
+      "kind": "internal",
+      "min": 113
+     }
+    ],
+    "withoutLit": {
+     "min": 25754,
+     "gzip": 8615
+    },
+    "withLit": {
+     "min": 48059,
+     "gzip": 16051
+    }
+   },
+   "render": {
+    "tag": "tc-activity-clock",
+    "source": "demo",
+    "runs": 7,
+    "cold": 10.9,
+    "first": 4.2,
+    "update": 2.5,
+    "updateKind": "one item of days replaced",
+    "nodes": 285,
+    "scale": {
+     "property": "days",
+     "demoItems": 7,
+     "points": [
+      {
+       "items": 100,
+       "first": 87.2,
+       "update": 71.1,
+       "nodes": 3633
+      },
+      {
+       "items": 1000,
+       "first": 5126.7,
+       "update": 4885.3,
+       "nodes": 36033
+      }
+     ]
+    },
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
   "agent-cursors": {
    "measuredAt": "2026-10-27",
    "hash": "169ec8d05c49b843",

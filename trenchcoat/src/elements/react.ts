@@ -14,6 +14,8 @@ export * from "./react/look-provider";
 export * from "./react/button";
 export * from "./react/combobox";
 export * from "./react/data-table";
+export * from "./react/activity-calendar";
+export * from "./react/activity-clock";
 export * from "./react/agent-cursors";
 export * from "./react/agent-graph";
 export * from "./react/agent-inbox";

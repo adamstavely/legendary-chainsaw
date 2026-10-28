@@ -4,6 +4,8 @@ One source per component, with both looks: the `look` prop picks Standard (the d
 the helpers in `src/internal/` and read their values from `tokens/tokens.css`, which an app loads once. These React
 components are being ported to Lit web components (`audit/lit-port-plan.md`); the package build follows.
 
+- **Activity Calendar** (`activity-calendar.tsx`) – A year of activity at a glance – a square per day in a column per week, shaded by how much happened, with month and weekday names, the total, and any day's value on hover or focus
+- **Activity Clock** (`activity-clock.tsx`) – When activity happens, a clock per day – an AM ring and a PM ring of hour segments shaded by how busy each hour was, the weekday and date in the middle, and any hour's value there on hover or focus
 - **Agent Cursors** (`agent-cursors.tsx`) – Agents working in a document like teammates in a multiplayer editor – live pointers with names, suggestions typed letter by letter, images they resize, code they fix and comments beside the page
 - **Agent Graph** (`agent-graph.tsx`) – Agents and the tools they call as a living network – a pulse along the link for every call and its answer, busy links growing thicker, agents that breathe while they work and turn amber when they need you
 - **Agent Inbox** (`agent-inbox.tsx`) – All your background agent tasks in one calm list – live clocks and status tags, filter tabs with rolling counts, rows that unfold to the last steps with Approve, Reject, Retry or Open, and glide to their new place
