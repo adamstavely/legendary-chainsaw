@@ -1,0 +1,504 @@
+{
+ "elements": [
+  {
+   "tag": "tc-contact-channels",
+   "className": "TcContactChannels",
+   "description": "The ways to reach a person or an account – email, phone, messaging and address – each masked until revealed, with\nits role, when it was last used and whether it's verified, Copy and the page's own actions.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Contact\"",
+     "description": "The heading",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "One line under the heading",
+     "readonly": false
+    },
+    {
+     "name": "channels",
+     "attribute": null,
+     "type": "ContactChannel[]",
+     "default": "[]",
+     "description": "The contact points, in order; they're grouped by kind",
+     "readonly": false
+    },
+    {
+     "name": "states",
+     "attribute": null,
+     "type": "Record<string, { label: string; tone: ContactTone }>",
+     "default": "{}",
+     "description": "Verification states' names and tones, merged over the defaults (verified, unverified, bounced, dormant, flagged)",
+     "readonly": false
+    },
+    {
+     "name": "kindLabels",
+     "attribute": null,
+     "type": "Partial<Record<ContactKind, string>>",
+     "default": "{}",
+     "description": "The groups' names, merged over the defaults (Email, Phone, Messaging, Address)",
+     "readonly": false
+    },
+    {
+     "name": "actions",
+     "attribute": null,
+     "type": "ContactAction[]",
+     "default": "[]",
+     "description": "Actions added to every row after Copy, e.g. [{ id: \"message\", label: \"Message\" }]",
+     "readonly": false
+    },
+    {
+     "name": "masked",
+     "attribute": "masked",
+     "type": "boolean",
+     "default": "true",
+     "description": "Masks values until revealed; set false to show them in full",
+     "readonly": false
+    },
+    {
+     "name": "revealed",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[]",
+     "description": "The ids whose values are shown. Changed by the user unless a tc-revealed-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The language for dates, e.g. \"en-GB\"; by default the browser's",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-revealed-change",
+     "detail": "",
+     "description": "A value was shown or masked again ({ revealed, id, shown }: ContactRevealedChange); cancelable – prevented, it stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-copy",
+     "detail": "",
+     "description": "Copy was pressed ({ channel, text }: ContactCopy); cancelable – prevented, nothing is copied",
+     "cancelable": true
+    },
+    {
+     "name": "tc-action",
+     "detail": "",
+     "description": "One of the page's actions was pressed ({ action, channel }: ContactActionEvent)",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "cch",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-weight",
+    "--tc-control-h-sm",
+    "--tc-control-px-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-mono",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-6",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-info-bg",
+    "--tc-status-info-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "defaultContactStates",
+   "signature": "defaultContactStates: Record<string, { label: string; tone: ContactTone }>",
+   "description": "The verification states' names and tones used when the page gives none"
+  },
+  {
+   "name": "defaultContactKindLabels",
+   "signature": "defaultContactKindLabels: Record<ContactKind, string>",
+   "description": "The groups' names used when the page gives none"
+  },
+  {
+   "name": "maskContact",
+   "signature": "maskContact(kind: ContactKind, value: string): void",
+   "description": "A value masked by kind: an email keeps its first letter and domain, a phone number its last two digits, an address\nits last part (the town), a handle its first letter"
+  }
+ ],
+ "react": [
+  {
+   "component": "ContactChannels",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading"
+    },
+    {
+     "name": "revealed",
+     "type": "string[]",
+     "optional": true,
+     "description": "The ids whose values are shown – controlled when given"
+    },
+    {
+     "name": "defaultRevealed",
+     "type": "string[]",
+     "optional": true,
+     "description": "The ids shown on mount when `revealed` isn't controlled"
+    },
+    {
+     "name": "onRevealedChange",
+     "type": "(revealed: string[]) => void",
+     "optional": true,
+     "description": "A value was shown or masked again; `revealed` is the new list"
+    },
+    {
+     "name": "onCopy",
+     "type": "(channel: ContactChannel, text: string) => boolean | void",
+     "optional": true,
+     "description": "Copy was pressed; return false to stop the copy"
+    },
+    {
+     "name": "onAction",
+     "type": "(action: string, channel: ContactChannel) => void",
+     "optional": true,
+     "description": "One of the page's actions was pressed"
+    }
+   ],
+   "hides": [
+    "heading",
+    "revealed",
+    "onCopy",
+    "children"
+   ],
+   "events": {
+    "tc-revealed-change": null,
+    "tc-copy": "onCopy",
+    "tc-action": "onAction"
+   }
+  }
+ ],
+ "changelog": [
+  "**People & profiles:** - `tc-entity-timeline`: events by month, each with a category and a graded source, filtered by category. - `tc-travel-itinerary`: legs with mode, document, confidence and flags, grouped into journeys. - `tc-place-list`: places with type, status, coordinates and dates. - `tc-account-list`: masked IBAN-style accounts with a status and the page's own stats. - `tc-money-flow`: transfers between entities as bands sized by amount, with flag chips. - Entities' and transfers' flows are lit with a readout, and there's a table view. - `tc-co-occurrence`: entities ranked by the events they share with a subject. - Strength in words and bars, with counts per source. - `tc-evidence-list`: exhibits, each opening onto its chain of custody, with hash agreement. - `tc-asset-list`: grouped assets with masked identifiers and a status. - `tc-contact-channels`: emails, phone numbers, messaging and addresses. - Masked until shown, with role, last use and verification."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-contact-channels",
+   "className": "TcContactChannels",
+   "module": "trenchcoat/contact-channels",
+   "data": [
+    "channels",
+    "states",
+    "kindLabels",
+    "actions",
+    "revealed"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    },
+    {
+     "name": "masked",
+     "attribute": "masked"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-revealed-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-copy",
+     "cancelable": true
+    },
+    {
+     "name": "tc-action",
+     "cancelable": false
+    }
+   ],
+   "controlled": [
+    {
+     "property": "revealed",
+     "event": "tc-revealed-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "clipboard",
+    "name": "Async Clipboard (writeText)",
+    "bcd": "api.Clipboard.writeText",
+    "versions": {
+     "chrome": "66",
+     "edge": "79",
+     "firefox": "63",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "why": "Copy buttons.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setTimeout"
+  ],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 26537,
+  "gzip": 8754
+ }
+}

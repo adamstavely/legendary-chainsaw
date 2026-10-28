@@ -1,0 +1,508 @@
+{
+ "elements": [
+  {
+   "tag": "tc-entity-timeline",
+   "className": "TcEntityTimeline",
+   "description": "A dated record of events grouped by month – each with a category, its source and grade, an optional flag and an\ninline detail – filtered by category.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Timeline\"",
+     "description": "The heading, and the list's name",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "One line under the heading",
+     "readonly": false
+    },
+    {
+     "name": "events",
+     "attribute": null,
+     "type": "TimelineEvent[]",
+     "default": "[]",
+     "description": "The events, in any order – the element sorts them",
+     "readonly": false
+    },
+    {
+     "name": "categories",
+     "attribute": null,
+     "type": "TimelineCategory[]",
+     "default": "[]",
+     "description": "The categories events can have, in the order their chips show",
+     "readonly": false
+    },
+    {
+     "name": "order",
+     "attribute": "order",
+     "type": "\"newest\" | \"oldest\"",
+     "default": "\"newest\"",
+     "description": "\"newest\" first (the default) or \"oldest\" first",
+     "readonly": false
+    },
+    {
+     "name": "filter",
+     "attribute": "filter",
+     "type": "string",
+     "default": "\"all\"",
+     "description": "The category shown, or \"all\". Changed by the user unless a tc-filter-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "selected",
+     "attribute": null,
+     "type": "string | null",
+     "default": "null",
+     "description": "The event whose detail is open. Changed by the user unless a tc-selected-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The language for dates, e.g. \"en-GB\"; by default the browser's",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-filter-change",
+     "detail": "",
+     "description": "A category chip was picked ({ filter }: TimelineFilterChange; \"all\" for every category); cancelable – prevented, `filter` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-selected-change",
+     "detail": "",
+     "description": "An event's detail opened or closed ({ selected, event }: TimelineSelectedChange); cancelable – prevented, `selected` stays as it was",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "etl",
+   "cssProperties": [
+    {
+     "name": "--tc-etl-tone",
+     "value": "var(--tc-icon-muted)",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    }
+   ],
+   "tokens": [
+    "--tc-accent-text",
+    "--tc-border-default",
+    "--tc-border-selected",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-h-sm",
+    "--tc-control-px-sm",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-etl-tone-bg",
+    "--tc-fill-default",
+    "--tc-fill-selected",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-mono",
+    "--tc-font-sans",
+    "--tc-font-size-2xs",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-none",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-2xs",
+    "--tc-radius-badge",
+    "--tc-radius-full",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-5",
+    "--tc-space-6",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-info-bg",
+    "--tc-status-info-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tone-violet-bg",
+    "--tc-tone-violet-fg",
+    "--tc-tracking-caps",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "EntityTimeline",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading, and the list's name"
+    },
+    {
+     "name": "filter",
+     "type": "string",
+     "optional": true,
+     "description": "The category shown, or \"all\" – controlled when given"
+    },
+    {
+     "name": "defaultFilter",
+     "type": "string",
+     "optional": true,
+     "description": "The category shown on mount when `filter` isn't controlled"
+    },
+    {
+     "name": "onFilterChange",
+     "type": "(filter: string) => void",
+     "optional": true,
+     "description": "A category chip was picked"
+    },
+    {
+     "name": "selected",
+     "type": "string | null",
+     "optional": true,
+     "description": "The event whose detail is open – controlled when given (null for none)"
+    },
+    {
+     "name": "defaultSelected",
+     "type": "string | null",
+     "optional": true,
+     "description": "The event open on mount when `selected` isn't controlled"
+    },
+    {
+     "name": "onSelectedChange",
+     "type": "(selected: string | null, event?: TimelineEvent) => void",
+     "optional": true,
+     "description": "An event's detail opened or closed; `event` is the opened event"
+    }
+   ],
+   "hides": [
+    "heading",
+    "filter",
+    "selected",
+    "children"
+   ],
+   "events": {
+    "tc-filter-change": null,
+    "tc-selected-change": null
+   }
+  }
+ ],
+ "changelog": [
+  "**People & profiles:** - `tc-entity-timeline`: events by month, each with a category and a graded source, filtered by category. - `tc-travel-itinerary`: legs with mode, document, confidence and flags, grouped into journeys. - `tc-place-list`: places with type, status, coordinates and dates. - `tc-account-list`: masked IBAN-style accounts with a status and the page's own stats. - `tc-money-flow`: transfers between entities as bands sized by amount, with flag chips. - Entities' and transfers' flows are lit with a readout, and there's a table view. - `tc-co-occurrence`: entities ranked by the events they share with a subject. - Strength in words and bars, with counts per source. - `tc-evidence-list`: exhibits, each opening onto its chain of custody, with hash agreement. - `tc-asset-list`: grouped assets with masked identifiers and a status. - `tc-contact-channels`: emails, phone numbers, messaging and addresses. - Masked until shown, with role, last use and verification."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-entity-timeline",
+   "className": "TcEntityTimeline",
+   "module": "trenchcoat/entity-timeline",
+   "data": [
+    "events",
+    "categories",
+    "selected"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    },
+    {
+     "name": "order",
+     "attribute": "order"
+    },
+    {
+     "name": "filter",
+     "attribute": "filter"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-filter-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-selected-change",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "filter",
+     "event": "tc-filter-change"
+    },
+    {
+     "property": "selected",
+     "event": "tc-selected-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself",
+     "fact-sheet"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "fact-sheet",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "fact-sheet",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "clipboard",
+    "name": "Async Clipboard (writeText)",
+    "bcd": "api.Clipboard.writeText",
+    "versions": {
+     "chrome": "66",
+     "edge": "79",
+     "firefox": "63",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "why": "Copy buttons.",
+    "via": [
+     "internal/util"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "fact-sheet",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setTimeout (fact-sheet)"
+  ],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (fact-sheet)",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 44438,
+  "gzip": 11875
+ }
+}

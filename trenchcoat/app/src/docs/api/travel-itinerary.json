@@ -1,0 +1,468 @@
+{
+ "elements": [
+  {
+   "tag": "tc-travel-itinerary",
+   "className": "TcTravelItinerary",
+   "description": "Trips as legs – route, mode and carrier, document, confidence, source and grade, and flags – grouped into\njourneys headed by their route.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Travel\"",
+     "description": "The heading, and the list's name",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "One line under the heading",
+     "readonly": false
+    },
+    {
+     "name": "legs",
+     "attribute": null,
+     "type": "TravelLeg[]",
+     "default": "[]",
+     "description": "The legs, in any order – the element sorts them by date",
+     "readonly": false
+    },
+    {
+     "name": "flags",
+     "attribute": null,
+     "type": "Record<string, { label: string; tone: TravelFlagTone }>",
+     "default": "{}",
+     "description": "Flags' words and tones, merged over the defaults (no-record, cash, mismatch)",
+     "readonly": false
+    },
+    {
+     "name": "grouped",
+     "attribute": "grouped",
+     "type": "boolean",
+     "default": "false",
+     "description": "Groups legs into journeys: by their `journey` id, else consecutive legs that connect within `gap-days`",
+     "readonly": false
+    },
+    {
+     "name": "gapDays",
+     "attribute": "gap-days",
+     "type": "number",
+     "default": "14",
+     "description": "How many days may pass between two connecting legs of one journey, when they have no journey id",
+     "readonly": false
+    },
+    {
+     "name": "order",
+     "attribute": "order",
+     "type": "\"oldest\" | \"newest\"",
+     "default": "\"oldest\"",
+     "description": "\"oldest\" first (the default) or \"newest\" first",
+     "readonly": false
+    },
+    {
+     "name": "lowConfidence",
+     "attribute": "low-confidence",
+     "type": "number",
+     "default": "0.75",
+     "description": "Confidence below this reads as low and is drawn in warning; at or above 0.9 it reads as high",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The language for dates and numbers, e.g. \"en-GB\"; by default the browser's",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-open",
+     "detail": "",
+     "description": "A leg was opened ({ id, leg }: TravelOpen)",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "trit",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-border-default",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-width",
+    "--tc-font-mono",
+    "--tc-font-sans",
+    "--tc-font-size-2xs",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-none",
+    "--tc-line-height-normal",
+    "--tc-line-height-tight",
+    "--tc-meter-fill",
+    "--tc-meter-radius",
+    "--tc-meter-track",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-2xs",
+    "--tc-radius-badge",
+    "--tc-radius-sm",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-6",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-info-bg",
+    "--tc-status-info-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-status-warning-solid",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tracking-caps",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "defaultTravelFlags",
+   "signature": "defaultTravelFlags: Record<string, { label: string; tone: TravelFlagTone }>",
+   "description": "The flags' words and tones used when the page gives none"
+  }
+ ],
+ "react": [
+  {
+   "component": "TravelItinerary",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading, and the list's name"
+    },
+    {
+     "name": "onOpen",
+     "type": "(id: string, leg: TravelLeg) => void",
+     "optional": true,
+     "description": "A leg was opened"
+    }
+   ],
+   "hides": [
+    "heading",
+    "children"
+   ],
+   "events": {
+    "tc-open": "onOpen"
+   }
+  }
+ ],
+ "changelog": [
+  "**People & profiles:** - `tc-entity-timeline`: events by month, each with a category and a graded source, filtered by category. - `tc-travel-itinerary`: legs with mode, document, confidence and flags, grouped into journeys. - `tc-place-list`: places with type, status, coordinates and dates. - `tc-account-list`: masked IBAN-style accounts with a status and the page's own stats. - `tc-money-flow`: transfers between entities as bands sized by amount, with flag chips. - Entities' and transfers' flows are lit with a readout, and there's a table view. - `tc-co-occurrence`: entities ranked by the events they share with a subject. - Strength in words and bars, with counts per source. - `tc-evidence-list`: exhibits, each opening onto its chain of custody, with hash agreement. - `tc-asset-list`: grouped assets with masked identifiers and a status. - `tc-contact-channels`: emails, phone numbers, messaging and addresses. - Masked until shown, with role, last use and verification."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-travel-itinerary",
+   "className": "TcTravelItinerary",
+   "module": "trenchcoat/travel-itinerary",
+   "data": [
+    "legs",
+    "flags"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    },
+    {
+     "name": "grouped",
+     "attribute": "grouped"
+    },
+    {
+     "name": "gapDays",
+     "attribute": "gap-days"
+    },
+    {
+     "name": "order",
+     "attribute": "order"
+    },
+    {
+     "name": "lowConfidence",
+     "attribute": "low-confidence"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-open",
+     "cancelable": false
+    }
+   ],
+   "controlled": [],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself",
+     "fact-sheet"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "fact-sheet",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "fact-sheet",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "clipboard",
+    "name": "Async Clipboard (writeText)",
+    "bcd": "api.Clipboard.writeText",
+    "versions": {
+     "chrome": "66",
+     "edge": "79",
+     "firefox": "63",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "why": "Copy buttons.",
+    "via": [
+     "internal/util"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "fact-sheet",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setTimeout (fact-sheet)"
+  ],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (fact-sheet)",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 44564,
+  "gzip": 12404
+ }
+}

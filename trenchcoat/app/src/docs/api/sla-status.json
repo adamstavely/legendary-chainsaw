@@ -1,0 +1,559 @@
+{
+ "elements": [
+  {
+   "tag": "tc-sla-status",
+   "className": "TcSlaStatus",
+   "description": "Service-level performance – the on-time share, a Met / At risk / Breached split in words and marks, a weekly trend,\nper-type rows and a period chooser.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"SLA performance\"",
+     "description": "The heading",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "One line under the heading",
+     "readonly": false
+    },
+    {
+     "name": "split",
+     "attribute": null,
+     "type": "SlaSplit",
+     "default": "{ met: 0, atRisk: 0, breached: 0 }",
+     "description": "The counts for the whole period",
+     "readonly": false
+    },
+    {
+     "name": "rows",
+     "attribute": null,
+     "type": "SlaRow[]",
+     "default": "[]",
+     "description": "Counts per type of request, each drawn as its own bar",
+     "readonly": false
+    },
+    {
+     "name": "trend",
+     "attribute": null,
+     "type": "number[]",
+     "default": "[]",
+     "description": "The on-time share per week, oldest first, from 0 to 1",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "Partial<Record<SlaOutcome, string>>",
+     "default": "{}",
+     "description": "The outcomes' names, merged over the defaults (Met, At risk, Breached)",
+     "readonly": false
+    },
+    {
+     "name": "periods",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[\"7d\", \"30d\", \"90d\"]",
+     "description": "The periods to choose from; empty hides the chooser",
+     "readonly": false
+    },
+    {
+     "name": "period",
+     "attribute": "period",
+     "type": "string",
+     "default": "\"30d\"",
+     "description": "The period shown. Changed by the user unless a tc-period-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "unit",
+     "attribute": "unit",
+     "type": "string",
+     "default": "\"requests\"",
+     "description": "What the counts are, after the number: \"12 requests\"",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The language for numbers, e.g. \"de\"; by default the browser's",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-period-change",
+     "detail": "",
+     "description": "A period was picked ({ period }: SlaPeriodChange); cancelable – prevented, `period` stays as it was",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "sla",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-chart-1",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-ease-standard",
+    "--tc-focus-ring",
+    "--tc-focus-ring-width",
+    "--tc-font-sans",
+    "--tc-font-size-3xl",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-meter-radius",
+    "--tc-meter-track",
+    "--tc-radius-full",
+    "--tc-radius-xs",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-5",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tracking-tight",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "defaultSlaLabels",
+   "signature": "defaultSlaLabels: Record<SlaOutcome, string>",
+   "description": "The outcomes' names used when the page gives none"
+  }
+ ],
+ "react": [
+  {
+   "component": "SlaStatus",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading"
+    },
+    {
+     "name": "period",
+     "type": "string",
+     "optional": true,
+     "description": "The period shown – controlled when given"
+    },
+    {
+     "name": "defaultPeriod",
+     "type": "string",
+     "optional": true,
+     "description": "The period on mount when `period` isn't controlled"
+    },
+    {
+     "name": "onPeriodChange",
+     "type": "(period: string) => void",
+     "optional": true,
+     "description": "A period was picked"
+    }
+   ],
+   "hides": [
+    "heading",
+    "period",
+    "children"
+   ],
+   "events": {
+    "tc-period-change": null
+   }
+  }
+ ],
+ "changelog": [
+  "**Data & charts:** - `tc-ops-overview`: a dense strip of a health pill and count tiles with their change. - `tc-sla-status`: on-time share, a Met / At risk / Breached split, a trend and a bar per type."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-sla-status",
+   "className": "TcSlaStatus",
+   "module": "trenchcoat/sla-status",
+   "data": [
+    "split",
+    "rows",
+    "trend",
+    "labels",
+    "periods"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    },
+    {
+     "name": "period",
+     "attribute": "period"
+    },
+    {
+     "name": "unit",
+     "attribute": "unit"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-period-change",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "period",
+     "event": "tc-period-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "121",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "has"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "segmented-control",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "has",
+    "name": ":has()",
+    "bcd": "css.selectors.has",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "121",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Layout and state that depend on what's inside a part (an icon present, a focused field).",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "individual-transforms",
+    "name": "translate, scale and rotate properties",
+    "bcd": "css.properties.translate",
+    "versions": {
+     "chrome": "104",
+     "edge": "104",
+     "firefox": "72",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "segmented-control"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "segmented-control",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "resize-observer",
+    "name": "ResizeObserver",
+    "bcd": "api.ResizeObserver",
+    "versions": {
+     "chrome": "64",
+     "edge": "79",
+     "firefox": "69",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "via": [
+     "segmented-control"
+    ]
+   },
+   {
+    "id": "mask",
+    "name": "CSS masks",
+    "bcd": "css.properties.mask-image",
+    "versions": {
+     "chrome": "1",
+     "edge": "79",
+     "firefox": "53",
+     "safari": "4",
+     "safari_ios": "3.2"
+    },
+    "progressive": false,
+    "note": "with the -webkit- prefix",
+    "via": [
+     "segmented-control"
+    ]
+   },
+   {
+    "id": "scrollbar-width",
+    "name": "scrollbar-width",
+    "bcd": "css.properties.scrollbar-width",
+    "versions": {
+     "chrome": "121",
+     "edge": "121",
+     "firefox": "64",
+     "safari": "18.2",
+     "safari_ios": "18.2"
+    },
+    "progressive": true,
+    "without": "Scrollbars keep the browser's default width.",
+    "via": [
+     "segmented-control"
+    ]
+   },
+   {
+    "id": "at-property",
+    "name": "@property",
+    "bcd": "css.at-rules.property",
+    "versions": {
+     "chrome": "85",
+     "edge": "85",
+     "firefox": "128",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "The registered custom properties don't interpolate, so the transitions and spins they drive jump to their end state.",
+    "via": [
+     "segmented-control"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "overscroll-contain",
+    "name": "overscroll-behavior: contain",
+    "bcd": "css.properties.overscroll-behavior.contain",
+    "versions": {
+     "chrome": "63",
+     "edge": "18",
+     "firefox": "59",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "Scrolling past the end of a list carries on scrolling the page.",
+    "via": [
+     "segmented-control"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setTimeout (segmented-control)"
+  ],
+  "frames": [
+   "requestAnimationFrame, cancelled (segmented-control)"
+  ],
+  "animations": 0,
+  "observers": [
+   "ResizeObserver (segmented-control)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (segmented-control)",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 55551,
+  "gzip": 14044
+ }
+}

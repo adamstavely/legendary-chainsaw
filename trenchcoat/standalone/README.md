@@ -4,7 +4,7 @@
 it straight from disk (double-click it); it needs no server and loads nothing from the network. Pages are addressed by
 hash, e.g. `trenchcoat-gallery.html#/stories`.
 
-It's about 15 MB (4 MB gzipped; the overview thumbnails are about 1.8 MB of it) and loads every component up front, so the first open takes a moment. It covers the
+It's about 17 MB (5 MB gzipped; the overview thumbnails are about 2.2 MB of it) and loads every component up front, so the first open takes a moment. It covers the
 main gallery only, not `compare.html`, `measure.html` or `perf.html`.
 
 ## Rebuilding it

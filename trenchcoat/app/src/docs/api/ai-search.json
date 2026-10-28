@@ -1,0 +1,613 @@
+{
+ "elements": [
+  {
+   "tag": "tc-ai-search",
+   "className": "TcAiSearch",
+   "description": "A search box with an AI mode – suggestions in search mode, a multi-line prompt with examples in AI mode, a \"Search\nwithin file contents\" switch, removable scope chips, Clear and a ⌘K hotkey.",
+   "properties": [
+    {
+     "name": "label",
+     "attribute": "label",
+     "type": "string",
+     "default": "\"Search\"",
+     "description": "The field's name for assistive tech",
+     "readonly": false
+    },
+    {
+     "name": "mode",
+     "attribute": "mode",
+     "type": "AiSearchMode",
+     "default": "\"search\"",
+     "description": "Search or AI mode. Changed by the user unless a tc-mode-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "contents",
+     "attribute": "contents",
+     "type": "boolean",
+     "default": "false",
+     "description": "Whether to search inside files as well as their names. Changed by the user unless tc-contents-change is prevented",
+     "readonly": false
+    },
+    {
+     "name": "value",
+     "attribute": "value",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The text in the field",
+     "readonly": false
+    },
+    {
+     "name": "placeholder",
+     "attribute": "placeholder",
+     "type": "string",
+     "default": "\"Search files, people and topics\"",
+     "description": "The hint in search mode",
+     "readonly": false
+    },
+    {
+     "name": "aiPlaceholder",
+     "attribute": "ai-placeholder",
+     "type": "string",
+     "default": "\"Ask a question about your files\"",
+     "description": "The hint in AI mode",
+     "readonly": false
+    },
+    {
+     "name": "suggestions",
+     "attribute": null,
+     "type": "AiSearchSuggestion[]",
+     "default": "[]",
+     "description": "Recent and suggested searches, shown in search mode and filtered by what's typed",
+     "readonly": false
+    },
+    {
+     "name": "examples",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[]",
+     "description": "Prompts to start from in AI mode",
+     "readonly": false
+    },
+    {
+     "name": "scopes",
+     "attribute": null,
+     "type": "AiSearchScope[]",
+     "default": "[]",
+     "description": "Where the search looks, as chips inside the field; removable",
+     "readonly": false
+    },
+    {
+     "name": "aiLabel",
+     "attribute": "ai-label",
+     "type": "string",
+     "default": "\"AI mode\"",
+     "description": "The AI mode switch's label",
+     "readonly": false
+    },
+    {
+     "name": "contentsLabel",
+     "attribute": "contents-label",
+     "type": "string",
+     "default": "\"Search within file contents\"",
+     "description": "The contents switch's label",
+     "readonly": false
+    },
+    {
+     "name": "hotkey",
+     "attribute": null,
+     "type": "string | false",
+     "default": "\"mod+k\"",
+     "description": "Focuses the field from anywhere (\"mod+k\" is ⌘K on Apple keyboards, Ctrl K elsewhere); false turns it off",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-submit",
+     "detail": "",
+     "description": "A search or a question was sent ({ query, mode, contents, scopes }: AiSearchSubmit)",
+     "cancelable": false
+    },
+    {
+     "name": "tc-mode-change",
+     "detail": "",
+     "description": "AI mode was switched ({ mode }: AiSearchModeChange); cancelable – prevented, `mode` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-contents-change",
+     "detail": "",
+     "description": "\"Search within file contents\" was switched ({ contents }: AiSearchContentsChange); cancelable – prevented, `contents` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-query-change",
+     "detail": "",
+     "description": "The text changed ({ query }: AiSearchQueryChange)",
+     "cancelable": false
+    },
+    {
+     "name": "tc-scope-remove",
+     "detail": "",
+     "description": "A scope chip was removed ({ id }: AiSearchScopeRemove); cancelable – prevented, `scopes` stays as it was",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "aisr",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-accent",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-border-default",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
+    "--tc-control-h-sm",
+    "--tc-control-radius-sm",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-font-size",
+    "--tc-field-h",
+    "--tc-field-px",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-field-shadow-hover",
+    "--tc-fill-default",
+    "--tc-fill-strong",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-kbd-bg",
+    "--tc-kbd-fg",
+    "--tc-kbd-font-size",
+    "--tc-kbd-font-weight",
+    "--tc-kbd-h",
+    "--tc-kbd-px",
+    "--tc-kbd-radius",
+    "--tc-kbd-shadow",
+    "--tc-line-height-normal",
+    "--tc-menu-bg",
+    "--tc-menu-item-font-size",
+    "--tc-menu-item-h",
+    "--tc-menu-item-hover",
+    "--tc-menu-item-px",
+    "--tc-menu-item-radius",
+    "--tc-menu-padding",
+    "--tc-menu-radius",
+    "--tc-menu-shadow",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-full",
+    "--tc-shadow-control",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-4",
+    "--tc-space-5",
+    "--tc-surface-tray",
+    "--tc-switch-h",
+    "--tc-switch-knob",
+    "--tc-switch-knob-bg",
+    "--tc-switch-off",
+    "--tc-switch-on",
+    "--tc-switch-radius",
+    "--tc-switch-w",
+    "--tc-text-placeholder",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tone-violet-fg",
+    "--tc-tray-inset",
+    "--tc-tray-radius",
+    "--tc-z-dropdown"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "AiSearch",
+   "exported": true,
+   "props": [
+    {
+     "name": "mode",
+     "type": "AiSearchMode",
+     "optional": true,
+     "description": "Search or AI mode – controlled when given"
+    },
+    {
+     "name": "defaultMode",
+     "type": "AiSearchMode",
+     "optional": true,
+     "description": "The mode on mount when `mode` isn't controlled"
+    },
+    {
+     "name": "onModeChange",
+     "type": "(mode: AiSearchMode) => void",
+     "optional": true,
+     "description": "AI mode was switched"
+    },
+    {
+     "name": "contents",
+     "type": "boolean",
+     "optional": true,
+     "description": "Search within file contents – controlled when given"
+    },
+    {
+     "name": "defaultContents",
+     "type": "boolean",
+     "optional": true,
+     "description": "The switch on mount when `contents` isn't controlled"
+    },
+    {
+     "name": "onContentsChange",
+     "type": "(contents: boolean) => void",
+     "optional": true,
+     "description": "\"Search within file contents\" was switched"
+    },
+    {
+     "name": "defaultValue",
+     "type": "string",
+     "optional": true,
+     "description": "The text in the field on mount"
+    },
+    {
+     "name": "onQueryChange",
+     "type": "(query: string) => void",
+     "optional": true,
+     "description": "The text changed"
+    },
+    {
+     "name": "onSearch",
+     "type": "(detail: AiSearchSubmit) => void",
+     "optional": true,
+     "description": "A search or a question was sent"
+    },
+    {
+     "name": "scopes",
+     "type": "AiSearchScope[]",
+     "optional": true,
+     "description": "Where the search looks, as removable chips – controlled when given"
+    },
+    {
+     "name": "defaultScopes",
+     "type": "AiSearchScope[]",
+     "optional": true,
+     "description": "The scopes on mount when `scopes` isn't controlled"
+    },
+    {
+     "name": "onScopesChange",
+     "type": "(next: AiSearchScope[]) => void",
+     "optional": true,
+     "description": "A scope chip was removed; `next` is the list without it"
+    }
+   ],
+   "hides": [
+    "mode",
+    "contents",
+    "value",
+    "defaultValue",
+    "scopes",
+    "children"
+   ],
+   "events": {
+    "tc-submit": "onSearch",
+    "tc-mode-change": null,
+    "tc-contents-change": null,
+    "tc-query-change": "onQueryChange",
+    "tc-scope-remove": null
+   }
+  }
+ ],
+ "changelog": [
+  "**Search:** - `tc-query-builder`: conditions in AND / OR groups. - Read back in words and as a query string. - `tc-search-history`: recent and saved searches. - Run again, save, and remove with Undo. - `tc-ai-search`: one search box with an AI mode. - Suggestions, example prompts, a \"search within file contents\" option, scope chips and ⌘K."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-ai-search",
+   "className": "TcAiSearch",
+   "module": "trenchcoat/ai-search",
+   "data": [
+    "suggestions",
+    "examples",
+    "scopes",
+    "hotkey"
+   ],
+   "attributes": [
+    {
+     "name": "label",
+     "attribute": "label"
+    },
+    {
+     "name": "mode",
+     "attribute": "mode"
+    },
+    {
+     "name": "contents",
+     "attribute": "contents"
+    },
+    {
+     "name": "value",
+     "attribute": "value"
+    },
+    {
+     "name": "placeholder",
+     "attribute": "placeholder"
+    },
+    {
+     "name": "aiPlaceholder",
+     "attribute": "ai-placeholder"
+    },
+    {
+     "name": "aiLabel",
+     "attribute": "ai-label"
+    },
+    {
+     "name": "contentsLabel",
+     "attribute": "contents-label"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-submit",
+     "cancelable": false
+    },
+    {
+     "name": "tc-mode-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-contents-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-query-change",
+     "cancelable": false
+    },
+    {
+     "name": "tc-scope-remove",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "mode",
+     "event": "tc-mode-change"
+    },
+    {
+     "property": "contents",
+     "event": "tc-contents-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "field-sizing",
+    "name": "field-sizing",
+    "bcd": "css.properties.field-sizing",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "152",
+     "safari": "26.2",
+     "safari_ios": "26.2"
+    },
+    "progressive": true,
+    "without": "Text fields grow with their text. Without it they keep their minimum height and scroll.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "overscroll-contain",
+    "name": "overscroll-behavior: contain",
+    "bcd": "css.properties.overscroll-behavior.contain",
+    "versions": {
+     "chrome": "63",
+     "edge": "18",
+     "firefox": "59",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "Scrolling past the end of a list carries on scrolling the page.",
+    "via": [
+     "itself"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [
+   "window keydown (internal/controllers › HotkeyController)"
+  ],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 29158,
+  "gzip": 8754
+ }
+}

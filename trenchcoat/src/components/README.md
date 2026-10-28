@@ -4,6 +4,7 @@ One source per component, with both looks: the `look` prop picks Standard (the d
 the helpers in `src/internal/` and read their values from `tokens/tokens.css`, which an app loads once. These React
 components are being ported to Lit web components (`audit/lit-port-plan.md`); the package build follows.
 
+- **Account List** (`account-list.tsx`) – The financial accounts linked to a person or a company – institution, type, an IBAN-style identifier masked until shown one at a time, a balance or flagged amount and a status each (Monitored, Flagged, Under review, Closed or your own), with your own stats above
 - **Activity Calendar** (`activity-calendar.tsx`) – A year of activity at a glance – a square per day in a column per week, shaded by how much happened, with month and weekday names, the total, and any day's value on hover or focus
 - **Activity Clock** (`activity-clock.tsx`) – When activity happens, a clock per day – an AM ring and a PM ring of hour segments shaded by how busy each hour was, the weekday and date in the middle, and any hour's value there on hover or focus
 - **Agent Cursors** (`agent-cursors.tsx`) – Agents working in a document like teammates in a multiplayer editor – live pointers with names, suggestions typed letter by letter, images they resize, code they fix and comments beside the page
@@ -17,12 +18,14 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Agent Tree** (`agent-tree.tsx`) – Who started whom – an orchestrator and its sub-agents as a live tree, with status, cost and time on every card, costs rolling up each branch, and branches that fold to one line
 - **Agreement Tracker** (`agreement-tracker.tsx`) – How often the AI agreed with you versus pushed back this session – it turns amber on a run of agreement and points to the counter-argument
 - **AI Answer** (`ai-answer.tsx`) – Streamed answer with source cards, citation chips that preview their source, copy, regenerate, feedback and follow-ups
+- **AI Search** (`ai-search.tsx`) – One search box with an AI mode – recent and suggested searches as you type, a multi-line prompt with example prompts in AI mode, Search within file contents, removable scope chips, Clear and ⌘K
 - **AI Summary** (`ai-summary.tsx`) – The gist of a thread, meeting or set of documents – a TL;DR, a summary that streams in, key points citing their sources as numbered chips, open questions, a note when the sources have moved on, and feedback, Sources, Copy and Regenerate
 - **Alert Feed** (`alert-feed.tsx`) – A live feed of alerts, newest first – category, severity as an edge, mark and word, a fresh relative time, Escalate and Acknowledge on each, Pause feed with new alerts held back, and polite announcements
 - **Answer Arena** (`answer-arena.tsx`) – Two models answer the same prompt side by side, streaming together – then A is better, B is better or a tie, with a reason
 - **App Picker** (`app-picker.tsx`) – The app launcher for a suite header – a grid button that opens your apps as tiles, with pinned and recent apps, search, the current app marked and arrow keys that move in two dimensions
 - **Approval Card** (`approval-card.tsx`) – An agent asks before it acts – risk badge, preview, Approve and Deny with shortcuts, a pausing countdown, and a smooth morph into a resolved row
 - **Artifact Panel** (`artifact-panel.tsx`) – Everything a run produced in one place – files, code, documents and images with a preview for each, versions you can diff, and download
+- **Asset List** (`asset-list.tsx`) – The assets on record for a person, an account or a company, in groups – each with its kind, name, an identifier masked to its last four characters until shown, a detail line, what it's linked to and a status in words, with Open per row
 - **Attestation Check** (`attestation-check.tsx`) – Verify a signed evidence package by its hash or file – signature, chain integrity and what it covers, checked locally
 - **Audience Mix** (`audience-mix.tsx`) – Who is reading – a sector mix as bars, an internal-versus-external split and the top places, each with its share, and the row under the pointer or focus named in full
 - **Autonomy Dial** (`autonomy-dial.tsx`) – How much an agent may do on its own – a three-stop dial, and its real actions gliding between “Runs on its own” and “Asks you first”, with a lock for what always asks
@@ -44,6 +47,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Cited Answer** (`cited-answer.tsx`) – An AI answer wired to its sources – point at a citation to light up its sentence and source, click to unfold the quoted passage with the matching words marked
 - **Claim Answer** (`claim-answer.tsx`) – An answer you can check claim by claim – where each came from (a source, the model's knowledge, an inference), how sure it is, and the strongest case against it
 - **Clarifying Questions** (`clarifying-questions.tsx`) – The agent asks before it starts – two or three quick questions with choices or a short answer, sent back as one reply
+- **Co-Occurrence** (`co-occurrence.tsx`) – Who keeps turning up alongside a subject – accounts, cards, devices or people ranked by shared events, each with a strength in words and bars, a score, the share of events, a count per source and when last seen, opening onto the shared events themselves
 - **Code Block** (`code-block.tsx`) – Code that streams in with syntax colours from the theme – Copy, Apply, and a diff against the current file before you apply it
 - **Combobox** (`combobox.tsx`) – Pick one or many from a searchable, grouped list – chips with avatars, highlighted matches, create-on-the-fly and full keyboard support
 - **Command Menu** (`command-menu.tsx`) – Search and run anything from one field – tool actions with logos and ⌘1–⌘5, everyday commands with icons
@@ -52,6 +56,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Compact Breakdown** (`compact-breakdown.tsx`) – A total split into its parts in one small card – numbers roll, the bar glides and the ranked rows trade places when the period changes
 - **Confidence Brief** (`confidence-brief.tsx`) – An answer explained for someone who wasn't there – what we conclude, the kind of uncertainty, what would change it, assumptions, signs to watch and the track record
 - **Configuration release control** (`configuration-release-control.tsx`) – A configuration version moving through environments: the pipeline, a gate on evidence and approvals, confirmed promote and rollback
+- **Contact Channels** (`contact-channels.tsx`) – The ways to reach a person or an account, grouped as Email, Phone, Messaging and Address – each masked until shown, with its role, when it was last used, how far it's verified, Copy and the page's own actions
 - **Context Map** (`context-map.tsx`) – What fills an agent's context window, as a living treemap – system prompt, tools, memory, every file, the chat and tool results as tiles that glide as it grows, the free space dashed, and compaction squeezing old turns into a summary
 - **Context Tray** (`context-tray.tsx`) – What the model can see, as chips – files, @-mentions and sources, each with its token weight; pin or remove them and watch the total against the window
 - **Context Window** (`context-window.tsx`) – What fills the model's context, as a field of cells – hover a part to light it up, remove files, and compact the conversation while its cells shimmer and clear
@@ -74,9 +79,11 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Dropzone** (`dropzone.tsx`) – Drag files in and watch them upload – fanning documents, colored type badges, progress with time left, errors with retry
 - **Email Draft** (`email-draft.tsx`) – Agent-written email for review – switch recipient and tone, edit inline, remove the attachment, send or discard with undo
 - **Engagement Quality** (`engagement-quality.tsx`) – Whether reviews are genuine – an index from reused text, time on the source, batch dismissals and repeated commitments, shown as quality, not a violation
+- **Entity Timeline** (`entity-timeline.tsx`) – What happened to a person, account or case, in order – events under month headers, each with a category, its source and Admiralty grade tinted by confidence, an optional flag and a detail that opens in place, filtered by category chips with counts
 - **Eval Scorecard** (`eval-scorecard.tsx`) – Test cases run against prompt or model versions – pass and fail per case, the score across versions, and a failing case opened beside its expected answer
 - **Evaluation Dataset Editor** (`evaluation-dataset-editor.tsx`) – Edit an eval set's cases, checks, tags and splits, compare it with an earlier version, and import or export it as JSON Lines
 - **Evidence Coverage** (`evidence-coverage.tsx`) – What an answer could and couldn't see – each source category current, stale or missing, with a request for coverage
+- **Evidence List** (`evidence-list.tsx`) – The exhibits behind a matter – reference, title, type, source with its grade, date, holder and a status in words, each opening onto its chain of custody with every step's hash, copyable, and whether the hashes agree
 - **Experiment Card** (`experiment-card.tsx`) – An A/B test in two lines that quietly unfolds on hover – variants linked to a tiny chart, a metric switch with rolling numbers, and a winner you pick with a click
 - **Extraction Review** (`extraction-review.tsx`) – Fields pulled from a document, each linked to its place on the page – confidence per field, accept, correct or reject, field by field from the keyboard
 - **Fact Sheet** (`fact-sheet.tsx`) – What's known and how far to trust it – facts in sections, each value tagged with its source and an Admiralty grade, tinted and marked by confidence, with conflicting readings side by side and unknowns said plainly
@@ -114,16 +121,19 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Model Picker** (`model-picker.tsx`) – The model menu of an AI chat – point at a model and its speed, quality and cost bars fill, switch on extended thinking and its effort unfolds, while the tray rolls the first-token time and price
 - **Model Routing** (`model-routing.tsx`) – Routing rules as a route with a fallback chain, target health, breakers and residency, and a route test that lights up the path taken
 - **Model Settings** (`model-settings.tsx`) – The parameters a model supports, explained, with presets, a value signature, incompatible-setting feedback and what differs from the defaults
+- **Money Flow** (`money-flow.tsx`) – How money moved between entities – people, companies, shells and banks in columns, transfers as bands sized by amount with flag chips, an entity's or a transfer's flows lit with a readout in words, a list of every transfer and a table view
 - **Multimodal input** (`multimodal-input.tsx`) – Attach mixed media with local previews, upload state, format limits, and token estimates.
 - **Notification Stack** (`notification-stack.tsx`) – Notice cards stacked behind each other – dismiss the front one to reveal the next
 - **Notifications** (`notifications.tsx`) – The notification center – a bell with an unread badge that opens a panel of notifications grouped by day, with tabs, read state, inline actions, Mark all as read and Load more
 - **Number Field** (`number-field.tsx`) – A bounded numeric input with native validation
+- **Ops Overview** (`ops-overview.tsx`) – An operations overview in one dense strip – a status line, a health pill and count tiles, each with its change since the last period in words and green or red by which way is good, an optional sparkline and tone, optionally opening what it counts
 - **Org Unit Card** (`org-unit-card.tsx`) – An organisational unit at a glance – code, name, lead, On track / Watch / At risk counts, the page's stats with a spent-of-budget bar, and teams that fold open onto their topics' priority, coverage, open gaps and momentum
 - **OTP Input** (`otp-input.tsx`) – The verification code field done right – a gliding focus ring, paste and SMS autofill, a calm shake on errors and a morph into Verified
 - **Output Schema Builder** (`output-schema-builder.tsx`) – Build a structured-output schema as a tree beside a rendered preview of the answer – types visible, problems flagged on their rows – with raw JSON and the JSON Schema as tabs
 - **Parallel Attempts** (`parallel-attempts.tsx`) – An agent tries the same task several ways at once and the best one wins – every attempt races as a row with its model, approach and live bar, then gets a score; the best is marked and picked, and you can switch to another
 - **Permission Request** (`permission-request.tsx`) – An agent asks for one specific right – who, why and exactly what will happen – and you allow it once, for an hour or always; then it folds into one line with the time left and Revoke
 - **Person Links** (`person-links.tsx`) – The people linked to a person or an account – role, an ID or second line, and how strong each link is in words and bars, with a count, a "View network" action and "Show all"
+- **Place List** (`place-list.tsx`) – The places on record – type with an icon, Confirmed / Unverified / Vacated in words, address, coordinates and when each applies, with a place picked for a map
 - **Plan vs Actual (Clean only)** (`plan-vs-actual.tsx`) – An agent's plan against what really happens – every step's bar grows over its dashed planned ghost, overruns turn amber, the steps after it slide right, and the expected finish moves away from the planned one
 - **Playbook Canvas** (`playbook-canvas.tsx`) – An agent workflow, phase by phase – triggers, intake, context, analysis and review as steps you add and order, with review gates, versions and a dry run
 - **Policy Simulator** (`policy-simulator.tsx`) – Try an action against the policy before it's real – allow, needs approval, deny or hard stop, the rule that decided it and why
@@ -137,6 +147,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Provenance Summary** (`provenance-summary.tsx`) – What a document is made of – how much came from sources, from AI and from its authors, section by section
 - **Provider connection** (`provider-connection.tsx`) – A model provider connection read as a path – endpoint, credential, deployment – with each hop's health from an app-run test, the last check and the models it reports
 - **Publication Impact** (`publication-impact.tsx`) – One paper's impact on one card – venue, topic, grade and authors, downloads, views, citations and attention with a reads sparkline, mentions, who is reading, and peer, reader and sponsor feedback with a sentiment each
+- **Query Builder** (`query-builder.tsx`) – A search query built from conditions – a field, an operator that fits its type and a value per condition, AND / OR per group with one level of nesting, and the query read back in words and as a query string with Copy and Run
 - **Radio Group** (`radio-group.tsx`) – A native keyboard-operated single choice
 - **Reaction Bar** (`reaction-bar.tsx`) – Like, comment, repost and share in one pill – icons pop and fill, counts roll in digit by digit
 - **Reasoning Flags** (`reasoning-flags.tsx`) – Inline markers for weak reasoning in an answer – circular, hedged then certain, self-contradicting or overconfident – each with an explanation
@@ -151,12 +162,14 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Run Compare** (`run-compare.tsx`) – Two runs or two prompt versions side by side – outputs, steps, cost and time, with every difference highlighted
 - **Run Manifest** (`run-manifest.tsx`) – What it takes to reproduce a run – model, settings, instruction hash, sources, intent and the verification summary, ready to export
 - **Sandbox Log** (`sandbox-log.tsx`) – Command output from the agent's sandbox – a block per step with the command, exit code and time, streaming text in colour, copy and search, fast with long logs
+- **Search History** (`search-history.tsx`) – Recent and saved searches – tabs with counts, a filter, searches grouped by day with scope chips, result counts and times, and Run again, a save star and Remove with Undo on each
 - **Secret Field** (`secret-field.tsx`) – A masked credential input with an explicit reveal control
 - **Segmented Control** (`segmented-control.tsx`) – Switch between two to six options – a raised pill or underline that glides, stretches a little and can be dragged across, with icons, counts and badges
 - **Selection Translate** (`selection-translate.tsx`) – Select text and translate it – the translation in a card with the detected language, copy, replace in place and show original
 - **Session Context Bar** (`session-context-bar.tsx`) – The session's declared terms kept in view – intent, knowledge mode, scope, review, posture, limits, deadline and budget
 - **Session State** (`session-state.tsx`) – Where a long LLM session stands – a health pill, tiles for the primary goal, open loops, pending artifacts and context pressure with a meter that warns as it fills, and status chips, the tiles optionally opening what they count
 - **Setup Guide** (`setup-guide.tsx`) – Onboarding panel with a progress bar and collapsible task groups that strike through when done
+- **SLA Status** (`sla-status.tsx`) – How well service levels are met – the share on time, a Met / At risk / Breached split in words and marks, a weekly trend, a bar per type of request with a readout, and a period chooser
 - **Slider Field** (`slider-field.tsx`) – A synchronized slider and numeric input
 - **Smart Recommendation** (`smart-recommendation.tsx`) – Suggestion card with a confidence signal, alternatives to switch to and accept with undo
 - **Status Tracker** (`status-tracker.tsx`) – Where work stands in a fixed sequence of steps – gates or stages on a line, each cleared, pending, blocked or not reached in words and marks, the line filling as they clear, the current step marked, a legend, and a step's evidence record on click
@@ -178,6 +191,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Trace Waterfall** (`trace-waterfall.tsx`) – Where the time and money of an agent run go – every LLM call, tool call and sub-agent as a bar on a live timeline, with tokens and cost per step, the slowest call marked and branches that fold into their parent
 - **Traceability Spine** (`traceability-spine.tsx`) – The chain from open questions to outcomes – a column per stage from questions and gaps to work, papers and who cites them, linked cards joined by lines, and a card's whole path traced on click with the rest dimmed
 - **Transcript Review** (`transcript-review.tsx`) – Recorded audio or video with a transcript that follows playback – speakers, timestamps, recognition confidence and low-confidence segments to verify
+- **Travel Itinerary** (`travel-itinerary.tsx`) – Trips as legs for a travel or expense audit – route codes, mode and carrier, the document used, confidence as a meter and %, source and grade, flags such as No record or Cash ticket in words, and connecting legs grouped into journeys
 - **Trigger Builder** (`trigger-builder.tsx`) – “Run when X happens, or every Monday at 9” – an event or a schedule, conditions, a plain-language summary and the next run times
 - **Usage Meter** (`usage-meter.tsx`) – Plan usage and AI credits – a stacked credits meter by category, daily sparkline, limits and a button that speaks up near the limit
 - **Validity Badge** (`validity-badge.tsx`) – How fresh a piece of evidence is – a band from high to stale that ages over time, contested and superseded marks, and a margin strip for a document

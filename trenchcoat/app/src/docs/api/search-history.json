@@ -1,0 +1,518 @@
+{
+ "elements": [
+  {
+   "tag": "tc-search-history",
+   "className": "TcSearchHistory",
+   "description": "Recent and saved searches – tabs with counts, a filter, searches grouped by day with scope chips, result counts and\ntimes, and Run again, a save star and Remove with Undo on each.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Search history\"",
+     "description": "The heading, and the list's name",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "One line under the heading",
+     "readonly": false
+    },
+    {
+     "name": "searches",
+     "attribute": null,
+     "type": "SearchHistoryEntry[]",
+     "default": "[]",
+     "description": "The searches, any order; shown newest first. Saving and removing change it unless their events are prevented",
+     "readonly": false
+    },
+    {
+     "name": "tab",
+     "attribute": "tab",
+     "type": "SearchHistoryTab",
+     "default": "\"recent\"",
+     "description": "The tab shown. Changed by the user unless a tc-tab-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "filter",
+     "attribute": "filter",
+     "type": "string",
+     "default": "\"\"",
+     "description": "What the filter box holds",
+     "readonly": false
+    },
+    {
+     "name": "now",
+     "attribute": "now",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The time now, epoch ms; by default the element's own clock",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The language for times and numbers, e.g. \"en-GB\"; by default the browser's",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-select",
+     "detail": "",
+     "description": "A search was picked to run again ({ id, search }: SearchHistorySelect)",
+     "cancelable": false
+    },
+    {
+     "name": "tc-saved-change",
+     "detail": "",
+     "description": "A search was saved or unsaved ({ id, saved, searches }: SearchHistorySavedChange); cancelable – prevented, `searches` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-remove",
+     "detail": "",
+     "description": "A search was removed ({ id, search, searches }: SearchHistoryRemove); cancelable – prevented, it stays until the page takes it out of `searches`",
+     "cancelable": true
+    },
+    {
+     "name": "tc-restore",
+     "detail": "",
+     "description": "A removed search was put back with Undo ({ id, search, searches }: SearchHistoryRemove); cancelable – prevented, it comes back when the page puts it in `searches`",
+     "cancelable": true
+    },
+    {
+     "name": "tc-tab-change",
+     "detail": "",
+     "description": "The tab changed ({ tab }: SearchHistoryTabChange); cancelable – prevented, `tab` stays as it was",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "shis",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-h-sm",
+    "--tc-control-radius-sm",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-field-bg-sunken",
+    "--tc-field-h-sm",
+    "--tc-field-px",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-field-shadow-hover",
+    "--tc-fill-default",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-strong",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-menu-item-hover",
+    "--tc-menu-item-radius",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-md",
+    "--tc-seg-pad",
+    "--tc-seg-thumb-bg",
+    "--tc-seg-thumb-shadow",
+    "--tc-seg-track-bg",
+    "--tc-seg-track-radius",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-5",
+    "--tc-space-6",
+    "--tc-status-warning-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-placeholder",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "SearchHistory",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading, and the list's name"
+    },
+    {
+     "name": "searches",
+     "type": "SearchHistoryEntry[]",
+     "optional": true,
+     "description": "The searches – controlled when given: saving, removing and Undo report the next list through onSearchesChange"
+    },
+    {
+     "name": "defaultSearches",
+     "type": "SearchHistoryEntry[]",
+     "optional": true,
+     "description": "The searches on mount when `searches` isn't controlled"
+    },
+    {
+     "name": "onSearchesChange",
+     "type": "(next: SearchHistoryEntry[]) => void",
+     "optional": true,
+     "description": "A search was saved, unsaved, removed or put back; `next` is the list as it will be"
+    },
+    {
+     "name": "tab",
+     "type": "SearchHistoryTab",
+     "optional": true,
+     "description": "The tab shown – controlled when given"
+    },
+    {
+     "name": "defaultTab",
+     "type": "SearchHistoryTab",
+     "optional": true,
+     "description": "The tab on mount when `tab` isn't controlled"
+    },
+    {
+     "name": "onTabChange",
+     "type": "(tab: SearchHistoryTab) => void",
+     "optional": true,
+     "description": "The tab changed"
+    },
+    {
+     "name": "onRunAgain",
+     "type": "(search: SearchHistoryEntry) => void",
+     "optional": true,
+     "description": "A search was picked to run again"
+    }
+   ],
+   "hides": [
+    "heading",
+    "searches",
+    "tab",
+    "children"
+   ],
+   "events": {
+    "tc-select": "onRunAgain",
+    "tc-saved-change": null,
+    "tc-remove": null,
+    "tc-restore": null,
+    "tc-tab-change": null
+   }
+  }
+ ],
+ "changelog": [
+  "**Search:** - `tc-query-builder`: conditions in AND / OR groups. - Read back in words and as a query string. - `tc-search-history`: recent and saved searches. - Run again, save, and remove with Undo. - `tc-ai-search`: one search box with an AI mode. - Suggestions, example prompts, a \"search within file contents\" option, scope chips and ⌘K."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-search-history",
+   "className": "TcSearchHistory",
+   "module": "trenchcoat/search-history",
+   "data": [
+    "searches"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    },
+    {
+     "name": "tab",
+     "attribute": "tab"
+    },
+    {
+     "name": "filter",
+     "attribute": "filter"
+    },
+    {
+     "name": "now",
+     "attribute": "now"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-select",
+     "cancelable": false
+    },
+    {
+     "name": "tc-saved-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-remove",
+     "cancelable": true
+    },
+    {
+     "name": "tc-restore",
+     "cancelable": true
+    },
+    {
+     "name": "tc-tab-change",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "tab",
+     "event": "tc-tab-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "relative-time-format",
+    "name": "Intl.RelativeTimeFormat",
+    "bcd": "javascript.builtins.Intl.RelativeTimeFormat",
+    "versions": {
+     "chrome": "71",
+     "edge": "79",
+     "firefox": "65",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setInterval, cleared"
+  ],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [
+   "Date.now()"
+  ],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 26959,
+  "gzip": 8647
+ }
+}
