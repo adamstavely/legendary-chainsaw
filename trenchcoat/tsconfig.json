@@ -65,5 +65,10 @@
     "tests",
     "vite.config.ts",
     "src"
+  ],
+  // The Angular wrappers import the built package ("trenchcoat/*") and use Angular's decorators: npm run
+  // check:angular builds the package and compiles them with ngc
+  "exclude": [
+    "src/angular"
   ]
 }
