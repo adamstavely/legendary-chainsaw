@@ -74,7 +74,7 @@
     {
      "name": "tc-selected-change",
      "detail": "",
-     "description": "An artifact was picked in the list ({ id: string }); cancelable",
+     "description": "An artifact was picked in the list ({ id, selected }: ArtifactSelectedChange – both the artifact's id); cancelable",
      "cancelable": true
     },
     {
@@ -301,6 +301,7 @@
   }
  ],
  "changelog": [
+  "**Event details:** four change events gained a field named after the property they change. The existing fields stay. The docs' controlled examples read these names, which the events lacked; the new Angular type check caught it. - `tc-artifact-panel`'s `tc-selected-change`: `selected`. - `tc-email-draft`'s `tc-recipient-change`: `recipient`. - `tc-reliance-gauge`'s `tc-review-level-change`: `reviewLevel`. - `tc-transcript-review`'s `tc-translation-mode-change`: `translationMode`.",
   "`tc-artifact-panel` – what a run produced: a list, a preview per kind (Markdown text, code through `tc-code-block`, images, tables from CSV), versions with a diff against the one before, and download (a Blob by default, cancelable)."
  ],
  "frameworks": [
@@ -670,7 +671,7 @@
   "windowed": false
  },
  "size": {
-  "min": 119267,
-  "gzip": 30462
+  "min": 119278,
+  "gzip": 30466
  }
 }

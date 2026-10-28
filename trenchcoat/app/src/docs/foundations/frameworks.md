@@ -64,24 +64,37 @@ client-only plugin (`plugins/trenchcoat.client.ts` with `import "trenchcoat"`), 
 
 ## Angular
 
-Add `CUSTOM_ELEMENTS_SCHEMA` to every component that uses a tag, and import the module for its side effect:
+`trenchcoat/angular` has a standalone directive for every element, named after it (`tc-combobox` → `Combobox`). Put
+the directives in a component's `imports` – no `CUSTOM_ELEMENTS_SCHEMA` – and strict templates check every binding:
 
 ```ts
-import { Component, CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
-import "trenchcoat/combobox";
+import { Component, signal } from "@angular/core";
+import { Combobox } from "trenchcoat/angular";
+import type { ComboboxOption } from "trenchcoat/combobox";
 
 @Component({
   selector: "app-assignees",
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  template: `<tc-combobox [options]="people" [value]="who()" (tc-value-change)="onWho($event)"></tc-combobox>`,
+  imports: [Combobox],
+  template: `<tc-combobox [options]="people" [value]="who()" (tc-value-change)="who.set($event.detail.value)"></tc-combobox>`,
 })
-export class Assignees { /* … */ }
+export class Assignees {
+  people: ComboboxOption[] = [/* … */];
+  who = signal<string[]>([]);
+}
 ```
 
-The schema turns template type-checking off for those tags, so type the class side: inputs as
-`TcCombobox["options"]` and handlers as `CustomEvent<…>`. `[(value)]` needs a `valueChange` output, which a custom
-element doesn't have – bind `[value]` and update it from `(tc-value-change)`. With Angular SSR, import the module in
-the browser only (`afterNextRender` or `isPlatformBrowser`); `examples/angular` renders on the client.
+- **Inputs** are the element's properties, typed from it: `[options]` takes `TcCombobox["options"]`, and a misspelt
+  input or a wrong type fails the build. Plain attributes work as in HTML – `required`, `value="0.6"`.
+- **Events** are typed: `$event` is the event's `CustomEvent<…>`, so `$event.detail.value` is checked. The element
+  dispatches the event itself, and a handler runs once per event.
+- **Forms:** an element that holds a `value` takes `[(ngModel)]`, `[formControl]` and `formControlName` through its
+  accessor in `trenchcoat/angular/forms` (`ComboboxValueAccessor`, or `TRENCHCOAT_FORMS` for all of them).
+  `@angular/forms` is only needed for that entry.
+- `TRENCHCOAT` is every directive at once, for an `imports` array. `#ref="tcCombobox"` gives the directive, and its
+  `element` is the element itself.
+
+The directives are built for Angular 19 and later. With Angular SSR, render the components on the browser only
+(`afterNextRender` or `isPlatformBrowser`); `examples/angular` renders on the client.
 
 ## Svelte
 
@@ -117,7 +130,7 @@ Import the module and use the tag; set data from script and listen with `addEven
 |---|---|---|
 | React / Next.js | `tsc` with `examples/react`'s React types | Next.js's `dynamic` set-up is shown, not compiled per page |
 | Vue / Nuxt | `vue-tsc` with `trenchcoat/vue`: props and events in templates | Nuxt's plugin set-up is shown, not compiled per page |
-| Angular | `ngc` with strict templates | CUSTOM_ELEMENTS_SCHEMA leaves the `tc-` bindings unchecked |
+| Angular | `ngc` with strict templates against `trenchcoat/angular`: inputs, attributes and `$event` | – |
 | Svelte | the Svelte compiler, and `tsc` on each script with Svelte's types | no `svelte-check` in the app, so the markup's bindings aren't type-checked |
 | HTML | each module script parsed | plain JS: syntax only |
 

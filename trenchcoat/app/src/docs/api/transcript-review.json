@@ -224,7 +224,7 @@
     {
      "name": "tc-translation-mode-change",
      "detail": "",
-     "description": "Original, Translation or Side by side was chosen; detail `{ mode }` (TranscriptTranslationModeChange). Cancelable",
+     "description": "Original, Translation or Side by side was chosen ({ mode, translationMode }: TranscriptTranslationModeChange – the same mode). Cancelable",
      "cancelable": true
     }
    ],
@@ -499,6 +499,7 @@
   }
  ],
  "changelog": [
+  "**Event details:** four change events gained a field named after the property they change. The existing fields stay. The docs' controlled examples read these names, which the events lacked; the new Angular type check caught it. - `tc-artifact-panel`'s `tc-selected-change`: `selected`. - `tc-email-draft`'s `tc-recipient-change`: `recipient`. - `tc-reliance-gauge`'s `tc-review-level-change`: `reviewLevel`. - `tc-transcript-review`'s `tc-translation-mode-change`: `translationMode`.",
   "**Trust & calibration**, from THEMIS and built domain-neutral: - `tc-agreement-tracker`, `tc-confidence-brief`, `tc-capability-notice`, `tc-transcript-review`, `tc-version-history`, `tc-session-context-bar`, `tc-evidence-coverage`, `tc-review-conflict`; - `tc-handoff-brief`, `tc-engagement-quality`, `tc-knowledge-promotion`, `tc-friction-profile`, `tc-reasoning-flags`."
  ],
  "frameworks": [
@@ -970,7 +971,7 @@
   "windowed": true
  },
  "size": {
-  "min": 64278,
-  "gzip": 18370
+  "min": 64296,
+  "gzip": 18372
  }
 }

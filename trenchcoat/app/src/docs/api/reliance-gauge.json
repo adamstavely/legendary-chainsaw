@@ -218,7 +218,7 @@
     {
      "name": "tc-review-level-change",
      "detail": "",
-     "description": "The footer's switch was pressed (detail: { level: \"routine\" | \"spot-check\" | \"mandatory\", previous: same }); cancelable – prevent it to keep `reviewLevel` yourself",
+     "description": "The footer's switch was pressed ({ level, reviewLevel, previous }: RelianceReviewLevelChange – reviewLevel is the new level); cancelable – prevent it to keep `reviewLevel` yourself",
      "cancelable": true
     },
     {
@@ -394,6 +394,7 @@
   }
  ],
  "changelog": [
+  "**Event details:** four change events gained a field named after the property they change. The existing fields stay. The docs' controlled examples read these names, which the events lacked; the new Angular type check caught it. - `tc-artifact-panel`'s `tc-selected-change`: `selected`. - `tc-email-draft`'s `tc-recipient-change`: `recipient`. - `tc-reliance-gauge`'s `tc-review-level-change`: `reviewLevel`. - `tc-transcript-review`'s `tc-translation-mode-change`: `translationMode`.",
   "**Trust & calibration**, from THEMIS and built domain-neutral: - claims and their reliability: `tc-claim-answer`, `tc-verification-queue`, `tc-reflection-gate`, `tc-reliance-gauge`, `tc-disagreement-banner`, `tc-synthesis-notes`; - where outputs came from: `tc-lineage-graph`, `tc-validity-badge`, `tc-provenance-summary`, `tc-correction-propagation`, `tc-attestation-check`, `tc-run-manifest`; - policy and control: `tc-policy-simulator`, `tc-gate-config`, `tc-coverage-matrix`, `tc-kill-switch`, `tc-playbook-canvas`."
  ],
  "frameworks": [
@@ -716,7 +717,7 @@
   "windowed": false
  },
  "size": {
-  "min": 54240,
-  "gzip": 14031
+  "min": 54254,
+  "gzip": 14035
  }
 }

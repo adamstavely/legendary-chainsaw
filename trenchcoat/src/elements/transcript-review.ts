@@ -75,7 +75,8 @@ export type TranscriptCopyDetail = { segment: TranscriptSegment; text: string };
 export type TranscriptSegmentChange = { segment: TranscriptSegment | null };
 export type TranscriptQueryChange = { query: string };
 export type TranscriptHiddenSpeakersChange = { hiddenSpeakers: string[] };
-export type TranscriptTranslationModeChange = { mode: TranscriptTranslationMode };
+/** `translationMode` is the same as `mode`, named after the property it changes */
+export type TranscriptTranslationModeChange = { mode: TranscriptTranslationMode; translationMode: TranscriptTranslationMode };
 
 const TONES: TranscriptTone[] = ["blue", "violet", "teal", "pink", "rose", "amber"];
 const MODES: TranscriptTranslationMode[] = ["original", "translation", "both"];
@@ -159,7 +160,7 @@ type Who = { id: string; name: string; short: string; tone: TranscriptTone };
  * @fires tc-copy - Copy on a segment; detail `{ segment, text }` (TranscriptCopyDetail) – the text with its timestamp and speaker. Cancelable: preventDefault() and copy it yourself
  * @fires tc-query-change - The search text changed; detail `{ query }` (TranscriptQueryChange). Cancelable
  * @fires tc-hidden-speakers-change - A speaker chip was toggled; detail `{ hiddenSpeakers }` (TranscriptHiddenSpeakersChange). Cancelable
- * @fires tc-translation-mode-change - Original, Translation or Side by side was chosen; detail `{ mode }` (TranscriptTranslationModeChange). Cancelable
+ * @fires tc-translation-mode-change - Original, Translation or Side by side was chosen ({ mode, translationMode }: TranscriptTranslationModeChange – the same mode). Cancelable
  */
 export class TcTranscriptReview extends TcElement {
   static override ui = "tsr";
@@ -706,7 +707,7 @@ export class TcTranscriptReview extends TcElement {
   }
 
   private setMode(mode: TranscriptTranslationMode) {
-    if (mode !== this.translationMode && this.emit<TranscriptTranslationModeChange>("tc-translation-mode-change", { mode }, { cancelable: true })) this.translationMode = mode;
+    if (mode !== this.translationMode && this.emit<TranscriptTranslationModeChange>("tc-translation-mode-change", { mode, translationMode: mode }, { cancelable: true })) this.translationMode = mode;
   }
 
   /* ---------- Keyboard and pointer ---------- */

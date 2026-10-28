@@ -125,7 +125,9 @@
    }
   }
  ],
- "changelog": [],
+ "changelog": [
+  "**`examples/angular`:** uses the directives with no schema, and checks two things in Chromium: a handler runs once per event, and `[(ngModel)]` drives `tc-switch`."
+ ],
  "frameworks": [
   {
    "tag": "tc-switch",

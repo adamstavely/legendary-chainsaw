@@ -10,7 +10,7 @@ builds, serves and checks every one in Chromium.
 | `next/` | Next.js (App Router) | the React wrappers in a client component, loaded client-only (decision L10) |
 | `vue/` | Vue 3 + Vite | the elements directly; `:value` + `@tc-value-change` |
 | `nuxt/` | Nuxt | the elements directly inside `<ClientOnly>` |
-| `angular/` | Angular 21 (22 needs Node 24.15+) | `CUSTOM_ELEMENTS_SCHEMA`; `[value]` + `(tc-value-change)` |
+| `angular/` | Angular 21 (22 needs Node 24.15+) | `trenchcoat/angular` directives, no schema; `[value]` + `(tc-value-change)`, and `[(ngModel)]` through `trenchcoat/angular/forms` |
 | `svelte/` | Svelte 5 + Vite | the elements directly |
 | `html/` | no framework (Vite) | the elements and plain DOM events |
 

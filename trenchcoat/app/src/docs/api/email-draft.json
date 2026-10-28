@@ -138,7 +138,7 @@
     {
      "name": "tc-recipient-change",
      "detail": "",
-     "description": "Another contact is picked; detail `{ email: string, contact: DraftContact }`. Cancelable: prevent it to control `recipient`",
+     "description": "Another contact is picked ({ email, recipient, contact }: DraftRecipientChange – recipient is the email). Cancelable: prevent it to control `recipient`",
      "cancelable": true
     },
     {
@@ -345,7 +345,9 @@
    }
   }
  ],
- "changelog": [],
+ "changelog": [
+  "**Event details:** four change events gained a field named after the property they change. The existing fields stay. The docs' controlled examples read these names, which the events lacked; the new Angular type check caught it. - `tc-artifact-panel`'s `tc-selected-change`: `selected`. - `tc-email-draft`'s `tc-recipient-change`: `recipient`. - `tc-reliance-gauge`'s `tc-review-level-change`: `reviewLevel`. - `tc-transcript-review`'s `tc-translation-mode-change`: `translationMode`."
+ ],
  "frameworks": [
   {
    "tag": "tc-email-draft",
@@ -666,7 +668,7 @@
   "windowed": false
  },
  "size": {
-  "min": 59063,
-  "gzip": 13986
+  "min": 59081,
+  "gzip": 13989
  }
 }

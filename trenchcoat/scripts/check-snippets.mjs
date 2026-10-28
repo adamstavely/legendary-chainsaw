@@ -3,7 +3,7 @@
 // type declarations emitted from the current sources (remediation 6.5):
 //   · React – tsc with examples/react's React types (the Next.js tab shows the same wrapper code)
 //   · Vue – vue-tsc with trenchcoat/vue, so templates are type-checked: props and @tc-* events
-//   · Angular – ngc with strictTemplates (CUSTOM_ELEMENTS_SCHEMA leaves tc-* bindings unchecked, the class is checked)
+//   · Angular – ngc with strictTemplates against the trenchcoat/angular directives: bindings, attributes and $event
 //   · Svelte – the Svelte compiler (no svelte-check in the app), plus tsc on each <script lang="ts"> with Svelte's
 //     rune types; the markup's bindings aren't type-checked
 //   · HTML – each <script type="module"> parsed (syntax only: plain JS has no types to check against)
@@ -63,6 +63,10 @@ const trenchcoatPaths = {
   "trenchcoat/vue": [join(types, "vue.d.ts")],
   "trenchcoat/svelte": [join(types, "svelte.d.ts")],
   "trenchcoat/tokens.css": [join(types, "tokens.css.d.ts")],
+  // The Angular directives from their generated sources, compiled with the snippets
+  "trenchcoat/angular": [join(ROOT, "src/angular/index.ts")],
+  "trenchcoat/angular/forms": [join(ROOT, "src/angular/forms.ts")],
+  "trenchcoat/look-provider": [join(types, "elements/internal/look.d.ts")],
   "trenchcoat/*": [join(types, "elements/*.d.ts")],
 };
 
@@ -85,7 +89,9 @@ const sh = (cmd, args, cwd) => {
   }
 };
 /** Compiler output lines naming a file → problems for its page */
-const report = (fw, out, dir) => {
+const report = (fw, raw, dir) => {
+  // ngc colours its output whatever the options say: strip the colour codes before reading it
+  const out = raw.replace(/\x1b\[[0-9;]*m/g, "");
   for (const line of out.split("\n")) {
     const m = line.match(/([a-z0-9_]+)(?:\.controlled)?\.(?:tsx|vue|ts|svelte\.ts)[(:]\s*(\d+)?/);
     if (m && /error/i.test(line)) problems.push(`${m[1].replace(/_/g, "-")} (${fw}): ${line.replace(dir + "/", "").trim()}`);
@@ -150,7 +156,7 @@ const t0 = Date.now();
   writeFileSync(
     join(dir, "tsconfig.json"),
     JSON.stringify({
-      compilerOptions: { target: "ES2022", module: "ES2022", moduleResolution: "bundler", strict: true, skipLibCheck: true, lib: ["ES2022", "dom"], experimentalDecorators: true, useDefineForClassFields: false, outDir: "out", declaration: false, types: [], paths: trenchcoatPaths },
+      compilerOptions: { target: "ES2022", module: "ES2022", moduleResolution: "bundler", strict: true, skipLibCheck: true, lib: ["ES2022", "dom"], experimentalDecorators: true, useDefineForClassFields: false, outDir: "out", declaration: false, types: [], paths: trenchcoatPaths, pretty: false },
       angularCompilerOptions: { strictTemplates: true },
       files,
     }),

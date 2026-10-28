@@ -99,6 +99,20 @@ async function check(page) {
   return problems;
 }
 
+/** angular: the wrappers (trenchcoat/angular) – one handler call per event, and ngModel on an element */
+async function angularOnly(page) {
+  const problems = [];
+  const changes = await page.textContent("#changes");
+  if (changes?.trim() !== "1") problems.push(`angular: tc-value-change handled ${changes} times for one pick (expected 1)`);
+  await page.click("#notify [role=switch]");
+  try {
+    await page.waitForFunction(() => document.querySelector("#notify-value")?.textContent?.trim() === "false", null, { timeout: 3000 });
+  } catch {
+    problems.push(`angular: ngModel didn't follow the switch (got ${await page.textContent("#notify-value")})`);
+  }
+  return problems;
+}
+
 const browser = await chromium.launch();
 let failed = 0;
 let port = 4800;
@@ -124,6 +138,7 @@ for (const app of apps) {
     await page.goto(`http://localhost:${port}/`);
     const problems = await check(page);
     if (app === "html") problems.push(...(await everyElement(page, port)), ...treeShaking(dir));
+    if (app === "angular") problems.push(...(await angularOnly(page)));
     // Hydration and runtime errors (a missing favicon is not one)
     problems.push(...errors.filter((e) => !/favicon|404/.test(e)).map((e) => `console: ${e.slice(0, 200)}`));
     await page.close();

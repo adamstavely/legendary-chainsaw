@@ -34,7 +34,8 @@ export type DraftContact = { name: string; email: string };
 export type DraftTone = { id: string; label: string; body: (contact: DraftContact) => string };
 
 export type DraftEmail = { to: DraftContact; body: string; attachment: string | null };
-export type DraftRecipientChange = { email: string; contact: DraftContact };
+/** `recipient` is the same as `email`, named after the property it changes */
+export type DraftRecipientChange = { email: string; recipient: string; contact: DraftContact };
 export type DraftToneChange = { tone: string };
 export type DraftUndo = { action: "send" | "discard" };
 
@@ -95,7 +96,7 @@ let instances = 0;
 /**
  * An agent-written email waiting for review: recipient, attachment, tones, inline editing, Discard and Send.
  * @tag tc-email-draft
- * @fires tc-recipient-change - Another contact is picked; detail `{ email: string, contact: DraftContact }`. Cancelable: prevent it to control `recipient`
+ * @fires tc-recipient-change - Another contact is picked ({ email, recipient, contact }: DraftRecipientChange – recipient is the email). Cancelable: prevent it to control `recipient`
  * @fires tc-tone-change - Another tone is picked; detail `{ tone: string }`. Cancelable: prevent it to control `tone`
  * @fires tc-discard - The draft is discarded; detail `null`
  * @fires tc-undo - A send or discard is taken back from the receipt; detail `{ action: "send" | "discard" }`
@@ -230,7 +231,7 @@ export class TcEmailDraft extends TcElement {
   private setTo(c: DraftContact) {
     const current = this.recipient ?? this.contacts[0]?.email ?? "";
     if (c.email === current) return;
-    if (this.emit<DraftRecipientChange>("tc-recipient-change", { email: c.email, contact: c }, { cancelable: true })) this.recipient = c.email;
+    if (this.emit<DraftRecipientChange>("tc-recipient-change", { email: c.email, recipient: c.email, contact: c }, { cancelable: true })) this.recipient = c.email;
   }
 
   private openMenu(at?: "first" | "last") {
