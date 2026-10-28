@@ -1,0 +1,70 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-capability-notice.json",
+  "title": "tc-capability-notice",
+  "description": "An advisory with an answer: the request falls where the AI is only partly proven (amber) or not proven (red) – the\ntask area, a capped confidence, who was notified, and a folded distance-from-usual score.",
+  "type": "object",
+  "properties": {
+    "level": {
+      "type": "string",
+      "enum": [
+        "partial",
+        "unproven"
+      ],
+      "description": "How proven the AI is for this request: \"partial\" (amber) or \"unproven\" (red)"
+    },
+    "area": {
+      "type": "string",
+      "description": "The task area the request falls in, by the name people know it by"
+    },
+    "heading": {
+      "type": "string",
+      "description": "The heading – what to do about the answer: \"Check this answer independently\" or \"Treat this answer as a starting point\" by default"
+    },
+    "message": {
+      "type": "string",
+      "description": "Why – a sentence on how proven the AI is here; a default sentence per level"
+    },
+    "cap": {
+      "type": "string",
+      "description": "The highest confidence the answer may show, e.g. \"Medium\"; set, the notice says \"Confidence capped at …\""
+    },
+    "notified": {
+      "type": "string",
+      "description": "Who was told about the request, e.g. \"Supervisor\"; set, the notice says \"… notified\""
+    },
+    "distance": {
+      "type": "number",
+      "description": "How far the request is from the ones the AI usually handles; set, the notice has a folded detail with a scale"
+    },
+    "usual": {
+      "type": "number",
+      "description": "The score above which a request counts as unusual – marked on the scale, the usual range shaded below it"
+    },
+    "scaleMin": {
+      "type": "number",
+      "description": "The low end of the scale"
+    },
+    "scaleMax": {
+      "type": "number",
+      "description": "The high end of the scale"
+    },
+    "digits": {
+      "type": "number",
+      "description": "Decimal places the score is shown with"
+    },
+    "distanceLabel": {
+      "type": "string",
+      "description": "The name of the score – the toggle's label and the scale's name"
+    },
+    "distanceNote": {
+      "type": "string",
+      "description": "A sentence under the scale saying what the score means"
+    },
+    "open": {
+      "type": "boolean",
+      "description": "Whether the distance detail is open"
+    }
+  },
+  "additionalProperties": false
+}

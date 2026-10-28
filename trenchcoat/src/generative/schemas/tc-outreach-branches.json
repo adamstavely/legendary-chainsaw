@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-outreach-branches.json",
+  "title": "tc-outreach-branches",
+  "description": "Lines branching out to Gmail, Slack and Notion – an illustration for multi-channel outreach.",
+  "type": "object",
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Describes the scene to assistive tech (role=\"img\"); without it the illustration is decorative and hidden from them"
+    }
+  },
+  "additionalProperties": false
+}

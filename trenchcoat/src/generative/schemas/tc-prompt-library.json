@@ -1,0 +1,102 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-prompt-library.json",
+  "title": "tc-prompt-library",
+  "description": "Saved prompt templates whose variables are filled in place.",
+  "type": "object",
+  "properties": {
+    "templates": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/PromptTemplate"
+      },
+      "description": "The saved templates, in list order – each with a title, an optional category and a body with {variables}"
+    },
+    "value": {
+      "type": "string",
+      "description": "Id of the chosen template – unset or unknown shows the first. Changed by the user unless a tc-value-change listener calls preventDefault()"
+    },
+    "values": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": {
+          "type": "string"
+        }
+      },
+      "description": "The variables typed so far, per template; a missing one shows its template default. Changed by the user unless a tc-values-change listener calls preventDefault()"
+    },
+    "heading": {
+      "type": "string",
+      "description": "The heading over the list, and the group's name"
+    },
+    "useLabel": {
+      "type": "string",
+      "description": "Label of the use button"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "PromptTemplate": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string",
+          "description": "Small tag next to the title, e.g. \"Sales\""
+        },
+        "tone": {
+          "$ref": "#/definitions/PromptTone",
+          "description": "Color of the tag – by default each category gets its own color in the order they appear"
+        },
+        "body": {
+          "type": "string",
+          "description": "The prompt with variables in curly braces, e.g. \"Summarize this for {audience}\""
+        },
+        "variables": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/PromptVariable"
+          },
+          "description": "Optional details per variable name"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "body"
+      ],
+      "additionalProperties": false
+    },
+    "PromptTone": {
+      "type": "string",
+      "enum": [
+        "blue",
+        "violet",
+        "amber",
+        "green",
+        "red",
+        "gray"
+      ]
+    },
+    "PromptVariable": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "What to put in – shown on the tray while the field is focused or hovered"
+        },
+        "default": {
+          "type": "string",
+          "description": "Starts filled with this value"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

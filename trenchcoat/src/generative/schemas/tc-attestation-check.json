@@ -1,0 +1,107 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-attestation-check.json",
+  "title": "tc-attestation-check",
+  "description": "Verify a signed evidence package by its hash or file – signature, chain integrity and what it covers, checked\nlocally.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the component's name"
+    },
+    "result": {
+      "type": "object",
+      "properties": {
+        "valid": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "hash": {
+          "type": "string"
+        },
+        "signer": {
+          "type": "string"
+        },
+        "signedAt": {
+          "type": "string"
+        },
+        "signature": {
+          "$ref": "#/definitions/AttestationCheckItem"
+        },
+        "chain": {
+          "$ref": "#/definitions/AttestationCheckItem"
+        },
+        "coverage": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "ok": {
+              "type": "boolean"
+            },
+            "detail": {
+              "type": "string",
+              "description": "What was found – e.g. \"Signed with the release key · Ed25519\", \"Link 17 doesn't match link 16\""
+            }
+          },
+          "required": [
+            "ok"
+          ]
+        },
+        "reasons": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "valid"
+      ],
+      "additionalProperties": false,
+      "description": "The result on show (null = none). Set by a finished check unless a tc-result-change listener calls preventDefault()"
+    },
+    "accept": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "File types the file picker offers – e.g. [\".json\", \".zip\"]; unset offers any file"
+    },
+    "hint": {
+      "type": "string",
+      "description": "The line under the drop area – where the check happens"
+    },
+    "placeholder": {
+      "type": "string",
+      "description": "Placeholder of the hash field"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "AttestationCheckItem": {
+      "type": "object",
+      "properties": {
+        "ok": {
+          "type": "boolean"
+        },
+        "detail": {
+          "type": "string",
+          "description": "What was found – e.g. \"Signed with the release key · Ed25519\", \"Link 17 doesn't match link 16\""
+        }
+      },
+      "required": [
+        "ok"
+      ],
+      "additionalProperties": false,
+      "description": "One check's outcome"
+    }
+  }
+}

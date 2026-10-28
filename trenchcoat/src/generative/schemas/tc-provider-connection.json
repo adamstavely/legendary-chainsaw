@@ -1,0 +1,229 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-provider-connection.json",
+  "title": "tc-provider-connection",
+  "description": "A connection to a model provider: provider, endpoint, deployment and a masked credential reference, with an\napp-run connection test, its health, when it was checked and the models the endpoint reports.",
+  "type": "object",
+  "properties": {
+    "value": {
+      "type": "object",
+      "properties": {
+        "provider": {
+          "type": "string"
+        },
+        "endpoint": {
+          "type": "string"
+        },
+        "deployment": {
+          "type": "string"
+        },
+        "credentialRef": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "provider",
+        "endpoint",
+        "deployment",
+        "credentialRef"
+      ],
+      "additionalProperties": false,
+      "description": "The connection. Changed by the user unless a tc-value-change listener calls preventDefault()"
+    },
+    "providers": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ProviderConnectionOption"
+      },
+      "description": "The providers to choose from; with none, the Provider row is hidden"
+    },
+    "credentials": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ProviderConnectionCredential"
+      },
+      "description": "The credential references to choose from; with none, the reference is typed in"
+    },
+    "check": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "$ref": "#/definitions/ProviderConnectionHealth"
+        },
+        "at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "latencyMs": {
+          "type": "number"
+        },
+        "message": {
+          "type": "string"
+        },
+        "models": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProviderConnectionModel"
+          }
+        }
+      },
+      "required": [
+        "status"
+      ],
+      "additionalProperties": false,
+      "description": "The app's answer to the last test; setting it ends Testing…"
+    },
+    "stateLabels": {
+      "type": "object",
+      "properties": {
+        "expired": {
+          "type": "string"
+        },
+        "untested": {
+          "type": "string"
+        },
+        "testing": {
+          "type": "string"
+        },
+        "healthy": {
+          "type": "string"
+        },
+        "auth-failed": {
+          "type": "string"
+        },
+        "model-unavailable": {
+          "type": "string"
+        },
+        "unreachable": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The states' short names, merged over PROVIDER_CONNECTION_LABELS"
+    },
+    "heading": {
+      "type": "string",
+      "description": "Names the group, shown at the top"
+    },
+    "description": {
+      "type": "string",
+      "description": "A quieter line under the heading"
+    },
+    "testLabel": {
+      "type": "string",
+      "description": "The test button's text"
+    },
+    "originLabel": {
+      "type": "string",
+      "description": "The first stop on the path, before the endpoint"
+    },
+    "name": {
+      "type": "string",
+      "description": "Submitted with the form: the connection as JSON"
+    },
+    "disabled": {
+      "type": "boolean",
+      "description": "Turns every control off and leaves the connection out of the form; a disabled fieldset does the same"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ProviderConnectionOption": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "endpoint": {
+          "type": "string",
+          "description": "The endpoint field's placeholder for this provider, e.g. its usual base URL"
+        },
+        "deploymentLabel": {
+          "type": "string",
+          "description": "What this provider calls the thing being called: \"Deployment\" (the default) or \"Model\""
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false,
+      "description": "A provider the app supports"
+    },
+    "ProviderConnectionCredential": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "\"Production key\""
+        },
+        "hint": {
+          "type": "string",
+          "description": "The masked end of the key, e.g. \"4f2a\" – shown after ••••"
+        },
+        "expires": {
+          "type": "string",
+          "description": "When it expires, as the app says it: \"Expires 3 Nov\""
+        },
+        "expired": {
+          "type": "boolean",
+          "description": "The app knows it has expired"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false,
+      "description": "A credential reference the app's server can resolve – never the key"
+    },
+    "ProviderConnectionHealth": {
+      "type": "string",
+      "enum": [
+        "healthy",
+        "auth-failed",
+        "expired",
+        "model-unavailable",
+        "unreachable"
+      ],
+      "description": "What a test found"
+    },
+    "ProviderConnectionModel": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "A friendlier name, shown before the id"
+        },
+        "detail": {
+          "type": "string",
+          "description": "A quiet note, e.g. \"128k context\""
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "additionalProperties": false,
+      "description": "A model the endpoint reports"
+    }
+  }
+}

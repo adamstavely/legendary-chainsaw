@@ -1,0 +1,133 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-watchlist.json",
+  "title": "tc-watchlist",
+  "description": "A watchlist of people, accounts or entities – avatar, name, reference, group and a risk badge – most at risk first,\nwith a count, filters by risk and a View all action.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the list's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/WatchItem"
+      },
+      "description": "What's watched"
+    },
+    "sort": {
+      "type": "string",
+      "enum": [
+        "name",
+        "risk",
+        "none"
+      ],
+      "description": "\"risk\": most at risk first, then by name (default) · \"name\": by name · \"none\": as given"
+    },
+    "limit": {
+      "type": "number",
+      "description": "Shows only the first this many rows; all when unset"
+    },
+    "filters": {
+      "type": "boolean",
+      "description": "Shows the filter buttons: All and each risk that has rows, with counts"
+    },
+    "filter": {
+      "anyOf": [
+        {
+          "type": "string",
+          "const": "all"
+        },
+        {
+          "$ref": "#/definitions/WatchRisk"
+        }
+      ],
+      "description": "The risk shown. Changed by the user unless a tc-filter-change listener calls preventDefault()"
+    },
+    "viewAll": {
+      "type": "string",
+      "description": "The View all action's text in the header; empty for none"
+    },
+    "riskLabels": {
+      "type": "object",
+      "properties": {
+        "critical": {
+          "type": "string"
+        },
+        "low": {
+          "type": "string"
+        },
+        "elevated": {
+          "type": "string"
+        },
+        "guarded": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The risks' names, merged over the defaults (Critical, Elevated, Guarded, Low)"
+    },
+    "empty": {
+      "type": "string",
+      "description": "Shown when there's nothing to watch"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "WatchItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string",
+          "description": "The person's, account's or entity's name"
+        },
+        "ref": {
+          "type": "string",
+          "description": "A quiet reference under the name: an id, an account number"
+        },
+        "group": {
+          "type": "string",
+          "description": "The case, team or list it belongs to, as a tag"
+        },
+        "risk": {
+          "$ref": "#/definitions/WatchRisk"
+        },
+        "avatar": {
+          "type": "string",
+          "description": "A picture's URL; initials of the name otherwise"
+        },
+        "shape": {
+          "type": "string",
+          "enum": [
+            "round",
+            "square"
+          ],
+          "description": "Round for a person (default), square for an account or organisation"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "risk"
+      ],
+      "additionalProperties": false
+    },
+    "WatchRisk": {
+      "type": "string",
+      "enum": [
+        "critical",
+        "elevated",
+        "guarded",
+        "low"
+      ]
+    }
+  }
+}

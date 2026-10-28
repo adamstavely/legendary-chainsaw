@@ -1,5 +1,29 @@
 # Changelog
 
+## Unreleased – Phase 3: generative UI
+
+### Added
+
+- **`trenchcoat/generative`:** what an app needs to let a model place components in its answers.
+  - **Catalogue:** `catalog` and `catalogPrompt()`, a line per component.
+  - **Schemas and tools:** `loadSchema()`, one JSON Schema per component; `toolDefinitions()` and `tagOfTool()`,
+    tools for the Messages API.
+  - **Checks:** `checkComponent()` and `mountComponent()`.
+  - **On a server:** tool definitions and checks work there too.
+- **Schemas for 189 components**, generated from their TypeScript types and JSDoc by `scripts/gen-schemas.mjs`
+  (`npm run check:generative` keeps them in step).
+  - **Left out:** properties that take functions, DOM nodes or files, and fields deeper down that do.
+  - **App-controlled:** dialogs, the composer, global shortcuts, the look provider and decoration stay that way.
+- **`tc-generated-ui`:** a `component` block, `{ type: "component", tag, props }`, places any catalogued component.
+  - **Checks:** props are checked against the schema before they're set; what doesn't fit is left out and listed in
+    `tc-spec-check`.
+  - **Events:** the component's events come back as `tc-component-event`, also exposed as React's `onComponentEvent`;
+    preventing it prevents the component's own.
+  - **Guardrails:** links must be http(s), mailto or relative; lists are capped at 200 items, strings at 4,000
+    characters, nesting at 8 levels and props at 200 KB.
+- **Foundations → Generative UI:** both ways in (the component block, and tool use with the Messages API), with the
+  guardrails.
+
 ## Unreleased – Phase 2: DTCG token export
 
 ### Added

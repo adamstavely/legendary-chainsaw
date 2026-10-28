@@ -1,0 +1,126 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-delegate-board.json",
+  "title": "tc-delegate-board",
+  "description": "Hand work to agents by dragging it onto them – or by click and keyboard.",
+  "type": "object",
+  "properties": {
+    "agents": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/DelegateAgent"
+      },
+      "description": "The agents work can go to, in the order they're listed (number keys 1–9 pick them)"
+    },
+    "tasks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/DelegateTask"
+      },
+      "description": "Every task – without an `agentId` it waits under \"Unassigned\"; the first in each agent's queue is the running one"
+    },
+    "now": {
+      "type": "number",
+      "description": "The clock for the \"Busy until\" times, in epoch ms – without it the board reads the clock while connected"
+    },
+    "mode": {
+      "type": "string",
+      "enum": [
+        "auto",
+        "manual"
+      ],
+      "description": "Auto hands every unassigned task to the least busy agent on its own; Manual waits for a drag. Changed by the user unless a tc-mode-change listener calls preventDefault()"
+    },
+    "suggestion": {
+      "type": "object",
+      "properties": {
+        "taskId": {
+          "type": "string"
+        },
+        "agentId": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "taskId",
+        "agentId"
+      ],
+      "additionalProperties": false,
+      "description": "A suggested hand-off, e.g. from your router: the agent lights up and previews the new time, the task is marked"
+    },
+    "heading": {
+      "type": "string",
+      "description": "The heading in the bar"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "DelegateAgent": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string",
+          "description": "Model or role, shown under the name"
+        },
+        "avatar": {
+          "type": "string",
+          "description": "A small mark, e.g. the model maker's logo (an element, cloned, or text) – defaults to the initials"
+        },
+        "current": {
+          "type": "number",
+          "description": "Minutes left on the task it is running now (the first task in its queue), for the \"Busy until\" time"
+        },
+        "rate": {
+          "type": "number",
+          "description": "What a minute of its work costs (e.g. 0.05 for $0.05) – shows the price per task when you hand one over"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "DelegateTask": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "estimate": {
+          "type": "number",
+          "description": "Rough minutes it takes"
+        },
+        "tools": {
+          "type": "array",
+          "items": {
+            "not": {}
+          },
+          "description": "Small logos of the tools it works in (elements, cloned) – up to three"
+        },
+        "agentId": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Who it is with – leave it out for unassigned. In each queue, the first task is the running one"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "estimate"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

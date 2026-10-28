@@ -1,0 +1,84 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-plan-vs-actual.json",
+  "title": "tc-plan-vs-actual",
+  "description": "An agent's plan against what really happens, as a live Gantt chart. Clean look only.",
+  "type": "object",
+  "properties": {
+    "steps": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/PlanVsActualStep"
+      },
+      "description": "The plan's steps, in order – each with its planned time, what it waits for, and its real start and end so far"
+    },
+    "now": {
+      "type": "number",
+      "description": "The clock, in epoch ms – without it (and without `elapsed`) the chart reads the clock after it connects and ticks while the run goes on"
+    },
+    "startedAt": {
+      "type": "number",
+      "description": "When the run started, in epoch ms – defaults to the earliest step start"
+    },
+    "elapsed": {
+      "type": "number",
+      "description": "Where the run is now as ms from its start; step start/end are then run-relative too. Takes precedence over `now`"
+    },
+    "task": {
+      "type": "string",
+      "description": "What the run is for – e.g. \"Ship the pricing page\""
+    },
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the list's name"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "PlanVsActualStep": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string",
+          "description": "What the step does, in a few words – e.g. \"Build the layout\""
+        },
+        "plan": {
+          "type": "number",
+          "description": "How long it was planned to take, in ms"
+        },
+        "deps": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Steps that have to finish first"
+        },
+        "start": {
+          "type": "number",
+          "description": "When it really started – epoch ms, on the same clock as `now` (or ms from the start of the run with `elapsed`). Leave out while it waits"
+        },
+        "end": {
+          "type": "number",
+          "description": "When it really finished – leave out while it runs"
+        },
+        "cost": {
+          "type": "number",
+          "description": "What it has cost so far – shown when you point at the step, and added up in the bar on top"
+        },
+        "planCost": {
+          "type": "number",
+          "description": "What it was planned to cost – the plan's total shows next to the spend"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "plan"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

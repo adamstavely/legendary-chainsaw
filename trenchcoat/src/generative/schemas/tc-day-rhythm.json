@@ -1,0 +1,109 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-day-rhythm.json",
+  "title": "tc-day-rhythm",
+  "description": "A typical day as a strip of blocks by kind of place or activity, one row per kind of day, with hour ticks, a legend,\na now marker and a readout of the block under the pointer or focus.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading, e.g. \"Typical day, last 30 days\""
+    },
+    "kinds": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/RhythmKind"
+      },
+      "description": "The kinds of place or activity, in legend order"
+    },
+    "rows": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/RhythmRow"
+      },
+      "description": "The strips, top to bottom"
+    },
+    "now": {
+      "type": "number",
+      "description": "A marker at this time, in minutes from midnight; none when unset"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "RhythmKind": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "The kind's name, in the legend and on wide blocks: \"Work\""
+        },
+        "color": {
+          "type": "number",
+          "description": "Which chart colour, 1–6; by default the kinds take them in order"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "RhythmRow": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "The row's name beside its strip, e.g. \"Weekdays\"; with one row it can be left out"
+        },
+        "segments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RhythmSegment"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "segments"
+      ],
+      "additionalProperties": false
+    },
+    "RhythmSegment": {
+      "type": "object",
+      "properties": {
+        "start": {
+          "type": "number",
+          "description": "Minutes from midnight, 0–1440"
+        },
+        "end": {
+          "type": "number",
+          "description": "Minutes from midnight, 0–1440; less than `start` when the block runs past midnight"
+        },
+        "kind": {
+          "type": "string",
+          "description": "A kind's id"
+        },
+        "place": {
+          "type": "string",
+          "description": "Where or what, in the readout: \"Harbour office\""
+        }
+      },
+      "required": [
+        "start",
+        "end",
+        "kind"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

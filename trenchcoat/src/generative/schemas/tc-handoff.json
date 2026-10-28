@@ -1,0 +1,126 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-handoff.json",
+  "title": "tc-handoff",
+  "description": "The agent hands control to a person mid-task with what it did, why it stopped and what it needs – and takes it back.",
+  "type": "object",
+  "properties": {
+    "agent": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false,
+      "description": "Who hands over"
+    },
+    "ask": {
+      "type": "string",
+      "description": "What it needs you to do, lower case after \"needs you to\", e.g. \"sign in to Stripe\""
+    },
+    "task": {
+      "type": "string",
+      "description": "The run it belongs to, e.g. \"Book flights to Lisbon\" – shown under the heading"
+    },
+    "step": {
+      "type": "string",
+      "description": "Where in the run, e.g. \"Step 4 of 7\""
+    },
+    "blocker": {
+      "type": "string",
+      "description": "Why it stopped, in a pill: \"Sign-in required\", \"Needs a decision\""
+    },
+    "reason": {
+      "type": "string",
+      "description": "The agent's own words on why it stopped"
+    },
+    "done": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/HandoffItem"
+      },
+      "description": "What it did so far"
+    },
+    "needs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/HandoffItem"
+      },
+      "description": "What it needs from you – a checklist once you have control"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "waiting",
+        "active",
+        "returned"
+      ],
+      "description": "Who has control"
+    },
+    "checked": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Ids of the needs ticked off"
+    },
+    "note": {
+      "type": "string",
+      "description": "Your note for the agent, passed on when you hand back"
+    },
+    "doneLimit": {
+      "type": "number",
+      "description": "Done steps shown before \"N more\""
+    },
+    "doneTitle": {
+      "type": "string",
+      "description": "Heading of the list of what the agent did"
+    },
+    "needsTitle": {
+      "type": "string",
+      "description": "Heading of the list of what the agent needs – the checklist once you have control"
+    },
+    "noteLabel": {
+      "type": "string",
+      "description": "Label of the note field shown while you have control"
+    },
+    "notePlaceholder": {
+      "type": "string",
+      "description": "Placeholder of the note field"
+    },
+    "shortcuts": {
+      "type": "boolean",
+      "description": "Show ⌘↵ hints on the main button (the shortcut works either way). Default true"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "HandoffItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "meta": {
+          "type": "string",
+          "description": "Right-aligned and quiet, e.g. \"3 results\" or \"0:42\""
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

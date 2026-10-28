@@ -1,0 +1,182 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-file-summary.json",
+  "title": "tc-file-summary",
+  "description": "An AI summary of a file – the file's type, size and length, a summary that streams in, key points citing their\npages or times, the people, organisations, dates and amounts it mentions, and Copy, Regenerate and Open file.",
+  "type": "object",
+  "properties": {
+    "file": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/definitions/FileSummaryKind"
+        },
+        "size": {
+          "type": "number"
+        },
+        "pages": {
+          "type": "number"
+        },
+        "duration": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false,
+      "description": "The file summarised"
+    },
+    "href": {
+      "type": "string",
+      "description": "Where the file opens; makes Open file and the citation chips links"
+    },
+    "openable": {
+      "type": "boolean",
+      "description": "Show Open file without `href` – it then only fires tc-open"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "done",
+        "idle",
+        "summarising",
+        "error"
+      ],
+      "description": "Where the summary is: \"idle\", \"summarising\", \"done\" or \"error\""
+    },
+    "summary": {
+      "type": "string",
+      "description": "The summary; may grow while \"summarising\". Blank lines split paragraphs"
+    },
+    "points": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/FileSummaryPoint"
+      },
+      "description": "The key points, each with the pages or times it comes from"
+    },
+    "entities": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/FileSummaryEntity"
+      },
+      "description": "People, organisations, dates and amounts the file mentions"
+    },
+    "coverage": {
+      "type": "string",
+      "description": "How much of the file the summary covers, e.g. \"Covers 42 of 48 pages · 3 pages unreadable\""
+    },
+    "summarisedAt": {
+      "type": "number",
+      "description": "When it was summarised, as epoch ms"
+    },
+    "model": {
+      "type": "string",
+      "description": "The model that wrote it, e.g. \"Claude Sonnet\""
+    },
+    "length": {
+      "type": "string",
+      "enum": [
+        "short",
+        "detailed"
+      ],
+      "description": "Short or detailed. Changed by the user unless a tc-length-change listener calls preventDefault()"
+    },
+    "error": {
+      "type": "string",
+      "description": "What went wrong, shown with \"error\""
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for dates and numbers, e.g. \"en-GB\"; by default the browser's"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "FileSummaryKind": {
+      "type": "string",
+      "enum": [
+        "pdf",
+        "doc",
+        "sheet",
+        "slides",
+        "image",
+        "audio",
+        "video",
+        "other"
+      ]
+    },
+    "FileSummaryPoint": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        },
+        "refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FileSummaryRef"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "text"
+      ],
+      "additionalProperties": false
+    },
+    "FileSummaryRef": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "type": "number"
+        },
+        "time": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Where a point comes from: a page, or a time in ms for audio and video"
+    },
+    "FileSummaryEntity": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/definitions/FileSummaryEntityKind"
+        },
+        "count": {
+          "type": "number",
+          "description": "How many times the file mentions it"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "kind"
+      ],
+      "additionalProperties": false
+    },
+    "FileSummaryEntityKind": {
+      "type": "string",
+      "enum": [
+        "person",
+        "organization",
+        "date",
+        "amount"
+      ]
+    }
+  }
+}

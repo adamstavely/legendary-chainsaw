@@ -1,0 +1,96 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-conversation-branches.json",
+  "title": "tc-conversation-branches",
+  "description": "A conversation that forks when a past message is edited: a \"‹ 2 / 3 ›\" switcher on each message with siblings, and\nthe picked branch's messages below it.",
+  "type": "object",
+  "properties": {
+    "messages": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/BranchMessage"
+      },
+      "description": "Every message of every branch, in the order they were written; each names its parent"
+    },
+    "selected": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "The picked child per parent id (\"\" for the first messages); a parent without an entry shows its newest child"
+    },
+    "editable": {
+      "type": "boolean",
+      "description": "Your messages can be edited (default true; editable=\"false\" turns it off)"
+    },
+    "replyActions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/MessageActionKey"
+      },
+      "description": "The actions under each reply (message-actions' keys); an empty list hides the bar"
+    },
+    "label": {
+      "type": "string",
+      "description": "Accessible name of the conversation"
+    },
+    "userName": {
+      "type": "string",
+      "description": "Who \"you\" are, for screen readers"
+    },
+    "assistantName": {
+      "type": "string",
+      "description": "Who answers, for screen readers"
+    },
+    "caption": {
+      "type": "string",
+      "description": "The caption line (Standard: on the tray, Clean: the card's last row); unset, it sums up the branches"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "BranchMessage": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "role": {
+          "$ref": "#/definitions/BranchRole"
+        },
+        "text": {
+          "type": "string"
+        },
+        "parentId": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The message this one answers or follows; unset or null for the first message"
+        }
+      },
+      "required": [
+        "id",
+        "role",
+        "text"
+      ],
+      "additionalProperties": false
+    },
+    "BranchRole": {
+      "type": "string",
+      "enum": [
+        "user",
+        "assistant"
+      ]
+    },
+    "MessageActionKey": {
+      "type": "string",
+      "enum": [
+        "copy",
+        "regenerate",
+        "feedback",
+        "speak"
+      ]
+    }
+  }
+}

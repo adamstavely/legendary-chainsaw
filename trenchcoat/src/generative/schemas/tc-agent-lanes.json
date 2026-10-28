@@ -1,0 +1,153 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-agent-lanes.json",
+  "title": "tc-agent-lanes",
+  "description": "Every agent as a lane on a live timeline, with decisions in place.",
+  "type": "object",
+  "properties": {
+    "agents": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/LaneAgent"
+      },
+      "description": "The agents, one lane each from top to bottom – name, model and an optional avatar"
+    },
+    "tasks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/LaneTask"
+      },
+      "description": "The tasks – always the source of truth. After Approve or Reject the block shows the result right away; as soon as you pass that task with a new status, start or end, your version wins"
+    },
+    "span": {
+      "type": "number",
+      "description": "How much time the lanes show, in ms (default 30 minutes)"
+    },
+    "now": {
+      "type": "number",
+      "description": "A clock you control, in epoch ms. Without it the lanes follow real time"
+    },
+    "rate": {
+      "type": "number",
+      "description": "How fast the clock runs, in clock ms per real ms: on from `now` when set (default 0), from real time otherwise (default 1)"
+    },
+    "openable": {
+      "type": "boolean",
+      "description": "Shows \"Open\" in a block's details; pressing it fires tc-open"
+    },
+    "paused": {
+      "type": "boolean",
+      "description": "Whether the timeline is held still. Changed by the Pause button unless a tc-paused-change listener calls preventDefault(). The lanes also hold still while the pointer or focus is on them (WCAG 2.2.2)"
+    },
+    "expanded": {
+      "type": "string",
+      "description": "The id of the block whose decision or details are open (null: none). Changed by the user unless a tc-expanded-change listener calls preventDefault()"
+    },
+    "heading": {
+      "type": "string",
+      "description": "The title on the summary bar"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "LaneAgent": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string",
+          "description": "Model or role, shown under the name, e.g. \"Opus 5.5\""
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "LaneTask": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "agentId": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/LaneTaskStatus"
+        },
+        "start": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string",
+              "format": "date-time"
+            }
+          ]
+        },
+        "end": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string",
+              "format": "date-time"
+            }
+          ],
+          "description": "Leave it out while the task runs or waits – it then reaches \"now\""
+        },
+        "handoffTo": {
+          "type": "string",
+          "description": "Id of the task another agent picked up from this one – drawn as a hand-off curve"
+        },
+        "ask": {
+          "type": "string",
+          "description": "What exactly needs a decision, shown above Approve / Reject"
+        },
+        "summary": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "What got done so far, a few words each – shown in the details popover"
+        },
+        "tools": {
+          "type": "array",
+          "items": {
+            "not": {}
+          },
+          "description": "Small logos of the tools it works in (cloned), shown before the title – up to three"
+        }
+      },
+      "required": [
+        "id",
+        "agentId",
+        "title",
+        "status",
+        "start"
+      ],
+      "additionalProperties": false
+    },
+    "LaneTaskStatus": {
+      "type": "string",
+      "enum": [
+        "done",
+        "running",
+        "waiting",
+        "failed"
+      ]
+    }
+  }
+}

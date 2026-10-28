@@ -1,0 +1,179 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-lineage-graph.json",
+  "title": "tc-lineage-graph",
+  "description": "Where an output came from: run, turns, queries and tools, source chunks, claims and artifacts in columns, every\nnode's record a click away.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading in the bar, and the graph's name"
+    },
+    "columns": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/LineageColumn"
+      },
+      "description": "The columns, cause to effect – a node sits in the column its `column` names; columns without nodes don't show"
+    },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/LineageNode"
+      },
+      "description": "Everything in the lineage: the run, turns, queries and tools, source chunks, claims, artifacts"
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/LineageEdge"
+      },
+      "description": "The links, from what came first to what it fed"
+    },
+    "selected": {
+      "type": "string",
+      "description": "The node whose record is open (null = none). Changed by the user unless a tc-selected-change listener calls preventDefault()"
+    },
+    "view": {
+      "type": "string",
+      "enum": [
+        "graph",
+        "chain"
+      ],
+      "description": "\"graph\" or \"chain\" (the event chain). Changed by the user unless a tc-view-change listener calls preventDefault()"
+    },
+    "weakLabel": {
+      "type": "string",
+      "description": "What a weak link means – in the legend, and in a node's links when the link has no note of its own"
+    },
+    "emptyText": {
+      "type": "string",
+      "description": "Shown when there are no nodes"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "LineageColumn": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "The column's heading, e.g. \"Source chunks\""
+        },
+        "tone": {
+          "$ref": "#/definitions/LineageTone",
+          "description": "The colour of its nodes' marks"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "LineageTone": {
+      "type": "string",
+      "enum": [
+        "neutral",
+        "blue",
+        "teal",
+        "green",
+        "violet",
+        "amber",
+        "pink",
+        "rose"
+      ]
+    },
+    "LineageNode": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "column": {
+          "type": "string",
+          "description": "The id of the column it sits in"
+        },
+        "label": {
+          "type": "string",
+          "description": "What it is, in a few words – e.g. \"search: renewal terms 2024\""
+        },
+        "detail": {
+          "type": "string",
+          "description": "One quieter line under the label – e.g. \"policy-handbook.pdf · p. 14\""
+        },
+        "at": {
+          "type": "number",
+          "description": "When it happened, in ms from the start of the run – orders the event chain and shows there"
+        },
+        "text": {
+          "type": "string",
+          "description": "A passage shown in the record – the chunk's text, the claim as written"
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LineageField"
+          },
+          "description": "Key–value lines shown in the record"
+        },
+        "tone": {
+          "$ref": "#/definitions/LineageTone",
+          "description": "Overrides the column's tone for this node – e.g. a claim coloured by where it came from"
+        }
+      },
+      "required": [
+        "id",
+        "column",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "LineageField": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "label",
+        "value"
+      ],
+      "additionalProperties": false,
+      "description": "A line of a node's record, e.g. { label: \"Score\", value: \"0.82\" }"
+    },
+    "LineageEdge": {
+      "type": "object",
+      "properties": {
+        "from": {
+          "type": "string",
+          "description": "Where it came from …"
+        },
+        "to": {
+          "type": "string",
+          "description": "… and what it fed"
+        },
+        "weak": {
+          "type": "boolean",
+          "description": "A weak link – the context was truncated, so the source may not have reached the model in full. Drawn dashed"
+        },
+        "note": {
+          "type": "string",
+          "description": "Why it's weak, e.g. \"3 of 8 chunks fit the context\" – shown in the record"
+        }
+      },
+      "required": [
+        "from",
+        "to"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

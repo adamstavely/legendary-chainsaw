@@ -1,0 +1,152 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-fingerprint-card.json",
+  "title": "tc-fingerprint-card",
+  "description": "A ten-print card: each finger's print and status – captured with its NFIQ quality, poor, not captured, unable to\nprint or bandaged – the count on file, and a finger's detail on Enter or click.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the grid's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "prints": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/FingerPrint"
+      },
+      "description": "The prints by finger position; a finger not listed is not captured"
+    },
+    "order": {
+      "type": "string",
+      "enum": [
+        "right-first",
+        "left-first"
+      ],
+      "description": "Which hand's row comes first"
+    },
+    "selected": {
+      "type": "number",
+      "enum": [
+        5,
+        2,
+        1,
+        8,
+        3,
+        4,
+        6,
+        7,
+        9,
+        10
+      ],
+      "description": "The finger whose detail is open. Changed by the user unless a tc-selected-change listener calls preventDefault()"
+    },
+    "statusLabels": {
+      "type": "object",
+      "properties": {
+        "missing": {
+          "type": "string"
+        },
+        "captured": {
+          "type": "string"
+        },
+        "poor": {
+          "type": "string"
+        },
+        "unable": {
+          "type": "string"
+        },
+        "bandaged": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The statuses' names, merged over the defaults (Captured, Poor quality, Not captured, Unable to print, Bandaged)"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for dates, e.g. \"en-GB\"; by default the browser's"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "FingerPrint": {
+      "type": "object",
+      "properties": {
+        "position": {
+          "$ref": "#/definitions/FingerPosition"
+        },
+        "status": {
+          "$ref": "#/definitions/FingerStatus"
+        },
+        "quality": {
+          "type": "number",
+          "description": "NFIQ quality, 1 (excellent) to 5 (poor)"
+        },
+        "pattern": {
+          "$ref": "#/definitions/FingerPattern",
+          "description": "The ridge pattern, drawn on the tile and named in the detail; whorl when not given"
+        },
+        "captured": {
+          "type": "number",
+          "description": "When it was captured, epoch ms"
+        },
+        "device": {
+          "type": "string",
+          "description": "What captured it, e.g. \"Live-scan kiosk 3\""
+        },
+        "image": {
+          "type": "string",
+          "description": "The print's image URL, shown instead of the drawn pattern"
+        },
+        "note": {
+          "type": "string",
+          "description": "One line about the finger, e.g. \"Bandaged on 12 May – recapture booked\""
+        }
+      },
+      "required": [
+        "position",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "FingerPosition": {
+      "type": "number",
+      "enum": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "description": "ANSI/NIST finger positions: 1–5 right thumb to little, 6–10 left thumb to little"
+    },
+    "FingerStatus": {
+      "type": "string",
+      "enum": [
+        "captured",
+        "poor",
+        "missing",
+        "unable",
+        "bandaged"
+      ],
+      "description": "captured: a usable print · poor: on file but low quality · missing: not captured yet · unable: can't be printed (amputated, scarred) · bandaged: temporarily can't be printed"
+    },
+    "FingerPattern": {
+      "type": "string",
+      "enum": [
+        "whorl",
+        "loop",
+        "arch"
+      ]
+    }
+  }
+}

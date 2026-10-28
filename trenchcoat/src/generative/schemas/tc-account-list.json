@@ -1,0 +1,169 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-account-list.json",
+  "title": "tc-account-list",
+  "description": "The financial accounts linked to a person or a company – institution, type, a masked identifier shown one at a time,\nan amount and a status each (Monitored, Flagged, Under review, Closed or your own), with the page's stats above.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "accounts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AccountRecord"
+      },
+      "description": "The accounts, in order"
+    },
+    "stats": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AccountStat"
+      },
+      "description": "Stats shown in a strip above the list: { id, label, value, detail? }"
+    },
+    "statuses": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "tone": {
+            "$ref": "#/definitions/AccountTone"
+          }
+        },
+        "required": [
+          "label",
+          "tone"
+        ],
+        "additionalProperties": false
+      },
+      "description": "Statuses' names and tones, merged over the defaults (monitored, flagged, review, closed, cleared)"
+    },
+    "masked": {
+      "type": "boolean",
+      "description": "Masks identifiers to their last four characters until revealed; set false to show them in full"
+    },
+    "revealed": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The ids whose identifiers are shown. Changed by the user unless a tc-revealed-change listener calls preventDefault()"
+    },
+    "currency": {
+      "type": "string",
+      "description": "The currency for amounts that don't name their own, e.g. \"EUR\""
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for amounts, e.g. \"fr-FR\"; by default the browser's"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "AccountRecord": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "institution": {
+          "type": "string",
+          "description": "Who holds the account: \"Banque Rhône\""
+        },
+        "branch": {
+          "type": "string",
+          "description": "Where it sits: a branch or a city, \"Lyon\""
+        },
+        "country": {
+          "type": "string",
+          "description": "The country it sits in: \"France\""
+        },
+        "type": {
+          "type": "string",
+          "description": "What kind of account it is: \"Personal current\", \"Business operating\", \"Offshore-linked\""
+        },
+        "number": {
+          "type": "string",
+          "description": "The identifier, IBAN-style; masked to its last four characters unless `masked` is off or it's revealed"
+        },
+        "status": {
+          "type": "string",
+          "description": "A key of `statuses`: monitored, flagged, review, closed, or one of the page's own"
+        },
+        "amount": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "number"
+            },
+            "label": {
+              "type": "string"
+            },
+            "currency": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "additionalProperties": false,
+          "description": "An amount to show on the row, with what it is: { value: 240000, label: \"Flagged · 90 days\" }"
+        },
+        "note": {
+          "type": "string",
+          "description": "One quiet line: \"Opened three weeks before the first transfer\""
+        }
+      },
+      "required": [
+        "id",
+        "institution",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "AccountStat": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "detail": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "value"
+      ],
+      "additionalProperties": false,
+      "description": "A stat in the strip above the list"
+    },
+    "AccountTone": {
+      "type": "string",
+      "enum": [
+        "success",
+        "info",
+        "warning",
+        "danger",
+        "neutral"
+      ],
+      "description": "The tone a status is drawn in"
+    }
+  }
+}

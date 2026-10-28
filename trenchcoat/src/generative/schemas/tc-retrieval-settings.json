@@ -1,0 +1,246 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-retrieval-settings.json",
+  "title": "tc-retrieval-settings",
+  "description": "Chunking, top-k, a score threshold, keyword ↔ vector balance, reranking, metadata filters and how many chunks go\ninto context – with the pipeline they make and the cost and latency the app reports.",
+  "type": "object",
+  "properties": {
+    "value": {
+      "type": "object",
+      "properties": {
+        "chunkSize": {
+          "type": "number"
+        },
+        "chunkOverlap": {
+          "type": "number"
+        },
+        "topK": {
+          "type": "number"
+        },
+        "threshold": {
+          "type": "number"
+        },
+        "hybrid": {
+          "type": "number"
+        },
+        "rerank": {
+          "type": "boolean"
+        },
+        "rerankModel": {
+          "type": "string"
+        },
+        "topN": {
+          "type": "number"
+        },
+        "filters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RetrievalFilter"
+          }
+        }
+      },
+      "required": [
+        "chunkSize",
+        "chunkOverlap",
+        "topK",
+        "threshold",
+        "hybrid",
+        "rerank",
+        "rerankModel",
+        "topN",
+        "filters"
+      ],
+      "additionalProperties": false,
+      "description": "The config. Changed by the user unless a tc-value-change listener calls preventDefault()"
+    },
+    "filterFields": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/RetrievalFilterField"
+      },
+      "description": "The metadata fields filters can test; without any, a filter's field is typed in"
+    },
+    "rerankModels": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/RetrievalRerankModel"
+      },
+      "description": "The reranking models to offer; without any, Rerank is a switch only"
+    },
+    "indexed": {
+      "type": "object",
+      "properties": {
+        "chunkSize": {
+          "type": "number"
+        },
+        "chunkOverlap": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "chunkSize",
+        "chunkOverlap"
+      ],
+      "additionalProperties": false,
+      "description": "The chunking the sources are indexed with now – a different size or overlap says the sources will be re-indexed"
+    },
+    "estimate": {
+      "type": "object",
+      "properties": {
+        "latencyMs": {
+          "type": "number"
+        },
+        "cost": {
+          "type": "number"
+        },
+        "contextTokens": {
+          "type": "number"
+        },
+        "note": {
+          "type": "string"
+        },
+        "stages": {
+          "type": "object",
+          "properties": {
+            "retrieve": {
+              "type": "number"
+            },
+            "filter": {
+              "type": "number"
+            },
+            "rerank": {
+              "type": "number"
+            },
+            "context": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false,
+      "description": "Per-query cost and latency from the app, shown on the pipeline and at the foot; unset shows none"
+    },
+    "stage": {
+      "type": "string",
+      "enum": [
+        "context",
+        "filter",
+        "retrieve",
+        "rerank"
+      ],
+      "description": "The stage whose settings show under the pipeline: \"retrieve\", \"filter\", \"rerank\" or \"context\""
+    },
+    "heading": {
+      "type": "string",
+      "description": "The heading; also names the group"
+    },
+    "description": {
+      "type": "string",
+      "description": "A quieter line under the heading, e.g. which index this is"
+    },
+    "flat": {
+      "type": "boolean",
+      "description": "Drops the tray and the card, for settings inside another card"
+    },
+    "name": {
+      "type": "string",
+      "description": "Submitted with the form: the config as JSON"
+    },
+    "disabled": {
+      "type": "boolean",
+      "description": "Turns every control off and leaves the config out of the form; a disabled fieldset does the same"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "RetrievalFilter": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "field": {
+          "type": "string"
+        },
+        "operator": {
+          "$ref": "#/definitions/RetrievalFilterOperator"
+        },
+        "value": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "field",
+        "operator",
+        "value"
+      ],
+      "additionalProperties": false,
+      "description": "One metadata rule: `field` `operator` `value` – \"Language is English\""
+    },
+    "RetrievalFilterOperator": {
+      "type": "string",
+      "enum": [
+        "is",
+        "is-not",
+        "contains",
+        "before",
+        "after",
+        "at-least",
+        "at-most"
+      ]
+    },
+    "RetrievalFilterField": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "\"Language\", \"Updated\""
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "text",
+            "number",
+            "date",
+            "choice"
+          ],
+          "description": "Picks the operators and the value control; \"text\" by default"
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The values a \"choice\" field offers"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false,
+      "description": "A metadata field a filter can test"
+    },
+    "RetrievalRerankModel": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

@@ -49,6 +49,9 @@ jobs:
       # The wrappers are current, build with ngc, and strict templates check them (and catch five common mistakes)
       - name: Angular wrappers
         run: npm run check:angular
+      # The components a model can place: their schemas, catalogue and registry are current
+      - name: Generative UI schemas
+        run: npm run check:generative
       - name: Dead CSS
         run: npm run check:dead-css
       - name: Docs pages

@@ -1,0 +1,119 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-work-item.json",
+  "title": "tc-work-item",
+  "description": "A work item card – title, status, a note, progress, due date, people, what it delivers, spent against budget and\neffort – that opens as a link or a button.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The work's title, and the card's control"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "paused",
+        "done",
+        "blocked",
+        "active",
+        "review"
+      ],
+      "description": "Where the work stands: active, blocked, review, done or paused – shown in words with a mark"
+    },
+    "statusLabels": {
+      "type": "object",
+      "properties": {
+        "paused": {
+          "type": "string"
+        },
+        "done": {
+          "type": "string"
+        },
+        "blocked": {
+          "type": "string"
+        },
+        "active": {
+          "type": "string"
+        },
+        "review": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The statuses' names, merged over the defaults (Active, Blocked, In review, Done, Paused)"
+    },
+    "note": {
+      "type": "string",
+      "description": "One line under the title: the blocker, the next step"
+    },
+    "progress": {
+      "type": "number",
+      "description": "How far along, from 0 to 1; no bar when unset"
+    },
+    "due": {
+      "type": "number",
+      "description": "When it's due, as epoch ms"
+    },
+    "now": {
+      "type": "number",
+      "description": "The time to compare `due` with, as epoch ms; today when unset"
+    },
+    "people": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/WorkPerson"
+      },
+      "description": "Who's on it"
+    },
+    "outcome": {
+      "type": "string",
+      "description": "What it delivers, as a tag, e.g. \"fills 1 gap\""
+    },
+    "spent": {
+      "type": "number",
+      "description": "Money spent so far"
+    },
+    "budget": {
+      "type": "number",
+      "description": "The money it has; spent is shown against it"
+    },
+    "currency": {
+      "type": "string",
+      "description": "The currency of `spent` and `budget`, as an ISO 4217 code"
+    },
+    "effort": {
+      "type": "string",
+      "description": "The effort, written as shown, e.g. \"1.5 FTE\""
+    },
+    "source": {
+      "type": "string",
+      "description": "Where the item comes from when it's mirrored, e.g. \"Synced · read-only\""
+    },
+    "href": {
+      "type": "string",
+      "description": "Makes the title a link"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for dates and money, e.g. \"en-GB\"; by default the browser's"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "WorkPerson": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "picture": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

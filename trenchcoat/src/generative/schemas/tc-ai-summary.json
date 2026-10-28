@@ -1,0 +1,172 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-ai-summary.json",
+  "title": "tc-ai-summary",
+  "description": "An AI summary of a set of sources – a thread, a meeting, documents, a ticket's history – with a TL;DR, key points\nciting their sources, open questions, a note when the sources have moved on, feedback, Copy and Regenerate.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "subject": {
+      "type": "string",
+      "description": "What was summarised, named before the counts: \"#launch-q3\""
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AiSummarySource"
+      },
+      "description": "The sources summarised, in citation order – a point's chip shows its source's number in this list"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "done",
+        "idle",
+        "summarising",
+        "error"
+      ],
+      "description": "Where the summary is: \"idle\", \"summarising\", \"done\" or \"error\""
+    },
+    "tldr": {
+      "type": "string",
+      "description": "The one-line gist, shown first and emphasised"
+    },
+    "summary": {
+      "type": "string",
+      "description": "The summary; may grow while \"summarising\". Blank lines split paragraphs"
+    },
+    "points": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AiSummaryPoint"
+      },
+      "description": "The key points, each with the sources it comes from"
+    },
+    "questions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "What the sources leave open"
+    },
+    "length": {
+      "type": "string",
+      "enum": [
+        "short",
+        "detailed"
+      ],
+      "description": "Short or detailed. Changed by the user unless a tc-length-change listener calls preventDefault()"
+    },
+    "model": {
+      "type": "string",
+      "description": "The model that wrote it, e.g. \"Claude Sonnet\""
+    },
+    "generatedAt": {
+      "type": "number",
+      "description": "When it was generated, epoch ms"
+    },
+    "now": {
+      "type": "number",
+      "description": "\"Now\" for the relative time and freshness, epoch ms; unset, the element keeps its own clock"
+    },
+    "stale": {
+      "type": [
+        "number",
+        "boolean"
+      ],
+      "description": "The sources have moved on since the summary: true, or how many new items there are. Sources dated after `generatedAt` count too"
+    },
+    "staleLabel": {
+      "type": "string",
+      "description": "The banner's words in place of \"3 new messages since this summary\""
+    },
+    "feedback": {
+      "type": "string",
+      "enum": [
+        "up",
+        "down"
+      ],
+      "description": "Whether it helped: \"up\", \"down\" or null. Changed by the user unless a tc-feedback listener calls preventDefault()"
+    },
+    "sourcesOpen": {
+      "type": "boolean",
+      "description": "The list of sources under the footer is open"
+    },
+    "error": {
+      "type": "string",
+      "description": "What went wrong, shown with \"error\""
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for dates and numbers, e.g. \"en-GB\"; by default the browser's"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "AiSummarySource": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "How the source is named in chips and the list: \"Priya in #launch\", \"Pricing brief.docx\""
+        },
+        "kind": {
+          "$ref": "#/definitions/AiSummarySourceKind"
+        },
+        "href": {
+          "type": "string",
+          "description": "Where the source opens; makes its chips and its row in the list links"
+        },
+        "at": {
+          "type": "number",
+          "description": "When it was written or last changed, epoch ms"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "AiSummarySourceKind": {
+      "type": "string",
+      "enum": [
+        "message",
+        "document",
+        "meeting",
+        "ticket",
+        "web",
+        "other"
+      ]
+    },
+    "AiSummaryPoint": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "text"
+      ],
+      "additionalProperties": false,
+      "description": "A key point, with the ids of the sources it comes from"
+    }
+  }
+}

@@ -1,0 +1,157 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-knowledge-promotion.json",
+  "title": "tc-knowledge-promotion",
+  "description": "Promote a verified fact into shared team knowledge: the fact with any disputed versions beside it, a checklist of\nrequired and recommended conditions with who met them and when, and Promote and Dispute.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the region's name"
+    },
+    "scope": {
+      "type": "string",
+      "description": "Where the knowledge goes or what it covers, a quiet line under the heading – e.g. \"Acme lease review\""
+    },
+    "fact": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "by": {
+          "type": "string"
+        },
+        "at": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string"
+        },
+        "confidence": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "additionalProperties": false,
+      "description": "The fact to promote"
+    },
+    "conditions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/KnowledgeCondition"
+      },
+      "description": "The checklist, in order – required conditions block Promote, recommended ones only warn"
+    },
+    "versions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/KnowledgeVersion"
+      },
+      "description": "Disputed versions of the fact, shown side by side with it"
+    },
+    "threshold": {
+      "type": "number",
+      "description": "Confidence the fact needs, 0–1 – checked when `fact.confidence` is set"
+    },
+    "thresholdOptional": {
+      "type": "boolean",
+      "description": "Makes the confidence condition recommended instead of required"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "candidate",
+        "promoting",
+        "promoted"
+      ],
+      "description": "\"candidate\" (default), \"promoting\" while the app saves, or \"promoted\""
+    },
+    "error": {
+      "type": "string",
+      "description": "Why the last promotion failed – shown above the actions; Promote tries again"
+    },
+    "disputing": {
+      "type": "boolean",
+      "description": "The dispute form is open – set false to close it after a prevented tc-dispute"
+    },
+    "noDispute": {
+      "type": "boolean",
+      "description": "Hides Dispute, for people who can promote but not dispute"
+    },
+    "locale": {
+      "type": "string",
+      "description": "Locale for numbers"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "KnowledgeCondition": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "\"Reviewer sign-off\", \"No open dispute\""
+        },
+        "required": {
+          "type": "boolean",
+          "description": "Required conditions block Promote; recommended ones (false) only warn. Default true"
+        },
+        "met": {
+          "type": "boolean"
+        },
+        "by": {
+          "type": "string",
+          "description": "Who met it – \"Priya Shah\""
+        },
+        "at": {
+          "type": "string",
+          "description": "When, as the app formats it"
+        },
+        "detail": {
+          "type": "string",
+          "description": "A short line under the label – what it waits on, or what was checked"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "met"
+      ],
+      "additionalProperties": false
+    },
+    "KnowledgeVersion": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        },
+        "by": {
+          "type": "string",
+          "description": "Who disputes it"
+        },
+        "at": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string",
+          "description": "Why – \"The March filing says 14 days, not 10\""
+        }
+      },
+      "required": [
+        "id",
+        "text"
+      ],
+      "additionalProperties": false,
+      "description": "A disputed version of the fact, shown beside it"
+    }
+  }
+}

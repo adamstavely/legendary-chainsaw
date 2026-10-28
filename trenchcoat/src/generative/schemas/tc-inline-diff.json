@@ -1,0 +1,99 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-inline-diff.json",
+  "title": "tc-inline-diff",
+  "description": "Review an AI's word-level edits to prose: accept or reject each change in place.",
+  "type": "object",
+  "properties": {
+    "original": {
+      "type": "string",
+      "description": "The text as it is now"
+    },
+    "suggested": {
+      "type": "string",
+      "description": "The text the AI suggests"
+    },
+    "changes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/DiffSegment"
+      },
+      "description": "Pre-computed segments instead of original + suggested"
+    },
+    "decisions": {
+      "type": "object",
+      "additionalProperties": {
+        "anyOf": [
+          {
+            "$ref": "#/definitions/InlineDiffVerdict"
+          },
+          {
+            "not": {}
+          }
+        ]
+      },
+      "description": "The verdicts so far. Changed by the user unless a tc-decisions-change listener calls preventDefault(); new text resets them (reported as {})"
+    },
+    "label": {
+      "type": "string",
+      "description": "Small line above the card (Clean: at the top of the card), e.g. \"Suggested by AI · Make it shorter\""
+    },
+    "fill": {
+      "type": "boolean",
+      "description": "Grow to the container's height: the card fills the rest below the label, the toolbar staying in place"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "DiffSegment": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "const": "equal"
+            },
+            "text": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "text"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "const": "change"
+            },
+            "remove": {
+              "type": "string"
+            },
+            "insert": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "remove",
+            "insert"
+          ],
+          "additionalProperties": false
+        }
+      ],
+      "description": "A run of unchanged text, or one change (removed and/or inserted text)"
+    },
+    "InlineDiffVerdict": {
+      "type": "string",
+      "enum": [
+        "accepted",
+        "rejected"
+      ]
+    }
+  }
+}

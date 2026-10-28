@@ -1,0 +1,157 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-agent-tree.json",
+  "title": "tc-agent-tree",
+  "description": "Who started whom in a run of agents: cards joined by connectors, with costs, times and folding.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the tree list's name"
+    },
+    "root": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "task": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string"
+        },
+        "tools": {
+          "type": "array",
+          "items": {
+            "not": {}
+          }
+        },
+        "status": {
+          "$ref": "#/definitions/TreeAgentStatus"
+        },
+        "cost": {
+          "type": "number"
+        },
+        "ask": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string"
+        },
+        "started": {
+          "type": "number"
+        },
+        "ended": {
+          "type": "number"
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TreeAgent"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "task",
+        "status"
+      ],
+      "additionalProperties": false,
+      "description": "The orchestrator, with its sub-agents nested in `children` – the whole run as one tree"
+    },
+    "collapsed": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Ids of folded branches. Changed by the fold buttons unless tc-collapsed-change is prevented"
+    },
+    "now": {
+      "type": "number",
+      "description": "The clock for running times, in epoch ms – unset uses an internal clock"
+    },
+    "selectable": {
+      "type": "boolean",
+      "description": "The agents' names are buttons that fire tc-select (the whole card stays clickable for a pointer)"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "TreeAgentStatus": {
+      "type": "string",
+      "enum": [
+        "queued",
+        "running",
+        "waiting",
+        "done",
+        "failed",
+        "stopped"
+      ]
+    },
+    "TreeAgent": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "task": {
+          "type": "string",
+          "description": "What it was asked to do"
+        },
+        "model": {
+          "type": "string"
+        },
+        "tools": {
+          "type": "array",
+          "items": {
+            "not": {}
+          },
+          "description": "Marks of the tools it works with (cloned) – shown as small overlapping tiles"
+        },
+        "status": {
+          "$ref": "#/definitions/TreeAgentStatus"
+        },
+        "cost": {
+          "type": "number",
+          "description": "Its own cost so far – the children's costs are added on top"
+        },
+        "ask": {
+          "type": "string",
+          "description": "What it waits for you to decide – shown when you open \"needs you\""
+        },
+        "error": {
+          "type": "string",
+          "description": "What went wrong – shown when you open \"failed\""
+        },
+        "started": {
+          "type": "number",
+          "description": "When it started and ended (ms) – for the time it took"
+        },
+        "ended": {
+          "type": "number"
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TreeAgent"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "task",
+        "status"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

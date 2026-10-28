@@ -1,0 +1,106 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-cited-answer.json",
+  "title": "tc-cited-answer",
+  "description": "An AI answer with numbered source markers, source chips and an in-place source preview.",
+  "type": "object",
+  "properties": {
+    "segments": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/CitedSegment"
+      },
+      "description": "The answer as text segments, each naming the sources it relies on – a numbered marker ends each cited one"
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/CitedSource"
+      },
+      "description": "The sources, numbered in this order – chips under the answer and the passages their previews quote"
+    },
+    "pagesRead": {
+      "type": "number",
+      "description": "Pages the model read while searching – shown in the head next to the source count"
+    },
+    "preview": {
+      "type": "string",
+      "description": "Id of the source whose preview is open (null: closed)"
+    },
+    "openHandled": {
+      "type": "boolean",
+      "description": "The app opens sources itself (it listens to tc-open-source): links don't navigate, and sources without a url get Open source too"
+    },
+    "actionLabel": {
+      "type": "string",
+      "description": "A button on the tray that fires tc-action, e.g. \"Follow up\""
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "CitedSegment": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "description": "A sentence or part of one. Spaces at the start or end are kept outside the highlight"
+        },
+        "cite": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Ids of the sources this text relies on – one marker each, in this order"
+        },
+        "paragraph": {
+          "type": "boolean",
+          "description": "Starts a new paragraph"
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "additionalProperties": false
+    },
+    "CitedSource": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string",
+          "description": "Headline of the page or document"
+        },
+        "url": {
+          "type": "string"
+        },
+        "site": {
+          "type": "string",
+          "description": "Short name on the chip, e.g. \"Latency Notes\""
+        },
+        "date": {
+          "type": "string",
+          "description": "Ready-to-show date, e.g. \"Sep 12, 2026\""
+        },
+        "quote": {
+          "type": "string",
+          "description": "The passage the answer relies on"
+        },
+        "highlight": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Words or phrases of the quote to mark. Without it, words the quote shares with the citing sentences are marked"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "site"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,173 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-artifact-panel.json",
+  "title": "tc-artifact-panel",
+  "description": "The files, code and documents a run produced: a list, a preview per type, versions with a diff, download.",
+  "type": "object",
+  "properties": {
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Artifact"
+      },
+      "description": "What the run produced"
+    },
+    "selected": {
+      "type": "string",
+      "description": "The id of the artifact shown; empty shows the first. Changed by the user unless a tc-selected-change listener calls preventDefault()"
+    },
+    "version": {
+      "type": "string",
+      "description": "The id of the version shown; empty shows the latest. Changed by the user unless a tc-version-change listener calls preventDefault()"
+    },
+    "view": {
+      "type": "string",
+      "enum": [
+        "preview",
+        "diff"
+      ],
+      "description": "\"preview\", or \"diff\" to compare the version with the one before. Changed by the user unless a tc-view-change listener calls preventDefault()"
+    },
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the region's name"
+    },
+    "emptyLabel": {
+      "type": "string",
+      "description": "Shown when there is nothing yet"
+    },
+    "previewHeight": {
+      "type": "number",
+      "description": "The preview's height cap in px; longer content scrolls"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "Artifact": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string",
+          "description": "File name, e.g. \"launch-plan.md\" – also the download name"
+        },
+        "kind": {
+          "$ref": "#/definitions/ArtifactKind"
+        },
+        "language": {
+          "type": "string",
+          "description": "Code: the language for the colours (ts, py, json, html, css, sh …)"
+        },
+        "mimeType": {
+          "type": "string",
+          "description": "The download's media type; a sensible one by kind when left out"
+        },
+        "alt": {
+          "type": "string",
+          "description": "Images: the description"
+        },
+        "size": {
+          "type": "string",
+          "description": "Ready to show, e.g. \"2.4 KB\""
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "writing",
+            "ready"
+          ],
+          "description": "\"writing\" while the run is still producing it: the newest version streams"
+        },
+        "versions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ArtifactVersion"
+          },
+          "description": "Oldest first"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "kind",
+        "versions"
+      ],
+      "additionalProperties": false
+    },
+    "ArtifactKind": {
+      "type": "string",
+      "enum": [
+        "text",
+        "code",
+        "image",
+        "table"
+      ]
+    },
+    "ArtifactVersion": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "Chip text; defaults to v1, v2 …"
+        },
+        "time": {
+          "type": "string",
+          "description": "When, ready to show: \"2 min ago\""
+        },
+        "note": {
+          "type": "string",
+          "description": "What changed in this version: \"Tightened the intro\""
+        },
+        "content": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/definitions/ArtifactTable"
+            }
+          ],
+          "description": "Text or code; an image URL; a table (or CSV text)"
+        }
+      },
+      "required": [
+        "id",
+        "content"
+      ],
+      "additionalProperties": false
+    },
+    "ArtifactTable": {
+      "type": "object",
+      "properties": {
+        "columns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": [
+                "string",
+                "number"
+              ]
+            }
+          }
+        }
+      },
+      "required": [
+        "columns",
+        "rows"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

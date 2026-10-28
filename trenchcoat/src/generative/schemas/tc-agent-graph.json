@@ -1,0 +1,168 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-agent-graph.json",
+  "title": "tc-agent-graph",
+  "description": "Agents and the tools they use, drawn as a living network with pulses along the links.",
+  "type": "object",
+  "properties": {
+    "nodes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/GraphNode"
+      },
+      "description": "The agents, tools and people in the graph – the lead agent in the middle, the other agents around it, the rest outside"
+    },
+    "calls": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/GraphCall"
+      },
+      "description": "Recent calls, newest last – every new id sends a pulse. Calls also draw the links they need"
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "minItems": 2,
+        "maxItems": 2
+      },
+      "description": "Links that are always there, even before their first call"
+    },
+    "now": {
+      "type": "number",
+      "description": "The clock for calls per minute and link heat, in epoch ms – defaults to an internal clock that ticks every second while the graph is on screen"
+    },
+    "heatWindow": {
+      "type": "number",
+      "description": "How far back calls make a link thicker (ms)"
+    },
+    "selected": {
+      "type": "string",
+      "description": "The node whose card is open (null = none). Changed by the user unless a tc-selected-change listener calls preventDefault()"
+    },
+    "height": {
+      "type": "number",
+      "description": "Fixed height of the graph in px – defaults to one that fits the width"
+    },
+    "paused": {
+      "type": "boolean",
+      "description": "Stops the moving parts, as the bar's Pause button does. Changed by the user unless a tc-paused-change listener calls preventDefault()"
+    },
+    "heading": {
+      "type": "string",
+      "description": "The heading in the bar, and the start of the graph's name"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "GraphNode": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/definitions/GraphNodeKind",
+          "description": "\"agent\" sits on the inner orbit (the lead in the middle), \"tool\" and \"user\" on the outer one"
+        },
+        "short": {
+          "type": "string",
+          "description": "A shorter name for narrow containers, e.g. \"Search\" for \"Web search\""
+        },
+        "detail": {
+          "type": "string",
+          "description": "One line under the name – the model of an agent, what a tool is"
+        },
+        "status": {
+          "$ref": "#/definitions/GraphNodeStatus"
+        },
+        "doing": {
+          "type": "string",
+          "description": "What it is doing right now – shown in its card"
+        },
+        "cost": {
+          "type": "number",
+          "description": "What it has cost so far – summed up in the bar"
+        },
+        "lead": {
+          "type": "boolean",
+          "description": "The agent in the middle – defaults to the first agent"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "kind"
+      ],
+      "additionalProperties": false
+    },
+    "GraphNodeKind": {
+      "type": "string",
+      "enum": [
+        "agent",
+        "tool",
+        "user"
+      ]
+    },
+    "GraphNodeStatus": {
+      "type": "string",
+      "enum": [
+        "idle",
+        "working",
+        "waiting",
+        "error",
+        "done"
+      ]
+    },
+    "GraphCall": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "from": {
+          "type": "string",
+          "description": "Who calls …"
+        },
+        "to": {
+          "type": "string",
+          "description": "… and who is called – a tool, another agent, or you"
+        },
+        "label": {
+          "type": "string",
+          "description": "What was asked, e.g. \"search: pricing linear.app\""
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "pending",
+            "ok",
+            "error"
+          ],
+          "description": "\"pending\" sends the pulse out; once it turns \"ok\" or \"error\" the answer travels back"
+        },
+        "at": {
+          "type": "number",
+          "description": "When it was made (ms)"
+        },
+        "ms": {
+          "type": "number",
+          "description": "How long it took (ms)"
+        }
+      },
+      "required": [
+        "id",
+        "from",
+        "to",
+        "at"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

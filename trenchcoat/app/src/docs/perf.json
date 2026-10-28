@@ -2096,12 +2096,12 @@
    }
   },
   "artifact-panel": {
-   "measuredAt": "2026-10-27",
-   "hash": "5dd0de781d749c61",
+   "measuredAt": "2026-10-28",
+   "hash": "1c7e33b4ad431c74",
    "bundle": {
     "own": {
-     "min": 34114,
-     "gzip": 10093
+     "min": 34125,
+     "gzip": 10098
     },
     "shared": [
      {
@@ -2151,21 +2151,21 @@
      }
     ],
     "withoutLit": {
-     "min": 119267,
-     "gzip": 30566
+     "min": 119278,
+     "gzip": 30571
     },
     "withLit": {
-     "min": 142265,
-     "gzip": 38325
+     "min": 142276,
+     "gzip": 38330
     }
    },
    "render": {
     "tag": "tc-artifact-panel",
     "source": "demo",
     "runs": 7,
-    "cold": 9.9,
-    "first": 1.4,
-    "update": 0.2,
+    "cold": 8.8,
+    "first": 1.6,
+    "update": 0.3,
     "updateKind": "one item of artifacts replaced",
     "nodes": 99,
     "scale": {
@@ -2174,14 +2174,14 @@
      "points": [
       {
        "items": 100,
-       "first": 4.8,
-       "update": 0.5,
+       "first": 5,
+       "update": 0.4,
        "nodes": 963
       },
       {
        "items": 1000,
-       "first": 36.9,
-       "update": 5.3,
+       "first": 40,
+       "update": 5,
        "nodes": 9063
       }
      ]
@@ -4484,11 +4484,11 @@
   },
   "co-occurrence": {
    "measuredAt": "2026-10-28",
-   "hash": "d623b4f94fa428db",
+   "hash": "5c94571c99261450",
    "bundle": {
     "own": {
-     "min": 25652,
-     "gzip": 7576
+     "min": 25589,
+     "gzip": 7563
     },
     "shared": [
      {
@@ -4533,21 +4533,21 @@
      }
     ],
     "withoutLit": {
-     "min": 32703,
-     "gzip": 9546
+     "min": 32640,
+     "gzip": 9531
     },
     "withLit": {
-     "min": 55052,
-     "gzip": 17011
+     "min": 54989,
+     "gzip": 16998
     }
    },
    "render": {
     "tag": "tc-co-occurrence",
     "source": "demo",
     "runs": 7,
-    "cold": 7.8,
-    "first": 2.4,
-    "update": 1.1,
+    "cold": 8.8,
+    "first": 2.5,
+    "update": 1.2,
     "updateKind": "one item of entities replaced",
     "nodes": 234,
     "scale": {
@@ -4556,14 +4556,14 @@
      "points": [
       {
        "items": 100,
-       "first": 22.3,
-       "update": 11,
+       "first": 22.6,
+       "update": 10.9,
        "nodes": 3312
       },
       {
        "items": 1000,
-       "first": 273,
-       "update": 171.5,
+       "first": 277.9,
+       "update": 162.4,
        "nodes": 32472
       }
      ]
@@ -7559,12 +7559,12 @@
    }
   },
   "email-draft": {
-   "measuredAt": "2026-10-27",
-   "hash": "cd3fc7228961ce20",
+   "measuredAt": "2026-10-28",
+   "hash": "f1eadd77050caee0",
    "bundle": {
     "own": {
-     "min": 50544,
-     "gzip": 11431
+     "min": 50562,
+     "gzip": 11434
     },
     "shared": [
      {
@@ -7604,21 +7604,21 @@
      }
     ],
     "withoutLit": {
-     "min": 59063,
-     "gzip": 14033
+     "min": 59081,
+     "gzip": 14038
     },
     "withLit": {
-     "min": 82080,
-     "gzip": 21576
+     "min": 82098,
+     "gzip": 21580
     }
    },
    "render": {
     "tag": "tc-email-draft",
     "source": "demo",
     "runs": 7,
-    "cold": 11.2,
+    "cold": 11.8,
     "first": 0.9,
-    "update": 0.3,
+    "update": 0.2,
     "updateKind": "one item of contacts replaced",
     "nodes": 47,
     "scale": {
@@ -7633,7 +7633,7 @@
       },
       {
        "items": 1000,
-       "first": 1,
+       "first": 0.7,
        "update": 0.1,
        "nodes": 47
       }
@@ -9525,94 +9525,2014 @@
    }
   },
   "generated-ui": {
-   "measuredAt": "2026-10-27",
-   "hash": "4b8a0c4c0fb2a85c",
+   "measuredAt": "2026-10-28",
+   "hash": "ab8733349b88cbdb",
    "bundle": {
     "own": {
-     "min": 30935,
-     "gzip": 9955
+     "min": 33154,
+     "gzip": 10690
     },
     "shared": [
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 22775
+      "min": 27005
+     },
+     {
+      "name": "internal/settings",
+      "kind": "internal",
+      "min": 14721
+     },
+     {
+      "name": "internal/selection",
+      "kind": "internal",
+      "min": 10653
      },
      {
       "name": "internal/controllers",
       "kind": "internal",
-      "min": 4997
+      "min": 8963
+     },
+     {
+      "name": "internal/popover",
+      "kind": "internal",
+      "min": 8577
      },
      {
       "name": "internal/card-head",
       "kind": "internal",
-      "min": 2968
+      "min": 2993
      },
      {
       "name": "internal/base",
       "kind": "internal",
-      "min": 1352
+      "min": 1417
+     },
+     {
+      "name": "internal/layered-graph",
+      "kind": "internal",
+      "min": 1382
+     },
+     {
+      "name": "internal/selection-toolbar",
+      "kind": "internal",
+      "min": 1382
      },
      {
       "name": "internal/kit",
       "kind": "internal",
-      "min": 1348
-     },
-     {
-      "name": "internal/look",
-      "kind": "internal",
-      "min": 445
-     },
-     {
-      "name": "internal/styles",
-      "kind": "internal",
-      "min": 436
+      "min": 1366
      },
      {
       "name": "internal/util",
       "kind": "internal",
-      "min": 270
+      "min": 671
+     },
+     {
+      "name": "internal/source-line",
+      "kind": "internal",
+      "min": 522
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 484
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 466
+     },
+     {
+      "name": "internal/format",
+      "kind": "internal",
+      "min": 443
+     },
+     {
+      "name": "internal/activity-scale",
+      "kind": "internal",
+      "min": 195
+     },
+     {
+      "name": "review-center",
+      "kind": "element",
+      "min": 102891
+     },
+     {
+      "name": "agent-queue",
+      "kind": "element",
+      "min": 90825
+     },
+     {
+      "name": "project-flow",
+      "kind": "element",
+      "min": 87116
+     },
+     {
+      "name": "agent-graph",
+      "kind": "element",
+      "min": 80783
      },
      {
       "name": "stepper-form",
       "kind": "element",
-      "min": 78296
+      "min": 78923
+     },
+     {
+      "name": "region-dach",
+      "kind": "element",
+      "min": 71477
+     },
+     {
+      "name": "memory-panel",
+      "kind": "element",
+      "min": 64824
+     },
+     {
+      "name": "evaluation-dataset-editor",
+      "kind": "element",
+      "min": 63147
+     },
+     {
+      "name": "agent-plan",
+      "kind": "element",
+      "min": 61280
+     },
+     {
+      "name": "context-map",
+      "kind": "element",
+      "min": 60006
+     },
+     {
+      "name": "ai-answer",
+      "kind": "element",
+      "min": 58064
+     },
+     {
+      "name": "date-range-picker",
+      "kind": "element",
+      "min": 57128
+     },
+     {
+      "name": "trace-waterfall",
+      "kind": "element",
+      "min": 57083
+     },
+     {
+      "name": "configuration-release-control",
+      "kind": "element",
+      "min": 56827
+     },
+     {
+      "name": "decision-tree",
+      "kind": "element",
+      "min": 56156
+     },
+     {
+      "name": "integration-flow",
+      "kind": "element",
+      "min": 53105
      },
      {
       "name": "data-table",
       "kind": "element",
-      "min": 50625
+      "min": 51863
+     },
+     {
+      "name": "transcript-review",
+      "kind": "element",
+      "min": 51746
+     },
+     {
+      "name": "tool-configuration",
+      "kind": "element",
+      "min": 51698
+     },
+     {
+      "name": "integration-picker",
+      "kind": "element",
+      "min": 50429
+     },
+     {
+      "name": "prompt-library",
+      "kind": "element",
+      "min": 49125
+     },
+     {
+      "name": "agent-tree",
+      "kind": "element",
+      "min": 48552
+     },
+     {
+      "name": "email-draft",
+      "kind": "element",
+      "min": 48384
+     },
+     {
+      "name": "cited-answer",
+      "kind": "element",
+      "min": 47955
+     },
+     {
+      "name": "billing-schedule",
+      "kind": "element",
+      "min": 47815
+     },
+     {
+      "name": "playbook-canvas",
+      "kind": "element",
+      "min": 47053
+     },
+     {
+      "name": "world-map",
+      "kind": "element",
+      "min": 47052
+     },
+     {
+      "name": "chat-history",
+      "kind": "element",
+      "min": 46433
+     },
+     {
+      "name": "usage-meter",
+      "kind": "element",
+      "min": 46419
+     },
+     {
+      "name": "message-actions",
+      "kind": "element",
+      "min": 45909
+     },
+     {
+      "name": "permission-request",
+      "kind": "element",
+      "min": 45728
+     },
+     {
+      "name": "context-window",
+      "kind": "element",
+      "min": 45344
+     },
+     {
+      "name": "reliance-gauge",
+      "kind": "element",
+      "min": 44444
+     },
+     {
+      "name": "data-handling-policy",
+      "kind": "element",
+      "min": 44376
+     },
+     {
+      "name": "image-grid",
+      "kind": "element",
+      "min": 44314
+     },
+     {
+      "name": "tool-call-card",
+      "kind": "element",
+      "min": 44270
+     },
+     {
+      "name": "integration-settings",
+      "kind": "element",
+      "min": 44242
+     },
+     {
+      "name": "inline-diff",
+      "kind": "element",
+      "min": 43601
+     },
+     {
+      "name": "approval-card",
+      "kind": "element",
+      "min": 43406
+     },
+     {
+      "name": "mcp-connection-manager",
+      "kind": "element",
+      "min": 43015
+     },
+     {
+      "name": "combobox",
+      "kind": "element",
+      "min": 42865
+     },
+     {
+      "name": "output-schema-builder",
+      "kind": "element",
+      "min": 42327
+     },
+     {
+      "name": "writing-assistant",
+      "kind": "element",
+      "min": 42065
+     },
+     {
+      "name": "comments-panel",
+      "kind": "element",
+      "min": 41946
+     },
+     {
+      "name": "conversation-annotation",
+      "kind": "element",
+      "min": 41918
+     },
+     {
+      "name": "provider-connection",
+      "kind": "element",
+      "min": 40632
+     },
+     {
+      "name": "text-annotator",
+      "kind": "element",
+      "min": 39601
+     },
+     {
+      "name": "experiment-card",
+      "kind": "element",
+      "min": 39583
+     },
+     {
+      "name": "lineage-graph",
+      "kind": "element",
+      "min": 38858
+     },
+     {
+      "name": "breakdown-chart",
+      "kind": "element",
+      "min": 38785
+     },
+     {
+      "name": "delegate-board",
+      "kind": "element",
+      "min": 38779
+     },
+     {
+      "name": "agent-inbox",
+      "kind": "element",
+      "min": 38554
+     },
+     {
+      "name": "agent-steering",
+      "kind": "element",
+      "min": 38474
+     },
+     {
+      "name": "model-picker",
+      "kind": "element",
+      "min": 37413
+     },
+     {
+      "name": "plan-vs-actual",
+      "kind": "element",
+      "min": 37283
+     },
+     {
+      "name": "version-history",
+      "kind": "element",
+      "min": 36130
+     },
+     {
+      "name": "agent-lanes",
+      "kind": "element",
+      "min": 35713
+     },
+     {
+      "name": "retrieval-settings",
+      "kind": "element",
+      "min": 35446
+     },
+     {
+      "name": "tool-permissions",
+      "kind": "element",
+      "min": 35402
+     },
+     {
+      "name": "sandbox-log",
+      "kind": "element",
+      "min": 35394
+     },
+     {
+      "name": "run-checkpoints",
+      "kind": "element",
+      "min": 35363
+     },
+     {
+      "name": "reflection-gate",
+      "kind": "element",
+      "min": 35277
+     },
+     {
+      "name": "claim-answer",
+      "kind": "element",
+      "min": 35087
+     },
+     {
+      "name": "model-routing",
+      "kind": "element",
+      "min": 34898
+     },
+     {
+      "name": "knowledge-source-manager",
+      "kind": "element",
+      "min": 34464
+     },
+     {
+      "name": "project-card",
+      "kind": "element",
+      "min": 34288
+     },
+     {
+      "name": "instruction-editor",
+      "kind": "element",
+      "min": 34092
+     },
+     {
+      "name": "eval-scorecard",
+      "kind": "element",
+      "min": 33792
+     },
+     {
+      "name": "code-block",
+      "kind": "element",
+      "min": 33783
+     },
+     {
+      "name": "handoff",
+      "kind": "element",
+      "min": 33577
      },
      {
       "name": "structured-output",
       "kind": "element",
-      "min": 32812
+      "min": 33138
+     },
+     {
+      "name": "trigger-builder",
+      "kind": "element",
+      "min": 33135
+     },
+     {
+      "name": "thinking-state",
+      "kind": "element",
+      "min": 32798
+     },
+     {
+      "name": "policy-simulator",
+      "kind": "element",
+      "min": 32342
+     },
+     {
+      "name": "filter-menu",
+      "kind": "element",
+      "min": 32135
+     },
+     {
+      "name": "verification-queue",
+      "kind": "element",
+      "min": 31907
+     },
+     {
+      "name": "artifact-panel",
+      "kind": "element",
+      "min": 31769
+     },
+     {
+      "name": "model-settings",
+      "kind": "element",
+      "min": 31612
+     },
+     {
+      "name": "ai-summary",
+      "kind": "element",
+      "min": 31264
+     },
+     {
+      "name": "extraction-review",
+      "kind": "element",
+      "min": 30948
+     },
+     {
+      "name": "segmented-control",
+      "kind": "element",
+      "min": 30716
+     },
+     {
+      "name": "fan-out-grid",
+      "kind": "element",
+      "min": 30689
+     },
+     {
+      "name": "retrieval-inspector",
+      "kind": "element",
+      "min": 30604
+     },
+     {
+      "name": "agent-ledger",
+      "kind": "element",
+      "min": 30325
+     },
+     {
+      "name": "smart-recommendation",
+      "kind": "element",
+      "min": 30015
+     },
+     {
+      "name": "response-selection",
+      "kind": "element",
+      "min": 29672
+     },
+     {
+      "name": "comment-thread",
+      "kind": "element",
+      "min": 29036
+     },
+     {
+      "name": "attestation-check",
+      "kind": "element",
+      "min": 28736
+     },
+     {
+      "name": "parallel-attempts",
+      "kind": "element",
+      "min": 27795
+     },
+     {
+      "name": "budget-guard",
+      "kind": "element",
+      "min": 27757
+     },
+     {
+      "name": "compact-breakdown",
+      "kind": "element",
+      "min": 27189
+     },
+     {
+      "name": "run-compare",
+      "kind": "element",
+      "min": 27123
+     },
+     {
+      "name": "money-flow",
+      "kind": "element",
+      "min": 26853
+     },
+     {
+      "name": "setup-guide",
+      "kind": "element",
+      "min": 26475
+     },
+     {
+      "name": "clarifying-questions",
+      "kind": "element",
+      "min": 26434
+     },
+     {
+      "name": "agent-team",
+      "kind": "element",
+      "min": 26418
+     },
+     {
+      "name": "context-tray",
+      "kind": "element",
+      "min": 26014
+     },
+     {
+      "name": "knowledge-promotion",
+      "kind": "element",
+      "min": 25510
+     },
+     {
+      "name": "kill-switch",
+      "kind": "element",
+      "min": 25250
+     },
+     {
+      "name": "file-summary",
+      "kind": "element",
+      "min": 24899
+     },
+     {
+      "name": "feedback-rubric",
+      "kind": "element",
+      "min": 24671
+     },
+     {
+      "name": "integration-grid",
+      "kind": "element",
+      "min": 24658
+     },
+     {
+      "name": "synthesis-notes",
+      "kind": "element",
+      "min": 24606
+     },
+     {
+      "name": "conversation-branches",
+      "kind": "element",
+      "min": 24397
+     },
+     {
+      "name": "org-unit-card",
+      "kind": "element",
+      "min": 24370
+     },
+     {
+      "name": "gate-config",
+      "kind": "element",
+      "min": 24265
+     },
+     {
+      "name": "engagement-quality",
+      "kind": "element",
+      "min": 23913
+     },
+     {
+      "name": "run-manifest",
+      "kind": "element",
+      "min": 23594
+     },
+     {
+      "name": "coverage-matrix",
+      "kind": "element",
+      "min": 23568
+     },
+     {
+      "name": "friction-profile",
+      "kind": "element",
+      "min": 23536
+     },
+     {
+      "name": "co-occurrence",
+      "kind": "element",
+      "min": 23526
+     },
+     {
+      "name": "review-conflict",
+      "kind": "element",
+      "min": 23491
+     },
+     {
+      "name": "status-tracker",
+      "kind": "element",
+      "min": 23227
+     },
+     {
+      "name": "evidence-list",
+      "kind": "element",
+      "min": 23207
+     },
+     {
+      "name": "correction-propagation",
+      "kind": "element",
+      "min": 23076
      },
      {
       "name": "kpi-chart",
       "kind": "element",
-      "min": 22715
+      "min": 22959
+     },
+     {
+      "name": "guardrail-notice",
+      "kind": "element",
+      "min": 22628
+     },
+     {
+      "name": "gap-exposure",
+      "kind": "element",
+      "min": 22257
+     },
+     {
+      "name": "publication-impact",
+      "kind": "element",
+      "min": 22093
+     },
+     {
+      "name": "cover-flow",
+      "kind": "element",
+      "min": 22036
+     },
+     {
+      "name": "query-builder",
+      "kind": "element",
+      "min": 21768
+     },
+     {
+      "name": "progress-tracker",
+      "kind": "element",
+      "min": 21580
+     },
+     {
+      "name": "answer-arena",
+      "kind": "element",
+      "min": 21546
+     },
+     {
+      "name": "autonomy-dial",
+      "kind": "element",
+      "min": 21327
+     },
+     {
+      "name": "handoff-brief",
+      "kind": "element",
+      "min": 20938
+     },
+     {
+      "name": "fingerprint-card",
+      "kind": "element",
+      "min": 20899
+     },
+     {
+      "name": "agreement-tracker",
+      "kind": "element",
+      "min": 20668
+     },
+     {
+      "name": "traceability-spine",
+      "kind": "element",
+      "min": 20639
+     },
+     {
+      "name": "priority-list",
+      "kind": "element",
+      "min": 20510
+     },
+     {
+      "name": "confidence-brief",
+      "kind": "element",
+      "min": 19793
+     },
+     {
+      "name": "alert-feed",
+      "kind": "element",
+      "min": 19207
+     },
+     {
+      "name": "isbn-details",
+      "kind": "element",
+      "min": 19112
+     },
+     {
+      "name": "session-context-bar",
+      "kind": "element",
+      "min": 18890
+     },
+     {
+      "name": "travel-itinerary",
+      "kind": "element",
+      "min": 18753
+     },
+     {
+      "name": "disagreement-banner",
+      "kind": "element",
+      "min": 18713
+     },
+     {
+      "name": "validity-badge",
+      "kind": "element",
+      "min": 18692
+     },
+     {
+      "name": "entity-timeline",
+      "kind": "element",
+      "min": 18451
+     },
+     {
+      "name": "profile-header",
+      "kind": "element",
+      "min": 18287
+     },
+     {
+      "name": "search-history",
+      "kind": "element",
+      "min": 17997
+     },
+     {
+      "name": "contact-channels",
+      "kind": "element",
+      "min": 17512
+     },
+     {
+      "name": "provenance-summary",
+      "kind": "element",
+      "min": 17391
+     },
+     {
+      "name": "activity-calendar",
+      "kind": "element",
+      "min": 17275
+     },
+     {
+      "name": "account-list",
+      "kind": "element",
+      "min": 17016
+     },
+     {
+      "name": "notification-stack",
+      "kind": "element",
+      "min": 16963
+     },
+     {
+      "name": "model-wheel",
+      "kind": "element",
+      "min": 16943
+     },
+     {
+      "name": "capability-notice",
+      "kind": "element",
+      "min": 16753
+     },
+     {
+      "name": "decision-inbox",
+      "kind": "element",
+      "min": 16734
+     },
+     {
+      "name": "fact-sheet",
+      "kind": "element",
+      "min": 16707
+     },
+     {
+      "name": "asset-list",
+      "kind": "element",
+      "min": 16654
+     },
+     {
+      "name": "activity-clock",
+      "kind": "element",
+      "min": 16413
+     },
+     {
+      "name": "outreach-branches",
+      "kind": "element",
+      "min": 16279
+     },
+     {
+      "name": "capacity-bars",
+      "kind": "element",
+      "min": 16202
+     },
+     {
+      "name": "budget-burn",
+      "kind": "element",
+      "min": 16201
+     },
+     {
+      "name": "biometric-status",
+      "kind": "element",
+      "min": 16089
+     },
+     {
+      "name": "prompt-starters",
+      "kind": "element",
+      "min": 16076
+     },
+     {
+      "name": "evidence-coverage",
+      "kind": "element",
+      "min": 15984
+     },
+     {
+      "name": "investment-balance",
+      "kind": "element",
+      "min": 15474
+     },
+     {
+      "name": "reasoning-flags",
+      "kind": "element",
+      "min": 15397
+     },
+     {
+      "name": "person-links",
+      "kind": "element",
+      "min": 15208
+     },
+     {
+      "name": "document-list",
+      "kind": "element",
+      "min": 15103
+     },
+     {
+      "name": "sla-status",
+      "kind": "element",
+      "min": 14967
+     },
+     {
+      "name": "work-item",
+      "kind": "element",
+      "min": 14683
+     },
+     {
+      "name": "lead-sourcing",
+      "kind": "element",
+      "min": 14138
+     },
+     {
+      "name": "day-rhythm",
+      "kind": "element",
+      "min": 13780
+     },
+     {
+      "name": "tips-panel",
+      "kind": "element",
+      "min": 13730
+     },
+     {
+      "name": "session-state",
+      "kind": "element",
+      "min": 13140
+     },
+     {
+      "name": "place-list",
+      "kind": "element",
+      "min": 12908
+     },
+     {
+      "name": "watchlist",
+      "kind": "element",
+      "min": 12896
+     },
+     {
+      "name": "button",
+      "kind": "element",
+      "min": 12834
+     },
+     {
+      "name": "team-invite",
+      "kind": "element",
+      "min": 12754
+     },
+     {
+      "name": "audience-mix",
+      "kind": "element",
+      "min": 12312
+     },
+     {
+      "name": "digest",
+      "kind": "element",
+      "min": 12274
+     },
+     {
+      "name": "ops-overview",
+      "kind": "element",
+      "min": 11589
+     },
+     {
+      "name": "ghosted-chat",
+      "kind": "element",
+      "min": 11586
+     },
+     {
+      "name": "reaction-bar",
+      "kind": "element",
+      "min": 11529
+     },
+     {
+      "name": "coverage-ring",
+      "kind": "element",
+      "min": 10829
+     },
+     {
+      "name": "citation-sections",
+      "kind": "element",
+      "min": 10587
+     },
+     {
+      "name": "citation-badge",
+      "kind": "element",
+      "min": 10540
+     },
+     {
+      "name": "change-summary",
+      "kind": "element",
+      "min": 9845
+     },
+     {
+      "name": "grade-distribution",
+      "kind": "element",
+      "min": 9301
+     },
+     {
+      "name": "enrichment-orbit",
+      "kind": "element",
+      "min": 7821
+     },
+     {
+      "name": "empty-calendar",
+      "kind": "element",
+      "min": 7691
+     },
+     {
+      "name": "tab-overload",
+      "kind": "element",
+      "min": 7505
+     },
+     {
+      "name": "slider-field",
+      "kind": "element",
+      "min": 1904
+     },
+     {
+      "name": "number-field",
+      "kind": "element",
+      "min": 1668
+     },
+     {
+      "name": "radio-group",
+      "kind": "element",
+      "min": 1232
+     },
+     {
+      "name": "checkbox",
+      "kind": "element",
+      "min": 812
+     },
+     {
+      "name": "switch",
+      "kind": "element",
+      "min": 800
+     },
+     {
+      "name": "src/generative/registry.ts",
+      "kind": "other",
+      "min": 31174
+     },
+     {
+      "name": "src/generative/schemas/tc-verification-queue.json",
+      "kind": "other",
+      "min": 9340
+     },
+     {
+      "name": "src/generative/schemas/tc-claim-answer.json",
+      "kind": "other",
+      "min": 9019
+     },
+     {
+      "name": "src/generative/schemas/tc-configuration-release-control.json",
+      "kind": "other",
+      "min": 6442
+     },
+     {
+      "name": "src/generative/schemas/tc-playbook-canvas.json",
+      "kind": "other",
+      "min": 5754
+     },
+     {
+      "name": "src/generative/schemas/tc-reliance-gauge.json",
+      "kind": "other",
+      "min": 5738
+     },
+     {
+      "name": "src/generative/schemas/tc-validity-badge.json",
+      "kind": "other",
+      "min": 5067
+     },
+     {
+      "name": "src/generative/schemas/tc-review-center.json",
+      "kind": "other",
+      "min": 4918
+     },
+     {
+      "name": "src/generative/schemas/tc-data-handling-policy.json",
+      "kind": "other",
+      "min": 4744
+     },
+     {
+      "name": "src/generative/schemas/tc-retrieval-inspector.json",
+      "kind": "other",
+      "min": 4556
+     },
+     {
+      "name": "src/generative/schemas/tc-org-unit-card.json",
+      "kind": "other",
+      "min": 4437
+     },
+     {
+      "name": "src/generative/schemas/tc-publication-impact.json",
+      "kind": "other",
+      "min": 4425
+     },
+     {
+      "name": "src/generative/schemas/tc-mcp-connection-manager.json",
+      "kind": "other",
+      "min": 4355
+     },
+     {
+      "name": "src/generative/schemas/tc-transcript-review.json",
+      "kind": "other",
+      "min": 4271
+     },
+     {
+      "name": "src/generative/schemas/tc-policy-simulator.json",
+      "kind": "other",
+      "min": 4254
+     },
+     {
+      "name": "src/generative/schemas/tc-reflection-gate.json",
+      "kind": "other",
+      "min": 4171
+     },
+     {
+      "name": "src/generative/schemas/tc-agent-queue.json",
+      "kind": "other",
+      "min": 4159
+     },
+     {
+      "name": "src/generative/schemas/tc-conversation-annotation.json",
+      "kind": "other",
+      "min": 4070
+     },
+     {
+      "name": "src/generative/schemas/tc-evaluation-dataset-editor.json",
+      "kind": "other",
+      "min": 3963
+     },
+     {
+      "name": "src/generative/schemas/tc-approval-card.json",
+      "kind": "other",
+      "min": 3910
+     },
+     {
+      "name": "src/generative/schemas/tc-provider-connection.json",
+      "kind": "other",
+      "min": 3838
+     },
+     {
+      "name": "src/generative/schemas/tc-model-settings.json",
+      "kind": "other",
+      "min": 3759
+     },
+     {
+      "name": "src/generative/schemas/tc-retrieval-settings.json",
+      "kind": "other",
+      "min": 3730
+     },
+     {
+      "name": "src/generative/schemas/tc-profile-header.json",
+      "kind": "other",
+      "min": 3670
+     },
+     {
+      "name": "src/generative/schemas/tc-trigger-builder.json",
+      "kind": "other",
+      "min": 3623
+     },
+     {
+      "name": "src/generative/schemas/tc-evidence-list.json",
+      "kind": "other",
+      "min": 3480
+     },
+     {
+      "name": "src/generative/schemas/tc-lineage-graph.json",
+      "kind": "other",
+      "min": 3480
+     },
+     {
+      "name": "src/generative/schemas/tc-permission-request.json",
+      "kind": "other",
+      "min": 3437
+     },
+     {
+      "name": "src/generative/schemas/tc-ai-summary.json",
+      "kind": "other",
+      "min": 3343
+     },
+     {
+      "name": "src/generative/schemas/tc-prompt-starters.json",
+      "kind": "other",
+      "min": 3307
+     },
+     {
+      "name": "src/generative/schemas/tc-co-occurrence.json",
+      "kind": "other",
+      "min": 3262
+     },
+     {
+      "name": "src/generative/schemas/tc-query-builder.json",
+      "kind": "other",
+      "min": 3246
+     },
+     {
+      "name": "src/generative/schemas/tc-agent-graph.json",
+      "kind": "other",
+      "min": 3227
+     },
+     {
+      "name": "src/generative/schemas/tc-structured-output.json",
+      "kind": "other",
+      "min": 3207
+     },
+     {
+      "name": "src/generative/schemas/tc-model-routing.json",
+      "kind": "other",
+      "min": 3166
+     },
+     {
+      "name": "src/generative/schemas/tc-engagement-quality.json",
+      "kind": "other",
+      "min": 3154
+     },
+     {
+      "name": "src/generative/schemas/tc-priority-list.json",
+      "kind": "other",
+      "min": 3146
+     },
+     {
+      "name": "src/generative/schemas/tc-travel-itinerary.json",
+      "kind": "other",
+      "min": 3127
+     },
+     {
+      "name": "src/generative/schemas/tc-account-list.json",
+      "kind": "other",
+      "min": 3117
+     },
+     {
+      "name": "src/generative/schemas/tc-status-tracker.json",
+      "kind": "other",
+      "min": 3086
+     },
+     {
+      "name": "src/generative/schemas/tc-version-history.json",
+      "kind": "other",
+      "min": 3077
+     },
+     {
+      "name": "src/generative/schemas/tc-tool-permissions.json",
+      "kind": "other",
+      "min": 3054
+     },
+     {
+      "name": "src/generative/schemas/tc-knowledge-source-manager.json",
+      "kind": "other",
+      "min": 3037
+     },
+     {
+      "name": "src/generative/schemas/tc-trace-waterfall.json",
+      "kind": "other",
+      "min": 3014
+     },
+     {
+      "name": "src/generative/schemas/tc-usage-meter.json",
+      "kind": "other",
+      "min": 3008
+     },
+     {
+      "name": "src/generative/schemas/tc-image-grid.json",
+      "kind": "other",
+      "min": 2995
+     },
+     {
+      "name": "src/generative/schemas/tc-decision-tree.json",
+      "kind": "other",
+      "min": 2972
+     },
+     {
+      "name": "src/generative/schemas/tc-handoff-brief.json",
+      "kind": "other",
+      "min": 2967
+     },
+     {
+      "name": "src/generative/schemas/tc-gate-config.json",
+      "kind": "other",
+      "min": 2965
+     },
+     {
+      "name": "src/generative/schemas/tc-eval-scorecard.json",
+      "kind": "other",
+      "min": 2960
+     },
+     {
+      "name": "src/generative/schemas/tc-confidence-brief.json",
+      "kind": "other",
+      "min": 2950
+     },
+     {
+      "name": "src/generative/schemas/tc-chat-history.json",
+      "kind": "other",
+      "min": 2945
+     },
+     {
+      "name": "src/generative/schemas/tc-instruction-editor.json",
+      "kind": "other",
+      "min": 2944
+     },
+     {
+      "name": "src/generative/schemas/tc-file-summary.json",
+      "kind": "other",
+      "min": 2940
+     },
+     {
+      "name": "src/generative/schemas/tc-contact-channels.json",
+      "kind": "other",
+      "min": 2929
+     },
+     {
+      "name": "src/generative/schemas/tc-knowledge-promotion.json",
+      "kind": "other",
+      "min": 2928
+     },
+     {
+      "name": "src/generative/schemas/tc-agent-lanes.json",
+      "kind": "other",
+      "min": 2909
+     },
+     {
+      "name": "src/generative/schemas/tc-alert-feed.json",
+      "kind": "other",
+      "min": 2870
+     },
+     {
+      "name": "src/generative/schemas/tc-session-state.json",
+      "kind": "other",
+      "min": 2866
+     },
+     {
+      "name": "src/generative/schemas/tc-artifact-panel.json",
+      "kind": "other",
+      "min": 2830
+     },
+     {
+      "name": "src/generative/validate.ts",
+      "kind": "other",
+      "min": 2818
+     },
+     {
+      "name": "src/generative/schemas/tc-money-flow.json",
+      "kind": "other",
+      "min": 2786
+     },
+     {
+      "name": "src/generative/schemas/tc-fact-sheet.json",
+      "kind": "other",
+      "min": 2778
+     },
+     {
+      "name": "src/generative/schemas/tc-gap-exposure.json",
+      "kind": "other",
+      "min": 2748
+     },
+     {
+      "name": "src/generative/schemas/tc-entity-timeline.json",
+      "kind": "other",
+      "min": 2744
+     },
+     {
+      "name": "src/generative/schemas/tc-text-annotator.json",
+      "kind": "other",
+      "min": 2742
+     },
+     {
+      "name": "src/generative/schemas/tc-kill-switch.json",
+      "kind": "other",
+      "min": 2740
+     },
+     {
+      "name": "src/generative/schemas/tc-extraction-review.json",
+      "kind": "other",
+      "min": 2738
+     },
+     {
+      "name": "src/generative/schemas/tc-coverage-matrix.json",
+      "kind": "other",
+      "min": 2712
+     },
+     {
+      "name": "src/generative/schemas/tc-clarifying-questions.json",
+      "kind": "other",
+      "min": 2711
+     },
+     {
+      "name": "src/generative/schemas/tc-fingerprint-card.json",
+      "kind": "other",
+      "min": 2701
+     },
+     {
+      "name": "src/generative/schemas/tc-run-checkpoints.json",
+      "kind": "other",
+      "min": 2699
+     },
+     {
+      "name": "src/generative/schemas/tc-session-context-bar.json",
+      "kind": "other",
+      "min": 2694
+     },
+     {
+      "name": "src/generative/schemas/tc-biometric-status.json",
+      "kind": "other",
+      "min": 2676
+     },
+     {
+      "name": "src/generative/schemas/tc-friction-profile.json",
+      "kind": "other",
+      "min": 2676
+     },
+     {
+      "name": "src/generative/schemas/tc-run-manifest.json",
+      "kind": "other",
+      "min": 2658
+     },
+     {
+      "name": "src/generative/schemas/tc-tool-configuration.json",
+      "kind": "other",
+      "min": 2645
+     },
+     {
+      "name": "src/generative/schemas/tc-place-list.json",
+      "kind": "other",
+      "min": 2635
+     },
+     {
+      "name": "src/generative/schemas/tc-feedback-rubric.json",
+      "kind": "other",
+      "min": 2616
+     },
+     {
+      "name": "src/generative/schemas/tc-guardrail-notice.json",
+      "kind": "other",
+      "min": 2605
+     },
+     {
+      "name": "src/generative/schemas/tc-message-actions.json",
+      "kind": "other",
+      "min": 2601
+     },
+     {
+      "name": "src/generative/schemas/tc-asset-list.json",
+      "kind": "other",
+      "min": 2583
+     },
+     {
+      "name": "src/generative/schemas/tc-experiment-card.json",
+      "kind": "other",
+      "min": 2567
+     },
+     {
+      "name": "src/generative/schemas/tc-breakdown-chart.json",
+      "kind": "other",
+      "min": 2519
+     },
+     {
+      "name": "src/generative/schemas/tc-fan-out-grid.json",
+      "kind": "other",
+      "min": 2516
+     },
+     {
+      "name": "src/generative/schemas/tc-delegate-board.json",
+      "kind": "other",
+      "min": 2494
+     },
+     {
+      "name": "src/generative/schemas/tc-agent-steering.json",
+      "kind": "other",
+      "min": 2476
+     },
+     {
+      "name": "src/generative/schemas/tc-context-map.json",
+      "kind": "other",
+      "min": 2473
+     },
+     {
+      "name": "src/generative/schemas/tc-review-conflict.json",
+      "kind": "other",
+      "min": 2464
+     },
+     {
+      "name": "src/generative/schemas/tc-data-table.json",
+      "kind": "other",
+      "min": 2405
+     },
+     {
+      "name": "src/generative/schemas/tc-correction-propagation.json",
+      "kind": "other",
+      "min": 2331
+     },
+     {
+      "name": "src/generative/schemas/tc-agent-tree.json",
+      "kind": "other",
+      "min": 2329
+     },
+     {
+      "name": "src/generative/schemas/tc-digest.json",
+      "kind": "other",
+      "min": 2324
+     },
+     {
+      "name": "src/generative/schemas/tc-document-list.json",
+      "kind": "other",
+      "min": 2316
+     },
+     {
+      "name": "src/generative/schemas/tc-person-links.json",
+      "kind": "other",
+      "min": 2314
+     },
+     {
+      "name": "src/generative/schemas/tc-evidence-coverage.json",
+      "kind": "other",
+      "min": 2305
+     },
+     {
+      "name": "src/generative/schemas/tc-handoff.json",
+      "kind": "other",
+      "min": 2297
+     },
+     {
+      "name": "src/generative/schemas/tc-watchlist.json",
+      "kind": "other",
+      "min": 2294
+     },
+     {
+      "name": "src/generative/schemas/tc-traceability-spine.json",
+      "kind": "other",
+      "min": 2278
+     },
+     {
+      "name": "src/generative/schemas/tc-output-schema-builder.json",
+      "kind": "other",
+      "min": 2269
+     },
+     {
+      "name": "src/generative/schemas/tc-ops-overview.json",
+      "kind": "other",
+      "min": 2266
+     },
+     {
+      "name": "src/generative/schemas/tc-project-card.json",
+      "kind": "other",
+      "min": 2250
+     },
+     {
+      "name": "src/generative/schemas/tc-email-draft.json",
+      "kind": "other",
+      "min": 2234
+     },
+     {
+      "name": "src/generative/schemas/tc-combobox.json",
+      "kind": "other",
+      "min": 2229
+     },
+     {
+      "name": "src/generative/schemas/tc-cited-answer.json",
+      "kind": "other",
+      "min": 2203
+     },
+     {
+      "name": "src/generative/schemas/tc-agent-inbox.json",
+      "kind": "other",
+      "min": 2200
+     },
+     {
+      "name": "src/generative/schemas/tc-kpi-chart.json",
+      "kind": "other",
+      "min": 2191
+     },
+     {
+      "name": "src/generative/schemas/tc-work-item.json",
+      "kind": "other",
+      "min": 2180
+     },
+     {
+      "name": "src/generative/schemas/tc-budget-burn.json",
+      "kind": "other",
+      "min": 2156
+     },
+     {
+      "name": "src/generative/schemas/tc-sandbox-log.json",
+      "kind": "other",
+      "min": 2154
+     },
+     {
+      "name": "src/generative/schemas/tc-thinking-state.json",
+      "kind": "other",
+      "min": 2149
+     },
+     {
+      "name": "src/generative/schemas/tc-progress-tracker.json",
+      "kind": "other",
+      "min": 2123
+     },
+     {
+      "name": "src/generative/schemas/tc-billing-schedule.json",
+      "kind": "other",
+      "min": 2119
+     },
+     {
+      "name": "src/generative/schemas/tc-integration-picker.json",
+      "kind": "other",
+      "min": 2114
+     },
+     {
+      "name": "src/generative/schemas/tc-run-compare.json",
+      "kind": "other",
+      "min": 2112
+     },
+     {
+      "name": "src/generative/schemas/tc-segmented-control.json",
+      "kind": "other",
+      "min": 2110
+     },
+     {
+      "name": "src/generative/schemas/tc-agreement-tracker.json",
+      "kind": "other",
+      "min": 2099
+     },
+     {
+      "name": "src/generative/schemas/tc-response-selection.json",
+      "kind": "other",
+      "min": 2079
+     },
+     {
+      "name": "src/generative/schemas/tc-context-window.json",
+      "kind": "other",
+      "min": 2077
+     },
+     {
+      "name": "src/generative/schemas/tc-prompt-library.json",
+      "kind": "other",
+      "min": 2058
+     },
+     {
+      "name": "src/generative/schemas/tc-capability-notice.json",
+      "kind": "other",
+      "min": 2045
+     },
+     {
+      "name": "src/generative/schemas/tc-ai-answer.json",
+      "kind": "other",
+      "min": 2040
+     },
+     {
+      "name": "src/generative/schemas/tc-citation-badge.json",
+      "kind": "other",
+      "min": 2039
+     },
+     {
+      "name": "src/generative/schemas/tc-plan-vs-actual.json",
+      "kind": "other",
+      "min": 2035
+     },
+     {
+      "name": "src/generative/schemas/tc-synthesis-notes.json",
+      "kind": "other",
+      "min": 2017
+     },
+     {
+      "name": "src/generative/schemas/tc-investment-balance.json",
+      "kind": "other",
+      "min": 1985
+     },
+     {
+      "name": "src/generative/schemas/tc-capacity-bars.json",
+      "kind": "other",
+      "min": 1979
+     },
+     {
+      "name": "src/generative/schemas/tc-budget-guard.json",
+      "kind": "other",
+      "min": 1970
+     },
+     {
+      "name": "src/generative/schemas/tc-agent-ledger.json",
+      "kind": "other",
+      "min": 1955
+     },
+     {
+      "name": "src/generative/schemas/tc-audience-mix.json",
+      "kind": "other",
+      "min": 1952
+     },
+     {
+      "name": "src/generative/schemas/tc-activity-calendar.json",
+      "kind": "other",
+      "min": 1934
+     },
+     {
+      "name": "src/generative/schemas/tc-day-rhythm.json",
+      "kind": "other",
+      "min": 1927
+     },
+     {
+      "name": "src/generative/schemas/tc-parallel-attempts.json",
+      "kind": "other",
+      "min": 1901
+     },
+     {
+      "name": "src/generative/schemas/tc-sla-status.json",
+      "kind": "other",
+      "min": 1879
+     },
+     {
+      "name": "src/generative/schemas/tc-activity-clock.json",
+      "kind": "other",
+      "min": 1868
+     },
+     {
+      "name": "src/generative/schemas/tc-memory-panel.json",
+      "kind": "other",
+      "min": 1864
+     },
+     {
+      "name": "src/generative/schemas/tc-reasoning-flags.json",
+      "kind": "other",
+      "min": 1862
+     },
+     {
+      "name": "src/generative/schemas/tc-conversation-branches.json",
+      "kind": "other",
+      "min": 1858
+     },
+     {
+      "name": "src/generative/schemas/tc-model-picker.json",
+      "kind": "other",
+      "min": 1831
+     },
+     {
+      "name": "src/generative/schemas/tc-attestation-check.json",
+      "kind": "other",
+      "min": 1806
+     },
+     {
+      "name": "src/generative/schemas/tc-coverage-ring.json",
+      "kind": "other",
+      "min": 1787
+     },
+     {
+      "name": "src/generative/schemas/tc-agent-plan.json",
+      "kind": "other",
+      "min": 1774
+     },
+     {
+      "name": "src/generative/schemas/tc-writing-assistant.json",
+      "kind": "other",
+      "min": 1772
+     },
+     {
+      "name": "src/generative/schemas/tc-comment-thread.json",
+      "kind": "other",
+      "min": 1764
+     },
+     {
+      "name": "src/generative/schemas/tc-code-block.json",
+      "kind": "other",
+      "min": 1735
+     },
+     {
+      "name": "src/generative/schemas/tc-provenance-summary.json",
+      "kind": "other",
+      "min": 1709
+     },
+     {
+      "name": "src/generative/schemas/tc-cover-flow.json",
+      "kind": "other",
+      "min": 1696
+     },
+     {
+      "name": "src/generative/schemas/tc-answer-arena.json",
+      "kind": "other",
+      "min": 1667
+     },
+     {
+      "name": "src/generative/schemas/tc-filter-menu.json",
+      "kind": "other",
+      "min": 1667
+     },
+     {
+      "name": "src/generative/schemas/tc-tool-call-card.json",
+      "kind": "other",
+      "min": 1659
+     },
+     {
+      "name": "src/generative/schemas/tc-search-history.json",
+      "kind": "other",
+      "min": 1649
+     },
+     {
+      "name": "src/generative/schemas/tc-disagreement-banner.json",
+      "kind": "other",
+      "min": 1605
+     },
+     {
+      "name": "src/generative/schemas/tc-inline-diff.json",
+      "kind": "other",
+      "min": 1598
+     },
+     {
+      "name": "src/generative/schemas/tc-comments-panel.json",
+      "kind": "other",
+      "min": 1596
+     },
+     {
+      "name": "src/generative/schemas/tc-citation-sections.json",
+      "kind": "other",
+      "min": 1569
+     },
+     {
+      "name": "src/generative/schemas/tc-context-tray.json",
+      "kind": "other",
+      "min": 1551
+     },
+     {
+      "name": "src/generative/schemas/tc-button.json",
+      "kind": "other",
+      "min": 1503
+     },
+     {
+      "name": "src/generative/schemas/tc-setup-guide.json",
+      "kind": "other",
+      "min": 1498
+     },
+     {
+      "name": "src/generative/schemas/tc-compact-breakdown.json",
+      "kind": "other",
+      "min": 1494
+     },
+     {
+      "name": "src/generative/schemas/tc-date-range-picker.json",
+      "kind": "other",
+      "min": 1453
+     },
+     {
+      "name": "src/generative/schemas/tc-decision-inbox.json",
+      "kind": "other",
+      "min": 1417
+     },
+     {
+      "name": "src/generative/schemas/tc-integration-grid.json",
+      "kind": "other",
+      "min": 1340
+     },
+     {
+      "name": "src/generative/schemas/tc-tips-panel.json",
+      "kind": "other",
+      "min": 1320
+     },
+     {
+      "name": "src/generative/schemas/tc-stepper-form.json",
+      "kind": "other",
+      "min": 1262
+     },
+     {
+      "name": "src/generative/schemas/tc-smart-recommendation.json",
+      "kind": "other",
+      "min": 1250
+     },
+     {
+      "name": "src/generative/schemas/tc-autonomy-dial.json",
+      "kind": "other",
+      "min": 1235
+     },
+     {
+      "name": "src/generative/schemas/tc-integration-settings.json",
+      "kind": "other",
+      "min": 1231
+     },
+     {
+      "name": "src/generative/schemas/tc-grade-distribution.json",
+      "kind": "other",
+      "min": 1220
+     },
+     {
+      "name": "src/generative/schemas/tc-integration-flow.json",
+      "kind": "other",
+      "min": 1135
+     },
+     {
+      "name": "src/generative/schemas/tc-radio-group.json",
+      "kind": "other",
+      "min": 1107
+     },
+     {
+      "name": "src/generative/schemas/tc-agent-team.json",
+      "kind": "other",
+      "min": 1091
+     },
+     {
+      "name": "src/generative/schemas/tc-change-summary.json",
+      "kind": "other",
+      "min": 1074
+     },
+     {
+      "name": "src/generative/schemas/tc-model-wheel.json",
+      "kind": "other",
+      "min": 1026
+     },
+     {
+      "name": "src/generative/schemas/tc-number-field.json",
+      "kind": "other",
+      "min": 986
+     },
+     {
+      "name": "src/generative/schemas/tc-slider-field.json",
+      "kind": "other",
+      "min": 986
+     },
+     {
+      "name": "src/generative/schemas/tc-reaction-bar.json",
+      "kind": "other",
+      "min": 982
+     },
+     {
+      "name": "src/generative/schemas/tc-notification-stack.json",
+      "kind": "other",
+      "min": 973
+     },
+     {
+      "name": "src/generative/schemas/tc-team-invite.json",
+      "kind": "other",
+      "min": 863
+     },
+     {
+      "name": "src/generative/schemas/tc-tool-call-group.json",
+      "kind": "other",
+      "min": 800
+     },
+     {
+      "name": "src/generative/schemas/tc-checkbox.json",
+      "kind": "other",
+      "min": 782
+     },
+     {
+      "name": "src/generative/schemas/tc-switch.json",
+      "kind": "other",
+      "min": 776
+     },
+     {
+      "name": "src/generative/schemas/tc-isbn-details.json",
+      "kind": "other",
+      "min": 717
+     },
+     {
+      "name": "src/generative/schemas/tc-project-flow.json",
+      "kind": "other",
+      "min": 579
+     },
+     {
+      "name": "src/generative/schemas/tc-world-map.json",
+      "kind": "other",
+      "min": 523
+     },
+     {
+      "name": "src/generative/schemas/tc-region-dach.json",
+      "kind": "other",
+      "min": 509
+     },
+     {
+      "name": "src/generative/schemas/tc-outreach-branches.json",
+      "kind": "other",
+      "min": 493
+     },
+     {
+      "name": "src/generative/schemas/tc-lead-sourcing.json",
+      "kind": "other",
+      "min": 467
+     },
+     {
+      "name": "src/generative/schemas/tc-tab-overload.json",
+      "kind": "other",
+      "min": 459
+     },
+     {
+      "name": "src/generative/schemas/tc-empty-calendar.json",
+      "kind": "other",
+      "min": 452
+     },
+     {
+      "name": "src/generative/schemas/tc-enrichment-orbit.json",
+      "kind": "other",
+      "min": 442
+     },
+     {
+      "name": "src/generative/schemas/tc-ghosted-chat.json",
+      "kind": "other",
+      "min": 440
      },
      {
       "name": "src/internal/reduced-motion.ts",
       "kind": "other",
-      "min": 96
+      "min": 111
+     },
+     {
+      "name": "src/internal/ease.ts",
+      "kind": "other",
+      "min": 43
      }
     ],
     "withoutLit": {
-     "min": 228909,
-     "gzip": 54613
+     "min": 6331274,
+     "gzip": 1535042
     },
     "withLit": {
-     "min": 251619,
-     "gzip": 62131
+     "min": 6308025,
+     "gzip": 1527695
     }
    },
    "render": {
     "tag": "tc-generated-ui",
     "source": "demo",
     "runs": 7,
-    "cold": 1.9,
+    "cold": 2.1,
     "first": 0.5,
     "update": 0.1,
     "updateKind": "re-render with the same data",
@@ -13208,17 +15128,17 @@
   },
   "money-flow": {
    "measuredAt": "2026-10-28",
-   "hash": "50ce837d1e2ef2bc",
+   "hash": "311bc527ceaac09d",
    "bundle": {
     "own": {
-     "min": 28534,
-     "gzip": 8830
+     "min": 28874,
+     "gzip": 9013
     },
     "shared": [
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 21103
+      "min": 21109
      },
      {
       "name": "internal/card-head",
@@ -13252,19 +15172,19 @@
      }
     ],
     "withoutLit": {
-     "min": 35504,
-     "gzip": 10756
+     "min": 35845,
+     "gzip": 10950
     },
     "withLit": {
-     "min": 57865,
-     "gzip": 18185
+     "min": 58209,
+     "gzip": 18388
     }
    },
    "render": {
     "tag": "tc-money-flow",
     "source": "demo",
     "runs": 7,
-    "cold": 7.8,
+    "cold": 9.8,
     "first": 1.8,
     "update": 0.7,
     "updateKind": "one item of nodes replaced",
@@ -13275,14 +15195,14 @@
      "points": [
       {
        "items": 100,
-       "first": 5.5,
+       "first": 5.7,
        "update": 1.4,
        "nodes": 1238
       },
       {
        "items": 1000,
-       "first": 57.8,
-       "update": 21.9,
+       "first": 58.2,
+       "update": 22.6,
        "nodes": 11588
       }
      ]
@@ -16060,11 +17980,11 @@
   },
   "query-builder": {
    "measuredAt": "2026-10-28",
-   "hash": "e59f57d5da456732",
+   "hash": "0c0f8c28031918c1",
    "bundle": {
     "own": {
-     "min": 24000,
-     "gzip": 7521
+     "min": 23875,
+     "gzip": 7478
     },
     "shared": [
      {
@@ -16109,20 +18029,20 @@
      }
     ],
     "withoutLit": {
-     "min": 31190,
-     "gzip": 9567
+     "min": 31065,
+     "gzip": 9524
     },
     "withLit": {
-     "min": 54125,
-     "gzip": 17162
+     "min": 54000,
+     "gzip": 17127
     }
    },
    "render": {
     "tag": "tc-query-builder",
     "source": "demo",
     "runs": 7,
-    "cold": 15.6,
-    "first": 1.8,
+    "cold": 13.7,
+    "first": 1.9,
     "update": 0.4,
     "updateKind": "one item of fields replaced",
     "nodes": 128,
@@ -16132,14 +18052,14 @@
      "points": [
       {
        "items": 100,
-       "first": 3.5,
-       "update": 0.5,
+       "first": 3.4,
+       "update": 0.6,
        "nodes": 410
       },
       {
        "items": 1000,
-       "first": 21.2,
-       "update": 2.9,
+       "first": 20.6,
+       "update": 2.4,
        "nodes": 3110
       }
      ]
@@ -16633,12 +18553,12 @@
    }
   },
   "reliance-gauge": {
-   "measuredAt": "2026-10-27",
-   "hash": "a28d4b8ae3764b91",
+   "measuredAt": "2026-10-28",
+   "hash": "f4f74fdf58deed1c",
    "bundle": {
     "own": {
-     "min": 46494,
-     "gzip": 11750
+     "min": 46508,
+     "gzip": 11754
     },
     "shared": [
      {
@@ -16678,21 +18598,21 @@
      }
     ],
     "withoutLit": {
-     "min": 54240,
-     "gzip": 14091
+     "min": 54254,
+     "gzip": 14095
     },
     "withLit": {
-     "min": 77493,
-     "gzip": 21853
+     "min": 77507,
+     "gzip": 21859
     }
    },
    "render": {
     "tag": "tc-reliance-gauge",
     "source": "demo",
     "runs": 7,
-    "cold": 11.7,
+    "cold": 11.9,
     "first": 1.6,
-    "update": 0.2,
+    "update": 0.3,
     "updateKind": "one item of domains replaced",
     "nodes": 185,
     "scale": {
@@ -16701,14 +18621,14 @@
      "points": [
       {
        "items": 100,
-       "first": 4.8,
-       "update": 0.6,
+       "first": 4.9,
+       "update": 0.7,
        "nodes": 1241
       },
       {
        "items": 1000,
-       "first": 36.6,
-       "update": 4.9,
+       "first": 37.3,
+       "update": 3.8,
        "nodes": 11141
       }
      ]
@@ -20885,12 +22805,12 @@
    }
   },
   "transcript-review": {
-   "measuredAt": "2026-10-27",
-   "hash": "a7b8c56e303dfad3",
+   "measuredAt": "2026-10-28",
+   "hash": "2a5038ea897a9d13",
    "bundle": {
     "own": {
-     "min": 53767,
-     "gzip": 15083
+     "min": 53785,
+     "gzip": 15086
     },
     "shared": [
      {
@@ -20940,21 +22860,21 @@
      }
     ],
     "withoutLit": {
-     "min": 64278,
-     "gzip": 18475
+     "min": 64296,
+     "gzip": 18477
     },
     "withLit": {
-     "min": 88015,
-     "gzip": 26231
+     "min": 88033,
+     "gzip": 26233
     }
    },
    "render": {
     "tag": "tc-transcript-review",
     "source": "demo",
     "runs": 7,
-    "cold": 11.9,
-    "first": 2.5,
-    "update": 0.4,
+    "cold": 11.7,
+    "first": 2.6,
+    "update": 0.5,
     "updateKind": "one item of peaks replaced",
     "nodes": 361,
     "scale": {
@@ -20963,7 +22883,7 @@
      "points": [
       {
        "items": 10000,
-       "first": 2.5,
+       "first": 2.6,
        "update": 0.4,
        "nodes": 361
       }

@@ -1,0 +1,165 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-run-compare.json",
+  "title": "tc-run-compare",
+  "description": "Two runs or two prompt versions side by side – outputs, steps, cost and time – with every difference highlighted.",
+  "type": "object",
+  "properties": {
+    "baseline": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "running",
+            "done",
+            "failed"
+          ]
+        },
+        "output": {
+          "type": "string"
+        },
+        "prompt": {
+          "type": "string"
+        },
+        "steps": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RunCompareStep"
+          }
+        },
+        "duration": {
+          "type": "number"
+        },
+        "cost": {
+          "type": "number"
+        },
+        "tokens": {
+          "type": "number"
+        },
+        "score": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false,
+      "description": "The run to compare against – on the left"
+    },
+    "candidate": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "running",
+            "done",
+            "failed"
+          ]
+        },
+        "output": {
+          "type": "string"
+        },
+        "prompt": {
+          "type": "string"
+        },
+        "steps": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RunCompareStep"
+          }
+        },
+        "duration": {
+          "type": "number"
+        },
+        "cost": {
+          "type": "number"
+        },
+        "tokens": {
+          "type": "number"
+        },
+        "score": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false,
+      "description": "The run being judged – on the right; its numbers carry the change against the baseline"
+    },
+    "view": {
+      "type": "string",
+      "enum": [
+        "steps",
+        "prompt",
+        "output"
+      ],
+      "description": "The open tab"
+    },
+    "heading": {
+      "type": "string",
+      "description": "The heading – e.g. the task both runs did"
+    },
+    "canPick": {
+      "type": "boolean",
+      "description": "Shows \"Use this\" on each finished run (fires tc-pick)"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "RunCompareStep": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "What the step did – e.g. a tool's name. Steps are matched across the runs by it"
+        },
+        "detail": {
+          "type": "string",
+          "description": "Its arguments or result, in a line – diffed when both runs have the step"
+        },
+        "status": {
+          "$ref": "#/definitions/RunCompareStepStatus"
+        },
+        "duration": {
+          "type": "number",
+          "description": "How long it took, in ms"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "RunCompareStepStatus": {
+      "type": "string",
+      "enum": [
+        "ok",
+        "error",
+        "skipped"
+      ]
+    }
+  }
+}

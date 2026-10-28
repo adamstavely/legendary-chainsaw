@@ -1,0 +1,117 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-evidence-coverage.json",
+  "title": "tc-evidence-coverage",
+  "description": "What an answer could and couldn't see: each source category current, stale or missing, with a request for coverage.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the region's name"
+    },
+    "scope": {
+      "type": "string",
+      "description": "A quiet line under the heading – what the coverage is of, e.g. \"For this answer\""
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/CoverageSource"
+      },
+      "description": "The source categories, in the order to show them"
+    },
+    "statusLabels": {
+      "type": "object",
+      "properties": {
+        "stale": {
+          "type": "string"
+        },
+        "none": {
+          "type": "string"
+        },
+        "current": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The words for each status"
+    },
+    "summary": {
+      "type": "string",
+      "description": "The summary line; unset, it's written from the sources (\"Couldn't see …\")"
+    },
+    "requestLabel": {
+      "type": "string",
+      "description": "The request button's text"
+    },
+    "requestable": {
+      "type": "boolean",
+      "description": "Offer Request coverage on stale and missing sources. Default true"
+    },
+    "inline": {
+      "type": "boolean",
+      "description": "A quiet line under an answer instead of a card"
+    },
+    "open": {
+      "type": "boolean",
+      "description": "Inline: whether the rows are folded out"
+    },
+    "locale": {
+      "type": "string",
+      "description": "Locale for joining names into a sentence"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "CoverageSource": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "The category's name, e.g. \"Lab results\""
+        },
+        "status": {
+          "$ref": "#/definitions/EvidenceCoverageStatus"
+        },
+        "age": {
+          "type": "string",
+          "description": "How old the newest evidence is, as the app words it – \"14 months\", \"3d\". Shown with stale sources"
+        },
+        "detail": {
+          "type": "string",
+          "description": "A quiet second line, e.g. \"Last import 12 Aug\" or \"No feed connected\""
+        },
+        "request": {
+          "$ref": "#/definitions/CoverageRequest",
+          "description": "The request's state, when the app owns it; unset, the element keeps its own"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "EvidenceCoverageStatus": {
+      "type": "string",
+      "enum": [
+        "current",
+        "stale",
+        "none"
+      ]
+    },
+    "CoverageRequest": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "requested",
+        "failed"
+      ],
+      "description": "Where a coverage request stands: \"pending\" while the app sends it, \"requested\" once sent, \"failed\" if it couldn't"
+    }
+  }
+}

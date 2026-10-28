@@ -1,0 +1,72 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-tips-panel.json",
+  "title": "tc-tips-panel",
+  "description": "A panel of short tips, each with one action that marks it done.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the region's name"
+    },
+    "tips": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/TipsPanelTip"
+      },
+      "description": "The tips, in order – each with a title, a short description and one action"
+    },
+    "done": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Ids of the tips whose action was taken"
+    },
+    "closable": {
+      "type": "boolean",
+      "description": "Shows the Close button in the footer"
+    },
+    "closeLabel": {
+      "type": "string",
+      "description": "Text of the Close button"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "TipsPanelTip": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string",
+          "description": "Short explanation – text, or a node (cloned) that may hold <kbd class=\"ui-tp__kbd\"> keys"
+        },
+        "action": {
+          "type": "string",
+          "description": "Button text"
+        },
+        "doneLabel": {
+          "type": "string",
+          "description": "Text after the action was taken, e.g. \"Enabled\""
+        },
+        "primary": {
+          "type": "boolean",
+          "description": "Shows the action as the dark button – use once for the most important tip"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "description",
+        "action"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

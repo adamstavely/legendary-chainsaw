@@ -1,0 +1,132 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-breakdown-chart.json",
+  "title": "tc-breakdown-chart",
+  "description": "A stacked bar chart with a linked table: pick the measure, the slice and the segment; legend chips hide segments.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the region's name"
+    },
+    "fill": {
+      "type": "boolean",
+      "description": "Grow to the container's width instead of stopping at 560px"
+    },
+    "records": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/BreakdownRecord"
+      },
+      "description": "The rows to chart – one object per item, with a value for each dimension key and each measure field"
+    },
+    "dimensions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/BreakdownDimension"
+      },
+      "description": "The fields people can slice and segment by, with their values in display order"
+    },
+    "measures": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/BreakdownMeasure"
+      },
+      "description": "What the bars can measure – a count of records, or the sum of a field"
+    },
+    "measure": {
+      "type": "string",
+      "description": "Measure key; unset is the first measure"
+    },
+    "slice": {
+      "type": "string",
+      "description": "Dimension key the bars are sliced by; unset is the first dimension"
+    },
+    "segment": {
+      "type": "string",
+      "description": "Dimension key the bars are segmented by, or \"none\" for single-color bars; unset is the second dimension"
+    },
+    "hiddenSegments": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Segment values hidden from the bars and totals; picking another segment clears it (`hidden` is the HTML attribute)"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "BreakdownRecord": {
+      "type": "object",
+      "additionalProperties": {
+        "type": [
+          "string",
+          "number"
+        ]
+      }
+    },
+    "BreakdownDimension": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Values in display order"
+        },
+        "colors": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Colors per value, used when this dimension segments the bars – keep each at 3:1 or more against the surface in both themes"
+        },
+        "icons": {
+          "type": "object",
+          "additionalProperties": {
+            "not": {}
+          },
+          "description": "Small icon element per value (cloned), shown under the bars and in the table"
+        }
+      },
+      "required": [
+        "key",
+        "label",
+        "values"
+      ],
+      "additionalProperties": false
+    },
+    "BreakdownMeasure": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "unit": {
+          "type": "string",
+          "description": "Unit after the total, e.g. \"tasks\" or \"points\""
+        },
+        "field": {
+          "type": "string",
+          "description": "Field to sum – leave empty to count records"
+        }
+      },
+      "required": [
+        "key",
+        "label",
+        "unit"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

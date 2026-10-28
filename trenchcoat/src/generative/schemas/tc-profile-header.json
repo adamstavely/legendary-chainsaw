@@ -1,0 +1,222 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-profile-header.json",
+  "title": "tc-profile-header",
+  "description": "The top of a person's or an account's page: picture, name, status and tags, other names, a line of facts, the\npage's actions and an optional row of tabs.",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The person's or the account's name: the page's heading"
+    },
+    "level": {
+      "type": "number",
+      "enum": [
+        2,
+        1
+      ],
+      "description": "The heading's level – 1 when the header tops the page, 2 (the default) inside a layout that has its own h1"
+    },
+    "picture": {
+      "type": "string",
+      "description": "A picture URL; without one the avatar shows the name's initials"
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "account",
+        "person"
+      ],
+      "description": "\"person\" draws a round avatar, \"account\" (a company, a team, a workspace) a rounded square"
+    },
+    "status": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "tone": {
+          "$ref": "#/definitions/ProfileTone"
+        }
+      },
+      "required": [
+        "label"
+      ],
+      "additionalProperties": false,
+      "description": "The status beside the name, e.g. { label: \"Under review\", tone: \"warning\" }"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ProfilePill"
+      },
+      "description": "More pills after the status, e.g. a priority"
+    },
+    "aliases": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Other names the person or account goes by, as chips"
+    },
+    "aliasLabel": {
+      "type": "string",
+      "description": "The label before the other names"
+    },
+    "meta": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ProfileMeta"
+      },
+      "description": "Short facts in one line, separated by dots: a role, a place, when last seen, a linked case"
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ProfileAction"
+      },
+      "description": "The page's actions, at the right"
+    },
+    "more": {
+      "type": "boolean",
+      "description": "Shows an overflow button after the actions, which fires tc-action \"more\""
+    },
+    "moreLabel": {
+      "type": "string",
+      "description": "The overflow button's name"
+    },
+    "tabs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ProfileTab"
+      },
+      "description": "Tabs for the sections below; none hides the row"
+    },
+    "selected": {
+      "type": "string",
+      "description": "The selected tab's id; the first tab when unset. Changed by the user unless a tc-selected-change listener calls preventDefault()"
+    },
+    "tabsLabel": {
+      "type": "string",
+      "description": "The tab row's name for screen readers"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ProfileTone": {
+      "type": "string",
+      "enum": [
+        "neutral",
+        "info",
+        "success",
+        "warning",
+        "danger"
+      ]
+    },
+    "ProfilePill": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "tone": {
+          "$ref": "#/definitions/ProfileTone"
+        }
+      },
+      "required": [
+        "label"
+      ],
+      "additionalProperties": false,
+      "description": "A pill: the status beside the name, or a tag after it"
+    },
+    "ProfileMeta": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "label": {
+              "type": "string"
+            },
+            "tone": {
+              "$ref": "#/definitions/ProfileTone"
+            }
+          },
+          "required": [
+            "label"
+          ],
+          "additionalProperties": false
+        }
+      ],
+      "description": "A short fact on the meta line; `tone` puts a coloured dot before it"
+    },
+    "ProfileAction": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "icon": {
+          "$ref": "#/definitions/ProfileIconName"
+        },
+        "variant": {
+          "type": "string",
+          "enum": [
+            "primary",
+            "secondary"
+          ],
+          "description": "\"primary\" for the page's main action (one at most), else \"secondary\" (the default)"
+        },
+        "disabled": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "ProfileIconName": {
+      "type": "string",
+      "enum": [
+        "flag",
+        "report",
+        "message",
+        "edit",
+        "share",
+        "star"
+      ],
+      "description": "The built-in action icons; or pass an icon element of your own, which is cloned"
+    },
+    "ProfileTab": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "count": {
+          "type": "number",
+          "description": "A count after the label, e.g. how many items the section holds"
+        },
+        "controls": {
+          "type": "string",
+          "description": "The id of the panel the tab shows, for aria-controls"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

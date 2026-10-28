@@ -1,0 +1,285 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-data-handling-policy.json",
+  "title": "tc-data-handling-policy",
+  "description": "Organization-level data handling as a lifecycle – conversations, logs, memory, training, deletion – led by the policy\nin effect, each stage edited in place, locked stages marked, and deletion requests with their status.",
+  "type": "object",
+  "properties": {
+    "value": {
+      "type": "object",
+      "properties": {
+        "retention": {
+          "type": "string"
+        },
+        "memory": {
+          "type": "string"
+        },
+        "logging": {
+          "type": "string"
+        },
+        "redact": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "training": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "retention",
+        "memory",
+        "logging",
+        "redact",
+        "training"
+      ],
+      "additionalProperties": false,
+      "description": "The chosen policy. Changed by the user unless a tc-value-change listener calls preventDefault()"
+    },
+    "effective": {
+      "type": "object",
+      "properties": {
+        "retention": {
+          "type": "string"
+        },
+        "memory": {
+          "type": "string"
+        },
+        "logging": {
+          "type": "string"
+        },
+        "redact": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "training": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The policy the app reports as applied; a missing field reads \"Not reported\""
+    },
+    "locks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/DataPolicyLock"
+      },
+      "description": "Settings fixed higher up; they can't be edited here and say who set them"
+    },
+    "retentionOptions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/DataPolicyOption"
+      },
+      "description": "How long conversations can be kept"
+    },
+    "memoryOptions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/DataPolicyOption"
+      },
+      "description": "How memory can persist"
+    },
+    "loggingOptions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/DataPolicyOption"
+      },
+      "description": "How much can be logged"
+    },
+    "categories": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/DataPolicyCategory"
+      },
+      "description": "The kinds of data that can be redacted from logs"
+    },
+    "deletionScopes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/DataPolicyOption"
+      },
+      "description": "What a deletion request can cover; empty hides Request deletion"
+    },
+    "deletions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/DataPolicyDeletion"
+      },
+      "description": "Deletion requests and their status, as the app reports them"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "retention": {
+          "type": "string"
+        },
+        "memory": {
+          "type": "string"
+        },
+        "logging": {
+          "type": "string"
+        },
+        "redact": {
+          "type": "string"
+        },
+        "training": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The stages' and settings' names, merged over the defaults (Conversations, Logs, Memory, Training, Redact from logs)"
+    },
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "A quieter line under the heading, e.g. which workspace this is"
+    },
+    "deletedLabel": {
+      "type": "string",
+      "description": "The last stage's name"
+    },
+    "trainingLabel": {
+      "type": "string",
+      "description": "The training switch's label"
+    },
+    "organization": {
+      "type": "string",
+      "description": "Who a lock without `by` was set by"
+    },
+    "deletionNote": {
+      "type": "string",
+      "description": "Said in the deletion dialog, under the scope"
+    },
+    "name": {
+      "type": "string",
+      "description": "Submitted with the form: the policy as JSON"
+    },
+    "disabled": {
+      "type": "boolean",
+      "description": "Turns every control off and leaves the policy out of the form; a disabled fieldset does the same"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "DataPolicyLock": {
+      "type": "object",
+      "properties": {
+        "field": {
+          "$ref": "#/definitions/DataPolicyField"
+        },
+        "category": {
+          "type": "string"
+        },
+        "by": {
+          "type": "string",
+          "description": "Who set it; unset, \"your organization\""
+        },
+        "note": {
+          "type": "string",
+          "description": "Why, shown under the setting"
+        }
+      },
+      "required": [
+        "field"
+      ],
+      "additionalProperties": false,
+      "description": "A setting fixed higher up. With `category`, only that redaction category is fixed"
+    },
+    "DataPolicyField": {
+      "type": "string",
+      "enum": [
+        "retention",
+        "memory",
+        "logging",
+        "redact",
+        "training"
+      ],
+      "description": "One of the policy's settings"
+    },
+    "DataPolicyOption": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "\"30 days\""
+        },
+        "description": {
+          "type": "string",
+          "description": "Shown under the choice when it's picked"
+        },
+        "unavailable": {
+          "type": "string",
+          "description": "Why it can't be picked, e.g. \"Longer than your organization allows\" – the option is shown but disabled"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false,
+      "description": "A choice for retention, memory, logging or a deletion's scope"
+    },
+    "DataPolicyCategory": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false,
+      "description": "A kind of data that can be redacted from logs"
+    },
+    "DataPolicyDeletion": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "What's deleted, e.g. \"Conversations\""
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "received",
+            "in-progress",
+            "completed",
+            "failed"
+          ]
+        },
+        "detail": {
+          "type": "string",
+          "description": "A quiet line, e.g. \"Requested 24 Oct by Priya Shah\""
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "state"
+      ],
+      "additionalProperties": false,
+      "description": "A deletion request and how far it has got, as the app reports it"
+    }
+  }
+}

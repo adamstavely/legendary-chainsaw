@@ -1,0 +1,100 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-sandbox-log.json",
+  "title": "tc-sandbox-log",
+  "description": "Command output from an agent's sandbox: a collapsible block per step with the command, exit code, duration and\nthe output in colour; search and copy; windowed for long logs.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "Names the region, shown at the top"
+    },
+    "environment": {
+      "type": "string",
+      "description": "Small text next to the heading – the machine, image or working directory"
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/SandboxLogStep"
+      },
+      "description": "The commands in the order they ran – one collapsible block each, with their output so far"
+    },
+    "open": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Ids of the open steps – unset opens the steps that are running or failed"
+    },
+    "query": {
+      "type": "string",
+      "description": "The search text"
+    },
+    "maxHeight": {
+      "type": "number",
+      "description": "Height in px at which a step's output scrolls"
+    },
+    "follow": {
+      "type": "boolean",
+      "description": "Keeps a step's output scrolled to its end, as a terminal does, until the reader scrolls up"
+    },
+    "lineNumbers": {
+      "type": "boolean",
+      "description": "Shows a line-number gutter"
+    },
+    "hideSummary": {
+      "type": "boolean",
+      "description": "Hides the summary line under the log"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "SandboxLogStep": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "command": {
+          "type": "string",
+          "description": "The command as typed – \"npm test\""
+        },
+        "label": {
+          "type": "string",
+          "description": "A plain-language line next to the command – \"Run the test suite\""
+        },
+        "output": {
+          "type": "string",
+          "description": "Everything the command printed so far, with ANSI escape codes; pass a longer string as it streams"
+        },
+        "exitCode": {
+          "type": "number",
+          "description": "Unset while the command runs"
+        },
+        "duration": {
+          "type": "number",
+          "description": "In ms – shown once known (update it while running for a live time)"
+        },
+        "status": {
+          "$ref": "#/definitions/SandboxLogStatus",
+          "description": "Overrides the status the exit code gives: \"queued\" before it starts"
+        }
+      },
+      "required": [
+        "id",
+        "command"
+      ],
+      "additionalProperties": false
+    },
+    "SandboxLogStatus": {
+      "type": "string",
+      "enum": [
+        "queued",
+        "running",
+        "success",
+        "error"
+      ]
+    }
+  }
+}

@@ -1,0 +1,131 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-project-card.json",
+  "title": "tc-project-card",
+  "description": "A project summary with a segmented progress ring that unfolds into its subtasks, people and status.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The project's name"
+    },
+    "tasks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ProjectTask"
+      },
+      "description": "Subtasks – one ring segment and one row each"
+    },
+    "statuses": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ProjectOption"
+      },
+      "description": "Options of the status picker"
+    },
+    "status": {
+      "type": "string",
+      "description": "The chosen status id – unset is the first option"
+    },
+    "due": {
+      "type": "string",
+      "description": "Ready-to-show due date, e.g. \"Oct 24\""
+    },
+    "members": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ProjectMember"
+      },
+      "description": "The people on the project – avatars in the head that filter the subtasks to theirs"
+    },
+    "actionLabel": {
+      "type": "string",
+      "description": "A button on the tray of the open card (Clean: in its last row); it fires tc-action"
+    },
+    "trigger": {
+      "type": "string",
+      "enum": [
+        "hover",
+        "click"
+      ],
+      "description": "\"hover\" opens under the pointer (taps and the keyboard still toggle), \"click\" only on click"
+    },
+    "open": {
+      "type": "boolean",
+      "description": "Whether the card is unfolded, showing the subtasks, the people filter and the tray"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ProjectTask": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "done": {
+          "type": "boolean"
+        },
+        "assignee": {
+          "type": "string",
+          "description": "Name of a member – shows their avatar on the row and powers the people filter"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "ProjectOption": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "tone": {
+          "$ref": "#/definitions/ProjectTone",
+          "description": "Color of the tag – also picks its icon: violet or gray = not started, amber = in progress, blue = in review, green = done, red = blocked"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "ProjectTone": {
+      "type": "string",
+      "enum": [
+        "red",
+        "amber",
+        "green",
+        "blue",
+        "violet",
+        "gray"
+      ]
+    },
+    "ProjectMember": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "avatar": {
+          "type": "string",
+          "description": "Image URL – initials on a soft color when left out"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

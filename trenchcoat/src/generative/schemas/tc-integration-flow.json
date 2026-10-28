@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-integration-flow.json",
+  "title": "tc-integration-flow",
+  "description": "Integrations rotating past a data hub, each sending a beam into it.",
+  "type": "object",
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "The scene's accessible name (it is an image) – defaults to one naming the first integrations"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/IntegrationFlowItem"
+      },
+      "description": "Integrations that rotate through the pills (5 or more look best); unset or empty shows a default set"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "IntegrationFlowItem": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Shown as the second line of the pill, e.g. \"Slack\""
+        },
+        "icon": {
+          "type": "null",
+          "description": "Logo element (cloned), drawn into a 64 × 64 box inside the round badge (an <svg> fills the box)"
+        },
+        "title": {
+          "type": "string",
+          "description": "First line of the pill"
+        },
+        "mono": {
+          "type": "boolean",
+          "description": "Single-color logo: white on the passing pills, black (white in dark mode) in the centre"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

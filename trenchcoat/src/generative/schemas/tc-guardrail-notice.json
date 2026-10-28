@@ -1,0 +1,126 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-guardrail-notice.json",
+  "title": "tc-guardrail-notice",
+  "description": "Content a policy blocked, redacted or rewrote: which policy, why, what changed – personal data masked – and Request review.",
+  "type": "object",
+  "properties": {
+    "action": {
+      "type": "string",
+      "enum": [
+        "blocked",
+        "redacted",
+        "rewritten"
+      ],
+      "description": "What the policy did: blocked the content, redacted parts of it or rewrote it – sets the icon, tone and wording"
+    },
+    "layout": {
+      "type": "string",
+      "enum": [
+        "inline",
+        "banner"
+      ],
+      "description": "Where it sits: \"inline\" in a thread, where the content would have been, or \"banner\" across the top of a view"
+    },
+    "heading": {
+      "type": "string",
+      "description": "The heading – \"Blocked by policy\", \"Redacted by policy\" or \"Rewritten by policy\" by default"
+    },
+    "policy": {
+      "type": "string",
+      "description": "The policy that acted, by the name people know it by, e.g. \"Personal data\""
+    },
+    "policyHref": {
+      "type": "string",
+      "description": "A link to the policy itself; the policy name becomes the link"
+    },
+    "reason": {
+      "type": "string",
+      "description": "Why the policy acted, in a sentence"
+    },
+    "original": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GuardrailSegment"
+          }
+        }
+      ],
+      "description": "The content as it was, with personal data already masked by the app – text, or segments"
+    },
+    "revised": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GuardrailSegment"
+          }
+        }
+      ],
+      "description": "The content as it went out – text, or segments; leave it out when nothing went out"
+    },
+    "originalLabel": {
+      "type": "string",
+      "description": "The label over the original"
+    },
+    "revisedLabel": {
+      "type": "string",
+      "description": "The label over what went out – \"Shown instead\", \"After redaction\" or \"Rewritten\" by default"
+    },
+    "open": {
+      "type": "boolean",
+      "description": "Whether the before / after is showing"
+    },
+    "reviewable": {
+      "type": "boolean",
+      "description": "Offers Request review; set it to false where there is no one to review"
+    },
+    "requested": {
+      "type": "boolean",
+      "description": "A review has been requested: the button shows \"Review requested\" and is off"
+    },
+    "reviewLabel": {
+      "type": "string",
+      "description": "The label of the review button"
+    },
+    "requestedLabel": {
+      "type": "string",
+      "description": "What the button says once a review is requested"
+    },
+    "dismissible": {
+      "type": "boolean",
+      "description": "Shows a close button that fires tc-dismiss"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "GuardrailSegment": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "mark": {
+          "type": "string",
+          "enum": [
+            "removed",
+            "added",
+            "masked"
+          ]
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "additionalProperties": false,
+      "description": "A run of text in the before / after: plain, or marked as removed, added or masked"
+    }
+  }
+}

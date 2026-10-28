@@ -1,0 +1,168 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-context-map.json",
+  "title": "tc-context-map",
+  "description": "What fills an agent's context window, as a treemap.",
+  "type": "object",
+  "properties": {
+    "blocks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ContextBlock"
+      },
+      "description": "In the order they should sit – the free space always comes last"
+    },
+    "limit": {
+      "type": "number",
+      "description": "The context window's size in tokens – e.g. 200000"
+    },
+    "model": {
+      "type": "string",
+      "description": "The model, next to the title"
+    },
+    "agents": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ContextAgent"
+      },
+      "description": "Agents to switch between – the bar shows the current one's name as a menu"
+    },
+    "agent": {
+      "type": "string",
+      "description": "The current agent's id; unset is the first one"
+    },
+    "compaction": {
+      "type": "object",
+      "properties": {
+        "before": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ContextBlock"
+          }
+        },
+        "summarized": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "dropped": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "summary": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "before"
+      ],
+      "additionalProperties": false,
+      "description": "The last compaction, to compare before and after – null shows the line for it while there's none yet"
+    },
+    "view": {
+      "type": "string",
+      "enum": [
+        "before",
+        "after"
+      ],
+      "description": "Which side of the compaction shows"
+    },
+    "status": {
+      "type": "string",
+      "description": "A short status in the bar – e.g. \"Compacting\""
+    },
+    "heading": {
+      "type": "string",
+      "description": "The title in the bar, and the map's name"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ContextBlock": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "What it is – e.g. \"checkout.spec.ts\""
+        },
+        "kind": {
+          "$ref": "#/definitions/ContextKind"
+        },
+        "tokens": {
+          "type": "number"
+        },
+        "detail": {
+          "type": "string",
+          "description": "One line about it, shown on hover – e.g. \"Read at 0:42\""
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "label"
+            ],
+            "additionalProperties": false
+          },
+          "description": "What's inside, listed on hover – e.g. the tools, each with its logo"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "kind",
+        "tokens"
+      ],
+      "additionalProperties": false
+    },
+    "ContextKind": {
+      "type": "string",
+      "enum": [
+        "system",
+        "tools",
+        "memory",
+        "file",
+        "chat",
+        "result",
+        "summary"
+      ]
+    },
+    "ContextAgent": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string",
+          "description": "e.g. \"Checkout fixer\""
+        },
+        "model": {
+          "type": "string",
+          "description": "The model it runs on – shown in the menu"
+        },
+        "limit": {
+          "type": "number",
+          "description": "Its context window in tokens"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "limit"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

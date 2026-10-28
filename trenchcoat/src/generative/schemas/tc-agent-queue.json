@@ -1,0 +1,232 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-agent-queue.json",
+  "title": "tc-agent-queue",
+  "description": "The work waiting for your agents, and how fast it moves: the queue, the workers, Done and Failed, and a depth chart.",
+  "type": "object",
+  "properties": {
+    "jobs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/QueueJob"
+      },
+      "description": "Waiting and running jobs, plus finished ones for as long as the chart should count them"
+    },
+    "workers": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/QueueWorker"
+      },
+      "description": "The worker slots – their number is the concurrency"
+    },
+    "now": {
+      "type": "number",
+      "description": "The clock in epoch ms – unset, the element keeps its own while there is work"
+    },
+    "rateLimits": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/QueueRateLimit"
+      },
+      "description": "Stretches when the provider rate-limits – while one is active the workers show as paused"
+    },
+    "paused": {
+      "type": "boolean",
+      "description": "The queue is paused – no new jobs start"
+    },
+    "pausable": {
+      "type": "boolean",
+      "description": "Shows a Pause/Resume button"
+    },
+    "stepper": {
+      "type": "boolean",
+      "description": "Shows a – N + stepper for the number of workers"
+    },
+    "minConcurrency": {
+      "type": "number",
+      "description": "The fewest workers the stepper allows – its – button is disabled at this number"
+    },
+    "maxConcurrency": {
+      "type": "number",
+      "description": "The most workers the stepper allows – its + button is disabled at this number"
+    },
+    "backpressure": {
+      "type": "number",
+      "description": "A depth that means trouble – drawn as a dashed line on the chart; above it Waiting turns amber"
+    },
+    "range": {
+      "type": "number",
+      "description": "How far back the chart looks, in ms"
+    },
+    "totals": {
+      "type": "object",
+      "properties": {
+        "done": {
+          "type": "number"
+        },
+        "failed": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Counts since the start, when `jobs` only holds the recent ones"
+    },
+    "openId": {
+      "type": "string",
+      "description": "The id of the job whose card is pinned, or null"
+    },
+    "promotable": {
+      "type": "boolean",
+      "description": "Shows \"Move to front\" in a waiting job's card"
+    },
+    "cancellable": {
+      "type": "boolean",
+      "description": "Shows \"Cancel\" in a waiting or running job's card"
+    },
+    "heading": {
+      "type": "string",
+      "description": "The heading at the top of the card"
+    },
+    "name": {
+      "type": "string",
+      "description": "The queue's name, muted next to the heading"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "QueueJob": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/definitions/QueueJobKind"
+        },
+        "status": {
+          "$ref": "#/definitions/QueueJobStatus"
+        },
+        "priority": {
+          "$ref": "#/definitions/QueueJobPriority",
+          "description": "High jumps ahead of the others, low waits behind them (default \"normal\")"
+        },
+        "enqueuedAt": {
+          "type": "number",
+          "description": "When it (last) entered the queue – ms, on the same clock as `now`"
+        },
+        "startedAt": {
+          "type": "number",
+          "description": "When a worker picked it up – clear it when the job goes back into the queue"
+        },
+        "endedAt": {
+          "type": "number",
+          "description": "When it finished or failed"
+        },
+        "worker": {
+          "type": "string",
+          "description": "The id of the worker that runs it"
+        },
+        "progress": {
+          "type": "number",
+          "description": "0–1 while it runs – leave it out and it's estimated from `estimate`"
+        },
+        "estimate": {
+          "type": "number",
+          "description": "How long it's expected to run, in ms"
+        },
+        "attempt": {
+          "type": "number",
+          "description": "1 for the first try, 2 for the first retry …"
+        },
+        "maxAttempts": {
+          "type": "number"
+        },
+        "detail": {
+          "type": "string",
+          "description": "A few muted words – the source, the target, the model"
+        },
+        "error": {
+          "type": "string",
+          "description": "What went wrong – shown in its card"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "kind",
+        "status",
+        "enqueuedAt"
+      ],
+      "additionalProperties": false
+    },
+    "QueueJobKind": {
+      "type": "string",
+      "enum": [
+        "llm",
+        "tool",
+        "agent",
+        "human"
+      ]
+    },
+    "QueueJobStatus": {
+      "type": "string",
+      "enum": [
+        "queued",
+        "running",
+        "done",
+        "failed"
+      ]
+    },
+    "QueueJobPriority": {
+      "type": "string",
+      "enum": [
+        "high",
+        "normal",
+        "low"
+      ]
+    },
+    "QueueWorker": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "detail": {
+          "type": "string",
+          "description": "One muted line under the name, e.g. the model or \"Worker 2\""
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "QueueRateLimit": {
+      "type": "object",
+      "properties": {
+        "from": {
+          "type": "number"
+        },
+        "until": {
+          "type": "number"
+        },
+        "label": {
+          "type": "string",
+          "description": "e.g. \"Token limit · 2M/min\" – shown with the countdown"
+        }
+      },
+      "required": [
+        "from",
+        "until"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

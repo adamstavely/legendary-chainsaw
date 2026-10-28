@@ -4,7 +4,7 @@ import type { GeneratedUiActionDetail } from "../../../src/elements/react";
 import { caption, textButton } from "../demo-kit";
 
 // What an analytics assistant answered to “How did the spring campaign do?” – as the JSON it streams (a
-// GeneratedUiSpec, plus one block type this app doesn't know)
+// GeneratedUiSpec with a component block, plus one block type this app doesn't know)
 const ANSWER = {
   blocks: [
     { type: "text", style: "heading", text: "Spring campaign, first two weeks" },
@@ -44,6 +44,21 @@ const ANSWER = {
         { channel: "Newsletter", signups: 712, cost: "$0.90", status: "On track" },
         { channel: "Partners", signups: 330, cost: "$9.20", status: "Watch" },
       ],
+    },
+    // Any Trenchcoat component, placed by the model – its props are checked against the component's schema first
+    {
+      type: "component",
+      tag: "tc-budget-burn",
+      props: {
+        heading: "Channel budgets",
+        currency: "USD",
+        period: 0.47,
+        items: [
+          { id: "search", label: "Paid search", budget: 18000, spent: 11300 },
+          { id: "social", label: "Paid social", budget: 12000, spent: 5200 },
+          { id: "partners", label: "Partners", budget: 6000, spent: 2400 },
+        ],
+      },
     },
     // A block this app doesn't support: drawn as its text
     { type: "map", title: "Sign-ups by region", note: "Most growth came from Lisbon and Porto." },

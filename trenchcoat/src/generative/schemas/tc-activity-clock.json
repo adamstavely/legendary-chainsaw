@@ -1,0 +1,88 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-activity-clock.json",
+  "title": "tc-activity-clock",
+  "description": "Activity by hour, a clock per day: an AM ring and a PM ring of hour segments shaded by how busy each hour was, with\nthe day in the middle and an hour's value there on hover or focus.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the grid's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "days": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ActivityDay"
+      },
+      "description": "The days, a clock each, in the order given"
+    },
+    "max": {
+      "type": "number",
+      "description": "The value that shades a segment fully; by default the busiest hour across every day shown"
+    },
+    "levels": {
+      "type": "number",
+      "description": "How many shades, counting empty: 5 is empty and four steps of activity"
+    },
+    "unit": {
+      "type": "string",
+      "description": "What the values count, after the number: \"12 events\""
+    },
+    "selected": {
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "number"
+        },
+        "hour": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "date",
+        "hour"
+      ],
+      "additionalProperties": false,
+      "description": "The selected hour. Changed by the user unless a tc-selected-change listener calls preventDefault()"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for day names and numbers, e.g. \"en-GB\"; by default the browser's"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ActivityDay": {
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "number",
+          "description": "The day, as epoch ms of any moment in it; it also identifies the day in `selected`"
+        },
+        "label": {
+          "type": "string",
+          "description": "Shown under the clock; by default the weekday and the day of the month, e.g. \"Tue 27\""
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "description": "One value per hour from midnight – 24 of them; null (or missing) means no data for that hour"
+        }
+      },
+      "required": [
+        "date",
+        "values"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

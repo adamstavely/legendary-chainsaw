@@ -1,0 +1,166 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-money-flow.json",
+  "title": "tc-money-flow",
+  "description": "How money moved between entities – a left-to-right flow of entities in columns and transfers as bands sized by\namount, each labelled with its amount and an optional flag, an entity's or a transfer's flows lit on hover or focus,\na readout in words, and a table of every transfer.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/FlowNode"
+      },
+      "description": "The entities"
+    },
+    "transfers": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/FlowTransfer"
+      },
+      "description": "The transfers between them"
+    },
+    "currency": {
+      "type": "string",
+      "description": "The currency for transfers that don't name their own, e.g. \"EUR\""
+    },
+    "kindLabels": {
+      "type": "object",
+      "properties": {
+        "person": {
+          "type": "string"
+        },
+        "company": {
+          "type": "string"
+        },
+        "shell": {
+          "type": "string"
+        },
+        "bank": {
+          "type": "string"
+        },
+        "unknown": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The kinds' names, merged over the defaults (Person, Company, Shell entity, Bank, Unknown)"
+    },
+    "selected": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "node",
+            "transfer"
+          ]
+        },
+        "id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "id"
+      ],
+      "additionalProperties": false,
+      "description": "The selected entity or transfer. Changed by the user unless a tc-selected-change listener calls preventDefault()"
+    },
+    "table": {
+      "type": "boolean",
+      "description": "Shows a table of every transfer in place of the drawing"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for amounts and dates, e.g. \"fr-FR\"; by default the browser's"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "FlowNode": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "The entity's name: \"Meridian Logistics SARL\""
+        },
+        "kind": {
+          "$ref": "#/definitions/FlowNodeKind",
+          "description": "What it is – shown as an icon and a word"
+        },
+        "detail": {
+          "type": "string",
+          "description": "One quiet line under the kind, e.g. a country: \"Cyprus\""
+        },
+        "column": {
+          "type": "number",
+          "description": "Its column, from 0 at the left; worked out from the transfers when not given"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "FlowNodeKind": {
+      "type": "string",
+      "enum": [
+        "person",
+        "company",
+        "shell",
+        "bank",
+        "unknown"
+      ]
+    },
+    "FlowTransfer": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "from": {
+          "type": "string",
+          "description": "The paying entity's id"
+        },
+        "to": {
+          "type": "string",
+          "description": "The receiving entity's id"
+        },
+        "amount": {
+          "type": "number"
+        },
+        "currency": {
+          "type": "string",
+          "description": "Its currency; by default the element's `currency`"
+        },
+        "date": {
+          "type": "number",
+          "description": "When it was made, as epoch ms"
+        },
+        "flag": {
+          "type": "string",
+          "description": "A short flag shown as a chip: \"Layering\", \"Cash-in\""
+        }
+      },
+      "required": [
+        "id",
+        "from",
+        "to",
+        "amount"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

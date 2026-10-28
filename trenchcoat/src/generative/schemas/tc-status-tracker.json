@@ -1,0 +1,177 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-status-tracker.json",
+  "title": "tc-status-tracker",
+  "description": "A status tracker – a fixed sequence of steps on a line, each cleared, pending, blocked or not reached, with the line\nfilling as steps clear, the current step marked, a legend, and a step's record on click or Enter.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the list's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "The line under the heading; by default the count cleared, e.g. \"4 of 9 gates cleared\""
+    },
+    "hint": {
+      "type": "string",
+      "description": "Added after the default description, e.g. \"click any gate for its evidence record\""
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/StatusTrackerStep"
+      },
+      "description": "The steps, in order"
+    },
+    "statuses": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/StatusTrackerStatus"
+      },
+      "description": "Statuses by key, merged over the defaults (cleared, pending, blocked, not-reached)"
+    },
+    "noun": {
+      "type": "string",
+      "description": "What a step is called: \"Gate\" shows \"GATE 3\" over each name; empty hides it"
+    },
+    "nounPlural": {
+      "type": "string",
+      "description": "The noun's plural, for the count; by default the noun with an \"s\""
+    },
+    "orientation": {
+      "type": "string",
+      "enum": [
+        "horizontal",
+        "vertical"
+      ],
+      "description": "\"horizontal\" (the default; stacks below 480 px) or \"vertical\""
+    },
+    "legend": {
+      "type": "boolean",
+      "description": "Shows the statuses in use beside the heading"
+    },
+    "selected": {
+      "type": "string",
+      "description": "The step whose record is open. Changed by the user unless a tc-selected-change listener calls preventDefault()"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for dates, e.g. \"en-GB\"; by default the browser's"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "StatusTrackerStep": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "description": "A key of `statuses`: cleared, pending, blocked, not-reached, or your own"
+        },
+        "date": {
+          "type": "number",
+          "description": "When it reached its status, as epoch ms"
+        },
+        "note": {
+          "type": "string",
+          "description": "One quiet line under the date"
+        },
+        "attention": {
+          "type": [
+            "boolean",
+            "string"
+          ],
+          "description": "Marks the step with a \"!\"; a string says why"
+        },
+        "detail": {
+          "type": "object",
+          "properties": {
+            "summary": {
+              "type": "string"
+            },
+            "owner": {
+              "type": "string"
+            },
+            "items": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/StatusTrackerItem"
+              }
+            }
+          },
+          "additionalProperties": false,
+          "description": "Its record, shown when the step is opened"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "StatusTrackerItem": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "href": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "StatusTrackerStatus": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "tone": {
+          "$ref": "#/definitions/StatusTone"
+        },
+        "mark": {
+          "type": "string",
+          "enum": [
+            "check",
+            "cross",
+            "number"
+          ]
+        },
+        "done": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "label",
+        "tone"
+      ],
+      "additionalProperties": false,
+      "description": "How a status looks: its name, tone and mark – and whether it counts as done (fills the line, counts as cleared)"
+    },
+    "StatusTone": {
+      "type": "string",
+      "enum": [
+        "success",
+        "warning",
+        "danger",
+        "info",
+        "neutral"
+      ]
+    }
+  }
+}

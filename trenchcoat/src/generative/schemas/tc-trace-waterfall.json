@@ -1,0 +1,194 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-trace-waterfall.json",
+  "title": "tc-trace-waterfall",
+  "description": "An agent run as a tree of spans next to a timeline: durations, costs, folding and a details window per span.",
+  "type": "object",
+  "properties": {
+    "root": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/definitions/TraceSpanKind"
+        },
+        "status": {
+          "$ref": "#/definitions/TraceSpanStatus"
+        },
+        "start": {
+          "type": "number"
+        },
+        "end": {
+          "type": "number"
+        },
+        "detail": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string"
+        },
+        "tokensIn": {
+          "type": "number"
+        },
+        "tokensOut": {
+          "type": "number"
+        },
+        "cost": {
+          "type": "number"
+        },
+        "input": {
+          "type": "string"
+        },
+        "output": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string"
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TraceSpan"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "kind",
+        "status",
+        "start"
+      ],
+      "additionalProperties": false,
+      "description": "The run: its root span, with the others as children"
+    },
+    "elapsed": {
+      "type": "number",
+      "description": "The clock, in ms from the start of the run – e.g. a faster one for a demo"
+    },
+    "now": {
+      "type": "number",
+      "description": "The clock in epoch ms, read against `startedAt` (without `startedAt`: ms from the start of the run)"
+    },
+    "startedAt": {
+      "type": "number",
+      "description": "When the run started (epoch ms) – with `now`, or the element's own clock while spans run"
+    },
+    "collapsed": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Ids of folded spans"
+    },
+    "openId": {
+      "type": "string",
+      "description": "Id of the span whose details are open"
+    },
+    "markSlowest": {
+      "type": "boolean",
+      "description": "Marks the slowest finished LLM or tool call (default true; mark-slowest=\"false\" turns it off)"
+    },
+    "minRange": {
+      "type": "number",
+      "description": "The shortest time the axis shows, in ms (default 10s)"
+    },
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the tree's name"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "TraceSpanKind": {
+      "type": "string",
+      "enum": [
+        "agent",
+        "subagent",
+        "llm",
+        "tool"
+      ]
+    },
+    "TraceSpanStatus": {
+      "type": "string",
+      "enum": [
+        "running",
+        "done",
+        "failed"
+      ]
+    },
+    "TraceSpan": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/definitions/TraceSpanKind"
+        },
+        "status": {
+          "$ref": "#/definitions/TraceSpanStatus"
+        },
+        "start": {
+          "type": "number",
+          "description": "When it started, in ms from the start of the run"
+        },
+        "end": {
+          "type": "number",
+          "description": "When it ended, in ms from the start of the run – leave it out while it runs"
+        },
+        "detail": {
+          "type": "string",
+          "description": "A few muted words after the name – the model, the query, the target"
+        },
+        "model": {
+          "type": "string",
+          "description": "The model of an LLM call or an agent – shown in the details"
+        },
+        "tokensIn": {
+          "type": "number"
+        },
+        "tokensOut": {
+          "type": "number"
+        },
+        "cost": {
+          "type": "number",
+          "description": "Its own cost – an agent's children are added on top"
+        },
+        "input": {
+          "type": "string",
+          "description": "What went in and what came out – a short preview, shown in the details"
+        },
+        "output": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string",
+          "description": "What went wrong – shown in the details of a failed span"
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TraceSpan"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "kind",
+        "status",
+        "start"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

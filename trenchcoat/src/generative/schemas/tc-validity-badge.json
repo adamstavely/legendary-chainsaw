@@ -1,0 +1,239 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-validity-badge.json",
+  "title": "tc-validity-badge",
+  "description": "Evidence freshness as a band that decays with age, plus contested and superseded marks – a badge, or a margin\nstrip for a document's paragraphs.",
+  "type": "object",
+  "properties": {
+    "mode": {
+      "type": "string",
+      "enum": [
+        "badge",
+        "strip"
+      ],
+      "description": "\"badge\" – the mark and the band in words; \"strip\" – one bar per paragraph down a document's margin"
+    },
+    "observed": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "string",
+          "format": "date-time"
+        }
+      ],
+      "description": "When the evidence was observed or published: epoch ms, an ISO date string or a Date"
+    },
+    "profile": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/ValidityProfileName"
+        },
+        {
+          "$ref": "#/definitions/ValidityProfile"
+        }
+      ],
+      "description": "How fast it decays: \"fast\", \"standard\", \"slow\", \"lasting\", or your own band boundaries in days"
+    },
+    "band": {
+      "type": "string",
+      "enum": [
+        "stale",
+        "high",
+        "good",
+        "aging"
+      ],
+      "description": "The band, set outright – `observed` and the profile are then ignored"
+    },
+    "contested": {
+      "type": "boolean",
+      "description": "Other evidence disputes it: a dashed ring round the mark and the word \"Contested\""
+    },
+    "superseded": {
+      "type": "boolean",
+      "description": "Something newer replaces it: the mark turns gray and the badge says \"Superseded\" first"
+    },
+    "changed": {
+      "type": "boolean",
+      "description": "The source has changed since it was used (the app compares what was relied on with what is there now): a blue dot on the mark and the words \"Changed since used\""
+    },
+    "now": {
+      "type": "number",
+      "description": "The moment the age is counted to, in epoch ms – defaults to when the element connected"
+    },
+    "compact": {
+      "type": "boolean",
+      "description": "Badge: only the mark, with its words in a tooltip and for screen readers"
+    },
+    "hideAge": {
+      "type": "boolean",
+      "description": "Badge: leave out the age (\"8 mo. ago\")"
+    },
+    "bandLabels": {
+      "type": "object",
+      "properties": {
+        "stale": {
+          "type": "string"
+        },
+        "high": {
+          "type": "string"
+        },
+        "good": {
+          "type": "string"
+        },
+        "aging": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The words for the bands – your own vocabulary in place of High, Good, Aging and Stale"
+    },
+    "contestedLabel": {
+      "type": "string",
+      "description": "The word for a contested piece of evidence"
+    },
+    "supersededLabel": {
+      "type": "string",
+      "description": "The word for a superseded piece of evidence"
+    },
+    "changedLabel": {
+      "type": "string",
+      "description": "The words for a source that has changed since it was used"
+    },
+    "changedNote": {
+      "type": "string",
+      "description": "What a changed source means and what to do – said after the band, and in the tooltip; empty leaves it out"
+    },
+    "subjectLabel": {
+      "type": "string",
+      "description": "What screen readers call the evidence: \"Aging evidence, observed 8 months ago\""
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ValidityInfo"
+      },
+      "description": "Strip: one entry per paragraph, in document order"
+    },
+    "for": {
+      "type": "string",
+      "description": "Strip: the id of the document whose paragraphs the bars line up with; unset stacks the bars on their own"
+    },
+    "selector": {
+      "type": "string",
+      "description": "Strip: which children of the `for` document count as paragraphs (a selector, default every child element)"
+    },
+    "stripLabel": {
+      "type": "string",
+      "description": "Strip: the name of the list of bars"
+    },
+    "paragraphLabel": {
+      "type": "string",
+      "description": "Strip: what an item without a `label` is called, before its number"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ValidityProfileName": {
+      "type": "string",
+      "enum": [
+        "fast",
+        "standard",
+        "slow",
+        "lasting"
+      ],
+      "description": "Built-in decay profiles – fast: hours and days (prices, status, news) · standard: weeks and months · slow: years (reference material) · lasting: never decays"
+    },
+    "ValidityProfile": {
+      "type": "object",
+      "properties": {
+        "high": {
+          "type": "number"
+        },
+        "good": {
+          "type": "number"
+        },
+        "aging": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "high",
+        "good",
+        "aging"
+      ],
+      "additionalProperties": false,
+      "description": "The band boundaries, as an age in days: younger than `high` is high, than `good` good, than `aging` aging; older is stale"
+    },
+    "ValidityInfo": {
+      "type": "object",
+      "properties": {
+        "observed": {
+          "$ref": "#/definitions/ValidityTime",
+          "description": "When the evidence was observed or published"
+        },
+        "profile": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ValidityProfileName"
+            },
+            {
+              "$ref": "#/definitions/ValidityProfile"
+            }
+          ],
+          "description": "How fast it decays (default \"standard\")"
+        },
+        "band": {
+          "$ref": "#/definitions/ValidityBand",
+          "description": "The band, set outright – `observed` and the profile are then ignored"
+        },
+        "contested": {
+          "type": "boolean",
+          "description": "Other evidence disputes it"
+        },
+        "superseded": {
+          "type": "boolean",
+          "description": "Something newer replaces it"
+        },
+        "changed": {
+          "type": "boolean",
+          "description": "The source has changed since it was used – the app compares what was relied on with what is there now"
+        },
+        "label": {
+          "type": "string",
+          "description": "Strip: what the paragraph is called in its tooltip and to screen readers (default \"Paragraph 2\")"
+        }
+      },
+      "additionalProperties": false,
+      "description": "What a piece of evidence says about its freshness – one paragraph of a strip, or a source in tc-claim-answer"
+    },
+    "ValidityTime": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "string",
+          "format": "date-time"
+        }
+      ],
+      "description": "A moment: epoch ms, an ISO date string or a Date"
+    },
+    "ValidityBand": {
+      "type": "string",
+      "enum": [
+        "high",
+        "good",
+        "aging",
+        "stale"
+      ]
+    }
+  }
+}

@@ -1,0 +1,109 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-context-window.json",
+  "title": "tc-context-window",
+  "description": "What fills a model's context window, as a field of cells per part, with removal and compaction.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the group's name"
+    },
+    "parts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ContextPart"
+      },
+      "description": "What fills the window, in order – each part takes the next run of cells"
+    },
+    "limit": {
+      "type": "number",
+      "description": "Size of the context window in tokens"
+    },
+    "model": {
+      "type": "string",
+      "description": "Small tag in the head, e.g. the model name"
+    },
+    "actionLabel": {
+      "type": "string",
+      "description": "Label of a button on the tray (Clean: in the card's last row), e.g. \"New chat\" – it fires tc-action"
+    },
+    "warnAt": {
+      "type": "number",
+      "description": "Share of the limit from which the card warns (0–1)"
+    },
+    "cells": {
+      "type": "number",
+      "description": "Number of cells and how many sit in one row"
+    },
+    "columns": {
+      "type": "number",
+      "description": "How many cells sit in one row (two thirds of it, at least 8, in a narrow container)"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ContextPart": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "tokens": {
+          "type": "number",
+          "description": "Tokens of this part – ignored when `items` are given (then it is their sum)"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ContextItem"
+          },
+          "description": "Single things inside this part that can be removed, e.g. attached files"
+        },
+        "locked": {
+          "type": "boolean",
+          "description": "Nothing can be removed or compacted here, e.g. the system prompt"
+        },
+        "compact": {
+          "type": [
+            "boolean",
+            "number"
+          ],
+          "description": "Shows a Compact button. A number is the share that stays after compacting (default 0.3)"
+        },
+        "color": {
+          "type": "string",
+          "description": "Any CSS color – defaults to a fixed palette in the order of the parts"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "ContextItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "tokens": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "tokens"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

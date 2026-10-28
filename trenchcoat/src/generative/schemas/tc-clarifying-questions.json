@@ -1,0 +1,146 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-clarifying-questions.json",
+  "title": "tc-clarifying-questions",
+  "description": "The agent asks before it starts: two or three questions – choices, a short answer, \"You decide\" – sent back as one reply.",
+  "type": "object",
+  "properties": {
+    "questions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ClarifyingQuestion"
+      },
+      "description": "The questions, in the order they're asked"
+    },
+    "value": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/ClarifyingAnswer"
+      },
+      "description": "The answers so far, by question id – the value"
+    },
+    "heading": {
+      "type": "string",
+      "description": "Names the questions, as the agent says it"
+    },
+    "intro": {
+      "type": "string",
+      "description": "What the agent will do once it knows, in a sentence under the heading"
+    },
+    "sent": {
+      "type": "boolean",
+      "description": "The answers have been sent: the card shows them as the reply"
+    },
+    "sendLabel": {
+      "type": "string",
+      "description": "The send button's label"
+    },
+    "decideLabel": {
+      "type": "string",
+      "description": "The label of the answer that leaves a question to the agent"
+    },
+    "skipLabel": {
+      "type": "string",
+      "description": "The label of the button that leaves every question to the agent"
+    },
+    "skippable": {
+      "type": "boolean",
+      "description": "Offers the skip button; set it to false when the agent can't go on without answers"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ClarifyingQuestion": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "prompt": {
+          "type": "string",
+          "description": "The question, as the agent asks it"
+        },
+        "kind": {
+          "$ref": "#/definitions/ClarifyingKind",
+          "description": "\"single\" – one choice, \"multiple\" – several, \"text\" – a short answer"
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ClarifyingOption"
+          },
+          "description": "The choices for single and multiple"
+        },
+        "hint": {
+          "type": "string",
+          "description": "Why the agent asks, in a line under the question"
+        },
+        "placeholder": {
+          "type": "string",
+          "description": "Placeholder of a text question"
+        },
+        "decide": {
+          "type": "boolean",
+          "description": "Offers \"You decide\" – on by default"
+        },
+        "optional": {
+          "type": "boolean",
+          "description": "Can be left unanswered – shows \"Optional\""
+        }
+      },
+      "required": [
+        "id",
+        "prompt",
+        "kind"
+      ],
+      "additionalProperties": false
+    },
+    "ClarifyingKind": {
+      "type": "string",
+      "enum": [
+        "single",
+        "multiple",
+        "text"
+      ]
+    },
+    "ClarifyingOption": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string",
+          "description": "A second line under the label – questions with descriptions show their answers as cards"
+        }
+      },
+      "required": [
+        "value",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "ClarifyingAnswer": {
+      "type": "object",
+      "properties": {
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "text": {
+          "type": "string"
+        },
+        "decide": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false,
+      "description": "One question's answer: the picked values, the text, or \"you decide\""
+    }
+  }
+}

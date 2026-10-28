@@ -1,0 +1,61 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-change-summary.json",
+  "title": "tc-change-summary",
+  "description": "What changed since last time, one metric per row, each with a trend mark.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the region's name"
+    },
+    "period": {
+      "type": "string",
+      "description": "Small text on the right of the heading, e.g. \"This week\""
+    },
+    "changes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/MetricChange"
+      },
+      "description": "The metrics, one row each, in the order given"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "MetricChange": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "change": {
+          "type": "string",
+          "description": "What happened, in words, e.g. \"Up 6.1% to 18.2K\""
+        },
+        "tone": {
+          "type": "string",
+          "enum": [
+            "good",
+            "bad",
+            "neutral"
+          ],
+          "description": "good: green arrow · bad: red arrow · neutral: gray dash"
+        },
+        "direction": {
+          "type": "string",
+          "enum": [
+            "up",
+            "down"
+          ],
+          "description": "Direction of the arrow – defaults to up for good, down for bad"
+        }
+      },
+      "required": [
+        "label",
+        "change"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,103 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-segmented-control.json",
+  "title": "tc-segmented-control",
+  "description": "Switch between two to six options, with a sliding indicator.",
+  "type": "object",
+  "properties": {
+    "options": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/SegmentOption"
+      },
+      "description": "The options to switch between, in order – two to six read best"
+    },
+    "value": {
+      "type": "string",
+      "description": "The picked value; unset picks the first enabled option. Changed by the user unless a tc-value-change listener calls preventDefault()"
+    },
+    "size": {
+      "type": "string",
+      "enum": [
+        "sm",
+        "md",
+        "lg"
+      ],
+      "description": "Height and text size of the control: \"sm\", \"md\" or \"lg\""
+    },
+    "variant": {
+      "type": "string",
+      "enum": [
+        "tray",
+        "buttons",
+        "underline"
+      ],
+      "description": "\"tray\", \"underline\" or \"buttons\" (Clean only – Standard shows it as \"tray\"). Unset: \"tray\" in Standard, \"buttons\" in Clean"
+    },
+    "fullWidth": {
+      "type": "boolean",
+      "description": "Fill the container with equal segments"
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "tabs",
+        "radio"
+      ],
+      "description": "\"radio\" (a radiogroup, the default) or \"tabs\" (a tablist that switches panels)"
+    },
+    "disabled": {
+      "type": "boolean",
+      "description": "Turns every option off; the hidden form input is disabled too"
+    },
+    "name": {
+      "type": "string",
+      "description": "Submits the picked value with a native form, through a hidden input"
+    },
+    "form": {
+      "type": "string",
+      "description": "The id of the form the hidden input belongs to, when the control sits outside it"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "SegmentOption": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "Text, or an element (cloned)"
+        },
+        "count": {
+          "type": [
+            "number",
+            "string"
+          ],
+          "description": "A small gray number after the label, e.g. unread items"
+        },
+        "badge": {
+          "type": "string",
+          "description": "A small tinted tag after the label, e.g. \"Save 20%\" – text, or an element (cloned)"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "ariaLabel": {
+          "type": "string",
+          "description": "Accessible name – needed when the option only shows an icon"
+        },
+        "controls": {
+          "type": "string",
+          "description": "With kind=\"tabs\": the id of the panel this tab shows"
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

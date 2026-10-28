@@ -1,0 +1,259 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-query-builder.json",
+  "title": "tc-query-builder",
+  "description": "A visual query builder – conditions joined by AND or OR, one level of nested groups, a field, an operator by type\nand a value per condition, and the query read back in words and as a query string with Copy and Run.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the builder's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "fields": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/QueryField"
+      },
+      "description": "The fields a condition can test"
+    },
+    "value": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "const": "group"
+        },
+        "id": {
+          "type": "string"
+        },
+        "join": {
+          "type": "string",
+          "enum": [
+            "and",
+            "or"
+          ]
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/QueryNode"
+          }
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "join",
+        "children"
+      ],
+      "additionalProperties": false,
+      "description": "The query: the top group and everything in it. Changed by the user unless a tc-value-change listener calls preventDefault()"
+    },
+    "operatorLabels": {
+      "type": "object",
+      "properties": {
+        "before": {
+          "type": "string"
+        },
+        "after": {
+          "type": "string"
+        },
+        "is": {
+          "type": "string"
+        },
+        "is-not": {
+          "type": "string"
+        },
+        "contains": {
+          "type": "string"
+        },
+        "starts-with": {
+          "type": "string"
+        },
+        "gt": {
+          "type": "string"
+        },
+        "lt": {
+          "type": "string"
+        },
+        "between": {
+          "type": "string"
+        },
+        "any-of": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The operators' names, merged over the defaults"
+    },
+    "runLabel": {
+      "type": "string",
+      "description": "The Run button's text; empty hides it"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for dates and numbers in the read-back, e.g. \"en-GB\"; by default the browser's"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "QueryField": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/QueryFieldType"
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/QueryFieldOption"
+          },
+          "description": "The choices of an enum field"
+        },
+        "key": {
+          "type": "string",
+          "description": "The field's name in the query string; by default its id"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "type"
+      ],
+      "additionalProperties": false
+    },
+    "QueryFieldType": {
+      "type": "string",
+      "enum": [
+        "text",
+        "number",
+        "date",
+        "enum"
+      ],
+      "description": "A field's kind of value, which decides its operators and its input"
+    },
+    "QueryFieldOption": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "value",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "QueryNode": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/QueryCondition"
+        },
+        {
+          "$ref": "#/definitions/QueryGroup"
+        }
+      ]
+    },
+    "QueryCondition": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "const": "condition"
+        },
+        "id": {
+          "type": "string"
+        },
+        "field": {
+          "type": "string"
+        },
+        "operator": {
+          "$ref": "#/definitions/QueryOperator"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "field",
+        "operator",
+        "value"
+      ],
+      "additionalProperties": false,
+      "description": "One condition. `value` is text for most operators, two texts for between, a list for any-of"
+    },
+    "QueryOperator": {
+      "type": "string",
+      "enum": [
+        "is",
+        "is-not",
+        "contains",
+        "starts-with",
+        "gt",
+        "lt",
+        "between",
+        "before",
+        "after",
+        "any-of"
+      ]
+    },
+    "QueryGroup": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "const": "group"
+        },
+        "id": {
+          "type": "string"
+        },
+        "join": {
+          "type": "string",
+          "enum": [
+            "and",
+            "or"
+          ]
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/QueryNode"
+          }
+        }
+      },
+      "required": [
+        "kind",
+        "id",
+        "join",
+        "children"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-memory-panel.json",
+  "title": "tc-memory-panel",
+  "description": "What an assistant remembers – grouped memories with filters, search, in-place editing, pause, forget with Undo, and\na master switch.",
+  "type": "object",
+  "properties": {
+    "memories": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Memory"
+      },
+      "description": "The memories shown, grouped by their category"
+    },
+    "enabled": {
+      "type": "boolean",
+      "description": "The master switch"
+    },
+    "categories": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Order of the groups and the choices for new memories – defaults to the categories in the order they appear"
+    },
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the group's name"
+    },
+    "maxHeight": {
+      "type": "number",
+      "description": "Height of the list before it scrolls, in px"
+    },
+    "undoFor": {
+      "type": "number",
+      "description": "How long Undo stays on the tray (Clean: in the card's last row), in ms. It waits while the pointer or focus is on the tray and starts over after; `Infinity` keeps it until the next forget (WCAG 2.2.1)"
+    },
+    "addedSource": {
+      "type": "string",
+      "description": "Source given to memories added here"
+    },
+    "actionLabel": {
+      "type": "string",
+      "description": "A button on the tray that fires tc-action – Undo takes its place for a moment"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "Memory": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string",
+          "description": "The remembered fact, one short sentence"
+        },
+        "category": {
+          "type": "string",
+          "description": "Group of the memory, e.g. \"Work\", \"Preferences\", \"Projects\""
+        },
+        "source": {
+          "type": "string",
+          "description": "Where it came from, ready to show, e.g. \"From chat\""
+        },
+        "date": {
+          "type": "string",
+          "description": "When it was learned, ready to show, e.g. \"Oct 12\""
+        },
+        "paused": {
+          "type": "boolean",
+          "description": "Kept, but not used in answers"
+        }
+      },
+      "required": [
+        "id",
+        "text",
+        "category"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

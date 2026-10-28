@@ -1,0 +1,137 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-review-conflict.json",
+  "title": "tc-review-conflict",
+  "description": "Two reviewers disagree: both verdicts with who gave them, resolved by a third person with a reason, or kept blind.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the group's name"
+    },
+    "scope": {
+      "type": "string",
+      "description": "A quiet line under the heading, e.g. the document or queue the item is from"
+    },
+    "item": {
+      "type": "string",
+      "description": "What was reviewed, quoted at the top – a claim, a finding, a row"
+    },
+    "reviews": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ReviewVerdict"
+      },
+      "description": "The two reviews, in the order to show them"
+    },
+    "difference": {
+      "type": "string",
+      "description": "The difference in one sentence; unset, it's written from the verdicts"
+    },
+    "blind": {
+      "type": "boolean",
+      "description": "The reviewers' view: identities and verdicts are hidden, only that a conflict exists is shown"
+    },
+    "viewer": {
+      "type": "string",
+      "description": "In blind mode, the id of the review that belongs to the person looking – they see their own verdict"
+    },
+    "resolvable": {
+      "type": "boolean",
+      "description": "The person looking may resolve it. Default true; false shows the conflict read-only"
+    },
+    "resolution": {
+      "type": "object",
+      "properties": {
+        "choice": {
+          "type": "string"
+        },
+        "verdict": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "by": {
+          "type": "string"
+        },
+        "at": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "choice",
+        "verdict",
+        "reason"
+      ],
+      "additionalProperties": false,
+      "description": "The outcome, once resolved"
+    },
+    "resolver": {
+      "type": "string",
+      "description": "The resolver's name, recorded with the resolution when the element sets it"
+    },
+    "confirmLabel": {
+      "type": "string",
+      "description": "The confirm button's text"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ReviewVerdict": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "reviewer": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "role": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "additionalProperties": false,
+          "description": "Who gave it"
+        },
+        "verdict": {
+          "type": "string",
+          "description": "The verdict in a word or two – \"Supported\", \"Not supported\""
+        },
+        "tone": {
+          "$ref": "#/definitions/ReviewTone",
+          "description": "The verdict's colour: positive (green), negative (red) or neutral (gray). Default neutral"
+        },
+        "at": {
+          "type": "string",
+          "description": "When, as the app words it – \"Today 09:14\""
+        },
+        "reason": {
+          "type": "string",
+          "description": "Their reason, in their words"
+        }
+      },
+      "required": [
+        "id",
+        "reviewer",
+        "verdict",
+        "reason"
+      ],
+      "additionalProperties": false
+    },
+    "ReviewTone": {
+      "type": "string",
+      "enum": [
+        "positive",
+        "negative",
+        "neutral"
+      ]
+    }
+  }
+}

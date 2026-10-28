@@ -1,0 +1,149 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-digest.json",
+  "title": "tc-digest",
+  "description": "A one-minute digest: what matters, what to do, what changed and what's safe to ignore, with a reading-time\nestimate, checkable actions and cited sources.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "matters": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/DigestItem"
+      },
+      "description": "What matters most, for the default sections"
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/DigestItem"
+      },
+      "description": "What the reader should do, for the default sections – checkable"
+    },
+    "changes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/DigestItem"
+      },
+      "description": "What changed, for the default sections"
+    },
+    "ignore": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/DigestItem"
+      },
+      "description": "What's safe to ignore, for the default sections – quieter"
+    },
+    "sections": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/DigestSection"
+      },
+      "description": "The page's own sections, in place of the defaults"
+    },
+    "done": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The ids of ticked items. Changed by the user unless a tc-done-change listener calls preventDefault()"
+    },
+    "wpm": {
+      "type": "number",
+      "description": "Reading speed for the estimate, in words a minute"
+    },
+    "estimate": {
+      "type": "string",
+      "description": "The estimate in words, in place of the computed one, e.g. \"~2 min\""
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "done",
+        "summarising"
+      ],
+      "description": "\"summarising\" shows a shimmer in place of the sections"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "DigestItem": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "text": {
+              "type": "string"
+            },
+            "source": {
+              "$ref": "#/definitions/DigestSource"
+            }
+          },
+          "required": [
+            "text"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "DigestSource": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "href": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "DigestSection": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DigestItem"
+          }
+        },
+        "checkable": {
+          "type": "boolean",
+          "description": "Each item gets a checkbox – for things to do"
+        },
+        "quiet": {
+          "type": "boolean",
+          "description": "Quieter styling – for what's safe to skip"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "items"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

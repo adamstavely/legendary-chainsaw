@@ -1,0 +1,215 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-transcript-review.json",
+  "title": "tc-transcript-review",
+  "description": "A recording with a transcript that follows playback: timestamps, speakers, recognition and translation confidence,\nlow-confidence segments marked, search, and \"Send to verification\".",
+  "type": "object",
+  "properties": {
+    "segments": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/TranscriptSegment"
+      },
+      "description": "The transcript, in order of `start`"
+    },
+    "speakers": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/TranscriptSpeaker"
+      },
+      "description": "Names, chip text and colours for the speaker ids in `segments`; an id with no entry shows as itself"
+    },
+    "src": {
+      "type": "string",
+      "description": "The recording's URL; the element makes its own <audio> or <video> (see `kind`). Ignored when `media` is set"
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "video",
+        "audio"
+      ],
+      "description": "What `src` is: \"audio\" (default) or \"video\", which shows the picture above the waveform"
+    },
+    "peaks": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      },
+      "description": "The waveform: loudness peaks from 0 to 1, as many as you have – they're resampled to fit the width"
+    },
+    "duration": {
+      "type": "number",
+      "description": "The recording's length in seconds, until the media reports it (default: the last segment's end)"
+    },
+    "threshold": {
+      "type": "number",
+      "description": "Segments and words with confidence below this (0–1) are marked for checking"
+    },
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the region's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "The quiet line under the heading (default: the length and how many speakers)"
+    },
+    "translationMode": {
+      "type": "string",
+      "enum": [
+        "original",
+        "translation",
+        "both"
+      ],
+      "description": "What the transcript shows when segments have translations: the original, the translation, or both side by side"
+    },
+    "originalLabel": {
+      "type": "string",
+      "description": "The name of the original language's column and button, e.g. \"Spanish\""
+    },
+    "translationLabel": {
+      "type": "string",
+      "description": "The name of the translation's column and button, e.g. \"English (machine)\""
+    },
+    "hiddenSpeakers": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Speaker ids whose segments the list leaves out"
+    },
+    "query": {
+      "type": "string",
+      "description": "The search text"
+    },
+    "sent": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Ids of segments already sent to verification"
+    },
+    "verifiable": {
+      "type": "boolean",
+      "description": "Shows \"Send to verification\" on each segment (default true)"
+    },
+    "verifyLabel": {
+      "type": "string",
+      "description": "The verification action's label"
+    },
+    "skip": {
+      "type": "number",
+      "description": "How far J and L (and the back and forward buttons) jump, in seconds"
+    },
+    "maxHeight": {
+      "type": "number",
+      "description": "The tallest the list grows, in px, before it scrolls"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "TranscriptSegment": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "start": {
+          "type": "number",
+          "description": "Seconds from the start of the recording"
+        },
+        "end": {
+          "type": "number"
+        },
+        "speaker": {
+          "type": "string",
+          "description": "A speaker's id – named and coloured by `speakers`"
+        },
+        "text": {
+          "type": "string"
+        },
+        "confidence": {
+          "type": "number",
+          "description": "Speech-recognition confidence, 0–1"
+        },
+        "translation": {
+          "type": "string",
+          "description": "The text in the other language"
+        },
+        "translationConfidence": {
+          "type": "number",
+          "description": "Translation confidence, 0–1"
+        },
+        "words": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TranscriptWord"
+          },
+          "description": "The words of `text` in order, each with its own confidence"
+        }
+      },
+      "required": [
+        "id",
+        "start",
+        "end",
+        "speaker",
+        "text"
+      ],
+      "additionalProperties": false,
+      "description": "One stretch of speech"
+    },
+    "TranscriptWord": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "confidence": {
+          "type": "number",
+          "description": "0–1; below the element's `threshold` the word is underlined as uncertain"
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "additionalProperties": false,
+      "description": "A word with its own recognition confidence – optional detail inside a segment"
+    },
+    "TranscriptSpeaker": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "short": {
+          "type": "string",
+          "description": "The chip's text – default the name's initials (\"Speaker 1\" → \"S1\")"
+        },
+        "tone": {
+          "$ref": "#/definitions/TranscriptTone",
+          "description": "The chip's colour – default the next in turn"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "TranscriptTone": {
+      "type": "string",
+      "enum": [
+        "blue",
+        "violet",
+        "teal",
+        "pink",
+        "rose",
+        "amber"
+      ],
+      "description": "A speaker's chip colour"
+    }
+  }
+}

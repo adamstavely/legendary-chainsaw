@@ -1,0 +1,92 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-parallel-attempts.json",
+  "title": "tc-parallel-attempts",
+  "description": "Several attempts at one task, side by side like a race; the best finished one is marked and picked, and you can\npick another.",
+  "type": "object",
+  "properties": {
+    "attempts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ParallelAttempt"
+      },
+      "description": "The attempts, one row each – name, approach, status and, once done, a score"
+    },
+    "task": {
+      "type": "string",
+      "description": "What all of them try to do – e.g. \"Fix the flaky checkout test\""
+    },
+    "heading": {
+      "type": "string",
+      "description": "The heading; unset shows \"Best of <n>\""
+    },
+    "picked": {
+      "type": "string",
+      "description": "The id of the attempt in use; null or an unknown id falls back to the best finished attempt once all are through"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ParallelAttempt": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string",
+          "description": "A short name – e.g. \"Attempt A\""
+        },
+        "approach": {
+          "type": "string",
+          "description": "How this one goes about it, in a few words – e.g. \"Mock the payment API\""
+        },
+        "model": {
+          "type": "string",
+          "description": "The model behind it – shown after the name"
+        },
+        "status": {
+          "$ref": "#/definitions/ParallelAttemptStatus"
+        },
+        "progress": {
+          "type": "number",
+          "description": "How far it is, 0 to 1 – the bar's length while it runs"
+        },
+        "step": {
+          "type": "string",
+          "description": "What it does right now, while it runs – e.g. \"Running tests 12/20\""
+        },
+        "score": {
+          "type": "number",
+          "description": "0–100 once done – the highest finished score is the best"
+        },
+        "note": {
+          "type": "string",
+          "description": "One line about the outcome – e.g. \"20/20 runs green\" or the error"
+        },
+        "took": {
+          "type": "number",
+          "description": "How long it took, in ms"
+        },
+        "cost": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "approach",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "ParallelAttemptStatus": {
+      "type": "string",
+      "enum": [
+        "running",
+        "done",
+        "failed"
+      ]
+    }
+  }
+}

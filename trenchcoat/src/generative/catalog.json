@@ -1,0 +1,1741 @@
+[
+  {
+    "tag": "tc-account-list",
+    "name": "AccountList",
+    "description": "The financial accounts linked to a person or a company – institution, type, a masked identifier shown one at a time,",
+    "events": [
+      "tc-open",
+      "tc-revealed-change"
+    ]
+  },
+  {
+    "tag": "tc-activity-calendar",
+    "name": "ActivityCalendar",
+    "description": "A year of activity, a square per day in a column per week, shaded by how much happened – with month and weekday",
+    "events": [
+      "tc-selected-change"
+    ]
+  },
+  {
+    "tag": "tc-activity-clock",
+    "name": "ActivityClock",
+    "description": "Activity by hour, a clock per day: an AM ring and a PM ring of hour segments shaded by how busy each hour was, with",
+    "events": [
+      "tc-selected-change"
+    ]
+  },
+  {
+    "tag": "tc-agent-graph",
+    "name": "AgentGraph",
+    "description": "Agents and the tools they use, drawn as a living network with pulses along the links.",
+    "events": [
+      "tc-selected-change",
+      "tc-select",
+      "tc-paused-change"
+    ]
+  },
+  {
+    "tag": "tc-agent-inbox",
+    "name": "AgentInbox",
+    "description": "Background agent tasks as a board (or list): Needs you, Running, Done.",
+    "events": [
+      "tc-view-change",
+      "tc-expanded-change",
+      "tc-open"
+    ]
+  },
+  {
+    "tag": "tc-agent-lanes",
+    "name": "AgentLanes",
+    "description": "Every agent as a lane on a live timeline, with decisions in place.",
+    "events": [
+      "tc-expanded-change",
+      "tc-paused-change",
+      "tc-open"
+    ]
+  },
+  {
+    "tag": "tc-agent-ledger",
+    "name": "AgentLedger",
+    "description": "Everything an agent changed, newest first, each change with an Undo that takes what builds on it along.",
+    "events": [
+      "tc-undone-change",
+      "tc-undo",
+      "tc-redo"
+    ]
+  },
+  {
+    "tag": "tc-agent-plan",
+    "name": "AgentPlan",
+    "description": "A step-by-step plan from an agent: reviewed and edited as a draft, then shown while it runs.",
+    "events": [
+      "tc-steps-change",
+      "tc-run",
+      "tc-retry",
+      "tc-cancel"
+    ]
+  },
+  {
+    "tag": "tc-agent-queue",
+    "name": "AgentQueue",
+    "description": "The work waiting for your agents, and how fast it moves: the queue, the workers, Done and Failed, and a depth chart.",
+    "events": [
+      "tc-paused-change",
+      "tc-concurrency-change",
+      "tc-open-change",
+      "tc-promote",
+      "tc-cancel"
+    ]
+  },
+  {
+    "tag": "tc-agent-steering",
+    "name": "AgentSteering",
+    "description": "Steer an agent while it works: the run, its plan, the queued notes and a field to add one.",
+    "events": [
+      "tc-draft-change",
+      "tc-remove",
+      "tc-pause",
+      "tc-resume"
+    ]
+  },
+  {
+    "tag": "tc-agent-team",
+    "name": "AgentTeam",
+    "description": "A prompt builds a team of three agents, who pop in with their roles and tools.",
+    "events": []
+  },
+  {
+    "tag": "tc-agent-tree",
+    "name": "AgentTree",
+    "description": "Who started whom in a run of agents: cards joined by connectors, with costs, times and folding.",
+    "events": [
+      "tc-collapsed-change",
+      "tc-select",
+      "tc-resolve"
+    ]
+  },
+  {
+    "tag": "tc-agreement-tracker",
+    "name": "AgreementTracker",
+    "description": "How often the AI agreed with the person's framing versus pushed back, this session: the record, the rate and the",
+    "events": [
+      "tc-counter-request"
+    ]
+  },
+  {
+    "tag": "tc-ai-answer",
+    "name": "AiAnswer",
+    "description": "An assistant's answer with its sources, citation chips, actions, feedback and follow-up questions.",
+    "events": [
+      "tc-feedback-change",
+      "tc-feedback",
+      "tc-follow-up",
+      "tc-stop",
+      "tc-copy"
+    ]
+  },
+  {
+    "tag": "tc-ai-summary",
+    "name": "AiSummary",
+    "description": "An AI summary of a set of sources – a thread, a meeting, documents, a ticket's history – with a TL;DR, key points",
+    "events": [
+      "tc-summarise",
+      "tc-retry",
+      "tc-length-change",
+      "tc-cite-open",
+      "tc-feedback",
+      "tc-copy"
+    ]
+  },
+  {
+    "tag": "tc-alert-feed",
+    "name": "AlertFeed",
+    "description": "A live feed of alerts – category, severity, title, subject and a fresh relative time, with actions per alert,",
+    "events": [
+      "tc-action",
+      "tc-paused-change"
+    ]
+  },
+  {
+    "tag": "tc-answer-arena",
+    "name": "AnswerArena",
+    "description": "Two models' answers to the same prompt side by side, with a vote: A is better, B is better or a tie, and a reason.",
+    "events": [
+      "tc-value-change"
+    ]
+  },
+  {
+    "tag": "tc-approval-card",
+    "name": "ApprovalCard",
+    "description": "An agent's request for approval, with Approve / Deny, an optional countdown, and a compact row once decided.",
+    "events": [
+      "tc-status-change",
+      "tc-deny",
+      "tc-expire",
+      "tc-edit",
+      "tc-details-change",
+      "tc-evidence-select"
+    ]
+  },
+  {
+    "tag": "tc-artifact-panel",
+    "name": "ArtifactPanel",
+    "description": "The files, code and documents a run produced: a list, a preview per type, versions with a diff, download.",
+    "events": [
+      "tc-selected-change",
+      "tc-version-change",
+      "tc-view-change",
+      "tc-download"
+    ]
+  },
+  {
+    "tag": "tc-asset-list",
+    "name": "AssetList",
+    "description": "Assets in groups – vehicles, devices – each with its kind, name, a masked identifier, a detail line, what it's linked",
+    "events": [
+      "tc-open",
+      "tc-revealed-change"
+    ]
+  },
+  {
+    "tag": "tc-attestation-check",
+    "name": "AttestationCheck",
+    "description": "Verify a signed evidence package by its hash or file – signature, chain integrity and what it covers, checked",
+    "events": [
+      "tc-verify",
+      "tc-result-change"
+    ]
+  },
+  {
+    "tag": "tc-audience-mix",
+    "name": "AudienceMix",
+    "description": "Who is reading – a sector mix as bars, an internal-versus-external split and the top places, each with its share,",
+    "events": []
+  },
+  {
+    "tag": "tc-autonomy-dial",
+    "name": "AutonomyDial",
+    "description": "How much an agent may do on its own: three levels, and the actions it runs alone or asks about first.",
+    "events": [
+      "tc-level-change",
+      "tc-pinned-change"
+    ]
+  },
+  {
+    "tag": "tc-billing-schedule",
+    "name": "BillingSchedule",
+    "description": "One phase of a billing plan: dates, products, a discount or a minimum, and the totals.",
+    "events": [
+      "tc-phase-change",
+      "tc-start-change",
+      "tc-duration-change",
+      "tc-lines-change",
+      "tc-schedule-change"
+    ]
+  },
+  {
+    "tag": "tc-biometric-status",
+    "name": "BiometricStatus",
+    "description": "Biometric enrolment across modalities – each with its status, detail and a quality meter – with the count",
+    "events": [
+      "tc-selected-change"
+    ]
+  },
+  {
+    "tag": "tc-breakdown-chart",
+    "name": "BreakdownChart",
+    "description": "A stacked bar chart with a linked table: pick the measure, the slice and the segment; legend chips hide segments.",
+    "events": [
+      "tc-measure-change",
+      "tc-slice-change",
+      "tc-segment-change",
+      "tc-hidden-change"
+    ]
+  },
+  {
+    "tag": "tc-budget-burn",
+    "name": "BudgetBurn",
+    "description": "Budget burn: each item's spend against its budget, with a pace marker and words for ahead, on or behind pace, its",
+    "events": [
+      "tc-sort-change",
+      "tc-open"
+    ]
+  },
+  {
+    "tag": "tc-budget-guard",
+    "name": "BudgetGuard",
+    "description": "Spend and token limits for a live run: progress against the cap, a warning near it, a hard stop at it, and raising",
+    "events": [
+      "tc-limits-change",
+      "tc-cap-reach",
+      "tc-stop"
+    ]
+  },
+  {
+    "tag": "tc-button",
+    "name": "Button",
+    "description": "A button: primary, secondary, ghost or destructive, in three sizes, with a loading state.",
+    "events": []
+  },
+  {
+    "tag": "tc-capability-notice",
+    "name": "CapabilityNotice",
+    "description": "An advisory with an answer: the request falls where the AI is only partly proven (amber) or not proven (red) – the",
+    "events": [
+      "tc-open-change"
+    ]
+  },
+  {
+    "tag": "tc-capacity-bars",
+    "name": "CapacityBars",
+    "description": "People's capacity: each person's allocation, split by what they work on, against what they can take, with anyone",
+    "events": [
+      "tc-selected-change"
+    ]
+  },
+  {
+    "tag": "tc-change-summary",
+    "name": "ChangeSummary",
+    "description": "What changed since last time, one metric per row, each with a trend mark.",
+    "events": []
+  },
+  {
+    "tag": "tc-chat-history",
+    "name": "ChatHistory",
+    "description": "The conversation list: search, pinning, folders, rename and delete with Undo, grouped by date; windowed.",
+    "events": [
+      "tc-value-change",
+      "tc-conversations-change",
+      "tc-rename",
+      "tc-pin",
+      "tc-move",
+      "tc-delete",
+      "tc-restore",
+      "tc-new-chat",
+      "tc-context-change"
+    ]
+  },
+  {
+    "tag": "tc-checkbox",
+    "name": "Checkbox",
+    "description": "Checkbox for AI product settings.",
+    "events": [
+      "tc-value-change"
+    ]
+  },
+  {
+    "tag": "tc-citation-badge",
+    "name": "CitationBadge",
+    "description": "A small badge of citation counts by kind – Publications, Supporting, Mentioning, Contrasting – with a tooltip",
+    "events": [
+      "tc-open"
+    ]
+  },
+  {
+    "tag": "tc-citation-sections",
+    "name": "CitationSections",
+    "description": "Where a work is cited – a donut of the counts by section (Intro, Methods, Results, Discussion, Other), a legend",
+    "events": [
+      "tc-open"
+    ]
+  },
+  {
+    "tag": "tc-cited-answer",
+    "name": "CitedAnswer",
+    "description": "An AI answer with numbered source markers, source chips and an in-place source preview.",
+    "events": [
+      "tc-preview-change",
+      "tc-open-source",
+      "tc-action"
+    ]
+  },
+  {
+    "tag": "tc-claim-answer",
+    "name": "ClaimAnswer",
+    "description": "An AI answer marked up claim by claim: source type, confidence, uncertainty, the passages behind each claim and a",
+    "events": [
+      "tc-open-change",
+      "tc-queued-change",
+      "tc-verify"
+    ]
+  },
+  {
+    "tag": "tc-clarifying-questions",
+    "name": "ClarifyingQuestions",
+    "description": "The agent asks before it starts: two or three questions – choices, a short answer, \"You decide\" – sent back as one reply.",
+    "events": [
+      "tc-value-change",
+      "tc-send"
+    ]
+  },
+  {
+    "tag": "tc-co-occurrence",
+    "name": "CoOccurrence",
+    "description": "Entities ranked by how often they appear together with a subject – strength in words and bars, a score, the share",
+    "events": [
+      "tc-selected-change",
+      "tc-sort-change"
+    ]
+  },
+  {
+    "tag": "tc-code-block",
+    "name": "CodeBlock",
+    "description": "Streaming code with syntax colours, Copy, Apply, and a line diff against the current file.",
+    "events": [
+      "tc-copy",
+      "tc-apply",
+      "tc-view-change"
+    ]
+  },
+  {
+    "tag": "tc-combobox",
+    "name": "Combobox",
+    "description": "Pick one or many options from a searchable, grouped list; picked options show as chips.",
+    "events": [
+      "tc-value-change",
+      "tc-open-change"
+    ]
+  },
+  {
+    "tag": "tc-comment-thread",
+    "name": "CommentThread",
+    "description": "One comment with its replies, an assistant's status lines and a reply field.",
+    "events": [
+      "tc-messages-change",
+      "tc-close"
+    ]
+  },
+  {
+    "tag": "tc-comments-panel",
+    "name": "CommentsPanel",
+    "description": "A comment feed with filters, sort, runnable /edit commands, resolving and a composer.",
+    "events": [
+      "tc-comments-change",
+      "tc-resolved-change",
+      "tc-filter-change",
+      "tc-close"
+    ]
+  },
+  {
+    "tag": "tc-compact-breakdown",
+    "name": "CompactBreakdown",
+    "description": "One total split into its parts: a big number, a stacked bar and a ranked list, with an optional period switch.",
+    "events": [
+      "tc-period-change"
+    ]
+  },
+  {
+    "tag": "tc-confidence-brief",
+    "name": "ConfidenceBrief",
+    "description": "An answer explained for someone who wasn't in the session: the conclusion, the kind of uncertainty, what would",
+    "events": [
+      "tc-provenance-open",
+      "tc-copy"
+    ]
+  },
+  {
+    "tag": "tc-configuration-release-control",
+    "name": "ConfigurationReleaseControl",
+    "description": "A configuration version moving through environments: the pipeline, what changed, the evaluation evidence, the",
+    "events": [
+      "tc-promote",
+      "tc-rollback",
+      "tc-compare",
+      "tc-finding-open"
+    ]
+  },
+  {
+    "tag": "tc-contact-channels",
+    "name": "ContactChannels",
+    "description": "The ways to reach a person or an account – email, phone, messaging and address – each masked until revealed, with",
+    "events": [
+      "tc-revealed-change",
+      "tc-copy",
+      "tc-action"
+    ]
+  },
+  {
+    "tag": "tc-context-map",
+    "name": "ContextMap",
+    "description": "What fills an agent's context window, as a treemap.",
+    "events": [
+      "tc-agent-change",
+      "tc-view-change",
+      "tc-select"
+    ]
+  },
+  {
+    "tag": "tc-context-tray",
+    "name": "ContextTray",
+    "description": "What the model can see, as chips with their token weight: remove (undoable), pin, and the total against the window.",
+    "events": [
+      "tc-items-change"
+    ]
+  },
+  {
+    "tag": "tc-context-window",
+    "name": "ContextWindow",
+    "description": "What fills a model's context window, as a field of cells per part, with removal and compaction.",
+    "events": [
+      "tc-remove-item",
+      "tc-compact",
+      "tc-action"
+    ]
+  },
+  {
+    "tag": "tc-conversation-annotation",
+    "name": "ConversationAnnotation",
+    "description": "A conversation transcript to annotate: label spans, redact, rate turns, correct answers and send the example on.",
+    "events": [
+      "tc-value-change",
+      "tc-send"
+    ]
+  },
+  {
+    "tag": "tc-conversation-branches",
+    "name": "ConversationBranches",
+    "description": "A conversation that forks when a past message is edited: a \"‹ 2 / 3 ›\" switcher on each message with siblings, and",
+    "events": [
+      "tc-selected-change",
+      "tc-messages-change",
+      "tc-edit"
+    ]
+  },
+  {
+    "tag": "tc-correction-propagation",
+    "name": "CorrectionPropagation",
+    "description": "How far a correction reaches: every artifact and released package that cites the corrected claim, each sent for",
+    "events": [
+      "tc-states-change",
+      "tc-review",
+      "tc-supersede",
+      "tc-dismiss"
+    ]
+  },
+  {
+    "tag": "tc-cover-flow",
+    "name": "CoverFlow",
+    "description": "Browse covers in 3D: the front one faces you, the others stack up on both sides.",
+    "events": [
+      "tc-index-change",
+      "tc-front-change",
+      "tc-select"
+    ]
+  },
+  {
+    "tag": "tc-coverage-matrix",
+    "name": "CoverageMatrix",
+    "description": "A heatmap of checks × parts – covered, partial or gap – with totals, a legend with counts, and a cell's detail on",
+    "events": [
+      "tc-open-change"
+    ]
+  },
+  {
+    "tag": "tc-coverage-ring",
+    "name": "CoverageRing",
+    "description": "One share as a large ring – the percentage and a caption in the middle, a title and a line – with an optional bar of",
+    "events": [
+      "tc-select"
+    ]
+  },
+  {
+    "tag": "tc-data-handling-policy",
+    "name": "DataHandlingPolicy",
+    "description": "Organization-level data handling as a lifecycle – conversations, logs, memory, training, deletion – led by the policy",
+    "events": [
+      "tc-value-change",
+      "tc-deletion-request"
+    ]
+  },
+  {
+    "tag": "tc-data-table",
+    "name": "DataTable",
+    "description": "A database-style table that works like a small spreadsheet.",
+    "events": [
+      "tc-rows-change",
+      "tc-selection-change",
+      "tc-sort-change"
+    ]
+  },
+  {
+    "tag": "tc-date-range-picker",
+    "name": "DateRangePicker",
+    "description": "Pick a date range from presets or two calendars, optionally compared with the period before or a year back.",
+    "events": [
+      "tc-value-change",
+      "tc-compare-change",
+      "tc-open-change"
+    ]
+  },
+  {
+    "tag": "tc-day-rhythm",
+    "name": "DayRhythm",
+    "description": "A typical day as a strip of blocks by kind of place or activity, one row per kind of day, with hour ticks, a legend,",
+    "events": [
+      "tc-select"
+    ]
+  },
+  {
+    "tag": "tc-decision-inbox",
+    "name": "DecisionInbox",
+    "description": "Open decisions with two quick answers each; answered ones confirm, then fold away.",
+    "events": [
+      "tc-answers-change",
+      "tc-decide"
+    ]
+  },
+  {
+    "tag": "tc-decision-tree",
+    "name": "DecisionTree",
+    "description": "An agent's open decision drawn as a tree of options and consequences – pick a path or write your own instruction.",
+    "events": [
+      "tc-decision-change"
+    ]
+  },
+  {
+    "tag": "tc-delegate-board",
+    "name": "DelegateBoard",
+    "description": "Hand work to agents by dragging it onto them – or by click and keyboard.",
+    "events": [
+      "tc-assign",
+      "tc-mode-change"
+    ]
+  },
+  {
+    "tag": "tc-digest",
+    "name": "Digest",
+    "description": "A one-minute digest: what matters, what to do, what changed and what's safe to ignore, with a reading-time",
+    "events": [
+      "tc-done-change",
+      "tc-cite-open"
+    ]
+  },
+  {
+    "tag": "tc-disagreement-banner",
+    "name": "DisagreementBanner",
+    "description": "Today's answer and an earlier answer to the same question side by side, the difference highlighted, with dismiss",
+    "events": [
+      "tc-expanded-change",
+      "tc-dismiss",
+      "tc-open-session"
+    ]
+  },
+  {
+    "tag": "tc-document-list",
+    "name": "DocumentList",
+    "description": "Identity and record documents with masked numbers, expiry and a status each – Active, Verified, Expired, Flagged,",
+    "events": [
+      "tc-open",
+      "tc-revealed-change"
+    ]
+  },
+  {
+    "tag": "tc-email-draft",
+    "name": "EmailDraft",
+    "description": "An agent-written email waiting for review: recipient, attachment, tones, inline editing, Discard and Send.",
+    "events": [
+      "tc-recipient-change",
+      "tc-tone-change",
+      "tc-discard",
+      "tc-undo"
+    ]
+  },
+  {
+    "tag": "tc-empty-calendar",
+    "name": "EmptyCalendar",
+    "description": "Stacked empty calendar cards – an illustration for an empty schedule.",
+    "events": []
+  },
+  {
+    "tag": "tc-engagement-quality",
+    "name": "EngagementQuality",
+    "description": "Whether reviews are genuine: an index with its band and trend, the signals it is built from – each with its value,",
+    "events": [
+      "tc-signal-open"
+    ]
+  },
+  {
+    "tag": "tc-enrichment-orbit",
+    "name": "EnrichmentOrbit",
+    "description": "A tile inside two rings with comets and orbiting data nodes.",
+    "events": []
+  },
+  {
+    "tag": "tc-entity-timeline",
+    "name": "EntityTimeline",
+    "description": "A dated record of events grouped by month – each with a category, its source and grade, an optional flag and an",
+    "events": [
+      "tc-filter-change",
+      "tc-selected-change"
+    ]
+  },
+  {
+    "tag": "tc-eval-scorecard",
+    "name": "EvalScorecard",
+    "description": "Test cases run against prompt or model versions – pass or fail per case per version, the pass rate across versions,",
+    "events": [
+      "tc-tags-change",
+      "tc-show-change",
+      "tc-open-change"
+    ]
+  },
+  {
+    "tag": "tc-evaluation-dataset-editor",
+    "name": "EvaluationDatasetEditor",
+    "description": "An evaluation set's cases – input, expected output, checks, tags and split – in a windowed table with a case editor,",
+    "events": [
+      "tc-value-change",
+      "tc-open-change",
+      "tc-compare-change",
+      "tc-import",
+      "tc-export"
+    ]
+  },
+  {
+    "tag": "tc-evidence-coverage",
+    "name": "EvidenceCoverage",
+    "description": "What an answer could and couldn't see: each source category current, stale or missing, with a request for coverage.",
+    "events": [
+      "tc-coverage-request",
+      "tc-open-change"
+    ]
+  },
+  {
+    "tag": "tc-evidence-list",
+    "name": "EvidenceList",
+    "description": "Exhibits linked to a matter – reference, title, type, source with its grade, date, holder and status – each opening",
+    "events": [
+      "tc-selected-change",
+      "tc-copy"
+    ]
+  },
+  {
+    "tag": "tc-experiment-card",
+    "name": "ExperimentCard",
+    "description": "An A/B test that unfolds into the full comparison; pick a winner and run an action on it.",
+    "events": [
+      "tc-open-change",
+      "tc-metric-change",
+      "tc-winner-change"
+    ]
+  },
+  {
+    "tag": "tc-extraction-review",
+    "name": "ExtractionReview",
+    "description": "Fields extracted from a document, each linked to its box on the page: confidence per field, accept, correct or",
+    "events": [
+      "tc-fields-change",
+      "tc-confirm"
+    ]
+  },
+  {
+    "tag": "tc-fact-sheet",
+    "name": "FactSheet",
+    "description": "Facts in sections, each value tagged with its source and an Admiralty grade, tinted and marked by confidence –",
+    "events": [
+      "tc-copy"
+    ]
+  },
+  {
+    "tag": "tc-fan-out-grid",
+    "name": "FanOutGrid",
+    "description": "A big job fanned out to many workers: one cell per task, live.",
+    "events": [
+      "tc-selected-change",
+      "tc-filter-change",
+      "tc-select"
+    ]
+  },
+  {
+    "tag": "tc-feedback-rubric",
+    "name": "FeedbackRubric",
+    "description": "Structured rating of an answer: rubric scores, the failure type and the ideal answer, sent as one payload.",
+    "events": [
+      "tc-value-change",
+      "tc-submit",
+      "tc-edit"
+    ]
+  },
+  {
+    "tag": "tc-file-summary",
+    "name": "FileSummary",
+    "description": "An AI summary of a file – the file's type, size and length, a summary that streams in, key points citing their",
+    "events": [
+      "tc-summarise",
+      "tc-retry",
+      "tc-length-change",
+      "tc-cite-open",
+      "tc-entity-select",
+      "tc-copy",
+      "tc-open"
+    ]
+  },
+  {
+    "tag": "tc-filter-menu",
+    "name": "FilterMenu",
+    "description": "Grouped filters: removable chips on top, collapsible groups of checkboxes below.",
+    "events": [
+      "tc-value-change",
+      "tc-open-change"
+    ]
+  },
+  {
+    "tag": "tc-fingerprint-card",
+    "name": "FingerprintCard",
+    "description": "A ten-print card: each finger's print and status – captured with its NFIQ quality, poor, not captured, unable to",
+    "events": [
+      "tc-selected-change"
+    ]
+  },
+  {
+    "tag": "tc-friction-profile",
+    "name": "FrictionProfile",
+    "description": "A mode switch – standard, elevated, deadline – that previews how each safeguard changes (on, shortened, deferred,",
+    "events": [
+      "tc-mode-change"
+    ]
+  },
+  {
+    "tag": "tc-gap-exposure",
+    "name": "GapExposure",
+    "description": "Gaps or risks and whether anyone is working on them – severity, the item and its priority, coverage, owner and",
+    "events": [
+      "tc-open",
+      "tc-group-change",
+      "tc-filter-change"
+    ]
+  },
+  {
+    "tag": "tc-gate-config",
+    "name": "GateConfig",
+    "description": "When a person decides: the conditions that pause a run, who reviews, what they see, what they may do and why.",
+    "events": [
+      "tc-value-change"
+    ]
+  },
+  {
+    "tag": "tc-ghosted-chat",
+    "name": "GhostedChat",
+    "description": "Unanswered chat messages – an illustration for being ghosted.",
+    "events": []
+  },
+  {
+    "tag": "tc-grade-distribution",
+    "name": "GradeDistribution",
+    "description": "Assessment grades as counts, with how many were assessed, an optional bar in proportion and a grade picked as a",
+    "events": [
+      "tc-selected-change"
+    ]
+  },
+  {
+    "tag": "tc-guardrail-notice",
+    "name": "GuardrailNotice",
+    "description": "Content a policy blocked, redacted or rewrote: which policy, why, what changed – personal data masked – and Request review.",
+    "events": [
+      "tc-open-change",
+      "tc-review-request",
+      "tc-dismiss"
+    ]
+  },
+  {
+    "tag": "tc-handoff",
+    "name": "Handoff",
+    "description": "The agent hands control to a person mid-task with what it did, why it stopped and what it needs – and takes it back.",
+    "events": [
+      "tc-status-change",
+      "tc-checked-change",
+      "tc-note-change",
+      "tc-return"
+    ]
+  },
+  {
+    "tag": "tc-handoff-brief",
+    "name": "HandoffBrief",
+    "description": "Work passing from one person to another: summary, open items and commitments, each acknowledged by the receiver,",
+    "events": [
+      "tc-acknowledged-change",
+      "tc-access-request",
+      "tc-accept"
+    ]
+  },
+  {
+    "tag": "tc-image-grid",
+    "name": "ImageGrid",
+    "description": "Generated images as a grid of variations: regenerate one, upscale, compare two, download, alt text for each.",
+    "events": [
+      "tc-open",
+      "tc-regenerate",
+      "tc-upscale",
+      "tc-download",
+      "tc-tiles-change",
+      "tc-compare-change",
+      "tc-split-change"
+    ]
+  },
+  {
+    "tag": "tc-inline-diff",
+    "name": "InlineDiff",
+    "description": "Review an AI's word-level edits to prose: accept or reject each change in place.",
+    "events": [
+      "tc-decisions-change",
+      "tc-text-change",
+      "tc-done"
+    ]
+  },
+  {
+    "tag": "tc-instruction-editor",
+    "name": "InstructionEditor",
+    "description": "System and developer instructions with highlighted variables, missing and unused variable warnings, an",
+    "events": [
+      "tc-value-change",
+      "tc-save"
+    ]
+  },
+  {
+    "tag": "tc-integration-flow",
+    "name": "IntegrationFlow",
+    "description": "Integrations rotating past a data hub, each sending a beam into it.",
+    "events": []
+  },
+  {
+    "tag": "tc-integration-grid",
+    "name": "IntegrationGrid",
+    "description": "A wall of integration logos around your product mark.",
+    "events": []
+  },
+  {
+    "tag": "tc-integration-picker",
+    "name": "IntegrationPicker",
+    "description": "The integrations page of a command menu: search, a grouped list and the picked service's details with a switch.",
+    "events": [
+      "tc-selected-change",
+      "tc-connected-change",
+      "tc-query-change",
+      "tc-explore",
+      "tc-back",
+      "tc-close"
+    ]
+  },
+  {
+    "tag": "tc-integration-settings",
+    "name": "IntegrationSettings",
+    "description": "The settings card of one connected service: a switch, an API key, the site address and a time zone, with a save bar.",
+    "events": [
+      "tc-values-change"
+    ]
+  },
+  {
+    "tag": "tc-investment-balance",
+    "name": "InvestmentBalance",
+    "description": "Investment against priority: each tier's share of the items, the budget and the people, with over- and",
+    "events": [
+      "tc-selected-change"
+    ]
+  },
+  {
+    "tag": "tc-isbn-details",
+    "name": "IsbnDetails",
+    "description": "ISBN numbers in text, validated and marked: hover or focus one for the book's details.",
+    "events": [
+      "tc-isbn-lookup",
+      "tc-copy",
+      "tc-open-change"
+    ]
+  },
+  {
+    "tag": "tc-kill-switch",
+    "name": "KillSwitch",
+    "description": "System posture and the emergency stop: what's running, a confirmed Stop that names what it halts, and the active",
+    "events": [
+      "tc-stop",
+      "tc-resume"
+    ]
+  },
+  {
+    "tag": "tc-knowledge-promotion",
+    "name": "KnowledgePromotion",
+    "description": "Promote a verified fact into shared team knowledge: the fact with any disputed versions beside it, a checklist of",
+    "events": [
+      "tc-promote",
+      "tc-dispute"
+    ]
+  },
+  {
+    "tag": "tc-knowledge-source-manager",
+    "name": "KnowledgeSourceManager",
+    "description": "The sources a knowledge base answers from – ingestion state and progress, documents and chunks, last sync and",
+    "events": [
+      "tc-sources-change",
+      "tc-selected-change",
+      "tc-show-change",
+      "tc-add",
+      "tc-resync",
+      "tc-pause",
+      "tc-review-chunks"
+    ]
+  },
+  {
+    "tag": "tc-kpi-chart",
+    "name": "KpiChart",
+    "description": "A metric card with a multi-line chart, a legend and a hover tooltip.",
+    "events": [
+      "tc-index-change"
+    ]
+  },
+  {
+    "tag": "tc-lead-sourcing",
+    "name": "LeadSourcing",
+    "description": "A small card illustration: three connected app tiles with a shine running along the line.",
+    "events": []
+  },
+  {
+    "tag": "tc-lineage-graph",
+    "name": "LineageGraph",
+    "description": "Where an output came from: run, turns, queries and tools, source chunks, claims and artifacts in columns, every",
+    "events": [
+      "tc-selected-change",
+      "tc-view-change"
+    ]
+  },
+  {
+    "tag": "tc-mcp-connection-manager",
+    "name": "McpConnectionManager",
+    "description": "MCP servers and their status: add one (transport, auth, test), inspect the tools, resources and prompts it exposes,",
+    "events": [
+      "tc-value-change",
+      "tc-connect",
+      "tc-disconnect",
+      "tc-test"
+    ]
+  },
+  {
+    "tag": "tc-memory-panel",
+    "name": "MemoryPanel",
+    "description": "What an assistant remembers – grouped memories with filters, search, in-place editing, pause, forget with Undo, and",
+    "events": [
+      "tc-memories-change",
+      "tc-enabled-change",
+      "tc-action"
+    ]
+  },
+  {
+    "tag": "tc-message-actions",
+    "name": "MessageActions",
+    "description": "The action bar under an AI chat message: copy, regenerate with a version switcher, thumbs with a feedback row, and",
+    "events": [
+      "tc-version-change",
+      "tc-copy",
+      "tc-feedback",
+      "tc-speak"
+    ]
+  },
+  {
+    "tag": "tc-model-picker",
+    "name": "ModelPicker",
+    "description": "The model menu of an AI chat: models with strength bars, extended thinking with its effort, and web search.",
+    "events": [
+      "tc-value-change",
+      "tc-thinking-change",
+      "tc-web-search-change",
+      "tc-effort-change",
+      "tc-open-change"
+    ]
+  },
+  {
+    "tag": "tc-model-routing",
+    "name": "ModelRouting",
+    "description": "Model routing as a route: rules in order, then the fallback chain, with each target's health, breaker and region,",
+    "events": [
+      "tc-value-change",
+      "tc-route-test"
+    ]
+  },
+  {
+    "tag": "tc-model-settings",
+    "name": "ModelSettings",
+    "description": "How one model generates: its supported parameters with plain explanations, presets, feedback on incompatible",
+    "events": [
+      "tc-value-change"
+    ]
+  },
+  {
+    "tag": "tc-model-wheel",
+    "name": "ModelWheel",
+    "description": "AI model names on a turning drum.",
+    "events": []
+  },
+  {
+    "tag": "tc-money-flow",
+    "name": "MoneyFlow",
+    "description": "How money moved between entities – a left-to-right flow of entities in columns and transfers as bands sized by",
+    "events": [
+      "tc-selected-change"
+    ]
+  },
+  {
+    "tag": "tc-notification-stack",
+    "name": "NotificationStack",
+    "description": "Notices stacked behind each other; dismissing the front one brings up the next.",
+    "events": [
+      "tc-dismiss"
+    ]
+  },
+  {
+    "tag": "tc-number-field",
+    "name": "NumberField",
+    "description": "Number field for AI product settings.",
+    "events": [
+      "tc-value-change"
+    ]
+  },
+  {
+    "tag": "tc-ops-overview",
+    "name": "OpsOverview",
+    "description": "An operations overview strip – a status line, a health pill and count tiles, each with its change since the last",
+    "events": [
+      "tc-action"
+    ]
+  },
+  {
+    "tag": "tc-org-unit-card",
+    "name": "OrgUnitCard",
+    "description": "An organisational unit – code, name, lead, health, the page's stats and its teams as rows that fold open onto",
+    "events": [
+      "tc-expanded-change",
+      "tc-action",
+      "tc-open"
+    ]
+  },
+  {
+    "tag": "tc-output-schema-builder",
+    "name": "OutputSchemaBuilder",
+    "description": "The shape of a model's structured answer, built as a tree of fields beside a rendered preview of the answer, its",
+    "events": [
+      "tc-value-change",
+      "tc-preview-change"
+    ]
+  },
+  {
+    "tag": "tc-outreach-branches",
+    "name": "OutreachBranches",
+    "description": "Lines branching out to Gmail, Slack and Notion – an illustration for multi-channel outreach.",
+    "events": []
+  },
+  {
+    "tag": "tc-parallel-attempts",
+    "name": "ParallelAttempts",
+    "description": "Several attempts at one task, side by side like a race; the best finished one is marked and picked, and you can",
+    "events": [
+      "tc-picked-change"
+    ]
+  },
+  {
+    "tag": "tc-permission-request",
+    "name": "PermissionRequest",
+    "description": "An agent asks for one specific right: what will happen, for how long, Allow or Deny – then one line with a countdown.",
+    "events": [
+      "tc-decision-change",
+      "tc-scope-change",
+      "tc-expire",
+      "tc-emergency-request"
+    ]
+  },
+  {
+    "tag": "tc-person-links",
+    "name": "PersonLinks",
+    "description": "The people linked to a person or an account, each with their role, a second line and how strong the link is,",
+    "events": [
+      "tc-selected-change",
+      "tc-action"
+    ]
+  },
+  {
+    "tag": "tc-place-list",
+    "name": "PlaceList",
+    "description": "Places on record – type with an icon, whether each is confirmed, the address, coordinates and when it applies –",
+    "events": [
+      "tc-selected-change"
+    ]
+  },
+  {
+    "tag": "tc-plan-vs-actual",
+    "name": "PlanVsActual",
+    "description": "An agent's plan against what really happens, as a live Gantt chart. Clean look only.",
+    "events": []
+  },
+  {
+    "tag": "tc-playbook-canvas",
+    "name": "PlaybookCanvas",
+    "description": "An agent workflow by phase: steps you add, remove, reorder and set up, review gates, versions and a dry run.",
+    "events": [
+      "tc-value-change",
+      "tc-selected-change",
+      "tc-dry-run",
+      "tc-dry-run-clear",
+      "tc-version-open"
+    ]
+  },
+  {
+    "tag": "tc-policy-simulator",
+    "name": "PolicySimulator",
+    "description": "A dry run of an action against a policy set: the decision, the rule that decided it, the reason and a step-by-step",
+    "events": [
+      "tc-input-change",
+      "tc-simulate",
+      "tc-result"
+    ]
+  },
+  {
+    "tag": "tc-priority-list",
+    "name": "PriorityList",
+    "description": "Topics or projects by priority – a priority badge, name, owner and team, momentum, coverage, what's open and the",
+    "events": [
+      "tc-open",
+      "tc-filter-change"
+    ]
+  },
+  {
+    "tag": "tc-profile-header",
+    "name": "ProfileHeader",
+    "description": "The top of a person's or an account's page: picture, name, status and tags, other names, a line of facts, the",
+    "events": [
+      "tc-action",
+      "tc-selected-change"
+    ]
+  },
+  {
+    "tag": "tc-progress-tracker",
+    "name": "ProgressTracker",
+    "description": "A checklist with a progress bar.",
+    "events": [
+      "tc-done-change"
+    ]
+  },
+  {
+    "tag": "tc-project-card",
+    "name": "ProjectCard",
+    "description": "A project summary with a segmented progress ring that unfolds into its subtasks, people and status.",
+    "events": [
+      "tc-tasks-change",
+      "tc-status-change",
+      "tc-open-change",
+      "tc-action"
+    ]
+  },
+  {
+    "tag": "tc-project-flow",
+    "name": "ProjectFlow",
+    "description": "Cards for a task, its subtasks, roles and tech stack build up one after another.",
+    "events": []
+  },
+  {
+    "tag": "tc-prompt-library",
+    "name": "PromptLibrary",
+    "description": "Saved prompt templates whose variables are filled in place.",
+    "events": [
+      "tc-value-change",
+      "tc-values-change",
+      "tc-copy"
+    ]
+  },
+  {
+    "tag": "tc-prompt-starters",
+    "name": "PromptStarters",
+    "description": "Suggestions for an empty chat and follow-ups after an answer, as a list that fills the composer or sends.",
+    "events": [
+      "tc-send",
+      "tc-fill"
+    ]
+  },
+  {
+    "tag": "tc-provenance-summary",
+    "name": "ProvenanceSummary",
+    "description": "What a document is made of: the share from sources, AI synthesis and original writing, per section and in total,",
+    "events": [
+      "tc-lineage-open"
+    ]
+  },
+  {
+    "tag": "tc-provider-connection",
+    "name": "ProviderConnection",
+    "description": "A connection to a model provider: provider, endpoint, deployment and a masked credential reference, with an",
+    "events": [
+      "tc-value-change",
+      "tc-test"
+    ]
+  },
+  {
+    "tag": "tc-publication-impact",
+    "name": "PublicationImpact",
+    "description": "One paper's impact – venue, topic, grade and authors; downloads, views, citations and attention with a reads",
+    "events": [
+      "tc-filter-change"
+    ]
+  },
+  {
+    "tag": "tc-query-builder",
+    "name": "QueryBuilder",
+    "description": "A visual query builder – conditions joined by AND or OR, one level of nested groups, a field, an operator by type",
+    "events": [
+      "tc-value-change",
+      "tc-submit"
+    ]
+  },
+  {
+    "tag": "tc-radio-group",
+    "name": "RadioGroup",
+    "description": "Radio group for AI product settings.",
+    "events": [
+      "tc-value-change"
+    ]
+  },
+  {
+    "tag": "tc-reaction-bar",
+    "name": "ReactionBar",
+    "description": "Like, comment, repost and share in one pill, with rolling counts.",
+    "events": [
+      "tc-reaction-change"
+    ]
+  },
+  {
+    "tag": "tc-reasoning-flags",
+    "name": "ReasoningFlags",
+    "description": "Inline markers for weak reasoning in an answer, each opening a plain explanation.",
+    "events": [
+      "tc-reconsider",
+      "tc-open-change"
+    ]
+  },
+  {
+    "tag": "tc-reflection-gate",
+    "name": "ReflectionGate",
+    "description": "A pause before relying on an answer: intent, prior, reformulate or checkpoint prompts, submitted through a",
+    "events": [
+      "tc-value-change",
+      "tc-submit",
+      "tc-skip",
+      "tc-phase-change"
+    ]
+  },
+  {
+    "tag": "tc-region-dach",
+    "name": "RegionDach",
+    "description": "A map of the DACH region (or another country) with a band along its border and a menu to switch it.",
+    "events": [
+      "tc-region-change"
+    ]
+  },
+  {
+    "tag": "tc-reliance-gauge",
+    "name": "RelianceGauge",
+    "description": "Whether trust in an AI matches its performance: a reliance–accuracy dial with its trend, signals against review",
+    "events": [
+      "tc-review-level-change",
+      "tc-episodes-open"
+    ]
+  },
+  {
+    "tag": "tc-response-selection",
+    "name": "ResponseSelection",
+    "description": "Select part of a model's answer and act on it: reply quoting it, ask why, or request an edit that comes back as a",
+    "events": [
+      "tc-quote",
+      "tc-quotes-change",
+      "tc-reply",
+      "tc-ask-why",
+      "tc-edit-request",
+      "tc-edit-reject",
+      "tc-text-change"
+    ]
+  },
+  {
+    "tag": "tc-retrieval-inspector",
+    "name": "RetrievalInspector",
+    "description": "The chunks retrieved for an answer – score, source and place, freshness, whether the answer used them – and the",
+    "events": [
+      "tc-show-change",
+      "tc-selected-change",
+      "tc-open-source"
+    ]
+  },
+  {
+    "tag": "tc-retrieval-settings",
+    "name": "RetrievalSettings",
+    "description": "Chunking, top-k, a score threshold, keyword ↔ vector balance, reranking, metadata filters and how many chunks go",
+    "events": [
+      "tc-value-change",
+      "tc-stage-change"
+    ]
+  },
+  {
+    "tag": "tc-review-center",
+    "name": "ReviewCenter",
+    "description": "Human in the loop: the queue of what your agents want to do, one item at a time.",
+    "events": [
+      "tc-filter-change",
+      "tc-undo",
+      "tc-skip"
+    ]
+  },
+  {
+    "tag": "tc-review-conflict",
+    "name": "ReviewConflict",
+    "description": "Two reviewers disagree: both verdicts with who gave them, resolved by a third person with a reason, or kept blind.",
+    "events": [
+      "tc-resolve"
+    ]
+  },
+  {
+    "tag": "tc-run-checkpoints",
+    "name": "RunCheckpoints",
+    "description": "An agent run's restore points: pick a step, see what it captured and what going back discards, and go back.",
+    "events": [
+      "tc-selected-change",
+      "tc-restore"
+    ]
+  },
+  {
+    "tag": "tc-run-compare",
+    "name": "RunCompare",
+    "description": "Two runs or two prompt versions side by side – outputs, steps, cost and time – with every difference highlighted.",
+    "events": [
+      "tc-view-change",
+      "tc-pick"
+    ]
+  },
+  {
+    "tag": "tc-run-manifest",
+    "name": "RunManifest",
+    "description": "A run's reproducibility record: model, settings, instruction hash, sources, intent and the verification summary,",
+    "events": [
+      "tc-copy",
+      "tc-export"
+    ]
+  },
+  {
+    "tag": "tc-sandbox-log",
+    "name": "SandboxLog",
+    "description": "Command output from an agent's sandbox: a collapsible block per step with the command, exit code, duration and",
+    "events": [
+      "tc-open-change",
+      "tc-query-change",
+      "tc-copy"
+    ]
+  },
+  {
+    "tag": "tc-search-history",
+    "name": "SearchHistory",
+    "description": "Recent and saved searches – tabs with counts, a filter, searches grouped by day with scope chips, result counts and",
+    "events": [
+      "tc-select",
+      "tc-saved-change",
+      "tc-remove",
+      "tc-restore",
+      "tc-tab-change"
+    ]
+  },
+  {
+    "tag": "tc-segmented-control",
+    "name": "SegmentedControl",
+    "description": "Switch between two to six options, with a sliding indicator.",
+    "events": [
+      "tc-value-change"
+    ]
+  },
+  {
+    "tag": "tc-session-context-bar",
+    "name": "SessionContextBar",
+    "description": "The session's declared terms kept in view – intent, knowledge mode, scope, review, posture, limits, deadline and",
+    "events": [
+      "tc-term-edit",
+      "tc-terms-changed"
+    ]
+  },
+  {
+    "tag": "tc-session-state",
+    "name": "SessionState",
+    "description": "Where a long LLM session stands: a health pill, tiles for the goal, open loops, pending artifacts and context",
+    "events": [
+      "tc-action"
+    ]
+  },
+  {
+    "tag": "tc-setup-guide",
+    "name": "SetupGuide",
+    "description": "An onboarding panel: a progress bar and collapsible groups of tasks that unlock one after another.",
+    "events": [
+      "tc-done-change",
+      "tc-open-group-change",
+      "tc-minimized-change",
+      "tc-edit",
+      "tc-close"
+    ]
+  },
+  {
+    "tag": "tc-sla-status",
+    "name": "SlaStatus",
+    "description": "Service-level performance – the on-time share, a Met / At risk / Breached split in words and marks, a weekly trend,",
+    "events": [
+      "tc-period-change"
+    ]
+  },
+  {
+    "tag": "tc-slider-field",
+    "name": "SliderField",
+    "description": "Slider field for AI product settings.",
+    "events": [
+      "tc-value-change"
+    ]
+  },
+  {
+    "tag": "tc-smart-recommendation",
+    "name": "SmartRecommendation",
+    "description": "A suggestion with a confidence signal, alternatives and one-click accept and undo.",
+    "events": [
+      "tc-value-change",
+      "tc-accepted-change",
+      "tc-open-change"
+    ]
+  },
+  {
+    "tag": "tc-status-tracker",
+    "name": "StatusTracker",
+    "description": "A status tracker – a fixed sequence of steps on a line, each cleared, pending, blocked or not reached, with the line",
+    "events": [
+      "tc-selected-change"
+    ]
+  },
+  {
+    "tag": "tc-stepper-form",
+    "name": "StepperForm",
+    "description": "A multi-step flow: numbered steps, sliding panes, checks on Continue and a success state.",
+    "events": [
+      "tc-values-change",
+      "tc-step-change",
+      "tc-panes-change"
+    ]
+  },
+  {
+    "tag": "tc-structured-output",
+    "name": "StructuredOutput",
+    "description": "Streaming JSON as a collapsible, typed tree, checked against a JSON Schema as it arrives.",
+    "events": [
+      "tc-collapsed-change",
+      "tc-copy",
+      "tc-validate"
+    ]
+  },
+  {
+    "tag": "tc-switch",
+    "name": "Switch",
+    "description": "Switch for AI product settings.",
+    "events": [
+      "tc-value-change"
+    ]
+  },
+  {
+    "tag": "tc-synthesis-notes",
+    "name": "SynthesisNotes",
+    "description": "The person's own conclusions, assumptions and things to verify – editable, reorderable from the keyboard,",
+    "events": [
+      "tc-notes-change",
+      "tc-export"
+    ]
+  },
+  {
+    "tag": "tc-tab-overload",
+    "name": "TabOverload",
+    "description": "Three overlapping browser windows; hovering one behind moves the highlight onto it.",
+    "events": []
+  },
+  {
+    "tag": "tc-team-invite",
+    "name": "TeamInvite",
+    "description": "A third teammate is dragged into the empty slot and joins the team.",
+    "events": []
+  },
+  {
+    "tag": "tc-text-annotator",
+    "name": "TextAnnotator",
+    "description": "A document to highlight and comment on: marks in the text, notes in a margin rail, a toolbar on the selection.",
+    "events": [
+      "tc-value-change",
+      "tc-copy",
+      "tc-filter-change"
+    ]
+  },
+  {
+    "tag": "tc-thinking-state",
+    "name": "ThinkingState",
+    "description": "The \"working…\" panel of an AI chat: steps and searches appear one by one, then \"Worked for …\".",
+    "events": [
+      "tc-progress-change",
+      "tc-done",
+      "tc-open-change"
+    ]
+  },
+  {
+    "tag": "tc-tips-panel",
+    "name": "TipsPanel",
+    "description": "A panel of short tips, each with one action that marks it done.",
+    "events": [
+      "tc-done-change",
+      "tc-tip-action",
+      "tc-close"
+    ]
+  },
+  {
+    "tag": "tc-tool-call-card",
+    "name": "ToolCallCard",
+    "description": "One tool call of an AI agent: name, summary, status with a live timer, arguments and result.",
+    "events": [
+      "tc-open-change"
+    ]
+  },
+  {
+    "tag": "tc-tool-call-group",
+    "name": "ToolCallGroup",
+    "description": "Several tool calls folded into one line: \"Used 3 tools · 2.4s\". The cards go in a `slot=\"list\"` child (see above).",
+    "events": [
+      "tc-open-change"
+    ]
+  },
+  {
+    "tag": "tc-tool-configuration",
+    "name": "ToolConfiguration",
+    "description": "A tool as its API reference entry: the name as the title, the signature and description, a doc table of the",
+    "events": [
+      "tc-value-change"
+    ]
+  },
+  {
+    "tag": "tc-tool-permissions",
+    "name": "ToolPermissions",
+    "description": "A matrix of which agent may use which tools and scopes – Allow, Ask or Deny per cell – with presets and a summary of",
+    "events": [
+      "tc-value-change",
+      "tc-save"
+    ]
+  },
+  {
+    "tag": "tc-trace-waterfall",
+    "name": "TraceWaterfall",
+    "description": "An agent run as a tree of spans next to a timeline: durations, costs, folding and a details window per span.",
+    "events": [
+      "tc-collapsed-change",
+      "tc-open-change"
+    ]
+  },
+  {
+    "tag": "tc-traceability-spine",
+    "name": "TraceabilitySpine",
+    "description": "The chain from questions to outcomes in stage columns, linked cards joined by lines, and a card's whole path traced",
+    "events": [
+      "tc-selected-change",
+      "tc-action"
+    ]
+  },
+  {
+    "tag": "tc-transcript-review",
+    "name": "TranscriptReview",
+    "description": "A recording with a transcript that follows playback: timestamps, speakers, recognition and translation confidence,",
+    "events": [
+      "tc-segment-change",
+      "tc-verify",
+      "tc-copy",
+      "tc-query-change",
+      "tc-hidden-speakers-change",
+      "tc-translation-mode-change"
+    ]
+  },
+  {
+    "tag": "tc-travel-itinerary",
+    "name": "TravelItinerary",
+    "description": "Trips as legs – route, mode and carrier, document, confidence, source and grade, and flags – grouped into",
+    "events": [
+      "tc-open"
+    ]
+  },
+  {
+    "tag": "tc-trigger-builder",
+    "name": "TriggerBuilder",
+    "description": "When an automation runs: an event or a schedule, conditions, a plain-language summary and the next run times.",
+    "events": [
+      "tc-value-change"
+    ]
+  },
+  {
+    "tag": "tc-usage-meter",
+    "name": "UsageMeter",
+    "description": "A usage card: a credits meter split into categories, a daily sparkline, plan limits and an upgrade button.",
+    "events": [
+      "tc-period-change",
+      "tc-upgrade"
+    ]
+  },
+  {
+    "tag": "tc-validity-badge",
+    "name": "ValidityBadge",
+    "description": "Evidence freshness as a band that decays with age, plus contested and superseded marks – a badge, or a margin",
+    "events": [
+      "tc-locate"
+    ]
+  },
+  {
+    "tag": "tc-verification-queue",
+    "name": "VerificationQueue",
+    "description": "The claims collected across a session, each marked verified externally, can't verify, incorrect or dismissed",
+    "events": [
+      "tc-claims-change",
+      "tc-review",
+      "tc-filter-change",
+      "tc-export"
+    ]
+  },
+  {
+    "tag": "tc-version-history",
+    "name": "VersionHistory",
+    "description": "The versions of an agent, prompt or workflow on a timeline – draft, active or deprecated, who and when, and what",
+    "events": [
+      "tc-select-change",
+      "tc-compare",
+      "tc-restore",
+      "tc-activate"
+    ]
+  },
+  {
+    "tag": "tc-watchlist",
+    "name": "Watchlist",
+    "description": "A watchlist of people, accounts or entities – avatar, name, reference, group and a risk badge – most at risk first,",
+    "events": [
+      "tc-open",
+      "tc-filter-change",
+      "tc-action"
+    ]
+  },
+  {
+    "tag": "tc-work-item",
+    "name": "WorkItem",
+    "description": "A work item card – title, status, a note, progress, due date, people, what it delivers, spent against budget and",
+    "events": [
+      "tc-open"
+    ]
+  },
+  {
+    "tag": "tc-world-map",
+    "name": "WorldMap",
+    "description": "A world map with one highlighted continent and a menu to switch it.",
+    "events": [
+      "tc-continent-change"
+    ]
+  },
+  {
+    "tag": "tc-writing-assistant",
+    "name": "WritingAssistant",
+    "description": "A compact AI chat card with suggestions, a growing prompt field and dictation.",
+    "events": [
+      "tc-messages-change",
+      "tc-draft-change"
+    ]
+  }
+]

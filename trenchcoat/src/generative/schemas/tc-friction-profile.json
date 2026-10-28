@@ -1,0 +1,163 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-friction-profile.json",
+  "title": "tc-friction-profile",
+  "description": "A mode switch – standard, elevated, deadline – that previews how each safeguard changes (on, shortened, deferred,\ntightened or off) against the mode in force before it is applied.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the region's name"
+    },
+    "scope": {
+      "type": "string",
+      "description": "What it applies to, a quiet line under the heading – e.g. \"This session\""
+    },
+    "modes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/FrictionMode"
+      },
+      "description": "The modes, in switch order – defaults to standard, elevated and deadline"
+    },
+    "mode": {
+      "type": "string",
+      "description": "The id of the mode in force"
+    },
+    "reason": {
+      "type": "string",
+      "description": "Why the mode in force was chosen, when it asked"
+    },
+    "until": {
+      "type": "string",
+      "description": "When the mode in force ends, as a datetime-local value (\"2026-10-27T17:00\"), when it asked"
+    },
+    "safeguards": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/FrictionSafeguard"
+      },
+      "description": "The safeguards and their state in each mode"
+    },
+    "stateLabels": {
+      "type": "object",
+      "properties": {
+        "off": {
+          "type": "string"
+        },
+        "on": {
+          "type": "string"
+        },
+        "shortened": {
+          "type": "string"
+        },
+        "deferred": {
+          "type": "string"
+        },
+        "tightened": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Names of the states"
+    },
+    "locale": {
+      "type": "string",
+      "description": "Locale for the end time"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "FrictionMode": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "\"Standard\", \"Elevated\", \"Deadline\""
+        },
+        "description": {
+          "type": "string",
+          "description": "One line on what the mode is for, under the switch"
+        },
+        "needsReason": {
+          "type": "boolean",
+          "description": "Applying it asks why"
+        },
+        "needsEnd": {
+          "type": "boolean",
+          "description": "Applying it asks until when"
+        },
+        "tone": {
+          "$ref": "#/definitions/FrictionTone",
+          "description": "The pill's colour while it is in force (default neutral)"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "FrictionTone": {
+      "type": "string",
+      "enum": [
+        "neutral",
+        "info",
+        "warning"
+      ]
+    },
+    "FrictionSafeguard": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "\"Intent check\", \"Export review\""
+        },
+        "description": {
+          "type": "string",
+          "description": "What it does, shown when it doesn't change"
+        },
+        "modes": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "state": {
+                "$ref": "#/definitions/FrictionState"
+              },
+              "change": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "state"
+            ],
+            "additionalProperties": false
+          },
+          "description": "Its state per mode id, with what changes in plain words; a mode left out is \"on\""
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "FrictionState": {
+      "type": "string",
+      "enum": [
+        "on",
+        "shortened",
+        "deferred",
+        "tightened",
+        "off"
+      ]
+    }
+  }
+}

@@ -1,0 +1,93 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-kpi-chart.json",
+  "title": "tc-kpi-chart",
+  "description": "A metric card with a multi-line chart, a legend and a hover tooltip.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The card's title"
+    },
+    "value": {
+      "type": "string",
+      "description": "Headline value, already formatted, e.g. \"$96.4k\""
+    },
+    "delta": {
+      "type": "number",
+      "description": "Change against the previous period – a rise is green and a drop red, unless `lowerIsBetter`"
+    },
+    "lowerIsBetter": {
+      "type": "boolean",
+      "description": "A drop is the good direction (latency, cost, error rate): a negative `delta` shows green, a positive one red"
+    },
+    "labels": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Short labels along the x-axis, e.g. \"Mar 4\""
+    },
+    "tooltipLabels": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Longer labels for the tooltip header, e.g. \"Tue, Mar 4\" – falls back to `labels`"
+    },
+    "series": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/KpiSeries"
+      },
+      "description": "The lines, each with a label, an optional colour and one value per label – every line also gets its own stroke pattern"
+    },
+    "footer": {
+      "type": "string",
+      "description": "Line under the chart"
+    },
+    "legend": {
+      "type": "boolean",
+      "description": "A legend naming each line – unset shows it when there are two or more lines; legend=\"false\" hides it"
+    },
+    "defaultIndex": {
+      "type": "number",
+      "description": "Point that stays highlighted while nobody hovers – unset hides the tooltip at rest"
+    },
+    "index": {
+      "type": "number",
+      "description": "The highlighted point, or null for none (then `defaultIndex` shows)"
+    },
+    "fill": {
+      "type": "boolean",
+      "description": "Fill the container: no max-width, the card stretches and the plot grows with its height"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "KpiSeries": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "color": {
+          "type": "string",
+          "description": "Line colour: any CSS colour, including a token such as `var(--tc-chart-2)` – it is applied through CSS, so custom properties resolve. Unset takes the next `--tc-chart-1…6` token"
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "One value per label, same length as `labels`"
+        }
+      },
+      "required": [
+        "label",
+        "values"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,315 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-publication-impact.json",
+  "title": "tc-publication-impact",
+  "description": "One paper's impact – venue, topic, grade and authors; downloads, views, citations and attention with a reads\nsparkline; mentions; who is reading; and feedback quotes filtered by kind, each with a sentiment.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The paper's title"
+    },
+    "venue": {
+      "type": "string",
+      "description": "Where it was published"
+    },
+    "date": {
+      "type": "number",
+      "description": "When it was published, as epoch ms"
+    },
+    "topic": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "href": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "label"
+      ],
+      "additionalProperties": false,
+      "description": "The topic it belongs to; with `href` it's a link"
+    },
+    "grade": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "tone": {
+          "$ref": "#/definitions/PublicationTone"
+        }
+      },
+      "required": [
+        "label"
+      ],
+      "additionalProperties": false,
+      "description": "The assessment grade, e.g. { label: \"Outstanding\", tone: \"success\" }"
+    },
+    "gradeLabel": {
+      "type": "string",
+      "description": "The grade's caption"
+    },
+    "authors": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/PublicationAuthor"
+      },
+      "description": "The authors, in order"
+    },
+    "outcome": {
+      "type": "string",
+      "description": "What the paper achieved, as a short tag: \"resolves gap\""
+    },
+    "metrics": {
+      "type": "object",
+      "properties": {
+        "downloads": {
+          "type": "number"
+        },
+        "views": {
+          "type": "number"
+        },
+        "citations": {
+          "type": "number"
+        },
+        "attention": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Downloads, views, citations and attention score; each shows only when given"
+    },
+    "reads": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      },
+      "description": "Cumulative reads over time, oldest first, for the sparkline"
+    },
+    "mentions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/PublicationMention"
+      },
+      "description": "Mentions by kind: [{ label: \"News\", value: 11 }, …]"
+    },
+    "audience": {
+      "type": "object",
+      "properties": {
+        "sectors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AudienceShare"
+          }
+        },
+        "split": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/AudienceSplit"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "places": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AudienceShare"
+          }
+        }
+      },
+      "additionalProperties": false,
+      "description": "Who is reading – shown with <tc-audience-mix> when given"
+    },
+    "feedback": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/PublicationFeedback"
+      },
+      "description": "Feedback quotes"
+    },
+    "filter": {
+      "anyOf": [
+        {
+          "type": "string",
+          "const": "all"
+        },
+        {
+          "$ref": "#/definitions/PublicationFeedbackKind"
+        }
+      ],
+      "description": "The feedback kind shown. Changed by the user unless a tc-filter-change listener calls preventDefault()"
+    },
+    "kindLabels": {
+      "type": "object",
+      "properties": {
+        "peer": {
+          "type": "string"
+        },
+        "reader": {
+          "type": "string"
+        },
+        "sponsor": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The feedback kinds' names, merged over the defaults (Peer, Reader, Sponsor)"
+    },
+    "sentimentLabels": {
+      "type": "object",
+      "properties": {
+        "mixed": {
+          "type": "string"
+        },
+        "positive": {
+          "type": "string"
+        },
+        "negative": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The sentiments' names, merged over the defaults (Positive, Mixed, Negative)"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for dates and numbers, e.g. \"en-GB\"; by default the browser's"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "PublicationTone": {
+      "type": "string",
+      "enum": [
+        "neutral",
+        "info",
+        "success",
+        "warning",
+        "danger"
+      ]
+    },
+    "PublicationAuthor": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "picture": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "PublicationMention": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "value": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "label",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "AudienceShare": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "value": {
+          "type": "number",
+          "description": "A count or a share in any unit; the percentage comes from the group's total"
+        }
+      },
+      "required": [
+        "label",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "AudienceSplit": {
+      "type": "object",
+      "properties": {
+        "internal": {
+          "type": "number"
+        },
+        "external": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "internal",
+        "external"
+      ],
+      "additionalProperties": false
+    },
+    "PublicationFeedback": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/definitions/PublicationFeedbackKind"
+        },
+        "who": {
+          "type": "string",
+          "description": "Who said it: \"Reviewer 2\""
+        },
+        "where": {
+          "type": "string",
+          "description": "Where they're from: \"Journal of Applied Sensing\", \"Northfield Lab\""
+        },
+        "date": {
+          "type": "number",
+          "description": "When, as epoch ms"
+        },
+        "quote": {
+          "type": "string"
+        },
+        "sentiment": {
+          "$ref": "#/definitions/PublicationSentiment"
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "who",
+        "quote",
+        "sentiment"
+      ],
+      "additionalProperties": false
+    },
+    "PublicationFeedbackKind": {
+      "type": "string",
+      "enum": [
+        "peer",
+        "reader",
+        "sponsor"
+      ]
+    },
+    "PublicationSentiment": {
+      "type": "string",
+      "enum": [
+        "positive",
+        "mixed",
+        "negative"
+      ]
+    }
+  }
+}

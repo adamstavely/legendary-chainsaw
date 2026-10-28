@@ -1,0 +1,70 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-code-block.json",
+  "title": "tc-code-block",
+  "description": "Streaming code with syntax colours, Copy, Apply, and a line diff against the current file.",
+  "type": "object",
+  "properties": {
+    "code": {
+      "type": "string",
+      "description": "The code; it may grow every frame while streaming"
+    },
+    "language": {
+      "type": "string",
+      "description": "Language for the colours: ts, tsx, js, jsx, py, json, html, xml, css, sh/bash, or plain"
+    },
+    "filename": {
+      "type": "string",
+      "description": "File name shown in the head, e.g. \"src/auth/session.ts\""
+    },
+    "current": {
+      "type": "string",
+      "description": "The file as it is now. When given, a Diff button shows the changes the code would make"
+    },
+    "view": {
+      "type": "string",
+      "enum": [
+        "diff",
+        "code"
+      ],
+      "description": "\"code\" or \"diff\". Changed by the user unless a tc-view-change listener calls preventDefault()"
+    },
+    "streaming": {
+      "type": "boolean",
+      "description": "The code is still coming in: a caret blinks at the end, Diff and Apply wait"
+    },
+    "applyable": {
+      "type": "boolean",
+      "description": "Show the Apply button (fires tc-apply)"
+    },
+    "applied": {
+      "type": "boolean",
+      "description": "The code has been applied: Apply turns into a disabled \"Applied\""
+    },
+    "applyLabel": {
+      "type": "string",
+      "description": "Apply button text"
+    },
+    "appliedLabel": {
+      "type": "string",
+      "description": "Applied state text"
+    },
+    "lineNumbers": {
+      "type": "boolean",
+      "description": "Line numbers in a gutter"
+    },
+    "wrap": {
+      "type": "boolean",
+      "description": "Wrap long lines instead of scrolling sideways"
+    },
+    "maxHeight": {
+      "type": "number",
+      "description": "Cap the body's height in px (0: grow with the code); a capped body scrolls and follows the end while streaming"
+    },
+    "bare": {
+      "type": "boolean",
+      "description": "No tray or card around it – for use inside another component's card"
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,86 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-disagreement-banner.json",
+  "title": "tc-disagreement-banner",
+  "description": "Today's answer and an earlier answer to the same question side by side, the difference highlighted, with dismiss\nand open-the-earlier-session.",
+  "type": "object",
+  "properties": {
+    "earlier": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "when": {
+          "type": "string"
+        },
+        "sessionId": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "additionalProperties": false,
+      "description": "The earlier answer – on the left"
+    },
+    "current": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "when": {
+          "type": "string"
+        },
+        "sessionId": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "additionalProperties": false,
+      "description": "Today's answer – on the right"
+    },
+    "question": {
+      "type": "string",
+      "description": "The question both answers were given to, shown under the heading"
+    },
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "summary": {
+      "type": "string",
+      "description": "A line from your product on what changed, e.g. \"The notice period went from 30 to 60 days\""
+    },
+    "expanded": {
+      "type": "boolean",
+      "description": "Shows both answers in full; unset, long answers show only the changes and the words around them"
+    },
+    "context": {
+      "type": "number",
+      "description": "How many shared words to keep either side of a change while not expanded"
+    },
+    "dismissible": {
+      "type": "boolean",
+      "description": "Shows Dismiss (fires tc-dismiss)"
+    },
+    "canOpen": {
+      "type": "boolean",
+      "description": "Shows \"Open earlier session\" (fires tc-open-session)"
+    },
+    "dismissed": {
+      "type": "boolean",
+      "description": "Dismissed: the banner shows nothing"
+    }
+  },
+  "additionalProperties": false
+}

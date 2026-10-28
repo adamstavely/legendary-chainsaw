@@ -1,0 +1,249 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-trigger-builder.json",
+  "title": "tc-trigger-builder",
+  "description": "When an automation runs: an event or a schedule, conditions, a plain-language summary and the next run times.",
+  "type": "object",
+  "properties": {
+    "value": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": [
+            "event",
+            "schedule"
+          ]
+        },
+        "event": {
+          "type": "string"
+        },
+        "schedule": {
+          "$ref": "#/definitions/TriggerSchedule"
+        },
+        "active": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/TriggerActive"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "conditions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TriggerCondition"
+          }
+        },
+        "match": {
+          "type": "string",
+          "enum": [
+            "all",
+            "any"
+          ]
+        }
+      },
+      "required": [
+        "kind",
+        "conditions",
+        "match"
+      ],
+      "additionalProperties": false,
+      "description": "The trigger definition. Changed by the user unless a tc-value-change listener calls preventDefault()"
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/TriggerEvent"
+      },
+      "description": "The events a trigger can listen for"
+    },
+    "scheduleFields": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/TriggerField"
+      },
+      "description": "What a schedule's conditions can test (none: schedules have no conditions)"
+    },
+    "heading": {
+      "type": "string",
+      "description": "Names the group, shown at the top"
+    },
+    "now": {
+      "type": "number",
+      "description": "Counts the next runs from here (ms since epoch); unset: when the element connected"
+    },
+    "runCount": {
+      "type": "number",
+      "description": "How many next runs to list"
+    },
+    "timeZone": {
+      "type": "string",
+      "description": "Shown under the card – unset: the browser's time zone"
+    },
+    "name": {
+      "type": "string",
+      "description": "Submitted with the form: the definition as JSON"
+    },
+    "disabled": {
+      "type": "boolean",
+      "description": "Turns every control off and leaves the definition out of the form; a disabled fieldset does the same"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "TriggerSchedule": {
+      "type": "object",
+      "properties": {
+        "frequency": {
+          "$ref": "#/definitions/TriggerFrequency"
+        },
+        "time": {
+          "type": "string",
+          "description": "\"09:00\", 24-hour; hourly runs use its minutes"
+        },
+        "days": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Weekly: the days, 0 = Sunday … 6 = Saturday"
+        },
+        "dayOfMonth": {
+          "type": "number",
+          "description": "Monthly: the day of the month, 1–31 (a short month runs on its last day)"
+        }
+      },
+      "required": [
+        "frequency",
+        "time"
+      ],
+      "additionalProperties": false
+    },
+    "TriggerFrequency": {
+      "type": "string",
+      "enum": [
+        "hourly",
+        "daily",
+        "weekly",
+        "monthly"
+      ]
+    },
+    "TriggerActive": {
+      "type": "object",
+      "properties": {
+        "start": {
+          "type": "string"
+        },
+        "end": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "start",
+        "end"
+      ],
+      "additionalProperties": false,
+      "description": "Only between these days, \"YYYY-MM-DD\", both included"
+    },
+    "TriggerCondition": {
+      "type": "object",
+      "properties": {
+        "field": {
+          "type": "string"
+        },
+        "operator": {
+          "$ref": "#/definitions/TriggerOperator"
+        },
+        "value": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "field",
+        "operator",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "TriggerOperator": {
+      "type": "string",
+      "enum": [
+        "is",
+        "is-not",
+        "contains",
+        "gt",
+        "lt"
+      ]
+    },
+    "TriggerEvent": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "In the list – \"Deal changes stage\""
+        },
+        "phrase": {
+          "type": "string",
+          "description": "In the sentence after \"when\" – \"a deal changes stage\"; defaults to the label"
+        },
+        "hint": {
+          "type": "string",
+          "description": "Lighter text in the list, e.g. the app it comes from"
+        },
+        "group": {
+          "type": "string",
+          "description": "Events with the same group are listed under one title"
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TriggerField"
+          },
+          "description": "What its conditions can test"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "TriggerField": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "text",
+            "number",
+            "select"
+          ],
+          "description": "\"text\" (the default), \"number\", or \"select\" with `options`"
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

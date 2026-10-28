@@ -1,0 +1,125 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-ops-overview.json",
+  "title": "tc-ops-overview",
+  "description": "An operations overview strip – a status line, a health pill and count tiles, each with its change since the last\nperiod in words and colour, an optional sparkline and tone, optionally actionable.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "status": {
+      "type": "string",
+      "description": "The one-line status under the heading: \"All operations active · 3 analysts on watch\""
+    },
+    "health": {
+      "type": "string",
+      "enum": [
+        "down",
+        "nominal",
+        "degraded"
+      ],
+      "description": "The feeds' or systems' health; unset hides the pill"
+    },
+    "healthLabels": {
+      "type": "object",
+      "properties": {
+        "down": {
+          "type": "string"
+        },
+        "nominal": {
+          "type": "string"
+        },
+        "degraded": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The health states' names, merged over the defaults (Feeds nominal, Feeds degraded, Feeds down)"
+    },
+    "tiles": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/OpsTile"
+      },
+      "description": "The count tiles, in order"
+    },
+    "changeLabel": {
+      "type": "string",
+      "description": "What a change is measured against, for screen readers and titles: \"since last week\""
+    },
+    "actionable": {
+      "type": "boolean",
+      "description": "Makes the tiles buttons that fire tc-action"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for numbers, e.g. \"de\"; by default the browser's"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "OpsTile": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "value": {
+          "type": [
+            "number",
+            "string"
+          ],
+          "description": "The count, or any short value (\"94%\")"
+        },
+        "sub": {
+          "type": "string",
+          "description": "One quiet line under the value: \"tracked\", \"projects active\""
+        },
+        "change": {
+          "type": "number",
+          "description": "The change since the last period, e.g. 2 or -1; 0 shows \"no change\""
+        },
+        "goodWhen": {
+          "type": "string",
+          "enum": [
+            "up",
+            "down",
+            "none"
+          ],
+          "description": "Which way is good: \"up\" (default), \"down\" (alerts, risks) or \"none\" (neither – the badge stays neutral)"
+        },
+        "trend": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Recent values, oldest first, drawn as a sparkline"
+        },
+        "tone": {
+          "$ref": "#/definitions/OpsTone",
+          "description": "Tints the value: danger for \"Critical risk\""
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "OpsTone": {
+      "type": "string",
+      "enum": [
+        "neutral",
+        "success",
+        "warning",
+        "danger"
+      ]
+    }
+  }
+}

@@ -1,0 +1,106 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-capacity-bars.json",
+  "title": "tc-capacity-bars",
+  "description": "People's capacity: each person's allocation, split by what they work on, against what they can take, with anyone\nover capacity marked and counted.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the grid's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "people": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/CapacityPerson"
+      },
+      "description": "The people"
+    },
+    "unit": {
+      "type": "string",
+      "description": "The unit loads are counted in: \"FTE\", \"h\", \"%\""
+    },
+    "sort": {
+      "type": "string",
+      "enum": [
+        "load",
+        "none"
+      ],
+      "description": "\"load\" puts the most loaded first; \"none\" keeps the order given"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for numbers, e.g. \"en-GB\"; by default the browser's"
+    },
+    "selected": {
+      "type": "string",
+      "description": "The selected person's id. Changed by the user unless a tc-selected-change listener calls preventDefault()"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "CapacityPerson": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string",
+          "description": "Their role, e.g. \"Principal Investigator\""
+        },
+        "picture": {
+          "type": "string",
+          "description": "A picture URL; without one the row shows the name's initials"
+        },
+        "capacity": {
+          "type": "number",
+          "description": "How much they can take, in `unit` – 1 FTE by default"
+        },
+        "allocations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CapacityAllocation"
+          },
+          "description": "What they work on"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "allocations"
+      ],
+      "additionalProperties": false
+    },
+    "CapacityAllocation": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Identifies the piece of work; the same id gets the same colour on every row"
+        },
+        "label": {
+          "type": "string",
+          "description": "What it is, e.g. \"Climate Resilience Modeling\""
+        },
+        "amount": {
+          "type": "number",
+          "description": "How much of the person it takes, in `unit`"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "amount"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

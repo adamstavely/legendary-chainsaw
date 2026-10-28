@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-isbn-details.json",
+  "title": "tc-isbn-details",
+  "description": "ISBN numbers in text, validated and marked: hover or focus one for the book's details.",
+  "type": "object",
+  "properties": {
+    "text": {
+      "type": "string",
+      "description": "The text to find ISBNs in: plain text, shown as written (line breaks kept)"
+    },
+    "hoverDelay": {
+      "type": "number",
+      "description": "How long the pointer rests on a mark before its card opens, ms"
+    },
+    "notFoundText": {
+      "type": "string",
+      "description": "What the card says when there are no details for an ISBN"
+    },
+    "errorText": {
+      "type": "string",
+      "description": "What the card says when the lookup failed"
+    }
+  },
+  "additionalProperties": false
+}

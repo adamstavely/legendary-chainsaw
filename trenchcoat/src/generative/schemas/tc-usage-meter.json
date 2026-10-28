@@ -1,0 +1,191 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-usage-meter.json",
+  "title": "tc-usage-meter",
+  "description": "A usage card: a credits meter split into categories, a daily sparkline, plan limits and an upgrade button.",
+  "type": "object",
+  "properties": {
+    "layout": {
+      "type": "string",
+      "enum": [
+        "wide",
+        "stacked"
+      ],
+      "description": "\"stacked\" (default): one column at most 460px wide · \"wide\": full width, two columns from 640px"
+    },
+    "total": {
+      "type": "number",
+      "description": "Credits included in the plan"
+    },
+    "used": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/UsageItem"
+      },
+      "description": "What the credits were spent on in the shown period"
+    },
+    "limits": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/UsageLimit"
+      },
+      "description": "Thin meters below, e.g. seats, storage, projects"
+    },
+    "periods": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/UsagePeriod"
+      },
+      "description": "Options of the period switch – no switch when left out"
+    },
+    "period": {
+      "type": "string",
+      "description": "The chosen period id – unset is the first of `periods`"
+    },
+    "resetAt": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "string",
+          "format": "date-time"
+        }
+      ],
+      "description": "When the credits reset – shown as \"Resets in 9 days\""
+    },
+    "now": {
+      "type": "number",
+      "description": "The current time in epoch ms, for \"Resets in …\" – unset reads the clock after the element connects"
+    },
+    "locale": {
+      "type": "string",
+      "description": "Locale for numbers and dates"
+    },
+    "daily": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/UsageDay"
+      },
+      "description": "Usage per day for the sparkline under the meter"
+    },
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the region's name"
+    },
+    "plan": {
+      "type": "string",
+      "description": "Plan name next to the reset date, e.g. \"Pro plan\""
+    },
+    "unit": {
+      "type": "string",
+      "description": "Unit of the credits"
+    },
+    "warnAt": {
+      "type": "number",
+      "description": "Share from which the meter warns (0–1)"
+    },
+    "upgradeLabel": {
+      "type": "string",
+      "description": "Button text while there is room left"
+    },
+    "topUpLabel": {
+      "type": "string",
+      "description": "Button text near and at the limit"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "UsageItem": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "value": {
+          "type": "number"
+        },
+        "color": {
+          "type": "string",
+          "description": "Any CSS color – defaults to shades of the accent, then grays"
+        }
+      },
+      "required": [
+        "label",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "UsageLimit": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "used": {
+          "type": "number"
+        },
+        "total": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Leave out (or pass null / Infinity) for unlimited"
+        },
+        "unit": {
+          "type": "string",
+          "description": "Shown after the numbers, e.g. \"GB\""
+        },
+        "decimals": {
+          "type": "number",
+          "description": "Decimal places – defaults to 1 for fractional values, else 0"
+        }
+      },
+      "required": [
+        "label",
+        "used"
+      ],
+      "additionalProperties": false
+    },
+    "UsagePeriod": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "UsageDay": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string",
+          "description": "Shown on hover, e.g. \"Oct 3\""
+        },
+        "value": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "null for days still to come in the period"
+        }
+      },
+      "required": [
+        "label",
+        "value"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

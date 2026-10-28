@@ -1,0 +1,103 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-agent-ledger.json",
+  "title": "tc-agent-ledger",
+  "description": "Everything an agent changed, newest first, each change with an Undo that takes what builds on it along.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the list's name"
+    },
+    "agent": {
+      "type": "string",
+      "description": "Who made the changes – e.g. \"Launch agent\""
+    },
+    "entries": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/LedgerEntry"
+      },
+      "description": "The changes the agent made, in any order – the ledger lists them newest first"
+    },
+    "now": {
+      "type": "number",
+      "description": "The clock for \"2m ago\", in epoch ms – unset, the element keeps its own clock"
+    },
+    "undone": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Ids of undone changes"
+    },
+    "pointAt": {
+      "type": "string",
+      "description": "Lights up a change and what builds on it, as if its Undo were pointed at – e.g. for a walkthrough"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "LedgerEntry": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "action": {
+          "type": "string",
+          "description": "What was done, in a few words – e.g. \"Changed price\""
+        },
+        "target": {
+          "type": "string",
+          "description": "To what – e.g. \"Pro plan\""
+        },
+        "system": {
+          "type": "string",
+          "description": "Where – e.g. \"Stripe\"; shown after the time and in the labels"
+        },
+        "at": {
+          "type": "number",
+          "description": "When it happened (epoch ms)"
+        },
+        "change": {
+          "type": "array",
+          "minItems": 2,
+          "items": [
+            {
+              "type": "string",
+              "title": "before"
+            },
+            {
+              "type": "string",
+              "title": "after"
+            }
+          ],
+          "maxItems": 2,
+          "description": "Before and after – e.g. [\"$29\", \"$34\"]; or a single line of detail"
+        },
+        "detail": {
+          "type": "string"
+        },
+        "reversible": {
+          "type": "boolean",
+          "description": "False for changes that can't be taken back – a sent email, a payout (default true)"
+        },
+        "dependsOn": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Ids of the changes this one builds on – undoing one of those undoes this one too"
+        }
+      },
+      "required": [
+        "id",
+        "action",
+        "system",
+        "at"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

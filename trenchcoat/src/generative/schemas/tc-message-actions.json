@@ -1,0 +1,105 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-message-actions.json",
+  "title": "tc-message-actions",
+  "description": "The action bar under an AI chat message: copy, regenerate with a version switcher, thumbs with a feedback row, and\nread aloud.",
+  "type": "object",
+  "properties": {
+    "text": {
+      "type": "string",
+      "description": "The message text – copied to the clipboard by Copy and used to time Read aloud"
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/MessageActionKey"
+      },
+      "description": "Which actions to show, in this order"
+    },
+    "versions": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      ],
+      "description": "All versions of the message, or just how many there are. From 2 on the version switcher shows"
+    },
+    "version": {
+      "type": "number",
+      "description": "The shown version (0-based); unset, the bar keeps it, starting at `defaultVersion` and jumping to new versions"
+    },
+    "defaultVersion": {
+      "type": "number",
+      "description": "Starting version while `version` is unset – defaults to the newest"
+    },
+    "regenerating": {
+      "type": "boolean",
+      "description": "Keeps the regenerate arrow spinning while a new version is written"
+    },
+    "feedback": {
+      "type": "string",
+      "enum": [
+        "up",
+        "down"
+      ],
+      "description": "The vote: \"up\", \"down\" or null for none. Unset, the bar keeps it, starting at `defaultFeedback`"
+    },
+    "defaultFeedback": {
+      "type": "string",
+      "enum": [
+        "up",
+        "down"
+      ],
+      "description": "The vote to start with while `feedback` is unset"
+    },
+    "reasons": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Quick reasons in the feedback row. \"Other\" opens a small text field"
+    },
+    "ownSpeech": {
+      "type": "boolean",
+      "description": "Set when you play the audio yourself (listen to tc-speak): the bar then doesn't read `text` with the browser's speech synthesis. Without it (and without `speaking`) the browser reads `text`; where there is none, reading is simulated (and warns once, unless `demo` is set)"
+    },
+    "speaking": {
+      "type": "boolean",
+      "description": "Controlled playing state, e.g. tied to your speech player"
+    },
+    "speakDuration": {
+      "type": "number",
+      "description": "How long an uncontrolled read aloud plays when it isn't the browser speaking, in ms – defaults to an estimate from `text`"
+    },
+    "demo": {
+      "type": "boolean",
+      "description": "Demo mode: Read aloud is simulated silently where it would be simulated. For galleries and prototypes"
+    },
+    "quiet": {
+      "type": "boolean",
+      "description": "Lighter icons until the message is hovered (default true; quiet=\"false\" turns it off). Put data-ui-message on the message wrapper"
+    },
+    "label": {
+      "type": "string",
+      "description": "Accessible name of the bar"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "MessageActionKey": {
+      "type": "string",
+      "enum": [
+        "copy",
+        "regenerate",
+        "feedback",
+        "speak"
+      ]
+    }
+  }
+}

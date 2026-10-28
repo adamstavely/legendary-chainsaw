@@ -1,0 +1,174 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-coverage-matrix.json",
+  "title": "tc-coverage-matrix",
+  "description": "A heatmap of checks × parts – covered, partial or gap – with totals, a legend with counts, and a cell's detail on\nEnter or click.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the grid's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "checks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/CoverageCheck"
+      },
+      "description": "The rows: what does the covering – tests, controls, policies"
+    },
+    "parts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/CoveragePart"
+      },
+      "description": "The columns: what gets covered – components, systems, models"
+    },
+    "coverage": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/CoverageCell"
+            },
+            {
+              "$ref": "#/definitions/CoverageStatus"
+            }
+          ]
+        }
+      },
+      "description": "Each cell's status, with optional detail and evidence"
+    },
+    "open": {
+      "type": "object",
+      "properties": {
+        "check": {
+          "type": "string"
+        },
+        "part": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "check",
+        "part"
+      ],
+      "additionalProperties": false,
+      "description": "The cell whose detail is open. Changed by the user unless a tc-open-change listener calls preventDefault()"
+    },
+    "defaultStatus": {
+      "type": "string",
+      "enum": [
+        "partial",
+        "none",
+        "covered",
+        "gap"
+      ],
+      "description": "A cell missing from `coverage`"
+    },
+    "partialWeight": {
+      "type": "number",
+      "description": "How much a partial cell counts towards a total, from 0 to 1"
+    },
+    "statusLabels": {
+      "type": "object",
+      "properties": {
+        "partial": {
+          "type": "string"
+        },
+        "none": {
+          "type": "string"
+        },
+        "covered": {
+          "type": "string"
+        },
+        "gap": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The statuses' names, merged over the defaults (Covered, Partial, Gap, Not applicable)"
+    },
+    "checkLabel": {
+      "type": "string",
+      "description": "The heading of the checks column"
+    },
+    "totalLabel": {
+      "type": "string",
+      "description": "The heading of the totals column and row"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "CoverageCheck": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string",
+          "description": "One quiet line under the label, e.g. \"Jailbreaks through retrieved text\""
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "CoveragePart": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "CoverageCell": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "$ref": "#/definitions/CoverageStatus"
+        },
+        "detail": {
+          "type": "string",
+          "description": "What covers it, or what's missing, in a sentence"
+        },
+        "evidence": {
+          "type": "string",
+          "description": "Where the coverage comes from, e.g. \"12 tests · last run 2 h ago\""
+        }
+      },
+      "required": [
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "CoverageStatus": {
+      "type": "string",
+      "enum": [
+        "covered",
+        "partial",
+        "gap",
+        "none"
+      ]
+    }
+  }
+}

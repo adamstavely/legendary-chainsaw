@@ -1,0 +1,62 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-button.json",
+  "title": "tc-button",
+  "description": "A button: primary, secondary, ghost or destructive, in three sizes, with a loading state.",
+  "type": "object",
+  "properties": {
+    "variant": {
+      "type": "string",
+      "enum": [
+        "primary",
+        "secondary",
+        "ghost",
+        "destructive"
+      ],
+      "description": "primary: dark and filled · secondary: white with an outline (Clean: a hairline shadow) · ghost: text only · destructive: red, for deleting"
+    },
+    "size": {
+      "type": "string",
+      "enum": [
+        "sm",
+        "md",
+        "lg"
+      ],
+      "description": "Height and padding: sm, md or lg (Standard 28 · 32 · 40 px, Clean 24 · 28 · 32 px)"
+    },
+    "label": {
+      "type": "string",
+      "description": "The button's text (and its accessible name)"
+    },
+    "hideLabel": {
+      "type": "boolean",
+      "description": "Icon only: the label isn't shown, but stays the button's name"
+    },
+    "loading": {
+      "type": "boolean",
+      "description": "Shows a shimmer over the label, blocks clicks and adds \"loading\" to the accessible name"
+    },
+    "disabled": {
+      "type": "boolean",
+      "description": "Dims the button and disables the native button inside it, so it can't be focused or clicked"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "button",
+        "submit",
+        "reset"
+      ],
+      "description": "The inner native button's type: \"button\" does nothing in a form, \"submit\" submits it, \"reset\" resets it"
+    },
+    "name": {
+      "type": "string",
+      "description": "Submitted with the form when this is its submit button"
+    },
+    "value": {
+      "type": "string",
+      "description": "Submitted as `name`'s value when this button submits its form"
+    }
+  },
+  "additionalProperties": false
+}

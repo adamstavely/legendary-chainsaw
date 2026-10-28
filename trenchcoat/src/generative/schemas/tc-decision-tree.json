@@ -1,0 +1,177 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-decision-tree.json",
+  "title": "tc-decision-tree",
+  "description": "An agent's open decision drawn as a tree of options and consequences – pick a path or write your own instruction.",
+  "type": "object",
+  "properties": {
+    "decisions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/TreeDecision"
+      },
+      "description": "Everything waiting for a call – decided ones leave on their own, new ids join at the end"
+    },
+    "decision": {
+      "type": "string",
+      "description": "The id of the decision on show – unset shows the first"
+    },
+    "allowOther": {
+      "type": "boolean",
+      "description": "Shows the \"Other…\" branch; allow-other=\"false\" hides it"
+    },
+    "heading": {
+      "type": "string",
+      "description": "The heading in the bar, before how many decisions wait"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "TreeDecision": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "question": {
+          "type": "string",
+          "description": "The question, in one sentence"
+        },
+        "context": {
+          "type": "string",
+          "description": "A line of context under it"
+        },
+        "agent": {
+          "type": "string",
+          "description": "Who asks, e.g. \"Billing agent\""
+        },
+        "model": {
+          "type": "string",
+          "description": "The model behind the agent – shown under its name"
+        },
+        "risk": {
+          "$ref": "#/definitions/DecisionRisk",
+          "description": "High and medium show as a small tag next to the agent"
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TreeDecisionOption"
+          },
+          "description": "Two to four options"
+        }
+      },
+      "required": [
+        "id",
+        "question",
+        "agent",
+        "options"
+      ],
+      "additionalProperties": false
+    },
+    "DecisionRisk": {
+      "type": "string",
+      "enum": [
+        "high",
+        "medium",
+        "low"
+      ]
+    },
+    "TreeDecisionOption": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string",
+          "description": "What to do, in a few words – e.g. \"Roll back to #481\""
+        },
+        "effects": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DecisionText"
+          },
+          "description": "What it leads to, one line each – e.g. \"Refunds $147 · not reversible\""
+        },
+        "apps": {
+          "type": "array",
+          "items": {
+            "not": {}
+          },
+          "description": "The systems it touches – small logo elements beside its consequences (cloned)"
+        },
+        "pick": {
+          "type": "boolean",
+          "description": "The agent's own preference – marked \"Agent's pick\""
+        },
+        "next": {
+          "$ref": "#/definitions/TreeDecisionStep",
+          "description": "A follow-up question this branch leads to – picked right after it. One level deep: its options end the path"
+        }
+      },
+      "required": [
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "DecisionText": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/definitions/DecisionFlag"
+              }
+            ]
+          }
+        }
+      ],
+      "description": "Plain text, or text with flagged parts in it"
+    },
+    "DecisionFlag": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "text",
+        "note"
+      ],
+      "additionalProperties": false,
+      "description": "A part of a consequence the agent isn't sure about – marked, its note shows on hover"
+    },
+    "TreeDecisionStep": {
+      "type": "object",
+      "properties": {
+        "question": {
+          "type": "string"
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TreeDecisionOption"
+          }
+        }
+      },
+      "required": [
+        "question",
+        "options"
+      ],
+      "additionalProperties": false,
+      "description": "A follow-up question with two to four options"
+    }
+  }
+}

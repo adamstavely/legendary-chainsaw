@@ -1,0 +1,123 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-response-selection.json",
+  "title": "tc-response-selection",
+  "description": "Select part of a model's answer and act on it: reply quoting it, ask why, or request an edit that comes back as a\nword diff to accept or reject.",
+  "type": "object",
+  "properties": {
+    "text": {
+      "type": "string",
+      "description": "The answer: plain text, paragraphs separated by blank lines. Offsets index into it"
+    },
+    "quotes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ResponseQuote"
+      },
+      "description": "The passages collected for a reply. Changed by the user unless a tc-quotes-change listener calls preventDefault()"
+    },
+    "edit": {
+      "type": "object",
+      "properties": {
+        "start": {
+          "type": "number"
+        },
+        "end": {
+          "type": "number"
+        },
+        "replacement": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "start",
+        "end"
+      ],
+      "additionalProperties": false,
+      "description": "The app's answer to an edit request – a replacement or an error for [start, end) – shown inline until accepted or rejected"
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ResponseAction"
+      },
+      "description": "The toolbar's actions, in order"
+    },
+    "presets": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ResponseEditPreset"
+      },
+      "description": "The edit menu's presets, before \"Your own words…\""
+    },
+    "textLabel": {
+      "type": "string",
+      "description": "The text's accessible name"
+    },
+    "replyLabel": {
+      "type": "string",
+      "description": "The label of the action that hands the quotes to the app; {n} is the count"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ResponseQuote": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "start": {
+          "type": "number"
+        },
+        "end": {
+          "type": "number"
+        },
+        "text": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "start",
+        "end",
+        "text"
+      ],
+      "additionalProperties": false,
+      "description": "A passage collected for a reply – UTF-16 offsets into `text`, and the passage itself"
+    },
+    "ResponseAction": {
+      "type": "string",
+      "enum": [
+        "reply",
+        "why",
+        "edit"
+      ],
+      "description": "The toolbar's actions"
+    },
+    "ResponseEditPreset": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "instruction": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "instruction"
+      ],
+      "additionalProperties": false,
+      "description": "An edit preset in the menu"
+    }
+  }
+}

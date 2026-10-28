@@ -1,0 +1,76 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-context-tray.json",
+  "title": "tc-context-tray",
+  "description": "What the model can see, as chips with their token weight: remove (undoable), pin, and the total against the window.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the group's name"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ContextTrayItem"
+      },
+      "description": "The chips, in order"
+    },
+    "limit": {
+      "type": "number",
+      "description": "Size of the context window in tokens (0: no meter, only the total)"
+    },
+    "reserved": {
+      "type": "number",
+      "description": "Tokens already in the window besides these items – system prompt, tools, the conversation"
+    },
+    "warnAt": {
+      "type": "number",
+      "description": "Share of the limit from which the tray warns (0–1)"
+    },
+    "undoTimeout": {
+      "type": "number",
+      "description": "How long Undo stays after a removal, in ms (0: no undo)"
+    },
+    "emptyText": {
+      "type": "string",
+      "description": "What the tray says with no items"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ContextTrayItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "tokens": {
+          "type": "number",
+          "description": "Tokens this item takes in the window"
+        },
+        "kind": {
+          "type": "string",
+          "description": "\"file\", \"mention\", \"source\" – or your own (it picks the icon and the meter colour)"
+        },
+        "pinned": {
+          "type": "boolean",
+          "description": "Kept in context when the conversation is compacted"
+        },
+        "hint": {
+          "type": "string",
+          "description": "Shown as the chip's tooltip, e.g. a path or a URL"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "tokens"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

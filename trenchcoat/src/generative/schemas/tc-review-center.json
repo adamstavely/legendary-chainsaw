@@ -1,0 +1,309 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-review-center.json",
+  "title": "tc-review-center",
+  "description": "Human in the loop: the queue of what your agents want to do, one item at a time.",
+  "type": "object",
+  "properties": {
+    "items": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ReviewItem"
+      },
+      "description": "Everything waiting for review – decided items hide themselves, new ids slide in"
+    },
+    "reviewed": {
+      "type": "number",
+      "description": "How many were reviewed before (e.g. today) – the header counts on from here"
+    },
+    "total": {
+      "type": "number",
+      "description": "The total for the header – defaults to reviewed + waiting"
+    },
+    "sla": {
+      "type": "number",
+      "description": "How long an item may wait, in ms – the waiting time turns amber at 75% and red past it (default 30 min)"
+    },
+    "now": {
+      "type": "number",
+      "description": "The clock (epoch ms) – defaults to the real one, read after connecting"
+    },
+    "lowConfidence": {
+      "type": "number",
+      "description": "Below this confidence an item counts as unsure (default 0.7)"
+    },
+    "reasons": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The quick reasons for a rejection, picked with 1–4"
+    },
+    "order": {
+      "type": "string",
+      "enum": [
+        "risk",
+        "oldest",
+        "given"
+      ],
+      "description": "\"risk\" (default): high risk first, then oldest · \"oldest\" · \"given\": as passed"
+    },
+    "filter": {
+      "type": "string",
+      "enum": [
+        "high",
+        "all",
+        "unsure"
+      ],
+      "description": "Which items the queue shows: \"all\", \"high\" (high risk only) or \"unsure\" (below `lowConfidence`). Changed by the user unless a tc-filter-change listener calls preventDefault()"
+    },
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "undoTimeout": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "boolean",
+          "const": false
+        }
+      ],
+      "description": "How long the Undo chip stays after a decision, in ms – false keeps it until the next decision"
+    },
+    "shortcuts": {
+      "type": "boolean",
+      "description": "The single-key shortcuts while focus is inside – false turns them off; Esc and ⌘/Ctrl combinations keep working"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ReviewItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string",
+          "description": "What it is, e.g. \"Refund order #4821 for Maya Chen\""
+        },
+        "agent": {
+          "type": "string",
+          "description": "Who proposes it, e.g. \"Support agent\""
+        },
+        "model": {
+          "type": "string",
+          "description": "The model behind the agent – shown after its name"
+        },
+        "type": {
+          "type": "string",
+          "description": "The kind of task, e.g. \"Refund\", \"Email\", \"Contract clause\", \"Code change\""
+        },
+        "risk": {
+          "$ref": "#/definitions/ReviewRisk"
+        },
+        "confidence": {
+          "type": "number",
+          "description": "How sure the agent is, 0–1"
+        },
+        "createdAt": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string",
+              "format": "date-time"
+            }
+          ],
+          "description": "When it started waiting for you (epoch ms or a Date)"
+        },
+        "reasoning": {
+          "type": "string",
+          "description": "Why – the agent's short reasoning"
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ReviewField"
+          },
+          "description": "Key facts of the proposal, e.g. amount, recipient, branch"
+        },
+        "body": {
+          "$ref": "#/definitions/ReviewText",
+          "description": "The proposed text – a reply, a clause, a diff"
+        },
+        "bodyLabel": {
+          "type": "string",
+          "description": "Label above the body, e.g. \"Reply\" or \"checkout/coupon.ts\""
+        },
+        "format": {
+          "type": "string",
+          "enum": [
+            "text",
+            "code"
+          ],
+          "description": "\"code\" sets the body as a diff"
+        },
+        "files": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ReviewFile"
+          },
+          "description": "A code change: files with their +/- counts, and a unified diff for the ones that matter"
+        },
+        "steps": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ReviewStep"
+          },
+          "description": "A plan: ordered steps, each with the tool it calls"
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ReviewSource"
+          },
+          "description": "What the agent looked at"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "agent",
+        "type",
+        "risk",
+        "confidence",
+        "createdAt"
+      ],
+      "additionalProperties": false
+    },
+    "ReviewRisk": {
+      "type": "string",
+      "enum": [
+        "high",
+        "medium",
+        "low"
+      ]
+    },
+    "ReviewField": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "value": {
+          "$ref": "#/definitions/ReviewText"
+        }
+      },
+      "required": [
+        "label",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "ReviewText": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/definitions/ReviewFlag"
+              }
+            ]
+          }
+        }
+      ],
+      "description": "Plain text, or text with flagged spans in it"
+    },
+    "ReviewFlag": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "text",
+        "note"
+      ],
+      "additionalProperties": false,
+      "description": "A span the agent isn't sure about – marked in the proposal, its note shows on hover"
+    },
+    "ReviewFile": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "added": {
+          "type": "number"
+        },
+        "removed": {
+          "type": "number"
+        },
+        "diff": {
+          "$ref": "#/definitions/ReviewText"
+        },
+        "start": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "path"
+      ],
+      "additionalProperties": false,
+      "description": "One file of a code change – its diff in unified form"
+    },
+    "ReviewStep": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "$ref": "#/definitions/ReviewText"
+        },
+        "tool": {
+          "type": "string"
+        },
+        "detail": {
+          "$ref": "#/definitions/ReviewText"
+        }
+      },
+      "required": [
+        "title"
+      ],
+      "additionalProperties": false,
+      "description": "One step of a plan (icon cloned)"
+    },
+    "ReviewSource": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "href": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "label"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

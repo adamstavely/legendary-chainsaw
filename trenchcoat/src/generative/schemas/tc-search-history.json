@@ -1,0 +1,83 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-search-history.json",
+  "title": "tc-search-history",
+  "description": "Recent and saved searches – tabs with counts, a filter, searches grouped by day with scope chips, result counts and\ntimes, and Run again, a save star and Remove with Undo on each.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the list's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "searches": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/SearchHistoryEntry"
+      },
+      "description": "The searches, any order; shown newest first. Saving and removing change it unless their events are prevented"
+    },
+    "tab": {
+      "type": "string",
+      "enum": [
+        "recent",
+        "saved"
+      ],
+      "description": "The tab shown. Changed by the user unless a tc-tab-change listener calls preventDefault()"
+    },
+    "filter": {
+      "type": "string",
+      "description": "What the filter box holds"
+    },
+    "now": {
+      "type": "number",
+      "description": "The time now, epoch ms; by default the element's own clock"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for times and numbers, e.g. \"en-GB\"; by default the browser's"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "SearchHistoryEntry": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "query": {
+          "type": "string",
+          "description": "The query as typed, or a builder query in words"
+        },
+        "scopes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Where it searched or how: \"Files\", \"AI mode\", \"Contents\""
+        },
+        "results": {
+          "type": "number",
+          "description": "How many results it found"
+        },
+        "at": {
+          "type": "number",
+          "description": "When it ran, epoch ms"
+        },
+        "saved": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "query",
+        "at"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

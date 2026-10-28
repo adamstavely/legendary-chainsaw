@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-tool-call-group.json",
+  "title": "tc-tool-call-group",
+  "description": "Several tool calls folded into one line: \"Used 3 tools · 2.4s\". The cards go in a `slot=\"list\"` child (see above).",
+  "type": "object",
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Label once all calls are done – defaults to \"Used 3 tools\""
+    },
+    "runningLabel": {
+      "type": "string",
+      "description": "Label while any call is running"
+    },
+    "duration": {
+      "type": "number",
+      "description": "Total duration in ms – otherwise the sum of the cards' durations, or the time measured while running"
+    },
+    "open": {
+      "type": "boolean",
+      "description": "Expanded. Changed by the user unless a tc-open-change listener calls preventDefault()"
+    }
+  },
+  "additionalProperties": false
+}

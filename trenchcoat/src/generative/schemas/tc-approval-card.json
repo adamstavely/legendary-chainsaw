@@ -1,0 +1,187 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-approval-card.json",
+  "title": "tc-approval-card",
+  "description": "An agent's request for approval, with Approve / Deny, an optional countdown, and a compact row once decided.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The action, e.g. \"Send campaign email\" – the group's name"
+    },
+    "risk": {
+      "type": "string",
+      "enum": [
+        "high",
+        "medium",
+        "low"
+      ],
+      "description": "Tinted badge in the header; leave out to hide it"
+    },
+    "details": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ApprovalDetail"
+      },
+      "description": "Key-value rows in the preview, e.g. To, Subject, Scheduled"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "denied"
+      ],
+      "description": "The status"
+    },
+    "errorLabel": {
+      "type": "string",
+      "description": "Shown under the buttons when an onApprove promise rejects"
+    },
+    "editable": {
+      "type": "boolean",
+      "description": "Shows an \"Edit\" button (it fires tc-edit)"
+    },
+    "expiresIn": {
+      "type": "number",
+      "description": "Seconds until the request expires and is denied with reason \"timeout\""
+    },
+    "allowStopTimer": {
+      "type": "boolean",
+      "description": "Show a \"Stop\" button next to the countdown that turns the time limit off (WCAG 2.2.1). Default true"
+    },
+    "stopTimerLabel": {
+      "type": "string",
+      "description": "Its label – the countdown (\"Expires in 42 seconds…\") describes it"
+    },
+    "allowAlways": {
+      "type": "boolean",
+      "description": "Show the \"Always allow this action\" checkbox. Default true"
+    },
+    "alwaysLabel": {
+      "type": "string",
+      "description": "The \"Always allow\" checkbox's label"
+    },
+    "approveLabel": {
+      "type": "string",
+      "description": "The Approve button's label"
+    },
+    "denyLabel": {
+      "type": "string",
+      "description": "The Deny button's label"
+    },
+    "editLabel": {
+      "type": "string",
+      "description": "The Edit button's label (shown with `editable`)"
+    },
+    "shortcuts": {
+      "type": "boolean",
+      "description": "Show ⌘↵ / Esc hints on the buttons (the shortcuts work either way). Default true"
+    },
+    "actions": {
+      "type": "string",
+      "enum": [
+        "card",
+        "tray"
+      ],
+      "description": "Where the buttons sit: on the gray tray below the card or inside the white card. Default: \"tray\" in the Standard look, \"card\" in the Clean look"
+    },
+    "why": {
+      "type": "string",
+      "description": "\"Why you're seeing this\": one line on what made the agent ask, e.g. the rule or threshold it met"
+    },
+    "whyLabel": {
+      "type": "string",
+      "description": "The heading of the `why` line"
+    },
+    "consequences": {
+      "type": "object",
+      "properties": {
+        "approve": {
+          "type": "string"
+        },
+        "deny": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "What happens if the person approves, and if they deny – one sentence each"
+    },
+    "ifApproveLabel": {
+      "type": "string",
+      "description": "The heading of the approve consequence"
+    },
+    "ifDenyLabel": {
+      "type": "string",
+      "description": "The heading of the deny consequence"
+    },
+    "editableDetails": {
+      "type": "boolean",
+      "description": "Shows \"Edit arguments\", which turns the text details into fields; each change fires tc-details-change"
+    },
+    "editDetailsLabel": {
+      "type": "string",
+      "description": "The \"Edit arguments\" button's label"
+    },
+    "doneDetailsLabel": {
+      "type": "string",
+      "description": "The button's label while editing"
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ApprovalEvidence"
+      },
+      "description": "Sources the request rests on, shown as chips"
+    },
+    "evidenceLabel": {
+      "type": "string",
+      "description": "The heading of the evidence chips"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ApprovalDetail": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "editable": {
+          "type": "boolean",
+          "description": "With `editableDetails`: false keeps this row read-only. Element values are always read-only"
+        }
+      },
+      "required": [
+        "label",
+        "value"
+      ],
+      "additionalProperties": false,
+      "description": "A key-value row of the preview: the value is text or an element (cloned)"
+    },
+    "ApprovalEvidence": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "detail": {
+          "type": "string",
+          "description": "A quiet second part, e.g. \"p. 4\" or \"2 h ago\""
+        },
+        "href": {
+          "type": "string",
+          "description": "Opens in a new tab"
+        }
+      },
+      "required": [
+        "label"
+      ],
+      "additionalProperties": false,
+      "description": "A source the request rests on, shown as a chip: a link with `href`, else a button that fires tc-evidence-select"
+    }
+  }
+}

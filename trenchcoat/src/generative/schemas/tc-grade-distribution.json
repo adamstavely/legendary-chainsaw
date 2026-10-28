@@ -1,0 +1,72 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-grade-distribution.json",
+  "title": "tc-grade-distribution",
+  "description": "Assessment grades as counts, with how many were assessed, an optional bar in proportion and a grade picked as a\nfilter.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "assessedLabel": {
+      "type": "string",
+      "description": "What was assessed, after the count: \"2 assessed\""
+    },
+    "grades": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Grade"
+      },
+      "description": "The grades in order, best first, each with its count"
+    },
+    "bar": {
+      "type": "boolean",
+      "description": "Shows a bar in proportion under the counts"
+    },
+    "selectable": {
+      "type": "boolean",
+      "description": "Grades can be picked as a filter"
+    },
+    "selected": {
+      "type": "string",
+      "description": "The grade picked as a filter. Changed by the user unless a tc-selected-change listener calls preventDefault()"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "Grade": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "count": {
+          "type": "number"
+        },
+        "tone": {
+          "$ref": "#/definitions/GradeTone"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "count"
+      ],
+      "additionalProperties": false
+    },
+    "GradeTone": {
+      "type": "string",
+      "enum": [
+        "neutral",
+        "info",
+        "success",
+        "warning",
+        "danger"
+      ]
+    }
+  }
+}

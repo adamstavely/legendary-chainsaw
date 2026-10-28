@@ -1,0 +1,87 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-date-range-picker.json",
+  "title": "tc-date-range-picker",
+  "description": "Pick a date range from presets or two calendars, optionally compared with the period before or a year back.",
+  "type": "object",
+  "properties": {
+    "value": {
+      "type": "object",
+      "properties": {
+        "start": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "end": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "start",
+        "end"
+      ],
+      "additionalProperties": false,
+      "description": "The applied range; unset, the last 30 days"
+    },
+    "presets": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/RangePreset"
+      },
+      "description": "The quick picks on the left, each building its range from today – defaults to Today through Year to date"
+    },
+    "compare": {
+      "type": "boolean",
+      "description": "Show the \"Compare to\" control"
+    },
+    "compareMode": {
+      "type": "string",
+      "enum": [
+        "off",
+        "previous",
+        "year"
+      ],
+      "description": "The applied comparison"
+    },
+    "open": {
+      "type": "boolean",
+      "description": "Whether the panel is open"
+    },
+    "name": {
+      "type": "string",
+      "description": "Name for native form submission: a hidden input with the applied range as \"YYYY-MM-DD/YYYY-MM-DD\""
+    },
+    "disabled": {
+      "type": "boolean",
+      "description": "The trigger can't be used and the hidden input is left out of the form"
+    },
+    "weekStartsOn": {
+      "type": "number",
+      "enum": [
+        0,
+        1
+      ],
+      "description": "0 = Sunday, 1 = Monday"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "RangePreset": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

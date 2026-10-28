@@ -1,0 +1,160 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-kill-switch.json",
+  "title": "tc-kill-switch",
+  "description": "System posture and the emergency stop: what's running, a confirmed Stop that names what it halts, and the active\nstops with Resume.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "posture": {
+      "type": "string",
+      "enum": [
+        "stopped",
+        "normal",
+        "elevated"
+      ],
+      "description": "The posture; unset follows the stops – a stop on everything is \"stopped\", any other stop \"elevated\""
+    },
+    "postureNote": {
+      "type": "string",
+      "description": "The line under the heading; unset says what the posture means"
+    },
+    "running": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/KillRunning"
+      },
+      "description": "What a stop can halt"
+    },
+    "stops": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/KillStop"
+      },
+      "description": "The active stops. Changed by the user unless a tc-stop or tc-resume listener calls preventDefault()"
+    },
+    "postureLabels": {
+      "type": "object",
+      "properties": {
+        "stopped": {
+          "type": "string"
+        },
+        "normal": {
+          "type": "string"
+        },
+        "elevated": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The postures' names, merged over the defaults (Normal, Elevated, Stopped)"
+    },
+    "you": {
+      "type": "string",
+      "description": "Who a stop made here is by"
+    },
+    "stopAllLabel": {
+      "type": "string",
+      "description": "The big button's text"
+    },
+    "stopLabel": {
+      "type": "string",
+      "description": "One running item's Stop button"
+    },
+    "resumeLabel": {
+      "type": "string",
+      "description": "An active stop's Resume button"
+    },
+    "cancelLabel": {
+      "type": "string",
+      "description": "The confirmation's Cancel button"
+    },
+    "stopNote": {
+      "type": "string",
+      "description": "What a stop does, said in the confirmation and next to Stop everything"
+    },
+    "reasonLabel": {
+      "type": "string",
+      "description": "The reason field's label in the confirmation"
+    },
+    "requireReason": {
+      "type": "boolean",
+      "description": "The confirmation needs a reason before Stop can be pressed"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "KillRunning": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "detail": {
+          "type": "string",
+          "description": "A quiet line, e.g. \"3 runs in progress\""
+        },
+        "kind": {
+          "type": "string",
+          "description": "A small tag, e.g. \"Agent\" or \"Schedule\""
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false,
+      "description": "Something a stop can halt: an agent, a schedule, a queue"
+    },
+    "KillStop": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "target": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "What it halts, e.g. \"Everything\" or \"Billing agent\""
+        },
+        "reason": {
+          "type": "string"
+        },
+        "by": {
+          "type": "string",
+          "description": "Who stopped it"
+        },
+        "at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "description": "When: a Date or epoch ms (shown as a time of day), or text as it is"
+        }
+      },
+      "required": [
+        "id",
+        "target",
+        "label"
+      ],
+      "additionalProperties": false,
+      "description": "An active stop. `target` is \"all\" or a running item's id"
+    }
+  }
+}

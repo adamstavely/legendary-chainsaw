@@ -1,0 +1,90 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-provenance-summary.json",
+  "title": "tc-provenance-summary",
+  "description": "What a document is made of: the share from sources, AI synthesis and original writing, per section and in total,\nwith each segment opening its lineage.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the region's name"
+    },
+    "scope": {
+      "type": "string",
+      "description": "What the summary covers, a quiet line under the heading – e.g. the document's name"
+    },
+    "sections": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ProvenanceSection"
+      },
+      "description": "The document's sections, in order, with how much of each came from where"
+    },
+    "kindLabels": {
+      "type": "object",
+      "properties": {
+        "original": {
+          "type": "string"
+        },
+        "sourced": {
+          "type": "string"
+        },
+        "synthesis": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Names of the three kinds"
+    },
+    "unit": {
+      "type": "string",
+      "description": "The unit of the amounts, plural – \"words\", \"characters\", \"sentences\""
+    },
+    "totalLabel": {
+      "type": "string",
+      "description": "The name of the whole-document row"
+    },
+    "totalOnly": {
+      "type": "boolean",
+      "description": "Hide the per-section rows and show the total only"
+    },
+    "locale": {
+      "type": "string",
+      "description": "Locale for numbers"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ProvenanceSection": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "sourced": {
+          "type": "number",
+          "description": "How much came from sources – quoted, paraphrased or cited"
+        },
+        "synthesis": {
+          "type": "number",
+          "description": "How much the AI wrote from what it was given"
+        },
+        "original": {
+          "type": "number",
+          "description": "How much the authors wrote themselves"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "sourced",
+        "synthesis",
+        "original"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

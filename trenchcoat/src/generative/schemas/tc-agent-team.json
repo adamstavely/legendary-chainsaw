@@ -1,0 +1,62 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-agent-team.json",
+  "title": "tc-agent-team",
+  "description": "A prompt builds a team of three agents, who pop in with their roles and tools.",
+  "type": "object",
+  "properties": {
+    "prompt": {
+      "type": "string",
+      "description": "Text that types itself into the prompt"
+    },
+    "members": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AgentTeamMember"
+      },
+      "description": "Exactly three agents, left to right"
+    },
+    "label": {
+      "type": "string",
+      "description": "Accessible description of the scene – defaults to one built from the prompt and the roles"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "AgentTeamMember": {
+      "type": "object",
+      "properties": {
+        "role": {
+          "type": "string",
+          "description": "Role shown in the pill"
+        },
+        "avatar": {
+          "type": "string",
+          "description": "Square portrait, shown in a circle"
+        },
+        "tools": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AgentTeamTool"
+          },
+          "description": "One or two tools, drawn as overlapping logo circles"
+        }
+      },
+      "required": [
+        "role",
+        "avatar"
+      ],
+      "additionalProperties": false
+    },
+    "AgentTeamTool": {
+      "type": "string",
+      "enum": [
+        "linkedin",
+        "hubspot",
+        "slack",
+        "gmail",
+        "salesforce"
+      ]
+    }
+  }
+}

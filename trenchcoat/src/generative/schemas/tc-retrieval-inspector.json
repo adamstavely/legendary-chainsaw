@@ -1,0 +1,242 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-retrieval-inspector.json",
+  "title": "tc-retrieval-inspector",
+  "description": "The chunks retrieved for an answer – score, source and place, freshness, whether the answer used them – and the\nmisses the app reports.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "query": {
+      "type": "string",
+      "description": "The query the chunks were retrieved for"
+    },
+    "chunks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/RetrievalChunk"
+      },
+      "description": "The chunks, in rank order – the first is the best match"
+    },
+    "misses": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/RetrievalMiss"
+      },
+      "description": "Chunks the app reports should have been retrieved and weren't"
+    },
+    "cutoff": {
+      "type": "number",
+      "description": "The score below which chunks are left out of the prompt – marked on every score bar; unset marks none"
+    },
+    "maxScore": {
+      "type": "number",
+      "description": "The top of the score scale – defaults to 1, or the highest score when that is higher"
+    },
+    "show": {
+      "type": "string",
+      "enum": [
+        "all",
+        "used",
+        "unused"
+      ],
+      "description": "Which chunks show: \"all\", \"used\" (by the answer) or \"unused\""
+    },
+    "selected": {
+      "type": "string",
+      "description": "The id of the open chunk, or null"
+    },
+    "profile": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/ValidityProfileName"
+        },
+        {
+          "$ref": "#/definitions/ValidityProfile"
+        }
+      ],
+      "description": "How fast sources go stale, for chunks without their own `profile` – see tc-validity-badge"
+    },
+    "now": {
+      "type": "number",
+      "description": "The moment freshness is counted to, in epoch ms – defaults to when each badge connected"
+    },
+    "openHandled": {
+      "type": "boolean",
+      "description": "Open source fires tc-open-source and the link doesn't navigate on its own; chunks without a url get the button"
+    },
+    "maxHeight": {
+      "type": "number",
+      "description": "The list's height before it scrolls, in px"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "RetrievalChunk": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string",
+          "description": "The chunk's text, as it was given to the model"
+        },
+        "score": {
+          "type": "number",
+          "description": "The retrieval score – higher is closer"
+        },
+        "source": {
+          "type": "string",
+          "description": "The source document's title"
+        },
+        "location": {
+          "type": "string",
+          "description": "Where in the source, in words: \"p. 12 · §3.2\""
+        },
+        "position": {
+          "type": "object",
+          "properties": {
+            "index": {
+              "type": "number"
+            },
+            "count": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "index",
+            "count"
+          ],
+          "additionalProperties": false,
+          "description": "Its place among the document's chunks: { index: 3, count: 37 } is the fourth of 37 (index from 0)"
+        },
+        "url": {
+          "type": "string",
+          "description": "Opens the source; with `open-handled` the app opens it instead"
+        },
+        "observed": {
+          "$ref": "#/definitions/ValidityTime",
+          "description": "When the source was published or last updated – sets the freshness band"
+        },
+        "profile": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ValidityProfileName"
+            },
+            {
+              "$ref": "#/definitions/ValidityProfile"
+            }
+          ],
+          "description": "How fast this source goes stale – defaults to the inspector's `profile`"
+        },
+        "contested": {
+          "type": "boolean",
+          "description": "Other evidence disputes the source"
+        },
+        "superseded": {
+          "type": "boolean",
+          "description": "Something newer replaces the source"
+        },
+        "used": {
+          "type": "boolean",
+          "description": "The answer used it"
+        },
+        "citation": {
+          "type": [
+            "string",
+            "number"
+          ],
+          "description": "The marker the answer cites it with – \"2\" shows as [2]"
+        }
+      },
+      "required": [
+        "id",
+        "text",
+        "score",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "ValidityTime": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "string",
+          "format": "date-time"
+        }
+      ],
+      "description": "A moment: epoch ms, an ISO date string or a Date"
+    },
+    "ValidityProfileName": {
+      "type": "string",
+      "enum": [
+        "fast",
+        "standard",
+        "slow",
+        "lasting"
+      ],
+      "description": "Built-in decay profiles – fast: hours and days (prices, status, news) · standard: weeks and months · slow: years (reference material) · lasting: never decays"
+    },
+    "ValidityProfile": {
+      "type": "object",
+      "properties": {
+        "high": {
+          "type": "number"
+        },
+        "good": {
+          "type": "number"
+        },
+        "aging": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "high",
+        "good",
+        "aging"
+      ],
+      "additionalProperties": false,
+      "description": "The band boundaries, as an age in days: younger than `high` is high, than `good` good, than `aging` aging; older is stale"
+    },
+    "RetrievalMiss": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string"
+        },
+        "location": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string",
+          "description": "The passage that was missed, or the start of it"
+        },
+        "reason": {
+          "type": "string",
+          "description": "Why it counts as a miss, in a line"
+        },
+        "score": {
+          "type": "number",
+          "description": "Its score, if the app scored it – often just under the cutoff"
+        }
+      },
+      "required": [
+        "id",
+        "source"
+      ],
+      "additionalProperties": false,
+      "description": "A chunk the app says should have been retrieved and wasn't – from eval labels, a reviewer, or a later check"
+    }
+  }
+}

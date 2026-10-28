@@ -1,0 +1,153 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-confidence-brief.json",
+  "title": "tc-confidence-brief",
+  "description": "An answer explained for someone who wasn't in the session: the conclusion, the kind of uncertainty, what would\nchange it, the key assumptions, signs to watch, the track record and the provenance record – with Copy as text.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading – what the brief is about, often the question as it was asked"
+    },
+    "meta": {
+      "type": "string",
+      "description": "A quiet line under the heading: when it was prepared, for whom"
+    },
+    "question": {
+      "type": "string",
+      "description": "The question as it was asked, quoted above the conclusion"
+    },
+    "conclusion": {
+      "type": "string",
+      "description": "What we conclude, in a sentence or two"
+    },
+    "confidence": {
+      "type": "string",
+      "enum": [
+        "high",
+        "low",
+        "moderate"
+      ],
+      "description": "How confident the conclusion is – shown beside it; unset shows no level"
+    },
+    "confidenceLabels": {
+      "type": "object",
+      "properties": {
+        "high": {
+          "type": "string"
+        },
+        "low": {
+          "type": "string"
+        },
+        "moderate": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Names of the three levels – \"High confidence\", \"Moderate confidence\" and \"Low confidence\" by default"
+    },
+    "uncertainty": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ConfidenceUncertaintyKind"
+      },
+      "description": "The kinds of uncertainty behind the conclusion: \"data\", \"model\", \"disagreement\", \"time\""
+    },
+    "uncertaintyLabels": {
+      "type": "object",
+      "properties": {
+        "model": {
+          "type": "string"
+        },
+        "data": {
+          "type": "string"
+        },
+        "disagreement": {
+          "type": "string"
+        },
+        "time": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Names of the four kinds – \"Data\", \"Model\", \"Disagreement\" and \"Time\" by default"
+    },
+    "uncertaintyNote": {
+      "type": "string",
+      "description": "A sentence on why it's uncertain, under the labels"
+    },
+    "basis": {
+      "type": "string",
+      "description": "What the conclusion rests on, in plain words – the kinds of source and how recent, not their names"
+    },
+    "changers": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "What would change the conclusion"
+    },
+    "assumptions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The assumptions the conclusion depends on"
+    },
+    "signals": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Things to watch for that would call the conclusion into question"
+    },
+    "record": {
+      "type": "object",
+      "properties": {
+        "right": {
+          "type": "number"
+        },
+        "total": {
+          "type": "number"
+        },
+        "note": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "right",
+        "total"
+      ],
+      "additionalProperties": false,
+      "description": "How often similar conclusions turned out right"
+    },
+    "provenanceId": {
+      "type": "string",
+      "description": "The provenance record's reference; set, the brief shows it and fires tc-provenance-open when it's pressed"
+    },
+    "provenanceLabel": {
+      "type": "string",
+      "description": "What the provenance reference is called"
+    },
+    "copyLabel": {
+      "type": "string",
+      "description": "The label of the copy button"
+    },
+    "noCopy": {
+      "type": "boolean",
+      "description": "Hides the copy button"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ConfidenceUncertaintyKind": {
+      "type": "string",
+      "enum": [
+        "data",
+        "model",
+        "disagreement",
+        "time"
+      ]
+    }
+  }
+}

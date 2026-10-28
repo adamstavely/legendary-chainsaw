@@ -1,0 +1,57 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-tool-call-card.json",
+  "title": "tc-tool-call-card",
+  "description": "One tool call of an AI agent: name, summary, status with a live timer, arguments and result.",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Tool name as the agent calls it, shown in mono – e.g. \"search_web\""
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "success",
+        "running",
+        "error"
+      ],
+      "description": "\"running\" shows a spinner and a live timer, \"success\" a check and the duration, \"error\" \"Failed\" and the message"
+    },
+    "args": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Arguments the tool was called with – objects are pretty-printed, JSON strings parsed"
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "What the tool returned – objects are pretty-printed, JSON strings parsed, other text shown as is"
+    },
+    "error": {
+      "type": "string",
+      "description": "Error message, shown when status is \"error\""
+    },
+    "startedAt": {
+      "type": "number",
+      "description": "When the call started (ms since epoch) – the live timer counts from here"
+    },
+    "duration": {
+      "type": "number",
+      "description": "Final duration in ms – otherwise measured while the card shows \"running\""
+    },
+    "open": {
+      "type": "boolean",
+      "description": "Expanded. Changed by the user (and on an error) unless a tc-open-change listener calls preventDefault()"
+    },
+    "openOnError": {
+      "type": "boolean",
+      "description": "Opens the card when the call fails and closes it again on the next run, unless someone toggled it"
+    },
+    "maxCodeHeight": {
+      "type": "number",
+      "description": "Height in px after which arguments and result are capped with a fade and \"Show all\""
+    }
+  },
+  "additionalProperties": false
+}

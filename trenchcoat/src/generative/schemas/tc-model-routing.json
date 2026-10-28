@@ -1,0 +1,201 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-model-routing.json",
+  "title": "tc-model-routing",
+  "description": "Model routing as a route: rules in order, then the fallback chain, with each target's health, breaker and region,\nand a route test the app answers.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the group's name"
+    },
+    "value": {
+      "type": "object",
+      "properties": {
+        "rules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RouteRule"
+          }
+        },
+        "fallbacks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "rules",
+        "fallbacks"
+      ],
+      "additionalProperties": false,
+      "description": "The rules and the fallback chain. Changed by the user unless tc-value-change is prevented"
+    },
+    "targets": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/RouteTarget"
+      },
+      "description": "Every model or deployment a rule or the chain can name"
+    },
+    "health": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/RouteTargetHealth"
+      },
+      "description": "Each target's health and breaker, by target id, as the app reports them"
+    },
+    "residency": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The regions requests may be sent to; targets elsewhere are flagged. Empty means no constraint"
+    },
+    "testResult": {
+      "type": "object",
+      "properties": {
+        "input": {
+          "type": "string"
+        },
+        "rule": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "target": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "reasons": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "skipped": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "input",
+        "rule",
+        "target",
+        "reasons"
+      ],
+      "additionalProperties": false,
+      "description": "The app's answer to the last route test; setting it ends the pending state"
+    },
+    "testPlaceholder": {
+      "type": "string",
+      "description": "Placeholder in the route test's field"
+    },
+    "readonly": {
+      "type": "boolean",
+      "description": "Shows the route without reorder handles or remove buttons"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "RouteRule": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string",
+          "description": "A short name, e.g. \"Long inputs\""
+        },
+        "conditions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The conditions as the app writes them: \"Input is over 100k tokens\""
+        },
+        "target": {
+          "type": "string",
+          "description": "The target's id"
+        }
+      },
+      "required": [
+        "id",
+        "conditions",
+        "target"
+      ],
+      "additionalProperties": false,
+      "description": "One rule: when every condition holds, send to `target`"
+    },
+    "RouteTarget": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "detail": {
+          "type": "string",
+          "description": "A quiet line, e.g. \"200k context\""
+        },
+        "region": {
+          "type": "string",
+          "description": "Where it runs, e.g. \"EU\" – compared with `residency`"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false,
+      "description": "A model or deployment a rule can send to"
+    },
+    "RouteTargetHealth": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "$ref": "#/definitions/RouteHealthStatus"
+        },
+        "breaker": {
+          "$ref": "#/definitions/RouteBreakerState",
+          "description": "The circuit breaker: open sends nothing; half-open lets a few test requests through"
+        },
+        "note": {
+          "type": "string",
+          "description": "A quiet line, e.g. \"p95 2.4s\" or \"Opened 3 min ago after 5 failures\""
+        }
+      },
+      "required": [
+        "status"
+      ],
+      "additionalProperties": false,
+      "description": "A target's health as the app reports it"
+    },
+    "RouteHealthStatus": {
+      "type": "string",
+      "enum": [
+        "healthy",
+        "degraded",
+        "down",
+        "unknown"
+      ]
+    },
+    "RouteBreakerState": {
+      "type": "string",
+      "enum": [
+        "closed",
+        "open",
+        "half-open"
+      ]
+    }
+  }
+}

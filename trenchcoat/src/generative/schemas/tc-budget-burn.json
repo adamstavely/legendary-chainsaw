@@ -1,0 +1,105 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-budget-burn.json",
+  "title": "tc-budget-burn",
+  "description": "Budget burn: each item's spend against its budget, with a pace marker and words for ahead, on or behind pace, its\npeople and team, totals in the header and a sort by burn or budget.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the list's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/BurnItem"
+      },
+      "description": "The items"
+    },
+    "period": {
+      "type": "number",
+      "description": "How far through the period we are, from 0 to 1; unset hides the pace marker and words"
+    },
+    "tolerance": {
+      "type": "number",
+      "description": "How far, as a share of the budget, spend may sit from the pace before it's ahead or behind"
+    },
+    "sort": {
+      "type": "string",
+      "enum": [
+        "burn",
+        "budget"
+      ],
+      "description": "\"budget\" puts the biggest budgets first, \"burn\" the highest burn. Changed by the user unless a tc-sort-change listener calls preventDefault()"
+    },
+    "currency": {
+      "type": "string",
+      "description": "The budget's currency, an ISO 4217 code"
+    },
+    "peopleUnit": {
+      "type": "string",
+      "description": "The unit people are counted in: \"FTE\", \"people\""
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for numbers, e.g. \"en-GB\"; by default the browser's"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "BurnItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "What's being funded, e.g. \"Neuromorphic Computing\""
+        },
+        "owner": {
+          "type": "string",
+          "description": "Who leads it, shown under the name"
+        },
+        "budget": {
+          "type": "number",
+          "description": "The budget, in `currency`"
+        },
+        "spent": {
+          "type": "number",
+          "description": "Spent so far, in `currency`"
+        },
+        "committed": {
+          "type": "number",
+          "description": "Under contract but not yet spent, in `currency`; adds to the header's committed total"
+        },
+        "people": {
+          "type": "number",
+          "description": "The people on it, in `people-unit`"
+        },
+        "team": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The team's names; each shows as initials"
+        },
+        "priority": {
+          "type": "string",
+          "description": "A short priority mark, e.g. \"1\" or \"P1\""
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "budget",
+        "spent"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

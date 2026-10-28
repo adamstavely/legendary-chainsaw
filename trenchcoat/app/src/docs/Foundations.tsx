@@ -17,6 +17,7 @@ export const FOUNDATIONS: [string, string][] = [
   ["patterns", "Patterns"],
   ["accessibility", "Accessibility"],
   ["frameworks", "Frameworks"],
+  ["generative-ui", "Generative UI"],
   ["browser-support", "Browser support"],
   ["performance", "Performance"],
   ["changelog", "Changelog"],

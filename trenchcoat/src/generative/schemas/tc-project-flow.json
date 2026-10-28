@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-project-flow.json",
+  "title": "tc-project-flow",
+  "description": "Cards for a task, its subtasks, roles and tech stack build up one after another.",
+  "type": "object",
+  "properties": {
+    "theme": {
+      "type": "string",
+      "enum": [
+        "light",
+        "dark"
+      ],
+      "description": "Light or dark cards; without it the scene follows the page theme"
+    },
+    "label": {
+      "type": "string",
+      "description": "Describes the scene to assistive tech (role=\"img\"); without it the illustration is decorative and hidden"
+    }
+  },
+  "additionalProperties": false
+}

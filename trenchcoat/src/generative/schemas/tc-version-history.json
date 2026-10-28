@@ -1,0 +1,167 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-version-history.json",
+  "title": "tc-version-history",
+  "description": "The versions of an agent, prompt or workflow on a timeline – draft, active or deprecated, who and when, and what\neach changed in behaviour – with compare, restore and a confirmed approve-and-activate.",
+  "type": "object",
+  "properties": {
+    "versions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/VersionEntry"
+      },
+      "description": "The versions, newest first"
+    },
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the region's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "The quiet line under the heading"
+    },
+    "selected": {
+      "type": "string",
+      "description": "The version whose detail shows; unset follows the draft, else the active version, else the newest"
+    },
+    "activateBlocked": {
+      "type": "string",
+      "description": "Why the draft can't be activated by this person; set, Approve and activate stays unavailable and says so"
+    },
+    "canRestore": {
+      "type": "boolean",
+      "description": "Restore is offered on past versions (default true)"
+    },
+    "maxHeight": {
+      "type": "number",
+      "description": "The tallest the timeline grows, in px, before it scrolls"
+    },
+    "statusLabels": {
+      "type": "object",
+      "properties": {
+        "draft": {
+          "type": "string"
+        },
+        "active": {
+          "type": "string"
+        },
+        "deprecated": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The names of the statuses – in place of Draft, Active and Deprecated"
+    },
+    "changeLabels": {
+      "type": "object",
+      "properties": {
+        "changed": {
+          "type": "string"
+        },
+        "added": {
+          "type": "string"
+        },
+        "removed": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "What screen readers hear before each change – in place of Added, Removed and Changed"
+    },
+    "activateLabel": {
+      "type": "string",
+      "description": "The approve button and the confirmation's action"
+    },
+    "restoreLabel": {
+      "type": "string",
+      "description": "The restore button"
+    },
+    "compareLabel": {
+      "type": "string",
+      "description": "The compare toggle"
+    },
+    "cancelLabel": {
+      "type": "string",
+      "description": "The confirmation's cancel button"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "VersionEntry": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "Short, e.g. \"v1.3\""
+        },
+        "status": {
+          "$ref": "#/definitions/VersionStatus"
+        },
+        "note": {
+          "type": "string",
+          "description": "One line on what this version is, e.g. \"Tightened the review step\""
+        },
+        "author": {
+          "type": "string",
+          "description": "Who made it"
+        },
+        "at": {
+          "type": "string",
+          "description": "When, shown as given: \"Today · 09:12\", \"May 28\""
+        },
+        "changes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/VersionChange"
+          },
+          "description": "What it does differently from the version before it"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "status"
+      ],
+      "additionalProperties": false,
+      "description": "One version of an agent, prompt or workflow"
+    },
+    "VersionStatus": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "active",
+        "deprecated"
+      ],
+      "description": "Where a version stands"
+    },
+    "VersionChange": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "$ref": "#/definitions/VersionChangeKind"
+        },
+        "text": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "text"
+      ],
+      "additionalProperties": false,
+      "description": "One change, said as what it will do differently: \"Asks for approval before sending\""
+    },
+    "VersionChangeKind": {
+      "type": "string",
+      "enum": [
+        "added",
+        "removed",
+        "changed"
+      ],
+      "description": "What a change did to the behaviour"
+    }
+  }
+}

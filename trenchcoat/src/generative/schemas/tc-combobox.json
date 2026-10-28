@@ -1,0 +1,109 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-combobox.json",
+  "title": "tc-combobox",
+  "description": "Pick one or many options from a searchable, grouped list; picked options show as chips.",
+  "type": "object",
+  "properties": {
+    "options": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ComboboxOption"
+      },
+      "description": "Every option"
+    },
+    "value": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The picked values. Changed by the user unless a tc-value-change listener calls preventDefault()"
+    },
+    "single": {
+      "type": "boolean",
+      "description": "Pick one instead of many"
+    },
+    "open": {
+      "type": "boolean",
+      "description": "Whether the list is open. Changed by the user unless a tc-open-change listener calls preventDefault()"
+    },
+    "placeholder": {
+      "type": "string",
+      "description": "Text in the empty input"
+    },
+    "creatable": {
+      "type": "boolean",
+      "description": "Offer \"Create “…”\" when nothing matches the typed text exactly"
+    },
+    "maxVisibleTags": {
+      "type": "number",
+      "description": "Show at most this many chips, the rest as \"+3\" (Clean always stays one line)"
+    },
+    "label": {
+      "type": "string",
+      "description": "Visible label above the field (or use a page <label for>)"
+    },
+    "emptyText": {
+      "type": "string",
+      "description": "Shown when nothing matches"
+    },
+    "name": {
+      "type": "string",
+      "description": "Submitted with the form: one entry per picked value"
+    },
+    "disabled": {
+      "type": "boolean",
+      "description": "Can't be changed or focused; also disabled inside a disabled <fieldset>"
+    },
+    "required": {
+      "type": "boolean",
+      "description": "At least one value must be picked before the form submits"
+    },
+    "invalid": {
+      "type": "boolean",
+      "description": "Shows the field as invalid (red edge, aria-invalid on the input)"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ComboboxOption": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "hint": {
+          "type": "string",
+          "description": "Lighter text after the label, e.g. a role or an email"
+        },
+        "avatar": {
+          "type": [
+            "string",
+            "boolean"
+          ],
+          "description": "An image URL, or true for initials from the label"
+        },
+        "color": {
+          "type": "string",
+          "description": "A small color dot – nice for labels and tags"
+        },
+        "group": {
+          "type": "string",
+          "description": "Options with the same group are listed under one title"
+        },
+        "keywords": {
+          "type": "string",
+          "description": "Extra words that should find this option"
+        }
+      },
+      "required": [
+        "value",
+        "label"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

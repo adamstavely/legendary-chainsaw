@@ -1,0 +1,277 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-mcp-connection-manager.json",
+  "title": "tc-mcp-connection-manager",
+  "description": "MCP servers and their status: add one (transport, auth, test), inspect the tools, resources and prompts it exposes,\nconnect, disconnect, retry and remove – the app does the connecting.",
+  "type": "object",
+  "properties": {
+    "value": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/McpServer"
+      },
+      "description": "The servers. Changed by the user unless a tc-value-change listener calls preventDefault()"
+    },
+    "connections": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/McpConnection"
+      },
+      "description": "What the app knows about each server's connection, by server id; a server without one is not connected"
+    },
+    "transports": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/McpTransportOption"
+      },
+      "description": "The transports offered when adding a server"
+    },
+    "authOptions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/McpAuthOption"
+      },
+      "description": "The auth options offered when adding a server"
+    },
+    "credentials": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/McpCredential"
+      },
+      "description": "The credential references offered when the auth needs one"
+    },
+    "statusLabels": {
+      "type": "object",
+      "properties": {
+        "failed": {
+          "type": "string"
+        },
+        "connected": {
+          "type": "string"
+        },
+        "connecting": {
+          "type": "string"
+        },
+        "disconnected": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The statuses' names, merged over MCP_STATUS_LABELS"
+    },
+    "heading": {
+      "type": "string",
+      "description": "Names the group, shown at the top"
+    },
+    "description": {
+      "type": "string",
+      "description": "A quieter line under the heading"
+    },
+    "note": {
+      "type": "string",
+      "description": "A quiet line beside Add server; empty hides it"
+    },
+    "name": {
+      "type": "string",
+      "description": "Submitted with the form: the servers as JSON"
+    },
+    "disabled": {
+      "type": "boolean",
+      "description": "Turns every control off and leaves the list out of the form; a disabled fieldset does the same"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "McpServer": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "transport": {
+          "type": "string",
+          "description": "The id of its transport"
+        },
+        "target": {
+          "type": "string",
+          "description": "The URL, or for a command transport the command line"
+        },
+        "auth": {
+          "type": "string",
+          "description": "The id of its auth option"
+        },
+        "credentialRef": {
+          "type": "string",
+          "description": "The id of its credential reference, when the auth needs one"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "transport",
+        "target",
+        "auth"
+      ],
+      "additionalProperties": false,
+      "description": "A configured server"
+    },
+    "McpConnection": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "$ref": "#/definitions/McpStatus"
+        },
+        "message": {
+          "type": "string",
+          "description": "Why it failed, or a note, in the app's words"
+        },
+        "at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "description": "When the status last changed: a Date or epoch ms (shown as a time of day), or text as it is"
+        },
+        "tools": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/McpCapability"
+          }
+        },
+        "resources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/McpCapability"
+          }
+        },
+        "prompts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/McpCapability"
+          }
+        }
+      },
+      "required": [
+        "status"
+      ],
+      "additionalProperties": false,
+      "description": "What the app knows about a server's connection"
+    },
+    "McpStatus": {
+      "type": "string",
+      "enum": [
+        "connected",
+        "connecting",
+        "disconnected",
+        "failed"
+      ]
+    },
+    "McpCapability": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "uri": {
+          "type": "string",
+          "description": "A resource's URI"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false,
+      "description": "A tool, resource or prompt a server exposes"
+    },
+    "McpTransportOption": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "\"stdio\", \"HTTP\", \"SSE\""
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "url",
+            "command"
+          ],
+          "description": "What it needs: a URL, or a command the app runs"
+        },
+        "description": {
+          "type": "string",
+          "description": "One line under the choice"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "kind"
+      ],
+      "additionalProperties": false,
+      "description": "A way to reach a server"
+    },
+    "McpAuthOption": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "credential": {
+          "type": "boolean",
+          "description": "It needs a credential reference"
+        },
+        "description": {
+          "type": "string",
+          "description": "One line under the select"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false,
+      "description": "How the app authenticates to a server"
+    },
+    "McpCredential": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "hint": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false,
+      "description": "A credential reference the app's server resolves – never the secret"
+    }
+  }
+}

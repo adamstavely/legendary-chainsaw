@@ -1,0 +1,191 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-tool-permissions.json",
+  "title": "tc-tool-permissions",
+  "description": "A matrix of which agent may use which tools and scopes – Allow, Ask or Deny per cell – with presets and a summary of\nwhat changed.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the grid's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "agents": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ToolPermissionAgent"
+      },
+      "description": "The columns"
+    },
+    "tools": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ToolPermissionTool"
+      },
+      "description": "The rows: each tool's scopes, grouped under the tool"
+    },
+    "value": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": {
+          "$ref": "#/definitions/ToolPermissionLevel"
+        }
+      },
+      "description": "The matrix. Changed by the user unless a tc-value-change listener calls preventDefault()"
+    },
+    "saved": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": {
+          "$ref": "#/definitions/ToolPermissionLevel"
+        }
+      },
+      "description": "What was last saved – the summary lists the differences. Unset: the value the element first showed"
+    },
+    "defaultLevel": {
+      "type": "string",
+      "enum": [
+        "ask",
+        "allow",
+        "deny"
+      ],
+      "description": "A cell missing from the value"
+    },
+    "presets": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ToolPermissionPreset"
+      },
+      "description": "One-click setups; [] hides the row"
+    },
+    "changesLimit": {
+      "type": "number",
+      "description": "Changes listed before \"N more\""
+    },
+    "saveLabel": {
+      "type": "string",
+      "description": "The Save button's text; the number of changes is shown beside it"
+    },
+    "resetLabel": {
+      "type": "string",
+      "description": "The text of the button that puts back what was last saved"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ToolPermissionAgent": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "ToolPermissionTool": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "scopes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ToolPermissionScope"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "scopes"
+      ],
+      "additionalProperties": false
+    },
+    "ToolPermissionScope": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string",
+          "description": "One quiet line under the label, e.g. \"Merge, push, force-push\""
+        },
+        "risk": {
+          "$ref": "#/definitions/ToolPermissionRisk",
+          "description": "Drives the built-in presets; \"destructive\" also rules out Allow unless `levels` says otherwise"
+        },
+        "levels": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ToolPermissionLevel"
+          },
+          "description": "The choices this scope offers – default all three, or Ask and Deny for a destructive scope"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "ToolPermissionRisk": {
+      "type": "string",
+      "enum": [
+        "safe",
+        "risky",
+        "destructive"
+      ]
+    },
+    "ToolPermissionLevel": {
+      "type": "string",
+      "enum": [
+        "allow",
+        "ask",
+        "deny"
+      ]
+    },
+    "ToolPermissionPreset": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string",
+          "description": "What it means, read as the radio's description"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

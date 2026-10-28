@@ -1,0 +1,119 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-sla-status.json",
+  "title": "tc-sla-status",
+  "description": "Service-level performance – the on-time share, a Met / At risk / Breached split in words and marks, a weekly trend,\nper-type rows and a period chooser.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "split": {
+      "type": "object",
+      "properties": {
+        "met": {
+          "type": "number"
+        },
+        "atRisk": {
+          "type": "number"
+        },
+        "breached": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "met",
+        "atRisk",
+        "breached"
+      ],
+      "additionalProperties": false,
+      "description": "The counts for the whole period"
+    },
+    "rows": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/SlaRow"
+      },
+      "description": "Counts per type of request, each drawn as its own bar"
+    },
+    "trend": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      },
+      "description": "The on-time share per week, oldest first, from 0 to 1"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "met": {
+          "type": "string"
+        },
+        "atRisk": {
+          "type": "string"
+        },
+        "breached": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The outcomes' names, merged over the defaults (Met, At risk, Breached)"
+    },
+    "periods": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The periods to choose from; empty hides the chooser"
+    },
+    "period": {
+      "type": "string",
+      "description": "The period shown. Changed by the user unless a tc-period-change listener calls preventDefault()"
+    },
+    "unit": {
+      "type": "string",
+      "description": "What the counts are, after the number: \"12 requests\""
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for numbers, e.g. \"de\"; by default the browser's"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "SlaRow": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "met": {
+          "type": "number"
+        },
+        "atRisk": {
+          "type": "number"
+        },
+        "breached": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "atRisk",
+        "breached",
+        "id",
+        "label",
+        "met"
+      ],
+      "description": "A type of request with its own split"
+    }
+  }
+}

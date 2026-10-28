@@ -1,7 +1,10 @@
 import { html, nothing, svg, type PropertyValues, type TemplateResult } from "lit";
 import { property, state } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
+import { keyed } from "lit/directives/keyed.js";
 import { live } from "lit/directives/live.js";
+import { registry } from "../generative/registry";
+import { checkProps, type GenerativeIssue, type Schema } from "../generative/validate";
 import { TcElement } from "./internal/base";
 import type { Look } from "./internal/look";
 import "./data-table";
@@ -35,6 +38,9 @@ import { structuredOutputParse } from "./structured-output";
  *            kind: "text" (default) | "email" | "number" | "url" | "date" | "textarea" | "select" | "choice"
  *   callout  { type: "callout", tone?: "info" | "success" | "warning" | "danger", title?, text?, children?, actions? }
  *   group    { type: "group", title?, layout?: "column" | "row" | "grid", children, actions? }
+ *   component { type: "component", tag, props? }   any generatable Trenchcoat component (trenchcoat/generative's
+ *            catalogue): props are checked against its schema – what doesn't fit is left out and reported in
+ *            tc-spec-check – and its events come back as tc-component-event
  *   actions  [{ id, label, primary? }] on a callout or a group – buttons that fire tc-action
  * Blocks nest inside callouts and groups, up to 6 levels.
  */
@@ -66,8 +72,10 @@ export type GeneratedUiForm = { type: "form"; id: string; title?: string; submit
 export type GeneratedUiTone = "info" | "success" | "warning" | "danger";
 export type GeneratedUiCallout = { type: "callout"; tone?: GeneratedUiTone; title?: string; text?: string; children?: GeneratedUiBlock[]; actions?: GeneratedUiAction[] };
 export type GeneratedUiGroup = { type: "group"; title?: string; layout?: "column" | "row" | "grid"; children: GeneratedUiBlock[]; actions?: GeneratedUiAction[] };
+/** Any component from trenchcoat/generative's catalogue; props are checked against its schema before they're set */
+export type GeneratedUiComponent = { type: "component"; tag: string; props?: Record<string, unknown> };
 /** One block of a spec */
-export type GeneratedUiBlock = GeneratedUiText | GeneratedUiMetric | GeneratedUiTable | GeneratedUiChart | GeneratedUiForm | GeneratedUiCallout | GeneratedUiGroup;
+export type GeneratedUiBlock = GeneratedUiText | GeneratedUiMetric | GeneratedUiTable | GeneratedUiChart | GeneratedUiForm | GeneratedUiCallout | GeneratedUiGroup | GeneratedUiComponent;
 /** A whole answer: { blocks }, a list of blocks, or one block */
 export type GeneratedUiSpec = { blocks: GeneratedUiBlock[] } | GeneratedUiBlock[] | GeneratedUiBlock;
 
@@ -88,6 +96,15 @@ export type GeneratedUiActionDetail = {
 };
 /** tc-spec-check */
 export type GeneratedUiSpecCheck = { issues: GeneratedUiIssue[] };
+/** tc-component-event: an event of a component the model placed, passed on */
+export type GeneratedUiComponentEvent = {
+  /** Where the component block sits in the spec, as a JSON Pointer path */
+  block: string;
+  tag: string;
+  /** The component's own event, e.g. "tc-selected-change" */
+  event: string;
+  detail: unknown;
+};
 
 /* ---------- Checking ---------- */
 
@@ -98,7 +115,8 @@ type Ok =
   | { type: "chart"; path: string; title: string; value: string; delta: number | undefined; labels: string[]; series: KpiSeries[]; footer: string }
   | { type: "form"; path: string; id: string; title: string; submitLabel: string; fields: FieldOk[] }
   | { type: "callout"; path: string; tone: GeneratedUiTone; title: string; text: string; children: Checked[]; actions: GeneratedUiAction[] }
-  | { type: "group"; path: string; title: string; layout: "column" | "row" | "grid"; children: Checked[]; actions: GeneratedUiAction[] };
+  | { type: "group"; path: string; title: string; layout: "column" | "row" | "grid"; children: Checked[]; actions: GeneratedUiAction[] }
+  | { type: "component"; path: string; tag: string; props: Record<string, unknown> };
 type FieldOk = { name: string; label: string; kind: GeneratedUiFieldKind; required: boolean; placeholder: string; hint: string; value: string; options: GeneratedUiOption[]; min?: number; max?: number };
 type Fallback = { type: "fallback"; path: string; text: string; reason: string };
 type Pending = { type: "pending"; path: string };
@@ -266,6 +284,13 @@ class Checker {
         const layout = raw.layout === "row" || raw.layout === "grid" ? raw.layout : "column";
         return { type: "group", path, title: optStr(raw.title) ?? "", layout, children, actions: this.actions(raw.actions, path) };
       }
+      case "component": {
+        const tag = str(raw.tag)?.trim().toLowerCase() ?? "";
+        if (!tag) return this.fallback(raw, path, "a component needs a tag");
+        if (!Object.hasOwn(registry, tag)) return this.fallback(raw, path, `“${tag}” isn't a component a model can place`);
+        if (raw.props !== undefined && !isObj(raw.props)) return this.fallback(raw, path, "a component's props should be an object");
+        return { type: "component", path, tag, props: (raw.props as Record<string, unknown>) ?? {} };
+      }
       default:
         return this.fallback(raw, path, t === undefined ? "a block needs a type" : `unknown type “${String(t)}”`);
     }
@@ -307,7 +332,8 @@ let instances = 0;
  * text for anything it can't draw.
  * @tag tc-generated-ui
  * @fires tc-action - A form was submitted or an action pressed ({ kind: "submit" | "action", action, block, values? })
- * @fires tc-spec-check - The spec settled (not streaming) and what fell back to text changed ({ issues })
+ * @fires tc-spec-check - The spec settled (not streaming) and what fell back to text, or a component's props it left out, changed ({ issues })
+ * @fires tc-component-event - A component the model placed fired one of its events ({ block, tag, event, detail }: GeneratedUiComponentEvent); cancelable when the component's event is – preventing it prevents that
  */
 export class TcGeneratedUi extends TcElement {
   static override ui = "gui";
@@ -330,10 +356,14 @@ export class TcGeneratedUi extends TcElement {
   private blocks: Checked[] = [];
   private found: GeneratedUiIssue[] = [];
   private lastReport = "";
+  /** Component blocks by path, and what each mounted container holds */
+  private components = new Map<string, { tag: string; props: Record<string, unknown> }>();
+  private componentIssues = new Map<string, GenerativeIssue[]>();
+  private mounting = new WeakMap<HTMLElement, string>();
 
-  /** What fell back to text, and why, by JSON Pointer path */
+  /** What fell back to text, and why, and the props of a component that were left out – by JSON Pointer path */
   get issues(): GeneratedUiIssue[] {
-    return this.found;
+    return [...this.found, ...[...this.componentIssues.values()].flat()];
   }
 
   protected override willUpdate(changed: PropertyValues) {
@@ -360,6 +390,15 @@ export class TcGeneratedUi extends TcElement {
     // A spec still arriving shows at least one placeholder
     if (this.streaming && !this.blocks.some((b) => b.type === "pending")) this.blocks.push({ type: "pending", path: "~next" });
     this.found = checker.issues;
+    this.components.clear();
+    const collect = (list: Checked[]) => {
+      for (const b of list) {
+        if (b.type === "component") this.components.set(b.path, { tag: b.tag, props: b.props });
+        else if (b.type === "callout" || b.type === "group") collect(b.children);
+      }
+    };
+    collect(this.blocks);
+    for (const path of [...this.componentIssues.keys()]) if (!this.components.has(path)) this.componentIssues.delete(path);
     // Forms start with their fields' values; what people typed survives a new spec with the same form
     const values = { ...this.formValues };
     let changedValues = false;
@@ -393,12 +432,54 @@ export class TcGeneratedUi extends TcElement {
       if (w.describedBy) control.setAttribute("aria-describedby", w.describedBy);
       else control.removeAttribute("aria-describedby");
     });
-    if ((changed.has("spec") || changed.has("streaming")) && !this.streaming) {
-      const key = JSON.stringify(this.found);
-      if (key !== this.lastReport) {
-        this.lastReport = key;
-        this.emit<GeneratedUiSpecCheck>("tc-spec-check", { issues: this.found });
-      }
+    this.mountComponents();
+    if (changed.has("spec") || changed.has("streaming")) this.report();
+  }
+
+  /** tc-spec-check, once the spec has settled and only when the issues changed */
+  private report() {
+    if (this.streaming) return;
+    const issues = this.issues;
+    const key = JSON.stringify(issues);
+    if (key === this.lastReport) return;
+    this.lastReport = key;
+    this.emit<GeneratedUiSpecCheck>("tc-spec-check", { issues });
+  }
+
+  /* ---------- Components a model placed ---------- */
+
+  /** Loads each component block's module and schema, checks its props and sets what's safe – again when they change */
+  private mountComponents() {
+    for (const box of this.querySelectorAll<HTMLElement>(".ui-gui__component")) {
+      if (box.closest("tc-generated-ui") !== this) continue;
+      const path = box.dataset.path ?? "";
+      const block = this.components.get(path);
+      if (!block) continue;
+      const key = `${block.tag} ${JSON.stringify(block.props)}`;
+      if (this.mounting.get(box) === key) continue;
+      this.mounting.set(box, key);
+      const entry = registry[block.tag];
+      void Promise.all([entry.load(), entry.schema()]).then(([, schema]) => {
+        if (this.mounting.get(box) !== key || !box.isConnected) return;
+        const checked = checkProps(schema.default as Schema, block.props);
+        let el = box.firstElementChild as HTMLElement | null;
+        if (!el || el.localName !== block.tag) {
+          el = document.createElement(block.tag);
+          const own = el;
+          // The component's own events, passed on as one event the app listens for
+          for (const name of entry.events)
+            own.addEventListener(name, (e) => {
+              if (e.target !== own) return;
+              e.stopPropagation();
+              const passed = this.emit<GeneratedUiComponentEvent>("tc-component-event", { block: path, tag: block.tag, event: name, detail: (e as CustomEvent).detail }, { cancelable: e.cancelable });
+              if (!passed) e.preventDefault();
+            });
+          box.replaceChildren(el);
+        }
+        Object.assign(el, checked.props);
+        this.componentIssues.set(path, checked.issues.map((i) => ({ path: `${path}/${i.path}`, message: i.message })));
+        this.report();
+      });
     }
   }
 
@@ -573,6 +654,10 @@ export class TcGeneratedUi extends TcElement {
             ${this.actions(b.actions, b.path)}
           </div>
         </div>`;
+      case "component":
+        // Mounted in updated(): the module and schema load first, then the checked props are set. Keyed by path, so a
+        // container never carries another block's component
+        return html`${keyed(b.path, html`<div class="ui-gui__component" data-path=${b.path} data-tag=${b.tag}></div>`)}`;
       case "group":
         return html`<section class="ui-gui__group" data-path=${b.path} aria-label=${ifDefined(b.title || undefined)}>
           ${b.title ? this.heading(b.title, "ui-gui__group-title") : nothing}
@@ -714,6 +799,8 @@ ${Array.from({ length: CHART_COLOURS }, (_, i) => `[data-ui="gui"] polyline[stro
 .ui-gui__reason { margin: 0; padding: var(--tc-space-1) var(--tc-space-2); border-radius: var(--tc-radius-sm); background: var(--tc-status-warning-bg); color: var(--tc-status-warning-fg); font-family: var(--tc-font-mono); font-size: var(--tc-font-size-xs); }
 /* The block still arriving */
 .ui-gui__pending { display: grid; gap: var(--tc-space-2); padding: var(--tc-space-1) 0; }
+/* A component block while its module and schema load: the pending block's quiet bar */
+.ui-gui__component:empty { min-height: var(--tc-control-h-md); border-radius: var(--tc-radius-lg); background: var(--tc-fill-subtle); }
 .ui-gui__pending > span { height: 10px; border-radius: var(--tc-radius-full); background: var(--tc-fill-default); animation: ui-gui-pulse var(--tc-duration-shimmer) var(--tc-ease-in-out) infinite; }
 .ui-gui__pending > span:nth-child(2) { width: 82%; animation-delay: var(--tc-duration-slow); }
 .ui-gui__pending > span:nth-child(3) { width: 56%; animation-delay: var(--tc-duration-slower); }

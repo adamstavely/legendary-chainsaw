@@ -1,0 +1,325 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-reflection-gate.json",
+  "title": "tc-reflection-gate",
+  "description": "A pause before relying on an answer: intent, prior, reformulate or checkpoint prompts, submitted through a\ncancelable event.",
+  "type": "object",
+  "properties": {
+    "mode": {
+      "type": "string",
+      "enum": [
+        "intent",
+        "prior",
+        "reformulate",
+        "checkpoint"
+      ],
+      "description": "Which prompt to show: intent, prior, reformulate or checkpoint"
+    },
+    "phase": {
+      "type": "string",
+      "enum": [
+        "done",
+        "open",
+        "compare",
+        "skipped"
+      ],
+      "description": "Where the gate is: open, compare (reformulate's second step), done or skipped – set it to restore one"
+    },
+    "value": {
+      "type": "object",
+      "properties": {
+        "match": {
+          "type": "string"
+        },
+        "task": {
+          "type": "string"
+        },
+        "confidence": {
+          "type": "string"
+        },
+        "claim": {
+          "type": "string"
+        },
+        "decision": {
+          "type": "string"
+        },
+        "stakes": {
+          "type": "string"
+        },
+        "belief": {
+          "type": "string"
+        },
+        "changeMind": {
+          "type": "string"
+        },
+        "restatement": {
+          "type": "string"
+        },
+        "method": {
+          "type": "string"
+        },
+        "brief": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "What the person wrote or picked, by field"
+    },
+    "answer": {
+      "type": "string",
+      "description": "The answer – hidden in prior mode until the prior is in, shown to restate in reformulate mode"
+    },
+    "claims": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ReflectionClaim"
+      },
+      "description": "The claims to pick from in checkpoint mode; without them the person types the claim"
+    },
+    "allowSkip": {
+      "type": "boolean",
+      "description": "Shows Skip – only where your product lets people go on without reflecting"
+    },
+    "minWords": {
+      "type": "number",
+      "description": "The fewest words a restatement may have"
+    },
+    "heading": {
+      "type": "string",
+      "description": "The heading – defaults to the mode's"
+    },
+    "description": {
+      "type": "string",
+      "description": "The line under the heading – defaults to the mode's"
+    },
+    "brief": {
+      "type": "boolean",
+      "description": "The short version for deadline situations: one combined field per mode, marked as the short version, still recorded"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "intentHeading": {
+          "type": "string"
+        },
+        "intentDescription": {
+          "type": "string"
+        },
+        "priorHeading": {
+          "type": "string"
+        },
+        "priorDescription": {
+          "type": "string"
+        },
+        "reformulateHeading": {
+          "type": "string"
+        },
+        "reformulateDescription": {
+          "type": "string"
+        },
+        "checkpointHeading": {
+          "type": "string"
+        },
+        "checkpointDescription": {
+          "type": "string"
+        },
+        "task": {
+          "type": "string"
+        },
+        "taskPlaceholder": {
+          "type": "string"
+        },
+        "decision": {
+          "type": "string"
+        },
+        "decisionPlaceholder": {
+          "type": "string"
+        },
+        "stakes": {
+          "type": "string"
+        },
+        "stakesLow": {
+          "type": "string"
+        },
+        "stakesLowHint": {
+          "type": "string"
+        },
+        "stakesMedium": {
+          "type": "string"
+        },
+        "stakesMediumHint": {
+          "type": "string"
+        },
+        "stakesHigh": {
+          "type": "string"
+        },
+        "stakesHighHint": {
+          "type": "string"
+        },
+        "belief": {
+          "type": "string"
+        },
+        "beliefPlaceholder": {
+          "type": "string"
+        },
+        "confidence": {
+          "type": "string"
+        },
+        "confidenceUnsure": {
+          "type": "string"
+        },
+        "confidenceLeaning": {
+          "type": "string"
+        },
+        "confidenceSure": {
+          "type": "string"
+        },
+        "changeMind": {
+          "type": "string"
+        },
+        "changeMindPlaceholder": {
+          "type": "string"
+        },
+        "answer": {
+          "type": "string"
+        },
+        "hiddenAnswer": {
+          "type": "string"
+        },
+        "restatement": {
+          "type": "string"
+        },
+        "restatementPlaceholder": {
+          "type": "string"
+        },
+        "yours": {
+          "type": "string"
+        },
+        "match": {
+          "type": "string"
+        },
+        "matchYes": {
+          "type": "string"
+        },
+        "matchYesHint": {
+          "type": "string"
+        },
+        "matchPartly": {
+          "type": "string"
+        },
+        "matchPartlyHint": {
+          "type": "string"
+        },
+        "matchNo": {
+          "type": "string"
+        },
+        "matchNoHint": {
+          "type": "string"
+        },
+        "claim": {
+          "type": "string"
+        },
+        "claimPlaceholder": {
+          "type": "string"
+        },
+        "method": {
+          "type": "string"
+        },
+        "methodPlaceholder": {
+          "type": "string"
+        },
+        "optional": {
+          "type": "string"
+        },
+        "submit": {
+          "type": "string"
+        },
+        "compare": {
+          "type": "string"
+        },
+        "back": {
+          "type": "string"
+        },
+        "skip": {
+          "type": "string"
+        },
+        "edit": {
+          "type": "string"
+        },
+        "reflectNow": {
+          "type": "string"
+        },
+        "noted": {
+          "type": "string"
+        },
+        "skipped": {
+          "type": "string"
+        },
+        "required": {
+          "type": "string"
+        },
+        "requiredChoice": {
+          "type": "string"
+        },
+        "tooShort": {
+          "type": "string"
+        },
+        "briefTag": {
+          "type": "string"
+        },
+        "briefDescription": {
+          "type": "string"
+        },
+        "notedBrief": {
+          "type": "string"
+        },
+        "briefIntent": {
+          "type": "string"
+        },
+        "briefIntentPlaceholder": {
+          "type": "string"
+        },
+        "briefPrior": {
+          "type": "string"
+        },
+        "briefPriorPlaceholder": {
+          "type": "string"
+        },
+        "briefReformulate": {
+          "type": "string"
+        },
+        "briefReformulatePlaceholder": {
+          "type": "string"
+        },
+        "briefCheckpoint": {
+          "type": "string"
+        },
+        "briefCheckpointPlaceholder": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Any of the gate's texts, to change the wording or the language"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ReflectionClaim": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "text"
+      ],
+      "additionalProperties": false,
+      "description": "A claim to pick in checkpoint mode"
+    }
+  }
+}

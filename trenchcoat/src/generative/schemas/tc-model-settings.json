@@ -1,0 +1,226 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-model-settings.json",
+  "title": "tc-model-settings",
+  "description": "How one model generates: its supported parameters with plain explanations, presets, feedback on incompatible\nsettings and what differs from the defaults.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the group's name"
+    },
+    "model": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "supports": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "defaults": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/ModelParamValue"
+          }
+        },
+        "ignores": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "supports"
+      ],
+      "additionalProperties": false,
+      "description": "The model the settings are for; unset shows every parameter"
+    },
+    "value": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/ModelParamValue"
+      },
+      "description": "The values the person set, by parameter id; missing ones are the defaults. Changed by the user unless tc-value-change is prevented"
+    },
+    "parameters": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ModelParam"
+      },
+      "description": "Every parameter the app knows; only those the model supports are shown"
+    },
+    "presets": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ModelSettingsPreset"
+      },
+      "description": "Named sets of values; a preset is picked when the shown values match it"
+    },
+    "conflicts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ModelSettingsConflict"
+      },
+      "description": "Parameters that shouldn't all move from their defaults at once, with what to say when they do"
+    },
+    "name": {
+      "type": "string",
+      "description": "Submitted with the form: the supported values as JSON"
+    },
+    "disabled": {
+      "type": "boolean",
+      "description": "Turns every control off and leaves the settings out of the form; a disabled fieldset does the same"
+    },
+    "signature": {
+      "type": "boolean",
+      "description": "Shows the signature above the controls: every value on its range with the default and presets marked. Off by default – the controls already show each value, so it's for pages that want the at-a-glance picture too"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ModelParamValue": {
+      "type": [
+        "number",
+        "string"
+      ],
+      "description": "A value a parameter can take"
+    },
+    "ModelParam": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string",
+          "description": "What it does, in plain words – shown under the label"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "range",
+            "choice"
+          ]
+        },
+        "default": {
+          "$ref": "#/definitions/ModelParamValue",
+          "description": "The default when the model doesn't give one"
+        },
+        "min": {
+          "type": "number",
+          "description": "range: the bounds and step"
+        },
+        "max": {
+          "type": "number"
+        },
+        "step": {
+          "type": "number"
+        },
+        "ends": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 2,
+          "maxItems": 2,
+          "description": "range: words at the two ends of the track, e.g. [\"Focused\", \"Varied\"]"
+        },
+        "unit": {
+          "type": "string",
+          "description": "range: a unit after the value, e.g. \"tokens\""
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "value": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "value",
+              "label"
+            ],
+            "additionalProperties": false
+          },
+          "description": "choice: the options"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "kind",
+        "default"
+      ],
+      "additionalProperties": false,
+      "description": "One generation parameter. `range` is a slider; `choice` a segmented control"
+    },
+    "ModelSettingsPreset": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "values": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/ModelParamValue"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "values"
+      ],
+      "additionalProperties": false,
+      "description": "A named set of values"
+    },
+    "ModelSettingsConflict": {
+      "type": "object",
+      "properties": {
+        "params": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "params",
+        "message"
+      ],
+      "additionalProperties": false,
+      "description": "Two or more parameters that shouldn't all move from their defaults at once"
+    }
+  }
+}

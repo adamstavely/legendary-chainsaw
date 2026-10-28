@@ -1,0 +1,104 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-citation-badge.json",
+  "title": "tc-citation-badge",
+  "description": "A small badge of citation counts by kind – Publications, Supporting, Mentioning, Contrasting – with a tooltip\nthat says what each means, and an optional link to the details.",
+  "type": "object",
+  "properties": {
+    "counts": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "number"
+      },
+      "description": "Each kind's count by id: { publications: 522, supporting: 29 … }; a kind without one shows 0"
+    },
+    "rows": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/CitationRow"
+      },
+      "description": "The kinds, in order; by default Publications, Supporting, Mentioning and Contrasting"
+    },
+    "layout": {
+      "type": "string",
+      "enum": [
+        "labelled",
+        "compact"
+      ],
+      "description": "\"labelled\": name, mark and count; \"compact\": the mark and the count"
+    },
+    "source": {
+      "type": "string",
+      "description": "A source's name shown on top, e.g. your index's name; none by default"
+    },
+    "label": {
+      "type": "string",
+      "description": "What the counts are, for the badge's name when there's no `source`"
+    },
+    "href": {
+      "type": "string",
+      "description": "Where the details are – the badge becomes a link"
+    },
+    "openable": {
+      "type": "boolean",
+      "description": "Without `href`, makes the badge a button that fires tc-open"
+    },
+    "detailsLabel": {
+      "type": "string",
+      "description": "The link's hint in the tooltip"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for numbers, e.g. \"en-GB\"; by default the browser's"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "CitationRow": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "icon": {
+          "$ref": "#/definitions/CitationIcon",
+          "description": "A built-in mark or an element to show (cloned)"
+        },
+        "tone": {
+          "$ref": "#/definitions/CitationTone"
+        },
+        "meaning": {
+          "type": "string",
+          "description": "What this kind means, for the tooltip: \"cites this work as evidence for its claim\""
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "CitationIcon": {
+      "type": "string",
+      "enum": [
+        "document",
+        "supporting",
+        "mentioning",
+        "contrasting"
+      ]
+    },
+    "CitationTone": {
+      "type": "string",
+      "enum": [
+        "neutral",
+        "success",
+        "info",
+        "warning",
+        "danger"
+      ]
+    }
+  }
+}
