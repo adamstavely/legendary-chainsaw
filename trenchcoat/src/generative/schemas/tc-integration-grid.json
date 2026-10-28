@@ -1,0 +1,58 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-integration-grid.json",
+  "title": "tc-integration-grid",
+  "description": "A wall of integration logos around your product mark.",
+  "type": "object",
+  "properties": {
+    "logos": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/IntegrationGridLogo"
+      },
+      "description": "Up to 22 logos, filled row by row around the centre tile – defaults to a set of well-known tools"
+    },
+    "columns": {
+      "type": "number",
+      "enum": [
+        5,
+        7,
+        9
+      ],
+      "description": "Tiles in the middle row – 9 by default; the rows above and below get two fewer. Use 7 or 5 for a tighter grid"
+    },
+    "label": {
+      "type": "string",
+      "description": "Accessible description of the scene – defaults to \"Integrates with …\" and the logos' names"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "IntegrationGridLogo": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name for the accessible description"
+        },
+        "path": {
+          "type": "string",
+          "description": "A single SVG path on a 24 × 24 viewBox (e.g. from simple-icons)"
+        },
+        "color": {
+          "type": "string",
+          "description": "Fill color – leave it out for black marks that should follow the ink color (and turn light in dark mode)"
+        },
+        "darkColor": {
+          "type": "string",
+          "description": "Optional fill color in dark mode, for brand colors that are too dark on a dark tile"
+        }
+      },
+      "required": [
+        "name",
+        "path"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

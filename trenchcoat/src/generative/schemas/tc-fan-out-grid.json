@@ -1,0 +1,115 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-fan-out-grid.json",
+  "title": "tc-fan-out-grid",
+  "description": "A big job fanned out to many workers: one cell per task, live.",
+  "type": "object",
+  "properties": {
+    "tasks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/FanoutTask"
+      },
+      "description": "Every task in the job, one cell each, in order – its label, state, worker, times, cost, result or error"
+    },
+    "job": {
+      "type": "string",
+      "description": "What the whole job does – e.g. \"Enrich 240 leads\""
+    },
+    "workers": {
+      "type": "number",
+      "description": "How many workers run at once – used for the time left (defaults to the tasks running now)"
+    },
+    "now": {
+      "type": "number",
+      "description": "The clock, in epoch ms – without it (and without `elapsed`) the element reads the clock and ticks while tasks run"
+    },
+    "startedAt": {
+      "type": "number",
+      "description": "When the job started, in epoch ms – defaults to the earliest task start"
+    },
+    "elapsed": {
+      "type": "number",
+      "description": "The clock as ms from the start of the job; task start/end are then job-relative too. Wins over `now`"
+    },
+    "selected": {
+      "type": "string",
+      "description": "The id of the task whose window is kept open (null: none). Changed by the user unless a tc-selected-change listener calls preventDefault()"
+    },
+    "filter": {
+      "type": "string",
+      "enum": [
+        "running",
+        "done",
+        "queued",
+        "failed",
+        "retrying"
+      ],
+      "description": "The state every other cell steps back from (null: none). Changed by the user unless a tc-filter-change listener calls preventDefault()"
+    },
+    "heading": {
+      "type": "string",
+      "description": "The title in the header"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "FanoutTask": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "What this task is about, in a few words – e.g. \"northwind.io\""
+        },
+        "status": {
+          "$ref": "#/definitions/FanoutStatus"
+        },
+        "worker": {
+          "type": "string",
+          "description": "Who works on it, e.g. \"Researcher 3\""
+        },
+        "start": {
+          "type": "number",
+          "description": "When it started and ended – epoch ms, on the same clock as `now` (or ms from the start of the job with `elapsed`)"
+        },
+        "end": {
+          "type": "number"
+        },
+        "cost": {
+          "type": "number"
+        },
+        "attempts": {
+          "type": "number",
+          "description": "How often it was tried – 2 and more show as retries"
+        },
+        "result": {
+          "type": "string",
+          "description": "What came out, one line – shown in the window of a finished task"
+        },
+        "error": {
+          "type": "string",
+          "description": "What went wrong – shown in the window of a failed or retrying task"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "FanoutStatus": {
+      "type": "string",
+      "enum": [
+        "queued",
+        "running",
+        "retrying",
+        "done",
+        "failed"
+      ]
+    }
+  }
+}

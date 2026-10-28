@@ -1,0 +1,156 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-place-list.json",
+  "title": "tc-place-list",
+  "description": "Places on record – type with an icon, whether each is confirmed, the address, coordinates and when it applies –\nwith a place picked for a map.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the list's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "places": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/PlaceRecord"
+      },
+      "description": "The places, in order"
+    },
+    "types": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "tone": {
+            "$ref": "#/definitions/PlaceTone"
+          },
+          "icon": {
+            "$ref": "#/definitions/PlaceIcon"
+          }
+        },
+        "required": [
+          "label",
+          "tone"
+        ],
+        "additionalProperties": false
+      },
+      "description": "Types' names, tones and icons, merged over the defaults (residence, work, frequent, former, other)"
+    },
+    "statuses": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "tone": {
+            "$ref": "#/definitions/PlaceTone"
+          }
+        },
+        "required": [
+          "label",
+          "tone"
+        ],
+        "additionalProperties": false
+      },
+      "description": "Statuses' names and tones, merged over the defaults (confirmed, unverified, vacated)"
+    },
+    "coordinates": {
+      "type": "boolean",
+      "description": "Shows each place's coordinates under its address"
+    },
+    "selected": {
+      "type": "string",
+      "description": "The picked place. Changed by the user unless a tc-selected-change listener calls preventDefault()"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for dates, e.g. \"en-GB\"; by default the browser's"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "PlaceRecord": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string",
+          "description": "A short name, e.g. \"Primary residence\"; by default the type's label"
+        },
+        "type": {
+          "type": "string",
+          "description": "A key of `types`: residence, work, frequent, former, other – or the page's own"
+        },
+        "status": {
+          "type": "string",
+          "description": "A key of `statuses`: confirmed, unverified, vacated – or the page's own"
+        },
+        "address": {
+          "type": "string"
+        },
+        "coords": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 2,
+          "maxItems": 2,
+          "description": "[latitude, longitude]"
+        },
+        "since": {
+          "type": "number",
+          "description": "When it started to apply, as epoch ms"
+        },
+        "until": {
+          "type": "number",
+          "description": "When it stopped, as epoch ms"
+        },
+        "span": {
+          "type": "string",
+          "description": "The period in your own words, replacing since / until: \"Visits 2024 –\""
+        },
+        "note": {
+          "type": "string",
+          "description": "One quiet line, e.g. \"Registered office\""
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "address"
+      ],
+      "additionalProperties": false
+    },
+    "PlaceTone": {
+      "type": "string",
+      "enum": [
+        "success",
+        "info",
+        "warning",
+        "danger",
+        "neutral"
+      ]
+    },
+    "PlaceIcon": {
+      "type": "string",
+      "enum": [
+        "home",
+        "work",
+        "star",
+        "history",
+        "pin"
+      ]
+    }
+  }
+}

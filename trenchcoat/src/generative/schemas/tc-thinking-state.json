@@ -1,0 +1,122 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-thinking-state.json",
+  "title": "tc-thinking-state",
+  "description": "The \"working…\" panel of an AI chat: steps and searches appear one by one, then \"Worked for …\".",
+  "type": "object",
+  "properties": {
+    "steps": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ThinkingStep"
+      },
+      "description": "The steps and searches to show, in order – `progress` (or the timeline) decides how many have appeared"
+    },
+    "doneLabel": {
+      "type": "string",
+      "description": "Label of the final row"
+    },
+    "stepMs": {
+      "type": "number",
+      "description": "Pause between two steps, in ms (the timeline that runs when `progress` and `done` are unset)"
+    },
+    "progress": {
+      "type": "number",
+      "description": "How many steps have appeared; unset, the timeline reveals them"
+    },
+    "done": {
+      "type": "boolean",
+      "description": "Finished; unset, the timeline decides (when `progress` is unset too)"
+    },
+    "loop": {
+      "type": "boolean",
+      "description": "Start over after a pause once finished – only while the timeline runs everything. Stops after a few runs, and as soon as the pointer or focus is inside (WCAG 2.2.2)"
+    },
+    "open": {
+      "type": "boolean",
+      "description": "Whether the steps are unfolded"
+    },
+    "startedAt": {
+      "type": "number",
+      "description": "When the work started, in epoch ms – the header's timer counts from here. Defaults to when the run started"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ThinkingStep": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "search"
+            },
+            "label": {
+              "type": "string"
+            },
+            "activeLabel": {
+              "type": "string"
+            },
+            "sources": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ThinkingSource"
+              }
+            },
+            "moreSources": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ThinkingSource"
+              },
+              "description": "Hidden behind a \"+N more\" chip until it is clicked"
+            }
+          },
+          "required": [
+            "kind",
+            "label",
+            "sources"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "type": "string",
+              "const": "step"
+            },
+            "label": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "kind",
+            "label"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "ThinkingSource": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "href": {
+          "type": "string",
+          "description": "Opens in a new tab"
+        },
+        "tooltip": {
+          "type": "string",
+          "description": "Tooltip on hover – defaults to the link"
+        }
+      },
+      "required": [
+        "label"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

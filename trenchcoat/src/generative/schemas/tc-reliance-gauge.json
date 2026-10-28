@@ -1,0 +1,280 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-reliance-gauge.json",
+  "title": "tc-reliance-gauge",
+  "description": "Whether trust in an AI matches its performance: a reliance–accuracy dial with its trend, signals against review\nthresholds, overtrust and undertrust episodes, and the recommended review level.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the region's name"
+    },
+    "scope": {
+      "type": "string",
+      "description": "What the numbers cover, a quiet line under the heading – e.g. \"Last 30 days · 412 answers\""
+    },
+    "index": {
+      "type": "number",
+      "description": "The reliance–accuracy index, 0–1 (1: trust matches accuracy). Unset, it is 1 − |reliance − accuracy|"
+    },
+    "reliance": {
+      "type": "number",
+      "description": "How often people relied on the AI's output, 0–1 – compared with `accuracy` to say which way trust leans"
+    },
+    "accuracy": {
+      "type": "number",
+      "description": "How often the AI's output was right, 0–1"
+    },
+    "trend": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/RelianceWindow"
+      },
+      "description": "The index over recent windows, oldest first – drawn as the trend line"
+    },
+    "calibratedAt": {
+      "type": "number",
+      "description": "Index from which the dial reads \"Calibrated\" (0–1)"
+    },
+    "driftAt": {
+      "type": "number",
+      "description": "Index from which the dial reads \"Drifting\"; below it, \"Miscalibrated\" (0–1)"
+    },
+    "signals": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/RelianceSignal"
+      },
+      "description": "Behaviour signals, each a 0–1 value where higher means more reason to review"
+    },
+    "spotCheckAt": {
+      "type": "number",
+      "description": "Signal value from which a spot-check is recommended (0–1)"
+    },
+    "mandatoryAt": {
+      "type": "number",
+      "description": "Signal value from which review of every output is recommended (0–1)"
+    },
+    "overtrust": {
+      "type": "number",
+      "description": "Overtrust episodes: output relied on, then found wrong"
+    },
+    "undertrust": {
+      "type": "number",
+      "description": "Undertrust episodes: output overridden, then found right"
+    },
+    "browsable": {
+      "type": "boolean",
+      "description": "The episode counts are buttons that fire tc-episodes-open"
+    },
+    "reviewLevel": {
+      "type": "string",
+      "enum": [
+        "routine",
+        "spot-check",
+        "mandatory"
+      ],
+      "description": "The review level in force – when it differs from the recommendation, the footer offers to switch"
+    },
+    "recommended": {
+      "type": "string",
+      "enum": [
+        "routine",
+        "spot-check",
+        "mandatory"
+      ],
+      "description": "Overrides the recommended level worked out from the signals and the index"
+    },
+    "reason": {
+      "type": "string",
+      "description": "Overrides the sentence that explains the recommendation"
+    },
+    "levelLabels": {
+      "type": "object",
+      "properties": {
+        "routine": {
+          "type": "string"
+        },
+        "spot-check": {
+          "type": "string"
+        },
+        "mandatory": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Names of the review levels"
+    },
+    "domains": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/RelianceDomain"
+      },
+      "description": "The calibration table: one row per domain, the AI's accuracy against the confidence it stated; empty hides it"
+    },
+    "calibrationTolerance": {
+      "type": "number",
+      "description": "How far confidence may sit from accuracy (0–1) and still read \"Well calibrated\""
+    },
+    "calibrationLabels": {
+      "type": "object",
+      "properties": {
+        "calibrated": {
+          "type": "string"
+        },
+        "over": {
+          "type": "string"
+        },
+        "under": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The names of the calibration bands – in place of Well calibrated, Over-confident and Under-confident"
+    },
+    "domainsLabel": {
+      "type": "string",
+      "description": "The calibration table's caption"
+    },
+    "agents": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/RelianceAgent"
+      },
+      "description": "Agents to rank by the rating the app gives each; empty hides the ranking"
+    },
+    "agentsLabel": {
+      "type": "string",
+      "description": "The ranking's caption"
+    },
+    "locale": {
+      "type": "string",
+      "description": "Locale for numbers"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "RelianceWindow": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "index": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "label",
+        "index"
+      ],
+      "additionalProperties": false,
+      "description": "One recent window of the index – a week, a batch, a release"
+    },
+    "RelianceSignal": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "\"Accepted unedited\", \"Time to accept\""
+        },
+        "value": {
+          "type": "number",
+          "description": "0–1 – higher means more reason to review"
+        },
+        "hint": {
+          "type": "string",
+          "description": "What the value measures, a quiet line under the label"
+        },
+        "spotCheckAt": {
+          "type": "number",
+          "description": "This signal's own spot-check threshold (0–1) – defaults to the element's"
+        },
+        "mandatoryAt": {
+          "type": "number",
+          "description": "This signal's own mandatory threshold (0–1) – defaults to the element's"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "RelianceDomain": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "\"Contract terms\", \"Case law\""
+        },
+        "accuracy": {
+          "type": "number",
+          "description": "How often the AI was right in this domain, 0–1"
+        },
+        "confidence": {
+          "type": "number",
+          "description": "The confidence it stated there, on average, 0–1"
+        },
+        "count": {
+          "type": "number",
+          "description": "How many outputs the row rests on – a quiet line under the label"
+        },
+        "band": {
+          "$ref": "#/definitions/RelianceCalibration",
+          "description": "The band, set outright – otherwise worked out from accuracy, confidence and `calibrationTolerance`"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "accuracy",
+        "confidence"
+      ],
+      "additionalProperties": false,
+      "description": "One row of the calibration table"
+    },
+    "RelianceCalibration": {
+      "type": "string",
+      "enum": [
+        "calibrated",
+        "over",
+        "under"
+      ],
+      "description": "How the AI's stated confidence compares with its accuracy in a domain"
+    },
+    "RelianceAgent": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "rating": {
+          "type": "number",
+          "description": "The rating the app gives it, 0–1 – the ranking sorts by it, highest first"
+        },
+        "detail": {
+          "type": "string",
+          "description": "A quiet line under the name, e.g. \"212 answers\""
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "rating"
+      ],
+      "additionalProperties": false,
+      "description": "One agent in the ranking"
+    }
+  }
+}

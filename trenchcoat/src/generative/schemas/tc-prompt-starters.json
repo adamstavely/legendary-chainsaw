@@ -1,0 +1,168 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-prompt-starters.json",
+  "title": "tc-prompt-starters",
+  "description": "Suggestions for an empty chat and follow-ups after an answer, as a list that fills the composer or sends.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading above the list, and the list's accessible name"
+    },
+    "variant": {
+      "type": "string",
+      "enum": [
+        "starters",
+        "follow-ups"
+      ],
+      "description": "\"starters\" for an empty chat (icon tiles and hints), or \"follow-ups\" after an answer (compact rows)"
+    },
+    "groups": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/PromptStarterGroup"
+      },
+      "description": "Suggestions in groups, each with a heading and an icon"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/PromptStarter"
+      },
+      "description": "Suggestions without groups – shown after any groups"
+    },
+    "mode": {
+      "type": "string",
+      "enum": [
+        "fill",
+        "send"
+      ],
+      "description": "What choosing a suggestion does unless it says otherwise: \"send\" it, or \"fill\" the composer to edit first"
+    },
+    "loading": {
+      "type": "boolean",
+      "description": "The suggestions are being worked out: placeholder rows instead of the list"
+    },
+    "hints": {
+      "type": "boolean",
+      "description": "Show the key hints under the list (↵ and →)"
+    },
+    "sendLabel": {
+      "type": "string",
+      "description": "The word for sending in the key hint and the screen-reader text"
+    },
+    "fillLabel": {
+      "type": "string",
+      "description": "The word for filling the composer in the key hint and the screen-reader text"
+    },
+    "emptyText": {
+      "type": "string",
+      "description": "Text when there are no suggestions (and not loading); empty hides the element's list entirely"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "PromptStarterGroup": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "The group's heading, e.g. “Analyse”"
+        },
+        "icon": {
+          "$ref": "#/definitions/PromptStarterIconName",
+          "description": "The icon its suggestions show unless they have their own"
+        },
+        "tone": {
+          "$ref": "#/definitions/PromptStarterTone",
+          "description": "The tint of its icon tiles"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PromptStarter"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "items"
+      ],
+      "additionalProperties": false
+    },
+    "PromptStarterIconName": {
+      "type": "string",
+      "enum": [
+        "sparkle",
+        "chart",
+        "document",
+        "search",
+        "write",
+        "code",
+        "list",
+        "question",
+        "lightbulb",
+        "calendar"
+      ],
+      "description": "Built-in icons, by name"
+    },
+    "PromptStarterTone": {
+      "type": "string",
+      "enum": [
+        "blue",
+        "violet",
+        "pink",
+        "amber",
+        "teal",
+        "green",
+        "gray"
+      ],
+      "description": "A tone for a group's icon tiles"
+    },
+    "PromptStarter": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string",
+          "description": "What's sent, or put in the composer"
+        },
+        "label": {
+          "type": "string",
+          "description": "What the row shows, when shorter than the text – defaults to the text"
+        },
+        "hint": {
+          "type": "string",
+          "description": "A lighter line after the label, e.g. where the suggestion comes from: “From your last report”"
+        },
+        "icon": {
+          "$ref": "#/definitions/PromptStarterIconName",
+          "description": "A built-in icon's name or an Element (cloned) – defaults to the group's"
+        },
+        "mode": {
+          "$ref": "#/definitions/PromptStarterMode",
+          "description": "Overrides the list's `mode` for this suggestion – \"fill\" for prompts with a blank to complete"
+        }
+      },
+      "required": [
+        "id",
+        "text"
+      ],
+      "additionalProperties": false
+    },
+    "PromptStarterMode": {
+      "type": "string",
+      "enum": [
+        "send",
+        "fill"
+      ],
+      "description": "What choosing a suggestion does: send it as it is, or put it in the composer to edit first"
+    }
+  }
+}

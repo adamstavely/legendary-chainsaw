@@ -1,0 +1,167 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-priority-list.json",
+  "title": "tc-priority-list",
+  "description": "Topics or projects by priority – a priority badge, name, owner and team, momentum, coverage, what's open and the\nwork in flight – with health filters and optional groups per priority.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the list's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/PriorityItem"
+      },
+      "description": "The topics or projects, in the order to show them (within a group when grouped)"
+    },
+    "grouped": {
+      "type": "boolean",
+      "description": "Puts the rows under a header per priority"
+    },
+    "filter": {
+      "anyOf": [
+        {
+          "type": "string",
+          "const": "all"
+        },
+        {
+          "$ref": "#/definitions/PriorityHealth"
+        }
+      ],
+      "description": "The health shown. Changed by the user unless a tc-filter-change listener calls preventDefault()"
+    },
+    "noFilters": {
+      "type": "boolean",
+      "description": "Shows the health filter chips with their counts"
+    },
+    "tiers": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "The tiers' names by number, merged over the defaults (Top priority, High, Medium, Watching)"
+    },
+    "healthLabels": {
+      "type": "object",
+      "properties": {
+        "on-track": {
+          "type": "string"
+        },
+        "watch": {
+          "type": "string"
+        },
+        "at-risk": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The healths' names, merged over the defaults (At risk, Watch, On track)"
+    },
+    "nameLabel": {
+      "type": "string",
+      "description": "The first column's heading"
+    },
+    "openUnit": {
+      "type": "string",
+      "description": "What's open, after its count: \"5 gaps\""
+    },
+    "openUnitOne": {
+      "type": "string",
+      "description": "What's open when there's one: \"1 gap\"; `open-unit` when unset"
+    },
+    "workUnit": {
+      "type": "string",
+      "description": "The short unit after the work count: \"3·wk\""
+    },
+    "workLabel": {
+      "type": "string",
+      "description": "The work count in words, for screen readers: \"3 work items\""
+    },
+    "coverageWarn": {
+      "type": "number",
+      "description": "Coverage under this share, from 0 to 1, is drawn in the danger colour"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for numbers, e.g. \"de\"; by default the browser's"
+    },
+    "empty": {
+      "type": "string",
+      "description": "Shown when nothing matches"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "PriorityItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string",
+          "description": "The topic's or project's name"
+        },
+        "owner": {
+          "type": "string",
+          "description": "Who leads it"
+        },
+        "team": {
+          "type": "string",
+          "description": "The team or group it belongs to"
+        },
+        "priority": {
+          "type": "number",
+          "description": "Its tier, from 1 (the top) to 4; named by `tiers`"
+        },
+        "health": {
+          "$ref": "#/definitions/PriorityHealth"
+        },
+        "trend": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Recent values for the momentum line, oldest first"
+        },
+        "change": {
+          "type": "number",
+          "description": "The change over the period as a fraction: -0.14 is ▼ 14%"
+        },
+        "coverage": {
+          "type": "number",
+          "description": "The share covered, from 0 to 1"
+        },
+        "open": {
+          "type": "number",
+          "description": "How many are open (gaps, issues, questions)"
+        },
+        "work": {
+          "type": "number",
+          "description": "How many pieces of work are in flight"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "priority",
+        "health"
+      ],
+      "additionalProperties": false
+    },
+    "PriorityHealth": {
+      "type": "string",
+      "enum": [
+        "at-risk",
+        "watch",
+        "on-track"
+      ]
+    }
+  }
+}

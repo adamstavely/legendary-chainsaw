@@ -1,0 +1,106 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-integration-picker.json",
+  "title": "tc-integration-picker",
+  "description": "The integrations page of a command menu: search, a grouped list and the picked service's details with a switch.",
+  "type": "object",
+  "properties": {
+    "integrations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/IntegrationPickerItem"
+      },
+      "description": "The services to list, grouped into Connected and Available – the sample services by default"
+    },
+    "appName": {
+      "type": "string",
+      "description": "Your product's name in the details, e.g. \"Trenchcoat + Linear\""
+    },
+    "selected": {
+      "type": "string",
+      "description": "Id of the picked integration; unset picks the first"
+    },
+    "connected": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Ids of the connected integrations; unset follows the integrations' `connected` flags"
+    },
+    "query": {
+      "type": "string",
+      "description": "The search text"
+    },
+    "hotkey": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "boolean",
+          "const": false
+        }
+      ],
+      "description": "Window shortcut that jumps into the search: \"mod+/\" by default, any other combination, or false for none"
+    },
+    "back": {
+      "type": "boolean",
+      "description": "Shows the back button (and ← in an empty search goes back)"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "IntegrationPickerItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "domain": {
+          "type": "string",
+          "description": "Shown under the name in the details, e.g. \"linear.app\""
+        },
+        "category": {
+          "type": "string",
+          "description": "Short label, e.g. \"Project management\""
+        },
+        "description": {
+          "type": "string"
+        },
+        "features": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Up to three short capabilities"
+        },
+        "path": {
+          "type": "string",
+          "description": "Brand mark: a single SVG path on a 24 × 24 grid in `color` – or pass your own `icon`"
+        },
+        "color": {
+          "type": "string"
+        },
+        "tile": {
+          "type": "string",
+          "description": "Background of the logo tile – the brand color with a white mark, or white with a colored mark"
+        },
+        "connected": {
+          "type": "boolean",
+          "description": "Starts connected. Read again whenever the flags change (when `connected` isn't set on the picker)"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "domain",
+        "category",
+        "description"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

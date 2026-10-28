@@ -1,0 +1,115 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-document-list.json",
+  "title": "tc-document-list",
+  "description": "Identity and record documents with masked numbers, expiry and a status each – Active, Verified, Expired, Flagged,\nFraudulent or your own – counted in the header, with View per row.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "documents": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/DocumentRecord"
+      },
+      "description": "The documents, in order"
+    },
+    "statuses": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "tone": {
+            "$ref": "#/definitions/DocumentTone"
+          }
+        },
+        "required": [
+          "label",
+          "tone"
+        ],
+        "additionalProperties": false
+      },
+      "description": "Statuses' names and tones, merged over the defaults (verified, active, expired, flagged, fraudulent)"
+    },
+    "masked": {
+      "type": "boolean",
+      "description": "Masks numbers to their last four characters until revealed; set false to show them in full"
+    },
+    "revealed": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The ids whose numbers are shown. Changed by the user unless a tc-revealed-change listener calls preventDefault()"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for expiry dates, e.g. \"en-GB\"; by default the browser's"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "DocumentRecord": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "description": "What it is: \"Passport\", \"National ID\", \"Driving licence\""
+        },
+        "country": {
+          "type": "string",
+          "description": "Who issued it: \"France\""
+        },
+        "number": {
+          "type": "string",
+          "description": "The document's number; masked to its last four characters unless `masked` is off or it's revealed"
+        },
+        "reference": {
+          "type": "string",
+          "description": "Your own reference for the record, e.g. an evidence or file id"
+        },
+        "expires": {
+          "type": "number",
+          "description": "When it expires, as epoch ms"
+        },
+        "status": {
+          "type": "string",
+          "description": "A key of `statusLabels`: active, verified, expired, flagged, fraudulent, or one of the page's own"
+        },
+        "note": {
+          "type": "string",
+          "description": "One quiet line: \"Expiry date doesn't match the issuing record\""
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "DocumentTone": {
+      "type": "string",
+      "enum": [
+        "success",
+        "info",
+        "warning",
+        "danger",
+        "neutral"
+      ],
+      "description": "The tone a status is drawn in"
+    }
+  }
+}

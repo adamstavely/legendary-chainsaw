@@ -1,0 +1,138 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-gap-exposure.json",
+  "title": "tc-gap-exposure",
+  "description": "Gaps or risks and whether anyone is working on them – severity, the item and its priority, coverage, owner and\nwhat's invested – with the severe uncovered ones called out, groups by priority or severity, and an uncovered-only\nfilter.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the list's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "gaps": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ExposureGap"
+      },
+      "description": "The gaps, in the order to show them within a group"
+    },
+    "groupBy": {
+      "type": "string",
+      "enum": [
+        "priority",
+        "severity"
+      ],
+      "description": "Groups the list by the item's priority or by severity. Changed by the user unless a tc-group-change listener calls preventDefault()"
+    },
+    "uncoveredOnly": {
+      "type": "boolean",
+      "description": "Shows only gaps with no work on them. Changed by the user unless a tc-filter-change listener calls preventDefault()"
+    },
+    "exposureSeverities": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/GapSeverity"
+      },
+      "description": "The severities that count as exposure when nothing is in work"
+    },
+    "severityLabels": {
+      "type": "object",
+      "properties": {
+        "critical": {
+          "type": "string"
+        },
+        "high": {
+          "type": "string"
+        },
+        "medium": {
+          "type": "string"
+        },
+        "low": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The severities' names, merged over the defaults (Critical, High, Medium, Low)"
+    },
+    "tiers": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "The priority tiers' names by number, merged over the defaults (Top priority, High, Medium, Watching)"
+    },
+    "currency": {
+      "type": "string",
+      "description": "The currency of `budget`, as an ISO code"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for numbers and money, e.g. \"de\"; by default the browser's"
+    },
+    "empty": {
+      "type": "string",
+      "description": "Shown when nothing matches"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ExposureGap": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string",
+          "description": "What's missing, in a sentence"
+        },
+        "severity": {
+          "$ref": "#/definitions/GapSeverity"
+        },
+        "item": {
+          "type": "string",
+          "description": "The topic or project it belongs to"
+        },
+        "priority": {
+          "type": "number",
+          "description": "That item's priority tier, from 1 (the top); named by `tiers`"
+        },
+        "work": {
+          "type": "number",
+          "description": "How many pieces of work are on it; 0 or unset means none – uncovered"
+        },
+        "owner": {
+          "type": "string",
+          "description": "Who owns it, as a name (shown as initials)"
+        },
+        "budget": {
+          "type": "number",
+          "description": "Money invested so far, in `currency`"
+        },
+        "fte": {
+          "type": "number",
+          "description": "People invested, in full-time equivalents"
+        }
+      },
+      "required": [
+        "id",
+        "text",
+        "severity"
+      ],
+      "additionalProperties": false
+    },
+    "GapSeverity": {
+      "type": "string",
+      "enum": [
+        "critical",
+        "high",
+        "medium",
+        "low"
+      ]
+    }
+  }
+}

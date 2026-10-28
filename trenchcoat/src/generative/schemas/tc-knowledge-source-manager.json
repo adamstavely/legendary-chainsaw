@@ -1,0 +1,163 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-knowledge-source-manager.json",
+  "title": "tc-knowledge-source-manager",
+  "description": "The sources a knowledge base answers from – ingestion state and progress, documents and chunks, last sync and\nschedule, stale and duplicate warnings – with add, resync, pause, remove and a handoff to chunk review.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/KnowledgeSource"
+      },
+      "description": "The sources. Changed by the user (remove, schedule) unless a tc-sources-change listener calls preventDefault()"
+    },
+    "schedules": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/KnowledgeSchedule"
+      },
+      "description": "The sync schedules a source can be set to"
+    },
+    "selected": {
+      "type": "string",
+      "description": "The id of the open source, or null"
+    },
+    "show": {
+      "type": "string",
+      "enum": [
+        "all",
+        "attention"
+      ],
+      "description": "Which sources show: \"all\", or \"attention\" – the failed, stale and duplicate ones"
+    },
+    "now": {
+      "type": "number",
+      "description": "The moment last syncs are counted to, in epoch ms; unset shows their dates"
+    },
+    "addLabel": {
+      "type": "string",
+      "description": "The Add source button's text"
+    },
+    "noAdd": {
+      "type": "boolean",
+      "description": "Hides Add source, for a read-only view"
+    },
+    "noReview": {
+      "type": "boolean",
+      "description": "Hides Review chunks, when the app has no chunk review"
+    },
+    "maxHeight": {
+      "type": "number",
+      "description": "The list's height before it scrolls, in px"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "KnowledgeSource": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string",
+          "description": "\"Help centre\", \"Pricing.pdf\""
+        },
+        "kind": {
+          "type": "string",
+          "description": "\"file\", \"site\" or \"connector\" pick the icon; any other word gets a generic one"
+        },
+        "location": {
+          "type": "string",
+          "description": "Where it comes from: a path, a URL, a workspace – shown under the name when picked"
+        },
+        "state": {
+          "$ref": "#/definitions/KnowledgeSourceState"
+        },
+        "progress": {
+          "type": "number",
+          "description": "How far indexing has got, 0–1"
+        },
+        "error": {
+          "type": "string",
+          "description": "Why it failed, in a sentence"
+        },
+        "docs": {
+          "type": "number",
+          "description": "How many documents it holds"
+        },
+        "chunks": {
+          "type": "number",
+          "description": "How many chunks those documents became"
+        },
+        "lastSync": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "description": "When it last synced: a Date or epoch ms (relative to `now` when set), or text as it is"
+        },
+        "schedule": {
+          "type": "string",
+          "description": "The id of its sync schedule, one of `schedules`"
+        },
+        "stale": {
+          "type": [
+            "boolean",
+            "string"
+          ],
+          "description": "The app flags it as stale: true, or the reason (\"The site changed 40 pages since\")"
+        },
+        "duplicateOf": {
+          "type": "string",
+          "description": "The app flags it as covering the same documents as another source: that source's id, or a name"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "state"
+      ],
+      "additionalProperties": false
+    },
+    "KnowledgeSourceState": {
+      "type": "string",
+      "enum": [
+        "queued",
+        "indexing",
+        "ready",
+        "paused",
+        "failed"
+      ]
+    },
+    "KnowledgeSchedule": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

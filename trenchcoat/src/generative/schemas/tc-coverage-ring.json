@@ -1,0 +1,101 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-coverage-ring.json",
+  "title": "tc-coverage-ring",
+  "description": "One share as a large ring – the percentage and a caption in the middle, a title and a line – with an optional bar of\nsegments from the healthiest to those that need attention, each read out on hover or focus.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The title beside the ring"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line saying what the share measures"
+    },
+    "value": {
+      "type": "number",
+      "description": "The share, from 0 to 1"
+    },
+    "caption": {
+      "type": "string",
+      "description": "The word under the percentage"
+    },
+    "tone": {
+      "type": "string",
+      "enum": [
+        "success",
+        "info",
+        "warning",
+        "danger",
+        "neutral"
+      ],
+      "description": "The ring's colour"
+    },
+    "segments": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/CoverageSegment"
+      },
+      "description": "The bar beneath, from the healthiest segment to the one that needs most attention; none when empty"
+    },
+    "startLabel": {
+      "type": "string",
+      "description": "The label at the bar's start"
+    },
+    "endLabel": {
+      "type": "string",
+      "description": "The label at the bar's end"
+    },
+    "unit": {
+      "type": "string",
+      "description": "What the segments count, after the number: \"12 topics\""
+    },
+    "unitOne": {
+      "type": "string",
+      "description": "The unit for a count of one, e.g. \"topic\"; by default `unit`"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for numbers, e.g. \"de\"; by default the browser's"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "CoverageSegment": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "count": {
+          "type": "number",
+          "description": "How many items fall here"
+        },
+        "tone": {
+          "$ref": "#/definitions/CoverageTone"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "count",
+        "tone"
+      ],
+      "additionalProperties": false
+    },
+    "CoverageTone": {
+      "type": "string",
+      "enum": [
+        "success",
+        "info",
+        "neutral",
+        "warning",
+        "danger"
+      ]
+    }
+  }
+}

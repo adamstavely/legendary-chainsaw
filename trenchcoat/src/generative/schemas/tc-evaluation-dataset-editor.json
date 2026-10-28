@@ -1,0 +1,218 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-evaluation-dataset-editor.json",
+  "title": "tc-evaluation-dataset-editor",
+  "description": "An evaluation set's cases – input, expected output, checks, tags and split – in a windowed table with a case editor,\nsplit counts and a comparison with an earlier version.",
+  "type": "object",
+  "properties": {
+    "value": {
+      "type": "object",
+      "properties": {
+        "cases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EvaluationCase"
+          }
+        }
+      },
+      "required": [
+        "cases"
+      ],
+      "additionalProperties": false,
+      "description": "The set. Changed by the user unless a tc-value-change listener calls preventDefault()"
+    },
+    "splits": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/EvaluationSplit"
+      },
+      "description": "The splits a case can go in, in order – train, validation and test by default"
+    },
+    "assertionTypes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/EvaluationAssertionType"
+      },
+      "description": "The kinds of check a case can have – contains, equals, matches schema and rubric by default"
+    },
+    "versions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/EvaluationDatasetVersion"
+      },
+      "description": "Earlier snapshots of the set, oldest first, offered in the Compare select"
+    },
+    "compare": {
+      "type": "string",
+      "description": "The id of the version to compare with, or \"\" for none. Changed by the user unless tc-compare-change is prevented"
+    },
+    "open": {
+      "type": "string",
+      "description": "The id of the case open in the editor, or null. Changed by the user unless tc-open-change is prevented"
+    },
+    "heading": {
+      "type": "string",
+      "description": "The heading – the set's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "A quieter line beside the heading, e.g. what the set tests"
+    },
+    "maxHeight": {
+      "type": "number",
+      "description": "The table's height before it scrolls, in px"
+    },
+    "name": {
+      "type": "string",
+      "description": "Submitted with the form: the set as JSON"
+    },
+    "disabled": {
+      "type": "boolean",
+      "description": "Turns every control off and leaves the set out of the form; a disabled fieldset does the same"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "EvaluationCase": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "input": {
+          "type": "string",
+          "description": "The prompt or input the model is given"
+        },
+        "expected": {
+          "type": "string",
+          "description": "What a good answer looks like, if there is one"
+        },
+        "assertions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EvaluationAssertion"
+          },
+          "description": "Checks on the answer"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "split": {
+          "type": "string",
+          "description": "An EvaluationSplit id"
+        }
+      },
+      "required": [
+        "id",
+        "input",
+        "assertions",
+        "tags",
+        "split"
+      ],
+      "additionalProperties": false,
+      "description": "One test case"
+    },
+    "EvaluationAssertion": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "value"
+      ],
+      "additionalProperties": false,
+      "description": "One check on a case's answer"
+    },
+    "EvaluationSplit": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false,
+      "description": "A split of the set: train, validation, test – or dev and test"
+    },
+    "EvaluationAssertionType": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "In the check's type select: \"Contains\""
+        },
+        "placeholder": {
+          "type": "string",
+          "description": "Placeholder for the check's value"
+        },
+        "description": {
+          "type": "string",
+          "description": "A line under the check explaining what it does"
+        },
+        "multiline": {
+          "type": "boolean",
+          "description": "The value is long text – a textarea instead of a one-line field"
+        },
+        "json": {
+          "type": "boolean",
+          "description": "The value must be JSON (a schema, say) – text that doesn't parse is an error"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false,
+      "description": "One way to check an answer: \"contains\", \"equals\", \"matches schema\", \"rubric\" – data, so an app can add its own"
+    },
+    "EvaluationDatasetVersion": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "detail": {
+          "type": "string"
+        },
+        "cases": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EvaluationCase"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "cases"
+      ],
+      "additionalProperties": false,
+      "description": "An earlier snapshot of the set, to compare against"
+    }
+  }
+}

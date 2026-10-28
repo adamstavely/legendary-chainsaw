@@ -1,0 +1,105 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-progress-tracker.json",
+  "title": "tc-progress-tracker",
+  "description": "A checklist with a progress bar.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the progress bar's name"
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ProgressStep"
+      },
+      "description": "The checklist. Each step's `done` flag is where it starts; when the flags change, the tracker follows them"
+    },
+    "done": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Ids of the ticked steps; unset, the tracker keeps its own"
+    },
+    "defaultDone": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Ids ticked at first when `done` is unset – defaults to the steps marked `done`"
+    },
+    "autoPlay": {
+      "type": "boolean",
+      "description": "Ticks the open steps one after another, then starts over"
+    },
+    "interval": {
+      "type": "number",
+      "description": "Pause between two automatic steps, in ms"
+    },
+    "readonly": {
+      "type": "boolean",
+      "description": "A status list: every step shows its state as text, nothing can be ticked and auto play stays off"
+    },
+    "doneStyle": {
+      "type": "string",
+      "enum": [
+        "strike",
+        "plain"
+      ],
+      "description": "How done steps look: \"strike\" draws a line through them, \"plain\" only grays them"
+    },
+    "fit": {
+      "type": "string",
+      "enum": [
+        "fill",
+        "compact",
+        "wide"
+      ],
+      "description": "The card's width: \"compact\" (up to 360 px), \"wide\" (up to 560 px) or \"fill\" (no maximum)"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ProgressStep": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "done": {
+          "type": "boolean"
+        },
+        "state": {
+          "$ref": "#/definitions/ProgressStepState",
+          "description": "\"failed\" or \"pending\": shown in place of the check and in words; the step doesn't count as done and can't be ticked"
+        },
+        "disabled": {
+          "type": "boolean",
+          "description": "Can't be ticked or cleared – it stays in the tab order, dimmed and announced as unavailable"
+        },
+        "readonly": {
+          "type": "boolean",
+          "description": "Shows its state as text, not as a checkbox"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "ProgressStepState": {
+      "type": "string",
+      "enum": [
+        "failed",
+        "pending"
+      ],
+      "description": "A step the app drives: \"failed\" (it went wrong) or \"pending\" (under way)"
+    }
+  }
+}

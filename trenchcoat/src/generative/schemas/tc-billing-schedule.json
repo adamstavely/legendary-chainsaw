@@ -1,0 +1,184 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-billing-schedule.json",
+  "title": "tc-billing-schedule",
+  "description": "One phase of a billing plan: dates, products, a discount or a minimum, and the totals.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "phase": {
+      "type": "string",
+      "description": "Phase name"
+    },
+    "currency": {
+      "type": "string",
+      "description": "Currency symbol shown with prices"
+    },
+    "catalog": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/BillingCatalogItem"
+      },
+      "description": "Products offered under \"Add product\""
+    },
+    "lines": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/BillingScheduleLine"
+      },
+      "description": "Schedule lines"
+    },
+    "start": {
+      "type": "string",
+      "description": "Start date, yyyy-mm-dd"
+    },
+    "duration": {
+      "type": "string",
+      "enum": [
+        "milestone",
+        "1m",
+        "3m",
+        "6m",
+        "12m"
+      ],
+      "description": "Phase length"
+    },
+    "name": {
+      "type": "string",
+      "description": "Form field name: a hidden input carries the schedule as JSON for native form submission"
+    },
+    "disabled": {
+      "type": "boolean",
+      "description": "Disables every field and button"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "BillingCatalogItem": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "repeat": {
+          "$ref": "#/definitions/BillingRepeat"
+        },
+        "price": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "name",
+        "repeat",
+        "price"
+      ],
+      "additionalProperties": false
+    },
+    "BillingRepeat": {
+      "type": "string",
+      "enum": [
+        "once",
+        "monthly",
+        "quarterly",
+        "yearly"
+      ]
+    },
+    "BillingScheduleLine": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "kind": {
+              "type": "string",
+              "const": "product"
+            },
+            "name": {
+              "type": "string"
+            },
+            "repeat": {
+              "$ref": "#/definitions/BillingRepeat"
+            },
+            "price": {
+              "type": "number"
+            },
+            "timing": {
+              "$ref": "#/definitions/BillingTiming"
+            }
+          },
+          "required": [
+            "id",
+            "kind",
+            "name",
+            "repeat",
+            "price",
+            "timing"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "kind": {
+              "type": "string",
+              "const": "discount"
+            },
+            "name": {
+              "type": "string"
+            },
+            "percent": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "id",
+            "kind",
+            "name",
+            "percent"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "kind": {
+              "type": "string",
+              "const": "minimum"
+            },
+            "name": {
+              "type": "string"
+            },
+            "amount": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "id",
+            "kind",
+            "name",
+            "amount"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "BillingTiming": {
+      "type": "string",
+      "enum": [
+        "advance",
+        "arrears"
+      ]
+    }
+  }
+}

@@ -1,0 +1,96 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-answer-arena.json",
+  "title": "tc-answer-arena",
+  "description": "Two models' answers to the same prompt side by side, with a vote: A is better, B is better or a tie, and a reason.",
+  "type": "object",
+  "properties": {
+    "prompt": {
+      "type": "string",
+      "description": "The prompt both models answered"
+    },
+    "answers": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ArenaAnswer"
+      },
+      "description": "The two answers: A first, then B"
+    },
+    "value": {
+      "type": "object",
+      "properties": {
+        "winner": {
+          "$ref": "#/definitions/ArenaWinner"
+        },
+        "reason": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "winner"
+      ],
+      "additionalProperties": false,
+      "description": "The vote (null: none yet). Changed by the element unless a tc-value-change listener calls preventDefault()"
+    },
+    "blind": {
+      "type": "boolean",
+      "description": "Hide the model names until there's a vote"
+    },
+    "question": {
+      "type": "string",
+      "description": "The question over the vote"
+    },
+    "reasons": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Reasons offered after A or B wins"
+    },
+    "tieReasons": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Reasons offered after a tie"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ArenaAnswer": {
+      "type": "object",
+      "properties": {
+        "model": {
+          "type": "string",
+          "description": "The model's name – hidden until the vote in blind mode"
+        },
+        "answer": {
+          "type": "string",
+          "description": "The answer so far – may grow while `streaming` is set"
+        },
+        "streaming": {
+          "type": "boolean",
+          "description": "More text is still coming"
+        },
+        "meta": {
+          "type": "string",
+          "description": "A short line under the answer, e.g. \"1.8s · 212 tokens\""
+        }
+      },
+      "required": [
+        "model",
+        "answer"
+      ],
+      "additionalProperties": false,
+      "description": "One side of the arena"
+    },
+    "ArenaWinner": {
+      "type": "string",
+      "enum": [
+        "a",
+        "b",
+        "tie"
+      ]
+    }
+  }
+}

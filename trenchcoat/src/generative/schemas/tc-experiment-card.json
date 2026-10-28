@@ -1,0 +1,148 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-experiment-card.json",
+  "title": "tc-experiment-card",
+  "description": "An A/B test that unfolds into the full comparison; pick a winner and run an action on it.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The test's name"
+    },
+    "variants": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ExperimentVariant"
+      },
+      "description": "The variants under test, the control first (or marked `control`) – one row and one chart column each"
+    },
+    "metrics": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ExperimentMetric"
+      },
+      "description": "The metrics to compare on; with more than one, a switch picks which one the card shows"
+    },
+    "metric": {
+      "type": "string",
+      "description": "The metric id shown; unset shows the first metric"
+    },
+    "winner": {
+      "type": "string",
+      "description": "The id of the variant picked as the winner, or null"
+    },
+    "status": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "tone": {
+          "$ref": "#/definitions/ExperimentTone"
+        }
+      },
+      "required": [
+        "label"
+      ],
+      "additionalProperties": false,
+      "description": "The tag under the title, e.g. { label: \"Running\", tone: \"green\" }"
+    },
+    "note": {
+      "type": "string",
+      "description": "Short text next to the status, e.g. \"Day 9 of 14\""
+    },
+    "trigger": {
+      "type": "string",
+      "enum": [
+        "hover",
+        "click"
+      ],
+      "description": "\"hover\" opens under the pointer (taps and the keyboard still toggle), \"click\" only on click"
+    },
+    "open": {
+      "type": "boolean",
+      "description": "Whether the card is unfolded, showing the metric switch, the variants and the tray"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ExperimentVariant": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "key": {
+          "type": "string",
+          "description": "Short key shown in the badge and the chart, e.g. \"A\""
+        },
+        "name": {
+          "type": "string"
+        },
+        "control": {
+          "type": "boolean",
+          "description": "The baseline every lift is measured against – defaults to the first variant"
+        },
+        "visitors": {
+          "type": "number"
+        },
+        "values": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number"
+          },
+          "description": "One number per metric id"
+        },
+        "confidence": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number"
+          },
+          "description": "Confidence against the control in percent, per metric id"
+        },
+        "color": {
+          "type": "string",
+          "description": "Any CSS color – defaults to gray for the control, then blue, violet, amber"
+        }
+      },
+      "required": [
+        "id",
+        "key",
+        "name",
+        "values"
+      ],
+      "additionalProperties": false
+    },
+    "ExperimentMetric": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "lowerIsBetter": {
+          "type": "boolean",
+          "description": "Set when a smaller number wins, e.g. bounce rate or cost"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "ExperimentTone": {
+      "type": "string",
+      "enum": [
+        "red",
+        "amber",
+        "green",
+        "blue",
+        "violet",
+        "gray"
+      ]
+    }
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-stepper-form.json",
+  "title": "tc-stepper-form",
+  "description": "A multi-step flow: numbered steps, sliding panes, checks on Continue and a success state.",
+  "type": "object",
+  "properties": {
+    "steps": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/StepperFormStep%3Calias-2073358172-74138-74264-2073358172-0-218439%3Cstring%2Cunknown%3E%3E"
+      },
+      "description": "The steps in order: id, title, content and the check Continue runs"
+    },
+    "values": {
+      "type": "object",
+      "additionalProperties": {},
+      "description": "The values of every step"
+    },
+    "step": {
+      "type": "number",
+      "description": "The open step's index"
+    },
+    "submitLabel": {
+      "type": "string",
+      "description": "Label of the last button"
+    },
+    "submittingLabel": {
+      "type": "string",
+      "description": "Label while onComplete runs"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "StepperFormStep<alias-2073358172-74138-74264-2073358172-0-218439<string,unknown>>": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string",
+          "description": "Short label for the step list, e.g. \"Team\""
+        },
+        "heading": {
+          "type": "string",
+          "description": "Heading inside the card – defaults to the title"
+        },
+        "description": {
+          "type": "string",
+          "description": "A line under the heading"
+        }
+      },
+      "required": [
+        "id",
+        "title"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

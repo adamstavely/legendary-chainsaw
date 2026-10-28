@@ -1,0 +1,184 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-handoff-brief.json",
+  "title": "tc-handoff-brief",
+  "description": "Work passing from one person to another: summary, open items and commitments, each acknowledged by the receiver,\nblocked when they lack access.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the group's name"
+    },
+    "from": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false,
+      "description": "Who hands the work over"
+    },
+    "to": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false,
+      "description": "Who receives it – the person looking"
+    },
+    "at": {
+      "type": "string",
+      "description": "When, as the app words it – \"Today 16:40\""
+    },
+    "summary": {
+      "type": "string",
+      "description": "What the work is and where it stands, in a short paragraph"
+    },
+    "unresolved": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/HandoffBriefItem"
+      },
+      "description": "What's still open"
+    },
+    "commitments": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/HandoffBriefItem"
+      },
+      "description": "What the previous owner promised, to whom and by when"
+    },
+    "acknowledged": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/HandoffBriefSection"
+      },
+      "description": "The sections acknowledged so far"
+    },
+    "missing": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/HandoffBriefAccess"
+      },
+      "description": "Material the work refers to that the receiver can't open – any blocks the handoff"
+    },
+    "accessRequest": {
+      "anyOf": [
+        {
+          "type": "string",
+          "const": ""
+        },
+        {
+          "$ref": "#/definitions/HandoffBriefRequest"
+        }
+      ],
+      "description": "Where the access request stands, when the app owns it; the element sets it when not prevented"
+    },
+    "accepted": {
+      "type": "boolean",
+      "description": "The receiver accepted the work"
+    },
+    "sectionTitles": {
+      "type": "object",
+      "properties": {
+        "summary": {
+          "type": "string"
+        },
+        "unresolved": {
+          "type": "string"
+        },
+        "commitments": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Names of the three sections"
+    },
+    "acceptLabel": {
+      "type": "string",
+      "description": "The accept button's text"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "HandoffBriefItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string",
+          "description": "The item in a sentence"
+        },
+        "detail": {
+          "type": "string",
+          "description": "A quiet line under it – where it stands, who's waiting"
+        },
+        "meta": {
+          "type": "string",
+          "description": "Right-aligned and quiet: a due date, an owner – \"Due Fri\", \"to Finance\""
+        }
+      },
+      "required": [
+        "id",
+        "text"
+      ],
+      "additionalProperties": false
+    },
+    "HandoffBriefSection": {
+      "type": "string",
+      "enum": [
+        "summary",
+        "unresolved",
+        "commitments"
+      ]
+    },
+    "HandoffBriefAccess": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "What it is – \"Supplier contract (v3)\""
+        },
+        "where": {
+          "type": "string",
+          "description": "Where the brief refers to it – \"Open item 2\""
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false,
+      "description": "Material the work refers to that the receiver can't open"
+    },
+    "HandoffBriefRequest": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "requested",
+        "failed"
+      ],
+      "description": "Where an access request stands"
+    }
+  }
+}

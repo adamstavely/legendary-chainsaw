@@ -346,6 +346,20 @@
    "elements": 3
   },
   {
+   "id": "object-hasown",
+   "name": "Object.hasOwn()",
+   "bcd": "javascript.builtins.Object.hasOwn",
+   "versions": {
+    "chrome": "93",
+    "edge": "93",
+    "firefox": "92",
+    "safari": "15.4",
+    "safari_ios": "15.4"
+   },
+   "progressive": false,
+   "elements": 3
+  },
+  {
    "id": "aria-reflection",
    "name": "ARIA reflection (element.ariaBusy…)",
    "bcd": "api.Element.ariaBusy",
@@ -358,20 +372,6 @@
    },
    "progressive": false,
    "why": "States such as busy and disabled reach screen readers.",
-   "elements": 2
-  },
-  {
-   "id": "object-hasown",
-   "name": "Object.hasOwn()",
-   "bcd": "javascript.builtins.Object.hasOwn",
-   "versions": {
-    "chrome": "93",
-    "edge": "93",
-    "firefox": "92",
-    "safari": "15.4",
-    "safari_ios": "15.4"
-   },
-   "progressive": false,
    "elements": 2
   },
   {

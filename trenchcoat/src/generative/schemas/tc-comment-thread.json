@@ -1,0 +1,126 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-comment-thread.json",
+  "title": "tc-comment-thread",
+  "description": "One comment with its replies, an assistant's status lines and a reply field.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the region's name"
+    },
+    "messages": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ThreadMessage"
+      },
+      "description": "The comment and its replies, oldest first – the source of truth, followed by id"
+    },
+    "currentUser": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "avatar": {
+          "type": "string"
+        },
+        "assistant": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false,
+      "description": "Who is replying here: the author of replies posted from the field"
+    },
+    "assistant": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "avatar": {
+          "type": "string"
+        },
+        "assistant": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false,
+      "description": "The assistant that answers – used for the thinking state"
+    },
+    "closable": {
+      "type": "boolean",
+      "description": "Shows a close button, which fires tc-close"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ThreadMessage": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "author": {
+          "$ref": "#/definitions/ThreadAuthor"
+        },
+        "createdAt": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "number"
+            }
+          ]
+        },
+        "text": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "description": "Assistant replies: a short status line that folds open to show these details"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "author",
+        "createdAt",
+        "text"
+      ],
+      "additionalProperties": false
+    },
+    "ThreadAuthor": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "avatar": {
+          "type": "string",
+          "description": "An element (cloned) or an image URL; unset shows initials"
+        },
+        "assistant": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

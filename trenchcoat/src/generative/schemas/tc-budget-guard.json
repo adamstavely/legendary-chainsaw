@@ -1,0 +1,101 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-budget-guard.json",
+  "title": "tc-budget-guard",
+  "description": "Spend and token limits for a live run: progress against the cap, a warning near it, a hard stop at it, and raising\nthe cap from the warning.",
+  "type": "object",
+  "properties": {
+    "limits": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/BudgetLimit"
+      },
+      "description": "The limits – the first one is the big meter. Raises apply unless a tc-limits-change listener calls preventDefault()"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "paused",
+        "running",
+        "done"
+      ],
+      "description": "The run: \"running\", \"paused\" or \"done\" – always set by the app"
+    },
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the region's name"
+    },
+    "task": {
+      "type": "string",
+      "description": "What runs, a quiet line under the heading"
+    },
+    "warnAt": {
+      "type": "number",
+      "description": "Share of a cap from which the card warns (0–1)"
+    },
+    "currency": {
+      "type": "string",
+      "description": "Currency of \"currency\" limits, an ISO 4217 code"
+    },
+    "locale": {
+      "type": "string",
+      "description": "Locale for numbers and money"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "BudgetLimit": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "\"Spend\", \"Tokens\", \"Tool calls\""
+        },
+        "used": {
+          "type": "number"
+        },
+        "cap": {
+          "type": "number",
+          "description": "The hard limit: the run stops when `used` reaches it"
+        },
+        "kind": {
+          "$ref": "#/definitions/BudgetLimitKind",
+          "description": "How the numbers read: money in `currency`, tokens (182.4k), or plain numbers with `unit`"
+        },
+        "unit": {
+          "type": "string",
+          "description": "For plain numbers, e.g. \"calls\""
+        },
+        "rate": {
+          "type": "number",
+          "description": "How much the run uses per minute right now – shown as the pace to the cap"
+        },
+        "raiseBy": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Amounts the warning offers to add to the cap – defaults to half, all and twice the cap, rounded"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "used",
+        "cap"
+      ],
+      "additionalProperties": false
+    },
+    "BudgetLimitKind": {
+      "type": "string",
+      "enum": [
+        "currency",
+        "tokens",
+        "number"
+      ]
+    }
+  }
+}

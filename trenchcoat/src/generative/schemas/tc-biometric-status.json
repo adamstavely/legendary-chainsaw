@@ -1,0 +1,149 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-biometric-status.json",
+  "title": "tc-biometric-status",
+  "description": "Biometric enrolment across modalities – each with its status, detail and a quality meter – with the count\nenrolled, an optional match score, and selectable rows.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the list's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "modalities": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/BiometricModality"
+      },
+      "description": "The modalities, a row each, in the order given"
+    },
+    "match": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "value": {
+          "type": "number"
+        },
+        "detail": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "label",
+        "value"
+      ],
+      "additionalProperties": false,
+      "description": "A score shown above the list, e.g. a gallery match"
+    },
+    "selected": {
+      "type": "string",
+      "description": "The selected row's id. Changed by the user unless a tc-selected-change listener calls preventDefault()"
+    },
+    "statusLabels": {
+      "type": "object",
+      "properties": {
+        "enrolled": {
+          "type": "string"
+        },
+        "on-file": {
+          "type": "string"
+        },
+        "partial": {
+          "type": "string"
+        },
+        "in-progress": {
+          "type": "string"
+        },
+        "missing": {
+          "type": "string"
+        },
+        "expired": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The statuses' names, merged over the defaults (Enrolled, On file, Partial, In progress, Missing, Expired)"
+    },
+    "enrolledStatuses": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/BiometricState"
+      },
+      "description": "The statuses that count as enrolled in the header"
+    },
+    "qualityLabel": {
+      "type": "string",
+      "description": "What a row's meter measures when the row doesn't say"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "BiometricModality": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/definitions/BiometricKind",
+          "description": "Picks the icon; \"other\" when not given"
+        },
+        "detail": {
+          "type": "string",
+          "description": "One line under the name, e.g. \"Both eyes · captured Feb 2024\""
+        },
+        "status": {
+          "$ref": "#/definitions/BiometricState"
+        },
+        "quality": {
+          "type": "number",
+          "description": "Quality or confidence from 0 to 1, shown as a meter and a percentage"
+        },
+        "qualityLabel": {
+          "type": "string",
+          "description": "What `quality` measures, e.g. \"Confidence\"; `qualityLabel` on the element when not given"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "BiometricKind": {
+      "type": "string",
+      "enum": [
+        "face",
+        "fingerprint",
+        "iris",
+        "dna",
+        "voice",
+        "gait",
+        "signature",
+        "palm",
+        "other"
+      ]
+    },
+    "BiometricState": {
+      "type": "string",
+      "enum": [
+        "enrolled",
+        "on-file",
+        "partial",
+        "in-progress",
+        "missing",
+        "expired"
+      ],
+      "description": "enrolled / on-file: usable · partial: some of it, or low quality · in-progress: being captured or modelled · missing: nothing yet · expired: was enrolled, needs recapture"
+    }
+  }
+}

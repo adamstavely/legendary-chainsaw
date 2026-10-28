@@ -1,0 +1,379 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-playbook-canvas.json",
+  "title": "tc-playbook-canvas",
+  "description": "An agent workflow by phase: steps you add, remove, reorder and set up, review gates, versions and a dry run.",
+  "type": "object",
+  "properties": {
+    "value": {
+      "type": "object",
+      "properties": {
+        "steps": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PlaybookStep"
+          }
+        }
+      },
+      "required": [
+        "steps"
+      ],
+      "additionalProperties": false,
+      "description": "The playbook: its steps, in order within each phase. Changed by the user unless a tc-value-change listener calls preventDefault()"
+    },
+    "phases": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/PlaybookPhase"
+      },
+      "description": "The phases, in order – the board's columns"
+    },
+    "stepTypes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/PlaybookStepType"
+      },
+      "description": "The kinds of step people can add"
+    },
+    "selected": {
+      "type": "string",
+      "description": "The id of the step being set up. Picks apply unless a tc-selected-change listener calls preventDefault()"
+    },
+    "heading": {
+      "type": "string",
+      "description": "Names the playbook, shown at the top"
+    },
+    "versions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/PlaybookVersion"
+      },
+      "description": "The saved versions, newest first"
+    },
+    "currentVersion": {
+      "type": "string",
+      "description": "The id of the version the board shows"
+    },
+    "dryRun": {
+      "type": "object",
+      "properties": {
+        "steps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "outcome": {
+                "$ref": "#/definitions/PlaybookDryRunOutcome"
+              },
+              "note": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "outcome"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "summary": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "steps"
+      ],
+      "additionalProperties": false,
+      "description": "The app's answer to the last tc-dry-run: which steps run, are skipped or pause; null clears it"
+    },
+    "gateConditions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/GateCondition"
+      },
+      "description": "Conditions offered by review steps' gates; unset: the gate's defaults"
+    },
+    "gateReviewers": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/GateReviewer"
+      },
+      "description": "Reviewers offered by review steps' gates; unset: the gate's defaults"
+    },
+    "gateViews": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/GateView"
+      },
+      "description": "What a reviewer can see, offered by review steps' gates; unset: the gate's defaults"
+    },
+    "gateActions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/GateActionOption"
+      },
+      "description": "Actions offered by review steps' gates; unset: the gate's defaults"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "PlaybookStep": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "phase": {
+          "type": "string",
+          "description": "The phase it's in"
+        },
+        "type": {
+          "type": "string",
+          "description": "Its step type's id"
+        },
+        "title": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "string",
+          "description": "Instructions for the agent, or what the step does"
+        },
+        "onFail": {
+          "$ref": "#/definitions/PlaybookFailure",
+          "description": "What happens when it fails – not used by review steps; \"stop\" when unset"
+        },
+        "gate": {
+          "$ref": "#/definitions/GateConfigValue",
+          "description": "A review step's gate"
+        }
+      },
+      "required": [
+        "id",
+        "phase",
+        "type",
+        "title"
+      ],
+      "additionalProperties": false
+    },
+    "PlaybookFailure": {
+      "type": "string",
+      "enum": [
+        "stop",
+        "skip",
+        "retry"
+      ],
+      "description": "What happens when a step fails"
+    },
+    "GateConfigValue": {
+      "type": "object",
+      "properties": {
+        "triggers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The ids of the conditions that pause the run"
+        },
+        "reviewer": {
+          "type": "string",
+          "description": "The id of who reviews"
+        },
+        "view": {
+          "type": "string",
+          "description": "The id of what the reviewer sees"
+        },
+        "actions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The ids of the actions the reviewer may take"
+        },
+        "reason": {
+          "type": "string",
+          "description": "Why the gate is there – the reviewer reads it"
+        }
+      },
+      "required": [
+        "triggers",
+        "reviewer",
+        "view",
+        "actions",
+        "reason"
+      ],
+      "additionalProperties": false
+    },
+    "PlaybookPhase": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "\"Analysis\""
+        },
+        "description": {
+          "type": "string",
+          "description": "A quieter line under the label: what happens in this phase"
+        },
+        "defaultType": {
+          "type": "string",
+          "description": "The step type \"Add step\" adds here; defaults to the first type allowed in the phase"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "PlaybookStepType": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "\"Agent task\""
+        },
+        "phases": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The phases it can go in; unset: any"
+        },
+        "review": {
+          "type": "boolean",
+          "description": "A review step: it pauses the run for a person and is set up with a gate"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "PlaybookVersion": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "\"v7\""
+        },
+        "meta": {
+          "type": "string",
+          "description": "A quieter line, e.g. \"Oct 24 · Maya Chen\""
+        },
+        "note": {
+          "type": "string",
+          "description": "What changed in it"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "PlaybookDryRunOutcome": {
+      "type": "string",
+      "enum": [
+        "run",
+        "skip",
+        "pause"
+      ]
+    },
+    "GateCondition": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "\"Confidence is low\" – also used, lower-cased, in the sentence"
+        },
+        "description": {
+          "type": "string",
+          "description": "A quieter line under the label"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "GateReviewer": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "GateView": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "On the segmented control: \"With evidence\""
+        },
+        "phrase": {
+          "type": "string",
+          "description": "In the sentence after \"reviews\": \"the output with its evidence\"; defaults to the label"
+        },
+        "description": {
+          "type": "string",
+          "description": "Shown under the control when it's picked"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "GateActionOption": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "approve, edit, send-back, escalate and reject by default"
+        },
+        "label": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string",
+          "description": "A quieter line under the label"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,167 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-text-annotator.json",
+  "title": "tc-text-annotator",
+  "description": "A document to highlight and comment on: marks in the text, notes in a margin rail, a toolbar on the selection.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the component's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "A quieter line under the heading – the document's name or where it came from"
+    },
+    "text": {
+      "type": "string",
+      "description": "The document: plain text, paragraphs separated by blank lines. Offsets index into it"
+    },
+    "value": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/TextAnnotation"
+      },
+      "description": "The annotations. Changed by the user unless a tc-value-change listener calls preventDefault()"
+    },
+    "author": {
+      "type": "string",
+      "description": "Who is annotating: the author of new annotations"
+    },
+    "colors": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/HighlightColor"
+      },
+      "description": "The colours the toolbar offers, in order (1–5 pick them from the keyboard)"
+    },
+    "colorNames": {
+      "type": "object",
+      "properties": {
+        "blue": {
+          "type": "string"
+        },
+        "pink": {
+          "type": "string"
+        },
+        "green": {
+          "type": "string"
+        },
+        "yellow": {
+          "type": "string"
+        },
+        "purple": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "blue",
+        "pink",
+        "green",
+        "yellow",
+        "purple"
+      ],
+      "additionalProperties": false,
+      "description": "The colours' names, as people read and hear them"
+    },
+    "filter": {
+      "type": "object",
+      "properties": {
+        "colors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/HighlightColor"
+          }
+        },
+        "authors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "resolved": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "colors",
+        "authors",
+        "resolved"
+      ],
+      "additionalProperties": false,
+      "description": "What the rail and the marks show; changed from the filter bar (tc-filter-change)"
+    },
+    "readonly": {
+      "type": "boolean",
+      "description": "Read and copy only: no new highlights, comments or changes"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The locale times are written in (default: the browser's)"
+    },
+    "textLabel": {
+      "type": "string",
+      "description": "The text's accessible name"
+    },
+    "emptyText": {
+      "type": "string",
+      "description": "Shown in the rail before there are any annotations"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "TextAnnotation": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "start": {
+          "type": "number",
+          "description": "UTF-16 offsets into `text`; `end` is exclusive"
+        },
+        "end": {
+          "type": "number"
+        },
+        "color": {
+          "$ref": "#/definitions/HighlightColor"
+        },
+        "comment": {
+          "type": "string"
+        },
+        "author": {
+          "type": "string",
+          "description": "Who made it – shown on its note and used by the author filter"
+        },
+        "at": {
+          "type": [
+            "string",
+            "number"
+          ],
+          "description": "When: epoch ms or an ISO string"
+        },
+        "resolved": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "start",
+        "end",
+        "color"
+      ],
+      "additionalProperties": false
+    },
+    "HighlightColor": {
+      "type": "string",
+      "enum": [
+        "yellow",
+        "green",
+        "blue",
+        "pink",
+        "purple"
+      ],
+      "description": "The highlighter colours – the --tc-highlight-<color>-bg / -fg tokens"
+    }
+  }
+}

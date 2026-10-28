@@ -1,0 +1,68 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-smart-recommendation.json",
+  "title": "tc-smart-recommendation",
+  "description": "A suggestion with a confidence signal, alternatives and one-click accept and undo.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the region's name"
+    },
+    "options": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Recommendation"
+      },
+      "description": "The first entry is the recommendation, the rest are offered as alternatives. A new set starts over"
+    },
+    "value": {
+      "type": "string",
+      "description": "Id of the option on show; empty shows the recommendation"
+    },
+    "accepted": {
+      "type": "string",
+      "description": "Id of the accepted option, or null"
+    },
+    "open": {
+      "type": "boolean",
+      "description": "Whether the reason is unfolded"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "Recommendation": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "Short name, used in the accept button, e.g. \"Incremental sync\""
+        },
+        "reason": {
+          "type": "string",
+          "description": "One sentence why – text, or an element (cloned)"
+        },
+        "signal": {
+          "type": "number",
+          "enum": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "description": "0 = no signal, 1 = weak, 2 = good, 3 = strong"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "reason",
+        "signal"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

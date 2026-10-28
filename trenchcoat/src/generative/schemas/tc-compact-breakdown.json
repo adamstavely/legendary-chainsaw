@@ -1,0 +1,82 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-compact-breakdown.json",
+  "title": "tc-compact-breakdown",
+  "description": "One total split into its parts: a big number, a stacked bar and a ranked list, with an optional period switch.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the group's name"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/BreakdownItem"
+      },
+      "description": "The parts of the shown period – the list ranks them by value"
+    },
+    "periods": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/BreakdownPeriod"
+      },
+      "description": "Options of the period switch – no switch when left out"
+    },
+    "period": {
+      "type": "string",
+      "description": "The chosen period id; unset is the first period"
+    },
+    "delta": {
+      "type": "number",
+      "description": "Change against the previous period in percent, e.g. 12.4 or -3 – shown as a small pill"
+    },
+    "totalLabel": {
+      "type": "string",
+      "description": "Text under the big number while nothing is hovered"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "BreakdownItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Stable key across periods – defaults to the label"
+        },
+        "label": {
+          "type": "string"
+        },
+        "value": {
+          "type": "number"
+        },
+        "color": {
+          "type": "string",
+          "description": "Any CSS color – defaults to shades of the accent, then grays"
+        }
+      },
+      "required": [
+        "label",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "BreakdownPeriod": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

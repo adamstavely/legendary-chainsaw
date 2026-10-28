@@ -1,0 +1,100 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-audience-mix.json",
+  "title": "tc-audience-mix",
+  "description": "Who is reading – a sector mix as bars, an internal-versus-external split and the top places, each with its share,\nand a readout of the row under the pointer or focus.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "sectors": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AudienceShare"
+      },
+      "description": "Readers by sector, in the order given"
+    },
+    "split": {
+      "type": "object",
+      "properties": {
+        "internal": {
+          "type": "number"
+        },
+        "external": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "internal",
+        "external"
+      ],
+      "additionalProperties": false,
+      "description": "Readers inside and outside the organisation; null hides the split"
+    },
+    "places": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AudienceShare"
+      },
+      "description": "Readers by place, largest first as given; put \"Other\" last yourself"
+    },
+    "sectorsLabel": {
+      "type": "string",
+      "description": "The heading of the sectors"
+    },
+    "splitLabel": {
+      "type": "string",
+      "description": "The heading of the internal-versus-external split"
+    },
+    "placesLabel": {
+      "type": "string",
+      "description": "The heading of the places"
+    },
+    "internalLabel": {
+      "type": "string",
+      "description": "The name of the internal share in the split"
+    },
+    "externalLabel": {
+      "type": "string",
+      "description": "The name of the external share in the split"
+    },
+    "unit": {
+      "type": "string",
+      "description": "What the shares are of, for the readout: \"54% of readers\""
+    },
+    "embedded": {
+      "type": "boolean",
+      "description": "No card or header – for use inside another component"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for numbers, e.g. \"en-GB\"; by default the browser's"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "AudienceShare": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "value": {
+          "type": "number",
+          "description": "A count or a share in any unit; the percentage comes from the group's total"
+        }
+      },
+      "required": [
+        "label",
+        "value"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

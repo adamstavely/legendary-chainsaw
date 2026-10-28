@@ -1,0 +1,91 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-investment-balance.json",
+  "title": "tc-investment-balance",
+  "description": "Investment against priority: each tier's share of the items, the budget and the people, with over- and\nunder-invested tiers marked and the biggest mismatch said in one line.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the list's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "tiers": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/InvestmentTier"
+      },
+      "description": "The tiers, most important first"
+    },
+    "itemLabel": {
+      "type": "string",
+      "description": "What the items are, plural: \"topics\", \"projects\""
+    },
+    "peopleUnit": {
+      "type": "string",
+      "description": "The unit people are counted in: \"FTE\", \"people\""
+    },
+    "currency": {
+      "type": "string",
+      "description": "The budget's currency, an ISO 4217 code"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for numbers, e.g. \"en-GB\"; by default the browser's"
+    },
+    "threshold": {
+      "type": "number",
+      "description": "How far, as a share from 0 to 1, a budget or people share may sit from the items share before it's marked"
+    },
+    "finding": {
+      "type": "string",
+      "description": "The finding at the top, in place of the one worked out; an empty string hides it"
+    },
+    "selected": {
+      "type": "string",
+      "description": "The selected tier's id. Changed by the user unless a tc-selected-change listener calls preventDefault()"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "InvestmentTier": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "The tier's name, e.g. \"Top priority\""
+        },
+        "badge": {
+          "type": "string",
+          "description": "A short mark before the name, e.g. \"1\" or \"P1\""
+        },
+        "items": {
+          "type": "number",
+          "description": "How many items (topics, projects) the tier holds"
+        },
+        "budget": {
+          "type": "number",
+          "description": "The tier's budget, in `currency`"
+        },
+        "people": {
+          "type": "number",
+          "description": "The people on the tier's work, in `people-unit`"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "items",
+        "budget",
+        "people"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

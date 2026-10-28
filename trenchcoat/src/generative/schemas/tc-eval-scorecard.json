@@ -1,0 +1,178 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-eval-scorecard.json",
+  "title": "tc-eval-scorecard",
+  "description": "Test cases run against prompt or model versions – pass or fail per case per version, the pass rate across versions,\nfilters by tag, and a case opened beside its expected answer.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading – the eval set's name"
+    },
+    "versions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/EvalVersion"
+      },
+      "description": "The versions in the order they were made – the last one is judged by the Failing and Regressed filters"
+    },
+    "cases": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/EvalCase"
+      },
+      "description": "The test cases, each with its results per version"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The picked tags – a case with any of them shows; none picked shows every case"
+    },
+    "show": {
+      "type": "string",
+      "enum": [
+        "all",
+        "failing",
+        "regressed"
+      ],
+      "description": "Which cases show: \"all\", \"failing\" (on the latest version) or \"regressed\" (passed on the one before, fails now)"
+    },
+    "open": {
+      "type": "object",
+      "properties": {
+        "caseId": {
+          "type": "string"
+        },
+        "versionId": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "caseId",
+        "versionId"
+      ],
+      "additionalProperties": false,
+      "description": "The open case and version, or null for none"
+    },
+    "maxHeight": {
+      "type": "number",
+      "description": "The grid's height before it scrolls, in px"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "EvalVersion": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "Short – it heads a grid column: \"v4\", \"Prompt 12\""
+        },
+        "detail": {
+          "type": "string",
+          "description": "What else sets it apart – the model, a date; shown in the trend"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "running",
+            "done"
+          ],
+          "description": "\"running\" while its results still come in"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "EvalCase": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string",
+          "description": "What the case tests, in a few words – the row's label"
+        },
+        "input": {
+          "type": "string",
+          "description": "The prompt or input the versions were given"
+        },
+        "expected": {
+          "type": "string",
+          "description": "The answer a pass looks like"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "results": {
+          "type": "object",
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/EvalResult"
+              },
+              {
+                "not": {}
+              }
+            ]
+          },
+          "description": "One result per version, by the version's id; a version without one hasn't run the case"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "results"
+      ],
+      "additionalProperties": false
+    },
+    "EvalResult": {
+      "type": "object",
+      "properties": {
+        "outcome": {
+          "$ref": "#/definitions/EvalOutcome"
+        },
+        "output": {
+          "type": "string",
+          "description": "What the version answered – diffed against the case's expected answer"
+        },
+        "score": {
+          "type": [
+            "number",
+            "string"
+          ],
+          "description": "The grader's score, already formatted or a number – shown with the result"
+        },
+        "reason": {
+          "type": "string",
+          "description": "Why it passed or failed, in a line – the grader's reason"
+        }
+      },
+      "required": [
+        "outcome"
+      ],
+      "additionalProperties": false
+    },
+    "EvalOutcome": {
+      "type": "string",
+      "enum": [
+        "pass",
+        "fail",
+        "error",
+        "pending"
+      ]
+    }
+  }
+}

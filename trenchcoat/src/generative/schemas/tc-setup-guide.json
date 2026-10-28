@@ -1,0 +1,88 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-setup-guide.json",
+  "title": "tc-setup-guide",
+  "description": "An onboarding panel: a progress bar and collapsible groups of tasks that unlock one after another.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the region's name"
+    },
+    "groups": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/SetupGroup"
+      },
+      "description": "The task groups. Each task's `done` flag is where it starts; when the flags change, the guide follows them"
+    },
+    "done": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Ids of the finished tasks; unset follows the tasks' flags. Changed by a tick unless tc-done-change is prevented"
+    },
+    "openGroup": {
+      "type": "string",
+      "description": "Id of the unfolded group, null for none; unset unfolds the first unfinished group"
+    },
+    "minimized": {
+      "type": "boolean",
+      "description": "The body is collapsed to the header"
+    },
+    "editable": {
+      "type": "boolean",
+      "description": "Shows an \"Edit\" link in the header (fires tc-edit)"
+    },
+    "closable": {
+      "type": "boolean",
+      "description": "Shows a close button in the header (fires tc-close)"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "SetupGroup": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "tasks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SetupTask"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "tasks"
+      ],
+      "additionalProperties": false
+    },
+    "SetupTask": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "done": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

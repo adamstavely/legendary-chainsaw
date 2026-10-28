@@ -1,0 +1,94 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-reasoning-flags.json",
+  "title": "tc-reasoning-flags",
+  "description": "Inline markers for weak reasoning in an answer, each opening a plain explanation.",
+  "type": "object",
+  "properties": {
+    "text": {
+      "type": "string",
+      "description": "The answer's text: plain text, shown as written (line breaks kept). Flags' offsets index into it"
+    },
+    "flags": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ReasoningFlag"
+      },
+      "description": "The flagged spans, from the app: `{ id?, start, end, kind, explanation }[]`"
+    },
+    "kinds": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/ReasoningFlagKind"
+      },
+      "description": "Names and descriptions by kind, merged over the built-in ones"
+    },
+    "reconsider": {
+      "type": "boolean",
+      "description": "Offer \"Ask the model to reconsider\" in each card (fires tc-reconsider)"
+    },
+    "reconsiderLabel": {
+      "type": "string",
+      "description": "The reconsider button's text"
+    },
+    "noSummary": {
+      "type": "boolean",
+      "description": "Hide the summary chip (\"2 reasoning flags\")"
+    },
+    "note": {
+      "type": "string",
+      "description": "The line at the foot of each card – that the flags are automatic and advisory"
+    },
+    "hoverDelay": {
+      "type": "number",
+      "description": "How long the pointer rests on a span or marker before its card opens, ms"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ReasoningFlag": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "start": {
+          "type": "number"
+        },
+        "end": {
+          "type": "number"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "explanation": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "start",
+        "end",
+        "kind",
+        "explanation"
+      ],
+      "additionalProperties": false,
+      "description": "One flagged span: UTF-16 offsets into `text` (`end` exclusive), the kind (a key of `kinds`) and a plain-language explanation"
+    },
+    "ReasoningFlagKind": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "label"
+      ],
+      "additionalProperties": false,
+      "description": "How a kind is named, and what the pattern means in general"
+    }
+  }
+}

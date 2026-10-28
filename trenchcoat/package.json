@@ -26,6 +26,10 @@
       "types": "./dist/angular/forms.d.ts",
       "import": "./dist/angular/forms.js"
     },
+    "./generative": {
+      "types": "./dist/types/generative/index.d.ts",
+      "import": "./dist/generative.js"
+    },
     "./vue": {
       "types": "./dist/types/vue.d.ts"
     },
@@ -64,7 +68,7 @@
     "test": "vitest run",
     "check:prefixes": "node scripts/check-prefixes.mjs",
     "check:ratchet": "node scripts/check-ratchet.mjs",
-    "ci": "npm run typecheck && npm run lint && npm run check:prefixes && npm run check:ratchet && npm run check:tokens && npm run check:contrast && node scripts/gen-elements.mjs --check && npm run check:angular && npm run check:dead-css && npm run check:docs && npm run check:snippets && npm run check:lit && npm test",
+    "ci": "npm run typecheck && npm run lint && npm run check:prefixes && npm run check:ratchet && npm run check:tokens && npm run check:contrast && node scripts/gen-elements.mjs --check && npm run check:angular && npm run check:generative && npm run check:dead-css && npm run check:docs && npm run check:snippets && npm run check:lit && npm test",
     "check:tokens": "node scripts/tokens.mjs --check && node scripts/check-tokens.mjs && node scripts/tokens-dtcg.mjs --check",
     "check:contrast": "node scripts/contrast.mjs",
     "check:lit": "lit-analyzer src/elements --strict --maxWarnings 0",
@@ -79,7 +83,8 @@
     "capture:thumbs": "node scripts/capture-thumbs.mjs",
     "check:snippets": "node scripts/check-snippets.mjs",
     "check:angular": "node scripts/gen-angular.mjs --check && node scripts/check-angular.mjs",
-    "tokens:dtcg": "node scripts/tokens-dtcg.mjs"
+    "tokens:dtcg": "node scripts/tokens-dtcg.mjs",
+    "check:generative": "node scripts/gen-schemas.mjs --check"
   },
   "dependencies": {
     "@lit/context": "1.1.6",
@@ -122,6 +127,7 @@
     "react": "19.3.1",
     "react-dom": "19.3.1",
     "rxjs": "7.8.2",
+    "ts-json-schema-generator": "2.9.0",
     "ts-lit-plugin": "2.0.2",
     "typescript": "5.8.3",
     "typescript-eslint": "8.35.1",
@@ -129,9 +135,9 @@
     "vitest": "5.0.5"
   },
   "peerDependencies": {
-    "react": ">=19",
     "@angular/core": ">=19.0.0",
-    "@angular/forms": ">=19.0.0"
+    "@angular/forms": ">=19.0.0",
+    "react": ">=19"
   },
   "peerDependenciesMeta": {
     "react": {

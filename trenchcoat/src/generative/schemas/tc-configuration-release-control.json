@@ -1,0 +1,382 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-configuration-release-control.json",
+  "title": "tc-configuration-release-control",
+  "description": "A configuration version moving through environments: the pipeline, what changed, the evaluation evidence, the\napprovals, the rollout and the rollback target, with a gated, confirmed Promote and a confirmed Roll back.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "A quieter line under the heading, e.g. which assistant this configures"
+    },
+    "stages": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ReleaseStage"
+      },
+      "description": "The environments in order, each with the version it runs and any rollout in progress"
+    },
+    "versions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ReleaseVersion"
+      },
+      "description": "Every version the stages, the candidate and the rollback target refer to"
+    },
+    "candidate": {
+      "type": "string",
+      "description": "The id of the version being promoted"
+    },
+    "target": {
+      "type": "string",
+      "description": "The id of the stage it's promoted to; unset, the stage after the last one that fully runs it"
+    },
+    "changes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ReleaseChange"
+      },
+      "description": "What changed against the version it replaces, by area"
+    },
+    "evidence": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "type": "string",
+          "enum": [
+            "running",
+            "done"
+          ]
+        },
+        "passRate": {
+          "type": "number"
+        },
+        "baseline": {
+          "type": "number"
+        },
+        "threshold": {
+          "type": "number"
+        },
+        "cases": {
+          "type": "number"
+        },
+        "suite": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "threshold"
+      ],
+      "additionalProperties": false,
+      "description": "The evaluation behind the promotion; unset, promotion waits for one"
+    },
+    "approvals": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ReleaseApproval"
+      },
+      "description": "Who has reviewed the candidate"
+    },
+    "requiredApprovals": {
+      "type": "number",
+      "description": "How many approvals Promote needs"
+    },
+    "rollback": {
+      "type": "object",
+      "properties": {
+        "stage": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "stage",
+        "version"
+      ],
+      "additionalProperties": false,
+      "description": "Where Roll back goes; unset, there's nothing to roll back to"
+    },
+    "hold": {
+      "type": "string",
+      "description": "A reason that holds every promotion, e.g. \"Releases are frozen until Monday\""
+    },
+    "promoteNote": {
+      "type": "string",
+      "description": "Said in the promote confirmation, under the move"
+    },
+    "rollbackNote": {
+      "type": "string",
+      "description": "Said in the rollback confirmation, under the move"
+    },
+    "cancelLabel": {
+      "type": "string",
+      "description": "The confirmation's Cancel button"
+    },
+    "suites": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ReleaseSuite"
+      },
+      "description": "Gate suites and their results; unset, the gate doesn't ask for any"
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ReleaseFinding"
+      },
+      "description": "Open findings linked to the candidate; blocking ones hold promotion unless waived"
+    },
+    "waivers": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ReleaseWaiver"
+      },
+      "description": "Waivers for conditional suites and blocking findings, with who granted them and when they expire"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ReleaseStage": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "\"Production\""
+        },
+        "version": {
+          "type": "string",
+          "description": "The id of the version it fully runs; unset when nothing is deployed"
+        },
+        "rollout": {
+          "type": "object",
+          "properties": {
+            "version": {
+              "type": "string"
+            },
+            "percent": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "version",
+            "percent"
+          ],
+          "additionalProperties": false,
+          "description": "A rollout in progress: another version taking `percent` (0–100) of this stage's traffic"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false,
+      "description": "An environment a version moves through, in order"
+    },
+    "ReleaseVersion": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "Short, e.g. \"v14\""
+        },
+        "title": {
+          "type": "string",
+          "description": "What it is, e.g. \"Shorter refund answers\""
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false,
+      "description": "A configuration version: an immutable snapshot of instructions, model, tools and retrieval"
+    },
+    "ReleaseChange": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "\"Instructions\""
+        },
+        "count": {
+          "type": "number",
+          "description": "How many changes, e.g. 3 edited lines or 2 tools added"
+        },
+        "detail": {
+          "type": "string",
+          "description": "A quieter line, e.g. \"2 added, 1 removed\""
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "count"
+      ],
+      "additionalProperties": false,
+      "description": "One area of the configuration that changed"
+    },
+    "ReleaseApproval": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "approved",
+            "pending",
+            "rejected"
+          ],
+          "description": "\"Approved\", \"Waiting\" or \"Changes requested\""
+        },
+        "detail": {
+          "type": "string",
+          "description": "A quiet line, e.g. their role or when they approved"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "state"
+      ],
+      "additionalProperties": false,
+      "description": "One person's review"
+    },
+    "ReleaseSuite": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/ReleaseSuiteStatus"
+        },
+        "passed": {
+          "type": "number",
+          "description": "Counts, shown as \"5 passed · 2 failed · 1 inconclusive\""
+        },
+        "failed": {
+          "type": "number"
+        },
+        "inconclusive": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "status"
+      ],
+      "additionalProperties": false,
+      "description": "A suite of checks the release gate runs, e.g. \"Safety regression\""
+    },
+    "ReleaseSuiteStatus": {
+      "type": "string",
+      "enum": [
+        "pass",
+        "fail",
+        "conditional"
+      ],
+      "description": "A gate suite's result: pass, fail, or conditional – passing only on a waiver"
+    },
+    "ReleaseFinding": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string",
+          "description": "\"Tool ran before its approval\""
+        },
+        "ref": {
+          "type": "string",
+          "description": "A short reference, e.g. \"F-001\""
+        },
+        "severity": {
+          "type": "string",
+          "description": "e.g. \"P0\" or \"High\""
+        },
+        "status": {
+          "type": "string",
+          "description": "e.g. \"Open\", \"Acknowledged\""
+        },
+        "suite": {
+          "type": "string",
+          "description": "The id of the suite it came from"
+        },
+        "blocking": {
+          "type": "boolean",
+          "description": "A blocking finding holds promotion until it's closed or waived"
+        }
+      },
+      "required": [
+        "id",
+        "title"
+      ],
+      "additionalProperties": false,
+      "description": "An open finding linked to the candidate"
+    },
+    "ReleaseWaiver": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "A short reference, e.g. \"W-001\""
+        },
+        "covers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The ids of the suites and findings it covers"
+        },
+        "grantedBy": {
+          "type": "string",
+          "description": "Who granted it"
+        },
+        "expires": {
+          "type": "string",
+          "description": "When it expires, shown as given, e.g. \"2026-06-10\""
+        },
+        "expired": {
+          "type": "boolean",
+          "description": "The app says it has expired – it then counts as unmet"
+        }
+      },
+      "required": [
+        "id",
+        "covers",
+        "grantedBy",
+        "expires"
+      ],
+      "additionalProperties": false,
+      "description": "A waiver: lets a conditional suite or a blocking finding through until it expires"
+    }
+  }
+}

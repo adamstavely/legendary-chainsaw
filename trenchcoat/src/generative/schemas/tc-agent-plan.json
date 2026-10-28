@@ -1,0 +1,93 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-agent-plan.json",
+  "title": "tc-agent-plan",
+  "description": "A step-by-step plan from an agent: reviewed and edited as a draft, then shown while it runs.",
+  "type": "object",
+  "properties": {
+    "steps": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AgentPlanStep"
+      },
+      "description": "The steps. Edits apply unless a tc-steps-change listener calls preventDefault()"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "running",
+        "done"
+      ],
+      "description": "\"draft\" = review and edit, \"running\" = executing, \"done\" = finished – always set by the app"
+    },
+    "heading": {
+      "type": "string",
+      "description": "The goal of the plan, shown as the heading"
+    },
+    "estimate": {
+      "type": "string",
+      "description": "Estimated run time shown in review, e.g. \"~2 min\""
+    },
+    "cancellable": {
+      "type": "boolean",
+      "description": "Shows a \"Cancel\" button next to \"Run plan\" (fires tc-cancel)"
+    },
+    "retryable": {
+      "type": "boolean",
+      "description": "Shows \"Retry from here\" on failed steps (fires tc-retry)"
+    },
+    "rerunnable": {
+      "type": "boolean",
+      "description": "Shows \"Run again\" once the plan is done (fires tc-run)"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "AgentPlanStep": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "detail": {
+          "type": "string",
+          "description": "A second, quieter line under the title"
+        },
+        "tool": {
+          "type": "string",
+          "description": "Tool the agent will call, shown as a small mono chip, e.g. \"search_web\""
+        },
+        "status": {
+          "$ref": "#/definitions/AgentPlanStepStatus"
+        },
+        "duration": {
+          "type": "number",
+          "description": "How long the step took, in ms – shown next to done steps (measured live if left out)"
+        },
+        "error": {
+          "type": "string",
+          "description": "Shown under a failed step"
+        }
+      },
+      "required": [
+        "id",
+        "title"
+      ],
+      "additionalProperties": false
+    },
+    "AgentPlanStepStatus": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "active",
+        "done",
+        "failed",
+        "skipped"
+      ]
+    }
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-autonomy-dial.json",
+  "title": "tc-autonomy-dial",
+  "description": "How much an agent may do on its own: three levels, and the actions it runs alone or asks about first.",
+  "type": "object",
+  "properties": {
+    "actions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AgentAction"
+      },
+      "description": "The agent's actions; each sorts into \"Runs on its own\" or \"Asks you first\" by its risk, the level and the pins"
+    },
+    "level": {
+      "type": "number",
+      "enum": [
+        0,
+        2,
+        1
+      ],
+      "description": "0 Ask every time · 1 Ask before risky actions · 2 Full auto"
+    },
+    "pinned": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Ids of actions that always ask, whatever the level"
+    },
+    "heading": {
+      "type": "string",
+      "description": "Heading, e.g. the agent's name"
+    },
+    "subtitle": {
+      "type": "string",
+      "description": "Line under the heading"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "AgentAction": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "detail": {
+          "type": "string",
+          "description": "A few words on what it touches, e.g. \"Gmail · to customers\""
+        },
+        "risk": {
+          "$ref": "#/definitions/ActionRisk"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "risk"
+      ],
+      "additionalProperties": false
+    },
+    "ActionRisk": {
+      "type": "string",
+      "enum": [
+        "safe",
+        "risky",
+        "destructive"
+      ]
+    }
+  }
+}

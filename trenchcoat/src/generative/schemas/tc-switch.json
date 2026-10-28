@@ -1,0 +1,34 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-switch.json",
+  "title": "tc-switch",
+  "description": "Switch for AI product settings.",
+  "type": "object",
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Visible heading or field label."
+    },
+    "value": {
+      "type": "boolean",
+      "description": "Current value; prevent tc-value-change to control it from the application."
+    },
+    "description": {
+      "type": "string",
+      "description": "Supporting explanation under the label."
+    },
+    "name": {
+      "type": "string",
+      "description": "Form field name; objects and arrays are serialized as JSON."
+    },
+    "disabled": {
+      "type": "boolean",
+      "description": "Disable editing and omit the control from form submission."
+    },
+    "required": {
+      "type": "boolean",
+      "description": "Require a nonempty value."
+    }
+  },
+  "additionalProperties": false
+}

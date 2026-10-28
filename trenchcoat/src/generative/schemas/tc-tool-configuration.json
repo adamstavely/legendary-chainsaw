@@ -1,0 +1,159 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-tool-configuration.json",
+  "title": "tc-tool-configuration",
+  "description": "A tool as its API reference entry: the name as the title, the signature and description, a doc table of the\nparameters edited in place, an example call, the JSON Schema on request, a validation strip and the approval a\ncall needs.",
+  "type": "object",
+  "properties": {
+    "value": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "parameters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ToolParameter"
+          }
+        },
+        "approval": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "description",
+        "parameters",
+        "approval"
+      ],
+      "additionalProperties": false,
+      "description": "The definition. Changed by the user unless a tc-value-change listener calls preventDefault()"
+    },
+    "approvals": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ToolApprovalOption"
+      },
+      "description": "The approvals offered in the head's picker; empty hides it"
+    },
+    "types": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "$ref": "#/definitions/ToolParameterType"
+          },
+          "label": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "label"
+        ],
+        "additionalProperties": false
+      },
+      "description": "The parameter types offered, with their labels"
+    },
+    "example": {
+      "type": "object",
+      "additionalProperties": {},
+      "description": "The arguments Example call shows; unset, they're made from the parameters (toolExampleCall)"
+    },
+    "heading": {
+      "type": "string",
+      "description": "The title while the tool has no name; the tool's name replaces it"
+    },
+    "description": {
+      "type": "string",
+      "description": "A quieter line under the title"
+    },
+    "showSchema": {
+      "type": "boolean",
+      "description": "Shows the JSON Schema disclosure"
+    },
+    "showExample": {
+      "type": "boolean",
+      "description": "Shows the Example call panel"
+    },
+    "name": {
+      "type": "string",
+      "description": "Submitted with the form: the definition as JSON"
+    },
+    "disabled": {
+      "type": "boolean",
+      "description": "Turns every control off and leaves the definition out of the form; a disabled fieldset does the same"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ToolParameter": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/ToolParameterType"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "description": {
+          "type": "string",
+          "description": "What the model should put in it"
+        },
+        "enum": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The values allowed, for string, number and integer parameters"
+        }
+      },
+      "required": [
+        "name",
+        "type",
+        "required",
+        "description"
+      ],
+      "additionalProperties": false
+    },
+    "ToolParameterType": {
+      "type": "string",
+      "enum": [
+        "string",
+        "number",
+        "integer",
+        "boolean",
+        "array",
+        "object"
+      ]
+    },
+    "ToolApprovalOption": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false,
+      "description": "What a call needs before it runs"
+    }
+  }
+}

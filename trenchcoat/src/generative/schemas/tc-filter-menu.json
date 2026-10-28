@@ -1,0 +1,95 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-filter-menu.json",
+  "title": "tc-filter-menu",
+  "description": "Grouped filters: removable chips on top, collapsible groups of checkboxes below.",
+  "type": "object",
+  "properties": {
+    "groups": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/FilterGroup"
+      },
+      "description": "The filter groups, in order – each a collapsible list of options that become chips when picked"
+    },
+    "value": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "description": "The picked options, per group id"
+    },
+    "open": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Ids of the open groups – unset opens the first group"
+    },
+    "name": {
+      "type": "string",
+      "description": "Name for native form submission: one hidden input per picked option, named `name[groupId]`"
+    },
+    "disabled": {
+      "type": "boolean",
+      "description": "Nothing can be picked, removed or cleared, and the hidden inputs are left out of the form"
+    },
+    "heading": {
+      "type": "string",
+      "description": "The heading, next to Clear all"
+    },
+    "hints": {
+      "type": "boolean",
+      "description": "Show the keyboard hints at the bottom (Clean: as the last row of the card); hints=\"false\" hides them"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "FilterGroup": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FilterOption"
+          }
+        },
+        "chipPrefix": {
+          "type": "string",
+          "description": "Put in front of the option on its chip, e.g. \"Score: \" → \"Score: 80–90\""
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "options"
+      ],
+      "additionalProperties": false
+    },
+    "FilterOption": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

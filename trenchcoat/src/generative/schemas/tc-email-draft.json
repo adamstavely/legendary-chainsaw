@@ -1,0 +1,106 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-email-draft.json",
+  "title": "tc-email-draft",
+  "description": "An agent-written email waiting for review: recipient, attachment, tones, inline editing, Discard and Send.",
+  "type": "object",
+  "properties": {
+    "reference": {
+      "type": "string",
+      "description": "Reference of the record, e.g. a subscription or invoice number"
+    },
+    "account": {
+      "type": "string",
+      "description": "Account or company under the reference"
+    },
+    "amount": {
+      "type": "string",
+      "description": "Amount shown on the right"
+    },
+    "status": {
+      "type": "string",
+      "description": "Status chip next to the reference"
+    },
+    "agent": {
+      "type": "string",
+      "description": "Who wrote the draft"
+    },
+    "contacts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/DraftContact"
+      },
+      "description": "The people the email can go to – the recipient list offers them; the first is picked unless `recipient` says otherwise"
+    },
+    "recipient": {
+      "type": "string",
+      "description": "The email of the contact it goes to – unset is the first contact; one not in `contacts` falls back to the first"
+    },
+    "attachment": {
+      "type": "string",
+      "description": "The file attached – removing it is remembered for that file only, so a new attachment shows again"
+    },
+    "tones": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/DraftTone"
+      },
+      "description": "Text variants to switch between – the first one is shown first"
+    },
+    "tone": {
+      "type": "string",
+      "description": "The id of the tone shown – unset is the first; one not in `tones` falls back to the first"
+    },
+    "link": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "href": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "label",
+        "href"
+      ],
+      "additionalProperties": false,
+      "description": "Label and target of the link appended to the email"
+    },
+    "undoSend": {
+      "type": "boolean",
+      "description": "The receipt offers Undo for a send (tc-undo takes it back) – unset: only when there's no `onSend`"
+    },
+    "undoDiscard": {
+      "type": "boolean",
+      "description": "The receipt offers Undo for a discard (tc-undo takes it back) – unset: yes"
+    },
+    "demo": {
+      "type": "boolean",
+      "description": "Demo mode: sending without onSend is simulated silently. For galleries and prototypes"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "DraftContact": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "email"
+      ],
+      "additionalProperties": false
+    },
+    "DraftTone": {
+      "not": {}
+    }
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-correction-propagation.json",
+  "title": "tc-correction-propagation",
+  "description": "How far a correction reaches: every artifact and released package that cites the corrected claim, each sent for\nreview – nothing rewritten automatically.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the component's name"
+    },
+    "claim": {
+      "type": "string",
+      "description": "The claim as it was, before the correction"
+    },
+    "correction": {
+      "type": "string",
+      "description": "The claim as corrected"
+    },
+    "reason": {
+      "type": "string",
+      "description": "Why it was corrected"
+    },
+    "meta": {
+      "type": "string",
+      "description": "Who corrected it and when, as one line – e.g. \"Dana Okafor · today, 10:42\""
+    },
+    "candidates": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/CorrectionCandidate"
+      },
+      "description": "The artifacts and released packages that cite the corrected claim"
+    },
+    "states": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/CorrectionState"
+      },
+      "description": "Each item's state by id; an item not named here uses its own `state`, else \"pending\". Changed by the user unless a tc-states-change listener calls preventDefault()"
+    },
+    "note": {
+      "type": "string",
+      "description": "The line under the list – what the component won't do"
+    },
+    "emptyText": {
+      "type": "string",
+      "description": "Shown when nothing cites the claim"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "CorrectionCandidate": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string",
+          "description": "What it is – e.g. \"Board summary, slide 3\""
+        },
+        "kind": {
+          "$ref": "#/definitions/CorrectionCandidateKind",
+          "description": "\"package\" for something already released to others (it can't be changed, only superseded); \"artifact\" (default) for a working document"
+        },
+        "detail": {
+          "type": "string",
+          "description": "One quieter line – where it cites the claim, who owns it"
+        },
+        "quote": {
+          "type": "string",
+          "description": "The passage that cites the corrected claim"
+        },
+        "version": {
+          "type": "string",
+          "description": "The released version – e.g. \"v2.1\""
+        },
+        "state": {
+          "$ref": "#/definitions/CorrectionState",
+          "description": "The state it starts in, when `states` doesn't name it"
+        }
+      },
+      "required": [
+        "id",
+        "title"
+      ],
+      "additionalProperties": false
+    },
+    "CorrectionCandidateKind": {
+      "type": "string",
+      "enum": [
+        "artifact",
+        "package"
+      ]
+    },
+    "CorrectionState": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "reviewed",
+        "superseded",
+        "dismissed"
+      ]
+    }
+  }
+}

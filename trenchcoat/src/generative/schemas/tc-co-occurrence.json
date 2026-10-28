@@ -1,0 +1,181 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-co-occurrence.json",
+  "title": "tc-co-occurrence",
+  "description": "Entities ranked by how often they appear together with a subject – strength in words and bars, a score, the share\nof events, a count per source and when last seen – with each row opening its shared events.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the list's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "window": {
+      "type": "string",
+      "description": "The time window the counts cover, shown in the header, e.g. \"120-day window\""
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/CoSource"
+      },
+      "description": "The data sources, in the order their counts are shown"
+    },
+    "entities": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/CoEntity"
+      },
+      "description": "The entities seen together with the subject"
+    },
+    "events": {
+      "type": "number",
+      "description": "How many events the subject had in the window – the share's denominator"
+    },
+    "eventUnit": {
+      "type": "string",
+      "description": "What an event is called after a number: \"14 of 17 events\""
+    },
+    "sort": {
+      "type": "string",
+      "enum": [
+        "score",
+        "share",
+        "recent"
+      ],
+      "description": "The order of the rows. Changed by the user unless a tc-sort-change listener calls preventDefault()"
+    },
+    "selected": {
+      "type": "string",
+      "description": "The open row's id. Changed by the user unless a tc-selected-change listener calls preventDefault()"
+    },
+    "thresholds": {
+      "type": "object",
+      "properties": {
+        "always": {
+          "type": "number"
+        },
+        "frequent": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "always",
+        "frequent"
+      ],
+      "additionalProperties": false,
+      "description": "The lowest shares, from 0 to 1, that count as Always together and Frequent; below Frequent is Occasional"
+    },
+    "strengthLabels": {
+      "type": "object",
+      "properties": {
+        "always": {
+          "type": "string"
+        },
+        "frequent": {
+          "type": "string"
+        },
+        "occasional": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The strengths' names, merged over the defaults (Always together, Frequent, Occasional)"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for dates and numbers, e.g. \"en-GB\"; by default the browser's"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "CoSource": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false,
+      "description": "A data source the events come from, e.g. { id: \"pay\", label: \"Payments\" }"
+    },
+    "CoEntity": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "detail": {
+          "type": "string",
+          "description": "A second line: an ID, a device, a company"
+        },
+        "score": {
+          "type": "number",
+          "description": "How strongly they're correlated, 0 to 100"
+        },
+        "together": {
+          "type": "number",
+          "description": "How many of the subject's events they were in; the share is this over `events`"
+        },
+        "bySource": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number"
+          },
+          "description": "Shared events by source id"
+        },
+        "lastSeen": {
+          "type": "number",
+          "description": "When they were last seen together, epoch ms"
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CoEvent"
+          },
+          "description": "The shared events, listed by source when the row opens"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "score",
+        "together"
+      ],
+      "additionalProperties": false
+    },
+    "CoEvent": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "at": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "source",
+        "label"
+      ],
+      "additionalProperties": false,
+      "description": "One event the entity and the subject shared"
+    }
+  }
+}

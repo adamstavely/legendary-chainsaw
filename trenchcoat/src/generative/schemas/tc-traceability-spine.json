@@ -1,0 +1,135 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-traceability-spine.json",
+  "title": "tc-traceability-spine",
+  "description": "The chain from questions to outcomes in stage columns, linked cards joined by lines, and a card's whole path traced\non click or Enter.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "stages": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/SpineStage"
+      },
+      "description": "The stages, a column each, left to right"
+    },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/SpineNode"
+      },
+      "description": "The items, each in a stage, with the ids it links to"
+    },
+    "selected": {
+      "type": "string",
+      "description": "The card whose path is traced. Changed by the user unless a tc-selected-change listener calls preventDefault()"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "SpineStage": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "noun": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 2,
+          "maxItems": 2,
+          "description": "What one and several items are called in the announcement, e.g. [\"work item\", \"work items\"]"
+        },
+        "more": {
+          "type": "number",
+          "description": "Items in the stage that aren't shown, as a \"+N more\" footer"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "SpineNode": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "stage": {
+          "type": "string",
+          "description": "The stage's id"
+        },
+        "title": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string",
+          "description": "The small label over the title; by default the stage's noun, e.g. \"Gap\""
+        },
+        "status": {
+          "type": "string",
+          "description": "A short status pill: \"Open\", \"Critical\", \"Blocked\""
+        },
+        "tone": {
+          "$ref": "#/definitions/SpineTone"
+        },
+        "flag": {
+          "type": "string",
+          "description": "A second, warning pill, e.g. \"Uncovered\""
+        },
+        "meta": {
+          "type": "string",
+          "description": "One quiet line: a venue, \"IEEE TNNLS · 2026 · MIT Lincoln Lab\", metrics"
+        },
+        "progress": {
+          "type": "number",
+          "description": "Progress from 0 to 1, drawn as a bar"
+        },
+        "people": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "People's names, shown as initials"
+        },
+        "links": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Ids of the nodes this one leads to or answers to, in any stage"
+        }
+      },
+      "required": [
+        "id",
+        "stage",
+        "title"
+      ],
+      "additionalProperties": false
+    },
+    "SpineTone": {
+      "type": "string",
+      "enum": [
+        "neutral",
+        "info",
+        "success",
+        "warning",
+        "danger"
+      ]
+    }
+  }
+}

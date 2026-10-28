@@ -1,0 +1,182 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-gate-config.json",
+  "title": "tc-gate-config",
+  "description": "When a person decides: the conditions that pause a run, who reviews, what they see, what they may do and why.",
+  "type": "object",
+  "properties": {
+    "value": {
+      "type": "object",
+      "properties": {
+        "triggers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "reviewer": {
+          "type": "string"
+        },
+        "view": {
+          "type": "string"
+        },
+        "actions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "reason": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "triggers",
+        "reviewer",
+        "view",
+        "actions",
+        "reason"
+      ],
+      "additionalProperties": false,
+      "description": "The gate's config. Changed by the user unless a tc-value-change listener calls preventDefault()"
+    },
+    "conditions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/GateCondition"
+      },
+      "description": "The conditions that can pause a run, each shown as a switch"
+    },
+    "reviewers": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/GateReviewer"
+      },
+      "description": "Who can review, offered in the Reviewer select"
+    },
+    "views": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/GateView"
+      },
+      "description": "What a reviewer can be shown, offered as a segmented control – two to four work best"
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/GateActionOption"
+      },
+      "description": "The actions a reviewer may be allowed, shown as checkboxes"
+    },
+    "heading": {
+      "type": "string",
+      "description": "Names the group, shown at the top"
+    },
+    "description": {
+      "type": "string",
+      "description": "A quieter line under the heading, e.g. which step the gate guards"
+    },
+    "placeholder": {
+      "type": "string",
+      "description": "Placeholder for the note"
+    },
+    "flat": {
+      "type": "boolean",
+      "description": "Drops the tray and the card, for a gate inside another card"
+    },
+    "name": {
+      "type": "string",
+      "description": "Submitted with the form: the config as JSON"
+    },
+    "disabled": {
+      "type": "boolean",
+      "description": "Turns every control off and leaves the config out of the form; a disabled fieldset does the same"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "GateCondition": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "\"Confidence is low\" – also used, lower-cased, in the sentence"
+        },
+        "description": {
+          "type": "string",
+          "description": "A quieter line under the label"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "GateReviewer": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "GateView": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "On the segmented control: \"With evidence\""
+        },
+        "phrase": {
+          "type": "string",
+          "description": "In the sentence after \"reviews\": \"the output with its evidence\"; defaults to the label"
+        },
+        "description": {
+          "type": "string",
+          "description": "Shown under the control when it's picked"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "GateActionOption": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "approve, edit, send-back, escalate and reject by default"
+        },
+        "label": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string",
+          "description": "A quieter line under the label"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,149 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-agent-steering.json",
+  "title": "tc-agent-steering",
+  "description": "Steer an agent while it works: the run, its plan, the queued notes and a field to add one.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "What the agent is working on, e.g. \"Migrate users table\""
+    },
+    "agent": {
+      "type": "string",
+      "description": "Name of the agent or model, e.g. \"Opus 5.5\""
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/SteerStep"
+      },
+      "description": "The plan: done steps, the active one and the steps still to come, in order"
+    },
+    "queue": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/SteerNote"
+      },
+      "description": "Notes waiting for the next step, oldest first"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "paused",
+        "running",
+        "done"
+      ],
+      "description": "Where the run is: \"running\", \"paused\" or \"done\" – done disables the field"
+    },
+    "startedAt": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "string",
+          "format": "date-time"
+        }
+      ],
+      "description": "When the run started (epoch ms or a Date) – the clock in the header ticks from here"
+    },
+    "draft": {
+      "type": "string",
+      "description": "The text in the field"
+    },
+    "placeholder": {
+      "type": "string",
+      "description": "Placeholder of the field while the run is open"
+    },
+    "removable": {
+      "type": "boolean",
+      "description": "Shows ✕ on the queued notes (tc-remove)"
+    },
+    "pausable": {
+      "type": "boolean",
+      "description": "Shows Pause in the header while running (tc-pause)"
+    },
+    "resumable": {
+      "type": "boolean",
+      "description": "Shows Resume in the header while paused (tc-resume)"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "SteerStep": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/SteerStepStatus"
+        },
+        "duration": {
+          "type": "number",
+          "description": "Time the step took in ms – shown on done steps"
+        },
+        "startedAt": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string",
+              "format": "date-time"
+            }
+          ],
+          "description": "When the active step started – its clock ticks from here"
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SteerNote"
+          },
+          "description": "Notes the agent took in for this step – a note that leaves the queue and shows up here glides over"
+        }
+      },
+      "required": [
+        "id",
+        "title"
+      ],
+      "additionalProperties": false
+    },
+    "SteerStepStatus": {
+      "type": "string",
+      "enum": [
+        "done",
+        "active",
+        "pending"
+      ]
+    },
+    "SteerNote": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        },
+        "picked": {
+          "type": "string",
+          "enum": [
+            "next",
+            "now"
+          ],
+          "description": "Set when the agent took the note in – shows \"Picked up\" (or \"Interrupted\" when it was applied right away)"
+        }
+      },
+      "required": [
+        "id",
+        "text"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

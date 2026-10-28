@@ -1,0 +1,149 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-asset-list.json",
+  "title": "tc-asset-list",
+  "description": "Assets in groups – vehicles, devices – each with its kind, name, a masked identifier, a detail line, what it's linked\nto and a status in words, with Open per row.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "groups": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AssetGroup"
+      },
+      "description": "The groups and their assets, in order; an empty group is left out"
+    },
+    "statuses": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "tone": {
+            "$ref": "#/definitions/AssetTone"
+          }
+        },
+        "required": [
+          "label",
+          "tone"
+        ],
+        "additionalProperties": false
+      },
+      "description": "Statuses' names and tones, merged over the defaults (confirmed, suspected, seized, in-analysis, retired)"
+    },
+    "masked": {
+      "type": "boolean",
+      "description": "Masks identifiers to their last four characters until revealed; set false to show them in full"
+    },
+    "revealed": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The ids whose identifiers are shown. Changed by the user unless a tc-revealed-change listener calls preventDefault()"
+    },
+    "openLabel": {
+      "type": "string",
+      "description": "The label of each row's open button"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "AssetGroup": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "assets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Asset"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "assets"
+      ],
+      "additionalProperties": false
+    },
+    "Asset": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/definitions/AssetKind",
+          "description": "Picks the icon"
+        },
+        "name": {
+          "type": "string",
+          "description": "Its name or model: \"Audi A6 Avant\", \"iPhone 15 Pro\""
+        },
+        "identifier": {
+          "type": "string",
+          "description": "A plate, IMEI or serial; masked to its last four characters unless `masked` is off or it's revealed"
+        },
+        "identifierLabel": {
+          "type": "string",
+          "description": "What the identifier is: \"Plate\", \"IMEI\", \"Serial\""
+        },
+        "detail": {
+          "type": "string",
+          "description": "One quiet line: \"Black · 2023\""
+        },
+        "link": {
+          "type": "string",
+          "description": "What it's linked to: \"Registered to customer\", \"Reg. Aurelia Estates\""
+        },
+        "status": {
+          "type": "string",
+          "description": "A key of `statuses`: confirmed, suspected, seized, in-analysis, retired, or one of the page's own"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "AssetKind": {
+      "type": "string",
+      "enum": [
+        "car",
+        "motorcycle",
+        "phone",
+        "laptop",
+        "drive",
+        "other"
+      ]
+    },
+    "AssetTone": {
+      "type": "string",
+      "enum": [
+        "success",
+        "info",
+        "warning",
+        "danger",
+        "neutral"
+      ],
+      "description": "The tone a status is drawn in"
+    }
+  }
+}

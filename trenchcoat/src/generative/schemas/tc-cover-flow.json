@@ -1,0 +1,91 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-cover-flow.json",
+  "title": "tc-cover-flow",
+  "description": "Browse covers in 3D: the front one faces you, the others stack up on both sides.",
+  "type": "object",
+  "properties": {
+    "items": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/CoverFlowItem"
+      },
+      "description": "The covers, in order: an image or your own content each, with a title and subtitle for the caption"
+    },
+    "index": {
+      "type": "number",
+      "description": "The front cover; unset starts on the middle one"
+    },
+    "itemWidth": {
+      "type": "number",
+      "description": "Cover size in px – scales down on narrow containers"
+    },
+    "itemHeight": {
+      "type": "number",
+      "description": "Cover height in px – scales down with the width"
+    },
+    "angle": {
+      "type": "number",
+      "description": "How far the side covers turn away, in degrees"
+    },
+    "reflection": {
+      "type": "boolean",
+      "description": "Mirror the covers on the floor"
+    },
+    "caption": {
+      "type": "boolean",
+      "description": "Title and subtitle of the front cover"
+    },
+    "controls": {
+      "type": "boolean",
+      "description": "Previous / next buttons next to the caption"
+    },
+    "ticks": {
+      "type": "boolean",
+      "description": "A row of small position ticks under the caption"
+    },
+    "sound": {
+      "type": "boolean",
+      "description": "A soft click each time a new cover reaches the front"
+    },
+    "selectable": {
+      "type": "boolean",
+      "description": "A click or Enter on the cover in front fires tc-select"
+    },
+    "label": {
+      "type": "string",
+      "description": "Names the carousel region"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "CoverFlowItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": [
+            "string",
+            "number"
+          ]
+        },
+        "title": {
+          "type": "string"
+        },
+        "subtitle": {
+          "type": "string"
+        },
+        "image": {
+          "type": "string",
+          "description": "Image URL – or pass your own cover with `cover`"
+        },
+        "alt": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

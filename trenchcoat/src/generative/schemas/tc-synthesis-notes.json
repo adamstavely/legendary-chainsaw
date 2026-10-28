@@ -1,0 +1,97 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-synthesis-notes.json",
+  "title": "tc-synthesis-notes",
+  "description": "The person's own conclusions, assumptions and things to verify – editable, reorderable from the keyboard,\nremovable with Undo, and exported with provenance.",
+  "type": "object",
+  "properties": {
+    "notes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/SynthesisNote"
+      },
+      "description": "The notes, each in the list its `kind` names"
+    },
+    "sections": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/SynthesisSection"
+      },
+      "description": "The lists, in order – by default Conclusions, Assumptions and Still to verify"
+    },
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the group's name"
+    },
+    "ownLabel": {
+      "type": "string",
+      "description": "The tag that sets the notes apart from the model's output"
+    },
+    "sessionId": {
+      "type": "string",
+      "description": "The session the notes belong to – shown on the tray and exported with them"
+    },
+    "author": {
+      "type": "string",
+      "description": "Who wrote the notes – shown on the tray and exported with them"
+    },
+    "undoFor": {
+      "type": "number",
+      "description": "How long Undo stays after a removal, in ms; it waits while the pointer or focus is on it. `Infinity` keeps it until the next removal"
+    },
+    "noExport": {
+      "type": "boolean",
+      "description": "Hides Export"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "SynthesisNote": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "text"
+      ],
+      "additionalProperties": false,
+      "description": "One note: its list (a section id) and its text"
+    },
+    "SynthesisSection": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "The list's heading, e.g. \"Assumptions\""
+        },
+        "addLabel": {
+          "type": "string",
+          "description": "The add button and the new field's name, e.g. \"Add an assumption\""
+        },
+        "empty": {
+          "type": "string",
+          "description": "What an empty list says, e.g. \"No assumptions yet\""
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false,
+      "description": "One of the lists – conclusions, assumptions, things to verify, or your own"
+    }
+  }
+}

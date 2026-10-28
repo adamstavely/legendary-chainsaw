@@ -1,0 +1,146 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-extraction-review.json",
+  "title": "tc-extraction-review",
+  "description": "Fields extracted from a document, each linked to its box on the page: confidence per field, accept, correct or\nreject, field by field from the keyboard while the page view follows.",
+  "type": "object",
+  "properties": {
+    "fields": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ExtractionField"
+      },
+      "description": "The reviewed fields – the value. Each review replaces the list (tc-fields-change)"
+    },
+    "pages": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ExtractionPage"
+      },
+      "description": "The document's pages, in order: an image URL and its size in pixels per page"
+    },
+    "heading": {
+      "type": "string",
+      "description": "Names the review"
+    },
+    "source": {
+      "type": "string",
+      "description": "The document the fields came from, e.g. \"invoice-2041.pdf\" – shown under the heading and in page alt texts"
+    },
+    "threshold": {
+      "type": "number",
+      "description": "Confidence below this (0–1) marks a field \"Low\" so people check it first"
+    },
+    "confirmLabel": {
+      "type": "string",
+      "description": "The label of the button that hands the reviewed fields back"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ExtractionField": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "The field's name, e.g. \"Invoice number\""
+        },
+        "value": {
+          "type": "string",
+          "description": "The value – the extracted one, or the correction once corrected"
+        },
+        "confidence": {
+          "type": "number",
+          "description": "How sure the extraction is, 0 to 1"
+        },
+        "box": {
+          "$ref": "#/definitions/ExtractionBox",
+          "description": "Where the value was found; a field without one has nothing to highlight"
+        },
+        "status": {
+          "$ref": "#/definitions/ExtractionFieldStatus",
+          "description": "\"pending\" when left out"
+        },
+        "original": {
+          "type": "string",
+          "description": "The extracted value, kept when a person corrects it"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "value",
+        "confidence"
+      ],
+      "additionalProperties": false
+    },
+    "ExtractionBox": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "type": "number",
+          "description": "The page, from 1"
+        },
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        },
+        "width": {
+          "type": "number"
+        },
+        "height": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "page",
+        "x",
+        "y",
+        "width",
+        "height"
+      ],
+      "additionalProperties": false,
+      "description": "Where a field sits on a page, in that page's pixels"
+    },
+    "ExtractionFieldStatus": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "accepted",
+        "corrected",
+        "rejected"
+      ]
+    },
+    "ExtractionPage": {
+      "type": "object",
+      "properties": {
+        "src": {
+          "type": "string",
+          "description": "The page image's URL – a data: URL works too"
+        },
+        "width": {
+          "type": "number"
+        },
+        "height": {
+          "type": "number"
+        },
+        "alt": {
+          "type": "string",
+          "description": "What the page is, for people who can't see it – \"Page 1 of invoice.pdf\" by default"
+        }
+      },
+      "required": [
+        "src",
+        "width",
+        "height"
+      ],
+      "additionalProperties": false,
+      "description": "One page of the document: an image and its size in pixels (the space the boxes are in)"
+    }
+  }
+}

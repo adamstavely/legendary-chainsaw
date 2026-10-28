@@ -1,0 +1,133 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-person-links.json",
+  "title": "tc-person-links",
+  "description": "The people linked to a person or an account, each with their role, a second line and how strong the link is,\nselectable to open them.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the list's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "people": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/LinkedPerson"
+      },
+      "description": "The people, in the order given"
+    },
+    "selected": {
+      "type": "string",
+      "description": "The selected person's id. Changed by the user unless a tc-selected-change listener calls preventDefault()"
+    },
+    "max": {
+      "type": "number",
+      "description": "How many rows show before \"Show all\"; unset shows everyone"
+    },
+    "expanded": {
+      "type": "boolean",
+      "description": "Shows everyone past `max`; the \"Show all\" button toggles it"
+    },
+    "networkLabel": {
+      "type": "string",
+      "description": "The header action's label, e.g. \"View network\"; unset hides it"
+    },
+    "countLabel": {
+      "type": "string",
+      "description": "What the count says after the number: \"6 linked\""
+    },
+    "strengthLabels": {
+      "type": "object",
+      "properties": {
+        "medium": {
+          "type": "string"
+        },
+        "strong": {
+          "type": "string"
+        },
+        "unknown": {
+          "type": "string"
+        },
+        "weak": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The strengths' names, merged over the defaults (Strong, Medium, Weak, Unknown)"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "LinkedPerson": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string",
+          "description": "How they're linked, e.g. \"Co-signer\", \"Manager\", \"Financier\""
+        },
+        "detail": {
+          "type": "string",
+          "description": "A second line: an ID, a company, a place"
+        },
+        "strength": {
+          "$ref": "#/definitions/LinkStrength",
+          "description": "How strong the link is; unset is \"unknown\""
+        },
+        "picture": {
+          "type": "string",
+          "description": "A picture URL; without one the row shows the name's initials"
+        },
+        "tag": {
+          "type": "object",
+          "properties": {
+            "label": {
+              "type": "string"
+            },
+            "tone": {
+              "$ref": "#/definitions/LinkTone"
+            }
+          },
+          "required": [
+            "label"
+          ],
+          "additionalProperties": false,
+          "description": "An extra pill for what matters most about the link, e.g. { label: \"Key link\", tone: \"danger\" }"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "LinkStrength": {
+      "type": "string",
+      "enum": [
+        "strong",
+        "medium",
+        "weak",
+        "unknown"
+      ]
+    },
+    "LinkTone": {
+      "type": "string",
+      "enum": [
+        "neutral",
+        "info",
+        "success",
+        "warning",
+        "danger"
+      ]
+    }
+  }
+}

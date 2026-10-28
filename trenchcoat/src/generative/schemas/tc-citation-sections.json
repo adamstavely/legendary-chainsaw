@@ -1,0 +1,70 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-citation-sections.json",
+  "title": "tc-citation-sections",
+  "description": "Where a work is cited – a donut of the counts by section (Intro, Methods, Results, Discussion, Other), a legend\nwith letter chips, and the section under the pointer or focus named with its count and share.",
+  "type": "object",
+  "properties": {
+    "counts": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "number"
+      },
+      "description": "Each section's count by id: { intro: 107, methods: 13 … }; a section without one shows 0"
+    },
+    "sections": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/CitationSection"
+      },
+      "description": "The sections, in order – darkest first; by default Intro, Methods, Results, Discussion and Other"
+    },
+    "source": {
+      "type": "string",
+      "description": "A source's name shown on top; none by default"
+    },
+    "caption": {
+      "type": "string",
+      "description": "The caption under the donut, and the legend's name"
+    },
+    "href": {
+      "type": "string",
+      "description": "Where the details are – adds a link under the caption"
+    },
+    "openable": {
+      "type": "boolean",
+      "description": "Without `href`, adds a button that fires tc-open"
+    },
+    "detailsLabel": {
+      "type": "string",
+      "description": "The link's or button's text"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for numbers, e.g. \"en-GB\"; by default the browser's"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "CitationSection": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "letter": {
+          "type": "string",
+          "description": "The chip's letter; by default the label's first"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

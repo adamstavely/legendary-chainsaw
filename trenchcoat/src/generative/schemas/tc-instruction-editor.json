@@ -1,0 +1,167 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-instruction-editor.json",
+  "title": "tc-instruction-editor",
+  "description": "System and developer instructions with highlighted variables, missing and unused variable warnings, an\napp-supplied token count, a diff against a chosen version and Save as a new version.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the group's name"
+    },
+    "value": {
+      "type": "object",
+      "properties": {
+        "role": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "role",
+        "text"
+      ],
+      "additionalProperties": false,
+      "description": "The role and the text. Changed by the user unless tc-value-change is prevented"
+    },
+    "roles": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/InstructionRole"
+      },
+      "description": "Which instructions these can be; fewer than two hides the switch"
+    },
+    "variables": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/InstructionVariable"
+      },
+      "description": "The variables the app fills in; the text is checked against them"
+    },
+    "versions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/InstructionVersion"
+      },
+      "description": "Saved versions, oldest first. Grows when Save isn't prevented"
+    },
+    "compareTo": {
+      "type": "string",
+      "description": "The id of the version the text is compared with; unset compares with the latest"
+    },
+    "tokenCount": {
+      "type": "number",
+      "description": "The text's length in tokens, as the app counts it; unset shows no count"
+    },
+    "tokenLimit": {
+      "type": "number",
+      "description": "The most tokens the instructions should use; past it the count turns red"
+    },
+    "counting": {
+      "type": "boolean",
+      "description": "The app is counting the tokens for the latest text"
+    },
+    "placeholder": {
+      "type": "string",
+      "description": "Placeholder in the empty editor"
+    },
+    "name": {
+      "type": "string",
+      "description": "Submitted with the form: the text"
+    },
+    "readonly": {
+      "type": "boolean",
+      "description": "Shows everything but nothing can be changed"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "InstructionRole": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "InstructionVariable": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "As written between the braces: {{customer_name}}"
+        },
+        "description": {
+          "type": "string",
+          "description": "What it holds"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false,
+      "description": "A variable the app fills in at run time"
+    },
+    "InstructionVersion": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "Short: \"v3\""
+        },
+        "value": {
+          "$ref": "#/definitions/InstructionEditorValue"
+        },
+        "note": {
+          "type": "string",
+          "description": "What changed, in the author's words"
+        },
+        "by": {
+          "type": "string",
+          "description": "Who saved it"
+        },
+        "at": {
+          "type": "string",
+          "description": "When, as text: \"Yesterday 16:20\""
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "value"
+      ],
+      "additionalProperties": false,
+      "description": "A saved version"
+    },
+    "InstructionEditorValue": {
+      "type": "object",
+      "properties": {
+        "role": {
+          "type": "string",
+          "description": "Which instructions these are – a role id, \"system\" or \"developer\" by default"
+        },
+        "text": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "role",
+        "text"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

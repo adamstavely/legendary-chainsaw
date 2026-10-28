@@ -1,0 +1,111 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-output-schema-builder.json",
+  "title": "tc-output-schema-builder",
+  "description": "The shape of a model's structured answer, built as a tree of fields beside a rendered preview of the answer, its\nraw JSON and the JSON Schema it makes.",
+  "type": "object",
+  "properties": {
+    "value": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/OutputSchemaField"
+      },
+      "description": "The output object's fields, in order. Changed by the user unless a tc-value-change listener calls preventDefault()"
+    },
+    "heading": {
+      "type": "string",
+      "description": "The heading – what the output is for"
+    },
+    "description": {
+      "type": "string",
+      "description": "A quieter line under the heading"
+    },
+    "preview": {
+      "type": "string",
+      "enum": [
+        "output",
+        "sample",
+        "schema"
+      ],
+      "description": "What the preview shows: the rendered answer (\"output\"), its raw JSON (\"sample\") or the JSON Schema (\"schema\")"
+    },
+    "flat": {
+      "type": "boolean",
+      "description": "Drops the tray and the card, for a builder inside another card"
+    },
+    "name": {
+      "type": "string",
+      "description": "Submitted with the form: the generated JSON Schema, as JSON"
+    },
+    "disabled": {
+      "type": "boolean",
+      "description": "Turns editing off and leaves the schema out of the form; a disabled fieldset does the same"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "OutputSchemaField": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The key in the output object"
+        },
+        "type": {
+          "$ref": "#/definitions/OutputFieldType"
+        },
+        "required": {
+          "type": "boolean",
+          "description": "The model must always include it"
+        },
+        "description": {
+          "type": "string",
+          "description": "What the field means – sent to the model as the schema's description"
+        },
+        "enum": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Strings (or a list's string items): the only values allowed; undefined allows any text, [] is a problem"
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OutputSchemaField"
+          },
+          "description": "An object's fields, or the fields of each item of a list of objects"
+        },
+        "itemType": {
+          "type": "string",
+          "enum": [
+            "string",
+            "number",
+            "integer",
+            "boolean",
+            "object"
+          ],
+          "description": "A list's item type; \"string\" when unset"
+        }
+      },
+      "required": [
+        "name",
+        "type",
+        "required"
+      ],
+      "additionalProperties": false
+    },
+    "OutputFieldType": {
+      "type": "string",
+      "enum": [
+        "string",
+        "number",
+        "integer",
+        "boolean",
+        "object",
+        "array"
+      ],
+      "description": "A JSON Schema type a field can have"
+    }
+  }
+}

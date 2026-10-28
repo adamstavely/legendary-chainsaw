@@ -1,0 +1,234 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-conversation-annotation.json",
+  "title": "tc-conversation-annotation",
+  "description": "A conversation transcript to annotate: label spans, redact, rate turns, correct answers and send the example on.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the transcript's accessible name"
+    },
+    "description": {
+      "type": "string",
+      "description": "A quieter line under the heading – where the conversation came from"
+    },
+    "messages": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AnnotationMessage"
+      },
+      "description": "The conversation, in order"
+    },
+    "labels": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AnnotationLabel"
+      },
+      "description": "The label set; the first nine get the shortcut keys 1–9"
+    },
+    "value": {
+      "type": "object",
+      "properties": {
+        "spans": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AnnotationSpan"
+          }
+        },
+        "ratings": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number"
+          }
+        },
+        "corrections": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "spans",
+        "ratings",
+        "corrections"
+      ],
+      "additionalProperties": false,
+      "description": "Spans, ratings and corrections. Changed by the user unless a tc-value-change listener calls preventDefault()"
+    },
+    "ratingLevels": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/RubricLevel"
+      },
+      "description": "The rating scale for a turn, lowest first"
+    },
+    "rateRoles": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The roles whose turns can be rated"
+    },
+    "correctRoles": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The roles whose turns can be corrected"
+    },
+    "roleLabels": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Display names per role; an unknown role shows as written"
+    },
+    "sendLabel": {
+      "type": "string",
+      "description": "The send button's label"
+    },
+    "sending": {
+      "type": "boolean",
+      "description": "The app is sending the example: the button shows it's busy"
+    },
+    "sent": {
+      "type": "boolean",
+      "description": "The app has stored the example: the button reads \"Sent to dataset\" until the value changes"
+    },
+    "name": {
+      "type": "string",
+      "description": "Submitted with the form: the value as JSON"
+    },
+    "disabled": {
+      "type": "boolean",
+      "description": "Turns every control off and leaves the value out of the form; a disabled fieldset does the same"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "AnnotationMessage": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string",
+          "description": "\"user\", \"assistant\", \"system\", \"tool\" – or your own; shown through `roleLabels`"
+        },
+        "author": {
+          "type": "string",
+          "description": "Who wrote it, shown after the role – \"Dana · Support\""
+        },
+        "text": {
+          "type": "string",
+          "description": "The exact text; span offsets index into it"
+        }
+      },
+      "required": [
+        "id",
+        "role",
+        "text"
+      ],
+      "additionalProperties": false
+    },
+    "AnnotationLabel": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "\"Unsupported\" – on the legend button and after each mark"
+        },
+        "tone": {
+          "$ref": "#/definitions/AnnotationTone",
+          "description": "The colour of its marks; defaults by position"
+        },
+        "description": {
+          "type": "string",
+          "description": "What it means, in a line – the legend button's tooltip"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "AnnotationTone": {
+      "type": "string",
+      "enum": [
+        "teal",
+        "violet",
+        "amber",
+        "pink",
+        "rose"
+      ],
+      "description": "One of the tone token families: --tc-tone-<tone>-bg / -fg / -solid"
+    },
+    "AnnotationSpan": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "messageId": {
+          "type": "string"
+        },
+        "start": {
+          "type": "number"
+        },
+        "end": {
+          "type": "number"
+        },
+        "quote": {
+          "type": "string",
+          "description": "The text between start and end when it was made – a span whose text changed is flagged"
+        },
+        "label": {
+          "type": "string",
+          "description": "The label's id; \"\" for a redaction"
+        },
+        "redacted": {
+          "type": "boolean",
+          "description": "Redacted: shown as a bar, blanked out in the export"
+        },
+        "note": {
+          "type": "string",
+          "description": "A note the app attached"
+        }
+      },
+      "required": [
+        "id",
+        "messageId",
+        "start",
+        "end",
+        "quote",
+        "label"
+      ],
+      "additionalProperties": false,
+      "description": "A labelled or redacted span. Offsets are UTF-16 indices into the message text"
+    },
+    "RubricLevel": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "number"
+        },
+        "label": {
+          "type": "string",
+          "description": "A word for the level – \"Good\"; read after the number"
+        }
+      },
+      "required": [
+        "value",
+        "label"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

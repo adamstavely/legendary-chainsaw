@@ -1,0 +1,206 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-evidence-list.json",
+  "title": "tc-evidence-list",
+  "description": "Exhibits linked to a matter – reference, title, type, source with its grade, date, holder and status – each opening\nonto its chain of custody with the hash at every step.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the list's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "exhibits": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Exhibit"
+      },
+      "description": "The exhibits, in the order given"
+    },
+    "statuses": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/ExhibitStatusDef"
+      },
+      "description": "The statuses, merged over the defaults (sealed, analysis, pending, transcribed, released)"
+    },
+    "synced": {
+      "type": "number",
+      "description": "When the list was last synced, epoch ms – shown in the header"
+    },
+    "note": {
+      "type": "string",
+      "description": "A quiet line above the list, e.g. where the originals are kept"
+    },
+    "selected": {
+      "type": "string",
+      "description": "The open exhibit's id. Changed by the user unless a tc-selected-change listener calls preventDefault()"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for dates, e.g. \"en-GB\"; by default the browser's"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "Exhibit": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "ref": {
+          "type": "string",
+          "description": "The exhibit's reference, e.g. \"E-101\""
+        },
+        "title": {
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/ExhibitType"
+        },
+        "source": {
+          "$ref": "#/definitions/ExhibitSource"
+        },
+        "date": {
+          "type": "number",
+          "description": "When it was collected or dated, epoch ms"
+        },
+        "status": {
+          "type": "string",
+          "description": "A key into `statuses`"
+        },
+        "holder": {
+          "type": "string",
+          "description": "Who holds it or where it is, e.g. \"Lab\", \"Analyst K. Osei\""
+        },
+        "custody": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CustodyEvent"
+          },
+          "description": "Every hand it passed through, oldest first"
+        },
+        "integrity": {
+          "type": "string",
+          "enum": [
+            "verified",
+            "mismatch",
+            "unchecked"
+          ],
+          "description": "Whether the hashes agree; unset works it out from `custody` (all equal → verified)"
+        }
+      },
+      "required": [
+        "id",
+        "ref",
+        "title",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "ExhibitType": {
+      "type": "string",
+      "enum": [
+        "photo",
+        "document",
+        "audio",
+        "video",
+        "forensic",
+        "financial",
+        "other"
+      ]
+    },
+    "ExhibitSource": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "grade": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "label"
+      ],
+      "additionalProperties": false,
+      "description": "Where an exhibit came from, with an Admiralty grade (source reliability A–F, credibility 1–6), e.g. \"A2\""
+    },
+    "CustodyEvent": {
+      "type": "object",
+      "properties": {
+        "at": {
+          "type": "number",
+          "description": "When, epoch ms"
+        },
+        "actor": {
+          "type": "string",
+          "description": "Who, e.g. \"D. Mercer (case officer)\""
+        },
+        "action": {
+          "type": "string",
+          "description": "What happened, e.g. \"Collected\", \"Sealed\", \"Transferred\", \"Checked out\", \"Returned\", \"Analysed\""
+        },
+        "location": {
+          "type": "string",
+          "description": "Where, e.g. \"Evidence room B\""
+        },
+        "hash": {
+          "type": "string",
+          "description": "The hash recorded at this step, shown in full and copyable"
+        }
+      },
+      "required": [
+        "at",
+        "actor",
+        "action"
+      ],
+      "additionalProperties": false,
+      "description": "One hand the exhibit passed through"
+    },
+    "ExhibitStatusDef": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "tone": {
+          "$ref": "#/definitions/ExhibitTone"
+        },
+        "mark": {
+          "$ref": "#/definitions/ExhibitMark"
+        }
+      },
+      "required": [
+        "label"
+      ],
+      "additionalProperties": false,
+      "description": "How an exhibit's status is shown: its name, tone and mark"
+    },
+    "ExhibitTone": {
+      "type": "string",
+      "enum": [
+        "neutral",
+        "info",
+        "success",
+        "warning",
+        "danger"
+      ]
+    },
+    "ExhibitMark": {
+      "type": "string",
+      "enum": [
+        "lock",
+        "flask",
+        "clock",
+        "check",
+        "out",
+        "dot"
+      ]
+    }
+  }
+}

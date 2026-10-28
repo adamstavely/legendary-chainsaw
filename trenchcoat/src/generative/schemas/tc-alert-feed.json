@@ -1,0 +1,155 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-alert-feed.json",
+  "title": "tc-alert-feed",
+  "description": "A live feed of alerts – category, severity, title, subject and a fresh relative time, with actions per alert,\ncounts in the header, Pause feed, and polite announcements of new alerts.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the feed's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AlertItem"
+      },
+      "description": "The alerts, in any order – shown newest first"
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AlertAction"
+      },
+      "description": "Every alert's actions, unless it names its own (Escalate and Acknowledge by default)"
+    },
+    "paused": {
+      "type": "boolean",
+      "description": "Holds new alerts back behind a \"Show N new\" button. Changed by the user unless a tc-paused-change listener calls preventDefault()"
+    },
+    "now": {
+      "type": "number",
+      "description": "\"Now\" for the relative times and today's count, epoch ms; unset, the element keeps its own clock"
+    },
+    "todayCount": {
+      "type": "number",
+      "description": "The events counted today, in the header; by default the alerts given since midnight"
+    },
+    "severityLabels": {
+      "type": "object",
+      "properties": {
+        "info": {
+          "type": "string"
+        },
+        "critical": {
+          "type": "string"
+        },
+        "high": {
+          "type": "string"
+        },
+        "medium": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The severities' names, merged over the defaults (Critical, High, Medium, Info)"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for times, e.g. \"en-GB\"; by default the browser's"
+    },
+    "empty": {
+      "type": "string",
+      "description": "Shown when there are no alerts"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "AlertItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string",
+          "description": "The kind of alert, shown as a small caps tag: \"Payment\""
+        },
+        "severity": {
+          "$ref": "#/definitions/AlertSeverity"
+        },
+        "title": {
+          "type": "string"
+        },
+        "subject": {
+          "type": "string",
+          "description": "Who or what it's about, an id and where, e.g. \"Northwind Traders · ACC-4471 · Rotterdam\""
+        },
+        "source": {
+          "type": "string",
+          "description": "Where it came from – a team, a rule, a case – as a quiet tag"
+        },
+        "time": {
+          "type": "number",
+          "description": "When it happened, epoch ms"
+        },
+        "acknowledged": {
+          "type": "boolean",
+          "description": "Already dealt with: shown quietly, without Acknowledge"
+        },
+        "actions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AlertAction"
+          },
+          "description": "This alert's actions, in place of `actions`"
+        }
+      },
+      "required": [
+        "id",
+        "category",
+        "severity",
+        "title",
+        "time"
+      ],
+      "additionalProperties": false
+    },
+    "AlertSeverity": {
+      "type": "string",
+      "enum": [
+        "critical",
+        "high",
+        "medium",
+        "info"
+      ]
+    },
+    "AlertAction": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "tone": {
+          "type": "string",
+          "enum": [
+            "danger",
+            "primary"
+          ],
+          "description": "\"danger\" for an action that escalates, \"primary\" for the main one; plain otherwise"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,243 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-policy-simulator.json",
+  "title": "tc-policy-simulator",
+  "description": "A dry run of an action against a policy set: the decision, the rule that decided it, the reason and a step-by-step\nrule trace. Nothing executes.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the form's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "action": {
+      "type": "string",
+      "description": "The action to try, in words or as a tool call, e.g. \"Send the Q3 report to an external address\""
+    },
+    "ruleClass": {
+      "type": "string",
+      "description": "The id of the picked rule class; unset picks the first"
+    },
+    "context": {
+      "type": "string",
+      "description": "Optional context the rules can read, e.g. \"amount: 4,800 · recipient: outside the company\""
+    },
+    "ruleClasses": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/PolicyRuleClass"
+      },
+      "description": "The rule classes to pick from"
+    },
+    "examples": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/PolicySimExample"
+      },
+      "description": "Ready-made actions shown as chips above the form; [] hides them"
+    },
+    "result": {
+      "type": "object",
+      "properties": {
+        "decision": {
+          "$ref": "#/definitions/PolicyDecision"
+        },
+        "rule": {
+          "$ref": "#/definitions/PolicyMatchedRule"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "trace": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PolicyTraceStep"
+          }
+        }
+      },
+      "required": [
+        "decision",
+        "reason",
+        "trace"
+      ],
+      "additionalProperties": false,
+      "description": "The result shown – set by a run, or by the app (after preventing tc-simulate)"
+    },
+    "decisionLabels": {
+      "type": "object",
+      "properties": {
+        "allow": {
+          "type": "string"
+        },
+        "require-approval": {
+          "type": "string"
+        },
+        "deny": {
+          "type": "string"
+        },
+        "hard-stop": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The decisions' names, merged over the defaults (Allow, Needs approval, Deny, Hard stop)"
+    },
+    "actionLabel": {
+      "type": "string",
+      "description": "The action field's label"
+    },
+    "actionPlaceholder": {
+      "type": "string",
+      "description": "The action field's placeholder"
+    },
+    "classLabel": {
+      "type": "string",
+      "description": "The rule class field's label"
+    },
+    "contextLabel": {
+      "type": "string",
+      "description": "The context field's label; the field is optional"
+    },
+    "contextPlaceholder": {
+      "type": "string",
+      "description": "The context field's placeholder"
+    },
+    "simulateLabel": {
+      "type": "string",
+      "description": "The Simulate button's text"
+    },
+    "requiredLabel": {
+      "type": "string",
+      "description": "Shown when Simulate is pressed with no action"
+    },
+    "errorLabel": {
+      "type": "string",
+      "description": "Shown when `evaluate` throws or its promise rejects"
+    },
+    "dryRunLabel": {
+      "type": "string",
+      "description": "The reminder next to Simulate that nothing runs"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "PolicyRuleClass": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string",
+          "description": "One quiet line shown under the field when this class is picked"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "PolicySimExample": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "action": {
+          "type": "string"
+        },
+        "ruleClass": {
+          "type": "string"
+        },
+        "context": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "label",
+        "action"
+      ],
+      "additionalProperties": false,
+      "description": "A ready-made action the person can try with one click"
+    },
+    "PolicyDecision": {
+      "type": "string",
+      "enum": [
+        "allow",
+        "require-approval",
+        "deny",
+        "hard-stop"
+      ]
+    },
+    "PolicyMatchedRule": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string",
+          "description": "Where the rule lives, e.g. \"Outbound policy · v12\""
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "PolicyTraceStep": {
+      "type": "object",
+      "properties": {
+        "rule": {
+          "type": "string",
+          "description": "The rule's name, e.g. \"External send over limit\""
+        },
+        "ruleId": {
+          "type": "string",
+          "description": "Its id – the step whose id is the result's `rule.id` is marked as the deciding one"
+        },
+        "outcome": {
+          "$ref": "#/definitions/PolicyTraceOutcome"
+        },
+        "detail": {
+          "type": "string",
+          "description": "Why it did or didn't apply, in a few words"
+        },
+        "decision": {
+          "$ref": "#/definitions/PolicyDecision",
+          "description": "What this rule would decide, for a matched rule"
+        },
+        "ms": {
+          "type": "number",
+          "description": "How long the check took, in ms"
+        }
+      },
+      "required": [
+        "rule",
+        "outcome"
+      ],
+      "additionalProperties": false,
+      "description": "One rule checked, in the order the policy set checked it"
+    },
+    "PolicyTraceOutcome": {
+      "type": "string",
+      "enum": [
+        "matched",
+        "no-match",
+        "skipped"
+      ],
+      "description": "\"matched\": the rule applied; \"no-match\": checked, didn't apply; \"skipped\": not checked (another class, or after the decision)"
+    }
+  }
+}

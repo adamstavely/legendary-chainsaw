@@ -1,0 +1,124 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-agent-inbox.json",
+  "title": "tc-agent-inbox",
+  "description": "Background agent tasks as a board (or list): Needs you, Running, Done.",
+  "type": "object",
+  "properties": {
+    "tasks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AgentTask"
+      },
+      "description": "The tasks – always the source of truth. After Approve, Reject or Retry the card shows the result right away; as soon as you pass that task with a new status (or steps, start or elapsed time), your version wins"
+    },
+    "heading": {
+      "type": "string",
+      "description": "Heading on the left of the bar"
+    },
+    "view": {
+      "type": "string",
+      "enum": [
+        "board",
+        "list"
+      ],
+      "description": "The layout: \"board\" or \"list\""
+    },
+    "expanded": {
+      "type": "string",
+      "description": "The id of the unfolded card, or null"
+    },
+    "openable": {
+      "type": "boolean",
+      "description": "Shows an Open button on running and done tasks (fires tc-open)"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "AgentTask": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string",
+          "description": "One or two sentences on what the task is about or where it stands"
+        },
+        "agent": {
+          "type": "string",
+          "description": "Name of the agent or model, e.g. \"Opus 5.5\""
+        },
+        "status": {
+          "$ref": "#/definitions/AgentTaskStatus"
+        },
+        "startedAt": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string",
+              "format": "date-time"
+            }
+          ],
+          "description": "When the task started – the clock ticks from here while it runs or waits"
+        },
+        "elapsed": {
+          "type": "number",
+          "description": "How long it took in ms – shown for done and failed tasks"
+        },
+        "tools": {
+          "type": "number",
+          "description": "Tool calls so far – shown with a small wrench"
+        },
+        "sources": {
+          "type": "number",
+          "description": "Sources or files read – shown with a small magnifier"
+        },
+        "steps": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AgentTaskStep"
+          },
+          "description": "What the agent did so far, oldest first – the last four are shown when the card is open"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "agent",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "AgentTaskStatus": {
+      "type": "string",
+      "enum": [
+        "running",
+        "waiting",
+        "done",
+        "failed"
+      ]
+    },
+    "AgentTaskStep": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "time": {
+          "type": "string",
+          "description": "Ready-to-show time, e.g. \"2m ago\" or \"14:02\""
+        }
+      },
+      "required": [
+        "label"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-world-map.json",
+  "title": "tc-world-map",
+  "description": "A world map with one highlighted continent and a menu to switch it.",
+  "type": "object",
+  "properties": {
+    "continent": {
+      "type": "string",
+      "enum": [
+        "north-america",
+        "south-america",
+        "europe",
+        "africa",
+        "asia",
+        "oceania"
+      ],
+      "description": "Highlighted continent"
+    },
+    "showSwitcher": {
+      "type": "boolean",
+      "description": "Show the continent menu in the top-left corner"
+    }
+  },
+  "additionalProperties": false
+}

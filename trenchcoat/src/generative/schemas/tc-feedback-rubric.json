@@ -1,0 +1,156 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-feedback-rubric.json",
+  "title": "tc-feedback-rubric",
+  "description": "Structured rating of an answer: rubric scores, the failure type and the ideal answer, sent as one payload.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "answer": {
+      "type": "string",
+      "description": "The answer being rated – quoted at the top, and where the correction starts from"
+    },
+    "criteria": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/RubricCriterion"
+      },
+      "description": "The criteria, each scored on its own scale"
+    },
+    "levels": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/RubricLevel"
+      },
+      "description": "The default scale for criteria without their own `levels`"
+    },
+    "failureTypes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/FeedbackFailureType"
+      },
+      "description": "The kinds of failure a person can pick, any number of them"
+    },
+    "value": {
+      "type": "object",
+      "properties": {
+        "scores": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number"
+          }
+        },
+        "failures": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "correction": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "scores",
+        "failures",
+        "correction"
+      ],
+      "additionalProperties": false,
+      "description": "The rating. Changed by the user unless a tc-value-change listener calls preventDefault()"
+    },
+    "meta": {
+      "type": "object",
+      "additionalProperties": {},
+      "description": "Sent along with the rating in tc-submit – ids and versions that tie it to the answer"
+    },
+    "sent": {
+      "type": "boolean",
+      "description": "The rating was sent: the controls lock and \"Edit rating\" unlocks them. Set by Send; the app may set it too"
+    },
+    "sending": {
+      "type": "boolean",
+      "description": "Shows Send as busy while the app saves the rating"
+    },
+    "submitLabel": {
+      "type": "string",
+      "description": "The label on the send button"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "RubricCriterion": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string",
+          "description": "The question the criterion asks, in a line"
+        },
+        "levels": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RubricLevel"
+          },
+          "description": "Its scale – defaults to the rubric's `levels`"
+        },
+        "optional": {
+          "type": "boolean",
+          "description": "Can be sent without a score"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "RubricLevel": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "number"
+        },
+        "label": {
+          "type": "string",
+          "description": "A word for the level – \"Good\"; read after the number"
+        }
+      },
+      "required": [
+        "value",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "FeedbackFailureType": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string",
+          "description": "What it means, in a line – shown as the toggle's tooltip"
+        }
+      },
+      "required": [
+        "value",
+        "label"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

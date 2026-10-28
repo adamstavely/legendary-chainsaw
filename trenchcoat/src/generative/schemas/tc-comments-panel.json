@@ -1,0 +1,111 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-comments-panel.json",
+  "title": "tc-comments-panel",
+  "description": "A comment feed with filters, sort, runnable /edit commands, resolving and a composer.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the region's name"
+    },
+    "comments": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/PanelComment"
+      },
+      "description": "The feed, keyed by id – comments added here show first until they appear in it"
+    },
+    "currentUser": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "avatar": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false,
+      "description": "Who writes new comments"
+    },
+    "demo": {
+      "type": "boolean",
+      "description": "Demo mode: edits are simulated silently when onRunEdit is missing. For galleries and prototypes"
+    },
+    "resolved": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Ids of resolved comments"
+    },
+    "filter": {
+      "type": "string",
+      "enum": [
+        "questions",
+        "all",
+        "edits"
+      ],
+      "description": "The filter tab"
+    },
+    "closable": {
+      "type": "boolean",
+      "description": "Shows a close button in the header, which fires tc-close"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "PanelComment": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "author": {
+          "$ref": "#/definitions/CommentAuthor"
+        },
+        "createdAt": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "number"
+            }
+          ],
+          "description": "When it was written – a Date or a timestamp"
+        },
+        "text": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "author",
+        "createdAt",
+        "text"
+      ],
+      "additionalProperties": false
+    },
+    "CommentAuthor": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "avatar": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

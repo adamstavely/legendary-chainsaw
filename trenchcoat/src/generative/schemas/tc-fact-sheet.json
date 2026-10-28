@@ -1,0 +1,175 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-fact-sheet.json",
+  "title": "tc-fact-sheet",
+  "description": "Facts in sections, each value tagged with its source and an Admiralty grade, tinted and marked by confidence –\nwith conflicting readings side by side, unknowns said plainly and an optional Copy per value.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "sections": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/FactSection"
+      },
+      "description": "The sections and their facts, in order"
+    },
+    "columns": {
+      "type": "number",
+      "enum": [
+        2,
+        1
+      ],
+      "description": "2 puts sections side by side when there's room (from about 720 px); 1 keeps them stacked"
+    },
+    "copyable": {
+      "type": "boolean",
+      "description": "Adds a Copy button to every value"
+    },
+    "missingLabel": {
+      "type": "string",
+      "description": "What a fact with no value reads"
+    },
+    "noLegend": {
+      "type": "boolean",
+      "description": "Hides \"How grades work\", for a page that explains the scale elsewhere"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "FactSection": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "facts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Fact"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "facts"
+      ],
+      "additionalProperties": false
+    },
+    "Fact": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ],
+          "description": "The value – a string, or several; empty or missing reads `missingLabel`"
+        },
+        "source": {
+          "$ref": "#/definitions/FactSource"
+        },
+        "alternatives": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FactReading"
+          },
+          "description": "Other readings that disagree with `value` – the fact then shows as conflicting"
+        },
+        "copyable": {
+          "type": "boolean",
+          "description": "Adds a Copy button to this value (the element's `copyable` does it for all)"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "FactSource": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string",
+          "description": "Where the value comes from, short: \"Registry\", \"OSINT\", \"Customer\""
+        },
+        "grade": {
+          "type": "string",
+          "description": "The Admiralty grade: a reliability letter A–F and a credibility digit 1–6, e.g. \"B2\""
+        },
+        "band": {
+          "$ref": "#/definitions/FactBand",
+          "description": "Sets the band instead of working it out from the grade"
+        },
+        "note": {
+          "type": "string",
+          "description": "One line on the source, read after the grade: \"Companies House filing, 2025\""
+        }
+      },
+      "required": [
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "FactBand": {
+      "type": "string",
+      "enum": [
+        "high",
+        "medium",
+        "low",
+        "unknown"
+      ],
+      "description": "How far a value can be trusted, from its grade"
+    },
+    "FactReading": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "source": {
+          "$ref": "#/definitions/FactSource"
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "additionalProperties": false,
+      "description": "One reading of a fact"
+    }
+  }
+}

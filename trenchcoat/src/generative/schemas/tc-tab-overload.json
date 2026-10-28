@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-tab-overload.json",
+  "title": "tc-tab-overload",
+  "description": "Three overlapping browser windows; hovering one behind moves the highlight onto it.",
+  "type": "object",
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Describes the scene to assistive tech (role=\"img\"); without it the illustration is decorative and hidden"
+    }
+  },
+  "additionalProperties": false
+}

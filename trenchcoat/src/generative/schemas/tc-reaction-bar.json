@@ -1,0 +1,62 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-reaction-bar.json",
+  "title": "tc-reaction-bar",
+  "description": "Like, comment, repost and share in one pill, with rolling counts.",
+  "type": "object",
+  "properties": {
+    "reactions": {
+      "type": "object",
+      "properties": {
+        "share": {
+          "$ref": "#/definitions/ReactionState"
+        },
+        "like": {
+          "$ref": "#/definitions/ReactionState"
+        },
+        "comment": {
+          "$ref": "#/definitions/ReactionState"
+        },
+        "repost": {
+          "$ref": "#/definitions/ReactionState"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Counts and whether each action is already taken; a tap applies locally until an action's value here changes"
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ReactionKey"
+      },
+      "description": "The actions to show, in order"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ReactionState": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "number"
+        },
+        "active": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "count"
+      ],
+      "additionalProperties": false
+    },
+    "ReactionKey": {
+      "type": "string",
+      "enum": [
+        "like",
+        "comment",
+        "repost",
+        "share"
+      ]
+    }
+  }
+}

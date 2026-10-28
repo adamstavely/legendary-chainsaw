@@ -1,0 +1,172 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-session-state.json",
+  "title": "tc-session-state",
+  "description": "Where a long LLM session stands: a health pill, tiles for the goal, open loops, pending artifacts and context\npressure, and status chips.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "health": {
+      "type": "string",
+      "enum": [
+        "at-risk",
+        "healthy",
+        "drifting",
+        "stalled"
+      ],
+      "description": "How the session is going: healthy, drifting, at-risk or stalled; unset hides the pill"
+    },
+    "healthLabels": {
+      "type": "object",
+      "properties": {
+        "at-risk": {
+          "type": "string"
+        },
+        "healthy": {
+          "type": "string"
+        },
+        "drifting": {
+          "type": "string"
+        },
+        "stalled": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The health names, merged over the defaults (Healthy, Drifting, At risk, Stalled)"
+    },
+    "goal": {
+      "type": "string",
+      "description": "The primary goal, for the default tiles"
+    },
+    "loops": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The open loops' names, for the default tiles"
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The artifacts still to come, for the default tiles"
+    },
+    "pressure": {
+      "type": "number",
+      "description": "How full the context is, from 0 to 1, for the default tiles; unset leaves the tile out"
+    },
+    "tiles": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/SessionTile"
+      },
+      "description": "The page's own tiles, in place of the defaults"
+    },
+    "chips": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/SessionChip"
+      },
+      "description": "The status chips under the tiles"
+    },
+    "warnAt": {
+      "type": "number",
+      "description": "A meter at or above this share turns warning"
+    },
+    "dangerAt": {
+      "type": "number",
+      "description": "A meter at or above this share turns danger"
+    },
+    "actionable": {
+      "type": "boolean",
+      "description": "Makes the tiles buttons that fire tc-action"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for numbers, e.g. \"de\"; by default the browser's"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "SessionTile": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "What the tile counts: \"Open loops\""
+        },
+        "value": {
+          "type": [
+            "number",
+            "string"
+          ],
+          "description": "The big figure: a count, or text such as \"68%\""
+        },
+        "detail": {
+          "type": "string",
+          "description": "One quiet line under the label: the goal, or the loops' names"
+        },
+        "meter": {
+          "type": "number",
+          "description": "A share from 0 to 1, drawn as a meter; its tone follows `warn-at` and `danger-at` unless `tone` is given"
+        },
+        "tone": {
+          "$ref": "#/definitions/SessionTone"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "SessionTone": {
+      "type": "string",
+      "enum": [
+        "neutral",
+        "info",
+        "success",
+        "warning",
+        "danger",
+        "violet",
+        "teal"
+      ]
+    },
+    "SessionChip": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "tone": {
+          "$ref": "#/definitions/SessionTone"
+        },
+        "action": {
+          "type": "boolean",
+          "description": "A button that fires tc-action, e.g. to list the files in context"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

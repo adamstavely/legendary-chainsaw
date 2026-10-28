@@ -1,0 +1,183 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-chat-history.json",
+  "title": "tc-chat-history",
+  "description": "The conversation list: search, pinning, folders, rename and delete with Undo, grouped by date; windowed.",
+  "type": "object",
+  "properties": {
+    "conversations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ChatConversation"
+      },
+      "description": "Every conversation"
+    },
+    "folders": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ChatFolder"
+      },
+      "description": "Folders, in the order they show; chats name theirs with `folder`"
+    },
+    "value": {
+      "type": "string",
+      "description": "The open chat's id"
+    },
+    "now": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "string",
+          "format": "date-time"
+        }
+      ],
+      "description": "\"Now\" for the date groups (epoch ms or a Date). Unset: the time the element was connected"
+    },
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the tree's name"
+    },
+    "maxHeight": {
+      "type": "number",
+      "description": "Height of the list before it scrolls, in px"
+    },
+    "undoFor": {
+      "type": "number",
+      "description": "How long Undo stays after a delete, in ms. It waits while the pointer or focus is on it and starts over after; `Infinity` keeps it until the next delete (WCAG 2.2.1)"
+    },
+    "hints": {
+      "type": "boolean",
+      "description": "Show the keyboard hints (hints=\"false\" hides them)"
+    },
+    "locale": {
+      "type": "string",
+      "description": "Locale for the month names; unset uses the page's"
+    },
+    "context": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ChatContextItem"
+      },
+      "description": "What's loaded into the current chat as context – summary items from earlier chats. The app decides what's sent"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ChatConversation": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "string",
+              "format": "date-time"
+            }
+          ],
+          "description": "Last activity: epoch ms, an ISO string or a Date"
+        },
+        "pinned": {
+          "type": "boolean"
+        },
+        "folder": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The id of the folder it's in"
+        },
+        "summary": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ChatSummaryItem"
+          },
+          "description": "The session's structured summary – findings, open questions, next steps – which can be loaded as context"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "updatedAt"
+      ],
+      "additionalProperties": false
+    },
+    "ChatSummaryItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string",
+          "description": "What kind of item, e.g. \"Finding\", \"Open question\", \"Next step\""
+        }
+      },
+      "required": [
+        "id",
+        "text"
+      ],
+      "additionalProperties": false,
+      "description": "One part of a session's structured summary"
+    },
+    "ChatFolder": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "ChatContextItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "chat": {
+          "type": "string"
+        },
+        "from": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string",
+          "description": "What kind of item, e.g. \"Finding\", \"Open question\", \"Next step\""
+        }
+      },
+      "required": [
+        "chat",
+        "id",
+        "text"
+      ],
+      "description": "A summary item loaded into the current chat, with the id of the chat it came from"
+    }
+  }
+}

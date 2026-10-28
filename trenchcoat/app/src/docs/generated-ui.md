@@ -76,6 +76,7 @@ The format to prompt the model with:
 | `form` | `id`, `title`, `submitLabel`, `fields`: `{ name, label, kind, required, placeholder, hint, value, options, min, max }` |
 | `callout` | `tone`: "info", "success", "warning" or "danger", `title`, `text`, `children`, `actions` |
 | `group` | `title`, `layout`: "column", "row" or "grid", `children`, `actions` |
+| `component` | `tag`: any tag in `trenchcoat/generative`'s catalogue, `props`: the component's properties as JSON |
 
 A spec is `{ blocks: [...] }`, a list of blocks, or one block. Field kinds are "text", "email", "number", "url",
 "date", "textarea", "select" (a native select) and "choice" (stepper-form's cards). Actions are `{ id, label,
@@ -85,12 +86,18 @@ primary }`. Blocks nest inside callouts and groups up to six levels.
 - Keep `text` short and specific; let metrics and tables carry the numbers.
 - Write action labels as what happens (“Cap daily spend”), and give each a stable `id` your app handles.
 - Title forms by what they do (“Send this as a weekly report”) and their submit button with the verb.
+- For a `component` block, put `catalogPrompt()` from `trenchcoat/generative` in the system prompt – a line per
+  component, or only the few your assistant needs. The props are checked against the component's schema before
+  anything is set: what doesn't fit is left out and listed in `tc-spec-check`, and links must be http(s), mailto or
+  relative. See Foundations → Generative UI.
 
 ## Do
 
 - Handle `tc-action` in one place: switch on `kind` and `action`, and read `values` for forms.
 - Listen to `tc-spec-check` (`onSpecCheck`) in development and evaluations to see what the model got wrong; turn
   on `showIssues` to see it in place.
+- Handle a placed component's events from `tc-component-event` (`onComponentEvent`): it says which block, which tag
+  and which event, and preventing it prevents the component's own (for the cancelable ones).
 - Pass the model's text straight to `spec` with `streaming` while it arrives.
 
 ## Don't

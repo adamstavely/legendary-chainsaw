@@ -1,0 +1,152 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-image-grid.json",
+  "title": "tc-image-grid",
+  "description": "Generated images as a grid of variations: regenerate one, upscale, compare two, download, alt text for each.",
+  "type": "object",
+  "properties": {
+    "tiles": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ImageGridTile"
+      },
+      "description": "The images, in order"
+    },
+    "heading": {
+      "type": "string",
+      "description": "Names the grid"
+    },
+    "prompt": {
+      "type": "string",
+      "description": "The prompt the images came from, shown under the heading"
+    },
+    "columns": {
+      "type": "number",
+      "description": "Tiles per row (fewer when there are fewer tiles)"
+    },
+    "ratio": {
+      "type": "number",
+      "description": "Width / height of every tile"
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ImageGridAction"
+      },
+      "description": "Which actions a done tile offers"
+    },
+    "compare": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 2,
+      "maxItems": 2,
+      "description": "The two tile ids side by side, or null for the grid"
+    },
+    "split": {
+      "type": "number",
+      "description": "Where the compare divider is: 0–100, percent from the left"
+    },
+    "openable": {
+      "type": "boolean",
+      "description": "Done tiles open: clicking the image, or Space or O on the tile, fires tc-open (for a viewer or a detail pane)"
+    },
+    "fill": {
+      "type": "boolean",
+      "description": "Grow to the container's width instead of stopping at 560px"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ImageGridTile": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "src": {
+          "type": "string",
+          "description": "The image URL – a data: URL works too. Shown when the tile is done"
+        },
+        "alt": {
+          "type": "string",
+          "description": "What the image shows, for people who can't see it. Required – an empty string shows \"Add alt text\""
+        },
+        "status": {
+          "$ref": "#/definitions/ImageGridTileStatus",
+          "description": "\"done\" when left out"
+        },
+        "progress": {
+          "type": "number",
+          "description": "0 to 1 while pending; left out, the tile just shimmers"
+        },
+        "activity": {
+          "type": "string",
+          "description": "What a pending tile says it is doing – \"Generating\" by default (\"Upscaling\", \"Varying\"…)"
+        },
+        "error": {
+          "type": "string",
+          "description": "Why a failed tile failed"
+        },
+        "upscaled": {
+          "type": "boolean",
+          "description": "Marks an upscaled image: a badge, and Upscale is off"
+        },
+        "label": {
+          "type": "string",
+          "description": "The tile's name – \"Variation 2\" by default"
+        },
+        "filename": {
+          "type": "string",
+          "description": "File name for downloads – from the heading and the tile number by default"
+        },
+        "badge": {
+          "type": "string",
+          "description": "A short status pill in the tile's top-left corner – \"Attested\", \"Unverified\", \"Draft\""
+        },
+        "badgeTone": {
+          "$ref": "#/definitions/ImageGridBadgeTone",
+          "description": "The badge's colour – \"neutral\" by default"
+        },
+        "meta": {
+          "type": "string",
+          "description": "A short note beside the tile number – \"3 claims\", \"×2\""
+        }
+      },
+      "required": [
+        "id",
+        "alt"
+      ],
+      "additionalProperties": false
+    },
+    "ImageGridTileStatus": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "done",
+        "failed"
+      ]
+    },
+    "ImageGridBadgeTone": {
+      "type": "string",
+      "enum": [
+        "neutral",
+        "success",
+        "warning",
+        "danger",
+        "info"
+      ],
+      "description": "The colours a tile badge can take"
+    },
+    "ImageGridAction": {
+      "type": "string",
+      "enum": [
+        "regenerate",
+        "upscale",
+        "compare",
+        "download"
+      ]
+    }
+  }
+}

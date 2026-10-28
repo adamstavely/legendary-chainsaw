@@ -1,0 +1,149 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-engagement-quality.json",
+  "title": "tc-engagement-quality",
+  "description": "Whether reviews are genuine: an index with its band and trend, the signals it is built from – each with its value,\nwhat was observed, an explanation and an example – and an optional note on who else sees it.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the region's name"
+    },
+    "scope": {
+      "type": "string",
+      "description": "What the numbers cover, a quiet line under the heading – e.g. \"Last 5 sessions · 38 reviews\""
+    },
+    "index": {
+      "type": "number",
+      "description": "The index, 0–1 (1: fully genuine). Unset, it is the weighted mean of the signals"
+    },
+    "signals": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/EngagementSignal"
+      },
+      "description": "The signals behind the index, each 0–1 where higher means more genuine"
+    },
+    "trend": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/EngagementWindow"
+      },
+      "description": "The index over recent windows, oldest first – drawn as small columns with the change"
+    },
+    "strongAt": {
+      "type": "number",
+      "description": "Index from which the band reads \"Strong\" (0–1)"
+    },
+    "mixedAt": {
+      "type": "number",
+      "description": "Index from which the band reads \"Mixed\"; below it, \"Low\" (0–1)"
+    },
+    "bandLabels": {
+      "type": "object",
+      "properties": {
+        "low": {
+          "type": "string"
+        },
+        "strong": {
+          "type": "string"
+        },
+        "mixed": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Names of the bands"
+    },
+    "summary": {
+      "type": "string",
+      "description": "Overrides the sentence under the index that says which signals hold it back"
+    },
+    "sharedWith": {
+      "type": "string",
+      "description": "Who else sees the score – a role or a name, e.g. \"your team lead\". Unset: no note"
+    },
+    "sharedNote": {
+      "type": "string",
+      "description": "Overrides the whole shared note"
+    },
+    "browsable": {
+      "type": "boolean",
+      "description": "Each signal's example offers \"Show these reviews\", which fires tc-signal-open"
+    },
+    "locale": {
+      "type": "string",
+      "description": "Locale for numbers"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "EngagementSignal": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/definitions/EngagementSignalKind",
+          "description": "One of the built-in kinds – supplies the label and explanation when they aren't given"
+        },
+        "label": {
+          "type": "string",
+          "description": "\"Written reasoning\", \"Time on the source\""
+        },
+        "value": {
+          "type": "number",
+          "description": "0–1 – higher means more genuine"
+        },
+        "reading": {
+          "type": "string",
+          "description": "What was observed, in a few words – \"Median 9 s with the source open\""
+        },
+        "explanation": {
+          "type": "string",
+          "description": "What the signal measures and why it matters, in plain words"
+        },
+        "example": {
+          "type": "string",
+          "description": "A concrete instance, shown when the person opens \"Example\""
+        },
+        "weight": {
+          "type": "number",
+          "description": "Share of the index when it is worked out from the signals (default 1)"
+        }
+      },
+      "required": [
+        "id",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "EngagementSignalKind": {
+      "type": "string",
+      "enum": [
+        "boilerplate",
+        "source-time",
+        "batch-dismissal",
+        "repeated-commitment"
+      ]
+    },
+    "EngagementWindow": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "index": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "label",
+        "index"
+      ],
+      "additionalProperties": false,
+      "description": "One recent window of the index – a session, a week"
+    }
+  }
+}

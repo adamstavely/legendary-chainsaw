@@ -1,0 +1,73 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-notification-stack.json",
+  "title": "tc-notification-stack",
+  "description": "Notices stacked behind each other; dismissing the front one brings up the next.",
+  "type": "object",
+  "properties": {
+    "notices": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Notice"
+      },
+      "description": "The notices to show, front first"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "Notice": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "badge": {
+          "type": "string",
+          "description": "Small label in the pill, e.g. \"Notice\""
+        },
+        "title": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        },
+        "action": {
+          "type": "object",
+          "properties": {
+            "label": {
+              "type": "string"
+            },
+            "href": {
+              "type": "string"
+            },
+            "external": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "label"
+          ],
+          "additionalProperties": false
+        },
+        "pattern": {
+          "$ref": "#/definitions/NoticePattern",
+          "description": "Line art in the top-right corner"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "text"
+      ],
+      "additionalProperties": false
+    },
+    "NoticePattern": {
+      "type": "string",
+      "enum": [
+        "orbit",
+        "grid",
+        "rays"
+      ]
+    }
+  }
+}

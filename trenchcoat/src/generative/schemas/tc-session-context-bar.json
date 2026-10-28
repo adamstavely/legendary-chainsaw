@@ -1,0 +1,107 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-session-context-bar.json",
+  "title": "tc-session-context-bar",
+  "description": "The session's declared terms kept in view – intent, knowledge mode, scope, review, posture, limits, deadline and\nbudget – as labelled chips, with \"+N more\" for the rest.",
+  "type": "object",
+  "properties": {
+    "terms": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/SessionTerm"
+      },
+      "description": "The terms, in the order they show; the ones that don't fit go behind \"+N more\""
+    },
+    "label": {
+      "type": "string",
+      "description": "The bar's name for screen readers"
+    },
+    "editable": {
+      "type": "boolean",
+      "description": "Every term is editable unless it says otherwise"
+    },
+    "locked": {
+      "type": "boolean",
+      "description": "The terms are fixed for the session: a lock shows at the start and nothing is editable"
+    },
+    "sticky": {
+      "type": "boolean",
+      "description": "Sticks to the top of the scroller it's in (default true)"
+    },
+    "stickyTop": {
+      "type": "number",
+      "description": "How far from the top it sticks, in px – the height of a header above it"
+    },
+    "maxVisible": {
+      "type": "number",
+      "description": "Show at most this many chips, however wide the bar is"
+    },
+    "termLabels": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Labels for term ids – in place of the usual ones (Intent, Knowledge …) or for your own ids"
+    },
+    "meterWarn": {
+      "type": "number",
+      "description": "The meter's tone turns warning from this share used (default 0.75)"
+    },
+    "meterDanger": {
+      "type": "number",
+      "description": "… and danger from this share (default 0.9)"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "SessionTerm": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Stable id; the eight usual terms take their label from it: intent, knowledge, scope, review, posture, release, deadline, budget"
+        },
+        "label": {
+          "type": "string",
+          "description": "The label; unset, the usual one for the id, else the id"
+        },
+        "value": {
+          "type": "string",
+          "description": "The value, shown as given: \"Sources and model knowledge\", \"Fri 17:00\""
+        },
+        "tone": {
+          "$ref": "#/definitions/SessionTermTone"
+        },
+        "meter": {
+          "type": "number",
+          "description": "How much is used, 0–1: shows a small meter beside the value (a budget)"
+        },
+        "editable": {
+          "type": "boolean",
+          "description": "The chip is a button that fires tc-term-edit; unset follows the bar's `editable`"
+        },
+        "description": {
+          "type": "string",
+          "description": "A longer line, shown in the \"+N more\" list and as the chip's tooltip (else the tooltip is the label and value, for a value cut short)"
+        }
+      },
+      "required": [
+        "id",
+        "value"
+      ],
+      "additionalProperties": false,
+      "description": "One declared term of the session"
+    },
+    "SessionTermTone": {
+      "type": "string",
+      "enum": [
+        "neutral",
+        "info",
+        "success",
+        "warning",
+        "danger"
+      ],
+      "description": "A term's colour – the value's words carry the meaning, the colour points at it"
+    }
+  }
+}

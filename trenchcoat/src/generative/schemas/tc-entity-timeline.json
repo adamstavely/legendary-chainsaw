@@ -1,0 +1,166 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-entity-timeline.json",
+  "title": "tc-entity-timeline",
+  "description": "A dated record of events grouped by month – each with a category, its source and grade, an optional flag and an\ninline detail – filtered by category.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the list's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/TimelineEvent"
+      },
+      "description": "The events, in any order – the element sorts them"
+    },
+    "categories": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/TimelineCategory"
+      },
+      "description": "The categories events can have, in the order their chips show"
+    },
+    "order": {
+      "type": "string",
+      "enum": [
+        "newest",
+        "oldest"
+      ],
+      "description": "\"newest\" first (the default) or \"oldest\" first"
+    },
+    "filter": {
+      "type": "string",
+      "description": "The category shown, or \"all\". Changed by the user unless a tc-filter-change listener calls preventDefault()"
+    },
+    "selected": {
+      "type": "string",
+      "description": "The event whose detail is open. Changed by the user unless a tc-selected-change listener calls preventDefault()"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for dates, e.g. \"en-GB\"; by default the browser's"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "TimelineEvent": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "date": {
+          "type": "number",
+          "description": "When it happened, as epoch ms"
+        },
+        "title": {
+          "type": "string"
+        },
+        "detail": {
+          "type": "string",
+          "description": "One quiet line under the title"
+        },
+        "category": {
+          "type": "string",
+          "description": "A category id from `categories`"
+        },
+        "source": {
+          "$ref": "#/definitions/TimelineSource"
+        },
+        "flag": {
+          "type": "string",
+          "description": "A short flag shown beside the tags, e.g. \"Auto-flag\""
+        },
+        "body": {
+          "type": "string",
+          "description": "The longer note shown when the event is opened"
+        },
+        "links": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TimelineLink"
+          },
+          "description": "Attachments or records to open from the detail"
+        }
+      },
+      "required": [
+        "id",
+        "date",
+        "title"
+      ],
+      "additionalProperties": false
+    },
+    "TimelineSource": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "grade": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "label"
+      ],
+      "additionalProperties": false,
+      "description": "Where an event came from: any label, with an optional Admiralty grade (A–F reliability, 1–6 credibility)"
+    },
+    "TimelineLink": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "href": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "TimelineCategory": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "tone": {
+          "$ref": "#/definitions/TimelineTone"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "TimelineTone": {
+      "type": "string",
+      "enum": [
+        "success",
+        "info",
+        "warning",
+        "danger",
+        "neutral",
+        "violet"
+      ],
+      "description": "The tone a category is drawn in"
+    }
+  }
+}

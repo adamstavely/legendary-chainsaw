@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-team-invite.json",
+  "title": "tc-team-invite",
+  "description": "A third teammate is dragged into the empty slot and joins the team.",
+  "type": "object",
+  "properties": {
+    "avatars": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/TeamInviteAvatar"
+      },
+      "description": "The two teammates that are already connected, then the one being invited"
+    },
+    "label": {
+      "type": "string",
+      "description": "Describes the scene to assistive tech; defaults to a sentence built from the avatars' names when they have any"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "TeamInviteAvatar": {
+      "type": "object",
+      "properties": {
+        "src": {
+          "type": "string",
+          "description": "Image URL – a square portrait, shown in a circle"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name for the accessible description"
+        }
+      },
+      "required": [
+        "src"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

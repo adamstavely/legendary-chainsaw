@@ -1,0 +1,71 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-decision-inbox.json",
+  "title": "tc-decision-inbox",
+  "description": "Open decisions with two quick answers each; answered ones confirm, then fold away.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The inbox's name, in the header; the line under it says how many need input"
+    },
+    "decisions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/InboxDecision"
+      },
+      "description": "The decisions to show – new ones join as they're passed, answered ones fold away"
+    },
+    "answers": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/DecisionAnswer"
+      },
+      "description": "The answers given so far, by decision id. Answers present on first render start folded away. Changed by the user unless a tc-answers-change listener calls preventDefault()"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "InboxDecision": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "detail": {
+          "type": "string",
+          "description": "Short context under the title"
+        },
+        "primary": {
+          "type": "string",
+          "description": "Main answer, shown as the dark button"
+        },
+        "secondary": {
+          "type": "string",
+          "description": "Other answer, shown as the light button"
+        },
+        "collapsed": {
+          "type": "boolean",
+          "description": "Starts folded to one muted line – click to open"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "primary",
+        "secondary"
+      ],
+      "additionalProperties": false
+    },
+    "DecisionAnswer": {
+      "type": "string",
+      "enum": [
+        "primary",
+        "secondary"
+      ]
+    }
+  }
+}

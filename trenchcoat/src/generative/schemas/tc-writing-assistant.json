@@ -1,0 +1,87 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-writing-assistant.json",
+  "title": "tc-writing-assistant",
+  "description": "A compact AI chat card with suggestions, a growing prompt field and dictation.",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The assistant's name, in the header"
+    },
+    "tagline": {
+      "type": "string",
+      "description": "Short line under the name"
+    },
+    "greeting": {
+      "type": "string",
+      "description": "Big line on the welcome screen"
+    },
+    "suggestions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Chips on the welcome screen; picking one sends it as a message"
+    },
+    "placeholder": {
+      "type": "string",
+      "description": "Text in the empty prompt field"
+    },
+    "messages": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ChatMessage"
+      },
+      "description": "The conversation. Changed by the element unless a tc-messages-change listener calls preventDefault()"
+    },
+    "draft": {
+      "type": "string",
+      "description": "Text in the prompt field. Changed by the element unless a tc-draft-change listener calls preventDefault()"
+    },
+    "speech": {
+      "type": "string",
+      "enum": [
+        "auto",
+        "simulate"
+      ],
+      "description": "\"auto\" uses real speech recognition when the browser has it and shows an error otherwise (or plays the sample take with `demo`); \"simulate\" always plays a sample take"
+    },
+    "demo": {
+      "type": "boolean",
+      "description": "Demo mode: the sample writer answers without a warning, and dictation plays the sample take where the browser has no speech recognition"
+    },
+    "dictation": {
+      "type": "string",
+      "description": "Sample sentence for simulated dictation"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ChatMessage": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string",
+          "enum": [
+            "user",
+            "assistant"
+          ]
+        },
+        "text": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "role",
+        "text"
+      ],
+      "additionalProperties": false,
+      "description": "One message of the conversation"
+    }
+  }
+}

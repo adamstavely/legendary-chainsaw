@@ -1,0 +1,98 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-model-picker.json",
+  "title": "tc-model-picker",
+  "description": "The model menu of an AI chat: models with strength bars, extended thinking with its effort, and web search.",
+  "type": "object",
+  "properties": {
+    "models": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/PickerModel"
+      },
+      "description": "The models to choose from, in menu order – each with its strengths, first-token time and price"
+    },
+    "value": {
+      "type": "string",
+      "description": "Id of the chosen model – unset or unknown shows the first"
+    },
+    "thinking": {
+      "type": "boolean",
+      "description": "Extended thinking switch"
+    },
+    "webSearch": {
+      "type": "boolean",
+      "description": "Web search switch"
+    },
+    "effort": {
+      "type": "string",
+      "enum": [
+        "high",
+        "medium",
+        "low"
+      ],
+      "description": "How hard the model thinks – only shown while extended thinking is on"
+    },
+    "open": {
+      "type": "boolean",
+      "description": "Whether the menu is open"
+    },
+    "align": {
+      "type": "string",
+      "enum": [
+        "end",
+        "start"
+      ],
+      "description": "Which edge of the trigger the menu lines up with"
+    },
+    "side": {
+      "type": "string",
+      "enum": [
+        "bottom",
+        "top"
+      ],
+      "description": "Whether the menu opens below or above the trigger – above suits a composer at the bottom of the screen"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "PickerModel": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string",
+          "description": "One short line under the name, e.g. \"Hardest problems\""
+        },
+        "speed": {
+          "type": "number",
+          "description": "Strengths from 1 to 5. Cost 5 is the most expensive. Leave all three out for a router like \"Auto\""
+        },
+        "quality": {
+          "type": "number"
+        },
+        "cost": {
+          "type": "number"
+        },
+        "latencyMs": {
+          "type": "number",
+          "description": "Typical time to the first token without extended thinking, in milliseconds"
+        },
+        "pricePerM": {
+          "type": "number",
+          "description": "Price per million output tokens, in dollars"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

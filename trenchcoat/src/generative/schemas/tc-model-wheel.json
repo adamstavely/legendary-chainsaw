@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-model-wheel.json",
+  "title": "tc-model-wheel",
+  "description": "AI model names on a turning drum.",
+  "type": "object",
+  "properties": {
+    "models": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/WheelModel"
+      },
+      "description": "Models on the wheel – brand marks as a single SVG path; at least 7 keep the drum full"
+    },
+    "hold": {
+      "type": "number",
+      "description": "Milliseconds a model stays selected before the wheel turns on"
+    },
+    "turns": {
+      "type": "number",
+      "description": "How many automatic turns before the wheel rests (default: once round the drum; Infinity keeps it turning)"
+    },
+    "label": {
+      "type": "string",
+      "description": "Describes the scene to assistive tech (role=\"img\"); without it the illustration is decorative and hidden from them"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "WheelModel": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "viewBox": {
+          "type": "string"
+        },
+        "color": {
+          "type": "string"
+        },
+        "d": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "viewBox",
+        "color",
+        "d"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

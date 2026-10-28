@@ -1,0 +1,97 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-agreement-tracker.json",
+  "title": "tc-agreement-tracker",
+  "description": "How often the AI agreed with the person's framing versus pushed back, this session: the record, the rate and the\nrun, amber at a run of agreements, with \"Show the other side\".",
+  "type": "object",
+  "properties": {
+    "turns": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AgreementTurn"
+      },
+      "description": "The session's answers in order, oldest first, each classified by the app"
+    },
+    "threshold": {
+      "type": "number",
+      "description": "How many agreements in a row turn the tracker amber"
+    },
+    "layout": {
+      "type": "string",
+      "enum": [
+        "card",
+        "inline"
+      ],
+      "description": "\"card\" – a small card; \"inline\" – one compact strip for a chat"
+    },
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the tracker's accessible name"
+    },
+    "scope": {
+      "type": "string",
+      "description": "A quiet line under the heading (card only)"
+    },
+    "stanceLabels": {
+      "type": "object",
+      "properties": {
+        "neutral": {
+          "type": "string"
+        },
+        "agreed": {
+          "type": "string"
+        },
+        "pushed-back": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Names of the three stances – \"Agreed\", \"Pushed back\" and \"Neutral\" by default"
+    },
+    "max": {
+      "type": "number",
+      "description": "How many of the latest turns the record shows – 24 in a card and 8 inline by default; earlier ones are counted"
+    },
+    "counterLabel": {
+      "type": "string",
+      "description": "The label of the button that asks for the counter-argument"
+    },
+    "warningText": {
+      "type": "string",
+      "description": "The warning at the threshold; {n} is replaced by the length of the run"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "AgreementTurn": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "stance": {
+          "$ref": "#/definitions/AgreementStance",
+          "description": "Whether the answer went along with the person's framing, pushed back on it, or neither"
+        },
+        "label": {
+          "type": "string",
+          "description": "A few words on what the turn was about – shown on hover and read by screen readers"
+        }
+      },
+      "required": [
+        "id",
+        "stance"
+      ],
+      "additionalProperties": false,
+      "description": "One answer in the session, as the app classified it"
+    },
+    "AgreementStance": {
+      "type": "string",
+      "enum": [
+        "agreed",
+        "pushed-back",
+        "neutral"
+      ]
+    }
+  }
+}

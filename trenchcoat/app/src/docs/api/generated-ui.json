@@ -42,7 +42,7 @@
      "attribute": null,
      "type": "GeneratedUiIssue[]",
      "default": null,
-     "description": "What fell back to text, and why, by JSON Pointer path",
+     "description": "What fell back to text, and why, and the props of a component that were left out – by JSON Pointer path",
      "readonly": true
     },
     {
@@ -64,8 +64,14 @@
     {
      "name": "tc-spec-check",
      "detail": "",
-     "description": "The spec settled (not streaming) and what fell back to text changed ({ issues })",
+     "description": "The spec settled (not streaming) and what fell back to text, or a component's props it left out, changed ({ issues })",
      "cancelable": false
+    },
+    {
+     "name": "tc-component-event",
+     "detail": "",
+     "description": "A component the model placed fired one of its events ({ block, tag, event, detail }: GeneratedUiComponentEvent); cancelable when the component's event is – preventing it prevents that",
+     "cancelable": true
     }
    ],
    "slots": [],
@@ -98,16 +104,24 @@
      "type": "(issues: GeneratedUiSpecCheck[\"issues\"]) => void",
      "optional": true,
      "description": "Called once the spec settles with the blocks that fell back to text, and why"
+    },
+    {
+     "name": "onComponentEvent",
+     "type": "(event: GeneratedUiComponentEvent) => boolean | void",
+     "optional": true,
+     "description": "Called when a component the model placed fires one of its events; return false to prevent it (when it can be)"
     }
    ],
    "hides": [],
    "events": {
     "tc-action": "onAction",
-    "tc-spec-check": "onSpecCheck"
+    "tc-spec-check": "onSpecCheck",
+    "tc-component-event": "onComponentEvent"
    }
   }
  ],
  "changelog": [
+  "**`tc-generated-ui`:** a `component` block, `{ type: \"component\", tag, props }`, places any catalogued component. - **Checks:** props are checked against the schema before they're set; what doesn't fit is left out and listed in `tc-spec-check`. - **Events:** the component's events come back as `tc-component-event`, also exposed as React's `onComponentEvent`; preventing it prevents the component's own. - **Guardrails:** links must be http(s), mailto or relative; lists are capped at 200 items, strings at 4,000 characters, nesting at 8 levels and props at 200 KB.",
   "**Quality, retrieval, safety, structured output and conversation:** `tc-eval-scorecard`, `tc-feedback-rubric`, `tc-retrieval-inspector`, `tc-extraction-review`, `tc-guardrail-notice`, `tc-clarifying-questions`, `tc-structured-output`, `tc-generated-ui` and `tc-prompt-starters`."
  ],
  "frameworks": [
@@ -140,6 +154,10 @@
     {
      "name": "tc-spec-check",
      "cancelable": false
+    },
+    {
+     "name": "tc-component-event",
+     "cancelable": true
     }
    ],
    "controlled": [],
@@ -303,6 +321,22 @@
     "via": [
      "data-table",
      "stepper-form"
+    ]
+   },
+   {
+    "id": "object-hasown",
+    "name": "Object.hasOwn()",
+    "bcd": "javascript.builtins.Object.hasOwn",
+    "versions": {
+     "chrome": "93",
+     "edge": "93",
+     "firefox": "92",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
     ]
    },
    {
@@ -551,7 +585,7 @@
   "windowed": false
  },
  "size": {
-  "min": 228909,
-  "gzip": 54343
+  "min": 6331274,
+  "gzip": 1523349
  }
 }

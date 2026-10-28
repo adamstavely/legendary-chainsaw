@@ -1,0 +1,139 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-run-checkpoints.json",
+  "title": "tc-run-checkpoints",
+  "description": "An agent run's restore points: pick a step, see what it captured and what going back discards, and go back.",
+  "type": "object",
+  "properties": {
+    "checkpoints": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/RunCheckpoint"
+      },
+      "description": "The checkpoints, oldest first – one before each step of the run"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "paused",
+        "running",
+        "done",
+        "failed"
+      ],
+      "description": "The run: \"running\" (a live run), \"paused\", \"done\", \"failed\" – always set by the app"
+    },
+    "heading": {
+      "type": "string",
+      "description": "The run's goal, shown as the heading"
+    },
+    "selected": {
+      "type": "string",
+      "description": "The picked checkpoint's id. Picks apply unless a tc-selected-change listener calls preventDefault()"
+    },
+    "elapsed": {
+      "type": "number",
+      "description": "How long the run has gone on, in ms – the strip's length (defaults to the last checkpoint)"
+    },
+    "placeholder": {
+      "type": "string",
+      "description": "Placeholder of the note that goes along with the restore"
+    },
+    "currency": {
+      "type": "string",
+      "description": "Currency of `cost`, an ISO 4217 code"
+    },
+    "locale": {
+      "type": "string",
+      "description": "Locale for money"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "RunCheckpoint": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string",
+          "description": "The step that starts at this checkpoint, e.g. \"Run the test suite\""
+        },
+        "detail": {
+          "type": "string",
+          "description": "A second, quieter line under the title"
+        },
+        "tool": {
+          "type": "string",
+          "description": "Tool the step called, shown as a small mono chip, e.g. \"run_tests\""
+        },
+        "at": {
+          "type": "number",
+          "description": "When the checkpoint was taken, in ms from the start of the run"
+        },
+        "status": {
+          "$ref": "#/definitions/RunCheckpointStatus",
+          "description": "\"done\" (default), \"active\" while the step runs, \"failed\""
+        },
+        "captured": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RunCheckpointCapture"
+          },
+          "description": "What the checkpoint holds – shown when it's picked"
+        },
+        "files": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Files the step changed – going back to it or an earlier point discards them"
+        },
+        "tokens": {
+          "type": "number",
+          "description": "Tokens the step spent"
+        },
+        "cost": {
+          "type": "number",
+          "description": "What the step cost, in `currency`"
+        },
+        "restorable": {
+          "type": "boolean",
+          "description": "false: no snapshot was kept, so the run can't go back here"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "at"
+      ],
+      "additionalProperties": false
+    },
+    "RunCheckpointStatus": {
+      "type": "string",
+      "enum": [
+        "done",
+        "active",
+        "failed"
+      ]
+    },
+    "RunCheckpointCapture": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string",
+          "description": "What was captured, e.g. \"Conversation\""
+        },
+        "value": {
+          "type": "string",
+          "description": "How much of it, e.g. \"14 messages\""
+        }
+      },
+      "required": [
+        "label",
+        "value"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

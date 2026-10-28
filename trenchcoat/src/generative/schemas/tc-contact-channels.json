@@ -1,0 +1,167 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-contact-channels.json",
+  "title": "tc-contact-channels",
+  "description": "The ways to reach a person or an account – email, phone, messaging and address – each masked until revealed, with\nits role, when it was last used and whether it's verified, Copy and the page's own actions.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "channels": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ContactChannel"
+      },
+      "description": "The contact points, in order; they're grouped by kind"
+    },
+    "states": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "tone": {
+            "$ref": "#/definitions/ContactTone"
+          }
+        },
+        "required": [
+          "label",
+          "tone"
+        ],
+        "additionalProperties": false
+      },
+      "description": "Verification states' names and tones, merged over the defaults (verified, unverified, bounced, dormant, flagged)"
+    },
+    "kindLabels": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "messaging": {
+          "type": "string"
+        },
+        "address": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The groups' names, merged over the defaults (Email, Phone, Messaging, Address)"
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ContactAction"
+      },
+      "description": "Actions added to every row after Copy, e.g. [{ id: \"message\", label: \"Message\" }]"
+    },
+    "masked": {
+      "type": "boolean",
+      "description": "Masks values until revealed; set false to show them in full"
+    },
+    "revealed": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The ids whose values are shown. Changed by the user unless a tc-revealed-change listener calls preventDefault()"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for dates, e.g. \"en-GB\"; by default the browser's"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ContactChannel": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/definitions/ContactKind"
+        },
+        "value": {
+          "type": "string",
+          "description": "The address, number, handle or postal address"
+        },
+        "role": {
+          "type": "string",
+          "description": "What it's for: \"Primary\", \"Work\", \"Backup\", \"Linked to alias\""
+        },
+        "service": {
+          "type": "string",
+          "description": "For messaging: the service, e.g. \"Signal\", \"WhatsApp\""
+        },
+        "lastUsed": {
+          "type": "number",
+          "description": "When it was last used, as epoch ms"
+        },
+        "state": {
+          "type": "string",
+          "description": "A key of `states`: verified, unverified, bounced, dormant, flagged, or one of the page's own"
+        },
+        "note": {
+          "type": "string",
+          "description": "One quiet line: \"Bounced twice in May\""
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "value",
+        "state"
+      ],
+      "additionalProperties": false
+    },
+    "ContactKind": {
+      "type": "string",
+      "enum": [
+        "email",
+        "phone",
+        "messaging",
+        "address"
+      ]
+    },
+    "ContactTone": {
+      "type": "string",
+      "enum": [
+        "success",
+        "info",
+        "warning",
+        "danger",
+        "neutral"
+      ],
+      "description": "The tone a verification state is drawn in"
+    },
+    "ContactAction": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false,
+      "description": "An action the page adds to every row"
+    }
+  }
+}

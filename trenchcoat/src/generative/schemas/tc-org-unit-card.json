@@ -1,0 +1,309 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-org-unit-card.json",
+  "title": "tc-org-unit-card",
+  "description": "An organisational unit – code, name, lead, health, the page's stats and its teams as rows that fold open onto\ntheir items – with the page's actions in the header.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The unit's name, and the card's heading"
+    },
+    "code": {
+      "type": "string",
+      "description": "A short code shown as the header's badge, e.g. \"CIS\"; initials of the name otherwise"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line about the unit"
+    },
+    "lead": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "picture": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false,
+      "description": "Who leads the unit"
+    },
+    "leadLabel": {
+      "type": "string",
+      "description": "The lead's role in the unit, the caption over their name"
+    },
+    "stats": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/OrgStat"
+      },
+      "description": "The page's stats, in order"
+    },
+    "health": {
+      "type": "object",
+      "properties": {
+        "on-track": {
+          "type": "number"
+        },
+        "watch": {
+          "type": "number"
+        },
+        "at-risk": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The unit's health: how many items are on track, on watch and at risk"
+    },
+    "healthLabels": {
+      "type": "object",
+      "properties": {
+        "on-track": {
+          "type": "string"
+        },
+        "watch": {
+          "type": "string"
+        },
+        "at-risk": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The health states' names, merged over the defaults (On track, Watch, At risk)"
+    },
+    "teams": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/OrgTeam"
+      },
+      "description": "The sub-units"
+    },
+    "teamsLabel": {
+      "type": "string",
+      "description": "The sub-units' caption"
+    },
+    "itemsLabel": {
+      "type": "string",
+      "description": "What a team's items are, for their list's name, e.g. \"Topics\""
+    },
+    "expanded": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The open teams' ids. Changed by the user unless a tc-expanded-change listener calls preventDefault()"
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/OrgAction"
+      },
+      "description": "Buttons in the header"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "OrgStat": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "Short, e.g. \"Budget\""
+        },
+        "value": {
+          "type": "string",
+          "description": "Written as shown, e.g. \"$9.2M\", \"66%\""
+        },
+        "sub": {
+          "type": "string",
+          "description": "A quiet line under the value, e.g. \"$5.1M spent\""
+        },
+        "meter": {
+          "type": "number",
+          "description": "A share from 0 to 1 drawn as a slim bar under the value, e.g. spent of allocated"
+        },
+        "tone": {
+          "type": "string",
+          "enum": [
+            "default",
+            "success",
+            "warning",
+            "danger"
+          ],
+          "description": "\"danger\" marks the value, e.g. over budget; the sub-line should say why"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "OrgTeam": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "lead": {
+          "$ref": "#/definitions/OrgPerson"
+        },
+        "people": {
+          "type": "number",
+          "description": "How many people"
+        },
+        "health": {
+          "$ref": "#/definitions/OrgHealthCounts",
+          "description": "Its items' health"
+        },
+        "coverage": {
+          "type": "number",
+          "description": "Share covered, from 0 to 1"
+        },
+        "gaps": {
+          "type": "number",
+          "description": "Open gaps, issues"
+        },
+        "fte": {
+          "type": "number",
+          "description": "Effort, in full-time equivalents"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OrgItem"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "OrgPerson": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string",
+          "description": "Their role, e.g. \"Principal Investigator\""
+        },
+        "picture": {
+          "type": "string",
+          "description": "A picture's URL; initials of the name otherwise"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "OrgHealthCounts": {
+      "type": "object",
+      "properties": {
+        "on-track": {
+          "type": "number"
+        },
+        "watch": {
+          "type": "number"
+        },
+        "at-risk": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false
+    },
+    "OrgItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "priority": {
+          "type": "number",
+          "description": "1 is the top priority; shown as a numbered badge"
+        },
+        "tag": {
+          "type": "string",
+          "description": "A tag after the label, e.g. \"Flagship\", \"Core\""
+        },
+        "detail": {
+          "type": "string",
+          "description": "What's in work, e.g. \"4 in work\""
+        },
+        "coverage": {
+          "type": "number",
+          "description": "Share covered, from 0 to 1"
+        },
+        "open": {
+          "type": "number",
+          "description": "How many are open, e.g. gaps"
+        },
+        "momentum": {
+          "type": "number",
+          "description": "Change over the period as a fraction: -0.08 is down 8%"
+        },
+        "health": {
+          "$ref": "#/definitions/OrgHealth"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "OrgHealth": {
+      "type": "string",
+      "enum": [
+        "on-track",
+        "watch",
+        "at-risk"
+      ]
+    },
+    "OrgAction": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "variant": {
+          "type": "string",
+          "enum": [
+            "primary",
+            "secondary"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

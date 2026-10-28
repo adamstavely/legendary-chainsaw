@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-region-dach.json",
+  "title": "tc-region-dach",
+  "description": "A map of the DACH region (or another country) with a band along its border and a menu to switch it.",
+  "type": "object",
+  "properties": {
+    "region": {
+      "type": "string",
+      "enum": [
+        "dach",
+        "us",
+        "cn",
+        "in",
+        "br",
+        "jp"
+      ],
+      "description": "Shown region"
+    },
+    "showSwitcher": {
+      "type": "boolean",
+      "description": "Show the region menu in the top-left corner"
+    }
+  },
+  "additionalProperties": false
+}
