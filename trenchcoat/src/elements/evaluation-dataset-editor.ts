@@ -217,7 +217,7 @@ let instances = 0;
  * @fires tc-value-change - A case was added, edited, deleted or restored ({ value }: EvaluationDatasetValueChange); cancelable – prevent it to control `value`
  * @fires tc-open-change - A case was opened or closed ({ open }: EvaluationDatasetOpenChange – the case id or null); cancelable
  * @fires tc-compare-change - A version to compare with was picked ({ compare }: EvaluationDatasetCompareChange – a version id, or "" for none); cancelable
- * @fires tc-import - Import was pressed: the app reads a file and sets `value`; no detail
+ * @fires tc-import - Import was pressed: the app reads a file and sets `value`; detail: null
  * @fires tc-export - Export was pressed ({ value, jsonl }: EvaluationDatasetExport – the set and the same set as JSON Lines)
  */
 export class TcEvaluationDatasetEditor extends TcElement {

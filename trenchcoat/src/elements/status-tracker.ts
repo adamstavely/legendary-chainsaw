@@ -5,6 +5,8 @@ import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
 import { FocusRescueController } from "./internal/controllers";
+import { safeUrl } from "./internal/safe-url";
+import { formatDate } from "./internal/util";
 
 /*
  * <tc-status-tracker> – where a piece of work stands in a fixed sequence of steps: gates to clear, stages to pass,
@@ -148,10 +150,10 @@ export class TcStatusTracker extends TcElement {
     return `${this.steps.filter((s) => this.isDone(s)).length} of ${this.steps.length} ${this.plural.toLowerCase()} cleared`;
   }
   private date(ms: number) {
-    return new Intl.DateTimeFormat(this.locale, { month: "short", day: "numeric" }).format(ms);
+    return formatDate(ms, this.locale, { month: "short", day: "numeric" });
   }
   private longDate(ms: number) {
-    return new Intl.DateTimeFormat(this.locale, { month: "long", day: "numeric", year: "numeric" }).format(ms);
+    return formatDate(ms, this.locale, { month: "long", day: "numeric", year: "numeric" });
   }
   private name(i: number) {
     return this.noun ? `${this.noun} ${i + 1}` : `${i + 1}`;
@@ -317,7 +319,7 @@ export class TcStatusTracker extends TcElement {
             ${d.items.map(
               (it) => html`<div class="ui-stk__row">
                 <dt>${it.label}</dt>
-                <dd>${it.href ? html`<a class="ui-stk__link" href=${it.href}>${it.value ?? "Open"}</a>` : (it.value ?? "–")}</dd>
+                <dd>${safeUrl(it.href) ? html`<a class="ui-stk__link" href=${ifDefined(safeUrl(it.href))}>${it.value ?? "Open"}</a>` : (it.value ?? "–")}</dd>
               </div>`,
             )}
           </dl>`

@@ -4,7 +4,9 @@ import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
 import { FocusRescueController, OffScreenController } from "./internal/controllers";
-import { copyText } from "./internal/util";
+import { copyText, formatDate } from "./internal/util";
+import { ifDefined } from "lit/directives/if-defined.js";
+import { safeUrl } from "./internal/safe-url";
 
 /*
  * <tc-ai-summary> – an AI summary of a set of sources: a thread, a meeting, some documents, a ticket's history. (For
@@ -90,14 +92,14 @@ export function aiSummaryAgo(ms: number, now: number, locale?: string) {
   if (diff < 45_000) return "just now";
   if (diff < HOUR) return `${Math.max(1, Math.round(diff / MIN))} min ago`;
   if (diff < 24 * HOUR) return `${Math.floor(diff / HOUR)} h ago`;
-  return new Intl.DateTimeFormat(locale, { day: "numeric", month: "short" }).format(ms);
+  return formatDate(ms, locale, { day: "numeric", month: "short" });
 }
 
 /**
  * An AI summary of a set of sources – a thread, a meeting, documents, a ticket's history – with a TL;DR, key points
  * citing their sources, open questions, a note when the sources have moved on, feedback, Copy and Regenerate.
  * @tag tc-ai-summary
- * @fires tc-summarise - Summarise was pressed while `status` is "idle" – start summarising
+ * @fires tc-summarise - Summarise was pressed while `status` is "idle" – start summarising; detail: null
  * @fires tc-retry - Regenerate, Retry after an error, or Update when stale ({ reason: "regenerate" | "error" | "stale" }: AiSummaryRetry)
  * @fires tc-length-change - Short or Detailed was picked ({ length }: AiSummaryLengthChange); cancelable – prevented, `length` stays as it was
  * @fires tc-cite-open - A citation chip was used ({ sourceId, pointId }: AiSummaryCiteOpen); cancelable – prevented, a link to the source doesn't open
@@ -364,10 +366,10 @@ export class TcAiSummary extends TcElement {
         }
       },
     };
-    const chip = source.href
+    const chip = safeUrl(source.href)
       ? html`<a
           class="ui-aism__cite"
-          href=${source.href}
+          href=${ifDefined(safeUrl(source.href))}
           target="_blank"
           rel="noopener"
           @click=${(e: Event) => this.openCite(e, point, source)}
@@ -452,7 +454,7 @@ export class TcAiSummary extends TcElement {
           return html`<li class="ui-aism__src" data-kind=${this.kindOf(s)}>
             <span class="ui-aism__src-n" aria-hidden="true">${i + 1}</span>
             <span class="ui-aism__src-icon" title=${KIND_NOUN[this.kindOf(s)][0]}>${lucide(KIND_ICON[this.kindOf(s)], 14)}</span>
-            ${s.href ? html`<a class="ui-aism__src-link" href=${s.href} target="_blank" rel="noopener">${label}</a>` : label}
+            ${safeUrl(s.href) ? html`<a class="ui-aism__src-link" href=${ifDefined(safeUrl(s.href))} target="_blank" rel="noopener">${label}</a>` : label}
             ${when ? html`<span class="ui-aism__src-at">${when}</span>` : nothing}
           </li>`;
         },

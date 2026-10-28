@@ -5,6 +5,8 @@ import { repeat } from "lit/directives/repeat.js";
 import { factBand, gradeWords, type FactBand } from "./fact-sheet";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
+import { safeUrl } from "./internal/safe-url";
+import { formatDate, isoDate } from "./internal/util";
 
 /*
  * <tc-entity-timeline> – what happened to a person, an account or a case, in order: each event with its date, a title,
@@ -108,10 +110,10 @@ export class TcEntityTimeline extends TcElement {
     return this.filter === "all" ? this.sorted : this.sorted.filter((e) => e.category === this.filter);
   }
   private dateText(ms: number) {
-    return new Intl.DateTimeFormat(this.locale, { day: "2-digit", month: "short" }).format(ms);
+    return formatDate(ms, this.locale, { day: "2-digit", month: "short" });
   }
   private fullDate(ms: number) {
-    return new Intl.DateTimeFormat(this.locale, { day: "numeric", month: "long", year: "numeric" }).format(ms);
+    return formatDate(ms, this.locale, { day: "numeric", month: "long", year: "numeric" });
   }
 
   private setFilter(next: string) {
@@ -179,7 +181,7 @@ export class TcEntityTimeline extends TcElement {
     const detailId = `${this.uid}-${ev.id}-detail`;
     return html`<li class="ui-etl__event" data-tone=${cat?.tone ?? "neutral"} ?data-open=${open}>
       <span class="ui-etl__dot" aria-hidden="true"></span>
-      <time class="ui-etl__date" datetime=${new Date(ev.date).toISOString()}>${this.dateText(ev.date)}</time>
+      <time class="ui-etl__date" datetime=${ifDefined(isoDate(ev.date))}>${this.dateText(ev.date)}</time>
       <div class="ui-etl__main">
         <button
           type="button"
@@ -209,7 +211,7 @@ export class TcEntityTimeline extends TcElement {
               ${ev.body ? html`<p class="ui-etl__body">${ev.body}</p>` : nothing}
               ${ev.links?.length
                 ? html`<ul class="ui-etl__links" aria-label="Attachments">
-                    ${ev.links.map((l) => html`<li>${l.href ? html`<a class="ui-etl__link" href=${l.href}>${clipIcon()}${l.label}</a>` : html`<span class="ui-etl__link">${clipIcon()}${l.label}</span>`}</li>`)}
+                    ${ev.links.map((l) => html`<li>${safeUrl(l.href) ? html`<a class="ui-etl__link" href=${ifDefined(safeUrl(l.href))}>${clipIcon()}${l.label}</a>` : html`<span class="ui-etl__link">${clipIcon()}${l.label}</span>`}</li>`)}
                   </ul>`
                 : nothing}
             </div>`
@@ -236,14 +238,13 @@ export class TcEntityTimeline extends TcElement {
     const id = this.uid;
     const shown = this.shown;
     const stop = this.stop;
-    const month = new Intl.DateTimeFormat(this.locale, { month: "long", year: "numeric" });
     const groups: { key: string; label: string; events: TimelineEvent[] }[] = [];
     for (const ev of shown) {
       const d = new Date(ev.date);
       const key = `${d.getFullYear()}-${d.getMonth()}`;
       const last = groups[groups.length - 1];
       if (last?.key === key) last.events.push(ev);
-      else groups.push({ key, label: month.format(ev.date), events: [ev] });
+      else groups.push({ key, label: formatDate(ev.date, this.locale, { month: "long", year: "numeric" }, "Date unknown"), events: [ev] });
     }
     const n = this.events.length;
     return html`

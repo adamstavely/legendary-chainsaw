@@ -5,7 +5,7 @@ import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
 import { activityLevel, activityMix, activitySteps } from "./internal/activity-scale";
 import { cardHead } from "./internal/card-head";
-import { isMac } from "./internal/util";
+import { formatDate, isMac } from "./internal/util";
 
 /*
  * <tc-activity-clock> – when activity happens, one clock per day: two rings of twelve hour segments, the inner ring
@@ -124,15 +124,15 @@ export class TcActivityClock extends TcElement {
   /** The middle of a clock: the weekday (or the day's label) over the day of the month */
   private dayFace(day: ActivityDay) {
     const at = new Date(day.date);
-    return { top: day.label ?? new Intl.DateTimeFormat(this.locale, { weekday: "short" }).format(at), date: new Intl.DateTimeFormat(this.locale, { day: "numeric" }).format(at) };
+    return { top: day.label ?? formatDate(at, this.locale, { weekday: "short" }), date: formatDate(at, this.locale, { day: "numeric" }) };
   }
   private dayLabel(day: ActivityDay) {
     if (day.label) return day.label;
     const at = new Date(day.date);
-    return `${new Intl.DateTimeFormat(this.locale, { weekday: "short" }).format(at)} ${at.getDate()}`;
+    return `${formatDate(at, this.locale, { weekday: "short" })} ${at.getDate()}`;
   }
   private dayName(day: ActivityDay) {
-    return day.label ?? new Intl.DateTimeFormat(this.locale, { weekday: "long", month: "long", day: "numeric" }).format(new Date(day.date));
+    return day.label ?? formatDate(new Date(day.date), this.locale, { weekday: "long", month: "long", day: "numeric" });
   }
   /** The busiest hour shown, for the header */
   private get peak() {

@@ -5,6 +5,7 @@ import { keyed } from "lit/directives/keyed.js";
 import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
 import { initials, textCaret } from "./internal/util";
+import { safeMediaUrl } from "./internal/safe-media";
 
 /*
  * <tc-mention-picker> – the / and @ picker inside a composer. It attaches to a text field the app owns (a <textarea>,
@@ -731,7 +732,7 @@ export class TcMentionPicker extends TcElement {
 
   private lead(item: MentionPickerItem) {
     if (item.icon) return html`<span class="ui-mnp__icon" aria-hidden="true">${this.mark(item.icon)}</span>`;
-    if (typeof item.avatar === "string") return html`<img class="ui-mnp__avatar" src=${item.avatar} alt="" />`;
+    if (typeof item.avatar === "string") return html`<img class="ui-mnp__avatar" src=${ifDefined(safeMediaUrl(item.avatar))} alt="" />`;
     if (item.avatar) return html`<span class="ui-mnp__avatar" aria-hidden="true">${initials(item.label)}</span>`;
     return nothing;
   }

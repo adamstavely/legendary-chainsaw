@@ -140,7 +140,7 @@
     {
      "name": "tc-import",
      "detail": "",
-     "description": "Import was pressed: the app reads a file and sets `value`; no detail",
+     "description": "Import was pressed: the app reads a file and sets `value`; detail: null",
      "cancelable": false
     },
     {
@@ -779,7 +779,7 @@
   "windowed": true
  },
  "size": {
-  "min": 75064,
-  "gzip": 19671
+  "min": 75102,
+  "gzip": 19680
  }
 }

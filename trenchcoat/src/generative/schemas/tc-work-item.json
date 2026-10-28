@@ -91,7 +91,8 @@
     },
     "href": {
       "type": "string",
-      "description": "Makes the title a link"
+      "description": "Makes the title a link",
+      "format": "uri-reference"
     },
     "locale": {
       "type": "string",
@@ -107,7 +108,9 @@
           "type": "string"
         },
         "picture": {
-          "type": "string"
+          "type": "string",
+          "format": "uri-reference",
+          "contentMediaType": "image/*"
         }
       },
       "required": [

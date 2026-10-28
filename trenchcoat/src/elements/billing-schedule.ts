@@ -100,7 +100,7 @@ type Field = { draft: string | null; error: string | null };
  * @fires tc-start-change - The start date changes; detail `{ start }`. Cancelable
  * @fires tc-duration-change - The duration changes; detail `{ duration }`. Cancelable
  * @fires tc-lines-change - The lines change; detail `{ lines }`. Cancelable
- * @fires tc-schedule-change - After every change the user makes (not on connect); detail: the whole schedule
+ * @fires tc-schedule-change - After every change the user makes (not on connect); detail: the whole schedule (BillingScheduleValue)
  */
 export class TcBillingSchedule extends TcElement {
   static override ui = "bs";

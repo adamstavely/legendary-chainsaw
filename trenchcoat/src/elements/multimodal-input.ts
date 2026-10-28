@@ -7,6 +7,7 @@ import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
 import { ToolbarController } from "./internal/controllers";
 import { compact } from "./internal/format";
+import { safeMediaUrl } from "./internal/safe-media";
 
 /*
  * <tc-multimodal-input> – a message box that takes images, audio, video and documents with the text. Files come in
@@ -385,7 +386,7 @@ export class TcMultimodalInput extends TcElement {
     const badge = a.duration !== undefined ? clock(a.duration) : a.pages !== undefined ? `${a.pages} p.` : "";
     const img = a.preview && (a.kind === "image" || a.kind === "video");
     return html`<span class="ui-mmi__thumb" data-kind=${a.kind} ?data-image=${!!img}>
-      ${img ? html`<img src=${a.preview!} alt="" loading="lazy" decoding="async" />` : KIND_ICON[a.kind]()}
+      ${img ? html`<img src=${ifDefined(safeMediaUrl(a.preview))} alt="" loading="lazy" decoding="async" />` : KIND_ICON[a.kind]()}
       ${img && a.kind === "video" ? play() : nothing}
       ${badge ? html`<span class="ui-mmi__badge">${badge}</span>` : nothing}
     </span>`;

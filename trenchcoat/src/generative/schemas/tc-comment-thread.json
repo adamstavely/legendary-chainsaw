@@ -23,7 +23,9 @@
           "type": "string"
         },
         "avatar": {
-          "type": "string"
+          "type": "string",
+          "format": "uri-reference",
+          "contentMediaType": "image/*"
         },
         "assistant": {
           "type": "boolean"
@@ -42,7 +44,9 @@
           "type": "string"
         },
         "avatar": {
-          "type": "string"
+          "type": "string",
+          "format": "uri-reference",
+          "contentMediaType": "image/*"
         },
         "assistant": {
           "type": "boolean"
@@ -111,7 +115,9 @@
         },
         "avatar": {
           "type": "string",
-          "description": "An element (cloned) or an image URL; unset shows initials"
+          "description": "An element (cloned) or an image URL; unset shows initials",
+          "format": "uri-reference",
+          "contentMediaType": "image/*"
         },
         "assistant": {
           "type": "boolean"

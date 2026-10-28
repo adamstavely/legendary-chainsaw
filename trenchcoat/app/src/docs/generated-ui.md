@@ -88,8 +88,9 @@ primary }`. Blocks nest inside callouts and groups up to six levels.
 - Title forms by what they do (“Send this as a weekly report”) and their submit button with the verb.
 - For a `component` block, put `catalogPrompt()` from `trenchcoat/generative` in the system prompt – a line per
   component, or only the few your assistant needs. The props are checked against the component's schema before
-  anything is set: what doesn't fit is left out and listed in `tc-spec-check`, and links must be http(s), mailto or
-  relative. See Foundations → Generative UI.
+  anything is set: what doesn't fit is left out and listed in `tc-spec-check`, and links must be http(s), mailto, tel
+  or relative. Set `allowedOrigins` to hold the components' images to your own origins. See Foundations → Generative
+  UI.
 
 ## Do
 

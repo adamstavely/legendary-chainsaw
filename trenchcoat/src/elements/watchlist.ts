@@ -4,6 +4,8 @@ import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
 import { initials } from "./internal/util";
+import { ifDefined } from "lit/directives/if-defined.js";
+import { safeMediaUrl } from "./internal/safe-media";
 
 /*
  * <tc-watchlist> – the people, accounts or entities a team is keeping an eye on, most at risk first. Each row has an
@@ -142,7 +144,7 @@ export class TcWatchlist extends TcElement {
 
   private renderRow(item: WatchItem, stop: string) {
     const avatar = item.avatar
-      ? html`<img class="ui-wls__pic" src=${item.avatar} alt="" />`
+      ? html`<img class="ui-wls__pic" src=${ifDefined(safeMediaUrl(item.avatar))} alt="" />`
       : html`<span class="ui-wls__initials">${initials(item.name)}</span>`;
     return html`<li class="ui-wls__item">
       <button type="button" class="ui-wls__row" data-row=${item.id} data-risk=${item.risk} tabindex=${item.id === stop ? 0 : -1} @focus=${() => (this.activeId = item.id)} @click=${() => this.open(item)}>

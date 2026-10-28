@@ -681,6 +681,7 @@ export class TcAgentGraph extends TcElement {
     if (this.hasUpdated) {
       this.observedStage = null;
       this.cardEl = null;
+      this.cardKey = "";
       this.requestUpdate();
     }
   }

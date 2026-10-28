@@ -100,7 +100,9 @@
         },
         "image": {
           "type": "string",
-          "description": "The print's image URL, shown instead of the drawn pattern"
+          "description": "The print's image URL, shown instead of the drawn pattern",
+          "format": "uri-reference",
+          "contentMediaType": "image/*"
         },
         "note": {
           "type": "string",

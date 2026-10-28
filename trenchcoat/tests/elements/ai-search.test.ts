@@ -241,6 +241,40 @@ describe("tc-ai-search", () => {
     await act(async () => root.unmount());
   });
 
+  test("React wrapper: a controlled value – typing asks the parent, and the parent can clear the field after a search", async () => {
+    (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+    const host = document.createElement("div");
+    document.body.append(host);
+    const root = createRoot(host);
+    const asked: string[] = [];
+    function Page() {
+      const [q, setQ] = React.useState("first");
+      return React.createElement(AiSearch, {
+        value: q,
+        onQueryChange: (next) => {
+          asked.push(next);
+          if (next !== "nope") setQ(next);
+        },
+        onSearch: () => setQ(""),
+      });
+    }
+    await act(async () => root.render(React.createElement(Page)));
+    await settle();
+    const el = host.querySelector("tc-ai-search")!;
+    expect(field(el).value).toBe("first");
+    await act(async () => type(field(el), "nope"));
+    await settle();
+    expect(asked).toEqual(["nope"]);
+    expect([el.value, field(el).value]).toEqual(["first", "first"]);
+    await act(async () => type(field(el), "invoice"));
+    await settle();
+    expect([el.value, field(el).value]).toEqual(["invoice", "invoice"]);
+    await act(async () => void key(field(el), "Enter"));
+    await settle();
+    expect([el.value, field(el).value]).toEqual(["", ""]);
+    await act(async () => root.unmount());
+  });
+
   for (const theme of ["light", "dark"] as const) {
     test(`axe (${theme}): no violations in either look, list open and in AI mode`, async () => {
       const wrap = await fixture(html`<div data-tc-theme=${theme} style="padding: 16px 16px 280px; background: var(--tc-surface-base)">

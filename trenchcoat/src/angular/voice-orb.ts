@@ -55,5 +55,5 @@ export class VoiceOrb {
    * The orb was pressed (only when `pressable`); detail: undefined
    * Types $event; the element dispatches the event itself.
    */
-  @Output("tc-press") readonly tcPress = new EventEmitter<CustomEvent<unknown>>();
+  @Output("tc-press") readonly tcPress = new EventEmitter<CustomEvent<undefined>>();
 }

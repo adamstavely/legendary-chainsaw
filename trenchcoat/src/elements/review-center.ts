@@ -8,6 +8,7 @@ import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
 import { FocusRescueController, OnScreenController } from "./internal/controllers";
+import { safeUrl } from "./internal/safe-url";
 
 /*
  * <tc-review-center> – the Lit port of src/components/review-center.tsx: a focused workspace for what your agents
@@ -1101,7 +1102,7 @@ export class TcReviewCenter extends TcElement implements ReviewCenterHandle {
             <ul class="ui-rvc__sources" aria-label="Sources">
               ${it.sources.map((s) => {
                 const inner = html`<span class="ui-rvc__source-icon">${s.icon ? s.icon.cloneNode(true) : linkGlyph}</span>${s.label}`;
-                return html`<li>${s.href && isLive ? html`<a class="ui-rvc__source" href=${s.href} target="_blank" rel="noreferrer">${inner}</a>` : html`<span class="ui-rvc__source">${inner}</span>`}</li>`;
+                return html`<li>${safeUrl(s.href) && isLive ? html`<a class="ui-rvc__source" href=${ifDefined(safeUrl(s.href))} target="_blank" rel="noreferrer">${inner}</a>` : html`<span class="ui-rvc__source">${inner}</span>`}</li>`;
               })}
             </ul>
           </div>`

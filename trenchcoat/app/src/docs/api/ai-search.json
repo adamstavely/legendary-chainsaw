@@ -132,8 +132,8 @@
     {
      "name": "tc-query-change",
      "detail": "",
-     "description": "The text changed ({ query }: AiSearchQueryChange)",
-     "cancelable": false
+     "description": "The text changed ({ query }: AiSearchQueryChange); cancelable – prevented, `value` stays as it was",
+     "cancelable": true
     },
     {
      "name": "tc-scope-remove",
@@ -278,10 +278,16 @@
      "description": "\"Search within file contents\" was switched"
     },
     {
+     "name": "value",
+     "type": "string",
+     "optional": true,
+     "description": "The text in the field – controlled when given: the field changes only when the parent passes a new value, so\nthe page can clear it after a search"
+    },
+    {
      "name": "defaultValue",
      "type": "string",
      "optional": true,
-     "description": "The text in the field on mount"
+     "description": "The text in the field on mount when `value` isn't controlled"
     },
     {
      "name": "onQueryChange",
@@ -326,7 +332,7 @@
     "tc-submit": "onSearch",
     "tc-mode-change": null,
     "tc-contents-change": null,
-    "tc-query-change": "onQueryChange",
+    "tc-query-change": null,
     "tc-scope-remove": null
    }
   }
@@ -394,7 +400,7 @@
     },
     {
      "name": "tc-query-change",
-     "cancelable": false
+     "cancelable": true
     },
     {
      "name": "tc-scope-remove",
@@ -607,7 +613,7 @@
   "windowed": false
  },
  "size": {
-  "min": 29158,
-  "gzip": 8754
+  "min": 29245,
+  "gzip": 8760
  }
 }

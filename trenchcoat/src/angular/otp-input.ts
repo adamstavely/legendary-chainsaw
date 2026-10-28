@@ -97,8 +97,8 @@ export class OtpInput {
    */
   @Output("tc-value-change") readonly tcValueChange = new EventEmitter<CustomEvent<OtpValueChange>>();
   /**
-   * "Resend code" was pressed (shown when `resendable`)
+   * "Resend code" was pressed (shown when `resendable`); detail: null
    * Types $event; the element dispatches the event itself.
    */
-  @Output("tc-resend") readonly tcResend = new EventEmitter<CustomEvent<unknown>>();
+  @Output("tc-resend") readonly tcResend = new EventEmitter<CustomEvent<null>>();
 }

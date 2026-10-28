@@ -2,6 +2,8 @@ import { html, nothing, svg, type PropertyValues, type TemplateResult } from "li
 import { property, state } from "lit/decorators.js";
 import { TcElement } from "./internal/base";
 import { FocusRescueController } from "./internal/controllers";
+import { ifDefined } from "lit/directives/if-defined.js";
+import { safeUrl } from "./internal/safe-url";
 
 /*
  * <tc-guardrail-notice> – content a policy blocked, redacted or rewrote, said plainly where it happened: which policy,
@@ -55,7 +57,7 @@ let instances = 0;
  * @tag tc-guardrail-notice
  * @fires tc-open-change - "Show what changed" opened or closed the before / after. Cancelable. Detail: GuardrailOpenChange ({ open })
  * @fires tc-review-request - Request review was pressed. Cancelable: unless prevented, the button turns into "Review requested". Detail: GuardrailReviewRequest ({ action, policy })
- * @fires tc-dismiss - The close button of a dismissible notice was pressed; remove the notice in answer
+ * @fires tc-dismiss - The close button of a dismissible notice was pressed; remove the notice in answer; detail: null
  */
 export class TcGuardrailNotice extends TcElement {
   static override ui = "grn";
@@ -165,7 +167,7 @@ export class TcGuardrailNotice extends TcElement {
 
   private renderPolicy() {
     if (!this.policy) return nothing;
-    const name = this.policyHref ? html`<a class="ui-grn__policy-link" href=${this.policyHref}>${this.policy}</a>` : this.policy;
+    const name = safeUrl(this.policyHref) ? html`<a class="ui-grn__policy-link" href=${ifDefined(safeUrl(this.policyHref))}>${this.policy}</a>` : this.policy;
     return html`<span class="ui-grn__policy">${icons.shield()}<span class="ui-grn__sr">Policy: </span>${name}</span>`;
   }
 

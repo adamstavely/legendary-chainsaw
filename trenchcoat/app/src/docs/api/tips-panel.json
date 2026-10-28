@@ -70,7 +70,7 @@
     {
      "name": "tc-close",
      "detail": "",
-     "description": "The Close button was pressed",
+     "description": "The Close button was pressed; detail: null",
      "cancelable": false
     }
    ],
@@ -485,7 +485,7 @@
   "windowed": false
  },
  "size": {
-  "min": 23852,
-  "gzip": 7181
+  "min": 23890,
+  "gzip": 7195
  }
 }

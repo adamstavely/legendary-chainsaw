@@ -8,6 +8,7 @@ import { cardHead } from "./internal/card-head";
 import { FocusRescueController, RowWindowController } from "./internal/controllers";
 import "./validity-badge";
 import type { ValidityProfile, ValidityProfileName, ValidityTime } from "./validity-badge";
+import { safeUrl } from "./internal/safe-url";
 
 /*
  * <tc-retrieval-inspector> – what the model was given to answer with: every chunk retrieval returned for one query,
@@ -243,10 +244,11 @@ export class TcRetrievalInspector extends TcElement {
     }
     if (e.key === "Enter") {
       const c = this.view[this.active];
-      if (c && (c.url || this.openHandled)) {
+      if (c && (safeUrl(c.url) || this.openHandled)) {
         e.preventDefault();
         this.openSource(c);
-        if (c.url && !this.openHandled) window.open(c.url, "_blank", "noopener");
+        const url = safeUrl(c.url);
+        if (url && !this.openHandled) window.open(url, "_blank", "noopener");
       }
       return;
     }
@@ -384,8 +386,8 @@ export class TcRetrievalInspector extends TcElement {
       </dl>
       <blockquote class="ui-rti__text">${parts.map((p, k) => (k % 2 ? html`<mark class="ui-rti__hit">${p}</mark>` : p))}</blockquote>
       ${canOpen
-        ? c.url
-          ? html`<a class="ui-rti__open" href=${c.url} target="_blank" rel="noopener noreferrer" @click=${(e: Event) => this.openSource(c, e)}>${openIcon}Open source</a>`
+        ? safeUrl(c.url)
+          ? html`<a class="ui-rti__open" href=${ifDefined(safeUrl(c.url))} target="_blank" rel="noopener noreferrer" @click=${(e: Event) => this.openSource(c, e)}>${openIcon}Open source</a>`
           : html`<button type="button" class="ui-rti__open" @click=${() => this.openSource(c)}>${openIcon}Open source</button>`
         : nothing}
     </section>`;

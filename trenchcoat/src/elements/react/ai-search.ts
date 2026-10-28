@@ -41,7 +41,10 @@ export type AiSearchProps = Omit<RawProps, Owned> & {
   defaultContents?: boolean;
   /** "Search within file contents" was switched */
   onContentsChange?: (contents: boolean) => void;
-  /** The text in the field on mount */
+  /** The text in the field – controlled when given: the field changes only when the parent passes a new value, so
+   *  the page can clear it after a search */
+  value?: string;
+  /** The text in the field on mount when `value` isn't controlled */
   defaultValue?: string;
   /** The text changed */
   onQueryChange?: (query: string) => void;
@@ -57,23 +60,20 @@ export type AiSearchProps = Omit<RawProps, Owned> & {
 
 const NO_SCOPES: AiSearchScope[] = [];
 
-export function AiSearch({ mode, defaultMode = "search", onModeChange, contents, defaultContents = false, onContentsChange, defaultValue = "", onQueryChange, onSearch, scopes, defaultScopes = NO_SCOPES, onScopesChange, ...props }: AiSearchProps) {
+export function AiSearch({ mode, defaultMode = "search", onModeChange, contents, defaultContents = false, onContentsChange, value, defaultValue = "", onQueryChange, onSearch, scopes, defaultScopes = NO_SCOPES, onScopesChange, ...props }: AiSearchProps) {
   const m = useControlled<AiSearchMode>(mode, defaultMode, onModeChange);
   const c = useControlled<boolean>(contents, defaultContents, onContentsChange);
   const sc = useControlled<AiSearchScope[]>(scopes, defaultScopes, onScopesChange);
-  const [text, setText] = React.useState(defaultValue);
+  const text = useControlled<string>(value, defaultValue, onQueryChange);
   return h(RawAiSearch, {
     ...props,
     mode: m.value,
     contents: c.value,
-    value: text,
+    value: text.value,
     scopes: sc.value,
     onTcModeChange: (e: CustomEvent<AiSearchModeChange>) => m.handler(e.detail.mode, e),
     onTcContentsChange: (e: CustomEvent<AiSearchContentsChange>) => c.handler(e.detail.contents, e),
-    onTcQueryChange: (e: CustomEvent<AiSearchQueryChange>) => {
-      setText(e.detail.query);
-      onQueryChange?.(e.detail.query);
-    },
+    onTcQueryChange: (e: CustomEvent<AiSearchQueryChange>) => text.handler(e.detail.query, e),
     onTcSubmit: (e: CustomEvent<AiSearchSubmit>) => onSearch?.(e.detail),
     onTcScopeRemove: (e: CustomEvent<AiSearchScopeRemove>) =>
       sc.handler(

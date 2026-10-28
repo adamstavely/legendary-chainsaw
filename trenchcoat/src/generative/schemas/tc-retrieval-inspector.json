@@ -115,7 +115,8 @@
         },
         "url": {
           "type": "string",
-          "description": "Opens the source; with `open-handled` the app opens it instead"
+          "description": "Opens the source; with `open-handled` the app opens it instead",
+          "format": "uri-reference"
         },
         "observed": {
           "$ref": "#/definitions/ValidityTime",

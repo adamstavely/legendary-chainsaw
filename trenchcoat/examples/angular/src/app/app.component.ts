@@ -1,13 +1,13 @@
 import { Component, signal } from "@angular/core";
-import { FormsModule } from "@angular/forms";
+import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { Button, Combobox, DataTable, LookProvider, Switch } from "trenchcoat/angular";
-import { SwitchValueAccessor } from "trenchcoat/angular/forms";
+import { ComboboxValueAccessor, SwitchValueAccessor } from "trenchcoat/angular/forms";
 import type { ComboboxOption, DataColumn, DataRow } from "trenchcoat";
 
 @Component({
   selector: "app-root",
   // The wrappers: no CUSTOM_ELEMENTS_SCHEMA, and every binding below is type-checked
-  imports: [Button, Combobox, DataTable, LookProvider, Switch, SwitchValueAccessor, FormsModule],
+  imports: [Button, Combobox, DataTable, LookProvider, Switch, ComboboxValueAccessor, SwitchValueAccessor, FormsModule, ReactiveFormsModule],
   template: `
     <main>
       <tc-button id="save" label="Save" (click)="clicks.set(clicks() + 1)"></tc-button>
@@ -24,6 +24,13 @@ import type { ComboboxOption, DataColumn, DataRow } from "trenchcoat";
       <output id="changes">{{ changes() }}</output>
       <tc-switch id="notify" label="Notify me" [(ngModel)]="notify"></tc-switch>
       <output id="notify-value">{{ notify }}</output>
+      <!-- Form accessors: reset writes null, a cancelled change stays out of the form, disable() reaches the element -->
+      <tc-combobox id="team" heading="Team" [options]="people" [formControl]="team"></tc-combobox>
+      <tc-button id="reset-team" variant="secondary" label="Reset team" (click)="team.reset()"></tc-button>
+      <output id="team-value">{{ json(team.value) }}</output>
+      <tc-switch id="locked" label="Locked" [formControl]="locked" (tc-value-change)="$event.preventDefault()"></tc-switch>
+      <output id="locked-value">{{ locked.value }}</output>
+      <tc-switch id="frozen" label="Frozen" [formControl]="frozen"></tc-switch>
       <tc-look-provider look="clean">
         <tc-button id="clean" variant="ghost" label="Clean"></tc-button>
       </tc-look-provider>
@@ -52,6 +59,9 @@ export class AppComponent {
   json = (v: unknown) => JSON.stringify(v);
   changes = signal(0);
   notify = true;
+  team = new FormControl<string[] | null>(["ana"]);
+  locked = new FormControl(true, { nonNullable: true });
+  frozen = new FormControl({ value: true, disabled: true }, { nonNullable: true });
 
   // Controlled: the app keeps the value and passes it back
   onWho(e: CustomEvent<{ value: string[] }>) {

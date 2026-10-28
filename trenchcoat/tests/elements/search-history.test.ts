@@ -127,6 +127,19 @@ describe("tc-search-history", () => {
     expect(el.querySelectorAll('.ui-shis__list [tabindex="0"]')).toHaveLength(1);
   });
 
+  test("the tab stop and focus stay on their search when a newer search arrives", async () => {
+    const el = await make();
+    const cell = el.querySelector<HTMLElement>('.ui-shis__row[data-id="b"] [data-cell$=":0"]')!;
+    cell.focus();
+    await settle();
+    el.searches = [{ id: "n", query: "new one", at: NOW - MIN }, ...SEARCHES];
+    await settle();
+    const focused = document.activeElement as HTMLElement;
+    expect(focused.closest<HTMLElement>(".ui-shis__row")!.dataset.id).toBe("b");
+    expect(el.querySelector<HTMLElement>('.ui-shis__row[data-id="b"] [data-cell$=":0"]')!.tabIndex).toBe(0);
+    expect(el.querySelectorAll('.ui-shis__list [tabindex="0"]')).toHaveLength(1);
+  });
+
   test("controlled: prevented saves and removals leave the list; Undo appears once the page removes the search", async () => {
     const el = await make();
     el.addEventListener("tc-saved-change", (e) => e.preventDefault());
@@ -139,6 +152,28 @@ describe("tc-search-history", () => {
     el.searches = SEARCHES.filter((s) => s.id !== "a");
     await settle();
     expect(el.querySelector(".ui-shis__removed")!.textContent).toContain("invoice 7741");
+  });
+
+  test("its own clock reads the time on each tick, so it's right after the computer sleeps", async () => {
+    const real = Date.now;
+    const ticks: (() => void)[] = [];
+    const realSet = window.setInterval;
+    window.setInterval = ((fn: () => void) => ticks.push(fn)) as unknown as typeof window.setInterval;
+    let t = real.call(Date);
+    Date.now = () => t;
+    try {
+      const el = await fixture<TcSearchHistory>(html`<tc-search-history .searches=${[{ id: "x", query: "q", at: t - 1000 }]}></tc-search-history>`);
+      expect(el.querySelector(".ui-shis__time")!.textContent).toBe("just now");
+      // Two hours pass while the timer is stalled, then one tick fires
+      t += 2 * 60 * MIN;
+      ticks.at(-1)!();
+      await settle();
+      expect(el.querySelector(".ui-shis__time")!.textContent).not.toBe("just now");
+      expect(el.querySelector(".ui-shis__time")!.textContent).not.toMatch(/min/);
+    } finally {
+      Date.now = real;
+      window.setInterval = realSet;
+    }
   });
 
   test("its own clock when `now` isn't given; an empty history says so", async () => {

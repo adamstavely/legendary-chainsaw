@@ -7,6 +7,7 @@ import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
 import { FocusRescueController, OffScreenController, RowWindowController } from "./internal/controllers";
 import { PopoverController } from "./internal/popover";
+import { safeUrl } from "./internal/safe-url";
 
 /*
  * <tc-background-tasks> – the person's own long-running jobs (an export, an upload, an agent run, a reindex) at a
@@ -477,8 +478,8 @@ export class TcBackgroundTasks extends TcElement {
     if (t.status === "done" && t.result) {
       const name = `Open ${t.result.label ?? t.label}`;
       acts.push(
-        t.result.href
-          ? html`<a class="ui-bgt__act ui-bgt__act--secondary" data-act="open" data-focus-key=${t.id} tabindex=${tab} href=${t.result.href} aria-label=${name} @click=${(e: Event) => this.openResult(t, e)}>Open</a>`
+        safeUrl(t.result.href)
+          ? html`<a class="ui-bgt__act ui-bgt__act--secondary" data-act="open" data-focus-key=${t.id} tabindex=${tab} href=${ifDefined(safeUrl(t.result.href))} aria-label=${name} @click=${(e: Event) => this.openResult(t, e)}>Open</a>`
           : html`<button type="button" class="ui-bgt__act ui-bgt__act--secondary" data-act="open" data-focus-key=${t.id} tabindex=${tab} aria-label=${name} @click=${(e: Event) => this.openResult(t, e)}>Open</button>`,
       );
     }

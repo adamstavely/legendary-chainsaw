@@ -4,6 +4,8 @@ import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
 import { initials } from "./internal/util";
+import { ifDefined } from "lit/directives/if-defined.js";
+import { safeMediaUrl } from "./internal/safe-media";
 
 /*
  * <tc-person-links> – the people linked to a person or an account: a row each with a picture or initials, the name,
@@ -141,7 +143,7 @@ export class TcPersonLinks extends TcElement {
   /* ---------- Rendering ---------- */
 
   private renderAvatar(p: LinkedPerson) {
-    if (p.picture) return html`<span class="ui-plk__avatar" aria-hidden="true"><img src=${p.picture} alt="" /></span>`;
+    if (p.picture) return html`<span class="ui-plk__avatar" aria-hidden="true"><img src=${ifDefined(safeMediaUrl(p.picture))} alt="" /></span>`;
     return html`<span class="ui-plk__avatar" data-hue=${hue(p.name)} aria-hidden="true">${initials(p.name)}</span>`;
   }
 

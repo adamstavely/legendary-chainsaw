@@ -79,10 +79,10 @@ export class EvaluationDatasetEditor {
    */
   @Output("tc-compare-change") readonly tcCompareChange = new EventEmitter<CustomEvent<EvaluationDatasetCompareChange>>();
   /**
-   * Import was pressed: the app reads a file and sets `value`; no detail
+   * Import was pressed: the app reads a file and sets `value`; detail: null
    * Types $event; the element dispatches the event itself.
    */
-  @Output("tc-import") readonly tcImport = new EventEmitter<CustomEvent<unknown>>();
+  @Output("tc-import") readonly tcImport = new EventEmitter<CustomEvent<null>>();
   /**
    * Export was pressed ({ value, jsonl }: EvaluationDatasetExport – the set and the same set as JSON Lines)
    * Types $event; the element dispatches the event itself.

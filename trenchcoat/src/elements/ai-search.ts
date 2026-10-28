@@ -60,7 +60,7 @@ const comboKeys = (combo: string, mod: string) =>
  * @fires tc-submit - A search or a question was sent ({ query, mode, contents, scopes }: AiSearchSubmit)
  * @fires tc-mode-change - AI mode was switched ({ mode }: AiSearchModeChange); cancelable – prevented, `mode` stays as it was
  * @fires tc-contents-change - "Search within file contents" was switched ({ contents }: AiSearchContentsChange); cancelable – prevented, `contents` stays as it was
- * @fires tc-query-change - The text changed ({ query }: AiSearchQueryChange)
+ * @fires tc-query-change - The text changed ({ query }: AiSearchQueryChange); cancelable – prevented, `value` stays as it was
  * @fires tc-scope-remove - A scope chip was removed ({ id }: AiSearchScopeRemove); cancelable – prevented, `scopes` stays as it was
  */
 export class TcAiSearch extends TcElement {
@@ -136,8 +136,12 @@ export class TcAiSearch extends TcElement {
   /* ---------- Actions ---------- */
 
   private setValue(query: string) {
+    // Prevented, the field shows `value` again
+    if (!this.emit<AiSearchQueryChange>("tc-query-change", { query }, { cancelable: true })) {
+      this.requestUpdate();
+      return;
+    }
     this.value = query;
-    this.emit<AiSearchQueryChange>("tc-query-change", { query });
   }
   private submit(query = this.value) {
     const q = query.trim();

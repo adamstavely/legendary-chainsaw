@@ -163,7 +163,7 @@ const SSR: Record<Framework, ReactNode> = {
   html: <>Server-rendered HTML can contain the tag; it upgrades when the module loads in the browser. Set properties from script after that – there's no server rendering of the element's own content in this version.</>,
   react: <>No server rendering in this version. In Next.js, load the component with <code>dynamic(() =&gt; import("./…"), {"{ ssr: false }"})</code> from a <code>"use client"</code> file, with a placeholder the size of the component so the page doesn't shift (<code>examples/next</code>).</>,
   vue: <>In Nuxt, import the module from a client-only plugin (<code>plugins/trenchcoat.client.ts</code>) and wrap the tag in <code>&lt;ClientOnly&gt;</code> (<code>examples/nuxt</code>).</>,
-  angular: <>With Angular SSR, import the module in the browser only – <code>afterNextRender(() =&gt; import("…"))</code> or behind <code>isPlatformBrowser</code>. The server sends the bare tag and it upgrades on the client. (Not covered by <code>examples/angular</code>, which renders on the client.)</>,
+  angular: <>Angular SSR imports the directive as it is – every module loads in Node without a DOM. The server sends the tag and its attributes, and the element renders when it upgrades on the client; if hydration reports a mismatch inside it, add <code>ngSkipHydration</code> to the component that holds it. To keep its code out of the server bundle, put it in a <code>@defer</code> block. (<code>examples/angular</code> renders on the client.)</>,
   svelte: <>In SvelteKit, import the module in <code>onMount</code> or behind <code>browser</code> from <code>$app/environment</code>; the server sends the bare tag. (<code>examples/svelte</code> is client-only.)</>,
 };
 

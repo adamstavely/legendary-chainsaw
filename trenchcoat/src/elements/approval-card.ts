@@ -5,6 +5,7 @@ import { live } from "lit/directives/live.js";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
 import { FocusRescueController, rescueFocus } from "./internal/controllers";
+import { safeUrl } from "./internal/safe-url";
 
 /*
  * <tc-approval-card> – the Lit port of src/components/approval-card.tsx: an AI agent asks before it does something
@@ -95,8 +96,8 @@ let uid = 0;
  * @tag tc-approval-card
  * @fires tc-status-change - The card was approved, denied or expired; detail `{ status }`. Cancelable: preventDefault() keeps the status (controlled use)
  * @fires tc-deny - Denied by the user or by the countdown; detail `{ reason: "user" | "timeout" }`
- * @fires tc-expire - The countdown ran out (tc-deny fires too)
- * @fires tc-edit - Edit was pressed (shown with `editable`)
+ * @fires tc-expire - The countdown ran out (tc-deny fires too); detail: null
+ * @fires tc-edit - Edit was pressed (shown with `editable`); detail: null
  * @fires tc-details-change - An argument was edited in "Edit arguments" mode; detail `{ details, index, label, value }`. Cancelable: preventDefault() keeps the rows (controlled use)
  * @fires tc-evidence-select - An evidence chip without `href` was pressed; detail `{ evidence, index }`
  */
@@ -677,8 +678,8 @@ export class TcApprovalCard extends TcElement {
       <ul class="ui-ap__chips" aria-labelledby=${id}>
         ${items.map((ev, index) => {
           const inner = html`${fileIcon}<span class="ui-ap__chip-label">${ev.label}</span>${ev.detail ? html`<span class="ui-ap__chip-detail">${ev.detail}</span>` : nothing}`;
-          return html`<li>${ev.href
-            ? html`<a class="ui-ap__chip" href=${ev.href} target="_blank" rel="noopener noreferrer">${inner}</a>`
+          return html`<li>${safeUrl(ev.href)
+            ? html`<a class="ui-ap__chip" href=${ifDefined(safeUrl(ev.href))} target="_blank" rel="noopener noreferrer">${inner}</a>`
             : html`<button type="button" class="ui-ap__chip" @click=${() => this.emit<ApprovalEvidenceSelect>("tc-evidence-select", { evidence: ev, index })}>${inner}</button>`}</li>`;
         })}
       </ul>

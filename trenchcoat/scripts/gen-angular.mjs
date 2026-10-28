@@ -20,7 +20,13 @@ const check = process.argv.includes("--check");
 execSync("npx cem analyze --config custom-elements-manifest.config.mjs", { stdio: "ignore" });
 const manifest = JSON.parse(readFileSync("custom-elements.json", "utf8"));
 
-const camel = (s) => s.replace(/-([a-z])/g, (_, c) => c.toUpperCase());
+const camel = (s) => s.replace(/-([a-z\d])/g, (_, c) => c.toUpperCase());
+/** An event's output name: tc-value-change → tcValueChange. Only lower-case words joined by single hyphens map to a
+ *  name Angular can bind both ways; anything else stops the script rather than writing a wrapper that can't work */
+const outputName = (tag, event) => {
+  if (!/^[a-z][a-z\d]*(-[a-z\d]+)*$/.test(event)) throw new Error(`${tag}: event "${event}" isn't lower-case words joined by hyphens – Angular can't bind it as an output; rename the event`);
+  return camel(event);
+};
 /** A property name that's a valid identifier as it stands */
 const ident = (s) => /^[A-Za-z_$][\w$]*$/.test(s);
 
@@ -95,7 +101,8 @@ function detailType(event, decl, types, cls) {
   const outside = desc.replace(/\{[^{}]*(\{[^{}]*\}[^{}]*)*\}/g, " ");
   const named = [...outside.matchAll(/\b([A-Z]\w+)\b/g)].map((m) => m[1]).find((t) => types.has(t) && t !== cls);
   if (named) return { type: named, imports: [named] };
-  if (/detail[`\s:]+null\b/i.test(desc)) return { type: "null", imports: [] };
+  const empty = /detail[`\s:]+(null|undefined)\b/i.exec(desc);
+  if (empty) return { type: empty[1], imports: [] };
   const inline = inlineObject(desc, decl, types, cls);
   if (inline) return inline;
   const m = /^tc-(.+)-change$/.exec(event.name);
@@ -108,6 +115,8 @@ const elements = [];
 for (const mod of manifest.modules) {
   // The look provider is the one public element that lives in internal/; it's published as trenchcoat/look-provider
   const provider = mod.path === "src/elements/internal/look.ts";
+  // iCloud copies ("generated-ui 2.ts") aren't elements of their own
+  if (/ \d+\.ts$/.test(mod.path)) continue;
   if (!mod.path.startsWith("src/elements/") || (mod.path.includes("/internal/") && !provider) || mod.path.includes("/react/")) continue;
   for (const decl of mod.declarations ?? []) {
     if (!decl.tagName || !decl.customElement) continue;
@@ -125,8 +134,10 @@ for (const mod of manifest.modules) {
       .map((e) => {
         const d = detailType(e, decl, types, cls);
         d.imports.forEach((t) => imports.add(t));
-        return { event: e.name, prop: camel(e.name), type: d.type, description: e.description };
+        return { event: e.name, prop: outputName(decl.tagName, e.name), type: d.type, description: e.description };
       });
+    const clash = outputs.find((o, i) => outputs.findIndex((p) => p.prop === o.prop) !== i || inputs.some((f) => f.name === o.prop));
+    if (clash) throw new Error(`${decl.tagName}: output ${clash.prop} (${clash.event}) clashes with another output or an input`);
     const value = inputs.some((f) => f.name === "value") && outputs.some((o) => o.event === "tc-value-change");
     const disabled = inputs.some((f) => f.name === "disabled");
     elements.push({ slug, tag: decl.tagName, cls, name, description: decl.description ?? decl.summary ?? "", inputs, outputs, imports: [...imports], value, disabled });
@@ -191,7 +202,7 @@ ${els.map(directive).join("\n")}`,
 files.set(
   "index.ts",
   `${header}// Every element's directive: import { Button, Combobox } from "trenchcoat/angular", or TRENCHCOAT for all of them.
-${[...bySlug].map(([slug, els]) => `import { ${els.map((el) => el.name).join(", ")} } from "./${slug}";`).join("\n")}
+${[...bySlug].map(([slug, els]) => `import { ${els.map((el) => el.name).join(", ")} } from "./${slug}.js";`).join("\n")}
 
 export { ${elements.map((el) => el.name).join(", ")} };
 
@@ -205,8 +216,9 @@ files.set(
   "forms.ts",
   `${header}// ngModel, formControl and formControlName for the elements that hold a value: import { CheckboxValueAccessor } from
 // "trenchcoat/angular/forms", or TRENCHCOAT_FORMS for all of them, next to FormsModule or ReactiveFormsModule.
-// The element keeps its own state; the accessor writes the form's value into it and reports tc-value-change back.
-import { Directive, ElementRef, forwardRef, inject } from "@angular/core";
+// The element keeps its own state; the accessor writes the form's value into it and reports tc-value-change back –
+// once the event has finished, so a change the page cancels (preventDefault) never reaches the form.
+import { Directive, ElementRef, forwardRef, inject, isDevMode } from "@angular/core";
 import { NG_VALUE_ACCESSOR, type ControlValueAccessor } from "@angular/forms";
 ${forms.map((el) => `import type { ${el.cls} } from "trenchcoat/${el.slug}";`).join("\n")}
 
@@ -216,11 +228,19 @@ abstract class ValueAccessor<E extends HTMLElement & { value: unknown }> impleme
   #change: (value: E["value"]) => void = () => {};
   #touched: () => void = () => {};
   constructor() {
-    this.el.addEventListener("tc-value-change", (e) => this.#change((e as CustomEvent<{ value: E["value"] }>).detail.value));
+    // This listener runs before the template's (tc-value-change) handler, so wait for the dispatch to finish before
+    // reading defaultPrevented – a microtask runs after it, and before the next event
+    this.el.addEventListener("tc-value-change", (e) => {
+      queueMicrotask(() => {
+        if (!e.defaultPrevented) this.#change((e as CustomEvent<{ value: E["value"] }>).detail.value);
+      });
+    });
     this.el.addEventListener("focusout", () => this.#touched());
   }
-  writeValue(value: E["value"]) {
-    this.el.value = value;
+  /** null and undefined – a new or reset control – become the element's own empty value ("", [], false …), read from a
+   *  fresh element of the same tag, since many elements expect an array or a string */
+  writeValue(value: E["value"] | null | undefined) {
+    this.el.value = value ?? (document.createElement(this.el.localName) as E).value;
   }
   registerOnChange(fn: (value: E["value"]) => void) {
     this.#change = fn;
@@ -230,6 +250,7 @@ abstract class ValueAccessor<E extends HTMLElement & { value: unknown }> impleme
   }
   setDisabledState(disabled: boolean) {
     if ("disabled" in this.el) (this.el as { disabled: boolean }).disabled = disabled;
+    else if (disabled && isDevMode()) console.warn("<" + this.el.localName + "> has no disabled state – the control is disabled, but the element stays editable");
   }
 }
 
@@ -268,6 +289,9 @@ for (const file of existsSync(OUT) ? readdirSync(OUT) : []) {
     stale++;
   } else rmSync(join(OUT, file));
 }
+// An unknown detail types $event as CustomEvent<unknown> – strict templates then need casts. Name the type in the
+// event's @fires line: "(detail: MyChange)", "{ value, item }", or "detail: null"
 const untyped = elements.flatMap((el) => el.outputs.filter((o) => o.type === "unknown").map((o) => `${el.tag} ${o.event}`));
-if (!check) console.log(`angular: ${elements.length} directives, ${forms.length} value accessors; ${untyped.length} events with an unknown detail${untyped.length ? ` (${untyped.slice(0, 12).join(", ")}${untyped.length > 12 ? " …" : ""})` : ""}`);
-process.exit(stale ? 1 : 0);
+for (const u of untyped) console.error(`${u}: no detail type in its @fires line – name the type, write { … }, or "detail: null"`);
+if (!check) console.log(`angular: ${elements.length} directives, ${forms.length} value accessors`);
+process.exit(stale || untyped.length ? 1 : 0);

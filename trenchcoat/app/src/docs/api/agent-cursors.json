@@ -170,7 +170,7 @@
     {
      "name": "tc-accept-all",
      "detail": "",
-     "description": "\"Accept all\" was pressed",
+     "description": "\"Accept all\" was pressed; detail: null",
      "cancelable": false
     },
     {
@@ -940,7 +940,7 @@
   "windowed": false
  },
  "size": {
-  "min": 85899,
-  "gzip": 22483
+  "min": 86407,
+  "gzip": 22723
  }
 }

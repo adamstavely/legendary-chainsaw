@@ -5,6 +5,8 @@ import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
 import { FocusRescueController, rescueFocus, SmoothHeightController } from "./internal/controllers";
 import type { Look } from "./internal/look";
+import { ifDefined } from "lit/directives/if-defined.js";
+import { safeMediaUrl } from "./internal/safe-media";
 
 /*
  * <tc-comment-thread> – the Lit port of src/components/comment-thread.tsx: one comment with its replies, including an
@@ -82,7 +84,7 @@ const threadIcon = svg`<path d="M14 9a2 2 0 0 1-2 2H6l-3 3V5a2 2 0 0 1 2-2h7a2 2
  * @tag tc-comment-thread
  * @fires tc-messages-change - A reply was posted here or the assistant answered; detail `{ messages: ThreadMessage[] }`
  *   is the whole thread. Cancelable: preventDefault() keeps the new message out until the app passes it back.
- * @fires tc-close - The close button was pressed (shown with `closable`)
+ * @fires tc-close - The close button was pressed (shown with `closable`); detail: null
  */
 export class TcCommentThread extends TcElement {
   static override ui = "ct";
@@ -253,7 +255,7 @@ export class TcCommentThread extends TcElement {
   private avatar(author: ThreadAuthor, look: Look) {
     const size = look === "clean" ? 20 : 24;
     if (author.avatar && typeof author.avatar !== "string") return html`<span class="ui-ct__avatar">${cloneIcon(author.avatar)}</span>`;
-    if (typeof author.avatar === "string") return html`<img class="ui-ct__avatar" src=${author.avatar} alt="" width=${size} height=${size} loading="lazy" />`;
+    if (typeof author.avatar === "string") return html`<img class="ui-ct__avatar" src=${ifDefined(safeMediaUrl(author.avatar))} alt="" width=${size} height=${size} loading="lazy" />`;
     const initials = author.name
       .split(" ")
       .map((p) => p[0])

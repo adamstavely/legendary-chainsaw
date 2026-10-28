@@ -128,7 +128,7 @@
     {
      "name": "tc-dispute",
      "detail": "",
-     "description": "The dispute form was sent (detail: { reason, version: the corrected wording, or \"\" }); cancelable – prevent it to keep the form open, e.g. while saving",
+     "description": "The dispute form was sent (KnowledgeDispute – detail: { reason, version: the corrected wording, or \"\" }); cancelable – prevent it to keep the form open, e.g. while saving",
      "cancelable": true
     }
    ],
@@ -515,7 +515,7 @@
   "windowed": false
  },
  "size": {
-  "min": 34531,
-  "gzip": 9767
+  "min": 34569,
+  "gzip": 9774
  }
 }

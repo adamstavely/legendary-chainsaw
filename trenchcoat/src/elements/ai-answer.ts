@@ -7,6 +7,7 @@ import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
 import { FocusRescueController, OnScreenController, rescueFocus } from "./internal/controllers";
 import type { Look } from "./internal/look";
+import { safeUrl } from "./internal/safe-url";
 
 /*
  * <tc-ai-answer> – the Lit port of src/components/ai-answer.tsx: an assistant's answer with its sources. The sources
@@ -234,7 +235,7 @@ let uidSeq = 0;
  * @fires tc-feedback-change - The verdict changes (a thumb, a reason, clearing it, a new answer starting over); detail `{ feedback: AnswerFeedback | null }`. Cancelable: preventDefault() keeps `feedback` as it is (controlled use)
  * @fires tc-feedback - A thumb up, or a thumbs down once its reason is picked; detail `{ value: "up" | "down", reason?: string }`
  * @fires tc-follow-up - A follow-up question was picked; detail `{ question: string }`
- * @fires tc-stop - Stop was pressed while writing
+ * @fires tc-stop - Stop was pressed while writing; detail: null
  * @fires tc-copy - The answer is on the clipboard; detail `{ text: string }`
  */
 export class TcAiAnswer extends TcElement {
@@ -545,8 +546,8 @@ export class TcAiAnswer extends TcElement {
           const inner = html`<span class="ui-ans__site">${s.icon ? html`<span class="ui-ans__favicon">${s.icon.cloneNode(true)}</span>` : nothing}<span class="ui-ans__site-name">${s.name}</span><span class="ui-ans__num">${i + 1}</span></span><span class="ui-ans__title">${s.title}</span>`;
           const style = styleMap({ animationDelay: instant ? "0ms" : `${120 + i * CARD_MS}ms` });
           return html`<div role="listitem" class="ui-ans__source-wrap">
-            ${s.href
-              ? html`<a class="ui-ans__source" ?data-lit=${lit.has(i)} style=${style} href=${s.href} target="_blank" rel="noreferrer" @mouseenter=${() => (this.hoverSource = i)} @mouseleave=${() => (this.hoverSource = null)}>${inner}</a>`
+            ${safeUrl(s.href)
+              ? html`<a class="ui-ans__source" ?data-lit=${lit.has(i)} style=${style} href=${ifDefined(safeUrl(s.href))} target="_blank" rel="noreferrer" @mouseenter=${() => (this.hoverSource = i)} @mouseleave=${() => (this.hoverSource = null)}>${inner}</a>`
               : html`<div class="ui-ans__source" ?data-lit=${lit.has(i)} style=${style} @mouseenter=${() => (this.hoverSource = i)} @mouseleave=${() => (this.hoverSource = null)}>${inner}</div>`}
           </div>`;
         })}
@@ -622,7 +623,7 @@ export class TcAiAnswer extends TcElement {
     >
       ${pop.ids.map((id) => {
         const s = this.sources[id];
-        return html`<a class="ui-ans__pop-item" href=${ifDefined(s.href)} target="_blank" rel="noreferrer" tabindex="-1">
+        return html`<a class="ui-ans__pop-item" href=${ifDefined(safeUrl(s.href))} target="_blank" rel="noreferrer" tabindex="-1">
           <span class="ui-ans__site">${s.icon ? html`<span class="ui-ans__favicon">${s.icon.cloneNode(true)}</span>` : nothing}<span class="ui-ans__site-name">${s.href ? s.href.replace(/^https?:\/\/(www\.)?/, "").split("/")[0] : s.name}</span><span class="ui-ans__num">${id + 1}</span></span>
           <span class="ui-ans__pop-title">${s.title}</span>
           ${s.snippet && pop.ids.length === 1 ? html`<span class="ui-ans__snippet">${s.snippet}</span>` : nothing}

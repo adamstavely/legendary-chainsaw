@@ -5,6 +5,8 @@
 //     and formControl on the elements
 //   · several that must not – a misspelt input binding (a plain attribute is allowed on any element, as in HTML), a value of the wrong type, a misread $event, a non-numeric attribute for a number, an unknown tc-* tag –
 //     each failing with the error Angular gives for it
+// then imports the built package in plain Node – no DOM, as a server-side render (SSR) meets it, and with Node's strict
+// ESM resolution, as webpack and test runners do: every dist/*.js and dist/angular/*.js module, and each entry point
 //   node scripts/check-angular.mjs
 import { execSync } from "node:child_process";
 import { mkdirSync, rmSync, writeFileSync } from "node:fs";
@@ -14,7 +16,8 @@ const ROOT = resolve(new URL("..", import.meta.url).pathname);
 const TMP = join(ROOT, "node_modules/.cache/check-angular");
 const run = (cmd, cwd = ROOT) => execSync(cmd, { cwd, stdio: ["ignore", "pipe", "pipe"], encoding: "utf8" });
 
-console.log("angular: build the element types and the wrappers");
+console.log("angular: build the elements, their types and the wrappers");
+run("npx vite build -c vite.package.config.ts");
 run("npx tsc -p tsconfig.package.json");
 run("npx ngc -p tsconfig.angular.json");
 
@@ -113,9 +116,28 @@ for (const [what, imports, template, want, members] of bad) {
   else if (!want.test(out)) problems.push(`${what}: failed, but not as expected:\n${out.slice(0, 800)}`);
 }
 
+// Plain Node: no document or window, so a module that touches the DOM when it loads fails here as it would in SSR.
+// The wrappers are partially compiled, so – as in an Angular server build – @angular/compiler links them
+const imports = run(
+  `node --input-type=module -e '
+    import { readdirSync } from "node:fs";
+    await import("@angular/compiler");
+    if (typeof document !== "undefined" || typeof window !== "undefined") throw new Error("expected no DOM");
+    const failed = [];
+    const mods = [...readdirSync("dist").filter((f) => f.endsWith(".js")).map((f) => "./dist/" + f),
+      ...readdirSync("dist/angular").filter((f) => f.endsWith(".js")).map((f) => "./dist/angular/" + f)].filter((f) => !/ [0-9]+[.]js$/.test(f));
+    for (const m of [...mods, "trenchcoat", "trenchcoat/react", "trenchcoat/angular", "trenchcoat/angular/forms", "trenchcoat/generative"]) {
+      try { await import(m); } catch (e) { failed.push(m + ": " + String(e.message).split("\\n")[0]); }
+    }
+    console.log(JSON.stringify({ count: mods.length, failed }));
+  '`,
+);
+const { count, failed } = JSON.parse(imports.trim().split("\n").pop());
+for (const f of failed) problems.push(`doesn't import in Node (SSR, strict ESM): ${f}`);
+
 rmSync(TMP, { recursive: true, force: true });
 if (problems.length) {
   console.error(`angular: ${problems.length} problem${problems.length === 1 ? "" : "s"}\n  ${problems.join("\n  ")}`);
   process.exit(1);
 }
-console.log(`angular ok: strict templates check the wrappers' inputs and events, ngModel and formControl work, and ${bad.length} mistakes are caught`);
+console.log(`angular ok: strict templates check the wrappers' inputs and events, ngModel and formControl work, ${bad.length} mistakes are caught, and all ${count} modules import in Node without a DOM`);

@@ -8,6 +8,7 @@ import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
 import { FocusRescueController, OffScreenController } from "./internal/controllers";
+import { safeMediaUrl } from "./internal/safe-media";
 
 /*
  * <tc-image-grid> – generated images as a grid of variations. Every tile is pending (a shimmer sweeps over it while it
@@ -101,6 +102,9 @@ const slugify = (s: string) =>
 
 /** Saves an image: data: and blob: URLs directly, others through fetch (a cross-origin image without CORS opens in a new tab instead) */
 async function saveImage(src: string, filename: string, keep: (url: string) => void) {
+  const safe = safeMediaUrl(src);
+  if (!safe) return;
+  src = safe;
   const a = document.createElement("a");
   a.download = filename;
   a.href = src;
@@ -587,7 +591,7 @@ export class TcImageGrid extends TcElement {
       </div>`;
     }
     return html`<div class="ui-igrid__media" @click=${() => this.open(i)}>
-      ${t.src ? keyed(t.src, html`<img class="ui-igrid__img" src=${t.src} alt=${t.alt} draggable="false" decoding="async" />`) : nothing}
+      ${t.src ? keyed(t.src, html`<img class="ui-igrid__img" src=${ifDefined(safeMediaUrl(t.src))} alt=${t.alt} draggable="false" decoding="async" />`) : nothing}
       <span class="ui-igrid__chips" aria-hidden="true"
         ><span class="ui-igrid__chip" data-text=${i + 1}></span>${t.upscaled ? html`<span class="ui-igrid__chip ui-igrid__chip-hd" data-text="Upscaled">${glyph(icons.hd)}</span>` : nothing}${t.meta
           ? html`<span class="ui-igrid__chip ui-igrid__meta" data-text=${t.meta}></span>`
@@ -728,8 +732,8 @@ export class TcImageGrid extends TcElement {
         @pointerup=${this.onStageUp}
         @pointercancel=${this.onStageUp}
       >
-        <img class="ui-igrid__cmp-img" src=${a.src!} alt=${a.alt} draggable="false" />
-        <div class="ui-igrid__cmp-after"><img class="ui-igrid__cmp-img" src=${b.src!} alt=${b.alt} draggable="false" /></div>
+        <img class="ui-igrid__cmp-img" src=${ifDefined(safeMediaUrl(a.src))} alt=${a.alt} draggable="false" />
+        <div class="ui-igrid__cmp-after"><img class="ui-igrid__cmp-img" src=${ifDefined(safeMediaUrl(b.src))} alt=${b.alt} draggable="false" /></div>
         <span class="ui-igrid__cmp-tag" data-side="left" aria-hidden="true">${la}</span>
         <span class="ui-igrid__cmp-tag" data-side="right" aria-hidden="true">${lb}</span>
         <div class="ui-igrid__divider">

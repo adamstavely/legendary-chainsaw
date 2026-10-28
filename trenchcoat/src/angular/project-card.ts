@@ -75,8 +75,8 @@ export class ProjectCard {
    */
   @Output("tc-open-change") readonly tcOpenChange = new EventEmitter<CustomEvent<{ open: boolean }>>();
   /**
-   * The action button (`actionLabel`) was pressed
+   * The action button (`actionLabel`) was pressed; detail: null
    * Types $event; the element dispatches the event itself.
    */
-  @Output("tc-action") readonly tcAction = new EventEmitter<CustomEvent<unknown>>();
+  @Output("tc-action") readonly tcAction = new EventEmitter<CustomEvent<null>>();
 }

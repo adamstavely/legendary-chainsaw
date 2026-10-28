@@ -140,7 +140,7 @@
     {
      "name": "tc-new-chat",
      "detail": "",
-     "description": "New chat was pressed",
+     "description": "New chat was pressed; detail: null",
      "cancelable": false
     },
     {
@@ -754,7 +754,7 @@
   "windowed": true
  },
  "size": {
-  "min": 58304,
-  "gzip": 16391
+  "min": 58342,
+  "gzip": 16401
  }
 }

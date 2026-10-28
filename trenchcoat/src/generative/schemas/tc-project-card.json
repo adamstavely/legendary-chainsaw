@@ -119,7 +119,9 @@
         },
         "avatar": {
           "type": "string",
-          "description": "Image URL – initials on a soft color when left out"
+          "description": "Image URL – initials on a soft color when left out",
+          "format": "uri-reference",
+          "contentMediaType": "image/*"
         }
       },
       "required": [

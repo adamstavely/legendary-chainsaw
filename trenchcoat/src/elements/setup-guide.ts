@@ -76,8 +76,8 @@ const lockedIcon = (look: Look) =>
  * @fires tc-done-change - A task was ticked or cleared (detail: { done: string[] }, the ids of all finished tasks); cancelable
  * @fires tc-open-group-change - A group unfolded or folded, also when a finished group folds away on its own (detail: { openGroup: string | null }); cancelable
  * @fires tc-minimized-change - The body was collapsed or expanded (detail: { minimized: boolean }); cancelable
- * @fires tc-edit - The Edit link was pressed (shown with `editable`)
- * @fires tc-close - The close button was pressed (shown with `closable`)
+ * @fires tc-edit - The Edit link was pressed (shown with `editable`); detail: null
+ * @fires tc-close - The close button was pressed (shown with `closable`); detail: null
  */
 export class TcSetupGuide extends TcElement {
   static override ui = "sg";

@@ -67,7 +67,9 @@
         },
         "src": {
           "type": "string",
-          "description": "The image URL – a data: URL works too. Shown when the tile is done"
+          "description": "The image URL – a data: URL works too. Shown when the tile is done",
+          "format": "uri-reference",
+          "contentMediaType": "image/*"
         },
         "alt": {
           "type": "string",

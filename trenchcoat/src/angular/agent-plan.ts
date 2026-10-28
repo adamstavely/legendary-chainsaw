@@ -74,8 +74,8 @@ export class AgentPlan {
    */
   @Output("tc-retry") readonly tcRetry = new EventEmitter<CustomEvent<{ stepId: string }>>();
   /**
-   * "Cancel" pressed (shown with `cancellable`)
+   * "Cancel" pressed (shown with `cancellable`); detail: null
    * Types $event; the element dispatches the event itself.
    */
-  @Output("tc-cancel") readonly tcCancel = new EventEmitter<CustomEvent<unknown>>();
+  @Output("tc-cancel") readonly tcCancel = new EventEmitter<CustomEvent<null>>();
 }

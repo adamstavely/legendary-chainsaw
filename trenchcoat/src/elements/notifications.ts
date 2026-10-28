@@ -8,6 +8,8 @@ import { cardHead } from "./internal/card-head";
 import { FocusRescueController, OffScreenController } from "./internal/controllers";
 import { PopoverController } from "./internal/popover";
 import { initials } from "./internal/util";
+import { safeUrl } from "./internal/safe-url";
+import { safeMediaUrl } from "./internal/safe-media";
 
 /*
  * <tc-notifications> – the notification center at the top right of an app (remediation 7.4). Two parts:
@@ -605,8 +607,8 @@ export class TcNotifications extends TcElement {
   private renderPanel(inline: boolean) {
     const L = this.text;
     const titleId = `${this.uid}-title`;
-    const settings = this.settingsHref
-      ? html`<a class="ui-ntc__iconbtn ui-ntc__settings" href=${this.settingsHref} aria-label=${L.settings} title=${L.settings} @click=${this.openSettings}>${icon(GEAR)}</a>`
+    const settings = safeUrl(this.settingsHref)
+      ? html`<a class="ui-ntc__iconbtn ui-ntc__settings" href=${ifDefined(safeUrl(this.settingsHref))} aria-label=${L.settings} title=${L.settings} @click=${this.openSettings}>${icon(GEAR)}</a>`
       : this.settings
         ? html`<button type="button" class="ui-ntc__iconbtn ui-ntc__settings" aria-label=${L.settings} title=${L.settings} @click=${this.openSettings}>${icon(GEAR)}</button>`
         : nothing;
@@ -720,7 +722,7 @@ export class TcNotifications extends TcElement {
   }
 
   private renderAvatar(n: NotificationItem) {
-    if (n.avatar) return html`<span class="ui-ntc__avatar" data-kind="image"><img src=${n.avatar} alt="" /></span>`;
+    if (n.avatar) return html`<span class="ui-ntc__avatar" data-kind="image"><img src=${ifDefined(safeMediaUrl(n.avatar))} alt="" /></span>`;
     if (n.icon) return html`<span class="ui-ntc__avatar" data-kind="icon" data-tone=${n.tone ?? "neutral"}>${n.icon.cloneNode(true)}</span>`;
     if (n.actor) return html`<span class="ui-ntc__avatar" data-kind="initials" data-hue=${hue(n.actor)}>${initials(n.actor)}</span>`;
     return html`<span class="ui-ntc__avatar" data-kind="icon" data-tone=${n.tone ?? "neutral"}>${icon(BELL)}</span>`;
@@ -742,8 +744,8 @@ export class TcNotifications extends TcElement {
     const title = html`${unread ? html`<span class="ui-ntc__sr">${L.unreadStatus}, </span>` : nothing}<span class="ui-ntc__title" id=${`${rid}-t`}
         >${n.actor ? html`<strong class="ui-ntc__actor">${n.actor}</strong> ` : nothing}${n.title}</span
       >`;
-    const main = n.href
-      ? html`<a class="ui-ntc__main" href=${n.href} data-id=${n.id} data-focus-key=${n.id} tabindex=${tab} aria-describedby=${described} @click=${(e: Event) => this.openItem(n, e)}>${title}</a>`
+    const main = safeUrl(n.href)
+      ? html`<a class="ui-ntc__main" href=${ifDefined(safeUrl(n.href))} data-id=${n.id} data-focus-key=${n.id} tabindex=${tab} aria-describedby=${described} @click=${(e: Event) => this.openItem(n, e)}>${title}</a>`
       : html`<button type="button" class="ui-ntc__main" data-id=${n.id} data-focus-key=${n.id} tabindex=${tab} aria-describedby=${described} @click=${(e: Event) => this.openItem(n, e)}>${title}</button>`;
     const rest = html`${n.body ? html`<span class="ui-ntc__body" id=${`${rid}-b`}>${n.body}</span>` : nothing}
       <span class="ui-ntc__meta" id=${`${rid}-m`}

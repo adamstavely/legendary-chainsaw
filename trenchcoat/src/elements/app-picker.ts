@@ -8,6 +8,8 @@ import { cardHead } from "./internal/card-head";
 import { FocusRescueController } from "./internal/controllers";
 import { PopoverController } from "./internal/popover";
 import { initials } from "./internal/util";
+import { safeUrl } from "./internal/safe-url";
+import { safeMediaUrl } from "./internal/safe-media";
 
 /*
  * <tc-app-picker> – the app launcher at the top right of a suite: a grid ("waffle") button that opens a popover of
@@ -168,7 +170,7 @@ type Cell = { key: string; app: AppPickerApp; row: number; col: number };
  * @fires tc-app-select - A tile was picked with a plain click or Enter; detail `{ id, app }`. Cancelable: preventDefault() stops the link being followed (route in the app instead)
  * @fires tc-pin-change - A pin was toggled while editing pins; detail `{ id, pinned, pins }` (`pins` as they'd be afterwards). Cancelable: preventDefault() and the app updates `pinned`
  * @fires tc-open-change - The panel is opening or closing; detail `{ open }`. Cancelable: preventDefault() keeps it as it is
- * @fires tc-retry - Retry was chosen after an error – the app loads the apps again
+ * @fires tc-retry - Retry was chosen after an error – the app loads the apps again ({})
  */
 export class TcAppPicker extends TcElement {
   static override ui = "apk";
@@ -601,7 +603,7 @@ export class TcAppPicker extends TcElement {
 
   private renderIcon(app: AppPickerApp) {
     if (app.icon) return html`<span class="ui-apk__icon" data-kind="element" data-tone=${ifDefined(app.tone)} aria-hidden="true">${app.icon.cloneNode(true)}</span>`;
-    if (app.image) return html`<span class="ui-apk__icon" data-kind="image" aria-hidden="true"><img src=${app.image} alt="" loading="lazy" decoding="async" /></span>`;
+    if (app.image) return html`<span class="ui-apk__icon" data-kind="image" aria-hidden="true"><img src=${ifDefined(safeMediaUrl(app.image))} alt="" loading="lazy" decoding="async" /></span>`;
     return html`<span class="ui-apk__icon" data-kind="initials" data-tone=${app.tone ?? appTone(app.id)} aria-hidden="true">${initials(app.name) || "?"}</span>`;
   }
 
@@ -631,10 +633,10 @@ export class TcAppPicker extends TcElement {
         <span class="ui-apk__pin" aria-hidden="true">${icon(PIN)}</span>
       </button>`;
     }
-    if (app.href) {
+    if (safeUrl(app.href)) {
       return html`<a
         class="ui-apk__tile"
-        href=${app.href}
+        href=${ifDefined(safeUrl(app.href))}
         target=${ifDefined(app.target || undefined)}
         rel=${ifDefined(app.target === "_blank" ? "noopener" : undefined)}
         data-key=${key}
@@ -680,8 +682,8 @@ export class TcAppPicker extends TcElement {
             ${this.editing ? nothing : icon(PIN, "ui-apk__act-icon")}${this.editing ? this.t.done : this.t.edit}
           </button>`
         : nothing}
-      ${this.footerHref
-        ? html`<a class="ui-apk__act ui-apk__act--ghost ui-apk__more" href=${this.footerHref} target=${ifDefined(this.footerTarget || undefined)}>${this.footerLabel}${icon(ARROW, "ui-apk__act-icon")}</a>`
+      ${safeUrl(this.footerHref)
+        ? html`<a class="ui-apk__act ui-apk__act--ghost ui-apk__more" href=${ifDefined(safeUrl(this.footerHref))} target=${ifDefined(this.footerTarget || undefined)}>${this.footerLabel}${icon(ARROW, "ui-apk__act-icon")}</a>`
         : nothing}
     </div>`;
   }

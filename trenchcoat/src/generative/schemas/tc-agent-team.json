@@ -32,7 +32,9 @@
         },
         "avatar": {
           "type": "string",
-          "description": "Square portrait, shown in a circle"
+          "description": "Square portrait, shown in a circle",
+          "format": "uri-reference",
+          "contentMediaType": "image/*"
         },
         "tools": {
           "type": "array",

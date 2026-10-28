@@ -10,8 +10,9 @@ How money moved between people, companies and accounts, drawn left to right:
 - **Entities** are cards in columns. They take the column you give them, or one worked out from who paid whom: payers
   to the left of the people they paid. Each card shows its kind (person, company, shell entity, bank or unknown) as an
   icon and a word.
-- **Transfers** are bands whose width follows the amount. Each is labelled with its amount and an optional flag chip,
-  such as "Layering", "Cash-in" or "Courier fee". Flagged bands are drawn in the danger ink.
+- **Transfers** are bands whose width follows the amount, compared with the largest transfer in the same currency.
+  Each is labelled with its amount and an optional flag chip, such as "Layering", "Cash-in" or "Courier fee". Flagged
+  bands are drawn in the danger ink.
 - **Labels** sit in the gap between two columns, never on a card, and labels in one gap are kept apart. When the
   card is too narrow for every column and its labels, the drawing keeps its size and scrolls sideways.
 
@@ -86,7 +87,9 @@ status message, and clearing with “Selection cleared”. The table has a capti
 ## Do
 
 - Keep the network small – roughly twenty entities and thirty transfers – so the drawing stays readable.
-- Give transfers their own `currency` when they're in more than one.
+- Give transfers their own `currency` when they're in more than one. Amounts in different currencies are never added
+  together: an entity's totals are given per currency ("out $100 + ¥10,000"), and band widths are only comparable
+  within a currency.
 - Pair a selected entity with its accounts in `account-list`.
 
 ## Don't

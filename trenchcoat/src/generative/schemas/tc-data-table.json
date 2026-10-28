@@ -119,7 +119,9 @@
         },
         "logo": {
           "type": "string",
-          "description": "Small logo in front of the title cell: an element (cloned) or an image URL"
+          "description": "Small logo in front of the title cell: an element (cloned) or an image URL",
+          "format": "uri-reference",
+          "contentMediaType": "image/*"
         }
       },
       "required": [

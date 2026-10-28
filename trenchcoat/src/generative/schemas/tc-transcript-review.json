@@ -21,7 +21,9 @@
     },
     "src": {
       "type": "string",
-      "description": "The recording's URL; the element makes its own <audio> or <video> (see `kind`). Ignored when `media` is set"
+      "description": "The recording's URL; the element makes its own <audio> or <video> (see `kind`). Ignored when `media` is set",
+      "format": "uri-reference",
+      "contentMediaType": "image/*"
     },
     "kind": {
       "type": "string",

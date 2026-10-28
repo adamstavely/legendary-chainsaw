@@ -5,6 +5,8 @@ import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
 import { FocusRescueController, rescueFocus } from "./internal/controllers";
 import type { Look } from "./internal/look";
+import { ifDefined } from "lit/directives/if-defined.js";
+import { safeMediaUrl } from "./internal/safe-media";
 
 /*
  * <tc-project-card> – the Lit port of src/components/project-card.tsx: a two-line summary that quietly grows into the
@@ -86,7 +88,7 @@ function toneIcon(look: Look, tone: ProjectTone) {
 const arrowIcon = html`<svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">${svg`<path d="M2.5 6h7M6.5 3l3 3-3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path>`}</svg>`;
 const checkMark = html`<svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">${svg`<circle class="ui-pc__ring" cx="8" cy="8" r="6.3"></circle><circle class="ui-pc__disc" cx="8" cy="8" r="7"></circle><path class="ui-pc__tick" d="m5.2 8.2 1.9 1.9 3.7-4"></path>`}</svg>`;
 const avatar = (m: ProjectMember) =>
-  html`<span class="ui-pc__avatar" aria-hidden="true" style=${styleMap({ "--tc-project-card-hue": String(hue(m.name)) })}>${m.avatar ? html`<img src=${m.avatar} alt="" />` : initials(m.name)}</span>`;
+  html`<span class="ui-pc__avatar" aria-hidden="true" style=${styleMap({ "--tc-project-card-hue": String(hue(m.name)) })}>${m.avatar ? html`<img src=${ifDefined(safeMediaUrl(m.avatar))} alt="" />` : initials(m.name)}</span>`;
 
 type Subtask = ProjectTask & { done: boolean };
 let uidCount = 0;
@@ -97,7 +99,7 @@ let uidCount = 0;
  * @fires tc-tasks-change - A subtask was ticked or unticked; detail `{ tasks: ProjectTask[] }`. Cancelable.
  * @fires tc-status-change - Another status was chosen; detail `{ status: string }`. Cancelable.
  * @fires tc-open-change - The card opens or closes; detail `{ open: boolean }`. Cancelable.
- * @fires tc-action - The action button (`actionLabel`) was pressed
+ * @fires tc-action - The action button (`actionLabel`) was pressed; detail: null
  */
 export class TcProjectCard extends TcElement {
   static override ui = "pc";

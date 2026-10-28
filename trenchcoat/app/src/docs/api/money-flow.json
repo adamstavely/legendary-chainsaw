@@ -388,6 +388,22 @@
     ]
    },
    {
+    "id": "object-hasown",
+    "name": "Object.hasOwn()",
+    "bcd": "javascript.builtins.Object.hasOwn",
+    "versions": {
+     "chrome": "93",
+     "edge": "93",
+     "firefox": "92",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "via": [
+     "internal/util"
+    ]
+   },
+   {
     "id": "inset",
     "name": "inset",
     "bcd": "css.properties.inset",
@@ -517,7 +533,7 @@
   "windowed": false
  },
  "size": {
-  "min": 35845,
-  "gzip": 10878
+  "min": 36499,
+  "gzip": 11101
  }
 }

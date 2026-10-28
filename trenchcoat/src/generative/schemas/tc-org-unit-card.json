@@ -27,7 +27,9 @@
           "type": "string"
         },
         "picture": {
-          "type": "string"
+          "type": "string",
+          "format": "uri-reference",
+          "contentMediaType": "image/*"
         }
       },
       "required": [
@@ -208,7 +210,9 @@
         },
         "picture": {
           "type": "string",
-          "description": "A picture's URL; initials of the name otherwise"
+          "description": "A picture's URL; initials of the name otherwise",
+          "format": "uri-reference",
+          "contentMediaType": "image/*"
         }
       },
       "required": [

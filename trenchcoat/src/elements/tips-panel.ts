@@ -45,7 +45,7 @@ const checkIcon = (look: Look) =>
  * @tag tc-tips-panel
  * @fires tc-done-change - A tip's action was taken; detail `{ done: string[], tip }` is the new list of done ids. Cancelable: preventDefault() keeps `done` as it is (controlled use)
  * @fires tc-tip-action - A tip's action was taken; detail `{ id: string }`
- * @fires tc-close - The Close button was pressed
+ * @fires tc-close - The Close button was pressed; detail: null
  */
 export class TcTipsPanel extends TcElement {
   static override ui = "tp";

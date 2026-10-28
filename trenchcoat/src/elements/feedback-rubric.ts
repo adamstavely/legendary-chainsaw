@@ -110,7 +110,7 @@ let instances = 0;
  * @tag tc-feedback-rubric
  * @fires tc-value-change - A score, a failure type or the correction changed ({ value }: FeedbackRubricValueChange); cancelable
  * @fires tc-submit - Send was pressed with every required criterion scored (FeedbackRubricSubmit); cancelable – prevent it to stay editable
- * @fires tc-edit - "Edit rating" unlocked a sent rating; no detail
+ * @fires tc-edit - "Edit rating" unlocked a sent rating; detail: null
  */
 export class TcFeedbackRubric extends TcElement {
   static override ui = "fbr";

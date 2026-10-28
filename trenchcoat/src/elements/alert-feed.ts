@@ -3,6 +3,7 @@ import { property, state } from "lit/decorators.js";
 import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
+import { formatDate } from "./internal/util";
 
 /*
  * <tc-alert-feed> – a live feed of alerts, newest first. Each alert has a category tag (Sign-in, Payment, Location …
@@ -69,7 +70,7 @@ export function alertTime(ms: number, now: number, locale?: string) {
   if (diff < 45_000) return "just now";
   if (diff < HOUR) return `${Math.max(1, Math.round(diff / MIN))}m ago`;
   if (diff < 24 * HOUR) return `${Math.floor(diff / HOUR)}h ago`;
-  return new Intl.DateTimeFormat(locale, { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }).format(ms);
+  return formatDate(ms, locale, { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
 }
 
 /* A mark per severity, so it never rests on colour: an octagon, a triangle, a circle, an i */

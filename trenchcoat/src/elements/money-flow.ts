@@ -3,10 +3,12 @@ import { property, state } from "lit/decorators.js";
 import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
+import { formatDate, pick } from "./internal/util";
 
 /*
  * <tc-money-flow> – how money moved between entities: a left-to-right flow with the entities as cards in columns
- * (by `column`, or worked out from who paid whom) and every transfer as a band whose width follows its amount,
+ * (by `column`, or worked out from who paid whom) and every transfer as a band whose width follows its amount (compared
+ * within its currency – amounts in different currencies are never added or compared),
  * labelled with the amount and an optional flag chip ("Layering", "Cash-in", "Courier fee"). Pointing at or focusing
  * an entity lights up the transfers in and out of it; pointing at a transfer lights up it and its two ends, and a
  * readout says it in full: "Meridian SARL → Helios Holdings (CY) · €240,000 · 15 May · Layering". Click or Enter
@@ -140,6 +142,8 @@ export class TcMoneyFlow extends TcElement {
   override disconnectedCallback() {
     super.disconnectedCallback();
     this.observer?.disconnect();
+    // A new observer watches the body when the element is put back in the page
+    this.observed = null;
     if (this.frame) cancelAnimationFrame(this.frame);
     this.frame = 0;
   }
@@ -156,7 +160,7 @@ export class TcMoneyFlow extends TcElement {
   /* ---------- The model ---------- */
 
   private kindLabel(k: FlowNodeKind) {
-    return this.kindLabels[k] ?? defaultFlowKindLabels[k];
+    return this.kindLabels[k] ?? defaultFlowKindLabels[k] ?? k;
   }
   private nodeOf(id: string) {
     return this.nodes.find((n) => n.id === id);
@@ -173,7 +177,7 @@ export class TcMoneyFlow extends TcElement {
     }
   }
   private day(ms: number) {
-    return new Intl.DateTimeFormat(this.locale, { day: "numeric", month: "short" }).format(ms);
+    return formatDate(ms, this.locale, { day: "numeric", month: "short" });
   }
   private sayTransfer(t: FlowTransfer) {
     const from = this.nodeOf(t.from)?.label ?? t.from;
@@ -185,12 +189,23 @@ export class TcMoneyFlow extends TcElement {
     const ts = this.liveTransfers;
     const outs = ts.filter((t) => t.from === n.id);
     const ins = ts.filter((t) => t.to === n.id);
-    const sum = (list: FlowTransfer[]) => list.reduce((s, t) => s + t.amount, 0);
     const parts: string[] = [];
-    if (ins.length) parts.push(`in ${this.money({ amount: sum(ins) })}`);
-    if (outs.length) parts.push(`out ${this.money({ amount: sum(outs) })}`);
+    if (ins.length) parts.push(`in ${this.total(ins)}`);
+    if (outs.length) parts.push(`out ${this.total(outs)}`);
     parts.push(`${ins.length + outs.length} ${ins.length + outs.length === 1 ? "transfer" : "transfers"}`);
     return parts.join(" · ");
+  }
+  /** Transfers added up per currency – amounts in different currencies are never added: "$100 + ¥10,000" */
+  private total(list: FlowTransfer[]) {
+    const by = new Map<string, number>();
+    for (const t of list) {
+      const cur = this.currencyOf(t);
+      by.set(cur, (by.get(cur) ?? 0) + t.amount);
+    }
+    return [...by].map(([currency, amount]) => this.money({ amount, currency })).join(" + ");
+  }
+  private currencyOf(t: { currency?: string }) {
+    return (t.currency ?? this.currency).toUpperCase();
   }
   private sayNode(n: FlowNode) {
     return [n.label, this.kindLabel(n.kind ?? "unknown"), this.flowsOf(n)].join(" · ");
@@ -238,8 +253,10 @@ export class TcMoneyFlow extends TcElement {
     });
     // Bands leave and arrive spread over the card's height, ordered by where they go, so they don't cross at the card
     const ts = this.liveTransfers;
-    const max = Math.max(1, ...ts.map((t) => t.amount));
-    const thick = (t: FlowTransfer) => 2 + (t.amount / max) * 12;
+    // A band's width compares it with the largest transfer in the same currency – never across currencies
+    const max = new Map<string, number>();
+    for (const t of ts) if (Number.isFinite(t.amount)) max.set(this.currencyOf(t), Math.max(max.get(this.currencyOf(t)) ?? 1, Math.abs(t.amount)));
+    const thick = (t: FlowTransfer) => 2 + (Number.isFinite(t.amount) ? Math.abs(t.amount) / (max.get(this.currencyOf(t)) ?? 1) : 0) * 12;
     const ends = new Map<string, { y0: number; y1: number }>();
     const spread = (list: FlowTransfer[], key: "from" | "to", other: "from" | "to") => {
       const sorted = [...list].sort((a, b) => (pos.get(a[other])?.y ?? 0) - (pos.get(b[other])?.y ?? 0));
@@ -474,7 +491,7 @@ export class TcMoneyFlow extends TcElement {
                 @click=${() => this.toggle({ kind: "node", id: n.id })}
               >
                 <span class="ui-mfl__node-name">${n.label}</span>
-                <span class="ui-mfl__node-kind">${KIND_ICON[kind]()}<span>${this.kindLabel(kind)}${n.detail ? ` · ${n.detail}` : ""}</span></span>
+                <span class="ui-mfl__node-kind">${pick(KIND_ICON, kind, "unknown")()}<span>${this.kindLabel(kind)}${n.detail ? ` · ${n.detail}` : ""}</span></span>
                 <span class="ui-mfl__sr">, ${this.flowsOf(n)}</span>
               </button>
             </li>`;
@@ -567,7 +584,6 @@ export class TcMoneyFlow extends TcElement {
             return t ? this.sayTransfer(t) : "";
           })()
       : "";
-    const total = ts.reduce((s, t) => s + t.amount, 0);
     return html`
       <span class="ui-mfl__sr" role="status">${this.announce}</span>
       <span class="ui-mfl__sr" id=${`${id}-keys`}>Arrow keys move between entities; Enter selects one and lights its transfers</span>
@@ -578,7 +594,7 @@ export class TcMoneyFlow extends TcElement {
         id: `${id}-title`,
         aside: empty
           ? nothing
-          : html`<span class="ui-mfl__total"><span class="ui-mfl__total-label">${ts.length} ${ts.length === 1 ? "transfer" : "transfers"}</span><span class="ui-mfl__total-value">${this.money({ amount: total })}</span></span>`,
+          : html`<span class="ui-mfl__total"><span class="ui-mfl__total-label">${ts.length} ${ts.length === 1 ? "transfer" : "transfers"}</span><span class="ui-mfl__total-value">${this.total(ts)}</span></span>`,
       })}
       <div class="ui-mfl__card">
         ${empty

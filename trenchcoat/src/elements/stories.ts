@@ -7,6 +7,8 @@ import { cardHead } from "./internal/card-head";
 import { ToolbarController } from "./internal/controllers";
 import { ModalController } from "./internal/modal";
 import { initials } from "./internal/util";
+import { safeUrl } from "./internal/safe-url";
+import { safeMediaUrl } from "./internal/safe-media";
 
 /*
  * <tc-stories> – a row of avatars for people and accounts, and the "what changed" brief each one opens. A gradient
@@ -209,7 +211,7 @@ const arrowIcon = (s = 14) => lucide(s, svg`<path d="M5 12h14"></path><path d="m
  * @fires tc-seen-change - A brief was opened on unseen updates, once per opening ({ seen, entry, updates }: StorySeenChangeEvent – `seen` with every one of them added, in the same shape); cancelable – prevented, `seen` stays as it was
  * @fires tc-action - A link or action tile was activated ({ entry, update }: StoryActionEvent); cancelable – prevented, a link doesn't navigate
  * @fires tc-reply - A reply was sent from the brief ({ text, entry }: StoryReplyEvent)
- * @fires tc-add - The "add" tile was activated (no detail)
+ * @fires tc-add - The "add" tile was activated; detail: undefined
  */
 export class TcStories extends TcElement {
   static override ui = "sty";
@@ -426,7 +428,7 @@ export class TcStories extends TcElement {
 
   private face(entry: { name: string; avatar?: string; id: string }) {
     return entry.avatar
-      ? html`<img class="ui-sty__img" src=${entry.avatar} alt="" draggable="false" />`
+      ? html`<img class="ui-sty__img" src=${ifDefined(safeMediaUrl(entry.avatar))} alt="" draggable="false" />`
       : html`<span class="ui-sty__initials" data-tone=${toneFor(entry.id)} aria-hidden="true">${initials(entry.name)}</span>`;
   }
 
@@ -437,7 +439,7 @@ export class TcStories extends TcElement {
       ${this.addable
         ? html`<button type="button" class="ui-sty__person ui-sty__add" @click=${() => this.emit("tc-add", undefined)}>
             <span class="ui-sty__ring"
-              ><span class="ui-sty__face">${this.addAvatar ? html`<img class="ui-sty__img" src=${this.addAvatar} alt="" draggable="false" />` : html`<span class="ui-sty__plus-face">${plusIcon(22)}</span>`}</span
+              ><span class="ui-sty__face">${this.addAvatar ? html`<img class="ui-sty__img" src=${ifDefined(safeMediaUrl(this.addAvatar))} alt="" draggable="false" />` : html`<span class="ui-sty__plus-face">${plusIcon(22)}</span>`}</span
               ><span class="ui-sty__badge">${plusIcon(12)}</span></span
             >
             <span class="ui-sty__label">${this.addLabel}</span>
@@ -588,13 +590,13 @@ export class TcStories extends TcElement {
       }
       case "image":
         return html`<figure class="ui-sty__figure">
-          <img class="ui-sty__photo" src=${u.src} alt=${u.alt ?? ""} loading="lazy" draggable="false" />
+          <img class="ui-sty__photo" src=${ifDefined(safeMediaUrl(u.src))} alt=${u.alt ?? ""} loading="lazy" draggable="false" />
           ${u.caption ? html`<figcaption class="ui-sty__caption">${u.caption}</figcaption>` : nothing}
         </figure>`;
       case "link":
         return html`${u.text ? html`<p class="ui-sty__text">${u.text}</p>` : nothing}
-          ${u.href
-            ? html`<a class="ui-sty__action" href=${u.href} @click=${(e: Event) => this.act(e, entry, u)}>${u.label}${arrowIcon(14)}</a>`
+          ${safeUrl(u.href)
+            ? html`<a class="ui-sty__action" href=${ifDefined(safeUrl(u.href))} @click=${(e: Event) => this.act(e, entry, u)}>${u.label}${arrowIcon(14)}</a>`
             : html`<button type="button" class="ui-sty__action" @click=${(e: Event) => this.act(e, entry, u)}>${u.label}${arrowIcon(14)}</button>`}`;
       default:
         return nothing;

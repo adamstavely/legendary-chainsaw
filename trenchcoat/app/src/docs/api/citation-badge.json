@@ -375,7 +375,9 @@
    "MutationObserver (internal/controllers › AriaForwardController)"
   ],
   "clock": [],
-  "listeners": [],
+  "listeners": [
+   "document keydown"
+  ],
   "pauses": {
    "offscreen": [],
    "hidden": [],
@@ -387,7 +389,7 @@
   "windowed": false
  },
  "size": {
-  "min": 18778,
-  "gzip": 6436
+  "min": 19541,
+  "gzip": 6715
  }
 }

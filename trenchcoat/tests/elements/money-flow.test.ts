@@ -208,6 +208,44 @@ describe("tc-money-flow", () => {
     expect(stage.offsetWidth).toBeGreaterThan(body.clientWidth);
   });
 
+  test("keeps following its width after it's moved to another place in the page", async () => {
+    const el = await make("standard", 1400);
+    await expect.poll(() => left(el, "bank") - left(el, "dir")).toBeGreaterThan(900);
+    const before = left(el, "bank") - left(el, "dir");
+    const other = document.createElement("div");
+    other.style.width = "1400px";
+    document.body.append(other);
+    try {
+      other.append(el);
+      await settle();
+      other.style.width = "1000px";
+      await expect.poll(() => left(el, "bank") - left(el, "dir")).toBeLessThan(before - 80);
+    } finally {
+      other.remove();
+    }
+  });
+
+  test("amounts in different currencies are never added together, and bands compare within a currency", async () => {
+    const el = await fixture<TcMoneyFlow>(html`<tc-money-flow
+      currency="EUR"
+      .nodes=${[{ id: "a", label: "A" }, { id: "b", label: "B" }, { id: "c", label: "C" }]}
+      .transfers=${[
+        { id: "usd", from: "a", to: "b", amount: 100, currency: "USD" },
+        { id: "jpy", from: "a", to: "c", amount: 10000, currency: "JPY" },
+        { id: "usd2", from: "b", to: "c", amount: 50, currency: "usd" },
+      ]}
+    ></tc-money-flow>`);
+    const fmt = (n: number, c: string) => new Intl.NumberFormat(undefined, { style: "currency", currency: c, maximumFractionDigits: 0 }).format(n);
+    expect(el.querySelector(".ui-mfl__total-value")!.textContent).toBe(`${fmt(150, "USD")} + ${fmt(10000, "JPY")}`);
+    node(el, "a").focus();
+    await settle();
+    expect(readout(el)).toContain(`out ${fmt(100, "USD")} + ${fmt(10000, "JPY")}`);
+    // $100 is the largest dollar transfer, so it's as thick as the largest yen one
+    const w = (id: string) => parseFloat(band(el, id).querySelector<SVGPathElement>(".ui-mfl__band-line")!.style.strokeWidth);
+    expect(w("usd")).toBe(w("jpy"));
+    expect(w("usd2")).toBeLessThan(w("usd"));
+  });
+
   test("a selection whose entity goes away clears; an empty element says so", async () => {
     const el = await make();
     el.selected = { kind: "node", id: "bank" };

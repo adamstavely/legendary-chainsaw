@@ -118,7 +118,7 @@
     {
      "name": "tc-edit",
      "detail": "",
-     "description": "\"Edit rating\" unlocked a sent rating; no detail",
+     "description": "\"Edit rating\" unlocked a sent rating; detail: null",
      "cancelable": false
     }
    ],
@@ -594,7 +594,7 @@
   "windowed": false
  },
  "size": {
-  "min": 78249,
-  "gzip": 19588
+  "min": 78287,
+  "gzip": 19601
  }
 }

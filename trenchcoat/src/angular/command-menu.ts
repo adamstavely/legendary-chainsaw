@@ -56,8 +56,8 @@ export class CommandMenu {
    */
   @Output("tc-query-change") readonly tcQueryChange = new EventEmitter<CustomEvent<{ query: TcCommandMenu["query"] }>>();
   /**
-   * Esc in an empty search
+   * Esc in an empty search; detail: null
    * Types $event; the element dispatches the event itself.
    */
-  @Output("tc-close") readonly tcClose = new EventEmitter<CustomEvent<unknown>>();
+  @Output("tc-close") readonly tcClose = new EventEmitter<CustomEvent<null>>();
 }

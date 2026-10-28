@@ -1,8 +1,10 @@
 import { html, nothing, svg, type PropertyValues } from "lit";
 import { property, state } from "lit/decorators.js";
+import { repeat } from "lit/directives/repeat.js";
 import { factBand, gradeWords, type FactBand } from "./fact-sheet";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
+import { formatDate } from "./internal/util";
 
 /*
  * <tc-travel-itinerary> – trips as legs, for a travel audit or an expense review: each leg's date, its route as codes
@@ -80,6 +82,10 @@ const FLAG_MARK: Record<TravelFlagTone, () => ReturnType<typeof lucide>> = {
 const arrowIcon = () => lucide(14, svg`<path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path>`);
 
 const place = (p: TravelPlace | string): TravelPlace => (typeof p === "string" ? { code: p } : p);
+/** A leg's date for sorting – a leg without a valid date goes last */
+const when = (l: TravelLeg) => (Number.isFinite(l.date) ? l.date : Number.MAX_SAFE_INTEGER);
+/** A mode the element doesn't know is drawn as "other" rather than breaking the list */
+const modeOf = (l: TravelLeg): TravelMode => (l.mode in MODE_LABEL ? l.mode : "other");
 
 /**
  * Trips as legs – route, mode and carrier, document, confidence, source and grade, and flags – grouped into
@@ -120,14 +126,14 @@ export class TcTravelItinerary extends TcElement {
   }
   private get sorted() {
     const dir = this.order === "newest" ? -1 : 1;
-    return [...this.legs].sort((a, b) => (a.date - b.date) * dir);
+    return [...this.legs].sort((a, b) => (when(a) - when(b)) * dir);
   }
   /** The legs in display order, split into journeys when grouped */
   private get journeys(): TravelLeg[][] {
     const legs = this.sorted;
     if (!this.grouped) return legs.length ? [legs] : [];
     // Chronological to decide what connects, then back to the display order
-    const asc = [...legs].sort((a, b) => a.date - b.date);
+    const asc = [...legs].sort((a, b) => when(a) - when(b));
     const out: TravelLeg[][] = [];
     for (const leg of asc) {
       const cur = out[out.length - 1];
@@ -142,11 +148,12 @@ export class TcTravelItinerary extends TcElement {
     return c >= 0.9 ? "High" : c >= this.lowConfidence ? "Medium" : "Low";
   }
   private dateText(ms: number, withYear = false) {
-    return new Intl.DateTimeFormat(this.locale, { day: "numeric", month: "short", ...(withYear ? { year: "numeric" } : {}) }).format(ms);
+    if (!Number.isFinite(ms)) return "Date unknown";
+    return formatDate(ms, this.locale, { day: "numeric", month: "short", ...(withYear ? { year: "numeric" } : {}) });
   }
   /** "LYS → IST → DXB" for a journey in travel order */
   private routeOf(legs: TravelLeg[]) {
-    const asc = [...legs].sort((a, b) => a.date - b.date);
+    const asc = [...legs].sort((a, b) => when(a) - when(b));
     const codes = [place(asc[0].from).code];
     for (const l of asc) {
       if (codes[codes.length - 1] !== place(l.from).code) codes.push(place(l.from).code);
@@ -194,7 +201,8 @@ export class TcTravelItinerary extends TcElement {
   private renderLeg(leg: TravelLeg, stop: string | null) {
     const from = place(leg.from);
     const to = place(leg.to);
-    const c = leg.confidence;
+    const mode = modeOf(leg);
+    const c = leg.confidence !== undefined && Number.isFinite(leg.confidence) ? Math.max(0, Math.min(1, leg.confidence)) : undefined;
     const low = c !== undefined && c < this.lowConfidence;
     const name = `${from.name ?? from.code} to ${to.name ?? to.code}, ${this.dateText(leg.date, true)}`;
     return html`<li class="ui-trit__leg" ?data-flagged=${!!leg.flags?.length}>
@@ -210,7 +218,7 @@ export class TcTravelItinerary extends TcElement {
           this.emit<TravelOpen>("tc-open", { id: leg.id, leg });
         }}
       ></button>
-      <time class="ui-trit__date" datetime=${new Date(leg.date).toISOString()}>${this.dateText(leg.date)}</time>
+      <time class="ui-trit__date" datetime=${Number.isFinite(leg.date) ? new Date(leg.date).toISOString() : nothing}>${this.dateText(leg.date)}</time>
       <span class="ui-trit__route">
         <span class="ui-trit__code" title=${from.name ?? from.code}>${from.code}</span>
         <span class="ui-trit__arrow" aria-hidden="true">${arrowIcon()}</span>
@@ -218,21 +226,22 @@ export class TcTravelItinerary extends TcElement {
         <span class="ui-trit__code" title=${to.name ?? to.code}>${to.code}</span>
         ${from.name || to.name ? html`<span class="ui-trit__sr"> (${from.name ?? from.code} to ${to.name ?? to.code})</span>` : nothing}
       </span>
-      <span class="ui-trit__mode" data-mode=${leg.mode}>
-        ${MODE_ICON[leg.mode]()}<span class="ui-trit__sr">${MODE_LABEL[leg.mode]}</span>${leg.carrier ? html`<span class="ui-trit__carrier">${leg.carrier}</span>` : html`<span aria-hidden="true">${MODE_LABEL[leg.mode]}</span>`}
+      <span class="ui-trit__mode" data-mode=${mode}>
+        ${MODE_ICON[mode]()}<span class="ui-trit__sr">${MODE_LABEL[mode]}</span>${leg.carrier ? html`<span class="ui-trit__carrier">${leg.carrier}</span>` : html`<span aria-hidden="true">${MODE_LABEL[mode]}</span>`}
       </span>
       <span class="ui-trit__doc">${leg.document ? html`<span class="ui-trit__sr">Document </span>${leg.document}` : html`<span class="ui-trit__none">No document</span>`}</span>
       <span class="ui-trit__conf" ?data-low=${low}>
         ${c === undefined
           ? html`<span class="ui-trit__none">–</span>`
-          : html`<span class="ui-trit__meter" aria-hidden="true"><span class="ui-trit__meter-fill" style=${`inline-size: ${Math.round(Math.max(0, Math.min(1, c)) * 100)}%`}></span></span>
+          : html`<span class="ui-trit__meter" aria-hidden="true"><span class="ui-trit__meter-fill" style=${`inline-size: ${Math.round(c * 100)}%`}></span></span>
               <span class="ui-trit__pct">${Math.round(c * 100)}%</span><span class="ui-trit__sr"> confidence, ${this.confidenceWord(c).toLowerCase()}</span>`}
       </span>
       <span class="ui-trit__meta">
         ${leg.source ? this.renderSource(leg.source) : nothing}
         ${(leg.flags ?? []).map((k) => {
           const f = this.flagOf(k);
-          return html`<span class="ui-trit__flag" data-tone=${f.tone}>${FLAG_MARK[f.tone]()}${f.label}</span>`;
+          const tone = f.tone in FLAG_MARK ? f.tone : "warning";
+          return html`<span class="ui-trit__flag" data-tone=${tone}>${FLAG_MARK[tone]()}${f.label}</span>`;
         })}
       </span>
     </li>`;
@@ -261,7 +270,7 @@ export class TcTravelItinerary extends TcElement {
           ? html`<div class="ui-trit__list" role="group" aria-labelledby=${`${id}-title`} aria-describedby=${`${id}-keys`} @keydown=${this.onKey}>
               ${journeys.map((legs, j) => {
                 const route = this.routeOf(legs);
-                const asc = [...legs].sort((a, b) => a.date - b.date);
+                const asc = [...legs].sort((a, b) => when(a) - when(b));
                 const span = asc.length > 1 ? `${this.dateText(asc[0].date)} – ${this.dateText(asc[asc.length - 1].date, true)}` : this.dateText(asc[0].date, true);
                 return html`<section class="ui-trit__journey" aria-label=${this.grouped ? `Journey ${j + 1}: ${route.join(" to ")}` : "Legs"}>
                   ${this.grouped
@@ -270,7 +279,7 @@ export class TcTravelItinerary extends TcElement {
                         <span class="ui-trit__journey-meta">${span} · ${legs.length} ${legs.length === 1 ? "leg" : "legs"}</span>
                       </div>`
                     : nothing}
-                  <ol class="ui-trit__legs">${legs.map((l) => this.renderLeg(l, stop))}</ol>
+                  <ol class="ui-trit__legs">${repeat(legs, (l) => l.id, (l) => this.renderLeg(l, stop))}</ol>
                 </section>`;
               })}
             </div>`

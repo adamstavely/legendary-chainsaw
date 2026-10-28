@@ -134,13 +134,13 @@
     {
      "name": "tc-pause",
      "detail": "",
-     "description": "Pause was pressed",
+     "description": "Pause was pressed; detail: null",
      "cancelable": false
     },
     {
      "name": "tc-resume",
      "detail": "",
-     "description": "Resume was pressed",
+     "description": "Resume was pressed; detail: null",
      "cancelable": false
     }
    ],
@@ -674,7 +674,7 @@
   "windowed": false
  },
  "size": {
-  "min": 49196,
-  "gzip": 13031
+  "min": 49234,
+  "gzip": 13042
  }
 }

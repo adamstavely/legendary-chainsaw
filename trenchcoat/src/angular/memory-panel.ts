@@ -85,8 +85,8 @@ export class MemoryPanel {
    */
   @Output("tc-enabled-change") readonly tcEnabledChange = new EventEmitter<CustomEvent<{ enabled: boolean }>>();
   /**
-   * The action button (`actionLabel`) was pressed
+   * The action button (`actionLabel`) was pressed; detail: null
    * Types $event; the element dispatches the event itself.
    */
-  @Output("tc-action") readonly tcAction = new EventEmitter<CustomEvent<unknown>>();
+  @Output("tc-action") readonly tcAction = new EventEmitter<CustomEvent<null>>();
 }

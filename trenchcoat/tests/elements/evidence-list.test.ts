@@ -107,6 +107,18 @@ describe("tc-evidence-list", () => {
     expect(seen).toEqual(["a", "b", "c", null]);
   });
 
+  test("hashes are compared as digests: case, spaces and prefix spelling don't count; different algorithms aren't compared", async () => {
+    const step = (hash: string) => ({ at: T, actor: "M. Tan", action: "Checked", hash });
+    const state = async (...hashes: string[]) => {
+      const el = await fixture<TcEvidenceList>(html`<tc-evidence-list .exhibits=${[{ id: "x", ref: "E-1", title: "Disk", type: "forensic", status: "sealed", custody: hashes.map(step) }]} selected="x"></tc-evidence-list>`);
+      return el.querySelector(".ui-evl__integrity")!.getAttribute("data-state");
+    };
+    expect(await state("sha256:ABCDEF", " SHA-256: abcdef ")).toBe("verified");
+    expect(await state("sha256:abcdef", "abcdef")).toBe("verified");
+    expect(await state("sha256:abcdef", "sha256:abcdee")).toBe("mismatch");
+    expect(await state("sha256:abcdef", "md5:abcdef")).toBe("unchecked");
+  });
+
   test("Copy: tc-copy with the hash; preventDefault() stops the element copying", async () => {
     const el = await make();
     el.selected = "a";

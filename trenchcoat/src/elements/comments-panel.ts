@@ -7,6 +7,7 @@ import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
 import { FocusRescueController, rescueFocus, SmoothHeightController } from "./internal/controllers";
 import type { Look } from "./internal/look";
+import { safeMediaUrl } from "./internal/safe-media";
 
 /*
  * <tc-comments-panel> – the Lit port of src/components/comments-panel.tsx: a comment feed with filters, runnable /edit
@@ -103,7 +104,7 @@ const avatar = (author: CommentAuthor, look: Look) => {
     .slice(0, 2)
     .join("");
   return author.avatar
-    ? html`<img class="ui-cp__avatar" src=${author.avatar} alt="" width=${size} height=${size} loading="lazy" />`
+    ? html`<img class="ui-cp__avatar" src=${ifDefined(safeMediaUrl(author.avatar))} alt="" width=${size} height=${size} loading="lazy" />`
     : html`<span class="ui-cp__avatar ui-cp__avatar--initials" aria-hidden="true">${initials}</span>`;
 };
 
@@ -119,7 +120,7 @@ const commentsIcon = svg`<path d="M21 15a2 2 0 0 1-2 2H8l-4 4V5a2 2 0 0 1 2-2h13
  *   `{ comments: PanelComment[] }` is the whole feed. Cancelable: preventDefault() keeps an added comment out until the app passes it back.
  * @fires tc-resolved-change - A comment was resolved or reopened; detail `{ resolved: string[] }`. Cancelable.
  * @fires tc-filter-change - Another filter was picked; detail `{ filter: CommentsFilter }`. Cancelable.
- * @fires tc-close - The close button was pressed (shown with `closable`)
+ * @fires tc-close - The close button was pressed (shown with `closable`); detail: null
  */
 export class TcCommentsPanel extends TcElement {
   static override ui = "cp";

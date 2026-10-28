@@ -5,6 +5,7 @@ import { TcElement } from "./internal/base";
 import { PopoverController } from "./internal/popover";
 import { marks } from "./internal/selection";
 import { copyText } from "./internal/util";
+import { safeMediaUrl } from "./internal/safe-media";
 
 /*
  * <tc-isbn-details> – ISBN numbers in a passage of text, found, validated and marked. Each valid ISBN-10 or ISBN-13
@@ -438,7 +439,7 @@ export class TcIsbnDetails extends TcElement {
 
   private renderCover(entry: Entry, book: IsbnBook | null) {
     if (entry.status === "loading") return html`<div class="ui-isbn__cover" data-loading aria-hidden="true"></div>`;
-    if (book?.cover) return html`<div class="ui-isbn__cover"><img class="ui-isbn__img" src=${book.cover} alt="" loading="lazy" decoding="async" @error=${(e: Event) => ((e.target as HTMLElement).hidden = true)} />${glyph(bookIcon, "ui-isbn__placeholder")}</div>`;
+    if (book?.cover) return html`<div class="ui-isbn__cover"><img class="ui-isbn__img" src=${ifDefined(safeMediaUrl(book.cover))} alt="" loading="lazy" decoding="async" @error=${(e: Event) => ((e.target as HTMLElement).hidden = true)} />${glyph(bookIcon, "ui-isbn__placeholder")}</div>`;
     return html`<div class="ui-isbn__cover" data-empty>${glyph(bookIcon, "ui-isbn__placeholder")}</div>`;
   }
 

@@ -138,7 +138,7 @@ const historyIcon = svg`<path d="M3 12a9 9 0 1 0 3-6.7L3 8"></path><path d="M3 3
  * @fires tc-move - A chat was moved to a folder, or out of one (`folder: null`); detail `{ id, folder }`
  * @fires tc-delete - A chat was deleted (Undo may still bring it back); detail `{ id, conversation }`
  * @fires tc-restore - Undo brought a deleted chat back; detail `{ id, conversation }`
- * @fires tc-new-chat - New chat was pressed
+ * @fires tc-new-chat - New chat was pressed; detail: null
  * @fires tc-context-change - A chat's summary was loaded as context, or items were removed; detail `{ context, action, chat, items }`: ChatContextChange. Cancelable: prevent it to control `context`
  */
 export class TcChatHistory extends TcElement {

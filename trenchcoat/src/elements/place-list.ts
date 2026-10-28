@@ -3,6 +3,7 @@ import { property, state } from "lit/decorators.js";
 import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
+import { formatDate, pick } from "./internal/util";
 
 /*
  * <tc-place-list> – the places on record for a person, an account or a business: each with its type (Residence, Work,
@@ -123,7 +124,7 @@ export class TcPlaceList extends TcElement {
   }
   private spanOf(p: PlaceRecord) {
     if (p.span) return p.span;
-    const f = (ms: number) => new Intl.DateTimeFormat(this.locale, { month: "short", year: "numeric" }).format(ms);
+    const f = (ms: number) => formatDate(ms, this.locale, { month: "short", year: "numeric" });
     if (p.since !== undefined && p.until !== undefined) return `${f(p.since)} – ${f(p.until)}`;
     if (p.since !== undefined) return `${f(p.since)} –`;
     if (p.until !== undefined) return `Until ${f(p.until)}`;
@@ -191,12 +192,12 @@ export class TcPlaceList extends TcElement {
         this.setSelected(sel ? null : p.id);
       }}
     >
-      <span class="ui-plc__icon" aria-hidden="true">${ICON[t.icon]()}</span>
+      <span class="ui-plc__icon" aria-hidden="true">${pick(ICON, t.icon, "pin")()}</span>
       <span class="ui-plc__main">
         <span class="ui-plc__head">
           <span class="ui-plc__name">${p.name ?? t.label}</span>
           ${p.name ? html`<span class="ui-plc__type">${t.label}</span>` : nothing}
-          ${st ? html`<span class="ui-plc__status" data-tone=${st.tone}>${MARK[st.tone]()}${st.label}</span>` : nothing}
+          ${st ? html`<span class="ui-plc__status" data-tone=${st.tone}>${pick(MARK, st.tone, "neutral")()}${st.label}</span>` : nothing}
         </span>
         <span class="ui-plc__address">${p.address}</span>
         ${this.coordinates && p.coords ? html`<span class="ui-plc__coords"><span class="ui-plc__sr">Coordinates </span>${this.coordsText(p.coords)}</span>` : nothing}

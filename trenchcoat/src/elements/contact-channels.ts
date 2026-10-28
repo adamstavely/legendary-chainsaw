@@ -4,6 +4,7 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
+import { formatDate, pick } from "./internal/util";
 
 /*
  * <tc-contact-channels> – the ways to reach a person or an account, grouped as Email, Phone, Messaging and Address:
@@ -246,7 +247,7 @@ export class TcContactChannels extends TcElement {
     const shown = this.isShown(c);
     const what = `${this.kindLabel(c.kind)}${c.role ? `, ${c.role}` : ""}`;
     const tab = (k: string) => (this.active.r === r && this.active.k === k ? 0 : -1);
-    const date = c.lastUsed !== undefined ? new Intl.DateTimeFormat(this.locale, { day: "numeric", month: "short", year: "numeric" }).format(c.lastUsed) : null;
+    const date = c.lastUsed !== undefined ? formatDate(c.lastUsed, this.locale, { day: "numeric", month: "short", year: "numeric" }) : null;
     const button = (k: string, cls: string, label: string, body: unknown, onClick: () => void, extra: { pressed?: boolean; title?: string } = {}) =>
       html`<button
         type="button"
@@ -271,7 +272,7 @@ export class TcContactChannels extends TcElement {
         </span>
         ${c.note ? html`<span class="ui-cch__note">${c.note}</span>` : nothing}
       </div>
-      <span class="ui-cch__pill" data-tone=${st.tone}>${MARK[st.tone]()}${st.label}</span>
+      <span class="ui-cch__pill" data-tone=${st.tone}>${pick(MARK, st.tone, "neutral")()}${st.label}</span>
       <span class="ui-cch__actions">
         ${this.masked
           ? button("reveal", "ui-cch__icon-btn ui-cch__reveal", `Show ${what}`, shown ? eyeOffIcon() : eyeIcon(), () => this.setRevealed(c, !shown), { pressed: shown, title: shown ? "Hide" : "Show" })

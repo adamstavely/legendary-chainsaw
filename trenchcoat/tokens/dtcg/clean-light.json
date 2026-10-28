@@ -587,19 +587,8 @@
     "outline": {
       "$type": "border",
       "$value": {
-        "color": {
-          "colorSpace": "srgb",
-          "components": [
-            0,
-            0.3765,
-            0.8863
-          ],
-          "hex": "#0060e2"
-        },
-        "width": {
-          "value": 2,
-          "unit": "px"
-        },
+        "color": "{focus-ring.$root}",
+        "width": "{focus-ring.width}",
         "style": "solid"
       },
       "$extensions": {
@@ -1927,16 +1916,7 @@
       "$type": "shadow",
       "$value": [
         {
-          "color": {
-            "colorSpace": "srgb",
-            "components": [
-              0,
-              0,
-              0
-            ],
-            "alpha": 0.06,
-            "hex": "#000000"
-          },
+          "color": "{border.default}",
           "offsetX": {
             "value": 0,
             "unit": "px"
@@ -1955,16 +1935,7 @@
           }
         },
         {
-          "color": {
-            "colorSpace": "srgb",
-            "components": [
-              0,
-              0,
-              0
-            ],
-            "alpha": 0.05,
-            "hex": "#000000"
-          },
+          "color": "{shadow.color}",
           "offsetX": {
             "value": 0,
             "unit": "px"
@@ -1983,16 +1954,7 @@
           }
         },
         {
-          "color": {
-            "colorSpace": "srgb",
-            "components": [
-              0,
-              0,
-              0
-            ],
-            "alpha": 0.05,
-            "hex": "#000000"
-          },
+          "color": "{shadow.color}",
           "offsetX": {
             "value": 0,
             "unit": "px"
@@ -2021,16 +1983,7 @@
       "$type": "shadow",
       "$value": [
         {
-          "color": {
-            "colorSpace": "srgb",
-            "components": [
-              0,
-              0,
-              0
-            ],
-            "alpha": 0.06,
-            "hex": "#000000"
-          },
+          "color": "{border.default}",
           "offsetX": {
             "value": 0,
             "unit": "px"
@@ -2049,16 +2002,7 @@
           }
         },
         {
-          "color": {
-            "colorSpace": "srgb",
-            "components": [
-              0,
-              0,
-              0
-            ],
-            "alpha": 0.05,
-            "hex": "#000000"
-          },
+          "color": "{shadow.color}",
           "offsetX": {
             "value": 0,
             "unit": "px"
@@ -2077,16 +2021,7 @@
           }
         },
         {
-          "color": {
-            "colorSpace": "srgb",
-            "components": [
-              0,
-              0,
-              0
-            ],
-            "alpha": 0.05,
-            "hex": "#000000"
-          },
+          "color": "{shadow.color}",
           "offsetX": {
             "value": 0,
             "unit": "px"
@@ -2115,16 +2050,7 @@
       "$type": "shadow",
       "$value": [
         {
-          "color": {
-            "colorSpace": "srgb",
-            "components": [
-              0,
-              0,
-              0
-            ],
-            "alpha": 0.1,
-            "hex": "#000000"
-          },
+          "color": "{border.strong}",
           "offsetX": {
             "value": 0,
             "unit": "px"
@@ -2143,16 +2069,7 @@
           }
         },
         {
-          "color": {
-            "colorSpace": "srgb",
-            "components": [
-              0,
-              0,
-              0
-            ],
-            "alpha": 0.05,
-            "hex": "#000000"
-          },
+          "color": "{shadow.color}",
           "offsetX": {
             "value": 0,
             "unit": "px"
@@ -2171,16 +2088,7 @@
           }
         },
         {
-          "color": {
-            "colorSpace": "srgb",
-            "components": [
-              0,
-              0,
-              0
-            ],
-            "alpha": 0.05,
-            "hex": "#000000"
-          },
+          "color": "{shadow.color}",
           "offsetX": {
             "value": 0,
             "unit": "px"
@@ -2209,16 +2117,7 @@
       "$type": "shadow",
       "$value": [
         {
-          "color": {
-            "colorSpace": "srgb",
-            "components": [
-              0,
-              0,
-              0
-            ],
-            "alpha": 0.1,
-            "hex": "#000000"
-          },
+          "color": "{border.strong}",
           "offsetX": {
             "value": 0,
             "unit": "px"
@@ -2237,16 +2136,7 @@
           }
         },
         {
-          "color": {
-            "colorSpace": "srgb",
-            "components": [
-              0,
-              0,
-              0
-            ],
-            "alpha": 0.16,
-            "hex": "#000000"
-          },
+          "color": "{shadow.color-strong}",
           "offsetX": {
             "value": 0,
             "unit": "px"
@@ -2265,16 +2155,7 @@
           }
         },
         {
-          "color": {
-            "colorSpace": "srgb",
-            "components": [
-              0,
-              0,
-              0
-            ],
-            "alpha": 0.05,
-            "hex": "#000000"
-          },
+          "color": "{shadow.color}",
           "offsetX": {
             "value": 0,
             "unit": "px"
@@ -2302,16 +2183,7 @@
     "sunken": {
       "$type": "shadow",
       "$value": {
-        "color": {
-          "colorSpace": "srgb",
-          "components": [
-            0,
-            0,
-            0
-          ],
-          "alpha": 0.06,
-          "hex": "#000000"
-        },
+        "color": "{border.default}",
         "offsetX": {
           "value": 0,
           "unit": "px"
@@ -2531,8 +2403,8 @@
       }
     },
     "font-weight": {
-      "$type": "number",
-      "$value": 500,
+      "$type": "fontWeight",
+      "$value": "{font-weight.medium}",
       "$extensions": {
         "com.trenchcoat": {
           "css": "--tc-control-font-weight"
@@ -2613,16 +2485,7 @@
     "shadow": {
       "$type": "shadow",
       "$value": {
-        "color": {
-          "colorSpace": "srgb",
-          "components": [
-            0,
-            0,
-            0
-          ],
-          "alpha": 0.48,
-          "hex": "#000000"
-        },
+        "color": "{border.control}",
         "offsetX": {
           "value": 0,
           "unit": "px"
@@ -2650,16 +2513,7 @@
     "shadow-hover": {
       "$type": "shadow",
       "$value": {
-        "color": {
-          "colorSpace": "srgb",
-          "components": [
-            0,
-            0,
-            0
-          ],
-          "alpha": 0.6,
-          "hex": "#000000"
-        },
+        "color": "{border.control-hover}",
         "offsetX": {
           "value": 0,
           "unit": "px"
@@ -2688,15 +2542,7 @@
       "$type": "shadow",
       "$value": [
         {
-          "color": {
-            "colorSpace": "srgb",
-            "components": [
-              0,
-              0.3765,
-              0.8863
-            ],
-            "hex": "#0060e2"
-          },
+          "color": "{focus-ring.$root}",
           "offsetX": {
             "value": 0,
             "unit": "px"
@@ -2716,16 +2562,7 @@
           "inset": true
         },
         {
-          "color": {
-            "colorSpace": "srgb",
-            "components": [
-              0,
-              0.3765,
-              0.8863
-            ],
-            "alpha": 0.24,
-            "hex": "#0060e2"
-          },
+          "color": "{focus.halo}",
           "offsetX": {
             "value": 0,
             "unit": "px"
@@ -2738,10 +2575,7 @@
             "value": 0,
             "unit": "px"
           },
-          "spread": {
-            "value": 3,
-            "unit": "px"
-          }
+          "spread": "{focus.halo-width}"
         }
       ],
       "$extensions": {
@@ -2753,15 +2587,7 @@
     "shadow-invalid": {
       "$type": "shadow",
       "$value": {
-        "color": {
-          "colorSpace": "srgb",
-          "components": [
-            0.898,
-            0.2824,
-            0.302
-          ],
-          "hex": "#e5484d"
-        },
+        "color": "{status.danger-solid}",
         "offsetX": {
           "value": 0,
           "unit": "px"
@@ -2929,8 +2755,8 @@
       }
     },
     "font-weight": {
-      "$type": "number",
-      "$value": 500,
+      "$type": "fontWeight",
+      "$value": "{font-weight.medium}",
       "$extensions": {
         "com.trenchcoat": {
           "css": "--tc-pill-font-weight"
@@ -3015,8 +2841,8 @@
       }
     },
     "font-weight": {
-      "$type": "number",
-      "$value": 500,
+      "$type": "fontWeight",
+      "$value": "{font-weight.medium}",
       "$extensions": {
         "com.trenchcoat": {
           "css": "--tc-kbd-font-weight"
@@ -3302,8 +3128,8 @@
       }
     },
     "font-weight": {
-      "$type": "number",
-      "$value": 500,
+      "$type": "fontWeight",
+      "$value": "{font-weight.medium}",
       "$extensions": {
         "com.trenchcoat": {
           "css": "--tc-avatar-font-weight"
@@ -3411,8 +3237,8 @@
       }
     },
     "font-weight": {
-      "$type": "number",
-      "$value": 500,
+      "$type": "fontWeight",
+      "$value": "{font-weight.strong}",
       "$extensions": {
         "com.trenchcoat": {
           "css": "--tc-title-font-weight"
@@ -3478,8 +3304,8 @@
       }
     },
     "font-weight": {
-      "$type": "number",
-      "$value": 500,
+      "$type": "fontWeight",
+      "$value": "{font-weight.medium}",
       "$extensions": {
         "com.trenchcoat": {
           "css": "--tc-caption-font-weight"
@@ -3516,8 +3342,8 @@
       }
     },
     "font-weight": {
-      "$type": "number",
-      "$value": 500,
+      "$type": "fontWeight",
+      "$value": "{font-weight.medium}",
       "$extensions": {
         "com.trenchcoat": {
           "css": "--tc-eyebrow-font-weight"

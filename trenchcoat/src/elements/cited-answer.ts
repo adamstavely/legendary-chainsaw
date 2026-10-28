@@ -5,6 +5,7 @@ import { keyed } from "lit/directives/keyed.js";
 import { TcElement } from "./internal/base";
 import { FocusRescueController, rescueFocus } from "./internal/controllers";
 import type { Look } from "./internal/look";
+import { safeUrl } from "./internal/safe-url";
 
 /*
  * <tc-cited-answer> – the Lit port of src/components/cited-answer.tsx: an AI answer whose sentences and sources are
@@ -115,7 +116,7 @@ let uidCount = 0;
  * @tag tc-cited-answer
  * @fires tc-preview-change - The open preview changes; detail `{ preview: string | null }` (null: closed). Cancelable.
  * @fires tc-open-source - Open source was pressed; detail `{ source: CitedSource }`
- * @fires tc-action - The action button (`actionLabel`) was pressed
+ * @fires tc-action - The action button (`actionLabel`) was pressed; detail: null
  */
 export class TcCitedAnswer extends TcElement {
   static override ui = "ca";
@@ -449,8 +450,8 @@ export class TcCitedAnswer extends TcElement {
       <div class="ui-ca__pv-title">${source.title}</div>
       ${source.quote ? html`<blockquote class="ui-ca__quote">${marked(source.quote, source.highlight, answer)}</blockquote>` : nothing}
       <div class="ui-ca__pv-actions">
-        ${source.url
-          ? html`<a class="ui-ca__btn ui-ca__btn--main" href=${source.url} target="_blank" rel="noreferrer noopener" @click=${(e: Event) => this.openSource(e, source)}>${openLabel}</a>`
+        ${safeUrl(source.url)
+          ? html`<a class="ui-ca__btn ui-ca__btn--main" href=${ifDefined(safeUrl(source.url))} target="_blank" rel="noreferrer noopener" @click=${(e: Event) => this.openSource(e, source)}>${openLabel}</a>`
           : this.openHandled
             ? html`<button type="button" class="ui-ca__btn ui-ca__btn--main" @click=${(e: Event) => this.openSource(e, source)}>${openLabel}</button>`
             : nothing}

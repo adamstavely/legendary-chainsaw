@@ -23,7 +23,9 @@
           "type": "string"
         },
         "avatar": {
-          "type": "string"
+          "type": "string",
+          "format": "uri-reference",
+          "contentMediaType": "image/*"
         }
       },
       "required": [
@@ -99,7 +101,9 @@
           "type": "string"
         },
         "avatar": {
-          "type": "string"
+          "type": "string",
+          "format": "uri-reference",
+          "contentMediaType": "image/*"
         }
       },
       "required": [

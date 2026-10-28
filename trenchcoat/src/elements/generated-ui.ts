@@ -344,6 +344,8 @@ export class TcGeneratedUi extends TcElement {
   @property({ type: Boolean, reflect: true }) accessor streaming = false;
   /** Show why a block fell back to text, under it – for development and evaluation, not for end users */
   @property({ type: Boolean, attribute: "show-issues" }) accessor showIssues = false;
+  /** Origins that images in placed components may load from ("https://cdn.example.com"); unset, any http(s) origin */
+  @property({ attribute: false }) accessor allowedOrigins: readonly string[] | undefined = undefined;
   /** The heading level of text headings, group and form titles (2–6); the tables' own titles stay h3 */
   @property({ type: Number, attribute: "heading-level" }) accessor headingLevel = 3;
 
@@ -360,6 +362,8 @@ export class TcGeneratedUi extends TcElement {
   private components = new Map<string, { tag: string; props: Record<string, unknown> }>();
   private componentIssues = new Map<string, GenerativeIssue[]>();
   private mounting = new WeakMap<HTMLElement, string>();
+  /** The props last set on each placed component, to reset the ones a new answer drops */
+  private applied = new WeakMap<HTMLElement, string[]>();
 
   /** What fell back to text, and why, and the props of a component that were left out – by JSON Pointer path */
   get issues(): GeneratedUiIssue[] {
@@ -455,31 +459,56 @@ export class TcGeneratedUi extends TcElement {
       const path = box.dataset.path ?? "";
       const block = this.components.get(path);
       if (!block) continue;
-      const key = `${block.tag} ${JSON.stringify(block.props)}`;
+      const origins = this.allowedOrigins;
+      const key = `${block.tag} ${JSON.stringify(origins ?? null)} ${JSON.stringify(block.props)}`;
       if (this.mounting.get(box) === key) continue;
       this.mounting.set(box, key);
       const entry = registry[block.tag];
-      void Promise.all([entry.load(), entry.schema()]).then(([, schema]) => {
-        if (this.mounting.get(box) !== key || !box.isConnected) return;
-        const checked = checkProps(schema.default as Schema, block.props);
-        let el = box.firstElementChild as HTMLElement | null;
-        if (!el || el.localName !== block.tag) {
-          el = document.createElement(block.tag);
-          const own = el;
-          // The component's own events, passed on as one event the app listens for
-          for (const name of entry.events)
-            own.addEventListener(name, (e) => {
-              if (e.target !== own) return;
-              e.stopPropagation();
-              const passed = this.emit<GeneratedUiComponentEvent>("tc-component-event", { block: path, tag: block.tag, event: name, detail: (e as CustomEvent).detail }, { cancelable: e.cancelable });
-              if (!passed) e.preventDefault();
-            });
-          box.replaceChildren(el);
-        }
-        Object.assign(el, checked.props);
-        this.componentIssues.set(path, checked.issues.map((i) => ({ path: `${path}/${i.path}`, message: i.message })));
-        this.report();
-      });
+      Promise.all([entry.load(), entry.schema()]).then(
+        ([, schema]) => {
+          if (this.mounting.get(box) !== key || !box.isConnected) return;
+          const checked = checkProps(schema.default as Schema, block.props, { allowedOrigins: origins });
+          let el = box.firstElementChild as HTMLElement | null;
+          if (!el || el.localName !== block.tag) {
+            el = document.createElement(block.tag);
+            const own = el;
+            // The component's own events, passed on as one event the app listens for
+            for (const name of entry.events)
+              own.addEventListener(name, (e) => {
+                if (e.target !== own) return;
+                e.stopPropagation();
+                const passed = this.emit<GeneratedUiComponentEvent>("tc-component-event", { block: path, tag: block.tag, event: name, detail: (e as CustomEvent).detail }, { cancelable: e.cancelable });
+                if (!passed) e.preventDefault();
+              });
+            box.replaceChildren(el);
+            this.applied.delete(el);
+          }
+          // A revised answer that drops a property (or has it left out now) puts it back to the element's default,
+          // rather than keeping what the last answer set
+          const before = this.applied.get(el) ?? [];
+          const gone = before.filter((k) => !Object.hasOwn(checked.props, k));
+          if (gone.length) {
+            const fresh = document.createElement(block.tag) as unknown as Record<string, unknown>;
+            for (const k of gone) (el as unknown as Record<string, unknown>)[k] = fresh[k];
+          }
+          Object.assign(el, checked.props);
+          this.applied.set(el, Object.keys(checked.props));
+          this.componentIssues.set(path, checked.issues.map((i) => ({ path: `${path}/${i.path}`, message: i.message })));
+          this.report();
+        },
+        (error: unknown) => {
+          if (this.mounting.get(box) !== key) return;
+          // Tried again on the next update – a new spec, or the same one set again
+          this.mounting.delete(box);
+          if (!box.isConnected) return;
+          const note = document.createElement("p");
+          note.className = "ui-gui__component-error";
+          note.textContent = `This ${block.tag.replace(/^tc-/, "").replace(/-/g, " ")} couldn't be shown.`;
+          box.replaceChildren(note);
+          this.componentIssues.set(path, [{ path, message: `${block.tag} couldn't load – ${error instanceof Error ? error.message : String(error)}` }]);
+          this.report();
+        },
+      );
     }
   }
 
@@ -801,6 +830,8 @@ ${Array.from({ length: CHART_COLOURS }, (_, i) => `[data-ui="gui"] polyline[stro
 .ui-gui__pending { display: grid; gap: var(--tc-space-2); padding: var(--tc-space-1) 0; }
 /* A component block while its module and schema load: the pending block's quiet bar */
 .ui-gui__component:empty { min-height: var(--tc-control-h-md); border-radius: var(--tc-radius-lg); background: var(--tc-fill-subtle); }
+/* A component block whose module couldn't load */
+.ui-gui__component-error { margin: 0; font-size: var(--tc-font-size-sm); color: var(--tc-text-secondary); }
 .ui-gui__pending > span { height: 10px; border-radius: var(--tc-radius-full); background: var(--tc-fill-default); animation: ui-gui-pulse var(--tc-duration-shimmer) var(--tc-ease-in-out) infinite; }
 .ui-gui__pending > span:nth-child(2) { width: 82%; animation-delay: var(--tc-duration-slow); }
 .ui-gui__pending > span:nth-child(3) { width: 56%; animation-delay: var(--tc-duration-slower); }

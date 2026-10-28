@@ -38,7 +38,8 @@
               "type": "string"
             },
             "href": {
-              "type": "string"
+              "type": "string",
+              "format": "uri-reference"
             },
             "external": {
               "type": "boolean"

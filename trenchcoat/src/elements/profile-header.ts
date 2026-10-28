@@ -1,8 +1,10 @@
 import { html, nothing, svg, type PropertyValues, type TemplateResult } from "lit";
 import { property, state } from "lit/decorators.js";
+import { repeat } from "lit/directives/repeat.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { TcElement } from "./internal/base";
 import { initials } from "./internal/util";
+import { safeMediaUrl } from "./internal/safe-media";
 
 /*
  * <tc-profile-header> – the top of a person's or an account's page: a picture or initials, the name, a status pill
@@ -159,7 +161,7 @@ export class TcProfileHeader extends TcElement {
 
   private renderAvatar() {
     const shape = this.kind === "account" ? "square" : "round";
-    if (this.picture) return html`<span class="ui-phd__avatar" data-shape=${shape} aria-hidden="true"><img src=${this.picture} alt="" /></span>`;
+    if (this.picture) return html`<span class="ui-phd__avatar" data-shape=${shape} aria-hidden="true"><img src=${ifDefined(safeMediaUrl(this.picture))} alt="" /></span>`;
     return html`<span class="ui-phd__avatar" data-shape=${shape} data-hue=${hue(this.name)} aria-hidden="true">${initials(this.name)}</span>`;
   }
 
@@ -187,7 +189,9 @@ export class TcProfileHeader extends TcElement {
     const current = this.current;
     const stop = this.focusTab ?? current;
     return html`<div class="ui-phd__tabs" role="tablist" aria-label=${this.tabsLabel} @keydown=${this.onTabKey}>
-      ${this.tabs.map(
+      ${repeat(
+        this.tabs,
+        (t) => t.id,
         (t) => html`<button
           type="button"
           role="tab"

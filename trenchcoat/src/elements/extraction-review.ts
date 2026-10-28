@@ -7,6 +7,7 @@ import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
 import { FocusRescueController } from "./internal/controllers";
+import { safeMediaUrl } from "./internal/safe-media";
 
 /*
  * <tc-extraction-review> – fields extracted from a document, checked by a person before they're used. The page image
@@ -410,7 +411,7 @@ export class TcExtractionReview extends TcElement {
       ${nav}
       <div class="ui-xrev__viewport" tabindex="0" role="region" aria-labelledby=${`${this.uid}-pageno`}>
         <div class="ui-xrev__sheet" style=${styleMap({ aspectRatio: `${page.width} / ${page.height}` })}>
-          <img class="ui-xrev__img" src=${page.src} alt=${page.alt ?? `Page ${i + 1} of ${name}`} draggable="false" decoding="async" />
+          <img class="ui-xrev__img" src=${ifDefined(safeMediaUrl(page.src))} alt=${page.alt ?? `Page ${i + 1} of ${name}`} draggable="false" decoding="async" />
           ${repeat(
             boxes,
             ({ f }) => f.id,

@@ -3,6 +3,7 @@ import { property, state } from "lit/decorators.js";
 import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
+import { pick } from "./internal/util";
 
 /*
  * <tc-account-list> – the financial accounts linked to a person or a company: each one's institution and where it
@@ -214,7 +215,7 @@ export class TcAccountList extends TcElement {
       ${a.amount
         ? html`<span class="ui-acl__amount"><span class="ui-acl__amount-value">${this.money(a.amount)}</span>${a.amount.label ? html`<span class="ui-acl__amount-label">${a.amount.label}</span>` : nothing}</span>`
         : html`<span class="ui-acl__amount" aria-hidden="true"></span>`}
-      <span class="ui-acl__pill" data-tone=${st.tone}>${MARK[st.tone]()}${st.label}</span>
+      <span class="ui-acl__pill" data-tone=${st.tone}>${pick(MARK, st.tone, "neutral")()}${st.label}</span>
       <span class="ui-acl__actions">
         ${this.canReveal(a)
           ? html`<button

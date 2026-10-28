@@ -107,6 +107,39 @@ describe("tc-query-builder", () => {
     expect([...cond(el, "a").querySelectorAll("input")].map((i) => i.getAttribute("aria-label"))).toEqual(["From, condition 1", "To, condition 1"]);
   });
 
+  test("values that would break the query string are quoted, with backslashes and quotes escaped", async () => {
+    const q = (value: string) =>
+      make("standard", { kind: "group", id: "root", join: "and", children: [{ kind: "condition", id: "a", field: "owner", operator: "is", value }] }).then((el) => el.query);
+    expect(await q("C:\\a b\\")).toBe('owner:"C:\\\\a b\\\\"');
+    expect(await q('say "hi"')).toBe('owner:"say \\"hi\\""');
+    expect(await q("-draft")).toBe('owner:"-draft"');
+    expect(await q("OR")).toBe('owner:"OR"');
+    expect(await q("a*b")).toBe('owner:"a*b"');
+    expect(await q("Osei")).toBe("owner:Osei");
+  });
+
+  test("Copy says it copied only when it did; a failed copy says so", async () => {
+    const el = await make();
+    const status = () => el.querySelector('[role="status"]')!.textContent;
+    const copy = el.querySelector<HTMLButtonElement>(".ui-qb__copy")!;
+    const clip = navigator.clipboard;
+    const exec = document.execCommand;
+    Object.defineProperty(navigator, "clipboard", { configurable: true, value: { writeText: () => Promise.reject(new Error("denied")) } });
+    document.execCommand = () => false;
+    try {
+      copy.click();
+      await expect.poll(status).toBe("Couldn't copy the query");
+      expect(copy.textContent!.trim()).toBe("Copy");
+      Object.defineProperty(navigator, "clipboard", { configurable: true, value: { writeText: () => Promise.resolve() } });
+      copy.click();
+      await expect.poll(status).toBe("Query copied");
+      expect(copy.textContent!.trim()).toBe("Copied");
+    } finally {
+      Object.defineProperty(navigator, "clipboard", { configurable: true, value: clip });
+      document.execCommand = exec;
+    }
+  });
+
   test("AND / OR per group, adding conditions and a group, removing them; tc-value-change each time", async () => {
     const el = await make();
     const seen: QueryGroup[] = [];

@@ -116,7 +116,7 @@
     {
      "name": "tc-add",
      "detail": "",
-     "description": "Add source was pressed – open your own picker (no detail)",
+     "description": "Add source was pressed – open your own picker; detail: null",
      "cancelable": false
     },
     {
@@ -684,7 +684,7 @@
   "windowed": true
  },
  "size": {
-  "min": 46426,
-  "gzip": 13443
+  "min": 46464,
+  "gzip": 13452
  }
 }

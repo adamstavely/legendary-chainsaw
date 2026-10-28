@@ -278,13 +278,13 @@
     {
      "name": "tc-expire",
      "detail": "",
-     "description": "The countdown ran out (tc-deny fires too)",
+     "description": "The countdown ran out (tc-deny fires too); detail: null",
      "cancelable": false
     },
     {
      "name": "tc-edit",
      "detail": "",
-     "description": "Edit was pressed (shown with `editable`)",
+     "description": "Edit was pressed (shown with `editable`); detail: null",
      "cancelable": false
     },
     {
@@ -928,7 +928,7 @@
   "windowed": false
  },
  "size": {
-  "min": 53503,
-  "gzip": 14981
+  "min": 53895,
+  "gzip": 15176
  }
 }

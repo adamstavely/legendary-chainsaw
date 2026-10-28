@@ -10,6 +10,7 @@ import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
 import { FocusRescueController, OffScreenController } from "./internal/controllers";
 import type { Look } from "./internal/look";
+import { safeMediaUrl } from "./internal/safe-media";
 
 /*
  * <tc-artifact-panel> – everything a run produced, in one place: files, code, documents, images and tables. A list on
@@ -124,8 +125,12 @@ export function saveArtifact(artifact: Artifact, version: ArtifactVersion) {
   const a = document.createElement("a");
   a.download = artifact.name;
   let url = "";
-  if (artifact.kind === "image") a.href = textOf(version.content);
-  else {
+  if (artifact.kind === "image") {
+    // A javascript: "image" would run on the click below
+    const src = safeMediaUrl(textOf(version.content));
+    if (!src) return;
+    a.href = src;
+  } else {
     const type = artifact.mimeType ?? (artifact.kind === "table" ? "text/csv" : /\.md$/i.test(artifact.name) ? "text/markdown" : "text/plain");
     const body = artifact.kind === "table" ? artifactTableToCsv(tableOf(version.content)) : textOf(version.content);
     url = URL.createObjectURL(new Blob([body], { type: `${type};charset=utf-8` }));
@@ -481,9 +486,9 @@ export class TcArtifactPanel extends TcElement {
       case "image":
         if (prev)
           return html`<div class="ui-artp__pair">${[prev, v].map(
-            (x, i) => html`<figure class="ui-artp__figure"><div class="ui-artp__stage"><img src=${textOf(x.content)} alt=${`${a.alt ?? a.name} (${x.label ?? `v${at + i}`})`} /></div><figcaption>${i ? "After" : "Before"} · ${x.label ?? `v${at + i}`}</figcaption></figure>`,
+            (x, i) => html`<figure class="ui-artp__figure"><div class="ui-artp__stage"><img src=${ifDefined(safeMediaUrl(textOf(x.content)))} alt=${`${a.alt ?? a.name} (${x.label ?? `v${at + i}`})`} /></div><figcaption>${i ? "After" : "Before"} · ${x.label ?? `v${at + i}`}</figcaption></figure>`,
           )}</div>`;
-        return html`<figure class="ui-artp__figure"><div class="ui-artp__stage"><img src=${textOf(v.content)} alt=${a.alt ?? a.name} /></div></figure>`;
+        return html`<figure class="ui-artp__figure"><div class="ui-artp__stage"><img src=${ifDefined(safeMediaUrl(textOf(v.content)))} alt=${a.alt ?? a.name} /></div></figure>`;
       case "table":
         return this.tableView(a, tableOf(v.content), prev ? tableOf(prev.content) : null);
       default:

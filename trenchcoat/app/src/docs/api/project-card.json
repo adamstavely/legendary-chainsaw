@@ -116,7 +116,7 @@
     {
      "name": "tc-action",
      "detail": "",
-     "description": "The action button (`actionLabel`) was pressed",
+     "description": "The action button (`actionLabel`) was pressed; detail: null",
      "cancelable": false
     }
    ],
@@ -649,7 +649,7 @@
   "windowed": false
  },
  "size": {
-  "min": 43768,
-  "gzip": 11306
+  "min": 44335,
+  "gzip": 11563
  }
 }

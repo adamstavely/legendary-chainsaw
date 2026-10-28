@@ -170,25 +170,25 @@ export class ChatComposer {
    */
   @Output("tc-skill-change") readonly tcSkillChange = new EventEmitter<CustomEvent<ChatSkillChange>>();
   /**
-   * The plus button was pressed – open your own file or folder picker here
+   * The plus button was pressed – open your own file or folder picker here; detail: null
    * Types $event; the element dispatches the event itself.
    */
-  @Output("tc-attach") readonly tcAttach = new EventEmitter<CustomEvent<unknown>>();
+  @Output("tc-attach") readonly tcAttach = new EventEmitter<CustomEvent<null>>();
   /**
-   * "Connect apps" was pressed; `onConnectApps` may return a promise it waits for
+   * "Connect apps" was pressed; `onConnectApps` may return a promise it waits for; detail: null
    * Types $event; the element dispatches the event itself.
    */
-  @Output("tc-connect-apps") readonly tcConnectApps = new EventEmitter<CustomEvent<unknown>>();
+  @Output("tc-connect-apps") readonly tcConnectApps = new EventEmitter<CustomEvent<null>>();
   /**
-   * "Request approval" was pressed; `onRequestApproval` may return a promise it waits for
+   * "Request approval" was pressed; `onRequestApproval` may return a promise it waits for; detail: null
    * Types $event; the element dispatches the event itself.
    */
-  @Output("tc-request-approval") readonly tcRequestApproval = new EventEmitter<CustomEvent<unknown>>();
+  @Output("tc-request-approval") readonly tcRequestApproval = new EventEmitter<CustomEvent<null>>();
   /**
-   * "Select a project" was pressed
+   * "Select a project" was pressed; detail: null
    * Types $event; the element dispatches the event itself.
    */
-  @Output("tc-select-project") readonly tcSelectProject = new EventEmitter<CustomEvent<unknown>>();
+  @Output("tc-select-project") readonly tcSelectProject = new EventEmitter<CustomEvent<null>>();
   /**
    * The model settings changed in the settings popover (`ChatSettingsChange`: `{ value, changed }`); cancelable – prevent it to control `settings`
    * Types $event; the element dispatches the event itself.

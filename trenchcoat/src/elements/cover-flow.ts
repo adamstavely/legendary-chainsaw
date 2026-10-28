@@ -4,6 +4,7 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { keyed } from "lit/directives/keyed.js";
 import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
+import { safeMediaUrl } from "./internal/safe-media";
 
 /*
  * <tc-cover-flow> – the Lit port of illustrations/cover-flow.tsx: browse covers in 3D. The cover in front faces you;
@@ -389,7 +390,7 @@ export class TcCoverFlow extends TcElement {
       if (!pair) this.clones.set(item.cover, (pair = [item.cover.cloneNode(true), item.cover.cloneNode(true)]));
       content = pair[decorative ? 1 : 0];
     } else if (item.image)
-      content = html`<img src=${item.image} alt=${decorative ? "" : (item.alt ?? item.title ?? "")} draggable="false" loading="lazy" decoding="async" />`;
+      content = html`<img src=${ifDefined(safeMediaUrl(item.image))} alt=${decorative ? "" : (item.alt ?? item.title ?? "")} draggable="false" loading="lazy" decoding="async" />`;
     return html`<div class="ui-cf__media">${content}</div>`;
   }
 

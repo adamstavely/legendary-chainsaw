@@ -136,8 +136,8 @@ export class Stories {
    */
   @Output("tc-reply") readonly tcReply = new EventEmitter<CustomEvent<StoryReplyEvent>>();
   /**
-   * The "add" tile was activated (no detail)
+   * The "add" tile was activated; detail: undefined
    * Types $event; the element dispatches the event itself.
    */
-  @Output("tc-add") readonly tcAdd = new EventEmitter<CustomEvent<unknown>>();
+  @Output("tc-add") readonly tcAdd = new EventEmitter<CustomEvent<undefined>>();
 }

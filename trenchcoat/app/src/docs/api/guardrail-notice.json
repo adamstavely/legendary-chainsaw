@@ -158,7 +158,7 @@
     {
      "name": "tc-dismiss",
      "detail": "",
-     "description": "The close button of a dismissible notice was pressed; remove the notice in answer",
+     "description": "The close button of a dismissible notice was pressed; remove the notice in answer; detail: null",
      "cancelable": false
     }
    ],
@@ -712,7 +712,7 @@
   "windowed": false
  },
  "size": {
-  "min": 31837,
-  "gzip": 9018
+  "min": 32289,
+  "gzip": 9219
  }
 }

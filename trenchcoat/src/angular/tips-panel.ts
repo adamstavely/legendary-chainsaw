@@ -50,8 +50,8 @@ export class TipsPanel {
    */
   @Output("tc-tip-action") readonly tcTipAction = new EventEmitter<CustomEvent<{ id: string }>>();
   /**
-   * The Close button was pressed
+   * The Close button was pressed; detail: null
    * Types $event; the element dispatches the event itself.
    */
-  @Output("tc-close") readonly tcClose = new EventEmitter<CustomEvent<unknown>>();
+  @Output("tc-close") readonly tcClose = new EventEmitter<CustomEvent<null>>();
 }

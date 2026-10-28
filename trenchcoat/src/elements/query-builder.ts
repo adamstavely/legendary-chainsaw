@@ -4,7 +4,7 @@ import { live } from "lit/directives/live.js";
 import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
-import { copyText } from "./internal/util";
+import { copyText, formatDate } from "./internal/util";
 
 /*
  * <tc-query-builder> – a search query built from conditions instead of typed syntax. Conditions sit in a group joined
@@ -86,7 +86,10 @@ function complete(c: QueryCondition) {
   if (c.operator === "any-of") return Array.isArray(c.value) && c.value.length > 0;
   return typeof c.value === "string" && c.value.trim() !== "";
 }
-const quote = (v: string) => (/[\s:()"]/.test(v) ? `"${v.replace(/"/g, '\\"')}"` : v);
+/** A value in the query string: quoted – with \ and " escaped – when it has spaces or the syntax's own characters, or
+ *  would read as an operator (AND, OR, NOT, a leading - or +, a wildcard) */
+const quote = (v: string) =>
+  /[\s:()"\\*?{}[\]^~<>=!]/.test(v) || /^[-+]/.test(v) || /^(AND|OR|NOT|TO)$/i.test(v) || v === "" ? `"${v.replace(/[\\"]/g, (ch) => `\\${ch}`)}"` : v;
 
 /**
  * A visual query builder – conditions joined by AND or OR, one level of nested groups, a field, an operator by type
@@ -138,7 +141,7 @@ export class TcQueryBuilder extends TcElement {
   private dateLabel(v: string) {
     const [y, m, d] = v.split("-").map(Number);
     if (!y || !m || !d) return v;
-    return new Intl.DateTimeFormat(this.locale, { day: "numeric", month: "short", year: "numeric" }).format(new Date(y, m - 1, d));
+    return formatDate(new Date(y, m - 1, d), this.locale, { day: "numeric", month: "short", year: "numeric" });
   }
   private valueWords(f: QueryField | undefined, v: string) {
     if (f?.type === "enum") return this.optionLabel(f, v);
@@ -267,7 +270,11 @@ export class TcQueryBuilder extends TcElement {
   private async copy() {
     const q = this.query;
     if (!q) return;
-    await copyText(q);
+    if (!(await copyText(q))) {
+      this.copied = false;
+      this.announce = "Couldn't copy the query";
+      return;
+    }
     this.copied = true;
     this.announce = "Query copied";
     clearTimeout(this.copiedTimer);

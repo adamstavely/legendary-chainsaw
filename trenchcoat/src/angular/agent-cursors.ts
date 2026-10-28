@@ -107,10 +107,10 @@ export class AgentCursors {
    */
   @Output("tc-reject") readonly tcReject = new EventEmitter<CustomEvent<DocSuggestion>>();
   /**
-   * "Accept all" was pressed
+   * "Accept all" was pressed; detail: null
    * Types $event; the element dispatches the event itself.
    */
-  @Output("tc-accept-all") readonly tcAcceptAll = new EventEmitter<CustomEvent<unknown>>();
+  @Output("tc-accept-all") readonly tcAcceptAll = new EventEmitter<CustomEvent<null>>();
   /**
    * A comment was resolved; `detail` is the `DocComment`
    * Types $event; the element dispatches the event itself.

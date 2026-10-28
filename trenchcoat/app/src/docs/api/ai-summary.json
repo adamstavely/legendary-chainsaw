@@ -162,7 +162,7 @@
     {
      "name": "tc-summarise",
      "detail": "",
-     "description": "Summarise was pressed while `status` is \"idle\" – start summarising",
+     "description": "Summarise was pressed while `status` is \"idle\" – start summarising; detail: null",
      "cancelable": false
     },
     {
@@ -755,7 +755,7 @@
   "windowed": false
  },
  "size": {
-  "min": 41909,
-  "gzip": 12268
+  "min": 42573,
+  "gzip": 12558
  }
 }

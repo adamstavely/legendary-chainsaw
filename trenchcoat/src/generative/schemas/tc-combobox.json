@@ -84,7 +84,9 @@
             "string",
             "boolean"
           ],
-          "description": "An image URL, or true for initials from the label"
+          "description": "An image URL, or true for initials from the label",
+          "format": "uri-reference",
+          "contentMediaType": "image/*"
         },
         "color": {
           "type": "string",

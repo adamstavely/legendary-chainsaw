@@ -2,7 +2,9 @@ import { html, nothing, svg } from "lit";
 import { property, state } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { TcElement } from "./internal/base";
-import { initials } from "./internal/util";
+import { formatDate, initials } from "./internal/util";
+import { safeUrl } from "./internal/safe-url";
+import { safeMediaUrl } from "./internal/safe-media";
 
 /*
  * <tc-work-item> – one piece of work as a card: its title and a status in words and a mark (Active, Blocked, In review,
@@ -120,8 +122,8 @@ export class TcWorkItem extends TcElement {
   /* ---------- Rendering ---------- */
 
   private renderTitle() {
-    return this.href
-      ? html`<a class="ui-wki__title" href=${this.href} @click=${(e: MouseEvent) => this.open(e)}>${this.heading}</a>`
+    return safeUrl(this.href)
+      ? html`<a class="ui-wki__title" href=${ifDefined(safeUrl(this.href))} @click=${(e: MouseEvent) => this.open(e)}>${this.heading}</a>`
       : html`<button type="button" class="ui-wki__title" @click=${(e: MouseEvent) => this.open(e)}>${this.heading}</button>`;
   }
 
@@ -148,11 +150,11 @@ export class TcWorkItem extends TcElement {
         : nothing}
       <div class="ui-wki__meta">
         ${this.due !== undefined
-          ? html`<span class="ui-wki__due" ?data-overdue=${overdue}>${calendarIcon}${overdue ? html`<span class="ui-wki__overdue">Overdue</span>` : html`<span class="ui-wki__sr">Due </span>`}${new Intl.DateTimeFormat(this.locale, { month: "short", day: "numeric" }).format(this.due)}</span>`
+          ? html`<span class="ui-wki__due" ?data-overdue=${overdue}>${calendarIcon}${overdue ? html`<span class="ui-wki__overdue">Overdue</span>` : html`<span class="ui-wki__sr">Due </span>`}${formatDate(this.due, this.locale, { month: "short", day: "numeric" })}</span>`
           : nothing}
         ${this.people.length
           ? html`<span class="ui-wki__people" aria-label=${`People: ${this.people.map((p) => p.name).join(", ")}`} role="img">
-              ${this.people.slice(0, 4).map((p) => html`<span class="ui-wki__avatar" title=${p.name}>${p.picture ? html`<img src=${p.picture} alt="" />` : initials(p.name)}</span>`)}
+              ${this.people.slice(0, 4).map((p) => html`<span class="ui-wki__avatar" title=${p.name}>${p.picture ? html`<img src=${ifDefined(safeMediaUrl(p.picture))} alt="" />` : initials(p.name)}</span>`)}
               ${this.people.length > 4 ? html`<span class="ui-wki__avatar ui-wki__more">+${this.people.length - 4}</span>` : nothing}
             </span>`
           : nothing}

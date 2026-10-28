@@ -30,6 +30,14 @@
      "readonly": false
     },
     {
+     "name": "allowedOrigins",
+     "attribute": null,
+     "type": "readonly string[] | undefined",
+     "default": "undefined",
+     "description": "Origins that images in placed components may load from (\"https://cdn.example.com\"); unset, any http(s) origin",
+     "readonly": false
+    },
+    {
      "name": "headingLevel",
      "attribute": "heading-level",
      "type": "number",
@@ -130,7 +138,8 @@
    "className": "TcGeneratedUi",
    "module": "trenchcoat/generated-ui",
    "data": [
-    "spec"
+    "spec",
+    "allowedOrigins"
    ],
    "attributes": [
     {
@@ -336,7 +345,8 @@
     },
     "progressive": false,
     "via": [
-     "itself"
+     "itself",
+     "src/generative/validate"
     ]
    },
    {
@@ -585,7 +595,7 @@
   "windowed": false
  },
  "size": {
-  "min": 6331274,
-  "gzip": 1523349
+  "min": 6340838,
+  "gzip": 1527069
  }
 }

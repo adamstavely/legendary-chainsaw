@@ -180,7 +180,7 @@
     {
      "name": "tc-retry",
      "detail": "",
-     "description": "Retry was chosen after an error – the app loads the apps again",
+     "description": "Retry was chosen after an error – the app loads the apps again ({})",
      "cancelable": false
     }
    ],
@@ -785,7 +785,7 @@
   "windowed": false
  },
  "size": {
-  "min": 51561,
-  "gzip": 15563
+  "min": 52089,
+  "gzip": 15810
  }
 }

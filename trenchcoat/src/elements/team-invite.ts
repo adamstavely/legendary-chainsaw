@@ -2,6 +2,8 @@ import { html, nothing, svg, type PropertyValues } from "lit";
 import { property } from "lit/decorators.js";
 import { TcElement } from "./internal/base";
 import { OnScreenController } from "./internal/controllers";
+import { ifDefined } from "lit/directives/if-defined.js";
+import { safeMediaUrl } from "./internal/safe-media";
 
 /*
  * <tc-team-invite> – the Lit port of illustrations/team-invite.tsx: two connected teammates and an empty dashed slot.
@@ -27,7 +29,7 @@ let seq = 0;
 
 const node = (avatar: TeamInviteAvatar | undefined, cls: string) =>
   html`<div class=${`ui-ti-node ${cls}`} aria-hidden="true">
-    <span class="ui-ti-face">${avatar ? html`<img src=${avatar.src} alt="" draggable="false" />` : nothing}</span>
+    <span class="ui-ti-face">${avatar ? html`<img src=${ifDefined(safeMediaUrl(avatar.src))} alt="" draggable="false" />` : nothing}</span>
     <span class="ui-ti-dot"></span>
   </div>`;
 

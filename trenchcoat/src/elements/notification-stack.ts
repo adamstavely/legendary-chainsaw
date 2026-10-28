@@ -5,6 +5,7 @@ import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
 import { FocusRescueController, rescueFocus } from "./internal/controllers";
 import type { Look } from "./internal/look";
+import { safeUrl } from "./internal/safe-url";
 
 /*
  * <tc-notification-stack> – the Lit port of src/components/notification-stack.tsx: notices stacked behind each other.
@@ -208,8 +209,8 @@ export class TcNotificationStack extends TcElement {
               <h3 class="ui-ns__title">${notice.title}</h3>
               <p class="ui-ns__text">${notice.text}</p>
               ${a
-                ? a.href
-                  ? html`<a class="ui-ns__btn" href=${a.href} target=${ifDefined(a.external ? "_blank" : undefined)} rel=${ifDefined(a.external ? "noreferrer" : undefined)} @click=${() => a.onClick?.()}>${a.label}${a.external ? arrowIcon(look) : nothing}</a>`
+                ? safeUrl(a.href)
+                  ? html`<a class="ui-ns__btn" href=${ifDefined(safeUrl(a.href))} target=${ifDefined(a.external ? "_blank" : undefined)} rel=${ifDefined(a.external ? "noreferrer" : undefined)} @click=${() => a.onClick?.()}>${a.label}${a.external ? arrowIcon(look) : nothing}</a>`
                   : html`<button type="button" class="ui-ns__btn" @click=${() => a.onClick?.()}>${a.label}</button>`
                 : nothing}
             </div>

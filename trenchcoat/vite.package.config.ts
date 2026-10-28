@@ -21,7 +21,12 @@ export default defineConfig({
       // Every element module (src/elements/<slug>.ts) is an entry, with the index, the React wrappers, the provider and
       // trenchcoat/generative
       entry: {
-        ...Object.fromEntries(readdirSync(here("src/elements")).filter((f) => f.endsWith(".ts")).map((f) => [f.slice(0, -3), here(`src/elements/${f}`)])),
+        // iCloud's "<name> 2.ts" copies (the repo lives under ~/Documents) aren't elements
+        ...Object.fromEntries(
+          readdirSync(here("src/elements"))
+            .filter((f) => f.endsWith(".ts") && !/ \d+\.ts$/.test(f))
+            .map((f) => [f.slice(0, -3), here(`src/elements/${f}`)]),
+        ),
         "look-provider": here("src/elements/internal/look.ts"),
         // What an app needs to let a model place components: the catalogue, schemas, tools and checks
         generative: here("src/generative/index.ts"),

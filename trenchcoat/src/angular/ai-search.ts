@@ -83,7 +83,7 @@ export class AiSearch {
    */
   @Output("tc-contents-change") readonly tcContentsChange = new EventEmitter<CustomEvent<AiSearchContentsChange>>();
   /**
-   * The text changed ({ query }: AiSearchQueryChange)
+   * The text changed ({ query }: AiSearchQueryChange); cancelable – prevented, `value` stays as it was
    * Types $event; the element dispatches the event itself.
    */
   @Output("tc-query-change") readonly tcQueryChange = new EventEmitter<CustomEvent<AiSearchQueryChange>>();

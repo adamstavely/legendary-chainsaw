@@ -24,13 +24,29 @@ jobs:
       run:
         working-directory: trenchcoat
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 22
           cache: npm
           cache-dependency-path: trenchcoat/package-lock.json
       - run: npm ci
+      # Playwright's browsers are cached per version; the system libraries they need are installed either way
+      - name: Playwright version
+        id: playwright
+        run: echo "version=$(node -p "require('playwright/package.json').version")" >> "$GITHUB_OUTPUT"
+      - name: Chromium cache
+        id: browser-cache
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}-chromium
+      - name: Chromium
+        run: npx playwright install --with-deps chromium
+        if: steps.browser-cache.outputs.cache-hit != 'true'
+      - name: Chromium system libraries
+        run: npx playwright install-deps chromium
+        if: steps.browser-cache.outputs.cache-hit == 'true'
       # The same checks as `npm run ci`, one step each so a failure is named on the PR; fast ones first
       - name: Typecheck
         run: npm run typecheck
@@ -40,6 +56,7 @@ jobs:
         run: npm run check:prefixes
       - name: Ratchet on risky patterns
         run: npm run check:ratchet
+      # The DTCG export is checked against what Chromium computes from tokens.css, in each look and theme
       - name: Design tokens
         run: npm run check:tokens
       - name: Contrast
@@ -58,13 +75,18 @@ jobs:
         run: npm run check:docs
       - name: Lit templates
         run: npm run check:lit
-      - name: Chromium for the framework examples
-        run: npx playwright install --with-deps chromium
       # The React components, the gallery and its docs, in jsdom; the Lit elements run in the jobs below
       - name: Tests (jsdom)
         run: npx vitest run --project react
+      # Its own step so a build failure is named as one; the examples install the tarball it packs
+      - name: Build and pack the package
+        run: |
+          npm run build:package
+          rm -rf examples/.packed && mkdir -p examples/.packed
+          npm pack --pack-destination examples/.packed
+          mv examples/.packed/trenchcoat-*.tgz examples/.packed/trenchcoat.tgz
       - name: Framework examples (React, Next.js, Vue, Nuxt, Angular, Svelte, HTML)
-        run: npm run examples
+        run: npm run examples -- --no-pack
       # Needs the examples/ apps installed by the step above
       - name: Framework snippets on the docs pages
         run: npm run check:snippets
@@ -94,14 +116,28 @@ jobs:
       run:
         working-directory: trenchcoat
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: 22
           cache: npm
           cache-dependency-path: trenchcoat/package-lock.json
       - run: npm ci
+      # Playwright's browsers are cached per version; the system libraries they need are installed either way
+      - name: Playwright version
+        id: playwright
+        run: echo "version=$(node -p "require('playwright/package.json').version")" >> "$GITHUB_OUTPUT"
+      - name: Browser cache
+        id: browser-cache
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.playwright.outputs.version }}-${{ matrix.browser }}
       - name: Browser
         run: npx playwright install --with-deps ${{ matrix.browser }}
+        if: steps.browser-cache.outputs.cache-hit != 'true'
+      - name: Browser system libraries
+        run: npx playwright install-deps ${{ matrix.browser }}
+        if: steps.browser-cache.outputs.cache-hit == 'true'
       - name: Element tests
         run: npx vitest run --project elements --browser.name=${{ matrix.browser }} --shard=${{ matrix.shard }}
