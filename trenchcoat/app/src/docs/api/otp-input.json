@@ -168,7 +168,7 @@
     {
      "name": "tc-resend",
      "detail": "",
-     "description": "\"Resend code\" was pressed (shown when `resendable`)",
+     "description": "\"Resend code\" was pressed (shown when `resendable`); detail: null",
      "cancelable": false
     }
    ],
@@ -700,7 +700,7 @@
   "windowed": false
  },
  "size": {
-  "min": 47442,
+  "min": 47480,
   "gzip": 12584
  }
 }

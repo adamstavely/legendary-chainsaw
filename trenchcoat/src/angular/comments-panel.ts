@@ -81,8 +81,8 @@ export class CommentsPanel {
    */
   @Output("tc-filter-change") readonly tcFilterChange = new EventEmitter<CustomEvent<{ filter: CommentsFilter }>>();
   /**
-   * The close button was pressed (shown with `closable`)
+   * The close button was pressed (shown with `closable`); detail: null
    * Types $event; the element dispatches the event itself.
    */
-  @Output("tc-close") readonly tcClose = new EventEmitter<CustomEvent<unknown>>();
+  @Output("tc-close") readonly tcClose = new EventEmitter<CustomEvent<null>>();
 }

@@ -58,7 +58,9 @@
         },
         "picture": {
           "type": "string",
-          "description": "A picture URL; without one the row shows the name's initials"
+          "description": "A picture URL; without one the row shows the name's initials",
+          "format": "uri-reference",
+          "contentMediaType": "image/*"
         },
         "capacity": {
           "type": "number",

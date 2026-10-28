@@ -82,10 +82,10 @@ export class AiAnswer {
    */
   @Output("tc-follow-up") readonly tcFollowUp = new EventEmitter<CustomEvent<{ question: string }>>();
   /**
-   * Stop was pressed while writing
+   * Stop was pressed while writing; detail: null
    * Types $event; the element dispatches the event itself.
    */
-  @Output("tc-stop") readonly tcStop = new EventEmitter<CustomEvent<unknown>>();
+  @Output("tc-stop") readonly tcStop = new EventEmitter<CustomEvent<null>>();
   /**
    * The answer is on the clipboard; detail `{ text: string }`
    * Types $event; the element dispatches the event itself.

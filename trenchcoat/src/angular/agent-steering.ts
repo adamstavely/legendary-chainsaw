@@ -85,13 +85,13 @@ export class AgentSteering {
    */
   @Output("tc-remove") readonly tcRemove = new EventEmitter<CustomEvent<{ id: string }>>();
   /**
-   * Pause was pressed
+   * Pause was pressed; detail: null
    * Types $event; the element dispatches the event itself.
    */
-  @Output("tc-pause") readonly tcPause = new EventEmitter<CustomEvent<unknown>>();
+  @Output("tc-pause") readonly tcPause = new EventEmitter<CustomEvent<null>>();
   /**
-   * Resume was pressed
+   * Resume was pressed; detail: null
    * Types $event; the element dispatches the event itself.
    */
-  @Output("tc-resume") readonly tcResume = new EventEmitter<CustomEvent<unknown>>();
+  @Output("tc-resume") readonly tcResume = new EventEmitter<CustomEvent<null>>();
 }

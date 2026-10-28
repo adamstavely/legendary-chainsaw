@@ -3,6 +3,7 @@ import { property, state } from "lit/decorators.js";
 import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
+import { formatDate, pick } from "./internal/util";
 
 /*
  * <tc-document-list> – the identity and record documents on file for a person or an account: each one's type, issuing
@@ -171,7 +172,7 @@ export class TcDocumentList extends TcElement {
   private renderRow(d: DocumentRecord, r: number) {
     const st = this.statusOf(d.status);
     const shown = !this.canReveal(d) || this.revealed.includes(d.id);
-    const date = d.expires !== undefined ? new Intl.DateTimeFormat(this.locale, { day: "numeric", month: "short", year: "numeric" }).format(d.expires) : null;
+    const date = d.expires !== undefined ? formatDate(d.expires, this.locale, { day: "numeric", month: "short", year: "numeric" }) : null;
     const name = `${d.type}${d.country ? `, ${d.country}` : ""}`;
     const tab = (c: number) => (this.active.r === r && this.active.c === c ? 0 : -1);
     return html`<li class="ui-dlst__row" data-id=${d.id} data-tone=${st.tone}>
@@ -187,7 +188,7 @@ export class TcDocumentList extends TcElement {
         </span>
         ${d.note ? html`<span class="ui-dlst__note">${d.note}</span>` : nothing}
       </div>
-      <span class="ui-dlst__pill" data-tone=${st.tone}>${MARK[st.tone]()}${st.label}</span>
+      <span class="ui-dlst__pill" data-tone=${st.tone}>${pick(MARK, st.tone, "neutral")()}${st.label}</span>
       <span class="ui-dlst__actions">
         ${this.canReveal(d)
           ? html`<button

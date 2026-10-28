@@ -4,6 +4,8 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
 import { FocusRescueController } from "./internal/controllers";
+import { safeMediaUrl } from "./internal/safe-media";
+import { formatDate } from "./internal/util";
 
 /*
  * <tc-fingerprint-card> – a ten-print card: a row of five fingers for each hand, thumb to little finger, in the
@@ -200,13 +202,15 @@ export class TcFingerprintCard extends TcElement {
 
   /* ---------- Rendering ---------- */
 
-  private renderGlyph(p: FingerPrint) {
-    const clip = `${this.uid}-clip-${p.position}`;
+  /** A finger's drawing; `where` keeps the clip path's id unique when the same finger is drawn in its tile and in the
+   *  detail panel */
+  private renderGlyph(p: FingerPrint, where: "tile" | "detail") {
+    const clip = `${this.uid}-clip-${where}-${p.position}`;
     const ridges = p.status === "missing" || p.status === "unable" ? nothing : svg`<path class="ui-fpc__ridges" d=${RIDGES[p.pattern ?? "whorl"]}></path>`;
     return html`<svg class="ui-fpc__glyph" viewBox="0 0 40 50" aria-hidden="true">
       <defs><clipPath id=${clip}><path d=${TIP}></path></clipPath></defs>
       ${p.image && this.onFile(p)
-        ? svg`<image href=${p.image} x="7" y="4" width="26" height="42" preserveAspectRatio="xMidYMid slice" clip-path=${`url(#${clip})`}></image>`
+        ? svg`<image href=${ifDefined(safeMediaUrl(p.image))} x="7" y="4" width="26" height="42" preserveAspectRatio="xMidYMid slice" clip-path=${`url(#${clip})`}></image>`
         : svg`<g clip-path=${`url(#${clip})`}>${ridges}</g>`}
       <path class="ui-fpc__tip" d=${TIP}></path>
       ${p.status === "unable" ? svg`<path class="ui-fpc__slash" d="M9 44 31 6"></path>` : nothing}
@@ -255,7 +259,7 @@ export class TcFingerprintCard extends TcElement {
     >
       <span class="ui-fpc__sr">${fingerName(pos)}, position ${pos}: ${this.say(p)}</span>
       <span class="ui-fpc__pos" aria-hidden="true">${pos}</span>
-      ${this.renderGlyph(p)}
+      ${this.renderGlyph(p, "tile")}
       <span class="ui-fpc__finger" aria-hidden="true">${cap(FINGERS[(pos - 1) % 5])}</span>
       <span class="ui-fpc__status" aria-hidden="true">
         ${this.mark(p.status)}
@@ -274,12 +278,12 @@ export class TcFingerprintCard extends TcElement {
     const rows: [string, string][] = [];
     if (q !== undefined && this.onFile(p)) rows.push(["Quality", `NFIQ ${q} · ${QUALITY[q - 1]}`]);
     if (this.onFile(p) || p.status === "bandaged") rows.push(["Pattern", cap(p.pattern ?? "whorl")]);
-    if (p.captured !== undefined) rows.push(["Captured", new Intl.DateTimeFormat(this.locale, { day: "numeric", month: "short", year: "numeric" }).format(p.captured)]);
+    if (p.captured !== undefined) rows.push(["Captured", formatDate(p.captured, this.locale, { day: "numeric", month: "short", year: "numeric" })]);
     if (p.device) rows.push(["Device", p.device]);
     const id = this.uid;
     return html`<section class="ui-fpc__detail" id=${`${id}-detail`} data-status=${p.status} aria-labelledby=${`${id}-detail-title`}>
       <div class="ui-fpc__detail-head">
-        <span class="ui-fpc__detail-glyph" data-status=${p.status}>${this.renderGlyph(p)}</span>
+        <span class="ui-fpc__detail-glyph" data-status=${p.status}>${this.renderGlyph(p, "detail")}</span>
         <div class="ui-fpc__detail-titles">
           <h4 class="ui-fpc__detail-title" id=${`${id}-detail-title`}>${fingerName(pos)}</h4>
           <span class="ui-fpc__detail-sub">Position ${pos}</span>

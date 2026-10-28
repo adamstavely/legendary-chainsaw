@@ -94,8 +94,8 @@ export class GuardrailNotice {
    */
   @Output("tc-review-request") readonly tcReviewRequest = new EventEmitter<CustomEvent<GuardrailReviewRequest>>();
   /**
-   * The close button of a dismissible notice was pressed; remove the notice in answer
+   * The close button of a dismissible notice was pressed; remove the notice in answer; detail: null
    * Types $event; the element dispatches the event itself.
    */
-  @Output("tc-dismiss") readonly tcDismiss = new EventEmitter<CustomEvent<unknown>>();
+  @Output("tc-dismiss") readonly tcDismiss = new EventEmitter<CustomEvent<null>>();
 }

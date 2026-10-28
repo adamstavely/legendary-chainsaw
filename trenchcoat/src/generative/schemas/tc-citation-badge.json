@@ -37,7 +37,8 @@
     },
     "href": {
       "type": "string",
-      "description": "Where the details are – the badge becomes a link"
+      "description": "Where the details are – the badge becomes a link",
+      "format": "uri-reference"
     },
     "openable": {
       "type": "boolean",

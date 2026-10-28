@@ -102,7 +102,9 @@
         },
         "avatar": {
           "type": "string",
-          "description": "A picture's URL; initials of the name otherwise"
+          "description": "A picture's URL; initials of the name otherwise",
+          "format": "uri-reference",
+          "contentMediaType": "image/*"
         },
         "shape": {
           "type": "string",

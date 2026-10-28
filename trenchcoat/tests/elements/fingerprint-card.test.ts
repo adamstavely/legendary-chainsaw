@@ -131,6 +131,13 @@ describe("tc-fingerprint-card", () => {
     ]);
   });
 
+  test("with a finger open, every id in the card is unique – the tile's and the detail's clip paths don't clash", async () => {
+    const el = await make("standard", 1);
+    const ids = [...el.querySelectorAll("[id]")].map((n) => n.id);
+    expect(ids.length).toBeGreaterThan(10);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
   test("keyboard: ← → along the hand, ↑ ↓ to the same finger on the other hand, Home / End to the thumb and little finger", async () => {
     const el = await make();
     const at = () => Number((document.activeElement as HTMLElement).dataset.finger);

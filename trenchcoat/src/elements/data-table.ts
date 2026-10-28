@@ -7,6 +7,8 @@ import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
 import { FocusRescueController, RowWindowController, SmoothHeightController, rescueFocus } from "./internal/controllers";
 import type { Look } from "./internal/look";
+import { safeUrl } from "./internal/safe-url";
+import { safeMediaUrl } from "./internal/safe-media";
 
 /*
  * <tc-data-table> – the Lit port of src/components/data-table.tsx (pilot component, audit/lit-port-plan.md).
@@ -739,7 +741,7 @@ export class TcDataTable extends TcElement {
       const logo = row.logo;
       return html`<span class="ui-dt__name"
         >${logo
-          ? html`<span class="ui-dt__logo">${typeof logo === "string" ? html`<img src=${logo} alt="" />` : logo.cloneNode(true)}</span>`
+          ? html`<span class="ui-dt__logo">${typeof logo === "string" ? html`<img src=${ifDefined(safeMediaUrl(logo))} alt="" />` : logo.cloneNode(true)}</span>`
           : html`<span class="ui-dt__logo ui-dt__logo--empty"></span>`}<span class="ui-dt__name-text" ?data-empty=${text(value) === ""}>${text(value) || "Untitled"}</span></span
       >`;
     }
@@ -747,7 +749,7 @@ export class TcDataTable extends TcElement {
     if (column.type === "tag") return html`<span class="ui-dt__tag" data-tone=${this.tagTones[text(value)] ?? "blue"}>${text(value)}</span>`;
     if (column.type === "link") {
       const href = /^https?:\/\//.test(text(value)) ? text(value) : `https://${text(value)}`;
-      return html`<a class="ui-dt__link" href=${href} target="_blank" rel="noreferrer" tabindex="-1">${text(value).replace(/^https?:\/\//, "")}</a>`;
+      return html`<a class="ui-dt__link" href=${ifDefined(safeUrl(href))} target="_blank" rel="noreferrer" tabindex="-1">${text(value).replace(/^https?:\/\//, "")}</a>`;
     }
     if (column.type === "number" && typeof value === "number") return html`<span class="ui-dt__text">${value.toLocaleString("en-US")}</span>`;
     return html`<span class="ui-dt__text">${text(value)}</span>`;

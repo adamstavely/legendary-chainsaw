@@ -74,6 +74,30 @@ describe("tc-citation-badge", () => {
     await expect.poll(() => getComputedStyle(tip(el)).display).toBe("none");
   });
 
+  test("a tooltip opened by hover hides on Escape even when focus is elsewhere; the key listener goes with it", async () => {
+    const el = await fixture<TcCitationBadge>(html`<tc-citation-badge .counts=${COUNTS}></tc-citation-badge>`);
+    el.dispatchEvent(new PointerEvent("pointerenter"));
+    await expect.poll(() => getComputedStyle(tip(el)).display).toBe("grid");
+    expect(document.activeElement).not.toBe(badge(el));
+    key(document.body, "Escape");
+    await expect.poll(() => getComputedStyle(tip(el)).display).toBe("none");
+    // Removed while open, it leaves no document listener behind
+    el.dispatchEvent(new PointerEvent("pointerenter"));
+    await expect.poll(() => getComputedStyle(tip(el)).display).toBe("grid");
+    const removed: string[] = [];
+    const real = document.removeEventListener.bind(document);
+    document.removeEventListener = ((type: string, ...rest: [EventListenerOrEventListenerObject, (boolean | EventListenerOptions)?]) => {
+      removed.push(type);
+      real(type, ...rest);
+    }) as typeof document.removeEventListener;
+    try {
+      el.remove();
+      expect(removed).toContain("keydown");
+    } finally {
+      document.removeEventListener = real;
+    }
+  });
+
   test("with href it's a link; with openable a button; tc-open is cancelable", async () => {
     const link = await fixture<TcCitationBadge>(html`<tc-citation-badge href="#citations" .counts=${COUNTS}></tc-citation-badge>`);
     expect(badge(link).tagName).toBe("A");

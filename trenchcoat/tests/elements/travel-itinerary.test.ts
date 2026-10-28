@@ -103,6 +103,33 @@ describe("tc-travel-itinerary", () => {
     expect(empty.querySelector(".ui-trit__empty")!.textContent).toBe("No travel on record.");
   });
 
+  test("focus stays on its leg when an earlier leg is added", async () => {
+    const el = await make();
+    leg(el, "out").focus();
+    await settle();
+    el.legs = [{ id: "z", date: at(1, 2), from: "GVA", to: "LYS", mode: "rail" }, ...LEGS];
+    await settle();
+    expect(document.activeElement?.getAttribute("data-leg")).toBe("out");
+    expect(leg(el, "out").tabIndex).toBe(0);
+    expect(el.querySelectorAll('[data-leg][tabindex="0"]')).toHaveLength(1);
+  });
+
+  test("bad data doesn't break the list: an invalid date, an unknown mode or flag tone, confidence out of range", async () => {
+    const el = await fixture<TcTravelItinerary>(html`<tc-travel-itinerary
+      .flags=${{ odd: { label: "Odd", tone: "purple" } }}
+      .legs=${[
+        { id: "ok", date: at(5, 1), from: "LYS", to: "IST", mode: "air", confidence: 1.5 },
+        { id: "nan", date: Number.NaN, from: "IST", to: "LYS", mode: "hovercraft", flags: ["odd"] },
+      ] as unknown as TravelLeg[]}
+    ></tc-travel-itinerary>`);
+    expect(order(el)).toEqual(["ok", "nan"]);
+    expect(row(el, "nan").querySelector(".ui-trit__date")!.textContent).toBe("Date unknown");
+    expect(row(el, "nan").querySelector(".ui-trit__date")!.hasAttribute("datetime")).toBe(false);
+    expect(row(el, "nan").querySelector<HTMLElement>(".ui-trit__mode")!.dataset.mode).toBe("other");
+    expect(row(el, "nan").querySelector<HTMLElement>(".ui-trit__flag")!.dataset.tone).toBe("warning");
+    expect(row(el, "ok").querySelector(".ui-trit__pct")!.textContent).toBe("100%");
+  });
+
   test("React wrapper: the title and onOpen with the leg", async () => {
     (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
     const host = document.createElement("div");

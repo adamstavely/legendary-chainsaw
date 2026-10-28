@@ -98,10 +98,10 @@ export class ChatHistory {
    */
   @Output("tc-restore") readonly tcRestore = new EventEmitter<CustomEvent<{ id: unknown; conversation: unknown }>>();
   /**
-   * New chat was pressed
+   * New chat was pressed; detail: null
    * Types $event; the element dispatches the event itself.
    */
-  @Output("tc-new-chat") readonly tcNewChat = new EventEmitter<CustomEvent<unknown>>();
+  @Output("tc-new-chat") readonly tcNewChat = new EventEmitter<CustomEvent<null>>();
   /**
    * A chat's summary was loaded as context, or items were removed; detail `{ context, action, chat, items }`: ChatContextChange. Cancelable: prevent it to control `context`
    * Types $event; the element dispatches the event itself.

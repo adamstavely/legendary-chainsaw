@@ -11,5 +11,5 @@
     "plugins": []
   },
   "include": ["src/elements/**/*.ts", "src/generative/**/*.ts"],
-  "exclude": []
+  "exclude": ["**/* ?.ts", "**/* ?/**"]
 }

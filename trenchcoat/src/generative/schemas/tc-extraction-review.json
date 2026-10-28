@@ -121,7 +121,9 @@
       "properties": {
         "src": {
           "type": "string",
-          "description": "The page image's URL – a data: URL works too"
+          "description": "The page image's URL – a data: URL works too",
+          "format": "uri-reference",
+          "contentMediaType": "image/*"
         },
         "width": {
           "type": "number"

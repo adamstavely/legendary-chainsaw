@@ -62,6 +62,9 @@ export abstract class TcElement extends LitElement {
     adoptStyles(`ui-${type.ui}`, type.css, this.ownerDocument);
     this.dataset.ui = type.ui;
     super.connectedCallback();
+    // Put back in the page (moved, or re-inserted): one update, so observers an element drops on disconnect and
+    // starts again from updated() follow it to its new place
+    if (this.hasUpdated) this.requestUpdate();
   }
 
   protected override willUpdate(changed: PropertyValues) {

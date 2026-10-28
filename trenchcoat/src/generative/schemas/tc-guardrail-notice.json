@@ -32,7 +32,8 @@
     },
     "policyHref": {
       "type": "string",
-      "description": "A link to the policy itself; the policy name becomes the link"
+      "description": "A link to the policy itself; the policy name becomes the link",
+      "format": "uri-reference"
     },
     "reason": {
       "type": "string",

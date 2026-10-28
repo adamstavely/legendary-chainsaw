@@ -39,6 +39,12 @@
     "./tokens.css": "./tokens/tokens.css",
     "./tokens/dtcg/*": "./tokens/dtcg/*",
     "./custom-elements.json": "./custom-elements.json",
+    "./package.json": "./package.json",
+    "./internal/*": null,
+    "./elements/*": null,
+    "./generative/*": null,
+    "./angular/*": null,
+    "./types/*": null,
     "./*": {
       "types": "./dist/types/elements/*.d.ts",
       "import": "./dist/*.js"
@@ -53,12 +59,13 @@
     "dist/types",
     "tokens/tokens.css",
     "tokens/dtcg",
-    "custom-elements.json"
+    "custom-elements.json",
+    "!**/* [0-9].*",
+    "!**/* [0-9][0-9].*"
   ],
   "sideEffects": [
     "*.css",
-    "./dist/*.js",
-    "./dist/elements/*.js"
+    "./dist/*.js"
   ],
   "scripts": {
     "dev": "vite --port 5199",
@@ -135,8 +142,8 @@
     "vitest": "5.0.5"
   },
   "peerDependencies": {
-    "@angular/core": ">=19.0.0",
-    "@angular/forms": ">=19.0.0",
+    "@angular/core": ">=19.0.0 <22.0.0",
+    "@angular/forms": ">=19.0.0 <22.0.0",
     "react": ">=19"
   },
   "peerDependenciesMeta": {

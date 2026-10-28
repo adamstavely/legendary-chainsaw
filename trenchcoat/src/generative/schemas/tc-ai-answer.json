@@ -86,7 +86,8 @@
         },
         "href": {
           "type": "string",
-          "description": "Opens in a new tab"
+          "description": "Opens in a new tab",
+          "format": "uri-reference"
         },
         "snippet": {
           "type": "string",

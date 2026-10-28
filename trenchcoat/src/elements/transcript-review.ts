@@ -8,6 +8,8 @@ import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
 import { FocusRescueController, OffScreenController, RowWindowController } from "./internal/controllers";
 import { copyText, initials } from "./internal/util";
+import { ifDefined } from "lit/directives/if-defined.js";
+import { safeMediaUrl } from "./internal/safe-media";
 
 /*
  * <tc-transcript-review> – a recording with the transcript that follows it. A person listens (or watches) and reads
@@ -882,11 +884,11 @@ export class TcTranscriptReview extends TcElement {
     const own = !this.media && this.src;
     return html`${video
         ? html`<div class="ui-tsr__screen">
-            ${own ? html`<video class="ui-tsr__media" src=${this.src} preload="metadata" playsinline></video>` : nothing}
+            ${own ? html`<video class="ui-tsr__media" src=${ifDefined(safeMediaUrl(this.src))} preload="metadata" playsinline></video>` : nothing}
             ${caption ? html`<span class="ui-tsr__caption" aria-hidden="true">${caption}</span>` : nothing}
           </div>`
         : own
-          ? html`<audio class="ui-tsr__media" src=${this.src} preload="metadata"></audio>`
+          ? html`<audio class="ui-tsr__media" src=${ifDefined(safeMediaUrl(this.src))} preload="metadata"></audio>`
           : nothing}
       ${this.mediaError
         ? html`<p class="ui-tsr__error" role="alert">The recording couldn't load.<button type="button" class="ui-tsr__textbtn" @click=${() => this.retry()}>${icon(I.retry)}Try again</button></p>`

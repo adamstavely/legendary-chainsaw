@@ -32,7 +32,8 @@
     },
     "href": {
       "type": "string",
-      "description": "Where the file opens; makes Open file and the citation chips links"
+      "description": "Where the file opens; makes Open file and the citation chips links",
+      "format": "uri-reference"
     },
     "openable": {
       "type": "boolean",

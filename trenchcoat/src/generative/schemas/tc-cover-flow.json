@@ -76,7 +76,9 @@
         },
         "image": {
           "type": "string",
-          "description": "Image URL – or pass your own cover with `cover`"
+          "description": "Image URL – or pass your own cover with `cover`",
+          "format": "uri-reference",
+          "contentMediaType": "image/*"
         },
         "alt": {
           "type": "string"

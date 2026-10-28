@@ -92,10 +92,10 @@ export class AiSummary {
     this.#el.look = v;
   }
   /**
-   * Summarise was pressed while `status` is "idle" – start summarising
+   * Summarise was pressed while `status` is "idle" – start summarising; detail: null
    * Types $event; the element dispatches the event itself.
    */
-  @Output("tc-summarise") readonly tcSummarise = new EventEmitter<CustomEvent<unknown>>();
+  @Output("tc-summarise") readonly tcSummarise = new EventEmitter<CustomEvent<null>>();
   /**
    * Regenerate, Retry after an error, or Update when stale ({ reason: "regenerate" | "error" | "stale" }: AiSummaryRetry)
    * Types $event; the element dispatches the event itself.

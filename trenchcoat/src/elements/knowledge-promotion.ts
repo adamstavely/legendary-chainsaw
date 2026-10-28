@@ -101,7 +101,7 @@ const listOf = (items: string[]) => (items.length < 2 ? (items[0] ?? "") : `${it
  * required and recommended conditions with who met them and when, and Promote and Dispute.
  * @tag tc-knowledge-promotion
  * @fires tc-promote - Promote was pressed with every required condition met (detail: { fact, unmetRecommended: ids of recommended conditions not met }); cancelable – prevent it to save first and set `status` yourself
- * @fires tc-dispute - The dispute form was sent (detail: { reason, version: the corrected wording, or "" }); cancelable – prevent it to keep the form open, e.g. while saving
+ * @fires tc-dispute - The dispute form was sent (KnowledgeDispute – detail: { reason, version: the corrected wording, or "" }); cancelable – prevent it to keep the form open, e.g. while saving
  */
 export class TcKnowledgePromotion extends TcElement {
   static override ui = "kpro";

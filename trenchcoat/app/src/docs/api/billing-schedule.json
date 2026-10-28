@@ -114,7 +114,7 @@
     {
      "name": "tc-schedule-change",
      "detail": "",
-     "description": "After every change the user makes (not on connect); detail: the whole schedule",
+     "description": "After every change the user makes (not on connect); detail: the whole schedule (BillingScheduleValue)",
      "cancelable": false
     }
    ],
@@ -662,7 +662,7 @@
   "windowed": false
  },
  "size": {
-  "min": 58556,
-  "gzip": 13900
+  "min": 58594,
+  "gzip": 13908
  }
 }

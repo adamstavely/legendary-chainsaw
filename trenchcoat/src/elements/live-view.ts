@@ -6,6 +6,8 @@ import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
 import { OffScreenController } from "./internal/controllers";
+import { ifDefined } from "lit/directives/if-defined.js";
+import { safeMediaUrl } from "./internal/safe-media";
 
 /*
  * <tc-live-view> – watch the agent's screen as it works (browser or computer use). The stream is the app's: an image
@@ -543,7 +545,7 @@ export class TcLiveView extends TcElement {
         (this.src
           ? html`<img
               class="ui-lv__img"
-              src=${this.src}
+              src=${ifDefined(safeMediaUrl(this.src))}
               alt=${this.alt}
               draggable="false"
             />`

@@ -4,6 +4,7 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
 import { OffScreenController } from "./internal/controllers";
+import { safeUrl } from "./internal/safe-url";
 
 /*
  * <tc-digest> – a one-minute digest: a pile of information summarised around what the reader needs, not the order
@@ -143,8 +144,8 @@ export class TcDigest extends TcElement {
     const text = textOf(it);
     const source = typeof it === "string" ? undefined : it.source;
     const chip = source
-      ? source.href
-        ? html`<a class="ui-dig__source" href=${source.href} @click=${(e: Event) => this.cite(e, id, section.id, source)}>${source.label}</a>`
+      ? safeUrl(source.href)
+        ? html`<a class="ui-dig__source" href=${ifDefined(safeUrl(source.href))} @click=${(e: Event) => this.cite(e, id, section.id, source)}>${source.label}</a>`
         : html`<button type="button" class="ui-dig__source" @click=${(e: Event) => this.cite(e, id, section.id, source)}>${source.label}</button>`
       : nothing;
     if (section.checkable) {

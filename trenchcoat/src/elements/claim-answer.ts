@@ -8,6 +8,7 @@ import { FocusRescueController, rescueFocus } from "./internal/controllers";
 import type { Look } from "./internal/look";
 import "./validity-badge";
 import type { ValidityInfo } from "./validity-badge";
+import { safeUrl } from "./internal/safe-url";
 
 /*
  * <tc-claim-answer> – an answer you can check claim by claim. The answer is a list of claims (and the plain text
@@ -486,7 +487,7 @@ export class TcClaimAnswer extends TcElement {
             (s) => html`<li class="ui-cla__source">
               <div class="ui-cla__src-head">
                 <span class="ui-cla__glyph" aria-hidden="true">${(s.site ?? s.title).trim().charAt(0).toUpperCase()}</span>
-                <span class="ui-cla__src-name">${s.url ? html`<a href=${s.url} target="_blank" rel="noreferrer noopener">${s.site ?? s.title}</a>` : (s.site ?? s.title)}${s.date ? html`<span class="ui-cla__src-date"><span class="ui-cla__dot"> · </span>${s.date}</span>` : nothing}</span>
+                <span class="ui-cla__src-name">${safeUrl(s.url) ? html`<a href=${ifDefined(safeUrl(s.url))} target="_blank" rel="noreferrer noopener">${s.site ?? s.title}</a>` : (s.site ?? s.title)}${s.date ? html`<span class="ui-cla__src-date"><span class="ui-cla__dot"> · </span>${s.date}</span>` : nothing}</span>
                 ${s.validity
                   ? html`<tc-validity-badge
                       class="ui-cla__validity"

@@ -7,6 +7,7 @@ import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
 import { FocusRescueController, SmoothHeightController, rescueFocus } from "./internal/controllers";
+import { safeUrl } from "./internal/safe-url";
 
 /*
  * <tc-email-draft> – the Lit port of src/components/email-draft.tsx: an agent-written email waiting for review.
@@ -451,7 +452,7 @@ export class TcEmailDraft extends TcElement {
           ></textarea>`
         : keyed(
             this.toneKey,
-            html`<p class="ui-ed__text" @click=${this.startEditing} title="Click to edit">${this.body} <a href=${link.href} @click=${(e: Event) => e.stopPropagation()}>${link.label}</a></p>`,
+            html`<p class="ui-ed__text" @click=${this.startEditing} title="Click to edit">${this.body} <a href=${ifDefined(safeUrl(link.href))} @click=${(e: Event) => e.stopPropagation()}>${link.label}</a></p>`,
           )}
       ${this.replaced !== null && !editing ? html`<button type="button" class="ui-ed__restore" @click=${this.restore}>Restore my edits</button>` : nothing}
     </div>`;

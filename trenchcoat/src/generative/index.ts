@@ -7,7 +7,8 @@
  *   · Tool use: toolDefinitions() gives one tool per component (or a chosen few) for the model to call; the app renders
  *     each call with mountComponent() or as a component block.
  * Either way the props are checked against the component's schema before anything is set (checkComponent): bad props
- * are dropped and reported, links must be http(s), mailto or relative, and sizes are capped. Events come back as DOM
+ * are dropped and reported, links must be http(s), mailto, tel or relative, images can be held to allowedOrigins, and
+ * sizes are capped. Check on the server too (checkComponent) before props reach a client. Events come back as DOM
  * events; nothing a component does reaches the app's own state unless the app listens and decides.
  *
  * The catalogue is a line per component (tag, what it's for, its events) – about 5,600 tokens for all of them, so
@@ -15,9 +16,9 @@
  */
 import catalogData from "./catalog.json";
 import { registry } from "./registry";
-import { checkProps, type GenerativeIssue, type Schema } from "./validate";
+import { checkProps, type CheckOptions, type GenerativeIssue, type Schema } from "./validate";
 
-export { checkProps, MAX_BYTES, MAX_DEPTH, MAX_ITEMS, MAX_STRING, type GenerativeIssue, type Schema } from "./validate";
+export { checkProps, isLinkField, isResourceField, isSafeColour, MAX_BYTES, MAX_DEPTH, MAX_ITEMS, MAX_STRING, type CheckOptions, type GenerativeIssue, type Schema } from "./validate";
 
 export type CatalogEntry = { tag: string; name: string; description: string; events: string[] };
 /** Every generatable component, a line each */
@@ -33,9 +34,9 @@ export async function loadSchema(tag: string): Promise<(Schema & { title: string
 }
 
 /** Checks a model's props for a component: what's safe to set, and what was left out and why */
-export async function checkComponent(tag: string, props: unknown): Promise<{ props: Record<string, unknown>; issues: GenerativeIssue[] } | null> {
+export async function checkComponent(tag: string, props: unknown, options?: CheckOptions): Promise<{ props: Record<string, unknown>; issues: GenerativeIssue[] } | null> {
   const schema = await loadSchema(tag);
-  return schema ? checkProps(schema, props) : null;
+  return schema ? checkProps(schema, props, options) : null;
 }
 
 /** The catalogue as prompt text: the component block's format, then a line per component */
@@ -65,11 +66,11 @@ export async function toolDefinitions(tags: readonly string[] = catalog.map((e) 
 
 /**
  * Renders a component a model asked for into `parent`: loads its module, checks the props and sets what's safe.
- * Returns the element and the issues, or null for a tag that isn't generatable.
+ * Returns the element and the issues, or null for a tag that isn't generatable; rejects when the module can't load.
  */
-export async function mountComponent(parent: Element, tag: string, props: unknown): Promise<{ element: HTMLElement; issues: GenerativeIssue[] } | null> {
+export async function mountComponent(parent: Element, tag: string, props: unknown, options?: CheckOptions): Promise<{ element: HTMLElement; issues: GenerativeIssue[] } | null> {
   if (!isGeneratable(tag)) return null;
-  const [checked] = await Promise.all([checkComponent(tag, props), registry[tag].load()]);
+  const [checked] = await Promise.all([checkComponent(tag, props, options), registry[tag].load()]);
   const element = document.createElement(tag);
   Object.assign(element, checked!.props);
   parent.append(element);

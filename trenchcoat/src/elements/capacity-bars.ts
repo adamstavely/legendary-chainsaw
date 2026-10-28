@@ -4,6 +4,8 @@ import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
 import { initials } from "./internal/util";
+import { ifDefined } from "lit/directives/if-defined.js";
+import { safeMediaUrl } from "./internal/safe-media";
 
 /*
  * <tc-capacity-bars> – how loaded each person is: a row per person with their initials, name and role, and a bar of
@@ -215,7 +217,7 @@ export class TcCapacityBars extends TcElement {
           this.setSelected(isSel ? null : p.id);
         }}
       >
-        ${p.picture ? html`<span class="ui-capb__avatar" aria-hidden="true"><img src=${p.picture} alt="" /></span>` : html`<span class="ui-capb__avatar" aria-hidden="true">${initials(p.name)}</span>`}
+        ${p.picture ? html`<span class="ui-capb__avatar" aria-hidden="true"><img src=${ifDefined(safeMediaUrl(p.picture))} alt="" /></span>` : html`<span class="ui-capb__avatar" aria-hidden="true">${initials(p.name)}</span>`}
         <span class="ui-capb__who" aria-hidden="true"><span class="ui-capb__name">${p.name}</span>${p.role ? html`<span class="ui-capb__role">${p.role}</span>` : nothing}</span>
         <span class="ui-capb__load" aria-hidden="true"
           ><span class="ui-capb__load-num">${this.num(load)} / ${this.amount(cap)}</span>${over

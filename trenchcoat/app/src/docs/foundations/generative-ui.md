@@ -13,8 +13,8 @@ back to the app as an event.
   only when it's asked for.
 - **`toolDefinitions(tags?)`.** One tool per component (`show_status_tracker` …), ready for the Messages API's `tools`.
   `tagOfTool(name)` maps a tool call back to its tag.
-- **`checkComponent(tag, props)` and `mountComponent(parent, tag, props)`.** These check a model's props, and render the
-  component with what's safe to set.
+- **`checkComponent(tag, props, options?)` and `mountComponent(parent, tag, props, options?)`.** These check a model's
+  props, and render the component with what's safe to set. `options.allowedOrigins` holds images to your own origins.
 
 It works on a server too: `toolDefinitions` and `checkComponent` don't need a DOM.
 
@@ -65,14 +65,17 @@ Give the model the components as tools, and render each call. On the server:
 
 ```ts
 import Anthropic from "@anthropic-ai/sdk";
-import { tagOfTool, toolDefinitions } from "trenchcoat/generative";
+import { checkComponent, tagOfTool, toolDefinitions } from "trenchcoat/generative";
 
 const client = new Anthropic();
 const tools = (await toolDefinitions(["tc-status-tracker", "tc-coverage-ring", "tc-activity-calendar"])) as Anthropic.Beta.BetaTool[];
 
+// A model that keeps calling tools stops here, rather than running up the bill
+const MAX_TURNS = 8;
+
 export async function answer(messages: Anthropic.Beta.BetaMessageParam[]) {
-  const ui: { tag: string; props: unknown }[] = [];
-  for (;;) {
+  const ui: { tag: string; props: Record<string, unknown> }[] = [];
+  for (let turn = 0; turn < MAX_TURNS; turn++) {
     const response = await client.beta.messages.create({
       model: "claude-opus-5-5",
       max_tokens: 16000,
@@ -98,25 +101,34 @@ export async function answer(messages: Anthropic.Beta.BetaMessageParam[]) {
         results.push({ type: "tool_result", tool_use_id: block.id, content: "No such component.", is_error: true });
         continue;
       }
-      ui.push({ tag, props: block.input });
-      results.push({ type: "tool_result", tool_use_id: block.id, content: "Shown to the user." });
+      // Checked here, before anything reaches the client; what was left out goes back so the model can correct it
+      const checked = (await checkComponent(tag, block.input, { allowedOrigins: ["https://cdn.example.com"] }))!;
+      ui.push({ tag, props: checked.props });
+      const left = checked.issues.map((i) => `${i.path}: ${i.message}`).join("\n");
+      results.push({ type: "tool_result", tool_use_id: block.id, content: left ? `Shown, without:\n${left}` : "Shown to the user." });
     }
     messages.push({ role: "user", content: results });
   }
+  return { text: "That took more steps than I can take here.", ui };
 }
 ```
 
-Then on the client, render the calls as component blocks, so they get the same checks and events:
+Then on the client, render the calls as component blocks. They're checked again there, and their events come back the
+same way:
 
 ```ts
+generatedUi.allowedOrigins = ["https://cdn.example.com"];
 generatedUi.spec = { blocks: [{ type: "text", text }, ...ui.map((c) => ({ type: "component", ...c }))] };
 ```
 
 A few notes:
 - **No forced tool choice.** Leave `tool_choice` on `auto`; Claude Opus 5.5 doesn't accept a forced tool choice. If
   the assistant should always show a component, say so in the system prompt.
-- **Server-side checks.** To check on the server before anything is sent to the client, run `checkComponent(tag,
-  block.input)` and return its issues in the `tool_result`, so the model can correct itself.
+- **Check on the server.** The example runs `checkComponent` before anything is sent to the client and returns what it
+  left out in the `tool_result`, so the model can correct itself. Do this even though the client checks too: the
+  server is where you log, and where a client you don't control can't skip it. A date comes back as a `Date`, which
+  becomes an ISO string again in JSON – the client's check turns it back.
+- **A turn cap.** The loop stops after `MAX_TURNS`, so a model that keeps calling tools can't run up the bill.
 - **Keep the tool list short.** Every tool's schema is part of the prompt, so pass only the components the assistant
   needs. For a broad assistant, prefer the component block with `catalogPrompt()`: it costs a line per component, and
   a schema only when you choose to send one.
@@ -130,10 +142,15 @@ These hold whichever way the model reaches a component:
 | A tag not in the catalogue | Shown as text, with the reason |
 | A property the component doesn't have, or a value of the wrong type | Left out, and listed with its path |
 | A list item missing a required field | That item left out; the rest of the list kept |
-| A link (`href`, `url`, `src`, `image` …) that isn't http(s), mailto or relative | Left out – `javascript:` and `data:` never reach the page |
+| A link that isn't http(s), mailto, tel or relative – `javascript:`, `data:`, or `//host` and `/\host`, which browsers read as another site | Left out. A link is any string the element binds to `href` or `src` (the schema marks it `format: "uri-reference"`), and any property whose name ends in `href`, `url` or `src` |
+| An image from an origin not in `allowedOrigins` (when you set it) | Left out – a prompt-injected model can't send data out in an image's address. Clicked links aren't held to it |
+| A colour that isn't a colour – `url(…)`, `image-set(…)`, or anything with `;` or quotes | Left out |
+| A key named `__proto__`, or a field the schema can't describe (an element) | Left out |
+| A date and time the element types as a `Date` | Set as a `Date`; left out when it isn't a valid ISO 8601 date |
 | More than 200 items in a list | Cut to 200 |
 | A string longer than 4,000 characters | Cut |
-| More than 8 levels of nesting, or props over 200 KB | Left out |
+| More than 8 levels of nesting, or props over 200 KB as UTF-8 | Left out |
+| A component whose module can't load | A short note in its place, and an issue; tried again with the next spec |
 
 Nothing a component does changes the app's own state unless the app listens and decides: events come back to the app,
 and the cancelable ones can be prevented.

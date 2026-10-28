@@ -4,7 +4,7 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { TcElement } from "./internal/base";
 import { activityLevel, activityMix, activitySteps } from "./internal/activity-scale";
 import { cardHead } from "./internal/card-head";
-import { isMac } from "./internal/util";
+import { formatDate, isMac } from "./internal/util";
 
 /*
  * <tc-activity-calendar> – a year of activity at a glance: a column per week and a row per weekday, each day a small
@@ -99,6 +99,7 @@ export class TcActivityCalendar extends TcElement {
   private get byDay() {
     const map = new Map<number, number | null>();
     for (const d of this.days) {
+      if (!Number.isFinite(d.date)) continue;
       const v = typeof d.value === "number" && Number.isFinite(d.value) ? d.value : null;
       const k = dayStart(d.date);
       // Two entries for one day add up; null only when every entry is null
@@ -109,7 +110,14 @@ export class TcActivityCalendar extends TcElement {
   }
   /** The last day shown, the first column's first day, and how many columns */
   private get range() {
-    const last = this.end !== undefined ? dayStart(this.end) : this.days.length ? Math.max(...this.days.map((d) => dayStart(d.date))) : null;
+    // The latest day by a loop, not Math.max(...days) – spreading years of days overflows the call stack. Days and an
+    // end that aren't valid dates are left out
+    let last: number | null = this.end !== undefined && Number.isFinite(this.end) ? dayStart(this.end) : null;
+    if (last === null)
+      for (const d of this.days) {
+        const k = Number.isFinite(d.date) ? dayStart(d.date) : NaN;
+        if (Number.isFinite(k) && (last === null || k > last)) last = k;
+      }
     if (last === null) return null;
     const ws = ((Math.round(this.weekStart) % 7) + 7) % 7;
     const cols = Math.max(1, Math.round(this.weeks) || 53);
@@ -138,7 +146,7 @@ export class TcActivityCalendar extends TcElement {
     return this.format ? this.format(v) : `${new Intl.NumberFormat(this.locale).format(v)} ${this.unit}`;
   }
   private dayName(day: number) {
-    return new Intl.DateTimeFormat(this.locale, { weekday: "long", month: "long", day: "numeric", year: "numeric" }).format(day);
+    return formatDate(day, this.locale, { weekday: "long", month: "long", day: "numeric", year: "numeric" });
   }
   private inRange(c: number, r: number) {
     const rg = this.range;

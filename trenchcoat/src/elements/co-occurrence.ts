@@ -3,7 +3,7 @@ import { property, state } from "lit/decorators.js";
 import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
-import { initials } from "./internal/util";
+import { formatDate, initials } from "./internal/util";
 
 /*
  * <tc-co-occurrence> – who keeps turning up together with a subject: accounts, devices or people ranked by how often
@@ -135,7 +135,7 @@ export class TcCoOccurrence extends TcElement {
     return new Intl.NumberFormat(this.locale).format(n);
   }
   private day(ms: number) {
-    return new Intl.DateTimeFormat(this.locale, { day: "numeric", month: "short" }).format(ms);
+    return formatDate(ms, this.locale, { day: "numeric", month: "short" });
   }
   /** The tab stop: the active row, else the open one, else the first */
   private get stop() {

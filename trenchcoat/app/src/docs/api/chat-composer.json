@@ -282,25 +282,25 @@
     {
      "name": "tc-attach",
      "detail": "",
-     "description": "The plus button was pressed – open your own file or folder picker here",
+     "description": "The plus button was pressed – open your own file or folder picker here; detail: null",
      "cancelable": false
     },
     {
      "name": "tc-connect-apps",
      "detail": "",
-     "description": "\"Connect apps\" was pressed; `onConnectApps` may return a promise it waits for",
+     "description": "\"Connect apps\" was pressed; `onConnectApps` may return a promise it waits for; detail: null",
      "cancelable": false
     },
     {
      "name": "tc-request-approval",
      "detail": "",
-     "description": "\"Request approval\" was pressed; `onRequestApproval` may return a promise it waits for",
+     "description": "\"Request approval\" was pressed; `onRequestApproval` may return a promise it waits for; detail: null",
      "cancelable": false
     },
     {
      "name": "tc-select-project",
      "detail": "",
-     "description": "\"Select a project\" was pressed",
+     "description": "\"Select a project\" was pressed; detail: null",
      "cancelable": false
     },
     {
@@ -1321,7 +1321,7 @@
   "windowed": false
  },
  "size": {
-  "min": 363124,
-  "gzip": 83807
+  "min": 363840,
+  "gzip": 84235
  }
 }

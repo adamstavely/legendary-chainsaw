@@ -402,7 +402,8 @@
           "description": "Short name, e.g. \"Field survey\""
         },
         "url": {
-          "type": "string"
+          "type": "string",
+          "format": "uri-reference"
         },
         "date": {
           "type": "string",

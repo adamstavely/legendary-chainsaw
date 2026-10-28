@@ -54,8 +54,8 @@ export class CitedAnswer {
    */
   @Output("tc-open-source") readonly tcOpenSource = new EventEmitter<CustomEvent<{ source: CitedSource }>>();
   /**
-   * The action button (`actionLabel`) was pressed
+   * The action button (`actionLabel`) was pressed; detail: null
    * Types $event; the element dispatches the event itself.
    */
-  @Output("tc-action") readonly tcAction = new EventEmitter<CustomEvent<unknown>>();
+  @Output("tc-action") readonly tcAction = new EventEmitter<CustomEvent<null>>();
 }

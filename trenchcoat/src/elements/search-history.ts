@@ -1,7 +1,9 @@
 import { html, nothing, svg, type PropertyValues } from "lit";
 import { property, state } from "lit/decorators.js";
+import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
+import { formatDate } from "./internal/util";
 
 /*
  * <tc-search-history> – the searches someone ran and the ones they kept. Two tabs, Recent and Saved, each with its
@@ -88,6 +90,8 @@ export class TcSearchHistory extends TcElement {
   @state() private accessor clock = 0;
   @state() private accessor removed: { search: SearchHistoryEntry; index: number } | null = null;
   @state() private accessor active = { row: 0, col: 0 };
+  /** The search holding the tab stop, so the stop stays with it when searches are added, removed or reordered */
+  private activeId: string | null = null;
   @state() private accessor announce = "";
 
   private uid = `tc-shis-${++uidCount}`;
@@ -108,9 +112,11 @@ export class TcSearchHistory extends TcElement {
     clearInterval(this.timer);
     this.timer = 0;
     if (this.now !== undefined) return;
-    this.clock = Date.now();
-    this.timer = window.setInterval(() => (this.clock += MIN), MIN);
+    this.readClock();
+    // Read the clock on every tick rather than counting ticks: timers stall while the laptop sleeps or the tab is frozen
+    this.timer = window.setInterval(this.readClock, MIN);
   }
+  private readClock = () => (this.clock = Date.now());
   protected override willUpdate(changed: PropertyValues) {
     super.willUpdate(changed);
     if (changed.has("now") && this.isConnected) this.tick();
@@ -123,9 +129,11 @@ export class TcSearchHistory extends TcElement {
         this.pending = null;
       }
     }
-    // The tab stop stays on a row that's there
-    const n = this.shown.length;
-    if (n && this.active.row > n - 1) this.active = { row: n - 1, col: this.active.col };
+    // The tab stop follows its search; else it stays on a row that's there
+    const shown = this.shown;
+    const at = this.activeId === null ? -1 : shown.findIndex((x) => x.id === this.activeId);
+    if (at >= 0 && at !== this.active.row) this.setActive(at, this.active.col);
+    else if (at < 0 && shown.length && this.active.row > shown.length - 1) this.setActive(shown.length - 1, this.active.col);
   }
 
   /* ---------- The model ---------- */
@@ -150,14 +158,14 @@ export class TcSearchHistory extends TcElement {
     if (diff < MIN) return "just now";
     if (diff < 60 * MIN) return rtf.format(-Math.floor(diff / MIN), "minute");
     if (dayStart(at) === dayStart(this.time)) return rtf.format(-Math.floor(diff / (60 * MIN)), "hour");
-    return new Intl.DateTimeFormat(this.locale, { hour: "numeric", minute: "2-digit" }).format(at);
+    return formatDate(at, this.locale, { hour: "numeric", minute: "2-digit" });
   }
   private dayName(at: number) {
     const today = dayStart(this.time);
     const d = dayStart(at);
     if (d === today) return "Today";
     if (Math.round((today - d) / DAY) === 1) return "Yesterday";
-    return new Intl.DateTimeFormat(this.locale, { weekday: "long", month: "long", day: "numeric" }).format(at);
+    return formatDate(at, this.locale, { weekday: "long", month: "long", day: "numeric" });
   }
 
   /* ---------- Actions ---------- */
@@ -166,7 +174,7 @@ export class TcSearchHistory extends TcElement {
     if (tab === this.tab) return;
     if (!this.emit<SearchHistoryTabChange>("tc-tab-change", { tab }, { cancelable: true })) return;
     this.tab = tab;
-    this.active = { row: 0, col: 0 };
+    this.setActive(0, 0);
   }
   private run(s: SearchHistoryEntry) {
     this.emit<SearchHistorySelect>("tc-select", { id: s.id, search: s });
@@ -201,11 +209,16 @@ export class TcSearchHistory extends TcElement {
     this.searches = next;
     this.announce = `Restored “${r.search.query}”`;
     const row = this.shown.findIndex((s) => s.id === r.search.id);
-    this.active = { row: Math.max(0, row), col: 0 };
+    this.setActive(Math.max(0, row), 0);
     void this.updateComplete.then(() => this.cell(this.active.row, 0)?.focus());
   }
 
   /* ---------- Keyboard: one tab stop across the rows' buttons ---------- */
+
+  private setActive(row: number, col: number) {
+    this.active = { row, col };
+    this.activeId = this.shown[row]?.id ?? null;
+  }
 
   private cell(row: number, col: number) {
     return this.querySelector<HTMLElement>(`[data-cell="${row}:${col}"]`);
@@ -228,7 +241,7 @@ export class TcSearchHistory extends TcElement {
     e.preventDefault();
     const r = Math.max(0, Math.min(last, m[0]));
     const c = Math.max(0, Math.min(2, m[1]));
-    this.active = { row: r, col: c };
+    this.setActive(r, c);
     void this.updateComplete.then(() => this.cell(r, c)?.focus());
   };
 
@@ -265,7 +278,7 @@ export class TcSearchHistory extends TcElement {
 
   private renderRow(s: SearchHistoryEntry, row: number) {
     const stop = (col: number) => (this.active.row === row && this.active.col === col ? 0 : -1);
-    const focus = (col: number) => () => (this.active = { row, col });
+    const focus = (col: number) => () => this.setActive(row, col);
     const results = s.results === undefined ? "" : `${new Intl.NumberFormat(this.locale).format(s.results)} ${s.results === 1 ? "result" : "results"}`;
     return html`<li class="ui-shis__row" data-id=${s.id}>
       <button type="button" class="ui-shis__run" data-cell=${`${row}:0`} tabindex=${stop(0)} @focus=${focus(0)} @click=${() => this.run(s)}>
@@ -322,7 +335,7 @@ export class TcSearchHistory extends TcElement {
             .value=${this.filter}
             @input=${(e: Event) => {
               this.filter = (e.target as HTMLInputElement).value;
-              this.active = { row: 0, col: 0 };
+              this.setActive(0, 0);
             }}
           />
         </label>
@@ -336,7 +349,11 @@ export class TcSearchHistory extends TcElement {
                   (g) => html`<section class="ui-shis__day" aria-label=${g.day}>
                     <h4 class="ui-shis__day-name" aria-hidden="true">${g.day}</h4>
                     <ul class="ui-shis__list">
-                      ${g.rows.map(([s, i]) => this.renderRow(s, i))}
+                      ${repeat(
+                        g.rows,
+                        ([s]) => s.id,
+                        ([s, i]) => this.renderRow(s, i),
+                      )}
                     </ul>
                   </section>`,
                 )}

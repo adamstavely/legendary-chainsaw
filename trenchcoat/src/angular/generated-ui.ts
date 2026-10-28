@@ -27,6 +27,10 @@ export class GeneratedUi {
   @Input() set showIssues(v: TcGeneratedUi["showIssues"] | "" | "true" | "false") {
     this.#el.showIssues = typeof v === "string" ? v !== "false" : v;
   }
+  /** Origins that images in placed components may load from ("https://cdn.example.com"); unset, any http(s) origin */
+  @Input() set allowedOrigins(v: TcGeneratedUi["allowedOrigins"]) {
+    this.#el.allowedOrigins = v;
+  }
   /** The heading level of text headings, group and form titles (2–6); the tables' own titles stay h3 */
   @Input() set headingLevel(v: TcGeneratedUi["headingLevel"] | `${number}`) {
     this.#el.headingLevel = typeof v === "string" ? Number(v) : v;

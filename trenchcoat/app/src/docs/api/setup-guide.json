@@ -92,13 +92,13 @@
     {
      "name": "tc-edit",
      "detail": "",
-     "description": "The Edit link was pressed (shown with `editable`)",
+     "description": "The Edit link was pressed (shown with `editable`); detail: null",
      "cancelable": false
     },
     {
      "name": "tc-close",
      "detail": "",
-     "description": "The close button was pressed (shown with `closable`)",
+     "description": "The close button was pressed (shown with `closable`); detail: null",
      "cancelable": false
     }
    ],
@@ -556,7 +556,7 @@
   "windowed": false
  },
  "size": {
-  "min": 36799,
-  "gzip": 9183
+  "min": 36837,
+  "gzip": 9196
  }
 }

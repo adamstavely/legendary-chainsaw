@@ -3,6 +3,7 @@ import { property, state } from "lit/decorators.js";
 import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
+import { pick } from "./internal/util";
 
 /*
  * <tc-asset-list> – the assets on record for a person, an account or a company, in the page's groups (Vehicles,
@@ -191,7 +192,7 @@ export class TcAssetList extends TcElement {
     const what = a.identifierLabel ?? "Identifier";
     const tab = (c: number) => (this.active.r === r && this.active.c === c ? 0 : -1);
     return html`<li class="ui-asl__row" data-id=${a.id} data-tone=${st.tone}>
-      <span class="ui-asl__icon" aria-hidden="true">${KIND[a.kind ?? "other"]()}</span>
+      <span class="ui-asl__icon" aria-hidden="true">${pick(KIND, a.kind, "other")()}</span>
       <div class="ui-asl__main">
         <span class="ui-asl__name">${a.name}</span>
         <span class="ui-asl__meta">
@@ -206,7 +207,7 @@ export class TcAssetList extends TcElement {
         </span>
         ${a.link ? html`<span class="ui-asl__link">${a.link}</span>` : nothing}
       </div>
-      <span class="ui-asl__pill" data-tone=${st.tone}>${MARK[st.tone]()}${st.label}</span>
+      <span class="ui-asl__pill" data-tone=${st.tone}>${pick(MARK, st.tone, "neutral")()}${st.label}</span>
       <span class="ui-asl__actions">
         ${this.canReveal(a)
           ? html`<button

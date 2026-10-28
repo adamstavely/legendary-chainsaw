@@ -124,6 +124,27 @@ writeFileSync(
 );
 const generator = createGenerator({ path: join(TMP, "props.ts"), tsconfig: join(TMP, "tsconfig.json"), skipTypeCheck: true, expose: "export", topRef: false, jsDoc: "extended", functions: "hide", additionalProperties: false });
 
+/**
+ * The properties an element binds to href or src, from its source: name → "link", or "resource" for what loads by
+ * itself (src, an SVG <image href>). In-page fragments it builds (`#${id}`) aren't links from data, and `content` is
+ * text or a link depending on its kind (artifact-panel), so the element checks that one itself.
+ */
+const BOUND = /(?:\s|\.)(href|src|xlink:href)=\$\{((?:[^{}]|\{[^{}]*\})*)\}/g;
+const POLYMORPHIC = new Set(["content"]);
+function boundFields(slug) {
+  const src = readFileSync(`src/elements/${slug}.ts`, "utf8");
+  const found = new Map();
+  for (const m of src.matchAll(BOUND)) {
+    if (m[2].trim().startsWith("`#")) continue;
+    const resource = m[1] === "src" || /<image\b[^>]*$/.test(src.slice(Math.max(0, m.index - 200), m.index + 1));
+    for (const id of m[2].matchAll(/\b([A-Za-z_]\w*)\b(?!\s*\()/g)) {
+      if (id[1] === "this" || POLYMORPHIC.has(id[1])) continue;
+      found.set(id[1], found.get(id[1]) === "resource" || resource ? "resource" : "link");
+    }
+  }
+  return found;
+}
+
 /** DOM and runtime types that show up nested in a property – a property that reaches one isn't JSON */
 const DOMISH = /^(Element|HTMLElement|Node|EventTarget|File|Blob|AbortSignal|Promise|Map|Set|CSSStyleDeclaration|Document|Window)(<|$)/;
 const schemas = new Map();
@@ -174,6 +195,29 @@ for (const el of elements.filter((e) => e.props.length)) {
   };
   for (const def of Object.values(defs)) prune(def);
   prune(schema);
+  // Mark the strings the element binds to href or src as links, so the validator checks them whatever they're called
+  // (policyHref, cover …): format uri-reference, and contentMediaType image/* for what loads by itself
+  const bound = boundFields(el.slug);
+  const mark = (node, kind, seen = new Set()) => {
+    if (!node || typeof node !== "object") return;
+    if (node.$ref) {
+      const name = decodeURIComponent(node.$ref.replace("#/definitions/", ""));
+      if (!seen.has(name)) mark(defs[name], kind, new Set([...seen, name]));
+      return;
+    }
+    for (const alt of node.anyOf ?? node.oneOf ?? []) mark(alt, kind, seen);
+    if ([node.type].flat().includes("string") && !node.enum && !("const" in node)) {
+      node.format ??= "uri-reference";
+      if (kind === "resource") node.contentMediaType ??= "image/*";
+    }
+    for (const item of [node.items ?? []].flat()) mark(item, kind, seen);
+  };
+  const markBound = (node) => {
+    if (!node || typeof node !== "object") return;
+    if (node.properties && !Array.isArray(node.properties)) for (const [k, v] of Object.entries(node.properties)) if (bound.has(k)) mark(v, bound.get(k));
+    for (const v of Object.values(node)) if (v && typeof v === "object") markBound(v);
+  };
+  markBound(schema);
   // Keep only the definitions still in use
   const used = new Set();
   const collect = (node) => {

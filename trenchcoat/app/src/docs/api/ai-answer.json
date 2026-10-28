@@ -124,7 +124,7 @@
     {
      "name": "tc-stop",
      "detail": "",
-     "description": "Stop was pressed while writing",
+     "description": "Stop was pressed while writing; detail: null",
      "cancelable": false
     },
     {
@@ -737,7 +737,7 @@
   "windowed": false
  },
  "size": {
-  "min": 68848,
-  "gzip": 16769
+  "min": 69244,
+  "gzip": 16936
  }
 }

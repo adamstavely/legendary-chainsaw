@@ -10,6 +10,7 @@ import { cardHead } from "./internal/card-head";
 import { FocusRescueController, RowWindowController, ToolbarController } from "./internal/controllers";
 import type { Look } from "./internal/look";
 import "./validity-badge";
+import { safeUrl } from "./internal/safe-url";
 
 /*
  * <tc-verification-queue> – every claim worth checking from a session, in one queue, before anything leaves it.
@@ -481,7 +482,7 @@ export class TcVerificationQueue extends TcElement {
         ? html`<ul class="ui-vq__passages" aria-label="Source passages">${passages.map(
             (s) => html`<li class="ui-vq__passage">
               <div class="ui-vq__ps-head">
-                <span class="ui-vq__ps-name">${s.url ? html`<a href=${s.url} target="_blank" rel="noreferrer noopener">${s.site ?? s.title}</a>` : (s.site ?? s.title)}${s.date ? html`<span class="ui-vq__ps-date"> · ${s.date}</span>` : nothing}</span>
+                <span class="ui-vq__ps-name">${safeUrl(s.url) ? html`<a href=${ifDefined(safeUrl(s.url))} target="_blank" rel="noreferrer noopener">${s.site ?? s.title}</a>` : (s.site ?? s.title)}${s.date ? html`<span class="ui-vq__ps-date"> · ${s.date}</span>` : nothing}</span>
                 ${s.validity
                   ? html`<tc-validity-badge
                       hide-age

@@ -99,7 +99,8 @@ async function check(page) {
   return problems;
 }
 
-/** angular: the wrappers (trenchcoat/angular) – one handler call per event, and ngModel on an element */
+/** angular: the wrappers (trenchcoat/angular) – one handler call per event, ngModel on an element, and the form
+ *  accessors' reset, cancelled change and disabled state */
 async function angularOnly(page) {
   const problems = [];
   const changes = await page.textContent("#changes");
@@ -110,6 +111,27 @@ async function angularOnly(page) {
   } catch {
     problems.push(`angular: ngModel didn't follow the switch (got ${await page.textContent("#notify-value")})`);
   }
+  // Form accessors. reset() writes null: the combobox empties instead of throwing (page errors fail the run anyway)
+  const chips = () => page.locator("#team .ui-cbx__chip-label").allTextContents();
+  if (!(await chips()).includes("Ana Lima")) problems.push("angular: formControl didn't write its first value into the combobox");
+  await page.click("#reset-team > button");
+  try {
+    await page.waitForFunction(() => document.querySelector("#team-value")?.textContent?.trim() === "null", null, { timeout: 3000 });
+  } catch {
+    problems.push(`angular: reset() didn't reach the form (got ${await page.textContent("#team-value")})`);
+  }
+  try {
+    await page.waitForFunction(() => !document.querySelector("#team .ui-cbx__chip-label"), null, { timeout: 3000 });
+  } catch {
+    problems.push(`angular: reset() left the combobox holding ${await chips()}`);
+  }
+  // A change the page cancels stays out of the form, and the element keeps its value
+  await page.click("#locked [role=switch]");
+  await page.waitForTimeout(300);
+  const locked = { form: (await page.textContent("#locked-value"))?.trim(), checked: await page.locator("#locked [role=switch]").isChecked() };
+  if (locked.form !== "true" || !locked.checked) problems.push(`angular: a cancelled change reached the form (form ${locked.form}, switch ${locked.checked ? "on" : "off"})`);
+  // disable() reaches the element
+  if (!(await page.locator("#frozen [role=switch]").isDisabled())) problems.push("angular: a disabled FormControl left the switch enabled");
   return problems;
 }
 
@@ -126,6 +148,8 @@ for (const app of apps) {
     rmSync(join(dir, "package-lock.json"), { force: true });
     out("install");
     sh("npm install --no-audit --no-fund --loglevel=error", dir);
+    // The installed package, as a server render (SSR) or a webpack/Karma build resolves it: strict ESM, no DOM
+    if (app === "angular") sh(`node --input-type=module -e 'await import("@angular/compiler"); for (const m of ["trenchcoat", "trenchcoat/angular", "trenchcoat/angular/forms", "trenchcoat/command-menu"]) await import(m);'`, dir);
     out("build");
     sh("npm run -s build", dir);
     port += 1;

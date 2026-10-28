@@ -77,7 +77,7 @@ let instances = 0;
  * countdown.
  * @tag tc-otp-input
  * @fires tc-value-change - The user changed the code ({ value }: OtpValueChange); cancelable
- * @fires tc-resend - "Resend code" was pressed (shown when `resendable`)
+ * @fires tc-resend - "Resend code" was pressed (shown when `resendable`); detail: null
  */
 export class TcOtpInput extends TcElement {
   static override ui = "otp";

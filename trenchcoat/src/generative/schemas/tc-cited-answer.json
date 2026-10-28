@@ -73,7 +73,8 @@
           "description": "Headline of the page or document"
         },
         "url": {
-          "type": "string"
+          "type": "string",
+          "format": "uri-reference"
         },
         "site": {
           "type": "string",

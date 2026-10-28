@@ -109,15 +109,23 @@ function Tokens() {
             <code>primitives.json</code> holds the primitives.
           </li>
           <li>
-            One file per look and theme holds the semantic and pattern tokens, as aliases where the CSS points at another token:{" "}
-            <code>standard-light.json</code>, <code>standard-dark.json</code>, <code>clean-light.json</code> and <code>clean-dark.json</code>.
+            One file per look and theme holds the semantic and pattern tokens, as aliases where the CSS points at another token – a
+            shadow's or border's colour and width included: <code>standard-light.json</code>, <code>standard-dark.json</code>,{" "}
+            <code>clean-light.json</code> and <code>clean-dark.json</code>. Values built with <code>color-mix()</code> or{" "}
+            <code>calc()</code> have no DTCG form, so they're exported resolved. Style Dictionary reads these files as they are.
           </li>
           <li>
-            <code>$themes.json</code> pairs each mode with the primitives for Tokens Studio. Style Dictionary reads the files as they are.
+            <code>tokens-studio/</code> holds the same sets for Tokens Studio, whose DTCG mode doesn't read 2025.10 colour and
+            dimension objects yet: values are strings (<code>"#2f68ff"</code>, <code>"4px"</code>), types are its own
+            (<code>boxShadow</code>, <code>fontWeights</code>), a group's own token is <code>DEFAULT</code>, and{" "}
+            <code>$themes.json</code> pairs each mode with the primitives.
           </li>
           <li>
-            Five tokens have no DTCG type (em letter-spacing, <code>uppercase</code>, a padding shorthand). They're listed with their CSS under{" "}
-            <code>$extensions</code>.
+            A few tokens have no DTCG type (em letter-spacing, <code>uppercase</code>, a padding shorthand, a shadow of{" "}
+            <code>none</code>). They're listed with their CSS under <code>$extensions</code> in each file.
+          </li>
+          <li>
+            CI checks every exported token against what a browser computes from <code>tokens.css</code>, in each look and theme.
           </li>
         </ul>
         <input className="search docs-token-search" type="search" placeholder="Filter tokens…" value={q} onChange={(e) => setQ(e.target.value)} aria-label="Filter tokens" />

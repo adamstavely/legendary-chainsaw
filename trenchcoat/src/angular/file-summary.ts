@@ -72,10 +72,10 @@ export class FileSummary {
     this.#el.look = v;
   }
   /**
-   * Summarise was pressed while `status` is "idle" – start summarising
+   * Summarise was pressed while `status` is "idle" – start summarising; detail: null
    * Types $event; the element dispatches the event itself.
    */
-  @Output("tc-summarise") readonly tcSummarise = new EventEmitter<CustomEvent<unknown>>();
+  @Output("tc-summarise") readonly tcSummarise = new EventEmitter<CustomEvent<null>>();
   /**
    * Regenerate, or Retry after an error ({ reason: "regenerate" | "error" }: FileSummaryRetry)
    * Types $event; the element dispatches the event itself.
@@ -102,8 +102,8 @@ export class FileSummary {
    */
   @Output("tc-copy") readonly tcCopy = new EventEmitter<CustomEvent<{ text: unknown }>>();
   /**
-   * Open file was used; cancelable – prevented, a link to the file doesn't open
+   * Open file was used; cancelable – prevented, a link to the file doesn't open; detail: null
    * Types $event; the element dispatches the event itself.
    */
-  @Output("tc-open") readonly tcOpen = new EventEmitter<CustomEvent<unknown>>();
+  @Output("tc-open") readonly tcOpen = new EventEmitter<CustomEvent<null>>();
 }

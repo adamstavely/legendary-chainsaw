@@ -4,6 +4,8 @@ import { keyed } from "lit/directives/keyed.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
 import { OnScreenController } from "./internal/controllers";
+import { ifDefined } from "lit/directives/if-defined.js";
+import { safeUrl } from "./internal/safe-url";
 
 /*
  * <tc-thinking-state> – the Lit port of src/components/thinking-state.tsx: the "working…" panel of an AI chat. A
@@ -279,8 +281,8 @@ export class TcThinkingState extends TcElement {
     const tip = source.tooltip ?? source.href?.replace(/^https?:\/\//, "");
     const inner = html`${source.icon ? html`<span class="ui-think__favicon">${source.icon.cloneNode(true)}</span>` : nothing}<span class="ui-think__source-label">${source.label}</span>${tip ? html`<span class="ui-think__tip" aria-hidden="true">${tip}</span>` : nothing}`;
     const style = styleMap({ animationDelay: `${delay}ms` });
-    return source.href
-      ? html`<a class="ui-think__source" ?data-count=${!source.icon} style=${style} href=${source.href} target="_blank" rel="noreferrer" @pointerenter=${this.chipIn} @pointerleave=${this.chipOut} @focus=${this.chipIn} @blur=${this.chipOut}>${inner}</a>`
+    return safeUrl(source.href)
+      ? html`<a class="ui-think__source" ?data-count=${!source.icon} style=${style} href=${ifDefined(safeUrl(source.href))} target="_blank" rel="noreferrer" @pointerenter=${this.chipIn} @pointerleave=${this.chipOut} @focus=${this.chipIn} @blur=${this.chipOut}>${inner}</a>`
       : html`<span class="ui-think__source" ?data-count=${!source.icon} style=${style} @pointerenter=${this.chipIn} @pointerleave=${this.chipOut} @focus=${this.chipIn} @blur=${this.chipOut}>${inner}</span>`;
   }
 

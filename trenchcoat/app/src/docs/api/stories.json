@@ -234,7 +234,7 @@
     {
      "name": "tc-add",
      "detail": "",
-     "description": "The \"add\" tile was activated (no detail)",
+     "description": "The \"add\" tile was activated; detail: undefined",
      "cancelable": false
     }
    ],
@@ -935,7 +935,7 @@
   "windowed": false
  },
  "size": {
-  "min": 49445,
-  "gzip": 14169
+  "min": 49980,
+  "gzip": 14411
  }
 }

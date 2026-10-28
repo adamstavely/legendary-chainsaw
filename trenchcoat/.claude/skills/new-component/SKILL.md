@@ -77,11 +77,13 @@ When a fork reports back, note:
 ## 3. Integrate
 
 1. **Register in the gallery.** `node .claude/skills/new-component/scripts/add-to-gallery.mjs` adds the README line in
-   alphabetical order and the slug to its category; run it with `--help` for the arguments. Then add a changelog
+   alphabetical order and the slug to its category – in alphabetical place when the category is alphabetical, at the
+   end when it's kept in a deliberate order ("AI configuration"); run it with `--help` for the arguments. Then add a changelog
    entry at the top of `CHANGELOG.md`: an `## Unreleased – …` section listing what was added.
 2. **Run the integration pass.**
    `node .claude/skills/new-component/scripts/integrate.mjs --slugs <slug,slug,…>`. It:
-   - deletes iCloud duplicate files;
+   - deletes iCloud duplicate files and folders that match their original, or that are copies of generated files, and
+     lists any other copy for you to look at – iCloud's copy can be the newer one;
    - regenerates the element index, docs, Angular wrappers and generative schemas;
    - measures performance and captures thumbnails for anything new;
    - runs every check;
@@ -129,8 +131,8 @@ or mid-animation can look broken when nothing is; check the DOM before chasing a
 ## Things that have bitten before
 
 - **iCloud copies.** The repo lives under `~/Documents`, which iCloud syncs. It keeps creating `name 2.ts`,
-  `name 3.json` copies, and an older copy can shadow a newer file in generated indexes. `integrate.mjs` removes them;
-  check again before committing.
+  `name 3.json` copies, and an older copy can shadow a newer file in generated indexes. `integrate.mjs` removes the
+  safe ones and lists the rest; the type checks and the package build skip them. Check again before committing.
 - **Stale test cache.** If a test fails on something you just changed, run `rm -rf node_modules/.vitest-cache`.
 - **zsh doesn't split variables.** `$FILES` passed to vitest is one argument, so list test files explicitly.
 - **The main typecheck excludes `src/angular/`.** Those files import the built package and are checked by

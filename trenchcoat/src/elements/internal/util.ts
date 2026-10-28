@@ -65,3 +65,27 @@ export function textCaret(field: HTMLTextAreaElement | HTMLInputElement, index: 
   const top = r.top + at.top - box.top - field.scrollTop;
   return { left, top, bottom: top + at.height };
 }
+
+/** A table's entry for a key from data, else the fallback's – so a tone, kind or icon the element doesn't know is
+ *  drawn as a sensible default instead of breaking the render */
+export function pick<K extends string, V>(table: Record<K, V>, key: unknown, fallback: K): V {
+  return typeof key === "string" && Object.hasOwn(table, key) ? table[key as K] : table[fallback];
+}
+
+/** A date or time in words, like Intl.DateTimeFormat#format – but a missing or invalid date reads as `unknown` and a
+ *  locale the browser rejects falls back to its own, instead of throwing during render */
+export function formatDate(ms: number | Date | undefined | null, locale: string | string[] | undefined, options: Intl.DateTimeFormatOptions = {}, unknown = "–") {
+  const t = ms instanceof Date ? ms.getTime() : ms;
+  if (typeof t !== "number" || !Number.isFinite(t)) return unknown;
+  try {
+    return new Intl.DateTimeFormat(locale, options).format(t);
+  } catch {
+    return new Intl.DateTimeFormat(undefined, options).format(t);
+  }
+}
+
+/** A date for a `datetime` attribute, or undefined (bind it with `ifDefined`) when it isn't a valid date */
+export function isoDate(ms: number | Date | undefined | null) {
+  const t = ms instanceof Date ? ms.getTime() : ms;
+  return typeof t === "number" && Number.isFinite(t) ? new Date(t).toISOString() : undefined;
+}

@@ -67,8 +67,12 @@
     "src"
   ],
   // The Angular wrappers import the built package ("trenchcoat/*") and use Angular's decorators: npm run
-  // check:angular builds the package and compiles them with ngc
+  // check:angular builds the package and compiles them with ngc. iCloud's "<name> 2.ts" copies (the repo lives under
+  // ~/Documents) redeclare their originals' globals
   "exclude": [
-    "src/angular"
+    "src/angular",
+    "**/* ?.ts",
+    "**/* ?.tsx",
+    "**/* ?/**"
   ]
 }

@@ -129,7 +129,7 @@ let uidCount = 0;
  * @fires tc-memories-change - The list changed (added, edited, paused, forgotten, restored or rolled back); detail
  *   `{ memories: Memory[] }`. Cancelable: preventDefault() keeps the change out until the app passes the list back.
  * @fires tc-enabled-change - The master switch was flipped; detail `{ enabled: boolean }`. Cancelable.
- * @fires tc-action - The action button (`actionLabel`) was pressed
+ * @fires tc-action - The action button (`actionLabel`) was pressed; detail: null
  */
 export class TcMemoryPanel extends TcElement {
   static override ui = "mp";

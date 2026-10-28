@@ -115,7 +115,7 @@ const runIcon = html`<svg viewBox="0 0 16 16" aria-hidden="true">${svg`<path d="
  * @fires tc-steps-change - An edit in review: rename, remove, reorder, add (detail: { steps: AgentPlanStep[] }); cancelable
  * @fires tc-run - "Run plan" or "Run again" pressed (detail: { steps: AgentPlanStep[] }, in their final order)
  * @fires tc-retry - "Retry from here" pressed on a failed step (detail: { stepId: string })
- * @fires tc-cancel - "Cancel" pressed (shown with `cancellable`)
+ * @fires tc-cancel - "Cancel" pressed (shown with `cancellable`); detail: null
  */
 export class TcAgentPlan extends TcElement {
   static override ui = "pl";

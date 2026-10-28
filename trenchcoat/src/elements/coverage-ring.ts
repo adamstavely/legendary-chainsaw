@@ -1,5 +1,6 @@
 import { html, nothing } from "lit";
 import { property, state } from "lit/decorators.js";
+import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
 
 /*
@@ -103,7 +104,9 @@ export class TcCoverageRing extends TcElement {
     const id = this.uid;
     return html`<div class="ui-covr__split">
       <div class="ui-covr__bar" role="group" aria-labelledby=${`${id}-title`} @keydown=${this.onKey} @pointerleave=${() => (this.shown = null)}>
-        ${list.map(
+        ${repeat(
+          list,
+          (s) => s.id,
           (s) => html`<button
             type="button"
             class="ui-covr__seg"

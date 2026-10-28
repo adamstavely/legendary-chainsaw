@@ -4,6 +4,8 @@ import { styleMap } from "lit/directives/style-map.js";
 import { unsafeSVG } from "lit/directives/unsafe-svg.js";
 import { TcElement } from "./internal/base";
 import { OnScreenController } from "./internal/controllers";
+import { ifDefined } from "lit/directives/if-defined.js";
+import { safeMediaUrl } from "./internal/safe-media";
 
 /*
  * <tc-agent-team> – the Lit port of illustrations/agent-team.tsx: a prompt types itself into a pill and is sent;
@@ -159,7 +161,7 @@ export class TcAgentTeam extends TcElement {
       ${this.members.map(
         (m, i) => html`<div class="ui-at-agent" style=${styleMap({ left: `calc(${102 + i * 198} * var(--tc-agent-team-u))`, "--i": String(i) })} aria-hidden="true">
           <div class="ui-at-node">
-            <span class="ui-at-face"><img src=${m.avatar} alt="" draggable="false" /></span>
+            <span class="ui-at-face"><img src=${ifDefined(safeMediaUrl(m.avatar))} alt="" draggable="false" /></span>
             <span class="ui-at-dot"></span>
           </div>
           <div class="ui-at-role">

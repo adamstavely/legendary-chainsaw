@@ -121,7 +121,8 @@
         },
         "href": {
           "type": "string",
-          "description": "Where the source opens; makes its chips and its row in the list links"
+          "description": "Where the source opens; makes its chips and its row in the list links",
+          "format": "uri-reference"
         },
         "at": {
           "type": "number",

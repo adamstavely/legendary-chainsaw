@@ -8,6 +8,7 @@ import { reducedMotion } from "../internal/reduced-motion";
 import { TcElement } from "./internal/base";
 import { AriaForwardController } from "./internal/controllers";
 import { initials } from "./internal/util";
+import { safeMediaUrl } from "./internal/safe-media";
 
 /*
  * <tc-combobox> – the Lit port of src/components/combobox.tsx (pilot component, audit/lit-port-plan.md).
@@ -80,7 +81,7 @@ function highlight(text: string, query: string): TemplateResult {
 /** Avatar, color dot or icon in front of a chip or a row */
 function visual(o: ComboboxOption) {
   if (o.icon) return html`<span class="ui-cbx__icon">${o.icon.cloneNode(true)}</span>`;
-  if (typeof o.avatar === "string") return html`<img class="ui-cbx__avatar" src=${o.avatar} alt="" />`;
+  if (typeof o.avatar === "string") return html`<img class="ui-cbx__avatar" src=${ifDefined(safeMediaUrl(o.avatar))} alt="" />`;
   if (o.avatar) return html`<span class="ui-cbx__avatar" aria-hidden="true">${initials(o.label)}</span>`;
   if (o.color) return html`<span class="ui-cbx__dot" style=${styleMap({ background: o.color })} aria-hidden="true"></span>`;
   return nothing;

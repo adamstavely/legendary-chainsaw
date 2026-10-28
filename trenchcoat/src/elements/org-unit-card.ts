@@ -4,6 +4,8 @@ import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
 import { initials } from "./internal/util";
+import { ifDefined } from "lit/directives/if-defined.js";
+import { safeMediaUrl } from "./internal/safe-media";
 
 /*
  * <tc-org-unit-card> – an organisational unit at a glance: a centre, a department, a division. The header carries a
@@ -216,7 +218,7 @@ export class TcOrgUnitCard extends TcElement {
   /* ---------- Rendering ---------- */
 
   private avatar(p: OrgPerson, size: "sm" | "md") {
-    return html`<span class="ui-orgu__avatar" data-size=${size} aria-hidden="true">${p.picture ? html`<img src=${p.picture} alt="" />` : initials(p.name)}</span>`;
+    return html`<span class="ui-orgu__avatar" data-size=${size} aria-hidden="true">${p.picture ? html`<img src=${ifDefined(safeMediaUrl(p.picture))} alt="" />` : initials(p.name)}</span>`;
   }
 
   private renderHealth(counts: OrgHealthCounts, compact: boolean) {

@@ -1,6 +1,8 @@
 import { html, nothing, svg, type PropertyValues } from "lit";
 import { property, state } from "lit/decorators.js";
 import { TcElement } from "./internal/base";
+import { ifDefined } from "lit/directives/if-defined.js";
+import { safeUrl } from "./internal/safe-url";
 
 /*
  * <tc-citation-badge> – a small badge of how a work is cited, to embed beside a paper or a profile: a count per
@@ -127,7 +129,21 @@ export class TcCitationBadge extends TcElement {
     super.disconnectedCallback();
     this.removeEventListener("pointerenter", this.show);
     this.removeEventListener("pointerleave", this.hide);
+    document.removeEventListener("keydown", this.onDocKey);
+    this.tip = false;
   }
+  protected override updated(changed: PropertyValues) {
+    super.updated(changed);
+    // While the tooltip shows, Escape hides it wherever focus is – a tooltip opened by hover too (WCAG 1.4.13)
+    if (changed.has("tip")) {
+      if (this.tip) document.addEventListener("keydown", this.onDocKey);
+      else document.removeEventListener("keydown", this.onDocKey);
+    }
+  }
+  private onDocKey = (e: KeyboardEvent) => {
+    if (e.key !== "Escape" || !this.tip || e.defaultPrevented) return;
+    this.tip = false;
+  };
   private show = () => (this.tip = true);
   private hide = () => {
     if (!this.querySelector(".ui-ctb__badge:focus-visible")) this.tip = false;
@@ -158,8 +174,8 @@ export class TcCitationBadge extends TcElement {
       focus: () => (this.tip = true),
       blur: () => (this.tip = false),
     };
-    const badge = this.href
-      ? html`<a class="ui-ctb__badge" href=${this.href} aria-describedby=${tipId} @click=${(e: Event) => this.open(e)} @focus=${common.focus} @blur=${common.blur} @keydown=${this.onKey}>${this.renderInner()}</a>`
+    const badge = safeUrl(this.href)
+      ? html`<a class="ui-ctb__badge" href=${ifDefined(safeUrl(this.href))} aria-describedby=${tipId} @click=${(e: Event) => this.open(e)} @focus=${common.focus} @blur=${common.blur} @keydown=${this.onKey}>${this.renderInner()}</a>`
       : this.openable
         ? html`<button type="button" class="ui-ctb__badge" aria-describedby=${tipId} @click=${(e: Event) => this.open(e)} @focus=${common.focus} @blur=${common.blur} @keydown=${this.onKey}>${this.renderInner()}</button>`
         : html`<span class="ui-ctb__badge" role="img" tabindex="0" aria-label=${this.summary} aria-describedby=${tipId} @focus=${common.focus} @blur=${common.blur} @keydown=${this.onKey}>${this.renderInner()}</span>`;

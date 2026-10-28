@@ -70,8 +70,8 @@ export class FeedbackRubric {
    */
   @Output("tc-submit") readonly tcSubmit = new EventEmitter<CustomEvent<FeedbackRubricSubmit>>();
   /**
-   * "Edit rating" unlocked a sent rating; no detail
+   * "Edit rating" unlocked a sent rating; detail: null
    * Types $event; the element dispatches the event itself.
    */
-  @Output("tc-edit") readonly tcEdit = new EventEmitter<CustomEvent<unknown>>();
+  @Output("tc-edit") readonly tcEdit = new EventEmitter<CustomEvent<null>>();
 }

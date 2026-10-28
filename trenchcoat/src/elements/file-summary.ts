@@ -4,7 +4,9 @@ import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
 import { FocusRescueController, OffScreenController } from "./internal/controllers";
-import { copyText } from "./internal/util";
+import { copyText, formatDate } from "./internal/util";
+import { ifDefined } from "lit/directives/if-defined.js";
+import { safeUrl } from "./internal/safe-url";
 
 /*
  * <tc-file-summary> – what's in a file, summarised by AI. The header names the file with an icon for its type, its
@@ -148,13 +150,13 @@ const bytes = (n: number, locale?: string) => {
  * An AI summary of a file – the file's type, size and length, a summary that streams in, key points citing their
  * pages or times, the people, organisations, dates and amounts it mentions, and Copy, Regenerate and Open file.
  * @tag tc-file-summary
- * @fires tc-summarise - Summarise was pressed while `status` is "idle" – start summarising
+ * @fires tc-summarise - Summarise was pressed while `status` is "idle" – start summarising; detail: null
  * @fires tc-retry - Regenerate, or Retry after an error ({ reason: "regenerate" | "error" }: FileSummaryRetry)
  * @fires tc-length-change - Short or Detailed was picked ({ length }: FileSummaryLengthChange); cancelable – prevented, `length` stays as it was
  * @fires tc-cite-open - A citation chip was used ({ pointId, page, time }: FileSummaryCiteOpen); cancelable – prevented, a link to the file doesn't open
  * @fires tc-entity-select - A person, organisation, date or amount was picked ({ entity }: { entity: FileSummaryEntity })
  * @fires tc-copy - The summary is on the clipboard ({ text })
- * @fires tc-open - Open file was used; cancelable – prevented, a link to the file doesn't open
+ * @fires tc-open - Open file was used; cancelable – prevented, a link to the file doesn't open; detail: null
  */
 export class TcFileSummary extends TcElement {
   static override ui = "fsum";
@@ -335,8 +337,8 @@ export class TcFileSummary extends TcElement {
               // Read as "Open page 12" / "Open at 4 minutes 32 seconds"; seen as "p. 12" / "4:32"
               const body = html`<span class="tc-sr-only">${r.time !== undefined ? `Open at ${spoken(r.time)}` : `Open page ${r.page}`}</span><span aria-hidden="true">${label}</span>`;
               const href = this.refHref(r);
-              return href
-                ? html` <a class="ui-fsum__cite" href=${href} target="_blank" rel="noopener" @click=${(e: Event) => this.openCite(e, p, r)}>${body}</a>`
+              return safeUrl(href)
+                ? html` <a class="ui-fsum__cite" href=${ifDefined(safeUrl(href))} target="_blank" rel="noopener" @click=${(e: Event) => this.openCite(e, p, r)}>${body}</a>`
                 : html` <button type="button" class="ui-fsum__cite" @click=${(e: Event) => this.openCite(e, p, r)}>${body}</button>`;
             })}</span>
           </li>`,
@@ -406,7 +408,7 @@ export class TcFileSummary extends TcElement {
     const s = this.status;
     if (s === "idle" || s === "error") return nothing;
     const done = s === "done";
-    const when = done && this.summarisedAt !== undefined ? new Intl.DateTimeFormat(this.locale, { dateStyle: "medium", timeStyle: "short" }).format(this.summarisedAt) : "";
+    const when = done && this.summarisedAt !== undefined ? formatDate(this.summarisedAt, this.locale, { dateStyle: "medium", timeStyle: "short" }) : "";
     const by = [when ? `Summarised ${when}` : done ? "Summarised" : "Summarising…", this.model ? `with ${this.model}` : ""].filter(Boolean).join(" ");
     const showOpen = !!this.href || this.openable;
     return html`<div class="ui-fsum__foot">
@@ -417,10 +419,10 @@ export class TcFileSummary extends TcElement {
         </button>
         <button type="button" class="tc-btn-sm ui-fsum__regen" ?disabled=${!done} @click=${() => this.emit<FileSummaryRetry>("tc-retry", { reason: "regenerate" })}>${refreshIcon()}<span>Regenerate</span></button>
         ${showOpen
-          ? this.href
+          ? safeUrl(this.href)
             ? html`<a
                 class="tc-btn-sm ui-fsum__open"
-                href=${this.href}
+                href=${ifDefined(safeUrl(this.href))}
                 target="_blank"
                 rel="noopener"
                 @click=${(e: Event) => {

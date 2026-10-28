@@ -1,9 +1,12 @@
 import { html, nothing, svg, type PropertyValues } from "lit";
 import { property } from "lit/decorators.js";
 import { TcElement } from "./internal/base";
-import { initials } from "./internal/util";
+import { formatDate, initials } from "./internal/util";
 import "./audience-mix";
 import type { AudienceMixData } from "./audience-mix";
+import { ifDefined } from "lit/directives/if-defined.js";
+import { safeUrl } from "./internal/safe-url";
+import { safeMediaUrl } from "./internal/safe-media";
 
 /*
  * <tc-publication-impact> – one paper's impact on one card. The header has the venue and date, the topic it belongs
@@ -117,7 +120,7 @@ export class TcPublicationImpact extends TcElement {
     return new Intl.NumberFormat(this.locale).format(n);
   }
   private day(ms: number, month: "short" | "long" = "short") {
-    return new Intl.DateTimeFormat(this.locale, { day: "numeric", month, year: "numeric" }).format(ms);
+    return formatDate(ms, this.locale, { day: "numeric", month, year: "numeric" });
   }
 
   private pick(filter: PublicationFeedbackFilter) {
@@ -151,10 +154,10 @@ export class TcPublicationImpact extends TcElement {
     return html`<header class="ui-pubi__head">
       <div class="ui-pubi__meta">
         ${this.venue ? html`<span class="ui-pubi__venue">${this.venue}</span>` : nothing}
-        ${this.date !== undefined ? html`<span class="ui-pubi__date">${new Intl.DateTimeFormat(this.locale, { month: "short", year: "numeric" }).format(this.date)}</span>` : nothing}
+        ${this.date !== undefined ? html`<span class="ui-pubi__date">${formatDate(this.date, this.locale, { month: "short", year: "numeric" })}</span>` : nothing}
         ${this.topic
-          ? this.topic.href
-            ? html`<a class="ui-pubi__topic" href=${this.topic.href}><span aria-hidden="true">↳ </span>${this.topic.label}</a>`
+          ? safeUrl(this.topic.href)
+            ? html`<a class="ui-pubi__topic" href=${ifDefined(safeUrl(this.topic.href))}><span aria-hidden="true">↳ </span>${this.topic.label}</a>`
             : html`<span class="ui-pubi__topic"><span aria-hidden="true">↳ </span>${this.topic.label}</span>`
           : nothing}
       </div>
@@ -167,7 +170,7 @@ export class TcPublicationImpact extends TcElement {
       ${this.authors.length || this.outcome
         ? html`<div class="ui-pubi__by">
             ${this.authors.length
-              ? html`<span class="ui-pubi__faces" aria-hidden="true">${this.authors.slice(0, 4).map((a) => (a.picture ? html`<img class="ui-pubi__face" src=${a.picture} alt="" />` : html`<span class="ui-pubi__face">${initials(a.name)}</span>`))}</span>
+              ? html`<span class="ui-pubi__faces" aria-hidden="true">${this.authors.slice(0, 4).map((a) => (a.picture ? html`<img class="ui-pubi__face" src=${ifDefined(safeMediaUrl(a.picture))} alt="" />` : html`<span class="ui-pubi__face">${initials(a.name)}</span>`))}</span>
                   <span class="ui-pubi__names">${this.authors.map((a) => a.name.split(/\s+/).slice(-1)[0]).join(", ")}</span>`
               : nothing}
             ${this.outcome ? html`<span class="ui-pubi__outcome">${this.outcome}</span>` : nothing}

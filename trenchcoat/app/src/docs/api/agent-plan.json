@@ -108,7 +108,7 @@
     {
      "name": "tc-cancel",
      "detail": "",
-     "description": "\"Cancel\" pressed (shown with `cancellable`)",
+     "description": "\"Cancel\" pressed (shown with `cancellable`); detail: null",
      "cancelable": false
     }
    ],
@@ -682,7 +682,7 @@
   "windowed": false
  },
  "size": {
-  "min": 72025,
-  "gzip": 16075
+  "min": 72063,
+  "gzip": 16084
  }
 }

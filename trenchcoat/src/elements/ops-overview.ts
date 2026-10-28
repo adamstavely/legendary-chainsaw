@@ -3,6 +3,7 @@ import { property, state } from "lit/decorators.js";
 import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
+import { pick } from "./internal/util";
 
 /*
  * <tc-ops-overview> – an operations overview in one dense strip: a title, a one-line status ("All operations active ·
@@ -177,7 +178,7 @@ export class TcOpsOverview extends TcElement {
         title: this.heading,
         subtitle: this.status,
         id: `${id}-title`,
-        aside: this.health ? html`<span class="ui-opo__health" data-health=${this.health}>${HEALTH_MARK[this.health]()}${label}</span>` : nothing,
+        aside: this.health ? html`<span class="ui-opo__health" data-health=${this.health}>${pick(HEALTH_MARK, this.health, "degraded")()}${label}</span>` : nothing,
       })}
       <div class="ui-opo__card">
         ${this.tiles.length

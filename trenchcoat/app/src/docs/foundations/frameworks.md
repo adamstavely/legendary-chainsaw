@@ -84,17 +84,25 @@ export class Assignees {
 ```
 
 - **Inputs** are the element's properties, typed from it: `[options]` takes `TcCombobox["options"]`, and a misspelt
-  input or a wrong type fails the build. Plain attributes work as in HTML – `required`, `value="0.6"`.
+  input or a wrong type fails the build. Plain attributes work as in HTML – `required`, `value="0.6"` – with one
+  difference: on a boolean input the string `"false"` means false (`disabled="false"` leaves the element enabled),
+  where in HTML any present attribute means true.
 - **Events** are typed: `$event` is the event's `CustomEvent<…>`, so `$event.detail.value` is checked. The element
   dispatches the event itself, and a handler runs once per event.
 - **Forms:** an element that holds a `value` takes `[(ngModel)]`, `[formControl]` and `formControlName` through its
   accessor in `trenchcoat/angular/forms` (`ComboboxValueAccessor`, or `TRENCHCOAT_FORMS` for all of them).
-  `@angular/forms` is only needed for that entry.
+  `@angular/forms` is only needed for that entry. A new or reset control (`null`) gives the element its own empty
+  value – `[]`, `""`, `false`. A change the page cancels with `preventDefault()` stays out of the form, and
+  `control.disable()` disables the element; on the few elements without a disabled state, dev mode warns instead.
 - `TRENCHCOAT` is every directive at once, for an `imports` array. `#ref="tcCombobox"` gives the directive, and its
   `element` is the element itself.
 
-The directives are built for Angular 19 and later. With Angular SSR, render the components on the browser only
-(`afterNextRender` or `isPlatformBrowser`); `examples/angular` renders on the client.
+The directives are built for Angular 19 and later, in partial compilation mode, and every module loads in Node without
+a DOM – so Angular SSR, and webpack- or Karma-based builds, import them as they are (CI checks both). On the server the
+element is sent as its tag and attributes; it renders when it upgrades in the browser. If hydration reports a mismatch
+inside one, add `ngSkipHydration` to the component that holds it. To leave an element's code out of the server bundle
+altogether, put it in a `@defer` block – component `imports` are static, so `isPlatformBrowser` can't keep them off the
+server. `examples/angular` renders on the client.
 
 ## Svelte
 

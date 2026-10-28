@@ -1,6 +1,8 @@
 import { html, nothing, svg, type PropertyValues } from "lit";
 import { property, state } from "lit/decorators.js";
 import { TcElement } from "./internal/base";
+import { ifDefined } from "lit/directives/if-defined.js";
+import { safeUrl } from "./internal/safe-url";
 
 /*
  * <tc-citation-sections> – where in citing papers a work is cited: a donut of the counts by section – by default
@@ -164,8 +166,8 @@ export class TcCitationSections extends TcElement {
               ? html`<span class="ui-cts__readout-value">${shown.label} · ${this.num(this.count(shown.id))} · ${this.pct(this.count(shown.id))}</span>`
               : html`${this.num(this.total)} in all`}
           </p>
-          ${this.href
-            ? html`<a class="ui-cts__more" href=${this.href} @click=${(e: Event) => this.open(e)}>${this.detailsLabel}</a>`
+          ${safeUrl(this.href)
+            ? html`<a class="ui-cts__more" href=${ifDefined(safeUrl(this.href))} @click=${(e: Event) => this.open(e)}>${this.detailsLabel}</a>`
             : this.openable
               ? html`<button type="button" class="ui-cts__more" @click=${(e: Event) => this.open(e)}>${this.detailsLabel}</button>`
               : nothing}

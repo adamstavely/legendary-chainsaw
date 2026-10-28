@@ -8,7 +8,8 @@ import { afterEach, describe, expect, test } from "vitest";
 import "../../src/elements/generated-ui";
 import type { GeneratedUiComponentEvent, GeneratedUiSpecCheck, TcGeneratedUi } from "../../src/elements/generated-ui";
 import type { TcStatusTracker } from "../../src/elements/status-tracker";
-import { catalog, catalogPrompt, checkComponent, isGeneratable, loadSchema, MAX_ITEMS, mountComponent, tagOfTool, toolDefinitions, toolName } from "../../src/generative";
+import { catalog, catalogPrompt, checkComponent, checkProps, isGeneratable, isLinkField, isResourceField, loadSchema, MAX_ITEMS, mountComponent, tagOfTool, toolDefinitions, toolName, type Schema } from "../../src/generative";
+import { registry } from "../../src/generative/registry";
 import { cleanup, fixture, settle } from "./helpers";
 
 afterEach(cleanup);
@@ -93,6 +94,153 @@ describe("trenchcoat/generative", () => {
   });
 });
 
+/* The props are untrusted model output: what someone could write to get a script, another site or a crash past the check */
+describe("trenchcoat/generative: untrusted props", () => {
+  const XSS = "javascript:alert(1)";
+
+  test("__proto__ can't carry props past the check, or stand in for a required field", async () => {
+    // As the SDK's JSON.parse hands it over: __proto__ as an own key
+    const raw = JSON.parse(`{"events":[{"id":"a","date":1,"title":"t","__proto__":{"links":[{"label":"x","href":"${XSS}"}]}},{"__proto__":{"id":"b","date":2,"title":"u"}}]}`);
+    const checked = await checkComponent("tc-entity-timeline", raw);
+    const events = checked!.props.events as Record<string, unknown>[];
+    // The first event keeps its own fields and an ordinary prototype; the second has nothing of its own, so it's left out
+    expect(events).toHaveLength(1);
+    expect(Object.getPrototypeOf(events[0])).toBe(Object.prototype);
+    expect(events[0].links).toBeUndefined();
+    expect(checked!.issues.map((i) => `${i.path}: ${i.message}`)).toEqual(
+      expect.arrayContaining(["props/events/0/__proto__: not a property name – left out", expect.stringMatching(/^props\/events\/1: needs id, date, title/)]),
+    );
+    // At the top level too, and "constructor" is only a property when the schema has it
+    const top = checkProps({ type: "object", properties: { a: { type: "string" } } }, JSON.parse(`{"__proto__":{"a":"x"},"constructor":{"a":"y"}}`));
+    expect(top.props).toEqual({});
+    expect(Object.getPrototypeOf(top.props)).toBe(Object.prototype);
+    expect(top.issues.map((i) => i.path)).toEqual(["props/__proto__", "props/constructor"]);
+  });
+
+  test("a link is checked whatever it's called: …Href and …Url names, and fields the element binds to href or src", async () => {
+    const notice = await checkComponent("tc-guardrail-notice", { policy: "P", policyHref: XSS });
+    expect(notice!.props).toEqual({ policy: "P" });
+    expect(notice!.issues.map((i) => i.path)).toEqual(["props/policyHref"]);
+    // An avatar the element shows as an image is a link; a picture on a profile header too
+    const header = await checkComponent("tc-profile-header", { name: "Maya", picture: "data:image/svg+xml,<svg onload=alert(1)>" });
+    expect(header!.props).toEqual({ name: "Maya" });
+  });
+
+  test("protocol-relative and backslash links are another site, not a relative link", async () => {
+    for (const href of ["//evil.example/x", "/\\evil.example/x", "\\\\evil.example", " JaVaScRiPt:alert(1)", "java\tscript:alert(1)", "vbscript:x"]) {
+      const checked = await checkComponent("tc-guardrail-notice", { policy: "P", policyHref: href });
+      expect(checked!.props, href).toEqual({ policy: "P" });
+    }
+    for (const href of ["/docs", "./a", "#x", "?q=1", "https://example.com", "mailto:a@b.co", "tel:+15551234"]) {
+      const checked = await checkComponent("tc-guardrail-notice", { policy: "P", policyHref: href });
+      expect(checked!.props.policyHref, href).toBe(href);
+    }
+  });
+
+  test("every string an element binds to href or src is checked as a link (from the elements' own source)", async () => {
+    const sources = import.meta.glob("../../src/elements/*.ts", { query: "?raw", import: "default", eager: true }) as Record<string, string>;
+    const BOUND = /(?:\s|\.)(href|src|xlink:href)=\$\{((?:[^{}]|\{[^{}]*\})*)\}/g;
+    let checkedFields = 0;
+    const unchecked: string[] = [];
+    for (const { tag } of catalog) {
+      const src = Object.entries(sources).find(([file, text]) => !/ \d+\.ts$/.test(file) && text.includes(`customElements.define("${tag}"`))?.[1];
+      if (!src) continue;
+      const names = new Map<string, boolean>();
+      for (const m of src.matchAll(BOUND)) {
+        if (m[2].trim().startsWith("`#")) continue;
+        for (const id of m[2].matchAll(/\b([A-Za-z_]\w*)\b(?!\s*\()/g)) if (id[1] !== "this" && id[1] !== "content") names.set(id[1], names.get(id[1]) || m[1] === "src");
+      }
+      if (!names.size) continue;
+      const schema = (await loadSchema(tag))!;
+      const defs = schema.definitions ?? {};
+      const strings = (node: Schema, seen = new Set<string>()): Schema[] => {
+        if (node.$ref) {
+          const name = decodeURIComponent(node.$ref.replace("#/definitions/", ""));
+          return seen.has(name) ? [] : strings(defs[name] ?? {}, new Set([...seen, name]));
+        }
+        const own = [node.type].flat().includes("string") && !node.enum && !("const" in node) ? [node] : [];
+        return [...own, ...(node.anyOf ?? node.oneOf ?? []).flatMap((n) => strings(n, seen)), ...[node.items ?? []].flat().flatMap((n) => strings(n, seen))];
+      };
+      const walk = (node: unknown) => {
+        if (!node || typeof node !== "object") return;
+        const n = node as Schema;
+        for (const [k, v] of Object.entries(n.properties ?? {}))
+          if (names.has(k))
+            for (const leaf of strings(v)) {
+              checkedFields++;
+              if (!isLinkField(k, leaf)) unchecked.push(`${tag}.${k}`);
+              else if (names.get(k) && !isResourceField(k, leaf)) unchecked.push(`${tag}.${k} (loads by itself)`);
+            }
+        Object.values(n).forEach(walk);
+      };
+      walk(schema);
+    }
+    expect(checkedFields).toBeGreaterThan(30);
+    expect(unchecked).toEqual([]);
+  });
+
+  test("not: {} – a field the schema can't describe (an element) is left out, not copied as it is", async () => {
+    const checked = await checkComponent("tc-agent-lanes", { tasks: [{ id: "t", agentId: "a", title: "T", status: "running", start: 1, tools: ["x", { cloneNode: 1 }] }] });
+    const task = (checked!.props.tasks as { tools: unknown[] }[])[0];
+    expect(task.tools).toEqual([]);
+    expect(checked!.issues.filter((i) => i.message === "not allowed here – left out")).toHaveLength(2);
+  });
+
+  test("anyOf keeps the branch that keeps the most, and maps and nested values still get the guardrails", () => {
+    const schema: Schema = { type: "object", properties: { v: { anyOf: [{ type: "array", items: { type: "string" } }, { type: "array", items: { type: "number" } }] }, any: { type: "object" } } };
+    const checked = checkProps(schema, { v: [1, 2, 3], any: { deep: { href: XSS, ok: "fine" } } });
+    expect(checked.props).toEqual({ v: [1, 2, 3], any: { deep: { ok: "fine" } } });
+    expect(checked.issues.map((i) => i.path)).toEqual(["props/any/deep/href"]);
+  });
+
+  test("allowedOrigins holds images to the app's origins; clicked links aren't held", async () => {
+    const props = { name: "Maya", picture: "https://attacker.example/p.png?d=secret", actions: [] };
+    expect((await checkComponent("tc-profile-header", props))!.props.picture).toBe(props.picture);
+    const held = await checkComponent("tc-profile-header", props, { allowedOrigins: ["https://cdn.example.com"] });
+    expect(held!.props).not.toHaveProperty("picture");
+    expect(held!.issues[0].message).toBe("loads from https://attacker.example, which isn't an allowed origin – left out");
+    for (const picture of ["https://cdn.example.com/a.png", "/img/a.png"]) expect((await checkComponent("tc-profile-header", { name: "M", picture }, { allowedOrigins: ["https://cdn.example.com/"] }))!.props.picture).toBe(picture);
+    const link = await checkComponent("tc-guardrail-notice", { policy: "P", policyHref: "https://anywhere.example" }, { allowedOrigins: ["https://cdn.example.com"] });
+    expect(link!.props.policyHref).toBe("https://anywhere.example");
+  });
+
+  test("colours are colours: no url(), image() or anything else that loads", () => {
+    const schema: Schema = { type: "object", properties: { color: { type: "string" }, colors: { type: "object", additionalProperties: { type: "string" } } } };
+    const checked = checkProps(schema, { color: "url(https://evil.example/x)", colors: { ok: "oklch(0.6 0.1 200)", mix: "color-mix(in srgb, var(--tc-chart-1) 40%, white)", bad: "image-set('https://evil.example/x' 1x)", semi: "red; background: url(x)" } });
+    expect(checked.props).toEqual({ colors: { ok: "oklch(0.6 0.1 200)", mix: "color-mix(in srgb, var(--tc-chart-1) 40%, white)" } });
+    expect(checked.issues.map((i) => i.path)).toEqual(["props/color", "props/colors/bad", "props/colors/semi"]);
+  });
+
+  test("the schema's own limits: top-level required and additionalProperties, min/maxItems, tuples, numbers, date-time", async () => {
+    const schema: Schema = {
+      type: "object",
+      required: ["id"],
+      properties: { id: { type: "string", pattern: "^[a-z]+$" }, pair: { type: "array", items: [{ type: "number" }, { type: "number" }], minItems: 2, maxItems: 2 }, few: { type: "array", items: { type: "number", minimum: 0, maximum: 10 }, maxItems: 2 } },
+      additionalProperties: { type: "boolean" },
+    };
+    expect(checkProps(schema, { pair: [1, 2] })).toEqual({ props: {}, issues: [{ path: "props", message: "needs id – left out" }] });
+    const ok = checkProps(schema, { id: "a", pair: [1, "x"], few: [1, 20, 3, 4], extra: true, other: "no" });
+    expect(ok.props).toEqual({ id: "a", few: [1], extra: true });
+    expect(ok.issues.map((i) => i.path)).toEqual(["props/pair/1", "props/pair", "props/few", "props/few/1", "props/other"]);
+    expect(checkProps(schema, { id: "A1" }).issues[0].message).toBe("doesn't have the expected form – left out");
+    // A Date-typed field gets a Date, as the element expects – not the string
+    const lanes = await checkComponent("tc-agent-lanes", { tasks: [{ id: "t", agentId: "a", title: "T", status: "running", start: "2026-10-28T09:00:00Z" }, { id: "u", agentId: "a", title: "U", status: "running", start: "next tuesday-ish" }] });
+    const tasks = lanes!.props.tasks as { start: unknown }[];
+    expect(tasks).toHaveLength(1);
+    expect(tasks[0].start).toBeInstanceOf(Date);
+    expect((tasks[0].start as Date).toISOString()).toBe("2026-10-28T09:00:00.000Z");
+  });
+
+  test("the size budget is in UTF-8 bytes, and props that aren't JSON are refused", async () => {
+    // 70,000 characters, but 210,000 bytes
+    const steps = Array.from({ length: 35 }, (_, i) => ({ id: `s${i}`, label: "€".repeat(2000), status: "cleared" }));
+    expect((await checkComponent("tc-status-tracker", { steps }))!.issues.map((i) => i.message)).toEqual(["props are larger than 200 KB – left out"]);
+    const cyclic: Record<string, unknown> = { heading: "x" };
+    cyclic.self = cyclic;
+    expect((await checkComponent("tc-status-tracker", cyclic))!.props).toEqual({});
+  });
+});
+
 describe("tc-generated-ui: component blocks", () => {
   const mount = (spec: unknown) => fixture<TcGeneratedUi>(html`<tc-generated-ui .spec=${spec}></tc-generated-ui>`);
   const tracker = (el: Element) => el.querySelector<TcStatusTracker>("tc-status-tracker");
@@ -149,5 +297,41 @@ describe("tc-generated-ui: component blocks", () => {
     el.spec = `{"blocks": [{"type": "component", "tag": "tc-coverage-ring", "props": {"value": 0.5}}]}`;
     el.streaming = false;
     await expect.poll(() => (el.querySelector("tc-coverage-ring") as unknown as { value?: number } | null)?.value).toBe(0.5);
+  });
+
+  test("a revised answer that drops a property puts it back to the component's default", async () => {
+    const el = await mount({ blocks: [{ type: "component", tag: "tc-status-tracker", props: { heading: "Release gates", noun: "Gate", steps: STEPS } }] });
+    await expect.poll(() => tracker(el)?.heading).toBe("Release gates");
+    const first = tracker(el);
+    el.spec = { blocks: [{ type: "component", tag: "tc-status-tracker", props: { steps: STEPS, noun: 3 } }] };
+    await expect.poll(() => tracker(el)?.heading).toBe("Status");
+    // The same element, so what people did with it stays; a prop now left out is reset too
+    expect(tracker(el)).toBe(first);
+    expect(tracker(el)!.noun).toBe("Step");
+  });
+
+  test("a component whose module can't load says so, reports it, and is tried again on the next spec", async () => {
+    const entry = registry["tc-coverage-ring"];
+    const load = entry.load;
+    entry.load = () => Promise.reject(new Error("offline"));
+    try {
+      const el = await mount({ blocks: [{ type: "component", tag: "tc-coverage-ring", props: { value: 0.5 } }] });
+      await expect.poll(() => el.querySelector(".ui-gui__component-error")?.textContent).toBe("This coverage ring couldn't be shown.");
+      expect(el.issues).toEqual([{ path: "/blocks/0", message: "tc-coverage-ring couldn't load – offline" }]);
+      entry.load = load;
+      el.spec = { blocks: [{ type: "component", tag: "tc-coverage-ring", props: { value: 0.5 } }] };
+      await expect.poll(() => (el.querySelector("tc-coverage-ring") as unknown as { value?: number } | null)?.value).toBe(0.5);
+      await expect.poll(() => el.issues).toEqual([]);
+    } finally {
+      entry.load = load;
+    }
+  });
+
+  test("allowedOrigins on tc-generated-ui holds placed components' images to those origins", async () => {
+    const el = await fixture<TcGeneratedUi>(html`<tc-generated-ui .allowedOrigins=${["https://cdn.example.com"]} .spec=${{ blocks: [{ type: "component", tag: "tc-profile-header", props: { name: "Maya", picture: "https://attacker.example/p.png" } }] }}></tc-generated-ui>`);
+    await expect.poll(() => el.issues.map((i) => i.path)).toEqual(["/blocks/0/props/picture"]);
+    const header = el.querySelector("tc-profile-header") as unknown as { name: string; picture?: string };
+    expect(header.name).toBe("Maya");
+    expect(header.picture).toBeFalsy();
   });
 });

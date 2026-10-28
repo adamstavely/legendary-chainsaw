@@ -289,10 +289,10 @@ let uid = 0;
  * @fires tc-model-change - A model was picked in the menu (`{ model: string; choice: ChatModel }`); cancelable
  * @fires tc-send - A message was sent (`ChatSend`: `{ message, model, skill, args }` – `skill` is the picked skill's `{ id, name }` or null, `args` the text after its token); `onSend` may return a promise to keep it until it settles
  * @fires tc-skill-change - The message's skill changed (`ChatSkillChange`: `{ skill, previous, reason }`); cancelable when it was picked, replaced or removed – prevent it to keep the message as it is
- * @fires tc-attach - The plus button was pressed – open your own file or folder picker here
- * @fires tc-connect-apps - "Connect apps" was pressed; `onConnectApps` may return a promise it waits for
- * @fires tc-request-approval - "Request approval" was pressed; `onRequestApproval` may return a promise it waits for
- * @fires tc-select-project - "Select a project" was pressed
+ * @fires tc-attach - The plus button was pressed – open your own file or folder picker here; detail: null
+ * @fires tc-connect-apps - "Connect apps" was pressed; `onConnectApps` may return a promise it waits for; detail: null
+ * @fires tc-request-approval - "Request approval" was pressed; `onRequestApproval` may return a promise it waits for; detail: null
+ * @fires tc-select-project - "Select a project" was pressed; detail: null
  * @fires tc-settings-change - The model settings changed in the settings popover (`ChatSettingsChange`: `{ value, changed }`); cancelable – prevent it to control `settings`
  * @fires tc-prompt-pick - A prompt was picked in the prompt library (`ChatPromptPick`: `{ prompt, template, values }`); cancelable – prevent it to place the prompt yourself
  * @fires tc-page-context-change - The page context chip was toggled, or an attached item removed (`ChatPageContextChange`: `{ pageContext, change }`); cancelable – prevent it to control `pageContext`
@@ -463,6 +463,7 @@ export class TcChatComposer extends TcElement {
     super.disconnectedCallback();
     this.barRo?.disconnect();
     this.barRo = undefined;
+    this.watchedBar = null;
     this.timers.forEach((t) => window.clearTimeout(t));
     this.timers = [];
     this.stopSpeaking();
@@ -470,6 +471,7 @@ export class TcChatComposer extends TcElement {
     this.dictating = null;
     this.ro?.disconnect();
     this.ro = undefined;
+    this.watchedModel = null;
     document.removeEventListener("pointerdown", this.onDocDown);
     if (this.revert) cancelAnimationFrame(this.revert);
     this.revert = 0;
@@ -1127,10 +1129,19 @@ export class TcChatComposer extends TcElement {
   protected override firstUpdated() {
     // The picker attaches to the message, which exists only after the first render
     if (this.triggers.length) this.requestUpdate();
-    // The model button's width is kept current, so it's only measured when the model changes
+    if (this.modelButton) this.shownModel = this.current.id;
+  }
+
+  /** The model button's width is kept current, so it's only measured when the model changes. Watched from updated(),
+   *  so it's watched again after the composer is moved in the page */
+  private watchedModel: HTMLElement | null = null;
+  private watchModel() {
     const el = this.modelButton;
+    if (el === this.watchedModel) return;
+    this.ro?.disconnect();
+    this.ro = undefined;
+    this.watchedModel = el;
     if (!el) return;
-    this.shownModel = this.current.id;
     if (typeof ResizeObserver === "undefined") {
       this.modelWidth = el.getBoundingClientRect().width;
       return;
@@ -1143,6 +1154,7 @@ export class TcChatComposer extends TcElement {
   }
 
   protected override updated(changed: PropertyValues<this>) {
+    this.watchModel();
     this.watchBar(changed);
     this.onMessageScroll();
     // The toolbar's model picker renders its trigger after this update – the toolbar's tab stop is set again then

@@ -29,7 +29,8 @@
     },
     "href": {
       "type": "string",
-      "description": "Where the details are – adds a link under the caption"
+      "description": "Where the details are – adds a link under the caption",
+      "format": "uri-reference"
     },
     "openable": {
       "type": "boolean",

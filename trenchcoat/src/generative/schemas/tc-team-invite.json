@@ -24,7 +24,9 @@
       "properties": {
         "src": {
           "type": "string",
-          "description": "Image URL – a square portrait, shown in a circle"
+          "description": "Image URL – a square portrait, shown in a circle",
+          "format": "uri-reference",
+          "contentMediaType": "image/*"
         },
         "name": {
           "type": "string",

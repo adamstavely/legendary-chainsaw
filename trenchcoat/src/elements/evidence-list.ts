@@ -1,9 +1,10 @@
+import { ifDefined } from "lit/directives/if-defined.js";
 import { html, nothing, svg, type PropertyValues } from "lit";
 import { property, state } from "lit/decorators.js";
 import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
-import { copyText } from "./internal/util";
+import { copyText, formatDate, isoDate } from "./internal/util";
 
 /*
  * <tc-evidence-list> – the exhibits linked to a matter: each with its reference ("E-101"), title, type (photo,
@@ -115,6 +116,15 @@ function bandOf(grade: string | undefined): Band {
 }
 let uidCount = 0;
 
+/** A recorded hash in a form that compares: "SHA256: ABCDEF" and "sha256:abcdef" are the same digest. Hex digests
+ *  ignore case; anything else (base64) is compared as written */
+function digest(hash: string) {
+  const m = /^\s*([a-z][\w-]*)\s*:\s*(.*?)\s*$/i.exec(hash);
+  const algo = m ? m[1].toLowerCase().replace(/[-_]/g, "") : "";
+  const raw = (m ? m[2] : hash).trim();
+  return raw ? { algo, hex: /^[\da-f]+$/i.test(raw) ? raw.toLowerCase() : raw } : undefined;
+}
+
 /**
  * Exhibits linked to a matter – reference, title, type, source with its grade, date, holder and status – each opening
  * onto its chain of custody with the hash at every step.
@@ -162,18 +172,21 @@ export class TcEvidenceList extends TcElement {
   }
   private integrityOf(e: Exhibit): "verified" | "mismatch" | "unchecked" {
     if (e.integrity) return e.integrity;
-    const hashes = (e.custody ?? []).map((c) => c.hash).filter((h): h is string => !!h);
+    const hashes = (e.custody ?? []).map((c) => c.hash && digest(c.hash)).filter((h): h is { algo: string; hex: string } => !!h);
     if (hashes.length < 2) return "unchecked";
-    return hashes.every((h) => h === hashes[0]) ? "verified" : "mismatch";
+    // Different algorithms can't be compared – that's "not compared", never a mismatch. A hash without a prefix
+    // compares with any
+    if (new Set(hashes.map((h) => h.algo).filter(Boolean)).size > 1) return "unchecked";
+    return hashes.every((h) => h.hex === hashes[0].hex) ? "verified" : "mismatch";
   }
   private day(ms: number) {
-    return new Intl.DateTimeFormat(this.locale, { day: "numeric", month: "short", year: "numeric" }).format(ms);
+    return formatDate(ms, this.locale, { day: "numeric", month: "short", year: "numeric" });
   }
   private shortDay(ms: number) {
-    return new Intl.DateTimeFormat(this.locale, { day: "numeric", month: "short" }).format(ms);
+    return formatDate(ms, this.locale, { day: "numeric", month: "short" });
   }
   private stamp(ms: number) {
-    return new Intl.DateTimeFormat(this.locale, { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" }).format(ms);
+    return formatDate(ms, this.locale, { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
   }
   /** The tab stop: the active row, else the open one, else the first */
   private get stop() {
@@ -269,7 +282,7 @@ export class TcEvidenceList extends TcElement {
                 <span class="ui-evl__step-dot" aria-hidden="true"></span>
                 <div class="ui-evl__step-body">
                   <p class="ui-evl__step-line"><span class="ui-evl__step-action">${c.action}</span><span class="ui-evl__step-actor">${c.actor}</span></p>
-                  <p class="ui-evl__step-meta"><time datetime=${new Date(c.at).toISOString()}>${this.stamp(c.at)}</time>${c.location ? html`<span>${c.location}</span>` : nothing}</p>
+                  <p class="ui-evl__step-meta"><time datetime=${ifDefined(isoDate(c.at))}>${this.stamp(c.at)}</time>${c.location ? html`<span>${c.location}</span>` : nothing}</p>
                   ${c.hash
                     ? html`<p class="ui-evl__hash">
                         <code class="ui-evl__hash-text">${c.hash}</code>

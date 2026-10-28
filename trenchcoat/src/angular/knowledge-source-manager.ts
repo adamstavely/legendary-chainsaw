@@ -75,10 +75,10 @@ export class KnowledgeSourceManager {
    */
   @Output("tc-show-change") readonly tcShowChange = new EventEmitter<CustomEvent<KnowledgeShowChange>>();
   /**
-   * Add source was pressed – open your own picker (no detail)
+   * Add source was pressed – open your own picker; detail: null
    * Types $event; the element dispatches the event itself.
    */
-  @Output("tc-add") readonly tcAdd = new EventEmitter<CustomEvent<unknown>>();
+  @Output("tc-add") readonly tcAdd = new EventEmitter<CustomEvent<null>>();
   /**
    * Resync (or Retry, for a failed source) was pressed ({ source }: KnowledgeSourceEvent)
    * Types $event; the element dispatches the event itself.

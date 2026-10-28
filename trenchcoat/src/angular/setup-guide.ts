@@ -63,13 +63,13 @@ export class SetupGuide {
    */
   @Output("tc-minimized-change") readonly tcMinimizedChange = new EventEmitter<CustomEvent<{ minimized: boolean }>>();
   /**
-   * The Edit link was pressed (shown with `editable`)
+   * The Edit link was pressed (shown with `editable`); detail: null
    * Types $event; the element dispatches the event itself.
    */
-  @Output("tc-edit") readonly tcEdit = new EventEmitter<CustomEvent<unknown>>();
+  @Output("tc-edit") readonly tcEdit = new EventEmitter<CustomEvent<null>>();
   /**
-   * The close button was pressed (shown with `closable`)
+   * The close button was pressed (shown with `closable`); detail: null
    * Types $event; the element dispatches the event itself.
    */
-  @Output("tc-close") readonly tcClose = new EventEmitter<CustomEvent<unknown>>();
+  @Output("tc-close") readonly tcClose = new EventEmitter<CustomEvent<null>>();
 }

@@ -362,6 +362,25 @@ test("styles: --u is clamped to the type floor in rem; placeholder token; the ca
   expect(sheet).not.toMatch(/@keyframes ui-chat-composer-sweep\s*{[^@]*background-position/);
 });
 
+test("moved to another place in the page, it watches its model button again", async () => {
+  const el = await fixture<TcChatComposer>(html`<tc-chat-composer demo></tc-chat-composer>`);
+  const own = el as unknown as { ro?: ResizeObserver; modelWidth: number };
+  await expect.poll(() => !!own.ro).toBe(true);
+  const other = document.createElement("div");
+  document.body.append(other);
+  try {
+    other.append(el);
+    await settle();
+    await expect.poll(() => !!own.ro).toBe(true);
+    // A size change after the move still reaches the model button's measure
+    const button = el.querySelector<HTMLElement>(".ui-chat-composer__model")!;
+    button.style.width = "160px";
+    await expect.poll(() => own.modelWidth).toBeCloseTo(button.getBoundingClientRect().width, 0);
+  } finally {
+    other.remove();
+  }
+});
+
 test("axe: no violations in either look", async () => {
   const wrap = await fixture(html`<div style="padding-top: 320px">
     <tc-chat-composer demo value="Hello"></tc-chat-composer>

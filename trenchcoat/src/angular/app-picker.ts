@@ -107,8 +107,8 @@ export class AppPicker {
    */
   @Output("tc-open-change") readonly tcOpenChange = new EventEmitter<CustomEvent<{ open: TcAppPicker["open"] }>>();
   /**
-   * Retry was chosen after an error – the app loads the apps again
+   * Retry was chosen after an error – the app loads the apps again ({})
    * Types $event; the element dispatches the event itself.
    */
-  @Output("tc-retry") readonly tcRetry = new EventEmitter<CustomEvent<unknown>>();
+  @Output("tc-retry") readonly tcRetry = new EventEmitter<CustomEvent<Record<string, never>>>();
 }

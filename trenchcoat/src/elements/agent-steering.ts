@@ -86,8 +86,8 @@ const cornerIcon = html`<svg width="12" height="12" viewBox="0 0 12 12" aria-hid
  * @tag tc-agent-steering
  * @fires tc-draft-change - The text in the field changed; detail `{ draft: string }`. Cancelable: preventDefault() keeps `draft` as it is (controlled use)
  * @fires tc-remove - ✕ on a queued note; detail `{ id: string }`
- * @fires tc-pause - Pause was pressed
- * @fires tc-resume - Resume was pressed
+ * @fires tc-pause - Pause was pressed; detail: null
+ * @fires tc-resume - Resume was pressed; detail: null
  */
 export class TcAgentSteering extends TcElement {
   static override ui = "st";

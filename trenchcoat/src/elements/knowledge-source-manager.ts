@@ -140,7 +140,7 @@ let instances = 0;
  * @fires tc-sources-change - A source was removed or its schedule changed ({ sources, change: { type, source } }: KnowledgeSourcesChange); cancelable – prevent it to control `sources`
  * @fires tc-selected-change - A source was picked or the open one closed ({ selected, source }: KnowledgeSelectedChange); cancelable
  * @fires tc-show-change - All or Needs attention was picked ({ show }: KnowledgeShowChange); cancelable
- * @fires tc-add - Add source was pressed – open your own picker (no detail)
+ * @fires tc-add - Add source was pressed – open your own picker; detail: null
  * @fires tc-resync - Resync (or Retry, for a failed source) was pressed ({ source }: KnowledgeSourceEvent)
  * @fires tc-pause - Pause or Resume was pressed ({ source, paused }: KnowledgePauseEvent – `paused` is what was asked for)
  * @fires tc-review-chunks - Review chunks was pressed – open your chunk review for the source ({ source }: KnowledgeSourceEvent)

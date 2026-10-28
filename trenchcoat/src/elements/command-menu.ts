@@ -57,6 +57,12 @@ const svgEl = (markup: string) => {
   return t.content.firstElementChild!;
 };
 const glyph = (d: string) => svgEl(`<svg viewBox="0 0 24 24" class="ui-cm__glyph" aria-hidden="true"><path d="${d}"></path></svg>`);
+/** A command whose logo or icon is made the first time it's read – nothing touches `document` when the module loads,
+ *  so it imports on a server (SSR) */
+const lazyMark = <C extends Omit<CommandMenuCommand, "logo" | "icon">>(command: C, key: "logo" | "icon", make: () => Element) => {
+  let el: Element | undefined;
+  return Object.defineProperty(command, key, { get: () => (el ??= make()), enumerable: true, configurable: true }) as C & CommandMenuCommand;
+};
 const icons = {
   doc: "M7 3h7l5 5v13H7zM14 3v5h5M10 13h6M10 17h4",
   person: "M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4.5 20a7.5 7.5 0 0 1 15 0M19 8v4M17 10h4",
@@ -84,44 +90,44 @@ export const defaultCommandGroups: CommandMenuGroup[] = [
     id: "suggestions",
     label: "Suggestions",
     commands: [
-      { id: "email", label: "Write an email", hint: "Gmail", logo: svgEl(GMAIL), keywords: "mail send compose" },
-      { id: "ask", label: "Ask assistant", hint: "Summaries, drafts, answers", logo: svgEl(SPARK), keywords: "ai chat question" },
-      { id: "task", label: "Create a task", hint: "ClickUp", logo: svgEl(CLICKUP), keywords: "todo issue" },
-      { id: "crm", label: "Add contact to CRM", hint: "HubSpot", logo: svgEl(HUBSPOT), keywords: "lead deal company" },
-      { id: "meet", label: "Schedule a meeting", hint: "Google Calendar", logo: svgEl(CALENDAR), keywords: "call invite event" },
+      lazyMark({ id: "email", label: "Write an email", hint: "Gmail", keywords: "mail send compose" }, "logo", () => svgEl(GMAIL)),
+      lazyMark({ id: "ask", label: "Ask assistant", hint: "Summaries, drafts, answers", keywords: "ai chat question" }, "logo", () => svgEl(SPARK)),
+      lazyMark({ id: "task", label: "Create a task", hint: "ClickUp", keywords: "todo issue" }, "logo", () => svgEl(CLICKUP)),
+      lazyMark({ id: "crm", label: "Add contact to CRM", hint: "HubSpot", keywords: "lead deal company" }, "logo", () => svgEl(HUBSPOT)),
+      lazyMark({ id: "meet", label: "Schedule a meeting", hint: "Google Calendar", keywords: "call invite event" }, "logo", () => svgEl(CALENDAR)),
     ],
   },
   {
     id: "share",
     label: "Share",
     commands: [
-      { id: "slack", label: "Post an update", hint: "#team-updates", logo: svgEl(SLACK), keywords: "message channel" },
-      { id: "notion", label: "Save as page", hint: "Notion · Meeting notes", logo: svgEl(NOTION), keywords: "doc wiki" },
+      lazyMark({ id: "slack", label: "Post an update", hint: "#team-updates", keywords: "message channel" }, "logo", () => svgEl(SLACK)),
+      lazyMark({ id: "notion", label: "Save as page", hint: "Notion · Meeting notes", keywords: "doc wiki" }, "logo", () => svgEl(NOTION)),
     ],
   },
   {
     id: "general",
     label: "General",
     commands: [
-      { id: "new-doc", label: "New document", icon: glyph(icons.doc), keys: ["N"] },
-      { id: "invite", label: "Invite teammates", icon: glyph(icons.person), keys: ["I"] },
-      { id: "upload", label: "Upload files", icon: glyph(icons.upload), keys: ["U"] },
-      { id: "theme", label: "Switch to dark mode", icon: glyph(icons.moon), keywords: "theme appearance light", keys: ["⇧", "D"] },
+      lazyMark({ id: "new-doc", label: "New document", keys: ["N"] }, "icon", () => glyph(icons.doc)),
+      lazyMark({ id: "invite", label: "Invite teammates", keys: ["I"] }, "icon", () => glyph(icons.person)),
+      lazyMark({ id: "upload", label: "Upload files", keys: ["U"] }, "icon", () => glyph(icons.upload)),
+      lazyMark({ id: "theme", label: "Switch to dark mode", keywords: "theme appearance light", keys: ["⇧", "D"] }, "icon", () => glyph(icons.moon)),
     ],
   },
   {
     id: "go",
     label: "Go to",
     commands: [
-      { id: "home", label: "Home", icon: glyph(icons.home), keys: ["G", "H"] },
-      { id: "inbox", label: "Inbox", icon: glyph(icons.inbox), keys: ["G", "I"] },
-      { id: "reports", label: "Reports", icon: glyph(icons.chart), keys: ["G", "R"] },
-      { id: "settings", label: "Settings", icon: glyph(icons.gear), keys: ["G", "S"] },
-      { id: "help", label: "Help & feedback", icon: glyph(icons.help), keys: ["?"] },
+      lazyMark({ id: "home", label: "Home", keys: ["G", "H"] }, "icon", () => glyph(icons.home)),
+      lazyMark({ id: "inbox", label: "Inbox", keys: ["G", "I"] }, "icon", () => glyph(icons.inbox)),
+      lazyMark({ id: "reports", label: "Reports", keys: ["G", "R"] }, "icon", () => glyph(icons.chart)),
+      lazyMark({ id: "settings", label: "Settings", keys: ["G", "S"] }, "icon", () => glyph(icons.gear)),
+      lazyMark({ id: "help", label: "Help & feedback", keys: ["?"] }, "icon", () => glyph(icons.help)),
     ],
   },
 ];
-const sparkTile = svgEl(SPARK);
+let sparkTile: Element | undefined;
 
 /** The typed text, bold where it matches */
 const highlight = (text: string, query: string): TemplateResult | string => {
@@ -153,7 +159,7 @@ type RunStatus = { id: string; label: string; state: "pending" | "failed" };
  * @tag tc-command-menu
  * @fires tc-query-change - The search text changes; detail `{ query }`. Cancelable: preventDefault() keeps the
  *   current text (controlled use)
- * @fires tc-close - Esc in an empty search
+ * @fires tc-close - Esc in an empty search; detail: null
  */
 export class TcCommandMenu extends TcElement {
   static override ui = "cm";
@@ -280,7 +286,7 @@ export class TcCommandMenu extends TcElement {
       .map((g) => ({ ...g, commands: g.commands.filter((c) => !needle || `${c.label} ${c.hint ?? ""} ${c.keywords ?? ""}`.toLowerCase().includes(needle)) }))
       .filter((g) => g.commands.length);
     // With text typed, the first row always offers to ask the assistant about it
-    if (needle) result.unshift({ id: "ask-about", label: "Assistant", commands: [{ id: "ask-about", label: `Ask assistant about “${q}”`, logo: sparkTile }] });
+    if (needle) result.unshift({ id: "ask-about", label: "Assistant", commands: [{ id: "ask-about", label: `Ask assistant about “${q}”`, logo: (sparkTile ??= svgEl(SPARK)) }] });
     const total = result.reduce((n, g) => n + g.commands.length, 0);
     if (total <= this.maxRows) return { q, groups: result, total, cut: false };
     let left = this.maxRows;

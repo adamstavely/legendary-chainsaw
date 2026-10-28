@@ -30,6 +30,14 @@
      "readonly": false
     },
     {
+     "name": "allowedOrigins",
+     "attribute": null,
+     "type": "readonly string[] | undefined",
+     "default": "undefined",
+     "description": "Origins that images in placed components may load from (\"https://cdn.example.com\"); unset, any http(s) origin",
+     "readonly": false
+    },
+    {
      "name": "headingLevel",
      "attribute": "heading-level",
      "type": "number",
@@ -121,6 +129,7 @@
   }
  ],
  "changelog": [
+  "**`allowedOrigins`:** a new option on `checkProps`, `checkComponent`, `mountComponent` and `tc-generated-ui` keeps images and other resources that load by themselves to the origins you list. Colour fields must be real colours (no `url()`).",
   "**`tc-generated-ui`:** a `component` block, `{ type: \"component\", tag, props }`, places any catalogued component. - **Checks:** props are checked against the schema before they're set; what doesn't fit is left out and listed in `tc-spec-check`. - **Events:** the component's events come back as `tc-component-event`, also exposed as React's `onComponentEvent`; preventing it prevents the component's own. - **Guardrails:** links must be http(s), mailto or relative; lists are capped at 200 items, strings at 4,000 characters, nesting at 8 levels and props at 200 KB.",
   "**Quality, retrieval, safety, structured output and conversation:** `tc-eval-scorecard`, `tc-feedback-rubric`, `tc-retrieval-inspector`, `tc-extraction-review`, `tc-guardrail-notice`, `tc-clarifying-questions`, `tc-structured-output`, `tc-generated-ui` and `tc-prompt-starters`."
  ],
@@ -130,7 +139,8 @@
    "className": "TcGeneratedUi",
    "module": "trenchcoat/generated-ui",
    "data": [
-    "spec"
+    "spec",
+    "allowedOrigins"
    ],
    "attributes": [
     {
@@ -336,7 +346,8 @@
     },
     "progressive": false,
     "via": [
-     "itself"
+     "itself",
+     "src/generative/validate"
     ]
    },
    {
@@ -585,7 +596,7 @@
   "windowed": false
  },
  "size": {
-  "min": 6331274,
-  "gzip": 1523349
+  "min": 6340838,
+  "gzip": 1527069
  }
 }

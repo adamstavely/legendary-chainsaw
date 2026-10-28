@@ -157,15 +157,15 @@ export class ApprovalCard {
    */
   @Output("tc-deny") readonly tcDeny = new EventEmitter<CustomEvent<{ reason: "user" | "timeout" }>>();
   /**
-   * The countdown ran out (tc-deny fires too)
+   * The countdown ran out (tc-deny fires too); detail: null
    * Types $event; the element dispatches the event itself.
    */
-  @Output("tc-expire") readonly tcExpire = new EventEmitter<CustomEvent<unknown>>();
+  @Output("tc-expire") readonly tcExpire = new EventEmitter<CustomEvent<null>>();
   /**
-   * Edit was pressed (shown with `editable`)
+   * Edit was pressed (shown with `editable`); detail: null
    * Types $event; the element dispatches the event itself.
    */
-  @Output("tc-edit") readonly tcEdit = new EventEmitter<CustomEvent<unknown>>();
+  @Output("tc-edit") readonly tcEdit = new EventEmitter<CustomEvent<null>>();
   /**
    * An argument was edited in "Edit arguments" mode; detail `{ details, index, label, value }`. Cancelable: preventDefault() keeps the rows (controlled use)
    * Types $event; the element dispatches the event itself.

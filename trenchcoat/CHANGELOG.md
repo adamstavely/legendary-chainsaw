@@ -1,5 +1,83 @@
 # Changelog
 
+## Unreleased – review fixes
+
+### Generative UI (security)
+
+- **Prototype keys:** a `__proto__` key can no longer carry props past the validator, and `required` is checked
+  against the object's own keys.
+- **Links:** every string an element binds to `href`/`src` is now checked: the generator marks those fields
+  `format: "uri-reference"`, and any property ending in `href`, `url` or `src` is a link too (`policyHref`,
+  `siteUrl`). `//host` and `/\host` are no longer accepted as relative links.
+- **`allowedOrigins`:** a new option on `checkProps`, `checkComponent`, `mountComponent` and `tc-generated-ui` keeps
+  images and other resources that load by themselves to the origins you list. Colour fields must be real colours
+  (no `url()`).
+- **Validator:** `not: {}` fields are dropped; `anyOf` keeps the branch with the fewest issues; values in open
+  objects are checked, not copied; top-level `required`/`additionalProperties`, `minItems`/`maxItems` and string
+  and number limits are enforced; `MAX_BYTES` is UTF-8 bytes. `date-time` strings become `Date`s, which the
+  elements expect.
+- **Mounting:** a prop a revised answer drops is reset; a component that fails to load shows a note, reports an
+  issue and is retried.
+- **Docs:** the Claude example caps its tool loop, checks components on the server and returns what was left out.
+
+### Angular
+
+- `trenchcoat/angular` imports `./<slug>.js`, so it loads under webpack, Karma, Vitest and Node, not only esbuild.
+- Server-side rendering no longer crashes: `command-menu` builds its icons on first use instead of when the module
+  loads. `check:angular` now imports every dist module in Node with no DOM.
+- Form controls: a change the page cancels with `preventDefault()` no longer reaches the form; `reset()` / `null`
+  becomes the element's empty value instead of crashing (combobox, dropzone); `disable()` on an element with no
+  `disabled` warns in dev mode.
+- Every output has a typed `$event`; the generator fails on an untyped event or an event name it can't map.
+
+### Elements
+
+- **Links from data** go through a shared `safeUrl` check in 50 elements: `javascript:` and other schemes render as
+  text instead of a link.
+- **money-flow:** totals are kept per currency; it keeps re-laying out after being moved in the page (as does
+  chat-composer).
+- **evidence-list:** hashes are compared as digests (case, spaces, prefix spelling); different algorithms read
+  "Hashes not compared", not a mismatch.
+- **Focus follows the item** when data changes in travel-itinerary, search-history, coverage-ring and profile-header.
+- **search-history** reads the clock on every tick, so times stay right after sleep.
+- **query-builder** only says "Copied" when the copy worked, and escapes backslashes and query syntax in values.
+- **Bad data** (invalid dates, unknown tones or modes) no longer breaks rendering.
+- Smaller: travel-itinerary's percentage is clamped, fingerprint-card's clip ids are unique, citation-badge closes
+  on Escape while hovered, and the React `AiSearch` takes a controlled `value`.
+
+### Tokens, build and tooling
+
+- **DTCG export (`tokens/dtcg/`):**
+  - `--check` now compares every exported token, resolved through its aliases, with what Chromium computes from
+    `tokens.css` in each look and theme. Before, both sides came from the same parser, so a conversion bug passed.
+  - Font weights that point at another weight (`--tc-control-font-weight`) stay `fontWeight` aliases instead of
+    numbers.
+  - Shadows and borders keep references to their colour and width tokens (`{border.default}`, `{focus-ring.width}`).
+    Only `color-mix()`, `calc()` and theme branches that are literals in the CSS are exported resolved.
+  - **Breaking for Tokens Studio users:** `$themes.json` and `$metadata.json` moved to `tokens/dtcg/tokens-studio/`,
+    beside copies of the sets in the form Tokens Studio reads: string values, its own types (`boxShadow`,
+    `fontWeights`) and `DEFAULT` for a group's own token. Its DTCG mode doesn't read 2025.10 colour and dimension
+    objects yet.
+  - The CSS-only tokens are listed for every set, primitives included.
+- **Package:**
+  - iCloud's `<name> 2.ts` copies are no longer build entries, type-checked or packed.
+  - `trenchcoat/internal/*`, `trenchcoat/elements/*`, `trenchcoat/angular/*` (other than `angular/forms`) and other
+    internal paths are no longer importable: they weren't API, and their types pointed at the wrong files.
+  - `trenchcoat/package.json` is exported.
+  - A `sideEffects` pattern that matched nothing is gone.
+  - The Angular peer range is now the tested one, `>=19.0.0 <22.0.0`.
+- **CI:**
+  - Playwright browsers are cached per version.
+  - The package is built and packed in its own named step.
+  - Actions are pinned to commit SHAs.
+  - The token check runs after Chromium is installed.
+- **new-component skill:**
+  - `integrate.mjs` no longer deletes a copy of a hand-written file in `src/generative`, or a copy with no original.
+    It also cleans up duplicated folders (`schemas 2/`), and it fails clearly instead of running every test when a
+    component has no test file.
+  - `add-to-gallery.mjs` keeps a category's order, handles lists over several lines and category names with `$`, and
+    writes nothing unless every component fits.
+
 ## Unreleased – Phase 4: a skill for building components
 
 ### Added

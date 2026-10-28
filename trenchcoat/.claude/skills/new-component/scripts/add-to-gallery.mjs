@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 // Registers new components in the gallery: a line in src/components/README.md, in alphabetical order, and the slug in
-// its category in app/src/registry.ts – a new category is added before "Trust & calibration". Run from trenchcoat/.
+// its category in app/src/registry.ts – in alphabetical place when the category is already alphabetical, else at the
+// end, so a category kept in a deliberate order stays that way. A new category is added before "Trust & calibration".
+// Both files are worked out first and written only when every component fits. Run from trenchcoat/.
 //
 //   node .claude/skills/new-component/scripts/add-to-gallery.mjs \
 //     --slug status-tracker --name "Status Tracker" --category "Research & portfolio" \
@@ -33,33 +35,42 @@ for (const e of entries) {
     continue;
   }
   const items = rows.map((l, i) => [l, i]).filter(([l]) => l.startsWith("- **"));
+  if (!items.length) throw new Error(`${readme} has no "- **Name**" lines to sort into`);
   const at = items.find(([l]) => nameOf(l) > e.name.toLowerCase())?.[1] ?? items[items.length - 1][1] + 1;
   rows.splice(at, 0, `- **${e.name}** (\`${e.slug}.tsx\`) – ${e.line}`);
   console.log(`README: added ${e.name}`);
 }
-writeFileSync(readme, rows.join("\n"));
 
-// The registry: the slug in its category, sorted; a new category before Trust & calibration
+// The registry: the slug in its category; a new category before Trust & calibration. A category's list may span lines
 const registry = "app/src/registry.ts";
 let src = readFileSync(registry, "utf8");
-const esc = (s) => s.replace(/[.*+?^${}()|[\]\\&]/g, "\\$&");
+const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 for (const e of entries) {
-  const re = new RegExp(`\\["${esc(e.category)}", \\[([^\\]]*)\\]\\]`);
+  const re = new RegExp(`\\["${esc(e.category)}",\\s*\\[([^\\]]*)\\]\\s*\\]`);
   const m = re.exec(src);
   if (m) {
-    const items = m[1].split(",").map((s) => s.trim().replace(/^"|"$/g, "")).filter(Boolean);
+    const items = [...m[1].matchAll(/"([^"]+)"/g)].map((x) => x[1]);
     if (items.includes(e.slug)) {
       console.log(`registry: ${e.slug} already in ${e.category}`);
       continue;
     }
-    const next = [...items, e.slug].sort();
-    src = src.slice(0, m.index) + `["${e.category}", [${next.map((s) => `"${s}"`).join(", ")}]]` + src.slice(m.index + m[0].length);
+    const sorted = items.every((s, i) => i === 0 || items[i - 1] <= s);
+    const at = sorted ? items.findIndex((s) => s > e.slug) : -1;
+    const next = [...items];
+    next.splice(at < 0 ? next.length : at, 0, e.slug);
+    // Keep the list's layout: one line, or one item per line at the same indent
+    const indent = /\n(\s*)"/.exec(m[1])?.[1];
+    const list = indent === undefined ? next.map((s) => `"${s}"`).join(", ") : `\n${next.map((s) => `${indent}"${s}"`).join(",\n")}${/,\s*$/.test(m[1]) ? "," : ""}\n${/\n(\s*)$/.exec(m[1])?.[1] ?? ""}`;
+    src = src.slice(0, m.index) + `["${e.category}", [${list}]]` + src.slice(m.index + m[0].length);
+    console.log(`registry: ${e.slug} → ${e.category}${sorted ? "" : " (at the end – the category isn't alphabetical)"}`);
   } else {
     const anchor = '      ["Trust & calibration",';
     if (!src.includes(anchor)) throw new Error(`no category "${e.category}", and no Trust & calibration to add it before`);
-    src = src.replace(anchor, `      ["${e.category}", ["${e.slug}"]],\n${anchor}`);
-    console.log(`registry: new category ${e.category}`);
+    // A function, so "$&" or "$1" in a category name is text, not a replacement pattern
+    src = src.replace(anchor, () => `      ["${e.category}", ["${e.slug}"]],\n${anchor}`);
+    console.log(`registry: new category ${e.category}, with ${e.slug}`);
   }
-  console.log(`registry: ${e.slug} → ${e.category}`);
 }
+
+writeFileSync(readme, rows.join("\n"));
 writeFileSync(registry, src);

@@ -8,6 +8,7 @@ import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
 import { FocusRescueController, rescueFocus } from "./internal/controllers";
+import { safeMediaUrl } from "./internal/safe-media";
 
 /*
  * <tc-agent-cursors> – the Lit port of src/components/agent-cursors.tsx: agents working in a document like teammates
@@ -287,7 +288,7 @@ let instances = 0;
  * @fires tc-tab-change - Another tab was picked ({ tab }: AgentTabChange); cancelable
  * @fires tc-accept - A suggestion was accepted; `detail` is the `DocSuggestion`
  * @fires tc-reject - A suggestion was rejected; `detail` is the `DocSuggestion`
- * @fires tc-accept-all - "Accept all" was pressed
+ * @fires tc-accept-all - "Accept all" was pressed; detail: null
  * @fires tc-resolve - A comment was resolved; `detail` is the `DocComment`
  */
 export class TcAgentCursors extends TcElement {
@@ -840,7 +841,7 @@ export class TcAgentCursors extends TcElement {
         role="img"
         aria-label=${b.loading ? "Image loading" : b.alt || b.text || "Image"}
       >
-        ${b.loading || !b.src ? html`<span class="ui-agc__shimmer" aria-hidden="true"></span>` : html`<img src=${b.src} alt="" draggable="false" />`}
+        ${b.loading || !b.src ? html`<span class="ui-agc__shimmer" aria-hidden="true"></span>` : html`<img src=${ifDefined(safeMediaUrl(b.src))} alt="" draggable="false" />`}
         ${by
           ? html`${["tl", "tr", "bl", "br"].map((h) => html`<span class="ui-agc__handle" data-at=${h} aria-hidden="true"></span>`)}<span class="ui-agc__size" aria-hidden="true"
                 >${box ? `${box.w * 2} × ${box.h * 2}` : `${Math.round(1200 * w)} × ${Math.round((1200 * w) / ratio)}`}</span
