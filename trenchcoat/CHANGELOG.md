@@ -1,5 +1,29 @@
 # Changelog
 
+## Unreleased – summaries, session state and status tracking
+
+Four new Lit elements. Each comes with both looks, a React wrapper, tests in Chromium, Firefox and WebKit, a gallery
+demo, a docs page and an overview thumbnail.
+
+### Added
+
+- **`tc-ai-summary`** (AI & chat): the gist of a thread, meeting or set of documents.
+  - **Summary:** a TL;DR, then a summary that streams in.
+  - **Sources:** key points cite their sources as numbered chips with previews, plus open questions.
+  - **Freshness:** a note when the sources have moved on, with Update.
+  - **Controls:** Short / Detailed, feedback, a Sources list, Copy and Regenerate.
+- **`tc-digest`** (AI & chat): a one-minute digest arranged around what the reader needs, with a reading-time
+  estimate.
+  - **Sections:** what matters, what to do (ticked off as you go), what changed, and what's safe to ignore.
+- **`tc-session-state`** (AI & chat): where a long LLM session stands.
+  - **Header:** a health pill.
+  - **Tiles:** primary goal, open loops, pending artifacts, and context pressure with a meter that warns as it fills.
+  - **Chips:** status chips; the tiles can open what they count.
+- **`tc-status-tracker`** (Research & portfolio): a fixed sequence of gates or stages on a line.
+  - **Status:** each cleared, pending, blocked or not reached, in words and marks.
+  - **Progress:** the line fills as they clear, and the current step is marked.
+  - **Records:** a legend, and a step's evidence record on click; vertical when narrow.
+
 ## Unreleased – research and portfolio
 
 Fourteen new Lit elements in a new **Research & portfolio** section of the gallery. Each comes with both looks, a

@@ -1,0 +1,761 @@
+{
+ "elements": [
+  {
+   "tag": "tc-ai-summary",
+   "className": "TcAiSummary",
+   "description": "An AI summary of a set of sources – a thread, a meeting, documents, a ticket's history – with a TL;DR, key points\nciting their sources, open questions, a note when the sources have moved on, feedback, Copy and Regenerate.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Summary\"",
+     "description": "The heading",
+     "readonly": false
+    },
+    {
+     "name": "subject",
+     "attribute": "subject",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "What was summarised, named before the counts: \"#launch-q3\"",
+     "readonly": false
+    },
+    {
+     "name": "sources",
+     "attribute": null,
+     "type": "AiSummarySource[]",
+     "default": "[]",
+     "description": "The sources summarised, in citation order – a point's chip shows its source's number in this list",
+     "readonly": false
+    },
+    {
+     "name": "status",
+     "attribute": "status",
+     "type": "AiSummaryStatus",
+     "default": "\"idle\"",
+     "description": "Where the summary is: \"idle\", \"summarising\", \"done\" or \"error\"",
+     "readonly": false
+    },
+    {
+     "name": "tldr",
+     "attribute": "tldr",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The one-line gist, shown first and emphasised",
+     "readonly": false
+    },
+    {
+     "name": "summary",
+     "attribute": "summary",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The summary; may grow while \"summarising\". Blank lines split paragraphs",
+     "readonly": false
+    },
+    {
+     "name": "points",
+     "attribute": null,
+     "type": "AiSummaryPoint[]",
+     "default": "[]",
+     "description": "The key points, each with the sources it comes from",
+     "readonly": false
+    },
+    {
+     "name": "questions",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[]",
+     "description": "What the sources leave open",
+     "readonly": false
+    },
+    {
+     "name": "length",
+     "attribute": "length",
+     "type": "AiSummaryLength",
+     "default": "\"short\"",
+     "description": "Short or detailed. Changed by the user unless a tc-length-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "model",
+     "attribute": "model",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The model that wrote it, e.g. \"Claude Sonnet\"",
+     "readonly": false
+    },
+    {
+     "name": "generatedAt",
+     "attribute": "generated-at",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "When it was generated, epoch ms",
+     "readonly": false
+    },
+    {
+     "name": "now",
+     "attribute": "now",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "\"Now\" for the relative time and freshness, epoch ms; unset, the element keeps its own clock",
+     "readonly": false
+    },
+    {
+     "name": "stale",
+     "attribute": null,
+     "type": "boolean | number",
+     "default": "false",
+     "description": "The sources have moved on since the summary: true, or how many new items there are. Sources dated after `generatedAt` count too",
+     "readonly": false
+    },
+    {
+     "name": "staleLabel",
+     "attribute": "stale-label",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The banner's words in place of \"3 new messages since this summary\"",
+     "readonly": false
+    },
+    {
+     "name": "feedback",
+     "attribute": null,
+     "type": "AiSummaryFeedbackValue",
+     "default": "null",
+     "description": "Whether it helped: \"up\", \"down\" or null. Changed by the user unless a tc-feedback listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "sourcesOpen",
+     "attribute": "sources-open",
+     "type": "boolean",
+     "default": "false",
+     "description": "The list of sources under the footer is open",
+     "readonly": false
+    },
+    {
+     "name": "error",
+     "attribute": "error",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "What went wrong, shown with \"error\"",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The language for dates and numbers, e.g. \"en-GB\"; by default the browser's",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-summarise",
+     "detail": "",
+     "description": "Summarise was pressed while `status` is \"idle\" – start summarising",
+     "cancelable": false
+    },
+    {
+     "name": "tc-retry",
+     "detail": "",
+     "description": "Regenerate, Retry after an error, or Update when stale ({ reason: \"regenerate\" | \"error\" | \"stale\" }: AiSummaryRetry)",
+     "cancelable": false
+    },
+    {
+     "name": "tc-length-change",
+     "detail": "",
+     "description": "Short or Detailed was picked ({ length }: AiSummaryLengthChange); cancelable – prevented, `length` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-cite-open",
+     "detail": "",
+     "description": "A citation chip was used ({ sourceId, pointId }: AiSummaryCiteOpen); cancelable – prevented, a link to the source doesn't open",
+     "cancelable": true
+    },
+    {
+     "name": "tc-feedback",
+     "detail": "",
+     "description": "Helpful or not helpful was pressed, or pressed again to take it back ({ value }: AiSummaryFeedback); cancelable – prevented, `feedback` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-copy",
+     "detail": "",
+     "description": "The summary is on the clipboard ({ text })",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "aism",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-active",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-border-default",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-md",
+    "--tc-control-radius-md",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-shimmer",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-selected",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-2xs",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-loose",
+    "--tc-line-height-none",
+    "--tc-line-height-normal",
+    "--tc-line-height-relaxed",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-2xs",
+    "--tc-radius-badge",
+    "--tc-radius-full",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-seg-pad",
+    "--tc-seg-thumb-bg",
+    "--tc-seg-thumb-shadow",
+    "--tc-seg-track-bg",
+    "--tc-seg-track-radius",
+    "--tc-shadow-overlay",
+    "--tc-shimmer",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-success-fg",
+    "--tc-status-warning-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tone-violet-bg",
+    "--tc-tone-violet-fg",
+    "--tc-tooltip-bg",
+    "--tc-tooltip-fg",
+    "--tc-tooltip-font-size",
+    "--tc-tooltip-px",
+    "--tc-tooltip-py",
+    "--tc-tooltip-radius",
+    "--tc-tray-inset",
+    "--tc-tray-radius",
+    "--tc-z-popover"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "aiSummaryAgo",
+   "signature": "aiSummaryAgo(ms: number, now: number, locale?: string): void",
+   "description": "\"just now\", \"5 min ago\", \"3 h ago\", else the date"
+  }
+ ],
+ "react": [
+  {
+   "component": "AiSummary",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading (\"Summary\" by default)"
+    },
+    {
+     "name": "length",
+     "type": "AiSummaryLength",
+     "optional": true,
+     "description": "Short or detailed – controlled when given"
+    },
+    {
+     "name": "defaultLength",
+     "type": "AiSummaryLength",
+     "optional": true,
+     "description": "The length on mount when `length` isn't controlled"
+    },
+    {
+     "name": "onLengthChange",
+     "type": "(length: AiSummaryLength) => void",
+     "optional": true,
+     "description": "Short or Detailed was picked – summarise again"
+    },
+    {
+     "name": "feedback",
+     "type": "AiSummaryFeedbackValue",
+     "optional": true,
+     "description": "Whether it helped – controlled when given (\"up\", \"down\" or null)"
+    },
+    {
+     "name": "defaultFeedback",
+     "type": "AiSummaryFeedbackValue",
+     "optional": true,
+     "description": "The feedback on mount when `feedback` isn't controlled"
+    },
+    {
+     "name": "onFeedbackChange",
+     "type": "(value: AiSummaryFeedbackValue) => void",
+     "optional": true,
+     "description": "Helpful or not helpful was pressed, or taken back (null)"
+    },
+    {
+     "name": "onSummarise",
+     "type": "() => void",
+     "optional": true,
+     "description": "Summarise was pressed – start summarising"
+    },
+    {
+     "name": "onRetry",
+     "type": "(reason: AiSummaryRetry[\"reason\"]) => void",
+     "optional": true,
+     "description": "Regenerate, Retry after an error, or Update when the sources have moved on"
+    },
+    {
+     "name": "onCiteOpen",
+     "type": "(cite: AiSummaryCiteOpen) => boolean | void",
+     "optional": true,
+     "description": "A citation chip was used; return false to keep a link to the source from opening"
+    },
+    {
+     "name": "onCopy",
+     "type": "(text: string) => void",
+     "optional": true,
+     "description": "Called with the copied text once the summary is on the clipboard"
+    }
+   ],
+   "hides": [
+    "heading",
+    "length",
+    "feedback",
+    "onCopy",
+    "children"
+   ],
+   "events": {
+    "tc-summarise": "onSummarise",
+    "tc-retry": "onRetry",
+    "tc-length-change": null,
+    "tc-cite-open": "onCiteOpen",
+    "tc-feedback": null,
+    "tc-copy": "onCopy"
+   }
+  }
+ ],
+ "changelog": [
+  "**`tc-ai-summary`** (AI & chat): the gist of a thread, meeting or set of documents. - **Summary:** a TL;DR, then a summary that streams in. - **Sources:** key points cite their sources as numbered chips with previews, plus open questions. - **Freshness:** a note when the sources have moved on, with Update. - **Controls:** Short / Detailed, feedback, a Sources list, Copy and Regenerate."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-ai-summary",
+   "className": "TcAiSummary",
+   "module": "trenchcoat/ai-summary",
+   "data": [
+    "sources",
+    "points",
+    "questions",
+    "stale",
+    "feedback"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "subject",
+     "attribute": "subject"
+    },
+    {
+     "name": "status",
+     "attribute": "status"
+    },
+    {
+     "name": "tldr",
+     "attribute": "tldr"
+    },
+    {
+     "name": "summary",
+     "attribute": "summary"
+    },
+    {
+     "name": "length",
+     "attribute": "length"
+    },
+    {
+     "name": "model",
+     "attribute": "model"
+    },
+    {
+     "name": "generatedAt",
+     "attribute": "generated-at"
+    },
+    {
+     "name": "now",
+     "attribute": "now"
+    },
+    {
+     "name": "staleLabel",
+     "attribute": "stale-label"
+    },
+    {
+     "name": "sourcesOpen",
+     "attribute": "sources-open"
+    },
+    {
+     "name": "error",
+     "attribute": "error"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-summarise",
+     "cancelable": false
+    },
+    {
+     "name": "tc-retry",
+     "cancelable": false
+    },
+    {
+     "name": "tc-length-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-cite-open",
+     "cancelable": true
+    },
+    {
+     "name": "tc-feedback",
+     "cancelable": true
+    },
+    {
+     "name": "tc-copy",
+     "cancelable": false
+    }
+   ],
+   "controlled": [
+    {
+     "property": "length",
+     "event": "tc-length-change"
+    },
+    {
+     "property": "feedback",
+     "event": "tc-feedback"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "inert",
+    "name": "inert",
+    "bcd": "api.HTMLElement.inert",
+    "versions": {
+     "chrome": "102",
+     "edge": "102",
+     "firefox": "112",
+     "safari": "15.5",
+     "safari_ios": "15.5"
+    },
+    "progressive": false,
+    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
+    "via": [
+     "internal/controllers"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "clipboard",
+    "name": "Async Clipboard (writeText)",
+    "bcd": "api.Clipboard.writeText",
+    "versions": {
+     "chrome": "66",
+     "edge": "79",
+     "firefox": "63",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "why": "Copy buttons.",
+    "via": [
+     "internal/util"
+    ]
+   },
+   {
+    "id": "intersection-observer",
+    "name": "IntersectionObserver",
+    "bcd": "api.IntersectionObserver",
+    "versions": {
+     "chrome": "51",
+     "edge": "15",
+     "firefox": "55",
+     "safari": "12.1",
+     "safari_ios": "12.2"
+    },
+    "progressive": false,
+    "via": [
+     "internal/controllers"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setInterval, cleared",
+   "setTimeout"
+  ],
+  "frames": [],
+  "animations": 2,
+  "observers": [
+   "MutationObserver (internal/controllers › AriaForwardController)",
+   "MutationObserver (internal/controllers › FocusRescueController)",
+   "IntersectionObserver (internal/controllers › OffScreenController)"
+  ],
+  "clock": [
+   "Date.now()"
+  ],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [
+    "itself",
+    "internal/controllers › OffScreenController"
+   ],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 41909,
+  "gzip": 12268
+ }
+}
