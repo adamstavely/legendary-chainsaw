@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased – a UI kit for Adobe XD
+
+- **`xd-kit/`** – an Adobe XD plugin that draws every component (Standard and Clean, light and dark) into an XD
+  document as layered, named groups on one artboard per category, and adds the colour tokens and type scale to
+  Assets. The drawings are read from the rendered components (`node xd-kit/extract.mjs`), so the kit follows the
+  code; `npm run xd-kit` extracts, tests and packs `xd-kit/dist/trenchcoat-ui-kit.xdx`. XD's plugin API can't create
+  components, so each group is one ⌘K away from becoming one.
+
 ## Unreleased – colour picker, NPS / CSAT, coordinates, access requests, reading aloud
 
 - `tc-color-picker` – a saturation and brightness square, hue and opacity sliders, HEX / RGB / CMYK fields, an

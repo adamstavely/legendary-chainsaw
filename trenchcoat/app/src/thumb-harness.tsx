@@ -11,11 +11,11 @@ import "./styles.css";
 
 declare global {
   interface Window {
-    __entries: { id: string; library: string; slug: string; layout: string; looks: string[] }[];
+    __entries: { id: string; library: string; slug: string; name: string; layout: string; looks: string[] }[];
   }
 }
 
-window.__entries = ENTRIES.map((e) => ({ id: e.id, library: e.library, slug: e.slug, layout: e.layout, looks: Object.keys(e.load) }));
+window.__entries = ENTRIES.map((e) => ({ id: e.id, library: e.library, slug: e.slug, name: e.name, layout: e.layout, looks: Object.keys(e.load) }));
 
 const params = new URLSearchParams(location.search);
 const entry = ENTRIES.find((e) => e.id === params.get("id"));
