@@ -1,0 +1,503 @@
+{
+ "elements": [
+  {
+   "tag": "tc-activity-calendar",
+   "className": "TcActivityCalendar",
+   "description": "A year of activity, a square per day in a column per week, shaded by how much happened – with month and weekday\nnames, a total, and the day's value on hover or focus.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Activity\"",
+     "description": "The heading, and the grid's name",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "One line under the heading",
+     "readonly": false
+    },
+    {
+     "name": "days",
+     "attribute": null,
+     "type": "ActivityCalendarDay[]",
+     "default": "[]",
+     "description": "The days with activity, in any order; a day not listed counts as 0",
+     "readonly": false
+    },
+    {
+     "name": "end",
+     "attribute": "end",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The last day shown, as epoch ms of any moment in it; by default the latest day in `days`",
+     "readonly": false
+    },
+    {
+     "name": "weeks",
+     "attribute": "weeks",
+     "type": "number",
+     "default": "53",
+     "description": "How many weeks to show, ending with the week of `end`",
+     "readonly": false
+    },
+    {
+     "name": "weekStart",
+     "attribute": "week-start",
+     "type": "number",
+     "default": "0",
+     "description": "The first day of the week, as the first row: 0 Sunday, 1 Monday … 6 Saturday",
+     "readonly": false
+    },
+    {
+     "name": "max",
+     "attribute": "max",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The value that shades a day fully; by default the busiest day shown",
+     "readonly": false
+    },
+    {
+     "name": "levels",
+     "attribute": "levels",
+     "type": "number",
+     "default": "5",
+     "description": "How many shades, counting empty: 5 is empty and four steps of activity",
+     "readonly": false
+    },
+    {
+     "name": "unit",
+     "attribute": "unit",
+     "type": "string",
+     "default": "\"events\"",
+     "description": "What the values count, after the number: \"12 events\"",
+     "readonly": false
+    },
+    {
+     "name": "format",
+     "attribute": null,
+     "type": "((value: number) => string) | undefined",
+     "default": "undefined",
+     "description": "Writes a value in full, e.g. (v) => `${v} reviews`; replaces the number and `unit`",
+     "readonly": false
+    },
+    {
+     "name": "selected",
+     "attribute": null,
+     "type": "number | null",
+     "default": "null",
+     "description": "The selected day, as epoch ms of its local midnight. Changed by the user unless a tc-selected-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The language for month, weekday and number names, e.g. \"en-GB\"; by default the browser's",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-selected-change",
+     "detail": "",
+     "description": "A day was selected or cleared ({ selected, value }: ActivityCalendarSelectedChange); cancelable – prevented, `selected` stays as it was",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "acal",
+   "cssProperties": [
+    {
+     "name": "--tc-acal-ink",
+     "value": "var(--tc-chart-1)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-acal-track",
+     "value": "var(--tc-fill-default)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-acal-cell",
+     "value": "14px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-acal-gap",
+     "value": "3px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-acal-bg",
+     "value": "var(--tc-surface-raised)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-acal-mix",
+    "--tc-border-default",
+    "--tc-border-strong",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-chart-1",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-focus-outline",
+    "--tc-font-sans",
+    "--tc-font-size-2xs",
+    "--tc-font-size-md",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-strong",
+    "--tc-line-height-none",
+    "--tc-line-height-normal",
+    "--tc-line-height-tight",
+    "--tc-radius-2xs",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-6",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "ActivityCalendar",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading, and the grid's name"
+    },
+    {
+     "name": "selected",
+     "type": "number | null",
+     "optional": true,
+     "description": "The selected day as epoch ms of its local midnight – controlled when given (null for none)"
+    },
+    {
+     "name": "defaultSelected",
+     "type": "number | null",
+     "optional": true,
+     "description": "The day selected on mount when `selected` isn't controlled"
+    },
+    {
+     "name": "onSelectedChange",
+     "type": "(selected: number | null, value?: number | null) => void",
+     "optional": true,
+     "description": "A day was selected or cleared; `value` is its value (null when it has no data)"
+    }
+   ],
+   "hides": [
+    "heading",
+    "selected",
+    "children"
+   ],
+   "events": {
+    "tc-selected-change": null
+   }
+  }
+ ],
+ "changelog": [
+  "**`tc-activity-calendar`:** a year of activity, contribution-graph style. - **Layout:** a column per week and a row per weekday, ending on `end`, with `weeks` and `week-start` settings. - **Labels:** month names along the top, and weekday names pinned down the side while the weeks scroll. The newest week starts in view. - **Values:** a missing day counts as 0, and null is outlined as no data. - **Header, footer and selection:** the total in the header; the footer reads out the day under the pointer or focus. A selected day is reported with a cancelable `tc-selected-change`. - **Keyboard:** ↑ ↓ move a day, ← → a week, Page keys four weeks."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-activity-calendar",
+   "className": "TcActivityCalendar",
+   "module": "trenchcoat/activity-calendar",
+   "data": [
+    "days",
+    "format",
+    "selected"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    },
+    {
+     "name": "end",
+     "attribute": "end"
+    },
+    {
+     "name": "weeks",
+     "attribute": "weeks"
+    },
+    {
+     "name": "weekStart",
+     "attribute": "week-start"
+    },
+    {
+     "name": "max",
+     "attribute": "max"
+    },
+    {
+     "name": "levels",
+     "attribute": "levels"
+    },
+    {
+     "name": "unit",
+     "attribute": "unit"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-selected-change",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "selected",
+     "event": "tc-selected-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "itself",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "scrollbar-width",
+    "name": "scrollbar-width",
+    "bcd": "css.properties.scrollbar-width",
+    "versions": {
+     "chrome": "121",
+     "edge": "121",
+     "firefox": "64",
+     "safari": "18.2",
+     "safari_ios": "18.2"
+    },
+    "progressive": true,
+    "without": "Scrollbars keep the browser's default width.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 26592,
+  "gzip": 8872
+ }
+}

@@ -10,7 +10,7 @@ import { afterEach, describe, expect, test } from "vitest";
 import "../../src/elements/smart-recommendation";
 import type { Recommendation, TcSmartRecommendation } from "../../src/elements/smart-recommendation";
 import { SmartRecommendation } from "../../src/elements/react/smart-recommendation";
-import { cleanup, fixture, settle } from "./helpers";
+import { cleanup, finish, fixture, settle } from "./helpers";
 
 afterEach(cleanup);
 
@@ -239,6 +239,8 @@ describe("tc-smart-recommendation", () => {
       <tc-smart-recommendation .options=${options}></tc-smart-recommendation>
       <tc-smart-recommendation look="clean" heading="Clean" .options=${options} .accepted=${"inc"}></tc-smart-recommendation>
     </div>`);
+    // Contrast is checked once the entrance fades have finished
+    await finish(wrap);
     const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
     expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
   });
