@@ -1,5 +1,9 @@
 # Contributing
 
+**Adding a component?** The `new-component` skill (`.claude/skills/new-component/`) walks through the whole job – the
+element, its wrapper, demo, docs and tests, then the gallery and generated surfaces, checks and the PR – and its
+`integrate.mjs` runs the integration pass for you. With Claude Code, ask for the component and the skill is used.
+
 Each component has one source, `src/components/<slug>.tsx`, with both looks; the `look` prop picks one (Standard by
 default). There is no build step: the gallery and the tests load the source. Shared helpers live in `src/internal/`,
 and components read their values from `tokens/tokens.css`. While the components are ported to Lit

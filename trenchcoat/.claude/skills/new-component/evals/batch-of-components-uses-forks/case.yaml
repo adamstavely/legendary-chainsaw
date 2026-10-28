@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: batch-of-components-uses-forks
+expected_outcome: |
+  Plans the six components, groups them into parallel fork briefs using the skill's brief template (new files only), then integrates them itself (gallery registration, changelog, integration pass), reviews them visually, and opens one PR.

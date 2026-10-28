@@ -1,0 +1,4 @@
+schema_version: "1.1"
+name: single-component-from-screenshot-idea
+expected_outcome: |
+  A new tc-uptime-strip element with its React wrapper, demo, docs page and browser tests is built to the library's conventions, registered in the gallery, integrated (generated docs, Angular wrapper, generative schema, perf, thumbnail) and passes the checks; nothing outside trenchcoat/ is touched.
