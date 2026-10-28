@@ -1,5 +1,42 @@
 # Changelog
 
+## Unreleased – Phase 1: records, investigations and search
+
+Fourteen new Lit elements. Each comes with both looks, a React wrapper, tests in Chromium, Firefox and WebKit, a
+gallery demo, a docs page and an overview thumbnail. The gallery gains a **Search** section.
+
+### Added
+
+- **People & profiles:**
+  - `tc-entity-timeline`: events by month, each with a category and a graded source, filtered by category.
+  - `tc-travel-itinerary`: legs with mode, document, confidence and flags, grouped into journeys.
+  - `tc-place-list`: places with type, status, coordinates and dates.
+  - `tc-account-list`: masked IBAN-style accounts with a status and the page's own stats.
+  - `tc-money-flow`: transfers between entities as bands sized by amount, with flag chips.
+    - Entities' and transfers' flows are lit with a readout, and there's a table view.
+  - `tc-co-occurrence`: entities ranked by the events they share with a subject.
+    - Strength in words and bars, with counts per source.
+  - `tc-evidence-list`: exhibits, each opening onto its chain of custody, with hash agreement.
+  - `tc-asset-list`: grouped assets with masked identifiers and a status.
+  - `tc-contact-channels`: emails, phone numbers, messaging and addresses.
+    - Masked until shown, with role, last use and verification.
+- **Data & charts:**
+  - `tc-ops-overview`: a dense strip of a health pill and count tiles with their change.
+  - `tc-sla-status`: on-time share, a Met / At risk / Breached split, a trend and a bar per type.
+- **Search:**
+  - `tc-query-builder`: conditions in AND / OR groups.
+    - Read back in words and as a query string.
+  - `tc-search-history`: recent and saved searches.
+    - Run again, save, and remove with Undo.
+  - `tc-ai-search`: one search box with an AI mode.
+    - Suggestions, example prompts, a "search within file contents" option, scope chips and ⌘K.
+
+### Changed
+
+- **Standalone gallery:** `standalone/trenchcoat-gallery.html` is rebuilt with every component to date.
+  - It was last built at Part 7, so the people, research, summary, search and record components are new to it.
+  - Its size is now about 17 MB.
+
 ## Unreleased – summaries, session state and status tracking
 
 Four new Lit elements. Each comes with both looks, a React wrapper, tests in Chromium, Firefox and WebKit, a gallery

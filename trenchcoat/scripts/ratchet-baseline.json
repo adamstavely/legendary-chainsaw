@@ -379,6 +379,9 @@
     "clock/environment read": 4,
     "literal spacing": 28
   },
+  "src/elements/search-history.ts": {
+    "clock/environment read": 1
+  },
   "src/elements/segmented-control.ts": {
     "literal line-height": 1
   },
