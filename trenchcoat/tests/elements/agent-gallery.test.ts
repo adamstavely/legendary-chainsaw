@@ -39,8 +39,6 @@ const visiblePicks = (el: Element, name: string) =>
   [...el.querySelectorAll<HTMLElement>(".ui-ag__pick")].filter((b) => !b.closest('[aria-hidden="true"]') && b.getAttribute("aria-label") === `Show ${name}`);
 const arrow = (el: Element, label: string) => [...el.querySelectorAll<HTMLButtonElement>(".ui-ag__arrows button")].find((b) => b.textContent!.includes(label))!;
 const key = (target: Element, k: string) => target.dispatchEvent(new KeyboardEvent("keydown", { key: k, bubbles: true, cancelable: true }));
-/** Waits out the glide and the quiet jump back into the middle copy */
-const glide = () => new Promise((r) => setTimeout(r, 800));
 
 describe("<tc-agent-gallery>", () => {
   for (const look of ["standard", "clean"] as const) {
@@ -86,9 +84,10 @@ describe("<tc-agent-gallery>", () => {
     await settle(el);
     const [before] = visiblePicks(el, "Release notes");
     before.focus();
-    await glide();
+    // The glide, then the quiet jump: wait for the jump to have happened rather than a fixed time (WebKit runners are slow)
+    await expect.poll(() => before.closest('[aria-hidden="true"]') !== null && !el.querySelector(".ui-ag__track[data-snap]"), { timeout: 5000 }).toBe(true);
     await settle(el);
-    expect(before.closest('[aria-hidden="true"]')).not.toBeNull();
+    await expect.poll(() => (document.activeElement as HTMLElement | null)?.getAttribute("aria-label")).toBe("Show Release notes");
     const active = document.activeElement as HTMLElement;
     expect(active).not.toBe(before);
     expect(active.getAttribute("aria-label")).toBe("Show Release notes");
