@@ -143,6 +143,9 @@
     "literal border-radius": 1,
     "literal spacing": 13
   },
+  "src/elements/ai-summary.ts": {
+    "clock/environment read": 1
+  },
   "src/elements/alert-feed.ts": {
     "clock/environment read": 1
   },

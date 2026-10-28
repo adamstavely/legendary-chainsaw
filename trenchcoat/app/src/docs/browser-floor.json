@@ -11,13 +11,13 @@
    "features": [
     "light-dark"
    ],
-   "elements": 209
+   "elements": 213
   },
   "edge": {
    "features": [
     "light-dark"
    ],
-   "elements": 209
+   "elements": 213
   },
   "firefox": {
    "features": [
@@ -29,13 +29,13 @@
    "features": [
     "light-dark"
    ],
-   "elements": 209
+   "elements": 213
   },
   "safari_ios": {
    "features": [
     "light-dark"
    ],
-   "elements": 209
+   "elements": 213
   }
  },
  "features": [
@@ -52,7 +52,7 @@
    },
    "progressive": false,
    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
-   "elements": 209
+   "elements": 213
   },
   {
    "id": "color-mix",
@@ -67,7 +67,7 @@
    },
    "progressive": false,
    "why": "Tints and washes mixed from the tokens.",
-   "elements": 209
+   "elements": 213
   },
   {
    "id": "is-where",
@@ -82,7 +82,7 @@
    },
    "progressive": false,
    "why": "Every rule is keyed on :where() so the page can override it.",
-   "elements": 209
+   "elements": 213
   },
   {
    "id": "focus-visible",
@@ -97,7 +97,7 @@
    },
    "progressive": false,
    "why": "Focus rings for keyboard users.",
-   "elements": 208
+   "elements": 212
   },
   {
    "id": "container-size",
@@ -112,7 +112,7 @@
    },
    "progressive": false,
    "why": "Components adapt to the width they're given, not the window's.",
-   "elements": 164
+   "elements": 167
   },
   {
    "id": "inert",
@@ -127,7 +127,7 @@
    },
    "progressive": false,
    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
-   "elements": 107
+   "elements": 109
   },
   {
    "id": "inset",
@@ -141,7 +141,7 @@
     "safari_ios": "14.1"
    },
    "progressive": false,
-   "elements": 103
+   "elements": 105
   },
   {
    "id": "resize-observer",
@@ -155,7 +155,7 @@
     "safari_ios": "13.4"
    },
    "progressive": false,
-   "elements": 87
+   "elements": 88
   },
   {
    "id": "intersection-observer",
@@ -169,7 +169,7 @@
     "safari_ios": "12.2"
    },
    "progressive": false,
-   "elements": 68
+   "elements": 70
   },
   {
    "id": "has",
@@ -230,6 +230,21 @@
    "elements": 26
   },
   {
+   "id": "clipboard",
+   "name": "Async Clipboard (writeText)",
+   "bcd": "api.Clipboard.writeText",
+   "versions": {
+    "chrome": "66",
+    "edge": "79",
+    "firefox": "63",
+    "safari": "13.1",
+    "safari_ios": "13.4"
+   },
+   "progressive": false,
+   "why": "Copy buttons.",
+   "elements": 25
+  },
+  {
    "id": "form-associated",
    "name": "Form association (ElementInternals)",
    "bcd": "api.ElementInternals.setFormValue",
@@ -243,21 +258,6 @@
    "progressive": false,
    "why": "The element's value is submitted with its form, and it takes part in form validation and reset.",
    "elements": 25
-  },
-  {
-   "id": "clipboard",
-   "name": "Async Clipboard (writeText)",
-   "bcd": "api.Clipboard.writeText",
-   "versions": {
-    "chrome": "66",
-    "edge": "79",
-    "firefox": "63",
-    "safari": "13.1",
-    "safari_ios": "13.4"
-   },
-   "progressive": false,
-   "why": "Copy buttons.",
-   "elements": 24
   },
   {
    "id": "container-units",
@@ -387,7 +387,7 @@
    },
    "progressive": true,
    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
-   "elements": 209
+   "elements": 213
   },
   {
    "id": "adopted-stylesheets",
@@ -402,7 +402,7 @@
    },
    "progressive": true,
    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
-   "elements": 208
+   "elements": 212
   },
   {
    "id": "scrollbar-width",
@@ -417,7 +417,7 @@
    },
    "progressive": true,
    "without": "Scrollbars keep the browser's default width.",
-   "elements": 45
+   "elements": 46
   },
   {
    "id": "overscroll-contain",

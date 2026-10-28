@@ -17,6 +17,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Agent Tree** (`agent-tree.tsx`) – Who started whom – an orchestrator and its sub-agents as a live tree, with status, cost and time on every card, costs rolling up each branch, and branches that fold to one line
 - **Agreement Tracker** (`agreement-tracker.tsx`) – How often the AI agreed with you versus pushed back this session – it turns amber on a run of agreement and points to the counter-argument
 - **AI Answer** (`ai-answer.tsx`) – Streamed answer with source cards, citation chips that preview their source, copy, regenerate, feedback and follow-ups
+- **AI Summary** (`ai-summary.tsx`) – The gist of a thread, meeting or set of documents – a TL;DR, a summary that streams in, key points citing their sources as numbered chips, open questions, a note when the sources have moved on, and feedback, Sources, Copy and Regenerate
 - **Alert Feed** (`alert-feed.tsx`) – A live feed of alerts, newest first – category, severity as an edge, mark and word, a fresh relative time, Escalate and Acknowledge on each, Pause feed with new alerts held back, and polite announcements
 - **Answer Arena** (`answer-arena.tsx`) – Two models answer the same prompt side by side, streaming together – then A is better, B is better or a tie, with a reason
 - **App Picker** (`app-picker.tsx`) – The app launcher for a suite header – a grid button that opens your apps as tiles, with pinned and recent apps, search, the current app marked and arrow keys that move in two dimensions
@@ -67,6 +68,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Decision Tree** (`decision-tree.tsx`) – An agent stuck on a decision lays out its options as a tree – the consequences of each branch, the risky ones marked, its own pick highlighted – and you choose a path or write your own
 - **Delegate Board** (`delegate-board.tsx`) – Hand work to your agents by dragging it onto them – each agent previews its new “busy until” time, or switch to Auto and every new task goes to whoever is free first
 - **Dialog** (`dialog.tsx`) – A native modal with interactive content and restored focus
+- **Digest** (`digest.tsx`) – A one-minute digest of a pile of information, arranged around what the reader needs – what matters, what to do (ticked off as you go), what changed and what's safe to ignore, with a reading-time estimate and points that cite their sources
 - **Disagreement Banner** (`disagreement-banner.tsx`) – When today's answer contradicts an earlier one on the same question – both side by side, the difference marked
 - **Document List** (`document-list.tsx`) – Identity and record documents at a glance – type, country, masked numbers shown one at a time, expiry and a status each (Verified, Expired, Flagged, Fraudulent or your own), counted in the header, with View per row
 - **Dropzone** (`dropzone.tsx`) – Drag files in and watch them upload – fanning documents, colored type badges, progress with time left, errors with retry
@@ -153,9 +155,11 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Segmented Control** (`segmented-control.tsx`) – Switch between two to six options – a raised pill or underline that glides, stretches a little and can be dragged across, with icons, counts and badges
 - **Selection Translate** (`selection-translate.tsx`) – Select text and translate it – the translation in a card with the detected language, copy, replace in place and show original
 - **Session Context Bar** (`session-context-bar.tsx`) – The session's declared terms kept in view – intent, knowledge mode, scope, review, posture, limits, deadline and budget
+- **Session State** (`session-state.tsx`) – Where a long LLM session stands – a health pill, tiles for the primary goal, open loops, pending artifacts and context pressure with a meter that warns as it fills, and status chips, the tiles optionally opening what they count
 - **Setup Guide** (`setup-guide.tsx`) – Onboarding panel with a progress bar and collapsible task groups that strike through when done
 - **Slider Field** (`slider-field.tsx`) – A synchronized slider and numeric input
 - **Smart Recommendation** (`smart-recommendation.tsx`) – Suggestion card with a confidence signal, alternatives to switch to and accept with undo
+- **Status Tracker** (`status-tracker.tsx`) – Where work stands in a fixed sequence of steps – gates or stages on a line, each cleared, pending, blocked or not reached in words and marks, the line filling as they clear, the current step marked, a legend, and a step's evidence record on click
 - **Stepper Form** (`stepper-form.tsx`) – A multi-step flow for onboarding and setup – steps that fill and check off, sliding steps, a card that morphs to each step, inline validation and a success state
 - **Stories** (`stories.tsx`) – Avatars for people and accounts with a gradient ring for something new – open one for a "what changed" brief: a bento grid of metric, status, note, list, image and link tiles
 - **Structured Output** (`structured-output.tsx`) – Streaming JSON as a typed tree, checked against its schema as it arrives – missing and invalid fields flagged, copy as JSON or code
