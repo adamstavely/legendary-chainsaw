@@ -1,0 +1,477 @@
+{
+ "elements": [
+  {
+   "tag": "tc-budget-burn",
+   "className": "TcBudgetBurn",
+   "description": "Budget burn: each item's spend against its budget, with a pace marker and words for ahead, on or behind pace, its\npeople and team, totals in the header and a sort by burn or budget.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Budget burn\"",
+     "description": "The heading, and the list's name",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "One line under the heading",
+     "readonly": false
+    },
+    {
+     "name": "items",
+     "attribute": null,
+     "type": "BurnItem[]",
+     "default": "[]",
+     "description": "The items",
+     "readonly": false
+    },
+    {
+     "name": "period",
+     "attribute": "period",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "How far through the period we are, from 0 to 1; unset hides the pace marker and words",
+     "readonly": false
+    },
+    {
+     "name": "tolerance",
+     "attribute": "tolerance",
+     "type": "number",
+     "default": "0.1",
+     "description": "How far, as a share of the budget, spend may sit from the pace before it's ahead or behind",
+     "readonly": false
+    },
+    {
+     "name": "sort",
+     "attribute": "sort",
+     "type": "BurnSort",
+     "default": "\"budget\"",
+     "description": "\"budget\" puts the biggest budgets first, \"burn\" the highest burn. Changed by the user unless a tc-sort-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "currency",
+     "attribute": "currency",
+     "type": "string",
+     "default": "\"USD\"",
+     "description": "The budget's currency, an ISO 4217 code",
+     "readonly": false
+    },
+    {
+     "name": "peopleUnit",
+     "attribute": "people-unit",
+     "type": "string",
+     "default": "\"FTE\"",
+     "description": "The unit people are counted in: \"FTE\", \"people\"",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The language for numbers, e.g. \"en-GB\"; by default the browser's",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-sort-change",
+     "detail": "",
+     "description": "The sort was changed ({ sort }: BurnSortChange); cancelable – prevented, `sort` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-open",
+     "detail": "",
+     "description": "A row was opened ({ id, item }: BurnOpen)",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "bburn",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-avatar-font-weight",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-h-sm",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-sans",
+    "--tc-font-size-2xs",
+    "--tc-font-size-lg",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-line-height-none",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-meter-fill",
+    "--tc-meter-radius",
+    "--tc-meter-track",
+    "--tc-radius-2xs",
+    "--tc-radius-full",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-seg-pad",
+    "--tc-seg-thumb-bg",
+    "--tc-seg-thumb-shadow",
+    "--tc-seg-track-bg",
+    "--tc-seg-track-radius",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-6",
+    "--tc-status-info-fg",
+    "--tc-status-warning-fg",
+    "--tc-status-warning-solid",
+    "--tc-surface-inverse",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-sunken",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-on-inverse",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "BudgetBurn",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading, and the list's name"
+    },
+    {
+     "name": "sort",
+     "type": "BurnSort",
+     "optional": true,
+     "description": "The sort – controlled when given"
+    },
+    {
+     "name": "defaultSort",
+     "type": "BurnSort",
+     "optional": true,
+     "description": "The sort on mount when `sort` isn't controlled"
+    },
+    {
+     "name": "onSortChange",
+     "type": "(sort: BurnSort) => void",
+     "optional": true,
+     "description": "The sort was changed"
+    },
+    {
+     "name": "onOpen",
+     "type": "(id: string, item: BurnItem) => void",
+     "optional": true,
+     "description": "A row was opened"
+    }
+   ],
+   "hides": [
+    "heading",
+    "sort",
+    "children"
+   ],
+   "events": {
+    "tc-sort-change": null,
+    "tc-open": "onOpen"
+   }
+  }
+ ],
+ "changelog": [
+  "**`tc-budget-burn`:** spent against budget for each item, with a pace marker. - **Pace:** Ahead, On or Behind pace in words. - **Totals and sorting:** totals in the header, and a sort by budget or burn."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-budget-burn",
+   "className": "TcBudgetBurn",
+   "module": "trenchcoat/budget-burn",
+   "data": [
+    "items"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    },
+    {
+     "name": "period",
+     "attribute": "period"
+    },
+    {
+     "name": "tolerance",
+     "attribute": "tolerance"
+    },
+    {
+     "name": "sort",
+     "attribute": "sort"
+    },
+    {
+     "name": "currency",
+     "attribute": "currency"
+    },
+    {
+     "name": "peopleUnit",
+     "attribute": "people-unit"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-sort-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-open",
+     "cancelable": false
+    }
+   ],
+   "controlled": [
+    {
+     "property": "sort",
+     "event": "tc-sort-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "individual-transforms",
+    "name": "translate, scale and rotate properties",
+    "bcd": "css.properties.translate",
+    "versions": {
+     "chrome": "104",
+     "edge": "104",
+     "firefox": "72",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 25377,
+  "gzip": 7891
+ }
+}

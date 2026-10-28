@@ -1,0 +1,431 @@
+{
+ "elements": [
+  {
+   "tag": "tc-citation-sections",
+   "className": "TcCitationSections",
+   "description": "Where a work is cited – a donut of the counts by section (Intro, Methods, Results, Discussion, Other), a legend\nwith letter chips, and the section under the pointer or focus named with its count and share.",
+   "properties": [
+    {
+     "name": "counts",
+     "attribute": null,
+     "type": "Record<string, number>",
+     "default": "{}",
+     "description": "Each section's count by id: { intro: 107, methods: 13 … }; a section without one shows 0",
+     "readonly": false
+    },
+    {
+     "name": "sections",
+     "attribute": null,
+     "type": "CitationSection[]",
+     "default": "[ { id: \"intro\", label: \"Intro\", letter: \"I\" }, { id: \"methods\", label: \"Methods\", letter: \"M\" }, { id: \"results\", label: \"Results\", letter: \"R\" }, { id: \"discussion\", label: \"Discussion\", letter: \"D\" }, { id: \"other\", label: \"Other\", letter: \"O\" }, ]",
+     "description": "The sections, in order – darkest first; by default Intro, Methods, Results, Discussion and Other",
+     "readonly": false
+    },
+    {
+     "name": "source",
+     "attribute": "source",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "A source's name shown on top; none by default",
+     "readonly": false
+    },
+    {
+     "name": "logo",
+     "attribute": null,
+     "type": "Element | undefined",
+     "default": "undefined",
+     "description": "A logo shown on top instead of `source` (cloned)",
+     "readonly": false
+    },
+    {
+     "name": "caption",
+     "attribute": "caption",
+     "type": "string",
+     "default": "\"Sections\"",
+     "description": "The caption under the donut, and the legend's name",
+     "readonly": false
+    },
+    {
+     "name": "href",
+     "attribute": "href",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "Where the details are – adds a link under the caption",
+     "readonly": false
+    },
+    {
+     "name": "openable",
+     "attribute": "openable",
+     "type": "boolean",
+     "default": "false",
+     "description": "Without `href`, adds a button that fires tc-open",
+     "readonly": false
+    },
+    {
+     "name": "detailsLabel",
+     "attribute": "details-label",
+     "type": "string",
+     "default": "\"See more details\"",
+     "description": "The link's or button's text",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The language for numbers, e.g. \"en-GB\"; by default the browser's",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-open",
+     "detail": "",
+     "description": "\"See more details\" was used ({ href }: CitationSectionsOpen); cancelable – prevented, a link isn't followed",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "cts",
+   "cssProperties": [
+    {
+     "name": "--tc-cts-ink",
+     "value": "var(--tc-chart-1)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-cts-track",
+     "value": "var(--tc-surface-raised)",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent-text",
+    "--tc-border-default",
+    "--tc-chart-1",
+    "--tc-cts-mix",
+    "--tc-duration-fast",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xl",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-semibold",
+    "--tc-hairline",
+    "--tc-line-height-normal",
+    "--tc-line-height-tight",
+    "--tc-radius-lg",
+    "--tc-radius-sm",
+    "--tc-radius-xs",
+    "--tc-shadow-control",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-6",
+    "--tc-surface-raised",
+    "--tc-text-muted",
+    "--tc-text-on-accent",
+    "--tc-text-on-inverse",
+    "--tc-text-primary",
+    "--tc-tracking-tight"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "defaultCitationSections",
+   "signature": "defaultCitationSections: CitationSection[]",
+   "description": "The sections shown when the page gives none"
+  }
+ ],
+ "react": [
+  {
+   "component": "CitationSections",
+   "exported": true,
+   "props": [
+    {
+     "name": "onOpen",
+     "type": "(href?: string) => boolean | void",
+     "optional": true,
+     "description": "\"See more details\" was used; return false to stop a link being followed"
+    }
+   ],
+   "hides": [
+    "children"
+   ],
+   "events": {
+    "tc-open": "onOpen"
+   }
+  }
+ ],
+ "changelog": [
+  "**`tc-citation-sections`:** where a work is cited. - **Donut:** citing sections – Intro, Methods, Results, Discussion, Other – with letter chips and a legend."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-citation-sections",
+   "className": "TcCitationSections",
+   "module": "trenchcoat/citation-sections",
+   "data": [
+    "counts",
+    "sections",
+    "logo"
+   ],
+   "attributes": [
+    {
+     "name": "source",
+     "attribute": "source"
+    },
+    {
+     "name": "caption",
+     "attribute": "caption"
+    },
+    {
+     "name": "href",
+     "attribute": "href"
+    },
+    {
+     "name": "openable",
+     "attribute": "openable"
+    },
+    {
+     "name": "detailsLabel",
+     "attribute": "details-label"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-open",
+     "cancelable": true
+    }
+   ],
+   "controlled": [],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "121",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "has"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "itself",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "itself",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "has",
+    "name": ":has()",
+    "bcd": "css.selectors.has",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "121",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Layout and state that depend on what's inside a part (an icon present, a focused field).",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 18818,
+  "gzip": 6597
+ }
+}

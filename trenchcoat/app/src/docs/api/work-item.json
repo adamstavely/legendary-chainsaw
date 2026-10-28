@@ -1,0 +1,546 @@
+{
+ "elements": [
+  {
+   "tag": "tc-work-item",
+   "className": "TcWorkItem",
+   "description": "A work item card – title, status, a note, progress, due date, people, what it delivers, spent against budget and\neffort – that opens as a link or a button.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The work's title, and the card's control",
+     "readonly": false
+    },
+    {
+     "name": "status",
+     "attribute": "status",
+     "type": "WorkStatus",
+     "default": "\"active\"",
+     "description": "Where the work stands: active, blocked, review, done or paused – shown in words with a mark",
+     "readonly": false
+    },
+    {
+     "name": "statusLabels",
+     "attribute": null,
+     "type": "Partial<Record<WorkStatus, string>>",
+     "default": "{}",
+     "description": "The statuses' names, merged over the defaults (Active, Blocked, In review, Done, Paused)",
+     "readonly": false
+    },
+    {
+     "name": "note",
+     "attribute": "note",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "One line under the title: the blocker, the next step",
+     "readonly": false
+    },
+    {
+     "name": "progress",
+     "attribute": "progress",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "How far along, from 0 to 1; no bar when unset",
+     "readonly": false
+    },
+    {
+     "name": "due",
+     "attribute": "due",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "When it's due, as epoch ms",
+     "readonly": false
+    },
+    {
+     "name": "now",
+     "attribute": "now",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The time to compare `due` with, as epoch ms; today when unset",
+     "readonly": false
+    },
+    {
+     "name": "people",
+     "attribute": null,
+     "type": "WorkPerson[]",
+     "default": "[]",
+     "description": "Who's on it",
+     "readonly": false
+    },
+    {
+     "name": "outcome",
+     "attribute": "outcome",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "What it delivers, as a tag, e.g. \"fills 1 gap\"",
+     "readonly": false
+    },
+    {
+     "name": "spent",
+     "attribute": "spent",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "Money spent so far",
+     "readonly": false
+    },
+    {
+     "name": "budget",
+     "attribute": "budget",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The money it has; spent is shown against it",
+     "readonly": false
+    },
+    {
+     "name": "currency",
+     "attribute": "currency",
+     "type": "string",
+     "default": "\"USD\"",
+     "description": "The currency of `spent` and `budget`, as an ISO 4217 code",
+     "readonly": false
+    },
+    {
+     "name": "effort",
+     "attribute": "effort",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The effort, written as shown, e.g. \"1.5 FTE\"",
+     "readonly": false
+    },
+    {
+     "name": "source",
+     "attribute": "source",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "Where the item comes from when it's mirrored, e.g. \"Synced · read-only\"",
+     "readonly": false
+    },
+    {
+     "name": "href",
+     "attribute": "href",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "Makes the title a link",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The language for dates and money, e.g. \"en-GB\"; by default the browser's",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-open",
+     "detail": "",
+     "description": "The card was opened ({ href }: WorkOpen); cancelable – prevented, a link doesn't follow",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "wki",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-accent-text",
+    "--tc-avatar-font-weight",
+    "--tc-avatar-sm",
+    "--tc-border-default",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-card-shadow-hover",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-mono",
+    "--tc-font-sans",
+    "--tc-font-size-2xs",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-meter-fill",
+    "--tc-meter-h",
+    "--tc-meter-radius",
+    "--tc-meter-track",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-xs",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-danger-solid",
+    "--tc-status-info-bg",
+    "--tc-status-info-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-success-solid",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-surface-raised",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "defaultWorkStatusLabels",
+   "signature": "defaultWorkStatusLabels: Record<WorkStatus, string>",
+   "description": "The statuses' names used when the page gives none"
+  }
+ ],
+ "react": [
+  {
+   "component": "WorkItem",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": false,
+     "description": "The work's title, and the card's control"
+    },
+    {
+     "name": "onOpen",
+     "type": "(href?: string) => boolean | void",
+     "optional": true,
+     "description": "The card was opened; return false to stop a link following"
+    }
+   ],
+   "hides": [
+    "heading",
+    "children"
+   ],
+   "events": {
+    "tc-open": "onOpen"
+   }
+  }
+ ],
+ "changelog": [
+  "**`tc-work-item`:** one piece of work as a card. - **Status:** in words, with progress and a due date (marked when overdue). - **Resources:** people, what it delivers, spent against budget, and effort."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-work-item",
+   "className": "TcWorkItem",
+   "module": "trenchcoat/work-item",
+   "data": [
+    "statusLabels",
+    "people"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "status",
+     "attribute": "status"
+    },
+    {
+     "name": "note",
+     "attribute": "note"
+    },
+    {
+     "name": "progress",
+     "attribute": "progress"
+    },
+    {
+     "name": "due",
+     "attribute": "due"
+    },
+    {
+     "name": "now",
+     "attribute": "now"
+    },
+    {
+     "name": "outcome",
+     "attribute": "outcome"
+    },
+    {
+     "name": "spent",
+     "attribute": "spent"
+    },
+    {
+     "name": "budget",
+     "attribute": "budget"
+    },
+    {
+     "name": "currency",
+     "attribute": "currency"
+    },
+    {
+     "name": "effort",
+     "attribute": "effort"
+    },
+    {
+     "name": "source",
+     "attribute": "source"
+    },
+    {
+     "name": "href",
+     "attribute": "href"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-open",
+     "cancelable": true
+    }
+   ],
+   "controlled": [],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "121",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "has"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "has",
+    "name": ":has()",
+    "bcd": "css.selectors.has",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "121",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Layout and state that depend on what's inside a part (an icon present, a focused field).",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [
+   "Date.now()"
+  ],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 22976,
+  "gzip": 7140
+ }
+}

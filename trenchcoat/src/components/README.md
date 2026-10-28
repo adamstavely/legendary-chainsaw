@@ -23,18 +23,23 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Approval Card** (`approval-card.tsx`) – An agent asks before it acts – risk badge, preview, Approve and Deny with shortcuts, a pausing countdown, and a smooth morph into a resolved row
 - **Artifact Panel** (`artifact-panel.tsx`) – Everything a run produced in one place – files, code, documents and images with a preview for each, versions you can diff, and download
 - **Attestation Check** (`attestation-check.tsx`) – Verify a signed evidence package by its hash or file – signature, chain integrity and what it covers, checked locally
+- **Audience Mix** (`audience-mix.tsx`) – Who is reading – a sector mix as bars, an internal-versus-external split and the top places, each with its share, and the row under the pointer or focus named in full
 - **Autonomy Dial** (`autonomy-dial.tsx`) – How much an agent may do on its own – a three-stop dial, and its real actions gliding between “Runs on its own” and “Asks you first”, with a lock for what always asks
 - **Background Tasks** (`background-tasks.tsx`) – Your long-running jobs at a glance – a header indicator with overall progress, and a panel of running, queued, done and failed tasks with cancel, retry and open
 - **Billing Schedule** (`billing-schedule.tsx`) – Build a billing phase – start date, duration, products with repeats and timing, discount, minimum and live totals
 - **Biometric Status** (`biometric-status.tsx`) – Where someone's biometric enrolment stands – face, fingerprints, iris, voice and more, each with its status, detail and quality meter, the count enrolled and an optional match score
 - **Breakdown Chart** (`breakdown-chart.tsx`) – Stacked bar chart with measure, slice and segment pickers, a hover breakdown and a linked table
+- **Budget Burn** (`budget-burn.tsx`) – How fast each budget is being spent – spent against budget, the burn as a bar with a pace marker and Ahead, On or Behind pace in words, people and team, totals in the header and a sort by budget or burn
 - **Budget Guard** (`budget-guard.tsx`) – Spend and token limits for a live run – progress against the cap, a warning as it nears it, a hard stop at it, and raising the cap right from the warning
 - **Button** (`button.tsx`) – Primary, secondary, ghost and destructive buttons with icons, sizes and a shimmering loading state
 - **Capability Notice** (`capability-notice.tsx`) – When a request falls where the AI is only partly proven or not proven – a capped confidence, who was notified, and how far the request is from the usual
+- **Capacity Bars** (`capacity-bars.tsx`) – How loaded each person is – their allocation split by what they work on, against their capacity on one shared scale, each piece named with its amount, anyone over capacity marked and counted
 - **Change Summary** (`change-summary.tsx`) – What moved since last time – one metric per row with a colored trend
 - **Chat Composer** (`chat-composer.tsx`) – Prompt composer with model picker, voice input, app connections and approval request; an optional toolbar row switches the model, opens model settings and the prompt library, connects or disconnects the page context, and adds a disclaimer line – folding to fit a side pane
 - **Chat History** (`chat-history.tsx`) – Your conversations, grouped by date – search, pin, folders, rename and delete with undo, smooth with thousands of chats
 - **Checkbox** (`checkbox.tsx`) – A form-associated boolean choice
+- **Citation Badge** (`citation-badge.tsx`) – A small badge of how a work is cited – publications, supporting, mentioning and contrasting counts with their marks, labelled or compact, a tooltip saying what each means and an optional link to the details
+- **Citation Sections** (`citation-sections.tsx`) – Where a work is cited – a donut of citing sections (Intro, Methods, Results, Discussion, Other) shaded darkest first, a legend with letter chips and counts, and the section under the pointer or focus with its share
 - **Cited Answer** (`cited-answer.tsx`) – An AI answer wired to its sources – point at a citation to light up its sentence and source, click to unfold the quoted passage with the matching words marked
 - **Claim Answer** (`claim-answer.tsx`) – An answer you can check claim by claim – where each came from (a source, the model's knowledge, an inference), how sure it is, and the strongest case against it
 - **Clarifying Questions** (`clarifying-questions.tsx`) – The agent asks before it starts – two or three quick questions with choices or a short answer, sent back as one reply
@@ -53,6 +58,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Conversation Branches** (`conversation-branches.tsx`) – Edit a past message and the conversation forks – a 2 / 3 switcher on the edited message, and each branch's replies below it
 - **Correction Propagation** (`correction-propagation.tsx`) – How far a correction reaches – every artifact and released package that cites the corrected claim, each sent for review, nothing rewritten behind your back
 - **Coverage Matrix** (`coverage-matrix.tsx`) – Which checks cover which parts – covered, partial and gaps across a grid, with totals and each cell's detail
+- **Coverage Ring** (`coverage-ring.tsx`) – One share at a glance – a large ring with the percentage and a caption, a title and a line, and a bar from healthiest to needs attention that reads out each segment
 - **Data handling policy** (`data-handling-policy.tsx`) – Organization data handling as a lifecycle – retention, logs and redaction, memory, training, deletion – led by the effective policy, with locked stages and deletion requests
 - **Data Table** (`data-table.tsx`) – Spreadsheet-style table: select cells and ranges, edit in place, copy and paste, undo and sort
 - **Date Range Picker** (`date-range-picker.tsx`) – Presets and two calendars with a hover preview, comparison with the previous period or year, full keyboard control
@@ -78,8 +84,10 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Filter Menu** (`filter-menu.tsx`) – Grouped filters with removable chips, collapsible checkbox groups, Clear all and full keyboard control
 - **Fingerprint Card** (`fingerprint-card.tsx`) – A ten-print card – each finger's print and status in ANSI/NIST positions, captured with its NFIQ quality, poor, not captured, unable to print or bandaged, and a finger's detail
 - **Friction Profile** (`friction-profile.tsx`) – Switch between standard, elevated and deadline modes and see how each safeguard changes – shortened, deferred or tightened
+- **Gap Exposure** (`gap-exposure.tsx`) – Gaps or risks and whether anyone is working on them – severity in words and a mark, the item and its priority, coverage, owner and what's invested, with the severe uncovered ones called out, grouping by priority or severity and an uncovered-only switch
 - **Gate Config** (`gate-config.tsx`) – When a person decides – the conditions that pause a run, who reviews, what they see, and what they're allowed to do
 - **Generated UI** (`generated-ui.tsx`) – A model's answer drawn as real components – tables, charts, metrics, forms and callouts from a spec, checked as it arrives, with plain text for anything unknown
+- **Grade Distribution** (`grade-distribution.tsx`) – How a set of assessments came out – a count over each grade (Outstanding to Dissatisfactory, or your own), how many were assessed, empty grades muted, an optional bar in proportion and a grade picked as a filter
 - **Guardrail Notice** (`guardrail-notice.tsx`) – When a policy blocks, redacts or rewrites content – which policy, why, what changed with personal data masked, and a way to ask for review
 - **Handoff Brief** (`handoff-brief.tsx`) – Work passing from one person to another – summary, open items and commitments, each acknowledged by the receiver, blocked when they lack access
 - **Handoff** (`handoff.tsx`) – The agent hands the task to you mid-run – what it did, why it stopped and what it needs – and takes it back when you're done
@@ -88,6 +96,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Instruction Editor** (`instruction-editor.tsx`) – System and developer instructions with variable chips, missing and unused warnings, an app-supplied token count, versions and a word diff
 - **Integration Picker** (`integration-picker.tsx`) – Integrations page of a command menu – search, a list of services and the picked one with its connection on two tiles
 - **Integration Settings** (`integration-settings.tsx`) – Settings card for a connected service – on/off switch, API key, validated site address, time zone and a save bar
+- **Investment Balance** (`investment-balance.tsx`) – Are dollars and people following priority? – each tier's share of items, budget and people side by side as numbers and bars, over- and under-invested tiers flagged in words, and the biggest mismatch said in one line
 - **ISBN Details** (`isbn-details.tsx`) – ISBN numbers in text, validated and marked – hover or focus one for the book's cover, title, authors, publisher, year and pages
 - **Kill Switch** (`kill-switch.tsx`) – System posture and the emergency stop – what's running, a confirmed Stop that says what it halts, and resume
 - **Knowledge Promotion** (`knowledge-promotion.tsx`) – Promote a verified fact into shared team knowledge against a checklist, with disputed facts side by side
@@ -107,6 +116,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Notification Stack** (`notification-stack.tsx`) – Notice cards stacked behind each other – dismiss the front one to reveal the next
 - **Notifications** (`notifications.tsx`) – The notification center – a bell with an unread badge that opens a panel of notifications grouped by day, with tabs, read state, inline actions, Mark all as read and Load more
 - **Number Field** (`number-field.tsx`) – A bounded numeric input with native validation
+- **Org Unit Card** (`org-unit-card.tsx`) – An organisational unit at a glance – code, name, lead, On track / Watch / At risk counts, the page's stats with a spent-of-budget bar, and teams that fold open onto their topics' priority, coverage, open gaps and momentum
 - **OTP Input** (`otp-input.tsx`) – The verification code field done right – a gliding focus ring, paste and SMS autofill, a calm shake on errors and a morph into Verified
 - **Output Schema Builder** (`output-schema-builder.tsx`) – Build a structured-output schema as a tree beside a rendered preview of the answer – types visible, problems flagged on their rows – with raw JSON and the JSON Schema as tabs
 - **Parallel Attempts** (`parallel-attempts.tsx`) – An agent tries the same task several ways at once and the best one wins – every attempt races as a row with its model, approach and live bar, then gets a score; the best is marked and picked, and you can switch to another
@@ -115,6 +125,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Plan vs Actual (Clean only)** (`plan-vs-actual.tsx`) – An agent's plan against what really happens – every step's bar grows over its dashed planned ghost, overruns turn amber, the steps after it slide right, and the expected finish moves away from the planned one
 - **Playbook Canvas** (`playbook-canvas.tsx`) – An agent workflow, phase by phase – triggers, intake, context, analysis and review as steps you add and order, with review gates, versions and a dry run
 - **Policy Simulator** (`policy-simulator.tsx`) – Try an action against the policy before it's real – allow, needs approval, deny or hard stop, the rule that decided it and why
+- **Priority List** (`priority-list.tsx`) – A portfolio's topics or projects by priority – a tier badge, owner and team, health in words, momentum as a line with its change, coverage as a bar, what's open and the work in flight, with health filters and groups per priority
 - **Profile Header** (`profile-header.tsx`) – The top of a person's or an account's page – picture or initials, name, status and tags, other names as chips, a line of key facts, the page's actions and a row of section tabs
 - **Profile Menu** (`profile-menu.tsx`) – Account card with the signed-in user, menu actions and profile setup progress
 - **Progress Tracker** (`progress-tracker.tsx`) – Onboarding checklist with an animated progress bar, ticks that draw themselves and auto play
@@ -123,6 +134,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Prompt Starters** (`prompt-starters.tsx`) – Where to begin, and what to ask next – suggestions for an empty chat and follow-ups after an answer, from the conversation's context
 - **Provenance Summary** (`provenance-summary.tsx`) – What a document is made of – how much came from sources, from AI and from its authors, section by section
 - **Provider connection** (`provider-connection.tsx`) – A model provider connection read as a path – endpoint, credential, deployment – with each hop's health from an app-run test, the last check and the models it reports
+- **Publication Impact** (`publication-impact.tsx`) – One paper's impact on one card – venue, topic, grade and authors, downloads, views, citations and attention with a reads sparkline, mentions, who is reading, and peer, reader and sponsor feedback with a sentiment each
 - **Radio Group** (`radio-group.tsx`) – A native keyboard-operated single choice
 - **Reaction Bar** (`reaction-bar.tsx`) – Like, comment, repost and share in one pill – icons pop and fill, counts roll in digit by digit
 - **Reasoning Flags** (`reasoning-flags.tsx`) – Inline markers for weak reasoning in an answer – circular, hedged then certain, self-contradicting or overconfident – each with an explanation
@@ -160,6 +172,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Tool Permissions** (`tool-permissions.tsx`) – Which agent may use which tools – allow, ask or deny per cell, presets for the common setups, and a summary of what you changed
 - **Tooltip** (`tooltip.tsx`) – Keyboard, pointer and touch help text
 - **Trace Waterfall** (`trace-waterfall.tsx`) – Where the time and money of an agent run go – every LLM call, tool call and sub-agent as a bar on a live timeline, with tokens and cost per step, the slowest call marked and branches that fold into their parent
+- **Traceability Spine** (`traceability-spine.tsx`) – The chain from open questions to outcomes – a column per stage from questions and gaps to work, papers and who cites them, linked cards joined by lines, and a card's whole path traced on click with the rest dimmed
 - **Transcript Review** (`transcript-review.tsx`) – Recorded audio or video with a transcript that follows playback – speakers, timestamps, recognition confidence and low-confidence segments to verify
 - **Trigger Builder** (`trigger-builder.tsx`) – “Run when X happens, or every Monday at 9” – an event or a schedule, conditions, a plain-language summary and the next run times
 - **Usage Meter** (`usage-meter.tsx`) – Plan usage and AI credits – a stacked credits meter by category, daily sparkline, limits and a button that speaks up near the limit
@@ -168,6 +181,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Version History** (`version-history.tsx`) – The versions of an agent, prompt or workflow – draft, active or deprecated, who and when, and what changed in behaviour
 - **Voice Mode** (`voice-mode.tsx`) – A spoken conversation with the model – live transcript, listening and speaking states, interrupt, mute and end, with captions for every turn
 - **Watchlist** (`watchlist.tsx`) – The people, accounts or entities a team is watching, most at risk first – avatar, reference, case tag and a risk badge in words, with a count, filters by risk and View all
+- **Work Item** (`work-item.tsx`) – One piece of work as a card – status in words, a note, progress, a due date marked when overdue, people, what it delivers, spent against budget, effort and a "Synced · read-only" source, the whole card opening it
 - **Writing Assistant** (`writing-assistant.tsx`) – AI chat card with a soft gradient glow, suggestions, streaming replies and live voice dictation
 
 Live previews: run `npm run dev` and open the gallery.

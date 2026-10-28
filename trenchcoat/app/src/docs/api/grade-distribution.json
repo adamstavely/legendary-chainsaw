@@ -1,0 +1,398 @@
+{
+ "elements": [
+  {
+   "tag": "tc-grade-distribution",
+   "className": "TcGradeDistribution",
+   "description": "Assessment grades as counts, with how many were assessed, an optional bar in proportion and a grade picked as a\nfilter.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Grades\"",
+     "description": "The heading",
+     "readonly": false
+    },
+    {
+     "name": "assessedLabel",
+     "attribute": "assessed-label",
+     "type": "string",
+     "default": "\"assessed\"",
+     "description": "What was assessed, after the count: \"2 assessed\"",
+     "readonly": false
+    },
+    {
+     "name": "grades",
+     "attribute": null,
+     "type": "Grade[]",
+     "default": "[ { id: \"outstanding\", label: \"Outstanding\", count: 0, tone: \"success\" }, { id: \"excellent\", label: \"Excellent\", count: 0, tone: \"info\" }, { id: \"satisfactory\", label: \"Satisfactory\", count: 0, tone: \"neutral\" }, { id: \"dissatisfactory\", label: \"Dissatisfactory\", count: 0, tone: \"danger\" }, ]",
+     "description": "The grades in order, best first, each with its count",
+     "readonly": false
+    },
+    {
+     "name": "bar",
+     "attribute": "bar",
+     "type": "boolean",
+     "default": "false",
+     "description": "Shows a bar in proportion under the counts",
+     "readonly": false
+    },
+    {
+     "name": "selectable",
+     "attribute": "selectable",
+     "type": "boolean",
+     "default": "false",
+     "description": "Grades can be picked as a filter",
+     "readonly": false
+    },
+    {
+     "name": "selected",
+     "attribute": null,
+     "type": "string | null",
+     "default": "null",
+     "description": "The grade picked as a filter. Changed by the user unless a tc-selected-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-selected-change",
+     "detail": "",
+     "description": "A grade was picked or cleared as a filter ({ selected, grade }: GradeSelectedChange); cancelable – prevented, `selected` stays as it was",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "grd",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-border-selected",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-duration-fast",
+    "--tc-ease-standard",
+    "--tc-fill-selected",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-2xl",
+    "--tc-font-size-md",
+    "--tc-font-size-xs",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-display-sm",
+    "--tc-line-height-normal",
+    "--tc-line-height-tight",
+    "--tc-meter-radius",
+    "--tc-radius-md",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-status-danger-fg",
+    "--tc-status-danger-solid",
+    "--tc-status-info-fg",
+    "--tc-status-info-solid",
+    "--tc-status-success-fg",
+    "--tc-status-success-solid",
+    "--tc-status-warning-fg",
+    "--tc-status-warning-solid",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tracking-tight",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "GradeDistribution",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading"
+    },
+    {
+     "name": "selected",
+     "type": "string | null",
+     "optional": true,
+     "description": "The grade picked as a filter – controlled when given (null for none)"
+    },
+    {
+     "name": "defaultSelected",
+     "type": "string | null",
+     "optional": true,
+     "description": "The grade picked on mount when `selected` isn't controlled"
+    },
+    {
+     "name": "onSelectedChange",
+     "type": "(selected: string | null, grade?: Grade) => void",
+     "optional": true,
+     "description": "A grade was picked or cleared; `grade` is the picked grade"
+    }
+   ],
+   "hides": [
+    "heading",
+    "selected",
+    "children"
+   ],
+   "events": {
+    "tc-selected-change": null
+   }
+  }
+ ],
+ "changelog": [
+  "**`tc-grade-distribution`:** a count over each assessment grade. - **Display:** grades with no assessments are muted, and an optional bar shows their proportions. - **Filtering:** a grade can be picked as a filter."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-grade-distribution",
+   "className": "TcGradeDistribution",
+   "module": "trenchcoat/grade-distribution",
+   "data": [
+    "grades",
+    "selected"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "assessedLabel",
+     "attribute": "assessed-label"
+    },
+    {
+     "name": "bar",
+     "attribute": "bar"
+    },
+    {
+     "name": "selectable",
+     "attribute": "selectable"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-selected-change",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "selected",
+     "event": "tc-selected-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "121",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "has"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "has",
+    "name": ":has()",
+    "bcd": "css.selectors.has",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "121",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Layout and state that depend on what's inside a part (an icon present, a focused field).",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 17618,
+  "gzip": 5904
+ }
+}

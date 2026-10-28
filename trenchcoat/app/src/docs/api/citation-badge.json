@@ -1,0 +1,393 @@
+{
+ "elements": [
+  {
+   "tag": "tc-citation-badge",
+   "className": "TcCitationBadge",
+   "description": "A small badge of citation counts by kind – Publications, Supporting, Mentioning, Contrasting – with a tooltip\nthat says what each means, and an optional link to the details.",
+   "properties": [
+    {
+     "name": "counts",
+     "attribute": null,
+     "type": "Record<string, number>",
+     "default": "{}",
+     "description": "Each kind's count by id: { publications: 522, supporting: 29 … }; a kind without one shows 0",
+     "readonly": false
+    },
+    {
+     "name": "rows",
+     "attribute": null,
+     "type": "CitationRow[]",
+     "default": "[ { id: \"publications\", label: \"Publications\", icon: \"document\", tone: \"neutral\", meaning: \"publications that cite this work\" }, { id: \"supporting\", label: \"Supporting\", icon: \"supporting\", tone: \"success\", meaning: \"cites this work as evidence for its claim\" }, { id: \"mentioning\", label: \"Mentioning\", icon: \"mentioning\", tone: \"neutral\", meaning: \"refers to this work without taking a side\" }, { id: \"contrasting\", label: \"Contrasting\", icon: \"contrasting\", tone: \"info\", meaning: \"reports findings that question or disagree with it\" }, ]",
+     "description": "The kinds, in order; by default Publications, Supporting, Mentioning and Contrasting",
+     "readonly": false
+    },
+    {
+     "name": "layout",
+     "attribute": "layout",
+     "type": "\"labelled\" | \"compact\"",
+     "default": "\"labelled\"",
+     "description": "\"labelled\": name, mark and count; \"compact\": the mark and the count",
+     "readonly": false
+    },
+    {
+     "name": "source",
+     "attribute": "source",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "A source's name shown on top, e.g. your index's name; none by default",
+     "readonly": false
+    },
+    {
+     "name": "logo",
+     "attribute": null,
+     "type": "Element | undefined",
+     "default": "undefined",
+     "description": "A logo shown on top instead of `source` (cloned); give it an accessible name, or set `source` too",
+     "readonly": false
+    },
+    {
+     "name": "label",
+     "attribute": "label",
+     "type": "string",
+     "default": "\"Citations\"",
+     "description": "What the counts are, for the badge's name when there's no `source`",
+     "readonly": false
+    },
+    {
+     "name": "href",
+     "attribute": "href",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "Where the details are – the badge becomes a link",
+     "readonly": false
+    },
+    {
+     "name": "openable",
+     "attribute": "openable",
+     "type": "boolean",
+     "default": "false",
+     "description": "Without `href`, makes the badge a button that fires tc-open",
+     "readonly": false
+    },
+    {
+     "name": "detailsLabel",
+     "attribute": "details-label",
+     "type": "string",
+     "default": "\"See more details\"",
+     "description": "The link's hint in the tooltip",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The language for numbers, e.g. \"en-GB\"; by default the browser's",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-open",
+     "detail": "",
+     "description": "The badge was opened (clicked, or Enter on it) with `href` or `openable` ({ href }: CitationOpen); cancelable – prevented, a link isn't followed",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "ctb",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-border-default",
+    "--tc-duration-fast",
+    "--tc-ease-standard",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-xl",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-semibold",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-radius-lg",
+    "--tc-shadow-control",
+    "--tc-shadow-overlay",
+    "--tc-shadow-raised-hover",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-status-danger-fg",
+    "--tc-status-info-fg",
+    "--tc-status-success-fg",
+    "--tc-status-warning-fg",
+    "--tc-surface-raised",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tooltip-bg",
+    "--tc-tooltip-fg",
+    "--tc-tooltip-font-size",
+    "--tc-tooltip-px",
+    "--tc-tooltip-py",
+    "--tc-tooltip-radius",
+    "--tc-tracking-tight",
+    "--tc-z-popover"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "defaultCitationRows",
+   "signature": "defaultCitationRows: CitationRow[]",
+   "description": "The kinds shown when the page gives none"
+  }
+ ],
+ "react": [
+  {
+   "component": "CitationBadge",
+   "exported": true,
+   "props": [
+    {
+     "name": "onOpen",
+     "type": "(href?: string) => boolean | void",
+     "optional": true,
+     "description": "The badge was opened (with `href` or `openable`); return false to stop a link being followed"
+    }
+   ],
+   "hides": [
+    "children"
+   ],
+   "events": {
+    "tc-open": "onOpen"
+   }
+  }
+ ],
+ "changelog": [
+  "**`tc-citation-badge`:** an embeddable badge of citation tallies – publications, supporting, mentioning and contrasting. - **Layouts:** labelled or compact. - **Details:** a tooltip says what each type means, and an optional link goes to more. No third-party branding."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-citation-badge",
+   "className": "TcCitationBadge",
+   "module": "trenchcoat/citation-badge",
+   "data": [
+    "counts",
+    "rows",
+    "logo"
+   ],
+   "attributes": [
+    {
+     "name": "layout",
+     "attribute": "layout"
+    },
+    {
+     "name": "source",
+     "attribute": "source"
+    },
+    {
+     "name": "label",
+     "attribute": "label"
+    },
+    {
+     "name": "href",
+     "attribute": "href"
+    },
+    {
+     "name": "openable",
+     "attribute": "openable"
+    },
+    {
+     "name": "detailsLabel",
+     "attribute": "details-label"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-open",
+     "cancelable": true
+    }
+   ],
+   "controlled": [],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "itself",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 18778,
+  "gzip": 6436
+ }
+}
