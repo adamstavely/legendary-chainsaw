@@ -1,5 +1,26 @@
 # Changelog
 
+## Unreleased – Phase 4: a skill for building components
+
+### Added
+
+- **`.claude/skills/new-component/`:** an agent skill with the library's way of building components, so a new one
+  comes out like the rest. It covers:
+  - deciding whether something new is needed;
+  - the element conventions and the five files per component;
+  - parallel fork briefs for batches;
+  - integration, visual review, and the PR / CI / merge flow;
+  - the problems that have bitten before.
+  - **Scripts:**
+    - `add-to-gallery.mjs` registers components in the README and a gallery section.
+    - `integrate.mjs` runs the integration pass in order, stopping at the first failure:
+      1. iCloud duplicate cleanup;
+      2. regenerating the element index, docs, Angular wrappers and generative schemas;
+      3. perf and thumbnails for anything new;
+      4. every CI check;
+      5. tests in three browsers.
+  - **Test cases** in `evals/`, for `claude plugin eval`.
+
 ## Unreleased – Phase 3: generative UI
 
 ### Added
