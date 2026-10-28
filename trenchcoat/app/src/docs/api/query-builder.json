@@ -245,6 +245,7 @@
   }
  ],
  "changelog": [
+  "**query-builder** only says \"Copied\" when the copy worked, and escapes backslashes and query syntax in values.",
   "**Search:** - `tc-query-builder`: conditions in AND / OR groups. - Read back in words and as a query string. - `tc-search-history`: recent and saved searches. - Run again, save, and remove with Undo. - `tc-ai-search`: one search box with an AI mode. - Suggestions, example prompts, a \"search within file contents\" option, scope chips and ⌘K."
  ],
  "frameworks": [

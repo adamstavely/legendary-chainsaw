@@ -321,7 +321,9 @@
    }
   }
  ],
- "changelog": [],
+ "changelog": [
+  "Server-side rendering no longer crashes: `command-menu` builds its icons on first use instead of when the module loads. `check:angular` now imports every dist module in Node with no DOM."
+ ],
  "frameworks": [
   {
    "tag": "tc-command-menu",
