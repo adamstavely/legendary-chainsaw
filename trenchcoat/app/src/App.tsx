@@ -89,6 +89,8 @@ export function App() {
   const [mode, setMode] = useStoredMode();
   const [theme, setTheme] = useStoredTheme();
   const route = useHash();
+  // Opening a result (or any page) leaves search, or the results would keep covering the page
+  useEffect(() => setQuery(""), [route]);
   // #/<id> or #/<id>/<section> – ids can hold a slash (illustrations/voice-orb), so the longest match wins
   const focused = ENTRIES.filter((e) => route === e.id || route.startsWith(`${e.id}/`)).sort((a, b) => b.id.length - a.id.length)[0];
   const section = focused && route.length > focused.id.length ? route.slice(focused.id.length + 1) : "";
@@ -192,7 +194,7 @@ export function App() {
       <main className="main">
         <ThemeContext.Provider value={theme}>
         {results ? (
-          <Results list={results} query={query} mode={mode} />
+          <Results list={results} query={query} mode={mode} onOpen={() => setQuery("")} />
         ) : foundation ? (
           <Foundations key={foundation} page={foundation} />
         ) : focused ? (
@@ -282,7 +284,8 @@ function Tile({ entry, mode, level }: { entry: Entry; mode: Mode; level: 2 | 3 }
   );
 }
 
-function Results({ list, query, mode }: { list: Entry[]; query: string; mode: Mode }) {
+/** `onOpen` runs when a result is clicked – also the page already showing, where the route doesn't change */
+function Results({ list, query, mode, onOpen }: { list: Entry[]; query: string; mode: Mode; onOpen: () => void }) {
   if (!list.length) return <p className="empty">Nothing matches “{query}”.</p>;
   return (
     <>
@@ -292,7 +295,9 @@ function Results({ list, query, mode }: { list: Entry[]; query: string; mode: Mo
           {list.length} {list.length === 1 ? "item matches" : "items match"} “{query.trim()}”
         </p>
       </header>
-      <Sections list={list} mode={mode} />
+      <div onClick={(e) => (e.target as Element).closest("a[href^='#/']") && onOpen()}>
+        <Sections list={list} mode={mode} />
+      </div>
     </>
   );
 }
