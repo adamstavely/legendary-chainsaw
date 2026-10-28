@@ -667,6 +667,7 @@
   "observers": [
    "ResizeObserver (validity-badge)",
    "MutationObserver (validity-badge)",
+   "MutationObserver (internal/base › TcElement)",
    "MutationObserver (internal/controllers › AriaForwardController)",
    "MutationObserver (internal/controllers › FocusRescueController)"
   ],
@@ -686,7 +687,7 @@
   "windowed": false
  },
  "size": {
-  "min": 63876,
-  "gzip": 17869
+  "min": 64364,
+  "gzip": 17990
  }
 }

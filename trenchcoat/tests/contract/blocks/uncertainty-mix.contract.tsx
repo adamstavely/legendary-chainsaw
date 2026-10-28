@@ -6,24 +6,11 @@ const sources = [
   { part: "B", kind: "model", amount: 5 },
 ];
 
+// The block is <tc-uncertainty-mix> through trenchcoat/react. jsdom loads @lit/react's node build, which never sets an element's
+// properties, so its controlled state is checked in a real browser (tests/elements/uncertainty-mix.test.ts)
 export const spec: ContractSpec = {
+  root: "tc-uncertainty-mix",
   component: "UncertaintyMix",
   props: { sources },
   ref: "root",
-  controlled: [
-    {
-      prop: "hidden",
-      values: [["model"], ["gap", "chance"]],
-      read: (root) => {
-        const shown = root.querySelector(".ui-umix__bar")?.getAttribute("aria-label") ?? "";
-        return [
-          ["gap", "Missing information"],
-          ["chance", "Inherent uncertainty"],
-          ["model", "Model limits"],
-        ]
-          .filter(([, label]) => !shown.includes(label))
-          .map(([key]) => key);
-      },
-    },
-  ],
 };

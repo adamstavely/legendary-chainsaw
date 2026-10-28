@@ -1,0 +1,767 @@
+{
+ "elements": [
+  {
+   "tag": "tc-metrics-dashboard",
+   "className": "TcMetricsDashboard",
+   "description": "A compact sales overview: KPI tabs that pick the charted metric, a line or bar chart with an optional previous-period\ncomparison, and top products and channels.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Sales\"",
+     "description": "Title in the bar on top",
+     "readonly": false
+    },
+    {
+     "name": "site",
+     "attribute": "site",
+     "type": "string",
+     "default": "\"Northwind Store\"",
+     "description": "Site or workspace shown under the title",
+     "readonly": false
+    },
+    {
+     "name": "range",
+     "attribute": "range",
+     "type": "RangeKey",
+     "default": "\"30d\"",
+     "description": "The period: \"7d\", \"30d\" or \"90d\"",
+     "readonly": false
+    },
+    {
+     "name": "metric",
+     "attribute": "metric",
+     "type": "MetricKey",
+     "default": "\"revenue\"",
+     "description": "The charted metric: \"revenue\", \"orders\", \"aov\" or \"refunds\"",
+     "readonly": false
+    },
+    {
+     "name": "chart",
+     "attribute": "chart",
+     "type": "MetricsChart",
+     "default": "\"line\"",
+     "description": "The chart type: \"line\" or \"bars\"",
+     "readonly": false
+    },
+    {
+     "name": "compare",
+     "attribute": "compare",
+     "type": "boolean",
+     "default": "false",
+     "description": "Shows the previous period beside the current one",
+     "readonly": false
+    },
+    {
+     "name": "now",
+     "attribute": "now",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "Last day of the sample data, as epoch ms – today by default",
+     "readonly": false
+    },
+    {
+     "name": "onExport",
+     "attribute": null,
+     "type": "((range: RangeKey, metric: MetricKey) => void | Promise<unknown>) | undefined",
+     "default": "undefined",
+     "description": "Called when Export is pressed, with the current range and metric. Return a promise to show Exporting… until it settles",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-range-change",
+     "detail": "",
+     "description": "The period was picked ({ range }: MetricsRangeChange); cancelable – prevented, `range` stays",
+     "cancelable": true
+    },
+    {
+     "name": "tc-metric-change",
+     "detail": "",
+     "description": "A KPI card was picked ({ metric }: MetricsMetricChange); cancelable – prevented, `metric` stays",
+     "cancelable": true
+    },
+    {
+     "name": "tc-chart-change",
+     "detail": "",
+     "description": "Line or bars was picked ({ chart }: MetricsChartChange); cancelable – prevented, `chart` stays",
+     "cancelable": true
+    },
+    {
+     "name": "tc-compare-change",
+     "detail": "",
+     "description": "The comparison switch was toggled ({ compare }: MetricsCompareChange); cancelable – prevented, `compare` stays",
+     "cancelable": true
+    },
+    {
+     "name": "tc-export",
+     "detail": "",
+     "description": "Export was pressed ({ range, metric }: MetricsExport); `onExport` may return a promise it waits for",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "md",
+   "cssProperties": [
+    {
+     "name": "--tc-md-area",
+     "value": "color-mix(in srgb, var(--tc-chart-1) 18%, transparent)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-md-prev",
+     "value": "var(--tc-icon-muted)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-md-plot-h",
+     "value": "168px",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent-subtle",
+    "--tc-border-default",
+    "--tc-border-selected",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-card-shadow-hover",
+    "--tc-chart-1",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-moderate",
+    "--tc-duration-reveal-slow",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-duration-slowest",
+    "--tc-ease-in-out",
+    "--tc-ease-move",
+    "--tc-ease-spring",
+    "--tc-ease-standard",
+    "--tc-fill-hover",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-2xl",
+    "--tc-font-size-3xl",
+    "--tc-font-size-lg-plus",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-display-sm",
+    "--tc-line-height-relaxed",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-2xs",
+    "--tc-radius-md",
+    "--tc-radius-xs",
+    "--tc-seg-thumb-bg",
+    "--tc-shadow-control",
+    "--tc-shadow-overlay",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-4-5",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-switch-h",
+    "--tc-switch-knob",
+    "--tc-switch-knob-bg",
+    "--tc-switch-off",
+    "--tc-switch-on",
+    "--tc-switch-radius",
+    "--tc-switch-w",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tone-rose-bg",
+    "--tc-tone-rose-fg",
+    "--tc-tooltip-bg",
+    "--tc-tooltip-fg",
+    "--tc-tooltip-font-size",
+    "--tc-tooltip-radius",
+    "--tc-tracking-snug",
+    "--tc-tracking-tight",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "niceMax",
+   "signature": "niceMax(n: number): void",
+   "description": "A round axis maximum with four equal steps"
+  }
+ ],
+ "react": [
+  {
+   "component": "MetricsDashboard",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "Title in the bar on top"
+    },
+    {
+     "name": "range",
+     "type": "RangeKey",
+     "optional": true,
+     "description": "The period (controlled) – pass `onRangeChange` with it"
+    },
+    {
+     "name": "defaultRange",
+     "type": "RangeKey",
+     "optional": true,
+     "description": "Range to start on"
+    },
+    {
+     "name": "onRangeChange",
+     "type": "(range: RangeKey) => void",
+     "optional": true,
+     "description": "A period was picked"
+    },
+    {
+     "name": "metric",
+     "type": "MetricKey",
+     "optional": true,
+     "description": "The charted metric (controlled) – pass `onMetricChange` with it"
+    },
+    {
+     "name": "defaultMetric",
+     "type": "MetricKey",
+     "optional": true,
+     "description": "Metric to start on"
+    },
+    {
+     "name": "onMetricChange",
+     "type": "(metric: MetricKey) => void",
+     "optional": true,
+     "description": "A metric was picked"
+    },
+    {
+     "name": "chart",
+     "type": "MetricsChart",
+     "optional": true,
+     "description": "Line or bars (controlled)"
+    },
+    {
+     "name": "defaultChart",
+     "type": "MetricsChart",
+     "optional": true,
+     "description": "The chart type at first (uncontrolled)"
+    },
+    {
+     "name": "onChartChange",
+     "type": "(chart: MetricsChart) => void",
+     "optional": true,
+     "description": "The chart type was switched"
+    },
+    {
+     "name": "compare",
+     "type": "boolean",
+     "optional": true,
+     "description": "The previous-period comparison (controlled)"
+    },
+    {
+     "name": "defaultCompare",
+     "type": "boolean",
+     "optional": true,
+     "description": "Comparing with the previous period at first (uncontrolled)"
+    },
+    {
+     "name": "onCompareChange",
+     "type": "(compare: boolean) => void",
+     "optional": true,
+     "description": "Comparison was turned on or off"
+    }
+   ],
+   "hides": [
+    "heading",
+    "range",
+    "metric",
+    "chart",
+    "compare",
+    "title"
+   ],
+   "events": {
+    "tc-range-change": "onRangeChange",
+    "tc-metric-change": "onMetricChange",
+    "tc-chart-change": "onChartChange",
+    "tc-compare-change": "onCompareChange"
+   }
+  }
+ ],
+ "changelog": [
+  "All 18 blocks are now elements – `tc-agent-gallery`, `tc-ai-side-pane`, `tc-ai-workspace`, `tc-app-directory`, `tc-client-context`, `tc-evidence-gallery`, `tc-header-nav`, `tc-invoice-credit`, `tc-kpi-board`, `tc-logo-marquee`, `tc-metrics-dashboard`, `tc-oversight-home`, `tc-pricing-plans`, `tc-publish-readiness`, `tc-red-team-finding`, `tc-task-board`, `tc-testimonial-wall`, `tc-uncertainty-mix` – so Angular (`trenchcoat/angular`), Vue, Svelte, plain HTML and generative UI get them like any component, with docs pages."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-metrics-dashboard",
+   "className": "TcMetricsDashboard",
+   "module": "trenchcoat/metrics-dashboard",
+   "data": [
+    "onExport"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "site",
+     "attribute": "site"
+    },
+    {
+     "name": "range",
+     "attribute": "range"
+    },
+    {
+     "name": "metric",
+     "attribute": "metric"
+    },
+    {
+     "name": "chart",
+     "attribute": "chart"
+    },
+    {
+     "name": "compare",
+     "attribute": "compare"
+    },
+    {
+     "name": "now",
+     "attribute": "now"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-range-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-metric-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-chart-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-compare-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-export",
+     "cancelable": false
+    }
+   ],
+   "controlled": [
+    {
+     "property": "range",
+     "event": "tc-range-change"
+    },
+    {
+     "property": "metric",
+     "event": "tc-metric-change"
+    },
+    {
+     "property": "chart",
+     "event": "tc-chart-change"
+    },
+    {
+     "property": "compare",
+     "event": "tc-compare-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "121",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "has"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "itself",
+     "button",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "button",
+     "internal/kit",
+     "segmented-control"
+    ]
+   },
+   {
+    "id": "has",
+    "name": ":has()",
+    "bcd": "css.selectors.has",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "121",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Layout and state that depend on what's inside a part (an icon present, a focused field).",
+    "via": [
+     "button"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself",
+     "button"
+    ]
+   },
+   {
+    "id": "individual-transforms",
+    "name": "translate, scale and rotate properties",
+    "bcd": "css.properties.translate",
+    "versions": {
+     "chrome": "104",
+     "edge": "104",
+     "firefox": "72",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself",
+     "segmented-control"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "button",
+     "internal/base",
+     "segmented-control",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "resize-observer",
+    "name": "ResizeObserver",
+    "bcd": "api.ResizeObserver",
+    "versions": {
+     "chrome": "64",
+     "edge": "79",
+     "firefox": "69",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "via": [
+     "button",
+     "segmented-control"
+    ]
+   },
+   {
+    "id": "intersection-observer",
+    "name": "IntersectionObserver",
+    "bcd": "api.IntersectionObserver",
+    "versions": {
+     "chrome": "51",
+     "edge": "15",
+     "firefox": "55",
+     "safari": "12.1",
+     "safari_ios": "12.2"
+    },
+    "progressive": false,
+    "via": [
+     "internal/controllers"
+    ]
+   },
+   {
+    "id": "mask",
+    "name": "CSS masks",
+    "bcd": "css.properties.mask-image",
+    "versions": {
+     "chrome": "1",
+     "edge": "79",
+     "firefox": "53",
+     "safari": "4",
+     "safari_ios": "3.2"
+    },
+    "progressive": false,
+    "note": "with the -webkit- prefix",
+    "via": [
+     "button",
+     "segmented-control"
+    ]
+   },
+   {
+    "id": "scrollbar-width",
+    "name": "scrollbar-width",
+    "bcd": "css.properties.scrollbar-width",
+    "versions": {
+     "chrome": "121",
+     "edge": "121",
+     "firefox": "64",
+     "safari": "18.2",
+     "safari_ios": "18.2"
+    },
+    "progressive": true,
+    "without": "Scrollbars keep the browser's default width.",
+    "via": [
+     "segmented-control"
+    ]
+   },
+   {
+    "id": "at-property",
+    "name": "@property",
+    "bcd": "css.at-rules.property",
+    "versions": {
+     "chrome": "85",
+     "edge": "85",
+     "firefox": "128",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "The registered custom properties don't interpolate, so the transitions and spins they drive jump to their end state.",
+    "via": [
+     "segmented-control"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "overscroll-contain",
+    "name": "overscroll-behavior: contain",
+    "bcd": "css.properties.overscroll-behavior.contain",
+    "versions": {
+     "chrome": "63",
+     "edge": "18",
+     "firefox": "59",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "Scrolling past the end of a list carries on scrolling the page.",
+    "via": [
+     "segmented-control"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setTimeout",
+   "setTimeout (segmented-control)"
+  ],
+  "frames": [
+   "requestAnimationFrame, cancelled",
+   "requestAnimationFrame, cancelled (segmented-control)"
+  ],
+  "animations": 3,
+  "observers": [
+   "ResizeObserver (button)",
+   "MutationObserver (button)",
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)",
+   "IntersectionObserver (internal/controllers › OffScreenController)",
+   "ResizeObserver (segmented-control)"
+  ],
+  "clock": [
+   "Date.now()"
+  ],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [
+    "button",
+    "internal/controllers › OffScreenController"
+   ],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (button)",
+    "CSS (internal/kit › kitCss)",
+    "CSS (segmented-control)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 87705,
+  "gzip": 22354
+ }
+}

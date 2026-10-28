@@ -39,6 +39,10 @@
     "locale": {
       "type": "string",
       "description": "The language for times and numbers, e.g. \"en-GB\"; by default the browser's"
+    },
+    "schedulable": {
+      "type": "boolean",
+      "description": "Whether saved searches offer Schedule, to run them as routines (tc-schedule)"
     }
   },
   "additionalProperties": false,

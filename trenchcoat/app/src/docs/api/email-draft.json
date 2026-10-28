@@ -649,6 +649,7 @@
   ],
   "animations": 1,
   "observers": [
+   "MutationObserver (internal/base › TcElement)",
    "MutationObserver (internal/controllers › AriaForwardController)",
    "MutationObserver (internal/controllers › FocusRescueController)",
    "ResizeObserver (internal/controllers › SmoothHeightController)"
@@ -668,7 +669,7 @@
   "windowed": false
  },
  "size": {
-  "min": 59469,
-  "gzip": 14183
+  "min": 59957,
+  "gzip": 14309
  }
 }

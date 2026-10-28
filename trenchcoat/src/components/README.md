@@ -122,6 +122,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Model Routing** (`model-routing.tsx`) – Routing rules as a route with a fallback chain, target health, breakers and residency, and a route test that lights up the path taken
 - **Model Settings** (`model-settings.tsx`) – The parameters a model supports, explained, with presets, a value signature, incompatible-setting feedback and what differs from the defaults
 - **Money Flow** (`money-flow.tsx`) – How money moved between entities – people, companies, shells and banks in columns, transfers as bands sized by amount with flag chips, an entity's or a transfer's flows lit with a readout in words, a list of every transfer and a table view
+- **Multi Calendar** (`multi-calendar.tsx`) – A calendar of calendars: many people's Google, Outlook, Exchange and iCal calendars in one Day, Week, Month, Agenda or People view, with show/hide per calendar, conflicts across a person's calendars, and create, edit, drag-to-move and delete on writable ones
 - **Multimodal input** (`multimodal-input.tsx`) – Attach mixed media with local previews, upload state, format limits, and token estimates.
 - **Notification Stack** (`notification-stack.tsx`) – Notice cards stacked behind each other – dismiss the front one to reveal the next
 - **Notifications** (`notifications.tsx`) – The notification center – a bell with an unread badge that opens a panel of notifications grouped by day, with tabs, read state, inline actions, Mark all as read and Load more
@@ -158,6 +159,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Retrieval Settings** (`retrieval-settings.tsx`) – Chunking, top-k, a score threshold, keyword ↔ vector balance, reranking and metadata filters, edited on a picture of the pipeline, with the app's cost and latency
 - **Review Center** (`review-center.tsx`) – A focused workspace for what your agents want to do – the queue sorted by risk, one item at a time with the shaky spans marked, Approve, Edit, Reject and Skip on single keys, a stamp as each one leaves and the next one rising in
 - **Review Conflict** (`review-conflict.tsx`) – Two reviewers disagree – both verdicts with who gave them, resolved by a third person with a reason, or kept blind
+- **Routine Form** (`routine-form.tsx`) – Set up a routine: name, frequency and start time in a time zone with the next run worked out, first run now or on schedule, email notifications and instructions, with Dismiss and Create routine
 - **Run Checkpoints** (`run-checkpoints.tsx`) – A run's restore points on a timeline – what each one captured, what going back discards, and “go back to step 4 and try again”
 - **Run Compare** (`run-compare.tsx`) – Two runs or two prompt versions side by side – outputs, steps, cost and time, with every difference highlighted
 - **Run Manifest** (`run-manifest.tsx`) – What it takes to reproduce a run – model, settings, instruction hash, sources, intent and the verification summary, ready to export

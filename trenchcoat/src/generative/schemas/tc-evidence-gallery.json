@@ -1,0 +1,108 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-evidence-gallery.json",
+  "title": "tc-evidence-gallery",
+  "description": "The images behind a set of claims: a filter by attestation, an image grid with each image's attestation and linked\nclaims, and the same items in a sortable, read-only table.",
+  "type": "object",
+  "properties": {
+    "items": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/EvidenceItem"
+      },
+      "description": "The evidence, in display order"
+    },
+    "filter": {
+      "anyOf": [
+        {
+          "type": "string",
+          "const": "all"
+        },
+        {
+          "$ref": "#/definitions/Attestation"
+        }
+      ],
+      "description": "Which items show: \"all\", \"attested\", \"unverified\" or \"failed\""
+    },
+    "attestationLabels": {
+      "type": "object",
+      "properties": {
+        "failed": {
+          "type": "string"
+        },
+        "attested": {
+          "type": "string"
+        },
+        "unverified": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Words for the attestation states, merged over defaultAttestationLabels"
+    },
+    "heading": {
+      "type": "string",
+      "description": "The grid's heading"
+    },
+    "subtitle": {
+      "type": "string",
+      "description": "A line under the grid's heading, e.g. the case or report it belongs to"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "EvidenceItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string",
+          "description": "What it is, e.g. \"Loading bay camera, 06:12\""
+        },
+        "kind": {
+          "type": "string",
+          "description": "e.g. \"Photo\", \"Scan\", \"Map\""
+        },
+        "src": {
+          "type": "string",
+          "description": "The image (or a still of it) – a data: URL works too"
+        },
+        "alt": {
+          "type": "string",
+          "description": "What the image shows, for people who can't see it"
+        },
+        "attestation": {
+          "$ref": "#/definitions/Attestation"
+        },
+        "claims": {
+          "type": "number",
+          "description": "How many claims cite it"
+        },
+        "source": {
+          "type": "string",
+          "description": "Where it came from, e.g. \"Site camera 2\""
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "kind",
+        "src",
+        "alt",
+        "attestation",
+        "claims"
+      ],
+      "additionalProperties": false
+    },
+    "Attestation": {
+      "type": "string",
+      "enum": [
+        "attested",
+        "unverified",
+        "failed"
+      ]
+    }
+  }
+}

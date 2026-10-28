@@ -2,19 +2,12 @@ import type { ContractSpec } from "../../contract.test";
 
 const task = (id: string, title: string) => ({ id, key: id.toUpperCase(), title, status: "todo", priority: 0, labels: [], created: "Oct 1" });
 const a = [task("a", "Alpha")];
-const b = [task("b", "Beta"), task("c", "Gamma")];
-const byTitles: Record<string, unknown> = { Alpha: a, "Beta|Gamma": b };
 
+// The block is <tc-task-board> through trenchcoat/react. jsdom loads @lit/react's node build, which never sets an element's
+// properties, so its controlled state is checked in a real browser (tests/elements/task-board.test.ts)
 export const spec: ContractSpec = {
   component: "TaskBoard",
   props: { defaultTasks: a, statuses: [{ id: "todo", label: "Todo", icon: null }], labels: [], people: [] },
-  root: ".ui-tb",
+  root: "tc-task-board",
   ref: "root",
-  controlled: [
-    {
-      prop: "tasks",
-      values: [a, b],
-      read: (root) => byTitles[[...root.querySelectorAll(".ui-tb__card-title > span:last-child")].map((n) => n.textContent).join("|")],
-    },
-  ],
 };

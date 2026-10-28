@@ -17,15 +17,11 @@ const segments = [
   { id: "all", label: "All plans" },
   { id: "pro", label: "Pro" },
 ];
-const picked = (root: HTMLElement, label: string) =>
-  root.querySelector(`[role="combobox"][aria-label="${label}"]`)?.textContent;
-
+// The block is <tc-kpi-board> through trenchcoat/react. jsdom loads @lit/react's node build, which never sets an
+// element's properties, so controlled `range` and `segment` are checked in a real browser (tests/elements/kpi-board.test.ts)
 export const spec: ContractSpec = {
+  root: "tc-kpi-board",
   component: "KpiBoard",
   props: { data: { "7d": set(1), "30d": set(2) }, ranges, segments },
   ref: "root",
-  controlled: [
-    { prop: "range", values: ["7d", "30d"], read: (root) => ranges.find((r) => r.label === picked(root, "Date range"))?.id },
-    { prop: "segment", values: ["all", "pro"], read: (root) => segments.find((s) => s.label === picked(root, "Segment"))?.id },
-  ],
 };

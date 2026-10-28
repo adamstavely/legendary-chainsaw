@@ -27,16 +27,19 @@ Every submit says what to search for, in which mode, whether to look inside file
 
 ## Anatomy
 
-1. **Field** `.ui-aisr__field` – the search icon (a sparkle in AI mode), scopes, the input or prompt, then keys, Clear and Send
-2. **Scopes** `.ui-aisr__scopes` – where the search looks, each chip removable
-3. **Suggestions** `.ui-aisr__pop` – recent and suggested searches below the field, in search mode
-4. **Examples** `.ui-aisr__examples` – prompts to start from, in AI mode
-5. **Switches** `.ui-aisr__opts` – AI mode, and Search within file contents
+1. **Card** `.ui-aisr__box` – the search card; its ring shows where focus is
+2. **Field** `.ui-aisr__field` – the search icon (a sparkle in AI mode), scopes, the input or prompt, then keys, Clear and Send
+3. **Scopes** `.ui-aisr__scopes` – where the search looks, each chip removable
+4. **Suggestions** `.ui-aisr__pop` – recent and suggested searches below the card, in search mode
+5. **Examples** `.ui-aisr__examples` – prompts to start from, inside the card in AI mode
+6. **Switches** `.ui-aisr__opts` – AI mode and Search within file contents, with the keys that send on the right
 
 ## Looks
 
-Both looks use the field recipe for the box. Standard sets the suggestions in a menu card on a gray tray; Clean shows
-one menu. The switch, checkbox and chips are the same in both.
+Standard is a white search card on a gray tray, with the switches on the tray below it; its suggestions are a menu card
+on a tray too. Clean is one white card with the switches as its last row, below a divider, and one menu for the
+suggestions. Focus rings the whole card rather than the input. The keys hint on the right of the switches and the ⌘K
+chips go when the search is narrower than about 460 px.
 
 ## Keyboard
 

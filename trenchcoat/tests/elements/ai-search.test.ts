@@ -58,6 +58,34 @@ describe("tc-ai-search", () => {
     });
   }
 
+  test("the card: Standard's tray and Clean's divider, the drawn checkbox, the keys hint by mode, and the focus ring on the card", async () => {
+    const std = await make();
+    const clean = await make("clean");
+    // Standard: the tray is the host, the card is the box; Clean: the host is the card, the switches below a divider
+    expect(getComputedStyle(std).backgroundColor).not.toBe(getComputedStyle(std.querySelector(".ui-aisr__box")!).backgroundColor);
+    expect(getComputedStyle(clean.querySelector(".ui-aisr__opts")!).borderTopStyle).toBe("solid");
+    // The examples sit inside the card in AI mode
+    std.mode = "ai";
+    await settle();
+    expect(std.querySelector(".ui-aisr__box .ui-aisr__examples")).not.toBeNull();
+    expect(std.querySelector(".ui-aisr__hint")!.textContent!.replace(/\s+/g, " ").trim()).toBe("↵ to ask · ⇧↵ new line");
+    expect(clean.querySelector(".ui-aisr__hint")!.textContent!.replace(/\s+/g, " ").trim()).toBe("↵ to search");
+    expect(clean.querySelector(".ui-aisr__hint")!.getAttribute("aria-hidden")).toBe("true");
+    // The checkbox is the real one, drawn with tokens; its tick shows when checked
+    const box = clean.querySelector<HTMLInputElement>(".ui-aisr__check input")!;
+    expect(getComputedStyle(box).appearance).toBe("none");
+    box.click();
+    await settle();
+    expect(clean.contents).toBe(true);
+    await expect.poll(() => getComputedStyle(clean.querySelector(".ui-aisr__tick")!).strokeDashoffset).toBe("0px");
+    // The prompt is three lines tall at least
+    const prompt = std.querySelector<HTMLTextAreaElement>("textarea")!;
+    expect(prompt.getBoundingClientRect().height).toBeGreaterThanOrEqual(3 * parseFloat(getComputedStyle(prompt).lineHeight) - 1);
+    // Focus rings the card
+    clean.querySelector<HTMLInputElement>(".ui-aisr__input")!.focus();
+    await expect.poll(() => getComputedStyle(clean).boxShadow).toContain("0px 0px 0px");
+  });
+
   test("suggestions: open on focus, recent first, filtered as you type, ↓ ↑ move, Enter submits the one picked", async () => {
     const el = await make();
     const got: AiSearchSubmit[] = [];

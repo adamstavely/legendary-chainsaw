@@ -1,0 +1,104 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-testimonial-wall.json",
+  "title": "tc-testimonial-wall",
+  "description": "The landing-page wall of quotes: columns that scroll endlessly in opposite directions, ease to a stop on hover and pause for good.",
+  "type": "object",
+  "properties": {
+    "items": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Testimonial"
+      },
+      "description": "The quotes"
+    },
+    "columns": {
+      "type": "number",
+      "enum": [
+        2,
+        1,
+        3
+      ],
+      "description": "Most columns on a wide container – narrower containers use fewer (2 below 740 px, 1 below 480 px)"
+    },
+    "speed": {
+      "type": "number",
+      "description": "Pixels per second of the first column; the others run a little slower and faster"
+    },
+    "pauseOnHover": {
+      "type": "boolean",
+      "description": "Ease a column to a stop while the pointer is over it or a card in it has keyboard focus"
+    },
+    "paused": {
+      "type": "boolean",
+      "description": "Stopped for good (the Pause / Play button's state)"
+    },
+    "pauseButton": {
+      "type": "boolean",
+      "description": "Show the Pause / Play button (on by default – moving content needs a way to stop it, WCAG 2.2.2)"
+    },
+    "label": {
+      "type": "string",
+      "description": "Accessible name of the wall"
+    },
+    "buttonLabels": {
+      "type": "object",
+      "properties": {
+        "pause": {
+          "type": "string"
+        },
+        "play": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "pause",
+        "play"
+      ],
+      "additionalProperties": false,
+      "description": "The Pause button's name, and the Play button's"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "Testimonial": {
+      "type": "object",
+      "properties": {
+        "quote": {
+          "type": "string",
+          "description": "The quote itself – mix short and long ones, the masonry looks more natural"
+        },
+        "name": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string",
+          "description": "e.g. \"Design Engineer\""
+        },
+        "company": {
+          "type": "string",
+          "description": "e.g. \"Fieldnote\" – shown after the role"
+        },
+        "avatar": {
+          "type": "string",
+          "description": "Photo URL; without one the initials sit on a soft gray circle",
+          "format": "uri-reference",
+          "contentMediaType": "image/*"
+        },
+        "rating": {
+          "type": "number",
+          "description": "1–5 – a small, calm gray star row above the quote"
+        },
+        "verified": {
+          "type": "boolean",
+          "description": "A small gray check beside the name"
+        }
+      },
+      "required": [
+        "quote",
+        "name"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

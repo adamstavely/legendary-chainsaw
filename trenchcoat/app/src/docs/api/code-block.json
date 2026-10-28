@@ -724,6 +724,7 @@
   "frames": [],
   "animations": 2,
   "observers": [
+   "MutationObserver (internal/base › TcElement)",
    "MutationObserver (internal/controllers › AriaForwardController)",
    "IntersectionObserver (internal/controllers › OffScreenController)",
    "ResizeObserver (inline-diff)"
@@ -748,7 +749,7 @@
   "windowed": false
  },
  "size": {
-  "min": 85959,
-  "gzip": 23157
+  "min": 86447,
+  "gzip": 23291
  }
 }

@@ -29,7 +29,9 @@ in mono, with Copy and Run. A condition without a value is left out of both unti
 
 1. **Group** `.ui-qb__group` – conditions joined by its AND / OR switch; nested groups are indented
 2. **Join** `.ui-qb__join` – the AND / OR switch, with “all of these” or “any of these” beside it
-3. **Condition** `.ui-qb__cond` – field, operator, value and remove
+3. **Condition** `.ui-qb__cond` – the joining word, then field, operator, value and remove
+   - **Joining word** `.ui-qb__conj` – “Where” on the first row, then the group's “and” or “or”, so the rows read as a sentence
+   - **Select** `.ui-qb__select` – a native select drawn as a field, with a chevron
 4. **Value** `.ui-qb__value` – text, a number, a date, two of them for between, or option chips for “is any of”
 5. **Add** `.ui-qb__adds` – Condition, and Group in the top group
 6. **Read-back** `.ui-qb__read` – the query in words, then the query string with Copy and Run
@@ -37,7 +39,9 @@ in mono, with Copy and Run. A condition without a value is left out of both unti
 ## Looks
 
 Standard is a white card on a gray tray, with the header on the tray above it. Clean is one white card with the header
-as its first row. The fields, switches and read-back are the same in both.
+as its first row. The fields, switches and read-back are the same in both. Each condition sits on one line; below about
+600 px the joining words go (the group's switch still says AND or OR), and below about 460 px the value takes its own
+line. The width of the joining words is `--tc-qb-conj`.
 
 ## Keyboard
 

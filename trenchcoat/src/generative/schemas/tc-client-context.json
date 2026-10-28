@@ -1,0 +1,331 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-client-context.json",
+  "title": "tc-client-context",
+  "description": "One client's numbers, reports and shared context – switch clients, sync, regenerate reports and keep a team timeline.",
+  "type": "object",
+  "properties": {
+    "clients": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ContextClient"
+      },
+      "description": "The clients and their context. Context added or removed here is kept per client until you pass a different context for that client – then your data wins"
+    },
+    "client": {
+      "type": "string",
+      "description": "Id of the open client; empty opens the first"
+    },
+    "me": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "avatar": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false,
+      "description": "The signed-in person – author of new context"
+    },
+    "tab": {
+      "type": "string",
+      "enum": [
+        "settings",
+        "context",
+        "reports",
+        "financials"
+      ],
+      "description": "The section shown: context, reports, financials or settings"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ContextClient": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "meta": {
+          "type": "string",
+          "description": "Second line under the name, e.g. legal name, currency and fiscal year end"
+        },
+        "mark": {
+          "type": "object",
+          "properties": {
+            "letter": {
+              "type": "string"
+            },
+            "bg": {
+              "type": "string"
+            },
+            "fg": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "letter",
+            "bg",
+            "fg"
+          ],
+          "additionalProperties": false,
+          "description": "Initial and colours of the client's mark"
+        },
+        "kpis": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ContextKpi"
+          }
+        },
+        "reports": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ContextReport"
+          }
+        },
+        "context": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ContextEntry"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "meta",
+        "mark",
+        "kpis",
+        "reports",
+        "context"
+      ],
+      "additionalProperties": false
+    },
+    "ContextKpi": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "previous": {
+          "type": "string"
+        },
+        "delta": {
+          "type": "number"
+        },
+        "points": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        },
+        "color": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "label",
+        "value",
+        "previous",
+        "delta",
+        "points",
+        "color"
+      ],
+      "additionalProperties": false
+    },
+    "ContextReport": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "when": {
+          "type": "string"
+        },
+        "summary": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "when",
+        "summary"
+      ],
+      "additionalProperties": false
+    },
+    "ContextEntry": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "kind": {
+              "type": "string",
+              "const": "note"
+            },
+            "author": {
+              "$ref": "#/definitions/ContextPerson"
+            },
+            "when": {
+              "type": "string"
+            },
+            "text": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "kind",
+            "author",
+            "when",
+            "text"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "kind": {
+              "type": "string",
+              "const": "report"
+            },
+            "author": {
+              "$ref": "#/definitions/ContextPerson"
+            },
+            "when": {
+              "type": "string"
+            },
+            "report": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "kind",
+            "author",
+            "when",
+            "report"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "kind": {
+              "type": "string",
+              "const": "files"
+            },
+            "author": {
+              "$ref": "#/definitions/ContextPerson"
+            },
+            "when": {
+              "type": "string"
+            },
+            "files": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ContextFile"
+              }
+            },
+            "text": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "kind",
+            "author",
+            "when",
+            "files"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "kind": {
+              "type": "string",
+              "const": "integration"
+            },
+            "when": {
+              "type": "string"
+            },
+            "app": {
+              "type": "string"
+            },
+            "connected": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "id",
+            "kind",
+            "when",
+            "app",
+            "connected"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "ContextPerson": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "avatar": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "ContextFile": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "pdf",
+            "xlsx",
+            "csv",
+            "doc"
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "type"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

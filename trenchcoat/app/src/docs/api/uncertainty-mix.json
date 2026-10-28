@@ -1,0 +1,462 @@
+{
+ "elements": [
+  {
+   "tag": "tc-uncertainty-mix",
+   "className": "TcUncertaintyMix",
+   "description": "Where an answer's uncertainty comes from: the mix of kinds with their shares and meanings and a reading of what to\ndo, beside a breakdown chart of the same mix per part of the answer.",
+   "properties": [
+    {
+     "name": "sources",
+     "attribute": null,
+     "type": "UncertaintySource[]",
+     "default": "[]",
+     "description": "Where the uncertainty comes from: a part, a kind's key and an amount each",
+     "readonly": false
+    },
+    {
+     "name": "kinds",
+     "attribute": null,
+     "type": "UncertaintyKind[]",
+     "default": "[ { key: \"gap\", label: \"Missing information\", meaning: \"More information would narrow it\", advice: \"Find or request what's missing before relying on it.\", color: \"var(--tc-tone-violet-solid)\", }, { key: \"chance\", label: \"Inherent uncertainty\", meaning: \"The outcome isn't decided yet\", advice: \"Watch for early signs and revisit as things change.\", color: \"var(--tc-status-info-solid)\", }, { key: \"model\", label: \"Model limits\", meaning: \"At the edge of what the model knows\", advice: \"Check it with a person who knows the area, or a primary source.\", color: \"var(--tc-tone-amber-solid)\", }, ]",
+     "description": "The kinds, in display order – defaultUncertaintyKinds by default",
+     "readonly": false
+    },
+    {
+     "name": "parts",
+     "attribute": null,
+     "type": "string[] | undefined",
+     "default": "undefined",
+     "description": "The parts in display order – by first appearance in `sources` by default",
+     "readonly": false
+    },
+    {
+     "name": "partLabel",
+     "attribute": "part-label",
+     "type": "string",
+     "default": "\"Part of the answer\"",
+     "description": "What a part is called, e.g. \"Section\" or \"Claim\"",
+     "readonly": false
+    },
+    {
+     "name": "hiddenKinds",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[]",
+     "description": "Keys of the kinds hidden from the chart and the reading",
+     "readonly": false
+    },
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Uncertainty mix\"",
+     "description": "The reading card's heading",
+     "readonly": false
+    },
+    {
+     "name": "subtitle",
+     "attribute": "subtitle",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The line under the heading, e.g. the question the answer is to",
+     "readonly": false
+    },
+    {
+     "name": "chartTitle",
+     "attribute": "chart-title",
+     "type": "string",
+     "default": "\"By part of the answer\"",
+     "description": "The chart's heading",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-hidden-change",
+     "detail": "",
+     "description": "Kinds were hidden or shown in the chart's legend ({ hidden, hiddenKinds }: UncertaintyHiddenChange – both the kinds' keys); cancelable – prevented, `hiddenKinds` stays",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "umix",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-duration-slow",
+    "--tc-ease-out",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xl",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-semibold",
+    "--tc-line-height-normal",
+    "--tc-line-height-tight",
+    "--tc-radius-2xs",
+    "--tc-radius-full",
+    "--tc-radius-lg",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-sunken",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "defaultUncertaintyKinds",
+   "signature": "defaultUncertaintyKinds: UncertaintyKind[]",
+   "description": "Missing information, inherent uncertainty and model limits"
+  }
+ ],
+ "react": [
+  {
+   "component": "UncertaintyMix",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The reading card's heading – \"Uncertainty mix\" by default"
+    },
+    {
+     "name": "hidden",
+     "type": "string[]",
+     "optional": true,
+     "description": "Keys of the kinds hidden from the chart and the reading (controlled)"
+    },
+    {
+     "name": "defaultHidden",
+     "type": "string[]",
+     "optional": true,
+     "description": "Hidden at first when uncontrolled"
+    },
+    {
+     "name": "onHiddenChange",
+     "type": "(keys: string[]) => void",
+     "optional": true,
+     "description": "Called when the chart's legend hides or shows kinds"
+    }
+   ],
+   "hides": [
+    "heading",
+    "hidden",
+    "hiddenKinds",
+    "children"
+   ],
+   "events": {
+    "tc-hidden-change": "onHiddenChange"
+   }
+  }
+ ],
+ "changelog": [
+  "All 18 blocks are now elements – `tc-agent-gallery`, `tc-ai-side-pane`, `tc-ai-workspace`, `tc-app-directory`, `tc-client-context`, `tc-evidence-gallery`, `tc-header-nav`, `tc-invoice-credit`, `tc-kpi-board`, `tc-logo-marquee`, `tc-metrics-dashboard`, `tc-oversight-home`, `tc-pricing-plans`, `tc-publish-readiness`, `tc-red-team-finding`, `tc-task-board`, `tc-testimonial-wall`, `tc-uncertainty-mix` – so Angular (`trenchcoat/angular`), Vue, Svelte, plain HTML and generative UI get them like any component, with docs pages."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-uncertainty-mix",
+   "className": "TcUncertaintyMix",
+   "module": "trenchcoat/uncertainty-mix",
+   "data": [
+    "sources",
+    "kinds",
+    "parts",
+    "hiddenKinds"
+   ],
+   "attributes": [
+    {
+     "name": "partLabel",
+     "attribute": "part-label"
+    },
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "subtitle",
+     "attribute": "subtitle"
+    },
+    {
+     "name": "chartTitle",
+     "attribute": "chart-title"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-hidden-change",
+     "cancelable": true
+    }
+   ],
+   "controlled": [],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself",
+     "breakdown-chart"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "breakdown-chart",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "breakdown-chart"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "breakdown-chart",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "resize-observer",
+    "name": "ResizeObserver",
+    "bcd": "api.ResizeObserver",
+    "versions": {
+     "chrome": "64",
+     "edge": "79",
+     "firefox": "69",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "via": [
+     "breakdown-chart",
+     "internal/controllers"
+    ]
+   },
+   {
+    "id": "scrollbar-width",
+    "name": "scrollbar-width",
+    "bcd": "css.properties.scrollbar-width",
+    "versions": {
+     "chrome": "121",
+     "edge": "121",
+     "firefox": "64",
+     "safari": "18.2",
+     "safari_ios": "18.2"
+    },
+    "progressive": true,
+    "without": "Scrollbars keep the browser's default width.",
+    "via": [
+     "breakdown-chart"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [
+   "requestAnimationFrame, cancelled (internal/controllers › SmoothHeightController)"
+  ],
+  "animations": 0,
+  "observers": [
+   "ResizeObserver (breakdown-chart)",
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)",
+   "ResizeObserver (internal/controllers › SmoothHeightController)"
+  ],
+  "clock": [],
+  "listeners": [
+   "document keydown (breakdown-chart)",
+   "window pointerdown (breakdown-chart)"
+  ],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (breakdown-chart)",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 58345,
+  "gzip": 15479
+ }
+}

@@ -79,7 +79,7 @@ function checks(spec: ContractSpec, file: string, look?: "standard" | "clean") {
     const root = rootOf(container);
     expect(root, "root element").toBeTruthy();
     expect(root.classList.contains("consumer-class"), "consumer className merged").toBe(true);
-    expect([...root.classList].some((c) => c.startsWith("ui-")), "component keeps its own class").toBe(true);
+    expect([...root.classList].some((c) => c.startsWith("ui-")) || root.hasAttribute("data-ui"), "component keeps its own class (a Lit root carries data-ui)").toBe(true);
     expect(root.getAttribute("data-consumer")).toBe("yes");
     expect(root.getAttribute("aria-describedby")).toBe("consumer");
     if (look) expect(root.getAttribute("data-look"), "default look").toBe(look);

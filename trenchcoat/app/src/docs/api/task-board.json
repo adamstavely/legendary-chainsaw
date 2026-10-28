@@ -1,0 +1,596 @@
+{
+ "elements": [
+  {
+   "tag": "tc-task-board",
+   "className": "TcTaskBoard",
+   "description": "A kanban board: columns per status, cards to drag, a detail panel to edit a card, search, a label filter and a\ncompact view.",
+   "properties": [
+    {
+     "name": "tasks",
+     "attribute": null,
+     "type": "Task[]",
+     "default": "[]",
+     "description": "The cards",
+     "readonly": false
+    },
+    {
+     "name": "statuses",
+     "attribute": null,
+     "type": "TaskStatus[]",
+     "default": "[]",
+     "description": "The columns, in order",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "TaskLabel[]",
+     "default": "[]",
+     "description": "The labels a card can carry, with their colours",
+     "readonly": false
+    },
+    {
+     "name": "people",
+     "attribute": null,
+     "type": "TaskPerson[]",
+     "default": "[]",
+     "description": "The people a card can be assigned to",
+     "readonly": false
+    },
+    {
+     "name": "path",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[\"Northwind\", \"Launch\", \"Sprint 12\"]",
+     "description": "Breadcrumb above the board; its steps also name the board",
+     "readonly": false
+    },
+    {
+     "name": "compact",
+     "attribute": "compact",
+     "type": "boolean",
+     "default": "false",
+     "description": "Shows cards without their properties and dates",
+     "readonly": false
+    },
+    {
+     "name": "now",
+     "attribute": "now",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The day new cards are created, as epoch ms – today by default",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-tasks-change",
+     "detail": "",
+     "description": "A card was added, edited, moved or deleted ({ tasks, task, change }: TaskBoardTasksChange); cancelable – prevented, `tasks` stays",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "tb",
+   "cssProperties": [
+    {
+     "name": "--tc-tb-scrim",
+     "value": "light-dark(rgba(23, 23, 23, 0.08), rgba(0, 0, 0, 0.4))",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-border-default",
+    "--tc-border-selected",
+    "--tc-border-strong",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-card-shadow-hover",
+    "--tc-control-h-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-quick",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-bg-sunken",
+    "--tc-field-font-size",
+    "--tc-field-h",
+    "--tc-field-px",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-field-shadow-hover",
+    "--tc-fill-hover",
+    "--tc-fill-selected",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-sans",
+    "--tc-font-size-2xs",
+    "--tc-font-size-lg",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xl",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-loose",
+    "--tc-line-height-normal",
+    "--tc-menu-bg",
+    "--tc-menu-item-font-size",
+    "--tc-menu-item-h",
+    "--tc-menu-item-hover",
+    "--tc-menu-item-px",
+    "--tc-menu-item-radius",
+    "--tc-menu-item-selected-fg",
+    "--tc-menu-padding",
+    "--tc-menu-radius",
+    "--tc-menu-shadow",
+    "--tc-pill-h-lg",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-2xl",
+    "--tc-radius-2xs",
+    "--tc-radius-3xl",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-xl",
+    "--tc-shadow-overlay",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-4-5",
+    "--tc-status-warning-fg",
+    "--tc-status-warning-solid",
+    "--tc-surface-overlay",
+    "--tc-surface-raised",
+    "--tc-surface-sunken",
+    "--tc-text-muted",
+    "--tc-text-on-accent",
+    "--tc-text-placeholder",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tone-pink-bg",
+    "--tc-tone-pink-border",
+    "--tc-tone-pink-fg",
+    "--tc-tone-pink-solid",
+    "--tc-z-drawer",
+    "--tc-z-drawer-scrim",
+    "--tc-z-dropdown"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "TaskBoard",
+   "exported": true,
+   "props": [
+    {
+     "name": "tasks",
+     "type": "Task[]",
+     "optional": true,
+     "description": "The tasks (controlled) – pass `onTasksChange` with it. Leave undefined to start from `defaultTasks`"
+    },
+    {
+     "name": "defaultTasks",
+     "type": "Task[]",
+     "optional": true,
+     "description": "The tasks to start from when uncontrolled"
+    },
+    {
+     "name": "onTasksChange",
+     "type": "(tasks: Task[]) => void",
+     "optional": true,
+     "description": "Called with all tasks after every change"
+    },
+    {
+     "name": "statuses",
+     "type": "TaskStatus[]",
+     "optional": false,
+     "description": "The columns, in order – an icon may be any React node"
+    },
+    {
+     "name": "onChange",
+     "type": "(tasks: Task[]) => void",
+     "optional": true,
+     "description": "Any change to the tasks (added, edited, moved or deleted) – the same as `onTasksChange`, kept from the block"
+    }
+   ],
+   "hides": [
+    "tasks",
+    "statuses",
+    "onChange"
+   ],
+   "events": {
+    "tc-tasks-change": "onTasksChange"
+   }
+  }
+ ],
+ "changelog": [
+  "All 18 blocks are now elements – `tc-agent-gallery`, `tc-ai-side-pane`, `tc-ai-workspace`, `tc-app-directory`, `tc-client-context`, `tc-evidence-gallery`, `tc-header-nav`, `tc-invoice-credit`, `tc-kpi-board`, `tc-logo-marquee`, `tc-metrics-dashboard`, `tc-oversight-home`, `tc-pricing-plans`, `tc-publish-readiness`, `tc-red-team-finding`, `tc-task-board`, `tc-testimonial-wall`, `tc-uncertainty-mix` – so Angular (`trenchcoat/angular`), Vue, Svelte, plain HTML and generative UI get them like any component, with docs pages."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-task-board",
+   "className": "TcTaskBoard",
+   "module": "trenchcoat/task-board",
+   "data": [
+    "tasks",
+    "statuses",
+    "labels",
+    "people",
+    "path"
+   ],
+   "attributes": [
+    {
+     "name": "compact",
+     "attribute": "compact"
+    },
+    {
+     "name": "now",
+     "attribute": "now"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-tasks-change",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "tasks",
+     "event": "tc-tasks-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "121",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "has"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "itself",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "button",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "inert",
+    "name": "inert",
+    "bcd": "api.HTMLElement.inert",
+    "versions": {
+     "chrome": "102",
+     "edge": "102",
+     "firefox": "112",
+     "safari": "15.5",
+     "safari_ios": "15.5"
+    },
+    "progressive": false,
+    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "button",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "has",
+    "name": ":has()",
+    "bcd": "css.selectors.has",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "121",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Layout and state that depend on what's inside a part (an icon present, a focused field).",
+    "via": [
+     "button"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself",
+     "button"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "button",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "resize-observer",
+    "name": "ResizeObserver",
+    "bcd": "api.ResizeObserver",
+    "versions": {
+     "chrome": "64",
+     "edge": "79",
+     "firefox": "69",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "via": [
+     "button"
+    ]
+   },
+   {
+    "id": "intersection-observer",
+    "name": "IntersectionObserver",
+    "bcd": "api.IntersectionObserver",
+    "versions": {
+     "chrome": "51",
+     "edge": "15",
+     "firefox": "55",
+     "safari": "12.1",
+     "safari_ios": "12.2"
+    },
+    "progressive": false,
+    "via": [
+     "internal/controllers"
+    ]
+   },
+   {
+    "id": "mask",
+    "name": "CSS masks",
+    "bcd": "css.properties.mask-image",
+    "versions": {
+     "chrome": "1",
+     "edge": "79",
+     "firefox": "53",
+     "safari": "4",
+     "safari_ios": "3.2"
+    },
+    "progressive": false,
+    "note": "with the -webkit- prefix",
+    "via": [
+     "button"
+    ]
+   },
+   {
+    "id": "scrollbar-width",
+    "name": "scrollbar-width",
+    "bcd": "css.properties.scrollbar-width",
+    "versions": {
+     "chrome": "121",
+     "edge": "121",
+     "firefox": "64",
+     "safari": "18.2",
+     "safari_ios": "18.2"
+    },
+    "progressive": true,
+    "without": "Scrollbars keep the browser's default width.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 3,
+  "observers": [
+   "ResizeObserver (button)",
+   "MutationObserver (button)",
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)",
+   "IntersectionObserver (internal/controllers › OffScreenController)"
+  ],
+  "clock": [
+   "Date.now()"
+  ],
+  "listeners": [
+   "window keydown",
+   "window pointerdown"
+  ],
+  "pauses": {
+   "offscreen": [
+    "button",
+    "internal/controllers › OffScreenController"
+   ],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (button)",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 59098,
+  "gzip": 16177
+ }
+}

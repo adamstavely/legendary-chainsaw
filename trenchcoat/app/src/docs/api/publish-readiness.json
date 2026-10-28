@@ -1,0 +1,684 @@
+{
+ "elements": [
+  {
+   "tag": "tc-publish-readiness",
+   "className": "TcPublishReadiness",
+   "description": "What must pass before something is released: a summary card with one tick per check that opens a dialog of the\nchecks, the blockers behind failing ones and the publish action, held back while anything blocks.",
+   "properties": [
+    {
+     "name": "subject",
+     "attribute": "subject",
+     "type": "string",
+     "default": "\"\"",
+     "description": "What is being released, e.g. \"Daily briefing\"",
+     "readonly": false
+    },
+    {
+     "name": "version",
+     "attribute": "version",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "Its version, e.g. \"v1.3\"",
+     "readonly": false
+    },
+    {
+     "name": "checks",
+     "attribute": null,
+     "type": "ReadinessCheck[]",
+     "default": "[]",
+     "description": "The checks, in order",
+     "readonly": false
+    },
+    {
+     "name": "confirmed",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[]",
+     "description": "Ids of the manual checks the person has signed off",
+     "readonly": false
+    },
+    {
+     "name": "open",
+     "attribute": "open",
+     "type": "boolean",
+     "default": "false",
+     "description": "Whether the dialog is open",
+     "readonly": false
+    },
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Ready to publish?\"",
+     "description": "The dialog's heading",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string | Element | undefined",
+     "default": "undefined",
+     "description": "The line under the summary's title – text, or an element (cloned)",
+     "readonly": false
+    },
+    {
+     "name": "note",
+     "attribute": "note",
+     "type": "string | Element | undefined",
+     "default": "undefined",
+     "description": "Who approves and what happens next – a note above the action: text, or an element (cloned)",
+     "readonly": false
+    },
+    {
+     "name": "publishLabel",
+     "attribute": "publish-label",
+     "type": "string",
+     "default": "\"Submit for approval\"",
+     "description": "The action's label",
+     "readonly": false
+    },
+    {
+     "name": "publishDisabled",
+     "attribute": "publish-disabled",
+     "type": "boolean",
+     "default": "false",
+     "description": "Keep the publish action off even when ready – nothing to publish to yet",
+     "readonly": false
+    },
+    {
+     "name": "plainBlockers",
+     "attribute": "plain-blockers",
+     "type": "boolean",
+     "default": "false",
+     "description": "Show blockers as plain text instead of links (nothing opens them)",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-confirmed-change",
+     "detail": "",
+     "description": "A sign-off was given or withdrawn ({ confirmed }: ReadinessConfirmedChange – every signed-off id); cancelable – prevented, `confirmed` stays",
+     "cancelable": true
+    },
+    {
+     "name": "tc-open-change",
+     "detail": "",
+     "description": "The dialog opens or closes ({ open }: ReadinessOpenChange); cancelable – prevented, `open` stays",
+     "cancelable": true
+    },
+    {
+     "name": "tc-open-blocker",
+     "detail": "",
+     "description": "A blocker's link was followed – open the place it points at ({ blocker, check }: ReadinessOpenBlocker)",
+     "cancelable": false
+    },
+    {
+     "name": "tc-publish",
+     "detail": "",
+     "description": "The publish action was pressed, with nothing blocking; detail: null",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "prd",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-border-strong",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-h-sm",
+    "--tc-duration-base",
+    "--tc-ease-standard",
+    "--tc-eyebrow-color",
+    "--tc-eyebrow-font-size",
+    "--tc-eyebrow-font-weight",
+    "--tc-eyebrow-line-height",
+    "--tc-eyebrow-tracking",
+    "--tc-eyebrow-transform",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-mono",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-hairline",
+    "--tc-line-height-normal",
+    "--tc-meter-h",
+    "--tc-meter-radius",
+    "--tc-meter-track",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-2xs",
+    "--tc-radius-lg",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-border",
+    "--tc-status-danger-fg",
+    "--tc-status-danger-solid",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-success-solid",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-sunken",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "PublishReadiness",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The dialog's heading – \"Ready to publish?\" by default"
+    },
+    {
+     "name": "description",
+     "type": "React.ReactNode",
+     "optional": true,
+     "description": "The line under the summary's title"
+    },
+    {
+     "name": "note",
+     "type": "React.ReactNode",
+     "optional": true,
+     "description": "Who approves and what happens next – a note above the action"
+    },
+    {
+     "name": "confirmed",
+     "type": "string[]",
+     "optional": true,
+     "description": "Ids of the manual checks the person has signed off (controlled)"
+    },
+    {
+     "name": "defaultConfirmed",
+     "type": "string[]",
+     "optional": true,
+     "description": "Signed off at first when uncontrolled"
+    },
+    {
+     "name": "onConfirmedChange",
+     "type": "(ids: string[]) => void",
+     "optional": true,
+     "description": "Called with every change to the signed-off ids"
+    },
+    {
+     "name": "open",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether the dialog is open (controlled)"
+    },
+    {
+     "name": "defaultOpen",
+     "type": "boolean",
+     "optional": true,
+     "description": "The checks dialog is open at first (uncontrolled)"
+    },
+    {
+     "name": "onOpenChange",
+     "type": "(open: boolean) => void",
+     "optional": true,
+     "description": "The checks dialog opened or closed"
+    },
+    {
+     "name": "onOpenBlocker",
+     "type": "(blocker: ReadinessBlocker, check: ReadinessCheck) => void",
+     "optional": true,
+     "description": "A blocker's link was followed – open the place it points at. Without it, blockers are plain text"
+    },
+    {
+     "name": "onPublish",
+     "type": "() => void",
+     "optional": true,
+     "description": "The release action – enabled once nothing blocks and every sign-off is given; without it the action stays off"
+    }
+   ],
+   "hides": [
+    "heading",
+    "confirmed",
+    "open",
+    "description",
+    "note",
+    "plainBlockers",
+    "publishDisabled",
+    "children"
+   ],
+   "events": {
+    "tc-confirmed-change": "onConfirmedChange",
+    "tc-open-change": "onOpenChange",
+    "tc-open-blocker": "onOpenBlocker",
+    "tc-publish": "onPublish"
+   }
+  }
+ ],
+ "changelog": [
+  "All 18 blocks are now elements – `tc-agent-gallery`, `tc-ai-side-pane`, `tc-ai-workspace`, `tc-app-directory`, `tc-client-context`, `tc-evidence-gallery`, `tc-header-nav`, `tc-invoice-credit`, `tc-kpi-board`, `tc-logo-marquee`, `tc-metrics-dashboard`, `tc-oversight-home`, `tc-pricing-plans`, `tc-publish-readiness`, `tc-red-team-finding`, `tc-task-board`, `tc-testimonial-wall`, `tc-uncertainty-mix` – so Angular (`trenchcoat/angular`), Vue, Svelte, plain HTML and generative UI get them like any component, with docs pages."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-publish-readiness",
+   "className": "TcPublishReadiness",
+   "module": "trenchcoat/publish-readiness",
+   "data": [
+    "checks",
+    "confirmed"
+   ],
+   "attributes": [
+    {
+     "name": "subject",
+     "attribute": "subject"
+    },
+    {
+     "name": "version",
+     "attribute": "version"
+    },
+    {
+     "name": "open",
+     "attribute": "open"
+    },
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    },
+    {
+     "name": "note",
+     "attribute": "note"
+    },
+    {
+     "name": "publishLabel",
+     "attribute": "publish-label"
+    },
+    {
+     "name": "publishDisabled",
+     "attribute": "publish-disabled"
+    },
+    {
+     "name": "plainBlockers",
+     "attribute": "plain-blockers"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-confirmed-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-open-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-open-blocker",
+     "cancelable": false
+    },
+    {
+     "name": "tc-publish",
+     "cancelable": false
+    }
+   ],
+   "controlled": [
+    {
+     "property": "confirmed",
+     "event": "tc-confirmed-change"
+    },
+    {
+     "property": "open",
+     "event": "tc-open-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "121",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "has"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "progress-tracker",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "button",
+     "internal/settings",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself",
+     "progress-tracker"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "button",
+     "internal/kit",
+     "internal/settings",
+     "progress-tracker"
+    ]
+   },
+   {
+    "id": "has",
+    "name": ":has()",
+    "bcd": "css.selectors.has",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "121",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Layout and state that depend on what's inside a part (an icon present, a focused field).",
+    "via": [
+     "button",
+     "dialog"
+    ]
+   },
+   {
+    "id": "dialog",
+    "name": "<dialog> and showModal()",
+    "bcd": "api.HTMLDialogElement.showModal",
+    "versions": {
+     "chrome": "37",
+     "edge": "79",
+     "firefox": "98",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Modals trap focus, close on Escape and sit in the top layer.",
+    "via": [
+     "dialog",
+     "internal/modal"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "button",
+     "progress-tracker"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "button",
+     "internal/base",
+     "internal/settings",
+     "progress-tracker",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "resize-observer",
+    "name": "ResizeObserver",
+    "bcd": "api.ResizeObserver",
+    "versions": {
+     "chrome": "64",
+     "edge": "79",
+     "firefox": "69",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "via": [
+     "button"
+    ]
+   },
+   {
+    "id": "intersection-observer",
+    "name": "IntersectionObserver",
+    "bcd": "api.IntersectionObserver",
+    "versions": {
+     "chrome": "51",
+     "edge": "15",
+     "firefox": "55",
+     "safari": "12.1",
+     "safari_ios": "12.2"
+    },
+    "progressive": false,
+    "via": [
+     "internal/controllers"
+    ]
+   },
+   {
+    "id": "mask",
+    "name": "CSS masks",
+    "bcd": "css.properties.mask-image",
+    "versions": {
+     "chrome": "1",
+     "edge": "79",
+     "firefox": "53",
+     "safari": "4",
+     "safari_ios": "3.2"
+    },
+    "progressive": false,
+    "note": "with the -webkit- prefix",
+    "via": [
+     "button"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setTimeout (progress-tracker)"
+  ],
+  "frames": [],
+  "animations": 4,
+  "observers": [
+   "ResizeObserver (button)",
+   "MutationObserver (button)",
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)",
+   "IntersectionObserver (internal/controllers › OffScreenController)",
+   "IntersectionObserver (internal/controllers › OnScreenController)"
+  ],
+  "clock": [],
+  "listeners": [
+   "document visibilitychange (internal/controllers › OnScreenController)"
+  ],
+  "pauses": {
+   "offscreen": [
+    "button",
+    "internal/controllers › OffScreenController",
+    "progress-tracker",
+    "internal/controllers › OnScreenController"
+   ],
+   "hidden": [
+    "internal/controllers › OnScreenController"
+   ],
+   "reducedMotion": [
+    "CSS",
+    "CSS (button)",
+    "CSS (internal/kit › kitCss)",
+    "CSS (internal/settings › rawSettingsCss)",
+    "CSS (progress-tracker)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 81652,
+  "gzip": 20986
+ }
+}

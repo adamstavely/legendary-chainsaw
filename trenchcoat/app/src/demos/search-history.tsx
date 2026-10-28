@@ -25,8 +25,8 @@ export default function Demo({ ui }: { ui: typeof UI }) {
   const [last, setLast] = useState<string | null>(null);
   return (
     <div style={{ width: "100%", maxWidth: 560, display: "grid", gap: 8 }}>
-      <SearchHistory now={NOW} defaultSearches={SEARCHES} onRunAgain={(s) => setLast(s.query)} />
-      <div style={{ ...caption, textAlign: "center" }}>{last ? `Running “${last}” again.` : "Star a search to keep it, remove one and Undo, or move with the arrow keys."}</div>
+      <SearchHistory now={NOW} defaultSearches={SEARCHES} schedulable onRunAgain={(s) => setLast(`Running “${s.query}” again.`)} onSchedule={(s) => setLast(`Scheduling “${s.query}” – open a routine form here.`)} />
+      <div style={{ ...caption, textAlign: "center" }}>{last ?? "Star a search to keep it, schedule a saved one, remove one and Undo, or move with the arrow keys."}</div>
     </div>
   );
 }

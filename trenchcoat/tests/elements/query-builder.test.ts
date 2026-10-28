@@ -65,6 +65,32 @@ describe("tc-query-builder", () => {
     });
   }
 
+  test("rows read as a sentence – Where, then the group's join – and the selects are drawn as fields with a chevron", async () => {
+    const wrap = await fixture<HTMLDivElement>(html`<div style="width: 760px"><tc-query-builder .fields=${FIELDS} .value=${QUERY}></tc-query-builder></div>`);
+    const el = wrap.querySelector("tc-query-builder")!;
+    await settle();
+    const words = (g: Element) => [...g.querySelectorAll(":scope > .ui-qb__list > li > .ui-qb__conj")].map((c) => c.textContent);
+    const root = el.querySelector('[data-node="root"]')!;
+    expect(words(root)[0]).toBe("Where");
+    expect(words(root).slice(1).every((w) => w === "and")).toBe(true);
+    // Flipping the join renames the words
+    el.querySelector<HTMLInputElement>('[data-node="root"] > .ui-qb__group-head input[value="or"]')!.click();
+    await settle();
+    expect(words(root).slice(1).every((w) => w === "or")).toBe(true);
+    // The words are decoration: hidden from assistive tech, shown at this width
+    const conj = root.querySelector<HTMLElement>(".ui-qb__conj")!;
+    expect(conj.getAttribute("aria-hidden")).toBe("true");
+    expect(getComputedStyle(conj).display).not.toBe("none");
+    for (const select of el.querySelectorAll("select")) {
+      expect(getComputedStyle(select).appearance).toBe("none");
+      expect(select.parentElement!.classList.contains("ui-qb__select")).toBe(true);
+      expect(select.parentElement!.querySelector(".ui-qb__chevron")).not.toBeNull();
+    }
+    // Narrow: the words go, a condition keeps its controls
+    wrap.style.width = "420px";
+    await expect.poll(() => getComputedStyle(conj).display).toBe("none");
+  });
+
   test("operators fit the field's type; changing the field resets the operator and value; any-of picks options as chips", async () => {
     const el = await make();
     const ops = (id: string) => [...cond(el, id).querySelectorAll<HTMLOptionElement>(".ui-qb__op option")].map((o) => o.value);

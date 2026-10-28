@@ -627,6 +627,7 @@
   "animations": 0,
   "observers": [
    "ResizeObserver (segmented-control)",
+   "MutationObserver (internal/base › TcElement)",
    "MutationObserver (internal/controllers › AriaForwardController)"
   ],
   "clock": [],
@@ -643,7 +644,7 @@
   "windowed": false
  },
  "size": {
-  "min": 64961,
-  "gzip": 16147
+  "min": 65449,
+  "gzip": 16285
  }
 }

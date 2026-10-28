@@ -70,7 +70,7 @@ const newId = (prefix: string) => `qb-${prefix}${++nodeCount}`;
 /** An empty top group, the starting value */
 export const emptyQuery = (): QueryGroup => ({ kind: "group", id: "root", join: "and", children: [] });
 
-/* plus, x, copy, check, play, sliders: Lucide (ISC, lucide.dev) */
+/* plus, x, copy, check, play, sliders, chevron-down: Lucide (ISC, lucide.dev) */
 const lucide = (size: number, body: ReturnType<typeof svg>) =>
   html`<svg width=${size} height=${size} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${body}</svg>`;
 const plusIcon = () => lucide(14, svg`<path d="M5 12h14"></path><path d="M12 5v14"></path>`);
@@ -78,6 +78,7 @@ const xIcon = () => lucide(14, svg`<path d="M18 6 6 18"></path><path d="m6 6 12 
 const copyIcon = () => lucide(14, svg`<rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>`);
 const checkIcon = () => lucide(14, svg`<path d="M20 6 9 17l-5-5"></path>`);
 const playIcon = () => lucide(14, svg`<polygon points="6 3 20 12 6 21 6 3"></polygon>`);
+const chevronIcon = () => html`<svg class="ui-qb__chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>`;
 const builderIcon = svg`<path d="M3 6h18"></path><path d="M7 12h10"></path><path d="M10 18h4"></path>`;
 
 /** Is a condition complete enough to read back? */
@@ -302,10 +303,13 @@ export class TcQueryBuilder extends TcElement {
       </div>`;
     }
     if (type === "enum") {
-      return html`<select class="ui-qb__input" aria-label=${label} .value=${live(String(c.value))} @change=${(e: Event) => this.update1(c, { value: (e.target as HTMLSelectElement).value })}>
-        <option value="" ?selected=${c.value === ""}>Choose…</option>
-        ${(f?.options ?? []).map((o) => html`<option value=${o.value} ?selected=${c.value === o.value}>${o.label}</option>`)}
-      </select>`;
+      return html`<span class="ui-qb__select"
+        ><select class="ui-qb__input" aria-label=${label} .value=${live(String(c.value))} @change=${(e: Event) => this.update1(c, { value: (e.target as HTMLSelectElement).value })}>
+          <option value="" ?selected=${c.value === ""}>Choose…</option>
+          ${(f?.options ?? []).map((o) => html`<option value=${o.value} ?selected=${c.value === o.value}>${o.label}</option>`)}
+        </select
+        >${chevronIcon()}</span
+      >`;
     }
     const inputType = type === "number" ? "number" : type === "date" ? "date" : "text";
     if (c.operator === "between") {
@@ -330,16 +334,28 @@ export class TcQueryBuilder extends TcElement {
     />`;
   }
 
-  private renderCondition(c: QueryCondition, n: number, focusAfter: string) {
+  /** The word that joins a row to the ones above it – "Where" first, then the group's AND or OR – read like a sentence */
+  private conj(g: QueryGroup, i: number) {
+    return html`<span class="ui-qb__conj" aria-hidden="true">${i === 0 ? "Where" : g.join}</span>`;
+  }
+
+  private renderCondition(c: QueryCondition, n: number, focusAfter: string, g: QueryGroup, i: number) {
     const f = this.field(c.field);
     const ops = queryOperators[f?.type ?? "text"];
     return html`<li class="ui-qb__cond" data-node=${c.id} ?data-incomplete=${!complete(c)}>
-      <select class="ui-qb__input ui-qb__field" aria-label=${`Field, condition ${n}`} .value=${live(c.field)} @change=${(e: Event) => this.update1(c, { field: (e.target as HTMLSelectElement).value })}>
-        ${this.fields.map((x) => html`<option value=${x.id} ?selected=${x.id === c.field}>${x.label}</option>`)}
-      </select>
-      <select class="ui-qb__input ui-qb__op" aria-label=${`Operator, condition ${n}`} .value=${live(c.operator)} @change=${(e: Event) => this.update1(c, { operator: (e.target as HTMLSelectElement).value as QueryOperator })}>
-        ${ops.map((o) => html`<option value=${o} ?selected=${o === c.operator}>${this.opLabel(o)}</option>`)}
-      </select>
+      ${this.conj(g, i)}
+      <span class="ui-qb__select ui-qb__select--field"
+        ><select class="ui-qb__input ui-qb__field" aria-label=${`Field, condition ${n}`} .value=${live(c.field)} @change=${(e: Event) => this.update1(c, { field: (e.target as HTMLSelectElement).value })}>
+          ${this.fields.map((x) => html`<option value=${x.id} ?selected=${x.id === c.field}>${x.label}</option>`)}
+        </select
+        >${chevronIcon()}</span
+      >
+      <span class="ui-qb__select ui-qb__select--op"
+        ><select class="ui-qb__input ui-qb__op" aria-label=${`Operator, condition ${n}`} .value=${live(c.operator)} @change=${(e: Event) => this.update1(c, { operator: (e.target as HTMLSelectElement).value as QueryOperator })}>
+          ${ops.map((o) => html`<option value=${o} ?selected=${o === c.operator}>${this.opLabel(o)}</option>`)}
+        </select
+        >${chevronIcon()}</span
+      >
       <span class="ui-qb__value">${this.renderValue(c, n)}</span>
       <button type="button" class="ui-qb__remove" aria-label=${`Remove condition ${n}`} @click=${() => this.removeNode(c, focusAfter)}>${xIcon()}</button>
     </li>`;
@@ -363,7 +379,7 @@ export class TcQueryBuilder extends TcElement {
     const addId = `${this.uid}-add-${g.id}`;
     return html`<div class="ui-qb__group" ?data-nested=${nested} role="group" aria-label=${nested ? `${label}, joined by ${g.join.toUpperCase()}` : `Conditions, joined by ${g.join.toUpperCase()}`} data-node=${g.id}>
       <div class="ui-qb__group-head">
-        <span class="ui-qb__match">${nested ? "Any group" : "Match"}</span>
+        <span class="ui-qb__match">${nested ? "Group" : "Match"}</span>
         ${this.renderJoin(g, nested ? `Join for ${label.toLowerCase()}` : "Join for all conditions")}
         <span class="ui-qb__join-hint">${g.join === "and" ? "all of these" : "any of these"}</span>
         ${nested
@@ -375,13 +391,13 @@ export class TcQueryBuilder extends TcElement {
             ${repeat(
               g.children,
               (n) => n.id,
-              (node): TemplateResult => {
+              (node, i): TemplateResult => {
                 if (node.kind === "group") {
                   const groups = this.value.children.filter((x) => x.kind === "group");
-                  return html`<li class="ui-qb__sub">${this.renderGroup(node, true, counter, groups.indexOf(node) + 1)}</li>`;
+                  return html`<li class="ui-qb__sub">${this.conj(g, i)}${this.renderGroup(node, true, counter, groups.indexOf(node) + 1)}</li>`;
                 }
                 counter.n++;
-                return this.renderCondition(node, counter.n, `#${addId}`);
+                return this.renderCondition(node, counter.n, `#${addId}`, g, i);
               },
             )}
           </ol>`
@@ -427,6 +443,7 @@ export class TcQueryBuilder extends TcElement {
   border-radius: var(--tc-tray-radius);
   background: var(--tc-surface-tray);
   container-type: inline-size;
+  --tc-qb-conj: var(--tc-space-12);
   font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-md);
   line-height: var(--tc-line-height-normal);
@@ -444,6 +461,7 @@ export class TcQueryBuilder extends TcElement {
   background: var(--tc-surface-raised);
   box-shadow: var(--tc-card-shadow);
   container-type: inline-size;
+  --tc-qb-conj: var(--tc-space-12);
   font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-md);
   font-weight: var(--tc-font-weight-regular);
@@ -460,11 +478,11 @@ export class TcQueryBuilder extends TcElement {
 [data-ui="qb"] svg { display: block; flex: none; }
 :where([data-look="standard"], [data-look="standard"] *).ui-qb__card { overflow: hidden; border-radius: var(--tc-card-radius); background: var(--tc-surface-on-tray); box-shadow: var(--tc-card-shadow); }
 /* ----- A group: its AND / OR switch, its conditions, then Add ----- */
-.ui-qb__group { display: grid; gap: var(--tc-space-2-5); padding: var(--tc-space-4); }
+.ui-qb__group { display: grid; gap: var(--tc-space-3); padding: var(--tc-space-4); }
 :where([data-look="clean"], [data-look="clean"] *).ui-qb__group:not([data-nested]) { padding-top: var(--tc-space-2); }
-.ui-qb__group[data-nested] { padding: var(--tc-space-3); border-radius: var(--tc-radius-lg); background: var(--tc-fill-subtle); box-shadow: inset var(--tc-space-0-5) 0 0 var(--tc-border-strong); }
+.ui-qb__group[data-nested] { gap: var(--tc-space-2-5); padding: var(--tc-space-2-5) var(--tc-space-3) var(--tc-space-2); border-radius: var(--tc-radius-lg); background: var(--tc-fill-subtle); box-shadow: inset 0 0 0 var(--tc-hairline) var(--tc-border-default); }
 .ui-qb__group-head { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-2); }
-.ui-qb__match { font-size: var(--tc-font-size-sm); color: var(--tc-text-secondary); }
+.ui-qb__match { font-size: var(--tc-font-size-sm); font-weight: var(--tc-font-weight-medium); color: var(--tc-text-secondary); }
 .ui-qb__join-hint { font-size: var(--tc-font-size-sm); color: var(--tc-text-muted); }
 /* The join: a two-way segmented switch made of radios */
 .ui-qb__join { display: inline-flex; padding: var(--tc-seg-pad); border: 0; border-radius: var(--tc-seg-track-radius); background: var(--tc-seg-track-bg); }
@@ -472,9 +490,16 @@ export class TcQueryBuilder extends TcElement {
 .ui-qb__join-opt[data-on] { background: var(--tc-seg-thumb-bg); box-shadow: var(--tc-seg-thumb-shadow); color: var(--tc-text-primary); }
 .ui-qb__join-opt:has(:focus-visible) { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
 .ui-qb__list { display: grid; gap: var(--tc-space-2); }
-/* A condition: field, operator, value and remove on one line, wrapping when narrow */
-.ui-qb__cond { display: grid; grid-template-columns: minmax(8rem, 0.9fr) minmax(7rem, 0.8fr) minmax(10rem, 1.6fr) auto; align-items: start; gap: var(--tc-space-2); }
+/* A row: the word that joins it ("Where", "and", "or"), then field, operator, value and remove – wrapping when narrow */
+.ui-qb__cond { display: grid; grid-template-columns: var(--tc-qb-conj) minmax(0, 1fr) minmax(0, 0.85fr) minmax(0, 1.4fr) auto; align-items: start; gap: var(--tc-space-2); }
+.ui-qb__sub { display: grid; grid-template-columns: var(--tc-qb-conj) minmax(0, 1fr); align-items: start; gap: var(--tc-space-2); }
+.ui-qb__conj { display: flex; align-items: center; justify-content: flex-end; height: var(--tc-field-h); padding-right: var(--tc-space-1); font-size: var(--tc-font-size-sm); color: var(--tc-text-muted); }
+.ui-qb__sub > .ui-qb__conj { height: calc(var(--tc-control-h-sm) + 2 * var(--tc-space-2-5)); }
 .ui-qb__value { min-width: 0; }
+/* Selects drawn as the library's fields: no native arrow, a chevron at the end */
+.ui-qb__select { position: relative; display: block; min-width: 0; }
+.ui-qb__select > select { padding-right: var(--tc-space-7); appearance: none; text-overflow: ellipsis; }
+.ui-qb__chevron { position: absolute; top: 50%; right: var(--tc-space-2-5); width: var(--tc-space-3-5); height: var(--tc-space-3-5); fill: none; stroke: var(--tc-icon-muted); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transform: translateY(-50%); pointer-events: none; }
 .ui-qb__input { width: 100%; min-width: 0; height: var(--tc-field-h); padding: 0 var(--tc-field-px); border: 0; border-radius: var(--tc-field-radius); background: var(--tc-field-bg); box-shadow: var(--tc-field-shadow); font: inherit; font-size: var(--tc-field-font-size); color: var(--tc-text-primary); outline: none; transition: box-shadow var(--tc-duration-fast) var(--tc-ease-standard); }
 .ui-qb__input:hover { box-shadow: var(--tc-field-shadow-hover); }
 .ui-qb__input:focus-visible { box-shadow: var(--tc-field-shadow-focus); }
@@ -506,10 +531,19 @@ select.ui-qb__input { cursor: pointer; }
 .ui-qb__run { display: inline-flex; align-items: center; gap: var(--tc-space-1-5); height: var(--tc-control-h-sm); padding: 0 var(--tc-control-px-sm); border-radius: var(--tc-control-radius-sm); background: var(--tc-action-primary-bg); box-shadow: var(--tc-action-primary-shadow); font-size: var(--tc-control-font-size); font-weight: var(--tc-control-font-weight); color: var(--tc-action-primary-fg); transition: background-color var(--tc-duration-fast) var(--tc-ease-standard); }
 .ui-qb__run:hover { background: var(--tc-action-primary-bg-hover); }
 .ui-qb__run:active { background: var(--tc-action-primary-bg-active); }
-@container (max-width: 560px) {
-  .ui-qb__cond { grid-template-columns: 1fr 1fr auto; }
+/* Narrower: the joining words go (the group's switch still says it), then the value takes its own line */
+@container (max-width: 600px) {
+  .ui-qb__conj { display: none; }
+  .ui-qb__cond { grid-template-columns: minmax(0, 1fr) minmax(0, 0.85fr) minmax(0, 1.4fr) auto; }
+  .ui-qb__sub { grid-template-columns: minmax(0, 1fr); }
+}
+@container (max-width: 460px) {
+  .ui-qb__cond { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; }
   .ui-qb__value { grid-column: 1 / 3; grid-row: 2; }
   .ui-qb__group { padding: var(--tc-space-3); }
+}
+@media (forced-colors: active) {
+  .ui-qb__chevron { stroke: ButtonText; }
 }
 @media (forced-colors: active) {
   .ui-qb__join-opt[data-on] { outline: 2px solid Highlight; }

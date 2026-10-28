@@ -691,6 +691,7 @@
   "observers": [
    "ResizeObserver",
    "IntersectionObserver",
+   "MutationObserver (internal/base › TcElement)",
    "MutationObserver (internal/controllers › AriaForwardController)",
    "MutationObserver (internal/controllers › FocusRescueController)"
   ],
@@ -715,7 +716,7 @@
   "windowed": false
  },
  "size": {
-  "min": 56685,
-  "gzip": 15289
+  "min": 57173,
+  "gzip": 15397
  }
 }

@@ -1,0 +1,735 @@
+{
+ "elements": [
+  {
+   "tag": "tc-client-context",
+   "className": "TcClientContext",
+   "description": "One client's numbers, reports and shared context – switch clients, sync, regenerate reports and keep a team timeline.",
+   "properties": [
+    {
+     "name": "clients",
+     "attribute": null,
+     "type": "ContextClient[]",
+     "default": "[ { id: \"northwind\", name: \"Northwind Logistics\", meta: \"Northwind Logistics GmbH · EUR · Fiscal year ends Dec 31\", mark: { letter: \"N\", bg: \"#1d4ed8\", fg: \"#ffffff\" }, kpis: [ { label: \"MRR\", value: \"€48.2k\", previous: \"€44.9k\", delta: 7.4, points: [31, 33, 32, 35, 36, 35, 38, 40, 41, 44], color: \"#2f6bff\" }, { label: \"Cash\", value: \"€612k\", previous: \"€648k\", delta: -5.6, points: [44, 43, 43, 41, 40, 41, 38, 37, 36, 35], color: \"#0ea5e9\" }, { label: \"Gross margin\", value: \"64.1%\", previous: \"62.8%\", delta: 1.3, points: [30, 31, 30, 32, 31, 33, 32, 33, 34, 34], color: \"#8b5cf6\" }, { label: \"Net burn\", value: \"€36.0k\", previous: \"€41.5k\", delta: -13.3, points: [42, 41, 43, 40, 39, 38, 39, 36, 35, 33], color: \"#ec4899\" }, ], reports: [ { name: \"Monthly P&L\", when: \"1d ago\", summary: \"Revenue up 7% on the new Hamburg routes; freight costs flat, so margin improved by 1.3 points.\" }, { name: \"Cash runway\", when: \"6d ago\", summary: \"17 months at the current burn. The Q1 fleet lease pushes it to 15 if signed in January.\" }, { name: \"Board pack Q3\", when: \"2w ago\", summary: \"Highlights, KPIs and the three decisions for the board: pricing, fleet lease and the Nordics pilot.\" }, ], context: [ { id: \"n1\", kind: \"note\", author: people.lena, when: \"today\", text: \"CFO wants every figure in the @Monthly P&L in EUR, also for the Danish entity – no converted totals.\" }, { id: \"n2\", kind: \"report\", author: people.jonas, when: \"1d ago\", report: \"Monthly P&L\" }, { id: \"n3\", kind: \"files\", author: people.jonas, when: \"2d ago\", files: [ { name: \"budget-2027.pdf\", type: \"pdf\" }, { name: \"fleet-costs-Q3.xlsx\", type: \"xlsx\" }, ], }, { id: \"n4\", kind: \"note\", author: people.lena, when: \"4d ago\", text: \"Renewal talks start in November. They'll ask for a lower rate if the Nordics pilot slips – keep the @Cash runway current.\", }, { id: \"n5\", kind: \"integration\", when: \"1w ago\", app: \"Stripe\", connected: true }, ], }, { id: \"lumen\", name: \"Lumen Labs\", meta: \"Lumen Labs, Inc. · GBP · Fiscal year ends Mar 31\", mark: { letter: \"L\", bg: \"#f97316\", fg: \"#ffffff\" }, kpis: [ { label: \"ARR\", value: \"£1.84m\", previous: \"£1.62m\", delta: 13.6, points: [20, 22, 23, 25, 27, 28, 30, 33, 35, 38], color: \"#2f6bff\" }, { label: \"Cash\", value: \"£980k\", previous: \"£1.06m\", delta: -7.5, points: [46, 45, 43, 42, 41, 40, 38, 37, 36, 35], color: \"#0ea5e9\" }, { label: \"Gross margin\", value: \"78.0%\", previous: \"77.2%\", delta: 0.8, points: [36, 36, 37, 36, 37, 37, 38, 37, 38, 38], color: \"#8b5cf6\" }, { label: \"Runway\", value: \"17 mo\", previous: \"18 mo\", delta: -5.6, points: [40, 39, 39, 38, 37, 37, 36, 35, 35, 34], color: \"#ec4899\" }, ], reports: [{ name: \"Runway forecast\", when: \"today\", summary: \"Hiring four engineers in Q1 shortens the runway from 19 to 17 months.\" }], context: [ { id: \"l1\", kind: \"report\", author: people.mara, when: \"today\", report: \"Runway forecast\" }, { id: \"l2\", kind: \"note\", author: people.mara, when: \"2d ago\", text: \"Hiring plan adds four engineers in Q1 – reflect it in the @Runway forecast before the board meeting.\" }, { id: \"l3\", kind: \"files\", author: people.theo, when: \"4d ago\", files: [{ name: \"hiring-plan.doc\", type: \"doc\" }] }, ], }, { id: \"halcyon\", name: \"Halcyon Health\", meta: \"Halcyon Health Ltd · USD · Fiscal year ends Jun 30\", mark: { letter: \"H\", bg: \"#0f766e\", fg: \"#ffffff\" }, kpis: [ { label: \"Revenue\", value: \"$212k\", previous: \"$198k\", delta: 7.1, points: [30, 29, 31, 33, 32, 34, 35, 34, 36, 37], color: \"#2f6bff\" }, { label: \"Cash\", value: \"$1.21m\", previous: \"$1.19m\", delta: 1.7, points: [38, 38, 39, 38, 39, 40, 39, 40, 41, 41], color: \"#0ea5e9\" }, { label: \"Gross margin\", value: \"58.3%\", previous: \"59.0%\", delta: -0.7, points: [36, 35, 36, 35, 35, 34, 35, 34, 34, 33], color: \"#8b5cf6\" }, { label: \"Net profit\", value: \"$18.4k\", previous: \"$12.0k\", delta: 53.3, points: [20, 21, 19, 22, 24, 23, 26, 27, 29, 31], color: \"#ec4899\" }, ], reports: [{ name: \"Clinic margins\", when: \"3d ago\", summary: \"Two of nine clinics run below 40% margin; both opened this year.\" }], context: [ { id: \"h1\", kind: \"note\", author: people.theo, when: \"yesterday\", text: \"New clinics need 12 months before they count in the @Clinic margins comparison.\" }, { id: \"h2\", kind: \"integration\", when: \"2w ago\", app: \"Stripe\", connected: true }, ], }, ]",
+     "description": "The clients and their context. Context added or removed here is kept per client until you pass a different\ncontext for that client – then your data wins",
+     "readonly": false
+    },
+    {
+     "name": "client",
+     "attribute": "client",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Id of the open client; empty opens the first",
+     "readonly": false
+    },
+    {
+     "name": "me",
+     "attribute": null,
+     "type": "ContextPerson",
+     "default": "{ name: \"Sofia Lind\", avatar: \"/avatars/sofia.jpg\" }",
+     "description": "The signed-in person – author of new context",
+     "readonly": false
+    },
+    {
+     "name": "tab",
+     "attribute": "tab",
+     "type": "ContextTab",
+     "default": "\"context\"",
+     "description": "The section shown: context, reports, financials or settings",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-client-change",
+     "detail": "",
+     "description": "A client was picked or created (`ClientContextClientChange`: `{ client }`); cancelable – prevented, `client` stays (controlled use)",
+     "cancelable": true
+    },
+    {
+     "name": "tc-add-context",
+     "detail": "",
+     "description": "Context was added (`ClientContextAdd`: `{ client, text, files }`); cancelable – prevented, it isn't added here",
+     "cancelable": true
+    },
+    {
+     "name": "tc-create-client",
+     "detail": "",
+     "description": "A client was created from the switcher (`ClientContextCreate`: `{ name }`); cancelable – prevented, it isn't created",
+     "cancelable": true
+    },
+    {
+     "name": "tc-tab-change",
+     "detail": "",
+     "description": "The section changed (`ClientContextTabChange`: `{ tab }`); cancelable – prevented, `tab` stays",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "cx",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-accent-highlight",
+    "--tc-accent-solid",
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-border-default",
+    "--tc-border-selected",
+    "--tc-border-strong",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-card-shadow-hover",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-duration-quick",
+    "--tc-duration-reveal",
+    "--tc-duration-reveal-slow",
+    "--tc-duration-slow",
+    "--tc-duration-slowest",
+    "--tc-ease-in-out",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-bg-sunken",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-field-shadow-hover",
+    "--tc-fill-default",
+    "--tc-fill-hover",
+    "--tc-fill-selected",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-sans",
+    "--tc-font-size-2xl",
+    "--tc-font-size-2xs",
+    "--tc-font-size-lg",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xl",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-hairline",
+    "--tc-kbd-bg",
+    "--tc-kbd-fg",
+    "--tc-kbd-font-size",
+    "--tc-kbd-font-weight",
+    "--tc-kbd-h",
+    "--tc-kbd-px",
+    "--tc-kbd-radius",
+    "--tc-kbd-shadow",
+    "--tc-line-height-loose",
+    "--tc-line-height-none",
+    "--tc-line-height-normal",
+    "--tc-line-height-relaxed",
+    "--tc-line-height-tight",
+    "--tc-menu-bg",
+    "--tc-menu-item-font-size",
+    "--tc-menu-item-h",
+    "--tc-menu-item-hover",
+    "--tc-menu-item-px",
+    "--tc-menu-item-radius",
+    "--tc-menu-item-selected-fg",
+    "--tc-menu-padding",
+    "--tc-menu-radius",
+    "--tc-menu-shadow",
+    "--tc-radius-2xs",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-radius-xl",
+    "--tc-shadow-control",
+    "--tc-shadow-sunken",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-16",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-4-5",
+    "--tc-space-5",
+    "--tc-space-6",
+    "--tc-space-7",
+    "--tc-status-danger-fg",
+    "--tc-status-danger-solid",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-success-solid",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-solid",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-sunken",
+    "--tc-surface-tray",
+    "--tc-switch-h",
+    "--tc-switch-knob",
+    "--tc-switch-knob-bg",
+    "--tc-switch-off",
+    "--tc-switch-on",
+    "--tc-switch-radius",
+    "--tc-switch-w",
+    "--tc-text-muted",
+    "--tc-text-placeholder",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-title-font-size",
+    "--tc-tone-rose-fg",
+    "--tc-tone-teal-solid",
+    "--tc-tracking-snug",
+    "--tc-tracking-tight",
+    "--tc-tray-inset",
+    "--tc-tray-radius",
+    "--tc-z-dropdown"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "defaultContextClients",
+   "signature": "defaultContextClients: ContextClient[]",
+   "description": "The sample clients shown when `clients` isn't set"
+  },
+  {
+   "name": "clientContextMatches",
+   "signature": "clientContextMatches(e: ContextEntry, query: string): void",
+   "description": "Whether an entry matches the search (author, text, file names, report or app)"
+  },
+  {
+   "name": "clientContextMentionStart",
+   "signature": "clientContextMentionStart(value: string, caret: number): void",
+   "description": "Where the \"@\" mention being typed starts, or null – an \"@\" at the start or after a space, up to the caret"
+  }
+ ],
+ "react": [
+  {
+   "component": "ClientContext",
+   "exported": true,
+   "props": [
+    {
+     "name": "clients",
+     "type": "ContextClient[]",
+     "optional": true,
+     "description": "The clients and their context. Context added or removed in the block is kept per client until you pass a\ndifferent context for that client – then your data wins"
+    },
+    {
+     "name": "client",
+     "type": "string",
+     "optional": true,
+     "description": "Id of the open client (controlled) – pass `onClientChange` with it. Leave undefined to start at `defaultClient` (the first)"
+    },
+    {
+     "name": "defaultClient",
+     "type": "string",
+     "optional": true,
+     "description": "The client open on mount when `client` isn't controlled – the first by default"
+    },
+    {
+     "name": "onClientChange",
+     "type": "(id: string) => void",
+     "optional": true,
+     "description": "A client was picked or created"
+    },
+    {
+     "name": "tab",
+     "type": "ContextTab",
+     "optional": true,
+     "description": "The section shown (controlled) – pass `onTabChange` with it"
+    },
+    {
+     "name": "defaultTab",
+     "type": "ContextTab",
+     "optional": true,
+     "description": "The section on mount when `tab` isn't controlled"
+    },
+    {
+     "name": "onTabChange",
+     "type": "(tab: ContextTab) => void",
+     "optional": true,
+     "description": "The section changed"
+    },
+    {
+     "name": "onAddContext",
+     "type": "(clientId: string, text: string, files: ContextFile[]) => void",
+     "optional": true,
+     "description": "Called when context is added, with the client, the text and any attached files"
+    },
+    {
+     "name": "onCreateClient",
+     "type": "(name: string) => void",
+     "optional": true,
+     "description": "Called when a client is created from the switcher"
+    }
+   ],
+   "hides": [
+    "client",
+    "clients",
+    "tab",
+    "children"
+   ],
+   "events": {
+    "tc-client-change": null,
+    "tc-add-context": "onAddContext",
+    "tc-create-client": "onCreateClient",
+    "tc-tab-change": null
+   }
+  }
+ ],
+ "changelog": [
+  "All 18 blocks are now elements – `tc-agent-gallery`, `tc-ai-side-pane`, `tc-ai-workspace`, `tc-app-directory`, `tc-client-context`, `tc-evidence-gallery`, `tc-header-nav`, `tc-invoice-credit`, `tc-kpi-board`, `tc-logo-marquee`, `tc-metrics-dashboard`, `tc-oversight-home`, `tc-pricing-plans`, `tc-publish-readiness`, `tc-red-team-finding`, `tc-task-board`, `tc-testimonial-wall`, `tc-uncertainty-mix` – so Angular (`trenchcoat/angular`), Vue, Svelte, plain HTML and generative UI get them like any component, with docs pages."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-client-context",
+   "className": "TcClientContext",
+   "module": "trenchcoat/client-context",
+   "data": [
+    "clients",
+    "me"
+   ],
+   "attributes": [
+    {
+     "name": "client",
+     "attribute": "client"
+    },
+    {
+     "name": "tab",
+     "attribute": "tab"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-client-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-add-context",
+     "cancelable": true
+    },
+    {
+     "name": "tc-create-client",
+     "cancelable": true
+    },
+    {
+     "name": "tc-tab-change",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "client",
+     "event": "tc-client-change"
+    },
+    {
+     "property": "tab",
+     "event": "tc-tab-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "121",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "has"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "button",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "inert",
+    "name": "inert",
+    "bcd": "api.HTMLElement.inert",
+    "versions": {
+     "chrome": "102",
+     "edge": "102",
+     "firefox": "112",
+     "safari": "15.5",
+     "safari_ios": "15.5"
+    },
+    "progressive": false,
+    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "button",
+     "internal/kit",
+     "segmented-control"
+    ]
+   },
+   {
+    "id": "has",
+    "name": ":has()",
+    "bcd": "css.selectors.has",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "121",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Layout and state that depend on what's inside a part (an icon present, a focused field).",
+    "via": [
+     "button"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "button"
+    ]
+   },
+   {
+    "id": "individual-transforms",
+    "name": "translate, scale and rotate properties",
+    "bcd": "css.properties.translate",
+    "versions": {
+     "chrome": "104",
+     "edge": "104",
+     "firefox": "72",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "segmented-control"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "button",
+     "internal/base",
+     "segmented-control",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "resize-observer",
+    "name": "ResizeObserver",
+    "bcd": "api.ResizeObserver",
+    "versions": {
+     "chrome": "64",
+     "edge": "79",
+     "firefox": "69",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "via": [
+     "button",
+     "segmented-control"
+    ]
+   },
+   {
+    "id": "intersection-observer",
+    "name": "IntersectionObserver",
+    "bcd": "api.IntersectionObserver",
+    "versions": {
+     "chrome": "51",
+     "edge": "15",
+     "firefox": "55",
+     "safari": "12.1",
+     "safari_ios": "12.2"
+    },
+    "progressive": false,
+    "via": [
+     "internal/controllers"
+    ]
+   },
+   {
+    "id": "mask",
+    "name": "CSS masks",
+    "bcd": "css.properties.mask-image",
+    "versions": {
+     "chrome": "1",
+     "edge": "79",
+     "firefox": "53",
+     "safari": "4",
+     "safari_ios": "3.2"
+    },
+    "progressive": false,
+    "note": "with the -webkit- prefix",
+    "via": [
+     "button",
+     "segmented-control"
+    ]
+   },
+   {
+    "id": "field-sizing",
+    "name": "field-sizing",
+    "bcd": "css.properties.field-sizing",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "152",
+     "safari": "26.2",
+     "safari_ios": "26.2"
+    },
+    "progressive": true,
+    "without": "Text fields grow with their text. Without it they keep their minimum height and scroll.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "scrollbar-width",
+    "name": "scrollbar-width",
+    "bcd": "css.properties.scrollbar-width",
+    "versions": {
+     "chrome": "121",
+     "edge": "121",
+     "firefox": "64",
+     "safari": "18.2",
+     "safari_ios": "18.2"
+    },
+    "progressive": true,
+    "without": "Scrollbars keep the browser's default width.",
+    "via": [
+     "segmented-control"
+    ]
+   },
+   {
+    "id": "at-property",
+    "name": "@property",
+    "bcd": "css.at-rules.property",
+    "versions": {
+     "chrome": "85",
+     "edge": "85",
+     "firefox": "128",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "The registered custom properties don't interpolate, so the transitions and spins they drive jump to their end state.",
+    "via": [
+     "segmented-control"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "overscroll-contain",
+    "name": "overscroll-behavior: contain",
+    "bcd": "css.properties.overscroll-behavior.contain",
+    "versions": {
+     "chrome": "63",
+     "edge": "18",
+     "firefox": "59",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "Scrolling past the end of a list carries on scrolling the page.",
+    "via": [
+     "segmented-control"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setTimeout",
+   "setTimeout (segmented-control)"
+  ],
+  "frames": [
+   "requestAnimationFrame, cancelled",
+   "requestAnimationFrame, cancelled (segmented-control)"
+  ],
+  "animations": 4,
+  "observers": [
+   "ResizeObserver (button)",
+   "MutationObserver (button)",
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)",
+   "IntersectionObserver (internal/controllers › OffScreenController)",
+   "ResizeObserver (segmented-control)"
+  ],
+  "clock": [],
+  "listeners": [
+   "document pointerdown"
+  ],
+  "pauses": {
+   "offscreen": [
+    "button",
+    "internal/controllers › OffScreenController"
+   ],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (button)",
+    "CSS (internal/kit › kitCss)",
+    "CSS (segmented-control)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 115876,
+  "gzip": 29040
+ }
+}

@@ -1,0 +1,114 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-uncertainty-mix.json",
+  "title": "tc-uncertainty-mix",
+  "description": "Where an answer's uncertainty comes from: the mix of kinds with their shares and meanings and a reading of what to\ndo, beside a breakdown chart of the same mix per part of the answer.",
+  "type": "object",
+  "properties": {
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/UncertaintySource"
+      },
+      "description": "Where the uncertainty comes from: a part, a kind's key and an amount each"
+    },
+    "kinds": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/UncertaintyKind"
+      },
+      "description": "The kinds, in display order – defaultUncertaintyKinds by default"
+    },
+    "parts": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The parts in display order – by first appearance in `sources` by default"
+    },
+    "partLabel": {
+      "type": "string",
+      "description": "What a part is called, e.g. \"Section\" or \"Claim\""
+    },
+    "hiddenKinds": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Keys of the kinds hidden from the chart and the reading"
+    },
+    "heading": {
+      "type": "string",
+      "description": "The reading card's heading"
+    },
+    "subtitle": {
+      "type": "string",
+      "description": "The line under the heading, e.g. the question the answer is to"
+    },
+    "chartTitle": {
+      "type": "string",
+      "description": "The chart's heading"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "UncertaintySource": {
+      "type": "object",
+      "properties": {
+        "part": {
+          "type": "string",
+          "description": "The part of the answer it belongs to, e.g. \"Timeline\""
+        },
+        "kind": {
+          "type": "string",
+          "description": "A kind's key"
+        },
+        "amount": {
+          "type": "number",
+          "description": "How much uncertainty it adds, in any unit – shares are worked out from the sum"
+        },
+        "claim": {
+          "type": "string",
+          "description": "The claim it comes from, if it's one claim"
+        }
+      },
+      "required": [
+        "part",
+        "kind",
+        "amount"
+      ],
+      "additionalProperties": false
+    },
+    "UncertaintyKind": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "e.g. \"Missing information\""
+        },
+        "meaning": {
+          "type": "string",
+          "description": "What it means, in a few words"
+        },
+        "advice": {
+          "type": "string",
+          "description": "What to do about it, as a sentence"
+        },
+        "color": {
+          "type": "string",
+          "description": "Segment colour, any CSS colour – keep it at 3:1 against the card in both themes"
+        }
+      },
+      "required": [
+        "key",
+        "label",
+        "meaning",
+        "advice"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

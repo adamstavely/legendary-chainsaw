@@ -25,6 +25,14 @@
     ]
   },
   {
+    "tag": "tc-agent-gallery",
+    "name": "AgentGallery",
+    "description": "A showcase of agents as slim gradient panels, one open in the middle with its product screen.",
+    "events": [
+      "tc-index-change"
+    ]
+  },
+  {
     "tag": "tc-agent-graph",
     "name": "AgentGraph",
     "description": "Agents and the tools they use, drawn as a living network with pulses along the links.",
@@ -135,6 +143,28 @@
     ]
   },
   {
+    "tag": "tc-ai-side-pane",
+    "name": "AiSidePane",
+    "description": "An assistant docked beside a page: a conversation about what's on it, with history, starters, a reflection gate for",
+    "events": [
+      "tc-send",
+      "tc-stop",
+      "tc-regenerate",
+      "tc-feedback",
+      "tc-verify",
+      "tc-reflect",
+      "tc-new-chat",
+      "tc-conversation-change",
+      "tc-conversations-change",
+      "tc-model-change",
+      "tc-settings-change",
+      "tc-page-context-change",
+      "tc-open-change",
+      "tc-collapsed-change",
+      "tc-width-change"
+    ]
+  },
+  {
     "tag": "tc-ai-summary",
     "name": "AiSummary",
     "description": "An AI summary of a set of sources – a thread, a meeting, documents, a ticket's history – with a TL;DR, key points",
@@ -145,6 +175,16 @@
       "tc-cite-open",
       "tc-feedback",
       "tc-copy"
+    ]
+  },
+  {
+    "tag": "tc-ai-workspace",
+    "name": "AiWorkspace",
+    "description": "A complete assistant app – sidebar, welcome, streaming chat and projects, built on the Chat Composer.",
+    "events": [
+      "tc-conversations-change",
+      "tc-projects-change",
+      "tc-share-chat"
     ]
   },
   {
@@ -162,6 +202,15 @@
     "description": "Two models' answers to the same prompt side by side, with a vote: A is better, B is better or a tie, and a reason.",
     "events": [
       "tc-value-change"
+    ]
+  },
+  {
+    "tag": "tc-app-directory",
+    "name": "AppDirectory",
+    "description": "Browse, search and connect integrations – categories, a filter menu and app cards with a connect flow.",
+    "events": [
+      "tc-connected-change",
+      "tc-learn-more"
     ]
   },
   {
@@ -366,6 +415,17 @@
     "events": [
       "tc-value-change",
       "tc-send"
+    ]
+  },
+  {
+    "tag": "tc-client-context",
+    "name": "ClientContext",
+    "description": "One client's numbers, reports and shared context – switch clients, sync, regenerate reports and keep a team timeline.",
+    "events": [
+      "tc-client-change",
+      "tc-add-context",
+      "tc-create-client",
+      "tc-tab-change"
     ]
   },
   {
@@ -701,6 +761,15 @@
     ]
   },
   {
+    "tag": "tc-evidence-gallery",
+    "name": "EvidenceGallery",
+    "description": "The images behind a set of claims: a filter by attestation, an image grid with each image's attestation and linked",
+    "events": [
+      "tc-filter-change",
+      "tc-alt-change"
+    ]
+  },
+  {
     "tag": "tc-evidence-list",
     "name": "EvidenceList",
     "description": "Exhibits linked to a matter – reference, title, type, source with its grade, date, holder and status – each opening",
@@ -859,6 +928,16 @@
     ]
   },
   {
+    "tag": "tc-header-nav",
+    "name": "HeaderNav",
+    "description": "The right end of an app header: the page's bell and app picker, and the person's avatar with their account card.",
+    "events": [
+      "tc-panel-change",
+      "tc-account-select",
+      "tc-setup-continue"
+    ]
+  },
+  {
     "tag": "tc-image-grid",
     "name": "ImageGrid",
     "description": "Generated images as a grid of variations: regenerate one, upscale, compare two, download, alt text for each.",
@@ -933,6 +1012,17 @@
     ]
   },
   {
+    "tag": "tc-invoice-credit",
+    "name": "InvoiceCredit",
+    "description": "An invoice and its credit note stacked like paper – switch between them, pick lines to credit, adjust amounts and issue.",
+    "events": [
+      "tc-view-change",
+      "tc-issue",
+      "tc-pdf",
+      "tc-pay"
+    ]
+  },
+  {
     "tag": "tc-isbn-details",
     "name": "IsbnDetails",
     "description": "ISBN numbers in text, validated and marked: hover or focus one for the book's details.",
@@ -975,6 +1065,17 @@
     ]
   },
   {
+    "tag": "tc-kpi-board",
+    "name": "KpiBoard",
+    "description": "A dashboard's top: a date range, three trend cards, an overview that compares two periods, and a focus card.",
+    "events": [
+      "tc-range-change",
+      "tc-segment-change",
+      "tc-setup",
+      "tc-action"
+    ]
+  },
+  {
     "tag": "tc-kpi-chart",
     "name": "KpiChart",
     "description": "A metric card with a multi-line chart, a legend and a hover tooltip.",
@@ -995,6 +1096,14 @@
     "events": [
       "tc-selected-change",
       "tc-view-change"
+    ]
+  },
+  {
+    "tag": "tc-logo-marquee",
+    "name": "LogoMarquee",
+    "description": "The endless \"Trusted by\" strip: rows of logos that loop, ease to a stop on hover, scrub with inertia and pause for good.",
+    "events": [
+      "tc-paused-change"
     ]
   },
   {
@@ -1027,6 +1136,18 @@
       "tc-copy",
       "tc-feedback",
       "tc-speak"
+    ]
+  },
+  {
+    "tag": "tc-metrics-dashboard",
+    "name": "MetricsDashboard",
+    "description": "A compact sales overview: KPI tabs that pick the charted metric, a line or bar chart with an optional previous-period",
+    "events": [
+      "tc-range-change",
+      "tc-metric-change",
+      "tc-chart-change",
+      "tc-compare-change",
+      "tc-export"
     ]
   },
   {
@@ -1070,6 +1191,19 @@
     "description": "How money moved between entities – a left-to-right flow of entities in columns and transfers as bands sized by",
     "events": [
       "tc-selected-change"
+    ]
+  },
+  {
+    "tag": "tc-multi-calendar",
+    "name": "MultiCalendar",
+    "description": "A calendar of calendars – many people's events from many accounts in one Day, Week, Month, Agenda or People view,",
+    "events": [
+      "tc-event-create",
+      "tc-event-update",
+      "tc-event-delete",
+      "tc-view-change",
+      "tc-date-change",
+      "tc-visible-change"
     ]
   },
   {
@@ -1120,6 +1254,15 @@
     "name": "OutreachBranches",
     "description": "Lines branching out to Gmail, Slack and Notion – an illustration for multi-channel outreach.",
     "events": []
+  },
+  {
+    "tag": "tc-oversight-home",
+    "name": "OversightHome",
+    "description": "A role's home for overseeing AI work: what needs doing, the one thing first, the numbers the role watches against",
+    "events": [
+      "tc-role-change",
+      "tc-open-focus"
+    ]
   },
   {
     "tag": "tc-parallel-attempts",
@@ -1183,6 +1326,16 @@
       "tc-input-change",
       "tc-simulate",
       "tc-result"
+    ]
+  },
+  {
+    "tag": "tc-pricing-plans",
+    "name": "PricingPlans",
+    "description": "A pricing section: a Monthly / Yearly switch and a card per plan with limits, a call to action and collapsible details.",
+    "events": [
+      "tc-billing-change",
+      "tc-details-change",
+      "tc-plan-select"
     ]
   },
   {
@@ -1273,6 +1426,17 @@
     ]
   },
   {
+    "tag": "tc-publish-readiness",
+    "name": "PublishReadiness",
+    "description": "What must pass before something is released: a summary card with one tick per check that opens a dialog of the",
+    "events": [
+      "tc-confirmed-change",
+      "tc-open-change",
+      "tc-open-blocker",
+      "tc-publish"
+    ]
+  },
+  {
     "tag": "tc-query-builder",
     "name": "QueryBuilder",
     "description": "A visual query builder – conditions joined by AND or OR, one level of nested groups, a field, an operator by type",
@@ -1304,6 +1468,16 @@
     "events": [
       "tc-reconsider",
       "tc-open-change"
+    ]
+  },
+  {
+    "tag": "tc-red-team-finding",
+    "name": "RedTeamFinding",
+    "description": "What an adversarial test broke and the response: a findings listbox and the picked finding's invariants, scenario, evidence and undoable response timeline.",
+    "events": [
+      "tc-finding-change",
+      "tc-evidence-open",
+      "tc-rerun"
     ]
   },
   {
@@ -1386,6 +1560,17 @@
     ]
   },
   {
+    "tag": "tc-routine-form",
+    "name": "RoutineForm",
+    "description": "A form that creates or edits a routine – name, frequency and start time in a time zone with the next run worked out,",
+    "events": [
+      "tc-value-change",
+      "tc-submit",
+      "tc-dismiss",
+      "tc-open-routines"
+    ]
+  },
+  {
     "tag": "tc-run-checkpoints",
     "name": "RunCheckpoints",
     "description": "An agent run's restore points: pick a step, see what it captured and what going back discards, and go back.",
@@ -1431,7 +1616,8 @@
       "tc-saved-change",
       "tc-remove",
       "tc-restore",
-      "tc-tab-change"
+      "tc-tab-change",
+      "tc-schedule"
     ]
   },
   {
@@ -1549,10 +1735,26 @@
     "events": []
   },
   {
+    "tag": "tc-task-board",
+    "name": "TaskBoard",
+    "description": "A kanban board: columns per status, cards to drag, a detail panel to edit a card, search, a label filter and a",
+    "events": [
+      "tc-tasks-change"
+    ]
+  },
+  {
     "tag": "tc-team-invite",
     "name": "TeamInvite",
     "description": "A third teammate is dragged into the empty slot and joins the team.",
     "events": []
+  },
+  {
+    "tag": "tc-testimonial-wall",
+    "name": "TestimonialWall",
+    "description": "The landing-page wall of quotes: columns that scroll endlessly in opposite directions, ease to a stop on hover and pause for good.",
+    "events": [
+      "tc-paused-change"
+    ]
   },
   {
     "tag": "tc-text-annotator",
@@ -1662,6 +1864,14 @@
     "description": "When an automation runs: an event or a schedule, conditions, a plain-language summary and the next run times.",
     "events": [
       "tc-value-change"
+    ]
+  },
+  {
+    "tag": "tc-uncertainty-mix",
+    "name": "UncertaintyMix",
+    "description": "Where an answer's uncertainty comes from: the mix of kinds with their shares and meanings and a reading of what to",
+    "events": [
+      "tc-hidden-change"
     ]
   },
   {

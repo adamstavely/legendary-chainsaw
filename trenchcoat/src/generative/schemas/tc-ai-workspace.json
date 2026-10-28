@@ -1,0 +1,119 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-ai-workspace.json",
+  "title": "tc-ai-workspace",
+  "description": "A complete assistant app – sidebar, welcome, streaming chat and projects, built on the Chat Composer.",
+  "type": "object",
+  "properties": {
+    "userName": {
+      "type": "string",
+      "description": "The signed-in person's name – the welcome greets them"
+    },
+    "userAvatar": {
+      "type": "string",
+      "description": "Their avatar's URL; their initial shows without one"
+    },
+    "workspace": {
+      "type": "string",
+      "description": "The workspace's initial in the top-left tile"
+    },
+    "pinned": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Pinned items listed in the sidebar, above the pinned projects"
+    },
+    "conversations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AiWorkspaceConversation"
+      },
+      "description": "The conversations, newest first"
+    },
+    "projects": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AiWorkspaceProject"
+      },
+      "description": "The projects"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "AiWorkspaceConversation": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "messages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AiWorkspaceMessage"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "messages"
+      ],
+      "additionalProperties": false
+    },
+    "AiWorkspaceMessage": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string",
+          "enum": [
+            "user",
+            "assistant"
+          ]
+        },
+        "text": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "role",
+        "text"
+      ],
+      "additionalProperties": false
+    },
+    "AiWorkspaceProject": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "updatedDaysAgo": {
+          "type": "number"
+        },
+        "pinned": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "description",
+        "updatedDaysAgo"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,131 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-invoice-credit.json",
+  "title": "tc-invoice-credit",
+  "description": "An invoice and its credit note stacked like paper – switch between them, pick lines to credit, adjust amounts and issue.",
+  "type": "object",
+  "properties": {
+    "seller": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "lines": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "name",
+        "lines"
+      ],
+      "additionalProperties": false,
+      "description": "Who sends the invoice"
+    },
+    "buyer": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "lines": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "name",
+        "lines"
+      ],
+      "additionalProperties": false,
+      "description": "Who pays it"
+    },
+    "invoiceNo": {
+      "type": "string",
+      "description": "The invoice's number"
+    },
+    "creditNo": {
+      "type": "string",
+      "description": "The credit note's number"
+    },
+    "invoiceDate": {
+      "type": "string",
+      "description": "The date of the invoice (and of issue for the credit note), as written"
+    },
+    "dueDate": {
+      "type": "string",
+      "description": "When the invoice is due, as written"
+    },
+    "period": {
+      "type": "string",
+      "description": "The billing period, as written"
+    },
+    "lines": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/InvoiceLine"
+      },
+      "description": "The invoice's lines – lines with a `group` are listed under it"
+    },
+    "currency": {
+      "type": "string",
+      "description": "The currency sign before amounts"
+    },
+    "currencyCode": {
+      "type": "string",
+      "description": "The currency code after the amount applied to the invoice"
+    },
+    "payHref": {
+      "type": "string",
+      "description": "Where \"Pay online\" goes; unset, the link only fires tc-pay",
+      "format": "uri-reference"
+    },
+    "view": {
+      "type": "string",
+      "enum": [
+        "invoice",
+        "credit"
+      ],
+      "description": "The sheet in front"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "InvoiceLine": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "qty": {
+          "type": "number"
+        },
+        "rate": {
+          "type": "number"
+        },
+        "tax": {
+          "type": "number"
+        },
+        "group": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "qty",
+        "rate",
+        "tax"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

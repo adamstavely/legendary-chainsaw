@@ -1,5 +1,46 @@
 # Changelog
 
+## Unreleased – blocks as elements, routines, a calendar of calendars
+
+### Blocks are Lit elements
+
+- All 18 blocks are now elements – `tc-agent-gallery`, `tc-ai-side-pane`, `tc-ai-workspace`, `tc-app-directory`,
+  `tc-client-context`, `tc-evidence-gallery`, `tc-header-nav`, `tc-invoice-credit`, `tc-kpi-board`,
+  `tc-logo-marquee`, `tc-metrics-dashboard`, `tc-oversight-home`, `tc-pricing-plans`, `tc-publish-readiness`,
+  `tc-red-team-finding`, `tc-task-board`, `tc-testimonial-wall`, `tc-uncertainty-mix` – so Angular
+  (`trenchcoat/angular`), Vue, Svelte, plain HTML and generative UI get them like any component, with docs pages.
+- Each `blocks/<slug>.tsx` is now a thin React wrapper that keeps its exports, props and types. Its `ref` is the
+  `tc-<slug>` element, and with no `look` and no `LookProvider` a block is Standard, like every element (the React
+  blocks read the page's `data-tc-look`).
+- Every block has both looks; client-context, metrics-dashboard and task-board gain a Clean look.
+- Renamed exports where names clashed in the barrel: ai-workspace's `ChatMessage`, `Conversation` and `Project` are
+  `AiWorkspaceMessage`, `AiWorkspaceConversation` and `AiWorkspaceProject` (the block file still exports the old
+  names). uncertainty-mix's element property is `hiddenKinds` and oversight-home's is `roleId` (`hidden` and `role`
+  are HTMLElement's); the React props are unchanged.
+- Fixed on the way: oversight-home's changes read "++6%" / "−+50%"; the side pane's composer was too tall as a sheet;
+  red-team-finding's muted text on the selected row failed contrast in dark mode.
+
+### New
+
+- **Routine Form** (`tc-routine-form`): set up a scheduled routine – name, frequency, start time in a time zone with
+  the next run worked out (DST-safe, `nextRoutineRun()` exported), first run now or on schedule, email notifications
+  and instructions, with validation and Create / Save.
+- **Multi Calendar** (`tc-multi-calendar`): a calendar of calendars – many people's Google, Outlook, Exchange and
+  iCal calendars in Day, Week, Month, Agenda and a People view (one column per person), with show/hide per calendar,
+  conflicts across a person's calendars, and create, edit, drag to move or resize, and delete on writable calendars –
+  every change a cancelable event, so the page owns saving.
+- **Search history:** an opt-in Schedule action on saved searches (`schedulable`, cancelable `tc-schedule`).
+
+### Changed
+
+- **Search components redesigned** to sit with the rest of the library: AI Search has a tray and card with the
+  switches below and a keys hint; Query Builder draws its selects as library fields, reads as a sentence and keeps
+  each condition on one line; Search History's filter is a quiet field.
+- **Chat composer** measures its message again when its width changes.
+- **Elements** keep rendering when a Lit parent swaps the last child it put inside them (`<tc-button>${icon}`), which
+  used to throw "ChildPart has no parentNode".
+- **Multi Calendar:** an event widens into free columns to its right, so busy days keep their titles readable.
+
 ## Unreleased – review fixes
 
 ### Generative UI (security)

@@ -1,0 +1,267 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-kpi-board.json",
+  "title": "tc-kpi-board",
+  "description": "A dashboard's top: a date range, three trend cards, an overview that compares two periods, and a focus card.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "Heading on the left of the bar above the cards – none by default"
+    },
+    "data": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/KpiBoardData"
+      },
+      "description": "One data set per range id"
+    },
+    "ranges": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/KpiOption"
+      },
+      "description": "The date ranges, e.g. Last 7 / 30 / 90 days"
+    },
+    "range": {
+      "type": "string",
+      "description": "The range shown – unset, the first one"
+    },
+    "segments": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/KpiOption"
+      },
+      "description": "A filter inside the overview card, e.g. All plans / Pro / Team – it only switches the overview's lines"
+    },
+    "segment": {
+      "type": "string",
+      "description": "The segment shown – unset, the first one"
+    },
+    "compareLabel": {
+      "type": "string",
+      "description": "Words after every change, e.g. \"vs. last month\""
+    },
+    "currentLabel": {
+      "type": "string",
+      "description": "Name of this period's line"
+    },
+    "previousLabel": {
+      "type": "string",
+      "description": "Name of the last period's line"
+    },
+    "setup": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "label"
+      ],
+      "additionalProperties": false,
+      "description": "The small button at the top right of the focus card, e.g. Set up"
+    },
+    "action": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "label"
+      ],
+      "additionalProperties": false,
+      "description": "The button at the bottom of the focus card"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "KpiBoardData": {
+      "type": "object",
+      "properties": {
+        "stats": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/KpiStat"
+          },
+          "description": "The small cards in the first row – three fit best"
+        },
+        "overview": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "labels": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "current": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            },
+            "previous": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            },
+            "segments": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "object",
+                "properties": {
+                  "current": {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    }
+                  },
+                  "previous": {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    }
+                  }
+                },
+                "required": [
+                  "current",
+                  "previous"
+                ],
+                "additionalProperties": false
+              },
+              "description": "The same two lines per segment id – picked with the filter inside this card, which changes nothing else"
+            }
+          },
+          "required": [
+            "title",
+            "labels",
+            "current",
+            "previous"
+          ],
+          "additionalProperties": false
+        },
+        "focus": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "note": {
+              "type": "string"
+            },
+            "metric": {
+              "type": "string",
+              "description": "What is counted, e.g. \"Product sales rate\""
+            },
+            "unit": {
+              "type": "string",
+              "description": "Word after the number, e.g. \"items\""
+            },
+            "labels": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "values": {
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
+            },
+            "previous": {
+              "type": "number",
+              "description": "Total of the period before"
+            }
+          },
+          "required": [
+            "title",
+            "metric",
+            "labels",
+            "values",
+            "previous"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "stats",
+        "overview",
+        "focus"
+      ],
+      "additionalProperties": false
+    },
+    "KpiStat": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "money",
+            "count"
+          ],
+          "description": "\"money\" runs the value through formatMoney, \"count\" shows a whole number"
+        },
+        "labels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "One label per point, e.g. \"17 Aug\""
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        },
+        "previous": {
+          "type": "number",
+          "description": "Total of the period before – shown as the change on the right"
+        },
+        "lowerIsBetter": {
+          "type": "boolean",
+          "description": "Set when a smaller number is the good news, e.g. refunds"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "labels",
+        "values"
+      ],
+      "additionalProperties": false
+    },
+    "KpiOption": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false,
+      "description": "A choice in a picker"
+    }
+  }
+}

@@ -597,6 +597,7 @@
   "observers": [
    "IntersectionObserver (voice-orb)",
    "MutationObserver (voice-orb)",
+   "MutationObserver (internal/base › TcElement)",
    "MutationObserver (internal/controllers › AriaForwardController)",
    "IntersectionObserver (internal/controllers › OffScreenController)"
   ],
@@ -625,7 +626,7 @@
   "windowed": false
  },
  "size": {
-  "min": 40637,
-  "gzip": 12781
+  "min": 41125,
+  "gzip": 12929
  }
 }

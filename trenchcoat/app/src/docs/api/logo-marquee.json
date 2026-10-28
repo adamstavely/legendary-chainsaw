@@ -1,0 +1,657 @@
+{
+ "elements": [
+  {
+   "tag": "tc-logo-marquee",
+   "className": "TcLogoMarquee",
+   "description": "The endless \"Trusted by\" strip: rows of logos that loop, ease to a stop on hover, scrub with inertia and pause for good.",
+   "properties": [
+    {
+     "name": "logos",
+     "attribute": null,
+     "type": "MarqueeLogo[]",
+     "default": "[]",
+     "description": "The logos",
+     "readonly": false
+    },
+    {
+     "name": "speed",
+     "attribute": "speed",
+     "type": "number",
+     "default": "40",
+     "description": "Pixels per second, independent of the strip's width",
+     "readonly": false
+    },
+    {
+     "name": "direction",
+     "attribute": "direction",
+     "type": "\"left\" | \"right\"",
+     "default": "\"left\"",
+     "description": "Which way the first row runs; a second row runs the other way",
+     "readonly": false
+    },
+    {
+     "name": "rows",
+     "attribute": "rows",
+     "type": "1 | 2",
+     "default": "1",
+     "description": "1, or 2 for a second row in the opposite direction (the logos are split between the rows)",
+     "readonly": false
+    },
+    {
+     "name": "gap",
+     "attribute": "gap",
+     "type": "number",
+     "default": "56",
+     "description": "Space between logos in px (smaller on narrow containers)",
+     "readonly": false
+    },
+    {
+     "name": "pauseOnHover",
+     "attribute": "pause-on-hover",
+     "type": "boolean",
+     "default": "true",
+     "description": "Ease to a stop while the pointer is over the strip or it has keyboard focus",
+     "readonly": false
+    },
+    {
+     "name": "paused",
+     "attribute": "paused",
+     "type": "boolean",
+     "default": "false",
+     "description": "Stopped for good (the Pause / Play button's state)",
+     "readonly": false
+    },
+    {
+     "name": "pauseButton",
+     "attribute": "pause-button",
+     "type": "boolean",
+     "default": "true",
+     "description": "Show the Pause / Play button (on by default – moving content needs a way to stop it, WCAG 2.2.2)",
+     "readonly": false
+    },
+    {
+     "name": "grayscale",
+     "attribute": "grayscale",
+     "type": "boolean",
+     "default": "true",
+     "description": "Muted, colourless logos that lift to full colour on hover",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": "labels",
+     "type": "MarqueeLabels",
+     "default": "\"none\"",
+     "description": "Show the brand name under each mark or beside it, like a wordmark",
+     "readonly": false
+    },
+    {
+     "name": "label",
+     "attribute": "label",
+     "type": "string",
+     "default": "\"Logos of companies using the product\"",
+     "description": "Accessible name of the strip",
+     "readonly": false
+    },
+    {
+     "name": "buttonLabels",
+     "attribute": null,
+     "type": "{ pause: string; play: string }",
+     "default": "{ pause: \"Pause logos\", play: \"Play logos\" }",
+     "description": "The Pause button's name, and the Play button's",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-paused-change",
+     "detail": "",
+     "description": "The Pause / Play button was pressed ({ paused }: MarqueePausedChange); cancelable – prevented, `paused` stays as it is (controlled use)",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "lm",
+   "cssProperties": [
+    {
+     "name": "--tc-lm-h",
+     "value": "28px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-lm-g",
+     "value": "var(--tc-lm-gap, 56px)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-lm-row-gap",
+     "value": "20px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-lm-fade",
+     "value": "min(14%, 120px)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-lm-dim",
+     "value": "0.75",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-lm-touch",
+     "value": "40px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-lm-gap",
+     "value": "56px",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    },
+    {
+     "name": "--tc-lm-scale",
+     "value": "1",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    },
+    {
+     "name": "--tc-lm-brand",
+     "value": "var(--tc-text-primary)",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    }
+   ],
+   "tokens": [
+    "--tc-duration-moderate",
+    "--tc-ease-standard",
+    "--tc-focus-outline",
+    "--tc-font-sans",
+    "--tc-font-size-sm",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-semibold",
+    "--tc-icon-muted",
+    "--tc-line-height-none",
+    "--tc-radius-md",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-tracking-tight"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "marqueeRows",
+   "signature": "marqueeRows(logos: MarqueeLogo[], rows: 1 | 2, direction: \"left\" | \"right\"): Row[]",
+   "description": "The logos split into rows: two rows take alternate logos, so each shows different brands"
+  }
+ ],
+ "react": [
+  {
+   "component": "LogoMarqueeOwn",
+   "exported": false,
+   "props": [
+    {
+     "name": "logos",
+     "type": "MarqueeLogo[]",
+     "optional": false,
+     "description": "The logos"
+    },
+    {
+     "name": "paused",
+     "type": "boolean",
+     "optional": true,
+     "description": "Stopped (controlled) – pass `onPausedChange` with it. Leave undefined to start at `defaultPaused`"
+    },
+    {
+     "name": "defaultPaused",
+     "type": "boolean",
+     "optional": true,
+     "description": "Stopped at first when uncontrolled"
+    },
+    {
+     "name": "onPausedChange",
+     "type": "(paused: boolean) => void",
+     "optional": true,
+     "description": "Called when the Pause / Play button is pressed"
+    }
+   ],
+   "hides": [],
+   "events": {
+    "tc-paused-change": "onTcPausedChange"
+   }
+  },
+  {
+   "component": "LogoMarquee",
+   "exported": true,
+   "props": [
+    {
+     "name": "logos",
+     "type": "MarqueeLogo[]",
+     "optional": false,
+     "description": "The logos"
+    },
+    {
+     "name": "paused",
+     "type": "boolean",
+     "optional": true,
+     "description": "Stopped (controlled) – pass `onPausedChange` with it. Leave undefined to start at `defaultPaused`"
+    },
+    {
+     "name": "defaultPaused",
+     "type": "boolean",
+     "optional": true,
+     "description": "Stopped at first when uncontrolled"
+    },
+    {
+     "name": "onPausedChange",
+     "type": "(paused: boolean) => void",
+     "optional": true,
+     "description": "Called when the Pause / Play button is pressed"
+    }
+   ],
+   "hides": [
+    "children"
+   ],
+   "events": {
+    "tc-paused-change": "onPausedChange"
+   }
+  }
+ ],
+ "changelog": [
+  "All 18 blocks are now elements – `tc-agent-gallery`, `tc-ai-side-pane`, `tc-ai-workspace`, `tc-app-directory`, `tc-client-context`, `tc-evidence-gallery`, `tc-header-nav`, `tc-invoice-credit`, `tc-kpi-board`, `tc-logo-marquee`, `tc-metrics-dashboard`, `tc-oversight-home`, `tc-pricing-plans`, `tc-publish-readiness`, `tc-red-team-finding`, `tc-task-board`, `tc-testimonial-wall`, `tc-uncertainty-mix` – so Angular (`trenchcoat/angular`), Vue, Svelte, plain HTML and generative UI get them like any component, with docs pages."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-logo-marquee",
+   "className": "TcLogoMarquee",
+   "module": "trenchcoat/logo-marquee",
+   "data": [
+    "logos",
+    "buttonLabels"
+   ],
+   "attributes": [
+    {
+     "name": "speed",
+     "attribute": "speed"
+    },
+    {
+     "name": "direction",
+     "attribute": "direction"
+    },
+    {
+     "name": "rows",
+     "attribute": "rows"
+    },
+    {
+     "name": "gap",
+     "attribute": "gap"
+    },
+    {
+     "name": "pauseOnHover",
+     "attribute": "pause-on-hover"
+    },
+    {
+     "name": "paused",
+     "attribute": "paused"
+    },
+    {
+     "name": "pauseButton",
+     "attribute": "pause-button"
+    },
+    {
+     "name": "grayscale",
+     "attribute": "grayscale"
+    },
+    {
+     "name": "labels",
+     "attribute": "labels"
+    },
+    {
+     "name": "label",
+     "attribute": "label"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-paused-change",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "paused",
+     "event": "tc-paused-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "121",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "has"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "button",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "inert",
+    "name": "inert",
+    "bcd": "api.HTMLElement.inert",
+    "versions": {
+     "chrome": "102",
+     "edge": "102",
+     "firefox": "112",
+     "safari": "15.5",
+     "safari_ios": "15.5"
+    },
+    "progressive": false,
+    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "button",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "has",
+    "name": ":has()",
+    "bcd": "css.selectors.has",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "121",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Layout and state that depend on what's inside a part (an icon present, a focused field).",
+    "via": [
+     "itself",
+     "button"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "button"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "button",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "resize-observer",
+    "name": "ResizeObserver",
+    "bcd": "api.ResizeObserver",
+    "versions": {
+     "chrome": "64",
+     "edge": "79",
+     "firefox": "69",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "via": [
+     "itself",
+     "button"
+    ]
+   },
+   {
+    "id": "intersection-observer",
+    "name": "IntersectionObserver",
+    "bcd": "api.IntersectionObserver",
+    "versions": {
+     "chrome": "51",
+     "edge": "15",
+     "firefox": "55",
+     "safari": "12.1",
+     "safari_ios": "12.2"
+    },
+    "progressive": false,
+    "via": [
+     "itself",
+     "internal/controllers"
+    ]
+   },
+   {
+    "id": "mask",
+    "name": "CSS masks",
+    "bcd": "css.properties.mask-image",
+    "versions": {
+     "chrome": "1",
+     "edge": "79",
+     "firefox": "53",
+     "safari": "4",
+     "safari_ios": "3.2"
+    },
+    "progressive": false,
+    "note": "with the -webkit- prefix",
+    "via": [
+     "itself",
+     "button"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setTimeout"
+  ],
+  "frames": [
+   "requestAnimationFrame, cancelled"
+  ],
+  "animations": 3,
+  "observers": [
+   "ResizeObserver",
+   "IntersectionObserver",
+   "ResizeObserver (button)",
+   "MutationObserver (button)",
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)",
+   "IntersectionObserver (internal/controllers › OffScreenController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [
+    "itself",
+    "button",
+    "internal/controllers › OffScreenController"
+   ],
+   "hidden": [],
+   "reducedMotion": [
+    "script",
+    "CSS",
+    "CSS (button)",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 38497,
+  "gzip": 12039
+ }
+}

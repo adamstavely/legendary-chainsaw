@@ -1,0 +1,224 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-oversight-home.json",
+  "title": "tc-oversight-home",
+  "description": "A role's home for overseeing AI work: what needs doing, the one thing first, the numbers the role watches against\nlast week, and the state of the services behind them – switch roles at the top.",
+  "type": "object",
+  "properties": {
+    "roles": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/OversightRole"
+      },
+      "description": "The roles, each with its own home"
+    },
+    "roleId": {
+      "type": "string",
+      "description": "Id of the role on show – the first one when unset or unknown"
+    },
+    "stateLabels": {
+      "type": "object",
+      "properties": {
+        "down": {
+          "type": "string"
+        },
+        "normal": {
+          "type": "string"
+        },
+        "unknown": {
+          "type": "string"
+        },
+        "limited": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Words for the service states, merged over defaultServiceStateLabels"
+    },
+    "currentLabel": {
+      "type": "string",
+      "description": "Name of this period's line in each chart"
+    },
+    "previousLabel": {
+      "type": "string",
+      "description": "Name of the last period's line in each chart"
+    },
+    "hideFocusAction": {
+      "type": "boolean",
+      "description": "Hide the focus card's action – nothing opens it"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "OversightRole": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "The role's name in the switcher, e.g. \"Reviewer\""
+        },
+        "eyebrow": {
+          "type": "string",
+          "description": "The kicker above the headline, e.g. \"Friday · 12 June · Review\""
+        },
+        "headline": {
+          "type": "string",
+          "description": "What needs doing, as a sentence – e.g. \"5 decisions are waiting for you.\""
+        },
+        "summary": {
+          "type": "string",
+          "description": "What this home covers"
+        },
+        "focus": {
+          "type": "object",
+          "properties": {
+            "label": {
+              "type": "string"
+            },
+            "detail": {
+              "type": "string"
+            },
+            "action": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "label"
+          ],
+          "additionalProperties": false,
+          "description": "The one thing that needs this person first"
+        },
+        "kpis": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OversightKpi"
+          }
+        },
+        "services": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OversightService"
+          }
+        },
+        "servicesNote": {
+          "type": "string",
+          "description": "A line above the services, e.g. who can see what"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "headline",
+        "kpis",
+        "services"
+      ],
+      "additionalProperties": false
+    },
+    "OversightKpi": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "What is counted, e.g. \"Decisions awaiting review\""
+        },
+        "value": {
+          "type": "string",
+          "description": "The headline number, already formatted"
+        },
+        "delta": {
+          "type": "number",
+          "description": "Change against the last period, in percent – positive is up"
+        },
+        "lowerIsBetter": {
+          "type": "boolean",
+          "description": "A drop is good news (pending work, latency, incidents): the change shows green when it falls"
+        },
+        "labels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "One label per point, e.g. weekdays"
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "This period, one value per label"
+        },
+        "previous": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "The period before, drawn as a second, dashed line"
+        },
+        "footer": {
+          "type": "string",
+          "description": "A line under the chart, e.g. \"3 overdue\""
+        },
+        "colors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "maxItems": 2,
+          "description": "Line colours – this period, then the last: any CSS colour, tokens included"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "value",
+        "labels",
+        "values"
+      ],
+      "additionalProperties": false
+    },
+    "OversightService": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "state": {
+          "$ref": "#/definitions/ServiceState"
+        },
+        "availability": {
+          "type": "string",
+          "description": "e.g. \"99.95%\""
+        },
+        "lastEvent": {
+          "type": "string",
+          "description": "What happened last, e.g. \"Health check passed · 4m ago\""
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "state"
+      ],
+      "additionalProperties": false
+    },
+    "ServiceState": {
+      "type": "string",
+      "enum": [
+        "normal",
+        "limited",
+        "down",
+        "unknown"
+      ]
+    }
+  }
+}

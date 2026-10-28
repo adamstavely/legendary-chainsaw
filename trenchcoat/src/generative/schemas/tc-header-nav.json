@@ -1,0 +1,124 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-header-nav.json",
+  "title": "tc-header-nav",
+  "description": "The right end of an app header: the page's bell and app picker, and the person's avatar with their account card.",
+  "type": "object",
+  "properties": {
+    "user": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "avatar": {
+          "type": "string"
+        },
+        "tone": {
+          "$ref": "#/definitions/HeaderNavTone"
+        },
+        "presence": {
+          "$ref": "#/definitions/HeaderNavPresence"
+        }
+      },
+      "required": [
+        "name",
+        "email"
+      ],
+      "additionalProperties": false,
+      "description": "The signed-in person"
+    },
+    "accountItems": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ProfileMenuItem"
+      },
+      "description": "The account card's actions; unset shows Settings, Language, Docs and Sign out"
+    },
+    "setup": {
+      "type": "object",
+      "properties": {
+        "done": {
+          "type": "number"
+        },
+        "total": {
+          "type": "number"
+        },
+        "next": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "done",
+        "total"
+      ],
+      "additionalProperties": false,
+      "description": "Profile setup progress in the account card – unset hides it"
+    },
+    "accountLabel": {
+      "type": "string",
+      "description": "The account popover's name, and the start of the avatar's (\"Account\")"
+    },
+    "panel": {
+      "type": "string",
+      "enum": [
+        "apps",
+        "account",
+        "notifications"
+      ],
+      "description": "The open popover, or null for none"
+    },
+    "separator": {
+      "type": "boolean",
+      "description": "The hairline before the avatar (default true; separator=\"false\" hides it)"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "HeaderNavTone": {
+      "type": "string",
+      "enum": [
+        "accent",
+        "teal",
+        "violet",
+        "amber",
+        "pink",
+        "rose"
+      ],
+      "description": "The tone behind initials when there's no image"
+    },
+    "HeaderNavPresence": {
+      "type": "string",
+      "enum": [
+        "online",
+        "away",
+        "busy",
+        "offline"
+      ],
+      "description": "Presence: a dot on the avatar's bottom corner"
+    },
+    "ProfileMenuItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "badge": {
+          "type": "string",
+          "description": "Small pill on the right, e.g. \"New\""
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

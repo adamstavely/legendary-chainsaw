@@ -18,7 +18,8 @@ import { isMac } from "./internal/util";
  *   · ⌘K / Ctrl K focuses the field from anywhere – change it or turn it off with `hotkey`
  *   · every submit fires tc-submit ({ query, mode, contents, scopes }); the mode and contents switches fire cancelable
  *     changes, so the page can own them
- * Both looks are a field with the field recipe; Standard sets the suggestions in a menu on a tray, Clean in one menu.
+ * Standard: a gray tray holding the white search card, with the switches on the tray below it; the suggestions in a
+ * menu on a tray. Clean: one white card, the switches its last row below a divider; the suggestions in one menu.
  *
  *   <tc-ai-search .suggestions=${[{ label: "invoice 7741", kind: "recent" }]}></tc-ai-search>
  */
@@ -45,6 +46,7 @@ const sparkleIcon = (size = 16) =>
 const xIcon = (size = 14) => lucide(size, svg`<path d="M18 6 6 18"></path><path d="m6 6 12 12"></path>`);
 const sendIcon = () => lucide(16, svg`<path d="m5 12 7-7 7 7"></path><path d="M12 19V5"></path>`);
 const clockIcon = () => lucide(14, svg`<circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path>`);
+const checkIcon = () => html`<svg class="ui-aisr__tick" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>`;
 
 /** The keys of a combination as shown on key chips */
 const comboKeys = (combo: string, mod: string) =>
@@ -325,31 +327,35 @@ export class TcAiSearch extends TcElement {
             <button type="button" class="ui-aisr__send" aria-label=${ai ? "Ask" : "Search"} ?disabled=${!this.value.trim()} @click=${() => this.submit()}>${sendIcon()}</button>
           </span>
         </div>
+        ${ai && this.examples.length
+          ? html`<div class="ui-aisr__examples" role="group" aria-label="Example prompts">
+              ${this.examples.map(
+                (x) => html`<button
+                  type="button"
+                  class="ui-aisr__example"
+                  @click=${() => {
+                    this.setValue(x);
+                    void this.updateComplete.then(() => this.field?.focus());
+                  }}
+                >${sparkleIcon(12)}<span>${x}</span></button>`,
+              )}
+            </div>`
+          : nothing}
         ${this.renderList()}
       </div>
-      ${ai && this.examples.length
-        ? html`<div class="ui-aisr__examples" role="group" aria-label="Example prompts">
-            ${this.examples.map(
-              (x) => html`<button
-                type="button"
-                class="ui-aisr__example"
-                @click=${() => {
-                  this.setValue(x);
-                  void this.updateComplete.then(() => this.field?.focus());
-                }}
-              >${sparkleIcon(12)}${x}</button>`,
-            )}
-          </div>`
-        : nothing}
       <div class="ui-aisr__opts">
         <button type="button" role="switch" class="ui-aisr__switch" aria-checked=${ai ? "true" : "false"} @click=${() => this.toggleMode()}>
           <span class="ui-aisr__track" aria-hidden="true"><span class="ui-aisr__knob"></span></span>
           ${this.aiLabel}
         </button>
         <label class="ui-aisr__check">
-          <input type="checkbox" .checked=${live(this.contents)} @change=${() => this.toggleContents()} />
+          <span class="ui-aisr__box-check">
+            <input type="checkbox" .checked=${live(this.contents)} @change=${() => this.toggleContents()} />
+            ${checkIcon()}
+          </span>
           ${this.contentsLabel}
         </label>
+        <span class="ui-aisr__hint" aria-hidden="true">${ai ? html`<kbd>↵</kbd> to ask · <kbd>⇧</kbd><kbd>↵</kbd> new line` : html`<kbd>↵</kbd> to search`}</span>
       </div>
     `;
   }
@@ -359,8 +365,8 @@ export class TcAiSearch extends TcElement {
   position: relative;
   box-sizing: border-box;
   display: grid;
-  gap: var(--tc-space-2);
   width: 100%;
+  container-type: inline-size;
   font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-md);
   line-height: var(--tc-line-height-normal);
@@ -368,39 +374,53 @@ export class TcAiSearch extends TcElement {
   text-align: left;
   -webkit-font-smoothing: antialiased;
 }
+/* Standard: a gray tray holding the white search card; the switches sit on the tray below it */
+:where([data-look="standard"], [data-look="standard"] *)[data-ui="aisr"] { padding: var(--tc-tray-inset); border-radius: var(--tc-tray-radius); background: var(--tc-surface-tray); }
+:where([data-look="standard"], [data-look="standard"] *).ui-aisr__box { border-radius: var(--tc-card-radius); background: var(--tc-surface-on-tray); box-shadow: var(--tc-card-shadow); }
+/* Clean: one white card; the switches are its last row, below a divider */
+:where([data-look="clean"], [data-look="clean"] *)[data-ui="aisr"] { border-radius: var(--tc-card-radius); background: var(--tc-surface-raised); box-shadow: var(--tc-card-shadow); }
+:where([data-look="clean"], [data-look="clean"] *).ui-aisr__opts { border-top: var(--tc-hairline) solid var(--tc-divider); }
 [data-ui="aisr"] *, [data-ui="aisr"] *::before, [data-ui="aisr"] *::after { box-sizing: border-box; }
 :where([data-ui="aisr"]) button { margin: 0; padding: 0; border: 0; background: none; font: inherit; color: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 [data-ui="aisr"] button:focus-visible { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
 [data-ui="aisr"] ul { margin: 0; padding: 0; list-style: none; }
 [data-ui="aisr"] svg { display: block; flex: none; }
+/* The field's focus is the card's: a ring round the whole search card */
+.ui-aisr__box { position: relative; transition: box-shadow var(--tc-duration-fast) var(--tc-ease-standard); }
+:where([data-look="standard"], [data-look="standard"] *).ui-aisr__box:has(.ui-aisr__input:focus-visible) { box-shadow: var(--tc-card-shadow), 0 0 0 var(--tc-focus-ring-width) var(--tc-focus-ring), 0 0 0 calc(var(--tc-focus-ring-width) + var(--tc-focus-halo-width)) var(--tc-focus-halo); }
+:where([data-look="clean"], [data-look="clean"] *)[data-ui="aisr"]:has(.ui-aisr__input:focus-visible) { box-shadow: var(--tc-card-shadow), 0 0 0 var(--tc-focus-ring-width) var(--tc-focus-ring), 0 0 0 calc(var(--tc-focus-ring-width) + var(--tc-focus-halo-width)) var(--tc-focus-halo); }
 /* ----- The field: lead icon, scopes, the input or prompt, then keys, Clear and Send ----- */
-.ui-aisr__box { position: relative; }
-.ui-aisr__field { display: flex; align-items: center; gap: var(--tc-space-2); min-height: var(--tc-field-h); padding: 0 var(--tc-space-1) 0 var(--tc-field-px); border-radius: var(--tc-field-radius); background: var(--tc-field-bg); box-shadow: var(--tc-field-shadow); transition: box-shadow var(--tc-duration-fast) var(--tc-ease-standard); }
-.ui-aisr__field:hover { box-shadow: var(--tc-field-shadow-hover); }
-.ui-aisr__field:focus-within { box-shadow: var(--tc-field-shadow-focus); }
-.ui-aisr__box[data-ai] .ui-aisr__field { align-items: flex-start; padding-top: var(--tc-space-2); padding-bottom: var(--tc-space-1); }
+.ui-aisr__field { display: flex; align-items: center; gap: var(--tc-space-2); min-height: var(--tc-control-h-lg); padding: var(--tc-space-1-5) var(--tc-space-1-5) var(--tc-space-1-5) var(--tc-space-3); }
+.ui-aisr__box[data-ai] .ui-aisr__field { align-items: flex-start; padding-top: var(--tc-space-2-5); }
 .ui-aisr__lead { display: grid; place-items: center; color: var(--tc-icon-muted); }
 .ui-aisr__box[data-ai] .ui-aisr__lead { padding-top: var(--tc-space-0-5); color: var(--tc-tone-violet-fg); }
-.ui-aisr__input { flex: 1; min-width: 0; height: var(--tc-field-h); padding: 0; border: 0; background: none; font: inherit; font-size: var(--tc-field-font-size); color: var(--tc-text-primary); outline: none; resize: none; }
-textarea.ui-aisr__input { height: auto; min-height: calc(3 * var(--tc-line-height-normal) * 1em); line-height: var(--tc-line-height-normal); field-sizing: content; max-height: 12em; }
+.ui-aisr__input { flex: 1; min-width: 0; height: var(--tc-control-h-md); padding: 0; border: 0; background: none; font: inherit; font-size: var(--tc-field-font-size); color: var(--tc-text-primary); outline: none; resize: none; }
+textarea.ui-aisr__input { height: auto; min-height: calc(3 * var(--tc-line-height-normal)); line-height: var(--tc-line-height-normal); field-sizing: content; max-height: 12em; }
 .ui-aisr__input::placeholder { color: var(--tc-text-placeholder); }
+.ui-aisr__input::-webkit-search-cancel-button { display: none; }
 .ui-aisr__scopes { display: inline-flex; flex-wrap: wrap; gap: var(--tc-space-1); }
+.ui-aisr__box[data-ai] .ui-aisr__scopes { padding-top: var(--tc-space-0-5); }
 .ui-aisr__scope { display: inline-flex; align-items: center; gap: var(--tc-space-0-5); height: var(--tc-pill-h); padding: 0 var(--tc-space-0-5) 0 var(--tc-pill-px); border-radius: var(--tc-pill-radius); background: var(--tc-fill-default); font-size: var(--tc-pill-font-size); font-weight: var(--tc-pill-font-weight); color: var(--tc-text-secondary); white-space: nowrap; }
 .ui-aisr__scope-x { display: grid; place-items: center; width: var(--tc-space-4); height: var(--tc-space-4); border-radius: var(--tc-radius-full); color: var(--tc-icon-muted); }
 .ui-aisr__scope-x:hover { background: var(--tc-fill-strong); color: var(--tc-text-primary); }
 .ui-aisr__trail { display: inline-flex; flex: none; align-items: center; gap: var(--tc-space-1); }
 .ui-aisr__box[data-ai] .ui-aisr__trail { align-self: flex-end; }
 .ui-aisr__keys { display: inline-flex; gap: var(--tc-space-0-5); margin-right: var(--tc-space-1); }
-.ui-aisr__keys kbd { display: inline-grid; place-items: center; min-width: var(--tc-kbd-h); height: var(--tc-kbd-h); padding: 0 var(--tc-kbd-px); border-radius: var(--tc-kbd-radius); background: var(--tc-kbd-bg); box-shadow: var(--tc-kbd-shadow); font-family: inherit; font-size: var(--tc-kbd-font-size); font-weight: var(--tc-kbd-font-weight); color: var(--tc-kbd-fg); }
+[data-ui="aisr"] kbd { display: inline-grid; place-items: center; min-width: var(--tc-kbd-h); height: var(--tc-kbd-h); padding: 0 var(--tc-kbd-px); border-radius: var(--tc-kbd-radius); background: var(--tc-kbd-bg); box-shadow: var(--tc-kbd-shadow); font-family: inherit; font-size: var(--tc-kbd-font-size); font-weight: var(--tc-kbd-font-weight); color: var(--tc-kbd-fg); }
 .ui-aisr__clear { display: grid; place-items: center; width: var(--tc-control-h-sm); height: var(--tc-control-h-sm); border-radius: var(--tc-control-radius-sm); color: var(--tc-icon-muted); }
 .ui-aisr__clear:hover { background: var(--tc-action-ghost-bg-hover); color: var(--tc-text-primary); }
-.ui-aisr__send { display: grid; place-items: center; width: var(--tc-control-h-sm); height: var(--tc-control-h-sm); border-radius: var(--tc-control-radius-sm); background: var(--tc-action-primary-bg); box-shadow: var(--tc-action-primary-shadow); color: var(--tc-action-primary-fg); transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), opacity var(--tc-duration-fast) var(--tc-ease-standard); }
+.ui-aisr__send { display: grid; place-items: center; width: var(--tc-control-h-md); height: var(--tc-control-h-md); border-radius: var(--tc-radius-full); background: var(--tc-action-primary-bg); box-shadow: var(--tc-action-primary-shadow); color: var(--tc-action-primary-fg); transition: background-color var(--tc-duration-fast) var(--tc-ease-standard); }
 .ui-aisr__send:hover:not(:disabled) { background: var(--tc-action-primary-bg-hover); }
-.ui-aisr__send:disabled { opacity: 0.35; cursor: not-allowed; }
-/* ----- Suggestions: a menu below the field ----- */
+.ui-aisr__send:disabled { background: var(--tc-fill-strong); box-shadow: none; color: var(--tc-text-disabled); cursor: not-allowed; }
+/* ----- Examples, inside the card under the prompt ----- */
+.ui-aisr__examples { display: flex; flex-wrap: wrap; gap: var(--tc-space-1-5); padding: var(--tc-space-1) var(--tc-space-3) var(--tc-space-3); }
+.ui-aisr__example { display: inline-flex; align-items: center; gap: var(--tc-space-1-5); min-height: var(--tc-control-h-sm); padding: var(--tc-space-1) var(--tc-space-2-5); border-radius: var(--tc-radius-full); background: var(--tc-fill-subtle); font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-snug); color: var(--tc-text-secondary); text-align: left; transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard); }
+.ui-aisr__example:hover { background: var(--tc-fill-hover); color: var(--tc-text-primary); }
+.ui-aisr__example svg { color: var(--tc-tone-violet-fg); }
+/* ----- Suggestions: a menu below the card ----- */
 .ui-aisr__pop { position: absolute; z-index: var(--tc-z-dropdown); top: calc(100% + var(--tc-space-1-5)); left: 0; right: 0; box-shadow: var(--tc-menu-shadow); animation: ui-aisr-open var(--tc-duration-moderate) var(--tc-ease-move) both; }
-:where([data-look="standard"], [data-look="standard"] *).ui-aisr__pop { padding: var(--tc-tray-inset); border-radius: var(--tc-tray-radius); background: var(--tc-surface-tray); }
-:where([data-look="standard"], [data-look="standard"] *).ui-aisr__menu { overflow: hidden; border-radius: calc(var(--tc-tray-radius) - var(--tc-tray-inset)); background: var(--tc-menu-bg); box-shadow: 0 0 0 var(--tc-hairline) var(--tc-border-default); }
+:where([data-look="standard"], [data-look="standard"] *).ui-aisr__pop { top: calc(100% + var(--tc-tray-inset) + var(--tc-space-1)); left: calc(-1 * var(--tc-tray-inset)); right: calc(-1 * var(--tc-tray-inset)); padding: var(--tc-tray-inset); border-radius: var(--tc-tray-radius); background: var(--tc-surface-tray); }
+:where([data-look="standard"], [data-look="standard"] *).ui-aisr__menu { overflow: hidden; border-radius: var(--tc-card-radius); background: var(--tc-menu-bg); box-shadow: 0 0 0 var(--tc-hairline) var(--tc-border-default); }
 :where([data-look="clean"], [data-look="clean"] *).ui-aisr__pop { overflow: hidden; border-radius: var(--tc-menu-radius); background: var(--tc-menu-bg); }
 .ui-aisr__list { max-height: 320px; padding: var(--tc-menu-padding); overflow-y: auto; overscroll-behavior: contain; }
 .ui-aisr__group { padding: var(--tc-space-1-5) var(--tc-menu-item-px) var(--tc-space-1); font-size: var(--tc-caption-font-size); font-weight: var(--tc-caption-font-weight); line-height: var(--tc-caption-line-height); letter-spacing: var(--tc-caption-tracking); text-transform: var(--tc-caption-transform); color: var(--tc-caption-color); }
@@ -408,12 +428,9 @@ textarea.ui-aisr__input { height: auto; min-height: calc(3 * var(--tc-line-heigh
 .ui-aisr__option[aria-selected="true"] { background: var(--tc-menu-item-hover); }
 .ui-aisr__option-icon { color: var(--tc-icon-muted); }
 .ui-aisr__option-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-/* ----- Examples, then the switches ----- */
-.ui-aisr__examples { display: flex; flex-wrap: wrap; gap: var(--tc-space-1-5); }
-.ui-aisr__example { display: inline-flex; align-items: center; gap: var(--tc-space-1); min-height: var(--tc-control-h-sm); padding: 0 var(--tc-space-2-5); border-radius: var(--tc-radius-full); box-shadow: inset 0 0 0 var(--tc-hairline) var(--tc-border-default); font-size: var(--tc-font-size-sm); color: var(--tc-text-secondary); text-align: left; transition: background-color var(--tc-duration-fast) var(--tc-ease-standard); }
-.ui-aisr__example:hover { background: var(--tc-fill-subtle); color: var(--tc-text-primary); }
-.ui-aisr__example svg { color: var(--tc-tone-violet-fg); }
-.ui-aisr__opts { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-2) var(--tc-space-5); font-size: var(--tc-font-size-sm); }
+/* ----- The switches: AI mode, file contents, and the keys on the right ----- */
+.ui-aisr__opts { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-1) var(--tc-space-5); padding: var(--tc-space-1-5) var(--tc-space-3); font-size: var(--tc-font-size-sm); }
+:where([data-look="standard"], [data-look="standard"] *).ui-aisr__opts { padding: var(--tc-space-1-5) var(--tc-space-2-5) var(--tc-space-1); }
 .ui-aisr__switch { display: inline-flex; align-items: center; gap: var(--tc-space-2); min-height: var(--tc-control-h-sm); color: var(--tc-text-secondary); }
 .ui-aisr__track { position: relative; display: block; width: var(--tc-switch-w); height: var(--tc-switch-h); border-radius: var(--tc-switch-radius); background: var(--tc-switch-off); transition: background-color var(--tc-duration-fast) var(--tc-ease-standard); }
 .ui-aisr__knob { position: absolute; top: calc((var(--tc-switch-h) - var(--tc-switch-knob)) / 2); left: calc((var(--tc-switch-h) - var(--tc-switch-knob)) / 2); width: var(--tc-switch-knob); height: var(--tc-switch-knob); border-radius: var(--tc-radius-full); background: var(--tc-switch-knob-bg); box-shadow: var(--tc-shadow-control); transition: transform var(--tc-duration-base) var(--tc-ease-move); }
@@ -421,12 +438,31 @@ textarea.ui-aisr__input { height: auto; min-height: calc(3 * var(--tc-line-heigh
 .ui-aisr__switch[aria-checked="true"] .ui-aisr__knob { transform: translateX(calc(var(--tc-switch-w) - var(--tc-switch-h))); }
 .ui-aisr__switch[aria-checked="true"] { color: var(--tc-text-primary); }
 .ui-aisr__check { display: inline-flex; align-items: center; gap: var(--tc-space-2); min-height: var(--tc-control-h-sm); color: var(--tc-text-secondary); cursor: pointer; }
-.ui-aisr__check input { width: var(--tc-space-4); height: var(--tc-space-4); margin: 0; accent-color: var(--tc-accent); cursor: pointer; }
-.ui-aisr__check input:focus-visible { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
+.ui-aisr__check:has(:checked) { color: var(--tc-text-primary); }
+/* The box: the real checkbox, drawn with tokens, the tick laid over it */
+.ui-aisr__box-check { display: grid; flex: none; }
+.ui-aisr__box-check > * { grid-area: 1 / 1; }
+.ui-aisr__box-check input { width: var(--tc-space-4); height: var(--tc-space-4); margin: 0; border-radius: var(--tc-radius-xs); background: var(--tc-surface-control); box-shadow: inset 0 0 0 1px var(--tc-border-control); appearance: none; cursor: pointer; transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), box-shadow var(--tc-duration-fast) var(--tc-ease-standard); }
+.ui-aisr__box-check input:hover { box-shadow: inset 0 0 0 1px var(--tc-border-control-hover); }
+.ui-aisr__box-check input:checked { background: var(--tc-surface-inverse); box-shadow: inset 0 0 0 1px var(--tc-surface-inverse); }
+:where([data-look="clean"], [data-look="clean"] *).ui-aisr__box-check input:checked { background: var(--tc-accent); box-shadow: none; }
+.ui-aisr__box-check input:focus-visible { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
+.ui-aisr__tick { place-self: center; width: var(--tc-space-3); height: var(--tc-space-3); fill: none; stroke: var(--tc-text-on-inverse); stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 24; stroke-dashoffset: 24; pointer-events: none; transition: stroke-dashoffset var(--tc-duration-moderate) var(--tc-ease-move); }
+:where([data-look="clean"], [data-look="clean"] *).ui-aisr__tick { stroke: var(--tc-text-on-accent); }
+.ui-aisr__box-check input:checked + .ui-aisr__tick { stroke-dashoffset: 0; }
+.ui-aisr__hint { display: inline-flex; align-items: center; gap: var(--tc-space-1); margin-left: auto; font-size: var(--tc-font-size-xs); color: var(--tc-text-muted); white-space: nowrap; }
+.ui-aisr__hint kbd { margin-right: var(--tc-space-0-5); }
 @keyframes ui-aisr-open { from { opacity: 0; transform: translateY(-2px) scale(0.99); } }
+@container (max-width: 460px) {
+  .ui-aisr__hint, .ui-aisr__keys { display: none; }
+  .ui-aisr__opts { gap: var(--tc-space-1) var(--tc-space-4); }
+}
 @media (forced-colors: active) {
   .ui-aisr__option[aria-selected="true"] { outline: 2px solid Highlight; }
   .ui-aisr__track { border: 1px solid ButtonText; }
+  .ui-aisr__box-check input { border: 1px solid ButtonText; }
+  .ui-aisr__box-check input:checked { background: Highlight; }
+  .ui-aisr__tick { stroke: HighlightText; }
 }
 @media (prefers-reduced-motion: reduce) {
   [data-ui="aisr"] *, [data-ui="aisr"] *::before, [data-ui="aisr"] *::after { animation: none !important; transition: none !important; }

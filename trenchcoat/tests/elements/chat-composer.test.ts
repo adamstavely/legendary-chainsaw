@@ -1303,3 +1303,17 @@ describe("tc-chat-composer: skills (Part 7.2)", () => {
         await run();
       });
 });
+
+describe("tc-chat-composer – the message is measured again when its width changes", () => {
+  afterEach(cleanup);
+  test("a narrower composer gives a long message more lines (Clean)", async () => {
+    const wrap = await fixture<HTMLDivElement>(html`<div style="width: 1200px"><tc-chat-composer look="clean" load-ms="0"></tc-chat-composer></div>`);
+    const el = wrap.querySelector("tc-chat-composer") as TcChatComposer;
+    el.value = "Summarise the vendor ledger for the third quarter";
+    await settle(wrap);
+    const lines = () => Number((el.querySelector("[style*='--tc-chat-composer-lines']") as HTMLElement | null)?.style.getPropertyValue("--tc-chat-composer-lines") || 1);
+    await expect.poll(lines).toBe(1);
+    wrap.style.width = "320px";
+    await expect.poll(lines).toBeGreaterThan(1);
+  });
+});

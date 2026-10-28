@@ -663,6 +663,7 @@
   "observers": [
    "ResizeObserver",
    "IntersectionObserver",
+   "MutationObserver (internal/base › TcElement)",
    "MutationObserver (internal/controllers › AriaForwardController)"
   ],
   "clock": [
@@ -684,7 +685,7 @@
   "windowed": false
  },
  "size": {
-  "min": 55553,
-  "gzip": 14793
+  "min": 56041,
+  "gzip": 14936
  }
 }

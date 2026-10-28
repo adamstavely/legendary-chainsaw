@@ -1,0 +1,638 @@
+{
+ "elements": [
+  {
+   "tag": "tc-oversight-home",
+   "className": "TcOversightHome",
+   "description": "A role's home for overseeing AI work: what needs doing, the one thing first, the numbers the role watches against\nlast week, and the state of the services behind them – switch roles at the top.",
+   "properties": [
+    {
+     "name": "roles",
+     "attribute": null,
+     "type": "OversightRole[]",
+     "default": "[]",
+     "description": "The roles, each with its own home",
+     "readonly": false
+    },
+    {
+     "name": "roleId",
+     "attribute": "role-id",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "Id of the role on show – the first one when unset or unknown",
+     "readonly": false
+    },
+    {
+     "name": "stateLabels",
+     "attribute": null,
+     "type": "Partial<Record<ServiceState, string>>",
+     "default": "{}",
+     "description": "Words for the service states, merged over defaultServiceStateLabels",
+     "readonly": false
+    },
+    {
+     "name": "currentLabel",
+     "attribute": "current-label",
+     "type": "string",
+     "default": "\"This week\"",
+     "description": "Name of this period's line in each chart",
+     "readonly": false
+    },
+    {
+     "name": "previousLabel",
+     "attribute": "previous-label",
+     "type": "string",
+     "default": "\"Last week\"",
+     "description": "Name of the last period's line in each chart",
+     "readonly": false
+    },
+    {
+     "name": "hideFocusAction",
+     "attribute": "hide-focus-action",
+     "type": "boolean",
+     "default": "false",
+     "description": "Hide the focus card's action – nothing opens it",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-role-change",
+     "detail": "",
+     "description": "Another role was picked ({ roleId, role }: OversightRoleChange – its id and the role); cancelable – prevented, `roleId` stays",
+     "cancelable": true
+    },
+    {
+     "name": "tc-open-focus",
+     "detail": "",
+     "description": "The focus card's action was pressed ({ role }: OversightOpenFocus – the role on show)",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "ovh",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
+    "--tc-duration-moderate",
+    "--tc-ease-out",
+    "--tc-eyebrow-color",
+    "--tc-eyebrow-font-size",
+    "--tc-eyebrow-font-weight",
+    "--tc-eyebrow-line-height",
+    "--tc-eyebrow-tracking",
+    "--tc-eyebrow-transform",
+    "--tc-font-sans",
+    "--tc-font-size-3xl",
+    "--tc-font-size-4xl",
+    "--tc-font-size-lg",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xl",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-semibold",
+    "--tc-hairline",
+    "--tc-head-glyph-stroke",
+    "--tc-line-height-display",
+    "--tc-line-height-display-sm",
+    "--tc-line-height-loose",
+    "--tc-line-height-normal",
+    "--tc-line-height-relaxed",
+    "--tc-radius-lg",
+    "--tc-shadow-control",
+    "--tc-space-1-5",
+    "--tc-space-10",
+    "--tc-space-2",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-5",
+    "--tc-space-6",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-border",
+    "--tc-status-warning-fg",
+    "--tc-surface-raised",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-text-strong",
+    "--tc-title-color",
+    "--tc-title-font-size",
+    "--tc-title-font-weight",
+    "--tc-title-line-height",
+    "--tc-title-tracking",
+    "--tc-tracking-snug",
+    "--tc-tracking-tight",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "defaultServiceStateLabels",
+   "signature": "defaultServiceStateLabels: Record<ServiceState, string>",
+   "description": "The words for the service states"
+  }
+ ],
+ "react": [
+  {
+   "component": "OversightHome",
+   "exported": true,
+   "props": [
+    {
+     "name": "role",
+     "type": "string",
+     "optional": true,
+     "description": "Id of the role on show (controlled)"
+    },
+    {
+     "name": "defaultRole",
+     "type": "string",
+     "optional": true,
+     "description": "The role at first when uncontrolled – the first one by default"
+    },
+    {
+     "name": "onRoleChange",
+     "type": "(id: string) => void",
+     "optional": true,
+     "description": "Called when another role is picked"
+    },
+    {
+     "name": "onOpenFocus",
+     "type": "(role: OversightRole) => void",
+     "optional": true,
+     "description": "The focus card's action was pressed; without it the action isn't shown"
+    }
+   ],
+   "hides": [
+    "role",
+    "roleId",
+    "hideFocusAction",
+    "children"
+   ],
+   "events": {
+    "tc-role-change": "onRoleChange",
+    "tc-open-focus": "onOpenFocus"
+   }
+  }
+ ],
+ "changelog": [
+  "All 18 blocks are now elements – `tc-agent-gallery`, `tc-ai-side-pane`, `tc-ai-workspace`, `tc-app-directory`, `tc-client-context`, `tc-evidence-gallery`, `tc-header-nav`, `tc-invoice-credit`, `tc-kpi-board`, `tc-logo-marquee`, `tc-metrics-dashboard`, `tc-oversight-home`, `tc-pricing-plans`, `tc-publish-readiness`, `tc-red-team-finding`, `tc-task-board`, `tc-testimonial-wall`, `tc-uncertainty-mix` – so Angular (`trenchcoat/angular`), Vue, Svelte, plain HTML and generative UI get them like any component, with docs pages."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-oversight-home",
+   "className": "TcOversightHome",
+   "module": "trenchcoat/oversight-home",
+   "data": [
+    "roles",
+    "stateLabels"
+   ],
+   "attributes": [
+    {
+     "name": "roleId",
+     "attribute": "role-id"
+    },
+    {
+     "name": "currentLabel",
+     "attribute": "current-label"
+    },
+    {
+     "name": "previousLabel",
+     "attribute": "previous-label"
+    },
+    {
+     "name": "hideFocusAction",
+     "attribute": "hide-focus-action"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-role-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-open-focus",
+     "cancelable": false
+    }
+   ],
+   "controlled": [],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "121",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "has"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "data-table",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "button",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself",
+     "kpi-chart"
+    ]
+   },
+   {
+    "id": "inert",
+    "name": "inert",
+    "bcd": "api.HTMLElement.inert",
+    "versions": {
+     "chrome": "102",
+     "edge": "102",
+     "firefox": "112",
+     "safari": "15.5",
+     "safari_ios": "15.5"
+    },
+    "progressive": false,
+    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
+    "via": [
+     "internal/controllers"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "button",
+     "internal/kit",
+     "data-table",
+     "kpi-chart",
+     "segmented-control"
+    ]
+   },
+   {
+    "id": "has",
+    "name": ":has()",
+    "bcd": "css.selectors.has",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "121",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Layout and state that depend on what's inside a part (an icon present, a focused field).",
+    "via": [
+     "button",
+     "data-table"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "button",
+     "data-table",
+     "kpi-chart"
+    ]
+   },
+   {
+    "id": "individual-transforms",
+    "name": "translate, scale and rotate properties",
+    "bcd": "css.properties.translate",
+    "versions": {
+     "chrome": "104",
+     "edge": "104",
+     "firefox": "72",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "segmented-control"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "button",
+     "internal/base",
+     "data-table",
+     "kpi-chart",
+     "segmented-control",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "resize-observer",
+    "name": "ResizeObserver",
+    "bcd": "api.ResizeObserver",
+    "versions": {
+     "chrome": "64",
+     "edge": "79",
+     "firefox": "69",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "via": [
+     "button",
+     "internal/controllers",
+     "segmented-control"
+    ]
+   },
+   {
+    "id": "intersection-observer",
+    "name": "IntersectionObserver",
+    "bcd": "api.IntersectionObserver",
+    "versions": {
+     "chrome": "51",
+     "edge": "15",
+     "firefox": "55",
+     "safari": "12.1",
+     "safari_ios": "12.2"
+    },
+    "progressive": false,
+    "via": [
+     "internal/controllers"
+    ]
+   },
+   {
+    "id": "mask",
+    "name": "CSS masks",
+    "bcd": "css.properties.mask-image",
+    "versions": {
+     "chrome": "1",
+     "edge": "79",
+     "firefox": "53",
+     "safari": "4",
+     "safari_ios": "3.2"
+    },
+    "progressive": false,
+    "note": "with the -webkit- prefix",
+    "via": [
+     "button",
+     "segmented-control"
+    ]
+   },
+   {
+    "id": "scrollbar-width",
+    "name": "scrollbar-width",
+    "bcd": "css.properties.scrollbar-width",
+    "versions": {
+     "chrome": "121",
+     "edge": "121",
+     "firefox": "64",
+     "safari": "18.2",
+     "safari_ios": "18.2"
+    },
+    "progressive": true,
+    "without": "Scrollbars keep the browser's default width.",
+    "via": [
+     "data-table",
+     "segmented-control"
+    ]
+   },
+   {
+    "id": "text-wrap-balance",
+    "name": "text-wrap: balance",
+    "bcd": "css.properties.text-wrap.balance",
+    "versions": {
+     "chrome": "114",
+     "edge": "114",
+     "firefox": "121",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": true,
+    "without": "Titles break where the line fills up instead of into even lines.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "at-property",
+    "name": "@property",
+    "bcd": "css.at-rules.property",
+    "versions": {
+     "chrome": "85",
+     "edge": "85",
+     "firefox": "128",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "The registered custom properties don't interpolate, so the transitions and spins they drive jump to their end state.",
+    "via": [
+     "segmented-control"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "overscroll-contain",
+    "name": "overscroll-behavior: contain",
+    "bcd": "css.properties.overscroll-behavior.contain",
+    "versions": {
+     "chrome": "63",
+     "edge": "18",
+     "firefox": "59",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "Scrolling past the end of a list carries on scrolling the page.",
+    "via": [
+     "segmented-control"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setTimeout (segmented-control)"
+  ],
+  "frames": [
+   "requestAnimationFrame (data-table)",
+   "requestAnimationFrame, cancelled (internal/controllers › RowWindowController)",
+   "requestAnimationFrame, cancelled (internal/controllers › SmoothHeightController)",
+   "requestAnimationFrame, cancelled (segmented-control)"
+  ],
+  "animations": 3,
+  "observers": [
+   "ResizeObserver (button)",
+   "MutationObserver (button)",
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)",
+   "IntersectionObserver (internal/controllers › OffScreenController)",
+   "MutationObserver (internal/controllers › FocusRescueController)",
+   "ResizeObserver (internal/controllers › SmoothHeightController)",
+   "ResizeObserver (segmented-control)"
+  ],
+  "clock": [
+   "performance.now() (internal/controllers › RowWindowController)"
+  ],
+  "listeners": [
+   "window pointerup (data-table)",
+   "window scroll (internal/controllers › RowWindowController)",
+   "window resize (internal/controllers › RowWindowController)",
+   "window keydown (kpi-chart)"
+  ],
+  "pauses": {
+   "offscreen": [
+    "button",
+    "internal/controllers › OffScreenController"
+   ],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (button)",
+    "CSS (internal/kit › kitCss)",
+    "CSS (data-table)",
+    "CSS (kpi-chart)",
+    "CSS (segmented-control)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 142919,
+  "gzip": 33674
+ }
+}

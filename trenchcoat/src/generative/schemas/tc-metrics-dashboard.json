@@ -1,0 +1,53 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-metrics-dashboard.json",
+  "title": "tc-metrics-dashboard",
+  "description": "A compact sales overview: KPI tabs that pick the charted metric, a line or bar chart with an optional previous-period\ncomparison, and top products and channels.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "Title in the bar on top"
+    },
+    "site": {
+      "type": "string",
+      "description": "Site or workspace shown under the title"
+    },
+    "range": {
+      "type": "string",
+      "enum": [
+        "7d",
+        "30d",
+        "90d"
+      ],
+      "description": "The period: \"7d\", \"30d\" or \"90d\""
+    },
+    "metric": {
+      "type": "string",
+      "enum": [
+        "revenue",
+        "orders",
+        "aov",
+        "refunds"
+      ],
+      "description": "The charted metric: \"revenue\", \"orders\", \"aov\" or \"refunds\""
+    },
+    "chart": {
+      "type": "string",
+      "enum": [
+        "line",
+        "bars"
+      ],
+      "description": "The chart type: \"line\" or \"bars\""
+    },
+    "compare": {
+      "type": "boolean",
+      "description": "Shows the previous period beside the current one"
+    },
+    "now": {
+      "type": "number",
+      "description": "Last day of the sample data, as epoch ms – today by default"
+    }
+  },
+  "additionalProperties": false
+}

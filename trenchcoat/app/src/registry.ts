@@ -9,9 +9,9 @@ const litPorts = new Set(Object.keys(import.meta.glob("../../src/elements/*.ts")
 litPorts.add("look-provider");
 const loadWrappers = () => import("../../src/elements/react");
 import blocksReadme from "../../blocks/README.md?raw";
-// Blocks built on the Lit components through trenchcoat/react (decision O): one file, both looks – the stage's look
-// provider picks one, as it does for the elements
-const litBlocks = new Set(["ai-side-pane", "evidence-gallery", "header-nav", "oversight-home", "publish-readiness", "red-team-finding", "uncertainty-mix"]);
+// Every block is a Lit element (src/elements/<slug>.ts) with a thin React file in blocks/: one file, both looks – the
+// stage's look provider picks one, as it does for the elements
+const litBlocks = new Set(Object.keys(import.meta.glob("../../blocks/*.tsx")).map((p) => p.match(/([^/]+)\.tsx$/)![1]));
 import screensReadme from "../../screens/README.md?raw";
 import illustrationsReadme from "../../illustrations/README.md?raw";
 import motionReadme from "../../motion/README.md?raw";
@@ -74,9 +74,9 @@ const LIBRARIES: Library[] = [
       ["Data & charts", ["activity-calendar", "activity-clock", "billing-schedule", "breakdown-chart", "change-summary", "compact-breakdown", "data-table", "day-rhythm", "eval-scorecard", "experiment-card", "kpi-chart", "ops-overview", "project-card", "sla-status", "usage-meter"]],
       ["Feedback & onboarding", ["background-tasks", "notification-stack", "notifications", "progress-tracker", "setup-guide", "stories", "terms-dialog", "tips-panel", "toaster"]],
       ["Inputs & controls", ["app-picker", "button", "checkbox", "combobox", "command-menu", "date-range-picker", "dialog", "dropzone", "filter-menu", "integration-picker", "integration-settings", "isbn-details", "number-field", "otp-input", "profile-menu", "radio-group", "reaction-bar", "secret-field", "segmented-control", "slider-field", "stepper-form", "switch", "text-annotator", "tooltip"]],
-      ["People & profiles", ["account-list", "alert-feed", "asset-list", "biometric-status", "co-occurrence", "contact-channels", "document-list", "entity-timeline", "evidence-list", "fact-sheet", "fingerprint-card", "money-flow", "person-links", "place-list", "profile-header", "travel-itinerary", "watchlist"]],
+      ["People & profiles", ["account-list", "alert-feed", "asset-list", "biometric-status", "co-occurrence", "contact-channels", "document-list", "entity-timeline", "evidence-list", "fact-sheet", "fingerprint-card", "money-flow", "multi-calendar", "person-links", "place-list", "profile-header", "travel-itinerary", "watchlist"]],
       ["Research & portfolio", ["audience-mix", "budget-burn", "capacity-bars", "citation-badge", "citation-sections", "coverage-ring", "gap-exposure", "grade-distribution", "investment-balance", "org-unit-card", "priority-list", "publication-impact", "status-tracker", "traceability-spine", "work-item"]],
-      ["Search", ["ai-search", "query-builder", "search-history"]],
+      ["Search", ["ai-search", "query-builder", "routine-form", "search-history"]],
       ["Trust & calibration", ["agreement-tracker", "attestation-check", "capability-notice", "claim-answer", "confidence-brief", "correction-propagation", "coverage-matrix", "disagreement-banner", "engagement-quality", "evidence-coverage", "friction-profile", "gate-config", "handoff-brief", "kill-switch", "knowledge-promotion", "lineage-graph", "playbook-canvas", "policy-simulator", "provenance-summary", "reasoning-flags", "reflection-gate", "reliance-gauge", "review-conflict", "run-manifest", "session-context-bar", "synthesis-notes", "transcript-review", "validity-badge", "verification-queue", "version-history"]],
       ["Utilities", ["look-provider"]],
     ],

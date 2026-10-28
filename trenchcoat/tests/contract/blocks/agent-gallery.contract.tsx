@@ -12,16 +12,11 @@ const item = (id: string, name: string) => ({
 });
 const items = [item("a", "Alpha"), item("b", "Beta"), item("c", "Gamma"), item("d", "Delta")];
 
+// The block is <tc-agent-gallery> through trenchcoat/react. jsdom loads @lit/react's node build, which never sets an
+// element's properties, so controlled `index` is checked in a real browser (tests/elements/agent-gallery.test.ts)
 export const spec: ContractSpec = {
+  root: "tc-agent-gallery",
   component: "AgentGallery",
   props: { items },
   ref: "root",
-  controlled: [
-    {
-      prop: "index",
-      values: [0, 3],
-      // The caption names the open agent
-      read: (root) => items.findIndex((i) => `${i.name}.` === root.querySelector(".ui-ag__caption b")?.textContent),
-    },
-  ],
 };

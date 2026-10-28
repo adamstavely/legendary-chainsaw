@@ -5,13 +5,14 @@ import {
   type SearchHistoryEntry,
   type SearchHistoryRemove,
   type SearchHistorySavedChange,
+  type SearchHistorySchedule,
   type SearchHistorySelect,
   type SearchHistoryTab,
   type SearchHistoryTabChange,
 } from "../search-history";
 import { h, useControlled } from "./internal";
 
-export type { SearchHistoryEntry, SearchHistoryTab } from "../search-history";
+export type { SearchHistoryEntry, SearchHistorySchedule, SearchHistoryTab } from "../search-history";
 
 const RawSearchHistory = createComponent({
   tagName: "tc-search-history",
@@ -23,10 +24,11 @@ const RawSearchHistory = createComponent({
     onTcRemove: "tc-remove" as EventName<CustomEvent<SearchHistoryRemove>>,
     onTcRestore: "tc-restore" as EventName<CustomEvent<SearchHistoryRemove>>,
     onTcTabChange: "tc-tab-change" as EventName<CustomEvent<SearchHistoryTabChange>>,
+    onTcSchedule: "tc-schedule" as EventName<CustomEvent<SearchHistorySchedule>>,
   },
 });
 type RawProps = React.ComponentProps<typeof RawSearchHistory>;
-type Owned = "heading" | "searches" | "tab" | "onTcSelect" | "onTcSavedChange" | "onTcRemove" | "onTcRestore" | "onTcTabChange" | "children";
+type Owned = "heading" | "searches" | "tab" | "onTcSelect" | "onTcSavedChange" | "onTcRemove" | "onTcRestore" | "onTcTabChange" | "onTcSchedule" | "children";
 export type SearchHistoryProps = Omit<RawProps, Owned> & {
   /** The heading, and the list's name */
   title?: string;
@@ -44,11 +46,13 @@ export type SearchHistoryProps = Omit<RawProps, Owned> & {
   onTabChange?: (tab: SearchHistoryTab) => void;
   /** A search was picked to run again */
   onRunAgain?: (search: SearchHistoryEntry) => void;
+  /** Schedule was pressed on a saved search (with `schedulable`) – open your routine form */
+  onSchedule?: (search: SearchHistoryEntry) => void;
 };
 
 const NONE: SearchHistoryEntry[] = [];
 
-export function SearchHistory({ title, searches, defaultSearches = NONE, onSearchesChange, tab, defaultTab = "recent", onTabChange, onRunAgain, ...props }: SearchHistoryProps) {
+export function SearchHistory({ title, searches, defaultSearches = NONE, onSearchesChange, tab, defaultTab = "recent", onTabChange, onRunAgain, onSchedule, ...props }: SearchHistoryProps) {
   const list = useControlled<SearchHistoryEntry[]>(searches, defaultSearches, onSearchesChange);
   const t = useControlled<SearchHistoryTab>(tab, defaultTab, onTabChange);
   return h(RawSearchHistory, {
@@ -61,5 +65,6 @@ export function SearchHistory({ title, searches, defaultSearches = NONE, onSearc
     onTcRestore: (e: CustomEvent<SearchHistoryRemove>) => list.handler(e.detail.searches, e),
     onTcTabChange: (e: CustomEvent<SearchHistoryTabChange>) => t.handler(e.detail.tab, e),
     onTcSelect: (e: CustomEvent<SearchHistorySelect>) => onRunAgain?.(e.detail.search),
+    onTcSchedule: (e: CustomEvent<SearchHistorySchedule>) => onSchedule?.(e.detail.search),
   });
 }
