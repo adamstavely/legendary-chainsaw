@@ -1,5 +1,57 @@
 # Changelog
 
+## Unreleased – research and portfolio
+
+Fourteen new Lit elements in a new **Research & portfolio** section of the gallery. Each comes with both looks, a
+React wrapper, tests in Chromium, Firefox and WebKit, a gallery demo, a docs page and an overview thumbnail.
+
+### Added
+
+- **`tc-traceability-spine`:** the chain from open questions to outcomes.
+  - **Columns:** one per stage – Question, Gap, Work, Paper, Cited by, or your own stages.
+  - **Linking and tracing:** linked cards are joined by lines. Clicking a card, or pressing Enter on it, traces its
+    whole path and dims the rest.
+- **`tc-grade-distribution`:** a count over each assessment grade.
+  - **Display:** grades with no assessments are muted, and an optional bar shows their proportions.
+  - **Filtering:** a grade can be picked as a filter.
+- **`tc-investment-balance`:** each priority tier's share of items, budget and people, side by side.
+  - **Flags:** over- and under-invested tiers are flagged in words.
+  - **Summary:** the biggest mismatch is said in one line.
+- **`tc-capacity-bars`:** each person's allocation, split by what they work on, against their capacity.
+  - **Scale:** all people share one scale.
+  - **Over capacity:** marked on the person and counted.
+- **`tc-budget-burn`:** spent against budget for each item, with a pace marker.
+  - **Pace:** Ahead, On or Behind pace in words.
+  - **Totals and sorting:** totals in the header, and a sort by budget or burn.
+- **`tc-publication-impact`:** one paper's impact.
+  - **About the paper:** venue, topic, grade and authors.
+  - **Reach:** downloads, views, citations and attention, with a reads sparkline, plus mentions.
+  - **Readers and feedback:** who is reading, and peer, reader and sponsor feedback, each with a sentiment.
+- **`tc-audience-mix`:** who is reading.
+  - **Breakdowns:** sector mix, internal versus external, and top places.
+- **`tc-citation-badge`:** an embeddable badge of citation tallies – publications, supporting, mentioning and
+  contrasting.
+  - **Layouts:** labelled or compact.
+  - **Details:** a tooltip says what each type means, and an optional link goes to more. No third-party branding.
+- **`tc-citation-sections`:** where a work is cited.
+  - **Donut:** citing sections – Intro, Methods, Results, Discussion, Other – with letter chips and a legend.
+- **`tc-priority-list`:** topics or projects by priority.
+  - **Each row:** health, a momentum line with its change, a coverage bar, what's open and the work in flight.
+  - **Filtering and grouping:** health filters, and groups per priority.
+- **`tc-gap-exposure`:** gaps or risks, and whether anyone is working on them.
+  - **Exposure:** severe uncovered gaps are called out.
+  - **Investment:** what's been invested in each.
+  - **Grouping:** by priority or severity, with an uncovered-only switch.
+- **`tc-coverage-ring`:** one share as a large ring.
+  - **Bar:** runs from healthiest to needs attention, and reads out each segment.
+- **`tc-org-unit-card`:** an organisational unit at a glance.
+  - **Header:** its lead and health counts.
+  - **Stats:** the page's own stats, with a spent-of-budget bar.
+  - **Teams:** each folds open onto its topics.
+- **`tc-work-item`:** one piece of work as a card.
+  - **Status:** in words, with progress and a due date (marked when overdue).
+  - **Resources:** people, what it delivers, spent against budget, and effort.
+
 ## Unreleased – people and profiles, and file summaries
 
 Ten new Lit elements, each with both looks, a React wrapper, tests in Chromium, Firefox and WebKit, a gallery demo,

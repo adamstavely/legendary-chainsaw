@@ -11,31 +11,31 @@
    "features": [
     "light-dark"
    ],
-   "elements": 195
+   "elements": 209
   },
   "edge": {
    "features": [
     "light-dark"
    ],
-   "elements": 195
+   "elements": 209
   },
   "firefox": {
    "features": [
     "has"
    ],
-   "elements": 56
+   "elements": 59
   },
   "safari": {
    "features": [
     "light-dark"
    ],
-   "elements": 195
+   "elements": 209
   },
   "safari_ios": {
    "features": [
     "light-dark"
    ],
-   "elements": 195
+   "elements": 209
   }
  },
  "features": [
@@ -52,7 +52,7 @@
    },
    "progressive": false,
    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
-   "elements": 195
+   "elements": 209
   },
   {
    "id": "color-mix",
@@ -67,7 +67,7 @@
    },
    "progressive": false,
    "why": "Tints and washes mixed from the tokens.",
-   "elements": 195
+   "elements": 209
   },
   {
    "id": "is-where",
@@ -82,7 +82,7 @@
    },
    "progressive": false,
    "why": "Every rule is keyed on :where() so the page can override it.",
-   "elements": 195
+   "elements": 209
   },
   {
    "id": "focus-visible",
@@ -97,7 +97,7 @@
    },
    "progressive": false,
    "why": "Focus rings for keyboard users.",
-   "elements": 194
+   "elements": 208
   },
   {
    "id": "container-size",
@@ -112,7 +112,7 @@
    },
    "progressive": false,
    "why": "Components adapt to the width they're given, not the window's.",
-   "elements": 152
+   "elements": 164
   },
   {
    "id": "inert",
@@ -141,7 +141,7 @@
     "safari_ios": "14.1"
    },
    "progressive": false,
-   "elements": 100
+   "elements": 103
   },
   {
    "id": "resize-observer",
@@ -155,7 +155,7 @@
     "safari_ios": "13.4"
    },
    "progressive": false,
-   "elements": 86
+   "elements": 87
   },
   {
    "id": "intersection-observer",
@@ -184,7 +184,7 @@
    },
    "progressive": false,
    "why": "Layout and state that depend on what's inside a part (an icon present, a focused field).",
-   "elements": 56
+   "elements": 59
   },
   {
    "id": "mask",
@@ -213,7 +213,7 @@
     "safari_ios": "14.1"
    },
    "progressive": false,
-   "elements": 32
+   "elements": 34
   },
   {
    "id": "aspect-ratio",
@@ -315,7 +315,7 @@
     "safari_ios": "15.4"
    },
    "progressive": false,
-   "elements": 4
+   "elements": 5
   },
   {
    "id": "relative-time-format",
@@ -387,7 +387,7 @@
    },
    "progressive": true,
    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
-   "elements": 195
+   "elements": 209
   },
   {
    "id": "adopted-stylesheets",
@@ -402,7 +402,7 @@
    },
    "progressive": true,
    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
-   "elements": 194
+   "elements": 208
   },
   {
    "id": "scrollbar-width",
@@ -417,7 +417,7 @@
    },
    "progressive": true,
    "without": "Scrollbars keep the browser's default width.",
-   "elements": 44
+   "elements": 45
   },
   {
    "id": "overscroll-contain",
@@ -538,7 +538,7 @@
    },
    "progressive": true,
    "without": "Titles break where the line fills up instead of into even lines.",
-   "elements": 4
+   "elements": 5
   },
   {
    "id": "scrollbar-gutter",

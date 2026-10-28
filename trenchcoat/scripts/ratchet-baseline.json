@@ -427,6 +427,9 @@
     "literal border-radius": 1,
     "literal spacing": 1
   },
+  "src/elements/work-item.ts": {
+    "clock/environment read": 1
+  },
   "src/elements/world-map.ts": {
     "literal spacing": 4
   },

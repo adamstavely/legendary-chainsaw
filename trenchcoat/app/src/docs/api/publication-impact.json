@@ -1,0 +1,576 @@
+{
+ "elements": [
+  {
+   "tag": "tc-publication-impact",
+   "className": "TcPublicationImpact",
+   "description": "One paper's impact – venue, topic, grade and authors; downloads, views, citations and attention with a reads\nsparkline; mentions; who is reading; and feedback quotes filtered by kind, each with a sentiment.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The paper's title",
+     "readonly": false
+    },
+    {
+     "name": "venue",
+     "attribute": "venue",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "Where it was published",
+     "readonly": false
+    },
+    {
+     "name": "date",
+     "attribute": "date",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "When it was published, as epoch ms",
+     "readonly": false
+    },
+    {
+     "name": "topic",
+     "attribute": null,
+     "type": "{ label: string; href?: string } | undefined",
+     "default": "undefined",
+     "description": "The topic it belongs to; with `href` it's a link",
+     "readonly": false
+    },
+    {
+     "name": "grade",
+     "attribute": null,
+     "type": "{ label: string; tone?: PublicationTone } | undefined",
+     "default": "undefined",
+     "description": "The assessment grade, e.g. { label: \"Outstanding\", tone: \"success\" }",
+     "readonly": false
+    },
+    {
+     "name": "gradeLabel",
+     "attribute": "grade-label",
+     "type": "string",
+     "default": "\"Assessment\"",
+     "description": "The grade's caption",
+     "readonly": false
+    },
+    {
+     "name": "authors",
+     "attribute": null,
+     "type": "PublicationAuthor[]",
+     "default": "[]",
+     "description": "The authors, in order",
+     "readonly": false
+    },
+    {
+     "name": "outcome",
+     "attribute": "outcome",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "What the paper achieved, as a short tag: \"resolves gap\"",
+     "readonly": false
+    },
+    {
+     "name": "metrics",
+     "attribute": null,
+     "type": "PublicationMetrics",
+     "default": "{}",
+     "description": "Downloads, views, citations and attention score; each shows only when given",
+     "readonly": false
+    },
+    {
+     "name": "reads",
+     "attribute": null,
+     "type": "number[]",
+     "default": "[]",
+     "description": "Cumulative reads over time, oldest first, for the sparkline",
+     "readonly": false
+    },
+    {
+     "name": "mentions",
+     "attribute": null,
+     "type": "PublicationMention[]",
+     "default": "[]",
+     "description": "Mentions by kind: [{ label: \"News\", value: 11 }, …]",
+     "readonly": false
+    },
+    {
+     "name": "audience",
+     "attribute": null,
+     "type": "AudienceMixData | undefined",
+     "default": "undefined",
+     "description": "Who is reading – shown with <tc-audience-mix> when given",
+     "readonly": false
+    },
+    {
+     "name": "feedback",
+     "attribute": null,
+     "type": "PublicationFeedback[]",
+     "default": "[]",
+     "description": "Feedback quotes",
+     "readonly": false
+    },
+    {
+     "name": "filter",
+     "attribute": "filter",
+     "type": "PublicationFeedbackFilter",
+     "default": "\"all\"",
+     "description": "The feedback kind shown. Changed by the user unless a tc-filter-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "kindLabels",
+     "attribute": null,
+     "type": "Partial<Record<PublicationFeedbackKind, string>>",
+     "default": "{}",
+     "description": "The feedback kinds' names, merged over the defaults (Peer, Reader, Sponsor)",
+     "readonly": false
+    },
+    {
+     "name": "sentimentLabels",
+     "attribute": null,
+     "type": "Partial<Record<PublicationSentiment, string>>",
+     "default": "{}",
+     "description": "The sentiments' names, merged over the defaults (Positive, Mixed, Negative)",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The language for dates and numbers, e.g. \"en-GB\"; by default the browser's",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-filter-change",
+     "detail": "",
+     "description": "A feedback filter was picked ({ filter }: PublicationFilterChange); cancelable – prevented, `filter` stays as it was",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "pubi",
+   "cssProperties": [
+    {
+     "name": "--tc-pubi-ink",
+     "value": "var(--tc-chart-1)",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-avatar-font-size",
+    "--tc-avatar-font-weight",
+    "--tc-avatar-sm",
+    "--tc-border-default",
+    "--tc-border-strong",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-chart-1",
+    "--tc-divider",
+    "--tc-duration-base",
+    "--tc-duration-moderate",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-eyebrow-color",
+    "--tc-eyebrow-font-size",
+    "--tc-eyebrow-font-weight",
+    "--tc-eyebrow-line-height",
+    "--tc-eyebrow-tracking",
+    "--tc-eyebrow-transform",
+    "--tc-fill-default",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-mono",
+    "--tc-font-sans",
+    "--tc-font-size-2xl",
+    "--tc-font-size-3xl",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xl",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-display",
+    "--tc-line-height-display-sm",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-line-height-tight",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-pubi-bg",
+    "--tc-pubi-fg",
+    "--tc-radius-full",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-seg-pad",
+    "--tc-seg-thumb-bg",
+    "--tc-seg-thumb-shadow",
+    "--tc-seg-track-bg",
+    "--tc-seg-track-radius",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-info-bg",
+    "--tc-status-info-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tracking-tight",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "defaultPublicationFeedbackLabels",
+   "signature": "defaultPublicationFeedbackLabels: Record<PublicationFeedbackKind, string>",
+   "description": "The feedback kinds' and sentiments' names used when the page gives none"
+  }
+ ],
+ "react": [
+  {
+   "component": "PublicationImpact",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The paper's title"
+    },
+    {
+     "name": "filter",
+     "type": "PublicationFeedbackFilter",
+     "optional": true,
+     "description": "The feedback kind shown – controlled when given"
+    },
+    {
+     "name": "defaultFilter",
+     "type": "PublicationFeedbackFilter",
+     "optional": true,
+     "description": "The feedback kind shown on mount when `filter` isn't controlled"
+    },
+    {
+     "name": "onFilterChange",
+     "type": "(filter: PublicationFeedbackFilter) => void",
+     "optional": true,
+     "description": "A feedback filter was picked"
+    }
+   ],
+   "hides": [
+    "heading",
+    "filter",
+    "children"
+   ],
+   "events": {
+    "tc-filter-change": null
+   }
+  }
+ ],
+ "changelog": [
+  "**`tc-publication-impact`:** one paper's impact. - **About the paper:** venue, topic, grade and authors. - **Reach:** downloads, views, citations and attention, with a reads sparkline, plus mentions. - **Readers and feedback:** who is reading, and peer, reader and sponsor feedback, each with a sentiment."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-publication-impact",
+   "className": "TcPublicationImpact",
+   "module": "trenchcoat/publication-impact",
+   "data": [
+    "topic",
+    "grade",
+    "authors",
+    "metrics",
+    "reads",
+    "mentions",
+    "audience",
+    "feedback",
+    "kindLabels",
+    "sentimentLabels"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "venue",
+     "attribute": "venue"
+    },
+    {
+     "name": "date",
+     "attribute": "date"
+    },
+    {
+     "name": "gradeLabel",
+     "attribute": "grade-label"
+    },
+    {
+     "name": "outcome",
+     "attribute": "outcome"
+    },
+    {
+     "name": "filter",
+     "attribute": "filter"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-filter-change",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "filter",
+     "event": "tc-filter-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "itself",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself",
+     "audience-mix"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "audience-mix",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "audience-mix",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "text-wrap-balance",
+    "name": "text-wrap: balance",
+    "bcd": "css.properties.text-wrap.balance",
+    "versions": {
+     "chrome": "114",
+     "edge": "114",
+     "firefox": "121",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": true,
+    "without": "Titles break where the line fills up instead of into even lines.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "audience-mix",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (audience-mix)",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 43372,
+  "gzip": 11619
+ }
+}
