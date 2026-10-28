@@ -1,0 +1,634 @@
+{
+ "elements": [
+  {
+   "tag": "tc-score-summary",
+   "className": "TcScoreSummary",
+   "description": "NPS or CSAT results: the score, the bands, the answers per score, the change and the target.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The heading; defaults to \"Net Promoter Score\" or \"Customer satisfaction\"",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The line under the heading – the survey and the period",
+     "readonly": false
+    },
+    {
+     "name": "kind",
+     "attribute": "kind",
+     "type": "ScoreSurveyKind",
+     "default": "\"nps\"",
+     "description": "\"nps\" for 0–10 answers, \"csat\" for 1–5",
+     "readonly": false
+    },
+    {
+     "name": "responses",
+     "attribute": null,
+     "type": "number[]",
+     "default": "[]",
+     "description": "Answers per score, lowest score first: 11 for NPS (0–10), 5 for CSAT (1–5)",
+     "readonly": false
+    },
+    {
+     "name": "scores",
+     "attribute": null,
+     "type": "number[]",
+     "default": "[]",
+     "description": "Or the answers themselves, one score each – used when `responses` is empty",
+     "readonly": false
+    },
+    {
+     "name": "previous",
+     "attribute": "previous",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The score last time, for the change; defaults to the last `trend` point",
+     "readonly": false
+    },
+    {
+     "name": "trend",
+     "attribute": null,
+     "type": "ScoreTrendPoint[]",
+     "default": "[]",
+     "description": "Earlier scores, oldest first – drawn as a sparkline ending at the current score",
+     "readonly": false
+    },
+    {
+     "name": "comparedTo",
+     "attribute": "compared-to",
+     "type": "string",
+     "default": "\"\"",
+     "description": "What the change is compared with – \"last quarter\"; defaults to the last `trend` label, else \"last time\"",
+     "readonly": false
+    },
+    {
+     "name": "target",
+     "attribute": "target",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The score to reach, shown as a marker",
+     "readonly": false
+    },
+    {
+     "name": "selected",
+     "attribute": "selected",
+     "type": "number | null",
+     "default": "null",
+     "description": "The picked score. Changed by the user unless a tc-score-select listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "Partial<ScoreSummaryLabels>",
+     "default": "{}",
+     "description": "Words the page can rename, merged over `defaultScoreSummaryLabels`",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The locale for numbers",
+     "readonly": false
+    },
+    {
+     "name": "summary",
+     "attribute": null,
+     "type": "ScoreSummaryResult",
+     "default": null,
+     "description": "The numbers shown: the total, NPS or CSAT, the bands and the counts",
+     "readonly": true
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-score-select",
+     "detail": "",
+     "description": "A score's bar was picked or cleared ({ score, selected }: ScoreSummaryScoreSelect); cancelable – prevented, `selected` stays as it was",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "ssm",
+   "cssProperties": [
+    {
+     "name": "--tc-ssm-detractor",
+     "value": "var(--tc-status-danger-solid)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-ssm-passive",
+     "value": "var(--tc-chart-neutral)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-ssm-promoter",
+     "value": "var(--tc-status-success-solid)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-ssm-csat-1",
+     "value": "var(--tc-status-danger-solid)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-ssm-csat-2",
+     "value": "var(--tc-status-warning-solid)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-ssm-csat-3",
+     "value": "var(--tc-chart-neutral)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-ssm-csat-4",
+     "value": "color-mix(in oklab, var(--tc-status-success-solid) 55%, var(--tc-surface-raised))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-ssm-csat-5",
+     "value": "var(--tc-status-success-solid)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-ssm-dist-h",
+     "value": "88px",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent-text",
+    "--tc-border-selected",
+    "--tc-border-strong",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-line-height",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-chart-1",
+    "--tc-chart-neutral",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-ease-standard",
+    "--tc-fill-selected",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-3xl",
+    "--tc-font-size-4xl",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-line-height-display",
+    "--tc-line-height-normal",
+    "--tc-line-height-tight",
+    "--tc-meter-fill",
+    "--tc-meter-h",
+    "--tc-meter-radius",
+    "--tc-meter-track",
+    "--tc-radius-2xs",
+    "--tc-radius-md",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-6",
+    "--tc-ssm-band",
+    "--tc-status-danger-fg",
+    "--tc-status-danger-solid",
+    "--tc-status-success-fg",
+    "--tc-status-success-solid",
+    "--tc-status-warning-solid",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tracking-tight",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "percentsTo100",
+   "signature": "percentsTo100(counts: number[]): number[]",
+   "description": "Rounds shares of `total` so they add up to exactly 100 – largest remainder first"
+  },
+  {
+   "name": "scoreCounts",
+   "signature": "scoreCounts(kind: ScoreSurveyKind, responses: number[], scores: number[]): number[]",
+   "description": "The counts per score from either input: counts lowest score first, or a list of scores"
+  },
+  {
+   "name": "summarizeScores",
+   "signature": "summarizeScores(kind: ScoreSurveyKind, counts: number[], labels: ScoreSummaryLabels): ScoreSummaryResult",
+   "description": "NPS or CSAT, its bands and the counts – what <tc-score-summary> shows"
+  }
+ ],
+ "react": [
+  {
+   "component": "ScoreSummary",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading – defaults to \"Net Promoter Score\" or \"Customer satisfaction\""
+    },
+    {
+     "name": "selected",
+     "type": "number | null",
+     "optional": true,
+     "description": "The picked score – controlled when given (null for none)"
+    },
+    {
+     "name": "defaultSelected",
+     "type": "number | null",
+     "optional": true,
+     "description": "The score picked on mount when `selected` isn't controlled"
+    },
+    {
+     "name": "onScoreSelect",
+     "type": "(score: number | null) => void",
+     "optional": true,
+     "description": "A score's bar was picked or cleared"
+    }
+   ],
+   "hides": [
+    "heading",
+    "selected",
+    "children"
+   ],
+   "events": {
+    "tc-score-select": null
+   }
+  }
+ ],
+ "changelog": [
+  "`tc-score-summary` – NPS or CSAT results: the score, change and trend, target, bands and a bar per score."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-score-summary",
+   "className": "TcScoreSummary",
+   "module": "trenchcoat/score-summary",
+   "data": [
+    "responses",
+    "scores",
+    "trend",
+    "labels"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    },
+    {
+     "name": "kind",
+     "attribute": "kind"
+    },
+    {
+     "name": "previous",
+     "attribute": "previous"
+    },
+    {
+     "name": "comparedTo",
+     "attribute": "compared-to"
+    },
+    {
+     "name": "target",
+     "attribute": "target"
+    },
+    {
+     "name": "selected",
+     "attribute": "selected"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-score-select",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "selected",
+     "event": "tc-score-select"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "itself",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself",
+     "score-survey"
+    ]
+   },
+   {
+    "id": "inert",
+    "name": "inert",
+    "bcd": "api.HTMLElement.inert",
+    "versions": {
+     "chrome": "102",
+     "edge": "102",
+     "firefox": "112",
+     "safari": "15.5",
+     "safari_ios": "15.5"
+    },
+    "progressive": false,
+    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
+    "via": [
+     "internal/controllers"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit",
+     "score-survey"
+    ]
+   },
+   {
+    "id": "array-at",
+    "name": "Array.prototype.at()",
+    "bcd": "javascript.builtins.Array.at",
+    "versions": {
+     "chrome": "92",
+     "edge": "92",
+     "firefox": "90",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "score-survey",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "field-sizing",
+    "name": "field-sizing",
+    "bcd": "css.properties.field-sizing",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "152",
+     "safari": "26.2",
+     "safari_ios": "26.2"
+    },
+    "progressive": true,
+    "without": "Text fields grow with their text. Without it they keep their minimum height and scroll.",
+    "via": [
+     "score-survey"
+    ]
+   },
+   {
+    "id": "text-wrap-pretty",
+    "name": "text-wrap: pretty",
+    "bcd": "css.properties.text-wrap.pretty",
+    "versions": {
+     "chrome": "117",
+     "edge": "117",
+     "firefox": null,
+     "safari": "26",
+     "safari_ios": "26"
+    },
+    "progressive": true,
+    "without": "Paragraphs may end on a single short word.",
+    "via": [
+     "score-survey"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "score-survey",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)",
+   "MutationObserver (internal/controllers › FocusRescueController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)",
+    "CSS (score-survey)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 49676,
+  "gzip": 13567
+ }
+}

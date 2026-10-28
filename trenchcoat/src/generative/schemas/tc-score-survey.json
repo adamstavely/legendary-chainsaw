@@ -1,0 +1,129 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-score-survey.json",
+  "title": "tc-score-survey",
+  "description": "The NPS or CSAT question a person answers, with an optional follow-up and a thank-you.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "nps",
+        "csat"
+      ],
+      "description": "\"nps\" for 0–10 likelihood to recommend, \"csat\" for 1–5 satisfaction"
+    },
+    "question": {
+      "type": "string",
+      "description": "The question; defaults to the standard wording for the kind"
+    },
+    "score": {
+      "type": "number",
+      "description": "The answer. Changed by the user unless a tc-score-change listener calls preventDefault()"
+    },
+    "followUp": {
+      "type": "string",
+      "description": "The follow-up question asked after a pick; \"\" asks none"
+    },
+    "followUps": {
+      "type": "object",
+      "properties": {
+        "1": {
+          "type": "string"
+        },
+        "2": {
+          "type": "string"
+        },
+        "3": {
+          "type": "string"
+        },
+        "4": {
+          "type": "string"
+        },
+        "5": {
+          "type": "string"
+        },
+        "detractor": {
+          "type": "string"
+        },
+        "passive": {
+          "type": "string"
+        },
+        "promoter": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Follow-up questions by NPS band or CSAT score, ahead of `followUp`"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "low": {
+          "type": "string"
+        },
+        "high": {
+          "type": "string"
+        },
+        "detractor": {
+          "type": "string"
+        },
+        "passive": {
+          "type": "string"
+        },
+        "promoter": {
+          "type": "string"
+        },
+        "csat": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 5,
+          "maxItems": 5
+        },
+        "submit": {
+          "type": "string"
+        },
+        "skip": {
+          "type": "string"
+        },
+        "thanks": {
+          "type": "string"
+        },
+        "change": {
+          "type": "string"
+        },
+        "dismiss": {
+          "type": "string"
+        },
+        "placeholder": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Words the page can rename, merged over `defaultScoreSurveyLabels`"
+    },
+    "hideBands": {
+      "type": "boolean",
+      "description": "Hides the NPS band names under the scale"
+    },
+    "dismissible": {
+      "type": "boolean",
+      "description": "Shows a dismiss button in the header, which fires tc-dismiss"
+    },
+    "submitted": {
+      "type": "boolean",
+      "description": "The answer was submitted: the thank-you shows. Set by Submit and Skip; the app may set it too"
+    },
+    "submitting": {
+      "type": "boolean",
+      "description": "Shows Submit as busy while the app saves the answer"
+    }
+  },
+  "additionalProperties": false
+}

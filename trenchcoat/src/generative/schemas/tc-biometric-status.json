@@ -47,6 +47,9 @@
     "statusLabels": {
       "type": "object",
       "properties": {
+        "expired": {
+          "type": "string"
+        },
         "enrolled": {
           "type": "string"
         },
@@ -60,9 +63,6 @@
           "type": "string"
         },
         "missing": {
-          "type": "string"
-        },
-        "expired": {
           "type": "string"
         }
       },

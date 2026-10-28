@@ -1,0 +1,126 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-score-summary.json",
+  "title": "tc-score-summary",
+  "description": "NPS or CSAT results: the score, the bands, the answers per score, the change and the target.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading; defaults to \"Net Promoter Score\" or \"Customer satisfaction\""
+    },
+    "description": {
+      "type": "string",
+      "description": "The line under the heading – the survey and the period"
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "nps",
+        "csat"
+      ],
+      "description": "\"nps\" for 0–10 answers, \"csat\" for 1–5"
+    },
+    "responses": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      },
+      "description": "Answers per score, lowest score first: 11 for NPS (0–10), 5 for CSAT (1–5)"
+    },
+    "scores": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      },
+      "description": "Or the answers themselves, one score each – used when `responses` is empty"
+    },
+    "previous": {
+      "type": "number",
+      "description": "The score last time, for the change; defaults to the last `trend` point"
+    },
+    "trend": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ScoreTrendPoint"
+      },
+      "description": "Earlier scores, oldest first – drawn as a sparkline ending at the current score"
+    },
+    "comparedTo": {
+      "type": "string",
+      "description": "What the change is compared with – \"last quarter\"; defaults to the last `trend` label, else \"last time\""
+    },
+    "target": {
+      "type": "number",
+      "description": "The score to reach, shown as a marker"
+    },
+    "selected": {
+      "type": "number",
+      "description": "The picked score. Changed by the user unless a tc-score-select listener calls preventDefault()"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "detractors": {
+          "type": "string"
+        },
+        "passives": {
+          "type": "string"
+        },
+        "promoters": {
+          "type": "string"
+        },
+        "csat": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 5,
+          "maxItems": 5
+        },
+        "responses": {
+          "type": "string"
+        },
+        "response": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "target": {
+          "type": "string"
+        },
+        "distribution": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Words the page can rename, merged over `defaultScoreSummaryLabels`"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The locale for numbers"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ScoreTrendPoint": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string",
+          "description": "The period – \"Q2\""
+        },
+        "value": {
+          "type": "number",
+          "description": "The NPS or CSAT for it"
+        }
+      },
+      "required": [
+        "label",
+        "value"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

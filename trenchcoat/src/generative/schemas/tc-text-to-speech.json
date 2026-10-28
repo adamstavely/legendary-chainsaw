@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-text-to-speech.json",
+  "title": "tc-text-to-speech",
+  "description": "Reads a passage aloud – the sentence and word being spoken marked in the text, with play, pause, stop, sentence\nskips, a voice picker, speed and pitch.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "A quiet line under the heading – the source or what the passage is"
+    },
+    "text": {
+      "type": "string",
+      "description": "The passage to read: plain text; a blank line starts a new paragraph"
+    },
+    "rate": {
+      "type": "number",
+      "description": "Speaking speed from 0.5 to 2 (1 is normal). Changed by the element unless a tc-rate-change listener calls preventDefault()"
+    },
+    "pitch": {
+      "type": "number",
+      "description": "Pitch from 0 to 2 (1 is normal). Changed by the element unless a tc-pitch-change listener calls preventDefault()"
+    },
+    "voice": {
+      "type": "string",
+      "description": "The chosen voice's `voiceURI`, or \"\" for the browser's default. Changed unless a tc-voice-change listener calls preventDefault()"
+    },
+    "lang": {
+      "type": "string",
+      "description": "The passage's language (a BCP 47 tag) – picks a default voice and splits sentences; unset, the browser decides"
+    }
+  },
+  "additionalProperties": false
+}

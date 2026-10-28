@@ -1,0 +1,120 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-geo-location.json",
+  "title": "tc-geo-location",
+  "description": "Coordinates made useful – decimal or degrees-minutes-seconds, Copy, links to mapping tools and an embedded map that\nloads only when asked.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "latitude": {
+      "type": "number",
+      "description": "The latitude, −90 to 90 – used when `points` is empty"
+    },
+    "longitude": {
+      "type": "number",
+      "description": "The longitude, −180 to 180 – used when `points` is empty"
+    },
+    "label": {
+      "type": "string",
+      "description": "What the place is, e.g. \"North weather mast\" – used when `points` is empty"
+    },
+    "zoom": {
+      "type": "number",
+      "description": "The map zoom, 1 (the world) to 19 (a building)"
+    },
+    "points": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/GeoPoint"
+      },
+      "description": "Several places to switch between, instead of latitude / longitude"
+    },
+    "selected": {
+      "type": "string",
+      "description": "The shown point's id when `points` is given; null shows the first. Changed by the user unless a tc-selected-change listener calls preventDefault()"
+    },
+    "notation": {
+      "type": "string",
+      "enum": [
+        "decimal",
+        "dms"
+      ],
+      "description": "Decimal (57.041200, −3.612700) or degrees-minutes-seconds. Changed by the user unless a tc-notation-change listener calls preventDefault()"
+    },
+    "precision": {
+      "type": "number",
+      "description": "Decimal places shown in decimal notation"
+    },
+    "providers": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/GeoProvider"
+      },
+      "description": "The mapping tools, replacing the defaults – spread `defaultGeoProviders` to add to them. Only http(s) templates are kept"
+    },
+    "embedNote": {
+      "type": "string",
+      "description": "Says where the map loads from under Show map, e.g. \"The map loads from openstreetmap.org\" – by default the embed's host"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "GeoPoint": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "What the place is, e.g. \"North weather mast\""
+        },
+        "latitude": {
+          "type": "number"
+        },
+        "longitude": {
+          "type": "number"
+        },
+        "zoom": {
+          "type": "number",
+          "description": "The map zoom for this point, 1–19; by default the element's `zoom`"
+        }
+      },
+      "required": [
+        "id",
+        "latitude",
+        "longitude"
+      ],
+      "additionalProperties": false
+    },
+    "GeoProvider": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri-reference"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "url"
+      ],
+      "additionalProperties": false,
+      "description": "A mapping tool. `url` is a template: {lat}, {lng}, {zoom} and {label} are replaced, encoded for a URL. Only http(s) links are kept."
+    }
+  }
+}

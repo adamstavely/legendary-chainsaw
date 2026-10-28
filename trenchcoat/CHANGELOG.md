@@ -1,5 +1,21 @@
 # Changelog
 
+## Unreleased – colour picker, NPS / CSAT, coordinates, access requests, reading aloud
+
+- `tc-color-picker` – a saturation and brightness square, hue and opacity sliders, HEX / RGB / CMYK fields, an
+  eyedropper where the browser has one (`EyeDropper`), swatches and Copy. A form control, so Angular gets a
+  ValueAccessor. CMYK is a plain device-independent conversion, not an ICC print profile.
+- `tc-score-survey` – the NPS (0–10) or CSAT (1–5) question with a follow-up per band, Submit and a thank-you.
+- `tc-score-summary` – NPS or CSAT results: the score, change and trend, target, bands and a bar per score.
+- `tc-geo-location` – coordinates in decimal or DMS, Copy, Open in Google Maps, Apple Maps, OpenStreetMap, Bing or
+  your own `providers`, and an OpenStreetMap embed that loads nothing until Show map. Generative UI can't set `embed`
+  or `embedSrc`, so a generated map always waits for the click.
+- `tc-access-request` – ask for access to one piece of data: level, duration, justification, fields; then pending,
+  approved, denied or expired.
+- `tc-text-to-speech` – reads a passage aloud with the browser's voices, marking the sentence and word.
+- `tc-speed-reader` – RSVP speed reading at 100–1000 words a minute with the recognition point on a guide mark.
+- The standalone gallery is rebuilt (#30).
+
 ## Unreleased – blocks as elements, routines, a calendar of calendars
 
 ### Blocks are Lit elements

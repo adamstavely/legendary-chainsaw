@@ -1,0 +1,220 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-access-request.json",
+  "title": "tc-access-request",
+  "description": "A request for access to one piece of data – the resource and its classification, the level, how long, a\njustification – then where the request stands: pending, approved, denied or expired.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "resource": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/AccessResourceType"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "description": {
+          "type": "string"
+        },
+        "owner": {
+          "type": "string"
+        },
+        "steward": {
+          "type": "string"
+        },
+        "classification": {
+          "type": "string"
+        },
+        "current": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false,
+      "description": "The data being asked for"
+    },
+    "classifications": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "tone": {
+            "$ref": "#/definitions/AccessTone"
+          }
+        },
+        "required": [
+          "label",
+          "tone"
+        ],
+        "additionalProperties": false
+      },
+      "description": "Classifications' names and tones, merged over the defaults (public, internal, confidential, restricted)"
+    },
+    "levels": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AccessLevel"
+      },
+      "description": "The access levels to choose from"
+    },
+    "level": {
+      "type": "string",
+      "description": "The picked level's id; by default the first level"
+    },
+    "durations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AccessDuration"
+      },
+      "description": "The fixed durations to choose from; an end date is always offered, permanent only with `allow-permanent`"
+    },
+    "duration": {
+      "type": "string",
+      "description": "The picked duration: a duration's id, \"custom\" or \"permanent\"; by default the second duration (30 days)"
+    },
+    "allowPermanent": {
+      "type": "boolean",
+      "description": "Offers Permanent as a duration"
+    },
+    "minJustification": {
+      "type": "number",
+      "description": "The fewest characters a justification may have"
+    },
+    "maxJustification": {
+      "type": "number",
+      "description": "The most characters a justification may have"
+    },
+    "fields": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The fields or columns that may be asked for; empty hides the choice"
+    },
+    "referenceLabel": {
+      "type": "string",
+      "description": "The optional reference field's label; empty hides it"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "pending",
+        "approved",
+        "denied",
+        "expired"
+      ],
+      "description": "Where the request stands. Changed by the element unless a tc-status-change listener calls preventDefault()"
+    },
+    "approvers": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Who decides, shown while pending"
+    },
+    "submittedAt": {
+      "type": "number",
+      "description": "When the request was sent, epoch ms; set by the element when it sends one"
+    },
+    "expiresAt": {
+      "type": "number",
+      "description": "When granted access ends, epoch ms; unset while approved means permanent"
+    },
+    "reason": {
+      "type": "string",
+      "description": "Why the request was denied"
+    },
+    "now": {
+      "type": "number",
+      "description": "The clock for \"time left\", epoch ms – unset uses an internal clock"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for dates, e.g. \"en-GB\"; by default the browser's"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "AccessResourceType": {
+      "type": "string",
+      "enum": [
+        "dataset",
+        "table",
+        "file",
+        "report",
+        "field"
+      ]
+    },
+    "AccessTone": {
+      "type": "string",
+      "enum": [
+        "success",
+        "info",
+        "warning",
+        "danger",
+        "neutral"
+      ]
+    },
+    "AccessLevel": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "AccessDuration": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "days": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "days"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

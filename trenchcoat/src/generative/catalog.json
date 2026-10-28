@@ -1,5 +1,15 @@
 [
   {
+    "tag": "tc-access-request",
+    "name": "AccessRequest",
+    "description": "A request for access to one piece of data – the resource and its classification, the level, how long, a",
+    "events": [
+      "tc-request",
+      "tc-status-change",
+      "tc-cancel"
+    ]
+  },
+  {
     "tag": "tc-account-list",
     "name": "AccountList",
     "description": "The financial accounts linked to a person or a company – institution, type, a masked identifier shown one at a time,",
@@ -448,6 +458,16 @@
     ]
   },
   {
+    "tag": "tc-color-picker",
+    "name": "ColorPicker",
+    "description": "Pick a colour – a saturation and brightness square, hue and opacity sliders, HEX / RGB / CMYK fields, an eyedropper,",
+    "events": [
+      "tc-value-change",
+      "tc-format-change",
+      "tc-copy"
+    ]
+  },
+  {
     "tag": "tc-combobox",
     "name": "Combobox",
     "description": "Pick one or many options from a searchable, grouped list; picked options show as chips.",
@@ -880,6 +900,17 @@
     "description": "When a person decides: the conditions that pause a run, who reviews, what they see, what they may do and why.",
     "events": [
       "tc-value-change"
+    ]
+  },
+  {
+    "tag": "tc-geo-location",
+    "name": "GeoLocation",
+    "description": "Coordinates made useful – decimal or degrees-minutes-seconds, Copy, links to mapping tools and an embedded map that",
+    "events": [
+      "tc-selected-change",
+      "tc-notation-change",
+      "tc-open",
+      "tc-copy"
     ]
   },
   {
@@ -1608,6 +1639,25 @@
     ]
   },
   {
+    "tag": "tc-score-summary",
+    "name": "ScoreSummary",
+    "description": "NPS or CSAT results: the score, the bands, the answers per score, the change and the target.",
+    "events": [
+      "tc-score-select"
+    ]
+  },
+  {
+    "tag": "tc-score-survey",
+    "name": "ScoreSurvey",
+    "description": "The NPS or CSAT question a person answers, with an optional follow-up and a thank-you.",
+    "events": [
+      "tc-score-change",
+      "tc-submit",
+      "tc-edit",
+      "tc-dismiss"
+    ]
+  },
+  {
     "tag": "tc-search-history",
     "name": "SearchHistory",
     "description": "Recent and saved searches – tabs with counts, a filter, searches grouped by day with scope chips, result counts and",
@@ -1681,6 +1731,17 @@
       "tc-value-change",
       "tc-accepted-change",
       "tc-open-change"
+    ]
+  },
+  {
+    "tag": "tc-speed-reader",
+    "name": "SpeedReader",
+    "description": "Speed reading, one word at a time in a fixed frame, with the recognition point on a guide mark, the speed, words at",
+    "events": [
+      "tc-wpm-change",
+      "tc-chunk-change",
+      "tc-position-change",
+      "tc-finish"
     ]
   },
   {
@@ -1764,6 +1825,18 @@
       "tc-value-change",
       "tc-copy",
       "tc-filter-change"
+    ]
+  },
+  {
+    "tag": "tc-text-to-speech",
+    "name": "TextToSpeech",
+    "description": "Reads a passage aloud – the sentence and word being spoken marked in the text, with play, pause, stop, sentence",
+    "events": [
+      "tc-rate-change",
+      "tc-pitch-change",
+      "tc-voice-change",
+      "tc-start",
+      "tc-end"
     ]
   },
   {

@@ -1,0 +1,202 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-color-picker.json",
+  "title": "tc-color-picker",
+  "description": "Pick a colour – a saturation and brightness square, hue and opacity sliders, HEX / RGB / CMYK fields, an eyedropper,\nswatches and Copy.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading; by default the labels' heading, \"Colour\""
+    },
+    "description": {
+      "type": "string",
+      "description": "A line under the heading"
+    },
+    "value": {
+      "type": "string",
+      "description": "The colour, \"#rrggbb\" – \"#rrggbbaa\" with `alpha`. Changed by the user unless a tc-value-change listener calls preventDefault()"
+    },
+    "previous": {
+      "type": "string",
+      "description": "The colour shown beside the new one, which the chip puts back; by default the value when the element first rendered"
+    },
+    "format": {
+      "type": "string",
+      "enum": [
+        "hex",
+        "rgb",
+        "cmyk"
+      ],
+      "description": "Which fields show: \"hex\", \"rgb\" or \"cmyk\". Changed by the user unless a tc-format-change listener calls preventDefault()"
+    },
+    "alpha": {
+      "type": "boolean",
+      "description": "Adds an opacity slider and field; the value then carries alpha (\"#rrggbbaa\")"
+    },
+    "eyedropper": {
+      "type": "boolean",
+      "description": "Shows the eyedropper where the browser has one (Chromium); set false to hide it everywhere"
+    },
+    "swatches": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ColorPickerSwatch"
+      },
+      "description": "Colours to pick from in one press: hex strings, or { value, name }"
+    },
+    "disabled": {
+      "type": "boolean",
+      "description": "Nothing can be changed or focused except Copy"
+    },
+    "readonly": {
+      "type": "boolean",
+      "description": "The colour shows and can be copied, but not changed"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "heading": {
+          "type": "string"
+        },
+        "area": {
+          "type": "string"
+        },
+        "saturation": {
+          "type": "string"
+        },
+        "brightness": {
+          "type": "string"
+        },
+        "areaKeys": {
+          "type": "string"
+        },
+        "hue": {
+          "type": "string"
+        },
+        "degrees": {
+          "type": "string"
+        },
+        "opacity": {
+          "type": "string"
+        },
+        "format": {
+          "type": "string"
+        },
+        "formats": {
+          "type": "object",
+          "properties": {
+            "hex": {
+              "type": "string"
+            },
+            "rgb": {
+              "type": "string"
+            },
+            "cmyk": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "hex",
+            "rgb",
+            "cmyk"
+          ],
+          "additionalProperties": false
+        },
+        "hex": {
+          "type": "string"
+        },
+        "red": {
+          "type": "string"
+        },
+        "green": {
+          "type": "string"
+        },
+        "blue": {
+          "type": "string"
+        },
+        "cyan": {
+          "type": "string"
+        },
+        "magenta": {
+          "type": "string"
+        },
+        "yellow": {
+          "type": "string"
+        },
+        "black": {
+          "type": "string"
+        },
+        "eyedropper": {
+          "type": "string"
+        },
+        "pickFailed": {
+          "type": "string"
+        },
+        "copy": {
+          "type": "string"
+        },
+        "copied": {
+          "type": "string"
+        },
+        "swatches": {
+          "type": "string"
+        },
+        "newColor": {
+          "type": "string"
+        },
+        "previous": {
+          "type": "string"
+        },
+        "usePrevious": {
+          "type": "string"
+        },
+        "hueNames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 8,
+          "maxItems": 8
+        },
+        "gray": {
+          "type": "string"
+        },
+        "invalidHex": {
+          "type": "string"
+        },
+        "invalidNumber": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The picker's words, merged over defaultColorPickerLabels"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ColorPickerSwatch": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "additionalProperties": false
+        }
+      ],
+      "description": "A swatch: a hex colour, or one with a name (\"Primary\")"
+    }
+  }
+}
