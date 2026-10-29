@@ -1,0 +1,143 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-facet-sidebar.json",
+  "title": "tc-facet-sidebar",
+  "description": "Search filters with counts – checkbox, radio, range and date facets that fold, the filters in use as removable\nchips with Clear all, Show more, and a search box in long facets.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the filters' name"
+    },
+    "facets": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Facet"
+      },
+      "description": "The facets, in order"
+    },
+    "value": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/FacetValue"
+      },
+      "description": "The filters in use, by facet id. Changed by the user unless tc-value-change is prevented"
+    },
+    "collapsed": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The ids of folded facets. Changed by the user unless tc-collapsed-change is prevented"
+    },
+    "showCount": {
+      "type": "number",
+      "description": "How many options a facet shows before \"Show n more\""
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for numbers and dates, e.g. \"en-GB\"; by default the browser's"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "Facet": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "checkbox",
+            "radio",
+            "range",
+            "date"
+          ]
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FacetOption"
+          },
+          "description": "The choices, for checkbox and radio"
+        },
+        "min": {
+          "type": "number",
+          "description": "The range's ends"
+        },
+        "max": {
+          "type": "number"
+        },
+        "step": {
+          "type": "number",
+          "description": "The range's step (1)"
+        },
+        "unit": {
+          "type": "string",
+          "description": "What the range counts, after its numbers: \"px\", \"pages\", \"%\""
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "type"
+      ],
+      "additionalProperties": false
+    },
+    "FacetOption": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "count": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "value",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "FacetValue": {
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        {
+          "type": "object",
+          "properties": {
+            "from": {
+              "type": "string"
+            },
+            "to": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      ],
+      "description": "A facet's value: the picked options, a [low, high] range, or a from–to date (yyyy-mm-dd)"
+    }
+  }
+}

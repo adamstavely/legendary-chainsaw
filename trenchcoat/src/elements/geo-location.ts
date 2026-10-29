@@ -201,7 +201,7 @@ export class TcGeoLocation extends TcElement {
   private async copy(p: GeoPoint) {
     const text = this.text(p);
     if (!this.emit<GeoCopy>("tc-copy", { text, point: p }, { cancelable: true })) return;
-    await copyText(text);
+    if (!(await copyText(text))) return;
     this.copied = true;
     this.announce = "Coordinates copied";
     clearTimeout(this.copiedTimer);

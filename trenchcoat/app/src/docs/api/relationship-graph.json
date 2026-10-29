@@ -1,0 +1,609 @@
+{
+ "elements": [
+  {
+   "tag": "tc-relationship-graph",
+   "className": "TcRelationshipGraph",
+   "description": "Connections between people and organisations around one of them – direct and second-hand rings, relationships drawn\nby strength, re-centring on click, and a panel and keyboard list of the connections.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Relationships\"",
+     "description": "The heading, and the graph's name",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "One line under the heading",
+     "readonly": false
+    },
+    {
+     "name": "nodes",
+     "attribute": null,
+     "type": "RelationNode[]",
+     "default": "[]",
+     "description": "People, organisations and anything else, each with a kind",
+     "readonly": false
+    },
+    {
+     "name": "edges",
+     "attribute": null,
+     "type": "RelationEdge[]",
+     "default": "[]",
+     "description": "The relationships between them",
+     "readonly": false
+    },
+    {
+     "name": "ego",
+     "attribute": "ego",
+     "type": "string | null",
+     "default": "null",
+     "description": "The node in the middle (the ego); by default the first person. Changed by the user unless tc-ego-change is prevented",
+     "readonly": false
+    },
+    {
+     "name": "depth",
+     "attribute": "depth",
+     "type": "1 | 2",
+     "default": "1",
+     "description": "How far out to draw: 1 (direct connections) or 2 (theirs too). Changed by the user unless tc-depth-change is prevented",
+     "readonly": false
+    },
+    {
+     "name": "kinds",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[]",
+     "description": "The kinds shown; empty for all. Changed from the legend unless tc-kinds-change is prevented",
+     "readonly": false
+    },
+    {
+     "name": "selected",
+     "attribute": "selected",
+     "type": "string | null",
+     "default": "null",
+     "description": "What's selected: a node id, \"edge:<edge id>\", or null. Changed by the user unless tc-selected-change is prevented",
+     "readonly": false
+    },
+    {
+     "name": "kindLabels",
+     "attribute": null,
+     "type": "Record<string, string>",
+     "default": "{}",
+     "description": "Names for the kinds in the legend: { organisation: \"Organisation\" }",
+     "readonly": false
+    },
+    {
+     "name": "centre",
+     "attribute": null,
+     "type": "RelationNode | undefined",
+     "default": null,
+     "description": "The node in the middle: `ego`, or the first person, or the first node",
+     "readonly": true
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-ego-change",
+     "detail": "",
+     "description": "A node was put in the middle ({ ego, node }: RelationEgoChange); cancelable – prevented, `ego` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-depth-change",
+     "detail": "",
+     "description": "Depth 1 or 2 was chosen ({ depth }: RelationDepthChange); cancelable – prevented, `depth` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-kinds-change",
+     "detail": "",
+     "description": "A kind was shown or hidden from the legend ({ kinds }: RelationKindsChange); cancelable – prevented, `kinds` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-selected-change",
+     "detail": "",
+     "description": "A node or a relationship was selected, or nothing ({ selected, node, edge }: RelationSelectedChange); cancelable – prevented, `selected` stays as it was",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "rgr",
+   "cssProperties": [
+    {
+     "name": "--tc-rgr-side-w",
+     "value": "260px",
+     "looks": [
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-border-default",
+    "--tc-border-strong",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-h-sm",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-duration-slow",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-selected",
+    "--tc-focus-outline",
+    "--tc-focus-ring",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-menu-item-hover",
+    "--tc-menu-item-radius",
+    "--tc-pill-h",
+    "--tc-radius-full",
+    "--tc-radius-lg",
+    "--tc-radius-xs",
+    "--tc-seg-pad",
+    "--tc-seg-thumb-bg",
+    "--tc-seg-thumb-shadow",
+    "--tc-seg-track-bg",
+    "--tc-seg-track-radius",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-5",
+    "--tc-space-6",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tone-amber-bg",
+    "--tc-tone-amber-fg",
+    "--tc-tone-amber-solid",
+    "--tc-tone-pink-bg",
+    "--tc-tone-pink-fg",
+    "--tc-tone-pink-solid",
+    "--tc-tone-rose-bg",
+    "--tc-tone-rose-fg",
+    "--tc-tone-rose-solid",
+    "--tc-tone-teal-bg",
+    "--tc-tone-teal-fg",
+    "--tc-tone-teal-solid",
+    "--tc-tone-violet-bg",
+    "--tc-tone-violet-fg",
+    "--tc-tone-violet-solid",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "relationEdgeId",
+   "signature": "relationEdgeId(e: RelationEdge): void",
+   "description": "An edge's id: its own, or one made from its ends and words"
+  }
+ ],
+ "react": [
+  {
+   "component": "RelationshipGraph",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading, and the graph's name"
+    },
+    {
+     "name": "ego",
+     "type": "string | null",
+     "optional": true,
+     "description": "The node in the middle – controlled when given"
+    },
+    {
+     "name": "defaultEgo",
+     "type": "string | null",
+     "optional": true,
+     "description": "The node in the middle on mount when `ego` isn't controlled; by default the first person"
+    },
+    {
+     "name": "onEgoChange",
+     "type": "(ego: string, node: RelationNode) => void",
+     "optional": true,
+     "description": "A node was put in the middle"
+    },
+    {
+     "name": "depth",
+     "type": "1 | 2",
+     "optional": true,
+     "description": "1 (direct) or 2 (their connections too) – controlled when given"
+    },
+    {
+     "name": "defaultDepth",
+     "type": "1 | 2",
+     "optional": true,
+     "description": "The depth on mount when `depth` isn't controlled"
+    },
+    {
+     "name": "onDepthChange",
+     "type": "(depth: 1 | 2) => void",
+     "optional": true,
+     "description": "The depth changed"
+    },
+    {
+     "name": "kinds",
+     "type": "string[]",
+     "optional": true,
+     "description": "The kinds shown, empty for all – controlled when given"
+    },
+    {
+     "name": "defaultKinds",
+     "type": "string[]",
+     "optional": true,
+     "description": "The kinds shown on mount when `kinds` isn't controlled"
+    },
+    {
+     "name": "onKindsChange",
+     "type": "(kinds: string[]) => void",
+     "optional": true,
+     "description": "A kind was shown or hidden"
+    },
+    {
+     "name": "selected",
+     "type": "string | null",
+     "optional": true,
+     "description": "What's selected: a node id, \"edge:<id>\" or null – controlled when given"
+    },
+    {
+     "name": "defaultSelected",
+     "type": "string | null",
+     "optional": true,
+     "description": "The selection on mount when `selected` isn't controlled"
+    },
+    {
+     "name": "onSelectedChange",
+     "type": "(selected: string | null, detail: RelationSelectedChange) => void",
+     "optional": true,
+     "description": "A node or relationship was selected, or nothing"
+    }
+   ],
+   "hides": [
+    "heading",
+    "ego",
+    "depth",
+    "kinds",
+    "selected",
+    "children"
+   ],
+   "events": {
+    "tc-ego-change": null,
+    "tc-depth-change": null,
+    "tc-kinds-change": null,
+    "tc-selected-change": null
+   }
+  }
+ ],
+ "changelog": [
+  "**People & profiles** - **Org Chart** (`tc-org-chart`) – reporting lines that fold, search that opens the way, pan and zoom, an outline when narrow. - **Person Hovercard** (`tc-person-hovercard`) – the profile card behind any name, with status and local time. - **Team Roster** (`tc-team-roster`) – a directory with everyone's local time and the team's best hour to meet. - **Relationship Graph** (`tc-relationship-graph`) – people and organisations around one of them, re-centring on click, with a keyboard list of every connection."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-relationship-graph",
+   "className": "TcRelationshipGraph",
+   "module": "trenchcoat/relationship-graph",
+   "data": [
+    "nodes",
+    "edges",
+    "kinds",
+    "kindLabels"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    },
+    {
+     "name": "ego",
+     "attribute": "ego"
+    },
+    {
+     "name": "depth",
+     "attribute": "depth"
+    },
+    {
+     "name": "selected",
+     "attribute": "selected"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-ego-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-depth-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-kinds-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-selected-change",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "ego",
+     "event": "tc-ego-change"
+    },
+    {
+     "property": "depth",
+     "event": "tc-depth-change"
+    },
+    {
+     "property": "kinds",
+     "event": "tc-kinds-change"
+    },
+    {
+     "property": "selected",
+     "event": "tc-selected-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "resize-observer",
+    "name": "ResizeObserver",
+    "bcd": "api.ResizeObserver",
+    "versions": {
+     "chrome": "64",
+     "edge": "79",
+     "firefox": "69",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "scrollbar-width",
+    "name": "scrollbar-width",
+    "bcd": "css.properties.scrollbar-width",
+    "versions": {
+     "chrome": "121",
+     "edge": "121",
+     "firefox": "64",
+     "safari": "18.2",
+     "safari_ios": "18.2"
+    },
+    "progressive": true,
+    "without": "Scrollbars keep the browser's default width.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [
+   "requestAnimationFrame, cancelled"
+  ],
+  "animations": 0,
+  "observers": [
+   "ResizeObserver",
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 35351,
+  "gzip": 10577
+ }
+}

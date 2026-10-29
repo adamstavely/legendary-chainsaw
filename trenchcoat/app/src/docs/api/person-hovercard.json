@@ -1,0 +1,565 @@
+{
+ "elements": [
+  {
+   "tag": "tc-person-hovercard",
+   "className": "TcPersonHovercard",
+   "description": "The profile card behind a name: picture, pronouns, title and team, status, local time, manager, Email, Message,\nView profile and links – on hover, focus or tap.",
+   "properties": [
+    {
+     "name": "person",
+     "attribute": null,
+     "type": "HovercardPerson | undefined",
+     "default": "undefined",
+     "description": "The person; when it's not given, `person-id` is looked up",
+     "readonly": false
+    },
+    {
+     "name": "personId",
+     "attribute": "person-id",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The id to look up with `resolve` or tc-person-lookup when `person` isn't given",
+     "readonly": false
+    },
+    {
+     "name": "resolve",
+     "attribute": null,
+     "type": "HovercardResolver | undefined",
+     "default": "undefined",
+     "description": "Supplies details for `person-id`",
+     "readonly": false
+    },
+    {
+     "name": "hoverDelay",
+     "attribute": "hover-delay",
+     "type": "number",
+     "default": "350",
+     "description": "How long the pointer rests on the name before the card opens, ms",
+     "readonly": false
+    },
+    {
+     "name": "now",
+     "attribute": "now",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The time now, epoch ms, for local times; by default the element's own clock when the card opens",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The language for times, e.g. \"en-GB\"; by default the browser's",
+     "readonly": false
+    },
+    {
+     "name": "actions",
+     "attribute": null,
+     "type": "HovercardAction[]",
+     "default": "[\"email\", \"message\", \"profile\"]",
+     "description": "Which actions the card offers",
+     "readonly": false
+    },
+    {
+     "name": "notFoundText",
+     "attribute": "not-found-text",
+     "type": "string",
+     "default": "\"No profile for this person\"",
+     "description": "What the card says when there are no details",
+     "readonly": false
+    },
+    {
+     "name": "errorText",
+     "attribute": "error-text",
+     "type": "string",
+     "default": "\"Couldn't load the profile.\"",
+     "description": "What the card says when the lookup failed",
+     "readonly": false
+    },
+    {
+     "name": "trigger",
+     "attribute": null,
+     "type": "HTMLElement | null",
+     "default": null,
+     "description": "The element that opens the card: the first link or button inside, or the element's own",
+     "readonly": true
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-person-lookup",
+     "detail": "",
+     "description": "The card needs a person's details ({ id, signal, respondWith }: HovercardLookupDetail); cancelable – prevented without an answer, there are no details",
+     "cancelable": true
+    },
+    {
+     "name": "tc-action",
+     "detail": "",
+     "description": "Message was pressed ({ id: \"message\", person }: HovercardActionDetail)",
+     "cancelable": false
+    },
+    {
+     "name": "tc-open",
+     "detail": "",
+     "description": "View profile was pressed ({ person }: HovercardOpenDetail)",
+     "cancelable": false
+    },
+    {
+     "name": "tc-open-change",
+     "detail": "",
+     "description": "The card opened or closed ({ open }: HovercardOpenChange)",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [
+    {
+     "name": "openCard",
+     "params": "",
+     "returns": "void",
+     "description": "Opens the card, pinned open; focus stays where it is"
+    },
+    {
+     "name": "closeCard",
+     "params": "",
+     "returns": "void",
+     "description": "Closes the card"
+    },
+    {
+     "name": "clearCache",
+     "params": "id?: string",
+     "returns": "void",
+     "description": "Forgets cached details – one id's, or all – so the next card asks again"
+    }
+   ],
+   "ui": "phc",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-accent-text",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-border-default",
+    "--tc-card-radius",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-sm",
+    "--tc-control-px-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-shimmer",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-none",
+    "--tc-line-height-snug",
+    "--tc-radius-2xs",
+    "--tc-radius-full",
+    "--tc-shadow-overlay",
+    "--tc-shadow-raised",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-12",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-status-danger-fg",
+    "--tc-status-danger-solid",
+    "--tc-status-success-solid",
+    "--tc-status-warning-solid",
+    "--tc-surface-overlay",
+    "--tc-surface-raised",
+    "--tc-surface-sunken",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tone-amber-bg",
+    "--tc-tone-amber-fg",
+    "--tc-tone-pink-bg",
+    "--tc-tone-pink-fg",
+    "--tc-tone-rose-bg",
+    "--tc-tone-rose-fg",
+    "--tc-tone-teal-bg",
+    "--tc-tone-teal-fg",
+    "--tc-tone-violet-bg",
+    "--tc-tone-violet-fg"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "personZoneOffset",
+   "signature": "personZoneOffset(timeZone: string, ms: number): number | null",
+   "description": "A time zone's offset from UTC at `ms`, in minutes; null for a zone the browser doesn't know"
+  },
+  {
+   "name": "personZoneDifference",
+   "signature": "personZoneDifference(timeZone: string, ms: number): string | null",
+   "description": "How far a zone is from the viewer's: \"same time as you\", \"2 h ahead\", \"5½ h behind\""
+  }
+ ],
+ "react": [
+  {
+   "component": "PersonHovercard",
+   "exported": true,
+   "props": [
+    {
+     "name": "onPersonLookup",
+     "type": "(detail: HovercardLookupDetail, event: CustomEvent<HovercardLookupDetail>) => void",
+     "optional": true,
+     "description": "The card needs a person's details; answer with `detail.respondWith(person)`"
+    },
+    {
+     "name": "onMessage",
+     "type": "(person: HovercardPerson) => void",
+     "optional": true,
+     "description": "Message was pressed"
+    },
+    {
+     "name": "onViewProfile",
+     "type": "(person: HovercardPerson) => void",
+     "optional": true,
+     "description": "View profile was pressed"
+    },
+    {
+     "name": "onCardOpenChange",
+     "type": "(open: boolean) => void",
+     "optional": true,
+     "description": "The card opened or closed"
+    }
+   ],
+   "hides": [],
+   "events": {
+    "tc-person-lookup": "onPersonLookup",
+    "tc-action": "onMessage",
+    "tc-open": "onViewProfile",
+    "tc-open-change": "onCardOpenChange"
+   }
+  }
+ ],
+ "changelog": [
+  "**People & profiles** - **Org Chart** (`tc-org-chart`) – reporting lines that fold, search that opens the way, pan and zoom, an outline when narrow. - **Person Hovercard** (`tc-person-hovercard`) – the profile card behind any name, with status and local time. - **Team Roster** (`tc-team-roster`) – a directory with everyone's local time and the team's best hour to meet. - **Relationship Graph** (`tc-relationship-graph`) – people and organisations around one of them, re-centring on click, with a keyboard list of every connection."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-person-hovercard",
+   "className": "TcPersonHovercard",
+   "module": "trenchcoat/person-hovercard",
+   "data": [
+    "person",
+    "resolve",
+    "actions"
+   ],
+   "attributes": [
+    {
+     "name": "personId",
+     "attribute": "person-id"
+    },
+    {
+     "name": "hoverDelay",
+     "attribute": "hover-delay"
+    },
+    {
+     "name": "now",
+     "attribute": "now"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    },
+    {
+     "name": "notFoundText",
+     "attribute": "not-found-text"
+    },
+    {
+     "name": "errorText",
+     "attribute": "error-text"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-person-lookup",
+     "cancelable": true
+    },
+    {
+     "name": "tc-action",
+     "cancelable": false
+    },
+    {
+     "name": "tc-open",
+     "cancelable": false
+    },
+    {
+     "name": "tc-open-change",
+     "cancelable": false
+    }
+   ],
+   "controlled": [],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "inert",
+    "name": "inert",
+    "bcd": "api.HTMLElement.inert",
+    "versions": {
+     "chrome": "102",
+     "edge": "102",
+     "firefox": "112",
+     "safari": "15.5",
+     "safari_ios": "15.5"
+    },
+    "progressive": false,
+    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
+    "via": [
+     "internal/popover"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself",
+     "internal/popover"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "resize-observer",
+    "name": "ResizeObserver",
+    "bcd": "api.ResizeObserver",
+    "versions": {
+     "chrome": "64",
+     "edge": "79",
+     "firefox": "69",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "via": [
+     "internal/popover"
+    ]
+   },
+   {
+    "id": "popover",
+    "name": "Popover API",
+    "bcd": "api.HTMLElement.popover",
+    "versions": {
+     "chrome": "114",
+     "edge": "114",
+     "firefox": "125",
+     "safari": "17",
+     "safari_ios": "18.3"
+    },
+    "progressive": true,
+    "without": "Lists open fixed to the window instead of in the top layer, so a clipping ancestor or a modal can cover them.",
+    "via": [
+     "internal/popover"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "internal/popover",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setTimeout (internal/popover › PopoverController)"
+  ],
+  "frames": [
+   "requestAnimationFrame, cancelled (internal/popover › PopoverController)"
+  ],
+  "animations": 1,
+  "observers": [
+   "MutationObserver",
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)",
+   "ResizeObserver (internal/popover › PopoverController)"
+  ],
+  "clock": [
+   "Date.now()"
+  ],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)",
+    "CSS (internal/popover › popoverCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 36718,
+  "gzip": 12074
+ }
+}

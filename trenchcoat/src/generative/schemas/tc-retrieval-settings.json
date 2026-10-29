@@ -124,8 +124,8 @@
     "stage": {
       "type": "string",
       "enum": [
-        "context",
         "filter",
+        "context",
         "retrieve",
         "rerank"
       ],

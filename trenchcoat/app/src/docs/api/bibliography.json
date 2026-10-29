@@ -1,0 +1,603 @@
+{
+ "elements": [
+  {
+   "tag": "tc-bibliography",
+   "className": "TcBibliography",
+   "description": "A reading list set in a citation style – APA, MLA, Chicago (notes–bibliography), Harvard or IEEE – with links,\ntags, search, sort, Copy for one or the selected, and export as BibTeX, RIS or plain text.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Bibliography\"",
+     "description": "The heading, and the list's name",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "One line under the heading",
+     "readonly": false
+    },
+    {
+     "name": "references",
+     "attribute": null,
+     "type": "Reference[]",
+     "default": "[]",
+     "description": "The references, any order",
+     "readonly": false
+    },
+    {
+     "name": "citationStyle",
+     "attribute": "citation-style",
+     "type": "CitationStyle",
+     "default": "\"apa\"",
+     "description": "The citation style (not `style`, which every element has for CSS). Changed by the user unless tc-citation-style-change is prevented",
+     "readonly": false
+    },
+    {
+     "name": "selected",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[]",
+     "description": "The ticked references' ids. Changed by the user unless tc-selected-change is prevented",
+     "readonly": false
+    },
+    {
+     "name": "sort",
+     "attribute": "sort",
+     "type": "BibliographySort",
+     "default": "\"author\"",
+     "description": "The order. Changed by the user unless tc-sort-change is prevented",
+     "readonly": false
+    },
+    {
+     "name": "filter",
+     "attribute": "filter",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Shows only references whose authors, title, container, year or tags hold this",
+     "readonly": false
+    },
+    {
+     "name": "filename",
+     "attribute": "filename",
+     "type": "string",
+     "default": "\"bibliography\"",
+     "description": "The name exported files are saved under, before the extension",
+     "readonly": false
+    },
+    {
+     "name": "shown",
+     "attribute": null,
+     "type": "Reference[]",
+     "default": null,
+     "description": "The references shown: filtered, then sorted",
+     "readonly": true
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-citation-style-change",
+     "detail": "",
+     "description": "The citation style changed ({ citationStyle }: BibliographyCitationStyleChange); cancelable – prevented, `citationStyle` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-selected-change",
+     "detail": "",
+     "description": "References were ticked or unticked ({ selected }: BibliographySelectedChange); cancelable – prevented, `selected` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-sort-change",
+     "detail": "",
+     "description": "The order changed ({ sort }: BibliographySortChange); cancelable – prevented, `sort` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-copy",
+     "detail": "",
+     "description": "A reference, or the selected ones, were copied ({ text, ids }: BibliographyCopy); cancelable – prevented, nothing is copied",
+     "cancelable": true
+    },
+    {
+     "name": "tc-export",
+     "detail": "",
+     "description": "Export was chosen ({ format, text, ids }: BibliographyExport); cancelable – prevented, the page saves it its own way; otherwise the file downloads",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "bib",
+   "cssProperties": [
+    {
+     "name": "--tc-bib-indent",
+     "value": "var(--tc-space-4)",
+     "looks": [
+      "clean",
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
+    "--tc-border-control",
+    "--tc-border-control-hover",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-h-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-px",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-fill-default",
+    "--tc-fill-selected",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-menu-bg",
+    "--tc-menu-item-font-size",
+    "--tc-menu-item-h",
+    "--tc-menu-item-hover",
+    "--tc-menu-item-px",
+    "--tc-menu-item-radius",
+    "--tc-menu-padding",
+    "--tc-menu-radius",
+    "--tc-menu-shadow",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-full",
+    "--tc-radius-xs",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-5",
+    "--tc-space-6",
+    "--tc-space-7",
+    "--tc-space-8",
+    "--tc-surface-control",
+    "--tc-surface-inverse",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-on-accent",
+    "--tc-text-on-inverse",
+    "--tc-text-placeholder",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius",
+    "--tc-z-dropdown"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "formatReference",
+   "signature": "formatReference(ref: Reference, style: CitationStyle, n?: number): string",
+   "description": "A reference as plain text in a citation style; `n` numbers it for IEEE"
+  },
+  {
+   "name": "formatReferenceTemplate",
+   "signature": "formatReferenceTemplate(ref: Reference, style: CitationStyle, n?: number): TemplateResult",
+   "description": "A reference in a citation style as a template: titles in italics where the style sets them so, DOI / URL as links"
+  },
+  {
+   "name": "toBibTeX",
+   "signature": "toBibTeX(refs: Reference[]): string",
+   "description": "References as BibTeX"
+  },
+  {
+   "name": "toRIS",
+   "signature": "toRIS(refs: Reference[]): string",
+   "description": "References as RIS"
+  }
+ ],
+ "react": [
+  {
+   "component": "Bibliography",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading, and the list's name"
+    },
+    {
+     "name": "citationStyle",
+     "type": "CitationStyle",
+     "optional": true,
+     "description": "The citation style – controlled when given"
+    },
+    {
+     "name": "defaultCitationStyle",
+     "type": "CitationStyle",
+     "optional": true,
+     "description": "The style on mount when `citationStyle` isn't controlled"
+    },
+    {
+     "name": "onCitationStyleChange",
+     "type": "(style: CitationStyle) => void",
+     "optional": true,
+     "description": "The style changed"
+    },
+    {
+     "name": "selected",
+     "type": "string[]",
+     "optional": true,
+     "description": "The ticked references' ids – controlled when given"
+    },
+    {
+     "name": "defaultSelected",
+     "type": "string[]",
+     "optional": true,
+     "description": "The ticked references on mount when `selected` isn't controlled"
+    },
+    {
+     "name": "onSelectedChange",
+     "type": "(selected: string[]) => void",
+     "optional": true,
+     "description": "References were ticked or unticked"
+    },
+    {
+     "name": "sort",
+     "type": "BibliographySort",
+     "optional": true,
+     "description": "The order – controlled when given"
+    },
+    {
+     "name": "defaultSort",
+     "type": "BibliographySort",
+     "optional": true,
+     "description": "The order on mount when `sort` isn't controlled"
+    },
+    {
+     "name": "onSortChange",
+     "type": "(sort: BibliographySort) => void",
+     "optional": true,
+     "description": "The order changed"
+    },
+    {
+     "name": "onCopyReferences",
+     "type": "( detail: BibliographyCopy, event: CustomEvent<BibliographyCopy>, ) => void",
+     "optional": true,
+     "description": "References were copied; `event.preventDefault()` stops the copy"
+    },
+    {
+     "name": "onExport",
+     "type": "( detail: BibliographyExport, event: CustomEvent<BibliographyExport>, ) => void",
+     "optional": true,
+     "description": "Export was chosen; `event.preventDefault()` to save it your own way"
+    }
+   ],
+   "hides": [
+    "heading",
+    "citationStyle",
+    "selected",
+    "sort",
+    "children"
+   ],
+   "events": {
+    "tc-citation-style-change": null,
+    "tc-selected-change": null,
+    "tc-sort-change": null,
+    "tc-copy": "onCopyReferences",
+    "tc-export": "onExport"
+   }
+  }
+ ],
+ "changelog": [
+  "**Research & portfolio** - **Roadmap Timeline** (`tc-roadmap-timeline`) – Gantt-style lanes with progress, milestones, Today and dependency arrows, at week, month or quarter scale. - **Prioritisation Matrix** (`tc-prioritisation-matrix`) – value against effort, points dragged or moved with the arrow keys, listed by quadrant. - **Risk Register** (`tc-risk-register`) – a 5 × 5 likelihood × impact grid beside a sortable, rescorable register. - **Bibliography** (`tc-bibliography`) – references in APA, MLA, Chicago, Harvard or IEEE, with Copy and BibTeX / RIS export."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-bibliography",
+   "className": "TcBibliography",
+   "module": "trenchcoat/bibliography",
+   "data": [
+    "references",
+    "selected"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    },
+    {
+     "name": "citationStyle",
+     "attribute": "citation-style"
+    },
+    {
+     "name": "sort",
+     "attribute": "sort"
+    },
+    {
+     "name": "filter",
+     "attribute": "filter"
+    },
+    {
+     "name": "filename",
+     "attribute": "filename"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-citation-style-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-selected-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-sort-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-copy",
+     "cancelable": true
+    },
+    {
+     "name": "tc-export",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "citationStyle",
+     "event": "tc-citation-style-change"
+    },
+    {
+     "property": "selected",
+     "event": "tc-selected-change"
+    },
+    {
+     "property": "sort",
+     "event": "tc-sort-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "itself",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "clipboard",
+    "name": "Async Clipboard (writeText)",
+    "bcd": "api.Clipboard.writeText",
+    "versions": {
+     "chrome": "66",
+     "edge": "79",
+     "firefox": "63",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "why": "Copy buttons.",
+    "via": [
+     "internal/util"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setTimeout"
+  ],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [
+   "document pointerdown"
+  ],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 40513,
+  "gzip": 12799
+ }
+}

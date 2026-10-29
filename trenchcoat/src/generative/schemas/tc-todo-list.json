@@ -1,0 +1,111 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-todo-list.json",
+  "title": "tc-todo-list",
+  "description": "A to-do list – add, tick off, edit, reorder and remove (with Undo), All / To do / Done tabs with counts, progress\nand Clear done.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the list's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/TodoItem"
+      },
+      "description": "The to-dos, in order. Changed by the user unless tc-items-change is prevented"
+    },
+    "filter": {
+      "type": "string",
+      "enum": [
+        "done",
+        "all",
+        "active"
+      ],
+      "description": "The tab shown. Changed by the user unless tc-filter-change is prevented"
+    },
+    "addTo": {
+      "type": "string",
+      "enum": [
+        "end",
+        "start"
+      ],
+      "description": "Where new to-dos go"
+    },
+    "maxLength": {
+      "type": "number",
+      "description": "The longest a to-do may be"
+    },
+    "readonly": {
+      "type": "boolean",
+      "description": "Read only: no adding, ticking, editing or removing"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "add": {
+          "type": "string"
+        },
+        "placeholder": {
+          "type": "string"
+        },
+        "all": {
+          "type": "string"
+        },
+        "active": {
+          "type": "string"
+        },
+        "done": {
+          "type": "string"
+        },
+        "clearDone": {
+          "type": "string"
+        },
+        "emptyAll": {
+          "type": "string"
+        },
+        "emptyActive": {
+          "type": "string"
+        },
+        "emptyDone": {
+          "type": "string"
+        },
+        "removed": {
+          "type": "string"
+        },
+        "undo": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Words to use instead of the defaults"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "TodoItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        },
+        "done": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "text"
+      ],
+      "additionalProperties": false
+    }
+  }
+}
