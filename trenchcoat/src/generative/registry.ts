@@ -199,6 +199,7 @@ export const registry: Record<string, { events: string[]; load: () => Promise<un
   "tc-text-to-speech": { events: ["tc-rate-change","tc-pitch-change","tc-voice-change","tc-start","tc-end"], load: () => import("../elements/text-to-speech"), schema: () => import("./schemas/tc-text-to-speech.json") },
   "tc-thinking-state": { events: ["tc-progress-change","tc-done","tc-open-change"], load: () => import("../elements/thinking-state"), schema: () => import("./schemas/tc-thinking-state.json") },
   "tc-tips-panel": { events: ["tc-done-change","tc-tip-action","tc-close"], load: () => import("../elements/tips-panel"), schema: () => import("./schemas/tc-tips-panel.json") },
+  "tc-todo-list": { events: ["tc-items-change","tc-filter-change"], load: () => import("../elements/todo-list"), schema: () => import("./schemas/tc-todo-list.json") },
   "tc-tool-call-card": { events: ["tc-open-change"], load: () => import("../elements/tool-call-card"), schema: () => import("./schemas/tc-tool-call-card.json") },
   "tc-tool-call-group": { events: ["tc-open-change"], load: () => import("../elements/tool-call-card"), schema: () => import("./schemas/tc-tool-call-group.json") },
   "tc-tool-configuration": { events: ["tc-value-change"], load: () => import("../elements/tool-configuration"), schema: () => import("./schemas/tc-tool-configuration.json") },

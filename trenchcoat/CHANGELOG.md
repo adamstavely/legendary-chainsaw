@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased – a to-do list
+
+- **To-do List** (`tc-todo-list`) – add a to-do (Enter), tick it off, click its words to edit them, move it with
+  Alt + ↑ / ↓, remove it with Undo; All / To do / Done tabs with counts, a done bar and Clear done. One cancelable
+  `tc-items-change` carries the whole next list and what changed, so a page can keep it in its own store.
+
 ## Unreleased – colour picker, NPS / CSAT, coordinates, access requests, reading aloud
 
 - `tc-color-picker` – a saturation and brightness square, hue and opacity sliders, HEX / RGB / CMYK fields, an

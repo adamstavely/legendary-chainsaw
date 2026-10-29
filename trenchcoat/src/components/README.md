@@ -192,6 +192,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Thinking Loader** (`thinking-loader.tsx`) – A small working pill for AI replies – an eight-ray spinner and a shimmering label that rolls through phases and settles on a check
 - **Thinking State** (`thinking-state.tsx`) – AI working panel with a live timer, searched sources and thinking steps that appear one by one
 - **Tips Panel** (`tips-panel.tsx`) – Grid of short tips with one action each – taken tips turn into a done state
+- **To-do List** (`todo-list.tsx`) – A to-do list people keep themselves – add, tick off, edit in place, move with Alt + arrows and remove with Undo, with All / To do / Done tabs, progress and Clear done
 - **Toaster** (`toaster.tsx`) – Calm toasts from anywhere – a stack that fans out on hover, promise toasts that morph from spinner to check, swipe to dismiss
 - **Tool Call Card** (`tool-call-card.tsx`) – An agent's tool call in one line – live timer, status and summary, folds open to highlighted arguments and result with copy, retry on errors and a group that sums them up
 - **Tool Configuration** (`tool-configuration.tsx`) – A tool as its API reference entry: name as the title, signature and description, a doc table of parameters edited in place, an example call and the JSON Schema, with the approval it needs

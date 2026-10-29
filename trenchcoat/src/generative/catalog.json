@@ -1860,6 +1860,15 @@
     ]
   },
   {
+    "tag": "tc-todo-list",
+    "name": "TodoList",
+    "description": "A to-do list – add, tick off, edit, reorder and remove (with Undo), All / To do / Done tabs with counts, progress",
+    "events": [
+      "tc-items-change",
+      "tc-filter-change"
+    ]
+  },
+  {
     "tag": "tc-tool-call-card",
     "name": "ToolCallCard",
     "description": "One tool call of an AI agent: name, summary, status with a live timer, arguments and result.",
