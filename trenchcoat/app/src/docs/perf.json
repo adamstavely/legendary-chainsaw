@@ -10836,7 +10836,7 @@
   },
   "generated-ui": {
    "measuredAt": "2026-10-29",
-   "hash": "a61313524d9c0eae",
+   "hash": "14be1b708e58a5a2",
    "bundle": {
     "own": {
      "min": 34126,
@@ -11654,6 +11654,11 @@
       "min": 21546
      },
      {
+      "name": "todo-list",
+      "kind": "element",
+      "min": 21463
+     },
+     {
       "name": "autonomy-dial",
       "kind": "element",
       "min": 21327
@@ -11914,14 +11919,14 @@
       "min": 13200
      },
      {
+      "name": "place-list",
+      "kind": "element",
+      "min": 12914
+     },
+     {
       "name": "watchlist",
       "kind": "element",
       "min": 12913
-     },
-     {
-      "name": "place-list",
-      "kind": "element",
-      "min": 12906
      },
      {
       "name": "button",
@@ -12051,7 +12056,7 @@
      {
       "name": "src/generative/registry.ts",
       "kind": "other",
-      "min": 36643
+      "min": 36803
      },
      {
       "name": "src/generative/schemas/tc-ai-side-pane.json",
@@ -12949,6 +12954,11 @@
       "min": 1592
      },
      {
+      "name": "src/generative/schemas/tc-todo-list.json",
+      "kind": "other",
+      "min": 1561
+     },
+     {
       "name": "src/generative/schemas/tc-context-tray.json",
       "kind": "other",
       "min": 1551
@@ -13160,21 +13170,21 @@
      }
     ],
     "withoutLit": {
-     "min": 7465677,
-     "gzip": 1836881
+     "min": 7489127,
+     "gzip": 1842845
     },
     "withLit": {
-     "min": 7432224,
-     "gzip": 1824599
+     "min": 7455416,
+     "gzip": 1829960
     }
    },
    "render": {
     "tag": "tc-generated-ui",
     "source": "demo",
     "runs": 7,
-    "cold": 2.1,
-    "first": 0.5,
-    "update": 0.1,
+    "cold": 2.7,
+    "first": 0.6,
+    "update": 0.2,
     "updateKind": "re-render with the same data",
     "nodes": 9,
     "scale": null,
@@ -26035,6 +26045,104 @@
     "updateKind": "re-render with the same data",
     "nodes": 33,
     "scale": null,
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
+  "todo-list": {
+   "measuredAt": "2026-10-29",
+   "hash": "b8323790a269d27b",
+   "bundle": {
+    "own": {
+     "min": 23485,
+     "gzip": 7260
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 21676
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2971
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1868
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 444
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 436
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     }
+    ],
+    "withoutLit": {
+     "min": 30977,
+     "gzip": 9340
+    },
+    "withLit": {
+     "min": 53906,
+     "gzip": 16931
+    }
+   },
+   "render": {
+    "tag": "tc-todo-list",
+    "source": "demo",
+    "runs": 7,
+    "cold": 10.6,
+    "first": 1.2,
+    "update": 0.3,
+    "updateKind": "one item of items replaced",
+    "nodes": 109,
+    "scale": {
+     "property": "items",
+     "demoItems": 6,
+     "points": [
+      {
+       "items": 100,
+       "first": 6.7,
+       "update": 0.7,
+       "nodes": 1237
+      },
+      {
+       "items": 1000,
+       "first": 59.3,
+       "update": 7.9,
+       "nodes": 12037
+      }
+     ]
+    },
     "idle": {
      "visible": {
       "frames": 0,

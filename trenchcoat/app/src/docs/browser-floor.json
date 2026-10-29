@@ -11,13 +11,13 @@
    "features": [
     "light-dark"
    ],
-   "elements": 257
+   "elements": 258
   },
   "edge": {
    "features": [
     "light-dark"
    ],
-   "elements": 257
+   "elements": 258
   },
   "firefox": {
    "features": [
@@ -29,13 +29,13 @@
    "features": [
     "light-dark"
    ],
-   "elements": 257
+   "elements": 258
   },
   "safari_ios": {
    "features": [
     "light-dark"
    ],
-   "elements": 257
+   "elements": 258
   }
  },
  "features": [
@@ -52,7 +52,7 @@
    },
    "progressive": false,
    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
-   "elements": 257
+   "elements": 258
   },
   {
    "id": "color-mix",
@@ -67,7 +67,7 @@
    },
    "progressive": false,
    "why": "Tints and washes mixed from the tokens.",
-   "elements": 257
+   "elements": 258
   },
   {
    "id": "is-where",
@@ -82,7 +82,7 @@
    },
    "progressive": false,
    "why": "Every rule is keyed on :where() so the page can override it.",
-   "elements": 257
+   "elements": 258
   },
   {
    "id": "focus-visible",
@@ -97,7 +97,7 @@
    },
    "progressive": false,
    "why": "Focus rings for keyboard users.",
-   "elements": 256
+   "elements": 257
   },
   {
    "id": "container-size",
@@ -112,7 +112,7 @@
    },
    "progressive": false,
    "why": "Components adapt to the width they're given, not the window's.",
-   "elements": 210
+   "elements": 211
   },
   {
    "id": "inset",
@@ -126,7 +126,7 @@
     "safari_ios": "14.1"
    },
    "progressive": false,
-   "elements": 130
+   "elements": 131
   },
   {
    "id": "inert",
@@ -387,7 +387,7 @@
    },
    "progressive": true,
    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
-   "elements": 257
+   "elements": 258
   },
   {
    "id": "adopted-stylesheets",
@@ -402,7 +402,7 @@
    },
    "progressive": true,
    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
-   "elements": 256
+   "elements": 257
   },
   {
    "id": "scrollbar-width",
