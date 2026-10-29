@@ -137,6 +137,53 @@ describe("tc-facet-sidebar", () => {
     expect(chips(el)).toContain("Updated: from 2026-01-01");
   });
 
+  test("range fields: emptied goes back to its end; a value that changes nothing is put back; dates past each other swap", async () => {
+    const el = await make("standard", { pages: [20, 80] });
+    const fields = facet(el, "pages").querySelectorAll<HTMLInputElement>('input[type="number"]');
+    const commit = async (f: HTMLInputElement, v: string) => {
+      f.value = v;
+      f.dispatchEvent(new Event("change", { bubbles: true }));
+      await settle();
+    };
+    // Emptying To goes back to the top of the range, not to 0
+    await commit(fields[1], "");
+    expect(el.value.pages).toEqual([20, 100]);
+    expect(fields[1].value).toBe("100");
+    // 150 clamps to 100, which is where it already is: the field shows 100 again
+    await commit(fields[1], "150");
+    expect(el.value.pages).toEqual([20, 100]);
+    expect(fields[1].value).toBe("100");
+    await commit(fields[0], "");
+    expect(el.value.pages).toBeUndefined();
+    const [from, to] = facet(el, "when").querySelectorAll<HTMLInputElement>('input[type="date"]');
+    await commit(to, "2026-04-01");
+    await commit(from, "2026-05-01");
+    expect(el.value.when).toEqual({ from: "2026-04-01", to: "2026-05-01" });
+  });
+
+  test("a range without min / max is in use only off 0–100, as it's drawn", () => {
+    const f: Facet = { id: "size", label: "Size", type: "range" };
+    expect(facetActive(f, [0, 100])).toBe(false);
+    expect(facetActive(f, [10, 100])).toBe(true);
+  });
+
+  test("controlled: after a chip's × or Clear all, focus moves on once the page applies the change", async () => {
+    const el = await make("standard", { kind: ["doc", "note"] });
+    el.addEventListener("tc-value-change", (e) => {
+      e.preventDefault();
+      el.value = (e as CustomEvent<FacetValueChange>).detail.value;
+    });
+    el.querySelectorAll<HTMLButtonElement>(".ui-fct__chip-x")[0].focus();
+    el.querySelectorAll<HTMLButtonElement>(".ui-fct__chip-x")[0].click();
+    await settle();
+    expect(chips(el)).toEqual(["Lab notes"]);
+    await expect.poll(() => document.activeElement).toBe(el.querySelector(".ui-fct__chip-x"));
+    el.querySelector<HTMLButtonElement>(".ui-fct__clear")!.click();
+    await settle();
+    expect(chips(el)).toEqual([]);
+    await expect.poll(() => document.activeElement).toBe(el.querySelector(".ui-fct__toggle"));
+  });
+
   test("fold: tc-collapsed-change; prevented, it stays open", async () => {
     const el = await make();
     facet(el, "kind").querySelector<HTMLButtonElement>(".ui-fct__toggle")!.click();

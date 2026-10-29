@@ -116,8 +116,53 @@ describe("tc-results-list", () => {
     await expect.poll(() => document.activeElement).toBe(el.querySelector('[data-id="r5"] .ui-rsl__title'));
     // The group's count is every result of the kind
     expect(text(el.querySelector(".ui-rsl__group-name"))).toBe("Documents 12");
-    el.addEventListener("tc-more", (e) => e.preventDefault(), { once: true });
+  });
+
+  test("Show more prevented: the page appends the next results and they show; focus goes to the first new one", async () => {
+    const page = (from: number, n: number) => Array.from({ length: n }, (_, i) => ({ id: `r${from + i}`, title: `Report ${from + i + 1}`, kind: "Document" }));
+    const el = await make("standard", page(0, 5));
+    el.pageSize = 5;
+    el.hasMore = true;
+    await settle();
+    el.addEventListener("tc-more", (e) => {
+      e.preventDefault();
+      // The page loads the next five and appends them
+      el.results = [...el.results, ...page(5, 5)];
+    });
     el.querySelector<HTMLButtonElement>(".ui-rsl__more")!.click();
+    await settle();
+    expect(el.querySelectorAll(".ui-rsl__item")).toHaveLength(10);
+    await expect.poll(() => document.activeElement).toBe(el.querySelector('[data-id="r5"] .ui-rsl__title'));
+  });
+
+  test("Show more, grouped: focus goes to the first new result in the order shown, not an old one", async () => {
+    const mixed = [
+      { id: "a1", kind: "A", title: "A one" },
+      { id: "b1", kind: "B", title: "B one" },
+      { id: "a2", kind: "A", title: "A two" },
+      { id: "b2", kind: "B", title: "B two" },
+    ];
+    const el = await make("standard", mixed);
+    el.pageSize = 2;
+    await settle();
+    el.querySelector<HTMLButtonElement>(".ui-rsl__more")!.click();
+    await settle();
+    // Shown A one, A two, B one, B two: the first new one is A two
+    await expect.poll(() => document.activeElement).toBe(el.querySelector('[data-id="a2"] .ui-rsl__title'));
+  });
+
+  test("a new set of results starts again at the first page; more of the same list keeps the pages open", async () => {
+    const page = (p: string, n: number) => Array.from({ length: n }, (_, i) => ({ id: `${p}${i}`, title: `${p} ${i}`, kind: "Document" }));
+    const el = await make("standard", page("x", 30));
+    el.pageSize = 10;
+    await settle();
+    el.querySelector<HTMLButtonElement>(".ui-rsl__more")!.click();
+    await settle();
+    el.querySelector<HTMLButtonElement>(".ui-rsl__more")!.click();
+    await settle();
+    expect(el.querySelectorAll(".ui-rsl__item")).toHaveLength(30);
+    // A facet changed: new results for the same query
+    el.results = page("y", 30);
     await settle();
     expect(el.querySelectorAll(".ui-rsl__item")).toHaveLength(10);
   });

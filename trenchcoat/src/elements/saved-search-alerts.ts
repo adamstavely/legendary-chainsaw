@@ -120,6 +120,9 @@ export class TcSavedSearchAlerts extends TcElement {
   @state() private accessor draftText = "";
   @state() private accessor draftFrequency: AlertFrequency = "daily";
   @state() private accessor announce = "";
+  /** A removal or an addition the page was asked to make (controlled `alerts`): Undo appears, or the form clears, once `alerts` shows it */
+  private pendingRemoval: { alert: SearchAlert; index: number } | null = null;
+  private pendingAdd: string | null = null;
 
   private uid = `tc-ssa-${++uidCount}`;
   private timer = 0;
@@ -147,6 +150,16 @@ export class TcSavedSearchAlerts extends TcElement {
     if (changed.has("now") && this.isConnected) this.tick();
     if (changed.has("draftQuery") && this.draftQuery) this.draftText = this.draftQuery;
     if (changed.has("alerts") && this.removedAlert && this.alerts.some((a) => a.id === this.removedAlert!.alert.id)) this.removedAlert = null;
+    if (changed.has("alerts") && this.pendingRemoval && !this.alerts.some((a) => a.id === this.pendingRemoval!.alert.id)) {
+      this.removedAlert = this.pendingRemoval;
+      this.pendingRemoval = null;
+      this.announce = `Removed “${this.removedAlert.alert.name}”. Undo is above the list`;
+      void this.updateComplete.then(() => this.querySelector<HTMLElement>(".ui-ssa__undo")?.focus());
+    }
+    if (changed.has("alerts") && this.pendingAdd && this.alerts.some((a) => a.id === this.pendingAdd)) {
+      this.pendingAdd = null;
+      this.clearDraft();
+    }
   }
 
   private get time() {
@@ -194,7 +207,14 @@ export class TcSavedSearchAlerts extends TcElement {
     if (!query || this.readonly) return;
     const name = this.draftName.trim() || query;
     const alert: SearchAlert = { id: newId(), name, query, frequency: this.draftFrequency, channels: this.channels[0] ? [this.channels[0].id] : [] };
-    if (!this.commit([...this.alerts, alert], { type: "add", id: alert.id }, `Alert “${name}” added`)) return;
+    if (!this.commit([...this.alerts, alert], { type: "add", id: alert.id }, `Alert “${name}” added`)) {
+      // Controlled: the form clears when the page adds it
+      this.pendingAdd = alert.id;
+      return;
+    }
+    this.clearDraft();
+  }
+  private clearDraft() {
     this.draftName = "";
     this.draftText = "";
     this.draftFrequency = "daily";
@@ -206,8 +226,11 @@ export class TcSavedSearchAlerts extends TcElement {
       this.alerts.filter((x) => x.id !== a.id),
       { type: "remove", id: a.id },
       `Removed “${a.name}”. Undo is above the list`,
-    ))
+    )) {
+      // Controlled: Undo appears when the page takes it out
+      this.pendingRemoval = { alert: a, index };
       return;
+    }
     this.removedAlert = { alert: a, index };
     void this.updateComplete.then(() => this.querySelector<HTMLElement>(".ui-ssa__undo")?.focus());
   }

@@ -99,6 +99,33 @@ describe("tc-saved-search-alerts", () => {
     expect(document.activeElement).toBe(row(el, "b").querySelector("h4"));
   });
 
+  test("controlled: Undo appears and the form clears once the page applies the change", async () => {
+    const el = await make();
+    el.addEventListener("tc-alerts-change", (e) => {
+      e.preventDefault();
+      el.alerts = (e as CustomEvent<AlertsChange>).detail.alerts;
+    });
+    row(el, "b").querySelector<HTMLButtonElement>(".ui-ssa__remove")!.click();
+    await settle();
+    expect(el.alerts.map((a) => a.id)).toEqual(["a", "c"]);
+    await expect.poll(() => document.activeElement).toBe(el.querySelector(".ui-ssa__undo"));
+    el.querySelector<HTMLButtonElement>(".ui-ssa__undo")!.click();
+    await settle();
+    expect(el.alerts.map((a) => a.id)).toEqual(["a", "b", "c"]);
+    expect(el.querySelector(".ui-ssa__undo")).toBeNull();
+    const [name, query] = el.querySelectorAll<HTMLInputElement>(".ui-ssa__add .ui-ssa__input");
+    name.value = "Kelp";
+    name.dispatchEvent(new Event("input", { bubbles: true }));
+    query.value = "kelp forest";
+    query.dispatchEvent(new Event("input", { bubbles: true }));
+    await settle();
+    el.querySelector<HTMLFormElement>(".ui-ssa__add")!.requestSubmit();
+    await settle();
+    expect(el.alerts.at(-1)!.query).toBe("kelp forest");
+    expect(name.value).toBe("");
+    expect(query.value).toBe("");
+  });
+
   test("Add alert: draft-query fills the search; the name falls back to the query", async () => {
     const el = await make();
     el.draftQuery = "seagrass carbon";

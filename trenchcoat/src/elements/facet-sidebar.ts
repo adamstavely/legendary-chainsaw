@@ -59,7 +59,7 @@ export function facetActive(f: Facet, v: FacetValue | undefined): boolean {
   if (v === undefined) return false;
   if (f.type === "range") {
     const [lo, hi] = v as [number, number];
-    return lo > (f.min ?? -Infinity) || hi < (f.max ?? Infinity);
+    return lo > (f.min ?? 0) || hi < (f.max ?? 100);
   }
   if (f.type === "date") {
     const d = v as { from?: string; to?: string };
@@ -97,12 +97,26 @@ export class TcFacetSidebar extends TcElement {
 
   private uid = `tc-fct-${++uidCount}`;
   private drag: { facet: Facet; end: 0 | 1 } | null = null;
+  /** Where focus goes once a removed chip (its index) or Clear all ("all") has gone – here, or when a page that controls `value` applies it */
+  private refocus: number | "all" | null = null;
 
   protected override willUpdate(changed: PropertyValues) {
     super.willUpdate(changed);
     if (changed.has("facets")) {
       const ids = new Set(this.facets.map((f) => f.id));
       this.expanded = new Set([...this.expanded].filter((id) => ids.has(id)));
+    }
+  }
+
+  protected override updated(changed: PropertyValues) {
+    super.updated(changed);
+    if (changed.has("value") && this.refocus !== null) {
+      const at = this.refocus;
+      this.refocus = null;
+      // The chip that took its place, or the first facet
+      const xs = this.querySelectorAll<HTMLElement>(".ui-fct__chip-x");
+      const to = at === "all" ? null : xs[Math.min(at, xs.length - 1)];
+      (to ?? this.querySelector<HTMLElement>(".ui-fct__toggle"))?.focus();
     }
   }
 
@@ -165,20 +179,17 @@ export class TcFacetSidebar extends TcElement {
   private removeChip(c: { facet: Facet; option?: string; label: string }, at: number) {
     const f = c.facet;
     const next = c.option !== undefined ? (this.facetValue(f) as string[]).filter((x) => x !== c.option) : undefined;
-    if (!this.set(f, next, `Removed ${c.label}`)) return;
-    // Focus goes to the chip that took its place, or Clear all, or the first facet
-    void this.updateComplete.then(() => {
-      const xs = this.querySelectorAll<HTMLElement>(".ui-fct__chip-x");
-      (xs[Math.min(at, xs.length - 1)] ?? this.querySelector<HTMLElement>(".ui-fct__toggle"))?.focus();
-    });
+    // Focus goes to the chip that took its place, or the first facet, once the chip has gone (updated)
+    this.refocus = at;
+    this.set(f, next, `Removed ${c.label}`);
   }
 
   private clearAll() {
     if (!Object.keys(this.value).length) return;
+    this.refocus = "all";
     if (!this.emit<FacetValueChange>("tc-value-change", { value: {}, facet: "" }, { cancelable: true })) return;
     this.value = {};
     this.announce = "All filters cleared";
-    void this.updateComplete.then(() => this.querySelector<HTMLElement>(".ui-fct__toggle")?.focus());
   }
 
   private fold(f: Facet) {
@@ -198,7 +209,11 @@ export class TcFacetSidebar extends TcElement {
     let n = Math.round((Math.min(max, Math.max(min, raw)) - min) / step) * step + min;
     n = Number(n.toFixed(6));
     const next: [number, number] = end === 0 ? [Math.min(n, hi), hi] : [lo, Math.max(n, lo)];
-    if (next[0] === lo && next[1] === hi) return;
+    // Nothing changes (clamped or rounded back to where it was): the number field shows the value again
+    if (next[0] === lo && next[1] === hi) {
+      this.requestUpdate();
+      return;
+    }
     this.set(f, next, `${f.label} ${this.fmt(next[0], f)} to ${this.fmt(next[1], f)}`);
   }
 
@@ -341,7 +356,9 @@ export class TcFacetSidebar extends TcElement {
           step=${f.step ?? 1}
           .value=${live(String(end === 0 ? lo : hi))}
           @change=${(e: Event) => {
-            const n = Number((e.target as HTMLInputElement).value);
+            // Emptied – or not a number, which a number field also reports as "" – goes back to its end of the range
+            const raw = (e.target as HTMLInputElement).value.trim();
+            const n = raw === "" ? (end === 0 ? min : max) : Number(raw);
             if (Number.isFinite(n)) this.setRange(f, end, n);
             else this.requestUpdate();
           }}
@@ -384,7 +401,10 @@ export class TcFacetSidebar extends TcElement {
           max=${ifDefined(key === "from" && d.to ? d.to : undefined)}
           @change=${(e: Event) => {
             const v = (e.target as HTMLInputElement).value || undefined;
-            this.set(f, { ...d, [key]: v }, v ? `${f.label} ${key} ${v}` : `${f.label} ${key} cleared`);
+            let next = { ...d, [key]: v };
+            // Typed past the other end (the picker's min / max don't stop typing): the two swap
+            if (next.from && next.to && next.from > next.to) next = { from: next.to, to: next.from };
+            this.set(f, next, v ? `${f.label} ${next.from ?? ""} – ${next.to ?? ""}`.trim() : `${f.label} ${key} cleared`);
           }}
         />
       </label>`;

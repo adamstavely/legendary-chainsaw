@@ -122,11 +122,21 @@ export class TcResultsList extends TcElement {
   @state() private accessor announce = "";
 
   private uid = `tc-rsl-${++uidCount}`;
+  /** The results showing when Show more was pressed: focus goes to the first one not among them, once it's there */
+  private beforeMore: Set<string> | null = null;
 
   protected override willUpdate(changed: PropertyValues) {
     super.willUpdate(changed);
-    if (changed.has("pageSize") || changed.has("query")) this.limit = Math.max(1, this.pageSize);
+    // A new set of results (not the same list with more on the end) starts again at the first page
+    const was = changed.get("results") as SearchResult[] | undefined;
+    const fresh = changed.has("results") && !!was?.length && this.results[0]?.id !== was[0]?.id;
+    if (changed.has("pageSize") || changed.has("query") || fresh) {
+      this.limit = Math.max(1, this.pageSize);
+      this.beforeMore = null;
+    }
     if (changed.has("selected") && this.selected) this.active = this.selected;
+    // Show more was prevented and the page has now added results: they show, and focus goes to the first of them
+    if (changed.has("results") && this.beforeMore) void this.updateComplete.then(() => this.focusNew());
   }
 
   /* ---------- The model ---------- */
@@ -185,16 +195,24 @@ export class TcResultsList extends TcElement {
   }
 
   private more() {
-    if (!this.emit<ResultsMore>("tc-more", { shown: this.limit, total: this.results.length }, { cancelable: true })) return;
-    const before = this.limit;
+    const shown = this.visible;
+    // Prevented, the page adds the next results itself – the next page still opens, and shows them when they arrive
+    this.emit<ResultsMore>("tc-more", { shown: this.limit, total: this.results.length }, { cancelable: true });
     this.limit += Math.max(1, this.pageSize);
-    const added = Math.min(this.limit, this.results.length) - before;
-    if (added > 0) {
-      this.announce = `${added} more ${added === 1 ? "result" : "results"}`;
-      // Focus goes to the first new result
-      const next = this.flat[before];
-      if (next) void this.updateComplete.then(() => this.focusResult(next.id));
-    }
+    this.beforeMore = new Set(shown.map((r) => r.id));
+    this.focusNew();
+  }
+
+  /** After Show more: the first result that wasn't showing, in the order shown (grouped results land inside their groups) */
+  private focusNew() {
+    const before = this.beforeMore;
+    if (!before) return;
+    const added = this.visible.filter((r) => !before.has(r.id)).length;
+    if (!added) return;
+    this.beforeMore = null;
+    this.announce = `${added} more ${added === 1 ? "result" : "results"}`;
+    const next = this.flat.find((r) => !before.has(r.id));
+    if (next) this.focusResult(next.id);
   }
 
   private focusResult(id: string) {
