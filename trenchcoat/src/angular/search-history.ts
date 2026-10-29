@@ -4,7 +4,7 @@ import type { TcSearchHistory, SearchHistorySelect, SearchHistorySavedChange, Se
 import "trenchcoat/search-history";
 
 /**
- * <tc-search-history> for Angular: Recent and saved searches – tabs with counts, a filter, searches grouped by day with scope chips, result counts and
+ * <tc-search-history> for Angular: Recent and saved searches – tabs with counts, a filter, searches grouped by day with their scopes, result counts and
  * 
  * imports: [SearchHistory] in a standalone component – no CUSTOM_ELEMENTS_SCHEMA, and bindings are type-checked.
  */

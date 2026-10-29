@@ -1,0 +1,74 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-coordinate-details.json",
+  "title": "tc-coordinate-details",
+  "description": "Coordinates in text, checked and marked: hover, focus or right-click one for the place, both notations, mapping links and a map.",
+  "type": "object",
+  "properties": {
+    "text": {
+      "type": "string",
+      "description": "The text to find coordinates in: plain text, shown as written (line breaks kept)"
+    },
+    "trigger": {
+      "type": "string",
+      "enum": [
+        "both",
+        "hover",
+        "contextmenu"
+      ],
+      "description": "What opens a card: \"both\" (hover, focus and right-click), \"hover\" (hover and focus) or \"contextmenu\" (right-click, Menu key, Enter)"
+    },
+    "hoverDelay": {
+      "type": "number",
+      "description": "How long the pointer rests on a mark before its card opens, ms"
+    },
+    "precision": {
+      "type": "number",
+      "description": "Decimal places shown in decimal notation"
+    },
+    "zoom": {
+      "type": "number",
+      "description": "The zoom for mapping links and the map, 1–19"
+    },
+    "providers": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/GeoProvider"
+      },
+      "description": "Mapping tools for \"Open in\": URL templates with {lat} {lng} {zoom} {label}; empty hides the links"
+    },
+    "notFoundText": {
+      "type": "string",
+      "description": "What the card says when there are no details for a place"
+    },
+    "errorText": {
+      "type": "string",
+      "description": "What the card says when the lookup failed"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "GeoProvider": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri-reference"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "url"
+      ],
+      "additionalProperties": false,
+      "description": "A mapping tool. `url` is a template: {lat}, {lng}, {zoom} and {label} are replaced, encoded for a URL. Only http(s) links are kept."
+    }
+  }
+}

@@ -34,9 +34,12 @@ const DENY = new Set([
 const NOT_JSON = /\b(Element|HTMLElement|Node|DocumentFragment|File|FileList|Blob|AbortSignal|Promise|Function|TemplateResult|Map|Set|WeakMap|Look)\b|=>/;
 /** Properties every element has that a model shouldn't set: the look is the page's */
 const SKIP_PROPS = new Set(["look"]);
-/** Per-element properties a model shouldn't set: geo-location's map stays behind "Show map", so a generated map
+/** Per-element properties a model shouldn't set: geo-location's and coordinate-details' maps stay behind "Show map", so a generated map
  *  never loads from a third party by itself, whatever allowedOrigins says */
-const SKIP_ELEMENT_PROPS = { "tc-geo-location": new Set(["embed", "embedSrc"]) };
+const SKIP_ELEMENT_PROPS = {
+  "tc-geo-location": new Set(["embed", "embedSrc"]),
+  "tc-coordinate-details": new Set(["embed", "embedSrc"]),
+};
 
 execSync("npx cem analyze --config custom-elements-manifest.config.mjs", { stdio: "ignore" });
 const manifest = JSON.parse(readFileSync("custom-elements.json", "utf8"));

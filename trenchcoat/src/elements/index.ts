@@ -68,6 +68,7 @@ export * from "./context-tray";
 export * from "./context-window";
 export * from "./conversation-annotation";
 export * from "./conversation-branches";
+export * from "./coordinate-details";
 export * from "./correction-propagation";
 export * from "./cover-flow";
 export * from "./coverage-matrix";
