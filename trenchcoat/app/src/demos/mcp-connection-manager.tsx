@@ -87,7 +87,7 @@ export default function Demo({ ui }: { ui: typeof UI }) {
         connections={connections}
         onChange={(next, change) => {
           setServers(next);
-          setNote(change.type === "add" ? `${change.server.name} added.` : `${change.server.name} removed.`);
+          setNote(change.type === "reset" ? "Servers reset." : change.type === "add" ? `${change.server.name} added.` : `${change.server.name} removed.`);
         }}
         onConnect={(server, signal) => reach(server, signal, "connected")}
         onTest={(server, signal) => reach(server, signal, "works – add it to keep it")}

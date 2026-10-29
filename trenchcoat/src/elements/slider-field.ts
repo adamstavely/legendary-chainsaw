@@ -8,7 +8,7 @@ import { TcSettingsElement, settingsCss } from "./internal/settings";
  * @tag tc-slider-field
  * @fires tc-value-change - Proposed value (detail: { value }); cancelable to keep application control.
  */
-export class TcSliderField extends TcSettingsElement<number> {
+export class TcSliderField extends TcSettingsElement<number | null> {
   static override ui = "slider-field";
   static override css = settingsCss;
   constructor() {
@@ -22,6 +22,8 @@ export class TcSliderField extends TcSettingsElement<number> {
   /** Increment used by the native controls. */
   @property({ type: Number }) accessor step = 1;
   protected override validate() {
+    // Empty is only an error when required, which the base class reports.
+    if (this.value === null) return "";
     if (
       !Number.isFinite(this.value) ||
       this.value < this.min ||
@@ -35,7 +37,9 @@ export class TcSliderField extends TcSettingsElement<number> {
   }
   private input(e: Event) {
     const input = e.target as HTMLInputElement;
-    if (input.validity.valid && Number.isFinite(input.valueAsNumber))
+    // A cleared box empties the value rather than keeping the last number; a half-typed one ("-", "1e") is badInput.
+    if (input.value === "" && !input.validity.badInput) this.commit(null);
+    else if (input.validity.valid && Number.isFinite(input.valueAsNumber))
       this.commit(input.valueAsNumber);
   }
   protected override render() {
@@ -45,7 +49,7 @@ export class TcSliderField extends TcSettingsElement<number> {
           ><span>${this.label}</span
           ><input
             type="number"
-            .value=${live(String(this.value))}
+            .value=${live(this.value === null ? "" : String(this.value))}
             min=${this.min}
             max=${this.max}
             step=${this.step}
@@ -56,7 +60,7 @@ export class TcSliderField extends TcSettingsElement<number> {
         <input
           type="range"
           aria-label=${this.label}
-          .value=${live(String(this.value))}
+          .value=${live(this.value === null ? "" : String(this.value))}
           min=${this.min}
           max=${this.max}
           step=${this.step}

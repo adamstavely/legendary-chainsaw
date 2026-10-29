@@ -73,7 +73,9 @@ export abstract class TcSettingsElement<T> extends TcElement {
     const submitted = this.submissionValue();
     const value =
       typeof submitted === "string" ? submitted : JSON.stringify(submitted);
-    this.internals.setFormValue(this.name && !this.blocked ? value : null);
+    this.internals.setFormValue(
+      this.name && !this.blocked && submitted != null ? value : null,
+    );
     this.internals.setValidity(
       invalid ? { customError: true } : {},
       invalid,

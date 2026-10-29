@@ -12,6 +12,7 @@ import "../../src/elements/instruction-editor";
 import { instructionVariables, type InstructionEditorValue, type InstructionVariable, type InstructionVersion, type TcInstructionEditor } from "../../src/elements/instruction-editor";
 import { InstructionEditor } from "../../src/elements/react/instruction-editor";
 import { cleanup, fixture, settle } from "./helpers";
+import { expectReactFormReset } from "./form-reset";
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -254,6 +255,10 @@ describe("tc-instruction-editor", () => {
     await settle();
     expect(field(el).readOnly).toBe(true);
     expect(el.querySelector(".ui-ied__primary, .ui-ied__note, button.ui-ied__var-btn")).toBeNull();
+  });
+
+  test("form reset through React: the baseline is the value React passed; reset goes through onChange", async () => {
+    await expectReactFormReset(InstructionEditor, "tc-instruction-editor", VALUE, { ...VALUE, text: "Other" });
   });
 
   test("React wrapper: value and versions, onChange and onSave; controlled versions stay with the app", async () => {

@@ -126,6 +126,14 @@
      "readonly": true
     },
     {
+     "name": "staleRedaction",
+     "attribute": null,
+     "type": "",
+     "default": null,
+     "description": "A redaction whose message no longer matches it: where it applies isn't known, so nothing is sent",
+     "readonly": true
+    },
+    {
      "name": "look",
      "attribute": "look",
      "type": "Look | undefined",
@@ -682,7 +690,7 @@
   "windowed": false
  },
  "size": {
-  "min": 96965,
-  "gzip": 25142
+  "min": 98467,
+  "gzip": 25545
  }
 }

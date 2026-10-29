@@ -92,7 +92,7 @@ export class DataHandlingPolicy {
     this.#el.look = v;
   }
   /**
-   * A setting changed ({ value, field }: DataPolicyChange); cancelable – prevent it to control `value`
+   * A setting changed, or a form reset put them all back with field null ({ value, field }: DataPolicyChange); cancelable – prevent it to control `value`
    * Types $event; the element dispatches the event itself.
    */
   @Output("tc-value-change") readonly tcValueChange = new EventEmitter<CustomEvent<DataPolicyChange>>();

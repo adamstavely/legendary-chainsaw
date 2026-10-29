@@ -12,6 +12,7 @@ import "../../src/elements/provider-connection";
 import type { ProviderConnectionCheck, ProviderConnectionTestEvent, ProviderConnectionValue, TcProviderConnection } from "../../src/elements/provider-connection";
 import { ProviderConnection } from "../../src/elements/react/provider-connection";
 import { cleanup, fixture, settle } from "./helpers";
+import { expectReactFormReset } from "./form-reset";
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -413,6 +414,10 @@ describe("tc-provider-connection", () => {
     expect(endpoint(el).disabled).toBe(true);
     expect(testBtn(el).disabled).toBe(true);
     expect(el.querySelector("select")!.disabled).toBe(true);
+  });
+
+  test("form reset through React: the baseline is the value React passed; reset goes through onChange", async () => {
+    await expectReactFormReset(ProviderConnection, "tc-provider-connection", VALUE, { ...VALUE, deployment: "other" });
   });
 
   test("React wrapper: uncontrolled survives a re-render; onTest gets the value and signal; controlled stays with the app", async () => {

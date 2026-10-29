@@ -60,6 +60,28 @@
 - **Score Summary** – NPS and CSAT are worked out from the counts and rounded once: a balanced split is 0, not −1.
 - **Geo Location** – a copy the browser refused no longer says Copied.
 
+## Unreleased – fixes: redaction, release gates, deletion scopes and configuration panels
+
+- **Conversation Annotation** – a redaction its message no longer matches blocks Send, says why, and the export blanks
+  its quote wherever it still appears, so unmasked text is never sent. Redacted text is now absent from the whole
+  page: a label over it quotes it as █, and so do the selection hint, the correction editor and its word diff.
+- **Configuration Release Control** – the gate is checked again while the confirmation is open and at Confirm. If it
+  fails (an approval withdrawn, a hold, a rollback that no longer applies), Confirm is disabled and the dialog says why.
+- **Data Handling Policy** – Request deletion picks the first scope it can delete and never an unavailable one; Confirm
+  refuses an unavailable scope and is disabled with the reason, including when the scope changes while open.
+- **Form reset in twelve configuration panels** (Model Settings, Conversation Annotation, Data Handling Policy,
+  Evaluation Dataset Editor, Gate Config, Instruction Editor, MCP Connection Manager, Output Schema Builder, Provider
+  Connection, Retrieval Settings, Tool Configuration, Trigger Builder) – the baseline is taken on the first update,
+  after React has set its props, not on connect. A reset fires the cancelable `tc-value-change`, so controlled
+  wrappers hear about it (`field` is `null` in Data Handling Policy, `change.type` is `"reset"` in MCP Connection Manager).
+- **MCP Connection Manager** – an app that answers inside its `tc-connect` listener no longer leaves the server
+  stuck on Connecting….
+- **Tool Configuration** – `__proto__`, `constructor` and `prototype` are refused as parameter names with a message,
+  and if one gets through it stays an ordinary key in the schema and the example call.
+- **Number Field** and **Slider Field** – clearing an optional field sets the value to `null` and submits nothing.
+  A cleared required field is invalid.
+
+
 ## Unreleased – a UI kit for Adobe XD
 
 - **`xd-kit/`** – an Adobe XD plugin that draws every component (Standard and Clean, light and dark) into an XD

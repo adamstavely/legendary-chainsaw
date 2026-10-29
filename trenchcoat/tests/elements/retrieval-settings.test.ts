@@ -12,6 +12,7 @@ import "../../src/elements/retrieval-settings";
 import { retrievalSettingsProblem, type RetrievalFilterField, type RetrievalSettingsChange, type RetrievalSettingsValue, type TcRetrievalSettings } from "../../src/elements/retrieval-settings";
 import { RetrievalSettings } from "../../src/elements/react/retrieval-settings";
 import { cleanup, fixture, settle } from "./helpers";
+import { expectReactFormReset } from "./form-reset";
 
 afterEach(cleanup);
 
@@ -361,6 +362,10 @@ describe("tc-retrieval-settings", () => {
     expect(el.querySelector(".ui-rset__card")).toBeNull();
     expect(el.querySelector(".tc-head")).toBeNull();
     expect(el.getAttribute("aria-label")).toBe("Index settings");
+  });
+
+  test("form reset through React: the baseline is the value React passed; reset goes through onChange", async () => {
+    await expectReactFormReset(RetrievalSettings, "tc-retrieval-settings", VALUE, { ...VALUE, topK: 10 });
   });
 
   test("React wrapper: an uncontrolled value survives parent re-renders; title and onChange", async () => {

@@ -9,7 +9,7 @@ const Raw = createComponent({
   react: React,
   events: {
     onTcValueChange: "tc-value-change" as EventName<
-      CustomEvent<{ value: number }>
+      CustomEvent<{ value: number | null }>
     >,
   },
 });
@@ -18,13 +18,13 @@ export type SliderFieldProps = Omit<
   "value" | "defaultValue" | "onChange" | "onTcValueChange"
 > & {
   /** Current value when controlled by the application. */
-  value?: number;
+  value?: number | null;
   /** Initial value when the element owns its state. */
-  defaultValue?: number;
+  defaultValue?: number | null;
   /** Called with proposed edits; controlled values remain application-owned. */
-  onChange?: (value: number) => void;
+  onChange?: (value: number | null) => void;
 };
-const DEFAULT: number = 0;
+const DEFAULT: number | null = 0;
 export function SliderField({
   value,
   defaultValue = DEFAULT,
@@ -35,7 +35,7 @@ export function SliderField({
   return h(Raw, {
     ...props,
     value: state.value,
-    onTcValueChange: (e: CustomEvent<{ value: number }>) =>
+    onTcValueChange: (e: CustomEvent<{ value: number | null }>) =>
       state.handler(e.detail.value, e),
   });
 }

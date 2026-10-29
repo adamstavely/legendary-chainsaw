@@ -13,6 +13,7 @@ import "../../src/elements/mcp-connection-manager";
 import type { McpConnectEvent, McpConnection, McpServer, McpTestEvent, McpValueChange, TcMcpConnectionManager } from "../../src/elements/mcp-connection-manager";
 import { McpConnectionManager } from "../../src/elements/react/mcp-connection-manager";
 import { cleanup, fixture, settle } from "./helpers";
+import { expectReactFormReset } from "./form-reset";
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -123,6 +124,27 @@ describe("tc-mcp-connection-manager", () => {
     action(el, "docs").click();
     await settle();
     expect(el.statusOf("docs")).toBe("failed");
+  });
+
+  test("an app that answers synchronously, inside tc-connect, isn't left connecting", async () => {
+    const el = await mount();
+    on(el, "tc-connect", (e: CustomEvent<McpConnectEvent>) => {
+      el.connections = { ...el.connections, [e.detail.server.id]: { status: "connected", tools: [{ name: "query" }], resources: [], prompts: [] } };
+    });
+    action(el, "db").click();
+    await settle();
+    expect(el.statusOf("db")).toBe("connected");
+    expect($(row(el, 1), ".ui-mcs__status").textContent).toBe("Connected");
+    expect(status(el)).toBe("Database connected – 1 tool, 0 resources and 0 prompts.");
+    // A retry answered with a failure at once is a failure, not Connecting…
+    el.connections = { ...el.connections, db: { status: "failed", message: "Down" } };
+    await settle();
+    on(el, "tc-connect", (e: CustomEvent<McpConnectEvent>) => {
+      el.connections = { ...el.connections, [e.detail.server.id]: { status: "failed", message: "Still down" } };
+    });
+    action(el, "db").click();
+    await settle();
+    expect(el.statusOf("db")).toBe("failed");
   });
 
   test("Disconnect fires tc-disconnect; leaving the page aborts what's pending", async () => {
@@ -332,6 +354,10 @@ describe("tc-mcp-connection-manager", () => {
     expect($(empty, ".ui-mcs__empty").textContent).toBe("No servers yet. Add one to give agents its tools.");
     expect(empty.querySelector(".ui-mcs__pill")).toBeNull();
     expect(empty.querySelector(".ui-mcs__foot-note")).toBeNull();
+  });
+
+  test("form reset through React: the baseline is the value React passed; reset goes through onChange", async () => {
+    await expectReactFormReset(McpConnectionManager, "tc-mcp-connection-manager", SERVERS, SERVERS.slice(1));
   });
 
   test("React wrapper: onChange gets the list and the change; onConnect, onDisconnect; uncontrolled survives a re-render", async () => {

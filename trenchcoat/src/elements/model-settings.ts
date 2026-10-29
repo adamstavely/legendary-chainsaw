@@ -198,12 +198,15 @@ export class TcModelSettings extends TcElement {
 
   override connectedCallback() {
     super.connectedCallback();
-    this.initialValue ??= this.value;
     if (!this.hasAttribute("role")) this.setAttribute("role", "group");
   }
 
   formResetCallback() {
-    this.value = this.initialValue ?? {};
+    const value = this.initialValue ?? {};
+    const changed = [...new Set([...Object.keys(this.value), ...Object.keys(value)])].filter((k) => !same(this.value[k], value[k]));
+    // Through tc-value-change like any edit, so a controlled wrapper hears of it and keeps the value until it agrees
+    if (this.emit<ModelSettingsChange>("tc-value-change", { value, changed }, { cancelable: true })) this.value = value;
+    else this.requestUpdate();
   }
   formDisabledCallback(disabled: boolean) {
     // Also called while `disabled` is reflected during an update, where a property change would be dropped – so after it
@@ -298,6 +301,8 @@ export class TcModelSettings extends TcElement {
 
   protected override willUpdate(changed: PropertyValues) {
     super.willUpdate(changed);
+    // The reset baseline is what the first render shows, so props a framework sets after connecting (React does) count
+    if (!this.hasUpdated) this.initialValue = this.value;
     this.toggleAttribute("data-disabled", this.isDisabled);
   }
 

@@ -40,7 +40,7 @@
     {
      "name": "value",
      "attribute": null,
-     "type": "number",
+     "type": "number | null",
      "default": "0",
      "description": "Current value; prevent tc-value-change to control it from the application.",
      "readonly": false
@@ -122,19 +122,19 @@
    "props": [
     {
      "name": "value",
-     "type": "number",
+     "type": "number | null",
      "optional": true,
      "description": "Current value when controlled by the application."
     },
     {
      "name": "defaultValue",
-     "type": "number",
+     "type": "number | null",
      "optional": true,
      "description": "Initial value when the element owns its state."
     },
     {
      "name": "onChange",
-     "type": "(value: number) => void",
+     "type": "(value: number | null) => void",
      "optional": true,
      "description": "Called with proposed edits; controlled values remain application-owned."
     }
@@ -402,7 +402,7 @@
   "windowed": false
  },
  "size": {
-  "min": 25423,
-  "gzip": 7152
+  "min": 25557,
+  "gzip": 7195
  }
 }

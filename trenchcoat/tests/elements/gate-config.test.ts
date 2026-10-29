@@ -11,6 +11,7 @@ import "../../src/elements/gate-config";
 import { describeGate, type GateConfigValue, type TcGateConfig } from "../../src/elements/gate-config";
 import { GateConfig } from "../../src/elements/react/gate-config";
 import { cleanup, fixture, settle } from "./helpers";
+import { expectReactFormReset } from "./form-reset";
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -224,6 +225,10 @@ describe("tc-gate-config", () => {
     expect(box(el, "approve").disabled).toBe(true);
     expect(el.querySelector("select")!.disabled).toBe(true);
     expect(el.querySelector("textarea")!.disabled).toBe(true);
+  });
+
+  test("form reset through React: the baseline is the value React passed; reset goes through onChange", async () => {
+    await expectReactFormReset(GateConfig, "tc-gate-config", VALUE, { ...VALUE, reason: "Other" });
   });
 
   test("React wrapper: uncontrolled value survives a parent re-render; controlled stays with the app; title and onChange", async () => {

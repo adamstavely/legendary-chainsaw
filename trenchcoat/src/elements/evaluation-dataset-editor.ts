@@ -300,13 +300,15 @@ export class TcEvaluationDatasetEditor extends TcElement {
 
   override connectedCallback() {
     super.connectedCallback();
-    this.initialValue ??= this.value;
     if (!this.hasAttribute("role")) this.setAttribute("role", "group");
     this.ownName ||= (this.hasAttribute("aria-label") && this.getAttribute("aria-label") !== this.heading) || this.hasAttribute("aria-labelledby");
   }
 
   formResetCallback() {
-    this.value = this.initialValue ?? EMPTY;
+    const value = this.initialValue ?? EMPTY;
+    // Through tc-value-change like any edit, so a controlled wrapper hears of it and keeps the value until it agrees
+    if (this.emit<EvaluationDatasetValueChange>("tc-value-change", { value }, { cancelable: true })) this.value = value;
+    else this.requestUpdate();
   }
   formDisabledCallback(disabled: boolean) {
     // Also called while `disabled` is reflected during an update, where a property change would be dropped – so after it
@@ -337,6 +339,8 @@ export class TcEvaluationDatasetEditor extends TcElement {
 
   protected override willUpdate(changed: PropertyValues) {
     super.willUpdate(changed);
+    // The reset baseline is what the first render shows, so props a framework sets after connecting (React does) count
+    if (!this.hasUpdated) this.initialValue = this.value;
     this.toggleAttribute("data-disabled", this.isDisabled);
     if (changed.has("open")) {
       this.editing = this.open !== null && this.open === this.editOnOpen;
