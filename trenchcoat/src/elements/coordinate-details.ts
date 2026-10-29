@@ -112,7 +112,7 @@ function tokenize(input: string): Token[] | null {
   return out;
 }
 
-type Part = { hemi?: string; negative: boolean; signed: boolean; value: number; marked: boolean; decimals: number };
+type Part = { hemi?: string; negative: boolean; signed: boolean; value: number; marked: boolean; decimals: number; minutes: boolean };
 
 /** One half of a pair: [hemisphere] [sign] degrees [°] [minutes ′ [seconds ″]] [hemisphere] */
 function readPart(tokens: Token[], at: number): { part: Part; next: number } | null {
@@ -131,6 +131,7 @@ function readPart(tokens: Token[], at: number): { part: Part; next: number } | n
   let value = Number(degText);
   let marked = false;
   let decimals = degText.includes(".") ? degText.length - degText.indexOf(".") - 1 : 0;
+  let minutes = false;
   if (tok()?.t === "deg") {
     i++;
     marked = true;
@@ -144,6 +145,7 @@ function readPart(tokens: Token[], at: number): { part: Part; next: number } | n
     value += min / 60;
     i += 2;
     marked = true;
+    minutes = true;
     decimals = 0;
     if (tok()?.t === "num" && tok(1)?.t === "sec") {
       if (minText.includes(".")) return null;
@@ -158,7 +160,7 @@ function readPart(tokens: Token[], at: number): { part: Part; next: number } | n
   if (hemi && signed) return null;
   if (hemi === "S" || hemi === "W") negative = true;
   if (hemi) marked = true;
-  return { part: { hemi, negative, signed, value: negative ? -value : value, marked, decimals }, next: i };
+  return { part: { hemi, negative, signed, value: negative ? -value : value, marked, decimals, minutes }, next: i };
 }
 
 /**
@@ -182,10 +184,14 @@ export function parseCoordinate(input: string): Coordinate | null {
   const b = readPart(tokens, i);
   if (!b || b.next !== tokens.length) return null;
   const [p, q] = [a.part, b.part];
+  const precise = p.decimals >= 3 && q.decimals >= 3;
   if (p.marked !== q.marked) {
     // One side has a hemisphere or a degree sign and the other none: fine only if both are decimals precise enough
-    if (!(p.decimals >= 3 && q.decimals >= 3 && sep)) return null;
-  } else if (!p.marked && !(p.decimals >= 3 && q.decimals >= 3 && sep)) return null;
+    if (!(precise && sep)) return null;
+  } else if (!p.marked && !(precise && sep)) return null;
+  // Degree signs alone don't make a place: "Highs of 20°, 25°" and "90° / 180°" are angles and temperatures. Marked
+  // halves also need a hemisphere letter, minutes, or decimals precise enough
+  else if (p.marked && !(p.hemi || q.hemi || p.minutes || q.minutes || precise)) return null;
   const axis = (h?: string) => (h === "N" || h === "S" ? "lat" : h === "E" || h === "W" ? "lng" : undefined);
   let [ax, bx] = [axis(p.hemi), axis(q.hemi)];
   if (ax && ax === bx) return null;
@@ -211,11 +217,14 @@ function startsHere(text: string, i: number) {
   return true;
 }
 
-/** Do they end at `end`? Not running on into a word or more digits */
+/**
+ * Do they end at `end`? Not running on into a word or more digits. A comma and another number may follow: the next
+ * pair in a list ("38.1,-77.1,39.1,-78.1"), a zoom ("@38.8977,-77.0365,15z") or an altitude ("lat,lng,alt")
+ */
 function endsHere(text: string, end: number) {
   const next = text[end];
   if (isWord(next)) return false;
-  if ((next === "." || next === ",") && isDigit(text[end + 1])) return false;
+  if (next === "." && isDigit(text[end + 1])) return false;
   return true;
 }
 
@@ -342,6 +351,13 @@ export class TcCoordinateDetails extends TcElement {
     closeOnFocusOut: true,
     onClose: () => this.closed(),
   });
+
+  override connectedCallback() {
+    super.connectedCallback();
+    // Back on the page with a card open: the lookup that leaving aborted is asked again
+    const m = this.openAt >= 0 ? this.coordinates[this.openAt] : undefined;
+    if (m) void this.lookup(m);
+  }
 
   override disconnectedCallback() {
     super.disconnectedCallback();
@@ -521,9 +537,9 @@ export class TcCoordinateDetails extends TcElement {
       const was = this.found[this.openAt];
       const now = this.coordinates[this.openAt];
       if (!was || !now || keyOf(was) !== keyOf(now)) {
-        this.openAt = -1;
-        this.mapShown = false;
+        // closed() resets the card and fires tc-open-change(null) – through the controller when it's showing
         if (this.pop.open) this.pop.close("anchor-gone");
+        this.closed();
       }
     }
   }

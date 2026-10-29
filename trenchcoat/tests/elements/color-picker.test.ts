@@ -259,6 +259,13 @@ describe("tc-color-picker", () => {
     expect(el.value).toBe("#ffffff");
   });
 
+  test("CMYK with alpha: changing only the opacity keeps the colour exactly", async () => {
+    const el = await fixture<TcColorPicker>(html`<tc-color-picker value="#3a6df080" alpha></tc-color-picker>`);
+    await pickFormat(el, "cmyk");
+    await type(el, "a", "60");
+    expect(el.value).toBe("#3a6df099");
+  });
+
   test("alpha: an opacity slider and field, eight-digit values, a checkerboard behind", async () => {
     const el = await make("standard", { alpha: true });
     const seen = changes(el);

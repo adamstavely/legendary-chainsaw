@@ -9,6 +9,19 @@
   (`tc-flags-change`); Copy and Download hand over the JSON – `source` as written, so integers too big to hold exactly
   (which are marked) keep their digits. `source` text that isn't valid JSON shows where it breaks. With `modal`, it's
   a dialog opened by `open`.
+## Unreleased – fixes from a review of the newest components
+
+- **Text to Speech** – when another reader (or the page) cancels the browser's shared speech queue, it pauses instead
+  of showing "Reading" with nothing spoken; `lang` reflects to the attribute, as HTMLElement's does.
+- **Access Request** – sending, cancelling and Request again keep focus (on what replaced the button); when the page
+  controls `status`, the sent time, announcements and validation reset still happen; `level` and `duration` change
+  through cancelable `tc-level-change` / `tc-duration-change`, and the React wrapper controls them
+  (`onAccessDurationChange` – `onDurationChange` is a React media prop).
+- **Score Survey** – a comment typed for a score whose follow-up question has gone isn't sent.
+- **Colour Picker** – in CMYK with alpha, changing only the opacity keeps the colour exactly.
+- **Speed Reader** – a listener that keeps the place pauses the reading instead of leaving it stuck on Pause.
+- **Score Summary** – NPS and CSAT are worked out from the counts and rounded once: a balanced split is 0, not −1.
+- **Geo Location** – a copy the browser refused no longer says Copied.
 
 ## Unreleased – a UI kit for Adobe XD
 

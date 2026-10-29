@@ -50,7 +50,7 @@
      "attribute": "level",
      "type": "string | undefined",
      "default": "undefined",
-     "description": "The picked level's id; by default the first level",
+     "description": "The picked level's id; by default the first level. Changed by the user unless tc-level-change is prevented",
      "readonly": false
     },
     {
@@ -66,7 +66,7 @@
      "attribute": "duration",
      "type": "AccessDurationId | undefined",
      "default": "undefined",
-     "description": "The picked duration: a duration's id, \"custom\" or \"permanent\"; by default the second duration (30 days)",
+     "description": "The picked duration: a duration's id, \"custom\" or \"permanent\"; by default the second duration (30 days). Changed by the user unless tc-duration-change is prevented",
      "readonly": false
     },
     {
@@ -185,6 +185,18 @@
      "name": "tc-status-change",
      "detail": "",
      "description": "The status is about to change: pending after a request, draft after Cancel or Request again ({ status }: AccessStatusChange); cancelable – prevented, `status` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-level-change",
+     "detail": "",
+     "description": "A level was picked ({ level }: AccessLevelChange); cancelable – prevented, `level` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-duration-change",
+     "detail": "",
+     "description": "A duration was picked ({ duration }: AccessDurationChange); cancelable – prevented, `duration` stays as it was",
      "cancelable": true
     },
     {
@@ -343,6 +355,42 @@
      "description": "The status changed: pending after a request, draft after Cancel or Request again"
     },
     {
+     "name": "level",
+     "type": "string",
+     "optional": true,
+     "description": "The picked level – controlled when given"
+    },
+    {
+     "name": "defaultLevel",
+     "type": "string",
+     "optional": true,
+     "description": "The level on mount when `level` isn't controlled"
+    },
+    {
+     "name": "onLevelChange",
+     "type": "(level: string) => void",
+     "optional": true,
+     "description": "A level was picked"
+    },
+    {
+     "name": "duration",
+     "type": "AccessDurationId",
+     "optional": true,
+     "description": "The picked duration – controlled when given"
+    },
+    {
+     "name": "defaultDuration",
+     "type": "AccessDurationId",
+     "optional": true,
+     "description": "The duration on mount when `duration` isn't controlled"
+    },
+    {
+     "name": "onAccessDurationChange",
+     "type": "(duration: AccessDurationId) => void",
+     "optional": true,
+     "description": "A duration was picked"
+    },
+    {
      "name": "onRequest",
      "type": "(request: AccessRequestDetail) => boolean | void",
      "optional": true,
@@ -358,12 +406,16 @@
    "hides": [
     "heading",
     "status",
+    "level",
+    "duration",
     "children"
    ],
    "events": {
     "tc-request": "onRequest",
     "tc-status-change": null,
-    "tc-cancel": "onCancelRequest"
+    "tc-cancel": "onCancelRequest",
+    "tc-level-change": null,
+    "tc-duration-change": null
    }
   }
  ],
@@ -451,11 +503,27 @@
      "cancelable": true
     },
     {
+     "name": "tc-level-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-duration-change",
+     "cancelable": true
+    },
+    {
      "name": "tc-cancel",
      "cancelable": true
     }
    ],
    "controlled": [
+    {
+     "property": "level",
+     "event": "tc-level-change"
+    },
+    {
+     "property": "duration",
+     "event": "tc-duration-change"
+    },
     {
      "property": "status",
      "event": "tc-status-change"
@@ -540,6 +608,23 @@
     "why": "Components adapt to the width they're given, not the window's.",
     "via": [
      "itself"
+    ]
+   },
+   {
+    "id": "inert",
+    "name": "inert",
+    "bcd": "api.HTMLElement.inert",
+    "versions": {
+     "chrome": "102",
+     "edge": "102",
+     "firefox": "112",
+     "safari": "15.5",
+     "safari_ios": "15.5"
+    },
+    "progressive": false,
+    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
+    "via": [
+     "internal/controllers"
     ]
    },
    {
@@ -657,7 +742,8 @@
   "animations": 0,
   "observers": [
    "MutationObserver (internal/base › TcElement)",
-   "MutationObserver (internal/controllers › AriaForwardController)"
+   "MutationObserver (internal/controllers › AriaForwardController)",
+   "MutationObserver (internal/controllers › FocusRescueController)"
   ],
   "clock": [
    "Date.now()"
@@ -674,7 +760,7 @@
   "windowed": false
  },
  "size": {
-  "min": 38475,
-  "gzip": 11150
+  "min": 39895,
+  "gzip": 11680
  }
 }
