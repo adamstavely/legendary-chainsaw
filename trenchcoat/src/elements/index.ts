@@ -141,6 +141,7 @@ export * from "./lineage-graph";
 export * from "./live-view";
 export * from "./logo-cluster";
 export * from "./logo-marquee";
+export * from "./loupe";
 export * from "./mcp-connection-manager";
 export * from "./memory-panel";
 export * from "./mention-picker";

@@ -22,7 +22,7 @@ const check = process.argv.includes("--check");
 /** Elements a model shouldn't place: they're app-controlled (modals, inputs that own the page's state, global
  *  shortcuts), wrap other content, or decorate the page */
 const DENY = new Set([
-  "tc-look-provider", "tc-dialog", "tc-terms-dialog", "tc-stories", "tc-toaster", "tc-tooltip", "tc-chat-composer", "tc-multimodal-input",
+  "tc-look-provider", "tc-dialog", "tc-terms-dialog", "tc-stories", "tc-toaster", "tc-tooltip", "tc-loupe", "tc-chat-composer", "tc-multimodal-input",
   "tc-voice-mode", "tc-voice-orb", "tc-dropzone", "tc-command-menu", "tc-selection-translate", "tc-ai-search", "tc-mention-picker",
   "tc-generated-ui", "tc-grid-background", "tc-gradient-floor", "tc-gradient-text", "tc-glow-keyboard", "tc-shimmer-loader", "tc-skeleton",
   "tc-shimmer-text", "tc-text-reveal", "tc-blur-crossfade", "tc-tilt-card", "tc-glass-folder", "tc-side-folder", "tc-layer-stack",

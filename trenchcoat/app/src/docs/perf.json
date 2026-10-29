@@ -10836,7 +10836,7 @@
   },
   "generated-ui": {
    "measuredAt": "2026-10-29",
-   "hash": "6676633437119be9",
+   "hash": "a61313524d9c0eae",
    "bundle": {
     "own": {
      "min": 34126,
@@ -12234,14 +12234,14 @@
       "min": 3437
      },
      {
-      "name": "src/generative/schemas/tc-app-directory.json",
-      "kind": "other",
-      "min": 3419
-     },
-     {
       "name": "src/generative/schemas/tc-ai-summary.json",
       "kind": "other",
       "min": 3366
+     },
+     {
+      "name": "src/generative/schemas/tc-app-directory.json",
+      "kind": "other",
+      "min": 3363
      },
      {
       "name": "src/generative/schemas/tc-prompt-starters.json",
@@ -13160,19 +13160,19 @@
      }
     ],
     "withoutLit": {
-     "min": 7465733,
-     "gzip": 1836891
+     "min": 7465677,
+     "gzip": 1836881
     },
     "withLit": {
-     "min": 7432280,
-     "gzip": 1824606
+     "min": 7432224,
+     "gzip": 1824599
     }
    },
    "render": {
     "tag": "tc-generated-ui",
     "source": "demo",
     "runs": 7,
-    "cold": 2.5,
+    "cold": 2.1,
     "first": 0.5,
     "update": 0.1,
     "updateKind": "re-render with the same data",
@@ -16595,6 +16595,114 @@
     "updateKind": "re-render with the same data",
     "nodes": 0,
     "scale": null,
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
+  "loupe": {
+   "measuredAt": "2026-10-29",
+   "hash": "adcdf16e8e2e9ab8",
+   "bundle": {
+    "own": {
+     "min": 39618,
+     "gzip": 11430
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 18958
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2968
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1868
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 1435
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 444
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 436
+     },
+     {
+      "name": "internal/safe-url",
+      "kind": "internal",
+      "min": 343
+     },
+     {
+      "name": "internal/util",
+      "kind": "internal",
+      "min": 113
+     }
+    ],
+    "withoutLit": {
+     "min": 48728,
+     "gzip": 14269
+    },
+    "withLit": {
+     "min": 68758,
+     "gzip": 20742
+    }
+   },
+   "render": {
+    "tag": "tc-loupe",
+    "source": "demo",
+    "runs": 7,
+    "cold": 2,
+    "first": 0.5,
+    "update": 0.2,
+    "updateKind": "one item of breakpoints replaced",
+    "nodes": 26,
+    "scale": {
+     "property": "breakpoints",
+     "demoItems": 5,
+     "points": [
+      {
+       "items": 100,
+       "first": 0.4,
+       "update": 0,
+       "nodes": 26
+      },
+      {
+       "items": 1000,
+       "first": 0.3,
+       "update": 0,
+       "nodes": 26
+      }
+     ]
+    },
     "idle": {
      "visible": {
       "frames": 0,
