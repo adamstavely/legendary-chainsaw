@@ -8,7 +8,7 @@ import axe from "axe-core";
 import * as React from "react";
 import { act } from "react";
 import { createRoot } from "react-dom/client";
-import { afterEach, describe, expect, test } from "vitest";
+import { afterEach, describe, expect, test, vi } from "vitest";
 import "../../src/elements/person-hovercard";
 import { personZoneDifference, personZoneOffset, type HovercardLookupDetail, type HovercardPerson, type TcPersonHovercard } from "../../src/elements/person-hovercard";
 import { PersonHovercard } from "../../src/elements/react/person-hovercard";
@@ -50,6 +50,13 @@ describe("tc-person-hovercard", () => {
     };
     expect(personZoneDifference("Asia/Kolkata", NOW)).toBe(words(330 - mine));
     expect(personZoneDifference("UTC", NOW)).toBe(words(-mine));
+    // Half an hour apart is "½ h", not "0½ h"
+    const spy = vi.spyOn(Date.prototype, "getTimezoneOffset").mockReturnValue(-300);
+    try {
+      expect(personZoneDifference("Asia/Kolkata", NOW)).toBe("½ h ahead");
+    } finally {
+      spy.mockRestore();
+    }
   });
 
   test("a link inside is the trigger; focus opens the card beside it, named by the person, with all of them", async () => {
@@ -119,6 +126,39 @@ describe("tc-person-hovercard", () => {
     await settle();
     expect(click.defaultPrevented).toBe(true);
     expect(card()).not.toBeNull();
+    // A second tap follows the link
+    link.dispatchEvent(new PointerEvent("pointerdown", { pointerType: "touch", bubbles: true }));
+    const again = new MouseEvent("click", { bubbles: true, cancelable: true, detail: 1 });
+    link.dispatchEvent(again);
+    expect(again.defaultPrevented).toBe(false);
+  });
+
+  test("touch, as a phone does it: the tap focuses the link (opening the card) before the click – which still doesn't follow it", async () => {
+    const host = await fixture<TcPersonHovercard>(html`<tc-person-hovercard .person=${MIRA}><a href="#m">Mira</a></tc-person-hovercard>`);
+    const link = host.querySelector("a")!;
+    link.dispatchEvent(new PointerEvent("pointerdown", { pointerType: "touch", bubbles: true }));
+    link.focus();
+    await settle();
+    expect(card()).not.toBeNull();
+    const click = new MouseEvent("click", { bubbles: true, cancelable: true, detail: 1 });
+    link.dispatchEvent(click);
+    expect(click.defaultPrevented).toBe(true);
+  });
+
+  test("open on a new person-id, or after the cache is cleared: it asks, rather than loading for good", async () => {
+    const calls: string[] = [];
+    const resolve = (id: string) => {
+      calls.push(id);
+      return Promise.resolve(id === "mira" ? MIRA : { id, name: "Yusuf Kaya" });
+    };
+    const host = await fixture<TcPersonHovercard>(html`<tc-person-hovercard person-id="mira" .resolve=${resolve}><a href="#m">Mira</a></tc-person-hovercard>`);
+    host.openCard();
+    await expect.poll(() => text(card()?.querySelector(".ui-phc__name"))).toBe("Mira Lindqvist (she/her)");
+    host.personId = "yusuf";
+    await expect.poll(() => text(card()?.querySelector(".ui-phc__name"))).toBe("Yusuf Kaya");
+    host.clearCache();
+    await expect.poll(() => calls).toEqual(["mira", "yusuf", "yusuf"]);
+    await expect.poll(() => card()?.getAttribute("aria-busy") ?? null).not.toBe("true");
   });
 
   test("Message fires tc-action, View profile tc-open; actions can be limited", async () => {

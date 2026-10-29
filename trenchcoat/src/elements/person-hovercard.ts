@@ -96,7 +96,7 @@ export function personZoneDifference(timeZone: string, ms: number): string | nul
   const diff = theirs - mine;
   if (!diff) return "same time as you";
   const h = Math.abs(diff) / 60;
-  const words = Number.isInteger(h) ? `${h}` : h % 1 === 0.5 ? `${Math.floor(h)}½` : h.toFixed(2).replace(/0+$/, "");
+  const words = Number.isInteger(h) ? `${h}` : h % 1 === 0.5 ? `${Math.floor(h) || ""}½` : h.toFixed(2).replace(/0+$/, "");
   return `${words} h ${diff > 0 ? "ahead" : "behind"}`;
 }
 
@@ -145,6 +145,8 @@ export class TcPersonHovercard extends TcElement {
   private readonly aborts = new Set<AbortController>();
   private bound: HTMLElement | null = null;
   private touched = false;
+  /** Whether the card was open when the touch went down – focus on that tap can open it before the click */
+  private openAtDown = false;
   private returning = false;
   private mutations: MutationObserver | null = null;
 
@@ -232,6 +234,9 @@ export class TcPersonHovercard extends TcElement {
       t.setAttribute("aria-haspopup", "dialog");
       t.setAttribute("aria-expanded", this.pop.open ? "true" : "false");
     }
+    // Open on someone not asked about yet (`person-id` changed, the cache cleared, or a lookup cut short when the element
+    // left the page): ask now, rather than show the loading card for good
+    if (this.pop.open && !this.person && this.personId && !this.cache.has(this.personId)) void this.lookup(this.personId);
   }
 
   private bind(t: HTMLElement) {
@@ -258,7 +263,10 @@ export class TcPersonHovercard extends TcElement {
   }
   private onEnter = (e: PointerEvent) => this.pop.hoverEnter(e, () => this.show());
   private onLeave = (e: PointerEvent) => this.pop.hoverLeave(e);
-  private onDown = (e: PointerEvent) => (this.touched = e.pointerType === "touch" || e.pointerType === "pen");
+  private onDown = (e: PointerEvent) => {
+    this.touched = e.pointerType === "touch" || e.pointerType === "pen";
+    this.openAtDown = this.pop.open;
+  };
   private onFocus = () => {
     if (this.returning) {
       this.returning = false;
@@ -276,8 +284,8 @@ export class TcPersonHovercard extends TcElement {
       else this.show({ pin: true });
       return;
     }
-    // A link: the first tap opens the card instead of following it
-    if (touch && !this.pop.open) {
+    // A link: the first tap opens the card instead of following it – even when the tap's focus has opened it already
+    if (touch && !this.openAtDown) {
       e.preventDefault();
       this.show({ pin: true });
     }

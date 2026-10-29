@@ -136,6 +136,32 @@ describe("tc-team-roster", () => {
     expect(document.activeElement).toBe(member(el, "d").querySelector(".ui-ros__name"));
   });
 
+  test("grid: ↑ ↓ keep to each group's own rows, then cross to the next group at the same column", async () => {
+    const el = await make();
+    el.style.width = "960px";
+    el.view = "grid";
+    await settle();
+    expect(getComputedStyle(el.querySelector(".ui-ros__members")!).gridTemplateColumns.split(" ").length).toBeGreaterThanOrEqual(3);
+    const name = (id: string) => member(el, id).querySelector<HTMLElement>(".ui-ros__name")!;
+    name("a").focus();
+    key(name("a"), "ArrowDown");
+    await settle();
+    expect(document.activeElement).toBe(name("b"));
+    name("c").focus();
+    key(name("c"), "ArrowDown");
+    await settle();
+    expect(document.activeElement).toBe(name("d"));
+    key(name("d"), "ArrowUp");
+    await settle();
+    expect(document.activeElement).toBe(name("c"));
+  });
+
+  test("a viewer-timezone the browser doesn't know falls back to the browser's own", async () => {
+    const el = await fixture<TcTeamRoster>(html`<tc-team-roster heading="Team" viewer-timezone="Mars/Olympus" locale="en-US" .now=${NOW} .members=${MEMBERS}></tc-team-roster>`);
+    expect(names(el)).toHaveLength(4);
+    expect(el.querySelector(".ui-ros__overlap")).not.toBeNull();
+  });
+
   test("without members, and without a time zone", async () => {
     const empty = await fixture<TcTeamRoster>(html`<tc-team-roster .now=${NOW}></tc-team-roster>`);
     expect(text(empty.querySelector(".ui-ros__empty"))).toBe("No one on this team yet.");

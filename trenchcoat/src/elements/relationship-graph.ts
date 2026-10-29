@@ -1,6 +1,7 @@
 import { html, nothing, svg, type PropertyValues } from "lit";
 import { property, state } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
+import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
 import { initials } from "./internal/util";
@@ -148,6 +149,8 @@ export class TcRelationshipGraph extends TcElement {
   private neighbours(id: string) {
     const out = new Set<string>();
     for (const e of this.edges) {
+      // A relationship with itself isn't a connection
+      if (e.from === e.to) continue;
       if (e.from === id) out.add(e.to);
       else if (e.to === id) out.add(e.from);
     }
@@ -202,7 +205,7 @@ export class TcRelationshipGraph extends TcElement {
   /** The relationships drawn: between nodes that are both placed */
   private visibleEdges(placed: Placed[]) {
     const ids = new Set(placed.map((p) => p.node.id));
-    return this.edges.filter((e) => ids.has(e.from) && ids.has(e.to));
+    return this.edges.filter((e) => e.from !== e.to && ids.has(e.from) && ids.has(e.to));
   }
 
   /* ---------- Actions ---------- */
@@ -295,7 +298,7 @@ export class TcRelationshipGraph extends TcElement {
           </g>`;
         })}
       </g>
-      ${placed.map((p, i) => {
+      ${repeat(placed, (p) => p.node.id, (p, i) => {
         const size = p.ring === 0 ? 52 : p.ring === 1 ? 38 : 30;
         const showLabel = p.ring < 2 || p.node.id === lit || p.node.id === activeId || p.node.id === this.hovered;
         const below = p.ring === 0 ? 1 : Math.sin(p.angle) >= -0.2;

@@ -94,6 +94,22 @@ describe("tc-relationship-graph", () => {
     expect(el.ego).toBe("uni");
   });
 
+  test("each node keeps its own drawing as the layout changes, so it glides to its new place", async () => {
+    const el = await make();
+    const uni = el.querySelector('.ui-rgr__node[data-id="uni"]')!;
+    uni.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    await settle();
+    expect(el.querySelector('.ui-rgr__node[data-id="uni"]')).toBe(uni);
+    expect(uni.getAttribute("data-ring")).toBe("0");
+  });
+
+  test("a relationship with itself: not a connection, not a line, and the node isn't drawn twice", async () => {
+    const el = await fixture<TcRelationshipGraph>(html`<tc-relationship-graph heading="Consortium" style="width: 760px" .nodes=${NODES} .edges=${[...EDGES, { from: "ines", to: "ines", label: "self" }]}></tc-relationship-graph>`);
+    expect(el.querySelectorAll('.ui-rgr__node[data-id="ines"]')).toHaveLength(1);
+    expect(order(el).filter((n) => n === "Ines Okafor")).toHaveLength(1);
+    expect(el.querySelectorAll(".ui-rgr__edge")).toHaveLength(2);
+  });
+
   test("the node list: arrows move in ring order, Enter centres, Space selects", async () => {
     const el = await make();
     const list = el.querySelector<HTMLElement>('[role="listbox"]')!;

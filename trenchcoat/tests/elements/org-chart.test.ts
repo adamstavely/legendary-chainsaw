@@ -154,6 +154,37 @@ describe("tc-org-chart", () => {
     expect(el.selected).toBe("r1");
   });
 
+  test("zoom in: the drawing's size settles – measuring it doesn't feed back into the zoom", async () => {
+    const el = await make();
+    el.layout = "tree";
+    el.style.width = "900px";
+    await settle();
+    el.querySelectorAll<HTMLButtonElement>(".ui-org__tool")[1].click();
+    const frames = () => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+    await frames();
+    await settle();
+    const sizer = el.querySelector<HTMLElement>(".ui-org__sizer")!;
+    const first = sizer.style.width;
+    for (let i = 0; i < 4; i++) await frames();
+    expect(sizer.style.width).toBe(first);
+    expect(parseFloat(first)).toBeCloseTo(el.querySelector<HTMLElement>(".ui-org__tree")!.offsetWidth * 1.25, 0);
+  });
+
+  test("a strip chip opens every closed branch above them", async () => {
+    const el = await make();
+    el.expanded = [];
+    el.selected = "r1";
+    await settle();
+    expect(ids(el)).toEqual(["dir"]);
+    const chips = [...el.querySelectorAll<HTMLButtonElement>(".ui-org__strip .ui-org__chip")];
+    expect(chips.map((c) => text(c.querySelector(":scope > span:last-child")))).toEqual(["Tomás Reyes", "Elif Demir", "Open role"]);
+    chips[1].click();
+    await settle();
+    expect(el.selected).toBe("r2");
+    expect(document.activeElement).toBe(item(el, "r2"));
+    expect([...el.expanded!].sort()).toEqual(["dir", "r1", "res"]);
+  });
+
   test("zoom: − and + step and stop at the ends; Fit; list layout is an outline without zoom", async () => {
     const el = await make();
     const [out, inn, fit] = [...el.querySelectorAll<HTMLButtonElement>(".ui-org__tool")];
@@ -182,8 +213,18 @@ describe("tc-org-chart", () => {
       { id: "c", name: "Cy", manager: "c" },
       { id: "d", name: "Di", manager: "e" },
       { id: "e", name: "Ed", manager: "d" },
+      { id: "a", name: "Ana again" },
     ]);
-    expect(ids(el)).toEqual(["a", "b", "c"]);
+    // The loop is headed by whoever of it comes first; an id listed twice shows once
+    expect(ids(el)).toEqual(["a", "b", "c", "d", "e"]);
+    expect(item(el, "c").hasAttribute("aria-expanded")).toBe(false);
+    // Searching into the loop, then folding it, finishes – and counts only who's there
+    const input = await search(el, "Ed");
+    expect(text(el.querySelector(".ui-org__count"))).toBe("1 match");
+    item(el, "d").querySelector<HTMLButtonElement>(".ui-org__fold")!.click();
+    await settle();
+    expect(input.value).toBe("");
+    expect(ids(el)).toEqual(["a", "b", "c", "d"]);
     const empty = await make("standard", []);
     expect(text(empty.querySelector(".ui-org__empty"))).toBe("No one to show yet.");
   });

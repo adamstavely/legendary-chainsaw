@@ -185,7 +185,9 @@ export class TcTeamRoster extends TcElement {
     return this.now ?? this.clock;
   }
   private get zone() {
-    return this.viewerTimezone ?? browserZone();
+    // A zone the browser doesn't know: the browser's own, rather than a broken chart
+    const z = this.viewerTimezone;
+    return z && zoneOffset(z, this.time) !== null ? z : browserZone();
   }
   private get viewerOffset() {
     return zoneOffset(this.zone, this.time) ?? 0;
@@ -332,6 +334,27 @@ export class TcTeamRoster extends TcElement {
     this.active = { r, c };
     void this.updateComplete.then(() => this.querySelector<HTMLElement>(`[data-at="${r}:${c}"]`)?.focus());
   }
+  /** ↑ / ↓: a row up or down within the member's own group's grid, then on into the next group at the same column */
+  private vertical(r: number, dir: 1 | -1, cols: number) {
+    const spans: [number, number][] = [];
+    let at = 0;
+    for (const g of this.groups) {
+      spans.push([at, at + g.members.length]);
+      at += g.members.length;
+    }
+    const gi = spans.findIndex(([s, e]) => r >= s && r < e);
+    if (gi < 0) return -1;
+    const [s, e] = spans[gi];
+    const next = r + dir * cols;
+    if (next >= s && next < e) return next;
+    // Down from a full row onto a shorter last one: its last card
+    if (dir > 0 && Math.floor((e - 1 - s) / cols) > Math.floor((r - s) / cols)) return e - 1;
+    const to = spans[gi + dir];
+    if (!to) return -1;
+    const [ts, te] = to;
+    const row = dir > 0 ? 0 : Math.floor((te - 1 - ts) / cols);
+    return Math.min(ts + row * cols + ((r - s) % cols), te - 1);
+  }
   /** How many cards sit in a row of the grid (read when a key is pressed) */
   private gridColumns() {
     const grid = this.querySelector<HTMLElement>(".ui-ros__members[data-view='grid']");
@@ -347,8 +370,8 @@ export class TcTeamRoster extends TcElement {
     const step = this.view === "grid" ? this.gridColumns() : 1;
     const n = this.shown.length;
     const moves: Record<string, [number, number]> = {
-      ArrowUp: [r - step, c],
-      ArrowDown: [r + step, c],
+      ArrowUp: [this.vertical(r, -1, step), c],
+      ArrowDown: [this.vertical(r, 1, step), c],
       ArrowLeft: i > 0 ? [r, cols[i - 1]] : [r - 1, 2],
       ArrowRight: i < cols.length - 1 ? [r, cols[i + 1]] : [r + 1, 0],
       Home: [0, 0],

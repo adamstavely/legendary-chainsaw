@@ -111,42 +111,62 @@ export class TcOrgChart extends TcElement {
   private byId = new Map<string, OrgChartPerson>();
   private kids = new Map<string, OrgChartPerson[]>();
   private roots: OrgChartPerson[] = [];
+  /** Who each person is drawn under: their manager, when that's someone else in the list and not a loop back to them */
+  private bossOf = new Map<string, string>();
   private hits: string[] = [];
 
   protected override willUpdate(changed: PropertyValues) {
     super.willUpdate(changed);
     if (changed.has("people")) {
-      this.byId = new Map(this.people.map((p) => [p.id, p]));
+      // An id listed twice: the first one counts
+      this.byId = new Map();
+      for (const p of this.people) if (!this.byId.has(p.id)) this.byId.set(p.id, p);
+      const everyone = [...this.byId.values()];
+      // A manager that isn't in the list (or a loop back to themselves) makes them a root
+      this.bossOf = new Map();
+      for (const p of everyone) if (p.manager && p.manager !== p.id && this.byId.has(p.manager)) this.bossOf.set(p.id, p.manager);
+      // A loop of managers (A under B, B under A) never reaches the top: whoever of them comes first in the list heads it
+      const order = new Map(everyone.map((p, i) => [p.id, i]));
+      for (const p of everyone) {
+        const path: string[] = [];
+        for (let m: string | undefined = p.id; m; m = this.bossOf.get(m)) {
+          const at = path.indexOf(m);
+          if (at >= 0) {
+            this.bossOf.delete(path.slice(at).reduce((a, b) => (order.get(a)! <= order.get(b)! ? a : b)));
+            break;
+          }
+          path.push(m);
+        }
+      }
       this.kids = new Map();
       this.roots = [];
-      for (const p of this.people) {
-        // A manager that isn't in the list (or a loop back to themselves) makes them a root
-        if (p.manager && p.manager !== p.id && this.byId.has(p.manager)) {
-          const list = this.kids.get(p.manager) ?? [];
+      for (const p of everyone) {
+        const boss = this.bossOf.get(p.id);
+        if (boss) {
+          const list = this.kids.get(boss) ?? [];
           list.push(p);
-          this.kids.set(p.manager, list);
+          this.kids.set(boss, list);
         } else this.roots.push(p);
       }
     }
     if (changed.has("people") || changed.has("filter")) {
-      const q = this.filter.trim().toLowerCase();
-      this.hits = q ? this.people.filter((p) => [p.name, p.title, p.team].some((x) => x?.toLowerCase().includes(q))).map((p) => p.id) : [];
+      this.hits = this.matching(this.filter).map((p) => p.id);
       this.matchAt = -1;
     }
   }
 
   protected override updated(changed: PropertyValues) {
     super.updated(changed);
-    const canvas = this.querySelector<HTMLElement>(".ui-org__canvas");
-    if (canvas && !this.resize) {
+    const tree = this.querySelector<HTMLElement>(".ui-org__tree");
+    if (tree && !this.resize) {
       this.resize = new ResizeObserver(() => {
-        // offsetWidth/Height aren't scaled by the zoom's transform: the drawing's own size
-        const w = canvas.offsetWidth;
-        const h = canvas.offsetHeight;
+        // The tree's own size, unscaled by the zoom's transform – not the canvas's, which stretches to the zoomed sizer
+        const w = tree.offsetWidth;
+        const h = tree.offsetHeight;
         if (w !== this.natural.w || h !== this.natural.h) this.natural = { w, h };
       });
-      this.resize.observe(canvas);
-    } else if (!canvas && this.resize) {
+      this.resize.observe(tree);
+    } else if (!tree && this.resize) {
       this.resize.disconnect();
       this.resize = null;
     }
@@ -156,7 +176,7 @@ export class TcOrgChart extends TcElement {
   private get openSet(): Set<string> {
     const base = new Set(this.expanded ?? this.roots.map((r) => r.id));
     // Searching opens the way to every match
-    for (const id of this.hits) for (let m = this.byId.get(id)?.manager; m && this.byId.has(m) && !base.has(m); m = this.byId.get(m)?.manager) base.add(m);
+    for (const id of this.hits) for (let m = this.bossOf.get(id); m && !base.has(m); m = this.bossOf.get(m)) base.add(m);
     return base;
   }
 
@@ -203,7 +223,7 @@ export class TcOrgChart extends TcElement {
     else {
       base.delete(id);
       // Folding a branch the search opened: leave the search's way to it closed too
-      for (const x of this.hits) for (let m = this.byId.get(x)?.manager; m && m !== id; m = this.byId.get(m)?.manager) if (this.isUnder(m, id)) base.delete(m);
+      for (const x of this.hits) for (let m = this.bossOf.get(x); m && m !== id; m = this.bossOf.get(m)) if (this.isUnder(m, id)) base.delete(m);
     }
     const expanded = [...base];
     if (!this.emit<OrgChartExpandedChange>("tc-expanded-change", { expanded, id, open }, { cancelable: true })) return;
@@ -216,11 +236,27 @@ export class TcOrgChart extends TcElement {
   /** Whether `id` is somewhere under `boss` */
   private isUnder(id: string, boss: string) {
     const seen = new Set<string>();
-    for (let m = this.byId.get(id)?.manager; m && !seen.has(m); m = this.byId.get(m)?.manager) {
+    for (let m = this.bossOf.get(id); m && !seen.has(m); m = this.bossOf.get(m)) {
       if (m === boss) return true;
       seen.add(m);
     }
     return false;
+  }
+
+  /** Opens every closed branch above a person, in one change, so they show */
+  private openTo(id: string) {
+    const now = this.openSet;
+    const need: string[] = [];
+    for (let m = this.bossOf.get(id); m; m = this.bossOf.get(m)) if (!now.has(m)) need.push(m);
+    if (!need.length) return;
+    const expanded = [...new Set([...(this.expanded ?? this.roots.map((r) => r.id)), ...need])];
+    if (!this.emit<OrgChartExpandedChange>("tc-expanded-change", { expanded, id: need[0], open: true }, { cancelable: true })) return;
+    this.expanded = expanded;
+  }
+
+  private matching(filter: string) {
+    const q = filter.trim().toLowerCase();
+    return q ? [...this.byId.values()].filter((p) => [p.name, p.title, p.team].some((x) => x?.toLowerCase().includes(q))) : [];
   }
 
   private select(id: string | null, focus = false) {
@@ -238,9 +274,8 @@ export class TcOrgChart extends TcElement {
       return;
     }
     this.filter = filter;
-    const q = filter.trim().toLowerCase();
-    const n = q ? this.people.filter((p) => [p.name, p.title, p.team].some((x) => x?.toLowerCase().includes(q))).length : 0;
-    this.announce = q ? (n ? `${n} ${n === 1 ? "match" : "matches"}` : "No matches") : "";
+    const n = this.matching(filter).length;
+    this.announce = filter.trim() ? (n ? `${n} ${n === 1 ? "match" : "matches"}` : "No matches") : "";
   }
 
   private nextMatch(back = false) {
@@ -270,7 +305,6 @@ export class TcOrgChart extends TcElement {
     const id = item.dataset.id!;
     const list = this.visible;
     const i = list.findIndex((v) => v.p.id === id);
-    const p = this.byId.get(id)!;
     const open = this.openSet.has(id);
     const has = this.reports(id).length > 0;
     const go = (to: string | undefined) => {
@@ -299,11 +333,12 @@ export class TcOrgChart extends TcElement {
       case "ArrowLeft":
         e.preventDefault();
         if (has && open) this.setOpen(id, false);
-        else if (p.manager && this.byId.has(p.manager)) go(p.manager);
+        else go(this.bossOf.get(id));
         break;
       case "*": {
         e.preventDefault();
-        const siblings = p.manager && this.byId.has(p.manager) ? this.reports(p.manager) : this.roots;
+        const boss = this.bossOf.get(id);
+        const siblings = boss ? this.reports(boss) : this.roots;
         for (const s of siblings) this.setOpen(s.id, true);
         break;
       }
@@ -439,11 +474,13 @@ export class TcOrgChart extends TcElement {
   private renderStrip() {
     const p = this.selected ? this.byId.get(this.selected) : undefined;
     if (!p) return nothing;
-    const boss = p.manager ? this.byId.get(p.manager) : undefined;
+    const b = this.bossOf.get(p.id);
+    const boss = b ? this.byId.get(b) : undefined;
     const kids = this.reports(p.id);
     const chip = (x: OrgChartPerson) =>
       html`<button type="button" class="ui-org__chip" @click=${() => {
-        if (x.manager && !this.openSet.has(x.manager)) this.setOpen(x.manager, true);
+        // Every branch above them opens, not just their manager's
+        this.openTo(x.id);
         this.select(x.id, true);
       }}>${this.avatar(x, "sm")}<span>${x.name}</span></button>`;
     return html`<div class="ui-org__strip" role="group" aria-label=${`${p.name}'s place`}>
@@ -566,7 +603,7 @@ export class TcOrgChart extends TcElement {
 .ui-org__canvas { width: max-content; min-width: 100%; transform: scale(var(--org-zoom, 1)); transform-origin: 0 0; }
 .ui-org__empty { padding: var(--tc-space-8) 0; color: var(--tc-text-muted); text-align: center; cursor: default; }
 /* Tree: top-down, a reporting line from each manager to a bar over their reports */
-.ui-org__tree { display: flex; justify-content: center; gap: var(--tc-space-6); }
+.ui-org__tree { display: flex; justify-content: center; gap: var(--tc-space-6); width: max-content; margin-inline: auto; }
 .ui-org__item { position: relative; display: flex; flex-direction: column; align-items: center; outline: none; }
 .ui-org__group { position: relative; display: flex; justify-content: center; padding-top: var(--tc-org-gap); }
 .ui-org__group::before { content: ""; position: absolute; top: 0; left: 50%; height: calc(var(--tc-org-gap) / 2); border-left: 1px solid var(--tc-org-line); }
@@ -620,7 +657,7 @@ export class TcOrgChart extends TcElement {
 .ui-org__more { align-self: center; font-size: var(--tc-font-size-xs); color: var(--tc-text-muted); }
 /* ----- List: an indented outline, for narrow containers or layout="list" ----- */
 @container (max-width: 560px) {
-  [data-ui="org"][layout="auto"] .ui-org__tree, [data-ui="org"]:not([layout]) .ui-org__tree { display: block; }
+  [data-ui="org"][layout="auto"] .ui-org__tree, [data-ui="org"]:not([layout]) .ui-org__tree { display: block; width: auto; }
   [data-ui="org"]:is([layout="auto"], :not([layout])) :is(.ui-org__item, .ui-org__group) { display: block; padding: 0; }
   [data-ui="org"]:is([layout="auto"], :not([layout])) .ui-org__group { margin-left: var(--tc-space-4); padding-left: var(--tc-space-3); border-left: 1px solid var(--tc-org-line); }
   [data-ui="org"]:is([layout="auto"], :not([layout])) :is(.ui-org__group, .ui-org__group > .ui-org__item)::before,
@@ -630,7 +667,7 @@ export class TcOrgChart extends TcElement {
   [data-ui="org"]:is([layout="auto"], :not([layout])) .ui-org__zoom { display: none; }
   [data-ui="org"]:is([layout="auto"], :not([layout])) .ui-org__view { cursor: default; }
 }
-[data-ui="org"][layout="list"] .ui-org__tree { display: block; }
+[data-ui="org"][layout="list"] .ui-org__tree { display: block; width: auto; }
 [data-ui="org"][layout="list"] :is(.ui-org__item, .ui-org__group) { display: block; padding: 0; }
 [data-ui="org"][layout="list"] .ui-org__group { margin-left: var(--tc-space-4); padding-left: var(--tc-space-3); border-left: 1px solid var(--tc-org-line); }
 [data-ui="org"][layout="list"] :is(.ui-org__group, .ui-org__group > .ui-org__item)::before,
