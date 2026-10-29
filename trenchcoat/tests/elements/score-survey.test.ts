@@ -151,6 +151,23 @@ describe("tc-score-survey", () => {
     expect(sent[1]).toEqual({ score: 10, comment: "", kind: "nps" });
   });
 
+  test("a comment typed for a score whose question has gone isn't sent", async () => {
+    const el = await fixture<TcScoreSurvey>(html`<tc-score-survey .followUps=${{ detractor: "What went wrong?" }}></tc-score-survey>`);
+    const sent: ScoreSurveySubmit[] = [];
+    el.addEventListener("tc-submit", (e) => sent.push((e as CustomEvent<ScoreSurveySubmit>).detail));
+    radios(el)[3].click();
+    await settle();
+    const field = el.querySelector("textarea")!;
+    field.value = "slow checkout";
+    field.dispatchEvent(new InputEvent("input", { bubbles: true }));
+    radios(el)[9].click();
+    await settle();
+    expect(el.querySelector("textarea")).toBeNull();
+    el.querySelector<HTMLButtonElement>(".ui-ssv__submit")!.click();
+    await settle();
+    expect(sent).toEqual([{ score: 9, comment: "", kind: "nps" }]);
+  });
+
   test("no follow-up: Submit alone; preventing tc-submit stays on the question; submitting shows busy", async () => {
     const el = await fixture<TcScoreSurvey>(html`<tc-score-survey kind="csat" .score=${5}></tc-score-survey>`);
     expect(el.querySelector("textarea")).toBeNull();

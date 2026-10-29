@@ -13,8 +13,9 @@ answers for CSAT – each named with its share and count, and a bar per score sh
 score's bar fires an event, so the page can filter the comments to it.
 
 NPS is the share of promoters (9–10) minus the share of detractors (0–6), from −100 to +100. CSAT is the share of 4s
-and 5s. Both come from the band percentages shown, which are rounded so they add up to 100 – so the score always
-matches what the bands say.
+and 5s. Both are worked out from the counts and rounded once, half away from zero – one detractor, one passive and
+one promoter is an NPS of 0. The band percentages are rounded on their own so they add up to 100, so the score can
+be 1 away from the difference of the rounded bands.
 
 ## When to use
 
@@ -58,8 +59,8 @@ bars hide. The band colours are component tokens: `--tc-ssm-detractor`, `--tc-ss
 
 ## Screen readers
 
-The card is a `group` named by the heading. The score reads as its name and number (“NPS +37”). The sparkline is
-hidden and replaced by text (“Trend: Q1 +18, Q2 +24, now +37”). The bands are a list whose items say the band, its
+The card is a `group` named by the heading. The score reads as its name and number (“NPS +38”). The sparkline is
+hidden and replaced by text (“Trend: Q1 +18, Q2 +24, now +38”). The bands are a list whose items say the band, its
 share and its count. The distribution is a `toolbar` named “Answers by score”; each bar is a toggle button with
 `aria-pressed`, named by its score, count and share (“9: 74 responses, 24%”).
 

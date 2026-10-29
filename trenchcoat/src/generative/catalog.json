@@ -6,6 +6,8 @@
     "events": [
       "tc-request",
       "tc-status-change",
+      "tc-level-change",
+      "tc-duration-change",
       "tc-cancel"
     ]
   },
@@ -1072,6 +1074,20 @@
       "tc-isbn-lookup",
       "tc-copy",
       "tc-open-change"
+    ]
+  },
+  {
+    "tag": "tc-json-viewer",
+    "name": "JsonViewer",
+    "description": "A JSON document laid out for review – Document and Raw, one at a time or side by side, search across them, flags with notes on fields,",
+    "events": [
+      "tc-view-change",
+      "tc-layout-change",
+      "tc-filter-change",
+      "tc-flags-change",
+      "tc-open-change",
+      "tc-copy",
+      "tc-download"
     ]
   },
   {

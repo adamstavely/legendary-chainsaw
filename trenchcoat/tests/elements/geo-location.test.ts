@@ -140,6 +140,23 @@ describe("tc-geo-location", () => {
     expect(seen).toEqual(["57.04121, -3.61274", "57.04121, -3.61274"]);
   });
 
+  test("a copy the browser refused doesn't say Copied", async () => {
+    const el = await one();
+    const clip = navigator.clipboard;
+    Object.defineProperty(navigator, "clipboard", { configurable: true, value: { writeText: () => Promise.reject(new Error("denied")) } });
+    const exec = document.execCommand;
+    document.execCommand = () => false;
+    try {
+      el.querySelector<HTMLButtonElement>(".ui-geo__copy")!.click();
+      await new Promise((r) => setTimeout(r, 50));
+      await settle();
+      expect(el.querySelector(".ui-geo__copy")!.textContent!.trim()).toBe("Copy");
+    } finally {
+      Object.defineProperty(navigator, "clipboard", { configurable: true, value: clip });
+      document.execCommand = exec;
+    }
+  });
+
   test("tc-open carries the provider and URL; preventDefault stops the link", async () => {
     const el = await one();
     const seen: GeoOpen[] = [];

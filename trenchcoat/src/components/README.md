@@ -111,6 +111,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Integration Settings** (`integration-settings.tsx`) – Settings card for a connected service – on/off switch, API key, validated site address, time zone and a save bar
 - **Investment Balance** (`investment-balance.tsx`) – Are dollars and people following priority? – each tier's share of items, budget and people side by side as numbers and bars, over- and under-invested tiers flagged in words, and the biggest mismatch said in one line
 - **ISBN Details** (`isbn-details.tsx`) – ISBN numbers in text, validated and marked – hover or focus one for the book's cover, title, authors, publisher, year and pages
+- **JSON Viewer** (`json-viewer.tsx`) – A JSON document laid out for review – Document, Tree and Raw views, search across them, flags with notes on fields, Copy and Download – inline or as a dialog
 - **Kill Switch** (`kill-switch.tsx`) – System posture and the emergency stop – what's running, a confirmed Stop that says what it halts, and resume
 - **Knowledge Promotion** (`knowledge-promotion.tsx`) – Promote a verified fact into shared team knowledge against a checklist, with disputed facts side by side
 - **Knowledge Source Manager** (`knowledge-source-manager.tsx`) – Sources a knowledge base answers from – ingestion state and progress, docs and chunks, sync schedule, stale and duplicate warnings, and a handoff to chunk review
@@ -118,6 +119,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Lineage Graph** (`lineage-graph.tsx`) – Where an output came from – run, turns, queries and tools, source chunks, claims and artifacts in columns, every node's record a click away
 - **Live View** (`live-view.tsx`) – Watch the agent's screen as it works – its clicks and typing drawn on top, a caption for each step, and Pause or Take over at any moment
 - **Look Provider** (`look-provider.tsx`) – Sets the look, Standard or Clean, for every Trenchcoat element inside it – one wrapper for a whole app, with any element still free to choose its own
+- **Loupe** (`loupe.tsx`) – A design-system inspector over the live page – components outlined with a card of their name, path and links, a breakpoint ruler, flex and grid containers listed – ⌘⇧L to turn it on
 - **MCP connection manager** (`mcp-connection-manager.tsx`) – MCP servers at a glance – status and what each exposes; add one (transport, auth, test), inspect its tools, resources and prompts, connect, retry and remove
 - **Memory Panel** (`memory-panel.tsx`) – What the assistant remembers about you, grouped and editable – a master switch, category filters, and on every memory edit in place, pause or forget with Undo on the tray
 - **Mention Picker** (`mention-picker.tsx`) – The / and @ picker inside a composer – grouped results, arrow keys and Enter, and the pick lands as a chip

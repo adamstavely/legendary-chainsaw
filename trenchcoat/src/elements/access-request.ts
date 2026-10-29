@@ -3,6 +3,7 @@ import { property, state } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
+import { FocusRescueController } from "./internal/controllers";
 import { formatDate, pick } from "./internal/util";
 
 /*
@@ -60,6 +61,8 @@ export type AccessRequestDetail = {
   fields: string[];
 };
 export type AccessStatusChange = { status: AccessStatus };
+export type AccessLevelChange = { level: string };
+export type AccessDurationChange = { duration: AccessDurationId };
 export type AccessCancel = { status: AccessStatus };
 
 /** The levels offered when the page gives none */
@@ -123,6 +126,8 @@ const names = (list: string[]) => (list.length < 2 ? (list[0] ?? "") : `${list.s
  * @tag tc-access-request
  * @fires tc-request - The form was sent ({ level, duration, until, justification, reference, fields }: AccessRequestDetail); cancelable – prevented, the form stays as it is
  * @fires tc-status-change - The status is about to change: pending after a request, draft after Cancel or Request again ({ status }: AccessStatusChange); cancelable – prevented, `status` stays as it was
+ * @fires tc-level-change - A level was picked ({ level }: AccessLevelChange); cancelable – prevented, `level` stays as it was
+ * @fires tc-duration-change - A duration was picked ({ duration }: AccessDurationChange); cancelable – prevented, `duration` stays as it was
  * @fires tc-cancel - Cancel request was used on a pending request ({ status }: AccessCancel); cancelable – prevented, the request stays pending
  */
 export class TcAccessRequest extends TcElement {
@@ -138,11 +143,11 @@ export class TcAccessRequest extends TcElement {
   @property({ attribute: false }) accessor classifications: Record<string, { label: string; tone: AccessTone }> = {};
   /** The access levels to choose from */
   @property({ attribute: false }) accessor levels: AccessLevel[] = defaultAccessLevels;
-  /** The picked level's id; by default the first level */
+  /** The picked level's id; by default the first level. Changed by the user unless tc-level-change is prevented */
   @property() accessor level: string | undefined = undefined;
   /** The fixed durations to choose from; an end date is always offered, permanent only with `allow-permanent` */
   @property({ attribute: false }) accessor durations: AccessDuration[] = defaultAccessDurations;
-  /** The picked duration: a duration's id, "custom" or "permanent"; by default the second duration (30 days) */
+  /** The picked duration: a duration's id, "custom" or "permanent"; by default the second duration (30 days). Changed by the user unless tc-duration-change is prevented */
   @property() accessor duration: AccessDurationId | undefined = undefined;
   /** Offers Permanent as a duration */
   @property({ type: Boolean, attribute: "allow-permanent" }) accessor allowPermanent = false;
@@ -179,6 +184,23 @@ export class TcAccessRequest extends TcElement {
   @state() private accessor tick = 0;
 
   private uid = `tc-dar-${++uidCount}`;
+
+  constructor() {
+    super();
+    // Sending, cancelling and Request again swap the form and the status view: focus goes to what replaced the button
+    new FocusRescueController(this, () => this.querySelector<HTMLElement>(".ui-dar__status button, [data-field='why']"));
+  }
+
+  private setLevel(level: string) {
+    if (level === this.levelId) return;
+    if (!this.emit<AccessLevelChange>("tc-level-change", { level }, { cancelable: true })) return;
+    this.level = level;
+  }
+  private setDuration(duration: AccessDurationId) {
+    if (duration === this.durationId) return;
+    if (!this.emit<AccessDurationChange>("tc-duration-change", { duration }, { cancelable: true })) return;
+    this.duration = duration;
+  }
 
   private get levelId() {
     return this.levels.find((l) => l.id === this.level)?.id ?? this.levels[0]?.id ?? "";
@@ -250,23 +272,15 @@ export class TcAccessRequest extends TcElement {
       fields: this.fields.length ? this.fields.filter((f) => this.picked.includes(f)) : [],
     };
     if (!this.emit<AccessRequestDetail>("tc-request", detail, { cancelable: true })) return;
-    if (!this.setStatus("pending")) return;
-    if (this.submittedAt === undefined) this.submittedAt = this.tick;
-    this.announce = "Request sent";
+    // The rest happens when `status` changes (willUpdate) – here or, controlled, when the page sets it
+    this.setStatus("pending");
   }
   private cancelRequest() {
     if (!this.emit<AccessCancel>("tc-cancel", { status: this.status }, { cancelable: true })) return;
-    if (this.setStatus("draft")) {
-      this.submittedAt = undefined;
-      this.announce = "Request cancelled";
-    }
+    this.setStatus("draft");
   }
   private requestAgain() {
-    if (this.setStatus("draft")) {
-      this.tried = false;
-      this.submittedAt = undefined;
-      this.announce = "";
-    }
+    this.setStatus("draft");
   }
 
   /** Arrow keys move and pick in a radio group */
@@ -285,6 +299,19 @@ export class TcAccessRequest extends TcElement {
   protected override willUpdate(changed: PropertyValues) {
     super.willUpdate(changed);
     if (changed.has("now") || changed.has("status") || changed.has("expiresAt") || !this.tick) this.tick = this.now ?? clock();
+    // What a status change brings with it, whoever made it – the element itself, or a page that controls `status`
+    const was = changed.get("status") as AccessStatus | undefined;
+    if (changed.has("status") && was !== undefined) {
+      if (this.status === "pending" && was === "draft") {
+        // A time the page gave stays; otherwise the request was sent now
+        this.submittedAt ??= this.tick;
+        this.announce = "Request sent";
+      } else if (this.status === "draft") {
+        if (!changed.has("submittedAt")) this.submittedAt = undefined;
+        this.tried = false;
+        this.announce = was === "pending" ? "Request cancelled" : "";
+      }
+    }
     if (changed.has("fields")) this.picked = this.picked.filter((f) => this.fields.includes(f));
   }
 
@@ -319,7 +346,7 @@ export class TcAccessRequest extends TcElement {
       ${this.levels.length
         ? html`<div class="ui-dar__field">
             <span class="ui-dar__label" id=${`${id}-level`}>Access level</span>
-            <div class="ui-dar__levels" role="radiogroup" aria-labelledby=${`${id}-level`} @keydown=${this.radioKeys(levelIds, level, (v) => (this.level = v), "level")}>
+            <div class="ui-dar__levels" role="radiogroup" aria-labelledby=${`${id}-level`} @keydown=${this.radioKeys(levelIds, level, (v) => this.setLevel(v), "level")}>
               ${this.levels.map(
                 (l) => html`<button
                   type="button"
@@ -328,7 +355,7 @@ export class TcAccessRequest extends TcElement {
                   data-level=${l.id}
                   aria-checked=${l.id === level ? "true" : "false"}
                   tabindex=${l.id === level ? 0 : -1}
-                  @click=${() => (this.level = l.id)}
+                  @click=${() => this.setLevel(l.id)}
                 ><span class="ui-dar__level-label">${l.label}</span>${l.description ? html`<span class="ui-dar__level-desc">${l.description}</span>` : nothing}</button>`,
               )}
             </div>
@@ -336,7 +363,7 @@ export class TcAccessRequest extends TcElement {
         : nothing}
       <div class="ui-dar__field">
         <span class="ui-dar__label" id=${`${id}-dur`}>For how long</span>
-        <div class="ui-dar__chips" role="radiogroup" aria-labelledby=${`${id}-dur`} @keydown=${this.radioKeys(opts.map((o) => o.id), dur, (v) => (this.duration = v), "duration")}>
+        <div class="ui-dar__chips" role="radiogroup" aria-labelledby=${`${id}-dur`} @keydown=${this.radioKeys(opts.map((o) => o.id), dur, (v) => this.setDuration(v as AccessDurationId), "duration")}>
           ${opts.map(
             (o) => html`<button
               type="button"
@@ -345,7 +372,7 @@ export class TcAccessRequest extends TcElement {
               data-duration=${o.id}
               aria-checked=${o.id === dur ? "true" : "false"}
               tabindex=${o.id === dur ? 0 : -1}
-              @click=${() => (this.duration = o.id)}
+              @click=${() => this.setDuration(o.id as AccessDurationId)}
             >${o.label}</button>`,
           )}
         </div>

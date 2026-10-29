@@ -5,6 +5,36 @@
 - **To-do List** (`tc-todo-list`) – add a to-do (Enter), tick it off, click its words to edit them, move it with
   Alt + ↑ / ↓, remove it with Undo; All / To do / Done tabs with counts, a done bar and Clear done. One cancelable
   `tc-items-change` carries the whole next list and what changed, so a page can keep it in its own store.
+## Unreleased – Loupe, a design-system inspector
+
+- **Loupe** (`tc-loupe`) – remade from cautious-lamp's LoupeTool. ⌘⇧L outlines the page's components
+  (`data-ds-component` and the library's own elements) with a card of name, path, size, look and docs / source /
+  design links; a ruler marks the breakpoints and the window's width; flex and grid containers are outlined and listed.
+  Unlike the original, the page keeps scrolling and working underneath, outlines follow scrolling, resizing and DOM
+  changes (no polling), the overlay sits in the top layer so transformed or contained ancestors can't shift it, and
+  everything is reachable from keyboard lists in the panel. Kept out of generative UI.
+## Unreleased – a JSON viewer for review
+
+- **JSON Viewer** (`tc-json-viewer`) – a JSON document laid out for someone to check: Document reads it like a form
+  (keys in plain words, nested objects as sections, lists of like objects as tables, links, dates and yes/no drawn as
+  what they are) and Raw is the pretty-printed JSON with line numbers; `layout="split"` shows them side by side, each
+  field linked to its lines. Search marks and counts matches in every view; reviewers flag fields with notes
+  (`tc-flags-change`); Copy and Download hand over the JSON – `source` as written, so integers too big to hold exactly
+  (which are marked) keep their digits. `source` text that isn't valid JSON shows where it breaks. With `modal`, it's
+  a dialog opened by `open`.
+## Unreleased – fixes from a review of the newest components
+
+- **Text to Speech** – when another reader (or the page) cancels the browser's shared speech queue, it pauses instead
+  of showing "Reading" with nothing spoken; `lang` reflects to the attribute, as HTMLElement's does.
+- **Access Request** – sending, cancelling and Request again keep focus (on what replaced the button); when the page
+  controls `status`, the sent time, announcements and validation reset still happen; `level` and `duration` change
+  through cancelable `tc-level-change` / `tc-duration-change`, and the React wrapper controls them
+  (`onAccessDurationChange` – `onDurationChange` is a React media prop).
+- **Score Survey** – a comment typed for a score whose follow-up question has gone isn't sent.
+- **Colour Picker** – in CMYK with alpha, changing only the opacity keeps the colour exactly.
+- **Speed Reader** – a listener that keeps the place pauses the reading instead of leaving it stuck on Pause.
+- **Score Summary** – NPS and CSAT are worked out from the counts and rounded once: a balanced split is 0, not −1.
+- **Geo Location** – a copy the browser refused no longer says Copied.
 
 ## Unreleased – a UI kit for Adobe XD
 
