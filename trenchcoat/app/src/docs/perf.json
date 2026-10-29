@@ -10707,8 +10707,8 @@
    }
   },
   "generated-ui": {
-   "measuredAt": "2026-10-28",
-   "hash": "bdc805dc79b822b2",
+   "measuredAt": "2026-10-29",
+   "hash": "4a0ca2f033f6251c",
    "bundle": {
     "own": {
      "min": 34126,
@@ -10763,7 +10763,7 @@
      {
       "name": "internal/modal",
       "kind": "internal",
-      "min": 1600
+      "min": 1594
      },
      {
       "name": "internal/selection-toolbar",
@@ -10931,6 +10931,11 @@
       "min": 51767
      },
      {
+      "name": "json-viewer",
+      "kind": "element",
+      "min": 51727
+     },
+     {
       "name": "integration-picker",
       "kind": "element",
       "min": 50429
@@ -10968,7 +10973,7 @@
      {
       "name": "playbook-canvas",
       "kind": "element",
-      "min": 47053
+      "min": 47093
      },
      {
       "name": "world-map",
@@ -11228,7 +11233,7 @@
      {
       "name": "policy-simulator",
       "kind": "element",
-      "min": 32342
+      "min": 32447
      },
      {
       "name": "filter-menu",
@@ -11438,7 +11443,7 @@
      {
       "name": "pricing-plans",
       "kind": "element",
-      "min": 23580
+      "min": 23585
      },
      {
       "name": "coverage-matrix",
@@ -11883,7 +11888,7 @@
      {
       "name": "dialog",
       "kind": "element",
-      "min": 3674
+      "min": 3673
      },
      {
       "name": "slider-field",
@@ -11913,7 +11918,7 @@
      {
       "name": "src/generative/registry.ts",
       "kind": "other",
-      "min": 36174
+      "min": 36394
      },
      {
       "name": "src/generative/schemas/tc-ai-side-pane.json",
@@ -12359,6 +12364,11 @@
       "name": "src/generative/schemas/tc-feedback-rubric.json",
       "kind": "other",
       "min": 2616
+     },
+     {
+      "name": "src/generative/schemas/tc-json-viewer.json",
+      "kind": "other",
+      "min": 2603
      },
      {
       "name": "src/generative/schemas/tc-message-actions.json",
@@ -13012,19 +13022,19 @@
      }
     ],
     "withoutLit": {
-     "min": 7383657,
-     "gzip": 1814060
+     "min": 7438717,
+     "gzip": 1828269
     },
     "withLit": {
-     "min": 7350793,
-     "gzip": 1801904
+     "min": 7405486,
+     "gzip": 1815726
     }
    },
    "render": {
     "tag": "tc-generated-ui",
     "source": "demo",
     "runs": 7,
-    "cold": 2.3,
+    "cold": 2,
     "first": 0.6,
     "update": 0.1,
     "updateKind": "re-render with the same data",
@@ -15224,6 +15234,119 @@
     "updateKind": "re-render with the same data",
     "nodes": 6,
     "scale": null,
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
+  "json-viewer": {
+   "measuredAt": "2026-10-29",
+   "hash": "889ab7be3c5c8526",
+   "bundle": {
+    "own": {
+     "min": 53764,
+     "gzip": 15136
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 19997
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2968
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1868
+     },
+     {
+      "name": "internal/modal",
+      "kind": "internal",
+      "min": 1573
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/util",
+      "kind": "internal",
+      "min": 501
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 444
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 436
+     },
+     {
+      "name": "internal/safe-url",
+      "kind": "internal",
+      "min": 343
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     }
+    ],
+    "withoutLit": {
+     "min": 63519,
+     "gzip": 18336
+    },
+    "withLit": {
+     "min": 84713,
+     "gzip": 25109
+    }
+   },
+   "render": {
+    "tag": "tc-json-viewer",
+    "source": "demo",
+    "runs": 7,
+    "cold": 9.4,
+    "first": 3.6,
+    "update": 1,
+    "updateKind": "one item of flags replaced",
+    "nodes": 457,
+    "scale": {
+     "property": "flags",
+     "demoItems": 1,
+     "points": [
+      {
+       "items": 100,
+       "first": 4.2,
+       "update": 1.1,
+       "nodes": 556
+      },
+      {
+       "items": 1000,
+       "first": 10,
+       "update": 3.1,
+       "nodes": 1456
+      }
+     ]
+    },
     "idle": {
      "visible": {
       "frames": 0,

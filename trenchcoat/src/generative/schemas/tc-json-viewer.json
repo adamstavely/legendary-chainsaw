@@ -1,0 +1,148 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-json-viewer.json",
+  "title": "tc-json-viewer",
+  "description": "A JSON document laid out for review – Document, Tree and Raw views, search across them, flags with notes on fields,\nCopy and Download – inline or as a modal.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the viewer's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading; by default the document's size and how many values it holds"
+    },
+    "value": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/JsonValue"
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/JsonValue"
+          }
+        }
+      ],
+      "description": "The document, already parsed. `source` is used when this is undefined"
+    },
+    "source": {
+      "type": "string",
+      "description": "The document as JSON text, parsed when `value` isn't given; a syntax error is shown where it is"
+    },
+    "view": {
+      "type": "string",
+      "enum": [
+        "document",
+        "tree",
+        "raw"
+      ],
+      "description": "The view shown. Changed by the user unless a tc-view-change listener calls preventDefault()"
+    },
+    "filter": {
+      "type": "string",
+      "description": "What the search box holds. Changed by the user unless tc-filter-change is prevented"
+    },
+    "flags": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/JsonFlag"
+      },
+      "description": "The reviewer's flags. Changed by the user unless tc-flags-change is prevented"
+    },
+    "flaggable": {
+      "type": "boolean",
+      "description": "Whether reviewers can flag fields"
+    },
+    "keyStyle": {
+      "type": "string",
+      "enum": [
+        "raw",
+        "words"
+      ],
+      "description": "How Document names fields: \"words\" (\"Invoice date\") or \"raw\" (the key as written)"
+    },
+    "expandDepth": {
+      "type": "number",
+      "description": "How many levels the tree shows open at first"
+    },
+    "filename": {
+      "type": "string",
+      "description": "The name Download saves the file under"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for numbers and dates, e.g. \"en-GB\"; by default the browser's"
+    },
+    "modal": {
+      "type": "boolean",
+      "description": "Show it as a dialog, opened by `open`"
+    },
+    "open": {
+      "type": "boolean",
+      "description": "With `modal`: whether the dialog is showing. Escape and Close ask to close (tc-open-change)"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "JsonValue": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/JsonValue"
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/JsonValue"
+          }
+        }
+      ],
+      "description": "Any JSON value"
+    },
+    "JsonFlag": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "path",
+        "note"
+      ],
+      "additionalProperties": false,
+      "description": "A reviewer's flag: the field (a JSON Pointer) and what they said about it"
+    }
+  }
+}

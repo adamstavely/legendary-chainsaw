@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased – a JSON viewer for review
+
+- **JSON Viewer** (`tc-json-viewer`) – a JSON document laid out for someone to check: Document reads it like a form
+  (keys in plain words, nested objects as sections, lists of like objects as tables, links, dates and yes/no drawn as
+  what they are), Tree shows every key and value with the tree pattern's keys, and Raw is the pretty-printed JSON with
+  line numbers. Search marks and counts matches in every view; reviewers flag fields with notes (`tc-flags-change`);
+  Copy and Download hand over the JSON. `source` text that isn't valid JSON shows where it breaks. With `modal`, it's
+  a dialog opened by `open`.
+
 ## Unreleased – colour picker, NPS / CSAT, coordinates, access requests, reading aloud
 
 - `tc-color-picker` – a saturation and brightness square, hue and opacity sliders, HEX / RGB / CMYK fields, an

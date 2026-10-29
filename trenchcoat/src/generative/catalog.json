@@ -1064,6 +1064,19 @@
     ]
   },
   {
+    "tag": "tc-json-viewer",
+    "name": "JsonViewer",
+    "description": "A JSON document laid out for review – Document, Tree and Raw views, search across them, flags with notes on fields,",
+    "events": [
+      "tc-view-change",
+      "tc-filter-change",
+      "tc-flags-change",
+      "tc-open-change",
+      "tc-copy",
+      "tc-download"
+    ]
+  },
+  {
     "tag": "tc-kill-switch",
     "name": "KillSwitch",
     "description": "System posture and the emergency stop: what's running, a confirmed Stop that names what it halts, and the active",

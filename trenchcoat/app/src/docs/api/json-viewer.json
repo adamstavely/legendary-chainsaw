@@ -1,0 +1,821 @@
+{
+ "elements": [
+  {
+   "tag": "tc-json-viewer",
+   "className": "TcJsonViewer",
+   "description": "A JSON document laid out for review – Document, Tree and Raw views, search across them, flags with notes on fields,\nCopy and Download – inline or as a modal.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"JSON\"",
+     "description": "The heading, and the viewer's name",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "One line under the heading; by default the document's size and how many values it holds",
+     "readonly": false
+    },
+    {
+     "name": "value",
+     "attribute": null,
+     "type": "JsonValue | undefined",
+     "default": "undefined",
+     "description": "The document, already parsed. `source` is used when this is undefined",
+     "readonly": false
+    },
+    {
+     "name": "source",
+     "attribute": "source",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The document as JSON text, parsed when `value` isn't given; a syntax error is shown where it is",
+     "readonly": false
+    },
+    {
+     "name": "view",
+     "attribute": "view",
+     "type": "JsonViewerView",
+     "default": "\"document\"",
+     "description": "The view shown. Changed by the user unless a tc-view-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "filter",
+     "attribute": "filter",
+     "type": "string",
+     "default": "\"\"",
+     "description": "What the search box holds. Changed by the user unless tc-filter-change is prevented",
+     "readonly": false
+    },
+    {
+     "name": "flags",
+     "attribute": null,
+     "type": "JsonFlag[]",
+     "default": "[]",
+     "description": "The reviewer's flags. Changed by the user unless tc-flags-change is prevented",
+     "readonly": false
+    },
+    {
+     "name": "flaggable",
+     "attribute": "flaggable",
+     "type": "boolean",
+     "default": "true",
+     "description": "Whether reviewers can flag fields",
+     "readonly": false
+    },
+    {
+     "name": "keyStyle",
+     "attribute": "key-style",
+     "type": "JsonKeyStyle",
+     "default": "\"words\"",
+     "description": "How Document names fields: \"words\" (\"Invoice date\") or \"raw\" (the key as written)",
+     "readonly": false
+    },
+    {
+     "name": "expandDepth",
+     "attribute": "expand-depth",
+     "type": "number",
+     "default": "2",
+     "description": "How many levels the tree shows open at first",
+     "readonly": false
+    },
+    {
+     "name": "filename",
+     "attribute": "filename",
+     "type": "string",
+     "default": "\"document.json\"",
+     "description": "The name Download saves the file under",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The language for numbers and dates, e.g. \"en-GB\"; by default the browser's",
+     "readonly": false
+    },
+    {
+     "name": "modal",
+     "attribute": "modal",
+     "type": "boolean",
+     "default": "false",
+     "description": "Show it as a dialog, opened by `open`",
+     "readonly": false
+    },
+    {
+     "name": "open",
+     "attribute": "open",
+     "type": "boolean",
+     "default": "false",
+     "description": "With `modal`: whether the dialog is showing. Escape and Close ask to close (tc-open-change)",
+     "readonly": false
+    },
+    {
+     "name": "document",
+     "attribute": null,
+     "type": "JsonValue | undefined",
+     "default": null,
+     "description": "The document shown",
+     "readonly": true
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-view-change",
+     "detail": "",
+     "description": "The view changed ({ view }: JsonViewerViewChange); cancelable – prevented, `view` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-filter-change",
+     "detail": "",
+     "description": "The search changed ({ filter }: JsonViewerFilterChange); cancelable – prevented, `filter` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-flags-change",
+     "detail": "",
+     "description": "A flag was added, edited or removed ({ flags, path, note }: JsonViewerFlagsChange); cancelable – prevented, `flags` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-open-change",
+     "detail": "",
+     "description": "With `modal`: asks to open or close ({ open }: JsonViewerOpenChange), from Escape or Close; cancelable – prevented, `open` stays",
+     "cancelable": true
+    },
+    {
+     "name": "tc-copy",
+     "detail": "",
+     "description": "JSON, a value or a path was copied ({ text, what, path }: JsonViewerCopy); cancelable – prevented, nothing is copied",
+     "cancelable": true
+    },
+    {
+     "name": "tc-download",
+     "detail": "",
+     "description": "Download was pressed ({ filename, text }: JsonViewerDownload); cancelable – prevented, the page saves it its own way",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "jsv",
+   "cssProperties": [
+    {
+     "name": "--tc-jsv-body-h",
+     "value": "520px",
+     "looks": [
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-jsv-key-w",
+     "value": "34%",
+     "looks": [
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-jsv-indent",
+     "value": "var(--tc-space-4)",
+     "looks": [
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-jsv-count-w",
+     "value": "6.5rem",
+     "looks": [
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
+    "--tc-border-default",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-font-weight",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-px",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-fill-default",
+    "--tc-fill-hover",
+    "--tc-fill-selected",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-mono",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-menu-item-hover",
+    "--tc-menu-item-radius",
+    "--tc-pill-h-lg",
+    "--tc-radius-2xs",
+    "--tc-radius-full",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-xs",
+    "--tc-scrim",
+    "--tc-seg-pad",
+    "--tc-seg-thumb-bg",
+    "--tc-seg-thumb-shadow",
+    "--tc-seg-track-bg",
+    "--tc-seg-track-radius",
+    "--tc-shadow-overlay",
+    "--tc-shadow-sunken",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-5",
+    "--tc-space-8",
+    "--tc-status-danger-fg",
+    "--tc-status-danger-solid",
+    "--tc-status-success-solid",
+    "--tc-surface-on-tray",
+    "--tc-surface-overlay",
+    "--tc-surface-raised",
+    "--tc-surface-sunken",
+    "--tc-surface-tray",
+    "--tc-syntax-keyword",
+    "--tc-syntax-number",
+    "--tc-syntax-property",
+    "--tc-syntax-punctuation",
+    "--tc-syntax-string",
+    "--tc-syntax-text",
+    "--tc-text-muted",
+    "--tc-text-placeholder",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tone-amber-bg",
+    "--tc-tone-amber-border",
+    "--tc-tone-amber-fg",
+    "--tc-tone-amber-solid",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "jsonPointer",
+   "signature": "jsonPointer(parent: string, key: string): void",
+   "description": "The path of `key` under `parent`"
+  },
+  {
+   "name": "valueAt",
+   "signature": "valueAt(doc: unknown, path: string): unknown",
+   "description": "The value at a JSON Pointer, or undefined"
+  },
+  {
+   "name": "keyWords",
+   "signature": "keyWords(key: string): void",
+   "description": "A key in plain words: \"invoice_date\", \"invoiceDate\" and \"invoice-date\" all read \"Invoice date\"; \"vendor_id\" reads \"Vendor ID\""
+  },
+  {
+   "name": "firstJsonError",
+   "signature": "firstJsonError(text: string): number",
+   "description": "Where JSON text first goes wrong, as an offset – a small scanner, for browsers whose messages don't say; -1 when it's valid"
+  },
+  {
+   "name": "errorPosition",
+   "signature": "errorPosition(text: string, message: string): { line: number; column: number } | null",
+   "description": "A JSON syntax error's position in the text: 1-based line and column, from the browser's message or found by scanning"
+  }
+ ],
+ "react": [
+  {
+   "component": "JsonViewer",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading, and the viewer's name"
+    },
+    {
+     "name": "view",
+     "type": "JsonViewerView",
+     "optional": true,
+     "description": "The view shown – controlled when given"
+    },
+    {
+     "name": "defaultView",
+     "type": "JsonViewerView",
+     "optional": true,
+     "description": "The view on mount when `view` isn't controlled"
+    },
+    {
+     "name": "onViewChange",
+     "type": "(view: JsonViewerView) => void",
+     "optional": true,
+     "description": "The view changed"
+    },
+    {
+     "name": "filter",
+     "type": "string",
+     "optional": true,
+     "description": "The search – controlled when given"
+    },
+    {
+     "name": "defaultFilter",
+     "type": "string",
+     "optional": true,
+     "description": "The search on mount when `filter` isn't controlled"
+    },
+    {
+     "name": "onFilterChange",
+     "type": "(filter: string) => void",
+     "optional": true,
+     "description": "The search changed"
+    },
+    {
+     "name": "flags",
+     "type": "JsonFlag[]",
+     "optional": true,
+     "description": "The reviewer's flags – controlled when given: adding, editing and removing report the next list"
+    },
+    {
+     "name": "defaultFlags",
+     "type": "JsonFlag[]",
+     "optional": true,
+     "description": "The flags on mount when `flags` isn't controlled"
+    },
+    {
+     "name": "onFlagsChange",
+     "type": "(next: JsonFlag[], change: { path: string; note: string | null }) => void",
+     "optional": true,
+     "description": "A flag was added, edited or removed; `next` is the list as it will be"
+    },
+    {
+     "name": "open",
+     "type": "boolean",
+     "optional": true,
+     "description": "With `modal`: whether the dialog is showing – controlled when given; pair it with onOpenChange"
+    },
+    {
+     "name": "defaultOpen",
+     "type": "boolean",
+     "optional": true,
+     "description": "With `modal`: whether an uncontrolled dialog starts open"
+    },
+    {
+     "name": "onOpenChange",
+     "type": "(open: boolean) => void",
+     "optional": true,
+     "description": "With `modal`: the dialog asks to open or close (Escape, Close)"
+    },
+    {
+     "name": "onCopyJson",
+     "type": "(detail: JsonViewerCopy, event: CustomEvent<JsonViewerCopy>) => void",
+     "optional": true,
+     "description": "JSON, a value or a path was copied; `event.preventDefault()` stops the copy"
+    },
+    {
+     "name": "onDownload",
+     "type": "(detail: JsonViewerDownload, event: CustomEvent<JsonViewerDownload>) => void",
+     "optional": true,
+     "description": "Download was pressed; `event.preventDefault()` to save it your own way"
+    }
+   ],
+   "hides": [
+    "heading",
+    "view",
+    "filter",
+    "flags",
+    "open",
+    "children"
+   ],
+   "events": {
+    "tc-view-change": null,
+    "tc-filter-change": null,
+    "tc-flags-change": "onFlagsChange",
+    "tc-open-change": null,
+    "tc-copy": "onCopyJson",
+    "tc-download": "onDownload"
+   }
+  }
+ ],
+ "changelog": [
+  "**JSON Viewer** (`tc-json-viewer`) – a JSON document laid out for someone to check: Document reads it like a form (keys in plain words, nested objects as sections, lists of like objects as tables, links, dates and yes/no drawn as what they are), Tree shows every key and value with the tree pattern's keys, and Raw is the pretty-printed JSON with line numbers. Search marks and counts matches in every view; reviewers flag fields with notes (`tc-flags-change`); Copy and Download hand over the JSON. `source` text that isn't valid JSON shows where it breaks. With `modal`, it's a dialog opened by `open`."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-json-viewer",
+   "className": "TcJsonViewer",
+   "module": "trenchcoat/json-viewer",
+   "data": [
+    "value",
+    "flags"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    },
+    {
+     "name": "source",
+     "attribute": "source"
+    },
+    {
+     "name": "view",
+     "attribute": "view"
+    },
+    {
+     "name": "filter",
+     "attribute": "filter"
+    },
+    {
+     "name": "flaggable",
+     "attribute": "flaggable"
+    },
+    {
+     "name": "keyStyle",
+     "attribute": "key-style"
+    },
+    {
+     "name": "expandDepth",
+     "attribute": "expand-depth"
+    },
+    {
+     "name": "filename",
+     "attribute": "filename"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    },
+    {
+     "name": "modal",
+     "attribute": "modal"
+    },
+    {
+     "name": "open",
+     "attribute": "open"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-view-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-filter-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-flags-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-open-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-copy",
+     "cancelable": true
+    },
+    {
+     "name": "tc-download",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "view",
+     "event": "tc-view-change"
+    },
+    {
+     "property": "filter",
+     "event": "tc-filter-change"
+    },
+    {
+     "property": "flags",
+     "event": "tc-flags-change"
+    },
+    {
+     "property": "open",
+     "event": "tc-open-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "121",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "has"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "has",
+    "name": ":has()",
+    "bcd": "css.selectors.has",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "121",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Layout and state that depend on what's inside a part (an icon present, a focused field).",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "dialog",
+    "name": "<dialog> and showModal()",
+    "bcd": "api.HTMLDialogElement.showModal",
+    "versions": {
+     "chrome": "37",
+     "edge": "79",
+     "firefox": "98",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Modals trap focus, close on Escape and sit in the top layer.",
+    "via": [
+     "itself",
+     "internal/modal"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "clipboard",
+    "name": "Async Clipboard (writeText)",
+    "bcd": "api.Clipboard.writeText",
+    "versions": {
+     "chrome": "66",
+     "edge": "79",
+     "firefox": "63",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "why": "Copy buttons.",
+    "via": [
+     "internal/util"
+    ]
+   },
+   {
+    "id": "scrollbar-width",
+    "name": "scrollbar-width",
+    "bcd": "css.properties.scrollbar-width",
+    "versions": {
+     "chrome": "121",
+     "edge": "121",
+     "firefox": "64",
+     "safari": "18.2",
+     "safari_ios": "18.2"
+    },
+    "progressive": true,
+    "without": "Scrollbars keep the browser's default width.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "overscroll-contain",
+    "name": "overscroll-behavior: contain",
+    "bcd": "css.properties.overscroll-behavior.contain",
+    "versions": {
+     "chrome": "63",
+     "edge": "18",
+     "firefox": "59",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "Scrolling past the end of a list carries on scrolling the page.",
+    "via": [
+     "itself"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setTimeout"
+  ],
+  "frames": [
+   "requestAnimationFrame"
+  ],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 63519,
+  "gzip": 18239
+ }
+}
