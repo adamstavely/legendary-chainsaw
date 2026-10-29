@@ -4,9 +4,10 @@
 
 - **JSON Viewer** (`tc-json-viewer`) – a JSON document laid out for someone to check: Document reads it like a form
   (keys in plain words, nested objects as sections, lists of like objects as tables, links, dates and yes/no drawn as
-  what they are), Tree shows every key and value with the tree pattern's keys, and Raw is the pretty-printed JSON with
-  line numbers. Search marks and counts matches in every view; reviewers flag fields with notes (`tc-flags-change`);
-  Copy and Download hand over the JSON. `source` text that isn't valid JSON shows where it breaks. With `modal`, it's
+  what they are) and Raw is the pretty-printed JSON with line numbers; `layout="split"` shows them side by side, each
+  field linked to its lines. Search marks and counts matches in every view; reviewers flag fields with notes
+  (`tc-flags-change`); Copy and Download hand over the JSON – `source` as written, so integers too big to hold exactly
+  (which are marked) keep their digits. `source` text that isn't valid JSON shows where it breaks. With `modal`, it's
   a dialog opened by `open`.
 
 ## Unreleased – colour picker, NPS / CSAT, coordinates, access requests, reading aloud

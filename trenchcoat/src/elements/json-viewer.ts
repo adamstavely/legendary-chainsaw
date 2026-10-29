@@ -215,6 +215,8 @@ export function errorPosition(text: string, message: string): { line: number; co
 
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}(?:[T ]\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:?\d{2})?)?$/;
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+/** Where el sits in its scrolling pane's content – offsetTop is measured from the nearest table or cell instead */
+const offsetIn = (el: Element, pane: HTMLElement) => el.getBoundingClientRect().top - pane.getBoundingClientRect().top + pane.scrollTop;
 
 /**
  * A JSON document laid out for review – Document and Raw, one at a time or side by side, search across them, flags with notes on fields,
@@ -396,8 +398,9 @@ export class TcJsonViewer extends TcElement {
     // Scrolled within the raw pane only – the page stays where it is
     const first = lines[0];
     if (scroll && first) {
-      const top = first.offsetTop - raw.offsetTop;
-      const bottom = lines[lines.length - 1].offsetTop - raw.offsetTop + lines[lines.length - 1].offsetHeight;
+      const top = offsetIn(first, raw);
+      const last = lines[lines.length - 1];
+      const bottom = offsetIn(last, raw) + last.offsetHeight;
       if (top < raw.scrollTop || bottom > raw.scrollTop + raw.clientHeight) raw.scrollTop = Math.max(0, top - raw.clientHeight / 3);
     }
   }
@@ -419,7 +422,7 @@ export class TcJsonViewer extends TcElement {
       if (target || !p) break;
     }
     if (left && target) {
-      left.scrollTop = Math.max(0, target.offsetTop - left.offsetTop - left.clientHeight / 3);
+      left.scrollTop = Math.max(0, offsetIn(target, left) - left.clientHeight / 3);
       target.setAttribute("data-found", "");
       setTimeout(() => target!.removeAttribute("data-found"), 1200);
     }
@@ -481,8 +484,14 @@ export class TcJsonViewer extends TcElement {
     if (path !== null) void this.updateComplete.then(() => this.querySelector<HTMLElement>(`[data-flag-for="${CSS.escape(path)}"]`)?.focus());
   }
 
+  /** What Copy and Download hand over: `source` as written when it's what's shown (JSON.parse rounds integers past
+   *  2^53, and the source keeps their digits), otherwise the value pretty-printed */
+  private text() {
+    return this.value === undefined && this.source !== undefined && !this.parsed.error ? this.source : JSON.stringify(this.document, null, 2);
+  }
+
   private async copy() {
-    const text = JSON.stringify(this.document, null, 2);
+    const text = this.text();
     if (!this.emit<JsonViewerCopy>("tc-copy", { text }, { cancelable: true })) return;
     if (!(await copyText(text))) return;
     this.copied = true;
@@ -493,7 +502,7 @@ export class TcJsonViewer extends TcElement {
 
 
   private download() {
-    const text = JSON.stringify(this.document, null, 2);
+    const text = this.text();
     if (!this.emit<JsonViewerDownload>("tc-download", { filename: this.filename, text }, { cancelable: true })) return;
     const url = URL.createObjectURL(new Blob([text], { type: "application/json" }));
     const a = document.createElement("a");
@@ -548,7 +557,10 @@ export class TcJsonViewer extends TcElement {
     if (v === null) return html`<span class="ui-jsv__null">null</span>`;
     if (typeof v === "boolean")
       return html`<span class="ui-jsv__bool" data-v=${String(v)}>${v ? checkIcon(12) : xIcon(12)}${v ? "Yes" : "No"}<span class="tc-sr-only"> (${String(v)})</span></span>`;
-    if (typeof v === "number") return html`<span class="ui-jsv__num">${this.hl(this.fmtNumber(v))}</span>`;
+    if (typeof v === "number")
+      return Number.isInteger(v) && !Number.isSafeInteger(v)
+        ? html`<span class="ui-jsv__num" data-unsafe title="Too big to hold exactly – digits may have been rounded">${this.hl(this.fmtNumber(v))}<span class="tc-sr-only"> (may be rounded)</span></span>`
+        : html`<span class="ui-jsv__num">${this.hl(this.fmtNumber(v))}</span>`;
     const s = String(v);
     if (!s) return html`<span class="ui-jsv__empty">Empty</span>`;
     if (/^https?:\/\//i.test(s) && safeUrl(s))
@@ -1092,7 +1104,7 @@ export class TcJsonViewer extends TcElement {
 .ui-jsv__panel .ui-jsv__pane { height: auto; min-height: 0; }
 .ui-jsv__pane[data-raw] .ui-jsv__line[data-path] { cursor: pointer; }
 .ui-jsv__raw .ui-jsv__line[data-linked] { background: var(--tc-fill-selected); box-shadow: inset 2px 0 0 var(--tc-accent); }
-[data-found] { animation: ui-jsv-found var(--tc-duration-slowest) var(--tc-ease-standard); }
+.ui-jsv__pane [data-found] { animation: ui-jsv-found var(--tc-duration-slowest) var(--tc-ease-standard); }
 @keyframes ui-jsv-found { 0%, 60% { background: var(--tc-fill-selected); } }
 /* ----- Document ----- */
 .ui-jsv__doc { display: grid; gap: var(--tc-space-3); }
@@ -1131,6 +1143,7 @@ export class TcJsonViewer extends TcElement {
 .ui-jsv__inline[data-match] { box-shadow: 0 0 0 1px var(--tc-tone-amber-border); border-radius: var(--tc-radius-2xs); }
 /* Values drawn as what they are */
 .ui-jsv__num { font-variant-numeric: tabular-nums; }
+.ui-jsv__num[data-unsafe] { text-decoration: underline dotted var(--tc-status-warning-solid); text-underline-offset: 3px; cursor: help; }
 .ui-jsv__null, .ui-jsv__empty { color: var(--tc-text-muted); font-style: italic; }
 .ui-jsv__bool { display: inline-flex; align-items: center; gap: var(--tc-space-1); }
 .ui-jsv__bool[data-v="true"] svg { color: var(--tc-status-success-solid); }

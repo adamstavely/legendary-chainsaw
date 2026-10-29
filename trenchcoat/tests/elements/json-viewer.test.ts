@@ -1,5 +1,5 @@
 /*
- * <tc-json-viewer> in real browsers: the three views, keys in words, tables and chips, values drawn as what they are,
+ * <tc-json-viewer> in real browsers: the two views, keys in words, tables and chips, values drawn as what they are,
  * search across views, flags with notes, copy and download, syntax errors, the modal, side by side, the helpers,
  * controlled use, the React wrapper and axe in both looks and both themes.
  */
@@ -256,6 +256,22 @@ describe("tc-json-viewer", () => {
     expect(JSON.parse(saved!.text)).toEqual(DOC);
   });
 
+  test("big integers: marked as possibly rounded; Copy and Download hand over the source with every digit", async () => {
+    const src = '{ "id": 12345678901234567890, "n": 42 }';
+    const el = await make({ source: src });
+    const nums = [...el.querySelectorAll<HTMLElement>(".ui-jsv__num")];
+    expect(nums.filter((n) => n.hasAttribute("data-unsafe"))).toHaveLength(1);
+    expect(text(nums.find((n) => n.hasAttribute("data-unsafe")))).toContain("(may be rounded)");
+    const copies: string[] = [];
+    el.addEventListener("tc-copy", (e) => {
+      copies.push((e as CustomEvent<JsonViewerCopy>).detail.text);
+      e.preventDefault();
+    });
+    el.querySelector<HTMLButtonElement>('.ui-jsv__btn[title="Copy JSON"]')!.click();
+    await settle();
+    expect(copies).toEqual([src]);
+  });
+
   test("source: parsed when valid; a syntax error says where, with the lines around it", async () => {
     const ok = await make({ source: '{ "a": [1, 2] }' });
     expect(ok.document).toEqual({ a: [1, 2] });
@@ -367,6 +383,17 @@ describe("tc-json-viewer", () => {
     await settle();
     expect(el.querySelector('td[data-path="/line_items/1/sku"][data-found]')).not.toBeNull();
     expect(linked()).toEqual(['"sku": "HL-1190",']);
+    // A field in a table, in a short pane, is scrolled into view (offsetTop would measure from the table)
+    const left = el.querySelector<HTMLElement>(".ui-jsv__pane[data-left]")!;
+    left.style.maxHeight = "120px";
+    left.style.overflow = "auto";
+    left.scrollTop = 0;
+    raw().querySelector<HTMLElement>('.ui-jsv__line[data-path="/line_items/1/amount"]')!.click();
+    await settle();
+    const cell = el.querySelector<HTMLElement>('td[data-path="/line_items/1/amount"]')!.getBoundingClientRect();
+    const box = left.getBoundingClientRect();
+    expect(cell.top).toBeGreaterThanOrEqual(box.top - 1);
+    expect(cell.bottom).toBeLessThanOrEqual(box.bottom + 1);
   });
 
   test("modal: open shows a native modal; Close and Escape ask to close; prevented, it stays", async () => {
