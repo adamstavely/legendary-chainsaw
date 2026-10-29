@@ -3,7 +3,7 @@
   {
    "tag": "tc-search-history",
    "className": "TcSearchHistory",
-   "description": "Recent and saved searches – tabs with counts, a filter, searches grouped by day with scope chips, result counts and\ntimes, and Run again, a save star and Remove with Undo on each.",
+   "description": "Recent and saved searches – tabs with counts, a filter, searches grouped by day with their scopes, result counts and\ntimes, and Run again, a save star and Remove with Undo on each.",
    "properties": [
     {
      "name": "heading",
@@ -142,7 +142,6 @@
     "--tc-field-px",
     "--tc-field-radius",
     "--tc-field-shadow-focus",
-    "--tc-fill-default",
     "--tc-fill-hover",
     "--tc-fill-subtle",
     "--tc-focus-outline",
@@ -157,14 +156,8 @@
     "--tc-icon-muted",
     "--tc-line-height-normal",
     "--tc-line-height-snug",
-    "--tc-line-height-tight",
     "--tc-menu-item-hover",
     "--tc-menu-item-radius",
-    "--tc-pill-font-size",
-    "--tc-pill-font-weight",
-    "--tc-pill-h",
-    "--tc-pill-px",
-    "--tc-pill-radius",
     "--tc-radius-md",
     "--tc-seg-pad",
     "--tc-seg-thumb-bg",
@@ -179,8 +172,7 @@
     "--tc-space-3",
     "--tc-space-4",
     "--tc-space-5",
-    "--tc-space-6",
-    "--tc-status-warning-fg",
+    "--tc-status-warning-solid",
     "--tc-surface-on-tray",
     "--tc-surface-raised",
     "--tc-surface-tray",
@@ -188,6 +180,7 @@
     "--tc-text-placeholder",
     "--tc-text-primary",
     "--tc-text-secondary",
+    "--tc-tone-violet-fg",
     "--tc-tray-inset",
     "--tc-tray-radius"
    ]
@@ -542,7 +535,7 @@
   "windowed": false
  },
  "size": {
-  "min": 29529,
-  "gzip": 9409
+  "min": 30415,
+  "gzip": 9837
  }
 }

@@ -54,7 +54,8 @@ describe("tc-ai-search", () => {
       expect(sw.textContent!.trim()).toBe("AI mode");
       expect(el.querySelector(".ui-aisr__check")!.textContent!.trim()).toBe("Search within file contents");
       expect(el.querySelectorAll(".ui-aisr__keys kbd")).toHaveLength(2);
-      expect(el.querySelector<HTMLButtonElement>(".ui-aisr__send")!.disabled).toBe(true);
+      // An empty search field has no Send yet; it appears with the first character
+      expect(el.querySelector(".ui-aisr__send")).toBeNull();
     });
   }
 
@@ -117,6 +118,21 @@ describe("tc-ai-search", () => {
     expect(got).toEqual([{ query: last, mode: "search", contents: false, scopes: ["files", "case"] }]);
     expect(input.value).toBe(last);
     expect(input.getAttribute("aria-expanded")).toBe("false");
+  });
+
+  test("suggestions show their hint and pick out what's typed; Send appears with the first character", async () => {
+    const el = await fixture<TcAiSearch>(html`<tc-ai-search .suggestions=${[{ label: "Helios Holdings wire", kind: "recent", hint: "Yesterday" }]}></tc-ai-search>`);
+    const input = field(el);
+    input.focus();
+    await settle();
+    expect(el.querySelector(".ui-aisr__option-hint")!.textContent).toBe("Yesterday");
+    expect(el.querySelector(".ui-aisr__match")).toBeNull();
+    expect(el.querySelector(".ui-aisr__send")).toBeNull();
+    type(input, "HOLD");
+    await settle();
+    expect(el.querySelector(".ui-aisr__match")!.textContent).toBe("Hold");
+    expect(el.querySelector(".ui-aisr__option-label")!.textContent).toBe("Helios Holdings wire");
+    expect(el.querySelector<HTMLButtonElement>(".ui-aisr__send")!.disabled).toBe(false);
   });
 
   test("Enter with nothing picked searches for what's typed; Escape closes the list, then clears", async () => {
