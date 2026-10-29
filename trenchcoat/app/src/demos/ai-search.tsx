@@ -7,12 +7,12 @@ import { caption } from "../demo-kit";
    prompts to start from. The caption shows what each submit would send. */
 
 const SUGGESTIONS: AiSearchSuggestion[] = [
-  { label: "invoice 7741", kind: "recent" },
-  { label: "Helios Holdings wire", kind: "recent" },
-  { label: "wire transfer May", kind: "recent" },
-  { label: "Board minutes 2026", kind: "suggested" },
-  { label: "Vendor contracts expiring this quarter", kind: "suggested" },
-  { label: "Logistics budget approvals", kind: "suggested" },
+  { label: "invoice 7741", kind: "recent", hint: "12 results" },
+  { label: "Helios Holdings wire", kind: "recent", hint: "Yesterday" },
+  { label: "wire transfer May", kind: "recent", hint: "In file contents" },
+  { label: "Board minutes 2026", kind: "suggested", hint: "Files" },
+  { label: "Vendor contracts expiring this quarter", kind: "suggested", hint: "Files" },
+  { label: "Logistics budget approvals", kind: "suggested", hint: "People" },
 ];
 const SCOPES: AiSearchScope[] = [{ id: "case", label: "Case 22-1187" }];
 const EXAMPLES = ["Summarise what changed in the vendor contracts", "Who signed off the Q3 logistics budget?", "List every file that mentions Helios Holdings"];

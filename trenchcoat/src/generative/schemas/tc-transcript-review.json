@@ -59,9 +59,9 @@
     "translationMode": {
       "type": "string",
       "enum": [
+        "both",
         "original",
-        "translation",
-        "both"
+        "translation"
       ],
       "description": "What the transcript shows when segments have translations: the original, the translation, or both side by side"
     },

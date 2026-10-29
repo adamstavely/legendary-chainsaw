@@ -19,13 +19,20 @@ import { isMac } from "./internal/util";
  *   · every submit fires tc-submit ({ query, mode, contents, scopes }); the mode and contents switches fire cancelable
  *     changes, so the page can own them
  * Standard: a gray tray holding the white search card, with the switches on the tray below it; the suggestions in a
- * menu on a tray. Clean: one white card, the switches its last row below a divider; the suggestions in one menu.
+ * menu on a tray, its key hints on the tray below. Clean: one white card, the switches its last row below a divider;
+ * the suggestions in one menu, the key hints its last row. The part of a suggestion that matches what's typed is
+ * picked out, and the highlighted one shows ↵.
  *
  *   <tc-ai-search .suggestions=${[{ label: "invoice 7741", kind: "recent" }]}></tc-ai-search>
  */
 
 export type AiSearchMode = "search" | "ai";
-export type AiSearchSuggestion = { label: string; kind?: "recent" | "suggested" };
+export type AiSearchSuggestion = {
+  label: string;
+  kind?: "recent" | "suggested";
+  /** A muted note after the label: where it searched, how many results, when */
+  hint?: string;
+};
 export type AiSearchScope = { id: string; label: string };
 
 /** Details of the events */
@@ -238,7 +245,9 @@ export class TcAiSearch extends TcElement {
         this.setValue(o.label);
         this.submit(o.label);
       }}
-    ><span class="ui-aisr__option-icon" aria-hidden="true">${(o.kind ?? "suggested") === "recent" ? clockIcon() : searchIcon()}</span><span class="ui-aisr__option-label">${o.label}</span></li>`;
+    ><span class="ui-aisr__option-icon" aria-hidden="true">${(o.kind ?? "suggested") === "recent" ? clockIcon() : searchIcon()}</span
+      ><span class="ui-aisr__option-text"><span class="ui-aisr__option-label">${this.highlight(o.label)}</span>${o.hint ? html`<span class="ui-aisr__option-hint">${o.hint}</span>` : nothing}</span
+      ></li>`;
     return html`<div class="ui-aisr__pop">
       <div class="ui-aisr__menu">
         <ul class="ui-aisr__list" id=${`${id}-list`} role="listbox" aria-label="Suggestions">
@@ -251,8 +260,19 @@ export class TcAiSearch extends TcElement {
                 ${suggested.map((o, i) => option(o, recent.length + i))}`
             : nothing}
         </ul>
+        <div class="ui-aisr__foot" aria-hidden="true">
+          <span><kbd>↑</kbd><kbd>↓</kbd> to move</span><span><kbd>↵</kbd> to search</span><span><kbd>esc</kbd> to close</span>
+        </div>
       </div>
     </div>`;
+  }
+
+  /** The label with the part that matches what's typed picked out */
+  private highlight(label: string) {
+    const q = this.value.trim();
+    const at = q ? label.toLowerCase().indexOf(q.toLowerCase()) : -1;
+    if (at < 0) return label;
+    return html`${label.slice(0, at)}<mark class="ui-aisr__match">${label.slice(at, at + q.length)}</mark>${label.slice(at + q.length)}`;
   }
 
   protected override render() {
@@ -324,7 +344,9 @@ export class TcAiSearch extends TcElement {
           <span class="ui-aisr__trail">
             ${showKeys && hotkey ? html`<span class="ui-aisr__keys" aria-hidden="true">${comboKeys(hotkey, isMac() ? "⌘" : "Ctrl").map((k) => html`<kbd>${k}</kbd>`)}</span>` : nothing}
             ${this.value ? html`<button type="button" class="ui-aisr__clear" aria-label="Clear" @click=${() => this.clear()}>${xIcon()}</button>` : nothing}
-            <button type="button" class="ui-aisr__send" aria-label=${ai ? "Ask" : "Search"} ?disabled=${!this.value.trim()} @click=${() => this.submit()}>${sendIcon()}</button>
+            ${ai || this.value.trim()
+              ? html`<button type="button" class="ui-aisr__send" aria-label=${ai ? "Ask" : "Search"} ?disabled=${!this.value.trim()} @click=${() => this.submit()}>${sendIcon()}</button>`
+              : nothing}
           </span>
         </div>
         ${ai && this.examples.length
@@ -411,7 +433,9 @@ textarea.ui-aisr__input { height: auto; min-height: calc(3 * var(--tc-line-heigh
 .ui-aisr__clear:hover { background: var(--tc-action-ghost-bg-hover); color: var(--tc-text-primary); }
 .ui-aisr__send { display: grid; place-items: center; width: var(--tc-control-h-md); height: var(--tc-control-h-md); border-radius: var(--tc-radius-full); background: var(--tc-action-primary-bg); box-shadow: var(--tc-action-primary-shadow); color: var(--tc-action-primary-fg); transition: background-color var(--tc-duration-fast) var(--tc-ease-standard); }
 .ui-aisr__send:hover:not(:disabled) { background: var(--tc-action-primary-bg-hover); }
-.ui-aisr__send:disabled { background: var(--tc-fill-strong); box-shadow: none; color: var(--tc-text-disabled); cursor: not-allowed; }
+.ui-aisr__send:disabled { background: var(--tc-fill-default); box-shadow: none; color: var(--tc-icon-muted); cursor: not-allowed; }
+/* In search mode Send appears with the first character; a fresh field keeps its end quiet */
+.ui-aisr__send:not(:disabled) { animation: ui-aisr-pop var(--tc-duration-moderate) var(--tc-ease-move) both; }
 /* ----- Examples, inside the card under the prompt ----- */
 .ui-aisr__examples { display: flex; flex-wrap: wrap; gap: var(--tc-space-1-5); padding: var(--tc-space-1) var(--tc-space-3) var(--tc-space-3); }
 .ui-aisr__example { display: inline-flex; align-items: center; gap: var(--tc-space-1-5); min-height: var(--tc-control-h-sm); padding: var(--tc-space-1) var(--tc-space-2-5); border-radius: var(--tc-radius-full); background: var(--tc-fill-subtle); font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-snug); color: var(--tc-text-secondary); text-align: left; transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard); }
@@ -420,14 +444,28 @@ textarea.ui-aisr__input { height: auto; min-height: calc(3 * var(--tc-line-heigh
 /* ----- Suggestions: a menu below the card ----- */
 .ui-aisr__pop { position: absolute; z-index: var(--tc-z-dropdown); top: calc(100% + var(--tc-space-1-5)); left: 0; right: 0; box-shadow: var(--tc-menu-shadow); animation: ui-aisr-open var(--tc-duration-moderate) var(--tc-ease-move) both; }
 :where([data-look="standard"], [data-look="standard"] *).ui-aisr__pop { top: calc(100% + var(--tc-tray-inset) + var(--tc-space-1)); left: calc(-1 * var(--tc-tray-inset)); right: calc(-1 * var(--tc-tray-inset)); padding: var(--tc-tray-inset); border-radius: var(--tc-tray-radius); background: var(--tc-surface-tray); }
-:where([data-look="standard"], [data-look="standard"] *).ui-aisr__menu { overflow: hidden; border-radius: var(--tc-card-radius); background: var(--tc-menu-bg); box-shadow: 0 0 0 var(--tc-hairline) var(--tc-border-default); }
 :where([data-look="clean"], [data-look="clean"] *).ui-aisr__pop { overflow: hidden; border-radius: var(--tc-menu-radius); background: var(--tc-menu-bg); }
 .ui-aisr__list { max-height: 320px; padding: var(--tc-menu-padding); overflow-y: auto; overscroll-behavior: contain; }
 .ui-aisr__group { padding: var(--tc-space-1-5) var(--tc-menu-item-px) var(--tc-space-1); font-size: var(--tc-caption-font-size); font-weight: var(--tc-caption-font-weight); line-height: var(--tc-caption-line-height); letter-spacing: var(--tc-caption-tracking); text-transform: var(--tc-caption-transform); color: var(--tc-caption-color); }
-.ui-aisr__option { display: flex; align-items: center; gap: var(--tc-space-2); min-height: var(--tc-menu-item-h); padding: 0 var(--tc-menu-item-px); border-radius: var(--tc-menu-item-radius); font-size: var(--tc-menu-item-font-size); color: var(--tc-text-primary); cursor: pointer; }
-.ui-aisr__option[aria-selected="true"] { background: var(--tc-menu-item-hover); }
-.ui-aisr__option-icon { color: var(--tc-icon-muted); }
-.ui-aisr__option-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ui-aisr__option { display: flex; align-items: center; gap: var(--tc-space-2-5); min-height: var(--tc-menu-item-h); padding: 0 var(--tc-menu-item-px); border-radius: var(--tc-menu-item-radius); font-size: var(--tc-menu-item-font-size); color: var(--tc-text-secondary); cursor: pointer; }
+:where([data-look="standard"], [data-look="standard"] *).ui-aisr__option { min-height: calc(var(--tc-menu-item-h) + var(--tc-space-1)); }
+.ui-aisr__option[aria-selected="true"] { background: var(--tc-menu-item-hover); color: var(--tc-text-primary); }
+.ui-aisr__option-icon { display: grid; place-items: center; flex: none; width: var(--tc-space-5); color: var(--tc-icon-muted); }
+.ui-aisr__option[aria-selected="true"] .ui-aisr__option-icon { color: var(--tc-text-primary); }
+.ui-aisr__option-text { display: flex; flex: 1; align-items: baseline; gap: var(--tc-space-2); min-width: 0; }
+.ui-aisr__option-label { overflow: hidden; color: var(--tc-text-primary); text-overflow: ellipsis; white-space: nowrap; }
+.ui-aisr__option-hint { flex: none; max-width: 45%; overflow: hidden; font-size: var(--tc-font-size-sm); color: var(--tc-text-muted); text-overflow: ellipsis; white-space: nowrap; }
+/* What's typed, picked out in the label */
+.ui-aisr__match { background: none; color: inherit; font-weight: var(--tc-font-weight-strong); }
+/* The highlighted suggestion shows ↵ at its end – drawn by CSS, so it's no part of the option's name */
+.ui-aisr__option[aria-selected="true"]::after { content: "↵" / ""; display: inline-grid; flex: none; place-items: center; min-width: var(--tc-kbd-h); height: var(--tc-kbd-h); margin-left: auto; padding: 0 var(--tc-kbd-px); border-radius: var(--tc-kbd-radius); background: var(--tc-kbd-bg); box-shadow: var(--tc-kbd-shadow); font-size: var(--tc-kbd-font-size); font-weight: var(--tc-kbd-font-weight); color: var(--tc-kbd-fg); }
+/* Key hints under the menu: on the tray in Standard, the menu's last row in Clean */
+.ui-aisr__foot { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-1) var(--tc-space-4); font-size: var(--tc-font-size-xs); color: var(--tc-text-muted); }
+.ui-aisr__foot > span { display: inline-flex; align-items: center; gap: var(--tc-space-1); }
+:where([data-look="standard"], [data-look="standard"] *).ui-aisr__foot { padding: var(--tc-space-2) var(--tc-space-2) var(--tc-space-0-5); }
+:where([data-look="standard"], [data-look="standard"] *).ui-aisr__menu { display: contents; }
+:where([data-look="standard"], [data-look="standard"] *).ui-aisr__list { border-radius: var(--tc-card-radius); background: var(--tc-menu-bg); box-shadow: 0 0 0 var(--tc-hairline) var(--tc-border-default); }
+:where([data-look="clean"], [data-look="clean"] *).ui-aisr__foot { padding: var(--tc-space-2) var(--tc-space-3); border-top: var(--tc-hairline) solid var(--tc-divider); }
 /* ----- The switches: AI mode, file contents, and the keys on the right ----- */
 .ui-aisr__opts { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-1) var(--tc-space-5); padding: var(--tc-space-1-5) var(--tc-space-3); font-size: var(--tc-font-size-sm); }
 :where([data-look="standard"], [data-look="standard"] *).ui-aisr__opts { padding: var(--tc-space-1-5) var(--tc-space-2-5) var(--tc-space-1); }
@@ -453,8 +491,9 @@ textarea.ui-aisr__input { height: auto; min-height: calc(3 * var(--tc-line-heigh
 .ui-aisr__hint { display: inline-flex; align-items: center; gap: var(--tc-space-1); margin-left: auto; font-size: var(--tc-font-size-xs); color: var(--tc-text-muted); white-space: nowrap; }
 .ui-aisr__hint kbd { margin-right: var(--tc-space-0-5); }
 @keyframes ui-aisr-open { from { opacity: 0; transform: translateY(-2px) scale(0.99); } }
+@keyframes ui-aisr-pop { from { opacity: 0; transform: scale(0.85); } }
 @container (max-width: 460px) {
-  .ui-aisr__hint, .ui-aisr__keys { display: none; }
+  .ui-aisr__hint, .ui-aisr__keys, .ui-aisr__foot, .ui-aisr__option-hint { display: none; }
   .ui-aisr__opts { gap: var(--tc-space-1) var(--tc-space-4); }
 }
 @media (forced-colors: active) {

@@ -7,8 +7,9 @@ related: ai-search, query-builder, routine-form, chat-history, prompt-library
 ## Overview
 
 The searches someone ran and the ones they kept. Two tabs, Recent and Saved, show their counts; a filter box narrows
-either one by query or scope. Searches are grouped by day – Today, Yesterday, then the date – and each shows its query,
-its scope as chips (“Files”, “AI mode”), how many results it found and when it ran. Each search can be run again,
+either one by query or scope. Searches are grouped by day – Today, Yesterday, then the date – and each shows an icon
+for how it ran (a sparkle for AI mode, a funnel for the builder), its query, and one quiet line with its scopes
+(“Files”, “AI mode”), how many results it found and when it ran. Each search can be run again,
 starred to keep it, or removed – which leaves “Removed · Undo” at the top until the next removal. With `schedulable`,
 saved searches also offer Schedule, for a page that runs them as routines.
 
@@ -39,7 +40,8 @@ saved searches also offer Schedule, for a page that runs them as routines.
 ## Looks
 
 Standard is a white card on a gray tray, with the header and tabs on the tray above it. Clean is one white card with
-the header as its first row. The rows, chips and actions are the same in both. The filter is a quiet field – a soft
+the header as its first row. The rows and actions are the same in both. With a mouse, a
+row's actions appear when it's hovered or focused, and a saved search keeps its star; on touch screens they always show. The filter is a quiet field – a soft
 fill, with the field's ring only when it has focus.
 
 ## Keyboard
