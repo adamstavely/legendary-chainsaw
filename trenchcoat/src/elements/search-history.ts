@@ -8,13 +8,16 @@ import { formatDate } from "./internal/util";
 /*
  * <tc-search-history> – the searches someone ran and the ones they kept. Two tabs, Recent and Saved, each with its
  * count; a filter box; searches grouped by day (Today, Yesterday, then the date). Each search shows its query, its
- * scope as chips ("Files", "AI mode"), how many results it found and when it ran, and three actions: run it again,
+ * scopes ("Files", "AI mode"), how many results it found and when it ran, and three actions: run it again,
  * save or unsave it (a star), and remove it – which leaves "Removed · Undo" in its place until the next removal.
  *   · the rows' buttons are one tab stop: ↑ / ↓ move between searches, ← / → between a search's actions, Home / End
  *     to the first and last search; Tab leaves the list
  *   · saving and removing fire cancelable events – prevent them to keep `searches` yourself
  *   · with `schedulable`, saved searches also offer Schedule (tc-schedule), for a page that runs them as routines
  *   · times are relative to `now`, or to the element's own clock, refreshed every minute
+ * Each search leads with an icon for how it ran – a sparkle for AI mode, a funnel for the builder, a magnifier
+ * otherwise – and its scopes, results and time read as one quiet line. Pointer users see a row's Schedule, star and
+ * Remove when they hover it (a saved search keeps its star); keyboard and touch users always have them.
  * Standard: the header on a gray tray above a white card. Clean: one white card, the header its first row.
  *
  *   <tc-search-history .searches=${[{ id: "s1", query: "invoice 7741", scopes: ["Files"], results: 12, at: ranAt }]}></tc-search-history>
@@ -46,11 +49,19 @@ const MIN = 60_000;
 const DAY = 86_400_000;
 let uidCount = 0;
 
-/* history, search, star, x, rotate-ccw, calendar-clock: Lucide (ISC, lucide.dev) */
+/* history, search, sparkles, list-filter, star, x, calendar-clock: Lucide (ISC, lucide.dev) */
 const lucide = (size: number, body: ReturnType<typeof svg>, fill = "none") =>
   html`<svg width=${size} height=${size} viewBox="0 0 24 24" fill=${fill} stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${body}</svg>`;
 const historyIcon = svg`<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path><path d="M12 7v5l4 2"></path>`;
-const searchIcon = () => lucide(14, svg`<circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path>`);
+const searchIcon = (size = 14) => lucide(size, svg`<circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path>`);
+const sparkleIcon = () =>
+  lucide(16, svg`<path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"></path>`);
+const builderIcon = () => lucide(16, svg`<path d="M3 6h18"></path><path d="M7 12h10"></path><path d="M10 18h4"></path>`);
+/** How a search ran, from its scopes: AI mode, the query builder, or a plain search */
+const kindOf = (s: SearchHistoryEntry) => {
+  const scopes = (s.scopes ?? []).map((x) => x.toLowerCase());
+  return scopes.includes("ai mode") ? "ai" : scopes.includes("builder") ? "builder" : "search";
+};
 const starPath = svg`<path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"></path>`;
 const starIcon = (on: boolean) => lucide(15, starPath, on ? "currentColor" : "none");
 const xIcon = () => lucide(14, svg`<path d="M18 6 6 18"></path><path d="m6 6 12 12"></path>`);
@@ -64,7 +75,7 @@ const dayStart = (ms: number) => {
 };
 
 /**
- * Recent and saved searches – tabs with counts, a filter, searches grouped by day with scope chips, result counts and
+ * Recent and saved searches – tabs with counts, a filter, searches grouped by day with their scopes, result counts and
  * times, and Run again, a save star and Remove with Undo on each.
  * @tag tc-search-history
  * @fires tc-select - A search was picked to run again ({ id, search }: SearchHistorySelect)
@@ -304,9 +315,9 @@ export class TcSearchHistory extends TcElement {
     const stopCol = Math.min(this.active.col, cols.length - 1);
     const stop = (c: number) => (this.active.row === row && stopCol === c ? 0 : -1);
     const focus = (c: number) => () => this.setActive(row, c);
-    return html`<li class="ui-shis__row" data-id=${s.id}>
+    return html`<li class="ui-shis__row" data-id=${s.id} ?data-saved=${!!s.saved}>
       <button type="button" class="ui-shis__run" data-cell=${`${row}:0`} tabindex=${stop(0)} @focus=${focus(0)} @click=${() => this.run(s)}>
-        <span class="ui-shis__glyph" aria-hidden="true">${searchIcon()}</span>
+        <span class="ui-shis__glyph" data-kind=${kindOf(s)} aria-hidden="true">${kindOf(s) === "ai" ? sparkleIcon() : kindOf(s) === "builder" ? builderIcon() : searchIcon(16)}</span>
         <span class="ui-shis__main">
           <span class="ui-shis__query">${s.query}</span>
           <span class="ui-shis__meta">
@@ -462,18 +473,26 @@ export class TcSearchHistory extends TcElement {
 .ui-shis__panel { padding: var(--tc-space-1) 0 var(--tc-space-2); }
 .ui-shis__day + .ui-shis__day { margin-top: var(--tc-space-1); }
 .ui-shis__day-name { padding: var(--tc-space-2) var(--tc-space-4) var(--tc-space-1); font-size: var(--tc-caption-font-size); font-weight: var(--tc-caption-font-weight); line-height: var(--tc-caption-line-height); letter-spacing: var(--tc-caption-tracking); text-transform: var(--tc-caption-transform); color: var(--tc-caption-color); }
-.ui-shis__row { display: flex; align-items: center; gap: var(--tc-space-0-5); margin: 0 var(--tc-space-2); padding-right: var(--tc-space-1); border-radius: var(--tc-menu-item-radius); transition: background-color var(--tc-duration-fast) var(--tc-ease-standard); }
+.ui-shis__row { display: flex; align-items: center; gap: var(--tc-space-0-5); margin: 0 var(--tc-space-2); padding-right: var(--tc-space-1-5); border-radius: var(--tc-menu-item-radius); transition: background-color var(--tc-duration-fast) var(--tc-ease-standard); }
 .ui-shis__row:hover { background: var(--tc-menu-item-hover); }
-.ui-shis__run { display: flex; flex: 1; align-items: flex-start; gap: var(--tc-space-2-5); min-width: 0; padding: var(--tc-space-2) var(--tc-space-2); border-radius: var(--tc-menu-item-radius); text-align: left; }
-.ui-shis__glyph { display: grid; place-items: center; flex: none; width: var(--tc-space-6); height: var(--tc-space-6); border-radius: var(--tc-radius-md); background: var(--tc-fill-subtle); color: var(--tc-icon-muted); }
-.ui-shis__main { display: grid; gap: var(--tc-space-1); min-width: 0; }
+.ui-shis__run { display: flex; flex: 1; align-items: flex-start; gap: var(--tc-space-3); min-width: 0; padding: var(--tc-space-2-5) var(--tc-space-2); border-radius: var(--tc-menu-item-radius); text-align: left; }
+/* The kind of search, a bare icon on the query's line */
+.ui-shis__glyph { display: grid; place-items: center; flex: none; width: var(--tc-space-5); height: calc(var(--tc-font-size-md) * var(--tc-line-height-snug)); color: var(--tc-icon-muted); }
+.ui-shis__glyph[data-kind="ai"] { color: var(--tc-tone-violet-fg); }
+.ui-shis__main { display: grid; gap: var(--tc-space-0-5); min-width: 0; }
 .ui-shis__query { overflow: hidden; color: var(--tc-text-primary); line-height: var(--tc-line-height-snug); text-overflow: ellipsis; white-space: nowrap; }
-.ui-shis__meta { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-1) var(--tc-space-2); font-size: var(--tc-font-size-xs); line-height: var(--tc-line-height-tight); color: var(--tc-text-muted); }
-.ui-shis__scope { display: inline-flex; align-items: center; height: var(--tc-pill-h); padding: 0 var(--tc-pill-px); border-radius: var(--tc-pill-radius); background: var(--tc-fill-default); font-size: var(--tc-pill-font-size); font-weight: var(--tc-pill-font-weight); color: var(--tc-text-secondary); }
+/* Scopes, results and time as one line, dot-separated */
+.ui-shis__meta { display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--tc-space-1-5); font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-snug); color: var(--tc-text-muted); }
+.ui-shis__meta > * + *::before { content: "·"; margin-right: var(--tc-space-1-5); color: var(--tc-text-muted); }
+.ui-shis__scope { color: var(--tc-text-secondary); }
 .ui-shis__results, .ui-shis__time { font-variant-numeric: tabular-nums; }
 .ui-shis__star, .ui-shis__remove, .ui-shis__schedule { display: grid; flex: none; place-items: center; width: var(--tc-control-h-sm); height: var(--tc-control-h-sm); border-radius: var(--tc-control-radius-sm); color: var(--tc-icon-muted); transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard); }
 .ui-shis__star:hover, .ui-shis__remove:hover, .ui-shis__schedule:hover { background: var(--tc-action-ghost-bg-hover); color: var(--tc-text-primary); }
-.ui-shis__star[aria-pressed="true"] { color: var(--tc-status-warning-fg); }
+.ui-shis__star[aria-pressed="true"] { color: var(--tc-status-warning-solid); }
+/* With a pointer, a row's actions show on hover or focus; a saved search keeps its star */
+@media (hover: hover) and (pointer: fine) {
+  .ui-shis__row:not(:hover, :focus-within) :is(.ui-shis__schedule, .ui-shis__remove, .ui-shis__star[aria-pressed="false"]) { opacity: 0; }
+}
 .ui-shis__removed { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-1); margin: var(--tc-space-2) var(--tc-space-3) 0; padding: var(--tc-space-2) var(--tc-space-3); border-radius: var(--tc-radius-md); background: var(--tc-fill-subtle); font-size: var(--tc-font-size-sm); color: var(--tc-text-secondary); animation: ui-shis-in var(--tc-duration-moderate) var(--tc-ease-move) both; }
 .ui-shis__undo { font-weight: var(--tc-font-weight-medium); color: var(--tc-accent-text); text-decoration: underline; text-underline-offset: var(--tc-space-0-5); }
 .ui-shis__empty { padding: var(--tc-space-5) var(--tc-space-4); color: var(--tc-text-muted); text-align: center; }

@@ -106,7 +106,7 @@
    "cssProperties": [
     {
      "name": "--tc-qb-conj",
-     "value": "var(--tc-space-12)",
+     "value": "var(--tc-space-10)",
      "looks": [
       "standard",
       "clean"
@@ -176,7 +176,7 @@
     "--tc-space-0-5",
     "--tc-space-1",
     "--tc-space-1-5",
-    "--tc-space-12",
+    "--tc-space-10",
     "--tc-space-2",
     "--tc-space-2-5",
     "--tc-space-3",
@@ -523,7 +523,7 @@
   "windowed": false
  },
  "size": {
-  "min": 34091,
-  "gzip": 10259
+  "min": 34286,
+  "gzip": 10330
  }
 }

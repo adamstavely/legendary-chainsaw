@@ -62,6 +62,7 @@ export const registry: Record<string, { events: string[]; load: () => Promise<un
   "tc-context-window": { events: ["tc-remove-item","tc-compact","tc-action"], load: () => import("../elements/context-window"), schema: () => import("./schemas/tc-context-window.json") },
   "tc-conversation-annotation": { events: ["tc-value-change","tc-send"], load: () => import("../elements/conversation-annotation"), schema: () => import("./schemas/tc-conversation-annotation.json") },
   "tc-conversation-branches": { events: ["tc-selected-change","tc-messages-change","tc-edit"], load: () => import("../elements/conversation-branches"), schema: () => import("./schemas/tc-conversation-branches.json") },
+  "tc-coordinate-details": { events: ["tc-coordinate-lookup","tc-copy","tc-open","tc-open-change"], load: () => import("../elements/coordinate-details"), schema: () => import("./schemas/tc-coordinate-details.json") },
   "tc-correction-propagation": { events: ["tc-states-change","tc-review","tc-supersede","tc-dismiss"], load: () => import("../elements/correction-propagation"), schema: () => import("./schemas/tc-correction-propagation.json") },
   "tc-cover-flow": { events: ["tc-index-change","tc-front-change","tc-select"], load: () => import("../elements/cover-flow"), schema: () => import("./schemas/tc-cover-flow.json") },
   "tc-coverage-matrix": { events: ["tc-open-change"], load: () => import("../elements/coverage-matrix"), schema: () => import("./schemas/tc-coverage-matrix.json") },

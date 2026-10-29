@@ -1713,11 +1713,11 @@
   },
   "ai-search": {
    "measuredAt": "2026-10-28",
-   "hash": "2b5cdada410ca3ec",
+   "hash": "b7eb13ca89dd86f3",
    "bundle": {
     "own": {
-     "min": 25929,
-     "gzip": 7336
+     "min": 28912,
+     "gzip": 7913
     },
     "shared": [
      {
@@ -1762,23 +1762,23 @@
      }
     ],
     "withoutLit": {
-     "min": 34032,
-     "gzip": 9745
+     "min": 37015,
+     "gzip": 10330
     },
     "withLit": {
-     "min": 55218,
-     "gzip": 16674
+     "min": 58201,
+     "gzip": 17267
     }
    },
    "render": {
     "tag": "tc-ai-search",
     "source": "demo",
     "runs": 7,
-    "cold": 16,
-    "first": 0.8,
-    "update": 0.1,
+    "cold": 15.4,
+    "first": 0.7,
+    "update": 0.2,
     "updateKind": "one item of suggestions replaced",
-    "nodes": 33,
+    "nodes": 29,
     "scale": {
      "property": "suggestions",
      "demoItems": 6,
@@ -1787,13 +1787,13 @@
        "items": 100,
        "first": 0.8,
        "update": 0,
-       "nodes": 33
+       "nodes": 29
       },
       {
        "items": 1000,
        "first": 0.7,
        "update": 0.1,
-       "nodes": 33
+       "nodes": 29
       }
      ]
     },
@@ -1987,7 +1987,7 @@
     "tag": "tc-ai-side-pane",
     "source": "defaults",
     "runs": 7,
-    "cold": 27.9,
+    "cold": 30.5,
     "first": 3.2,
     "update": 0.5,
     "updateKind": "re-render with the same data",
@@ -2251,9 +2251,9 @@
     "tag": "tc-ai-workspace",
     "source": "defaults",
     "runs": 7,
-    "cold": 26,
-    "first": 4,
-    "update": 0.4,
+    "cold": 23.1,
+    "first": 4.3,
+    "update": 0.5,
     "updateKind": "re-render with the same data",
     "nodes": 265,
     "scale": null,
@@ -2654,8 +2654,8 @@
     "tag": "tc-app-picker",
     "source": "demo",
     "runs": 7,
-    "cold": 5,
-    "first": 0.5,
+    "cold": 7.1,
+    "first": 0.4,
     "update": 0.1,
     "updateKind": "one item of pinned replaced",
     "nodes": 12,
@@ -2666,13 +2666,13 @@
       {
        "items": 100,
        "first": 0.4,
-       "update": 0,
+       "update": 0.1,
        "nodes": 12
       },
       {
        "items": 1000,
-       "first": 0.4,
-       "update": 0,
+       "first": 0.3,
+       "update": 0.1,
        "nodes": 12
       }
      ]
@@ -3385,9 +3385,9 @@
     "tag": "tc-background-tasks",
     "source": "demo",
     "runs": 7,
-    "cold": 6.2,
+    "cold": 5.8,
     "first": 0.4,
-    "update": 0.1,
+    "update": 0.2,
     "updateKind": "one item of tasks replaced",
     "nodes": 10,
     "scale": {
@@ -3396,8 +3396,8 @@
      "points": [
       {
        "items": 10000,
-       "first": 4.1,
-       "update": 1.9,
+       "first": 4.3,
+       "update": 2,
        "nodes": 10
       }
      ]
@@ -3487,7 +3487,7 @@
     "tag": "tc-bibliography",
     "source": "demo",
     "runs": 7,
-    "cold": 10.9,
+    "cold": 11.3,
     "first": 1.9,
     "update": 0.4,
     "updateKind": "one item of references replaced",
@@ -3498,14 +3498,14 @@
      "points": [
       {
        "items": 100,
-       "first": 10.6,
-       "update": 1.4,
+       "first": 10.5,
+       "update": 1.3,
        "nodes": 1746
       },
       {
        "items": 1000,
-       "first": 99.3,
-       "update": 12,
+       "first": 99,
+       "update": 11.8,
        "nodes": 16919
       }
      ]
@@ -4614,8 +4614,8 @@
     "tag": "tc-chat-composer",
     "source": "demo",
     "runs": 7,
-    "cold": 25.8,
-    "first": 4.3,
+    "cold": 16.2,
+    "first": 4,
     "update": 0.5,
     "updateKind": "one item of skills replaced",
     "nodes": 304,
@@ -4625,14 +4625,14 @@
      "points": [
       {
        "items": 100,
-       "first": 3.8,
-       "update": 0.1,
+       "first": 4,
+       "update": 0.3,
        "nodes": 304
       },
       {
        "items": 1000,
        "first": 3.9,
-       "update": 0.2,
+       "update": 0.3,
        "nodes": 304
       }
      ]
@@ -7089,6 +7089,134 @@
        "first": 0.9,
        "update": 0.1,
        "nodes": 24
+      }
+     ]
+    },
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
+  "coordinate-details": {
+   "measuredAt": "2026-10-29",
+   "hash": "0276f475c825ae4e",
+   "bundle": {
+    "own": {
+     "min": 26809,
+     "gzip": 9493
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 21108
+     },
+     {
+      "name": "internal/popover",
+      "kind": "internal",
+      "min": 8530
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2968
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1864
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/selection",
+      "kind": "internal",
+      "min": 899
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 444
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 435
+     },
+     {
+      "name": "internal/safe-url",
+      "kind": "internal",
+      "min": 343
+     },
+     {
+      "name": "internal/util",
+      "kind": "internal",
+      "min": 270
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     },
+     {
+      "name": "internal/safe-media",
+      "kind": "internal",
+      "min": 120
+     },
+     {
+      "name": "geo-location",
+      "kind": "element",
+      "min": 19290
+     }
+    ],
+    "withoutLit": {
+     "min": 63723,
+     "gzip": 19320
+    },
+    "withLit": {
+     "min": 85809,
+     "gzip": 26533
+    }
+   },
+   "render": {
+    "tag": "tc-coordinate-details",
+    "source": "demo",
+    "runs": 7,
+    "cold": 7,
+    "first": 0.4,
+    "update": 0.1,
+    "updateKind": "one item of providers replaced",
+    "nodes": 6,
+    "scale": {
+     "property": "providers",
+     "demoItems": 4,
+     "points": [
+      {
+       "items": 100,
+       "first": 0.3,
+       "update": 0.1,
+       "nodes": 6
+      },
+      {
+       "items": 1000,
+       "first": 0.3,
+       "update": 0,
+       "nodes": 6
       }
      ]
     },
@@ -9958,8 +10086,8 @@
     "tag": "tc-facet-sidebar",
     "source": "demo",
     "runs": 7,
-    "cold": 15.5,
-    "first": 2,
+    "cold": 8.3,
+    "first": 1.9,
     "update": 0.5,
     "updateKind": "one item of facets replaced",
     "nodes": 208,
@@ -9969,14 +10097,14 @@
      "points": [
       {
        "items": 100,
-       "first": 17.7,
-       "update": 4.3,
+       "first": 18.5,
+       "update": 4.8,
        "nodes": 3305
       },
       {
        "items": 1000,
-       "first": 186.4,
-       "update": 33.1,
+       "first": 189.6,
+       "update": 33.7,
        "nodes": 32645
       }
      ]
@@ -10914,7 +11042,7 @@
   },
   "generated-ui": {
    "measuredAt": "2026-10-29",
-   "hash": "1d6f3c0a207b212b",
+   "hash": "b02ef71d8eedff0a",
    "bundle": {
     "own": {
      "min": 34126,
@@ -10934,7 +11062,7 @@
      {
       "name": "internal/selection",
       "kind": "internal",
-      "min": 10653
+      "min": 10652
      },
      {
       "name": "internal/controllers",
@@ -11034,7 +11162,7 @@
      {
       "name": "agent-queue",
       "kind": "element",
-      "min": 90817
+      "min": 90815
      },
      {
       "name": "project-flow",
@@ -11199,7 +11327,7 @@
      {
       "name": "permission-request",
       "kind": "element",
-      "min": 45780
+      "min": 45829
      },
      {
       "name": "context-window",
@@ -11549,7 +11677,7 @@
      {
       "name": "parallel-attempts",
       "kind": "element",
-      "min": 27795
+      "min": 27815
      },
      {
       "name": "budget-guard",
@@ -11637,6 +11765,11 @@
       "min": 24658
      },
      {
+      "name": "coordinate-details",
+      "kind": "element",
+      "min": 24565
+     },
+     {
       "name": "conversation-branches",
       "kind": "element",
       "min": 24397
@@ -11647,14 +11780,14 @@
       "min": 24387
      },
      {
+      "name": "query-builder",
+      "kind": "element",
+      "min": 24276
+     },
+     {
       "name": "gate-config",
       "kind": "element",
       "min": 24265
-     },
-     {
-      "name": "query-builder",
-      "kind": "element",
-      "min": 24081
      },
      {
       "name": "engagement-quality",
@@ -11744,7 +11877,7 @@
      {
       "name": "speed-reader",
       "kind": "element",
-      "min": 21757
+      "min": 21894
      },
      {
       "name": "progress-tracker",
@@ -11764,7 +11897,7 @@
      {
       "name": "routine-form",
       "kind": "element",
-      "min": 20945
+      "min": 21038
      },
      {
       "name": "handoff-brief",
@@ -11775,6 +11908,11 @@
       "name": "fingerprint-card",
       "kind": "element",
       "min": 20910
+     },
+     {
+      "name": "search-history",
+      "kind": "element",
+      "min": 20735
      },
      {
       "name": "agreement-tracker",
@@ -11802,11 +11940,6 @@
       "min": 20433
      },
      {
-      "name": "search-history",
-      "kind": "element",
-      "min": 19827
-     },
-     {
       "name": "confidence-brief",
       "kind": "element",
       "min": 19793
@@ -11814,7 +11947,7 @@
      {
       "name": "geo-location",
       "kind": "element",
-      "min": 19695
+      "min": 19686
      },
      {
       "name": "prioritisation-matrix",
@@ -11829,7 +11962,7 @@
      {
       "name": "isbn-details",
       "kind": "element",
-      "min": 19124
+      "min": 19123
      },
      {
       "name": "travel-itinerary",
@@ -11944,7 +12077,7 @@
      {
       "name": "outreach-branches",
       "kind": "element",
-      "min": 16279
+      "min": 16283
      },
      {
       "name": "capacity-bars",
@@ -12104,7 +12237,7 @@
      {
       "name": "oversight-home",
       "kind": "element",
-      "min": 10426
+      "min": 10454
      },
      {
       "name": "change-summary",
@@ -12174,7 +12307,7 @@
      {
       "name": "src/generative/registry.ts",
       "kind": "other",
-      "min": 38236
+      "min": 38427
      },
      {
       "name": "src/generative/schemas/tc-ai-side-pane.json",
@@ -13054,7 +13187,7 @@
      {
       "name": "src/generative/schemas/tc-search-history.json",
       "kind": "other",
-      "min": 1769
+      "min": 1770
      },
      {
       "name": "src/generative/schemas/tc-cover-flow.json",
@@ -13085,6 +13218,11 @@
       "name": "src/generative/schemas/tc-filter-menu.json",
       "kind": "other",
       "min": 1667
+     },
+     {
+      "name": "src/generative/schemas/tc-coordinate-details.json",
+      "kind": "other",
+      "min": 1664
      },
      {
       "name": "src/generative/schemas/tc-tool-call-card.json",
@@ -13328,19 +13466,19 @@
      }
     ],
     "withoutLit": {
-     "min": 7689647,
-     "gzip": 1889025
+     "min": 7717727,
+     "gzip": 1897651
     },
     "withLit": {
-     "min": 7653995,
-     "gzip": 1875737
+     "min": 7681837,
+     "gzip": 1883656
     }
    },
    "render": {
     "tag": "tc-generated-ui",
     "source": "demo",
     "runs": 7,
-    "cold": 2.2,
+    "cold": 2.6,
     "first": 0.5,
     "update": 0.1,
     "updateKind": "re-render with the same data",
@@ -14471,7 +14609,7 @@
     "tag": "tc-header-nav",
     "source": "defaults",
     "runs": 7,
-    "cold": 8.5,
+    "cold": 9.8,
     "first": 0.3,
     "update": 0.1,
     "updateKind": "re-render with the same data",
@@ -15534,7 +15672,7 @@
     "tag": "tc-isbn-details",
     "source": "demo",
     "runs": 7,
-    "cold": 8,
+    "cold": 7.9,
     "first": 0.4,
     "update": 0.2,
     "updateKind": "re-render with the same data",
@@ -17763,9 +17901,9 @@
     "tag": "tc-multi-calendar",
     "source": "demo",
     "runs": 7,
-    "cold": 22.2,
-    "first": 9.2,
-    "update": 1.7,
+    "cold": 20.7,
+    "first": 8.7,
+    "update": 1.6,
     "updateKind": "one item of events replaced",
     "nodes": 1368,
     "scale": {
@@ -17774,14 +17912,14 @@
      "points": [
       {
        "items": 100,
-       "first": 14.6,
-       "update": 2.1,
+       "first": 15.1,
+       "update": 2,
        "nodes": 2008
       },
       {
        "items": 1000,
-       "first": 81.5,
-       "update": 10.5,
+       "first": 85.5,
+       "update": 9.3,
        "nodes": 9208
       }
      ]
@@ -18097,7 +18235,7 @@
     "tag": "tc-notifications",
     "source": "demo",
     "runs": 7,
-    "cold": 6.2,
+    "cold": 5.7,
     "first": 0.4,
     "update": 0.1,
     "updateKind": "one item of items replaced",
@@ -18108,7 +18246,7 @@
      "points": [
       {
        "items": 100,
-       "first": 0.4,
+       "first": 0.5,
        "update": 0,
        "nodes": 7
       },
@@ -18480,8 +18618,8 @@
     "tag": "tc-org-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 9.4,
-    "first": 1.3,
+    "cold": 11.3,
+    "first": 1.2,
     "update": 0.3,
     "updateKind": "one item of people replaced",
     "nodes": 126,
@@ -18491,14 +18629,14 @@
      "points": [
       {
        "items": 100,
-       "first": 2.1,
+       "first": 2.2,
        "update": 0.3,
        "nodes": 267
       },
       {
        "items": 1000,
-       "first": 9.1,
-       "update": 1.6,
+       "first": 8.9,
+       "update": 1.5,
        "nodes": 1451
       }
      ]
@@ -19308,8 +19446,8 @@
     "tag": "tc-person-hovercard",
     "source": "demo",
     "runs": 7,
-    "cold": 3.9,
-    "first": 0.3,
+    "cold": 4.4,
+    "first": 0.2,
     "update": 0.1,
     "updateKind": "one item of actions replaced",
     "nodes": 2,
@@ -19319,14 +19457,14 @@
      "points": [
       {
        "items": 100,
-       "first": 0.6,
+       "first": 0.1,
        "update": 0,
        "nodes": 2
       },
       {
        "items": 1000,
-       "first": 0.3,
-       "update": 0,
+       "first": 0.1,
+       "update": 0.1,
        "nodes": 2
       }
      ]
@@ -20027,7 +20165,7 @@
     "tag": "tc-prioritisation-matrix",
     "source": "demo",
     "runs": 7,
-    "cold": 8.5,
+    "cold": 8.7,
     "first": 1.5,
     "update": 0.3,
     "updateKind": "one item of items replaced",
@@ -20044,8 +20182,8 @@
       },
       {
        "items": 1000,
-       "first": 44,
-       "update": 8.6,
+       "first": 38.9,
+       "update": 7.8,
        "nodes": 8076
       }
      ]
@@ -21296,11 +21434,11 @@
   },
   "query-builder": {
    "measuredAt": "2026-10-28",
-   "hash": "669a76a624e59e00",
+   "hash": "cce08bbb57f117d6",
    "bundle": {
     "own": {
-     "min": 26160,
-     "gzip": 8044
+     "min": 26355,
+     "gzip": 8114
     },
     "shared": [
      {
@@ -21345,19 +21483,19 @@
      }
     ],
     "withoutLit": {
-     "min": 34091,
-     "gzip": 10304
+     "min": 34286,
+     "gzip": 10373
     },
     "withLit": {
-     "min": 57026,
-     "gzip": 17863
+     "min": 57221,
+     "gzip": 17933
     }
    },
    "render": {
     "tag": "tc-query-builder",
     "source": "demo",
     "runs": 7,
-    "cold": 13.4,
+    "cold": 15.1,
     "first": 1.9,
     "update": 0.4,
     "updateKind": "one item of fields replaced",
@@ -21368,14 +21506,14 @@
      "points": [
       {
        "items": 100,
-       "first": 3.5,
-       "update": 0.5,
+       "first": 3.4,
+       "update": 0.4,
        "nodes": 435
       },
       {
        "items": 1000,
-       "first": 20.4,
-       "update": 3,
+       "first": 20.1,
+       "update": 2.8,
        "nodes": 3135
       }
      ]
@@ -21666,8 +21804,8 @@
     "tag": "tc-reasoning-flags",
     "source": "demo",
     "runs": 7,
-    "cold": 3,
-    "first": 0.4,
+    "cold": 2,
+    "first": 0.3,
     "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 2,
@@ -22027,7 +22165,7 @@
     "tag": "tc-relationship-graph",
     "source": "demo",
     "runs": 7,
-    "cold": 10.6,
+    "cold": 8.4,
     "first": 1.5,
     "update": 0.3,
     "updateKind": "one item of edges replaced",
@@ -22044,8 +22182,8 @@
       },
       {
        "items": 1000,
-       "first": 15.4,
-       "update": 2.2,
+       "first": 15.1,
+       "update": 1.9,
        "nodes": 3245
       }
      ]
@@ -22243,8 +22381,8 @@
     "tag": "tc-response-selection",
     "source": "demo",
     "runs": 7,
-    "cold": 2.5,
-    "first": 0.4,
+    "cold": 2.8,
+    "first": 0.5,
     "update": 0.2,
     "updateKind": "one item of actions replaced",
     "nodes": 5,
@@ -22255,7 +22393,7 @@
       {
        "items": 100,
        "first": 0.5,
-       "update": 0.1,
+       "update": 0,
        "nodes": 5
       },
       {
@@ -22351,9 +22489,9 @@
     "tag": "tc-results-list",
     "source": "demo",
     "runs": 7,
-    "cold": 10.6,
+    "cold": 10.8,
     "first": 1.3,
-    "update": 0.5,
+    "update": 0.4,
     "updateKind": "one item of results replaced",
     "nodes": 107,
     "scale": {
@@ -22362,14 +22500,14 @@
      "points": [
       {
        "items": 100,
-       "first": 1.3,
-       "update": 0.1,
+       "first": 1.4,
+       "update": 0.2,
        "nodes": 107
       },
       {
        "items": 1000,
-       "first": 1.1,
-       "update": 0.2,
+       "first": 1.3,
+       "update": 0.3,
        "nodes": 107
       }
      ]
@@ -22865,8 +23003,8 @@
     "tag": "tc-risk-register",
     "source": "demo",
     "runs": 7,
-    "cold": 12.7,
-    "first": 2.5,
+    "cold": 12.3,
+    "first": 2.3,
     "update": 0.4,
     "updateKind": "one item of risks replaced",
     "nodes": 298,
@@ -22876,14 +23014,14 @@
      "points": [
       {
        "items": 100,
-       "first": 8.1,
-       "update": 0.8,
+       "first": 8.4,
+       "update": 1,
        "nodes": 1745
       },
       {
        "items": 1000,
-       "first": 80.9,
-       "update": 7.5,
+       "first": 81.2,
+       "update": 7.4,
        "nodes": 16045
       }
      ]
@@ -22963,9 +23101,9 @@
     "tag": "tc-roadmap-timeline",
     "source": "demo",
     "runs": 7,
-    "cold": 10.4,
-    "first": 3.6,
-    "update": 2.1,
+    "cold": 9.7,
+    "first": 3.7,
+    "update": 2.2,
     "updateKind": "one item of items replaced",
     "nodes": 273,
     "scale": {
@@ -22975,13 +23113,13 @@
       {
        "items": 100,
        "first": 19.8,
-       "update": 16,
+       "update": 15.3,
        "nodes": 1019
       },
       {
        "items": 1000,
-       "first": 752.3,
-       "update": 746.9,
+       "first": 705.5,
+       "update": 680.2,
        "nodes": 8333
       }
      ]
@@ -23005,11 +23143,11 @@
   },
   "routine-form": {
    "measuredAt": "2026-10-28",
-   "hash": "9239f692ac0c15c6",
+   "hash": "8372df852723befc",
    "bundle": {
     "own": {
-     "min": 22981,
-     "gzip": 8030
+     "min": 23074,
+     "gzip": 8051
     },
     "shared": [
      {
@@ -23059,21 +23197,21 @@
      }
     ],
     "withoutLit": {
-     "min": 62320,
-     "gzip": 16516
+     "min": 62413,
+     "gzip": 16529
     },
     "withLit": {
-     "min": 85177,
-     "gzip": 24079
+     "min": 85270,
+     "gzip": 24091
     }
    },
    "render": {
     "tag": "tc-routine-form",
     "source": "demo",
     "runs": 7,
-    "cold": 20.7,
+    "cold": 19.1,
     "first": 2.1,
-    "update": 0.7,
+    "update": 0.6,
     "updateKind": "re-render with the same data",
     "nodes": 84,
     "scale": null,
@@ -23546,8 +23684,8 @@
     "tag": "tc-saved-search-alerts",
     "source": "demo",
     "runs": 7,
-    "cold": 10.7,
-    "first": 1.6,
+    "cold": 10.2,
+    "first": 1.7,
     "update": 0.4,
     "updateKind": "one item of alerts replaced",
     "nodes": 162,
@@ -23557,14 +23695,14 @@
      "points": [
       {
        "items": 100,
-       "first": 22.4,
-       "update": 4.7,
+       "first": 22.2,
+       "update": 4.6,
        "nodes": 4269
       },
       {
        "items": 1000,
-       "first": 246.5,
-       "update": 32.9,
+       "first": 241.6,
+       "update": 32,
        "nodes": 42369
       }
      ]
@@ -23772,17 +23910,17 @@
   },
   "search-history": {
    "measuredAt": "2026-10-28",
-   "hash": "669f8130096c7032",
+   "hash": "262011e50a362806",
    "bundle": {
     "own": {
-     "min": 21850,
-     "gzip": 7303
+     "min": 22735,
+     "gzip": 7737
     },
     "shared": [
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 21078
+      "min": 21084
      },
      {
       "name": "internal/card-head",
@@ -23821,20 +23959,20 @@
      }
     ],
     "withoutLit": {
-     "min": 29529,
-     "gzip": 9474
+     "min": 30415,
+     "gzip": 9901
     },
     "withLit": {
-     "min": 51882,
-     "gzip": 16898
+     "min": 52769,
+     "gzip": 17326
     }
    },
    "render": {
     "tag": "tc-search-history",
     "source": "demo",
     "runs": 7,
-    "cold": 10.3,
-    "first": 1.7,
+    "cold": 15.7,
+    "first": 1.8,
     "update": 0.6,
     "updateKind": "one item of searches replaced",
     "nodes": 196,
@@ -23844,14 +23982,14 @@
      "points": [
       {
        "items": 100,
-       "first": 11.3,
-       "update": 4.4,
-       "nodes": 2298
+       "first": 12.5,
+       "update": 4.3,
+       "nodes": 2297
       },
       {
        "items": 1000,
-       "first": 107.8,
-       "update": 43.8,
+       "first": 133.7,
+       "update": 39.6,
        "nodes": 22612
       }
      ]
@@ -24146,7 +24284,7 @@
      "points": [
       {
        "items": 100,
-       "first": 0.5,
+       "first": 0.4,
        "update": 0,
        "nodes": 5
       },
@@ -24243,7 +24381,7 @@
     "tag": "tc-session-context-bar",
     "source": "demo",
     "runs": 7,
-    "cold": 7.5,
+    "cold": 9,
     "first": 1.1,
     "update": 0.4,
     "updateKind": "one item of terms replaced",
@@ -24254,14 +24392,14 @@
      "points": [
       {
        "items": 100,
-       "first": 7.2,
+       "first": 6.9,
        "update": 1.6,
        "nodes": 1238
       },
       {
        "items": 1000,
-       "first": 71.2,
-       "update": 16.2,
+       "first": 70.3,
+       "update": 16.6,
        "nodes": 12590
       }
      ]
@@ -24929,12 +25067,12 @@
    }
   },
   "speed-reader": {
-   "measuredAt": "2026-10-28",
-   "hash": "66afbb0422508b86",
+   "measuredAt": "2026-10-29",
+   "hash": "1590b360e95eb8a7",
    "bundle": {
     "own": {
-     "min": 23816,
-     "gzip": 7551
+     "min": 23953,
+     "gzip": 7614
     },
     "shared": [
      {
@@ -24974,21 +25112,21 @@
      }
     ],
     "withoutLit": {
-     "min": 32215,
-     "gzip": 9992
+     "min": 32352,
+     "gzip": 10058
     },
     "withLit": {
-     "min": 53450,
-     "gzip": 16892
+     "min": 53587,
+     "gzip": 16961
     }
    },
    "render": {
     "tag": "tc-speed-reader",
     "source": "demo",
     "runs": 7,
-    "cold": 13.5,
+    "cold": 10.3,
     "first": 1.3,
-    "update": 0.3,
+    "update": 0.2,
     "updateKind": "re-render with the same data",
     "nodes": 69,
     "scale": null,
@@ -25971,8 +26109,8 @@
     "tag": "tc-team-roster",
     "source": "demo",
     "runs": 7,
-    "cold": 8.6,
-    "first": 5,
+    "cold": 10.5,
+    "first": 5.2,
     "update": 3,
     "updateKind": "one item of members replaced",
     "nodes": 361,
@@ -25983,13 +26121,13 @@
       {
        "items": 100,
        "first": 33,
-       "update": 20.4,
+       "update": 20,
        "nodes": 3025
       },
       {
        "items": 1000,
-       "first": 271,
-       "update": 110,
+       "first": 277.8,
+       "update": 114.1,
        "nodes": 29325
       }
      ]
@@ -26293,8 +26431,8 @@
     "tag": "tc-text-annotator",
     "source": "demo",
     "runs": 7,
-    "cold": 12.5,
-    "first": 1.5,
+    "cold": 9,
+    "first": 1.7,
     "update": 0.4,
     "updateKind": "one item of colors replaced",
     "nodes": 131,
@@ -26304,14 +26442,14 @@
      "points": [
       {
        "items": 100,
-       "first": 2.5,
-       "update": 0.2,
+       "first": 2.6,
+       "update": 0.4,
        "nodes": 359
       },
       {
        "items": 1000,
-       "first": 10.6,
-       "update": 1.7,
+       "first": 11.6,
+       "update": 1.6,
        "nodes": 2519
       }
      ]

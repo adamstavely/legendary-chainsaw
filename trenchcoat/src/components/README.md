@@ -65,6 +65,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Context Window** (`context-window.tsx`) – What fills the model's context, as a field of cells – hover a part to light it up, remove files, and compact the conversation while its cells shimmer and clear
 - **Conversation annotation** (`conversation-annotation.tsx`) – Label and redact spans in a conversation, rate turns, correct answers as a diff, and send the reviewed example to a dataset
 - **Conversation Branches** (`conversation-branches.tsx`) – Edit a past message and the conversation forks – a 2 / 3 switcher on the edited message, and each branch's replies below it
+- **Coordinate Details** (`coordinate-details.tsx`) – Coordinates in text, checked and marked – hover, focus or right-click one for the place, decimal and DMS with Copy, mapping links and a map that loads only on request
 - **Correction Propagation** (`correction-propagation.tsx`) – How far a correction reaches – every artifact and released package that cites the corrected claim, each sent for review, nothing rewritten behind your back
 - **Coverage Matrix** (`coverage-matrix.tsx`) – Which checks cover which parts – covered, partial and gaps across a grid, with totals and each cell's detail
 - **Coverage Ring** (`coverage-ring.tsx`) – One share at a glance – a large ring with the percentage and a caption, a title and a line, and a bar from healthiest to needs attention that reads out each segment
