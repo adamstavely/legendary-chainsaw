@@ -1,0 +1,610 @@
+{
+ "elements": [
+  {
+   "tag": "tc-roadmap-timeline",
+   "className": "TcRoadmapTimeline",
+   "description": "Workstreams on a calendar, Gantt style – lanes, bars with progress and status, milestones, a Today line and\ndependency arrows, at a week, month or quarter scale, with details for the piece of work selected.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Roadmap\"",
+     "description": "The heading, and the chart's name",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "One line under the heading",
+     "readonly": false
+    },
+    {
+     "name": "lanes",
+     "attribute": null,
+     "type": "RoadmapLane[]",
+     "default": "[]",
+     "description": "The workstreams, top to bottom",
+     "readonly": false
+    },
+    {
+     "name": "items",
+     "attribute": null,
+     "type": "RoadmapItem[]",
+     "default": "[]",
+     "description": "The pieces of work",
+     "readonly": false
+    },
+    {
+     "name": "range",
+     "attribute": null,
+     "type": "RoadmapRange | undefined",
+     "default": "undefined",
+     "description": "The window shown; by default the work's own span, padded to whole months",
+     "readonly": false
+    },
+    {
+     "name": "scale",
+     "attribute": "scale",
+     "type": "RoadmapScale",
+     "default": "\"month\"",
+     "description": "Weeks, months or quarters. Changed by the user unless a tc-scale-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "today",
+     "attribute": "today",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "Today, \"YYYY-MM-DD\"; by default the element's own clock",
+     "readonly": false
+    },
+    {
+     "name": "selected",
+     "attribute": "selected",
+     "type": "string | null",
+     "default": "null",
+     "description": "The selected piece of work's id. Changed by the user unless tc-selected-change is prevented",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The language for dates, e.g. \"en-GB\"; by default the browser's",
+     "readonly": false
+    },
+    {
+     "name": "statusLabels",
+     "attribute": null,
+     "type": "Partial<RoadmapStatusLabels>",
+     "default": "{}",
+     "description": "Words for the statuses",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-selected-change",
+     "detail": "",
+     "description": "A piece of work was selected, or the selection cleared ({ selected, item }: RoadmapSelectedChange); cancelable – prevented, `selected` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-scale-change",
+     "detail": "",
+     "description": "The scale was switched ({ scale }: RoadmapScaleChange); cancelable – prevented, `scale` stays as it was",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "rdm",
+   "cssProperties": [
+    {
+     "name": "--tc-rdm-lane-w",
+     "value": "112px",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
+    "--tc-border-default",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-h-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-fill-strong",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-meter-fill",
+    "--tc-meter-h",
+    "--tc-meter-radius",
+    "--tc-meter-track",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-2xs",
+    "--tc-radius-lg",
+    "--tc-radius-md",
+    "--tc-radius-xs",
+    "--tc-rdm-bar-h",
+    "--tc-rdm-head-h",
+    "--tc-rdm-row",
+    "--tc-seg-pad",
+    "--tc-seg-thumb-bg",
+    "--tc-seg-thumb-shadow",
+    "--tc-seg-track-bg",
+    "--tc-seg-track-radius",
+    "--tc-shadow-control",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-space-8",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-border",
+    "--tc-status-danger-fg",
+    "--tc-status-danger-solid",
+    "--tc-status-info-bg",
+    "--tc-status-info-border",
+    "--tc-status-info-fg",
+    "--tc-status-info-solid",
+    "--tc-status-success-bg",
+    "--tc-status-success-border",
+    "--tc-status-success-fg",
+    "--tc-status-success-solid",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-border",
+    "--tc-status-warning-fg",
+    "--tc-status-warning-solid",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-on-accent",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "dayNumber",
+   "signature": "dayNumber(iso: string | undefined): number",
+   "description": "A calendar day as a day number (UTC days since 1970), or NaN"
+  }
+ ],
+ "react": [
+  {
+   "component": "RoadmapTimeline",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading, and the chart's name"
+    },
+    {
+     "name": "selected",
+     "type": "string | null",
+     "optional": true,
+     "description": "The selected piece of work's id – controlled when given"
+    },
+    {
+     "name": "defaultSelected",
+     "type": "string | null",
+     "optional": true,
+     "description": "The selection on mount when `selected` isn't controlled"
+    },
+    {
+     "name": "onSelectedChange",
+     "type": "(selected: string | null, item: RoadmapItem | null) => void",
+     "optional": true,
+     "description": "A piece of work was selected, or the selection cleared"
+    },
+    {
+     "name": "scale",
+     "type": "RoadmapScale",
+     "optional": true,
+     "description": "Weeks, months or quarters – controlled when given"
+    },
+    {
+     "name": "defaultScale",
+     "type": "RoadmapScale",
+     "optional": true,
+     "description": "The scale on mount when `scale` isn't controlled"
+    },
+    {
+     "name": "onScaleChange",
+     "type": "(scale: RoadmapScale) => void",
+     "optional": true,
+     "description": "The scale was switched"
+    }
+   ],
+   "hides": [
+    "heading",
+    "selected",
+    "scale",
+    "children"
+   ],
+   "events": {
+    "tc-selected-change": null,
+    "tc-scale-change": null
+   }
+  }
+ ],
+ "changelog": [
+  "**Research & portfolio** - **Roadmap Timeline** (`tc-roadmap-timeline`) – Gantt-style lanes with progress, milestones, Today and dependency arrows, at week, month or quarter scale. - **Prioritisation Matrix** (`tc-prioritisation-matrix`) – value against effort, points dragged or moved with the arrow keys, listed by quadrant. - **Risk Register** (`tc-risk-register`) – a 5 × 5 likelihood × impact grid beside a sortable, rescorable register. - **Bibliography** (`tc-bibliography`) – references in APA, MLA, Chicago, Harvard or IEEE, with Copy and BibTeX / RIS export."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-roadmap-timeline",
+   "className": "TcRoadmapTimeline",
+   "module": "trenchcoat/roadmap-timeline",
+   "data": [
+    "lanes",
+    "items",
+    "range",
+    "statusLabels"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    },
+    {
+     "name": "scale",
+     "attribute": "scale"
+    },
+    {
+     "name": "today",
+     "attribute": "today"
+    },
+    {
+     "name": "selected",
+     "attribute": "selected"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-selected-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-scale-change",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "scale",
+     "event": "tc-scale-change"
+    },
+    {
+     "property": "selected",
+     "event": "tc-selected-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "itself",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "inert",
+    "name": "inert",
+    "bcd": "api.HTMLElement.inert",
+    "versions": {
+     "chrome": "102",
+     "edge": "102",
+     "firefox": "112",
+     "safari": "15.5",
+     "safari_ios": "15.5"
+    },
+    "progressive": false,
+    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
+    "via": [
+     "internal/controllers"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "individual-transforms",
+    "name": "translate, scale and rotate properties",
+    "bcd": "css.properties.translate",
+    "versions": {
+     "chrome": "104",
+     "edge": "104",
+     "firefox": "72",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "scrollbar-width",
+    "name": "scrollbar-width",
+    "bcd": "css.properties.scrollbar-width",
+    "versions": {
+     "chrome": "121",
+     "edge": "121",
+     "firefox": "64",
+     "safari": "18.2",
+     "safari_ios": "18.2"
+    },
+    "progressive": true,
+    "without": "Scrollbars keep the browser's default width.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "overscroll-contain",
+    "name": "overscroll-behavior: contain",
+    "bcd": "css.properties.overscroll-behavior.contain",
+    "versions": {
+     "chrome": "63",
+     "edge": "18",
+     "firefox": "59",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "Scrolling past the end of a list carries on scrolling the page.",
+    "via": [
+     "itself"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)",
+   "MutationObserver (internal/controllers › FocusRescueController)"
+  ],
+  "clock": [
+   "new Date()"
+  ],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 41727,
+  "gzip": 12197
+ }
+}

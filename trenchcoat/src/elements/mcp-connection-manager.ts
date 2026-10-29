@@ -86,7 +86,8 @@ export type McpConnection = {
   resources?: McpCapability[];
   prompts?: McpCapability[];
 };
-export type McpValueChange = { value: McpServer[]; change: { type: "add" | "remove"; server: McpServer } };
+/** A server added or removed, or a form reset putting back the whole list */
+export type McpValueChange = { value: McpServer[]; change: { type: "add" | "remove"; server: McpServer } | { type: "reset" } };
 /** tc-connect: connect `server` (again, when `retry`); stop when `signal` aborts, then update `connections` */
 export type McpConnectEvent = { server: McpServer; signal: AbortSignal; retry: boolean };
 /** tc-test: try a server that isn't added yet; report on `connections[server.id]` */
@@ -139,7 +140,7 @@ const chevronDown = html`<svg class="ui-mcs__chevron" viewBox="0 0 16 16" aria-h
  * MCP servers and their status: add one (transport, auth, test), inspect the tools, resources and prompts it exposes,
  * connect, disconnect, retry and remove – the app does the connecting.
  * @tag tc-mcp-connection-manager
- * @fires tc-value-change - A server was added or removed ({ value, change }: McpValueChange); cancelable – prevent it to control `value`
+ * @fires tc-value-change - A server was added or removed, or a form reset put the list back ({ value, change }: McpValueChange); cancelable – prevent it to control `value`
  * @fires tc-connect - Connect or Retry was pressed ({ server, signal, retry }: McpConnectEvent); connect, then update `connections`. Cancelable – prevented, nothing shows as connecting
  * @fires tc-disconnect - Disconnect was pressed ({ server }: McpDisconnectEvent); disconnect, then update `connections`
  * @fires tc-test - Test was pressed in the add form ({ server, signal }: McpTestEvent); try it and report on `connections[server.id]`. Cancelable
@@ -196,7 +197,6 @@ export class TcMcpConnectionManager extends TcElement {
 
   override connectedCallback() {
     super.connectedCallback();
-    this.initialValue ??= this.value;
     if (!this.hasAttribute("role")) this.setAttribute("role", "group");
     this.ownName ||= (this.hasAttribute("aria-label") && this.getAttribute("aria-label") !== this.heading) || this.hasAttribute("aria-labelledby");
   }
@@ -210,7 +210,10 @@ export class TcMcpConnectionManager extends TcElement {
     this.abortAll();
     this.draft = null;
     this.removing = null;
-    this.value = this.initialValue ?? [];
+    const value = this.initialValue ?? [];
+    // Through tc-value-change like any edit, so a controlled wrapper hears of it and keeps the value until it agrees
+    if (this.emit<McpValueChange>("tc-value-change", { value, change: { type: "reset" } }, { cancelable: true })) this.value = value;
+    else this.requestUpdate();
   }
   formDisabledCallback(disabled: boolean) {
     queueMicrotask(() => (this.formDisabled = disabled));
@@ -242,8 +245,10 @@ export class TcMcpConnectionManager extends TcElement {
     if (this.isDisabled || this.pending.has(server.id)) return false;
     const ctrl = new AbortController();
     const detail = type === "tc-connect" ? { server, signal: ctrl.signal, retry } : { server, signal: ctrl.signal };
+    // Taken before the event: an app that answers inside its listener has already changed it, and that answer counts
+    const seen = this.connections[server.id];
     if (!this.emit(type, detail, { cancelable: true })) return false;
-    this.pending = new Map(this.pending).set(server.id, { ctrl, seen: this.connections[server.id] });
+    this.pending = new Map(this.pending).set(server.id, { ctrl, seen });
     this.announcement = `${type === "tc-test" ? "Testing" : "Connecting to"} ${server.name}…`;
     return true;
   }
@@ -423,6 +428,8 @@ export class TcMcpConnectionManager extends TcElement {
 
   protected override willUpdate(changed: PropertyValues) {
     super.willUpdate(changed);
+    // The reset baseline is what the first render shows, so props a framework sets after connecting (React does) count
+    if (!this.hasUpdated) this.initialValue = this.value;
     this.toggleAttribute("data-disabled", this.isDisabled);
     if (changed.has("connections") && this.pending.size) {
       // The app answered for a server it was asked about: it isn't waiting any more

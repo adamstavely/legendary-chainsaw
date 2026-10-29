@@ -319,6 +319,19 @@ export class TcConfigurationReleaseControl extends TcElement {
   private get dialogEl() {
     return this.querySelector<HTMLDialogElement>(".ui-rls__dialog");
   }
+  /** Why an open confirmation can't go ahead now, or "" – the gate can change while it's open, so it's asked again */
+  private confirmBlock(kind: "promote" | "rollback") {
+    if (kind === "rollback") {
+      if (this.canRollback) return "";
+      const stage = this.rollbackStage;
+      const to = this.version(this.rollback?.version);
+      return stage && to ? `Can't roll back now: ${stage.label} already runs ${to.label}.` : "Can't roll back now: the rollback target is gone.";
+    }
+    if (this.rollingOut) return `Can't promote now: ${this.version(this.candidate)?.label ?? "the candidate"} is already rolling out.`;
+    if (this.ready) return "";
+    const unmet = this.checks.filter((c) => !c.met).map((c) => c.phrase);
+    return `Can't promote now: ${unmet.length ? unmet.join("; ") : "there's nothing to promote"}.`;
+  }
 
   /* ---------- Actions ---------- */
 
@@ -361,6 +374,12 @@ export class TcConfigurationReleaseControl extends TcElement {
 
   private confirm() {
     const kind = this.confirming;
+    // Confirm is disabled while blocked; this catches a click that lands before the re-render
+    const block = kind ? this.confirmBlock(kind) : "";
+    if (block) {
+      this.announce = block;
+      return;
+    }
     if (kind === "promote") {
       const stage = this.targetStage;
       const version = this.version(this.candidate);
@@ -653,6 +672,8 @@ export class TcConfigurationReleaseControl extends TcElement {
   private renderDialog() {
     const id = this.uid;
     const kind = this.confirming;
+    const block = kind ? this.confirmBlock(kind) : "";
+    const blocked = block ? html`<p class="ui-rls__dlg-blocked">${block}</p>` : nothing;
     let body: unknown = nothing;
     if (kind === "promote") {
       const stage = this.targetStage;
@@ -678,10 +699,11 @@ export class TcConfigurationReleaseControl extends TcElement {
             <div><dt>Approved by</dt><dd>${approved.length ? approved.join(", ") : "Nobody"}</dd></div>
           </dl>
           <p class="ui-rls__dlg-note">${this.promoteNote}</p>
+          ${blocked}
         </div>
         <div class="ui-rls__dlg-actions">
           <button type="button" class="ui-rls__btn ui-rls__btn--secondary ui-rls__cancel" @click=${() => this.close()}>${this.cancelLabel}</button>
-          <button type="button" class="ui-rls__btn ui-rls__btn--primary ui-rls__confirm" @click=${() => this.confirm()}>${promoteIcon()}Promote to ${stage?.label}</button>
+          <button type="button" class="ui-rls__btn ui-rls__btn--primary ui-rls__confirm" ?disabled=${!!block} @click=${() => this.confirm()}>${promoteIcon()}Promote to ${stage?.label}</button>
         </div>`;
     } else if (kind === "rollback") {
       const stage = this.rollbackStage;
@@ -699,10 +721,11 @@ export class TcConfigurationReleaseControl extends TcElement {
             <strong>${to?.label}${to?.title ? ` – ${to.title}` : ""}</strong>.
           </p>
           <p class="ui-rls__dlg-note">${this.rollbackNote}</p>
+          ${blocked}
         </div>
         <div class="ui-rls__dlg-actions">
           <button type="button" class="ui-rls__btn ui-rls__btn--secondary ui-rls__cancel" @click=${() => this.close()}>${this.cancelLabel}</button>
-          <button type="button" class="ui-rls__btn ui-rls__btn--danger ui-rls__confirm" @click=${() => this.confirm()}>${undoIcon()}Roll back to ${to?.label}</button>
+          <button type="button" class="ui-rls__btn ui-rls__btn--danger ui-rls__confirm" ?disabled=${!!block} @click=${() => this.confirm()}>${undoIcon()}Roll back to ${to?.label}</button>
         </div>`;
     }
     return html`<dialog
@@ -993,14 +1016,14 @@ export class TcConfigurationReleaseControl extends TcElement {
 
 /* ----- Buttons: primary, secondary and danger, medium ----- */
 .ui-rls__btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--tc-space-1-5); height: var(--tc-control-h-md); padding: 0 var(--tc-control-px-md); border-radius: var(--tc-control-radius-md); font-size: var(--tc-control-font-size); font-weight: var(--tc-control-font-weight); white-space: nowrap; transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), box-shadow var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard), transform var(--tc-duration-quick) var(--tc-ease-standard); }
-.ui-rls__btn:active:not([aria-disabled="true"]) { transform: scale(0.98); }
+.ui-rls__btn:active:not([aria-disabled="true"], :disabled) { transform: scale(0.98); }
 .ui-rls__btn--primary { background: var(--tc-action-primary-bg); box-shadow: var(--tc-action-primary-shadow); color: var(--tc-action-primary-fg); }
-.ui-rls__btn--primary:hover:not([aria-disabled="true"]) { background: var(--tc-action-primary-bg-hover); }
+.ui-rls__btn--primary:hover:not([aria-disabled="true"], :disabled) { background: var(--tc-action-primary-bg-hover); }
 .ui-rls__btn--secondary { background: var(--tc-action-secondary-bg); box-shadow: var(--tc-action-secondary-shadow); color: var(--tc-action-secondary-fg); }
 .ui-rls__btn--secondary:hover:not([aria-disabled="true"]) { box-shadow: var(--tc-action-secondary-shadow-hover); }
 .ui-rls__btn--danger { background: var(--tc-action-danger-bg); box-shadow: var(--tc-action-primary-shadow); color: var(--tc-action-danger-fg); }
-.ui-rls__btn--danger:hover { background: var(--tc-action-danger-bg-hover); }
-.ui-rls__btn[aria-disabled="true"] { background: var(--tc-fill-strong); box-shadow: none; color: var(--tc-text-muted); cursor: not-allowed; }
+.ui-rls__btn--danger:hover:not(:disabled) { background: var(--tc-action-danger-bg-hover); }
+.ui-rls__btn[aria-disabled="true"], .ui-rls__btn:disabled { background: var(--tc-fill-strong); box-shadow: none; color: var(--tc-text-muted); cursor: not-allowed; }
 .ui-rls__rollback-btn { height: var(--tc-control-h-sm); padding: 0 var(--tc-control-px-sm); border-radius: var(--tc-control-radius-sm); }
 
 /* ----- The confirmation ----- */
@@ -1022,6 +1045,7 @@ export class TcConfigurationReleaseControl extends TcElement {
 .ui-rls__facts dt { color: var(--tc-text-muted); }
 .ui-rls__facts dd { color: var(--tc-text-primary); }
 .ui-rls__dlg-note { font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-snug); color: var(--tc-text-muted); }
+.ui-rls__dlg-blocked { font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-snug); color: var(--tc-status-danger-fg); }
 .ui-rls__dlg-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--tc-space-2); }
 @keyframes ui-rls-pop { from { opacity: 0; transform: translateY(6px) scale(0.98); } }
 

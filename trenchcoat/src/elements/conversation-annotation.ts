@@ -109,19 +109,35 @@ export function annotationMatchesSource(span: AnnotationSpan, messages: readonly
   return !!m && Number.isInteger(span.start) && Number.isInteger(span.end) && span.start >= 0 && span.end > span.start && span.end <= m.text.length && m.text.slice(span.start, span.end) === span.quote;
 }
 
+/**
+ * What redaction hides. `masked` is a message with its redacted spans as █ – and, for a redaction its message no longer
+ * matches, wherever its quote still appears – keeping every offset. `scrub` turns every redacted quote in other text
+ * (quotes, corrections) into █. Both the page and the export go through it, so redacted text shows nowhere.
+ */
+function redactor(messages: readonly AnnotationMessage[], spans: readonly AnnotationSpan[]) {
+  const redacted = spans.filter((s) => s.redacted);
+  const current = redacted.filter((s) => annotationMatchesSource(s, messages));
+  const quotes = (list: AnnotationSpan[]) => [...new Set(list.map((s) => s.quote.trim()).filter(Boolean))].sort((a, b) => b.length - a.length);
+  const blank = (secrets: string[]) => (text: string) => secrets.reduce((t, q) => t.split(q).join(BLOCK.repeat(q.length)), text);
+  const scrub = blank(quotes(redacted));
+  const scrubStale = blank(quotes(redacted.filter((s) => !current.includes(s))));
+  const masked = new Map(
+    messages.map((m) => {
+      const chars = m.text.split("");
+      for (const s of current) if (s.messageId === m.id) chars.fill(BLOCK, s.start, s.end);
+      return [m.id, scrubStale(chars.join(""))];
+    }),
+  );
+  return { masked: (m: AnnotationMessage) => masked.get(m.id) ?? scrub(m.text), scrub };
+}
+
 /** An export copy: redacted spans become █ in the messages, in every quote that overlaps them and in corrections */
 export function prepareAnnotationExport(messages: readonly AnnotationMessage[], value: ConversationAnnotationValue): AnnotationExport {
-  const redacted = value.spans.filter((s) => s.redacted && annotationMatchesSource(s, messages));
-  const out = messages.map((m) => {
-    const chars = [...m.text.split("")];
-    for (const s of redacted) if (s.messageId === m.id) chars.fill(BLOCK, s.start, s.end);
-    return { ...m, text: chars.join("") };
-  });
-  const secrets = [...new Set(redacted.map((s) => s.quote.trim()).filter(Boolean))];
-  const scrub = (text: string) => secrets.reduce((t, q) => t.split(q).join(BLOCK.repeat(q.length)), text);
+  const { masked, scrub } = redactor(messages, value.spans);
+  const out = messages.map((m) => ({ ...m, text: masked(m) }));
   return {
     messages: out,
-    spans: value.spans.map((s) => ({ ...s, quote: annotationMatchesSource(s, messages) ? (out.find((m) => m.id === s.messageId)?.text.slice(s.start, s.end) ?? s.quote) : scrub(s.quote) })),
+    spans: value.spans.map((s) => ({ ...s, quote: annotationMatchesSource(s, messages) ? (out.find((m) => m.id === s.messageId)?.text.slice(s.start, s.end) ?? scrub(s.quote)) : scrub(s.quote) })),
     ratings: { ...value.ratings },
     corrections: Object.fromEntries(Object.entries(value.corrections).map(([id, text]) => [id, scrub(text)])),
   };
@@ -198,6 +214,7 @@ export class TcConversationAnnotation extends TcElement {
   private readonly uid = `tc-cva${++instances}`;
   private initialValue: ConversationAnnotationValue | null = null;
   private next = 0;
+  private redactionFor: { messages: AnnotationMessage[]; spans: AnnotationSpan[]; r: ReturnType<typeof redactor> } | null = null;
   private readonly legend = new ToolbarController(this, { items: () => [...this.querySelectorAll<HTMLElement>(".ui-cva__key")] });
 
   constructor() {
@@ -207,13 +224,11 @@ export class TcConversationAnnotation extends TcElement {
     new FocusRescueController(this, () => [...this.querySelectorAll<HTMLElement>(".ui-cva__jump")].pop() ?? this.querySelector<HTMLElement>('.ui-cva__turn[tabindex="0"]'));
   }
 
-  override connectedCallback() {
-    super.connectedCallback();
-    this.initialValue ??= this.value;
-  }
-
   formResetCallback() {
-    this.value = this.initialValue ?? EMPTY;
+    const value = this.initialValue ?? EMPTY;
+    // Through tc-value-change like any edit, so a controlled wrapper hears of it and keeps the value until it agrees
+    if (this.emit<ConversationAnnotationValueChange>("tc-value-change", { value }, { cancelable: true })) this.value = value;
+    else this.requestUpdate();
     this.selection = null;
     this.editing = null;
   }
@@ -230,9 +245,23 @@ export class TcConversationAnnotation extends TcElement {
   get example(): AnnotationExport {
     return prepareAnnotationExport(this.messages, this.value);
   }
+  /** A redaction whose message no longer matches it: where it applies isn't known, so nothing is sent */
+  get staleRedaction() {
+    return this.value.spans.some((s) => s.redacted && !annotationMatchesSource(s, this.messages));
+  }
+  /** Every piece of message text the page shows goes through this, so redacted text is never on it */
+  private get redaction() {
+    const c = this.redactionFor;
+    if (c && c.messages === this.messages && c.spans === this.value.spans) return c.r;
+    const r = redactor(this.messages, this.value.spans);
+    this.redactionFor = { messages: this.messages, spans: this.value.spans, r };
+    return r;
+  }
 
   protected override willUpdate(changed: PropertyValues) {
     super.willUpdate(changed);
+    // The reset baseline is what the first render shows, so props a framework sets after connecting (React does) count
+    if (!this.hasUpdated) this.initialValue = this.value;
     this.toggleAttribute("data-disabled", this.isDisabled);
     if (!this.messages.some((m) => m.id === this.activeId)) this.activeId = this.messages[0]?.id ?? "";
     if (this.selection && !this.messages.some((m) => m.id === this.selection!.messageId)) this.selection = null;
@@ -309,7 +338,7 @@ export class TcConversationAnnotation extends TcElement {
     const span: AnnotationSpan = labelId === null ? { id, messageId: r.m.id, start: r.start, end: r.end, quote, label: "", redacted: true } : { id, messageId: r.m.id, start: r.start, end: r.end, quote, label: labelId };
     if (!this.commit({ ...this.value, spans: [...this.value.spans, span] })) return;
     this.selection = { messageId: r.m.id, anchor: r.end, focus: r.end };
-    this.say(labelId === null ? `Redacted ${plural(quote.length, "character")}` : `Labelled ${label!.label}: “${shorten(quote)}”`);
+    this.say(labelId === null ? `Redacted ${plural(quote.length, "character")}` : `Labelled ${label!.label}: “${shorten(this.redaction.masked(r.m).slice(r.start, r.end))}”`);
   }
 
   private removeSpan(span: AnnotationSpan) {
@@ -328,7 +357,7 @@ export class TcConversationAnnotation extends TcElement {
   private saveCorrection(m: AnnotationMessage) {
     const draft = this.editing?.draft ?? "";
     const corrections = { ...this.value.corrections };
-    if (!draft.trim() || draft === m.text) delete corrections[m.id];
+    if (!draft.trim() || draft === m.text || draft === this.redaction.masked(m)) delete corrections[m.id];
     else corrections[m.id] = draft;
     if (!this.commit({ ...this.value, corrections })) return;
     this.editing = null;
@@ -345,6 +374,10 @@ export class TcConversationAnnotation extends TcElement {
 
   private send() {
     if (this.isDisabled || this.sending) return;
+    if (this.staleRedaction) {
+      this.say("A redaction's text has changed – remove it or redact the text again to send");
+      return;
+    }
     this.emit<ConversationAnnotationSend>("tc-send", { value: this.value, example: this.example });
   }
 
@@ -453,7 +486,8 @@ export class TcConversationAnnotation extends TcElement {
 
   /** The message's text, split at every span and selection boundary */
   private text(m: AnnotationMessage, active: boolean) {
-    const text = m.text;
+    // Masked text has the same length, so every offset still holds
+    const text = this.redaction.masked(m);
     const spans = this.value.spans.filter((s) => s.messageId === m.id && annotationMatchesSource(s, this.messages));
     // Redactions merge into bars
     const bars: [number, number][] = [];
@@ -556,7 +590,7 @@ export class TcConversationAnnotation extends TcElement {
     }
     if (fixed === undefined)
       return html`<button type="button" class="ui-cva__btn ui-cva__ghost" ?disabled=${disabled} @click=${() => this.startEdit(m)}>${pencilIcon}Correct the answer</button>`;
-    const diff = diffWords(m.text, fixed, 250_000);
+    const diff = diffWords(this.redaction.masked(m), this.redaction.scrub(fixed), 250_000);
     const changes = diff.filter((s) => s.type === "change").length;
     return html`<div class="ui-cva__fixed">
       <div class="ui-cva__fixed-head">
@@ -574,7 +608,8 @@ export class TcConversationAnnotation extends TcElement {
   }
 
   private startEdit(m: AnnotationMessage) {
-    this.editing = { id: m.id, draft: this.value.corrections[m.id] ?? m.text };
+    const fixed = this.value.corrections[m.id];
+    this.editing = { id: m.id, draft: fixed === undefined ? this.redaction.masked(m) : this.redaction.scrub(fixed) };
     void this.updateComplete.then(() => this.querySelector<HTMLTextAreaElement>(".ui-cva__field")?.focus());
   }
 
@@ -635,7 +670,7 @@ export class TcConversationAnnotation extends TcElement {
       </div>
       <p class="ui-cva__hint" id=${`${this.uid}-hint`}>
         ${r
-          ? html`<span class="ui-cva__picked">“${shorten(r.m.text.slice(r.start, r.end), 40)}”</span> – press ${max > 1 ? `1–${max}` : "1"} to label it, R to redact`
+          ? html`<span class="ui-cva__picked">“${shorten(this.redaction.masked(r.m).slice(r.start, r.end), 40)}”</span> – press ${max > 1 ? `1–${max}` : "1"} to label it, R to redact`
           : "Select text in a message to label it – or focus a turn and press Shift + → to select by word"}
       </p>
     </div>`;
@@ -655,7 +690,8 @@ export class TcConversationAnnotation extends TcElement {
                 const m = this.messages.find((x) => x.id === s.messageId);
                 const ok = annotationMatchesSource(s, this.messages);
                 const name = s.redacted ? "Redacted" : (this.labelOf(s.label)?.label ?? s.label);
-                const quote = s.redacted ? plural(s.end - s.start, "character") : `“${shorten(s.quote, 80)}”`;
+                // A label over redacted text quotes it blanked
+                const quote = s.redacted ? plural(s.end - s.start, "character") : `“${shorten(ok && m ? this.redaction.masked(m).slice(s.start, s.end) : this.redaction.scrub(s.quote), 80)}”`;
                 const where = m ? `Turn ${(order.get(m.id) ?? 0) + 1} · ${this.roleName(m)}` : "Message removed";
                 const hot = (on: boolean) => () => {
                   if (on) this.hotId = s.id;
@@ -694,6 +730,7 @@ export class TcConversationAnnotation extends TcElement {
     const rated = Object.keys(v.ratings).filter((id) => this.messages.some((m) => m.id === id)).length;
     const corrected = Object.keys(v.corrections).filter((id) => this.messages.some((m) => m.id === id)).length;
     const summary = [plural(v.spans.length, "annotation"), rated ? `${rated} rated` : "", corrected ? `${corrected} corrected` : ""].filter(Boolean).join(" · ");
+    const stale = this.staleRedaction;
     return html`
       ${cardHead({ icon: markIcon, title: this.heading, subtitle: this.description, id: titleId })}
       <div class="ui-cva__card">
@@ -705,14 +742,17 @@ export class TcConversationAnnotation extends TcElement {
           ${this.list()}
         </div>
         <div class="ui-cva__foot">
-          <span class="ui-cva__summary">${summary}</span>
+          ${stale
+            ? html`<span class="ui-cva__summary" data-warning id=${`${this.uid}-stale`}>${alertIcon}A redaction's text has changed – remove it or redact the text again to send.</span>`
+            : html`<span class="ui-cva__summary">${summary}</span>`}
           <button
             type="button"
             class="ui-cva__btn ui-cva__send"
             data-variant="primary"
             ?data-sent=${this.sent}
             aria-busy=${this.sending ? "true" : "false"}
-            ?disabled=${this.isDisabled || !this.messages.length}
+            aria-describedby=${ifDefined(stale ? `${this.uid}-stale` : undefined)}
+            ?disabled=${this.isDisabled || !this.messages.length || stale}
             @click=${this.send}
           >${this.sent ? html`${checkIcon}Sent to dataset` : this.sending ? "Sending…" : this.sendLabel}</button>
         </div>
@@ -873,6 +913,8 @@ export class TcConversationAnnotation extends TcElement {
 /* ----- The foot: what's there, and Send ----- */
 .ui-cva__foot { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-2) var(--tc-space-3); padding: var(--tc-space-3) var(--tc-space-4); border-top: var(--tc-hairline) solid var(--tc-divider); }
 .ui-cva__summary { flex: 1; min-width: 0; color: var(--tc-text-muted); font-size: var(--tc-font-size-sm); font-variant-numeric: tabular-nums; }
+.ui-cva__summary[data-warning] { display: flex; align-items: center; gap: var(--tc-space-1-5); color: var(--tc-status-warning-fg); }
+.ui-cva__summary[data-warning] > .ui-cva__glyph { flex: none; }
 .ui-cva__send { height: var(--tc-control-h-md); padding: 0 var(--tc-control-px-md); border-radius: var(--tc-control-radius-md); }
 .ui-cva__send[aria-busy="true"] { cursor: progress; }
 [data-ui="cva"] .ui-cva__send[data-sent] { background: var(--tc-action-secondary-bg); box-shadow: var(--tc-action-secondary-shadow); color: var(--tc-status-success-fg); }

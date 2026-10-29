@@ -21,6 +21,7 @@ import {
 } from "../../src/elements/data-handling-policy";
 import { DataHandlingPolicy } from "../../src/elements/react/data-handling-policy";
 import { cleanup, fixture, settle } from "./helpers";
+import { expectReactFormReset } from "./form-reset";
 
 afterEach(cleanup);
 
@@ -199,7 +200,7 @@ describe("tc-data-handling-policy", () => {
 
   test("every control fires tc-value-change with the field; arrows move a segmented choice", async () => {
     const el = await make("standard", { locks: [] });
-    const seen: [string, DataHandlingPolicyValue][] = [];
+    const seen: [string | null, DataHandlingPolicyValue][] = [];
     el.addEventListener("tc-value-change", (e) => {
       const d = (e as CustomEvent<DataPolicyChange>).detail;
       seen.push([d.field, d.value]);
@@ -354,6 +355,49 @@ describe("tc-data-handling-policy", () => {
     await settle();
     expect(el.querySelector(".ui-dhp__request")).toBeNull();
     expect(el.querySelector(".ui-dhp__none")!.textContent).toBe("No deletion requests.");
+  });
+
+  test("an unavailable scope is never picked for you and can't be confirmed", async () => {
+    const el = await make();
+    el.deletionScopes = [
+      { id: "conversations", label: "Conversations", unavailable: "A legal hold applies." },
+      { id: "memory", label: "Memory" },
+    ];
+    const seen: string[] = [];
+    el.addEventListener("tc-deletion-request", (e) => seen.push((e as CustomEvent<DataPolicyDeletionEvent>).detail.scope.id));
+    await settle();
+    el.querySelector<HTMLButtonElement>(".ui-dhp__request")!.click();
+    await settle();
+    // The first one it can delete is picked
+    expect(dialog(el).querySelector<HTMLElement & { value: string }>("tc-segmented-control")!.value).toBe("memory");
+    expect(text(dialog(el).querySelector(".ui-dhp__confirm"))).toBe("Delete memory");
+    // A scope that becomes unavailable while the dialog is open can't be confirmed, and says why
+    el.deletionScopes = [
+      { id: "conversations", label: "Conversations", unavailable: "A legal hold applies." },
+      { id: "memory", label: "Memory", unavailable: "Memory is off." },
+    ];
+    await settle();
+    const confirm = dialog(el).querySelector<HTMLButtonElement>(".ui-dhp__confirm")!;
+    expect(confirm.disabled).toBe(true);
+    expect(text(dialog(el).querySelector(".ui-dhp__dlg-desc"))).toContain("Memory can't be deleted: Memory is off.");
+    confirm.click();
+    await settle();
+    expect(seen).toEqual([]);
+    expect(el.querySelector('.ui-dhp__del[data-state="pending"]')).toBeNull();
+    // With nothing it can delete, opening again picks nothing
+    dialog(el).querySelector<HTMLButtonElement>(".ui-dhp__cancel")!.click();
+    await settle();
+    el.querySelector<HTMLButtonElement>(".ui-dhp__request")!.click();
+    await settle();
+    expect(dialog(el).querySelector<HTMLElement & { value: string }>("tc-segmented-control")!.value).toBe("");
+    expect(dialog(el).querySelector<HTMLButtonElement>(".ui-dhp__confirm")!.disabled).toBe(true);
+    dialog(el).querySelector<HTMLButtonElement>(".ui-dhp__confirm")!.click();
+    await settle();
+    expect(seen).toEqual([]);
+  });
+
+  test("form reset through React: the baseline is the value React passed; reset goes through onChange", async () => {
+    await expectReactFormReset(DataHandlingPolicy, "tc-data-handling-policy", VALUE, { ...VALUE, retention: "7d" });
   });
 
   test("React wrapper: uncontrolled value survives re-renders; onChange gets the field; onDeletionRequest fires", async () => {

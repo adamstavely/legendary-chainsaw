@@ -33,8 +33,8 @@ export type DataHandlingPolicyProps = Omit<RawProps, Owned> & {
   value?: DataHandlingPolicyValue;
   /** The policy to start with when uncontrolled */
   defaultValue?: DataHandlingPolicyValue;
-  /** Called with the whole policy and the setting that changed, after every change */
-  onChange?: (value: DataHandlingPolicyValue, field: DataPolicyField) => void;
+  /** Called with the whole policy and the setting that changed (null for a form reset), after every change */
+  onChange?: (value: DataHandlingPolicyValue, field: DataPolicyField | null) => void;
   /** A deletion was confirmed: send the request. Call `event.preventDefault()` if it can't be sent, so no pending request shows */
   onDeletionRequest?: (scope: DataPolicyOption, event: CustomEvent<DataPolicyDeletionEvent>) => void;
 };
@@ -42,7 +42,7 @@ export type DataHandlingPolicyProps = Omit<RawProps, Owned> & {
 const DEFAULT: DataHandlingPolicyValue = { retention: "30d", memory: "conversation", logging: "metadata", redact: ["personal", "financial", "credentials"], training: false };
 
 export function DataHandlingPolicy({ title, value, defaultValue = DEFAULT, onChange, onDeletionRequest, ...props }: DataHandlingPolicyProps) {
-  const field = React.useRef<DataPolicyField>("retention");
+  const field = React.useRef<DataPolicyField | null>("retention");
   const report = React.useCallback((next: DataHandlingPolicyValue) => onChange?.(next, field.current), [onChange]);
   const v = useControlled(value, defaultValue, onChange ? report : undefined);
   return h(RawDataHandlingPolicy, {

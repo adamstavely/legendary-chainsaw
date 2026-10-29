@@ -283,6 +283,18 @@
     ]
   },
   {
+    "tag": "tc-bibliography",
+    "name": "Bibliography",
+    "description": "A reading list set in a citation style – APA, MLA, Chicago (notes–bibliography), Harvard or IEEE – with links,",
+    "events": [
+      "tc-citation-style-change",
+      "tc-selected-change",
+      "tc-sort-change",
+      "tc-copy",
+      "tc-export"
+    ]
+  },
+  {
     "tag": "tc-billing-schedule",
     "name": "BillingSchedule",
     "description": "One phase of a billing plan: dates, products, a discount or a minimum, and the totals.",
@@ -851,6 +863,15 @@
     ]
   },
   {
+    "tag": "tc-facet-sidebar",
+    "name": "FacetSidebar",
+    "description": "Search filters with counts – checkbox, radio, range and date facets that fold, the filters in use as removable",
+    "events": [
+      "tc-value-change",
+      "tc-collapsed-change"
+    ]
+  },
+  {
     "tag": "tc-fact-sheet",
     "name": "FactSheet",
     "description": "Facts in sections, each value tagged with its source and an Admiralty grade, tinted and marked by confidence –",
@@ -1337,6 +1358,16 @@
     ]
   },
   {
+    "tag": "tc-org-chart",
+    "name": "OrgChart",
+    "description": "Who reports to whom: people's cards joined by reporting lines, branches that fold, search, a picked person's manager",
+    "events": [
+      "tc-expanded-change",
+      "tc-selected-change",
+      "tc-filter-change"
+    ]
+  },
+  {
     "tag": "tc-org-unit-card",
     "name": "OrgUnitCard",
     "description": "An organisational unit – code, name, lead, health, the page's stats and its teams as rows that fold open onto",
@@ -1387,6 +1418,17 @@
       "tc-scope-change",
       "tc-expire",
       "tc-emergency-request"
+    ]
+  },
+  {
+    "tag": "tc-person-hovercard",
+    "name": "PersonHovercard",
+    "description": "The profile card behind a name: picture, pronouns, title and team, status, local time, manager, Email, Message,",
+    "events": [
+      "tc-person-lookup",
+      "tc-action",
+      "tc-open",
+      "tc-open-change"
     ]
   },
   {
@@ -1442,6 +1484,14 @@
       "tc-billing-change",
       "tc-details-change",
       "tc-plan-select"
+    ]
+  },
+  {
+    "tag": "tc-prioritisation-matrix",
+    "name": "PrioritisationMatrix",
+    "description": "Value against effort, a 2 × 2 – numbered points you drag or move with the keys, gathered when they overlap, and the",
+    "events": [
+      "tc-items-change"
     ]
   },
   {
@@ -1606,6 +1656,17 @@
     ]
   },
   {
+    "tag": "tc-relationship-graph",
+    "name": "RelationshipGraph",
+    "description": "Connections between people and organisations around one of them – direct and second-hand rings, relationships drawn",
+    "events": [
+      "tc-ego-change",
+      "tc-depth-change",
+      "tc-kinds-change",
+      "tc-selected-change"
+    ]
+  },
+  {
     "tag": "tc-reliance-gauge",
     "name": "RelianceGauge",
     "description": "Whether trust in an AI matches its performance: a reliance–accuracy dial with its trend, signals against review",
@@ -1626,6 +1687,18 @@
       "tc-edit-request",
       "tc-edit-reject",
       "tc-text-change"
+    ]
+  },
+  {
+    "tag": "tc-results-list",
+    "name": "ResultsList",
+    "description": "Search results to read and open – kind, title, a snippet with the query's words marked, source and date; grouped by",
+    "events": [
+      "tc-open",
+      "tc-selected-change",
+      "tc-sort-change",
+      "tc-suggestion",
+      "tc-more"
     ]
   },
   {
@@ -1663,6 +1736,26 @@
     "description": "Two reviewers disagree: both verdicts with who gave them, resolved by a third person with a reason, or kept blind.",
     "events": [
       "tc-resolve"
+    ]
+  },
+  {
+    "tag": "tc-risk-register",
+    "name": "RiskRegister",
+    "description": "A risk register – a 5 × 5 likelihood × impact heat grid with counts and moves since the last review, beside a",
+    "events": [
+      "tc-selected-change",
+      "tc-cell-change",
+      "tc-sort-change",
+      "tc-risks-change"
+    ]
+  },
+  {
+    "tag": "tc-roadmap-timeline",
+    "name": "RoadmapTimeline",
+    "description": "Workstreams on a calendar, Gantt style – lanes, bars with progress and status, milestones, a Today line and",
+    "events": [
+      "tc-selected-change",
+      "tc-scale-change"
     ]
   },
   {
@@ -1711,6 +1804,16 @@
       "tc-open-change",
       "tc-query-change",
       "tc-copy"
+    ]
+  },
+  {
+    "tag": "tc-saved-search-alerts",
+    "name": "SavedSearchAlerts",
+    "description": "Saved searches that tell you about new matches – the new count, how often and where each checks, pause, Run now,",
+    "events": [
+      "tc-alerts-change",
+      "tc-run",
+      "tc-open"
     ]
   },
   {
@@ -1902,6 +2005,18 @@
     "events": []
   },
   {
+    "tag": "tc-team-roster",
+    "name": "TeamRoster",
+    "description": "A team directory with everyone's local time – status, role and team, how far ahead or behind you they are, whether",
+    "events": [
+      "tc-group-change",
+      "tc-filter-change",
+      "tc-view-change",
+      "tc-selected-change",
+      "tc-action"
+    ]
+  },
+  {
     "tag": "tc-testimonial-wall",
     "name": "TestimonialWall",
     "description": "The landing-page wall of quotes: columns that scroll endlessly in opposite directions, ease to a stop on hover and pause for good.",
@@ -1949,6 +2064,15 @@
       "tc-done-change",
       "tc-tip-action",
       "tc-close"
+    ]
+  },
+  {
+    "tag": "tc-todo-list",
+    "name": "TodoList",
+    "description": "A to-do list – add, tick off, edit, reorder and remove (with Undo), All / To do / Done tabs with counts, progress",
+    "events": [
+      "tc-items-change",
+      "tc-filter-change"
     ]
   },
   {

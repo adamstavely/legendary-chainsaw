@@ -13,6 +13,7 @@ import "../../src/elements/output-schema-builder";
 import { sampleFromFields, schemaFieldError, schemaFromFields, schemaIssues, validateOutputSample, type OutputSchemaField, type TcOutputSchemaBuilder } from "../../src/elements/output-schema-builder";
 import { OutputSchemaBuilder } from "../../src/elements/react/output-schema-builder";
 import { cleanup, fixture, settle } from "./helpers";
+import { expectReactFormReset } from "./form-reset";
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -373,6 +374,10 @@ describe("tc-output-schema-builder", () => {
     active(el).focus();
     await press(document.activeElement!, "Enter");
     expect(el.querySelector(".ui-osb__editor")).toBeNull();
+  });
+
+  test("form reset through React: the baseline is the value React passed; reset goes through onChange", async () => {
+    await expectReactFormReset(OutputSchemaBuilder, "tc-output-schema-builder", FIELDS, FIELDS.slice(1));
   });
 
   test("React wrapper: uncontrolled value survives a parent re-render; controlled stays with the app; title and onChange", async () => {

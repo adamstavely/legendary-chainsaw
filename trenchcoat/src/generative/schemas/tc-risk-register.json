@@ -1,0 +1,171 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-risk-register.json",
+  "title": "tc-risk-register",
+  "description": "A risk register – a 5 × 5 likelihood × impact heat grid with counts and moves since the last review, beside a\nsortable register whose risks open with their mitigation and can be rescored.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the grid's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "risks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Risk"
+      },
+      "description": "The risks. Rescoring changes them unless tc-risks-change is prevented"
+    },
+    "selected": {
+      "type": "string",
+      "description": "The risk whose detail is open. Changed by the user unless tc-selected-change is prevented"
+    },
+    "cell": {
+      "type": "object",
+      "properties": {
+        "likelihood": {
+          "$ref": "#/definitions/RiskLevel"
+        },
+        "impact": {
+          "$ref": "#/definitions/RiskLevel"
+        }
+      },
+      "required": [
+        "likelihood",
+        "impact"
+      ],
+      "additionalProperties": false,
+      "description": "The grid cell the register is filtered to, or null for all. Changed by the user unless tc-cell-change is prevented"
+    },
+    "sort": {
+      "type": "string",
+      "enum": [
+        "status",
+        "title",
+        "score",
+        "owner"
+      ],
+      "description": "The register's order. Changed by the user unless tc-sort-change is prevented"
+    },
+    "sortDir": {
+      "type": "string",
+      "enum": [
+        "asc",
+        "desc"
+      ],
+      "description": "Which way the register is sorted"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "likelihood": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "impact": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false,
+      "description": "The words for the five likelihood and impact levels"
+    },
+    "readonly": {
+      "type": "boolean",
+      "description": "Read only: risks can be opened but not rescored"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "Risk": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "likelihood": {
+          "$ref": "#/definitions/RiskLevel"
+        },
+        "impact": {
+          "$ref": "#/definitions/RiskLevel"
+        },
+        "owner": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/RiskStatus"
+        },
+        "mitigation": {
+          "type": "string",
+          "description": "What's being done about it"
+        },
+        "trend": {
+          "$ref": "#/definitions/RiskTrend",
+          "description": "Whether it's getting worse (up), better (down) or holding (flat)"
+        },
+        "previous": {
+          "type": "object",
+          "properties": {
+            "likelihood": {
+              "$ref": "#/definitions/RiskLevel"
+            },
+            "impact": {
+              "$ref": "#/definitions/RiskLevel"
+            }
+          },
+          "required": [
+            "likelihood",
+            "impact"
+          ],
+          "additionalProperties": false,
+          "description": "Where it sat at the last review; drawn as an arrow to where it is now"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "likelihood",
+        "impact"
+      ],
+      "additionalProperties": false
+    },
+    "RiskLevel": {
+      "type": "number",
+      "enum": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    },
+    "RiskStatus": {
+      "type": "string",
+      "enum": [
+        "open",
+        "mitigating",
+        "accepted",
+        "closed"
+      ]
+    },
+    "RiskTrend": {
+      "type": "string",
+      "enum": [
+        "up",
+        "down",
+        "flat"
+      ]
+    }
+  }
+}

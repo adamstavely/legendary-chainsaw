@@ -352,6 +352,9 @@
     "literal line-height": 1,
     "literal spacing": 8
   },
+  "src/elements/person-hovercard.ts": {
+    "clock/environment read": 1
+  },
   "src/elements/plan-vs-actual.ts": {
     "clock/environment read": 1,
     "literal spacing": 21
@@ -388,7 +391,13 @@
     "clock/environment read": 4,
     "literal spacing": 28
   },
+  "src/elements/roadmap-timeline.ts": {
+    "clock/environment read": 1
+  },
   "src/elements/routine-form.ts": {
+    "clock/environment read": 1
+  },
+  "src/elements/saved-search-alerts.ts": {
     "clock/environment read": 1
   },
   "src/elements/search-history.ts": {
@@ -401,6 +410,9 @@
     "literal spacing": 12
   },
   "src/elements/task-board.ts": {
+    "clock/environment read": 1
+  },
+  "src/elements/team-roster.ts": {
     "clock/environment read": 1
   },
   "src/elements/text-reveal.ts": {

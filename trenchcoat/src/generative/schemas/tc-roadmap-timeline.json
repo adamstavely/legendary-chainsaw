@@ -1,0 +1,171 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-roadmap-timeline.json",
+  "title": "tc-roadmap-timeline",
+  "description": "Workstreams on a calendar, Gantt style – lanes, bars with progress and status, milestones, a Today line and\ndependency arrows, at a week, month or quarter scale, with details for the piece of work selected.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the chart's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "lanes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/RoadmapLane"
+      },
+      "description": "The workstreams, top to bottom"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/RoadmapItem"
+      },
+      "description": "The pieces of work"
+    },
+    "range": {
+      "type": "object",
+      "properties": {
+        "start": {
+          "type": "string"
+        },
+        "end": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "start",
+        "end"
+      ],
+      "additionalProperties": false,
+      "description": "The window shown; by default the work's own span, padded to whole months"
+    },
+    "scale": {
+      "type": "string",
+      "enum": [
+        "week",
+        "month",
+        "quarter"
+      ],
+      "description": "Weeks, months or quarters. Changed by the user unless a tc-scale-change listener calls preventDefault()"
+    },
+    "today": {
+      "type": "string",
+      "description": "Today, \"YYYY-MM-DD\"; by default the element's own clock"
+    },
+    "selected": {
+      "type": "string",
+      "description": "The selected piece of work's id. Changed by the user unless tc-selected-change is prevented"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for dates, e.g. \"en-GB\"; by default the browser's"
+    },
+    "statusLabels": {
+      "type": "object",
+      "properties": {
+        "done": {
+          "type": "string"
+        },
+        "blocked": {
+          "type": "string"
+        },
+        "active": {
+          "type": "string"
+        },
+        "at-risk": {
+          "type": "string"
+        },
+        "planned": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Words for the statuses"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "RoadmapLane": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "owner": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "RoadmapItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "lane": {
+          "type": "string",
+          "description": "The lane's id"
+        },
+        "label": {
+          "type": "string"
+        },
+        "start": {
+          "type": "string",
+          "description": "First day, \"YYYY-MM-DD\""
+        },
+        "end": {
+          "type": "string",
+          "description": "Last day, \"YYYY-MM-DD\" (a milestone's day; defaults to `start`)"
+        },
+        "status": {
+          "$ref": "#/definitions/RoadmapStatus"
+        },
+        "progress": {
+          "type": "number",
+          "description": "How far it has got, 0–1"
+        },
+        "milestone": {
+          "type": "boolean",
+          "description": "A single day that matters, drawn as a diamond"
+        },
+        "dependsOn": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The ids of the work this waits for"
+        }
+      },
+      "required": [
+        "id",
+        "lane",
+        "label",
+        "start"
+      ],
+      "additionalProperties": false
+    },
+    "RoadmapStatus": {
+      "type": "string",
+      "enum": [
+        "planned",
+        "active",
+        "done",
+        "at-risk",
+        "blocked"
+      ]
+    }
+  }
+}

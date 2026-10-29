@@ -106,7 +106,7 @@
     {
      "name": "tc-value-change",
      "detail": "",
-     "description": "A server was added or removed ({ value, change }: McpValueChange); cancelable – prevent it to control `value`",
+     "description": "A server was added or removed, or a form reset put the list back ({ value, change }: McpValueChange); cancelable – prevent it to control `value`",
      "cancelable": true
     },
     {
@@ -726,7 +726,7 @@
   "windowed": false
  },
  "size": {
-  "min": 85145,
-  "gzip": 20816
+  "min": 85272,
+  "gzip": 20853
  }
 }

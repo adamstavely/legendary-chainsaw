@@ -13,6 +13,7 @@ import "../../src/elements/tool-configuration";
 import { toolExampleCall, toolInputSchema, validateTool, type TcToolConfiguration, type ToolConfigurationValue } from "../../src/elements/tool-configuration";
 import { ToolConfiguration } from "../../src/elements/react/tool-configuration";
 import { cleanup, fixture, settle } from "./helpers";
+import { expectReactFormReset } from "./form-reset";
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -87,6 +88,23 @@ describe("toolInputSchema and validateTool", () => {
       ["error", "param:2:enum", "a: “two” isn't a number."],
     ]);
     expect(validateTool({ ...VALUE, name: "" })[0].message).toBe("Name the tool.");
+  });
+
+  test("reserved parameter names stay ordinary keys and are flagged", () => {
+    const value: ToolConfigurationValue = {
+      ...VALUE,
+      parameters: ["__proto__", "constructor", "prototype"].map((name) => ({ name, type: "string", required: true, description: "x" })),
+    };
+    const schema = toolInputSchema(value);
+    expect(Object.getPrototypeOf(schema.properties)).toBe(Object.prototype);
+    expect(Object.keys(schema.properties as object)).toEqual(["__proto__", "constructor", "prototype"]);
+    expect(JSON.parse(JSON.stringify(schema)).properties.__proto__).toEqual({ type: "string", description: "x" });
+    const args = toolExampleCall(value);
+    expect(Object.getPrototypeOf(args)).toBe(Object.prototype);
+    expect(JSON.stringify(args)).toBe('{"__proto__":"<__proto__>","constructor":"<constructor>","prototype":"<prototype>"}');
+    expect(validateTool(value).map((x) => [x.level, x.field, x.message])).toEqual(
+      ["__proto__", "constructor", "prototype"].map((n, i) => ["error", `param:${i}:name`, `“${n}” is reserved – choose another name.`]),
+    );
   });
 });
 
@@ -355,6 +373,10 @@ describe("tc-tool-configuration", () => {
     expect($<HTMLButtonElement>(el, ".ui-tdef__add").disabled).toBe(true);
     expect($<HTMLButtonElement>(el, ".ui-tdef__edit-head").disabled).toBe(true);
     expect($<HTMLSelectElement>(el, ".ui-tdef__approval-select").disabled).toBe(true);
+  });
+
+  test("form reset through React: the baseline is the value React passed; reset goes through onChange", async () => {
+    await expectReactFormReset(ToolConfiguration, "tc-tool-configuration", VALUE, { ...VALUE, approval: "ask" });
   });
 
   test("React wrapper: uncontrolled survives a re-render; controlled stays with the app", async () => {

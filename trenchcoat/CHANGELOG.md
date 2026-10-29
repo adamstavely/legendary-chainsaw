@@ -16,6 +16,43 @@
   matrix with legend, selection and table view, and a value against its bands as a dial, half dial or bar (optionally a
   slider).
 
+## Unreleased – search results, research planning, and people
+
+- **Search**
+  - **Results List** (`tc-results-list`) – results with the query's words marked in their snippets, grouped by kind
+    with counts, Relevance / Date, “Did you mean” and Show more.
+  - **Facet Sidebar** (`tc-facet-sidebar`) – checkbox, radio, range and date filters with counts, active filters as
+    chips with Clear all.
+  - **Saved Search Alerts** (`tc-saved-search-alerts`) – saved searches that report new matches, with frequency,
+    channels, pause, Run now and remove with Undo.
+- **Research & portfolio**
+  - **Roadmap Timeline** (`tc-roadmap-timeline`) – Gantt-style lanes with progress, milestones, Today and
+    dependency arrows, at week, month or quarter scale.
+  - **Prioritisation Matrix** (`tc-prioritisation-matrix`) – value against effort, points dragged or moved with
+    the arrow keys, listed by quadrant.
+  - **Risk Register** (`tc-risk-register`) – a 5 × 5 likelihood × impact grid beside a sortable, rescorable register.
+  - **Bibliography** (`tc-bibliography`) – references in APA, MLA, Chicago, Harvard or IEEE, with Copy and BibTeX /
+    RIS export.
+- **People & profiles**
+  - **Org Chart** (`tc-org-chart`) – reporting lines that fold, search that opens the way, pan and zoom, an outline
+    when narrow.
+  - **Person Hovercard** (`tc-person-hovercard`) – the profile card behind any name, with status and local time.
+  - **Team Roster** (`tc-team-roster`) – a directory with everyone's local time and the team's best hour to meet.
+  - **Relationship Graph** (`tc-relationship-graph`) – people and organisations around one of them, re-centring on
+    click, with a keyboard list of every connection.
+## Unreleased – a to-do list
+
+- **To-do List** (`tc-todo-list`) – add a to-do (Enter), tick it off, click its words to edit them, move it with
+  Alt + ↑ / ↓, remove it with Undo; All / To do / Done tabs with counts, a done bar and Clear done. One cancelable
+  `tc-items-change` carries the whole next list and what changed, so a page can keep it in its own store.
+## Unreleased – Loupe, a design-system inspector
+
+- **Loupe** (`tc-loupe`) – remade from cautious-lamp's LoupeTool. ⌘⇧L outlines the page's components
+  (`data-ds-component` and the library's own elements) with a card of name, path, size, look and docs / source /
+  design links; a ruler marks the breakpoints and the window's width; flex and grid containers are outlined and listed.
+  Unlike the original, the page keeps scrolling and working underneath, outlines follow scrolling, resizing and DOM
+  changes (no polling), the overlay sits in the top layer so transformed or contained ancestors can't shift it, and
+  everything is reachable from keyboard lists in the panel. Kept out of generative UI.
 ## Unreleased – a JSON viewer for review
 
 - **JSON Viewer** (`tc-json-viewer`) – a JSON document laid out for someone to check: Document reads it like a form
@@ -38,6 +75,27 @@
 - **Speed Reader** – a listener that keeps the place pauses the reading instead of leaving it stuck on Pause.
 - **Score Summary** – NPS and CSAT are worked out from the counts and rounded once: a balanced split is 0, not −1.
 - **Geo Location** – a copy the browser refused no longer says Copied.
+
+## Unreleased – fixes: redaction, release gates, deletion scopes and configuration panels
+
+- **Conversation Annotation** – a redaction its message no longer matches blocks Send, says why, and the export blanks
+  its quote wherever it still appears, so unmasked text is never sent. Redacted text is now absent from the whole
+  page: a label over it quotes it as █, and so do the selection hint, the correction editor and its word diff.
+- **Configuration Release Control** – the gate is checked again while the confirmation is open and at Confirm. If it
+  fails (an approval withdrawn, a hold, a rollback that no longer applies), Confirm is disabled and the dialog says why.
+- **Data Handling Policy** – Request deletion picks the first scope it can delete and never an unavailable one; Confirm
+  refuses an unavailable scope and is disabled with the reason, including when the scope changes while open.
+- **Form reset in twelve configuration panels** (Model Settings, Conversation Annotation, Data Handling Policy,
+  Evaluation Dataset Editor, Gate Config, Instruction Editor, MCP Connection Manager, Output Schema Builder, Provider
+  Connection, Retrieval Settings, Tool Configuration, Trigger Builder) – the baseline is taken on the first update,
+  after React has set its props, not on connect. A reset fires the cancelable `tc-value-change`, so controlled
+  wrappers hear about it (`field` is `null` in Data Handling Policy, `change.type` is `"reset"` in MCP Connection Manager).
+- **MCP Connection Manager** – an app that answers inside its `tc-connect` listener no longer leaves the server
+  stuck on Connecting….
+- **Tool Configuration** – `__proto__`, `constructor` and `prototype` are refused as parameter names with a message,
+  and if one gets through it stays an ordinary key in the schema and the example call.
+- **Number Field** and **Slider Field** – clearing an optional field sets the value to `null` and submits nothing.
+  A cleared required field is invalid.
 
 ## Unreleased – a UI kit for Adobe XD
 

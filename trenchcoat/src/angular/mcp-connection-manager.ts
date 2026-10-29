@@ -64,7 +64,7 @@ export class McpConnectionManager {
     this.#el.look = v;
   }
   /**
-   * A server was added or removed ({ value, change }: McpValueChange); cancelable – prevent it to control `value`
+   * A server was added or removed, or a form reset put the list back ({ value, change }: McpValueChange); cancelable – prevent it to control `value`
    * Types $event; the element dispatches the event itself.
    */
   @Output("tc-value-change") readonly tcValueChange = new EventEmitter<CustomEvent<McpValueChange>>();

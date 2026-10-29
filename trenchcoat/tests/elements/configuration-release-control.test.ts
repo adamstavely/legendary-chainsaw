@@ -226,6 +226,52 @@ describe("tc-configuration-release-control", () => {
     expect(el.querySelector(".ui-rls__candidate")).toBeNull();
   });
 
+  test("a gate that fails while the confirmation is open disables Confirm and says why; it can't promote", async () => {
+    const el = await make();
+    const seen: ReleasePromoteEvent[] = [];
+    el.addEventListener("tc-promote", (e) => seen.push((e as CustomEvent<ReleasePromoteEvent>).detail));
+    promote(el).click();
+    await settle();
+    const confirm = () => dialog(el).querySelector<HTMLButtonElement>(".ui-rls__confirm")!;
+    expect(confirm().disabled).toBe(false);
+    // An approval is withdrawn and a hold lands after the dialog opened
+    el.approvals = [APPROVED[0], { ...APPROVED[1], state: "rejected" }];
+    el.hold = "Change freeze until Monday";
+    await settle();
+    expect(dialog(el).open).toBe(true);
+    expect(confirm().disabled).toBe(true);
+    expect(text(dialog(el).querySelector(".ui-rls__dlg-blocked"))).toBe("Can't promote now: Sam Ortiz asked for changes; Change freeze until Monday.");
+    confirm().click();
+    await settle();
+    expect(seen).toEqual([]);
+    expect(el.querySelector(".ui-rls__stage[data-requested]")).toBeNull();
+    // The gate passes again: Confirm works
+    el.approvals = APPROVED;
+    el.hold = "";
+    await settle();
+    expect(confirm().disabled).toBe(false);
+    expect(dialog(el).querySelector(".ui-rls__dlg-blocked")).toBeNull();
+    confirm().click();
+    await settle();
+    expect(seen).toHaveLength(1);
+  });
+
+  test("a rollback that stops making sense while the confirmation is open can't be confirmed", async () => {
+    const el = await make();
+    const seen: ReleaseRollbackEvent[] = [];
+    el.addEventListener("tc-rollback", (e) => seen.push((e as CustomEvent<ReleaseRollbackEvent>).detail));
+    rollbackBtn(el).click();
+    await settle();
+    // Production is already back on v12 by the time Confirm is pressed
+    el.stages = STAGES.map((s) => (s.id === "production" ? { ...s, version: "v12" } : s));
+    await settle();
+    const confirm = dialog(el).querySelector<HTMLButtonElement>(".ui-rls__confirm");
+    expect(confirm?.disabled ?? true).toBe(true);
+    confirm?.click();
+    await settle();
+    expect(seen).toEqual([]);
+  });
+
   test("controlled: preventDefault() on tc-promote leaves nothing marked Requested", async () => {
     const el = await make({ look: "clean" });
     el.addEventListener("tc-promote", (e) => e.preventDefault());

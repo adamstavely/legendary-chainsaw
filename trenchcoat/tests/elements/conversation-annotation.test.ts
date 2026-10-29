@@ -20,6 +20,7 @@ import {
 } from "../../src/elements/conversation-annotation";
 import { ConversationAnnotation } from "../../src/elements/react/conversation-annotation";
 import { cleanup, fixture, settle } from "./helpers";
+import { expectReactFormReset } from "./form-reset";
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -367,6 +368,66 @@ describe("tc-conversation-annotation", () => {
     expect(btn.textContent!.trim()).toBe("Sent to dataset");
   });
 
+  test("a redaction the text no longer matches blocks Send; nothing unmasked is exported", async () => {
+    const el = await mount(LABELLED);
+    const sent: ConversationAnnotationSend[] = [];
+    on(el, "tc-send", (e) => sent.push(e.detail));
+    // The message is edited: the email moves, so the redaction's offsets point at other text
+    el.messages = [{ ...MESSAGES[0], text: `Hi. ${MESSAGES[0].text}` }, ...MESSAGES.slice(1)];
+    await settle();
+    const btn = el.querySelector<HTMLButtonElement>(".ui-cva__send")!;
+    expect(btn.disabled).toBe(true);
+    expect(el.querySelector(".ui-cva__summary")!.textContent).toBe("A redaction's text has changed – remove it or redact the text again to send.");
+    btn.click();
+    el.querySelector<HTMLElement>(".ui-cva__foot")!.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    expect(sent).toEqual([]);
+    // Even called directly, the export never carries a redacted quote
+    const out = prepareAnnotationExport(el.messages, el.value);
+    expect(JSON.stringify(out)).not.toContain("sam@example.com");
+    // Removing the stale redaction lets it send again
+    el.querySelector<HTMLButtonElement>('.ui-cva__remove[aria-label^="Remove Redacted"]')!.click();
+    await settle();
+    expect(btn.disabled).toBe(false);
+    btn.click();
+    expect(sent).toHaveLength(1);
+  });
+
+  test("redacted text isn't in the DOM: not in overlapping quotes, the selection hint or a correction's diff", async () => {
+    const value: ConversationAnnotationValue = {
+      spans: [
+        { id: "s3", messageId: "u1", start: 35, end: 50, quote: "sam@example.com", label: "", redacted: true },
+        { id: "s4", messageId: "u1", start: 23, end: 50, quote: "My email is sam@example.com", label: "sensitive" },
+      ],
+      ratings: {},
+      corrections: {},
+    };
+    const el = await fixture<TcConversationAnnotation>(
+      html`<tc-conversation-annotation .messages=${MESSAGES} .value=${value} .correctRoles=${["user", "assistant"]}></tc-conversation-annotation>`,
+    );
+    expect(el.innerHTML).not.toContain("sam@example.com");
+    expect([...el.querySelectorAll(".ui-cva__quote")].map((q) => q.textContent)).toEqual(["“My email is ███████████████”", "15 characters"]);
+    // A correction of the redacted turn: its diff and its editor don't bring the text back
+    const u = turn(el, "u1");
+    u.querySelector<HTMLButtonElement>(".ui-cva__ghost")!.click();
+    await settle();
+    const field = u.querySelector<HTMLTextAreaElement>("textarea")!;
+    expect(field.value).not.toContain("sam@example.com");
+    field.value = "Can I return my order? Write to sam@example.com or call.";
+    field.dispatchEvent(new Event("input", { bubbles: true }));
+    await settle();
+    u.querySelector<HTMLButtonElement>('.ui-cva__btn[data-variant="primary"]')!.click();
+    await settle();
+    expect(u.querySelector(".ui-cva__diff")!.textContent).not.toContain("sam@example.com");
+    expect(el.innerHTML).not.toContain("sam@example.com");
+    // Selecting across the bar: the hint quotes it blanked
+    el.focus();
+    turn(el, "u1").focus();
+    key(turn(el, "u1"), "End", { shiftKey: true });
+    await settle();
+    expect(hint(el)).not.toContain("sam@example.com");
+    expect(el.innerHTML).not.toContain("sam@example.com");
+  });
+
   test("controlled: preventDefault keeps the value", async () => {
     const el = await mount(LABELLED);
     on(el, "tc-value-change", (e) => e.preventDefault());
@@ -437,6 +498,10 @@ describe("tc-conversation-annotation", () => {
     key(a, "1");
     await settle();
     expect(el.value).toEqual(LABELLED);
+  });
+
+  test("form reset through React: the baseline is the value React passed; reset goes through onChange", async () => {
+    await expectReactFormReset(ConversationAnnotation, "tc-conversation-annotation", LABELLED, EMPTY, { messages: MESSAGES });
   });
 
   test("React wrapper: uncontrolled value survives a parent re-render; controlled stays with the app; title, onChange, onSend", async () => {

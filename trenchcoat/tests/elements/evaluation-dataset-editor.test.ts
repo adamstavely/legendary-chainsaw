@@ -21,6 +21,7 @@ import {
 } from "../../src/elements/evaluation-dataset-editor";
 import { EvaluationDatasetEditor } from "../../src/elements/react/evaluation-dataset-editor";
 import { cleanup, fixture, settle } from "./helpers";
+import { expectReactFormReset } from "./form-reset";
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -471,6 +472,10 @@ describe("tc-evaluation-dataset-editor", () => {
     expect(detail(el)!.querySelector("textarea")).toBeNull();
     expect(detail(el)!.querySelector<HTMLButtonElement>(".ui-eds__mode")!.disabled).toBe(true);
     expect([...el.querySelectorAll<HTMLButtonElement>(".ui-eds__btn")].find((b) => b.textContent!.includes("Add case"))!.disabled).toBe(true);
+  });
+
+  test("form reset through React: the baseline is the value React passed; reset goes through onChange", async () => {
+    await expectReactFormReset(EvaluationDatasetEditor, "tc-evaluation-dataset-editor", VALUE, { cases: CASES.slice(1) });
   });
 
   test("React wrapper: uncontrolled value survives a parent re-render; controlled stays with the app; callbacks", async () => {

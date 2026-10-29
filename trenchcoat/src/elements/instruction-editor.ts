@@ -135,12 +135,14 @@ export class TcInstructionEditor extends TcElement {
 
   override connectedCallback() {
     super.connectedCallback();
-    this.initialValue ??= this.value;
     if (!this.hasAttribute("role")) this.setAttribute("role", "group");
   }
 
   formResetCallback() {
-    this.value = this.initialValue ?? DEFAULT_VALUE;
+    const value = this.initialValue ?? DEFAULT_VALUE;
+    // Through tc-value-change like any edit, so a controlled wrapper hears of it and keeps the value until it agrees
+    if (this.emit<InstructionEditorChange>("tc-value-change", { value }, { cancelable: true })) this.value = value;
+    else this.requestUpdate();
   }
 
   /* ---------- The model ---------- */
@@ -234,6 +236,8 @@ export class TcInstructionEditor extends TcElement {
 
   protected override willUpdate(changed: PropertyValues) {
     super.willUpdate(changed);
+    // The reset baseline is what the first render shows, so props a framework sets after connecting (React does) count
+    if (!this.hasUpdated) this.initialValue = this.value;
     this.toggleAttribute("data-readonly", this.readonly);
     // A new version (saved here, or passed back by the app): start the next note fresh and compare with it
     const before = changed.get("versions") as InstructionVersion[] | undefined;
