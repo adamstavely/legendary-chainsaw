@@ -111,6 +111,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Integration Settings** (`integration-settings.tsx`) – Settings card for a connected service – on/off switch, API key, validated site address, time zone and a save bar
 - **Investment Balance** (`investment-balance.tsx`) – Are dollars and people following priority? – each tier's share of items, budget and people side by side as numbers and bars, over- and under-invested tiers flagged in words, and the biggest mismatch said in one line
 - **ISBN Details** (`isbn-details.tsx`) – ISBN numbers in text, validated and marked – hover or focus one for the book's cover, title, authors, publisher, year and pages
+- **JSON Viewer** (`json-viewer.tsx`) – A JSON document laid out for review – Document, Tree and Raw views, search across them, flags with notes on fields, Copy and Download – inline or as a dialog
 - **Kill Switch** (`kill-switch.tsx`) – System posture and the emergency stop – what's running, a confirmed Stop that says what it halts, and resume
 - **Knowledge Promotion** (`knowledge-promotion.tsx`) – Promote a verified fact into shared team knowledge against a checklist, with disputed facts side by side
 - **Knowledge Source Manager** (`knowledge-source-manager.tsx`) – Sources a knowledge base answers from – ingestion state and progress, docs and chunks, sync schedule, stale and duplicate warnings, and a handoff to chunk review

@@ -72,6 +72,8 @@ describe("parseCoordinate", () => {
       "12.50, 13.75", // prices: too few decimals
       "38.8977 -77.0365", // plain decimals need a comma
       "38.8977, -77.0365, 12",
+      "20°, 25°", // degree signs alone: temperatures
+      "90° / 180°", // and angles
       "",
       "N",
     ]) {
@@ -103,6 +105,22 @@ describe("findCoordinates", () => {
 
   test("two pairs side by side are found separately", () => {
     expect(found("From 57.0412, -3.6127 to 57.1200, -3.7000.")).toEqual(["57.0412, -3.6127", "57.1200, -3.7000"]);
+  });
+
+  test("comma-joined lists pair the right numbers; a trailing zoom or altitude doesn't stop a pair", () => {
+    const list = findCoordinates("38.1234,-77.1234,39.1234,-78.1234");
+    expect(list.map((m) => m.text)).toEqual(["38.1234,-77.1234", "39.1234,-78.1234"]);
+    near(list[0], 38.1234, -77.1234);
+    near(list[1], 39.1234, -78.1234);
+    expect(found("https://maps.example.org/@38.8977,-77.0365,15z")).toEqual(["38.8977,-77.0365"]);
+    expect(found("Logger at 38.8977,-77.0365,120.5 m")).toEqual(["38.8977,-77.0365"]);
+  });
+
+  test("whole numbers with only degree signs stay plain; a hemisphere or minutes still make a place", () => {
+    expect(found("Highs of 20°, 25° today")).toEqual([]);
+    expect(found("Turn 90° / 180° and back")).toEqual([]);
+    expect(found("Drop at 38° N, 77° W")).toEqual(["38° N, 77° W"]);
+    expect(found("Buoy 50°49′N 1°05′W")).toEqual(["50°49′N 1°05′W"]);
   });
 });
 
@@ -432,6 +450,33 @@ describe("tc-coordinate-details", () => {
     await el.updateComplete;
     expect(marksOf(el)).toHaveLength(0);
     expect(card(el)).toBeNull();
+  });
+
+  test("a text change that closes the card says so with tc-open-change(null)", async () => {
+    const el = await make({ resolve: resolver([]) });
+    const changes: (number | null)[] = [];
+    el.addEventListener("tc-open-change", (e) => changes.push((e as CustomEvent<CoordinateOpenDetail>).detail.latitude));
+    marksOf(el)[0].focus();
+    await opened(el);
+    el.text = "Nothing here any more: 3, 4.";
+    await el.updateComplete;
+    expect(card(el)).toBeNull();
+    expect(changes[0]).toBeCloseTo(57.0412, 4);
+    expect(changes.at(-1)).toBeNull();
+  });
+
+  test("back on the page with a card open, the lookup that leaving aborted runs again", async () => {
+    const calls: Calls = [];
+    const el = await make({ resolve: resolver(calls, PLACES, 200) });
+    marksOf(el)[0].focus();
+    await wait(30);
+    const host = el.parentElement!;
+    el.remove();
+    expect(calls[0].signal.aborted).toBe(true);
+    host.append(el);
+    await opened(el, (c) => title(c) === "North weather mast");
+    expect(calls).toHaveLength(2);
+    expect(calls[1].signal.aborted).toBe(false);
   });
 
   test("the wrapper: resolve and onCopy (false stops the clipboard write); a parent re-render keeps the cache", async () => {

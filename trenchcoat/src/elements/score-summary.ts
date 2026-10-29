@@ -9,7 +9,8 @@ import { npsBand, type ScoreSurveyKind } from "./score-survey";
  * <tc-score-summary> – the results of an NPS or CSAT survey: the score in big type with its name ("NPS +32",
  * "CSAT 84%"), how many answered, and how it compares with last time and the target.
  *   · NPS is the share of promoters (9–10) minus the share of detractors (0–6), from −100 to +100; CSAT is the share
- *     of 4s and 5s. Both come from the band percentages shown, which are rounded so they add up to 100
+ *     of 4s and 5s. Both are worked out from the counts and rounded once (half away from zero); the band shares are
+ *     rounded separately so they add up to 100, so the score can differ by 1 from their difference
  *   · a stacked bar splits the answers into bands – detractors, passives, promoters, or the five CSAT answers – each
  *     named with its share and count in text, so colour is never the only cue
  *   · the distribution is a bar per score; the bars are one tab stop (arrows move, Enter picks, Escape clears), and
@@ -126,7 +127,9 @@ export function summarizeScores(kind: ScoreSurveyKind, counts: number[], labels:
       { key: "promoter", label: labels.promoters, count: by.promoter, percent: pct[2] },
     ];
   }
-  const value = !total ? null : kind === "csat" ? bands[3].percent + bands[4].percent : bands[2].percent - bands[0].percent;
+  // From the counts, not the rounded band shares: those can be 1 out, and even flip the sign of a balanced NPS
+  const exact = !total ? 0 : kind === "csat" ? ((bands[3].count + bands[4].count) / total) * 100 : ((bands[2].count - bands[0].count) / total) * 100;
+  const value = !total ? null : Math.sign(exact) * Math.round(Math.abs(exact));
   return { total, value, bands, counts };
 }
 
