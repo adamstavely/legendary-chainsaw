@@ -7003,11 +7003,11 @@
   },
   "coordinate-details": {
    "measuredAt": "2026-10-29",
-   "hash": "c6a4380ad35c96ee",
+   "hash": "9e0afba0c2c8a57a",
    "bundle": {
     "own": {
-     "min": 26809,
-     "gzip": 9493
+     "min": 26967,
+     "gzip": 9556
     },
     "shared": [
      {
@@ -7077,21 +7077,21 @@
      }
     ],
     "withoutLit": {
-     "min": 63710,
-     "gzip": 19319
+     "min": 63868,
+     "gzip": 19373
     },
     "withLit": {
-     "min": 85796,
-     "gzip": 26536
+     "min": 85954,
+     "gzip": 26595
     }
    },
    "render": {
     "tag": "tc-coordinate-details",
     "source": "demo",
     "runs": 7,
-    "cold": 6.8,
+    "cold": 9.4,
     "first": 0.5,
-    "update": 0.1,
+    "update": 0.2,
     "updateKind": "one item of providers replaced",
     "nodes": 6,
     "scale": {
@@ -7100,14 +7100,14 @@
      "points": [
       {
        "items": 100,
-       "first": 0.5,
-       "update": 0,
+       "first": 0.4,
+       "update": 0.1,
        "nodes": 6
       },
       {
        "items": 1000,
        "first": 0.4,
-       "update": 0.1,
+       "update": 0,
        "nodes": 6
       }
      ]
@@ -10836,7 +10836,7 @@
   },
   "generated-ui": {
    "measuredAt": "2026-10-29",
-   "hash": "be4df48dfc8170f5",
+   "hash": "53ef2b2fed953ef9",
    "bundle": {
     "own": {
      "min": 34126,
@@ -11514,6 +11514,11 @@
       "min": 24902
      },
      {
+      "name": "coordinate-details",
+      "kind": "element",
+      "min": 24723
+     },
+     {
       "name": "synthesis-notes",
       "kind": "element",
       "min": 24675
@@ -11527,11 +11532,6 @@
       "name": "integration-grid",
       "kind": "element",
       "min": 24658
-     },
-     {
-      "name": "coordinate-details",
-      "kind": "element",
-      "min": 24565
      },
      {
       "name": "conversation-branches",
@@ -13150,21 +13150,21 @@
      }
     ],
     "withoutLit": {
-     "min": 7412687,
-     "gzip": 1822878
+     "min": 7412845,
+     "gzip": 1822945
     },
     "withLit": {
-     "min": 7379591,
-     "gzip": 1809932
+     "min": 7379749,
+     "gzip": 1809985
     }
    },
    "render": {
     "tag": "tc-generated-ui",
     "source": "demo",
     "runs": 7,
-    "cold": 2.3,
-    "first": 0.5,
-    "update": 0.1,
+    "cold": 2.2,
+    "first": 0.6,
+    "update": 0.2,
     "updateKind": "re-render with the same data",
     "nodes": 9,
     "scale": null,
