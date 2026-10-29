@@ -1,0 +1,119 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-results-list.json",
+  "title": "tc-results-list",
+  "description": "Search results to read and open – kind, title, a snippet with the query's words marked, source and date; grouped by\nkind, sorted by relevance or date, \"Did you mean\", Show more and loading rows.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the list's name"
+    },
+    "query": {
+      "type": "string",
+      "description": "What was searched for; its words are picked out in titles and snippets"
+    },
+    "results": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/SearchResult"
+      },
+      "description": "The results, in order of relevance"
+    },
+    "group": {
+      "type": "string",
+      "enum": [
+        "none",
+        "kind"
+      ],
+      "description": "Group results under their kind, or list them as they come"
+    },
+    "suggestion": {
+      "type": "string",
+      "description": "\"Did you mean …\" – a corrected query to offer"
+    },
+    "total": {
+      "type": "string",
+      "description": "How many there are in all, in words (\"About 1,240 results\"); by default the count of `results`"
+    },
+    "sort": {
+      "type": "string",
+      "enum": [
+        "date",
+        "relevance"
+      ],
+      "description": "The order. Changed by the user unless a tc-sort-change listener calls preventDefault()"
+    },
+    "loading": {
+      "type": "boolean",
+      "description": "Waiting for results: placeholder rows"
+    },
+    "selected": {
+      "type": "string",
+      "description": "The result in focus. Changed by the user unless tc-selected-change is prevented"
+    },
+    "pageSize": {
+      "type": "number",
+      "description": "How many show at first, and how many Show more adds"
+    },
+    "hasMore": {
+      "type": "boolean",
+      "description": "There are more than `results` holds: Show more stays, for the page to load them (tc-more)"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for dates and numbers, e.g. \"en-GB\"; by default the browser's"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "SearchResult": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "snippet": {
+          "type": "string",
+          "description": "A passage that shows why it matched; the query's words are picked out"
+        },
+        "kind": {
+          "type": "string",
+          "description": "What it is – \"Document\", \"Person\", \"Email\" or any word; results are grouped by it"
+        },
+        "source": {
+          "type": "string",
+          "description": "Where it lives – a folder, a site, a mailbox"
+        },
+        "href": {
+          "type": "string",
+          "description": "Where it opens; a title without one is a button (tc-open)",
+          "format": "uri-reference"
+        },
+        "date": {
+          "type": "number",
+          "description": "When it was made or changed, epoch ms"
+        },
+        "score": {
+          "type": "number",
+          "description": "How well it matched, 0–1, for the page's own use"
+        },
+        "meta": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "More words for the quiet line under the snippet"
+        }
+      },
+      "required": [
+        "id",
+        "title"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

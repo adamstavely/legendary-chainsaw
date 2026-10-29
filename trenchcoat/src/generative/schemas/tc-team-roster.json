@@ -1,0 +1,133 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-team-roster.json",
+  "title": "tc-team-roster",
+  "description": "A team directory with everyone's local time – status, role and team, how far ahead or behind you they are, whether\nthey're working, skills – grouped and filtered, as a list or a grid, with the team's best hour to meet.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the roster's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "members": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/RosterMember"
+      },
+      "description": "The members, in order"
+    },
+    "now": {
+      "type": "number",
+      "description": "The time now, epoch ms; by default the element's own clock, read every minute"
+    },
+    "viewerTimezone": {
+      "type": "string",
+      "description": "\"Your time\": the viewer's IANA time zone; by default the browser's"
+    },
+    "groupBy": {
+      "type": "string",
+      "enum": [
+        "none",
+        "team",
+        "role",
+        "timezone"
+      ],
+      "description": "How members are grouped. Changed by the user unless a tc-group-change listener calls preventDefault()"
+    },
+    "filter": {
+      "type": "string",
+      "description": "What the filter box holds. Changed by the user unless tc-filter-change is prevented"
+    },
+    "view": {
+      "type": "string",
+      "enum": [
+        "list",
+        "grid"
+      ],
+      "description": "A list or a grid of cards. Changed by the user unless tc-view-change is prevented"
+    },
+    "selected": {
+      "type": "string",
+      "description": "The selected member's id. Changed by the user unless tc-selected-change is prevented"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for times, e.g. \"en-GB\"; by default the browser's"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "RosterMember": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        },
+        "team": {
+          "type": "string"
+        },
+        "avatar": {
+          "type": "string",
+          "description": "A picture URL; without one the member shows their initials"
+        },
+        "email": {
+          "type": "string"
+        },
+        "timezone": {
+          "type": "string",
+          "description": "An IANA time zone: \"Europe/Lisbon\""
+        },
+        "workingHours": {
+          "type": "object",
+          "properties": {
+            "start": {
+              "type": "string"
+            },
+            "end": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "start",
+            "end"
+          ],
+          "additionalProperties": false,
+          "description": "Their working day in their own time, \"09:00\" to \"17:30\"; 09:00–17:30 when they have a time zone but no hours"
+        },
+        "status": {
+          "$ref": "#/definitions/RosterStatus"
+        },
+        "skills": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "RosterStatus": {
+      "type": "string",
+      "enum": [
+        "available",
+        "busy",
+        "away",
+        "offline"
+      ]
+    }
+  }
+}

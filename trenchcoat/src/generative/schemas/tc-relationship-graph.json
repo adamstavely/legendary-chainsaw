@@ -1,0 +1,118 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-relationship-graph.json",
+  "title": "tc-relationship-graph",
+  "description": "Connections between people and organisations around one of them – direct and second-hand rings, relationships drawn\nby strength, re-centring on click, and a panel and keyboard list of the connections.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the graph's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/RelationNode"
+      },
+      "description": "People, organisations and anything else, each with a kind"
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/RelationEdge"
+      },
+      "description": "The relationships between them"
+    },
+    "ego": {
+      "type": "string",
+      "description": "The node in the middle (the ego); by default the first person. Changed by the user unless tc-ego-change is prevented"
+    },
+    "depth": {
+      "type": "number",
+      "enum": [
+        2,
+        1
+      ],
+      "description": "How far out to draw: 1 (direct connections) or 2 (theirs too). Changed by the user unless tc-depth-change is prevented"
+    },
+    "kinds": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The kinds shown; empty for all. Changed from the legend unless tc-kinds-change is prevented"
+    },
+    "selected": {
+      "type": "string",
+      "description": "What's selected: a node id, \"edge:<edge id>\", or null. Changed by the user unless tc-selected-change is prevented"
+    },
+    "kindLabels": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Names for the kinds in the legend: { organisation: \"Organisation\" }"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "RelationNode": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "subtitle": {
+          "type": "string"
+        },
+        "avatar": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "kind"
+      ],
+      "additionalProperties": false
+    },
+    "RelationEdge": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "from": {
+          "type": "string"
+        },
+        "to": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "weight": {
+          "type": "number"
+        },
+        "since": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "from",
+        "to"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

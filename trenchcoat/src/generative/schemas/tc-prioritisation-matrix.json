@@ -1,0 +1,88 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-prioritisation-matrix.json",
+  "title": "tc-prioritisation-matrix",
+  "description": "Value against effort, a 2 × 2 – numbered points you drag or move with the keys, gathered when they overlap, and the\nitems listed by quadrant beside it.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the plot's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/PrioritisationItem"
+      },
+      "description": "The items. Moved by the user unless tc-items-change is prevented"
+    },
+    "xLabel": {
+      "type": "string",
+      "description": "The across axis's name"
+    },
+    "yLabel": {
+      "type": "string",
+      "description": "The up axis's name"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "quickWins": {
+          "type": "string"
+        },
+        "bigBets": {
+          "type": "string"
+        },
+        "fillIns": {
+          "type": "string"
+        },
+        "moneyPits": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Names for the quadrants"
+    },
+    "readonly": {
+      "type": "boolean",
+      "description": "Points can't be moved"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "PrioritisationItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "value": {
+          "type": "number"
+        },
+        "effort": {
+          "type": "number"
+        },
+        "group": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "value",
+        "effort"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

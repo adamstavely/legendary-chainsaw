@@ -1,0 +1,443 @@
+{
+ "elements": [
+  {
+   "tag": "tc-facet-sidebar",
+   "className": "TcFacetSidebar",
+   "description": "Search filters with counts – checkbox, radio, range and date facets that fold, the filters in use as removable\nchips with Clear all, Show more, and a search box in long facets.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Filters\"",
+     "description": "The heading, and the filters' name",
+     "readonly": false
+    },
+    {
+     "name": "facets",
+     "attribute": null,
+     "type": "Facet[]",
+     "default": "[]",
+     "description": "The facets, in order",
+     "readonly": false
+    },
+    {
+     "name": "value",
+     "attribute": null,
+     "type": "FacetValues",
+     "default": "{}",
+     "description": "The filters in use, by facet id. Changed by the user unless tc-value-change is prevented",
+     "readonly": false
+    },
+    {
+     "name": "collapsed",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[]",
+     "description": "The ids of folded facets. Changed by the user unless tc-collapsed-change is prevented",
+     "readonly": false
+    },
+    {
+     "name": "showCount",
+     "attribute": "show-count",
+     "type": "number",
+     "default": "5",
+     "description": "How many options a facet shows before \"Show n more\"",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The language for numbers and dates, e.g. \"en-GB\"; by default the browser's",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-value-change",
+     "detail": "",
+     "description": "A filter changed ({ value, facet }: FacetValueChange); cancelable – prevented, `value` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-collapsed-change",
+     "detail": "",
+     "description": "A facet was folded or opened ({ collapsed }: FacetCollapsedChange); cancelable – prevented, `collapsed` stays as it was",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "fct",
+   "cssProperties": [
+    {
+     "name": "--tc-fct-thumb",
+     "value": "var(--tc-space-4)",
+     "looks": [
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent",
+    "--tc-accent-text",
+    "--tc-border-control",
+    "--tc-border-control-hover",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-px",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-fill-selected",
+    "--tc-fill-strong",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-menu-item-hover",
+    "--tc-menu-item-radius",
+    "--tc-meter-h",
+    "--tc-meter-radius",
+    "--tc-meter-track",
+    "--tc-pill-h",
+    "--tc-pill-h-lg",
+    "--tc-radius-full",
+    "--tc-radius-xs",
+    "--tc-shadow-control",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-5",
+    "--tc-space-6",
+    "--tc-surface-control",
+    "--tc-surface-inverse",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-switch-knob-bg",
+    "--tc-text-muted",
+    "--tc-text-on-accent",
+    "--tc-text-on-inverse",
+    "--tc-text-placeholder",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "facetActive",
+   "signature": "facetActive(f: Facet, v: FacetValue | undefined): boolean",
+   "description": "Whether a facet's value narrows anything"
+  }
+ ],
+ "react": [
+  {
+   "component": "FacetSidebar",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading, and the filters' name"
+    },
+    {
+     "name": "value",
+     "type": "FacetValues",
+     "optional": true,
+     "description": "The filters in use – controlled when given"
+    },
+    {
+     "name": "defaultValue",
+     "type": "FacetValues",
+     "optional": true,
+     "description": "The filters on mount when `value` isn't controlled"
+    },
+    {
+     "name": "onValueChange",
+     "type": "(value: FacetValues, facet: string) => void",
+     "optional": true,
+     "description": "A filter changed; `facet` is the facet's id (\"\" for Clear all)"
+    },
+    {
+     "name": "collapsed",
+     "type": "string[]",
+     "optional": true,
+     "description": "Folded facets – controlled when given"
+    },
+    {
+     "name": "defaultCollapsed",
+     "type": "string[]",
+     "optional": true,
+     "description": "Folded facets on mount when `collapsed` isn't controlled"
+    },
+    {
+     "name": "onCollapsedChange",
+     "type": "(collapsed: string[]) => void",
+     "optional": true,
+     "description": "A facet was folded or opened"
+    }
+   ],
+   "hides": [
+    "heading",
+    "value",
+    "defaultValue",
+    "collapsed",
+    "children"
+   ],
+   "events": {
+    "tc-value-change": "onValueChange",
+    "tc-collapsed-change": null
+   }
+  }
+ ],
+ "changelog": [
+  "**Search** - **Results List** (`tc-results-list`) – results with the query's words marked in their snippets, grouped by kind with counts, Relevance / Date, “Did you mean” and Show more. - **Facet Sidebar** (`tc-facet-sidebar`) – checkbox, radio, range and date filters with counts, active filters as chips with Clear all. - **Saved Search Alerts** (`tc-saved-search-alerts`) – saved searches that report new matches, with frequency, channels, pause, Run now and remove with Undo."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-facet-sidebar",
+   "className": "TcFacetSidebar",
+   "module": "trenchcoat/facet-sidebar",
+   "data": [
+    "facets",
+    "value",
+    "collapsed"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "showCount",
+     "attribute": "show-count"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-value-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-collapsed-change",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "value",
+     "event": "tc-value-change"
+    },
+    {
+     "property": "collapsed",
+     "event": "tc-collapsed-change"
+    }
+   ],
+   "form": {
+    "property": "value",
+    "event": "tc-value-change",
+    "formAssociated": false
+   },
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 32746,
+  "gzip": 9882
+ }
+}

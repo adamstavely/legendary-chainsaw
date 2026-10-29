@@ -1,5 +1,29 @@
 # Changelog
 
+## Unreleased – search results, research planning, and people
+
+- **Search**
+  - **Results List** (`tc-results-list`) – results with the query's words marked in their snippets, grouped by kind
+    with counts, Relevance / Date, “Did you mean” and Show more.
+  - **Facet Sidebar** (`tc-facet-sidebar`) – checkbox, radio, range and date filters with counts, active filters as
+    chips with Clear all.
+  - **Saved Search Alerts** (`tc-saved-search-alerts`) – saved searches that report new matches, with frequency,
+    channels, pause, Run now and remove with Undo.
+- **Research & portfolio**
+  - **Roadmap Timeline** (`tc-roadmap-timeline`) – Gantt-style lanes with progress, milestones, Today and
+    dependency arrows, at week, month or quarter scale.
+  - **Prioritisation Matrix** (`tc-prioritisation-matrix`) – value against effort, points dragged or moved with
+    the arrow keys, listed by quadrant.
+  - **Risk Register** (`tc-risk-register`) – a 5 × 5 likelihood × impact grid beside a sortable, rescorable register.
+  - **Bibliography** (`tc-bibliography`) – references in APA, MLA, Chicago, Harvard or IEEE, with Copy and BibTeX /
+    RIS export.
+- **People & profiles**
+  - **Org Chart** (`tc-org-chart`) – reporting lines that fold, search that opens the way, pan and zoom, an outline
+    when narrow.
+  - **Person Hovercard** (`tc-person-hovercard`) – the profile card behind any name, with status and local time.
+  - **Team Roster** (`tc-team-roster`) – a directory with everyone's local time and the team's best hour to meet.
+  - **Relationship Graph** (`tc-relationship-graph`) – people and organisations around one of them, re-centring on
+    click, with a keyboard list of every connection.
 ## Unreleased – a to-do list
 
 - **To-do List** (`tc-todo-list`) – add a to-do (Enter), tick it off, click its words to edit them, move it with

@@ -1,0 +1,587 @@
+{
+ "elements": [
+  {
+   "tag": "tc-org-chart",
+   "className": "TcOrgChart",
+   "description": "Who reports to whom: people's cards joined by reporting lines, branches that fold, search, a picked person's manager\nand reports, pan and zoom, and an outline when narrow.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Organisation\"",
+     "description": "The heading, and the chart's name",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "One line under the heading",
+     "readonly": false
+    },
+    {
+     "name": "people",
+     "attribute": null,
+     "type": "OrgChartPerson[]",
+     "default": "[]",
+     "description": "Everyone, in the order their manager lists them; `manager` joins them up",
+     "readonly": false
+    },
+    {
+     "name": "expanded",
+     "attribute": null,
+     "type": "string[] | null",
+     "default": "null",
+     "description": "The people whose reports are shown; null shows the top of each tree and one level under it. Changed by the user unless tc-expanded-change is prevented",
+     "readonly": false
+    },
+    {
+     "name": "selected",
+     "attribute": "selected",
+     "type": "string | null",
+     "default": "null",
+     "description": "The person picked. Changed by the user unless tc-selected-change is prevented",
+     "readonly": false
+    },
+    {
+     "name": "filter",
+     "attribute": "filter",
+     "type": "string",
+     "default": "\"\"",
+     "description": "What the search box holds. Changed by the user unless tc-filter-change is prevented",
+     "readonly": false
+    },
+    {
+     "name": "layout",
+     "attribute": "layout",
+     "type": "OrgChartLayout",
+     "default": "\"auto\"",
+     "description": "\"tree\" draws cards top-down, \"list\" an indented outline; \"auto\" is the tree, the outline when narrow",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-expanded-change",
+     "detail": "",
+     "description": "A branch was opened or folded ({ expanded, id, open }: OrgChartExpandedChange); cancelable – prevented, `expanded` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-selected-change",
+     "detail": "",
+     "description": "A person was picked ({ selected, person }: OrgChartSelectedChange); cancelable – prevented, `selected` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-filter-change",
+     "detail": "",
+     "description": "The search changed ({ filter }: OrgChartFilterChange); cancelable – prevented, `filter` stays as it was",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "org",
+   "cssProperties": [
+    {
+     "name": "--tc-org-card-w",
+     "value": "196px",
+     "looks": [
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-org-gap",
+     "value": "var(--tc-space-6)",
+     "looks": [
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-org-line",
+     "value": "var(--tc-border-strong)",
+     "looks": [
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-org-view-h",
+     "value": "460px",
+     "looks": [
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-action-ghost-bg-hover",
+    "--tc-border-default",
+    "--tc-border-selected",
+    "--tc-border-strong",
+    "--tc-caption-color",
+    "--tc-caption-font-size",
+    "--tc-caption-font-weight",
+    "--tc-caption-tracking",
+    "--tc-caption-transform",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-radius",
+    "--tc-field-shadow-focus",
+    "--tc-fill-default",
+    "--tc-fill-hover",
+    "--tc-fill-selected",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-semibold",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-none",
+    "--tc-line-height-normal",
+    "--tc-line-height-snug",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-h-lg",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-radius-2xs",
+    "--tc-radius-full",
+    "--tc-radius-lg",
+    "--tc-shadow-raised",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-5",
+    "--tc-space-6",
+    "--tc-space-8",
+    "--tc-status-warning-solid",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-sunken",
+    "--tc-surface-tray",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-placeholder",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tone-amber-bg",
+    "--tc-tone-amber-fg",
+    "--tc-tone-amber-solid",
+    "--tc-tone-pink-bg",
+    "--tc-tone-pink-fg",
+    "--tc-tone-rose-bg",
+    "--tc-tone-rose-fg",
+    "--tc-tone-teal-bg",
+    "--tc-tone-teal-fg",
+    "--tc-tone-violet-bg",
+    "--tc-tone-violet-fg",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "OrgChart",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading, and the chart's name"
+    },
+    {
+     "name": "expanded",
+     "type": "string[] | null",
+     "optional": true,
+     "description": "The people whose reports are shown – controlled when given; null shows the top of each tree and one level"
+    },
+    {
+     "name": "defaultExpanded",
+     "type": "string[] | null",
+     "optional": true,
+     "description": "`expanded` on mount when it isn't controlled"
+    },
+    {
+     "name": "onExpandedChange",
+     "type": "(next: string[], change: { id: string; open: boolean }) => void",
+     "optional": true,
+     "description": "A branch was opened or folded; `next` is the list as it will be"
+    },
+    {
+     "name": "selected",
+     "type": "string | null",
+     "optional": true,
+     "description": "The person picked – controlled when given"
+    },
+    {
+     "name": "defaultSelected",
+     "type": "string | null",
+     "optional": true,
+     "description": "The person picked on mount when `selected` isn't controlled"
+    },
+    {
+     "name": "onSelectedChange",
+     "type": "(selected: string | null, person: OrgChartPerson | null) => void",
+     "optional": true,
+     "description": "A person was picked"
+    },
+    {
+     "name": "filter",
+     "type": "string",
+     "optional": true,
+     "description": "The search – controlled when given"
+    },
+    {
+     "name": "defaultFilter",
+     "type": "string",
+     "optional": true,
+     "description": "The search on mount when `filter` isn't controlled"
+    },
+    {
+     "name": "onFilterChange",
+     "type": "(filter: string) => void",
+     "optional": true,
+     "description": "The search changed"
+    }
+   ],
+   "hides": [
+    "heading",
+    "expanded",
+    "selected",
+    "filter",
+    "children"
+   ],
+   "events": {
+    "tc-expanded-change": "onExpandedChange",
+    "tc-selected-change": "onSelectedChange",
+    "tc-filter-change": null
+   }
+  }
+ ],
+ "changelog": [
+  "**People & profiles** - **Org Chart** (`tc-org-chart`) – reporting lines that fold, search that opens the way, pan and zoom, an outline when narrow. - **Person Hovercard** (`tc-person-hovercard`) – the profile card behind any name, with status and local time. - **Team Roster** (`tc-team-roster`) – a directory with everyone's local time and the team's best hour to meet. - **Relationship Graph** (`tc-relationship-graph`) – people and organisations around one of them, re-centring on click, with a keyboard list of every connection."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-org-chart",
+   "className": "TcOrgChart",
+   "module": "trenchcoat/org-chart",
+   "data": [
+    "people",
+    "expanded"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    },
+    {
+     "name": "selected",
+     "attribute": "selected"
+    },
+    {
+     "name": "filter",
+     "attribute": "filter"
+    },
+    {
+     "name": "layout",
+     "attribute": "layout"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-expanded-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-selected-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-filter-change",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "expanded",
+     "event": "tc-expanded-change"
+    },
+    {
+     "property": "selected",
+     "event": "tc-selected-change"
+    },
+    {
+     "property": "filter",
+     "event": "tc-filter-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "resize-observer",
+    "name": "ResizeObserver",
+    "bcd": "api.ResizeObserver",
+    "versions": {
+     "chrome": "64",
+     "edge": "79",
+     "firefox": "69",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "scrollbar-width",
+    "name": "scrollbar-width",
+    "bcd": "css.properties.scrollbar-width",
+    "versions": {
+     "chrome": "121",
+     "edge": "121",
+     "firefox": "64",
+     "safari": "18.2",
+     "safari_ios": "18.2"
+    },
+    "progressive": true,
+    "without": "Scrollbars keep the browser's default width.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "overscroll-contain",
+    "name": "overscroll-behavior: contain",
+    "bcd": "css.properties.overscroll-behavior.contain",
+    "versions": {
+     "chrome": "63",
+     "edge": "18",
+     "firefox": "59",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "Scrolling past the end of a list carries on scrolling the page.",
+    "via": [
+     "itself"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "ResizeObserver",
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 40059,
+  "gzip": 11641
+ }
+}
