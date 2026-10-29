@@ -1,0 +1,619 @@
+{
+ "elements": [
+  {
+   "tag": "tc-tree-select",
+   "className": "TcTreeSelect",
+   "description": "Pick one or many options from a nested hierarchy, with type-to-filter and parent checkboxes.",
+   "properties": [
+    {
+     "name": "options",
+     "attribute": null,
+     "type": "TreeOption[]",
+     "default": "[]",
+     "description": "The hierarchy",
+     "readonly": false
+    },
+    {
+     "name": "value",
+     "attribute": null,
+     "type": "TreeSelectValue",
+     "default": "null",
+     "description": "The picked id (or ids, with `multiple`); null for nothing. Changed by the user unless a tc-value-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "multiple",
+     "attribute": "multiple",
+     "type": "boolean",
+     "default": "false",
+     "description": "Pick many: every row gets a checkbox",
+     "readonly": false
+    },
+    {
+     "name": "cascade",
+     "attribute": "cascade",
+     "type": "boolean",
+     "default": "true",
+     "description": "With `multiple`, checking a parent checks everything enabled beneath it; set cascade=\"false\" to check rows on their own",
+     "readonly": false
+    },
+    {
+     "name": "open",
+     "attribute": "open",
+     "type": "boolean",
+     "default": "false",
+     "description": "Whether the tree is open. Changed by the user unless a tc-open-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "label",
+     "attribute": "label",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Visible label above the field (or use a page <label for>)",
+     "readonly": false
+    },
+    {
+     "name": "placeholder",
+     "attribute": "placeholder",
+     "type": "string",
+     "default": "\"Choose…\"",
+     "description": "Shown in the empty field",
+     "readonly": false
+    },
+    {
+     "name": "filterPlaceholder",
+     "attribute": "filter-placeholder",
+     "type": "string",
+     "default": "\"Filter…\"",
+     "description": "The filter box's placeholder",
+     "readonly": false
+    },
+    {
+     "name": "emptyText",
+     "attribute": "empty-text",
+     "type": "string",
+     "default": "\"No matches\"",
+     "description": "Shown when nothing matches the filter",
+     "readonly": false
+    },
+    {
+     "name": "maxChips",
+     "attribute": "max-chips",
+     "type": "number",
+     "default": "3",
+     "description": "With `multiple`, show at most this many chips in the field, the rest as \"+N more\"",
+     "readonly": false
+    },
+    {
+     "name": "name",
+     "attribute": "name",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Submitted with the form: the id, or one entry per id with `multiple`",
+     "readonly": false
+    },
+    {
+     "name": "disabled",
+     "attribute": "disabled",
+     "type": "boolean",
+     "default": "false",
+     "description": "Can't be changed or focused; also disabled inside a disabled <fieldset>",
+     "readonly": false
+    },
+    {
+     "name": "required",
+     "attribute": "required",
+     "type": "boolean",
+     "default": "false",
+     "description": "Something must be picked before the form submits",
+     "readonly": false
+    },
+    {
+     "name": "invalid",
+     "attribute": "invalid",
+     "type": "boolean",
+     "default": "false",
+     "description": "Shows the field as invalid",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-value-change",
+     "detail": "",
+     "description": "An option was picked, checked or cleared ({ value, options }: TreeSelectValueChange); cancelable – prevented, `value` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-open-change",
+     "detail": "",
+     "description": "The tree opens or closes ({ open }: TreeSelectOpenChange); cancelable – prevented, it stays as it is",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [
+    {
+     "name": "focus",
+     "params": "options?: FocusOptions",
+     "returns": "void",
+     "description": ""
+    }
+   ],
+   "ui": "tsel",
+   "cssProperties": [
+    {
+     "name": "--tc-tsel-indent",
+     "value": "var(--tc-space-3)",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent-highlight",
+    "--tc-accent-solid",
+    "--tc-accent-text",
+    "--tc-border-control",
+    "--tc-border-default",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-bg-sunken",
+    "--tc-field-font-size",
+    "--tc-field-h",
+    "--tc-field-h-sm",
+    "--tc-field-px",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-field-shadow-hover",
+    "--tc-field-shadow-invalid",
+    "--tc-fill-default",
+    "--tc-fill-subtle",
+    "--tc-focus-ring",
+    "--tc-focus-ring-width",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xl",
+    "--tc-font-weight-medium",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-line-height-tight",
+    "--tc-menu-bg",
+    "--tc-menu-item-font-size",
+    "--tc-menu-item-h",
+    "--tc-menu-item-hover",
+    "--tc-menu-item-px",
+    "--tc-menu-item-radius",
+    "--tc-menu-item-selected-fg",
+    "--tc-menu-padding",
+    "--tc-menu-radius",
+    "--tc-menu-shadow",
+    "--tc-radius-2xs",
+    "--tc-radius-sm",
+    "--tc-radius-xs",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-2-5",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-5",
+    "--tc-surface-tray",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-on-accent",
+    "--tc-text-placeholder",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius",
+    "--tc-z-dropdown"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "flattenTree",
+   "signature": "flattenTree(options: TreeOption[]): TreeNode[]",
+   "description": "Every option as a node with its parent and depth, in tree order"
+  },
+  {
+   "name": "treePath",
+   "signature": "treePath(options: TreeOption[], id: string): string[]",
+   "description": "The labels from the root down to `id`, or [] when it isn't in the tree"
+  }
+ ],
+ "react": [
+  {
+   "component": "TreeSelect",
+   "exported": true,
+   "props": [
+    {
+     "name": "value",
+     "type": "TreeSelectValue",
+     "optional": true,
+     "description": "The picked id (or ids with `multiple`), null for nothing – controlled when given"
+    },
+    {
+     "name": "defaultValue",
+     "type": "TreeSelectValue",
+     "optional": true,
+     "description": "The value on mount when `value` isn't controlled"
+    },
+    {
+     "name": "onChange",
+     "type": "(value: TreeSelectValue, options: TreeOption[]) => void",
+     "optional": true,
+     "description": "Every pick, check and clear, with the picked options"
+    },
+    {
+     "name": "open",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether the tree is open – controlled when given"
+    },
+    {
+     "name": "defaultOpen",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether the tree starts open when uncontrolled"
+    },
+    {
+     "name": "onOpenChange",
+     "type": "(open: boolean) => void",
+     "optional": true,
+     "description": "The tree opened or closed"
+    }
+   ],
+   "hides": [
+    "value",
+    "defaultValue",
+    "open",
+    "onChange",
+    "children"
+   ],
+   "events": {
+    "tc-value-change": null,
+    "tc-open-change": "onOpenChange"
+   }
+  }
+ ],
+ "changelog": [
+  "**Tree Select** (`tc-tree-select`) – one or many from a nested hierarchy, with filtering that keeps parents, ARIA tree keys and cascading parent checkboxes; a form control."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-tree-select",
+   "className": "TcTreeSelect",
+   "module": "trenchcoat/tree-select",
+   "data": [
+    "options",
+    "value"
+   ],
+   "attributes": [
+    {
+     "name": "multiple",
+     "attribute": "multiple"
+    },
+    {
+     "name": "cascade",
+     "attribute": "cascade"
+    },
+    {
+     "name": "open",
+     "attribute": "open"
+    },
+    {
+     "name": "label",
+     "attribute": "label"
+    },
+    {
+     "name": "placeholder",
+     "attribute": "placeholder"
+    },
+    {
+     "name": "filterPlaceholder",
+     "attribute": "filter-placeholder"
+    },
+    {
+     "name": "emptyText",
+     "attribute": "empty-text"
+    },
+    {
+     "name": "maxChips",
+     "attribute": "max-chips"
+    },
+    {
+     "name": "name",
+     "attribute": "name"
+    },
+    {
+     "name": "disabled",
+     "attribute": "disabled"
+    },
+    {
+     "name": "required",
+     "attribute": "required"
+    },
+    {
+     "name": "invalid",
+     "attribute": "invalid"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-value-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-open-change",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "value",
+     "event": "tc-value-change"
+    },
+    {
+     "property": "open",
+     "event": "tc-open-change"
+    }
+   ],
+   "form": {
+    "property": "value",
+    "event": "tc-value-change",
+    "formAssociated": true
+   },
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "form-associated",
+    "name": "Form association (ElementInternals)",
+    "bcd": "api.ElementInternals.setFormValue",
+    "versions": {
+     "chrome": "77",
+     "edge": "79",
+     "firefox": "98",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": false,
+    "why": "The element's value is submitted with its form, and it takes part in form validation and reset.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "scrollbar-width",
+    "name": "scrollbar-width",
+    "bcd": "css.properties.scrollbar-width",
+    "versions": {
+     "chrome": "121",
+     "edge": "121",
+     "firefox": "64",
+     "safari": "18.2",
+     "safari_ios": "18.2"
+    },
+    "progressive": true,
+    "without": "Scrollbars keep the browser's default width.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "overscroll-contain",
+    "name": "overscroll-behavior: contain",
+    "bcd": "css.properties.overscroll-behavior.contain",
+    "versions": {
+     "chrome": "63",
+     "edge": "18",
+     "firefox": "59",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "Scrolling past the end of a list carries on scrolling the page.",
+    "via": [
+     "itself"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [
+   "document pointerdown"
+  ],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 35428,
+  "gzip": 10756
+ }
+}

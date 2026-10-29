@@ -1,0 +1,76 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-breadcrumbs.json",
+  "title": "tc-breadcrumbs",
+  "description": "A trail of links to the current page that folds its middle into \"…\" when it doesn't fit.",
+  "type": "object",
+  "properties": {
+    "items": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/BreadcrumbItem"
+      },
+      "description": "The trail, from the top down; the last item is the current page"
+    },
+    "separator": {
+      "type": "string",
+      "enum": [
+        "chevron",
+        "slash"
+      ],
+      "description": "Between items: a chevron or a slash"
+    },
+    "max": {
+      "type": "number",
+      "description": "Show at most this many items (the first, \"…\" and the last ones), even when more would fit"
+    },
+    "copyPath": {
+      "type": "boolean",
+      "description": "Adds a button that copies the trail as text"
+    },
+    "pathSeparator": {
+      "type": "string",
+      "description": "What the copied trail is joined with"
+    },
+    "label": {
+      "type": "string",
+      "description": "The navigation landmark's name"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "BreadcrumbItem": {
+      "type": "object",
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "href": {
+          "type": "string",
+          "description": "A link; without one the item is a button that fires tc-navigate",
+          "format": "uri-reference"
+        },
+        "id": {
+          "type": "string",
+          "description": "Your own key for the item, handed back in tc-navigate"
+        },
+        "icon": {
+          "$ref": "#/definitions/BreadcrumbIcon",
+          "description": "A small icon before the label"
+        }
+      },
+      "required": [
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "BreadcrumbIcon": {
+      "type": "string",
+      "enum": [
+        "home",
+        "folder",
+        "file"
+      ]
+    }
+  }
+}

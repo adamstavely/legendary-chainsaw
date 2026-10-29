@@ -1,0 +1,654 @@
+{
+ "elements": [
+  {
+   "tag": "tc-heatmap",
+   "className": "TcHeatmap",
+   "description": "A matrix of rows by columns shaded by value – sequential or diverging, binned or continuous – with a legend, the\nhighest and lowest cells, a tooltip per cell, selection and a table view.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Heatmap\"",
+     "description": "The heading, and the grid's name",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "One line under the heading",
+     "readonly": false
+    },
+    {
+     "name": "rows",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[]",
+     "description": "The rows' labels, top to bottom",
+     "readonly": false
+    },
+    {
+     "name": "columns",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[]",
+     "description": "The columns' labels, left to right",
+     "readonly": false
+    },
+    {
+     "name": "values",
+     "attribute": null,
+     "type": "(number | null)[][]",
+     "default": "[]",
+     "description": "The values, a row at a time: values[row][column]; null (or missing) is no data",
+     "readonly": false
+    },
+    {
+     "name": "scale",
+     "attribute": "scale",
+     "type": "HeatmapScale",
+     "default": "\"sequential\"",
+     "description": "Light to dark (\"sequential\"), or two colours either side of `midpoint` (\"diverging\")",
+     "readonly": false
+    },
+    {
+     "name": "midpoint",
+     "attribute": "midpoint",
+     "type": "number",
+     "default": "0",
+     "description": "The value between the two colours of a diverging scale",
+     "readonly": false
+    },
+    {
+     "name": "steps",
+     "attribute": "steps",
+     "type": "number",
+     "default": "5",
+     "description": "How many shades the legend bins the values into; 0 shades continuously",
+     "readonly": false
+    },
+    {
+     "name": "min",
+     "attribute": "min",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The bottom of the scale; by default the lowest value",
+     "readonly": false
+    },
+    {
+     "name": "max",
+     "attribute": "max",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The top of the scale; by default the highest value",
+     "readonly": false
+    },
+    {
+     "name": "unit",
+     "attribute": "unit",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The unit after the number: \"%\", \"runs\"",
+     "readonly": false
+    },
+    {
+     "name": "format",
+     "attribute": null,
+     "type": "((value: number) => string) | undefined",
+     "default": "undefined",
+     "description": "Writes a value, e.g. (v) => `${v} runs`; replaces the number and `unit`",
+     "readonly": false
+    },
+    {
+     "name": "showValues",
+     "attribute": "show-values",
+     "type": "boolean",
+     "default": "false",
+     "description": "Writes each value in its cell",
+     "readonly": false
+    },
+    {
+     "name": "crosshair",
+     "attribute": "crosshair",
+     "type": "boolean",
+     "default": "false",
+     "description": "Lights up the row and column of the cell under the pointer or focus",
+     "readonly": false
+    },
+    {
+     "name": "rowHeader",
+     "attribute": "row-header",
+     "type": "string",
+     "default": "\"Row\"",
+     "description": "What the rows are, for the table's corner: \"Day\"",
+     "readonly": false
+    },
+    {
+     "name": "selected",
+     "attribute": null,
+     "type": "HeatmapCell | null",
+     "default": "null",
+     "description": "The selected cell. Changed by the user unless a tc-selected-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "view",
+     "attribute": "view",
+     "type": "HeatmapView",
+     "default": "\"chart\"",
+     "description": "The chart or the same numbers as a table. Changed by the Table button unless a tc-view-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The language for numbers, e.g. \"de\"; by default the browser's",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-selected-change",
+     "detail": "",
+     "description": "A cell was selected or cleared ({ selected, value }: HeatmapSelectedChange); cancelable – prevented, `selected` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-view-change",
+     "detail": "",
+     "description": "The chart / table switch was pressed ({ view }: HeatmapViewChange); cancelable – prevented, `view` stays as it was",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "heat",
+   "cssProperties": [
+    {
+     "name": "--tc-heat-ink",
+     "value": "var(--tc-chart-1)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-heat-ink-low",
+     "value": "var(--tc-chart-3)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-heat-track",
+     "value": "var(--tc-fill-default)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-heat-cell-w",
+     "value": "36px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-heat-cell-h",
+     "value": "32px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-heat-label",
+     "value": "56px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-heat-gap",
+     "value": "2px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-heat-bg",
+     "value": "var(--tc-surface-raised)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-border-default",
+    "--tc-border-strong",
+    "--tc-border-subtle",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-chart-1",
+    "--tc-chart-3",
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-ease-out",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-focus-outline",
+    "--tc-font-sans",
+    "--tc-font-size-2xs",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-strong",
+    "--tc-line-height-none",
+    "--tc-line-height-normal",
+    "--tc-line-height-tight",
+    "--tc-radius-2xs",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-6",
+    "--tc-surface-inverse",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-on-inverse",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tooltip-bg",
+    "--tc-tooltip-fg",
+    "--tc-tooltip-font-size",
+    "--tc-tooltip-px",
+    "--tc-tooltip-py",
+    "--tc-tooltip-radius",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "Heatmap",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading, and the grid's name"
+    },
+    {
+     "name": "selected",
+     "type": "HeatmapCell | null",
+     "optional": true,
+     "description": "The selected cell – controlled when given (null for none)"
+    },
+    {
+     "name": "defaultSelected",
+     "type": "HeatmapCell | null",
+     "optional": true,
+     "description": "The cell selected on mount when `selected` isn't controlled"
+    },
+    {
+     "name": "onSelectedChange",
+     "type": "(selected: HeatmapCell | null, value?: number | null) => void",
+     "optional": true,
+     "description": "A cell was selected or cleared; `value` is its value (null when it has no data)"
+    },
+    {
+     "name": "view",
+     "type": "HeatmapView",
+     "optional": true,
+     "description": "The chart or the table – controlled when given"
+    },
+    {
+     "name": "defaultView",
+     "type": "HeatmapView",
+     "optional": true,
+     "description": "The view on mount when `view` isn't controlled"
+    },
+    {
+     "name": "onViewChange",
+     "type": "(view: HeatmapView) => void",
+     "optional": true,
+     "description": "The Table button was pressed"
+    }
+   ],
+   "hides": [
+    "heading",
+    "selected",
+    "view",
+    "children"
+   ],
+   "events": {
+    "tc-selected-change": null,
+    "tc-view-change": null
+   }
+  }
+ ],
+ "changelog": [
+  "**Sparkline** (`tc-sparkline`), **Heatmap** (`tc-heatmap`) and **Gauge** (`tc-gauge`) – an inline trend, a shaded matrix with legend, selection and table view, and a value against its bands as a dial, half dial or bar (optionally a slider)."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-heatmap",
+   "className": "TcHeatmap",
+   "module": "trenchcoat/heatmap",
+   "data": [
+    "rows",
+    "columns",
+    "values",
+    "format",
+    "selected"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    },
+    {
+     "name": "scale",
+     "attribute": "scale"
+    },
+    {
+     "name": "midpoint",
+     "attribute": "midpoint"
+    },
+    {
+     "name": "steps",
+     "attribute": "steps"
+    },
+    {
+     "name": "min",
+     "attribute": "min"
+    },
+    {
+     "name": "max",
+     "attribute": "max"
+    },
+    {
+     "name": "unit",
+     "attribute": "unit"
+    },
+    {
+     "name": "showValues",
+     "attribute": "show-values"
+    },
+    {
+     "name": "crosshair",
+     "attribute": "crosshair"
+    },
+    {
+     "name": "rowHeader",
+     "attribute": "row-header"
+    },
+    {
+     "name": "view",
+     "attribute": "view"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-selected-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-view-change",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "selected",
+     "event": "tc-selected-change"
+    },
+    {
+     "property": "view",
+     "event": "tc-view-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "itself",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "individual-transforms",
+    "name": "translate, scale and rotate properties",
+    "bcd": "css.properties.translate",
+    "versions": {
+     "chrome": "104",
+     "edge": "104",
+     "firefox": "72",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "scrollbar-width",
+    "name": "scrollbar-width",
+    "bcd": "css.properties.scrollbar-width",
+    "versions": {
+     "chrome": "121",
+     "edge": "121",
+     "firefox": "64",
+     "safari": "18.2",
+     "safari_ios": "18.2"
+    },
+    "progressive": true,
+    "without": "Scrollbars keep the browser's default width.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 31500,
+  "gzip": 9889
+ }
+}

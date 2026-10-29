@@ -11,13 +11,13 @@
    "features": [
     "light-dark"
    ],
-   "elements": 269
+   "elements": 277
   },
   "edge": {
    "features": [
     "light-dark"
    ],
-   "elements": 269
+   "elements": 277
   },
   "firefox": {
    "features": [
@@ -29,13 +29,13 @@
    "features": [
     "light-dark"
    ],
-   "elements": 269
+   "elements": 277
   },
   "safari_ios": {
    "features": [
     "light-dark"
    ],
-   "elements": 269
+   "elements": 277
   }
  },
  "features": [
@@ -52,7 +52,7 @@
    },
    "progressive": false,
    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
-   "elements": 269
+   "elements": 277
   },
   {
    "id": "color-mix",
@@ -67,7 +67,7 @@
    },
    "progressive": false,
    "why": "Tints and washes mixed from the tokens.",
-   "elements": 269
+   "elements": 277
   },
   {
    "id": "is-where",
@@ -82,7 +82,7 @@
    },
    "progressive": false,
    "why": "Every rule is keyed on :where() so the page can override it.",
-   "elements": 269
+   "elements": 277
   },
   {
    "id": "focus-visible",
@@ -97,7 +97,7 @@
    },
    "progressive": false,
    "why": "Focus rings for keyboard users.",
-   "elements": 268
+   "elements": 276
   },
   {
    "id": "container-size",
@@ -112,7 +112,7 @@
    },
    "progressive": false,
    "why": "Components adapt to the width they're given, not the window's.",
-   "elements": 220
+   "elements": 225
   },
   {
    "id": "inset",
@@ -126,7 +126,7 @@
     "safari_ios": "14.1"
    },
    "progressive": false,
-   "elements": 135
+   "elements": 138
   },
   {
    "id": "inert",
@@ -141,7 +141,7 @@
    },
    "progressive": false,
    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
-   "elements": 130
+   "elements": 132
   },
   {
    "id": "resize-observer",
@@ -155,7 +155,7 @@
     "safari_ios": "13.4"
    },
    "progressive": false,
-   "elements": 115
+   "elements": 118
   },
   {
    "id": "intersection-observer",
@@ -213,7 +213,7 @@
     "safari_ios": "14.1"
    },
    "progressive": false,
-   "elements": 47
+   "elements": 48
   },
   {
    "id": "clipboard",
@@ -228,7 +228,7 @@
    },
    "progressive": false,
    "why": "Copy buttons.",
-   "elements": 37
+   "elements": 40
   },
   {
    "id": "aspect-ratio",
@@ -242,7 +242,7 @@
     "safari_ios": "15"
    },
    "progressive": false,
-   "elements": 31
+   "elements": 33
   },
   {
    "id": "form-associated",
@@ -257,7 +257,7 @@
    },
    "progressive": false,
    "why": "The element's value is submitted with its form, and it takes part in form validation and reset.",
-   "elements": 27
+   "elements": 29
   },
   {
    "id": "container-units",
@@ -304,20 +304,6 @@
    "elements": 10
   },
   {
-   "id": "relative-time-format",
-   "name": "Intl.RelativeTimeFormat",
-   "bcd": "javascript.builtins.Intl.RelativeTimeFormat",
-   "versions": {
-    "chrome": "71",
-    "edge": "79",
-    "firefox": "65",
-    "safari": "14",
-    "safari_ios": "14"
-   },
-   "progressive": false,
-   "elements": 7
-  },
-  {
    "id": "array-at",
    "name": "Array.prototype.at()",
    "bcd": "javascript.builtins.Array.at",
@@ -327,6 +313,20 @@
     "firefox": "90",
     "safari": "15.4",
     "safari_ios": "15.4"
+   },
+   "progressive": false,
+   "elements": 9
+  },
+  {
+   "id": "relative-time-format",
+   "name": "Intl.RelativeTimeFormat",
+   "bcd": "javascript.builtins.Intl.RelativeTimeFormat",
+   "versions": {
+    "chrome": "71",
+    "edge": "79",
+    "firefox": "65",
+    "safari": "14",
+    "safari_ios": "14"
    },
    "progressive": false,
    "elements": 7
@@ -387,7 +387,7 @@
    },
    "progressive": true,
    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
-   "elements": 269
+   "elements": 277
   },
   {
    "id": "adopted-stylesheets",
@@ -402,7 +402,7 @@
    },
    "progressive": true,
    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
-   "elements": 268
+   "elements": 276
   },
   {
    "id": "scrollbar-width",
@@ -417,7 +417,7 @@
    },
    "progressive": true,
    "without": "Scrollbars keep the browser's default width.",
-   "elements": 68
+   "elements": 70
   },
   {
    "id": "overscroll-contain",
@@ -432,7 +432,7 @@
    },
    "progressive": true,
    "without": "Scrolling past the end of a list carries on scrolling the page.",
-   "elements": 56
+   "elements": 57
   },
   {
    "id": "at-property",
@@ -450,21 +450,6 @@
    "elements": 26
   },
   {
-   "id": "field-sizing",
-   "name": "field-sizing",
-   "bcd": "css.properties.field-sizing",
-   "versions": {
-    "chrome": "123",
-    "edge": "123",
-    "firefox": "152",
-    "safari": "26.2",
-    "safari_ios": "26.2"
-   },
-   "progressive": true,
-   "without": "Text fields grow with their text. Without it they keep their minimum height and scroll.",
-   "elements": 18
-  },
-  {
    "id": "popover",
    "name": "Popover API",
    "bcd": "api.HTMLElement.popover",
@@ -477,6 +462,21 @@
    },
    "progressive": true,
    "without": "Lists open fixed to the window instead of in the top layer, so a clipping ancestor or a modal can cover them.",
+   "elements": 20
+  },
+  {
+   "id": "field-sizing",
+   "name": "field-sizing",
+   "bcd": "css.properties.field-sizing",
+   "versions": {
+    "chrome": "123",
+    "edge": "123",
+    "firefox": "152",
+    "safari": "26.2",
+    "safari_ios": "26.2"
+   },
+   "progressive": true,
+   "without": "Text fields grow with their text. Without it they keep their minimum height and scroll.",
    "elements": 18
   },
   {

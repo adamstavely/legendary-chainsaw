@@ -1,0 +1,140 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-gauge.json",
+  "title": "tc-gauge",
+  "description": "One value against its range – a dial, a half dial or a bar – with the band it's in, the bands round it, a target\nand the change since last time; optionally a slider.",
+  "type": "object",
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "What it measures, named above the dial – the meter's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the label"
+    },
+    "value": {
+      "type": "number",
+      "description": "The value. Changed by the user when editable, unless a tc-value-change listener calls preventDefault()"
+    },
+    "min": {
+      "type": "number",
+      "description": "The start of the range"
+    },
+    "max": {
+      "type": "number",
+      "description": "The end of the range"
+    },
+    "bands": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/GaugeBand"
+      },
+      "description": "The bands from `min` up – each runs to its `to`, the last to `max`; none draws the dial in one colour"
+    },
+    "target": {
+      "type": "number",
+      "description": "A value to mark across the dial, e.g. a set point"
+    },
+    "targetLabel": {
+      "type": "string",
+      "description": "What the target is called"
+    },
+    "previous": {
+      "type": "number",
+      "description": "The value before, for the change under the dial"
+    },
+    "previousLabel": {
+      "type": "string",
+      "description": "When the previous value was, after \"from\": \"the last reading\""
+    },
+    "good": {
+      "type": "string",
+      "enum": [
+        "up",
+        "down"
+      ],
+      "description": "Which way is good, to colour the change: \"up\" or \"down\"; unset leaves it neutral"
+    },
+    "variant": {
+      "type": "string",
+      "enum": [
+        "arc",
+        "semicircle",
+        "bar"
+      ],
+      "description": "The shape: a 270° dial, a half dial or a straight bar"
+    },
+    "size": {
+      "type": "string",
+      "enum": [
+        "sm",
+        "md",
+        "lg"
+      ],
+      "description": "The size of the dial"
+    },
+    "tone": {
+      "type": "string",
+      "enum": [
+        "success",
+        "info",
+        "warning",
+        "danger",
+        "neutral"
+      ],
+      "description": "The colour without bands"
+    },
+    "unit": {
+      "type": "string",
+      "description": "The unit after the number: \"%\", \"°C\", \"GB\""
+    },
+    "editable": {
+      "type": "boolean",
+      "description": "Makes it a slider the user can move"
+    },
+    "step": {
+      "type": "number",
+      "description": "How far an arrow key moves it, when editable"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for numbers, e.g. \"de\"; by default the browser's"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "GaugeBand": {
+      "type": "object",
+      "properties": {
+        "to": {
+          "type": "number",
+          "description": "Where the band ends; it starts where the one before ends (the first at `min`), and the last runs to `max`"
+        },
+        "tone": {
+          "$ref": "#/definitions/GaugeTone"
+        },
+        "label": {
+          "type": "string",
+          "description": "Its name, said with the value: \"Warning\""
+        }
+      },
+      "required": [
+        "to",
+        "tone",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "GaugeTone": {
+      "type": "string",
+      "enum": [
+        "success",
+        "info",
+        "neutral",
+        "warning",
+        "danger"
+      ]
+    }
+  }
+}

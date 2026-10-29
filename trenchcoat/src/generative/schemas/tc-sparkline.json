@@ -1,0 +1,101 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-sparkline.json",
+  "title": "tc-sparkline",
+  "description": "A small inline trend chart – line, area, bars or win-loss – sized from the text around it, with optional markers, a\nreference line, a tone for which way it went and, when interactive, a tooltip per point.",
+  "type": "object",
+  "properties": {
+    "values": {
+      "type": "array",
+      "items": {
+        "type": [
+          "number",
+          "null"
+        ]
+      },
+      "description": "The values, oldest first; null is a gap"
+    },
+    "labels": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "A label per value, e.g. dates – read in the tooltip and announcements"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "area",
+        "line",
+        "bars",
+        "win-loss"
+      ],
+      "description": "How it's drawn"
+    },
+    "label": {
+      "type": "string",
+      "description": "What it measures, e.g. \"Samples per day\" – starts the accessible summary; by default \"Trend\""
+    },
+    "min": {
+      "type": "number",
+      "description": "The bottom of the scale; by default the lowest value (0 for bars)"
+    },
+    "max": {
+      "type": "number",
+      "description": "The top of the scale; by default the highest value"
+    },
+    "reference": {
+      "type": "number",
+      "description": "A value to draw as a dashed line, e.g. a target"
+    },
+    "referenceLabel": {
+      "type": "string",
+      "description": "What the reference line is, for the summary"
+    },
+    "markers": {
+      "type": "string",
+      "description": "Points to mark, space-separated: any of \"last\", \"first\", \"min\", \"max\"; \"none\" for none"
+    },
+    "good": {
+      "type": "string",
+      "enum": [
+        "up",
+        "down"
+      ],
+      "description": "Which way is good: \"up\" or \"down\"; with tone \"auto\", it's green when it moved that way and red when it didn't"
+    },
+    "tone": {
+      "type": "string",
+      "enum": [
+        "success",
+        "info",
+        "warning",
+        "danger",
+        "neutral",
+        "auto"
+      ],
+      "description": "The colour: \"auto\" follows `good` (neutral without it), or a fixed tone"
+    },
+    "width": {
+      "type": "number",
+      "description": "Width in px; by default 5em"
+    },
+    "height": {
+      "type": "number",
+      "description": "Height in px; by default 1.25em, so it matches the text"
+    },
+    "interactive": {
+      "type": "boolean",
+      "description": "One tab stop: the arrow keys step through the points with a tooltip"
+    },
+    "unit": {
+      "type": "string",
+      "description": "What the values count, after the number: \"148 samples\""
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for numbers, e.g. \"de\"; by default the browser's"
+    }
+  },
+  "additionalProperties": false
+}
