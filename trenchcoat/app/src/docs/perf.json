@@ -10,12 +10,12 @@
  },
  "pieces": {
   "access-request": {
-   "measuredAt": "2026-10-28",
-   "hash": "57e0c92e1f22a394",
+   "measuredAt": "2026-10-29",
+   "hash": "4bf6e086a232fb63",
    "bundle": {
     "own": {
-     "min": 30728,
-     "gzip": 9009
+     "min": 31176,
+     "gzip": 9145
     },
     "shared": [
      {
@@ -39,6 +39,11 @@
       "min": 1348
      },
      {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 1166
+     },
+     {
       "name": "internal/look",
       "kind": "internal",
       "min": 444
@@ -52,29 +57,24 @@
       "name": "internal/util",
       "kind": "internal",
       "min": 306
-     },
-     {
-      "name": "internal/controllers",
-      "kind": "internal",
-      "min": 132
      }
     ],
     "withoutLit": {
-     "min": 38475,
-     "gzip": 11200
+     "min": 39895,
+     "gzip": 11738
     },
     "withLit": {
-     "min": 58504,
-     "gzip": 17726
+     "min": 59922,
+     "gzip": 18216
     }
    },
    "render": {
     "tag": "tc-access-request",
     "source": "demo",
     "runs": 7,
-    "cold": 12.9,
-    "first": 1,
-    "update": 0.3,
+    "cold": 14.2,
+    "first": 1.1,
+    "update": 0.2,
     "updateKind": "one item of fields replaced",
     "nodes": 81,
     "scale": {
@@ -83,14 +83,14 @@
      "points": [
       {
        "items": 100,
-       "first": 2.9,
-       "update": 0.4,
+       "first": 2.2,
+       "update": 0.2,
        "nodes": 363
       },
       {
        "items": 1000,
-       "first": 12.5,
-       "update": 1.4,
+       "first": 15.7,
+       "update": 1.9,
        "nodes": 3063
       }
      ]
@@ -5540,12 +5540,12 @@
    }
   },
   "color-picker": {
-   "measuredAt": "2026-10-28",
-   "hash": "1a699804a15fc957",
+   "measuredAt": "2026-10-29",
+   "hash": "6253a7059c11187a",
    "bundle": {
     "own": {
-     "min": 29260,
-     "gzip": 10025
+     "min": 29365,
+     "gzip": 10058
     },
     "shared": [
      {
@@ -5590,21 +5590,21 @@
      }
     ],
     "withoutLit": {
-     "min": 68305,
-     "gzip": 18445
+     "min": 68410,
+     "gzip": 18478
     },
     "withLit": {
-     "min": 91163,
-     "gzip": 26025
+     "min": 91268,
+     "gzip": 26058
     }
    },
    "render": {
     "tag": "tc-color-picker",
     "source": "demo",
     "runs": 7,
-    "cold": 16.4,
-    "first": 1.4,
-    "update": 0.4,
+    "cold": 24,
+    "first": 1.8,
+    "update": 0.5,
     "updateKind": "one item of swatches replaced",
     "nodes": 69,
     "scale": {
@@ -5613,14 +5613,14 @@
      "points": [
       {
        "items": 100,
-       "first": 1.4,
+       "first": 1.6,
        "update": 0.2,
        "nodes": 69
       },
       {
        "items": 1000,
-       "first": 1.1,
-       "update": 0.2,
+       "first": 1.6,
+       "update": 0.3,
        "nodes": 69
       }
      ]
@@ -10707,8 +10707,8 @@
    }
   },
   "generated-ui": {
-   "measuredAt": "2026-10-28",
-   "hash": "bdc805dc79b822b2",
+   "measuredAt": "2026-10-29",
+   "hash": "b08fad820dad19e3",
    "bundle": {
     "own": {
      "min": 34126,
@@ -11301,14 +11301,14 @@
       "min": 29370
      },
      {
+      "name": "access-request",
+      "kind": "element",
+      "min": 29171
+     },
+     {
       "name": "comment-thread",
       "kind": "element",
       "min": 29053
-     },
-     {
-      "name": "access-request",
-      "kind": "element",
-      "min": 28783
      },
      {
       "name": "attestation-check",
@@ -11328,7 +11328,7 @@
      {
       "name": "color-picker",
       "kind": "element",
-      "min": 27202
+      "min": 27307
      },
      {
       "name": "compact-breakdown",
@@ -11428,7 +11428,7 @@
      {
       "name": "text-to-speech",
       "kind": "element",
-      "min": 23697
+      "min": 23819
      },
      {
       "name": "run-manifest",
@@ -11503,7 +11503,7 @@
      {
       "name": "speed-reader",
       "kind": "element",
-      "min": 21757
+      "min": 21771
      },
      {
       "name": "progress-tracker",
@@ -11553,7 +11553,7 @@
      {
       "name": "score-summary",
       "kind": "element",
-      "min": 20475
+      "min": 20526
      },
      {
       "name": "search-history",
@@ -11568,7 +11568,7 @@
      {
       "name": "geo-location",
       "kind": "element",
-      "min": 19695
+      "min": 19696
      },
      {
       "name": "alert-feed",
@@ -11593,7 +11593,7 @@
      {
       "name": "score-survey",
       "kind": "element",
-      "min": 18801
+      "min": 18825
      },
      {
       "name": "disagreement-banner",
@@ -11913,7 +11913,7 @@
      {
       "name": "src/generative/registry.ts",
       "kind": "other",
-      "min": 36174
+      "min": 36213
      },
      {
       "name": "src/generative/schemas/tc-ai-side-pane.json",
@@ -12061,6 +12061,11 @@
       "min": 3709
      },
      {
+      "name": "src/generative/schemas/tc-access-request.json",
+      "kind": "other",
+      "min": 3629
+     },
+     {
       "name": "src/generative/schemas/tc-trigger-builder.json",
       "kind": "other",
       "min": 3623
@@ -12069,11 +12074,6 @@
       "name": "src/generative/schemas/tc-oversight-home.json",
       "kind": "other",
       "min": 3593
-     },
-     {
-      "name": "src/generative/schemas/tc-access-request.json",
-      "kind": "other",
-      "min": 3512
      },
      {
       "name": "src/generative/schemas/tc-evidence-list.json",
@@ -12831,6 +12831,11 @@
       "min": 1417
      },
      {
+      "name": "src/generative/schemas/tc-text-to-speech.json",
+      "kind": "other",
+      "min": 1383
+     },
+     {
       "name": "src/generative/schemas/tc-agent-gallery.json",
       "kind": "other",
       "min": 1367
@@ -12844,11 +12849,6 @@
       "name": "src/generative/schemas/tc-tips-panel.json",
       "kind": "other",
       "min": 1320
-     },
-     {
-      "name": "src/generative/schemas/tc-text-to-speech.json",
-      "kind": "other",
-      "min": 1288
      },
      {
       "name": "src/generative/schemas/tc-stepper-form.json",
@@ -13012,21 +13012,21 @@
      }
     ],
     "withoutLit": {
-     "min": 7383657,
-     "gzip": 1814060
+     "min": 7384612,
+     "gzip": 1814434
     },
     "withLit": {
-     "min": 7350793,
-     "gzip": 1801904
+     "min": 7351749,
+     "gzip": 1802359
     }
    },
    "render": {
     "tag": "tc-generated-ui",
     "source": "demo",
     "runs": 7,
-    "cold": 2.3,
-    "first": 0.6,
-    "update": 0.1,
+    "cold": 2.1,
+    "first": 0.5,
+    "update": 0.2,
     "updateKind": "re-render with the same data",
     "nodes": 9,
     "scale": null,
@@ -13048,12 +13048,12 @@
    }
   },
   "geo-location": {
-   "measuredAt": "2026-10-28",
-   "hash": "e05fcef1de1f6c0b",
+   "measuredAt": "2026-10-29",
+   "hash": "84c3c4f51d0d8a27",
    "bundle": {
     "own": {
-     "min": 21801,
-     "gzip": 7572
+     "min": 21802,
+     "gzip": 7573
     },
     "shared": [
      {
@@ -13103,21 +13103,21 @@
      }
     ],
     "withoutLit": {
-     "min": 29820,
-     "gzip": 9942
+     "min": 29821,
+     "gzip": 9943
     },
     "withLit": {
-     "min": 52113,
-     "gzip": 17329
+     "min": 52114,
+     "gzip": 17332
     }
    },
    "render": {
     "tag": "tc-geo-location",
     "source": "demo",
     "runs": 7,
-    "cold": 8.8,
+    "cold": 9.8,
     "first": 0.9,
-    "update": 0.3,
+    "update": 0.2,
     "updateKind": "one item of providers replaced",
     "nodes": 76,
     "scale": {
@@ -13127,13 +13127,13 @@
       {
        "items": 100,
        "first": 3.2,
-       "update": 0.6,
+       "update": 0.5,
        "nodes": 748
       },
       {
        "items": 1000,
-       "first": 24.7,
-       "update": 6.3,
+       "first": 24.2,
+       "update": 7.9,
        "nodes": 7048
       }
      ]
@@ -22427,12 +22427,12 @@
    }
   },
   "score-summary": {
-   "measuredAt": "2026-10-28",
-   "hash": "d49813c5a168710a",
+   "measuredAt": "2026-10-29",
+   "hash": "b824133e68c04dfe",
    "bundle": {
     "own": {
-     "min": 22495,
-     "gzip": 7337
+     "min": 22546,
+     "gzip": 7376
     },
     "shared": [
      {
@@ -22473,25 +22473,25 @@
      {
       "name": "score-survey",
       "kind": "element",
-      "min": 18452
+      "min": 18476
      }
     ],
     "withoutLit": {
-     "min": 49676,
-     "gzip": 13638
+     "min": 49751,
+     "gzip": 13676
     },
     "withLit": {
-     "min": 70672,
-     "gzip": 20502
+     "min": 70747,
+     "gzip": 20539
     }
    },
    "render": {
     "tag": "tc-score-summary",
     "source": "demo",
     "runs": 7,
-    "cold": 9.9,
-    "first": 1.4,
-    "update": 0.5,
+    "cold": 12.7,
+    "first": 1.6,
+    "update": 0.6,
     "updateKind": "one item of responses replaced",
     "nodes": 127,
     "scale": {
@@ -22500,14 +22500,14 @@
      "points": [
       {
        "items": 100,
-       "first": 1.3,
+       "first": 1.7,
        "update": 0.4,
        "nodes": 127
       },
       {
        "items": 1000,
-       "first": 1.4,
-       "update": 0.4,
+       "first": 1.5,
+       "update": 0.5,
        "nodes": 127
       }
      ]
@@ -22530,12 +22530,12 @@
    }
   },
   "score-survey": {
-   "measuredAt": "2026-10-28",
-   "hash": "4669e4b5728776e5",
+   "measuredAt": "2026-10-29",
+   "hash": "df17dd743ce1f06b",
    "bundle": {
     "own": {
-     "min": 20884,
-     "gzip": 6790
+     "min": 20908,
+     "gzip": 6797
     },
     "shared": [
      {
@@ -22575,19 +22575,19 @@
      }
     ],
     "withoutLit": {
-     "min": 29348,
-     "gzip": 9264
+     "min": 29372,
+     "gzip": 9269
     },
     "withLit": {
-     "min": 50523,
-     "gzip": 16180
+     "min": 50547,
+     "gzip": 16184
     }
    },
    "render": {
     "tag": "tc-score-survey",
     "source": "demo",
     "runs": 7,
-    "cold": 12.6,
+    "cold": 13.2,
     "first": 0.9,
     "update": 0.2,
     "updateKind": "re-render with the same data",
@@ -23769,12 +23769,12 @@
    }
   },
   "speed-reader": {
-   "measuredAt": "2026-10-28",
-   "hash": "66afbb0422508b86",
+   "measuredAt": "2026-10-29",
+   "hash": "19a83faf04b29a5b",
    "bundle": {
     "own": {
-     "min": 23816,
-     "gzip": 7551
+     "min": 23830,
+     "gzip": 7557
     },
     "shared": [
      {
@@ -23814,21 +23814,21 @@
      }
     ],
     "withoutLit": {
-     "min": 32215,
-     "gzip": 9992
+     "min": 32229,
+     "gzip": 9997
     },
     "withLit": {
-     "min": 53450,
-     "gzip": 16892
+     "min": 53464,
+     "gzip": 16895
     }
    },
    "render": {
     "tag": "tc-speed-reader",
     "source": "demo",
     "runs": 7,
-    "cold": 13.5,
+    "cold": 19.4,
     "first": 1.3,
-    "update": 0.3,
+    "update": 0.2,
     "updateKind": "re-render with the same data",
     "nodes": 69,
     "scale": null,
@@ -25142,12 +25142,12 @@
    }
   },
   "text-to-speech": {
-   "measuredAt": "2026-10-28",
-   "hash": "42199b3ba6d35d76",
+   "measuredAt": "2026-10-29",
+   "hash": "0c4c240295aaf53a",
    "bundle": {
     "own": {
-     "min": 25728,
-     "gzip": 7996
+     "min": 25850,
+     "gzip": 8025
     },
     "shared": [
      {
@@ -25187,21 +25187,21 @@
      }
     ],
     "withoutLit": {
-     "min": 34134,
-     "gzip": 10414
+     "min": 34256,
+     "gzip": 10436
     },
     "withLit": {
-     "min": 55371,
-     "gzip": 17338
+     "min": 55493,
+     "gzip": 17359
     }
    },
    "render": {
     "tag": "tc-text-to-speech",
     "source": "demo",
     "runs": 7,
-    "cold": 13.2,
-    "first": 3.8,
-    "update": 0.6,
+    "cold": 16.7,
+    "first": 4.3,
+    "update": 0.5,
     "updateKind": "re-render with the same data",
     "nodes": 354,
     "scale": null,

@@ -110,8 +110,8 @@ export class TcTextToSpeech extends TcElement {
   @property({ type: Number }) accessor pitch = 1;
   /** The chosen voice's `voiceURI`, or "" for the browser's default. Changed unless a tc-voice-change listener calls preventDefault() */
   @property() accessor voice = "";
-  /** The passage's language (a BCP 47 tag) – picks a default voice and splits sentences; unset, the browser decides */
-  @property() accessor lang = "";
+  /** The passage's language (a BCP 47 tag) – picks a default voice and splits sentences; unset, the browser decides. Reflects to the lang attribute, as HTMLElement's own does, so assistive tech and fonts see it */
+  @property({ reflect: true }) accessor lang = "";
 
   @state() private accessor _state: TextToSpeechState = "idle";
   /** @internal The sentence being read, or next to be read */
@@ -202,7 +202,17 @@ export class TcTextToSpeech extends TcElement {
       else this.finish(true);
     };
     u.onerror = (e: SpeechSynthesisErrorEvent) => {
-      if (token !== this.run || e.error === "interrupted" || e.error === "canceled") return;
+      if (token !== this.run) return;
+      // The browser's speech queue is shared by the whole page: another reader (or the page) cancelled ours. Stop
+      // here as paused – Resume starts the sentence again – rather than showing "Reading" with nothing being read
+      if (e.error === "interrupted" || e.error === "canceled") {
+        this.run++;
+        clearTimeout(this.restartTimer);
+        this._state = "paused";
+        this.word = -1;
+        this.said = "Paused";
+        return;
+      }
       this.finish(false);
     };
     this._state = "playing";

@@ -141,7 +141,7 @@
    },
    "progressive": false,
    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
-   "elements": 125
+   "elements": 126
   },
   {
    "id": "resize-observer",

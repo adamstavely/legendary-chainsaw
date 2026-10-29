@@ -6,6 +6,8 @@
     "events": [
       "tc-request",
       "tc-status-change",
+      "tc-level-change",
+      "tc-duration-change",
       "tc-cancel"
     ]
   },

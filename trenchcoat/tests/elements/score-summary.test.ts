@@ -40,12 +40,16 @@ describe("tc-score-summary", () => {
     const nps = summarizeScores("nps", Q3);
     expect(nps.total).toBe(312);
     expect(nps.bands.map((b) => [b.key, b.count, b.percent])).toEqual([["detractor", 52, 17], ["passive", 90, 29], ["promoter", 170, 54]]);
-    expect(nps.value).toBe(37);
+    expect(nps.value).toBe(38);
     const csat = summarizeScores("csat", CSAT);
     expect(csat.value).toBe(80);
     expect(csat.bands.reduce((a, b) => a + b.percent, 0)).toBe(100);
     expect(summarizeScores("nps", [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]).value).toBeNull();
     expect(summarizeScores("nps", [10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]).value).toBe(-100);
+    // From the counts, rounded once: a balanced split is 0, not the −1 the rounded bands (33 − 34) would give
+    expect(summarizeScores("nps", [1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0]).value).toBe(0);
+    // 7 of 8 promoters, 1 passive: 87.5 rounds to 88
+    expect(summarizeScores("nps", [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 7]).value).toBe(88);
   });
 
   for (const look of ["standard", "clean"] as const) {
@@ -62,12 +66,12 @@ describe("tc-score-summary", () => {
       expect(el.querySelector(".tc-head__title")!.textContent).toBe("Net Promoter Score");
       expect(el.querySelector(".ui-ssm__card")!.getAttribute("aria-labelledby")).toBe(el.querySelector(".tc-head__title")!.id);
       expect(text(el.querySelector(".ui-ssm__total"))).toBe("312 responses");
-      expect(text(el.querySelector(".ui-ssm__hero"))).toBe("NPS +37");
-      expect(text(el.querySelector(".ui-ssm__change"))).toBe("Up 13 points from Q2");
+      expect(text(el.querySelector(".ui-ssm__hero"))).toBe("NPS +38");
+      expect(text(el.querySelector(".ui-ssm__change"))).toBe("Up 14 points from Q2");
       expect(el.querySelector(".ui-ssm__change")!.getAttribute("data-dir")).toBe("up");
-      expect(text(el.querySelector(".ui-ssm__spark .ui-ssm__sr"))).toBe("Trend: Q1 +18, Q2 +24, now +37");
+      expect(text(el.querySelector(".ui-ssm__spark .ui-ssm__sr"))).toBe("Trend: Q1 +18, Q2 +24, now +38");
       expect(el.querySelector(".ui-ssm__spark svg")!.getAttribute("aria-hidden")).toBe("true");
-      expect(text(el.querySelector(".ui-ssm__target"))).toBe("Target +40 · 3 points below");
+      expect(text(el.querySelector(".ui-ssm__target"))).toBe("Target +40 · 2 points below");
       expect(keys(el)).toEqual(["Detractors 17% 52", "Passives 29% 90", "Promoters 54% 170"]);
       const dist = el.querySelector(".ui-ssm__dist")!;
       expect(dist.getAttribute("role")).toBe("toolbar");

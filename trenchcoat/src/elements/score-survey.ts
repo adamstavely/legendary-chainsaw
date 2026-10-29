@@ -205,7 +205,8 @@ export class TcScoreSurvey extends TcElement {
   /** @internal */
   private submit(skip: boolean) {
     if (this.score === null || this.submitting) return;
-    const comment = skip ? "" : this.comment.trim();
+    // Only what was asked goes out: a comment typed for an earlier score, under a question that's gone, doesn't
+    const comment = skip || !this.followUpQuestion ? "" : this.comment.trim();
     if (!this.emit<ScoreSurveySubmit>("tc-submit", { score: this.score, comment, kind: this.kind }, { cancelable: true })) return;
     this.submitted = true;
     void this.updateComplete.then(() => this.querySelector<HTMLElement>(".ui-ssv__change")?.focus());
