@@ -309,6 +309,42 @@
      "description": "Turned on or off (the hotkey, Escape, Close, the start button)"
     },
     {
+     "name": "showComponents",
+     "type": "boolean",
+     "optional": true,
+     "description": "Outline components – controlled when given"
+    },
+    {
+     "name": "defaultShowComponents",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether an uncontrolled Loupe starts outlining components (default true)"
+    },
+    {
+     "name": "showRuler",
+     "type": "boolean",
+     "optional": true,
+     "description": "Show the breakpoint ruler – controlled when given"
+    },
+    {
+     "name": "defaultShowRuler",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether an uncontrolled Loupe starts with the ruler (default true)"
+    },
+    {
+     "name": "showLayouts",
+     "type": "boolean",
+     "optional": true,
+     "description": "Outline and list flex and grid containers – controlled when given"
+    },
+    {
+     "name": "defaultShowLayouts",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether an uncontrolled Loupe starts with layouts (default false)"
+    },
+    {
      "name": "onFeatureChange",
      "type": "(detail: LoupeFeatureChange, event: CustomEvent<LoupeFeatureChange>) => void",
      "optional": true,
@@ -324,6 +360,9 @@
    "hides": [
     "heading",
     "active",
+    "showComponents",
+    "showRuler",
+    "showLayouts",
     "children"
    ],
    "events": {
@@ -640,7 +679,7 @@
   "windowed": false
  },
  "size": {
-  "min": 47839,
-  "gzip": 13929
+  "min": 48728,
+  "gzip": 14194
  }
 }

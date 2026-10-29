@@ -10708,7 +10708,7 @@
   },
   "generated-ui": {
    "measuredAt": "2026-10-29",
-   "hash": "bdc805dc79b822b2",
+   "hash": "38e1f03231b492c4",
    "bundle": {
     "own": {
      "min": 34126,
@@ -12096,14 +12096,14 @@
       "min": 3437
      },
      {
-      "name": "src/generative/schemas/tc-app-directory.json",
-      "kind": "other",
-      "min": 3383
-     },
-     {
       "name": "src/generative/schemas/tc-ai-summary.json",
       "kind": "other",
       "min": 3366
+     },
+     {
+      "name": "src/generative/schemas/tc-app-directory.json",
+      "kind": "other",
+      "min": 3363
      },
      {
       "name": "src/generative/schemas/tc-prompt-starters.json",
@@ -13012,20 +13012,20 @@
      }
     ],
     "withoutLit": {
-     "min": 7383657,
-     "gzip": 1814060
+     "min": 7383637,
+     "gzip": 1814054
     },
     "withLit": {
-     "min": 7350793,
-     "gzip": 1801904
+     "min": 7350773,
+     "gzip": 1801895
     }
    },
    "render": {
     "tag": "tc-generated-ui",
     "source": "demo",
     "runs": 7,
-    "cold": 4.8,
-    "first": 0.5,
+    "cold": 2.2,
+    "first": 0.6,
     "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 9,
@@ -16353,11 +16353,11 @@
   },
   "loupe": {
    "measuredAt": "2026-10-29",
-   "hash": "74afed42ccb39d35",
+   "hash": "adcdf16e8e2e9ab8",
    "bundle": {
     "own": {
-     "min": 38694,
-     "gzip": 11152
+     "min": 39618,
+     "gzip": 11430
     },
     "shared": [
      {
@@ -16407,21 +16407,21 @@
      }
     ],
     "withoutLit": {
-     "min": 47804,
-     "gzip": 13996
+     "min": 48728,
+     "gzip": 14269
     },
     "withLit": {
-     "min": 67834,
-     "gzip": 20459
+     "min": 68758,
+     "gzip": 20742
     }
    },
    "render": {
     "tag": "tc-loupe",
     "source": "demo",
     "runs": 7,
-    "cold": 2.1,
+    "cold": 1.9,
     "first": 0.5,
-    "update": 0.1,
+    "update": 0.2,
     "updateKind": "one item of breakpoints replaced",
     "nodes": 26,
     "scale": {
@@ -16430,13 +16430,13 @@
      "points": [
       {
        "items": 100,
-       "first": 0.4,
+       "first": 0.5,
        "update": 0,
        "nodes": 26
       },
       {
        "items": 1000,
-       "first": 0.4,
+       "first": 0.5,
        "update": 0.1,
        "nodes": 26
       }

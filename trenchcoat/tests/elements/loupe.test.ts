@@ -129,8 +129,7 @@ describe("tc-loupe", () => {
     expect(el.active).toBe(true);
     expect(el.querySelector('[role="option"][aria-selected="true"]')).toBeNull();
     key(list, "Escape");
-    await settle();
-    expect(el.active).toBe(false);
+    await expect.poll(() => el.active).toBe(false);
   });
 
   test("on and off: the hotkey, Close and Escape ask with a cancelable tc-active-change; an open dialog keeps Escape", async () => {
@@ -154,14 +153,58 @@ describe("tc-loupe", () => {
     await settle();
     expect(el.active).toBe(true);
     key(document.body, "Escape");
-    await settle();
-    expect(el.active).toBe(false);
+    await expect.poll(() => el.active).toBe(false);
     expect(asks).toEqual([true, false, false]);
     el.hotkey = false;
     await settle();
     key(document.body, "L", { shiftKey: true, ctrlKey: true, metaKey: true });
     await settle();
     expect(el.active).toBe(false);
+  });
+
+  test("Escape is the page's first: an open popover keeps it, and so does a page handler that prevents it", async () => {
+    const { el } = await make({ active: true });
+    // An open popover on the page (a library card, a menu) has Escape
+    const pop = document.createElement("div");
+    pop.popover = "manual";
+    pop.innerHTML = "<button>inside</button>";
+    document.body.append(pop);
+    pop.showPopover();
+    key(document.body, "Escape");
+    await settle();
+    await new Promise((r) => setTimeout(r, 20));
+    expect(el.active).toBe(true);
+    pop.remove();
+    // A handler bound on the document after the Loupe started still gets to say Escape was its own
+    const mine = (e: KeyboardEvent) => e.key === "Escape" && e.preventDefault();
+    document.addEventListener("keydown", mine);
+    key(document.body, "Escape");
+    await settle();
+    await new Promise((r) => setTimeout(r, 20));
+    expect(el.active).toBe(true);
+    document.removeEventListener("keydown", mine);
+    key(document.body, "Escape");
+    await expect.poll(() => el.active).toBe(false);
+  });
+
+  test("moved while on, it keeps working: listening, outlining and its layer showing", async () => {
+    const { wrap, el, page } = await make({ active: true });
+    expect(el.querySelectorAll(".ui-lpe__outline")).toHaveLength(4);
+    // A framework moving it: out of the page and back in
+    const holder = document.createElement("div");
+    wrap.append(holder);
+    holder.append(el);
+    await settle();
+    await frame();
+    await settle();
+    expect(el.active).toBe(true);
+    expect(el.querySelectorAll(".ui-lpe__outline")).toHaveLength(4);
+    expect(el.querySelector(".ui-lpe__layer")!.matches(":popover-open")).toBe(true);
+    page.querySelector("header")!.dispatchEvent(new PointerEvent("pointermove", { bubbles: true }));
+    await settle();
+    expect(el.querySelector(".ui-lpe__card")).not.toBeNull();
+    key(document.body, "Escape");
+    await expect.poll(() => el.active).toBe(false);
   });
 
   test("breakpoints: the panel marks the current one; the ruler draws each", async () => {
@@ -192,7 +235,10 @@ describe("tc-loupe", () => {
     const { el } = await make({ active: true });
     el.querySelectorAll<HTMLButtonElement>('[role="switch"]')[2].click();
     await expect.poll(() => el.querySelectorAll(".ui-lpe__list")[1]?.querySelectorAll('[role="option"]').length ?? 0).toBeGreaterThanOrEqual(2);
-    const items = [...el.querySelectorAll(".ui-lpe__list")[1].querySelectorAll('[role="option"]')];
+    // The list is named by its heading alone, not by the Scan again button beside it
+    const layoutList = el.querySelectorAll(".ui-lpe__list")[1];
+    expect(text(document.getElementById(layoutList.getAttribute("aria-labelledby")!))).toMatch(/^Layouts \d+$/);
+    const items = [...layoutList.querySelectorAll('[role="option"]')];
     const grid = items.find((i) => text(i).includes("div#grid"))!;
     expect(text(grid)).toContain("Grid");
     expect(text(grid.querySelector(".ui-lpe__item-path"))).toContain("gap 12px");
@@ -261,6 +307,37 @@ describe("tc-loupe", () => {
     held.querySelector<HTMLButtonElement>(".ui-lpe__start")!.click();
     await settle();
     expect(held.active).toBe(false);
+    await act(async () => root.unmount());
+  });
+
+  test("React wrapper: the switches survive parent re-renders uncontrolled, and stay put controlled", async () => {
+    (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
+    const host = document.createElement("div");
+    document.body.append(host);
+    const root = createRoot(host);
+    let bump = () => {};
+    function App() {
+      const [n, setN] = React.useState(0);
+      bump = () => setN((x) => x + 1);
+      return React.createElement(Loupe, { floating: false, hotkey: false, defaultActive: true, "data-n": n } as React.ComponentProps<typeof Loupe>);
+    }
+    await act(async () => root.render(React.createElement(App)));
+    await settle();
+    let el = host.querySelector("tc-loupe")!;
+    el.querySelectorAll<HTMLButtonElement>('[role="switch"]')[2].click();
+    await settle();
+    await act(async () => bump());
+    await settle();
+    expect(el.showLayouts).toBe(true);
+    // Controlled: the parent's value holds until it changes it
+    const seen: boolean[] = [];
+    await act(async () => root.render(React.createElement(Loupe, { floating: false, hotkey: false, defaultActive: true, showRuler: true, onFeatureChange: (d) => void seen.push(d.on) })));
+    await settle();
+    el = host.querySelector("tc-loupe")!;
+    el.querySelectorAll<HTMLButtonElement>('[role="switch"]')[1].click();
+    await settle();
+    expect(seen).toEqual([false]);
+    expect(el.showRuler).toBe(true);
     await act(async () => root.unmount());
   });
 

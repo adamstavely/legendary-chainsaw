@@ -66,6 +66,8 @@ export const defaultLoupeBreakpoints: LoupeBreakpoint[] = [
 
 let uidCount = 0;
 const MAX_SCAN = 4000;
+/** How long page changes are gathered before the components are found again */
+const RESCAN_MS = 150;
 const TONES = ["violet", "info", "pink", "amber", "teal", "success", "rose"];
 
 /* scan-eye, x, book-open, code, pen-tool, external-link, layout-grid, columns, rows: Lucide (ISC, lucide.dev) */
@@ -167,6 +169,15 @@ export class TcLoupe extends TcElement {
     );
   }
 
+  override connectedCallback() {
+    super.connectedCallback();
+    // Moved while on (a framework reordering or portalling it): listen again, and draw – the layer is shown again in updated()
+    if (this.active && !this.observer) {
+      this.start();
+      this.requestUpdate();
+    }
+  }
+
   override disconnectedCallback() {
     super.disconnectedCallback();
     this.stop();
@@ -217,13 +228,14 @@ export class TcLoupe extends TcElement {
     const doc = this.ownerDocument;
     doc.addEventListener("pointermove", this.onPointer, { passive: true });
     doc.addEventListener("pointerleave", this.onLeave);
-    doc.addEventListener("keydown", this.onKey, true);
+    // Bubble phase: the page's own handlers on the way have had the event first
+    doc.addEventListener("keydown", this.onKey);
     window.addEventListener("scroll", this.onMove, { capture: true, passive: true });
     window.addEventListener("resize", this.onMove);
     this.observer = new MutationObserver((records) => {
       // Our own outlines change nothing worth rescanning for
       if (records.every((r) => this.contains(r.target))) return;
-      this.schedule(true);
+      this.rescanSoon();
     });
     this.observer.observe(this.scope, { childList: true, subtree: true, attributes: true, attributeFilter: ["data-ds-component", "data-ui", "class", "style", "hidden"] });
     this.schedule(true);
@@ -234,15 +246,18 @@ export class TcLoupe extends TcElement {
     const doc = this.ownerDocument;
     doc.removeEventListener("pointermove", this.onPointer);
     doc.removeEventListener("pointerleave", this.onLeave);
-    doc.removeEventListener("keydown", this.onKey, true);
+    doc.removeEventListener("keydown", this.onKey);
     window.removeEventListener("scroll", this.onMove, { capture: true });
     window.removeEventListener("resize", this.onMove);
     this.observer?.disconnect();
     this.observer = null;
+    clearTimeout(this.rescanTimer);
+    this.rescanTimer = 0;
     cancelAnimationFrame(this.frame);
     this.frame = 0;
     this.scanToken.cancelled = true;
     this.found = [];
+    this.foundSet = new Set();
     this.layouts = [];
     this.hovered = null;
     this.selected = null;
@@ -270,6 +285,15 @@ export class TcLoupe extends TcElement {
     });
   }
   private onMove = () => this.schedule();
+  /** Page changes come in bursts (an animation toggling classes): one rescan per burst, a moment later */
+  private rescanTimer = 0;
+  private rescanSoon() {
+    if (this.rescanTimer) return;
+    this.rescanTimer = window.setTimeout(() => {
+      this.rescanTimer = 0;
+      this.schedule(true);
+    }, RESCAN_MS);
+  }
 
   private infoFor(el: Element): LoupeComponentInfo {
     const own = this.describe?.(el);
@@ -290,13 +314,26 @@ export class TcLoupe extends TcElement {
     };
   }
 
+  /** The found components' elements, for the pointer's lookup */
+  private foundSet = new Set<Element>();
+
   private find() {
     const scope = this.scope;
     const all = [...scope.querySelectorAll(this.selector)];
     if (scope.matches(this.selector)) all.unshift(scope);
-    // The outermost of each component (a tc-* element's own parts carry data-ui too), never the Loupe itself
-    const els = all.filter((el) => !this.contains(el) && el !== this && !(el.parentElement && all.some((o) => o !== el && o.contains(el) && o.tagName === el.tagName && o.getAttribute("data-ui") === el.getAttribute("data-ui"))));
+    // The outermost of each component (a tc-* element's own parts carry data-ui too), never the Loupe itself: walk
+    // up from each match looking for a matched ancestor of the same kind – depth steps each, not a pass over all
+    const matched = new Set(all);
+    const nested = (el: Element) => {
+      const ui = el.getAttribute("data-ui");
+      for (let p = el.parentElement; p && p !== scope.parentElement; p = p.parentElement) {
+        if (p.tagName === el.tagName && p.getAttribute("data-ui") === ui && matched.has(p)) return true;
+      }
+      return false;
+    };
+    const els = all.filter((el) => el !== this && !this.contains(el) && !nested(el));
     this.found = els.filter((el) => !this.isHidden(el)).map((el) => ({ el, info: this.infoFor(el), box: null }));
+    this.foundSet = new Set(this.found.map((f) => f.el));
     if (this.selected && !this.found.some((f) => f.el === this.selected)) this.selected = null;
     if (this.compAt > this.found.length - 1) this.compAt = Math.max(0, this.found.length - 1);
   }
@@ -366,7 +403,7 @@ export class TcLoupe extends TcElement {
     if (!t || this.contains(t)) return;
     let hit: Element | null = null;
     for (let n: Element | null = t; n && n !== this.scope.parentElement; n = n.parentElement) {
-      if (this.found.some((f) => f.el === n)) {
+      if (this.foundSet.has(n)) {
         hit = n;
         break;
       }
@@ -378,15 +415,20 @@ export class TcLoupe extends TcElement {
   private onKey = (e: KeyboardEvent) => {
     if (e.key !== "Escape" || e.defaultPrevented) return;
     const t = e.target as Element | null;
-    // Escape belongs to an open dialog or menu on the page first
-    if (t && !this.contains(t) && t.closest("dialog[open], [role='menu'], [role='listbox'], [aria-expanded='true']")) return;
-    if (this.selected && this.contains(t)) {
+    if (this.selected && t && this.contains(t)) {
       this.selected = null;
       e.preventDefault();
       return;
     }
-    e.preventDefault();
-    this.setActive(false);
+    // Escape belongs to an open dialog, menu or popover on the page first
+    if (t && !this.contains(t) && t.closest("dialog[open], [role='menu'], [role='listbox'], [aria-expanded='true']")) return;
+    const layer = this.querySelector(".ui-lpe__layer");
+    if ([...this.ownerDocument.querySelectorAll(":popover-open")].some((p) => p !== layer && !this.contains(p))) return;
+    // Decided once the event is done: a page handler that runs after this one (bound later on the document) may
+    // still prevent it, and then Escape was the page's
+    setTimeout(() => {
+      if (!e.defaultPrevented && this.active) this.setActive(false);
+    }, 0);
   };
 
   private select(i: number, scroll = true) {
@@ -613,11 +655,11 @@ export class TcLoupe extends TcElement {
           : nothing}
         ${this.showLayouts
           ? html`<section class="ui-lpe__section" aria-labelledby=${`${id}-lay`}>
-              <h4 class="ui-lpe__label" id=${`${id}-lay`}>
-                Layouts <span class="ui-lpe__count">${this.layouts.length}</span>
+              <div class="ui-lpe__label-row">
+                <h4 class="ui-lpe__label" id=${`${id}-lay`}>Layouts <span class="ui-lpe__count">${this.layouts.length}</span></h4>
                 <span class="ui-lpe__spacer"></span>
                 <button type="button" class="ui-lpe__text-btn" @click=${() => (this.scanning ? ((this.scanToken.cancelled = true), (this.scanning = false)) : void this.scanLayouts())}>${this.scanning ? "Stop" : "Scan again"}</button>
-              </h4>
+              </div>
               ${this.scanning
                 ? html`<p class="ui-lpe__empty">Looking for flex and grid containers…</p>`
                 : this.layouts.length
@@ -726,6 +768,8 @@ export class TcLoupe extends TcElement {
 .ui-lpe__label { display: flex; align-items: center; gap: var(--tc-space-1-5); font-size: var(--tc-caption-font-size); font-weight: var(--tc-caption-font-weight); line-height: var(--tc-caption-line-height); letter-spacing: var(--tc-caption-tracking); text-transform: var(--tc-caption-transform); color: var(--tc-caption-color); }
 .ui-lpe__label .ui-lpe__count { text-transform: none; letter-spacing: normal; }
 .ui-lpe__spacer { flex: 1; }
+/* A heading with an action beside it – outside the heading, so the list it names isn't named after the button too */
+.ui-lpe__label-row { display: flex; align-items: center; gap: var(--tc-space-1-5); }
 .ui-lpe__text-btn { font-size: var(--tc-font-size-xs); font-weight: var(--tc-font-weight-medium); letter-spacing: normal; text-transform: none; color: var(--tc-accent-text); }
 .ui-lpe__text-btn:hover { text-decoration: underline; text-underline-offset: var(--tc-space-0-5); }
 .ui-lpe__empty { font-size: var(--tc-font-size-sm); color: var(--tc-text-muted); }
