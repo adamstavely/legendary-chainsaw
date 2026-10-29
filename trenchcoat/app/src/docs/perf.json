@@ -10708,7 +10708,7 @@
   },
   "generated-ui": {
    "measuredAt": "2026-10-29",
-   "hash": "7c4988917c63fa52",
+   "hash": "f2ec9d9268ef3c5a",
    "bundle": {
     "own": {
      "min": 34126,
@@ -13023,19 +13023,19 @@
     ],
     "withoutLit": {
      "min": 7443944,
-     "gzip": 1829588
+     "gzip": 1829585
     },
     "withLit": {
      "min": 7410706,
-     "gzip": 1817061
+     "gzip": 1817058
     }
    },
    "render": {
     "tag": "tc-generated-ui",
     "source": "demo",
     "runs": 7,
-    "cold": 2.2,
-    "first": 0.6,
+    "cold": 2.1,
+    "first": 0.5,
     "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 9,
@@ -15253,11 +15253,11 @@
   },
   "json-viewer": {
    "measuredAt": "2026-10-29",
-   "hash": "efe54448dc947c6f",
+   "hash": "7a115863e29d0f9f",
    "bundle": {
     "own": {
      "min": 58621,
-     "gzip": 16258
+     "gzip": 16254
     },
     "shared": [
      {
@@ -15313,20 +15313,20 @@
     ],
     "withoutLit": {
      "min": 68376,
-     "gzip": 19455
+     "gzip": 19451
     },
     "withLit": {
      "min": 89570,
-     "gzip": 26197
+     "gzip": 26193
     }
    },
    "render": {
     "tag": "tc-json-viewer",
     "source": "demo",
     "runs": 7,
-    "cold": 9.5,
-    "first": 3.4,
-    "update": 0.9,
+    "cold": 8.5,
+    "first": 3.3,
+    "update": 1,
     "updateKind": "one item of flags replaced",
     "nodes": 462,
     "scale": {
@@ -15335,14 +15335,14 @@
      "points": [
       {
        "items": 100,
-       "first": 3.9,
-       "update": 1.2,
+       "first": 4,
+       "update": 0.9,
        "nodes": 561
       },
       {
        "items": 1000,
-       "first": 9.6,
-       "update": 3,
+       "first": 10,
+       "update": 2.8,
        "nodes": 1461
       }
      ]
