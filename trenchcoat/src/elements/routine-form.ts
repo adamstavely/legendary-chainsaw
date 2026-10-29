@@ -637,7 +637,8 @@ export class TcRoutineForm extends TcElement {
 .ui-rtn__select > select { padding-right: var(--tc-space-8); appearance: none; text-overflow: ellipsis; cursor: pointer; }
 .ui-rtn__chevron { position: absolute; top: 50%; right: var(--tc-space-3); width: var(--tc-space-4); height: var(--tc-space-4); fill: none; stroke: var(--tc-icon-muted); stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; transform: translateY(-50%); pointer-events: none; }
 .ui-rtn__time { display: block; min-width: 0; }
-.ui-rtn__time input::-webkit-calendar-picker-indicator { cursor: pointer; }
+.ui-rtn__time input::-webkit-calendar-picker-indicator { opacity: 0.5; cursor: pointer; }
+.ui-rtn__time input::-webkit-calendar-picker-indicator:hover { opacity: 0.8; }
 /* Start time: a day and a time side by side, or the time alone */
 .ui-rtn__start { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--tc-space-3); }
 .ui-rtn__start[data-pair] { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
