@@ -55,6 +55,9 @@ export type JsonViewerDownload = { filename: string; text: string };
 
 let uidCount = 0;
 const ROW_CAP = 50;
+const EMPTY_KEY = "(empty key)";
+/** How much of a nested value a table cell shows inline */
+const INLINE_CHARS = 80;
 const RAW_CAP = 4000;
 const TABLE_COLUMNS = 8;
 
@@ -440,7 +443,12 @@ export class TcJsonViewer extends TcElement {
     const path = list[this.hitAt];
     this.announce = `Match ${this.hitAt + 1} of ${list.length}`;
     void this.updateComplete.then(() => {
-      const el = this.querySelector<HTMLElement>(`[data-path="${CSS.escape(path)}"]`);
+      // The match itself, or the nearest thing drawn that holds it (a table cell showing a nested value)
+      let el: HTMLElement | null = null;
+      for (let p = path; ; p = p.slice(0, p.lastIndexOf("/"))) {
+        el = this.querySelector<HTMLElement>(`.ui-jsv__body [data-path="${CSS.escape(p)}"]`);
+        if (el || !p) break;
+      }
       el?.scrollIntoView({ block: "nearest" });
     });
   }
@@ -504,8 +512,15 @@ export class TcJsonViewer extends TcElement {
 
   private label(path: string) {
     if (!path) return "the document";
-    const key = path.slice(path.lastIndexOf("/") + 1).replace(/~1/g, "/").replace(/~0/g, "~");
+    return this.keyName(path.slice(path.lastIndexOf("/") + 1).replace(/~1/g, "/").replace(/~0/g, "~"));
+  }
+  /** A key as Document names it: in words or as written; the empty key ("") gets a name of its own */
+  private keyName(key: string) {
+    if (key === "") return EMPTY_KEY;
     return this.keyStyle === "words" ? keyWords(key) : key;
+  }
+  private keyCell(key: string) {
+    return key === "" ? html`<span class="ui-jsv__empty">${EMPTY_KEY}</span>` : this.hl(this.keyName(key));
   }
 
   /** Text with the search's matches marked */
@@ -547,6 +562,14 @@ export class TcJsonViewer extends TcElement {
       }
     }
     return html`<span class="ui-jsv__str">${this.hl(s)}</span>`;
+  }
+
+  /** A nested value in a table cell: its JSON on one line (searchable, marked), shortened with its size when long */
+  private inline(v: JsonValue[] | { [k: string]: JsonValue }, path: string) {
+    const full = JSON.stringify(v);
+    const short = full.length > INLINE_CHARS ? `${full.slice(0, INLINE_CHARS - 1)}…` : full;
+    const hidden = short !== full && this.hits.some((h) => h.startsWith(`${path}/`)) && !short.toLowerCase().includes(this.query);
+    return html`<code class="ui-jsv__inline" title=${full} ?data-match=${hidden}>${this.hl(short)}</code>${short !== full ? html` <span class="ui-jsv__count">${this.summary(v)}</span>` : nothing}`;
   }
 
   private summary(v: JsonValue) {
@@ -648,10 +671,9 @@ export class TcJsonViewer extends TcElement {
   }
 
   private docRow(key: string, v: JsonValue, path: string) {
-    const name = this.keyStyle === "words" ? keyWords(key) : key;
     const flagged = !!this.flagAt(path);
     return html`<div class="ui-jsv__row" data-path=${path} ?data-flagged=${flagged} ?data-match=${this.hitSet.has(path)}>
-      <dt class="ui-jsv__key" title=${key}>${this.hl(name)}</dt>
+      <dt class="ui-jsv__key" title=${key}>${this.keyCell(key)}</dt>
       <dd class="ui-jsv__val">
         <div class="ui-jsv__val-main">${isContainer(v) ? html`<span class="ui-jsv__empty">${Array.isArray(v) ? "Empty list" : "No fields"}</span>` : this.prim(v)}${this.flagNote(path)}</div>
         ${this.flagButton(path)}
@@ -660,9 +682,8 @@ export class TcJsonViewer extends TcElement {
   }
 
   private docSection(key: string, v: JsonValue[] | { [k: string]: JsonValue }, path: string, depth: number) {
-    const name = this.keyStyle === "words" ? keyWords(key) : key;
     const level = Math.min(6, 4 + depth);
-    const title = html`${this.hl(name)} <span class="ui-jsv__count">${this.summary(v)}</span>`;
+    const title = html`${this.keyCell(key)} <span class="ui-jsv__count">${this.summary(v)}</span>`;
     const heading =
       level === 4
         ? html`<h4 class="ui-jsv__heading">${title}</h4>`
@@ -679,7 +700,9 @@ export class TcJsonViewer extends TcElement {
   /** A list: chips for short values, a table for like objects, otherwise one section per item */
   private docArray(v: JsonValue[], path: string, depth: number): TemplateResult {
     if (!v.length) return html`<p class="ui-jsv__empty">Empty list</p>`;
-    const capped = !this.showAll.has(path) && v.length > ROW_CAP;
+    // While searching, a list with a match past the cap shows all of it, so the match can be seen
+    const matchBeyond = this.hits.some((h) => h.startsWith(`${path}/`) && Number(h.slice(path.length + 1).split("/")[0]) >= ROW_CAP);
+    const capped = !this.showAll.has(path) && v.length > ROW_CAP && !matchBeyond;
     const shown = capped ? v.slice(0, ROW_CAP) : v;
     const more = capped
       ? html`<button type="button" class="ui-jsv__text-btn ui-jsv__more" @click=${() => (this.showAll = new Set(this.showAll).add(path))}>Show all ${this.fmtNumber(v.length)}</button>`
@@ -708,7 +731,7 @@ export class TcJsonViewer extends TcElement {
           <table class="ui-jsv__table">
             <thead>
               <tr>
-                ${columns.map((c) => html`<th scope="col" title=${c}>${this.hl(this.keyStyle === "words" ? keyWords(c) : c)}</th>`)}
+                ${columns.map((c) => html`<th scope="col" title=${c}>${this.keyCell(c)}</th>`)}
                 ${this.flaggable ? html`<th scope="col"><span class="tc-sr-only">Flag</span></th>` : nothing}
               </tr>
             </thead>
@@ -721,7 +744,7 @@ export class TcJsonViewer extends TcElement {
                       const cell = obj[c];
                       const cp = jsonPointer(p, c);
                       return html`<td data-path=${cp} ?data-match=${this.hitSet.has(cp)} ?data-num=${typeof cell === "number"}>
-                        ${cell === undefined ? html`<span class="ui-jsv__empty">–</span>` : isContainer(cell) ? html`<span class="ui-jsv__count">${this.summary(cell)}</span>` : this.prim(cell)}
+                        ${cell === undefined ? html`<span class="ui-jsv__empty">–</span>` : isContainer(cell) ? this.inline(cell, cp) : this.prim(cell)}
                       </td>`;
                     })}
                     ${this.flaggable ? html`<td class="ui-jsv__flag-cell">${this.flagButton(p)}</td>` : nothing}
@@ -769,7 +792,8 @@ export class TcJsonViewer extends TcElement {
   private renderRaw() {
     const lines: TemplateResult[] = [];
     const ind = (n: number) => "  ".repeat(n);
-    const key = (k: string) => html`<span class="ui-jsv__s-prop">"${this.hl(k)}"</span><span class="ui-jsv__s-punc">: </span>`;
+    // Keys as JSON writes them – quotes, backslashes and line breaks escaped, so every line stays valid JSON
+    const key = (k: string) => html`<span class="ui-jsv__s-prop">${this.hl(JSON.stringify(k))}</span><span class="ui-jsv__s-punc">: </span>`;
     const prim = (v: JsonValue) => {
       if (v === null) return html`<span class="ui-jsv__s-kw">null</span>`;
       if (typeof v === "boolean") return html`<span class="ui-jsv__s-kw">${String(v)}</span>`;
@@ -1102,6 +1126,9 @@ export class TcJsonViewer extends TcElement {
 .ui-jsv__table td[data-num] { text-align: right; }
 .ui-jsv__table .ui-jsv__flag-cell { width: calc(var(--tc-control-h-sm) + 2 * var(--tc-space-1)); padding: var(--tc-space-1); }
 .ui-jsv__note-row td { padding-top: 0; }
+/* A nested value in a table cell, on one line */
+.ui-jsv__inline { font-family: var(--tc-font-mono); font-size: var(--tc-font-size-xs); color: var(--tc-text-secondary); overflow-wrap: anywhere; }
+.ui-jsv__inline[data-match] { box-shadow: 0 0 0 1px var(--tc-tone-amber-border); border-radius: var(--tc-radius-2xs); }
 /* Values drawn as what they are */
 .ui-jsv__num { font-variant-numeric: tabular-nums; }
 .ui-jsv__null, .ui-jsv__empty { color: var(--tc-text-muted); font-style: italic; }

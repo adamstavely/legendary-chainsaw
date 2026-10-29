@@ -269,6 +269,43 @@ describe("tc-json-viewer", () => {
     expect(text(empty.querySelector(".ui-jsv__none"))).toBe("No document to show.");
   });
 
+  test("edge cases: the empty key, escaped keys, matches inside table cells and past the 50-entry cap", async () => {
+    const tricky = {
+      "": "Slash points here, not to root",
+      'quote"key': 1,
+      "backslash\\key": 2,
+      "newline\nkey": 3,
+      records: [{ id: 1, name: "Example", active: true, details: { hidden: "SECRET" } }],
+      branch: { child: { value: "FIND_ME" } },
+      items: [...Array.from({ length: 50 }, (_, i) => i), "HIDDEN_MATCH"],
+    };
+    const el = await make({ value: tricky as JsonValue });
+    // The empty key has a name, and its pointer is "/", not the root
+    expect(text(rowOf(el, "/").querySelector("dt"))).toBe("(empty key)");
+    expect(valueAt(tricky, "/")).toBe("Slash points here, not to root");
+    // A nested value in a table cell shows as JSON, so a search can see it
+    expect(text(el.querySelector('td[data-path="/records/0/details"] .ui-jsv__inline'))).toBe('{"hidden":"SECRET"}');
+    await search(el, "SECRET");
+    expect([...el.querySelectorAll(".ui-jsv__doc .ui-jsv__mark")].map((m) => m.textContent)).toEqual(["SECRET"]);
+    // A match past the cap opens the whole list while searching
+    expect(el.querySelectorAll('.ui-jsv__section[data-path="/items"] .ui-jsv__chip')).toHaveLength(50);
+    await search(el, "HIDDEN_MATCH");
+    expect(el.querySelectorAll('.ui-jsv__section[data-path="/items"] .ui-jsv__chip')).toHaveLength(51);
+    expect([...el.querySelectorAll(".ui-jsv__doc .ui-jsv__mark")].map((m) => m.textContent)).toEqual(["HIDDEN_MATCH"]);
+    await search(el, "");
+    // Raw writes keys as JSON does, so the text shown parses back to the document
+    el.view = "raw";
+    await settle();
+    const rawText = [...el.querySelectorAll(".ui-jsv__raw .ui-jsv__line")].map((l) => l.textContent).join("\n");
+    expect(JSON.parse(rawText)).toEqual(tricky);
+    expect(rawText).toContain('"quote\\"key": 1,');
+    expect(rawText).toContain('"newline\\nkey": 3,');
+    // Flags on the empty key name it too
+    el.flags = [{ path: "/", note: "check" }];
+    await settle();
+    expect(text(el.querySelector(".ui-jsv__flag-chip"))).toBe("(empty key)");
+  });
+
   test("split: Document beside the raw JSON, no tabs; the toolbar switches the layout", async () => {
     const el = await make();
     const layouts: string[] = [];
