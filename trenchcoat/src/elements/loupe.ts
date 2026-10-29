@@ -191,8 +191,9 @@ export class TcLoupe extends TcElement {
     }
     // The card goes beside its component once both are drawn
     if (changed.has("hovered") || changed.has("selected") || changed.has("found")) this.placeCard();
+    // Only while it's on the page: a last render after it left (stop() clears state) mustn't try to show it
     const layer = this.querySelector<HTMLElement>(".ui-lpe__layer");
-    if (layer && !layer.matches(":popover-open") && typeof layer.showPopover === "function") layer.showPopover();
+    if (this.isConnected && layer?.isConnected && !layer.matches(":popover-open") && typeof layer.showPopover === "function") layer.showPopover();
   }
 
   private setActive(active: boolean) {
