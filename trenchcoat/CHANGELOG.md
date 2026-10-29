@@ -1,5 +1,14 @@
 # Changelog
 
+
+## Unreleased – a UI kit for Adobe XD
+
+- **`xd-kit/`** – an Adobe XD plugin that draws every component (Standard and Clean, light and dark) into an XD
+  document as layered, named groups on one artboard per category, and adds the colour tokens and type scale to
+  Assets. The drawings are read from the rendered components (`node xd-kit/extract.mjs`), so the kit follows the
+  code; `npm run xd-kit` extracts, tests and packs `xd-kit/dist/trenchcoat-ui-kit.xdx`. XD's plugin API can't create
+  components, so each group is one ⌘K away from becoming one.
+
 ## Unreleased – coordinates in text, and a sharper search family
 
 - **Coordinate Details** (`tc-coordinate-details`) – the geospatial partner to ISBN Details. Coordinates in a passage
@@ -12,6 +21,7 @@
   and time read as one line, and a row's actions show on hover or focus (a saved search keeps its star).
 - **Query Builder** – the AND / OR switch is set in the UI font, the "Where / and / or" words show down to 500 px, and
   the date picker's button is quieter. **Routine Form**'s time picker button matches.
+
 
 ## Unreleased – colour picker, NPS / CSAT, coordinates, access requests, reading aloud
 
