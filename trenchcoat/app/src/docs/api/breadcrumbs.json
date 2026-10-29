@@ -1,0 +1,432 @@
+{
+ "elements": [
+  {
+   "tag": "tc-breadcrumbs",
+   "className": "TcBreadcrumbs",
+   "description": "A trail of links to the current page that folds its middle into \"…\" when it doesn't fit.",
+   "properties": [
+    {
+     "name": "items",
+     "attribute": null,
+     "type": "BreadcrumbItem[]",
+     "default": "[]",
+     "description": "The trail, from the top down; the last item is the current page",
+     "readonly": false
+    },
+    {
+     "name": "separator",
+     "attribute": "separator",
+     "type": "\"chevron\" | \"slash\"",
+     "default": "\"chevron\"",
+     "description": "Between items: a chevron or a slash",
+     "readonly": false
+    },
+    {
+     "name": "max",
+     "attribute": "max",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "Show at most this many items (the first, \"…\" and the last ones), even when more would fit",
+     "readonly": false
+    },
+    {
+     "name": "copyPath",
+     "attribute": "copy-path",
+     "type": "boolean",
+     "default": "false",
+     "description": "Adds a button that copies the trail as text",
+     "readonly": false
+    },
+    {
+     "name": "pathSeparator",
+     "attribute": "path-separator",
+     "type": "string",
+     "default": "\" / \"",
+     "description": "What the copied trail is joined with",
+     "readonly": false
+    },
+    {
+     "name": "label",
+     "attribute": "label",
+     "type": "string",
+     "default": "\"Breadcrumb\"",
+     "description": "The navigation landmark's name",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-navigate",
+     "detail": "",
+     "description": "An item was clicked ({ item, index }: BreadcrumbNavigate); cancelable – prevented, a link isn't followed",
+     "cancelable": true
+    },
+    {
+     "name": "tc-copy",
+     "detail": "",
+     "description": "Copy path was pressed ({ text }: BreadcrumbCopy); cancelable – prevented, nothing is copied",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "crumb",
+   "cssProperties": [
+    {
+     "name": "--tc-crumb-label-max",
+     "value": "220px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-crumb-gap",
+     "value": "var(--tc-space-0-5)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-duration-fast",
+    "--tc-duration-moderate",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-default",
+    "--tc-focus-ring",
+    "--tc-focus-ring-width",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-weight-medium",
+    "--tc-icon-muted",
+    "--tc-line-height-tight",
+    "--tc-menu-bg",
+    "--tc-menu-item-font-size",
+    "--tc-menu-item-h",
+    "--tc-menu-item-hover",
+    "--tc-menu-item-px",
+    "--tc-menu-item-radius",
+    "--tc-menu-padding",
+    "--tc-menu-radius",
+    "--tc-menu-shadow",
+    "--tc-radius-sm",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-z-dropdown"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "breadcrumbLayout",
+   "signature": "breadcrumbLayout(count: number, tail: number, max?: number): void",
+   "description": "Which items show: the first, then \"…\" for `hidden`, then the rest. `tail` is how many of the last fit"
+  }
+ ],
+ "react": [
+  {
+   "component": "Breadcrumbs",
+   "exported": true,
+   "props": [
+    {
+     "name": "onNavigate",
+     "type": "(item: BreadcrumbItem, index: number, event: CustomEvent<BreadcrumbNavigate>) => void",
+     "optional": true,
+     "description": "An item was clicked; call `event.preventDefault()` to route a link yourself instead of following it"
+    },
+    {
+     "name": "onCopyPath",
+     "type": "(text: string, event: CustomEvent<BreadcrumbCopy>) => void",
+     "optional": true,
+     "description": "Copy path was pressed; call `event.preventDefault()` to copy it your own way"
+    }
+   ],
+   "hides": [
+    "children"
+   ],
+   "events": {
+    "tc-navigate": "onNavigate",
+    "tc-copy": "onCopyPath"
+   }
+  }
+ ],
+ "changelog": [
+  "**Breadcrumbs** (`tc-breadcrumbs`) – a trail whose middle folds into \"…\" when it doesn't fit, with a cancelable `tc-navigate` and Copy path."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-breadcrumbs",
+   "className": "TcBreadcrumbs",
+   "module": "trenchcoat/breadcrumbs",
+   "data": [
+    "items"
+   ],
+   "attributes": [
+    {
+     "name": "separator",
+     "attribute": "separator"
+    },
+    {
+     "name": "max",
+     "attribute": "max"
+    },
+    {
+     "name": "copyPath",
+     "attribute": "copy-path"
+    },
+    {
+     "name": "pathSeparator",
+     "attribute": "path-separator"
+    },
+    {
+     "name": "label",
+     "attribute": "label"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-navigate",
+     "cancelable": true
+    },
+    {
+     "name": "tc-copy",
+     "cancelable": true
+    }
+   ],
+   "controlled": [],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "clipboard",
+    "name": "Async Clipboard (writeText)",
+    "bcd": "api.Clipboard.writeText",
+    "versions": {
+     "chrome": "66",
+     "edge": "79",
+     "firefox": "63",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "why": "Copy buttons.",
+    "via": [
+     "internal/util"
+    ]
+   },
+   {
+    "id": "resize-observer",
+    "name": "ResizeObserver",
+    "bcd": "api.ResizeObserver",
+    "versions": {
+     "chrome": "64",
+     "edge": "79",
+     "firefox": "69",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setTimeout"
+  ],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "ResizeObserver",
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [
+   "document pointerdown"
+  ],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 22433,
+  "gzip": 7709
+ }
+}

@@ -33,6 +33,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Background Tasks** (`background-tasks.tsx`) – Your long-running jobs at a glance – a header indicator with overall progress, and a panel of running, queued, done and failed tasks with cancel, retry and open
 - **Billing Schedule** (`billing-schedule.tsx`) – Build a billing phase – start date, duration, products with repeats and timing, discount, minimum and live totals
 - **Biometric Status** (`biometric-status.tsx`) – Where someone's biometric enrolment stands – face, fingerprints, iris, voice and more, each with its status, detail and quality meter, the count enrolled and an optional match score
+- **Breadcrumbs** (`breadcrumbs.tsx`) – Where you are in a hierarchy as a trail of links: the current page last, the middle folding into "…" when it doesn't fit or passes `max`, a cancelable `tc-navigate` for routing, and Copy path
 - **Breakdown Chart** (`breakdown-chart.tsx`) – Stacked bar chart with measure, slice and segment pickers, a hover breakdown and a linked table
 - **Budget Burn** (`budget-burn.tsx`) – How fast each budget is being spent – spent against budget, the burn as a bar with a pace marker and Ahead, On or Behind pace in words, people and team, totals in the header and a sort by budget or burn
 - **Budget Guard** (`budget-guard.tsx`) – Spend and token limits for a live run – progress against the cap, a warning as it nears it, a hard stop at it, and raising the cap right from the warning
@@ -82,6 +83,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Dropzone** (`dropzone.tsx`) – Drag files in and watch them upload – fanning documents, colored type badges, progress with time left, errors with retry
 - **Email Draft** (`email-draft.tsx`) – Agent-written email for review – switch recipient and tone, edit inline, remove the attachment, send or discard with undo
 - **Engagement Quality** (`engagement-quality.tsx`) – Whether reviews are genuine – an index from reused text, time on the source, batch dismissals and repeated commitments, shown as quality, not a violation
+- **Entity Details** (`entity-details.tsx`) – Email addresses, phone numbers, links and @handles in text, found and marked – hover, focus or right-click one for its domain, country or site (with an http warning), Copy, Write email / Call / Open, and what your directory knows about it
 - **Entity Timeline** (`entity-timeline.tsx`) – What happened to a person, account or case, in order – events under month headers, each with a category, its source and Admiralty grade tinted by confidence, an optional flag and a detail that opens in place, filtered by category chips with counts
 - **Eval Scorecard** (`eval-scorecard.tsx`) – Test cases run against prompt or model versions – pass and fail per case, the score across versions, and a failing case opened beside its expected answer
 - **Evaluation Dataset Editor** (`evaluation-dataset-editor.tsx`) – Edit an eval set's cases, checks, tags and splits, compare it with an earlier version, and import or export it as JSON Lines
@@ -98,12 +100,15 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Friction Profile** (`friction-profile.tsx`) – Switch between standard, elevated and deadline modes and see how each safeguard changes – shortened, deferred or tightened
 - **Gap Exposure** (`gap-exposure.tsx`) – Gaps or risks and whether anyone is working on them – severity in words and a mark, the item and its priority, coverage, owner and what's invested, with the severe uncovered ones called out, grouping by priority or severity and an uncovered-only switch
 - **Gate Config** (`gate-config.tsx`) – When a person decides – the conditions that pause a run, who reviews, what they see, and what they're allowed to do
+- **Gauge** (`gauge.tsx`) – One value against its range as a 270° dial, a half dial or a bar – the value in big type with the band it's in, bands and ticks round it, a target line and the change since last time; optionally a slider you drag or move with the keys
 - **Generated UI** (`generated-ui.tsx`) – A model's answer drawn as real components – tables, charts, metrics, forms and callouts from a spec, checked as it arrives, with plain text for anything unknown
 - **Geo Location** (`geo-location.tsx`) – Coordinates made useful – decimal or degrees-minutes-seconds, Copy, Open in Google Maps, Apple Maps, OpenStreetMap, Bing or your own tools, and an embedded map that loads nothing until Show map
 - **Grade Distribution** (`grade-distribution.tsx`) – How a set of assessments came out – a count over each grade (Outstanding to Dissatisfactory, or your own), how many were assessed, empty grades muted, an optional bar in proportion and a grade picked as a filter
 - **Guardrail Notice** (`guardrail-notice.tsx`) – When a policy blocks, redacts or rewrites content – which policy, why, what changed with personal data masked, and a way to ask for review
 - **Handoff Brief** (`handoff-brief.tsx`) – Work passing from one person to another – summary, open items and commitments, each acknowledged by the receiver, blocked when they lack access
 - **Handoff** (`handoff.tsx`) – The agent hands the task to you mid-run – what it did, why it stopped and what it needs – and takes it back when you're done
+- **Heatmap** (`heatmap.tsx`) – A matrix of rows by columns shaded by value – sequential or diverging, binned or continuous – with a legend, the highest and lowest cells, a tooltip per cell, an optional crosshair, selection and a table view
+- **Identifier Details** (`identifier-details.tsx`) – DOIs, IP addresses, file hashes, CVE ids and tracking numbers in text, found, checked and marked – hover, focus or right-click one for its normalised value with Copy, its range, algorithm, year or carrier, doi.org and NVD links, and what your sources know (severity, owner, status)
 - **Image Grid** (`image-grid.tsx`) – Generated images as a grid of variations – upscale, regenerate one tile, compare two, download, and alt text for every image
 - **Inline Diff** (`inline-diff.tsx`) – AI edits to prose shown inline – struck and added words you accept or reject one by one, with keys, a popover and undo
 - **Instruction Editor** (`instruction-editor.tsx`) – System and developer instructions with variable chips, missing and unused warnings, an app-supplied token count, versions and a word diff
@@ -181,6 +186,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **SLA Status** (`sla-status.tsx`) – How well service levels are met – the share on time, a Met / At risk / Breached split in words and marks, a weekly trend, a bar per type of request with a readout, and a period chooser
 - **Slider Field** (`slider-field.tsx`) – A synchronized slider and numeric input
 - **Smart Recommendation** (`smart-recommendation.tsx`) – Suggestion card with a confidence signal, alternatives to switch to and accept with undo
+- **Sparkline** (`sparkline.tsx`) – A small trend chart that sits in text or a table cell – line, area, bars or win-loss, sized from the text – with markers, a reference line, a tone for which way it went and, when interactive, a tooltip per point
 - **Speed Reader** (`speed-reader.tsx`) – Speed reading one word at a time in a fixed frame – the recognition point on a guide mark, longer pauses at sentence ends, 100–1000 words a minute, 1–3 words at a time, a scrubber with the time left, and the sentence around the word when paused
 - **Status Tracker** (`status-tracker.tsx`) – Where work stands in a fixed sequence of steps – gates or stages on a line, each cleared, pending, blocked or not reached in words and marks, the line filling as they clear, the current step marked, a legend, and a step's evidence record on click
 - **Stepper Form** (`stepper-form.tsx`) – A multi-step flow for onboarding and setup – steps that fill and check off, sliding steps, a card that morphs to each step, inline validation and a success state
@@ -188,6 +194,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Structured Output** (`structured-output.tsx`) – Streaming JSON as a typed tree, checked against its schema as it arrives – missing and invalid fields flagged, copy as JSON or code
 - **Switch** (`switch.tsx`) – An accessible on/off setting
 - **Synthesis Notes** (`synthesis-notes.tsx`) – Your own conclusions, assumptions and open questions, kept apart from the model's output and exported with where they came from
+- **Tag Input** (`tag-input.tsx`) – A field of free-text chips: add with Enter, a comma or Tab, or paste several at once, with suggestions, a limit, no duplicates, your own validation with the reason shown, and keyboard removal
 - **Terms Dialog** (`terms-dialog.tsx`) – Agreeing to terms in a modal designed for reading – version and date, a jump list, what changed since you last agreed, required and optional consents, and Accept that says why it waits
 - **Text Annotator** (`text-annotator.tsx`) – Highlight text in a document in a colour and comment on it – marks in the text, comments in the margin, edit, resolve and filter
 - **Text To Speech** (`text-to-speech.tsx`) – Reads a passage aloud with the browser's voices – the sentence and the spoken word marked as it goes, click a sentence to read from there, play, pause, skip and stop, and a voice, speed and pitch picker
@@ -203,6 +210,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Traceability Spine** (`traceability-spine.tsx`) – The chain from open questions to outcomes – a column per stage from questions and gaps to work, papers and who cites them, linked cards joined by lines, and a card's whole path traced on click with the rest dimmed
 - **Transcript Review** (`transcript-review.tsx`) – Recorded audio or video with a transcript that follows playback – speakers, timestamps, recognition confidence and low-confidence segments to verify
 - **Travel Itinerary** (`travel-itinerary.tsx`) – Trips as legs for a travel or expense audit – route codes, mode and carrier, the document used, confidence as a meter and %, source and grade, flags such as No record or Cash ticket in words, and connecting legs grouped into journeys
+- **Tree Select** (`tree-select.tsx`) – Pick one or many from a nested hierarchy: the picked path in the field, a filterable tree with the parents of every match kept, ARIA tree keys, and parent checkboxes that check what's beneath them
 - **Trigger Builder** (`trigger-builder.tsx`) – “Run when X happens, or every Monday at 9” – an event or a schedule, conditions, a plain-language summary and the next run times
 - **Usage Meter** (`usage-meter.tsx`) – Plan usage and AI credits – a stacked credits meter by category, daily sparkline, limits and a button that speaks up near the limit
 - **Validity Badge** (`validity-badge.tsx`) – How fresh a piece of evidence is – a band from high to stale that ages over time, contested and superseded marks, and a margin strip for a document

@@ -3696,6 +3696,114 @@
     "errors": []
    }
   },
+  "breadcrumbs": {
+   "measuredAt": "2026-10-29",
+   "hash": "30bb7ab0df59ff4e",
+   "bundle": {
+    "own": {
+     "min": 15133,
+     "gzip": 5578
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 18956
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2217
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1868
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 440
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 436
+     },
+     {
+      "name": "internal/safe-url",
+      "kind": "internal",
+      "min": 343
+     },
+     {
+      "name": "internal/util",
+      "kind": "internal",
+      "min": 270
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     }
+    ],
+    "withoutLit": {
+     "min": 22433,
+     "gzip": 7756
+    },
+    "withLit": {
+     "min": 42472,
+     "gzip": 14225
+    }
+   },
+   "render": {
+    "tag": "tc-breadcrumbs",
+    "source": "demo",
+    "runs": 7,
+    "cold": 3.4,
+    "first": 1,
+    "update": 0.1,
+    "updateKind": "one item of items replaced",
+    "nodes": 95,
+    "scale": {
+     "property": "items",
+     "demoItems": 6,
+     "points": [
+      {
+       "items": 100,
+       "first": 6.3,
+       "update": 0.4,
+       "nodes": 753
+      },
+      {
+       "items": 1000,
+       "first": 62.4,
+       "update": 2.7,
+       "nodes": 7053
+      }
+     ]
+    },
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
   "breakdown-chart": {
    "measuredAt": "2026-10-28",
    "hash": "76849fcf3ee417db",
@@ -9085,6 +9193,134 @@
     "errors": []
    }
   },
+  "entity-details": {
+   "measuredAt": "2026-10-29",
+   "hash": "f7499800306ce1a5",
+   "bundle": {
+    "own": {
+     "min": 26424,
+     "gzip": 9598
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 18992
+     },
+     {
+      "name": "internal/popover",
+      "kind": "internal",
+      "min": 8516
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2217
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1864
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/inline-details",
+      "kind": "internal",
+      "min": 1323
+     },
+     {
+      "name": "internal/selection",
+      "kind": "internal",
+      "min": 899
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 444
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 435
+     },
+     {
+      "name": "internal/safe-url",
+      "kind": "internal",
+      "min": 343
+     },
+     {
+      "name": "internal/util",
+      "kind": "internal",
+      "min": 270
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     },
+     {
+      "name": "internal/safe-media",
+      "kind": "internal",
+      "min": 120
+     }
+    ],
+    "withoutLit": {
+     "min": 44358,
+     "gzip": 15410
+    },
+    "withLit": {
+     "min": 64373,
+     "gzip": 21826
+    }
+   },
+   "render": {
+    "tag": "tc-entity-details",
+    "source": "demo",
+    "runs": 7,
+    "cold": 2.4,
+    "first": 0.7,
+    "update": 0.1,
+    "updateKind": "one item of kinds replaced",
+    "nodes": 14,
+    "scale": {
+     "property": "kinds",
+     "demoItems": 4,
+     "points": [
+      {
+       "items": 100,
+       "first": 0.6,
+       "update": 0.1,
+       "nodes": 14
+      },
+      {
+       "items": 1000,
+       "first": 0.5,
+       "update": 0,
+       "nodes": 14
+      }
+     ]
+    },
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
   "entity-timeline": {
    "measuredAt": "2026-10-28",
    "hash": "334b9860f57e0e57",
@@ -10834,9 +11070,107 @@
     "errors": []
    }
   },
+  "gauge": {
+   "measuredAt": "2026-10-29",
+   "hash": "c04d5194078d431b",
+   "bundle": {
+    "own": {
+     "min": 19866,
+     "gzip": 6396
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 18902
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2217
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1868
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 440
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 436
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     }
+    ],
+    "withoutLit": {
+     "min": 26653,
+     "gzip": 8354
+    },
+    "withLit": {
+     "min": 46649,
+     "gzip": 14871
+    }
+   },
+   "render": {
+    "tag": "tc-gauge",
+    "source": "demo",
+    "runs": 7,
+    "cold": 10.1,
+    "first": 0.6,
+    "update": 0.3,
+    "updateKind": "one item of bands replaced",
+    "nodes": 22,
+    "scale": {
+     "property": "bands",
+     "demoItems": 3,
+     "points": [
+      {
+       "items": 100,
+       "first": 0.7,
+       "update": 0.1,
+       "nodes": 24
+      },
+      {
+       "items": 1000,
+       "first": 1,
+       "update": 0.3,
+       "nodes": 24
+      }
+     ]
+    },
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
   "generated-ui": {
    "measuredAt": "2026-10-29",
-   "hash": "6676633437119be9",
+   "hash": "039ed9748151e8fe",
    "bundle": {
     "own": {
      "min": 34126,
@@ -10909,6 +11243,11 @@
       "min": 1366
      },
      {
+      "name": "internal/inline-details",
+      "kind": "internal",
+      "min": 1349
+     },
+     {
       "name": "internal/source-line",
       "kind": "internal",
       "min": 522
@@ -10966,7 +11305,7 @@
      {
       "name": "multi-calendar",
       "kind": "element",
-      "min": 82214
+      "min": 82234
      },
      {
       "name": "agent-graph",
@@ -11081,7 +11420,7 @@
      {
       "name": "agent-tree",
       "kind": "element",
-      "min": 48541
+      "min": 48543
      },
      {
       "name": "email-draft",
@@ -11126,7 +11465,7 @@
      {
       "name": "permission-request",
       "kind": "element",
-      "min": 45728
+      "min": 45829
      },
      {
       "name": "context-window",
@@ -11181,7 +11520,7 @@
      {
       "name": "output-schema-builder",
       "kind": "element",
-      "min": 42327
+      "min": 42396
      },
      {
       "name": "writing-assistant",
@@ -11451,7 +11790,7 @@
      {
       "name": "parallel-attempts",
       "kind": "element",
-      "min": 27795
+      "min": 27815
      },
      {
       "name": "budget-guard",
@@ -11462,6 +11801,11 @@
       "name": "color-picker",
       "kind": "element",
       "min": 27307
+     },
+     {
+      "name": "identifier-details",
+      "kind": "element",
+      "min": 27221
      },
      {
       "name": "compact-breakdown",
@@ -11477,6 +11821,11 @@
       "name": "run-compare",
       "kind": "element",
       "min": 27155
+     },
+     {
+      "name": "tree-select",
+      "kind": "element",
+      "min": 26616
      },
      {
       "name": "setup-guide",
@@ -11539,14 +11888,14 @@
       "min": 24658
      },
      {
+      "name": "org-unit-card",
+      "kind": "element",
+      "min": 24448
+     },
+     {
       "name": "conversation-branches",
       "kind": "element",
       "min": 24397
-     },
-     {
-      "name": "org-unit-card",
-      "kind": "element",
-      "min": 24387
      },
      {
       "name": "query-builder",
@@ -11557,6 +11906,11 @@
       "name": "gate-config",
       "kind": "element",
       "min": 24265
+     },
+     {
+      "name": "entity-details",
+      "kind": "element",
+      "min": 24164
      },
      {
       "name": "engagement-quality",
@@ -11637,6 +11991,11 @@
       "name": "cover-flow",
       "kind": "element",
       "min": 22048
+     },
+     {
+      "name": "heatmap",
+      "kind": "element",
+      "min": 21927
      },
      {
       "name": "speed-reader",
@@ -11764,6 +12123,16 @@
       "min": 18010
      },
      {
+      "name": "gauge",
+      "kind": "element",
+      "min": 17929
+     },
+     {
+      "name": "tag-input",
+      "kind": "element",
+      "min": 17855
+     },
+     {
       "name": "contact-channels",
       "kind": "element",
       "min": 17501
@@ -11786,7 +12155,7 @@
      {
       "name": "notification-stack",
       "kind": "element",
-      "min": 16979
+      "min": 16995
      },
      {
       "name": "model-wheel",
@@ -11821,7 +12190,7 @@
      {
       "name": "outreach-branches",
       "kind": "element",
-      "min": 16279
+      "min": 16288
      },
      {
       "name": "capacity-bars",
@@ -11871,7 +12240,7 @@
      {
       "name": "person-links",
       "kind": "element",
-      "min": 15225
+      "min": 15269
      },
      {
       "name": "document-list",
@@ -11899,6 +12268,11 @@
       "min": 14138
      },
      {
+      "name": "sparkline",
+      "kind": "element",
+      "min": 14116
+     },
+     {
       "name": "day-rhythm",
       "kind": "element",
       "min": 13780
@@ -11914,14 +12288,19 @@
       "min": 13200
      },
      {
-      "name": "watchlist",
+      "name": "breadcrumbs",
       "kind": "element",
-      "min": 12913
+      "min": 12999
      },
      {
       "name": "place-list",
       "kind": "element",
-      "min": 12906
+      "min": 12946
+     },
+     {
+      "name": "watchlist",
+      "kind": "element",
+      "min": 12913
      },
      {
       "name": "button",
@@ -11951,7 +12330,7 @@
      {
       "name": "ops-overview",
       "kind": "element",
-      "min": 11608
+      "min": 11644
      },
      {
       "name": "ghosted-chat",
@@ -11981,7 +12360,7 @@
      {
       "name": "oversight-home",
       "kind": "element",
-      "min": 10426
+      "min": 10454
      },
      {
       "name": "change-summary",
@@ -12031,7 +12410,7 @@
      {
       "name": "number-field",
       "kind": "element",
-      "min": 1668
+      "min": 1680
      },
      {
       "name": "radio-group",
@@ -12051,7 +12430,7 @@
      {
       "name": "src/generative/registry.ts",
       "kind": "other",
-      "min": 36643
+      "min": 37922
      },
      {
       "name": "src/generative/schemas/tc-ai-side-pane.json",
@@ -12519,6 +12898,11 @@
       "min": 2583
      },
      {
+      "name": "src/generative/schemas/tc-gauge.json",
+      "kind": "other",
+      "min": 2572
+     },
+     {
       "name": "src/generative/schemas/tc-experiment-card.json",
       "kind": "other",
       "min": 2567
@@ -12599,6 +12983,11 @@
       "min": 2316
      },
      {
+      "name": "src/generative/schemas/tc-heatmap.json",
+      "kind": "other",
+      "min": 2307
+     },
+     {
       "name": "src/generative/schemas/tc-evidence-coverage.json",
       "kind": "other",
       "min": 2305
@@ -12654,6 +13043,11 @@
       "min": 2253
      },
      {
+      "name": "src/generative/schemas/tc-tree-select.json",
+      "kind": "other",
+      "min": 2243
+     },
+     {
       "name": "src/generative/schemas/tc-publish-readiness.json",
       "kind": "other",
       "min": 2235
@@ -12677,6 +13071,11 @@
       "name": "src/generative/schemas/tc-kpi-chart.json",
       "kind": "other",
       "min": 2191
+     },
+     {
+      "name": "src/generative/schemas/tc-sparkline.json",
+      "kind": "other",
+      "min": 2181
      },
      {
       "name": "src/generative/schemas/tc-thinking-state.json",
@@ -12949,6 +13348,11 @@
       "min": 1592
      },
      {
+      "name": "src/generative/schemas/tc-identifier-details.json",
+      "kind": "other",
+      "min": 1578
+     },
+     {
       "name": "src/generative/schemas/tc-context-tray.json",
       "kind": "other",
       "min": 1551
@@ -12974,9 +13378,24 @@
       "min": 1453
      },
      {
+      "name": "src/generative/schemas/tc-entity-details.json",
+      "kind": "other",
+      "min": 1421
+     },
+     {
       "name": "src/generative/schemas/tc-decision-inbox.json",
       "kind": "other",
       "min": 1417
+     },
+     {
+      "name": "src/generative/schemas/tc-breadcrumbs.json",
+      "kind": "other",
+      "min": 1411
+     },
+     {
+      "name": "src/generative/schemas/tc-tag-input.json",
+      "kind": "other",
+      "min": 1386
      },
      {
       "name": "src/generative/schemas/tc-text-to-speech.json",
@@ -13160,21 +13579,21 @@
      }
     ],
     "withoutLit": {
-     "min": 7465733,
-     "gzip": 1836891
+     "min": 7648758,
+     "gzip": 1886857
     },
     "withLit": {
-     "min": 7432280,
-     "gzip": 1824606
+     "min": 7613292,
+     "gzip": 1873673
     }
    },
    "render": {
     "tag": "tc-generated-ui",
     "source": "demo",
     "runs": 7,
-    "cold": 2.5,
-    "first": 0.5,
-    "update": 0.1,
+    "cold": 2.4,
+    "first": 0.6,
+    "update": 0.2,
     "updateKind": "re-render with the same data",
     "nodes": 9,
     "scale": null,
@@ -14309,6 +14728,232 @@
     "updateKind": "re-render with the same data",
     "nodes": 2,
     "scale": null,
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
+  "heatmap": {
+   "measuredAt": "2026-10-29",
+   "hash": "936ec60d8b62851d",
+   "bundle": {
+    "own": {
+     "min": 23931,
+     "gzip": 7625
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 18957
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2971
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1868
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 440
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 436
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     },
+     {
+      "name": "internal/util",
+      "kind": "internal",
+      "min": 113
+     }
+    ],
+    "withoutLit": {
+     "min": 31500,
+     "gzip": 9929
+    },
+    "withLit": {
+     "min": 51591,
+     "gzip": 16450
+    }
+   },
+   "render": {
+    "tag": "tc-heatmap",
+    "source": "demo",
+    "runs": 7,
+    "cold": 8.6,
+    "first": 2.6,
+    "update": 1.2,
+    "updateKind": "one item of columns replaced",
+    "nodes": 249,
+    "scale": {
+     "property": "columns",
+     "demoItems": 12,
+     "points": [
+      {
+       "items": 100,
+       "first": 11.1,
+       "update": 2.4,
+       "nodes": 1657
+      },
+      {
+       "items": 1000,
+       "first": 111.7,
+       "update": 16.7,
+       "nodes": 16057
+      }
+     ]
+    },
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
+  "identifier-details": {
+   "measuredAt": "2026-10-29",
+   "hash": "73379d3352584f79",
+   "bundle": {
+    "own": {
+     "min": 29389,
+     "gzip": 10323
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 18987
+     },
+     {
+      "name": "internal/popover",
+      "kind": "internal",
+      "min": 8516
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2217
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1864
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/inline-details",
+      "kind": "internal",
+      "min": 1323
+     },
+     {
+      "name": "internal/selection",
+      "kind": "internal",
+      "min": 899
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 444
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 435
+     },
+     {
+      "name": "internal/safe-url",
+      "kind": "internal",
+      "min": 343
+     },
+     {
+      "name": "internal/util",
+      "kind": "internal",
+      "min": 270
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     }
+    ],
+    "withoutLit": {
+     "min": 47257,
+     "gzip": 16242
+    },
+    "withLit": {
+     "min": 67271,
+     "gzip": 22676
+    }
+   },
+   "render": {
+    "tag": "tc-identifier-details",
+    "source": "demo",
+    "runs": 7,
+    "cold": 2.5,
+    "first": 0.7,
+    "update": 0.2,
+    "updateKind": "one item of kinds replaced",
+    "nodes": 14,
+    "scale": {
+     "property": "kinds",
+     "demoItems": 5,
+     "points": [
+      {
+       "items": 100,
+       "first": 0.6,
+       "update": 0,
+       "nodes": 14
+      },
+      {
+       "items": 1000,
+       "first": 0.7,
+       "update": 0,
+       "nodes": 14
+      }
+     ]
+    },
     "idle": {
      "visible": {
       "frames": 0,
@@ -24029,6 +24674,104 @@
     "errors": []
    }
   },
+  "sparkline": {
+   "measuredAt": "2026-10-29",
+   "hash": "9df34fc471cd1e77",
+   "bundle": {
+    "own": {
+     "min": 16027,
+     "gzip": 5814
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 18956
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2217
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1864
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 440
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 435
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     }
+    ],
+    "withoutLit": {
+     "min": 22813,
+     "gzip": 7828
+    },
+    "withLit": {
+     "min": 42849,
+     "gzip": 14373
+    }
+   },
+   "render": {
+    "tag": "tc-sparkline",
+    "source": "demo",
+    "runs": 7,
+    "cold": 6.1,
+    "first": 0.4,
+    "update": 0.2,
+    "updateKind": "one item of values replaced",
+    "nodes": 6,
+    "scale": {
+     "property": "values",
+     "demoItems": 14,
+     "points": [
+      {
+       "items": 100,
+       "first": 0.5,
+       "update": 0.1,
+       "nodes": 6
+      },
+      {
+       "items": 1000,
+       "first": 0.6,
+       "update": 0.4,
+       "nodes": 6
+      }
+     ]
+    },
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
   "speed-reader": {
    "measuredAt": "2026-10-29",
    "hash": "c270050f7147e99a",
@@ -24773,6 +25516,104 @@
     "updateKind": "re-render with the same data",
     "nodes": 85,
     "scale": null,
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
+  "tag-input": {
+   "measuredAt": "2026-10-29",
+   "hash": "49a827fe95b2a50d",
+   "bundle": {
+    "own": {
+     "min": 19835,
+     "gzip": 6877
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 21680
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2217
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1868
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 444
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 436
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     }
+    ],
+    "withoutLit": {
+     "min": 26622,
+     "gzip": 8781
+    },
+    "withLit": {
+     "min": 49499,
+     "gzip": 16338
+    }
+   },
+   "render": {
+    "tag": "tc-tag-input",
+    "source": "demo",
+    "runs": 7,
+    "cold": 9,
+    "first": 0.8,
+    "update": 0.2,
+    "updateKind": "one item of suggestions replaced",
+    "nodes": 26,
+    "scale": {
+     "property": "suggestions",
+     "demoItems": 12,
+     "points": [
+      {
+       "items": 100,
+       "first": 0.7,
+       "update": 0,
+       "nodes": 26
+      },
+      {
+       "items": 1000,
+       "first": 0.8,
+       "update": 0.1,
+       "nodes": 26
+      }
+     ]
+    },
     "idle": {
      "visible": {
       "frames": 0,
@@ -26721,6 +27562,104 @@
        "first": 230.4,
        "update": 79.4,
        "nodes": 43989
+      }
+     ]
+    },
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
+  "tree-select": {
+   "measuredAt": "2026-10-29",
+   "hash": "ad3686ff3d27c77e",
+   "bundle": {
+    "own": {
+     "min": 28641,
+     "gzip": 8947
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 22511
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2217
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1868
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 444
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 436
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     }
+    ],
+    "withoutLit": {
+     "min": 35428,
+     "gzip": 10810
+    },
+    "withLit": {
+     "min": 59122,
+     "gzip": 18633
+    }
+   },
+   "render": {
+    "tag": "tc-tree-select",
+    "source": "demo",
+    "runs": 7,
+    "cold": 9.1,
+    "first": 0.5,
+    "update": 0.2,
+    "updateKind": "one item of options replaced",
+    "nodes": 18,
+    "scale": {
+     "property": "options",
+     "demoItems": 3,
+     "points": [
+      {
+       "items": 100,
+       "first": 0.5,
+       "update": 0.1,
+       "nodes": 18
+      },
+      {
+       "items": 1000,
+       "first": 1,
+       "update": 0.3,
+       "nodes": 18
       }
      ]
     },

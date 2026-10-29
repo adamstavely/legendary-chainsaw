@@ -1,0 +1,113 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-tree-select.json",
+  "title": "tc-tree-select",
+  "description": "Pick one or many options from a nested hierarchy, with type-to-filter and parent checkboxes.",
+  "type": "object",
+  "properties": {
+    "options": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/TreeOption"
+      },
+      "description": "The hierarchy"
+    },
+    "value": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      ],
+      "description": "The picked id (or ids, with `multiple`); null for nothing. Changed by the user unless a tc-value-change listener calls preventDefault()"
+    },
+    "multiple": {
+      "type": "boolean",
+      "description": "Pick many: every row gets a checkbox"
+    },
+    "cascade": {
+      "type": "boolean",
+      "description": "With `multiple`, checking a parent checks everything enabled beneath it; set cascade=\"false\" to check rows on their own"
+    },
+    "open": {
+      "type": "boolean",
+      "description": "Whether the tree is open. Changed by the user unless a tc-open-change listener calls preventDefault()"
+    },
+    "label": {
+      "type": "string",
+      "description": "Visible label above the field (or use a page <label for>)"
+    },
+    "placeholder": {
+      "type": "string",
+      "description": "Shown in the empty field"
+    },
+    "filterPlaceholder": {
+      "type": "string",
+      "description": "The filter box's placeholder"
+    },
+    "emptyText": {
+      "type": "string",
+      "description": "Shown when nothing matches the filter"
+    },
+    "maxChips": {
+      "type": "number",
+      "description": "With `multiple`, show at most this many chips in the field, the rest as \"+N more\""
+    },
+    "name": {
+      "type": "string",
+      "description": "Submitted with the form: the id, or one entry per id with `multiple`"
+    },
+    "disabled": {
+      "type": "boolean",
+      "description": "Can't be changed or focused; also disabled inside a disabled <fieldset>"
+    },
+    "required": {
+      "type": "boolean",
+      "description": "Something must be picked before the form submits"
+    },
+    "invalid": {
+      "type": "boolean",
+      "description": "Shows the field as invalid"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "TreeOption": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique across the whole tree"
+        },
+        "label": {
+          "type": "string"
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TreeOption"
+          },
+          "description": "Options beneath this one"
+        },
+        "disabled": {
+          "type": "boolean",
+          "description": "Shown but can't be picked"
+        },
+        "description": {
+          "type": "string",
+          "description": "Lighter text after the label"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

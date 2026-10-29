@@ -1,5 +1,21 @@
 # Changelog
 
+## Unreleased – inline details for entities and identifiers, three inputs and three charts
+
+- **Entity Details** (`tc-entity-details`) – emails, phone numbers, links and @handles in text are found and marked;
+  hover, focus or right-click opens a card with Copy, Write email / Call / Open and what your `resolve` (or a
+  `tc-entity-lookup` listener) knows. **Identifier Details** (`tc-identifier-details`) does the same for DOIs, IP
+  addresses (private and reserved ranges named), file hashes, CVE ids and tracking numbers.
+- **Tree Select** (`tc-tree-select`) – one or many from a nested hierarchy, with filtering that keeps parents, ARIA tree
+  keys and cascading parent checkboxes; a form control.
+- **Breadcrumbs** (`tc-breadcrumbs`) – a trail whose middle folds into "…" when it doesn't fit, with a cancelable
+  `tc-navigate` and Copy path.
+- **Tag Input** (`tc-tag-input`) – free-text chips with suggestions, paste, limits, de-duplication and validation; a form
+  control.
+- **Sparkline** (`tc-sparkline`), **Heatmap** (`tc-heatmap`) and **Gauge** (`tc-gauge`) – an inline trend, a shaded
+  matrix with legend, selection and table view, and a value against its bands as a dial, half dial or bar (optionally a
+  slider).
+
 ## Unreleased – a JSON viewer for review
 
 - **JSON Viewer** (`tc-json-viewer`) – a JSON document laid out for someone to check: Document reads it like a form

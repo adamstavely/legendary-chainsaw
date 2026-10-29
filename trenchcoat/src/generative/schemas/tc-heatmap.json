@@ -1,0 +1,114 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-heatmap.json",
+  "title": "tc-heatmap",
+  "description": "A matrix of rows by columns shaded by value – sequential or diverging, binned or continuous – with a legend, the\nhighest and lowest cells, a tooltip per cell, selection and a table view.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the grid's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "rows": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The rows' labels, top to bottom"
+    },
+    "columns": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The columns' labels, left to right"
+    },
+    "values": {
+      "type": "array",
+      "items": {
+        "type": "array",
+        "items": {
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      },
+      "description": "The values, a row at a time: values[row][column]; null (or missing) is no data"
+    },
+    "scale": {
+      "type": "string",
+      "enum": [
+        "sequential",
+        "diverging"
+      ],
+      "description": "Light to dark (\"sequential\"), or two colours either side of `midpoint` (\"diverging\")"
+    },
+    "midpoint": {
+      "type": "number",
+      "description": "The value between the two colours of a diverging scale"
+    },
+    "steps": {
+      "type": "number",
+      "description": "How many shades the legend bins the values into; 0 shades continuously"
+    },
+    "min": {
+      "type": "number",
+      "description": "The bottom of the scale; by default the lowest value"
+    },
+    "max": {
+      "type": "number",
+      "description": "The top of the scale; by default the highest value"
+    },
+    "unit": {
+      "type": "string",
+      "description": "The unit after the number: \"%\", \"runs\""
+    },
+    "showValues": {
+      "type": "boolean",
+      "description": "Writes each value in its cell"
+    },
+    "crosshair": {
+      "type": "boolean",
+      "description": "Lights up the row and column of the cell under the pointer or focus"
+    },
+    "rowHeader": {
+      "type": "string",
+      "description": "What the rows are, for the table's corner: \"Day\""
+    },
+    "selected": {
+      "type": "object",
+      "properties": {
+        "row": {
+          "type": "number"
+        },
+        "column": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "row",
+        "column"
+      ],
+      "additionalProperties": false,
+      "description": "The selected cell. Changed by the user unless a tc-selected-change listener calls preventDefault()"
+    },
+    "view": {
+      "type": "string",
+      "enum": [
+        "table",
+        "chart"
+      ],
+      "description": "The chart or the same numbers as a table. Changed by the Table button unless a tc-view-change listener calls preventDefault()"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for numbers, e.g. \"de\"; by default the browser's"
+    }
+  },
+  "additionalProperties": false
+}

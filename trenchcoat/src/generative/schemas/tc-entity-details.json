@@ -1,0 +1,74 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-entity-details.json",
+  "title": "tc-entity-details",
+  "description": "Email addresses, phone numbers, links and",
+  "type": "object",
+  "properties": {
+    "text": {
+      "type": "string",
+      "description": "The text to find contact details in: plain text, shown as written (line breaks kept)"
+    },
+    "kinds": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/EntityKind"
+      },
+      "description": "Which kinds to find: \"email\", \"phone\", \"url\", \"handle\""
+    },
+    "trigger": {
+      "type": "string",
+      "enum": [
+        "both",
+        "hover",
+        "contextmenu"
+      ],
+      "description": "What opens a card: \"both\" (hover, focus and right-click), \"hover\" (hover and focus) or \"contextmenu\" (right-click, Menu key, Enter)"
+    },
+    "hoverDelay": {
+      "type": "number",
+      "description": "How long the pointer rests on a mark before its card opens, ms"
+    },
+    "kindLabels": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri-reference"
+        },
+        "handle": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "What each kind is called on its card, merged over the defaults"
+    },
+    "notFoundText": {
+      "type": "string",
+      "description": "What the card says when the app knows nothing more"
+    },
+    "errorText": {
+      "type": "string",
+      "description": "What the card says when the lookup failed"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "EntityKind": {
+      "type": "string",
+      "enum": [
+        "email",
+        "phone",
+        "url",
+        "handle"
+      ],
+      "description": "What can be found: email addresses, phone numbers, links and"
+    }
+  }
+}

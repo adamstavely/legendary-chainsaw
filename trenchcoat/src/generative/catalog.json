@@ -303,6 +303,15 @@
     ]
   },
   {
+    "tag": "tc-breadcrumbs",
+    "name": "Breadcrumbs",
+    "description": "A trail of links to the current page that folds its middle into \"…\" when it doesn't fit.",
+    "events": [
+      "tc-navigate",
+      "tc-copy"
+    ]
+  },
+  {
     "tag": "tc-breakdown-chart",
     "name": "BreakdownChart",
     "description": "A stacked bar chart with a linked table: pick the measure, the slice and the segment; legend chips hide segments.",
@@ -754,6 +763,17 @@
     "events": []
   },
   {
+    "tag": "tc-entity-details",
+    "name": "EntityDetails",
+    "description": "Email addresses, phone numbers, links and",
+    "events": [
+      "tc-entity-lookup",
+      "tc-copy",
+      "tc-open",
+      "tc-open-change"
+    ]
+  },
+  {
     "tag": "tc-entity-timeline",
     "name": "EntityTimeline",
     "description": "A dated record of events grouped by month – each with a category, its source and grade, an optional flag and an",
@@ -916,6 +936,14 @@
     ]
   },
   {
+    "tag": "tc-gauge",
+    "name": "Gauge",
+    "description": "One value against its range – a dial, a half dial or a bar – with the band it's in, the bands round it, a target",
+    "events": [
+      "tc-value-change"
+    ]
+  },
+  {
     "tag": "tc-geo-location",
     "name": "GeoLocation",
     "description": "Coordinates made useful – decimal or degrees-minutes-seconds, Copy, links to mapping tools and an embedded map that",
@@ -979,6 +1007,26 @@
       "tc-panel-change",
       "tc-account-select",
       "tc-setup-continue"
+    ]
+  },
+  {
+    "tag": "tc-heatmap",
+    "name": "Heatmap",
+    "description": "A matrix of rows by columns shaded by value – sequential or diverging, binned or continuous – with a legend, the",
+    "events": [
+      "tc-selected-change",
+      "tc-view-change"
+    ]
+  },
+  {
+    "tag": "tc-identifier-details",
+    "name": "IdentifierDetails",
+    "description": "DOIs, IP addresses, file hashes, CVE ids and tracking numbers in text, marked: hover, focus or right-click one for what it is, Copy and what the app knows.",
+    "events": [
+      "tc-identifier-lookup",
+      "tc-copy",
+      "tc-open",
+      "tc-open-change"
     ]
   },
   {
@@ -1761,6 +1809,14 @@
     ]
   },
   {
+    "tag": "tc-sparkline",
+    "name": "Sparkline",
+    "description": "A small inline trend chart – line, area, bars or win-loss – sized from the text around it, with optional markers, a",
+    "events": [
+      "tc-point-focus"
+    ]
+  },
+  {
     "tag": "tc-speed-reader",
     "name": "SpeedReader",
     "description": "Speed reading, one word at a time in a fixed frame, with the recognition point on a guide mark, the speed, words at",
@@ -1821,6 +1877,15 @@
     "name": "TabOverload",
     "description": "Three overlapping browser windows; hovering one behind moves the highlight onto it.",
     "events": []
+  },
+  {
+    "tag": "tc-tag-input",
+    "name": "TagInput",
+    "description": "A field of free-text chips with suggestions, limits and validation.",
+    "events": [
+      "tc-value-change",
+      "tc-invalid-tag"
+    ]
   },
   {
     "tag": "tc-task-board",
@@ -1956,6 +2021,15 @@
     "description": "Trips as legs – route, mode and carrier, document, confidence, source and grade, and flags – grouped into",
     "events": [
       "tc-open"
+    ]
+  },
+  {
+    "tag": "tc-tree-select",
+    "name": "TreeSelect",
+    "description": "Pick one or many options from a nested hierarchy, with type-to-filter and parent checkboxes.",
+    "events": [
+      "tc-value-change",
+      "tc-open-change"
     ]
   },
   {

@@ -1,0 +1,60 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-tag-input.json",
+  "title": "tc-tag-input",
+  "description": "A field of free-text chips with suggestions, limits and validation.",
+  "type": "object",
+  "properties": {
+    "value": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The tags. Changed by the user unless a tc-value-change listener calls preventDefault()"
+    },
+    "suggestions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Offered in a list under the field, filtered by what's typed"
+    },
+    "allowCustom": {
+      "type": "boolean",
+      "description": "Accept tags that aren't in `suggestions`; set allow-custom=\"false\" to allow only suggestions"
+    },
+    "max": {
+      "type": "number",
+      "description": "The most tags the field holds"
+    },
+    "unique": {
+      "type": "boolean",
+      "description": "Refuse a tag that's already there (ignoring case); set unique=\"false\" to allow repeats"
+    },
+    "label": {
+      "type": "string",
+      "description": "Visible label above the field (or use a page <label for>)"
+    },
+    "placeholder": {
+      "type": "string",
+      "description": "Text in the empty input"
+    },
+    "name": {
+      "type": "string",
+      "description": "Submitted with the form: one entry per tag"
+    },
+    "disabled": {
+      "type": "boolean",
+      "description": "Can't be changed or focused; also disabled inside a disabled <fieldset>"
+    },
+    "required": {
+      "type": "boolean",
+      "description": "At least one tag before the form submits"
+    },
+    "invalid": {
+      "type": "boolean",
+      "description": "Shows the field as invalid"
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,487 @@
+{
+ "elements": [
+  {
+   "tag": "tc-sparkline",
+   "className": "TcSparkline",
+   "description": "A small inline trend chart – line, area, bars or win-loss – sized from the text around it, with optional markers, a\nreference line, a tone for which way it went and, when interactive, a tooltip per point.",
+   "properties": [
+    {
+     "name": "values",
+     "attribute": null,
+     "type": "(number | null)[]",
+     "default": "[]",
+     "description": "The values, oldest first; null is a gap",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "string[] | undefined",
+     "default": "undefined",
+     "description": "A label per value, e.g. dates – read in the tooltip and announcements",
+     "readonly": false
+    },
+    {
+     "name": "type",
+     "attribute": "type",
+     "type": "SparklineType",
+     "default": "\"line\"",
+     "description": "How it's drawn",
+     "readonly": false
+    },
+    {
+     "name": "label",
+     "attribute": "label",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "What it measures, e.g. \"Samples per day\" – starts the accessible summary; by default \"Trend\"",
+     "readonly": false
+    },
+    {
+     "name": "min",
+     "attribute": "min",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The bottom of the scale; by default the lowest value (0 for bars)",
+     "readonly": false
+    },
+    {
+     "name": "max",
+     "attribute": "max",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The top of the scale; by default the highest value",
+     "readonly": false
+    },
+    {
+     "name": "reference",
+     "attribute": "reference",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "A value to draw as a dashed line, e.g. a target",
+     "readonly": false
+    },
+    {
+     "name": "referenceLabel",
+     "attribute": "reference-label",
+     "type": "string",
+     "default": "\"Target\"",
+     "description": "What the reference line is, for the summary",
+     "readonly": false
+    },
+    {
+     "name": "markers",
+     "attribute": "markers",
+     "type": "string",
+     "default": "\"last\"",
+     "description": "Points to mark, space-separated: any of \"last\", \"first\", \"min\", \"max\"; \"none\" for none",
+     "readonly": false
+    },
+    {
+     "name": "good",
+     "attribute": "good",
+     "type": "\"up\" | \"down\" | undefined",
+     "default": "undefined",
+     "description": "Which way is good: \"up\" or \"down\"; with tone \"auto\", it's green when it moved that way and red when it didn't",
+     "readonly": false
+    },
+    {
+     "name": "tone",
+     "attribute": "tone",
+     "type": "SparklineTone",
+     "default": "\"auto\"",
+     "description": "The colour: \"auto\" follows `good` (neutral without it), or a fixed tone",
+     "readonly": false
+    },
+    {
+     "name": "width",
+     "attribute": "width",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "Width in px; by default 5em",
+     "readonly": false
+    },
+    {
+     "name": "height",
+     "attribute": "height",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "Height in px; by default 1.25em, so it matches the text",
+     "readonly": false
+    },
+    {
+     "name": "interactive",
+     "attribute": "interactive",
+     "type": "boolean",
+     "default": "false",
+     "description": "One tab stop: the arrow keys step through the points with a tooltip",
+     "readonly": false
+    },
+    {
+     "name": "format",
+     "attribute": null,
+     "type": "((value: number) => string) | undefined",
+     "default": "undefined",
+     "description": "Writes a value, e.g. (v) => `${v} °C`; replaces the number and `unit`",
+     "readonly": false
+    },
+    {
+     "name": "unit",
+     "attribute": "unit",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "What the values count, after the number: \"148 samples\"",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The language for numbers, e.g. \"de\"; by default the browser's",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-point-focus",
+     "detail": "",
+     "description": "A point was stepped to or pointed at, in interactive mode ({ index, value, label }: SparklinePointFocus)",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "spk",
+   "cssProperties": [
+    {
+     "name": "--tc-spk-w",
+     "value": "5em",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-spk-h",
+     "value": "1.25em",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-spk-ink",
+     "value": "var(--tc-chart-1)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-spk-stroke",
+     "value": "1.5px",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-border-default",
+    "--tc-border-strong",
+    "--tc-chart-1",
+    "--tc-chart-neutral",
+    "--tc-duration-fast",
+    "--tc-ease-out",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-weight-medium",
+    "--tc-line-height-none",
+    "--tc-line-height-tight",
+    "--tc-radius-2xs",
+    "--tc-space-1-5",
+    "--tc-status-danger-fg",
+    "--tc-status-info-fg",
+    "--tc-status-success-fg",
+    "--tc-status-warning-fg",
+    "--tc-surface-raised",
+    "--tc-text-muted",
+    "--tc-tooltip-bg",
+    "--tc-tooltip-fg",
+    "--tc-tooltip-font-size",
+    "--tc-tooltip-px",
+    "--tc-tooltip-py",
+    "--tc-tooltip-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "Sparkline",
+   "exported": true,
+   "props": [
+    {
+     "name": "onPointFocus",
+     "type": "(index: number, value: number | null, label?: string) => void",
+     "optional": true,
+     "description": "A point was stepped to or pointed at, in interactive mode"
+    }
+   ],
+   "hides": [
+    "children"
+   ],
+   "events": {
+    "tc-point-focus": "onPointFocus"
+   }
+  }
+ ],
+ "changelog": [
+  "**Sparkline** (`tc-sparkline`), **Heatmap** (`tc-heatmap`) and **Gauge** (`tc-gauge`) – an inline trend, a shaded matrix with legend, selection and table view, and a value against its bands as a dial, half dial or bar (optionally a slider)."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-sparkline",
+   "className": "TcSparkline",
+   "module": "trenchcoat/sparkline",
+   "data": [
+    "values",
+    "labels",
+    "format"
+   ],
+   "attributes": [
+    {
+     "name": "type",
+     "attribute": "type"
+    },
+    {
+     "name": "label",
+     "attribute": "label"
+    },
+    {
+     "name": "min",
+     "attribute": "min"
+    },
+    {
+     "name": "max",
+     "attribute": "max"
+    },
+    {
+     "name": "reference",
+     "attribute": "reference"
+    },
+    {
+     "name": "referenceLabel",
+     "attribute": "reference-label"
+    },
+    {
+     "name": "markers",
+     "attribute": "markers"
+    },
+    {
+     "name": "good",
+     "attribute": "good"
+    },
+    {
+     "name": "tone",
+     "attribute": "tone"
+    },
+    {
+     "name": "width",
+     "attribute": "width"
+    },
+    {
+     "name": "height",
+     "attribute": "height"
+    },
+    {
+     "name": "interactive",
+     "attribute": "interactive"
+    },
+    {
+     "name": "unit",
+     "attribute": "unit"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-point-focus",
+     "cancelable": false
+    }
+   ],
+   "controlled": [],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "itself",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 22813,
+  "gzip": 7786
+ }
+}
