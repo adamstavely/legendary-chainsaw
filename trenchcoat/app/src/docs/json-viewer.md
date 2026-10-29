@@ -7,23 +7,22 @@ related: structured-output, code-block, data-table, dialog
 ## Overview
 
 A JSON document laid out for someone to review: an API response, the fields an agent extracted from a PDF, a config,
-a record export. The same document has three views. **Document** reads like a form: fields are labelled rows with keys
-in plain words, so `invoice_date` reads "Invoice date". Nested objects become sections, lists of like objects become
-tables and lists of values become chips. Links, emails, dates, yes/no and null are drawn as what they are. **Tree**
-shows every key and value, folding, with types and counts. **Raw** is the JSON itself, pretty-printed with line
-numbers and syntax colours.
+a record export. It has two views. **Document** reads like a form: fields are labelled rows with keys in plain words,
+so `invoice_date` reads "Invoice date". Nested objects become sections, lists of like objects become tables and lists
+of values become chips. Links, emails, dates, yes/no and null are drawn as what they are. **Raw** is the JSON itself,
+pretty-printed with line numbers and syntax colours.
 
-A search box marks matching keys and values in every view and counts them; the tree opens to show them, and Enter
-moves to the next. Reviewers can flag a field with a note: in Document beside the row, in Tree from the bar under it.
-Flags are listed at the foot and reported in `tc-flags-change`, so the page can keep them. Copy and Download hand
-over the JSON. Give it `value` (parsed) or `source` (text). Text that isn't valid JSON shows the error at its line
-and column, with the lines around it. With `modal`, the viewer is a dialog that `open` shows.
+`layout` picks how they're shown. **`tabs`** (the default) shows one at a time, chosen with the Document / Raw tabs.
+**`split`** puts Document beside Raw, each scrolling on its own, and drops the tabs – both are showing. Point at or
+focus a field and its lines are marked in the raw JSON and scrolled into view; click a raw line and its field is found
+in Document. The toolbar's **Side by side** button switches between the two (`layout-toggle` to hide it), and below
+640 px the raw JSON goes under Document.
 
-`layout` picks how the views are shown. **`tabs`** (the default) shows one at a time. **`split`** puts the rendered
-view – Document or Tree, chosen with the tabs – beside the raw JSON, each scrolling on its own. Point at or focus a
-field and its lines are marked in the raw JSON and scrolled into view; click a raw line and its field is found on the
-left. The toolbar's **Side by side** button switches between the two (`layout-toggle` to hide it), and below 640 px
-the raw JSON goes under the rendered view.
+A search box marks matching keys and values in both views and counts them, and Enter moves to the next. Reviewers can
+flag a field with a note beside its row. Flags are listed at the foot and reported in `tc-flags-change`, so the page
+can keep them. Copy JSON and Download hand over the document. Give it `value` (parsed) or `source` (text). Text that
+isn't valid JSON shows the error at its line and column, with the lines around it. With `modal`, the viewer is a
+dialog that `open` shows.
 
 ## When to use
 
@@ -41,49 +40,41 @@ the raw JSON goes under the rendered view.
 
 ## Anatomy
 
-1. **Views** `.ui-jsv__tabs` – Document, Tree and Raw, in the header
-2. **Toolbar** `.ui-jsv__toolbar` – the search with its count, Expand all / Collapse all in Tree, Side by side, Copy
-   JSON and Download
+1. **Views** `.ui-jsv__tabs` – Document and Raw, in the header (one at a time; not shown side by side)
+2. **Toolbar** `.ui-jsv__toolbar` – the search with its count, Side by side, Copy JSON and Download
 3. **Fields** `.ui-jsv__row` – a key in plain words and its value, with the flag button at the end
 4. **Section** `.ui-jsv__section` – a nested object or list, with its name and size
 5. **Table** `.ui-jsv__table` – a list of like objects, one row each
-6. **Tree** `.ui-jsv__tree` – every key and value, folding
-7. **Path bar** `.ui-jsv__pathbar` – in Tree, the focused field's path with Copy path, Copy value and Flag
-8. **Raw** `.ui-jsv__raw` – the JSON with line numbers and syntax colours
-9. **Flags** `.ui-jsv__flags` – how many fields are flagged, each a button that goes to it
-10. **Side by side** `.ui-jsv__split` – with `layout="split"`, the rendered view and the raw JSON in two panes
+6. **Raw** `.ui-jsv__raw` – the JSON with line numbers and syntax colours
+7. **Side by side** `.ui-jsv__split` – with `layout="split"`, Document and Raw in two panes
+8. **Flags** `.ui-jsv__flags` – how many fields are flagged, each a button that goes to it
 
 ## Looks
 
 Standard sets the header and view tabs on a gray tray above a white card; Clean is one white card with the header as
-its first row. As a dialog the tray (Standard) or the card (Clean) is the dialog. Flagged fields have an amber wash
-and their note under the value. Syntax colours come from the theme's `--tc-syntax-*` tokens.
+its first row. As a dialog the tray (Standard) or the card (Clean) is the dialog. Side by side, the raw pane sits on
+the sunken surface, and the lines of the field you're pointing at are marked with an accent edge. Flagged fields have
+an amber wash and their note under the value. Syntax colours come from the theme's `--tc-syntax-*` tokens.
 
-A page can set `--tc-jsv-body-h` (how tall the body grows before it scrolls inline, 520px), `--tc-jsv-key-w` (the
-key column in Document, 34%) and `--tc-jsv-indent` (the tree's step).
+A page can set `--tc-jsv-body-h` (how tall the body, or each pane, grows before it scrolls, 520px) and
+`--tc-jsv-key-w` (the key column in Document, 34%).
 
 ## Keyboard
 
 | Key | Does |
 | --- | --- |
-| ← / → on the views | Switch between Document, Tree and Raw |
+| ← / → on the views | Switch between Document and Raw |
 | Enter / Shift + Enter in the search | Next / previous match |
 | Escape in the search | Clears it |
-| ↑ / ↓ in the tree | Previous / next row |
-| → in the tree | Opens a closed branch, or moves to its first child |
-| ← in the tree | Closes an open branch, or moves to its parent |
-| Home / End in the tree | First / last row |
-| Enter or Space in the tree | Opens or closes the branch |
+| Tab into a field (side by side) | Marks its lines in the raw JSON |
 | ⌘ / Ctrl + Enter in a note | Saves the flag |
 | Escape in a note | Cancels it |
 | Escape (dialog) | Asks to close |
-| Tab into a field (side by side) | Marks its lines in the raw JSON |
 
 ## Screen readers
 
-- The views are a `tablist`; the body is their `tabpanel`. Side by side, the raw JSON is its own region, "Raw JSON",
-  and Side by side is a toggle button that says whether it's on.
-- The tree is a `tree` of `treeitem`s with their level, position and open state; one is in the tab order.
+- The views are a `tablist`; the body is their `tabpanel`. Side by side, Document and the raw JSON are two named
+  regions ("Invoice, document" and "Raw JSON"), and Side by side is a toggle button that says whether it's on.
 - Document fields are a description list (`dl`), sections have headings below the card's own, and tables have
   column headers.
 - Yes/no values say "true" or "false" as well as the word and mark shown.

@@ -3,7 +3,7 @@
   {
    "tag": "tc-json-viewer",
    "className": "TcJsonViewer",
-   "description": "A JSON document laid out for review – Document, Tree and Raw views, search across them, flags with notes on fields,\nCopy and Download – inline or as a modal.",
+   "description": "A JSON document laid out for review – Document and Raw, one at a time or side by side, search across them, flags with notes on fields,\nCopy and Download – inline or as a modal.",
    "properties": [
     {
      "name": "heading",
@@ -94,14 +94,6 @@
      "readonly": false
     },
     {
-     "name": "expandDepth",
-     "attribute": "expand-depth",
-     "type": "number",
-     "default": "2",
-     "description": "How many levels the tree shows open at first",
-     "readonly": false
-    },
-    {
      "name": "filename",
      "attribute": "filename",
      "type": "string",
@@ -184,7 +176,7 @@
     {
      "name": "tc-copy",
      "detail": "",
-     "description": "JSON, a value or a path was copied ({ text, what, path }: JsonViewerCopy); cancelable – prevented, nothing is copied",
+     "description": "The JSON was copied ({ text }: JsonViewerCopy); cancelable – prevented, nothing is copied",
      "cancelable": true
     },
     {
@@ -208,13 +200,6 @@
     {
      "name": "--tc-jsv-key-w",
      "value": "34%",
-     "looks": [
-      "clean"
-     ]
-    },
-    {
-     "name": "--tc-jsv-indent",
-     "value": "var(--tc-space-4)",
      "looks": [
       "clean"
      ]
@@ -272,14 +257,11 @@
     "--tc-icon-muted",
     "--tc-line-height-normal",
     "--tc-line-height-snug",
-    "--tc-menu-item-hover",
-    "--tc-menu-item-radius",
     "--tc-pill-h-lg",
     "--tc-radius-2xs",
     "--tc-radius-full",
     "--tc-radius-lg",
     "--tc-radius-md",
-    "--tc-radius-xs",
     "--tc-scrim",
     "--tc-seg-pad",
     "--tc-seg-thumb-bg",
@@ -319,7 +301,6 @@
     "--tc-tone-amber-bg",
     "--tc-tone-amber-border",
     "--tc-tone-amber-fg",
-    "--tc-tone-amber-solid",
     "--tc-tray-inset",
     "--tc-tray-radius"
    ]
@@ -457,7 +438,7 @@
      "name": "onCopyJson",
      "type": "(detail: JsonViewerCopy, event: CustomEvent<JsonViewerCopy>) => void",
      "optional": true,
-     "description": "JSON, a value or a path was copied; `event.preventDefault()` stops the copy"
+     "description": "The JSON was copied; `event.preventDefault()` stops the copy"
     },
     {
      "name": "onDownload",
@@ -534,10 +515,6 @@
     {
      "name": "keyStyle",
      "attribute": "key-style"
-    },
-    {
-     "name": "expandDepth",
-     "attribute": "expand-depth"
     },
     {
      "name": "filename",
@@ -876,7 +853,7 @@
   "windowed": false
  },
  "size": {
-  "min": 68376,
-  "gzip": 19361
+  "min": 59743,
+  "gzip": 17315
  }
 }

@@ -80,7 +80,7 @@ export type JsonViewerProps = Omit<RawProps, Owned> & {
   defaultOpen?: boolean;
   /** With `modal`: the dialog asks to open or close (Escape, Close) */
   onOpenChange?: (open: boolean) => void;
-  /** JSON, a value or a path was copied; `event.preventDefault()` stops the copy */
+  /** The JSON was copied; `event.preventDefault()` stops the copy */
   onCopyJson?: (detail: JsonViewerCopy, event: CustomEvent<JsonViewerCopy>) => void;
   /** Download was pressed; `event.preventDefault()` to save it your own way */
   onDownload?: (detail: JsonViewerDownload, event: CustomEvent<JsonViewerDownload>) => void;

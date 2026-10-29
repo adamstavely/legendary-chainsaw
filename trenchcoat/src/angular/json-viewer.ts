@@ -4,7 +4,7 @@ import type { TcJsonViewer, JsonViewerViewChange, JsonViewerLayoutChange, JsonVi
 import "trenchcoat/json-viewer";
 
 /**
- * <tc-json-viewer> for Angular: A JSON document laid out for review – Document, Tree and Raw views, search across them, flags with notes on fields,
+ * <tc-json-viewer> for Angular: A JSON document laid out for review – Document and Raw, one at a time or side by side, search across them, flags with notes on fields,
  * 
  * imports: [JsonViewer] in a standalone component – no CUSTOM_ELEMENTS_SCHEMA, and bindings are type-checked.
  */
@@ -59,10 +59,6 @@ export class JsonViewer {
   @Input() set keyStyle(v: TcJsonViewer["keyStyle"]) {
     this.#el.keyStyle = v;
   }
-  /** How many levels the tree shows open at first */
-  @Input() set expandDepth(v: TcJsonViewer["expandDepth"] | `${number}`) {
-    this.#el.expandDepth = typeof v === "string" ? Number(v) : v;
-  }
   /** The name Download saves the file under */
   @Input() set filename(v: TcJsonViewer["filename"]) {
     this.#el.filename = v;
@@ -109,7 +105,7 @@ export class JsonViewer {
    */
   @Output("tc-open-change") readonly tcOpenChange = new EventEmitter<CustomEvent<JsonViewerOpenChange>>();
   /**
-   * JSON, a value or a path was copied ({ text, what, path }: JsonViewerCopy); cancelable – prevented, nothing is copied
+   * The JSON was copied ({ text }: JsonViewerCopy); cancelable – prevented, nothing is copied
    * Types $event; the element dispatches the event itself.
    */
   @Output("tc-copy") readonly tcCopy = new EventEmitter<CustomEvent<JsonViewerCopy>>();

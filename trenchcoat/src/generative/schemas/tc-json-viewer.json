@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "trenchcoat/generative/schemas/tc-json-viewer.json",
   "title": "tc-json-viewer",
-  "description": "A JSON document laid out for review – Document, Tree and Raw views, search across them, flags with notes on fields,\nCopy and Download – inline or as a modal.",
+  "description": "A JSON document laid out for review – Document and Raw, one at a time or side by side, search across them, flags with notes on fields,\nCopy and Download – inline or as a modal.",
   "type": "object",
   "properties": {
     "heading": {
@@ -47,7 +47,6 @@
       "type": "string",
       "enum": [
         "document",
-        "tree",
         "raw"
       ],
       "description": "The view shown. Changed by the user unless a tc-view-change listener calls preventDefault()"
@@ -86,10 +85,6 @@
         "words"
       ],
       "description": "How Document names fields: \"words\" (\"Invoice date\") or \"raw\" (the key as written)"
-    },
-    "expandDepth": {
-      "type": "number",
-      "description": "How many levels the tree shows open at first"
     },
     "filename": {
       "type": "string",

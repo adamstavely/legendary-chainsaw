@@ -1066,7 +1066,7 @@
   {
     "tag": "tc-json-viewer",
     "name": "JsonViewer",
-    "description": "A JSON document laid out for review – Document, Tree and Raw views, search across them, flags with notes on fields,",
+    "description": "A JSON document laid out for review – Document and Raw, one at a time or side by side, search across them, flags with notes on fields,",
     "events": [
       "tc-view-change",
       "tc-layout-change",

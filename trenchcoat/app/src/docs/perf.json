@@ -10708,7 +10708,7 @@
   },
   "generated-ui": {
    "measuredAt": "2026-10-29",
-   "hash": "f2ec9d9268ef3c5a",
+   "hash": "96229891f2bd16b4",
    "bundle": {
     "own": {
      "min": 34126,
@@ -10901,11 +10901,6 @@
       "min": 56827
      },
      {
-      "name": "json-viewer",
-      "kind": "element",
-      "min": 56605
-     },
-     {
       "name": "decision-tree",
       "kind": "element",
       "min": 56128
@@ -10966,6 +10961,11 @@
       "min": 47971
      },
      {
+      "name": "json-viewer",
+      "kind": "element",
+      "min": 47920
+     },
+     {
       "name": "billing-schedule",
       "kind": "element",
       "min": 47812
@@ -10973,7 +10973,7 @@
      {
       "name": "playbook-canvas",
       "kind": "element",
-      "min": 47101
+      "min": 47077
      },
      {
       "name": "world-map",
@@ -12246,11 +12246,6 @@
       "min": 2928
      },
      {
-      "name": "src/generative/schemas/tc-json-viewer.json",
-      "kind": "other",
-      "min": 2918
-     },
-     {
       "name": "src/generative/schemas/tc-agent-lanes.json",
       "kind": "other",
       "min": 2909
@@ -12269,6 +12264,11 @@
       "name": "src/generative/schemas/tc-session-state.json",
       "kind": "other",
       "min": 2866
+     },
+     {
+      "name": "src/generative/schemas/tc-json-viewer.json",
+      "kind": "other",
+      "min": 2843
      },
      {
       "name": "src/generative/schemas/tc-artifact-panel.json",
@@ -13022,19 +13022,19 @@
      }
     ],
     "withoutLit": {
-     "min": 7443944,
-     "gzip": 1829585
+     "min": 7435139,
+     "gzip": 1827574
     },
     "withLit": {
-     "min": 7410706,
-     "gzip": 1817058
+     "min": 7401922,
+     "gzip": 1814726
     }
    },
    "render": {
     "tag": "tc-generated-ui",
     "source": "demo",
     "runs": 7,
-    "cold": 2.1,
+    "cold": 3.5,
     "first": 0.5,
     "update": 0.1,
     "updateKind": "re-render with the same data",
@@ -15253,17 +15253,17 @@
   },
   "json-viewer": {
    "measuredAt": "2026-10-29",
-   "hash": "7a115863e29d0f9f",
+   "hash": "ffbae057c840f509",
    "bundle": {
     "own": {
-     "min": 58621,
-     "gzip": 16254
+     "min": 49989,
+     "gzip": 14245
     },
     "shared": [
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 19997
+      "min": 19994
      },
      {
       "name": "internal/card-head",
@@ -15312,38 +15312,38 @@
      }
     ],
     "withoutLit": {
-     "min": 68376,
-     "gzip": 19451
+     "min": 59743,
+     "gzip": 17402
     },
     "withLit": {
-     "min": 89570,
-     "gzip": 26193
+     "min": 80938,
+     "gzip": 24215
     }
    },
    "render": {
     "tag": "tc-json-viewer",
     "source": "demo",
     "runs": 7,
-    "cold": 8.5,
-    "first": 3.3,
-    "update": 1,
+    "cold": 10.9,
+    "first": 3.1,
+    "update": 0.9,
     "updateKind": "one item of flags replaced",
-    "nodes": 462,
+    "nodes": 461,
     "scale": {
      "property": "flags",
      "demoItems": 1,
      "points": [
       {
        "items": 100,
-       "first": 4,
+       "first": 3.8,
        "update": 0.9,
-       "nodes": 561
+       "nodes": 560
       },
       {
        "items": 1000,
-       "first": 10,
-       "update": 2.8,
-       "nodes": 1461
+       "first": 9.3,
+       "update": 2.7,
+       "nodes": 1460
       }
      ]
     },
