@@ -7002,12 +7002,12 @@
    }
   },
   "coordinate-details": {
-   "measuredAt": "2026-10-28",
-   "hash": "84407e876a624dc5",
+   "measuredAt": "2026-10-29",
+   "hash": "234dd46bc813b433",
    "bundle": {
     "own": {
-     "min": 26809,
-     "gzip": 9493
+     "min": 26967,
+     "gzip": 9556
     },
     "shared": [
      {
@@ -7077,21 +7077,21 @@
      }
     ],
     "withoutLit": {
-     "min": 63709,
-     "gzip": 19316
+     "min": 63867,
+     "gzip": 19370
     },
     "withLit": {
-     "min": 85795,
-     "gzip": 26531
+     "min": 85953,
+     "gzip": 26591
     }
    },
    "render": {
     "tag": "tc-coordinate-details",
     "source": "demo",
     "runs": 7,
-    "cold": 7.2,
+    "cold": 11.1,
     "first": 0.5,
-    "update": 0.1,
+    "update": 0.2,
     "updateKind": "one item of providers replaced",
     "nodes": 6,
     "scale": {
@@ -7101,12 +7101,12 @@
       {
        "items": 100,
        "first": 0.5,
-       "update": 0,
+       "update": 0.1,
        "nodes": 6
       },
       {
        "items": 1000,
-       "first": 0.3,
+       "first": 0.4,
        "update": 0.1,
        "nodes": 6
       }
@@ -10835,8 +10835,8 @@
    }
   },
   "generated-ui": {
-   "measuredAt": "2026-10-28",
-   "hash": "64442c24d62bb5b9",
+   "measuredAt": "2026-10-29",
+   "hash": "a46c71f7ed5110ad",
    "bundle": {
     "own": {
      "min": 34126,
@@ -11514,6 +11514,11 @@
       "min": 24902
      },
      {
+      "name": "coordinate-details",
+      "kind": "element",
+      "min": 24723
+     },
+     {
       "name": "synthesis-notes",
       "kind": "element",
       "min": 24675
@@ -11527,11 +11532,6 @@
       "name": "integration-grid",
       "kind": "element",
       "min": 24658
-     },
-     {
-      "name": "coordinate-details",
-      "kind": "element",
-      "min": 24565
      },
      {
       "name": "conversation-branches",
@@ -11636,7 +11636,7 @@
      {
       "name": "speed-reader",
       "kind": "element",
-      "min": 21757
+      "min": 21894
      },
      {
       "name": "progress-tracker",
@@ -12229,14 +12229,14 @@
       "min": 3437
      },
      {
-      "name": "src/generative/schemas/tc-app-directory.json",
-      "kind": "other",
-      "min": 3383
-     },
-     {
       "name": "src/generative/schemas/tc-ai-summary.json",
       "kind": "other",
       "min": 3366
+     },
+     {
+      "name": "src/generative/schemas/tc-app-directory.json",
+      "kind": "other",
+      "min": 3363
      },
      {
       "name": "src/generative/schemas/tc-prompt-starters.json",
@@ -13150,20 +13150,20 @@
      }
     ],
     "withoutLit": {
-     "min": 7411595,
-     "gzip": 1822337
+     "min": 7411870,
+     "gzip": 1822444
     },
     "withLit": {
-     "min": 7378498,
-     "gzip": 1809437
+     "min": 7378773,
+     "gzip": 1809557
     }
    },
    "render": {
     "tag": "tc-generated-ui",
     "source": "demo",
     "runs": 7,
-    "cold": 2.2,
-    "first": 0.5,
+    "cold": 2.4,
+    "first": 0.6,
     "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 9,
@@ -23907,12 +23907,12 @@
    }
   },
   "speed-reader": {
-   "measuredAt": "2026-10-28",
-   "hash": "66afbb0422508b86",
+   "measuredAt": "2026-10-29",
+   "hash": "1590b360e95eb8a7",
    "bundle": {
     "own": {
-     "min": 23816,
-     "gzip": 7551
+     "min": 23953,
+     "gzip": 7614
     },
     "shared": [
      {
@@ -23952,20 +23952,20 @@
      }
     ],
     "withoutLit": {
-     "min": 32215,
-     "gzip": 9992
+     "min": 32352,
+     "gzip": 10058
     },
     "withLit": {
-     "min": 53450,
-     "gzip": 16892
+     "min": 53587,
+     "gzip": 16961
     }
    },
    "render": {
     "tag": "tc-speed-reader",
     "source": "demo",
     "runs": 7,
-    "cold": 13.5,
-    "first": 1.3,
+    "cold": 15.1,
+    "first": 1.4,
     "update": 0.3,
     "updateKind": "re-render with the same data",
     "nodes": 69,
