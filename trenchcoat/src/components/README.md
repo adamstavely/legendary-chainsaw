@@ -117,6 +117,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Lineage Graph** (`lineage-graph.tsx`) – Where an output came from – run, turns, queries and tools, source chunks, claims and artifacts in columns, every node's record a click away
 - **Live View** (`live-view.tsx`) – Watch the agent's screen as it works – its clicks and typing drawn on top, a caption for each step, and Pause or Take over at any moment
 - **Look Provider** (`look-provider.tsx`) – Sets the look, Standard or Clean, for every Trenchcoat element inside it – one wrapper for a whole app, with any element still free to choose its own
+- **Loupe** (`loupe.tsx`) – A design-system inspector over the live page – components outlined with a card of their name, path and links, a breakpoint ruler, flex and grid containers listed – ⌘⇧L to turn it on
 - **MCP connection manager** (`mcp-connection-manager.tsx`) – MCP servers at a glance – status and what each exposes; add one (transport, auth, test), inspect its tools, resources and prompts, connect, retry and remove
 - **Memory Panel** (`memory-panel.tsx`) – What the assistant remembers about you, grouped and editable – a master switch, category filters, and on every memory edit in place, pause or forget with Undo on the tray
 - **Mention Picker** (`mention-picker.tsx`) – The / and @ picker inside a composer – grouped results, arrow keys and Enter, and the pick lands as a chip

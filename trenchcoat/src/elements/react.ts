@@ -150,6 +150,7 @@ export * from "./react/lineage-graph";
 export * from "./react/live-view";
 export * from "./react/logo-cluster";
 export * from "./react/logo-marquee";
+export * from "./react/loupe";
 export * from "./react/mcp-connection-manager";
 export * from "./react/memory-panel";
 export * from "./react/mention-picker";

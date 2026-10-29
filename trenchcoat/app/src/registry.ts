@@ -78,7 +78,7 @@ const LIBRARIES: Library[] = [
       ["Research & portfolio", ["audience-mix", "budget-burn", "capacity-bars", "citation-badge", "citation-sections", "coverage-ring", "gap-exposure", "grade-distribution", "investment-balance", "org-unit-card", "priority-list", "publication-impact", "status-tracker", "traceability-spine", "work-item"]],
       ["Search", ["ai-search", "query-builder", "routine-form", "search-history"]],
       ["Trust & calibration", ["access-request", "agreement-tracker", "attestation-check", "capability-notice", "claim-answer", "confidence-brief", "correction-propagation", "coverage-matrix", "disagreement-banner", "engagement-quality", "evidence-coverage", "friction-profile", "gate-config", "handoff-brief", "kill-switch", "knowledge-promotion", "lineage-graph", "playbook-canvas", "policy-simulator", "provenance-summary", "reasoning-flags", "reflection-gate", "reliance-gauge", "review-conflict", "run-manifest", "session-context-bar", "synthesis-notes", "transcript-review", "validity-badge", "verification-queue", "version-history"]],
-      ["Utilities", ["look-provider"]],
+      ["Utilities", ["look-provider", "loupe"]],
     ],
   },
   {

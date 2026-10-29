@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased – Loupe, a design-system inspector
+
+- **Loupe** (`tc-loupe`) – remade from cautious-lamp's LoupeTool. ⌘⇧L outlines the page's components
+  (`data-ds-component` and the library's own elements) with a card of name, path, size, look and docs / source /
+  design links; a ruler marks the breakpoints and the window's width; flex and grid containers are outlined and listed.
+  Unlike the original, the page keeps scrolling and working underneath, outlines follow scrolling, resizing and DOM
+  changes (no polling), the overlay sits in the top layer so transformed or contained ancestors can't shift it, and
+  everything is reachable from keyboard lists in the panel. Kept out of generative UI.
+
 ## Unreleased – colour picker, NPS / CSAT, coordinates, access requests, reading aloud
 
 - `tc-color-picker` – a saturation and brightness square, hue and opacity sliders, HEX / RGB / CMYK fields, an

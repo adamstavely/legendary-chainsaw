@@ -10707,7 +10707,7 @@
    }
   },
   "generated-ui": {
-   "measuredAt": "2026-10-28",
+   "measuredAt": "2026-10-29",
    "hash": "bdc805dc79b822b2",
    "bundle": {
     "own": {
@@ -13024,8 +13024,8 @@
     "tag": "tc-generated-ui",
     "source": "demo",
     "runs": 7,
-    "cold": 2.3,
-    "first": 0.6,
+    "cold": 4.8,
+    "first": 0.5,
     "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 9,
@@ -16334,6 +16334,114 @@
     "updateKind": "re-render with the same data",
     "nodes": 0,
     "scale": null,
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
+  "loupe": {
+   "measuredAt": "2026-10-29",
+   "hash": "74afed42ccb39d35",
+   "bundle": {
+    "own": {
+     "min": 38694,
+     "gzip": 11152
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 18958
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2968
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1868
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 1435
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 444
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 436
+     },
+     {
+      "name": "internal/safe-url",
+      "kind": "internal",
+      "min": 343
+     },
+     {
+      "name": "internal/util",
+      "kind": "internal",
+      "min": 113
+     }
+    ],
+    "withoutLit": {
+     "min": 47804,
+     "gzip": 13996
+    },
+    "withLit": {
+     "min": 67834,
+     "gzip": 20459
+    }
+   },
+   "render": {
+    "tag": "tc-loupe",
+    "source": "demo",
+    "runs": 7,
+    "cold": 2.1,
+    "first": 0.5,
+    "update": 0.1,
+    "updateKind": "one item of breakpoints replaced",
+    "nodes": 26,
+    "scale": {
+     "property": "breakpoints",
+     "demoItems": 5,
+     "points": [
+      {
+       "items": 100,
+       "first": 0.4,
+       "update": 0,
+       "nodes": 26
+      },
+      {
+       "items": 1000,
+       "first": 0.4,
+       "update": 0.1,
+       "nodes": 26
+      }
+     ]
+    },
     "idle": {
      "visible": {
       "frames": 0,
