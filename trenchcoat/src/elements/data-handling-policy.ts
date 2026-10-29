@@ -75,7 +75,8 @@ export type DataPolicyDeletion = {
   detail?: string;
 };
 /** Details of the events */
-export type DataPolicyChange = { value: DataHandlingPolicyValue; field: DataPolicyField };
+/** `field` is null when a form reset puts back the whole policy */
+export type DataPolicyChange = { value: DataHandlingPolicyValue; field: DataPolicyField | null };
 export type DataPolicyDeletionEvent = { scope: DataPolicyOption };
 
 export const DATA_POLICY_RETENTION: DataPolicyOption[] = [
@@ -145,7 +146,7 @@ const tick = (clean: boolean) =>
  * Organization-level data handling as a lifecycle – conversations, logs, memory, training, deletion – led by the policy
  * in effect, each stage edited in place, locked stages marked, and deletion requests with their status.
  * @tag tc-data-handling-policy
- * @fires tc-value-change - A setting changed ({ value, field }: DataPolicyChange); cancelable – prevent it to control `value`
+ * @fires tc-value-change - A setting changed, or a form reset put them all back with field null ({ value, field }: DataPolicyChange); cancelable – prevent it to control `value`
  * @fires tc-deletion-request - A deletion was confirmed ({ scope }: DataPolicyDeletionEvent); cancelable – prevented, no pending request is shown
  */
 export class TcDataHandlingPolicy extends TcElement {
@@ -210,7 +211,6 @@ export class TcDataHandlingPolicy extends TcElement {
 
   override connectedCallback() {
     super.connectedCallback();
-    this.initialValue ??= this.value;
     if (!this.hasAttribute("role")) this.setAttribute("role", "group");
   }
 
@@ -220,7 +220,10 @@ export class TcDataHandlingPolicy extends TcElement {
   }
 
   formResetCallback() {
-    this.value = this.initialValue ?? DEFAULT_VALUE;
+    const value = this.initialValue ?? DEFAULT_VALUE;
+    // Through tc-value-change like any edit, so a controlled wrapper hears of it and keeps the value until it agrees
+    if (this.emit<DataPolicyChange>("tc-value-change", { value, field: null }, { cancelable: true })) this.value = value;
+    else this.requestUpdate();
   }
   formDisabledCallback(disabled: boolean) {
     // Also called while `disabled` is reflected during an update, where a property change would be dropped – so after it
@@ -290,7 +293,9 @@ export class TcDataHandlingPolicy extends TcElement {
   private ask(opener: HTMLElement) {
     if (this.isDisabled || !this.deletionScopes.length) return;
     this.opener = opener;
-    this.scope = this.deletionScopes.some((s) => s.id === this.scope) ? this.scope : this.deletionScopes[0].id;
+    // Only a scope it can delete is picked for the person; with none, nothing is
+    const usable = this.deletionScopes.filter((s) => !s.unavailable);
+    this.scope = usable.some((s) => s.id === this.scope) ? this.scope : (usable[0]?.id ?? "");
     this.confirming = true;
     void this.updateComplete.then(() => {
       const d = this.dialogEl;
@@ -316,7 +321,9 @@ export class TcDataHandlingPolicy extends TcElement {
   }
   private confirm() {
     const scope = this.deletionScopes.find((s) => s.id === this.scope);
-    if (scope && this.emit<DataPolicyDeletionEvent>("tc-deletion-request", { scope }, { cancelable: true })) {
+    // Checked again here: a scope can become unavailable while the dialog is open
+    if (!scope || scope.unavailable) return;
+    if (this.emit<DataPolicyDeletionEvent>("tc-deletion-request", { scope }, { cancelable: true })) {
       this.pending = { label: scope.label, was: this.deletions.map((d) => d.id).join("|") };
       this.announcement = `Deletion of ${scope.label.toLowerCase()} requested.`;
     }
@@ -348,6 +355,8 @@ export class TcDataHandlingPolicy extends TcElement {
 
   protected override willUpdate(changed: PropertyValues) {
     super.willUpdate(changed);
+    // The reset baseline is what the first render shows, so props a framework sets after connecting (React does) count
+    if (!this.hasUpdated) this.initialValue = this.value;
     this.toggleAttribute("data-disabled", this.isDisabled);
     // The app listed a new request: the pending one is no longer needed (compared by ids, so equal data doesn't end it)
     if (this.pending && changed.has("deletions") && this.deletions.map((d) => d.id).join("|") !== this.pending.was) this.pending = null;
@@ -638,6 +647,11 @@ export class TcDataHandlingPolicy extends TcElement {
   private renderDialog(look: "standard" | "clean") {
     const id = this.uid;
     const scope = this.deletionScopes.find((s) => s.id === this.scope);
+    const why = scope
+      ? scope.unavailable
+        ? `${scope.label} can't be deleted: ${scope.unavailable}`
+        : ""
+      : `Nothing can be deleted right now.${this.deletionScopes[0]?.unavailable ? ` ${this.deletionScopes[0].unavailable}` : ""}`;
     return html`<dialog
       class="ui-dhp__dialog"
       role="alertdialog"
@@ -672,13 +686,13 @@ export class TcDataHandlingPolicy extends TcElement {
                 }}
               ></tc-segmented-control>
               <div id=${`${id}-dlg-desc`} class="ui-dhp__dlg-desc">
-                ${scope?.description ? html`<p class="ui-dhp__dlg-lead">${scope.description}</p>` : nothing}
+                ${why ? html`<p class="ui-dhp__dlg-lead">${why}</p>` : scope?.description ? html`<p class="ui-dhp__dlg-lead">${scope.description}</p>` : nothing}
                 <p class="ui-dhp__dlg-note">${this.deletionNote}</p>
               </div>
             </div>
             <div class="ui-dhp__dlg-actions">
               <button type="button" class="ui-dhp__btn ui-dhp__btn--secondary ui-dhp__cancel" @click=${() => this.close()}>Cancel</button>
-              <button type="button" class="ui-dhp__btn ui-dhp__btn--danger ui-dhp__confirm" @click=${() => this.confirm()}>${trashIcon()}Delete ${scope ? scope.label.toLowerCase() : ""}</button>
+              <button type="button" class="ui-dhp__btn ui-dhp__btn--danger ui-dhp__confirm" ?disabled=${!!why} @click=${() => this.confirm()}>${trashIcon()}Delete${scope ? ` ${scope.label.toLowerCase()}` : ""}</button>
             </div>
           </div>`}
     </dialog>`;

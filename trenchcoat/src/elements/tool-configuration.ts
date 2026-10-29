@@ -77,30 +77,34 @@ const DEFAULT_VALUE: ToolConfigurationValue = { name: "", description: "", param
 const NAME = /^[A-Za-z_][A-Za-z0-9_-]*$/;
 const ENUM_TYPES = new Set<ToolParameterType>(["string", "number", "integer"]);
 const isNumeric = (t: ToolParameterType) => t === "number" || t === "integer";
+/** Names JavaScript treats specially on a plain object; refused, and kept as ordinary keys if they slip through */
+const RESERVED = new Set(["__proto__", "constructor", "prototype"]);
 
 /** The JSON Schema for a tool's input: an object with one property per parameter */
 export function toolInputSchema(value: ToolConfigurationValue): Record<string, unknown> {
-  const properties: Record<string, unknown> = {};
+  // Built through fromEntries, which defines own keys – assigning properties["__proto__"] would swap the prototype.
+  const entries: [string, unknown][] = [];
   for (const p of value.parameters) {
     if (!p.name.trim()) continue;
     const values = ENUM_TYPES.has(p.type) && p.enum?.length ? (isNumeric(p.type) ? p.enum.map(Number).filter((n) => Number.isFinite(n)) : p.enum) : undefined;
-    properties[p.name.trim()] = { type: p.type, ...(p.description.trim() ? { description: p.description.trim() } : {}), ...(values?.length ? { enum: values } : {}) };
+    entries.push([p.name.trim(), { type: p.type, ...(p.description.trim() ? { description: p.description.trim() } : {}), ...(values?.length ? { enum: values } : {}) }]);
   }
+  const properties = Object.fromEntries(entries);
   const required = value.parameters.filter((p) => p.required && p.name.trim()).map((p) => p.name.trim());
   return { type: "object", properties, ...(required.length ? { required } : {}), additionalProperties: false };
 }
 
 /** Arguments a call could carry: the first allowed value, else a placeholder of the right type ("<name>", 1, 1.5, true, [], {}) */
 export function toolExampleCall(value: ToolConfigurationValue): Record<string, unknown> {
-  const out: Record<string, unknown> = {};
+  const out = new Map<string, unknown>();
   for (const p of value.parameters) {
     const n = p.name.trim();
-    if (!n || Object.hasOwn(out, n)) continue;
+    if (!n || out.has(n)) continue;
     const first = ENUM_TYPES.has(p.type) ? p.enum?.[0] : undefined;
-    if (first !== undefined) out[n] = isNumeric(p.type) && Number.isFinite(Number(first)) ? Number(first) : first;
-    else out[n] = p.type === "string" ? `<${n}>` : p.type === "integer" ? 1 : p.type === "number" ? 1.5 : p.type === "boolean" ? true : p.type === "array" ? [] : {};
+    if (first !== undefined) out.set(n, isNumeric(p.type) && Number.isFinite(Number(first)) ? Number(first) : first);
+    else out.set(n, p.type === "string" ? `<${n}>` : p.type === "integer" ? 1 : p.type === "number" ? 1.5 : p.type === "boolean" ? true : p.type === "array" ? [] : {});
   }
-  return out;
+  return Object.fromEntries(out);
 }
 
 /** What's wrong with a definition (errors) and what would make it better (warnings) */
@@ -117,6 +121,7 @@ export function validateTool(value: ToolConfigurationValue): ToolIssue[] {
     const label = n || `Parameter ${i + 1}`;
     if (!n) issues.push({ level: "error", field: `param:${i}:name`, message: `Parameter ${i + 1} has no name.` });
     else if (!NAME.test(n)) issues.push({ level: "error", field: `param:${i}:name`, message: `“${n}”: use only letters, digits, _ and -.` });
+    else if (RESERVED.has(n)) issues.push({ level: "error", field: `param:${i}:name`, message: `“${n}” is reserved – choose another name.` });
     else if (seen.has(n)) issues.push({ level: "error", field: `param:${i}:name`, message: `Two parameters are called “${n}”.` });
     if (n) seen.set(n, i);
     if (isNumeric(p.type) && p.enum?.length) {
@@ -209,13 +214,15 @@ export class TcToolConfiguration extends TcElement {
 
   override connectedCallback() {
     super.connectedCallback();
-    this.initialValue ??= this.value;
     if (!this.hasAttribute("role")) this.setAttribute("role", "group");
   }
 
   formResetCallback() {
     this.typing = new Map();
-    this.value = this.initialValue ?? DEFAULT_VALUE;
+    const value = this.initialValue ?? DEFAULT_VALUE;
+    // Through tc-value-change like any edit, so a controlled wrapper hears of it and keeps the value until it agrees
+    if (this.emit<ToolConfigurationValueChange>("tc-value-change", { value }, { cancelable: true })) this.value = value;
+    else this.requestUpdate();
   }
   formDisabledCallback(disabled: boolean) {
     queueMicrotask(() => (this.formDisabled = disabled));
@@ -344,6 +351,8 @@ export class TcToolConfiguration extends TcElement {
 
   protected override willUpdate(changed: PropertyValues) {
     super.willUpdate(changed);
+    // The reset baseline is what the first render shows, so props a framework sets after connecting (React does) count
+    if (!this.hasUpdated) this.initialValue = this.value;
     this.toggleAttribute("data-disabled", this.isDisabled);
   }
 

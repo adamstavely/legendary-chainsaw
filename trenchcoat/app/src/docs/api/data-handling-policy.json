@@ -162,7 +162,7 @@
     {
      "name": "tc-value-change",
      "detail": "",
-     "description": "A setting changed ({ value, field }: DataPolicyChange); cancelable – prevent it to control `value`",
+     "description": "A setting changed, or a form reset put them all back with field null ({ value, field }: DataPolicyChange); cancelable – prevent it to control `value`",
      "cancelable": true
     },
     {
@@ -318,9 +318,9 @@
     },
     {
      "name": "onChange",
-     "type": "(value: DataHandlingPolicyValue, field: DataPolicyField) => void",
+     "type": "(value: DataHandlingPolicyValue, field: DataPolicyField | null) => void",
      "optional": true,
-     "description": "Called with the whole policy and the setting that changed, after every change"
+     "description": "Called with the whole policy and the setting that changed (null for a form reset), after every change"
     },
     {
      "name": "onDeletionRequest",
@@ -749,7 +749,7 @@
   "windowed": false
  },
  "size": {
-  "min": 85362,
-  "gzip": 20731
+  "min": 85771,
+  "gzip": 20832
  }
 }

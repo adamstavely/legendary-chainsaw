@@ -13,6 +13,7 @@ import { describeTrigger, nextTriggerRuns, type TcTriggerBuilder, type TriggerEv
 import type { TcCombobox } from "../../src/elements/combobox";
 import { TriggerBuilder, type TriggerBuilderProps } from "../../src/elements/react/trigger-builder";
 import { cleanup, fixture, settle } from "./helpers";
+import { expectReactFormReset } from "./form-reset";
 
 afterEach(() => {
   vi.useRealTimers();
@@ -333,6 +334,10 @@ describe("tc-trigger-builder", () => {
     el.querySelector<HTMLButtonElement>('.ui-tgb__day[data-day="5"]')!.click();
     await settle();
     expect(status.textContent).toBe("Runs every Monday and Friday at 9:00 AM.");
+  });
+
+  test("form reset through React: the baseline is the value React passed; reset goes through onChange", async () => {
+    await expectReactFormReset(TriggerBuilder, "tc-trigger-builder", WEEKLY, EVENT, { events: WRAPPER_EVENTS });
   });
 
   test("React wrapper: uncontrolled value survives a parent re-render; controlled stays with the app; title and onChange", async () => {

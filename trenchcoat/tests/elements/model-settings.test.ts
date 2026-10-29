@@ -12,6 +12,7 @@ import "../../src/elements/model-settings";
 import { formatModelParam, defaultModelParams, type ModelSettingsModel, type ModelSettingsValue, type TcModelSettings } from "../../src/elements/model-settings";
 import { ModelSettings } from "../../src/elements/react/model-settings";
 import { cleanup, fixture, settle } from "./helpers";
+import { expectReactFormReset } from "./form-reset";
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -232,6 +233,10 @@ describe("tc-model-settings", () => {
     await settle();
     expect(el.value).toEqual({ temperature: 0.4 });
     expect(range(el, "temperature").value).toBe("0.4");
+  });
+
+  test("form reset through React: the baseline is the value React passed; reset goes through onChange", async () => {
+    await expectReactFormReset(ModelSettings, "tc-model-settings", { temperature: 0.2 }, { temperature: 0.9 });
   });
 
   test("React wrapper: uncontrolled survives a re-render; controlled stays with the app; title and onChange(value, changed)", async () => {

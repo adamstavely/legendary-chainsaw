@@ -528,22 +528,6 @@
     ]
    },
    {
-    "id": "object-hasown",
-    "name": "Object.hasOwn()",
-    "bcd": "javascript.builtins.Object.hasOwn",
-    "versions": {
-     "chrome": "93",
-     "edge": "93",
-     "firefox": "92",
-     "safari": "15.4",
-     "safari_ios": "15.4"
-    },
-    "progressive": false,
-    "via": [
-     "itself"
-    ]
-   },
-   {
     "id": "is-where",
     "name": ":is() and :where()",
     "bcd": "css.selectors.where",
@@ -719,7 +703,7 @@
   "windowed": false
  },
  "size": {
-  "min": 138539,
-  "gzip": 35123
+  "min": 138871,
+  "gzip": 35196
  }
 }
