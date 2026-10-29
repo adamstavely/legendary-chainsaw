@@ -199,6 +199,20 @@ describe("PopoverController", () => {
     expect(a.closed).toEqual(["api"]);
   });
 
+  test("closing one whose host left the page doesn't take another popover off the stack", async () => {
+    const a = await host();
+    const b = await host();
+    a.pop.show();
+    b.pop.show();
+    await a.updateComplete;
+    await b.updateComplete;
+    a.remove();
+    a.pop.close();
+    await userEvent.keyboard("{Escape}");
+    expect(b.pop.open).toBe(false);
+    expect(b.closed).toEqual(["escape"]);
+  });
+
   test("follows scrolling, and closes when its anchor goes away", async () => {
     const el = await host();
     const spacer = document.createElement("div");

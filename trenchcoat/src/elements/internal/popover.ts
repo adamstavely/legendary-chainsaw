@@ -241,7 +241,9 @@ export class PopoverController implements ReactiveController {
     this.open = false;
     this.pinned = false;
     this.placement = null;
-    stack.splice(stack.indexOf(this), 1);
+    // Not in the stack when its host left the page while it was open: splicing at -1 would drop the newest popover
+    const at = stack.indexOf(this);
+    if (at >= 0) stack.splice(at, 1);
     this.listen(false);
     this.unobserve();
     if (pop) this.hide(pop);
