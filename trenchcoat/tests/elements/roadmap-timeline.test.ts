@@ -8,7 +8,7 @@ import axe from "axe-core";
 import * as React from "react";
 import { act } from "react";
 import { createRoot } from "react-dom/client";
-import { afterEach, describe, expect, test } from "vitest";
+import { afterEach, describe, expect, test, vi } from "vitest";
 import "../../src/elements/roadmap-timeline";
 import { dayNumber, type RoadmapItem, type RoadmapLane, type RoadmapSelectedChange, type TcRoadmapTimeline } from "../../src/elements/roadmap-timeline";
 import { RoadmapTimeline } from "../../src/elements/react/roadmap-timeline";
@@ -71,6 +71,23 @@ describe("tc-roadmap-timeline", () => {
     expect(today).toBeGreaterThan(left("p2"));
     expect(today).toBeLessThan(left("p2") + width("p2"));
     expect(text(el.querySelector(".ui-rdm__today-label"))).toBe("Today");
+  });
+
+  test("without `today`, Today is the reader's own calendar day, early or late in it", async () => {
+    const line = (el: Element) => parseFloat(el.querySelector<HTMLElement>(".ui-rdm__today")!.style.left);
+    const set = await make();
+    const want = line(set);
+    // Just after midnight and just before it, local time: a day either side of UTC in most places
+    for (const at of [new Date(2027, 3, 7, 0, 20), new Date(2027, 3, 7, 23, 40)]) {
+      vi.useFakeTimers({ toFake: ["Date"] });
+      vi.setSystemTime(at);
+      try {
+        const el = await fixture<TcRoadmapTimeline>(html`<tc-roadmap-timeline locale="en-GB" heading="Plan" .lanes=${LANES} .items=${ITEMS}></tc-roadmap-timeline>`);
+        expect(line(el)).toBe(want);
+      } finally {
+        vi.useRealTimers();
+      }
+    }
   });
 
   test("dependencies: an arrow per link; one whose follower starts before it ends is late", async () => {

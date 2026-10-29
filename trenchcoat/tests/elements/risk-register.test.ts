@@ -255,6 +255,13 @@ describe("tc-risk-register", () => {
       .click();
     await settle();
     expect(el.risks.find((r) => r.id === "storm")!.likelihood).toBe(4);
+    // The level that's still true stays checked
+    const likelihoods = el
+      .querySelector(".ui-rrg__detail")!
+      .querySelectorAll("fieldset")[0]
+      .querySelectorAll<HTMLInputElement>("input");
+    expect(likelihoods[3].checked).toBe(true);
+    expect(likelihoods[0].checked).toBe(false);
     // Close returns focus to the title
     el.querySelector<HTMLButtonElement>(".ui-rrg__close")!.click();
     await settle();
@@ -262,6 +269,56 @@ describe("tc-risk-register", () => {
     expect(document.activeElement).toBe(
       el.querySelector('[data-id="storm"] .ui-rrg__title'),
     );
+  });
+
+  test("rescoring an open risk: it stays listed though it leaves the cell, and its picker keeps focus as the row moves", async () => {
+    const el = await make();
+    // Filtered to likelihood 4 × impact 5: only Storm damage
+    key(cell(el, 4, 5), "Enter");
+    await settle();
+    expect(titles(el)).toEqual(["Storm damage"]);
+    el.querySelector<HTMLButtonElement>(
+      '[data-id="storm"] .ui-rrg__title',
+    )!.click();
+    await settle();
+    const impact1 = el
+      .querySelector(".ui-rrg__detail")!
+      .querySelectorAll("fieldset")[1]
+      .querySelectorAll<HTMLInputElement>("input")[0];
+    impact1.focus();
+    impact1.click();
+    await settle();
+    expect(el.risks.find((r) => r.id === "storm")!.impact).toBe(1);
+    expect(titles(el)).toEqual(["Storm damage"]);
+    expect(el.querySelector(".ui-rrg__detail")).not.toBeNull();
+    // Closed, it leaves the filtered list
+    el.querySelector<HTMLButtonElement>(".ui-rrg__close")!.click();
+    await settle();
+    expect(titles(el)).toEqual([]);
+    // Unfiltered and sorted by score, a rescore moves the row; focus follows it
+    key(cell(el, 4, 5), "Escape");
+    await settle();
+    el.querySelector<HTMLButtonElement>(
+      '[data-id="kit"] .ui-rrg__title',
+    )!.click();
+    await settle();
+    expect(titles(el)[0]).not.toBe("Kit servicing");
+    const impact5 = el
+      .querySelector(".ui-rrg__detail")!
+      .querySelectorAll("fieldset")[1]
+      .querySelectorAll<HTMLInputElement>("input")[4];
+    impact5.focus();
+    impact5.click();
+    await settle();
+    expect(titles(el)[0]).toBe("Kit servicing");
+    await expect
+      .poll(() => document.activeElement)
+      .toBe(
+        el
+          .querySelector(".ui-rrg__detail")!
+          .querySelectorAll("fieldset")[1]
+          .querySelectorAll("input")[4],
+      );
   });
 
   test("read only: a risk opens but can't be rescored; renamed level words; empty", async () => {

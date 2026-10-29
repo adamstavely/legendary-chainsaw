@@ -1,5 +1,7 @@
 import { html, nothing, svg, type PropertyValues } from "lit";
 import { property, state } from "lit/decorators.js";
+import { live } from "lit/directives/live.js";
+import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
 import { FocusRescueController } from "./internal/controllers";
@@ -162,6 +164,10 @@ export class TcRiskRegister extends TcElement {
   @state() accessor announce = "";
 
   private uid = `tc-rrg-${++uidCount}`;
+  /** A risk rescored while open: it stays listed, though it's left the filtered cell, until it closes or the filter changes */
+  private keep: string | null = null;
+  /** The level picker a rescore came from: its checked level takes focus back once the risks change (the row may move) */
+  private refocus: string | null = null;
 
   constructor() {
     super();
@@ -179,6 +185,21 @@ export class TcRiskRegister extends TcElement {
       !this.risks.some((r) => r.id === this.selected)
     )
       this.selected = null;
+    if (changed.has("cell") || changed.has("selected")) this.keep = null;
+  }
+
+  protected override updated(changed: PropertyValues) {
+    super.updated(changed);
+    if (changed.has("risks") && this.refocus) {
+      const name = this.refocus;
+      this.refocus = null;
+      const at = document.activeElement;
+      // Only when focus was in the picker, or was lost as its row moved
+      if (at === document.body || at === null || this.contains(at))
+        this.querySelector<HTMLElement>(
+          `input[name="${name}"]:checked`,
+        )?.focus();
+    }
   }
 
   /* ---------- The model ---------- */
@@ -201,6 +222,8 @@ export class TcRiskRegister extends TcElement {
     const list = this.cell
       ? this.inCell(this.cell.likelihood, this.cell.impact)
       : [...this.risks];
+    const kept = this.keep && this.risks.find((r) => r.id === this.keep);
+    if (kept && !list.includes(kept)) list.push(kept);
     const dir = this.sortDir === "asc" ? 1 : -1;
     const key = (r: Risk): string | number =>
       this.sort === "score"
@@ -290,9 +313,17 @@ export class TcRiskRegister extends TcElement {
     this.sortDir = sortDir;
   }
 
-  private rescore(r: Risk, likelihood: RiskLevel, impact: RiskLevel) {
+  private rescore(
+    r: Risk,
+    likelihood: RiskLevel,
+    impact: RiskLevel,
+    picker: string,
+  ) {
     if (this.readonly || (likelihood === r.likelihood && impact === r.impact))
       return;
+    // Applied here or by a page that controls `risks`: the risk stays listed and its picker keeps focus
+    this.keep = r.id;
+    this.refocus = picker;
     const risks = this.risks.map((x) =>
       x.id === r.id ? { ...x, likelihood, impact } : x,
     );
@@ -492,7 +523,7 @@ export class TcRiskRegister extends TcElement {
                 type="radio"
                 class="tc-sr-only"
                 name=${name}
-                .checked=${v === value}
+                .checked=${live(v === value)}
                 ?disabled=${this.readonly}
                 aria-label=${`${v} ${w[v - 1]}`}
                 @change=${() =>
@@ -500,6 +531,7 @@ export class TcRiskRegister extends TcElement {
                     r,
                     which === "likelihood" ? v : r.likelihood,
                     which === "impact" ? v : r.impact,
+                    name,
                   )}
               /><span aria-hidden="true">${v}</span>
             </label>`,
@@ -612,65 +644,78 @@ export class TcRiskRegister extends TcElement {
               </tr>
             </thead>
             <tbody>
-              ${rows.map((r) => {
-                const s = riskScore(r);
-                const band = riskBand(s);
-                const open = this.selected === r.id;
-                return html`<tr
-                    class="ui-rrg__row"
-                    data-id=${r.id}
-                    ?data-open=${open}
-                  >
-                    <td class="ui-rrg__td ui-rrg__td--score" data-label="Score">
-                      <span class="ui-rrg__badge" data-band=${band}
-                        >${s}<span class="ui-rrg__badge-band"
-                          >${BAND_WORDS[band]}</span
-                        ></span
-                      ><span class="ui-rrg__lxi"
-                        >${r.likelihood}×${r.impact}</span
+              ${repeat(
+                rows,
+                (r) => r.id,
+                (r) => {
+                  const s = riskScore(r);
+                  const band = riskBand(s);
+                  const open = this.selected === r.id;
+                  return html`<tr
+                      class="ui-rrg__row"
+                      data-id=${r.id}
+                      ?data-open=${open}
+                    >
+                      <td
+                        class="ui-rrg__td ui-rrg__td--score"
+                        data-label="Score"
                       >
-                    </td>
-                    <td class="ui-rrg__td ui-rrg__td--title" data-label="Risk">
-                      <button
-                        type="button"
-                        class="ui-rrg__title"
-                        id=${`${this.uid}-t-${r.id}`}
-                        aria-expanded=${open ? "true" : "false"}
-                        aria-controls=${`${this.uid}-d-${r.id}`}
-                        @click=${() => this.setSelected(open ? null : r.id)}
+                        <span class="ui-rrg__badge" data-band=${band}
+                          >${s}<span class="ui-rrg__badge-band"
+                            >${BAND_WORDS[band]}</span
+                          ></span
+                        ><span class="ui-rrg__lxi"
+                          >${r.likelihood}×${r.impact}</span
+                        >
+                      </td>
+                      <td
+                        class="ui-rrg__td ui-rrg__td--title"
+                        data-label="Risk"
                       >
-                        ${r.title}
-                      </button>
-                    </td>
-                    <td class="ui-rrg__td" data-label="Owner">
-                      ${r.owner ?? html`<span class="ui-rrg__muted">–</span>`}
-                    </td>
-                    <td class="ui-rrg__td" data-label="Status">
-                      <span
-                        class="ui-rrg__status"
-                        data-status=${r.status ?? "open"}
-                        >${STATUS_WORDS[r.status ?? "open"]}</span
+                        <button
+                          type="button"
+                          class="ui-rrg__title"
+                          id=${`${this.uid}-t-${r.id}`}
+                          aria-expanded=${open ? "true" : "false"}
+                          aria-controls=${`${this.uid}-d-${r.id}`}
+                          @click=${() => this.setSelected(open ? null : r.id)}
+                        >
+                          ${r.title}
+                        </button>
+                      </td>
+                      <td class="ui-rrg__td" data-label="Owner">
+                        ${r.owner ?? html`<span class="ui-rrg__muted">–</span>`}
+                      </td>
+                      <td class="ui-rrg__td" data-label="Status">
+                        <span
+                          class="ui-rrg__status"
+                          data-status=${r.status ?? "open"}
+                          >${STATUS_WORDS[r.status ?? "open"]}</span
+                        >
+                      </td>
+                      <td
+                        class="ui-rrg__td ui-rrg__td--trend"
+                        data-label="Trend"
                       >
-                    </td>
-                    <td class="ui-rrg__td ui-rrg__td--trend" data-label="Trend">
-                      ${r.trend
-                        ? html`<span
-                            class="ui-rrg__trend"
-                            data-trend=${r.trend}
-                            title=${TREND_WORDS[r.trend]}
-                            >${trendIcon(r.trend)}<span class="tc-sr-only"
-                              >${TREND_WORDS[r.trend]}</span
-                            ></span
-                          >`
-                        : html`<span class="ui-rrg__muted">–</span>`}
-                    </td>
-                  </tr>
-                  ${open
-                    ? html`<tr class="ui-rrg__detail-row">
-                        <td colspan="5">${this.renderDetail(r)}</td>
-                      </tr>`
-                    : nothing}`;
-              })}
+                        ${r.trend
+                          ? html`<span
+                              class="ui-rrg__trend"
+                              data-trend=${r.trend}
+                              title=${TREND_WORDS[r.trend]}
+                              >${trendIcon(r.trend)}<span class="tc-sr-only"
+                                >${TREND_WORDS[r.trend]}</span
+                              ></span
+                            >`
+                          : html`<span class="ui-rrg__muted">–</span>`}
+                      </td>
+                    </tr>
+                    ${open
+                      ? html`<tr class="ui-rrg__detail-row">
+                          <td colspan="5">${this.renderDetail(r)}</td>
+                        </tr>`
+                      : nothing}`;
+                },
+              )}
             </tbody>
           </table>`
         : html`<p class="ui-rrg__empty">

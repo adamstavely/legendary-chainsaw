@@ -31,7 +31,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Audience Mix** (`audience-mix.tsx`) – Who is reading – a sector mix as bars, an internal-versus-external split and the top places, each with its share, and the row under the pointer or focus named in full
 - **Autonomy Dial** (`autonomy-dial.tsx`) – How much an agent may do on its own – a three-stop dial, and its real actions gliding between “Runs on its own” and “Asks you first”, with a lock for what always asks
 - **Background Tasks** (`background-tasks.tsx`) – Your long-running jobs at a glance – a header indicator with overall progress, and a panel of running, queued, done and failed tasks with cancel, retry and open
-- **Bibliography** (`bibliography.tsx`) – A reading list set in APA, MLA, Chicago, Harvard or IEEE, with live DOIs, tags, search and sort, Copy, and export as BibTeX, RIS or plain text
+- **Bibliography** (`bibliography.tsx`) – A reading list set in APA, MLA, Chicago (notes–bibliography), Harvard or IEEE, with live DOIs, tags, search and sort, Copy, and export as BibTeX, RIS or plain text
 - **Billing Schedule** (`billing-schedule.tsx`) – Build a billing phase – start date, duration, products with repeats and timing, discount, minimum and live totals
 - **Biometric Status** (`biometric-status.tsx`) – Where someone's biometric enrolment stands – face, fingerprints, iris, voice and more, each with its status, detail and quality meter, the count enrolled and an optional match score
 - **Breakdown Chart** (`breakdown-chart.tsx`) – Stacked bar chart with measure, slice and segment pickers, a hover breakdown and a linked table

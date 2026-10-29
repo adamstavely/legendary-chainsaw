@@ -78,10 +78,24 @@ export class TcPrioritisationMatrix extends TcElement {
   private uid = `tc-pmx-${++uidCount}`;
   private plotRect: DOMRect | null = null;
   private moved = false;
+  /** The item just moved by key or drag: once `items` has it, focus goes to its point – or the cluster it joined */
+  private refocus: string | null = null;
 
   protected override willUpdate(changed: PropertyValues) {
     super.willUpdate(changed);
     if (changed.has("items") && this.fanned && !this.clusters.some((c) => c.key === this.fanned)) this.fanned = null;
+  }
+
+  protected override updated(changed: PropertyValues) {
+    super.updated(changed);
+    if (changed.has("items") && this.refocus) {
+      const id = this.refocus;
+      this.refocus = null;
+      const at = document.activeElement;
+      if (at && at !== document.body && !this.contains(at)) return;
+      const cluster = this.clusters.find((c) => c.members.some((m) => m.it.id === id));
+      (this.querySelector<HTMLElement>(`[data-point="${CSS.escape(id)}"]`) ?? (cluster && this.querySelector<HTMLElement>(`[data-cluster="${CSS.escape(cluster.key)}"]`)))?.focus();
+    }
   }
 
   /* ---------- The model ---------- */
@@ -156,7 +170,10 @@ export class TcPrioritisationMatrix extends TcElement {
     const d = this.drag;
     this.drag = null;
     this.plotRect = null;
-    if (d && this.moved) this.commit(d.id, d.value, d.effort);
+    if (d && this.moved) {
+      this.refocus = d.id;
+      this.commit(d.id, d.value, d.effort);
+    }
   }
 
   private onKey(e: KeyboardEvent, id: string) {
@@ -175,7 +192,9 @@ export class TcPrioritisationMatrix extends TcElement {
     const m = moves[e.key];
     if (!m) return;
     e.preventDefault();
-    if (this.commit(id, it.value + m[0], it.effort + m[1])) void this.updateComplete.then(() => this.querySelector<HTMLElement>(`[data-point="${CSS.escape(id)}"]`)?.focus());
+    // Focus stays with it, here or once a page that controls `items` applies the move (updated)
+    this.refocus = id;
+    this.commit(id, it.value + m[0], it.effort + m[1]);
   }
 
   /* ---------- Rendering ---------- */

@@ -6,11 +6,11 @@ related: citation-badge, citation-sections, publication-impact, document-list
 
 ## Overview
 
-A reading list, formatted. Each reference is set in the chosen citation style – APA 7, MLA 9, Chicago, Harvard or
-IEEE – with a hanging indent (numbered for IEEE). Its DOI or link is live, its tags show as chips, and it has its
-own Copy button. The toolbar picks the style and the order (author, newest first, title) and searches authors,
-titles, journals, years and tags. It also copies the selected references, and exports them – or everything shown,
-when none are ticked – as BibTeX, RIS or plain text.
+A reading list, formatted. Each reference is set in the chosen citation style – APA 7, MLA 9, Chicago
+(notes–bibliography), Harvard or IEEE – with a hanging indent (numbered for IEEE). Its DOI or link is live, its tags
+show as chips, and it has its own Copy button. The toolbar picks the style and the order (author, newest first,
+title) and searches authors, titles, journals, years and tags. It also copies the selected references, and exports
+them – or everything shown, when none are ticked – as BibTeX, RIS or plain text.
 
 The formatting covers what reading lists mostly hold: journal articles, books, chapters, reports, web pages and
 theses. It follows each style's rules for listing authors ("&", "and", et al.), but not editions, editors or

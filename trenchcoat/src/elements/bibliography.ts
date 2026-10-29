@@ -9,9 +9,9 @@ import { copyText } from "./internal/util";
 
 /*
  * <tc-bibliography> – a reading list, formatted. Each reference is set in the chosen citation style – APA, MLA,
- * Chicago, Harvard or IEEE – with a hanging indent (IEEE numbered), its DOI or link live, its tags as chips and a
- * Copy button. A toolbar picks the style and the order (author, year, title), searches, copies the selected
- * references and exports them – or all of them, when none are ticked – as BibTeX, RIS or plain text.
+ * Chicago (notes–bibliography), Harvard or IEEE – with a hanging indent (IEEE numbered), its DOI or link live, its
+ * tags as chips and a Copy button. A toolbar picks the style and the order (author, year, title), searches, copies the
+ * selected references and exports them – or all of them, when none are ticked – as BibTeX, RIS or plain text.
  *   · the formatting covers what reading lists mostly hold: journal articles, books, chapters, reports, web pages and
  *     theses, with each style's rules for listing authors ("&", "and", et al.); not editions or translators
  *   · Export fires a cancelable tc-export ({ format, text, ids }) – prevent it to save the file your own way; otherwise
@@ -69,7 +69,7 @@ export type BibliographyExport = {
 export const citationStyleNames: Record<CitationStyle, string> = {
   apa: "APA 7",
   mla: "MLA 9",
-  chicago: "Chicago",
+  chicago: "Chicago (notes–bibliography)",
   harvard: "Harvard",
   ieee: "IEEE",
 };
@@ -80,9 +80,10 @@ export const citationStyleNames: Record<CitationStyle, string> = {
 type Seg = { text: string; italic?: boolean; href?: string };
 
 const pageRange = (p: string) => p.replace(/\s*[-–—]+\s*/, "–");
-/** "Ana María" → "A. M."; "Jean-Luc" → "J.-L." */
+/** "Ana María" → "A. M."; "Jean-Luc" → "J.-L."; "J.R." → "J. R." */
 const initials = (given = "") =>
   given
+    .replace(/\.(?=\p{L})/gu, ". ")
     .trim()
     .split(/\s+/)
     .filter(Boolean)
@@ -212,10 +213,26 @@ function segments(r: Reference, style: CitationStyle, n?: number): Seg[] {
 
   switch (style) {
     case "apa": {
-      if (authors) t(`${stop(authors)} `);
-      t(`(${year || "n.d."}). `);
+      const title = () => {
+        if (r.type === "chapter" || r.type === "article")
+          t(`${stop(r.title)} `);
+        else {
+          t(r.title, italicTitle);
+          if (r.type === "thesis")
+            t(` [Thesis${r.publisher ? `, ${r.publisher}` : ""}]`);
+          t(". ");
+        }
+      };
+      // No author: the title takes the author's place, before the date
+      if (authors) {
+        t(`${stop(authors)} `);
+        t(`(${year || "n.d."}). `);
+        title();
+      } else {
+        title();
+        t(`(${year || "n.d."}). `);
+      }
       if (r.type === "chapter") {
-        t(`${stop(r.title)} `);
         if (r.container) {
           t("In ");
           t(r.container, true);
@@ -223,7 +240,6 @@ function segments(r: Reference, style: CitationStyle, n?: number): Seg[] {
         }
         if (r.publisher) t(`${stop(r.publisher)} `);
       } else if (r.type === "article") {
-        t(`${stop(r.title)} `);
         if (r.container) {
           t(r.container, true);
           if (vol) {
@@ -235,10 +251,6 @@ function segments(r: Reference, style: CitationStyle, n?: number): Seg[] {
           t(". ");
         }
       } else {
-        t(r.title, italicTitle);
-        if (r.type === "thesis")
-          t(` [Thesis${r.publisher ? `, ${r.publisher}` : ""}]`);
-        t(". ");
         if (r.type === "web" && r.container) t(`${stop(r.container)} `);
         else if (r.type !== "thesis" && r.publisher) t(`${stop(r.publisher)} `);
       }
@@ -292,7 +304,8 @@ function segments(r: Reference, style: CitationStyle, n?: number): Seg[] {
           t(`${stop([r.publisher, year].filter(Boolean).join(", "))} `);
       } else if (r.type === "web") {
         t(`“${stop(r.title)}” `);
-        if (r.container) t(`${stop(r.container)} `);
+        const where = [r.container, year].filter(Boolean).join(", ");
+        if (where) t(`${stop(where)} `);
         if (r.accessed) t(`Accessed ${accessedWords(r.accessed)}. `);
       } else {
         t(r.title, true);
@@ -305,26 +318,39 @@ function segments(r: Reference, style: CitationStyle, n?: number): Seg[] {
       break;
     }
     case "harvard": {
-      if (authors) t(`${authors} `);
-      t(`(${year || "no date"}) `);
+      const date = `(${year || "no date"})`;
+      const title = () => {
+        if (r.type === "article" || r.type === "chapter") t(`‘${r.title}’`);
+        else {
+          t(r.title, true);
+          if (r.type === "thesis") t(". Thesis");
+        }
+      };
+      // No author: the title takes the author's place, before the date
+      if (authors) {
+        t(`${authors} ${date} `);
+        title();
+      } else {
+        title();
+        t(` ${date}`);
+      }
       if (r.type === "article") {
-        t(`‘${r.title}’, `);
+        t(authors ? ", " : " ");
         if (r.container) t(r.container, true);
         if (vol) t(`, ${vol}`);
         if (iss) t(`(${iss})`);
         if (pages) t(`, pp. ${pages}`);
         t(". ");
       } else if (r.type === "chapter") {
-        t(`‘${r.title}’, in `);
+        t(authors ? ", in " : " In ");
         if (r.container) t(r.container, true);
         if (r.publisher) t(`. ${r.publisher}`);
         if (pages) t(`, pp. ${pages}`);
         t(". ");
       } else {
-        t(r.title, true);
-        if (r.type === "thesis") t(". Thesis");
-        if (r.type === "web" && r.container) t(`, ${r.container}`);
-        else if (r.publisher) t(`. ${r.publisher}`);
+        if (r.type === "web" && r.container)
+          t(`${authors ? "," : ""} ${r.container}`);
+        else if (r.publisher) t(`${authors ? "." : ""} ${r.publisher}`);
         t(". ");
       }
       if (link()) {
@@ -338,7 +364,6 @@ function segments(r: Reference, style: CitationStyle, n?: number): Seg[] {
       if (authors) t(`${authors}, `);
       if (r.type === "article" || r.type === "web") {
         // “Title,” Journal, vol. 3, no. 2, pp. 1–9, 2020, doi: 10.x.  – or, online only: … 2020. [Online]. Available: url
-        t(`“${r.title},” `);
         const items: Seg[][] = [];
         if (r.container) items.push([{ text: r.container, italic: true }]);
         if (vol) items.push([{ text: `vol. ${vol}` }]);
@@ -349,11 +374,14 @@ function segments(r: Reference, style: CitationStyle, n?: number): Seg[] {
           items.push([{ text: `accessed ${accessedWords(r.accessed)}` }]);
         if (r.doi)
           items.push([{ text: `doi: ${bareDoi(r.doi)}`, href: doiUrl(r.doi) }]);
+        // Nothing after the title (a web page with no site or date): it closes with its own full stop
+        if (!items.length) t(`“${stop(r.title)}”`);
+        else t(`“${r.title},” `);
         items.forEach((it, i) => {
           if (i) t(", ");
           out.push(...it);
         });
-        t(".");
+        if (items.length) t(".");
         if (!r.doi && r.url) {
           t(" [Online]. Available: ");
           out.push({ text: r.url, href: r.url });
@@ -372,8 +400,8 @@ function segments(r: Reference, style: CitationStyle, n?: number): Seg[] {
       } else {
         t(r.title, true);
         if (r.type === "thesis") t(", Thesis");
-        t(". ");
-        t(stop([r.publisher, year].filter(Boolean).join(", ")));
+        const pub = [r.publisher, year].filter(Boolean).join(", ");
+        t(pub ? `. ${stop(pub)}` : ".");
         if (r.doi || r.url) {
           t(" ");
           link();
@@ -452,7 +480,7 @@ function citeKey(r: Reference, used: Set<string>) {
     r.title.split(/\s+/)[0] ??
     "ref";
   const base =
-    `${plain(r.authors[0]?.family ?? "anon").toLowerCase()}${r.year ?? ""}${plain(word).toLowerCase()}` ||
+    `${plain(r.authors[0]?.family ?? "anon").toLowerCase()}${plain(String(r.year ?? ""))}${plain(word).toLowerCase()}` ||
     r.id;
   let key = base;
   for (let i = 0; used.has(key); i++)
@@ -464,51 +492,78 @@ function citeKey(r: Reference, used: Set<string>) {
 /** References as BibTeX */
 export function toBibTeX(refs: Reference[]): string {
   const used = new Set<string>();
-  const esc = (s: string) => s.replace(/([{}])/g, "\\$1");
-  return refs
-    .map((r) => {
-      const f: [string, string | undefined][] = [
-        [
-          "author",
-          r.authors
-            .map((a) => (a.given ? `${a.family}, ${a.given}` : a.family))
-            .join(" and "),
-        ],
-        ["title", r.title],
-        [
-          r.type === "article"
-            ? "journal"
-            : r.type === "chapter"
-              ? "booktitle"
-              : r.type === "web"
-                ? "howpublished"
-                : "",
-          r.container,
-        ],
-        ["year", r.year !== undefined ? String(r.year) : undefined],
-        ["volume", r.volume !== undefined ? String(r.volume) : undefined],
-        ["number", r.issue !== undefined ? String(r.issue) : undefined],
-        ["pages", r.pages ? r.pages.replace(/\s*[-–—]+\s*/, "--") : undefined],
-        [
-          r.type === "report"
-            ? "institution"
-            : r.type === "thesis"
-              ? "school"
-              : "publisher",
-          r.publisher,
-        ],
-        ["doi", r.doi ? bareDoi(r.doi) : undefined],
-        ["url", r.url],
-        ["urldate", r.accessed],
-        ["keywords", r.tags?.join(", ")],
-      ];
-      const body = f
-        .filter(([k, v]) => k && v)
-        .map(([k, v]) => `  ${k} = {${esc(v!)}}`)
-        .join(",\n");
-      return `@${BIBTEX_TYPE[r.type]}{${citeKey(r, used)},\n${body}\n}`;
-    })
-    .join("\n\n");
+  return refs.map((r) => bibTeXEntry(r, used)).join("\n\n");
+}
+
+/** Braces that pair up (" {DNA}" keeps its capitals) */
+const balanced = (s: string) => {
+  let depth = 0;
+  for (const c of s) {
+    depth += c === "{" ? 1 : c === "}" ? -1 : 0;
+    if (depth < 0) return false;
+  }
+  return depth === 0;
+};
+/** Text for a BibTeX field: LaTeX's specials escaped; braces kept when they pair up, else written out */
+const bibEsc = (s: string) => {
+  let v = s.replace(/\\/g, "\\textbackslash ");
+  if (!balanced(v))
+    v = v.replace(/[{}]/g, (c) =>
+      c === "{" ? "\\textbraceleft " : "\\textbraceright ",
+    );
+  return v.replace(/([&%$#_])/g, "\\$1");
+};
+
+function bibTeXEntry(r: Reference, used: Set<string>): string {
+  const f: [string, string | undefined][] = [
+    [
+      "author",
+      // A name with no given name (an organisation) in braces, so BibTeX keeps it whole
+      r.authors
+        .map((a) =>
+          a.given
+            ? `${bibEsc(a.family)}, ${bibEsc(a.given)}`
+            : `{${bibEsc(a.family)}}`,
+        )
+        .join(" and "),
+    ],
+    ["title", r.title],
+    [
+      r.type === "article"
+        ? "journal"
+        : r.type === "chapter"
+          ? "booktitle"
+          : r.type === "web"
+            ? "howpublished"
+            : "",
+      r.container,
+    ],
+    ["year", r.year !== undefined ? String(r.year) : undefined],
+    ["volume", r.volume !== undefined ? String(r.volume) : undefined],
+    ["number", r.issue !== undefined ? String(r.issue) : undefined],
+    ["pages", r.pages ? r.pages.replace(/\s*[-–—]+\s*/, "--") : undefined],
+    [
+      r.type === "report"
+        ? "institution"
+        : r.type === "thesis"
+          ? "school"
+          : "publisher",
+      r.publisher,
+    ],
+    ["doi", r.doi ? bareDoi(r.doi) : undefined],
+    ["url", r.url],
+    ["urldate", r.accessed],
+    ["keywords", r.tags?.join(", ")],
+  ];
+  // The author's already escaped; a DOI or URL goes in as it is
+  const body = f
+    .filter(([k, v]) => k && v)
+    .map(
+      ([k, v]) =>
+        `  ${k} = {${k === "author" || k === "doi" || k === "url" ? v : bibEsc(v!)}}`,
+    )
+    .join(",\n");
+  return `@${BIBTEX_TYPE[r.type]}{${citeKey(r, used)},\n${body}\n}`;
 }
 
 /** References as RIS */
@@ -592,8 +647,8 @@ const FORMATS: [BibliographyExportFormat, string, string][] = [
 ];
 
 /**
- * A reading list set in a citation style – APA, MLA, Chicago, Harvard or IEEE – with links, tags, search, sort,
- * Copy for one or the selected, and export as BibTeX, RIS or plain text.
+ * A reading list set in a citation style – APA, MLA, Chicago (notes–bibliography), Harvard or IEEE – with links,
+ * tags, search, sort, Copy for one or the selected, and export as BibTeX, RIS or plain text.
  * @tag tc-bibliography
  * @fires tc-citation-style-change - The citation style changed ({ citationStyle }: BibliographyCitationStyleChange); cancelable – prevented, `citationStyle` stays as it was
  * @fires tc-selected-change - References were ticked or unticked ({ selected }: BibliographySelectedChange); cancelable – prevented, `selected` stays as it was
@@ -855,7 +910,7 @@ export class TcBibliography extends TcElement {
             type="checkbox"
             aria-label="Select all shown"
             .checked=${live(all)}
-            .indeterminate=${picked > 0 && !all}
+            .indeterminate=${live(picked > 0 && !all)}
             ?disabled=${!shown.length}
             @change=${() => {
               const ids = shown.map((r) => r.id);
@@ -886,6 +941,7 @@ export class TcBibliography extends TcElement {
         <span class="tc-sr-only">Citation style</span>
         <select
           class="ui-bib__field"
+          .value=${live(this.citationStyle)}
           @change=${(e: Event) =>
             this.setStyle(
               (e.target as HTMLSelectElement).value as CitationStyle,
@@ -903,6 +959,7 @@ export class TcBibliography extends TcElement {
         <span class="tc-sr-only">Sort by</span>
         <select
           class="ui-bib__field"
+          .value=${live(this.sort)}
           @change=${(e: Event) =>
             this.setSort(
               (e.target as HTMLSelectElement).value as BibliographySort,

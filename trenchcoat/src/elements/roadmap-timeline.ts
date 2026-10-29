@@ -131,8 +131,12 @@ export class TcRoadmapTimeline extends TcElement {
 
   override connectedCallback() {
     super.connectedCallback();
-    // The element's own clock, read once when it joins the page, for a Today line without `today`
-    if (this.today === undefined) this.clockDay = Math.floor(Date.now() / DAY);
+    // The element's own clock, read once when it joins the page, for a Today line without `today` – the reader's own
+    // calendar day, not UTC's, which is a day out for part of every day away from Greenwich
+    if (this.today === undefined) {
+      const n = new Date();
+      this.clockDay = Math.round(Date.UTC(n.getFullYear(), n.getMonth(), n.getDate()) / DAY);
+    }
   }
 
   protected override willUpdate(changed: PropertyValues) {

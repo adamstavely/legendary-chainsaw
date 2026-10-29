@@ -160,6 +160,62 @@ describe("formatReference", () => {
       "A. Mensah, “Training volunteer divers,” Reef Volunteers Network, 2024, accessed 14 September 2026. [Online]. Available: https://example.org/guides/divers",
     );
   });
+  test("initials: run-together initials are each their own", () => {
+    const jr: Reference = {
+      ...BOOK,
+      authors: [{ family: "Tolkien", given: "J.R.R." }],
+    };
+    expect(formatReference(jr, "apa")).toMatch(
+      /^Tolkien, J\. R\. R\. \(2019\)/,
+    );
+    expect(formatReference(jr, "ieee")).toMatch(/^J\. R\. R\. Tolkien, /);
+    expect(
+      formatReference(
+        { ...BOOK, authors: [{ family: "Picard", given: "Jean-Luc" }] },
+        "apa",
+      ),
+    ).toMatch(/^Picard, J\.-L\. /);
+  });
+  test("no author: APA and Harvard put the title where the author goes, before the date", () => {
+    const anon: Reference = { ...BOOK, authors: [] };
+    expect(formatReference(anon, "apa")).toBe(
+      "Gardening the sea: A practical guide to coral nurseries. (2019). Harbour Lane Press.",
+    );
+    expect(formatReference(anon, "harvard")).toBe(
+      "Gardening the sea: A practical guide to coral nurseries (2019) Harbour Lane Press.",
+    );
+    expect(
+      formatReference({ ...ARTICLE, authors: [], doi: undefined }, "apa"),
+    ).toBe(
+      "Rubble stabilisation and early coral recruitment on degraded reef flats. (2021). Journal of Reef Restoration, 14(2), 112–129.",
+    );
+    expect(
+      formatReference({ ...ARTICLE, authors: [], doi: undefined }, "harvard"),
+    ).toBe(
+      "‘Rubble stabilisation and early coral recruitment on degraded reef flats’ (2021) Journal of Reef Restoration, 14(2), pp. 112–129.",
+    );
+  });
+  test("Chicago web pages carry their year; IEEE leaves no stray full stop when there's little to say", () => {
+    expect(formatReference(WEB, "chicago")).toBe(
+      "Mensah, Ama. “Training volunteer divers.” Reef Volunteers Network, 2024. Accessed 14 September 2026. https://example.org/guides/divers.",
+    );
+    expect(
+      formatReference(
+        { ...BOOK, publisher: undefined, year: undefined },
+        "ieee",
+      ),
+    ).toBe(
+      "R. Haddad, Gardening the sea: A practical guide to coral nurseries.",
+    );
+    expect(
+      formatReference(
+        { ...WEB, container: undefined, year: undefined, accessed: undefined },
+        "ieee",
+      ),
+    ).toBe(
+      "A. Mensah, “Training volunteer divers.” [Online]. Available: https://example.org/guides/divers",
+    );
+  });
   test("et al. rules: APA lists 20 then an ellipsis; IEEE shortens at seven", () => {
     const many = (n: number): Reference => ({
       ...BOOK,
@@ -188,6 +244,29 @@ describe("exports", () => {
     expect(out).toContain("  pages = {112--129}");
     expect(out).toContain("@book{haddad2019gardening,");
     expect(out).toContain("  publisher = {Harbour Lane Press}");
+  });
+  test("BibTeX: LaTeX's specials escaped, organisations kept whole, braces that pair up kept, a plain cite key", () => {
+    const out = toBibTeX([
+      {
+        id: "who",
+        type: "report",
+        authors: [{ family: "Food & Agriculture Organization" }],
+        title: "50% of {DNA} reefs: #1 at $5_000 { open",
+        publisher: "R&D Unit",
+        year: "2020a",
+        url: "https://example.org/a_b?x=1%20",
+      },
+    ]);
+    expect(out).toContain("@techreport{foodagricultureorganization2020adna,");
+    expect(out).toContain("  author = {{Food \\& Agriculture Organization}}");
+    expect(out).toContain(
+      "  title = {50\\% of \\textbraceleft DNA\\textbraceright  reefs: \\#1 at \\$5\\_000 \\textbraceleft  open}",
+    );
+    expect(out).toContain("  institution = {R\\&D Unit}");
+    expect(out).toContain("  url = {https://example.org/a_b?x=1%20}");
+    expect(toBibTeX([{ ...BOOK, title: "The {DNA} of reefs" }])).toContain(
+      "  title = {The {DNA} of reefs}",
+    );
   });
   test("RIS: one record per reference, closed with ER", () => {
     const out = toRIS([ARTICLE, WEB]);
@@ -280,7 +359,15 @@ describe("tc-bibliography", () => {
     styleSel.dispatchEvent(new Event("change", { bubbles: true }));
     await settle();
     expect(el.citationStyle).toBe("ieee");
+    expect(styleSel.value).toBe("ieee");
     expect(styles).toEqual(["ieee", "mla"]);
+    el.addEventListener("tc-sort-change", (e) => e.preventDefault(), {
+      once: true,
+    });
+    sortSel.value = "title";
+    sortSel.dispatchEvent(new Event("change", { bubbles: true }));
+    await settle();
+    expect(sortSel.value).toBe("year");
   });
 
   test("ticking, select all, Copy selected and a reference's Copy fire cancelable tc-copy with the formatted text", async () => {
@@ -306,6 +393,15 @@ describe("tc-bibliography", () => {
     expect(copies[0].text).toBe(formatReference(ARTICLE, "apa"));
     const all = el.querySelector<HTMLInputElement>(".ui-bib__all input")!;
     expect(all.indeterminate).toBe(true);
+    // Prevented, the box goes back to part-ticked
+    el.addEventListener("tc-selected-change", (e) => e.preventDefault(), {
+      once: true,
+    });
+    all.click();
+    await settle();
+    expect(el.selected).toEqual(["okafor2021"]);
+    expect(all.indeterminate).toBe(true);
+    expect(all.checked).toBe(false);
     all.click();
     await settle();
     expect(el.selected.sort()).toEqual([

@@ -110,6 +110,28 @@ describe("tc-prioritisation-matrix", () => {
     expect(document.activeElement).toBe(el.querySelector(".ui-pmx__cluster"));
   });
 
+  test("moved onto another point, by key or drag: focus goes to the cluster it joined", async () => {
+    const el = await make("standard", [...ITEMS, { id: "flyer", label: "Flyer", value: 3, effort: 1.5 }]);
+    point(el, "flyer").focus();
+    key(point(el, "flyer"), "ArrowDown");
+    await settle();
+    expect(point(el, "flyer")).toBeNull();
+    const cluster = el.querySelector<HTMLButtonElement>(".ui-pmx__cluster")!;
+    expect(text(cluster.querySelector(".tc-sr-only"))).toBe("3 items here: Signage, Newsletter, Flyer. Show them");
+    await expect.poll(() => document.activeElement).toBe(cluster);
+    const plot = el.querySelector<HTMLElement>(".ui-pmx__plot")!.getBoundingClientRect();
+    const at = (effort: number, value: number) => ({ clientX: plot.left + (effort / 10) * plot.width, clientY: plot.top + ((10 - value) / 10) * plot.height, bubbles: true, pointerId: 1, button: 0 });
+    const p = point(el, "intranet");
+    p.focus();
+    p.dispatchEvent(new PointerEvent("pointerdown", at(7, 3)));
+    p.dispatchEvent(new PointerEvent("pointermove", at(1.5, 2.5)));
+    await settle();
+    point(el, "intranet").dispatchEvent(new PointerEvent("pointerup", at(1.5, 2.5)));
+    await settle();
+    expect(point(el, "intranet")).toBeNull();
+    await expect.poll(() => document.activeElement).toBe(el.querySelector(".ui-pmx__cluster"));
+  });
+
   test("highlight: a point lights its row and a row its point", async () => {
     const el = await make();
     point(el, "reef").dispatchEvent(new PointerEvent("pointerenter"));
