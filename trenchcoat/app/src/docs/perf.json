@@ -10836,7 +10836,7 @@
   },
   "generated-ui": {
    "measuredAt": "2026-10-29",
-   "hash": "53ef2b2fed953ef9",
+   "hash": "6676633437119be9",
    "bundle": {
     "own": {
      "min": 34126,
@@ -10891,7 +10891,7 @@
      {
       "name": "internal/modal",
       "kind": "internal",
-      "min": 1600
+      "min": 1594
      },
      {
       "name": "internal/selection-toolbar",
@@ -11064,6 +11064,11 @@
       "min": 50429
      },
      {
+      "name": "json-viewer",
+      "kind": "element",
+      "min": 49276
+     },
+     {
       "name": "ai-workspace",
       "kind": "element",
       "min": 49228
@@ -11096,7 +11101,7 @@
      {
       "name": "playbook-canvas",
       "kind": "element",
-      "min": 47053
+      "min": 47135
      },
      {
       "name": "world-map",
@@ -11241,7 +11246,7 @@
      {
       "name": "plan-vs-actual",
       "kind": "element",
-      "min": 37276
+      "min": 37329
      },
      {
       "name": "version-history",
@@ -11356,7 +11361,7 @@
      {
       "name": "policy-simulator",
       "kind": "element",
-      "min": 32438
+      "min": 32447
      },
      {
       "name": "filter-menu",
@@ -12016,7 +12021,7 @@
      {
       "name": "dialog",
       "kind": "element",
-      "min": 3674
+      "min": 3673
      },
      {
       "name": "slider-field",
@@ -12046,7 +12051,7 @@
      {
       "name": "src/generative/registry.ts",
       "kind": "other",
-      "min": 36404
+      "min": 36643
      },
      {
       "name": "src/generative/schemas/tc-ai-side-pane.json",
@@ -12231,7 +12236,7 @@
      {
       "name": "src/generative/schemas/tc-app-directory.json",
       "kind": "other",
-      "min": 3383
+      "min": 3419
      },
      {
       "name": "src/generative/schemas/tc-ai-summary.json",
@@ -12392,6 +12397,11 @@
       "name": "src/generative/schemas/tc-session-state.json",
       "kind": "other",
       "min": 2866
+     },
+     {
+      "name": "src/generative/schemas/tc-json-viewer.json",
+      "kind": "other",
+      "min": 2843
      },
      {
       "name": "src/generative/schemas/tc-artifact-panel.json",
@@ -13150,21 +13160,21 @@
      }
     ],
     "withoutLit": {
-     "min": 7412845,
-     "gzip": 1822945
+     "min": 7465733,
+     "gzip": 1836891
     },
     "withLit": {
-     "min": 7379749,
-     "gzip": 1809985
+     "min": 7432280,
+     "gzip": 1824606
     }
    },
    "render": {
     "tag": "tc-generated-ui",
     "source": "demo",
     "runs": 7,
-    "cold": 2.2,
-    "first": 0.6,
-    "update": 0.2,
+    "cold": 2.5,
+    "first": 0.5,
+    "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 9,
     "scale": null,
@@ -15362,6 +15372,119 @@
     "updateKind": "re-render with the same data",
     "nodes": 6,
     "scale": null,
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
+  "json-viewer": {
+   "measuredAt": "2026-10-29",
+   "hash": "b40be6dfc9a3a8f5",
+   "bundle": {
+    "own": {
+     "min": 51335,
+     "gzip": 14689
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 19994
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2968
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1868
+     },
+     {
+      "name": "internal/modal",
+      "kind": "internal",
+      "min": 1573
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/util",
+      "kind": "internal",
+      "min": 501
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 444
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 436
+     },
+     {
+      "name": "internal/safe-url",
+      "kind": "internal",
+      "min": 343
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     }
+    ],
+    "withoutLit": {
+     "min": 61089,
+     "gzip": 17833
+    },
+    "withLit": {
+     "min": 82281,
+     "gzip": 24641
+    }
+   },
+   "render": {
+    "tag": "tc-json-viewer",
+    "source": "demo",
+    "runs": 7,
+    "cold": 8.1,
+    "first": 3.2,
+    "update": 0.9,
+    "updateKind": "one item of flags replaced",
+    "nodes": 461,
+    "scale": {
+     "property": "flags",
+     "demoItems": 1,
+     "points": [
+      {
+       "items": 100,
+       "first": 3.9,
+       "update": 1.1,
+       "nodes": 560
+      },
+      {
+       "items": 1000,
+       "first": 9.3,
+       "update": 2.7,
+       "nodes": 1460
+      }
+     ]
+    },
     "idle": {
      "visible": {
       "frames": 0,

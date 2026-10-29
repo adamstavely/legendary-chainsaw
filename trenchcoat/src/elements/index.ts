@@ -129,6 +129,7 @@ export * from "./integration-settings";
 export * from "./investment-balance";
 export * from "./invoice-credit";
 export * from "./isbn-details";
+export * from "./json-viewer";
 export * from "./kill-switch";
 export * from "./knowledge-promotion";
 export * from "./knowledge-source-manager";

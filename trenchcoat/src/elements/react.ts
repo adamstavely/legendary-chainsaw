@@ -140,6 +140,7 @@ export * from "./react/integration-settings";
 export * from "./react/investment-balance";
 export * from "./react/invoice-credit";
 export * from "./react/isbn-details";
+export * from "./react/json-viewer";
 export * from "./react/kill-switch";
 export * from "./react/knowledge-promotion";
 export * from "./react/knowledge-source-manager";

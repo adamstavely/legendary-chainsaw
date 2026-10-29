@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased – a JSON viewer for review
+
+- **JSON Viewer** (`tc-json-viewer`) – a JSON document laid out for someone to check: Document reads it like a form
+  (keys in plain words, nested objects as sections, lists of like objects as tables, links, dates and yes/no drawn as
+  what they are) and Raw is the pretty-printed JSON with line numbers; `layout="split"` shows them side by side, each
+  field linked to its lines. Search marks and counts matches in every view; reviewers flag fields with notes
+  (`tc-flags-change`); Copy and Download hand over the JSON – `source` as written, so integers too big to hold exactly
+  (which are marked) keep their digits. `source` text that isn't valid JSON shows where it breaks. With `modal`, it's
+  a dialog opened by `open`.
 ## Unreleased – fixes from a review of the newest components
 
 - **Text to Speech** – when another reader (or the page) cancels the browser's shared speech queue, it pauses instead
