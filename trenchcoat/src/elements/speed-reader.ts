@@ -495,9 +495,10 @@ export class TcSpeedReader extends TcElement {
   letter-spacing: var(--tc-tracking-snug);
   white-space: pre;
 }
-/* A long chunk runs off the frame's edges; the left part is end-aligned so it overflows to the left */
-.ui-spr__left { display: flex; justify-content: flex-end; overflow: hidden; }
-.ui-spr__right { overflow: hidden; }
+/* A long chunk runs off the frame's edges; the left part is end-aligned so it overflows to the left. Only the sides
+   are cut: clipping both ways cut the descenders (g, y, p) off the tight line */
+.ui-spr__left { display: flex; justify-content: flex-end; overflow-x: clip; overflow-y: visible; }
+.ui-spr__right { overflow-x: clip; overflow-y: visible; }
 .ui-spr__pivot { color: var(--tc-accent-text); font-weight: var(--tc-font-weight-strong); }
 .ui-spr__none { text-align: center; color: var(--tc-text-muted); }
 

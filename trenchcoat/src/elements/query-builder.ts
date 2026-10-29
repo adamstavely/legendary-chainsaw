@@ -443,7 +443,7 @@ export class TcQueryBuilder extends TcElement {
   border-radius: var(--tc-tray-radius);
   background: var(--tc-surface-tray);
   container-type: inline-size;
-  --tc-qb-conj: var(--tc-space-12);
+  --tc-qb-conj: var(--tc-space-10);
   font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-md);
   line-height: var(--tc-line-height-normal);
@@ -461,7 +461,7 @@ export class TcQueryBuilder extends TcElement {
   background: var(--tc-surface-raised);
   box-shadow: var(--tc-card-shadow);
   container-type: inline-size;
-  --tc-qb-conj: var(--tc-space-12);
+  --tc-qb-conj: var(--tc-space-10);
   font-family: var(--tc-font-sans);
   font-size: var(--tc-font-size-md);
   font-weight: var(--tc-font-weight-regular);
@@ -486,7 +486,7 @@ export class TcQueryBuilder extends TcElement {
 .ui-qb__join-hint { font-size: var(--tc-font-size-sm); color: var(--tc-text-muted); }
 /* The join: a two-way segmented switch made of radios */
 .ui-qb__join { display: inline-flex; padding: var(--tc-seg-pad); border: 0; border-radius: var(--tc-seg-track-radius); background: var(--tc-seg-track-bg); }
-.ui-qb__join-opt { position: relative; display: inline-flex; align-items: center; height: calc(var(--tc-control-h-sm) - 2 * var(--tc-seg-pad)); padding: 0 var(--tc-space-2-5); border-radius: calc(var(--tc-seg-track-radius) - var(--tc-seg-pad)); font-family: var(--tc-font-mono); font-size: var(--tc-font-size-xs); font-weight: var(--tc-font-weight-medium); letter-spacing: var(--tc-tracking-caps); color: var(--tc-text-secondary); cursor: pointer; transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard); }
+.ui-qb__join-opt { position: relative; display: inline-flex; align-items: center; height: calc(var(--tc-control-h-sm) - 2 * var(--tc-seg-pad)); padding: 0 var(--tc-space-2-5); border-radius: calc(var(--tc-seg-track-radius) - var(--tc-seg-pad)); font-size: var(--tc-font-size-xs); font-weight: var(--tc-font-weight-medium); letter-spacing: var(--tc-tracking-caps); color: var(--tc-text-secondary); cursor: pointer; transition: background-color var(--tc-duration-fast) var(--tc-ease-standard), color var(--tc-duration-fast) var(--tc-ease-standard); }
 .ui-qb__join-opt[data-on] { background: var(--tc-seg-thumb-bg); box-shadow: var(--tc-seg-thumb-shadow); color: var(--tc-text-primary); }
 .ui-qb__join-opt:has(:focus-visible) { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
 .ui-qb__list { display: grid; gap: var(--tc-space-2); }
@@ -505,6 +505,9 @@ export class TcQueryBuilder extends TcElement {
 .ui-qb__input:focus-visible { box-shadow: var(--tc-field-shadow-focus); }
 .ui-qb__input::placeholder { color: var(--tc-text-placeholder); }
 select.ui-qb__input { cursor: pointer; }
+/* The browser's date picker button, quieted to the chevrons' weight */
+.ui-qb__input::-webkit-calendar-picker-indicator { opacity: 0.5; cursor: pointer; }
+.ui-qb__input::-webkit-calendar-picker-indicator:hover { opacity: 0.8; }
 .ui-qb__cond[data-incomplete] .ui-qb__value .ui-qb__input:not(:focus-visible) { box-shadow: var(--tc-field-shadow), inset 0 0 0 var(--tc-hairline) var(--tc-border-strong); }
 .ui-qb__between { display: flex; align-items: center; gap: var(--tc-space-1-5); }
 .ui-qb__and { flex: none; font-size: var(--tc-font-size-sm); color: var(--tc-text-muted); }
@@ -532,7 +535,7 @@ select.ui-qb__input { cursor: pointer; }
 .ui-qb__run:hover { background: var(--tc-action-primary-bg-hover); }
 .ui-qb__run:active { background: var(--tc-action-primary-bg-active); }
 /* Narrower: the joining words go (the group's switch still says it), then the value takes its own line */
-@container (max-width: 600px) {
+@container (max-width: 500px) {
   .ui-qb__conj { display: none; }
   .ui-qb__cond { grid-template-columns: minmax(0, 1fr) minmax(0, 0.85fr) minmax(0, 1.4fr) auto; }
   .ui-qb__sub { grid-template-columns: minmax(0, 1fr); }
