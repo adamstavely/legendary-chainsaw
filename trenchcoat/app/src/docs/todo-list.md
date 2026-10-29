@@ -65,6 +65,8 @@ Remove appears when a to-do is hovered or focused; on touch screens it always sh
 
 - Start each to-do with a verb: "Send the poster files", "Book the hall".
 - Keep them to one line; `max-length` (200) stops pasted essays.
+- Give every to-do its own id. Any string works ("1.5", "task:1", "a b"); if two share one, the first is kept and
+  the others are dropped, so ticking or removing always acts on one to-do.
 - Rename the words for your product's voice with `labels` ("Task" instead of "To-do", say).
 
 ## Do

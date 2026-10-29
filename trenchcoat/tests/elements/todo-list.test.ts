@@ -24,7 +24,7 @@ const make = (look = "standard", items = ITEMS) => fixture<TcTodoList>(html`<tc-
 /** Each to-do's words as shown – the text, without the screen-reader-only ", edit" */
 const texts = (el: Element) =>
   [...el.querySelectorAll(".ui-todo__item .ui-todo__text")].map((t) => [...t.childNodes].filter((n) => n.nodeType === Node.TEXT_NODE).map((n) => n.textContent).join("").trim());
-const box = (el: Element, id: string) => el.querySelector<HTMLInputElement>(`.ui-todo__item[data-id="${id}"] input[type="checkbox"]`)!;
+const box = (el: Element, id: string) => el.querySelector<HTMLInputElement>(`.ui-todo__item[data-id="${CSS.escape(id)}"] input[type="checkbox"]`)!;
 const key = (target: Element, k: string, init: KeyboardEventInit = {}) => target.dispatchEvent(new KeyboardEvent("keydown", { key: k, bubbles: true, cancelable: true, ...init }));
 const type = async (input: HTMLInputElement, value: string) => {
   input.value = value;
@@ -160,11 +160,76 @@ describe("tc-todo-list", () => {
     expect(seen).toHaveLength(1);
   });
 
+  test("ids that aren't valid selectors work: remove, Undo, move and edit keep focus", async () => {
+    const el = await make("standard", [
+      { id: "1.5", text: "Dotted" },
+      { id: "task:1", text: "Coloned" },
+      { id: "a b", text: "Spaced" },
+    ]);
+    // No element ids are built from page ids
+    expect(el.querySelector('[id*="1.5"], [id*="task:1"]')).toBeNull();
+    box(el, "task:1").focus();
+    key(box(el, "task:1"), "ArrowUp", { altKey: true });
+    await settle();
+    expect(texts(el)).toEqual(["Coloned", "Dotted", "Spaced"]);
+    expect(document.activeElement).toBe(box(el, "task:1"));
+    el.querySelector<HTMLButtonElement>('.ui-todo__item[data-id="a b"] .ui-todo__remove')!.click();
+    await settle();
+    el.querySelector<HTMLButtonElement>(".ui-todo__undo")!.click();
+    await settle();
+    expect(document.activeElement).toBe(box(el, "a b"));
+    el.querySelector<HTMLButtonElement>('.ui-todo__item[data-id="1.5"] .ui-todo__text')!.click();
+    await settle();
+    const edit = el.querySelector<HTMLInputElement>(".ui-todo__edit")!;
+    await type(edit, "Dotted, edited");
+    key(edit, "Enter");
+    await settle();
+    expect(document.activeElement).toBe(el.querySelector('.ui-todo__item[data-id="1.5"] .ui-todo__text'));
+  });
+
+  test("ticking a to-do out of the To do or Done tab moves focus to its neighbour", async () => {
+    const el = await make();
+    el.filter = "active";
+    await settle();
+    box(el, "b").focus();
+    box(el, "b").click();
+    await settle();
+    expect(texts(el)).toEqual(["Order badges"]);
+    expect(document.activeElement).toBe(box(el, "c"));
+    // The last one: focus falls back to the add box
+    box(el, "c").click();
+    await settle();
+    expect(document.activeElement).toBe(el.querySelector(".ui-todo__input"));
+    // In Done, unticking moves to the next done one
+    el.filter = "done";
+    await settle();
+    box(el, "a").focus();
+    box(el, "a").click();
+    await settle();
+    expect(document.activeElement).toBe(box(el, "b"));
+  });
+
+  test("duplicate ids: the first is kept, so actions act on exactly one to-do", async () => {
+    const el = await make("standard", [
+      { id: "x", text: "First" },
+      { id: "x", text: "Second" },
+      { id: "y", text: "Other" },
+    ]);
+    expect(texts(el)).toEqual(["First", "Other"]);
+    expect(el.items.map((i) => i.text)).toEqual(["First", "Other"]);
+    box(el, "x").click();
+    await settle();
+    expect(el.items.filter((i) => i.done)).toHaveLength(1);
+  });
+
   test("Clear done; empty states for each tab", async () => {
     const el = await make();
+    el.querySelector<HTMLButtonElement>(".ui-todo__clear")!.focus();
     el.querySelector<HTMLButtonElement>(".ui-todo__clear")!.click();
     await settle();
     expect(texts(el)).toEqual(["Print posters", "Order badges"]);
+    // The button went with the done to-dos: focus is on the add box
+    expect(document.activeElement).toBe(el.querySelector(".ui-todo__input"));
     expect(el.querySelector(".ui-todo__clear")).toBeNull();
     el.filter = "done";
     await settle();

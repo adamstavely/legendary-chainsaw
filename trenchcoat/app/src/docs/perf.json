@@ -10708,7 +10708,7 @@
   },
   "generated-ui": {
    "measuredAt": "2026-10-29",
-   "hash": "402a5eb370bd08a5",
+   "hash": "1f093cfc7cf8f0fb",
    "bundle": {
     "own": {
      "min": 34126,
@@ -11516,6 +11516,11 @@
       "min": 21546
      },
      {
+      "name": "todo-list",
+      "kind": "element",
+      "min": 21463
+     },
+     {
       "name": "autonomy-dial",
       "kind": "element",
       "min": 21327
@@ -11534,11 +11539,6 @@
       "name": "fingerprint-card",
       "kind": "element",
       "min": 20910
-     },
-     {
-      "name": "todo-list",
-      "kind": "element",
-      "min": 20877
      },
      {
       "name": "agreement-tracker",
@@ -12101,14 +12101,14 @@
       "min": 3437
      },
      {
-      "name": "src/generative/schemas/tc-app-directory.json",
-      "kind": "other",
-      "min": 3383
-     },
-     {
       "name": "src/generative/schemas/tc-ai-summary.json",
       "kind": "other",
       "min": 3366
+     },
+     {
+      "name": "src/generative/schemas/tc-app-directory.json",
+      "kind": "other",
+      "min": 3363
      },
      {
       "name": "src/generative/schemas/tc-prompt-starters.json",
@@ -13022,21 +13022,21 @@
      }
     ],
     "withoutLit": {
-     "min": 7406520,
-     "gzip": 1819713
+     "min": 7407086,
+     "gzip": 1819875
     },
     "withLit": {
-     "min": 7373398,
-     "gzip": 1807108
+     "min": 7373964,
+     "gzip": 1807265
     }
    },
    "render": {
     "tag": "tc-generated-ui",
     "source": "demo",
     "runs": 7,
-    "cold": 2.2,
+    "cold": 2.3,
     "first": 0.6,
-    "update": 0.1,
+    "update": 0.2,
     "updateKind": "re-render with the same data",
     "nodes": 9,
     "scale": null,
@@ -25695,11 +25695,11 @@
   },
   "todo-list": {
    "measuredAt": "2026-10-29",
-   "hash": "61361b92dc92f43e",
+   "hash": "b8323790a269d27b",
    "bundle": {
     "own": {
-     "min": 22899,
-     "gzip": 7085
+     "min": 23485,
+     "gzip": 7260
     },
     "shared": [
      {
@@ -25739,21 +25739,21 @@
      }
     ],
     "withoutLit": {
-     "min": 30391,
-     "gzip": 9173
+     "min": 30977,
+     "gzip": 9340
     },
     "withLit": {
-     "min": 53320,
-     "gzip": 16766
+     "min": 53906,
+     "gzip": 16931
     }
    },
    "render": {
     "tag": "tc-todo-list",
     "source": "demo",
     "runs": 7,
-    "cold": 12.7,
-    "first": 1.2,
-    "update": 0.3,
+    "cold": 10.4,
+    "first": 1.5,
+    "update": 0.4,
     "updateKind": "one item of items replaced",
     "nodes": 109,
     "scale": {
@@ -25762,14 +25762,14 @@
      "points": [
       {
        "items": 100,
-       "first": 6.8,
-       "update": 0.7,
+       "first": 9,
+       "update": 0.9,
        "nodes": 1237
       },
       {
        "items": 1000,
-       "first": 83.9,
-       "update": 8.5,
+       "first": 93.7,
+       "update": 6.5,
        "nodes": 12037
       }
      ]

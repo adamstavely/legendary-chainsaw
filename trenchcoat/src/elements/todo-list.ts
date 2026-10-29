@@ -14,6 +14,8 @@ import { cardHead } from "./internal/card-head";
  *   · Alt + ↑ / ↓ on a to-do moves it up or down
  *   · every change fires a cancelable tc-items-change with the list as it will be ({ items, change }) – prevent it
  *     and update `items` yourself to keep the list in your own store
+ *   · ids are any strings ("1.5", "task:1", "a b" all work) and should be unique; if two to-dos share an id, the
+ *     first is kept and the later ones are dropped, so every action acts on exactly one to-do
  * Standard: the header on a gray tray above a white card. Clean: one white card, the header its first row.
  *
  *   <tc-todo-list heading="This week" .items=${[{ id: "a", text: "Book the venue", done: true }]}></tc-todo-list>
@@ -116,6 +118,11 @@ export class TcTodoList extends TcElement {
 
   protected override willUpdate(changed: PropertyValues) {
     super.willUpdate(changed);
+    // One to-do per id: with duplicates, ticking or removing one would act on all of them and Undo on only one
+    if (changed.has("items") && new Set(this.items.map((i) => i.id)).size !== this.items.length) {
+      const seen = new Set<string>();
+      this.items = this.items.filter((i) => !seen.has(i.id) && !!seen.add(i.id));
+    }
     // A removal the page has put back can't be undone again
     if (changed.has("items") && this.removed && this.items.some((i) => i.id === this.removed!.item.id)) this.removed = null;
     if (this.editing && !this.items.some((i) => i.id === this.editing)) this.editing = null;
@@ -128,6 +135,21 @@ export class TcTodoList extends TcElement {
   }
   private get doneCount() {
     return this.items.filter((i) => i.done).length;
+  }
+  /** A to-do's check box or words, found by its row – ids come from the page, so they're escaped, never used as element ids */
+  private boxOf(id: string) {
+    return this.querySelector<HTMLElement>(`.ui-todo__item[data-id="${CSS.escape(id)}"] input[type="checkbox"]`);
+  }
+  private textOf(id: string) {
+    return this.querySelector<HTMLElement>(`.ui-todo__item[data-id="${CSS.escape(id)}"] .ui-todo__text`);
+  }
+  /** After the to-do at `row` left the tab shown: the next to-do's box, else the one before, else the add box or the tab */
+  private focusNear(row: number) {
+    void this.updateComplete.then(() => {
+      const shown = this.shown;
+      const next = shown[Math.min(row, shown.length - 1)];
+      (next ? this.boxOf(next.id) : (this.querySelector<HTMLElement>(".ui-todo__input") ?? this.querySelector<HTMLElement>('[role="tab"][aria-selected="true"]')))?.focus();
+    });
   }
 
   /** Asks to change the list; true when it changed here (not prevented) */
@@ -154,8 +176,14 @@ export class TcTodoList extends TcElement {
   private toggle(item: TodoItem) {
     if (this.readonly) return;
     const done = !item.done;
+    const row = this.shown.findIndex((i) => i.id === item.id);
     const items = this.items.map((i) => (i.id === item.id ? { ...i, done } : i));
-    if (!this.commit(items, { type: "toggle", id: item.id, done }, done ? `Done: “${item.text}”` : `To do: “${item.text}”`)) this.requestUpdate();
+    if (!this.commit(items, { type: "toggle", id: item.id, done }, done ? `Done: “${item.text}”` : `To do: “${item.text}”`)) {
+      this.requestUpdate();
+      return;
+    }
+    // Ticked out of the tab shown (To do, or Done): its box is gone, so focus moves to its neighbour
+    if (this.filter !== "all") this.focusNear(row);
   }
 
   private removeItem(item: TodoItem) {
@@ -169,7 +197,7 @@ export class TcTodoList extends TcElement {
     void this.updateComplete.then(() => {
       const undo = this.querySelector<HTMLElement>(".ui-todo__undo");
       const next = this.shown[Math.min(rowIndex, this.shown.length - 1)];
-      (undo ?? (next ? this.querySelector<HTMLElement>(`#${this.uid}-c-${next.id}`) : this.querySelector<HTMLElement>(".ui-todo__input")))?.focus();
+      (undo ?? (next ? this.boxOf(next.id) : this.querySelector<HTMLElement>(".ui-todo__input")))?.focus();
     });
   }
 
@@ -180,7 +208,7 @@ export class TcTodoList extends TcElement {
     items.splice(Math.min(r.index, items.length), 0, r.item);
     if (!this.commit(items, { type: "restore", id: r.item.id }, `Restored “${r.item.text}”`)) return;
     this.removed = null;
-    void this.updateComplete.then(() => this.querySelector<HTMLElement>(`#${this.uid}-c-${r.item.id}`)?.focus());
+    void this.updateComplete.then(() => this.boxOf(r.item.id)?.focus());
   }
 
   private clearDone() {
@@ -192,6 +220,11 @@ export class TcTodoList extends TcElement {
       `Cleared ${done.length} done ${done.length === 1 ? "to-do" : "to-dos"}`,
     );
     this.removed = null;
+    // Clear done goes with the done to-dos: focus moves to the add box, or the first to-do
+    void this.updateComplete.then(() => {
+      const first = this.shown[0];
+      (this.querySelector<HTMLElement>(".ui-todo__input") ?? (first ? this.boxOf(first.id) : null))?.focus();
+    });
   }
 
   private move(item: TodoItem, step: -1 | 1) {
@@ -205,7 +238,7 @@ export class TcTodoList extends TcElement {
     const index = step < 0 ? n : n + 1;
     items.splice(index, 0, item);
     if (!this.commit(items, { type: "move", id: item.id, index }, `Moved “${item.text}” to ${at + step + 1} of ${shown.length}`)) return;
-    void this.updateComplete.then(() => this.querySelector<HTMLElement>(`#${this.uid}-c-${item.id}`)?.focus());
+    void this.updateComplete.then(() => this.boxOf(item.id)?.focus());
   }
 
   private startEdit(item: TodoItem) {
@@ -230,7 +263,7 @@ export class TcTodoList extends TcElement {
       return;
     }
     if (keep && text !== item.text) this.commit(this.items.map((i) => (i.id === id ? { ...i, text } : i)), { type: "edit", id, text }, `Changed to “${text}”`);
-    void this.updateComplete.then(() => this.querySelector<HTMLElement>(`#${this.uid}-t-${id}`)?.focus());
+    void this.updateComplete.then(() => this.textOf(id)?.focus());
   }
 
   private setFilter(filter: TodoFilter) {
@@ -273,13 +306,11 @@ export class TcTodoList extends TcElement {
   }
 
   private renderItem(item: TodoItem) {
-    const id = this.uid;
     const editing = this.editing === item.id;
     return html`<li class="ui-todo__item" data-id=${item.id} ?data-done=${!!item.done}>
       <span class="ui-todo__box">
         <input
           type="checkbox"
-          id=${`${id}-c-${item.id}`}
           .checked=${live(!!item.done)}
           ?disabled=${this.readonly}
           aria-label=${item.text}
@@ -316,8 +347,8 @@ export class TcTodoList extends TcElement {
             @blur=${() => this.finishEdit(true)}
           />`
         : this.readonly
-          ? html`<span class="ui-todo__text" id=${`${id}-t-${item.id}`}>${item.text}</span>`
-          : html`<button type="button" class="ui-todo__text" id=${`${id}-t-${item.id}`} @click=${() => this.startEdit(item)}
+          ? html`<span class="ui-todo__text">${item.text}</span>`
+          : html`<button type="button" class="ui-todo__text" @click=${() => this.startEdit(item)}
               >${item.text}<span class="tc-sr-only">, edit</span></button
             >`}
       ${this.readonly || editing
