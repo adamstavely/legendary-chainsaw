@@ -85,6 +85,34 @@ const setRange = async (input: HTMLInputElement, value: number) => {
 };
 
 describe("splitSentences", () => {
+  test("another reader (or the page) cancelling the shared speech queue leaves this one paused, not stuck playing", async () => {
+    const speech = installSpeech(VOICES);
+    const el = await make();
+    el.play();
+    await settle();
+    expect(el.state).toBe("playing");
+    // The queue is the page's: someone else's cancel interrupts our utterance
+    speech.last().onerror!({ error: "interrupted" });
+    await settle();
+    expect(el.state).toBe("paused");
+    // Our own Pause is still ignored by the late error of the utterance it cancelled
+    el.play();
+    await settle();
+    const ours = speech.last();
+    el.pause();
+    ours.onerror!({ error: "interrupted" });
+    await settle();
+    expect(el.state).toBe("paused");
+  });
+
+  test("lang reflects to the attribute, as HTMLElement's does", async () => {
+    installSpeech(VOICES);
+    const el = await make();
+    el.lang = "fr";
+    await settle();
+    expect(el.getAttribute("lang")).toBe("fr");
+  });
+
   test("paragraphs at blank lines, sentences inside, and each word's place", () => {
     const s = splitSentences(TEXT, "en");
     expect(s.map((x) => x.text)).toEqual(["The light was first lit in 1871.", "Its lens came from Paris in eleven crates.", "Keepers wound the clockwork at dusk.", "It was automated in 1962."]);

@@ -6,6 +6,8 @@
     "events": [
       "tc-request",
       "tc-status-change",
+      "tc-level-change",
+      "tc-duration-change",
       "tc-cancel"
     ]
   },
@@ -1096,6 +1098,20 @@
     ]
   },
   {
+    "tag": "tc-json-viewer",
+    "name": "JsonViewer",
+    "description": "A JSON document laid out for review – Document and Raw, one at a time or side by side, search across them, flags with notes on fields,",
+    "events": [
+      "tc-view-change",
+      "tc-layout-change",
+      "tc-filter-change",
+      "tc-flags-change",
+      "tc-open-change",
+      "tc-copy",
+      "tc-download"
+    ]
+  },
+  {
     "tag": "tc-kill-switch",
     "name": "KillSwitch",
     "description": "System posture and the emergency stop: what's running, a confirmed Stop that names what it halts, and the active",
@@ -1983,6 +1999,15 @@
       "tc-done-change",
       "tc-tip-action",
       "tc-close"
+    ]
+  },
+  {
+    "tag": "tc-todo-list",
+    "name": "TodoList",
+    "description": "A to-do list – add, tick off, edit, reorder and remove (with Undo), All / To do / Done tabs with counts, progress",
+    "events": [
+      "tc-items-change",
+      "tc-filter-change"
     ]
   },
   {

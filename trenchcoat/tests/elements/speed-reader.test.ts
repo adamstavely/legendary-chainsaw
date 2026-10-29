@@ -120,6 +120,17 @@ describe("tc-speed-reader", () => {
     });
   }
 
+  test("a listener that keeps the place stops the reading – paused, not stuck on Pause", async () => {
+    const clock = manual();
+    const el = await make("standard", clock.scheduler);
+    el.addEventListener("tc-position-change", (e) => e.preventDefault());
+    tool(el, "Play").click();
+    await settle();
+    await clock.tick();
+    await expect.poll(() => tool(el, "Play")).toBeTruthy();
+    expect(clock.queue).toHaveLength(0);
+  });
+
   test("reads on word by word with the right pauses, then finishes", async () => {
     const m = manual();
     const el = await make("standard", m.scheduler);

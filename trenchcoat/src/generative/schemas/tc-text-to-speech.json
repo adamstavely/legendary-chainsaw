@@ -31,7 +31,7 @@
     },
     "lang": {
       "type": "string",
-      "description": "The passage's language (a BCP 47 tag) – picks a default voice and splits sentences; unset, the browser decides"
+      "description": "The passage's language (a BCP 47 tag) – picks a default voice and splits sentences; unset, the browser decides. Reflects to the lang attribute, as HTMLElement's own does, so assistive tech and fonts see it"
     }
   },
   "additionalProperties": false

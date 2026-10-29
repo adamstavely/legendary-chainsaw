@@ -186,7 +186,8 @@ export class TcSpeedReader extends TcElement {
       this.emit("tc-finish", { words: this.words.length });
       return;
     }
-    this.move(next);
+    // A listener kept the place (it stopped the reading there): pause rather than look like it's still playing
+    if (!this.move(next)) this.pause();
   }
 
   /** Moves to a word; returns false when a listener kept the place */
