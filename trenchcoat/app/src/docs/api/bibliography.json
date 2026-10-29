@@ -3,7 +3,7 @@
   {
    "tag": "tc-bibliography",
    "className": "TcBibliography",
-   "description": "A reading list set in a citation style – APA, MLA, Chicago, Harvard or IEEE – with links, tags, search, sort,\nCopy for one or the selected, and export as BibTeX, RIS or plain text.",
+   "description": "A reading list set in a citation style – APA, MLA, Chicago (notes–bibliography), Harvard or IEEE – with links,\ntags, search, sort, Copy for one or the selected, and export as BibTeX, RIS or plain text.",
    "properties": [
     {
      "name": "heading",
@@ -597,7 +597,7 @@
   "windowed": false
  },
  "size": {
-  "min": 39793,
-  "gzip": 12483
+  "min": 40513,
+  "gzip": 12799
  }
 }

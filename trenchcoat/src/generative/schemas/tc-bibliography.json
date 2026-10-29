@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "trenchcoat/generative/schemas/tc-bibliography.json",
   "title": "tc-bibliography",
-  "description": "A reading list set in a citation style – APA, MLA, Chicago, Harvard or IEEE – with links, tags, search, sort,\nCopy for one or the selected, and export as BibTeX, RIS or plain text.",
+  "description": "A reading list set in a citation style – APA, MLA, Chicago (notes–bibliography), Harvard or IEEE – with links,\ntags, search, sort, Copy for one or the selected, and export as BibTeX, RIS or plain text.",
   "type": "object",
   "properties": {
     "heading": {

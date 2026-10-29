@@ -4,7 +4,7 @@ import type { TcBibliography, BibliographyCitationStyleChange, BibliographySelec
 import "trenchcoat/bibliography";
 
 /**
- * <tc-bibliography> for Angular: A reading list set in a citation style – APA, MLA, Chicago, Harvard or IEEE – with links, tags, search, sort,
+ * <tc-bibliography> for Angular: A reading list set in a citation style – APA, MLA, Chicago (notes–bibliography), Harvard or IEEE – with links,
  * 
  * imports: [Bibliography] in a standalone component – no CUSTOM_ELEMENTS_SCHEMA, and bindings are type-checked.
  */

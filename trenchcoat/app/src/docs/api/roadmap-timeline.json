@@ -590,7 +590,7 @@
    "MutationObserver (internal/controllers › FocusRescueController)"
   ],
   "clock": [
-   "Date.now()"
+   "new Date()"
   ],
   "listeners": [],
   "pauses": {
@@ -604,7 +604,7 @@
   "windowed": false
  },
  "size": {
-  "min": 41670,
-  "gzip": 12180
+  "min": 41727,
+  "gzip": 12197
  }
 }
