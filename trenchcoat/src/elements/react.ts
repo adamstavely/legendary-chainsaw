@@ -79,6 +79,7 @@ export * from "./react/context-tray";
 export * from "./react/context-window";
 export * from "./react/conversation-annotation";
 export * from "./react/conversation-branches";
+export * from "./react/coordinate-details";
 export * from "./react/correction-propagation";
 export * from "./react/cover-flow";
 export * from "./react/coverage-matrix";

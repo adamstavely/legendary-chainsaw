@@ -582,6 +582,17 @@
     ]
   },
   {
+    "tag": "tc-coordinate-details",
+    "name": "CoordinateDetails",
+    "description": "Coordinates in text, checked and marked: hover, focus or right-click one for the place, both notations, mapping links and a map.",
+    "events": [
+      "tc-coordinate-lookup",
+      "tc-copy",
+      "tc-open",
+      "tc-open-change"
+    ]
+  },
+  {
     "tag": "tc-correction-propagation",
     "name": "CorrectionPropagation",
     "description": "How far a correction reaches: every artifact and released package that cites the corrected claim, each sent for",
@@ -1674,7 +1685,7 @@
   {
     "tag": "tc-search-history",
     "name": "SearchHistory",
-    "description": "Recent and saved searches – tabs with counts, a filter, searches grouped by day with scope chips, result counts and",
+    "description": "Recent and saved searches – tabs with counts, a filter, searches grouped by day with their scopes, result counts and",
     "events": [
       "tc-select",
       "tc-saved-change",

@@ -7,7 +7,8 @@ related: search-history, query-builder, command-menu, chat-composer
 ## Overview
 
 One search box with two modes. In search mode it's a single-line field with suggestions – recent searches first, then
-suggested ones – filtered as the person types. Switch on AI mode and the field becomes a prompt a few lines tall, with
+suggested ones – filtered as the person types, with what they typed picked out and an optional hint after each (“12
+results”, “Yesterday”). Switch on AI mode and the field becomes a prompt a few lines tall, with
 example prompts to start from. Under the field sit the AI mode switch and “Search within file contents”. Scopes the page
 sets show as removable chips inside the field, a Clear button empties it, and ⌘K / Ctrl K focuses it from anywhere.
 Every submit says what to search for, in which mode, whether to look inside files, and within which scopes.
@@ -28,9 +29,11 @@ Every submit says what to search for, in which mode, whether to look inside file
 ## Anatomy
 
 1. **Card** `.ui-aisr__box` – the search card; its ring shows where focus is
-2. **Field** `.ui-aisr__field` – the search icon (a sparkle in AI mode), scopes, the input or prompt, then keys, Clear and Send
+2. **Field** `.ui-aisr__field` – the search icon (a sparkle in AI mode), scopes, the input or prompt, then keys, Clear and
+   Send (in search mode, once something is typed)
 3. **Scopes** `.ui-aisr__scopes` – where the search looks, each chip removable
-4. **Suggestions** `.ui-aisr__pop` – recent and suggested searches below the card, in search mode
+4. **Suggestions** `.ui-aisr__pop` – recent and suggested searches below the card, in search mode, with the keys to move,
+   search and close beneath them
 5. **Examples** `.ui-aisr__examples` – prompts to start from, inside the card in AI mode
 6. **Switches** `.ui-aisr__opts` – AI mode and Search within file contents, with the keys that send on the right
 
