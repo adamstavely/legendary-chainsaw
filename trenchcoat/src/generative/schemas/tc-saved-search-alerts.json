@@ -1,0 +1,122 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-saved-search-alerts.json",
+  "title": "tc-saved-search-alerts",
+  "description": "Saved searches that tell you about new matches – the new count, how often and where each checks, pause, Run now,\nremove with Undo, and Add alert.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the list's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "alerts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/SearchAlert"
+      },
+      "description": "The alerts, in order. Changed by the user unless tc-alerts-change is prevented"
+    },
+    "channels": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AlertChannel"
+      },
+      "description": "Where alerts can tell people"
+    },
+    "draftQuery": {
+      "type": "string",
+      "description": "A query to fill Add alert with – the search the person just ran"
+    },
+    "now": {
+      "type": "number",
+      "description": "The time now, epoch ms; by default the element's own clock"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for dates and numbers, e.g. \"en-GB\"; by default the browser's"
+    },
+    "readonly": {
+      "type": "boolean",
+      "description": "Read only: no adding, changing or removing"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "SearchAlert": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "query": {
+          "type": "string"
+        },
+        "frequency": {
+          "$ref": "#/definitions/AlertFrequency"
+        },
+        "channels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Where it tells you: the ids of `channels`"
+        },
+        "newCount": {
+          "type": "number",
+          "description": "How many new matches since it last told you"
+        },
+        "lastRun": {
+          "type": "number",
+          "description": "When it last checked, epoch ms"
+        },
+        "lastMatch": {
+          "type": "number",
+          "description": "When it last found something new, epoch ms – \"12 new since Tue\""
+        },
+        "paused": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "query",
+        "frequency",
+        "channels"
+      ],
+      "additionalProperties": false
+    },
+    "AlertFrequency": {
+      "type": "string",
+      "enum": [
+        "instant",
+        "daily",
+        "weekly",
+        "off"
+      ]
+    },
+    "AlertChannel": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

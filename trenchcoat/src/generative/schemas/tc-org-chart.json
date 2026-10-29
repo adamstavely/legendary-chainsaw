@@ -1,0 +1,96 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-org-chart.json",
+  "title": "tc-org-chart",
+  "description": "Who reports to whom: people's cards joined by reporting lines, branches that fold, search, a picked person's manager\nand reports, pan and zoom, and an outline when narrow.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the chart's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "people": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/OrgChartPerson"
+      },
+      "description": "Everyone, in the order their manager lists them; `manager` joins them up"
+    },
+    "expanded": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The people whose reports are shown; null shows the top of each tree and one level under it. Changed by the user unless tc-expanded-change is prevented"
+    },
+    "selected": {
+      "type": "string",
+      "description": "The person picked. Changed by the user unless tc-selected-change is prevented"
+    },
+    "filter": {
+      "type": "string",
+      "description": "What the search box holds. Changed by the user unless tc-filter-change is prevented"
+    },
+    "layout": {
+      "type": "string",
+      "enum": [
+        "list",
+        "auto",
+        "tree"
+      ],
+      "description": "\"tree\" draws cards top-down, \"list\" an indented outline; \"auto\" is the tree, the outline when narrow"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "OrgChartPerson": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string",
+          "description": "The person's name; for a vacant role, what to call the gap (\"Open role\")"
+        },
+        "title": {
+          "type": "string"
+        },
+        "team": {
+          "type": "string"
+        },
+        "manager": {
+          "type": "string",
+          "description": "The id of the person they report to"
+        },
+        "avatar": {
+          "type": "string",
+          "description": "A picture URL; without one the card shows initials"
+        },
+        "location": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/OrgChartPersonStatus"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "OrgChartPersonStatus": {
+      "type": "string",
+      "enum": [
+        "active",
+        "away",
+        "vacant"
+      ]
+    }
+  }
+}

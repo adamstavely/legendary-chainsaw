@@ -1,0 +1,161 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-bibliography.json",
+  "title": "tc-bibliography",
+  "description": "A reading list set in a citation style – APA, MLA, Chicago, Harvard or IEEE – with links, tags, search, sort,\nCopy for one or the selected, and export as BibTeX, RIS or plain text.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the list's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "references": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Reference"
+      },
+      "description": "The references, any order"
+    },
+    "citationStyle": {
+      "type": "string",
+      "enum": [
+        "apa",
+        "mla",
+        "chicago",
+        "harvard",
+        "ieee"
+      ],
+      "description": "The citation style (not `style`, which every element has for CSS). Changed by the user unless tc-citation-style-change is prevented"
+    },
+    "selected": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The ticked references' ids. Changed by the user unless tc-selected-change is prevented"
+    },
+    "sort": {
+      "type": "string",
+      "enum": [
+        "author",
+        "year",
+        "title"
+      ],
+      "description": "The order. Changed by the user unless tc-sort-change is prevented"
+    },
+    "filter": {
+      "type": "string",
+      "description": "Shows only references whose authors, title, container, year or tags hold this"
+    },
+    "filename": {
+      "type": "string",
+      "description": "The name exported files are saved under, before the extension"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "Reference": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/ReferenceType"
+        },
+        "authors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ReferenceAuthor"
+          }
+        },
+        "title": {
+          "type": "string"
+        },
+        "container": {
+          "type": "string",
+          "description": "The journal, the book a chapter is in, or the website"
+        },
+        "year": {
+          "type": [
+            "number",
+            "string"
+          ]
+        },
+        "volume": {
+          "type": [
+            "string",
+            "number"
+          ]
+        },
+        "issue": {
+          "type": [
+            "string",
+            "number"
+          ]
+        },
+        "pages": {
+          "type": "string",
+          "description": "\"12–34\" or \"12-34\""
+        },
+        "publisher": {
+          "type": "string",
+          "description": "The publisher, the institution for a report, the university for a thesis"
+        },
+        "doi": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "accessed": {
+          "type": "string",
+          "description": "When a web page was read, ISO date"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "authors",
+        "title"
+      ],
+      "additionalProperties": false
+    },
+    "ReferenceType": {
+      "type": "string",
+      "enum": [
+        "article",
+        "book",
+        "chapter",
+        "report",
+        "web",
+        "thesis"
+      ]
+    },
+    "ReferenceAuthor": {
+      "type": "object",
+      "properties": {
+        "family": {
+          "type": "string"
+        },
+        "given": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "family"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

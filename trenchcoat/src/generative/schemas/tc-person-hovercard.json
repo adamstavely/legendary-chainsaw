@@ -1,0 +1,148 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-person-hovercard.json",
+  "title": "tc-person-hovercard",
+  "description": "The profile card behind a name: picture, pronouns, title and team, status, local time, manager, Email, Message,\nView profile and links – on hover, focus or tap.",
+  "type": "object",
+  "properties": {
+    "person": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "pronouns": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "team": {
+          "type": "string"
+        },
+        "avatar": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "location": {
+          "type": "string"
+        },
+        "timezone": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/HovercardStatus"
+        },
+        "manager": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "name"
+          ],
+          "additionalProperties": false
+        },
+        "links": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "href": {
+                "type": "string",
+                "format": "uri-reference"
+              }
+            },
+            "required": [
+              "label",
+              "href"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "additionalProperties": false,
+      "description": "The person; when it's not given, `person-id` is looked up"
+    },
+    "personId": {
+      "type": "string",
+      "description": "The id to look up with `resolve` or tc-person-lookup when `person` isn't given"
+    },
+    "hoverDelay": {
+      "type": "number",
+      "description": "How long the pointer rests on the name before the card opens, ms"
+    },
+    "now": {
+      "type": "number",
+      "description": "The time now, epoch ms, for local times; by default the element's own clock when the card opens"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for times, e.g. \"en-GB\"; by default the browser's"
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/HovercardAction"
+      },
+      "description": "Which actions the card offers"
+    },
+    "notFoundText": {
+      "type": "string",
+      "description": "What the card says when there are no details"
+    },
+    "errorText": {
+      "type": "string",
+      "description": "What the card says when the lookup failed"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "HovercardStatus": {
+      "type": "object",
+      "properties": {
+        "state": {
+          "type": "string",
+          "enum": [
+            "available",
+            "busy",
+            "away",
+            "offline"
+          ]
+        },
+        "text": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "state"
+      ],
+      "additionalProperties": false
+    },
+    "HovercardAction": {
+      "type": "string",
+      "enum": [
+        "email",
+        "message",
+        "profile"
+      ]
+    }
+  }
+}
