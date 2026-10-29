@@ -113,7 +113,7 @@ export const registry: Record<string, { events: string[]; load: () => Promise<un
   "tc-investment-balance": { events: ["tc-selected-change"], load: () => import("../elements/investment-balance"), schema: () => import("./schemas/tc-investment-balance.json") },
   "tc-invoice-credit": { events: ["tc-view-change","tc-issue","tc-pdf","tc-pay"], load: () => import("../elements/invoice-credit"), schema: () => import("./schemas/tc-invoice-credit.json") },
   "tc-isbn-details": { events: ["tc-isbn-lookup","tc-copy","tc-open-change"], load: () => import("../elements/isbn-details"), schema: () => import("./schemas/tc-isbn-details.json") },
-  "tc-json-viewer": { events: ["tc-view-change","tc-filter-change","tc-flags-change","tc-open-change","tc-copy","tc-download"], load: () => import("../elements/json-viewer"), schema: () => import("./schemas/tc-json-viewer.json") },
+  "tc-json-viewer": { events: ["tc-view-change","tc-layout-change","tc-filter-change","tc-flags-change","tc-open-change","tc-copy","tc-download"], load: () => import("../elements/json-viewer"), schema: () => import("./schemas/tc-json-viewer.json") },
   "tc-kill-switch": { events: ["tc-stop","tc-resume"], load: () => import("../elements/kill-switch"), schema: () => import("./schemas/tc-kill-switch.json") },
   "tc-knowledge-promotion": { events: ["tc-promote","tc-dispute"], load: () => import("../elements/knowledge-promotion"), schema: () => import("./schemas/tc-knowledge-promotion.json") },
   "tc-knowledge-source-manager": { events: ["tc-sources-change","tc-selected-change","tc-show-change","tc-add","tc-resync","tc-pause","tc-review-chunks"], load: () => import("../elements/knowledge-source-manager"), schema: () => import("./schemas/tc-knowledge-source-manager.json") },

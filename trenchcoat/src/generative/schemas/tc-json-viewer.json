@@ -52,6 +52,18 @@
       ],
       "description": "The view shown. Changed by the user unless a tc-view-change listener calls preventDefault()"
     },
+    "layout": {
+      "type": "string",
+      "enum": [
+        "split",
+        "tabs"
+      ],
+      "description": "\"tabs\" shows one view at a time; \"split\" shows the rendered view beside the raw JSON. Switched by the user unless tc-layout-change is prevented"
+    },
+    "layoutToggle": {
+      "type": "boolean",
+      "description": "Whether the toolbar offers the switch between tabs and side by side"
+    },
     "filter": {
       "type": "string",
       "description": "What the search box holds. Changed by the user unless tc-filter-change is prevented"

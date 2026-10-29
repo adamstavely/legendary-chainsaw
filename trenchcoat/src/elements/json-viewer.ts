@@ -24,6 +24,11 @@ import { copyText, formatDate } from "./internal/util";
  * column with the text around it). With `modal`, it's a dialog: `open` shows it (tc-open-change asks to close, from
  * Escape or Close), and the page behind is inert while it's up.
  *
+ * With `layout="split"` the rendered view (Document or Tree, from the tabs) and the raw JSON sit side by side, each
+ * scrolling on its own; pointing at or focusing a field marks its lines in the raw JSON and scrolls them into view, and
+ * clicking a raw line finds its field. A toolbar button switches between the two layouts (tc-layout-change); narrow,
+ * the two panes stack.
+ *
  * Paths are JSON Pointers ("/line_items/0/amount"). Long lists show their first 50 entries in Document, with Show all.
  * Standard: the header on a gray tray above a white card. Clean: one white card, the header its first row.
  *
@@ -34,6 +39,8 @@ import { copyText, formatDate } from "./internal/util";
 /** Any JSON value */
 export type JsonValue = null | boolean | number | string | JsonValue[] | { [key: string]: JsonValue };
 export type JsonViewerView = "document" | "tree" | "raw";
+/** One view at a time behind tabs, or the rendered view and the raw JSON side by side */
+export type JsonViewerLayout = "tabs" | "split";
 /** A reviewer's flag: the field (a JSON Pointer) and what they said about it */
 export type JsonFlag = { path: string; note: string };
 /** How Document names a field: in plain words ("Invoice date"), or the key as written */
@@ -41,6 +48,7 @@ export type JsonKeyStyle = "words" | "raw";
 
 /** Details of the events */
 export type JsonViewerViewChange = { view: JsonViewerView };
+export type JsonViewerLayoutChange = { layout: JsonViewerLayout };
 export type JsonViewerOpenChange = { open: boolean };
 export type JsonViewerFilterChange = { filter: string };
 /** `flags` is the list as it will be; `note` is null when the flag was removed */
@@ -54,7 +62,7 @@ const RAW_CAP = 4000;
 const TABLE_COLUMNS = 8;
 
 /* braces, search, chevron-right, flag, copy, download, x, check, external-link, chevrons-up-down, chevrons-down-up,
-   circle-alert: Lucide (ISC, lucide.dev) */
+   columns-2, circle-alert: Lucide (ISC, lucide.dev) */
 const lucide = (size: number, body: ReturnType<typeof svg>, cls = "") =>
   html`<svg class=${cls || nothing} width=${size} height=${size} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${body}</svg>`;
 const bracesIcon = svg`<path d="M8 3H7a2 2 0 0 0-2 2v5a2 2 0 0 1-2 2 2 2 0 0 1 2 2v5c0 1.1.9 2 2 2h1"></path><path d="M16 21h1a2 2 0 0 0 2-2v-5c0-1.1.9-2 2-2a2 2 0 0 1-2-2V5a2 2 0 0 0-2-2h-1"></path>`;
@@ -68,6 +76,7 @@ const checkIcon = (size = 14) => lucide(size, svg`<path d="M20 6 9 17l-5-5"></pa
 const linkIcon = () => lucide(12, svg`<path d="M15 3h6v6"></path><path d="M10 14 21 3"></path><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>`);
 const expandIcon = () => lucide(14, svg`<path d="m7 15 5 5 5-5"></path><path d="m7 9 5-5 5 5"></path>`);
 const collapseIcon = () => lucide(14, svg`<path d="m7 20 5-5 5 5"></path><path d="m7 4 5 5 5-5"></path>`);
+const splitIcon = () => lucide(14, svg`<rect width="18" height="18" x="3" y="3" rx="2"></rect><path d="M12 3v18"></path>`);
 const alertIcon = () => lucide(16, svg`<circle cx="12" cy="12" r="10"></circle><line x1="12" x2="12" y1="8" y2="12"></line><line x1="12" x2="12.01" y1="16" y2="16"></line>`);
 
 /* ---------- JSON helpers, exported for pages ---------- */
@@ -218,6 +227,7 @@ const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
  * Copy and Download – inline or as a modal.
  * @tag tc-json-viewer
  * @fires tc-view-change - The view changed ({ view }: JsonViewerViewChange); cancelable – prevented, `view` stays as it was
+ * @fires tc-layout-change - Tabs or side by side was switched ({ layout }: JsonViewerLayoutChange); cancelable – prevented, `layout` stays as it was
  * @fires tc-filter-change - The search changed ({ filter }: JsonViewerFilterChange); cancelable – prevented, `filter` stays as it was
  * @fires tc-flags-change - A flag was added, edited or removed ({ flags, path, note }: JsonViewerFlagsChange); cancelable – prevented, `flags` stays as it was
  * @fires tc-open-change - With `modal`: asks to open or close ({ open }: JsonViewerOpenChange), from Escape or Close; cancelable – prevented, `open` stays
@@ -237,6 +247,10 @@ export class TcJsonViewer extends TcElement {
   @property() accessor source: string | undefined = undefined;
   /** The view shown. Changed by the user unless a tc-view-change listener calls preventDefault() */
   @property({ reflect: true }) accessor view: JsonViewerView = "document";
+  /** "tabs" shows one view at a time; "split" shows the rendered view beside the raw JSON. Switched by the user unless tc-layout-change is prevented */
+  @property({ reflect: true }) accessor layout: JsonViewerLayout = "tabs";
+  /** Whether the toolbar offers the switch between tabs and side by side */
+  @property({ type: Boolean, attribute: "layout-toggle" }) accessor layoutToggle = true;
   /** What the search box holds. Changed by the user unless tc-filter-change is prevented */
   @property() accessor filter = "";
   /** The reviewer's flags. Changed by the user unless tc-flags-change is prevented */
@@ -304,6 +318,12 @@ export class TcJsonViewer extends TcElement {
   protected override updated(changed: PropertyValues) {
     super.updated(changed);
     if (this.modal) this.modalCtl.sync(this.open);
+    // A render puts the raw lines back as they were: mark the linked field's lines again (the tree's focused row leads)
+    if (this.layout === "split") {
+      const want = this.leftView === "tree" && this.active !== undefined && changed.has("active") ? this.active : this.linked;
+      this.linked = null;
+      this.link(want, changed.has("active"));
+    } else this.linked = null;
   }
 
   private parse() {
@@ -386,6 +406,72 @@ export class TcJsonViewer extends TcElement {
     this.view = view;
     this.editing = null;
   }
+
+  private setLayout(layout: JsonViewerLayout) {
+    if (layout === this.layout) return;
+    if (!this.emit<JsonViewerLayoutChange>("tc-layout-change", { layout }, { cancelable: true })) return;
+    this.layout = layout;
+    this.announce = layout === "split" ? "Side by side" : "One view at a time";
+  }
+
+  /** The view on the left: side by side, Raw is always on the right, so the left shows Document in its place */
+  private get leftView(): JsonViewerView {
+    return this.layout === "split" && this.view === "raw" ? "document" : this.view;
+  }
+
+  /** The field whose raw lines are marked, side by side – set straight on the lines, so pointing doesn't re-render */
+  private linked: string | null = null;
+  private link(path: string | null, scroll = true) {
+    if (this.layout !== "split" || path === this.linked) return;
+    this.linked = path;
+    const raw = this.querySelector<HTMLElement>(".ui-jsv__pane[data-raw]");
+    if (!raw) return;
+    for (const l of raw.querySelectorAll("[data-linked]")) l.removeAttribute("data-linked");
+    if (path === null) return;
+    const lines = [...raw.querySelectorAll<HTMLElement>(".ui-jsv__line[data-path]")].filter((l) => {
+      const p = l.dataset.path!;
+      return p === path || (path === "" ? true : p.startsWith(`${path}/`));
+    });
+    for (const l of lines) l.setAttribute("data-linked", "");
+    // Scrolled within the raw pane only – the page stays where it is
+    const first = lines[0];
+    if (scroll && first) {
+      const top = first.offsetTop - raw.offsetTop;
+      const bottom = lines[lines.length - 1].offsetTop - raw.offsetTop + lines[lines.length - 1].offsetHeight;
+      if (top < raw.scrollTop || bottom > raw.scrollTop + raw.clientHeight) raw.scrollTop = Math.max(0, top - raw.clientHeight / 3);
+    }
+  }
+  /** The field (or row) under the pointer or focus on the left, by its data-path */
+  private onLeftPoint = (e: Event) => {
+    const el = (e.target as Element | null)?.closest<HTMLElement>("[data-path]");
+    if (el && this.contains(el)) this.link(el.dataset.path ?? null);
+  };
+  /** A raw line clicked: its field, found on the left */
+  private onRawClick = (e: Event) => {
+    const line = (e.target as Element | null)?.closest<HTMLElement>(".ui-jsv__line[data-path]");
+    if (!line) return;
+    const path = line.dataset.path!;
+    this.link(path, false);
+    if (this.leftView === "tree") {
+      // Open the way to it, then focus its row
+      const next = new Set(this.expanded);
+      for (let p = path; p; p = p.slice(0, p.lastIndexOf("/"))) next.add(p.slice(0, p.lastIndexOf("/")));
+      this.expanded = next;
+      this.focusRow(path);
+      return;
+    }
+    const left = this.querySelector<HTMLElement>(".ui-jsv__pane[data-left]");
+    let target: HTMLElement | null = null;
+    for (let p = path; ; p = p.slice(0, p.lastIndexOf("/"))) {
+      target = left?.querySelector<HTMLElement>(`[data-path="${CSS.escape(p)}"]`) ?? null;
+      if (target || !p) break;
+    }
+    if (left && target) {
+      left.scrollTop = Math.max(0, target.offsetTop - left.offsetTop - left.clientHeight / 3);
+      target.setAttribute("data-found", "");
+      setTimeout(() => target!.removeAttribute("data-found"), 1200);
+    }
+  };
 
   private setFilter(filter: string) {
     if (!this.emit<JsonViewerFilterChange>("tc-filter-change", { filter }, { cancelable: true })) {
@@ -913,7 +999,7 @@ export class TcJsonViewer extends TcElement {
       }
       lines.push(html`<span class="ui-jsv__line" data-path=${path} ?data-flagged=${!!this.flagAt(path)}>${ind(depth)}${head}<span class="ui-jsv__s-punc">${o}</span></span>`);
       kids.forEach(([ck, cv], i) => emit(cv, depth + 1, arr ? null : ck, i < kids.length - 1, jsonPointer(path, ck)));
-      lines.push(html`<span class="ui-jsv__line">${ind(depth)}<span class="ui-jsv__s-punc">${c}</span>${comma(trailing)}</span>`);
+      lines.push(html`<span class="ui-jsv__line" data-path=${path} data-close>${ind(depth)}<span class="ui-jsv__s-punc">${c}</span>${comma(trailing)}</span>`);
     };
     emit(this.document!, 0, null, false, "");
     const capped = !this.rawAll && lines.length > RAW_CAP;
@@ -943,8 +1029,9 @@ export class TcJsonViewer extends TcElement {
     const views: [JsonViewerView, string][] = [
       ["document", "Document"],
       ["tree", "Tree"],
-      ["raw", "Raw"],
+      ...(this.layout === "split" ? [] : ([["raw", "Raw"]] as [JsonViewerView, string][])),
     ];
+    const current = this.leftView;
     return html`<div class="ui-jsv__tabs" role="tablist" aria-label="View">
       ${views.map(
         ([id, label]) => html`<button
@@ -952,17 +1039,17 @@ export class TcJsonViewer extends TcElement {
           role="tab"
           class="ui-jsv__tab"
           id=${`${this.uid}-tab-${id}`}
-          aria-selected=${this.view === id ? "true" : "false"}
+          aria-selected=${current === id ? "true" : "false"}
           aria-controls=${`${this.uid}-panel`}
-          tabindex=${this.view === id ? 0 : -1}
+          tabindex=${current === id ? 0 : -1}
           @click=${() => this.setView(id)}
           @keydown=${(e: KeyboardEvent) => {
-            const i = views.findIndex((v) => v[0] === this.view);
+            const i = views.findIndex((v) => v[0] === current);
             const next = e.key === "ArrowRight" ? views[(i + 1) % views.length] : e.key === "ArrowLeft" ? views[(i + views.length - 1) % views.length] : e.key === "Home" ? views[0] : e.key === "End" ? views[views.length - 1] : null;
             if (!next) return;
             e.preventDefault();
             this.setView(next[0]);
-            void this.updateComplete.then(() => this.querySelector<HTMLElement>(`#${this.uid}-tab-${this.view}`)?.focus());
+            void this.updateComplete.then(() => this.querySelector<HTMLElement>(`#${this.uid}-tab-${this.leftView}`)?.focus());
           }}
         >${label}</button>`,
       )}
@@ -1028,27 +1115,48 @@ export class TcJsonViewer extends TcElement {
                 />
                 <span class="ui-jsv__matches" id=${`${id}-count`}>${this.query ? (n ? `${this.hitAt >= 0 ? `${this.hitAt + 1} of ` : ""}${n} ${n === 1 ? "match" : "matches"}` : "No matches") : ""}</span>
               </label>
-              ${this.view === "tree"
+              ${this.leftView === "tree"
                 ? html`<button type="button" class="ui-jsv__btn" data-compact title="Expand all" @click=${() => this.setAll(true)}>${expandIcon()}<span class="ui-jsv__btn-label">Expand all</span></button>
                     <button type="button" class="ui-jsv__btn" data-compact title="Collapse all" @click=${() => this.setAll(false)}>${collapseIcon()}<span class="ui-jsv__btn-label">Collapse all</span></button>`
                 : nothing}
               <span class="ui-jsv__spacer"></span>
+              ${this.layoutToggle
+                ? html`<button type="button" class="ui-jsv__btn" data-compact title="Side by side" aria-pressed=${this.layout === "split" ? "true" : "false"} @click=${() => this.setLayout(this.layout === "split" ? "tabs" : "split")}
+                    >${splitIcon()}<span class="ui-jsv__btn-label">Side by side</span></button
+                  >`
+                : nothing}
               <button type="button" class="ui-jsv__btn" title="Copy JSON" @click=${() => this.copy("json")}>${this.copied === "json" ? checkIcon() : copyIcon()}<span class="ui-jsv__btn-label">${this.copied === "json" ? "Copied" : "Copy JSON"}</span></button>
               <button type="button" class="ui-jsv__btn" title="Download" @click=${() => this.download()}>${downloadIcon()}<span class="ui-jsv__btn-label">Download</span></button>
             </div>`
           : nothing}
-        <div class="ui-jsv__body" id=${`${id}-panel`} role=${ifDefined(doc !== undefined ? "tabpanel" : undefined)} aria-labelledby=${ifDefined(doc !== undefined ? `${id}-tab-${this.view}` : undefined)}>
-          ${error
-            ? this.renderError()
-            : doc === undefined
-              ? html`<p class="ui-jsv__none">No document to show.</p>`
-              : this.view === "tree"
-                ? this.renderTree()
-                : this.view === "raw"
-                  ? this.renderRaw()
-                  : this.renderDocument()}
-        </div>
-        ${doc !== undefined && this.view === "tree" ? this.renderPathBar() : nothing}
+        ${doc !== undefined && !error && this.layout === "split"
+          ? html`<div class="ui-jsv__split">
+              <div
+                class="ui-jsv__body ui-jsv__pane"
+                data-left
+                id=${`${id}-panel`}
+                role="tabpanel"
+                aria-labelledby=${`${id}-tab-${this.leftView}`}
+                @pointerover=${this.onLeftPoint}
+                @focusin=${this.onLeftPoint}
+                @pointerleave=${() => this.link(this.leftView === "tree" ? this.active : null, false)}
+              >
+                ${this.leftView === "tree" ? this.renderTree() : this.renderDocument()}
+              </div>
+              <div class="ui-jsv__body ui-jsv__pane" data-raw role="region" aria-label="Raw JSON" @click=${this.onRawClick}>${this.renderRaw()}</div>
+            </div>`
+          : html`<div class="ui-jsv__body" id=${`${id}-panel`} role=${ifDefined(doc !== undefined ? "tabpanel" : undefined)} aria-labelledby=${ifDefined(doc !== undefined ? `${id}-tab-${this.view}` : undefined)}>
+              ${error
+                ? this.renderError()
+                : doc === undefined
+                  ? html`<p class="ui-jsv__none">No document to show.</p>`
+                  : this.view === "tree"
+                    ? this.renderTree()
+                    : this.view === "raw"
+                      ? this.renderRaw()
+                      : this.renderDocument()}
+            </div>`}
+        ${doc !== undefined && this.leftView === "tree" ? this.renderPathBar() : nothing}
         ${doc !== undefined && this.flaggable && flags.length
           ? html`<div class="ui-jsv__flags">
               ${flagIcon()}
@@ -1060,7 +1168,7 @@ export class TcJsonViewer extends TcElement {
                     class="ui-jsv__flag-chip"
                     title=${f.note}
                     @click=${() => {
-                      if (this.view === "tree") this.focusRow(f.path);
+                      if (this.leftView === "tree") this.focusRow(f.path);
                       else void this.updateComplete.then(() => this.querySelector<HTMLElement>(`[data-path="${CSS.escape(f.path)}"]`)?.scrollIntoView({ block: "nearest" }));
                     }}
                   >${this.label(f.path)}</button>`,
@@ -1165,6 +1273,17 @@ export class TcJsonViewer extends TcElement {
 /* ----- The body: one view at a time, scrolling inside ----- */
 .ui-jsv__body { max-height: var(--tc-jsv-body-h); overflow: auto; overscroll-behavior: contain; padding: var(--tc-space-1) var(--tc-space-4) var(--tc-space-4); scrollbar-width: thin; }
 .ui-jsv__none { padding: var(--tc-space-8) 0; color: var(--tc-text-muted); text-align: center; }
+/* ----- Side by side: the rendered view and the raw JSON, each scrolling on its own ----- */
+.ui-jsv__split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); border-top: var(--tc-hairline) solid var(--tc-divider); }
+.ui-jsv__pane { height: var(--tc-jsv-body-h); max-height: none; }
+.ui-jsv__pane[data-raw] { padding: var(--tc-space-1) var(--tc-space-3) var(--tc-space-3); border-left: var(--tc-hairline) solid var(--tc-divider); background: var(--tc-surface-sunken); }
+.ui-jsv__pane[data-raw] .ui-jsv__raw { padding-top: var(--tc-space-2); border-radius: 0; background: none; box-shadow: none; }
+.ui-jsv__panel .ui-jsv__split { flex: 1; min-height: 0; }
+.ui-jsv__panel .ui-jsv__pane { height: auto; min-height: 0; }
+.ui-jsv__pane[data-raw] .ui-jsv__line[data-path] { cursor: pointer; }
+.ui-jsv__raw .ui-jsv__line[data-linked] { background: var(--tc-fill-selected); box-shadow: inset 2px 0 0 var(--tc-accent); }
+[data-found] { animation: ui-jsv-found var(--tc-duration-slowest) var(--tc-ease-standard); }
+@keyframes ui-jsv-found { 0%, 60% { background: var(--tc-fill-selected); } }
 /* ----- Document ----- */
 .ui-jsv__doc { display: grid; gap: var(--tc-space-3); }
 .ui-jsv__fields { display: grid; }
@@ -1271,6 +1390,12 @@ export class TcJsonViewer extends TcElement {
 @container (max-width: 640px) {
   .ui-jsv__btn[data-compact] .ui-jsv__btn-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   .ui-jsv__btn[data-compact] { width: var(--tc-control-h-sm); justify-content: center; padding: 0; }
+}
+/* Side by side needs room: narrower, the raw JSON goes under the rendered view */
+@container (max-width: 640px) {
+  .ui-jsv__split { grid-template-columns: minmax(0, 1fr); }
+  .ui-jsv__pane { height: calc(var(--tc-jsv-body-h) / 2 + var(--tc-space-12)); }
+  .ui-jsv__pane[data-raw] { border-left: 0; border-top: var(--tc-hairline) solid var(--tc-divider); }
 }
 @container (max-width: 480px) {
   .ui-jsv__toolbar .ui-jsv__btn-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }

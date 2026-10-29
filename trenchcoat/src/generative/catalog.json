@@ -1069,6 +1069,7 @@
     "description": "A JSON document laid out for review – Document, Tree and Raw views, search across them, flags with notes on fields,",
     "events": [
       "tc-view-change",
+      "tc-layout-change",
       "tc-filter-change",
       "tc-flags-change",
       "tc-open-change",

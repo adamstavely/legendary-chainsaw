@@ -46,6 +46,22 @@
      "readonly": false
     },
     {
+     "name": "layout",
+     "attribute": "layout",
+     "type": "JsonViewerLayout",
+     "default": "\"tabs\"",
+     "description": "\"tabs\" shows one view at a time; \"split\" shows the rendered view beside the raw JSON. Switched by the user unless tc-layout-change is prevented",
+     "readonly": false
+    },
+    {
+     "name": "layoutToggle",
+     "attribute": "layout-toggle",
+     "type": "boolean",
+     "default": "true",
+     "description": "Whether the toolbar offers the switch between tabs and side by side",
+     "readonly": false
+    },
+    {
      "name": "filter",
      "attribute": "filter",
      "type": "string",
@@ -142,6 +158,12 @@
      "cancelable": true
     },
     {
+     "name": "tc-layout-change",
+     "detail": "",
+     "description": "Tabs or side by side was switched ({ layout }: JsonViewerLayoutChange); cancelable – prevented, `layout` stays as it was",
+     "cancelable": true
+    },
+    {
      "name": "tc-filter-change",
      "detail": "",
      "description": "The search changed ({ filter }: JsonViewerFilterChange); cancelable – prevented, `filter` stays as it was",
@@ -206,6 +228,7 @@
     }
    ],
    "tokens": [
+    "--tc-accent",
     "--tc-accent-text",
     "--tc-action-ghost-bg-hover",
     "--tc-action-primary-bg",
@@ -223,6 +246,7 @@
     "--tc-divider",
     "--tc-duration-fast",
     "--tc-duration-moderate",
+    "--tc-duration-slowest",
     "--tc-ease-move",
     "--tc-ease-standard",
     "--tc-field-bg",
@@ -267,6 +291,7 @@
     "--tc-space-0-5",
     "--tc-space-1",
     "--tc-space-1-5",
+    "--tc-space-12",
     "--tc-space-2",
     "--tc-space-2-5",
     "--tc-space-3",
@@ -357,6 +382,24 @@
      "description": "The view changed"
     },
     {
+     "name": "layout",
+     "type": "JsonViewerLayout",
+     "optional": true,
+     "description": "One view at a time (\"tabs\") or the rendered view beside the raw JSON (\"split\") – controlled when given"
+    },
+    {
+     "name": "defaultLayout",
+     "type": "JsonViewerLayout",
+     "optional": true,
+     "description": "The layout on mount when `layout` isn't controlled"
+    },
+    {
+     "name": "onLayoutChange",
+     "type": "(layout: JsonViewerLayout) => void",
+     "optional": true,
+     "description": "The layout was switched with the toolbar button"
+    },
+    {
      "name": "filter",
      "type": "string",
      "optional": true,
@@ -426,6 +469,7 @@
    "hides": [
     "heading",
     "view",
+    "layout",
     "filter",
     "flags",
     "open",
@@ -433,6 +477,7 @@
    ],
    "events": {
     "tc-view-change": null,
+    "tc-layout-change": null,
     "tc-filter-change": null,
     "tc-flags-change": "onFlagsChange",
     "tc-open-change": null,
@@ -469,6 +514,14 @@
     {
      "name": "view",
      "attribute": "view"
+    },
+    {
+     "name": "layout",
+     "attribute": "layout"
+    },
+    {
+     "name": "layoutToggle",
+     "attribute": "layout-toggle"
     },
     {
      "name": "filter",
@@ -509,6 +562,10 @@
      "cancelable": true
     },
     {
+     "name": "tc-layout-change",
+     "cancelable": true
+    },
+    {
      "name": "tc-filter-change",
      "cancelable": true
     },
@@ -533,6 +590,10 @@
     {
      "property": "view",
      "event": "tc-view-change"
+    },
+    {
+     "property": "layout",
+     "event": "tc-layout-change"
     },
     {
      "property": "filter",
@@ -815,7 +876,7 @@
   "windowed": false
  },
  "size": {
-  "min": 63519,
-  "gzip": 18239
+  "min": 68376,
+  "gzip": 19361
  }
 }

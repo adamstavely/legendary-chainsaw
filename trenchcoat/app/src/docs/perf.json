@@ -10708,7 +10708,7 @@
   },
   "generated-ui": {
    "measuredAt": "2026-10-29",
-   "hash": "4a0ca2f033f6251c",
+   "hash": "7c4988917c63fa52",
    "bundle": {
     "own": {
      "min": 34126,
@@ -10901,6 +10901,11 @@
       "min": 56827
      },
      {
+      "name": "json-viewer",
+      "kind": "element",
+      "min": 56605
+     },
+     {
       "name": "decision-tree",
       "kind": "element",
       "min": 56128
@@ -10929,11 +10934,6 @@
       "name": "tool-configuration",
       "kind": "element",
       "min": 51767
-     },
-     {
-      "name": "json-viewer",
-      "kind": "element",
-      "min": 51727
      },
      {
       "name": "integration-picker",
@@ -10973,7 +10973,7 @@
      {
       "name": "playbook-canvas",
       "kind": "element",
-      "min": 47093
+      "min": 47101
      },
      {
       "name": "world-map",
@@ -11918,7 +11918,7 @@
      {
       "name": "src/generative/registry.ts",
       "kind": "other",
-      "min": 36394
+      "min": 36413
      },
      {
       "name": "src/generative/schemas/tc-ai-side-pane.json",
@@ -12246,6 +12246,11 @@
       "min": 2928
      },
      {
+      "name": "src/generative/schemas/tc-json-viewer.json",
+      "kind": "other",
+      "min": 2918
+     },
+     {
       "name": "src/generative/schemas/tc-agent-lanes.json",
       "kind": "other",
       "min": 2909
@@ -12364,11 +12369,6 @@
       "name": "src/generative/schemas/tc-feedback-rubric.json",
       "kind": "other",
       "min": 2616
-     },
-     {
-      "name": "src/generative/schemas/tc-json-viewer.json",
-      "kind": "other",
-      "min": 2603
      },
      {
       "name": "src/generative/schemas/tc-message-actions.json",
@@ -13022,19 +13022,19 @@
      }
     ],
     "withoutLit": {
-     "min": 7438717,
-     "gzip": 1828269
+     "min": 7443944,
+     "gzip": 1829588
     },
     "withLit": {
-     "min": 7405486,
-     "gzip": 1815726
+     "min": 7410706,
+     "gzip": 1817061
     }
    },
    "render": {
     "tag": "tc-generated-ui",
     "source": "demo",
     "runs": 7,
-    "cold": 2,
+    "cold": 2.2,
     "first": 0.6,
     "update": 0.1,
     "updateKind": "re-render with the same data",
@@ -15253,11 +15253,11 @@
   },
   "json-viewer": {
    "measuredAt": "2026-10-29",
-   "hash": "889ab7be3c5c8526",
+   "hash": "efe54448dc947c6f",
    "bundle": {
     "own": {
-     "min": 53764,
-     "gzip": 15136
+     "min": 58621,
+     "gzip": 16258
     },
     "shared": [
      {
@@ -15312,38 +15312,38 @@
      }
     ],
     "withoutLit": {
-     "min": 63519,
-     "gzip": 18336
+     "min": 68376,
+     "gzip": 19455
     },
     "withLit": {
-     "min": 84713,
-     "gzip": 25109
+     "min": 89570,
+     "gzip": 26197
     }
    },
    "render": {
     "tag": "tc-json-viewer",
     "source": "demo",
     "runs": 7,
-    "cold": 9.4,
-    "first": 3.6,
-    "update": 1,
+    "cold": 9.5,
+    "first": 3.4,
+    "update": 0.9,
     "updateKind": "one item of flags replaced",
-    "nodes": 457,
+    "nodes": 462,
     "scale": {
      "property": "flags",
      "demoItems": 1,
      "points": [
       {
        "items": 100,
-       "first": 4.2,
-       "update": 1.1,
-       "nodes": 556
+       "first": 3.9,
+       "update": 1.2,
+       "nodes": 561
       },
       {
        "items": 1000,
-       "first": 10,
-       "update": 3.1,
-       "nodes": 1456
+       "first": 9.6,
+       "update": 3,
+       "nodes": 1461
       }
      ]
     },

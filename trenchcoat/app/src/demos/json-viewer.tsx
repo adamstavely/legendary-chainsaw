@@ -4,8 +4,8 @@ import type { JsonFlag, JsonValue } from "../../../src/elements/react";
 import { caption, textButton } from "../demo-kit";
 
 /* What a document reader pulled out of a supplier's invoice, laid out for the person who checks it before it's paid:
-   the fields as a form, the line items as a table, one field already flagged. "Open as a dialog" shows the same
-   document in the modal viewer, and "Broken JSON" what a syntax error looks like. All the data is made up. */
+   the fields as a form, the line items as a table, one field already flagged. "Side by side" puts the raw JSON beside
+   it; "Open as a dialog" shows the same document in the modal viewer, side by side from the start, and "Broken JSON" what a syntax error looks like. All the data is made up. */
 
 const INVOICE: JsonValue = {
   invoice_number: "INV-2207",
@@ -63,9 +63,9 @@ export default function Demo({ ui }: { ui: typeof UI }) {
         onFlagsChange={setFlags}
         style={{ ["--tc-jsv-body-h" as string]: "440px" }}
       />
-      <JsonViewer modal open={open} onOpenChange={setOpen} title="Invoice INV-2207" filename="inv-2207.json" value={INVOICE} flags={flags} onFlagsChange={setFlags} />
+      <JsonViewer modal defaultLayout="split" open={open} onOpenChange={setOpen} title="Invoice INV-2207" filename="inv-2207.json" value={INVOICE} flags={flags} onFlagsChange={setFlags} />
       <div style={{ ...caption, textAlign: "center" }}>
-        Switch views, search “HL-”, or flag a field for a second look.{" "}
+        Switch views or go side by side, search “HL-”, or flag a field for a second look.{" "}
         <button type="button" style={textButton} onClick={() => setOpen(true)}>
           Open as a dialog
         </button>{" "}

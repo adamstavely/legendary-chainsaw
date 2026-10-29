@@ -322,6 +322,80 @@ describe("tc-json-viewer", () => {
     expect(text(empty.querySelector(".ui-jsv__none"))).toBe("No document to show.");
   });
 
+  test("split: the rendered view beside the raw JSON; tabs pick the left pane; the toolbar switches the layout", async () => {
+    const el = await make();
+    const layouts: string[] = [];
+    el.addEventListener("tc-layout-change", (e) => layouts.push((e as CustomEvent).detail.layout));
+    const toggle = [...el.querySelectorAll<HTMLButtonElement>(".ui-jsv__btn")].find((b) => b.title === "Side by side")!;
+    expect(toggle.getAttribute("aria-pressed")).toBe("false");
+    toggle.click();
+    await settle();
+    expect(el.layout).toBe("split");
+    expect(toggle.getAttribute("aria-pressed")).toBe("true");
+    // Raw is always on the right, so the tabs are Document and Tree
+    expect([...el.querySelectorAll('[role="tab"]')].map(text)).toEqual(["Document", "Tree"]);
+    const left = el.querySelector<HTMLElement>(".ui-jsv__pane[data-left]")!;
+    const raw = el.querySelector<HTMLElement>(".ui-jsv__pane[data-raw]")!;
+    expect(left.getAttribute("role")).toBe("tabpanel");
+    expect(left.querySelector(".ui-jsv__doc")).not.toBeNull();
+    expect(raw.getAttribute("aria-label")).toBe("Raw JSON");
+    expect(raw.querySelector(".ui-jsv__raw")).not.toBeNull();
+    el.querySelector<HTMLButtonElement>('[role="tab"]:nth-child(2)')!.click();
+    await settle();
+    expect(el.querySelector(".ui-jsv__pane[data-left] [role='tree']")).not.toBeNull();
+    // Raw chosen before going side by side shows Document on the left
+    el.view = "raw";
+    await settle();
+    expect(el.querySelector(".ui-jsv__pane[data-left] .ui-jsv__doc")).not.toBeNull();
+    expect(el.querySelector('[role="tab"][aria-selected="true"]')!.textContent).toBe("Document");
+    // Prevented, the layout stays
+    el.addEventListener("tc-layout-change", (e) => e.preventDefault(), { once: true });
+    toggle.click();
+    await settle();
+    expect(el.layout).toBe("split");
+    toggle.click();
+    await settle();
+    expect(el.layout).toBe("tabs");
+    expect(el.querySelector(".ui-jsv__split")).toBeNull();
+    expect(layouts).toEqual(["split", "tabs", "tabs"]);
+    el.layoutToggle = false;
+    await settle();
+    expect([...el.querySelectorAll<HTMLButtonElement>(".ui-jsv__btn")].some((b) => b.title === "Side by side")).toBe(false);
+  });
+
+  test("split: pointing at a field marks its raw lines; a section marks all of its own; clicking a raw line finds its field", async () => {
+    const el = await fixture<TcJsonViewer>(html`<tc-json-viewer layout="split" heading="Invoice" .value=${DOC}></tc-json-viewer>`);
+    const raw = () => el.querySelector<HTMLElement>(".ui-jsv__pane[data-raw]")!;
+    const linked = () => [...raw().querySelectorAll<HTMLElement>(".ui-jsv__line[data-linked]")].map((l) => l.textContent!.trim());
+    rowOf(el, "/invoice_number").dispatchEvent(new PointerEvent("pointerover", { bubbles: true }));
+    expect(linked()).toEqual(['"invoice_number": "INV-2207",']);
+    // A section: its opening line, everything inside and its closing line
+    el.querySelector('.ui-jsv__section[data-path="/supplier"] .ui-jsv__heading')!.dispatchEvent(new PointerEvent("pointerover", { bubbles: true }));
+    expect(linked()).toEqual(['"supplier": {', '"name": "Harbour Lane",', '"vatId": "NL004495445B01"', "},"]);
+    // Focus works the same
+    rowOf(el, "/paid").querySelector<HTMLButtonElement>(".ui-jsv__flag-btn")!.focus();
+    expect(linked()).toEqual(['"paid": false,']);
+    // A re-render keeps the marks
+    el.filter = "Harbour";
+    await settle();
+    expect(linked()).toEqual(['"paid": false,']);
+    el.querySelector(".ui-jsv__pane[data-left]")!.dispatchEvent(new PointerEvent("pointerleave"));
+    expect(linked()).toEqual([]);
+    // Clicking a raw line finds the field on the left (in the tree, its row takes focus)
+    const line = raw().querySelector<HTMLElement>('.ui-jsv__line[data-path="/line_items/1/sku"]')!;
+    line.click();
+    await settle();
+    expect(rowOf(el, "/invoice_number")).not.toBeNull();
+    expect(el.querySelector('[data-path="/line_items/1/sku"][data-found], [data-path="/line_items/1"][data-found], td[data-path="/line_items/1/sku"][data-found]')).not.toBeNull();
+    el.view = "tree";
+    el.expandDepth = 0;
+    await settle();
+    raw().querySelector<HTMLElement>('.ui-jsv__line[data-path="/line_items/1/sku"]')!.click();
+    await settle();
+    expect((document.activeElement as HTMLElement).dataset.path).toBe("/line_items/1/sku");
+    expect(linked()).toEqual(['"sku": "HL-1190",']);
+  });
+
   test("modal: open shows a native modal; Close and Escape ask to close; prevented, it stays", async () => {
     const opener = document.createElement("button");
     document.body.append(opener);
@@ -395,6 +469,8 @@ describe("tc-json-viewer", () => {
         <tc-json-viewer look="clean" view="tree" heading="Invoice tree" .value=${DOC} filter="HL"></tc-json-viewer>
         <tc-json-viewer view="raw" heading="Invoice raw" .value=${DOC}></tc-json-viewer>
         <tc-json-viewer look="clean" heading="Broken" source='{"a": }'></tc-json-viewer>
+        <tc-json-viewer layout="split" heading="Invoice side by side" .value=${DOC}></tc-json-viewer>
+        <tc-json-viewer look="clean" layout="split" view="tree" heading="Tree side by side" .value=${DOC}></tc-json-viewer>
       </div>`);
       await finish(wrap);
       const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });

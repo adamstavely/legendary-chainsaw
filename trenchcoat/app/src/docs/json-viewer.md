@@ -19,6 +19,12 @@ Flags are listed at the foot and reported in `tc-flags-change`, so the page can 
 over the JSON. Give it `value` (parsed) or `source` (text). Text that isn't valid JSON shows the error at its line
 and column, with the lines around it. With `modal`, the viewer is a dialog that `open` shows.
 
+`layout` picks how the views are shown. **`tabs`** (the default) shows one at a time. **`split`** puts the rendered
+view – Document or Tree, chosen with the tabs – beside the raw JSON, each scrolling on its own. Point at or focus a
+field and its lines are marked in the raw JSON and scrolled into view; click a raw line and its field is found on the
+left. The toolbar's **Side by side** button switches between the two (`layout-toggle` to hide it), and below 640 px
+the raw JSON goes under the rendered view.
+
 ## When to use
 
 - Someone has to check structured data before it's used: an extraction before it's paid, a response before it's
@@ -36,7 +42,8 @@ and column, with the lines around it. With `modal`, the viewer is a dialog that 
 ## Anatomy
 
 1. **Views** `.ui-jsv__tabs` – Document, Tree and Raw, in the header
-2. **Toolbar** `.ui-jsv__toolbar` – the search with its count, Expand all / Collapse all in Tree, Copy JSON and Download
+2. **Toolbar** `.ui-jsv__toolbar` – the search with its count, Expand all / Collapse all in Tree, Side by side, Copy
+   JSON and Download
 3. **Fields** `.ui-jsv__row` – a key in plain words and its value, with the flag button at the end
 4. **Section** `.ui-jsv__section` – a nested object or list, with its name and size
 5. **Table** `.ui-jsv__table` – a list of like objects, one row each
@@ -44,6 +51,7 @@ and column, with the lines around it. With `modal`, the viewer is a dialog that 
 7. **Path bar** `.ui-jsv__pathbar` – in Tree, the focused field's path with Copy path, Copy value and Flag
 8. **Raw** `.ui-jsv__raw` – the JSON with line numbers and syntax colours
 9. **Flags** `.ui-jsv__flags` – how many fields are flagged, each a button that goes to it
+10. **Side by side** `.ui-jsv__split` – with `layout="split"`, the rendered view and the raw JSON in two panes
 
 ## Looks
 
@@ -69,10 +77,12 @@ key column in Document, 34%) and `--tc-jsv-indent` (the tree's step).
 | ⌘ / Ctrl + Enter in a note | Saves the flag |
 | Escape in a note | Cancels it |
 | Escape (dialog) | Asks to close |
+| Tab into a field (side by side) | Marks its lines in the raw JSON |
 
 ## Screen readers
 
-- The views are a `tablist`; the body is their `tabpanel`.
+- The views are a `tablist`; the body is their `tabpanel`. Side by side, the raw JSON is its own region, "Raw JSON",
+  and Side by side is a toggle button that says whether it's on.
 - The tree is a `tree` of `treeitem`s with their level, position and open state; one is in the tab order.
 - Document fields are a description list (`dl`), sections have headings below the card's own, and tables have
   column headers.
@@ -93,6 +103,7 @@ key column in Document, 34%) and `--tc-jsv-indent` (the tree's step).
 ## Do
 
 - Open it as a dialog from a "View JSON" button where the JSON is a detail.
+- Go side by side where people check a rendering against the exact JSON – an extraction, a migration, an API change.
 - Keep the flags with the record (`onFlagsChange`), so the next reviewer sees them.
 - Pass `source` when you have text, so a broken payload says where it breaks.
 

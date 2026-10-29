@@ -7,13 +7,15 @@ import {
   type JsonViewerDownload,
   type JsonViewerFilterChange,
   type JsonViewerFlagsChange,
+  type JsonViewerLayout,
+  type JsonViewerLayoutChange,
   type JsonViewerOpenChange,
   type JsonViewerView,
   type JsonViewerViewChange,
 } from "../json-viewer";
 import { h, useControlled } from "./internal";
 
-export type { JsonFlag, JsonKeyStyle, JsonValue, JsonViewerCopy, JsonViewerDownload, JsonViewerView } from "../json-viewer";
+export type { JsonFlag, JsonKeyStyle, JsonValue, JsonViewerCopy, JsonViewerDownload, JsonViewerLayout, JsonViewerView } from "../json-viewer";
 
 const RawJsonViewer = createComponent({
   tagName: "tc-json-viewer",
@@ -21,6 +23,7 @@ const RawJsonViewer = createComponent({
   react: React,
   events: {
     onTcViewChange: "tc-view-change" as EventName<CustomEvent<JsonViewerViewChange>>,
+    onTcLayoutChange: "tc-layout-change" as EventName<CustomEvent<JsonViewerLayoutChange>>,
     onTcFilterChange: "tc-filter-change" as EventName<CustomEvent<JsonViewerFilterChange>>,
     onTcFlagsChange: "tc-flags-change" as EventName<CustomEvent<JsonViewerFlagsChange>>,
     onTcOpenChange: "tc-open-change" as EventName<CustomEvent<JsonViewerOpenChange>>,
@@ -32,6 +35,8 @@ type RawProps = React.ComponentProps<typeof RawJsonViewer>;
 type Owned =
   | "heading"
   | "view"
+  | "layout"
+  | "onTcLayoutChange"
   | "filter"
   | "flags"
   | "open"
@@ -51,6 +56,12 @@ export type JsonViewerProps = Omit<RawProps, Owned> & {
   defaultView?: JsonViewerView;
   /** The view changed */
   onViewChange?: (view: JsonViewerView) => void;
+  /** One view at a time ("tabs") or the rendered view beside the raw JSON ("split") – controlled when given */
+  layout?: JsonViewerLayout;
+  /** The layout on mount when `layout` isn't controlled */
+  defaultLayout?: JsonViewerLayout;
+  /** The layout was switched with the toolbar button */
+  onLayoutChange?: (layout: JsonViewerLayout) => void;
   /** The search – controlled when given */
   filter?: string;
   /** The search on mount when `filter` isn't controlled */
@@ -82,6 +93,9 @@ export function JsonViewer({
   view,
   defaultView = "document",
   onViewChange,
+  layout,
+  defaultLayout = "tabs",
+  onLayoutChange,
   filter,
   defaultFilter = "",
   onFilterChange,
@@ -97,16 +111,19 @@ export function JsonViewer({
 }: JsonViewerProps) {
   const v = useControlled<JsonViewerView>(view, defaultView, onViewChange);
   const f = useControlled<string>(filter, defaultFilter, onFilterChange);
+  const lay = useControlled<JsonViewerLayout>(layout, defaultLayout, onLayoutChange);
   const fl = useControlled<JsonFlag[]>(flags, defaultFlags, undefined);
   const o = useControlled<boolean>(open, defaultOpen, onOpenChange);
   return h(RawJsonViewer, {
     ...props,
     heading: title ?? "JSON",
     view: v.value,
+    layout: lay.value,
     filter: f.value,
     flags: fl.value,
     open: o.value,
     onTcViewChange: (e: CustomEvent<JsonViewerViewChange>) => v.handler(e.detail.view, e),
+    onTcLayoutChange: (e: CustomEvent<JsonViewerLayoutChange>) => lay.handler(e.detail.layout, e),
     onTcFilterChange: (e: CustomEvent<JsonViewerFilterChange>) => f.handler(e.detail.filter, e),
     onTcFlagsChange: (e: CustomEvent<JsonViewerFlagsChange>) => {
       onFlagsChange?.(e.detail.flags, { path: e.detail.path, note: e.detail.note });
