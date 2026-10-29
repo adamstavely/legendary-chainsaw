@@ -80,7 +80,7 @@
     },
     "level": {
       "type": "string",
-      "description": "The picked level's id; by default the first level"
+      "description": "The picked level's id; by default the first level. Changed by the user unless tc-level-change is prevented"
     },
     "durations": {
       "type": "array",
@@ -91,7 +91,7 @@
     },
     "duration": {
       "type": "string",
-      "description": "The picked duration: a duration's id, \"custom\" or \"permanent\"; by default the second duration (30 days)"
+      "description": "The picked duration: a duration's id, \"custom\" or \"permanent\"; by default the second duration (30 days). Changed by the user unless tc-duration-change is prevented"
     },
     "allowPermanent": {
       "type": "boolean",

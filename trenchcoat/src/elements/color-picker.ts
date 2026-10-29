@@ -455,6 +455,9 @@ export class TcColorPicker extends TcElement {
         if (!parsed) problem = this.l.invalidHex;
         // An opacity typed into the hex wins over the opacity field only when the field wasn't edited
         else rgb = { ...parsed, a: this.drafts.a === undefined && /^\s*#?([0-9a-f]{4}|[0-9a-f]{8})\s*$/i.test(this.fieldValue("hex")) ? parsed.a : a.values.a / 100 };
+      } else if (!(["r", "g", "b", "c", "m", "y", "k"] as const).some((k) => this.drafts[k] !== undefined)) {
+        // Only the opacity changed: keep the colour exactly – rebuilding it from rounded CMYK would nudge it
+        rgb = { ...this.rgb, a: a.values.a / 100 };
       } else if (this.format === "rgb") {
         const r = this.read(["r", "g", "b"]);
         problem = r.problem;

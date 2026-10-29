@@ -1,5 +1,18 @@
 # Changelog
 
+## Unreleased – fixes from a review of the newest components
+
+- **Text to Speech** – when another reader (or the page) cancels the browser's shared speech queue, it pauses instead
+  of showing "Reading" with nothing spoken; `lang` reflects to the attribute, as HTMLElement's does.
+- **Access Request** – sending, cancelling and Request again keep focus (on what replaced the button); when the page
+  controls `status`, the sent time, announcements and validation reset still happen; `level` and `duration` change
+  through cancelable `tc-level-change` / `tc-duration-change`, and the React wrapper controls them
+  (`onAccessDurationChange` – `onDurationChange` is a React media prop).
+- **Score Survey** – a comment typed for a score whose follow-up question has gone isn't sent.
+- **Colour Picker** – in CMYK with alpha, changing only the opacity keeps the colour exactly.
+- **Speed Reader** – a listener that keeps the place pauses the reading instead of leaving it stuck on Pause.
+- **Score Summary** – NPS and CSAT are worked out from the counts and rounded once: a balanced split is 0, not −1.
+- **Geo Location** – a copy the browser refused no longer says Copied.
 
 ## Unreleased – a UI kit for Adobe XD
 
@@ -21,7 +34,6 @@
   and time read as one line, and a row's actions show on hover or focus (a saved search keeps its star).
 - **Query Builder** – the AND / OR switch is set in the UI font, the "Where / and / or" words show down to 500 px, and
   the date picker's button is quieter. **Routine Form**'s time picker button matches.
-
 
 ## Unreleased – colour picker, NPS / CSAT, coordinates, access requests, reading aloud
 

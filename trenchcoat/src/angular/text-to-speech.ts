@@ -39,7 +39,7 @@ export class TextToSpeech {
   @Input() set voice(v: TcTextToSpeech["voice"]) {
     this.#el.voice = v;
   }
-  /** The passage's language (a BCP 47 tag) – picks a default voice and splits sentences; unset, the browser decides */
+  /** The passage's language (a BCP 47 tag) – picks a default voice and splits sentences; unset, the browser decides. Reflects to the lang attribute, as HTMLElement's own does, so assistive tech and fonts see it */
   @Input() set lang(v: TcTextToSpeech["lang"]) {
     this.#el.lang = v;
   }

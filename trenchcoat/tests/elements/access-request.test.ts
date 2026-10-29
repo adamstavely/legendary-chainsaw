@@ -159,6 +159,57 @@ describe("tc-access-request", () => {
     expect(seen).toEqual([null, new Date("2026-12-31T23:59:59").getTime()]);
   });
 
+  test("controlled status: what sending and cancelling bring still happens when the page sets status; focus lands on what replaced the button", async () => {
+    const el = await make();
+    // The page owns status: it prevents the change and sets it itself
+    el.addEventListener("tc-status-change", (e) => {
+      e.preventDefault();
+      el.status = (e as CustomEvent<AccessStatusChange>).detail.status;
+    });
+    type(why(el), WHY);
+    await settle();
+    const submit = el.querySelector<HTMLButtonElement>('button[type="submit"]')!;
+    submit.focus();
+    await send(el);
+    expect(el.status).toBe("pending");
+    expect(el.submittedAt).toBe(NOW);
+    expect(el.querySelector('[role="status"]')!.textContent).toBe("Request sent");
+    // The form's button is gone: focus is on the status view's action, not the page
+    await expect.poll(() => document.activeElement?.textContent).toBe("Cancel request");
+    (document.activeElement as HTMLButtonElement).click();
+    await settle();
+    expect(el.status).toBe("draft");
+    expect(el.submittedAt).toBeUndefined();
+    expect(el.querySelector('[role="status"]')!.textContent).toBe("Request cancelled");
+    await expect.poll(() => document.activeElement === why(el)).toBe(true);
+  });
+
+  test("level and duration: picking fires a cancelable change; prevented, the pick stays", async () => {
+    const el = await make();
+    const levels: string[] = [];
+    el.addEventListener("tc-level-change", (e) => levels.push((e as CustomEvent).detail.level));
+    const radios = [...el.querySelectorAll<HTMLButtonElement>('.ui-dar__levels [role="radio"]')];
+    radios[1].click();
+    await settle();
+    expect(checked(el, "level")).toBe(radios[1].dataset.level);
+    el.addEventListener("tc-level-change", (e) => e.preventDefault(), { once: true });
+    radios[0].click();
+    await settle();
+    expect(checked(el, "level")).toBe(radios[1].dataset.level);
+    expect(levels).toEqual([radios[1].dataset.level, radios[0].dataset.level]);
+    const durations: string[] = [];
+    el.addEventListener("tc-duration-change", (e) => {
+      durations.push((e as CustomEvent).detail.duration);
+      e.preventDefault();
+    });
+    const chips = [...el.querySelectorAll<HTMLButtonElement>("[data-duration]")];
+    const before = checked(el, "duration");
+    chips.find((c) => c.dataset.duration !== before)!.click();
+    await settle();
+    expect(checked(el, "duration")).toBe(before);
+    expect(durations).toHaveLength(1);
+  });
+
   test("pending: Cancel request fires tc-cancel and returns to the form; prevented, it stays pending", async () => {
     const el = await fixture<TcAccessRequest>(html`<tc-access-request status="pending" .resource=${RESOURCE} .now=${NOW} .submittedAt=${NOW - DAY}></tc-access-request>`);
     let cancels = 0;
