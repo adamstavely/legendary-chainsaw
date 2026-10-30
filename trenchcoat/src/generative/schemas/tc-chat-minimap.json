@@ -1,0 +1,61 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-chat-minimap.json",
+  "title": "tc-chat-minimap",
+  "description": "A rail of ticks beside a long chat, one per message the person sent – the one in view lit, the message on hover, a\nclick to jump – that follows the chat's scrolling.",
+  "type": "object",
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "What the rail is – its accessible name"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ChatMarker"
+      },
+      "description": "The person's messages, oldest first"
+    },
+    "current": {
+      "type": "string",
+      "description": "The id of the message in view. Followed from the scrolling unless `manual`, and set by a jump"
+    },
+    "manual": {
+      "type": "boolean",
+      "description": "Leaves `current` to the page: the rail neither follows the scrolling nor scrolls on a jump"
+    },
+    "tipSide": {
+      "type": "string",
+      "enum": [
+        "left",
+        "right"
+      ],
+      "description": "Which side of the rail a message shows on"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ChatMarker": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique within the rail"
+        },
+        "text": {
+          "type": "string",
+          "description": "The message as the person wrote it; shown on hover, and its length sets the tick's"
+        },
+        "target": {
+          "type": "string",
+          "description": "The id of the message's element in the chat, when it isn't `id`"
+        }
+      },
+      "required": [
+        "id",
+        "text"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

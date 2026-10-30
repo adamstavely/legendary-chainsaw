@@ -1,0 +1,420 @@
+{
+ "elements": [
+  {
+   "tag": "tc-chat-minimap",
+   "className": "TcChatMinimap",
+   "description": "A rail of ticks beside a long chat, one per message the person sent – the one in view lit, the message on hover, a\nclick to jump – that follows the chat's scrolling.",
+   "properties": [
+    {
+     "name": "label",
+     "attribute": "label",
+     "type": "string",
+     "default": "\"Your messages\"",
+     "description": "What the rail is – its accessible name",
+     "readonly": false
+    },
+    {
+     "name": "items",
+     "attribute": null,
+     "type": "ChatMarker[]",
+     "default": "[]",
+     "description": "The person's messages, oldest first",
+     "readonly": false
+    },
+    {
+     "name": "current",
+     "attribute": "current",
+     "type": "string | null",
+     "default": "null",
+     "description": "The id of the message in view. Followed from the scrolling unless `manual`, and set by a jump",
+     "readonly": false
+    },
+    {
+     "name": "scrollRoot",
+     "attribute": null,
+     "type": "Element | null",
+     "default": "null",
+     "description": "The element the chat scrolls in; by default the page",
+     "readonly": false
+    },
+    {
+     "name": "manual",
+     "attribute": "manual",
+     "type": "boolean",
+     "default": "false",
+     "description": "Leaves `current` to the page: the rail neither follows the scrolling nor scrolls on a jump",
+     "readonly": false
+    },
+    {
+     "name": "tipSide",
+     "attribute": "tip-side",
+     "type": "\"left\" | \"right\"",
+     "default": "\"left\"",
+     "description": "Which side of the rail a message shows on",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-jump",
+     "detail": "",
+     "description": "A tick was chosen ({ id, item }: ChatMinimapJump); cancelable – prevented, the chat doesn't scroll",
+     "cancelable": true
+    },
+    {
+     "name": "tc-current-change",
+     "detail": "",
+     "description": "The message in view changed ({ current }: ChatMinimapCurrentChange); cancelable – prevented, `current` stays as it was",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "cmm",
+   "cssProperties": [
+    {
+     "name": "--tc-cmm-pitch",
+     "value": "16px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-cmm-sm",
+     "value": "14px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-cmm-md",
+     "value": "20px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-cmm-lg",
+     "value": "28px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-cmm-thick",
+     "value": "3px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-cmm-thick-here",
+     "value": "4px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-cmm-tip-width",
+     "value": "280px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-cmm-tick",
+     "value": "var(--tc-text-muted)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-cmm-here",
+     "value": "var(--tc-accent-solid)",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent-solid",
+    "--tc-card-shadow",
+    "--tc-duration-fast",
+    "--tc-ease-standard",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-line-height-snug",
+    "--tc-radius-full",
+    "--tc-radius-md",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-2",
+    "--tc-space-3",
+    "--tc-surface-inverse",
+    "--tc-text-muted",
+    "--tc-text-on-inverse",
+    "--tc-text-primary"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "ChatMinimap",
+   "exported": true,
+   "props": [
+    {
+     "name": "current",
+     "type": "string | null",
+     "optional": true,
+     "description": "The id of the message in view – controlled when given (null for none)"
+    },
+    {
+     "name": "defaultCurrent",
+     "type": "string | null",
+     "optional": true,
+     "description": "The message in view on mount when `current` isn't controlled"
+    },
+    {
+     "name": "onCurrentChange",
+     "type": "(current: string | null) => void",
+     "optional": true,
+     "description": "The message in view changed – by scrolling or a jump"
+    }
+   ],
+   "hides": [
+    "current",
+    "children"
+   ],
+   "events": {
+    "tc-jump": "onTcJump",
+    "tc-current-change": null
+   }
+  }
+ ],
+ "changelog": [
+  "**Chat Minimap** (`tc-chat-minimap`) – a slim rail beside a long chat with a tick for each message the person sent, longer for longer messages, and the one in view lit. Pointing at a tick (or moving to it with the arrow keys) shows the message and where it falls; a click or Enter scrolls the chat back to it, holding still while the jump scrolls. It follows the chat's scroller by itself, or the page drives `current` with `manual`; cancelable `tc-jump` and `tc-current-change`."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-chat-minimap",
+   "className": "TcChatMinimap",
+   "module": "trenchcoat/chat-minimap",
+   "data": [
+    "items",
+    "scrollRoot"
+   ],
+   "attributes": [
+    {
+     "name": "label",
+     "attribute": "label"
+    },
+    {
+     "name": "current",
+     "attribute": "current"
+    },
+    {
+     "name": "manual",
+     "attribute": "manual"
+    },
+    {
+     "name": "tipSide",
+     "attribute": "tip-side"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-jump",
+     "cancelable": true
+    },
+    {
+     "name": "tc-current-change",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "current",
+     "event": "tc-current-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setTimeout"
+  ],
+  "frames": [
+   "requestAnimationFrame, cancelled"
+  ],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 17211,
+  "gzip": 6142
+ }
+}

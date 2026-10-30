@@ -398,6 +398,15 @@
     ]
   },
   {
+    "tag": "tc-chat-minimap",
+    "name": "ChatMinimap",
+    "description": "A rail of ticks beside a long chat, one per message the person sent – the one in view lit, the message on hover, a",
+    "events": [
+      "tc-jump",
+      "tc-current-change"
+    ]
+  },
+  {
     "tag": "tc-checkbox",
     "name": "Checkbox",
     "description": "Checkbox for AI product settings.",

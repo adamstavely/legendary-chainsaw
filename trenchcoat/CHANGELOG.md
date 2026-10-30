@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased – a chat minimap
+
+- **Chat Minimap** (`tc-chat-minimap`) – a slim rail beside a long chat with a tick for each message the person sent,
+  longer for longer messages, and the one in view lit. Pointing at a tick (or moving to it with the arrow keys) shows
+  the message and where it falls; a click or Enter scrolls the chat back to it, holding still while the jump scrolls.
+  It follows the chat's scroller by itself, or the page drives `current` with `manual`; cancelable `tc-jump` and
+  `tc-current-change`.
+
 ## Unreleased – inline details for entities and identifiers, three inputs and three charts
 
 - **Entity Details** (`tc-entity-details`) – emails, phone numbers, links and @handles in text are found and marked;

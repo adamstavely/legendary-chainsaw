@@ -59,6 +59,7 @@ export * from "./react/capacity-bars";
 export * from "./react/change-summary";
 export * from "./react/chat-composer";
 export * from "./react/chat-history";
+export * from "./react/chat-minimap";
 export * from "./react/checkbox";
 export * from "./react/citation-badge";
 export * from "./react/citation-sections";
