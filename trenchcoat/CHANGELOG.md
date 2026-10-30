@@ -8,6 +8,15 @@
   It follows the chat's scroller by itself, or the page drives `current` with `manual`; cancelable `tc-jump` and
   `tc-current-change`.
 
+## Unreleased – a radar chart and a year list
+
+- **Radar Chart** (`tc-radar-chart`) – a few measures on axes round a centre, joined into a shape: one series with its
+  value over each axis's name, or up to three compared in their own colours with a legend. A cross of axes or a web of
+  rings (`grid="web"`), scaled to the largest value, 100 for “%”, or `max`; read as its numbers, with a Table view.
+- **Year List** (`tc-year-list`) – years to choose one from, newest first, as a column or a row that scrolls: a
+  `listbox` with one tab stop, keys that move without choosing, Enter or Space to choose, typing a year to jump to it,
+  an optional count on each year and a cancelable `tc-selected-change`.
+
 ## Unreleased – inline details for entities and identifiers, three inputs and three charts
 
 - **Entity Details** (`tc-entity-details`) – emails, phone numbers, links and @handles in text are found and marked;

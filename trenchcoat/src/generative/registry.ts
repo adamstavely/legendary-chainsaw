@@ -171,6 +171,7 @@ export const registry: Record<string, { events: string[]; load: () => Promise<un
   "tc-publication-impact": { events: ["tc-filter-change"], load: () => import("../elements/publication-impact"), schema: () => import("./schemas/tc-publication-impact.json") },
   "tc-publish-readiness": { events: ["tc-confirmed-change","tc-open-change","tc-open-blocker","tc-publish"], load: () => import("../elements/publish-readiness"), schema: () => import("./schemas/tc-publish-readiness.json") },
   "tc-query-builder": { events: ["tc-value-change","tc-submit"], load: () => import("../elements/query-builder"), schema: () => import("./schemas/tc-query-builder.json") },
+  "tc-radar-chart": { events: ["tc-view-change"], load: () => import("../elements/radar-chart"), schema: () => import("./schemas/tc-radar-chart.json") },
   "tc-radio-group": { events: ["tc-value-change"], load: () => import("../elements/radio-group"), schema: () => import("./schemas/tc-radio-group.json") },
   "tc-reaction-bar": { events: ["tc-reaction-change"], load: () => import("../elements/reaction-bar"), schema: () => import("./schemas/tc-reaction-bar.json") },
   "tc-reasoning-flags": { events: ["tc-reconsider","tc-open-change"], load: () => import("../elements/reasoning-flags"), schema: () => import("./schemas/tc-reasoning-flags.json") },
@@ -240,4 +241,5 @@ export const registry: Record<string, { events: string[]; load: () => Promise<un
   "tc-work-item": { events: ["tc-open"], load: () => import("../elements/work-item"), schema: () => import("./schemas/tc-work-item.json") },
   "tc-world-map": { events: ["tc-continent-change"], load: () => import("../elements/world-map"), schema: () => import("./schemas/tc-world-map.json") },
   "tc-writing-assistant": { events: ["tc-messages-change","tc-draft-change"], load: () => import("../elements/writing-assistant"), schema: () => import("./schemas/tc-writing-assistant.json") },
+  "tc-year-list": { events: ["tc-selected-change"], load: () => import("../elements/year-list"), schema: () => import("./schemas/tc-year-list.json") },
 };

@@ -11,13 +11,13 @@
    "features": [
     "light-dark"
    ],
-   "elements": 278
+   "elements": 280
   },
   "edge": {
    "features": [
     "light-dark"
    ],
-   "elements": 278
+   "elements": 280
   },
   "firefox": {
    "features": [
@@ -29,13 +29,13 @@
    "features": [
     "light-dark"
    ],
-   "elements": 278
+   "elements": 280
   },
   "safari_ios": {
    "features": [
     "light-dark"
    ],
-   "elements": 278
+   "elements": 280
   }
  },
  "features": [
@@ -52,7 +52,7 @@
    },
    "progressive": false,
    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
-   "elements": 278
+   "elements": 280
   },
   {
    "id": "color-mix",
@@ -67,7 +67,7 @@
    },
    "progressive": false,
    "why": "Tints and washes mixed from the tokens.",
-   "elements": 278
+   "elements": 280
   },
   {
    "id": "is-where",
@@ -82,7 +82,7 @@
    },
    "progressive": false,
    "why": "Every rule is keyed on :where() so the page can override it.",
-   "elements": 278
+   "elements": 280
   },
   {
    "id": "focus-visible",
@@ -97,7 +97,7 @@
    },
    "progressive": false,
    "why": "Focus rings for keyboard users.",
-   "elements": 277
+   "elements": 279
   },
   {
    "id": "container-size",
@@ -112,7 +112,7 @@
    },
    "progressive": false,
    "why": "Components adapt to the width they're given, not the window's.",
-   "elements": 225
+   "elements": 226
   },
   {
    "id": "inset",
@@ -126,7 +126,7 @@
     "safari_ios": "14.1"
    },
    "progressive": false,
-   "elements": 138
+   "elements": 139
   },
   {
    "id": "inert",
@@ -242,7 +242,7 @@
     "safari_ios": "15"
    },
    "progressive": false,
-   "elements": 33
+   "elements": 34
   },
   {
    "id": "form-associated",
@@ -387,7 +387,7 @@
    },
    "progressive": true,
    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
-   "elements": 278
+   "elements": 280
   },
   {
    "id": "adopted-stylesheets",
@@ -402,7 +402,7 @@
    },
    "progressive": true,
    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
-   "elements": 277
+   "elements": 279
   },
   {
    "id": "scrollbar-width",
@@ -417,7 +417,7 @@
    },
    "progressive": true,
    "without": "Scrollbars keep the browser's default width.",
-   "elements": 70
+   "elements": 72
   },
   {
    "id": "overscroll-contain",

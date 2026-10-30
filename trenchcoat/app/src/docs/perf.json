@@ -4912,9 +4912,9 @@
     "tag": "tc-chat-minimap",
     "source": "demo",
     "runs": 7,
-    "cold": 4.6,
+    "cold": 7.1,
     "first": 0.6,
-    "update": 0.3,
+    "update": 0.2,
     "updateKind": "one item of items replaced",
     "nodes": 73,
     "scale": {
@@ -4923,14 +4923,14 @@
      "points": [
       {
        "items": 100,
-       "first": 3.3,
+       "first": 2.9,
        "update": 0.4,
        "nodes": 601
       },
       {
        "items": 1000,
-       "first": 18.7,
-       "update": 4.6,
+       "first": 21.1,
+       "update": 3,
        "nodes": 6001
       }
      ]
@@ -11474,7 +11474,7 @@
   },
   "generated-ui": {
    "measuredAt": "2026-10-30",
-   "hash": "e94ca8fd9aa4b454",
+   "hash": "e32165ba1fec7a8d",
    "bundle": {
     "own": {
      "min": 34126,
@@ -11629,7 +11629,7 @@
      {
       "name": "memory-panel",
       "kind": "element",
-      "min": 64886
+      "min": 64902
      },
      {
       "name": "evaluation-dataset-editor",
@@ -12667,6 +12667,11 @@
       "min": 12912
      },
      {
+      "name": "radar-chart",
+      "kind": "element",
+      "min": 12857
+     },
+     {
       "name": "button",
       "kind": "element",
       "min": 12832
@@ -12762,6 +12767,11 @@
       "min": 7509
      },
      {
+      "name": "year-list",
+      "kind": "element",
+      "min": 7495
+     },
+     {
       "name": "evidence-gallery",
       "kind": "element",
       "min": 5434
@@ -12799,7 +12809,7 @@
      {
       "name": "src/generative/registry.ts",
       "kind": "other",
-      "min": 40300
+      "min": 40586
      },
      {
       "name": "src/generative/schemas/tc-ai-side-pane.json",
@@ -13627,6 +13637,11 @@
       "min": 1914
      },
      {
+      "name": "src/generative/schemas/tc-radar-chart.json",
+      "kind": "other",
+      "min": 1909
+     },
+     {
       "name": "src/generative/schemas/tc-parallel-attempts.json",
       "kind": "other",
       "min": 1901
@@ -13842,6 +13857,11 @@
       "min": 1340
      },
      {
+      "name": "src/generative/schemas/tc-year-list.json",
+      "kind": "other",
+      "min": 1335
+     },
+     {
       "name": "src/generative/schemas/tc-prioritisation-matrix.json",
       "kind": "other",
       "min": 1332
@@ -14013,20 +14033,20 @@
      }
     ],
     "withoutLit": {
-     "min": 7992756,
-     "gzip": 1971744
+     "min": 8016919,
+     "gzip": 1978245
     },
     "withLit": {
-     "min": 7954133,
-     "gzip": 1956707
+     "min": 7978031,
+     "gzip": 1963088
     }
    },
    "render": {
     "tag": "tc-generated-ui",
     "source": "demo",
     "runs": 7,
-    "cold": 2.4,
-    "first": 0.5,
+    "cold": 6.1,
+    "first": 0.6,
     "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 9,
@@ -22529,6 +22549,104 @@
     "errors": []
    }
   },
+  "radar-chart": {
+   "measuredAt": "2026-10-30",
+   "hash": "9d840750ddcc3b30",
+   "bundle": {
+    "own": {
+     "min": 14786,
+     "gzip": 5248
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 18902
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2971
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1864
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 440
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 435
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     }
+    ],
+    "withoutLit": {
+     "min": 22277,
+     "gzip": 7557
+    },
+    "withLit": {
+     "min": 42324,
+     "gzip": 14070
+    }
+   },
+   "render": {
+    "tag": "tc-radar-chart",
+    "source": "demo",
+    "runs": 7,
+    "cold": 9.6,
+    "first": 0.8,
+    "update": 0.3,
+    "updateKind": "one item of axes replaced",
+    "nodes": 37,
+    "scale": {
+     "property": "axes",
+     "demoItems": 4,
+     "points": [
+      {
+       "items": 100,
+       "first": 2.4,
+       "update": 0.5,
+       "nodes": 325
+      },
+      {
+       "items": 1000,
+       "first": 15.5,
+       "update": 2.5,
+       "nodes": 3025
+      }
+     ]
+    },
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
   "radio-group": {
    "measuredAt": "2026-10-29",
    "hash": "65ef2c98fb55aedf",
@@ -30456,6 +30574,87 @@
       }
      ]
     },
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
+  "year-list": {
+   "measuredAt": "2026-10-30",
+   "hash": "79a29932fc24304f",
+   "bundle": {
+    "own": {
+     "min": 9438,
+     "gzip": 3864
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 18937
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2217
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1864
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 440
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 435
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     }
+    ],
+    "withoutLit": {
+     "min": 16213,
+     "gzip": 5847
+    },
+    "withLit": {
+     "min": 36303,
+     "gzip": 12389
+    }
+   },
+   "render": {
+    "tag": "tc-year-list",
+    "source": "demo",
+    "runs": 7,
+    "cold": 7,
+    "first": 0.6,
+    "update": 0.2,
+    "updateKind": "re-render with the same data",
+    "nodes": 58,
+    "scale": null,
     "idle": {
      "visible": {
       "frames": 0,
