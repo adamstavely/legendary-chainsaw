@@ -1,0 +1,56 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-year-list.json",
+  "title": "tc-year-list",
+  "description": "Years to choose one from, newest first – a column, or a row that scrolls – with an optional count on each and\ntyping a year to jump to it.",
+  "type": "object",
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "What the years are for – the list's accessible name"
+    },
+    "years": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      },
+      "description": "The years, in the order shown; when empty, `to` down to `from`"
+    },
+    "from": {
+      "type": "number",
+      "description": "The oldest year, when `years` isn't given"
+    },
+    "to": {
+      "type": "number",
+      "description": "The newest year, when `years` isn't given"
+    },
+    "selected": {
+      "type": "number",
+      "description": "The chosen year. Changed by the user unless a tc-selected-change listener calls preventDefault()"
+    },
+    "counts": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "number"
+      },
+      "description": "A count to show beside each year, by year: { 2026: 1204 }"
+    },
+    "countLabel": {
+      "type": "string",
+      "description": "What the counts are, said after each: \"contributions\""
+    },
+    "orientation": {
+      "type": "string",
+      "enum": [
+        "horizontal",
+        "vertical"
+      ],
+      "description": "A column (\"vertical\") or a row that scrolls (\"horizontal\")"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for counts, e.g. \"de\"; by default the browser's"
+    }
+  },
+  "additionalProperties": false
+}

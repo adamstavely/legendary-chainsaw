@@ -165,6 +165,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Provider connection** (`provider-connection.tsx`) – A model provider connection read as a path – endpoint, credential, deployment – with each hop's health from an app-run test, the last check and the models it reports
 - **Publication Impact** (`publication-impact.tsx`) – One paper's impact on one card – venue, topic, grade and authors, downloads, views, citations and attention with a reads sparkline, mentions, who is reading, and peer, reader and sponsor feedback with a sentiment each
 - **Query Builder** (`query-builder.tsx`) – A search query built from conditions – a field, an operator that fits its type and a value per condition, AND / OR per group with one level of nesting, and the query read back in words and as a query string with Copy and Run
+- **Radar Chart** (`radar-chart.tsx`) – A few measures on axes round a centre, joined into a shape – one series with its value on each axis, or up to three compared – as a cross of axes or a web of rings, with a table view
 - **Radio Group** (`radio-group.tsx`) – A native keyboard-operated single choice
 - **Reaction Bar** (`reaction-bar.tsx`) – Like, comment, repost and share in one pill – icons pop and fill, counts roll in digit by digit
 - **Reasoning Flags** (`reasoning-flags.tsx`) – Inline markers for weak reasoning in an answer – circular, hedged then certain, self-contradicting or overconfident – each with an explanation
@@ -233,5 +234,6 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Watchlist** (`watchlist.tsx`) – The people, accounts or entities a team is watching, most at risk first – avatar, reference, case tag and a risk badge in words, with a count, filters by risk and View all
 - **Work Item** (`work-item.tsx`) – One piece of work as a card – status in words, a note, progress, a due date marked when overdue, people, what it delivers, spent against budget, effort and a "Synced · read-only" source, the whole card opening it
 - **Writing Assistant** (`writing-assistant.tsx`) – AI chat card with a soft gradient glow, suggestions, streaming replies and live voice dictation
+- **Year List** (`year-list.tsx`) – Years to choose one from, newest first – a column, or a row that scrolls – with a count on each, keyboard moves that don't choose, and typing a year to jump to it
 
 Live previews: run `npm run dev` and open the gallery.

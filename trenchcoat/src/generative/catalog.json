@@ -1602,6 +1602,14 @@
     ]
   },
   {
+    "tag": "tc-radar-chart",
+    "name": "RadarChart",
+    "description": "Values on three or more axes round a centre, joined into a shape – one series with its values on the axes, or up to",
+    "events": [
+      "tc-view-change"
+    ]
+  },
+  {
     "tag": "tc-radio-group",
     "name": "RadioGroup",
     "description": "Radio group for AI product settings.",
@@ -2244,6 +2252,14 @@
     "events": [
       "tc-messages-change",
       "tc-draft-change"
+    ]
+  },
+  {
+    "tag": "tc-year-list",
+    "name": "YearList",
+    "description": "Years to choose one from, newest first – a column, or a row that scrolls – with an optional count on each and",
+    "events": [
+      "tc-selected-change"
     ]
   }
 ]
