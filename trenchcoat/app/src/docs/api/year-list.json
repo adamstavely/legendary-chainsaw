@@ -1,0 +1,430 @@
+{
+ "elements": [
+  {
+   "tag": "tc-year-list",
+   "className": "TcYearList",
+   "description": "Years to choose one from, newest first – a column, or a row that scrolls – with an optional count on each and\ntyping a year to jump to it.",
+   "properties": [
+    {
+     "name": "label",
+     "attribute": "label",
+     "type": "string",
+     "default": "\"Year\"",
+     "description": "What the years are for – the list's accessible name",
+     "readonly": false
+    },
+    {
+     "name": "years",
+     "attribute": null,
+     "type": "number[]",
+     "default": "[]",
+     "description": "The years, in the order shown; when empty, `to` down to `from`",
+     "readonly": false
+    },
+    {
+     "name": "from",
+     "attribute": "from",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The oldest year, when `years` isn't given",
+     "readonly": false
+    },
+    {
+     "name": "to",
+     "attribute": "to",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The newest year, when `years` isn't given",
+     "readonly": false
+    },
+    {
+     "name": "selected",
+     "attribute": "selected",
+     "type": "number | null",
+     "default": "null",
+     "description": "The chosen year. Changed by the user unless a tc-selected-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "counts",
+     "attribute": null,
+     "type": "Record<number, number> | undefined",
+     "default": "undefined",
+     "description": "A count to show beside each year, by year: { 2026: 1204 }",
+     "readonly": false
+    },
+    {
+     "name": "countLabel",
+     "attribute": "count-label",
+     "type": "string",
+     "default": "\"items\"",
+     "description": "What the counts are, said after each: \"contributions\"",
+     "readonly": false
+    },
+    {
+     "name": "orientation",
+     "attribute": "orientation",
+     "type": "YearListOrientation",
+     "default": "\"vertical\"",
+     "description": "A column (\"vertical\") or a row that scrolls (\"horizontal\")",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The language for counts, e.g. \"de\"; by default the browser's",
+     "readonly": false
+    },
+    {
+     "name": "list",
+     "attribute": null,
+     "type": "number[]",
+     "default": null,
+     "description": "The years shown, in order (read-only): `years`, or `to` down to `from`",
+     "readonly": true
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-selected-change",
+     "detail": "",
+     "description": "A year was chosen ({ selected }: YearListSelectedChange); cancelable – prevented, `selected` stays as it was",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "yl",
+   "cssProperties": [
+    {
+     "name": "--tc-yl-width",
+     "value": "136px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-yl-chosen-bg",
+     "value": "var(--tc-fill-selected)",
+     "looks": [
+      "both",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-yl-chosen-fg",
+     "value": "var(--tc-text-primary)",
+     "looks": [
+      "both",
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent-solid",
+    "--tc-control-h-md",
+    "--tc-control-px-lg",
+    "--tc-control-radius-md",
+    "--tc-duration-fast",
+    "--tc-ease-standard",
+    "--tc-fill-hover",
+    "--tc-fill-selected",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-line-height-tight",
+    "--tc-space-1",
+    "--tc-space-2",
+    "--tc-text-muted",
+    "--tc-text-on-accent",
+    "--tc-text-primary",
+    "--tc-text-secondary"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "YearList",
+   "exported": true,
+   "props": [
+    {
+     "name": "selected",
+     "type": "number | null",
+     "optional": true,
+     "description": "The chosen year – controlled when given (null for none)"
+    },
+    {
+     "name": "defaultSelected",
+     "type": "number | null",
+     "optional": true,
+     "description": "The year chosen on mount when `selected` isn't controlled"
+    },
+    {
+     "name": "onSelectedChange",
+     "type": "(selected: number | null) => void",
+     "optional": true,
+     "description": "A year was chosen"
+    }
+   ],
+   "hides": [
+    "selected",
+    "children"
+   ],
+   "events": {
+    "tc-selected-change": null
+   }
+  }
+ ],
+ "changelog": [
+  "**Year List** (`tc-year-list`) – years to choose one from, newest first, as a column or a row that scrolls: a `listbox` with one tab stop, keys that move without choosing, Enter or Space to choose, typing a year to jump to it, an optional count on each year and a cancelable `tc-selected-change`."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-year-list",
+   "className": "TcYearList",
+   "module": "trenchcoat/year-list",
+   "data": [
+    "years",
+    "counts"
+   ],
+   "attributes": [
+    {
+     "name": "label",
+     "attribute": "label"
+    },
+    {
+     "name": "from",
+     "attribute": "from"
+    },
+    {
+     "name": "to",
+     "attribute": "to"
+    },
+    {
+     "name": "selected",
+     "attribute": "selected"
+    },
+    {
+     "name": "countLabel",
+     "attribute": "count-label"
+    },
+    {
+     "name": "orientation",
+     "attribute": "orientation"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-selected-change",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "selected",
+     "event": "tc-selected-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "scrollbar-width",
+    "name": "scrollbar-width",
+    "bcd": "css.properties.scrollbar-width",
+    "versions": {
+     "chrome": "121",
+     "edge": "121",
+     "firefox": "64",
+     "safari": "18.2",
+     "safari_ios": "18.2"
+    },
+    "progressive": true,
+    "without": "Scrollbars keep the browser's default width.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setTimeout"
+  ],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 16213,
+  "gzip": 5829
+ }
+}

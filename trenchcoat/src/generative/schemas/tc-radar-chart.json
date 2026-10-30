@@ -1,0 +1,94 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-radar-chart.json",
+  "title": "tc-radar-chart",
+  "description": "Values on three or more axes round a centre, joined into a shape – one series with its values on the axes, or up to\nthree compared – as a cross of axes or a web of rings, with a table view.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the drawing's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "axes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The axes' names, clockwise from the top"
+    },
+    "series": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/RadarSeries"
+      },
+      "description": "The series to draw – the first three; each has a value per axis"
+    },
+    "max": {
+      "type": "number",
+      "description": "The value at the edge; by default the largest value (100 when the unit is \"%\")"
+    },
+    "grid": {
+      "type": "string",
+      "enum": [
+        "axes",
+        "web"
+      ],
+      "description": "Bare axes from the centre (\"axes\"), or rings at each quarter as well (\"web\")"
+    },
+    "unit": {
+      "type": "string",
+      "description": "The unit after each number: \"%\", \"pts\""
+    },
+    "hideValues": {
+      "type": "boolean",
+      "description": "Leaves the values off the axes' names, for one series"
+    },
+    "axisHeader": {
+      "type": "string",
+      "description": "The table's corner: what the axes are"
+    },
+    "view": {
+      "type": "string",
+      "enum": [
+        "table",
+        "chart"
+      ],
+      "description": "The chart or the same numbers as a table. Changed by the Table button unless a tc-view-change listener calls preventDefault()"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for numbers, e.g. \"de\"; by default the browser's"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "RadarSeries": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Its name, in the legend and the table"
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": [
+              "number",
+              "null"
+            ]
+          },
+          "description": "One value per axis, in the axes' order; null (or missing) is no data"
+        }
+      },
+      "required": [
+        "name",
+        "values"
+      ],
+      "additionalProperties": false
+    }
+  }
+}
