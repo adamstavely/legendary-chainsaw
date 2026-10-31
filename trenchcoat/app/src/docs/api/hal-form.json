@@ -1,0 +1,557 @@
+{
+ "elements": [
+  {
+   "tag": "tc-hal-form",
+   "className": "TcHalForm",
+   "description": "A form the server describes: a HAL-FORMS document drawn as controls, checked by its rules, and sent as its template\nasks – every type, inline and linked options, and JSON, form-encoded or query-string requests.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The heading; by default the template's title",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "One line under the heading",
+     "readonly": false
+    },
+    {
+     "name": "resource",
+     "attribute": null,
+     "type": "HalFormsDocument | null",
+     "default": "null",
+     "description": "The HAL-FORMS document, when the page already has it; wins over `src`",
+     "readonly": false
+    },
+    {
+     "name": "src",
+     "attribute": "src",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "Where to fetch the HAL-FORMS document. Also the base for relative URLs, and the target of last resort",
+     "readonly": false
+    },
+    {
+     "name": "templateKey",
+     "attribute": "template-key",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "Which template to use; by default \"default\", else the first",
+     "readonly": false
+    },
+    {
+     "name": "values",
+     "attribute": null,
+     "type": "HalFormValues",
+     "default": "{}",
+     "description": "The fields' values over what the template starts with. Changed by the user unless a tc-values-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "errors",
+     "attribute": null,
+     "type": "Record<string, string>",
+     "default": "{}",
+     "description": "Messages for fields, by name, e.g. from the server's answer; a message goes when its field is edited",
+     "readonly": false
+    },
+    {
+     "name": "variables",
+     "attribute": null,
+     "type": "Record<string, unknown>",
+     "default": "{}",
+     "description": "Values for templated `value`s and `options.link.href`s",
+     "readonly": false
+    },
+    {
+     "name": "fetcher",
+     "attribute": null,
+     "type": "HalFormFetcher | undefined",
+     "default": "undefined",
+     "description": "Replaces fetch for every request it makes, e.g. to add auth",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "Partial<HalFormLabels>",
+     "default": "{}",
+     "description": "Replaces any of the words: \"Submit\", the messages…",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-values-change",
+     "detail": "",
+     "description": "A field changed ({ values, name, value }: HalFormValuesChange); cancelable – prevented, the field keeps its value",
+     "cancelable": true
+    },
+    {
+     "name": "tc-submit",
+     "detail": "",
+     "description": "The form is valid and about to send ({ method, url, headers, body, values, templateKey }: HalFormSubmit); cancelable – prevented, nothing is sent and the request is yours",
+     "cancelable": true
+    },
+    {
+     "name": "tc-response",
+     "detail": "",
+     "description": "The server answered ({ ok, status, response, values }: HalFormResponse)",
+     "cancelable": false
+    },
+    {
+     "name": "tc-error",
+     "detail": "",
+     "description": "Fetching the form, a field's options or the request failed ({ phase, error, name }: HalFormError)",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "hal",
+   "cssProperties": [
+    {
+     "name": "--tc-hal-swatch",
+     "value": "64px",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-divider",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-font-weight-strong",
+    "--tc-hairline",
+    "--tc-line-height-normal",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-6",
+    "--tc-space-8",
+    "--tc-status-danger-fg",
+    "--tc-status-success-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "pickHalTemplate",
+   "signature": "pickHalTemplate(doc: HalFormsDocument | null | undefined, key?: string): { key: string; template: HalFormsTemplate } | null",
+   "description": "The template to use: the key asked for, else \"default\", else the first"
+  },
+  {
+   "name": "expandHalUri",
+   "signature": "expandHalUri(template: string, variables: Record<string, unknown>): string",
+   "description": "Expands the common URI templates (RFC 6570): {var}, {+var}, {?a,b} and {&a,b}; a variable without a value drops out"
+  },
+  {
+   "name": "parseHalChoices",
+   "signature": "parseHalChoices(raw: unknown, options: Pick<HalFormsOptions, \"promptField\" | \"valueField\">): { value: string; label: string }[] | null",
+   "description": "Choices from an array of plain values or objects; anything that isn't an array gives none"
+  },
+  {
+   "name": "parseHalCsv",
+   "signature": "parseHalCsv(text: string): { value: string; label: string }[]",
+   "description": "Choices from CSV, a line each: \"value\", or \"prompt,value\""
+  },
+  {
+   "name": "buildHalRequest",
+   "signature": "buildHalRequest(template: HalFormsTemplate, url: string, values: Record<string, HalFormWireValue>): HalRequest",
+   "description": "The request a template describes, for values as they're sent"
+  }
+ ],
+ "react": [
+  {
+   "component": "HalForm",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading; by default the template's title"
+    },
+    {
+     "name": "values",
+     "type": "HalFormValues",
+     "optional": true,
+     "description": "The fields' values – controlled when given"
+    },
+    {
+     "name": "defaultValues",
+     "type": "HalFormValues",
+     "optional": true,
+     "description": "The values on mount, over what the template starts with, when `values` isn't controlled"
+    },
+    {
+     "name": "onValuesChange",
+     "type": "(values: HalFormValues) => void",
+     "optional": true,
+     "description": "A field changed"
+    }
+   ],
+   "hides": [
+    "heading",
+    "values",
+    "children"
+   ],
+   "events": {
+    "tc-values-change": null,
+    "tc-submit": "onTcSubmit",
+    "tc-response": "onTcResponse",
+    "tc-error": "onTcError"
+   }
+  }
+ ],
+ "changelog": [
+  "**HAL Form** (`tc-hal-form`) – give it a HAL-FORMS document (`resource`) or its URL (`src`) and it draws the template as controls: every `type`, `options` inline or from `options.link` (JSON or CSV), `selectedValues`, `minItems` and `maxItems`. It checks `required`, `regex`, lengths, ranges and steps when a field is left and on submit, then sends to `_htarget`, `target`, the `self` link or `src`, as JSON, form encoding or a query string. `fetcher` adds auth, cancelable `tc-submit` hands the request to the app, and `errors` shows the server's messages on fields."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-hal-form",
+   "className": "TcHalForm",
+   "module": "trenchcoat/hal-form",
+   "data": [
+    "resource",
+    "values",
+    "errors",
+    "variables",
+    "fetcher",
+    "labels"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    },
+    {
+     "name": "src",
+     "attribute": "src"
+    },
+    {
+     "name": "templateKey",
+     "attribute": "template-key"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-values-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-submit",
+     "cancelable": true
+    },
+    {
+     "name": "tc-response",
+     "cancelable": false
+    },
+    {
+     "name": "tc-error",
+     "cancelable": false
+    }
+   ],
+   "controlled": [
+    {
+     "property": "values",
+     "event": "tc-values-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "combobox",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "form-associated",
+    "name": "Form association (ElementInternals)",
+    "bcd": "api.ElementInternals.setFormValue",
+    "versions": {
+     "chrome": "77",
+     "edge": "79",
+     "firefox": "98",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": false,
+    "why": "The element's value is submitted with its form, and it takes part in form validation and reset.",
+    "via": [
+     "combobox"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "internal/settings",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself",
+     "combobox"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "internal/kit",
+     "internal/settings"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "combobox",
+     "internal/base",
+     "internal/settings",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "resize-observer",
+    "name": "ResizeObserver",
+    "bcd": "api.ResizeObserver",
+    "versions": {
+     "chrome": "64",
+     "edge": "79",
+     "firefox": "69",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "via": [
+     "combobox"
+    ]
+   },
+   {
+    "id": "scrollbar-width",
+    "name": "scrollbar-width",
+    "bcd": "css.properties.scrollbar-width",
+    "versions": {
+     "chrome": "121",
+     "edge": "121",
+     "firefox": "64",
+     "safari": "18.2",
+     "safari_ios": "18.2"
+    },
+    "progressive": true,
+    "without": "Scrollbars keep the browser's default width.",
+    "via": [
+     "combobox"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "overscroll-contain",
+    "name": "overscroll-behavior: contain",
+    "bcd": "css.properties.overscroll-behavior.contain",
+    "versions": {
+     "chrome": "63",
+     "edge": "18",
+     "firefox": "59",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "Scrolling past the end of a list carries on scrolling the page.",
+    "via": [
+     "combobox"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setTimeout (combobox)"
+  ],
+  "frames": [
+   "requestAnimationFrame (combobox)"
+  ],
+  "animations": 0,
+  "observers": [
+   "ResizeObserver (combobox)",
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [
+   "document pointerdown (combobox)"
+  ],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS (combobox)",
+    "CSS (internal/kit › kitCss)",
+    "CSS (internal/settings › rawSettingsCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 91973,
+  "gzip": 25457
+ }
+}

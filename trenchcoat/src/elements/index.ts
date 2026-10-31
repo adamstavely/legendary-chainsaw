@@ -121,6 +121,7 @@ export * from "./gradient-floor";
 export * from "./gradient-text";
 export * from "./grid-background";
 export * from "./guardrail-notice";
+export * from "./hal-form";
 export * from "./handoff";
 export * from "./handoff-brief";
 export * from "./header-nav";

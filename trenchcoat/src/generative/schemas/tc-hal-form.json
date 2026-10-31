@@ -1,0 +1,306 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-hal-form.json",
+  "title": "tc-hal-form",
+  "description": "A form the server describes: a HAL-FORMS document drawn as controls, checked by its rules, and sent as its template\nasks – every type, inline and linked options, and JSON, form-encoded or query-string requests.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading; by default the template's title"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "resource": {
+      "type": "object",
+      "properties": {
+        "_links": {
+          "type": "object",
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "href": {
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": false
+              },
+              {
+                "not": {}
+              }
+            ]
+          }
+        },
+        "_templates": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/HalFormsTemplate"
+          }
+        }
+      },
+      "additionalProperties": false,
+      "description": "The HAL-FORMS document, when the page already has it; wins over `src`"
+    },
+    "src": {
+      "type": "string",
+      "description": "Where to fetch the HAL-FORMS document. Also the base for relative URLs, and the target of last resort"
+    },
+    "templateKey": {
+      "type": "string",
+      "description": "Which template to use; by default \"default\", else the first"
+    },
+    "values": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/HalFormValue"
+      },
+      "description": "The fields' values over what the template starts with. Changed by the user unless a tc-values-change listener calls preventDefault()"
+    },
+    "errors": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Messages for fields, by name, e.g. from the server's answer; a message goes when its field is edited"
+    },
+    "variables": {
+      "type": "object",
+      "additionalProperties": {},
+      "description": "Values for templated `value`s and `options.link.href`s"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "submit": {
+          "type": "string"
+        },
+        "sending": {
+          "type": "string"
+        },
+        "sent": {
+          "type": "string"
+        },
+        "refused": {
+          "not": {}
+        },
+        "unreachable": {
+          "type": "string"
+        },
+        "loading": {
+          "type": "string"
+        },
+        "loadFailed": {
+          "type": "string"
+        },
+        "retry": {
+          "type": "string"
+        },
+        "invalid": {
+          "type": "string"
+        },
+        "noTarget": {
+          "type": "string"
+        },
+        "optionsLoading": {
+          "type": "string"
+        },
+        "optionsFailed": {
+          "type": "string"
+        },
+        "required": {
+          "type": "string"
+        },
+        "complete": {
+          "type": "string"
+        },
+        "format": {
+          "type": "string"
+        },
+        "tooShort": {
+          "not": {}
+        },
+        "tooLong": {
+          "not": {}
+        },
+        "below": {
+          "not": {}
+        },
+        "above": {
+          "not": {}
+        },
+        "step": {
+          "not": {}
+        },
+        "tooFew": {
+          "not": {}
+        },
+        "tooMany": {
+          "not": {}
+        },
+        "problems": {
+          "not": {}
+        },
+        "noResults": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Replaces any of the words: \"Submit\", the messages…"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "HalFormsTemplate": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "method": {
+          "type": "string"
+        },
+        "contentType": {
+          "type": "string"
+        },
+        "target": {
+          "type": "string"
+        },
+        "properties": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/HalFormsProperty"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "HalFormsProperty": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "prompt": {
+          "type": "string"
+        },
+        "readOnly": {
+          "type": "boolean"
+        },
+        "regex": {
+          "type": "string"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "templated": {
+          "type": [
+            "boolean",
+            "string"
+          ]
+        },
+        "value": {},
+        "type": {
+          "type": "string"
+        },
+        "placeholder": {
+          "type": "string"
+        },
+        "min": {
+          "type": "number"
+        },
+        "max": {
+          "type": "number"
+        },
+        "minLength": {
+          "type": "number"
+        },
+        "maxLength": {
+          "type": "number"
+        },
+        "step": {
+          "type": "number"
+        },
+        "cols": {
+          "type": "number"
+        },
+        "rows": {
+          "type": "number"
+        },
+        "options": {
+          "$ref": "#/definitions/HalFormsOptions"
+        }
+      },
+      "additionalProperties": false
+    },
+    "HalFormsOptions": {
+      "type": "object",
+      "properties": {
+        "inline": {
+          "type": "array",
+          "items": {},
+          "description": "The choices: plain values, or objects read with `promptField` and `valueField`. Wins over `link`"
+        },
+        "link": {
+          "type": "object",
+          "properties": {
+            "href": {
+              "type": "string"
+            },
+            "templated": {
+              "type": [
+                "boolean",
+                "string"
+              ]
+            },
+            "type": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false,
+          "description": "Where to fetch the choices from"
+        },
+        "selectedValues": {
+          "type": "array",
+          "items": {},
+          "description": "What's chosen to begin with"
+        },
+        "minItems": {
+          "type": "number"
+        },
+        "maxItems": {
+          "type": "number"
+        },
+        "promptField": {
+          "type": "string",
+          "description": "The field holding a choice's words; \"prompt\" by default"
+        },
+        "valueField": {
+          "type": "string",
+          "description": "The field holding a choice's value; \"value\" by default"
+        }
+      },
+      "additionalProperties": false
+    },
+    "HalFormValue": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      ],
+      "description": "A control's value: words, whether a lone checkbox is ticked, or the values chosen"
+    }
+  }
+}

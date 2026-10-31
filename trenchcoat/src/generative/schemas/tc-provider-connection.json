@@ -89,6 +89,9 @@
         "expired": {
           "type": "string"
         },
+        "unreachable": {
+          "type": "string"
+        },
         "untested": {
           "type": "string"
         },
@@ -102,9 +105,6 @@
           "type": "string"
         },
         "model-unavailable": {
-          "type": "string"
-        },
-        "unreachable": {
           "type": "string"
         }
       },

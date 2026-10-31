@@ -107,6 +107,7 @@ export const registry: Record<string, { events: string[]; load: () => Promise<un
   "tc-ghosted-chat": { events: [], load: () => import("../elements/ghosted-chat"), schema: () => import("./schemas/tc-ghosted-chat.json") },
   "tc-grade-distribution": { events: ["tc-selected-change"], load: () => import("../elements/grade-distribution"), schema: () => import("./schemas/tc-grade-distribution.json") },
   "tc-guardrail-notice": { events: ["tc-open-change","tc-review-request","tc-dismiss"], load: () => import("../elements/guardrail-notice"), schema: () => import("./schemas/tc-guardrail-notice.json") },
+  "tc-hal-form": { events: ["tc-values-change","tc-submit","tc-response","tc-error"], load: () => import("../elements/hal-form"), schema: () => import("./schemas/tc-hal-form.json") },
   "tc-handoff": { events: ["tc-status-change","tc-checked-change","tc-note-change","tc-return"], load: () => import("../elements/handoff"), schema: () => import("./schemas/tc-handoff.json") },
   "tc-handoff-brief": { events: ["tc-acknowledged-change","tc-access-request","tc-accept"], load: () => import("../elements/handoff-brief"), schema: () => import("./schemas/tc-handoff-brief.json") },
   "tc-header-nav": { events: ["tc-panel-change","tc-account-select","tc-setup-continue"], load: () => import("../elements/header-nav"), schema: () => import("./schemas/tc-header-nav.json") },

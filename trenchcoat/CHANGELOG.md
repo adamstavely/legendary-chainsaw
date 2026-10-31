@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased – a form the server describes
+
+- **HAL Form** (`tc-hal-form`) – give it a HAL-FORMS document (`resource`) or its URL (`src`) and it draws the template
+  as controls: every `type`, `options` inline or from `options.link` (JSON or CSV), `selectedValues`, `minItems` and
+  `maxItems`. It checks `required`, `regex`, lengths, ranges and steps when a field is left and on submit, then sends to
+  `_htarget`, `target`, the `self` link or `src`, as JSON, form encoding or a query string. `fetcher` adds auth,
+  cancelable `tc-submit` hands the request to the app, and `errors` shows the server's messages on fields.
+
 ## Unreleased – a chat minimap
 
 - **Chat Minimap** (`tc-chat-minimap`) – a slim rail beside a long chat with a tick for each message the person sent,

@@ -132,6 +132,7 @@ export * from "./react/gradient-floor";
 export * from "./react/gradient-text";
 export * from "./react/grid-background";
 export * from "./react/guardrail-notice";
+export * from "./react/hal-form";
 export * from "./react/handoff";
 export * from "./react/handoff-brief";
 export * from "./react/header-nav";

@@ -1009,6 +1009,17 @@
     ]
   },
   {
+    "tag": "tc-hal-form",
+    "name": "HalForm",
+    "description": "A form the server describes: a HAL-FORMS document drawn as controls, checked by its rules, and sent as its template",
+    "events": [
+      "tc-values-change",
+      "tc-submit",
+      "tc-response",
+      "tc-error"
+    ]
+  },
+  {
     "tag": "tc-handoff",
     "name": "Handoff",
     "description": "The agent hands control to a person mid-task with what it did, why it stopped and what it needs – and takes it back.",
