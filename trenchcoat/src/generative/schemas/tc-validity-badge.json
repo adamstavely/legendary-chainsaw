@@ -8,8 +8,8 @@
     "mode": {
       "type": "string",
       "enum": [
-        "badge",
-        "strip"
+        "strip",
+        "badge"
       ],
       "description": "\"badge\" – the mark and the band in words; \"strip\" – one bar per paragraph down a document's margin"
     },
@@ -42,8 +42,8 @@
     "band": {
       "type": "string",
       "enum": [
-        "stale",
         "high",
+        "stale",
         "good",
         "aging"
       ],
@@ -76,10 +76,10 @@
     "bandLabels": {
       "type": "object",
       "properties": {
-        "stale": {
+        "high": {
           "type": "string"
         },
-        "high": {
+        "stale": {
           "type": "string"
         },
         "good": {

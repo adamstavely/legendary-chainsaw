@@ -35,16 +35,16 @@
     "severityLabels": {
       "type": "object",
       "properties": {
-        "critical": {
-          "type": "string"
-        },
-        "high": {
+        "low": {
           "type": "string"
         },
         "medium": {
           "type": "string"
         },
-        "low": {
+        "high": {
+          "type": "string"
+        },
+        "critical": {
           "type": "string"
         }
       },

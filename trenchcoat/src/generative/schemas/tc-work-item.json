@@ -12,8 +12,8 @@
     "status": {
       "type": "string",
       "enum": [
-        "paused",
         "done",
+        "paused",
         "blocked",
         "active",
         "review"
@@ -23,10 +23,10 @@
     "statusLabels": {
       "type": "object",
       "properties": {
-        "paused": {
+        "done": {
           "type": "string"
         },
-        "done": {
+        "paused": {
           "type": "string"
         },
         "blocked": {

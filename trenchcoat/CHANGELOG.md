@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased – Six more agent views
+
+- **Conflict Radar** (`tc-conflict-radar`), **Scheduled Runs** (`tc-scheduled-runs`), **Fallback Chain** (`tc-fallback-chain`),
+  **Agent Handoff** (`tc-agent-handoff`), **Agent Findings** (`tc-agent-findings`) and **Agent Monitor** (`tc-agent-monitor`):
+  where parallel agents collide, tasks across a week's sessions, one request finding a model, what's lost between agents,
+  what a group of agents found, and one agent at work.
+
 ## Unreleased – Content Hidden, Malware Blocked and First Use
 
 - **Content Hidden** (`tc-content-hidden`), **Malware Blocked** (`tc-malware-blocked`) and **First Use** (`tc-first-use`) –

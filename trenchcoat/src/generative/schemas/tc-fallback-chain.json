@@ -1,0 +1,135 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-fallback-chain.json",
+  "title": "tc-fallback-chain",
+  "description": "One request finding a model that answers, as a small flow in fallback order.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "A line under the heading"
+    },
+    "request": {
+      "type": "string",
+      "description": "What was asked, in a few words"
+    },
+    "attempts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/FallbackAttempt"
+      },
+      "description": "Each model, in fallback order"
+    },
+    "selected": {
+      "type": "string",
+      "description": "The open model's id. Changed by the user unless a tc-selected-change listener calls preventDefault()"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The locale for durations"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "request": {
+          "type": "string"
+        },
+        "models": {
+          "type": "string"
+        },
+        "waiting": {
+          "type": "string"
+        },
+        "trying": {
+          "type": "string"
+        },
+        "failed": {
+          "type": "string"
+        },
+        "answered": {
+          "type": "string"
+        },
+        "skipped": {
+          "type": "string"
+        },
+        "answeredFirst": {
+          "type": "string"
+        },
+        "answeredAfter": {
+          "type": "string"
+        },
+        "tryingNow": {
+          "type": "string"
+        },
+        "allFailed": {
+          "type": "string"
+        },
+        "notStarted": {
+          "type": "string"
+        },
+        "noModels": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "took": {
+          "type": "string"
+        },
+        "close": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "FallbackAttempt": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string"
+        },
+        "provider": {
+          "type": "string"
+        },
+        "state": {
+          "$ref": "#/definitions/FallbackState"
+        },
+        "reason": {
+          "type": "string",
+          "description": "Why it failed or was skipped"
+        },
+        "latencyMs": {
+          "type": "number",
+          "description": "How long it took"
+        }
+      },
+      "required": [
+        "id",
+        "model",
+        "state"
+      ],
+      "additionalProperties": false
+    },
+    "FallbackState": {
+      "type": "string",
+      "enum": [
+        "waiting",
+        "trying",
+        "failed",
+        "answered",
+        "skipped"
+      ]
+    }
+  }
+}

@@ -56,10 +56,10 @@
     "riskLabels": {
       "type": "object",
       "properties": {
-        "critical": {
+        "low": {
           "type": "string"
         },
-        "low": {
+        "critical": {
           "type": "string"
         },
         "elevated": {

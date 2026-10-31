@@ -1,0 +1,207 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-agent-findings.json",
+  "title": "tc-agent-findings",
+  "description": "A group of agents checking something: one row per agent, beside a feed of what they've found.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "A line under the heading"
+    },
+    "agents": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AgentFindingsAgent"
+      },
+      "description": "The agents doing the checking"
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AgentFinding"
+      },
+      "description": "What they've found, in any order: findings with `at` show newest first"
+    },
+    "selected": {
+      "type": "string",
+      "description": "The open finding's id, or null. Changed by the user unless a tc-selected-change listener calls preventDefault()"
+    },
+    "agentFilter": {
+      "type": "string",
+      "description": "The agent id the feed shows, or \"all\". Changed by the user unless a tc-agent-filter-change listener calls preventDefault()"
+    },
+    "severityFilter": {
+      "anyOf": [
+        {
+          "type": "string",
+          "const": "all"
+        },
+        {
+          "$ref": "#/definitions/AgentFindingSeverity"
+        }
+      ],
+      "description": "The severity the feed shows, or \"all\". Changed by the user unless a tc-severity-filter-change listener calls preventDefault()"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The locale for times"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "agents": {
+          "type": "string"
+        },
+        "findings": {
+          "type": "string"
+        },
+        "queued": {
+          "type": "string"
+        },
+        "running": {
+          "type": "string"
+        },
+        "done": {
+          "type": "string"
+        },
+        "failed": {
+          "type": "string"
+        },
+        "info": {
+          "type": "string"
+        },
+        "low": {
+          "type": "string"
+        },
+        "medium": {
+          "type": "string"
+        },
+        "high": {
+          "type": "string"
+        },
+        "allAgents": {
+          "type": "string"
+        },
+        "allSeverities": {
+          "type": "string"
+        },
+        "filterAgent": {
+          "type": "string"
+        },
+        "filterSeverity": {
+          "type": "string"
+        },
+        "count": {
+          "type": "string"
+        },
+        "countOne": {
+          "type": "string"
+        },
+        "progress": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "noMatch": {
+          "type": "string"
+        },
+        "newOne": {
+          "type": "string"
+        },
+        "newMany": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "AgentFindingsAgent": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/AgentFindingsStatus"
+        },
+        "progress": {
+          "type": "number",
+          "description": "How far along, 0 to 1"
+        },
+        "checked": {
+          "type": "string",
+          "description": "What it's checked so far, in words: \"412 of 900 records\""
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "AgentFindingsStatus": {
+      "type": "string",
+      "enum": [
+        "queued",
+        "running",
+        "done",
+        "failed"
+      ]
+    },
+    "AgentFinding": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "agent": {
+          "type": "string",
+          "description": "The id of the agent that found it"
+        },
+        "severity": {
+          "$ref": "#/definitions/AgentFindingSeverity"
+        },
+        "title": {
+          "type": "string"
+        },
+        "detail": {
+          "type": "string",
+          "description": "More about it, shown when it's opened"
+        },
+        "at": {
+          "type": "number",
+          "description": "When it was found, epoch ms"
+        }
+      },
+      "required": [
+        "id",
+        "agent",
+        "severity",
+        "title"
+      ],
+      "additionalProperties": false
+    },
+    "AgentFindingSeverity": {
+      "type": "string",
+      "enum": [
+        "info",
+        "low",
+        "medium",
+        "high"
+      ]
+    }
+  }
+}

@@ -15,9 +15,9 @@
     "status": {
       "type": "string",
       "enum": [
-        "paused",
         "running",
-        "done"
+        "done",
+        "paused"
       ],
       "description": "The run: \"running\", \"paused\" or \"done\" – always set by the app"
     },

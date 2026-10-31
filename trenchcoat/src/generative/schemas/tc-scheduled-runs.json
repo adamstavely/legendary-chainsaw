@@ -1,0 +1,187 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-scheduled-runs.json",
+  "title": "tc-scheduled-runs",
+  "description": "Agent tasks placed into a week's sessions under usage limits.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "A line under the heading"
+    },
+    "sessions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ScheduledSession"
+      },
+      "description": "The week's sessions, in order"
+    },
+    "tasks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ScheduledTask"
+      },
+      "description": "The tasks to place"
+    },
+    "placements": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ScheduledPlacement"
+      },
+      "description": "Where each task goes; unset, planRuns() decides. Changed by the user unless a tc-placements-change listener calls preventDefault()"
+    },
+    "unit": {
+      "type": "string",
+      "description": "What the numbers count"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The locale for numbers"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "moveTo": {
+          "type": "string"
+        },
+        "unscheduled": {
+          "type": "string"
+        },
+        "unscheduledHelp": {
+          "type": "string"
+        },
+        "part": {
+          "type": "string"
+        },
+        "pinned": {
+          "type": "string"
+        },
+        "used": {
+          "type": "string"
+        },
+        "left": {
+          "type": "string"
+        },
+        "full": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "noTasks": {
+          "type": "string"
+        },
+        "summary": {
+          "type": "string"
+        },
+        "summaryAll": {
+          "type": "string"
+        },
+        "moved": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ScheduledSession": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "day": {
+          "type": "string",
+          "description": "When it is, in words: \"Monday\""
+        },
+        "limit": {
+          "type": "number",
+          "description": "How much it can use"
+        },
+        "unit": {
+          "type": "string",
+          "description": "What the numbers count; by default the element's `unit`"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "limit"
+      ],
+      "additionalProperties": false
+    },
+    "ScheduledTask": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "cost": {
+          "type": "number",
+          "description": "How much it uses"
+        },
+        "priority": {
+          "type": "number",
+          "description": "Higher goes first"
+        },
+        "pinned": {
+          "type": "string",
+          "description": "A session's id it must run in, whole"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "cost"
+      ],
+      "additionalProperties": false
+    },
+    "ScheduledPlacement": {
+      "type": "object",
+      "properties": {
+        "task": {
+          "type": "string",
+          "description": "The task's id"
+        },
+        "session": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The session's id, or null when it's unscheduled"
+        },
+        "cost": {
+          "type": "number",
+          "description": "How much of the task's cost this part uses"
+        },
+        "part": {
+          "type": "number",
+          "description": "Which part this is, when the task is split"
+        },
+        "parts": {
+          "type": "number",
+          "description": "How many parts the task has, when it's split"
+        }
+      },
+      "required": [
+        "task",
+        "session",
+        "cost"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

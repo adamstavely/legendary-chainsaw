@@ -39,9 +39,9 @@
     "filter": {
       "type": "string",
       "enum": [
+        "queued",
         "running",
         "done",
-        "queued",
         "failed",
         "retrying"
       ],

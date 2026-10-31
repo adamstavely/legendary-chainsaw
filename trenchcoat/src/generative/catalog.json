@@ -53,6 +53,16 @@
     "events": []
   },
   {
+    "tag": "tc-agent-findings",
+    "name": "AgentFindings",
+    "description": "A group of agents checking something: one row per agent, beside a feed of what they've found.",
+    "events": [
+      "tc-selected-change",
+      "tc-agent-filter-change",
+      "tc-severity-filter-change"
+    ]
+  },
+  {
     "tag": "tc-agent-gallery",
     "name": "AgentGallery",
     "description": "A showcase of agents as slim gradient panels, one open in the middle with its product screen.",
@@ -68,6 +78,14 @@
       "tc-selected-change",
       "tc-select",
       "tc-paused-change"
+    ]
+  },
+  {
+    "tag": "tc-agent-handoff",
+    "name": "AgentHandoff",
+    "description": "A task passed along a chain of agents, with what carried over and what got lost at each handoff.",
+    "events": [
+      "tc-selected-change"
     ]
   },
   {
@@ -98,6 +116,15 @@
       "tc-undone-change",
       "tc-undo",
       "tc-redo"
+    ]
+  },
+  {
+    "tag": "tc-agent-monitor",
+    "name": "AgentMonitor",
+    "description": "One agent at work: its current step, a clock, the cost so far, a strip of its steps and the finished ones.",
+    "events": [
+      "tc-selected-change",
+      "tc-action"
     ]
   },
   {
@@ -608,6 +635,16 @@
     ]
   },
   {
+    "tag": "tc-conflict-radar",
+    "name": "ConflictRadar",
+    "description": "Which parallel agents touch the same files, and where they collide.",
+    "events": [
+      "tc-selected-change",
+      "tc-filter-change",
+      "tc-resolve"
+    ]
+  },
+  {
     "tag": "tc-contact-channels",
     "name": "ContactChannels",
     "description": "The ways to reach a person or an account – email, phone, messaging and address – each masked until revealed, with",
@@ -943,6 +980,14 @@
     "description": "Facts in sections, each value tagged with its source and an Admiralty grade, tinted and marked by confidence –",
     "events": [
       "tc-copy"
+    ]
+  },
+  {
+    "tag": "tc-fallback-chain",
+    "name": "FallbackChain",
+    "description": "One request finding a model that answers, as a small flow in fallback order.",
+    "events": [
+      "tc-selected-change"
     ]
   },
   {
@@ -1938,6 +1983,14 @@
       "tc-alerts-change",
       "tc-run",
       "tc-open"
+    ]
+  },
+  {
+    "tag": "tc-scheduled-runs",
+    "name": "ScheduledRuns",
+    "description": "Agent tasks placed into a week's sessions under usage limits.",
+    "events": [
+      "tc-placements-change"
     ]
   },
   {

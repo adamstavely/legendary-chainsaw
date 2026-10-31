@@ -45,13 +45,13 @@
         "info": {
           "type": "string"
         },
-        "critical": {
+        "medium": {
           "type": "string"
         },
         "high": {
           "type": "string"
         },
-        "medium": {
+        "critical": {
           "type": "string"
         }
       },
