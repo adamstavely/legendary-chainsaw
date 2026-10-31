@@ -55,13 +55,23 @@ describe("tc-usage-meter", () => {
     });
 
     test(`${look}: the count-in ends on the real numbers`, async () => {
-      const el = await meter(look);
-      const big = el.querySelector(".ui-um__big")!;
-      // Read it every frame until it lands
+      // Each frame counts as 16 ms, so a slow runner that drops frames still rolls through the same values
+      const realFrame = window.requestAnimationFrame;
+      let clock = 0;
+      window.requestAnimationFrame = (run) => realFrame(() => run((clock += 16)));
       const seen = new Set<string>();
-      for (let i = 0; i < 600 && big.textContent !== "6,000"; i++) {
-        seen.add(big.textContent!);
-        await new Promise((r) => requestAnimationFrame(r));
+      let el: TcUsageMeter;
+      let big: Element;
+      try {
+        el = await meter(look);
+        big = el.querySelector(".ui-um__big")!;
+        // Read it every frame until it lands
+        for (let i = 0; i < 600 && big.textContent !== "6,000"; i++) {
+          seen.add(big.textContent!);
+          await new Promise((r) => requestAnimationFrame(r));
+        }
+      } finally {
+        window.requestAnimationFrame = realFrame;
       }
       await counted(el);
       // The number rolled through many values
