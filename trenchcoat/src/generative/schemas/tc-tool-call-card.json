@@ -13,8 +13,8 @@
       "type": "string",
       "enum": [
         "success",
-        "running",
-        "error"
+        "error",
+        "running"
       ],
       "description": "\"running\" shows a spinner and a live timer, \"success\" a check and the duration, \"error\" \"Failed\" and the message"
     },

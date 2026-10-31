@@ -23,10 +23,10 @@
     "status": {
       "type": "string",
       "enum": [
-        "done",
         "idle",
-        "summarising",
-        "error"
+        "error",
+        "done",
+        "summarising"
       ],
       "description": "Where the summary is: \"idle\", \"summarising\", \"done\" or \"error\""
     },
