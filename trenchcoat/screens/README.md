@@ -24,4 +24,6 @@ no restyling of their classes and no `zoom`.
 - **Folder** (`folder.tsx`) – Inside one folder: breadcrumbs, file cards with previews, and an empty state
 - **Integrations** (`integrations.tsx`) – App directory with a sticky header, categories, search and connect states; focus stays on the list when rows leave a tab; `connected`/`defaultConnected`/`onConnectedChange`
 - **Onboarding** (`onboarding.tsx`) – First-run flow of an AI workspace: workspace setup, tool connections, team invites and a first agent (template radio group with arrow keys), with a getting-started checklist; `step`/`defaultStep`/`onStepChange`, and `onComplete` may return a promise
+- **Search Results** (`search-results.tsx`) – A full search page: the search box, filters down the side, results grouped by kind, and Nothing Found when nothing matches
 - **Settings & Billing** (`settings-billing.tsx`) – Settings page with tabs: workspace, members, API keys and billing with plan, the library Usage Meter (`layout="wide"`), payment method, plan comparison and invoices; `tab`/`defaultTab`/`onTabChange`
+- **Sharing & Access** (`sharing-access.tsx`) – An admin page for what a team shares and who can reach it: team flags, access reviews and the audit trail, under three tabs
