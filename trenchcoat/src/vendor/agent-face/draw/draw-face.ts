@@ -1,10 +1,12 @@
 import type { FacePose } from "../engine";
-import { GRADIENT, SOFT_PATH } from "./spear-tip.mjs";
+import { BODY_GRADIENT, BODY_PATH, LEG_FACE_PATH, LEG_GRADIENT, LEG_PATH, LEG_RIM, TIP_PATH, type LogoGradient } from "./spear-tip.mjs";
 
 const INK = "#fff";
-const EYE_Y = 52;
-const EYE_GAP = 12;
-const MOUTH_Y = 67;
+// The face sits on the long stroke, above where the short one crosses it
+const EYE_Y = 38;
+const EYE_GAP = 8.5;
+const MOUTH_Y = 49;
+const MOUTH_HALF_WIDTH = 4.5;
 const PIVOT_Y = 55;
 const BASE_Y = 88;
 const LINE_COLOR = "#000";
@@ -23,6 +25,8 @@ const OUTLINE_PX = 1.25;
 
 export interface FaceMetrics {
   eyeRadius: number;
+  eyeWidth: number;
+  eyeHeight: number;
   line: number;
   mouth: boolean;
   hands: boolean;
@@ -31,17 +35,30 @@ export interface FaceMetrics {
 
 /** Features grow as the face shrinks, so they survive at 16 and 26 px. Too small for a mouth and hands, it moves the body instead. */
 export function metricsFor(size: number): FaceMetrics {
-  if (size <= 16) return { eyeRadius: 7, line: 6.5, mouth: false, hands: false, fingers: false };
-  if (size <= 26) return { eyeRadius: 5.5, line: 5, mouth: false, hands: false, fingers: false };
-  return { eyeRadius: 4.2, line: 3.2, mouth: true, hands: true, fingers: size >= FINGERS_FROM_PX };
+  if (size <= 16) return { eyeRadius: 7, eyeWidth: 4.4, eyeHeight: 7.5, line: 6.5, mouth: false, hands: false, fingers: false };
+  if (size <= 26) return { eyeRadius: 5.5, eyeWidth: 3.5, eyeHeight: 6, line: 5, mouth: false, hands: false, fingers: false };
+  return { eyeRadius: 4.2, eyeWidth: 2.3, eyeHeight: 4.75, line: 2.6, mouth: true, hands: true, fingers: size >= FINGERS_FROM_PX };
 }
 
-let outline: Path2D | null = null;
+interface LogoPaths {
+  body: Path2D;
+  leg: Path2D;
+  legFace: Path2D;
+  tip: Path2D;
+}
+
+let logo: LogoPaths | null = null;
+
+function fillGradient(ctx: CanvasRenderingContext2D, { from, to, stops }: LogoGradient): CanvasGradient {
+  const gradient = ctx.createLinearGradient(from[0], from[1], to[0], to[1]);
+  for (const [at, color] of stops) gradient.addColorStop(at, color);
+  return gradient;
+}
 
 /** Draws in a box from (0, 0) to (size, size) in the context's current units. The pose can reach outside the box. */
 export function drawFace(ctx: CanvasRenderingContext2D, pose: FacePose, size: number): void {
   const m = metricsFor(size);
-  outline ??= new Path2D(SOFT_PATH);
+  logo ??= { body: new Path2D(BODY_PATH), leg: new Path2D(LEG_PATH), legFace: new Path2D(LEG_FACE_PATH), tip: new Path2D(TIP_PATH) };
   const stretch = pose.squash + (m.mouth ? 0 : pose.mouthOpen * 0.1);
 
   ctx.save();
@@ -60,10 +77,13 @@ export function drawFace(ctx: CanvasRenderingContext2D, pose: FacePose, size: nu
     placeHand(ctx, 1, pose.handRight, outline, m.fingers);
   }
 
-  const gradient = ctx.createLinearGradient(8, 92, 92, 8);
-  GRADIENT.forEach((color: string, i: number) => gradient.addColorStop(i / (GRADIENT.length - 1), color));
-  ctx.fillStyle = gradient;
-  ctx.fill(outline);
+  ctx.fillStyle = fillGradient(ctx, BODY_GRADIENT);
+  ctx.fill(logo.body);
+  ctx.fillStyle = fillGradient(ctx, LEG_RIM);
+  ctx.fill(logo.leg);
+  ctx.fill(logo.tip);
+  ctx.fillStyle = fillGradient(ctx, LEG_GRADIENT);
+  ctx.fill(logo.legFace);
 
   ctx.fillStyle = INK;
   ctx.strokeStyle = INK;
@@ -123,11 +143,12 @@ function drawEye(ctx: CanvasRenderingContext2D, pose: FacePose, m: FaceMetrics, 
   if (round > 0.01) {
     ctx.globalAlpha = round;
     const open = pose.eyeOpen;
-    const rx = r * Math.max(1, open);
-    // A shut eye is a short pill, never a line that vanishes
-    const ry = Math.max(r * open, m.line / 2);
+    // A tall pill that widens as it shuts, ending as a short pill, never a line that vanishes
+    const width = m.eyeWidth * scale;
+    const rx = open < 1 ? width + (r - width) * (1 - open) : width * open;
+    const ry = Math.max(m.eyeHeight * scale * open, m.line / 2);
     ctx.beginPath();
-    ctx.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2);
+    ctx.roundRect(x - rx, y - ry, rx * 2, ry * 2, Math.min(rx, ry));
     ctx.fill();
   }
   if (pose.eyeSmile > 0.01) {
@@ -155,8 +176,8 @@ function drawMouth(ctx: CanvasRenderingContext2D, pose: FacePose): void {
   if (Math.abs(curve) > 0.03) {
     ctx.globalAlpha = Math.min(1, Math.abs(curve) * 5);
     ctx.beginPath();
-    ctx.moveTo(45, MOUTH_Y);
-    ctx.quadraticCurveTo(50, MOUTH_Y + curve * 8, 55, MOUTH_Y);
+    ctx.moveTo(50 - MOUTH_HALF_WIDTH, MOUTH_Y);
+    ctx.quadraticCurveTo(50, MOUTH_Y + curve * 8, 50 + MOUTH_HALF_WIDTH, MOUTH_Y);
     ctx.stroke();
     ctx.globalAlpha = 1;
   }
