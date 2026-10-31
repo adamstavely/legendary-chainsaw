@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased – Sharing and search screens
+
+- **Sharing & Access** – a screen with team flags, access reviews and the audit trail.
+- **Search Results** – a screen with search, filters, results and Nothing Found.
+
 ## Unreleased – Case review
 
 - **Case Review** (`tc-case-review`) – a block for one case: evidence, a timeline, the assistant's labelled suggestion, and
