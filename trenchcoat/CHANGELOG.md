@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased – Reviewing access and the record
+
+- **Access Review** (`tc-access-review`) – a block for periodic reviews of who can see what: keep or remove each one,
+  with a written reason for keeping anyone flagged.
+- **Audit Trail** (`tc-audit-trail`) – a block showing who did what and when, with search, a filter by outcome and a CSV
+  export that keeps spreadsheet formulas from running.
+
 ## Unreleased – Motion for state changes
 
 - **List Motion** (`tc-list-motion`) – rows glide when reordered, added or removed. Team Flag Editor now uses it.

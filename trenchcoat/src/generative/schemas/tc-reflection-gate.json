@@ -18,8 +18,8 @@
     "phase": {
       "type": "string",
       "enum": [
-        "done",
         "open",
+        "done",
         "compare",
         "skipped"
       ],

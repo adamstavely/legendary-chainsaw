@@ -27,13 +27,13 @@
     "attestationLabels": {
       "type": "object",
       "properties": {
+        "unverified": {
+          "type": "string"
+        },
         "failed": {
           "type": "string"
         },
         "attested": {
-          "type": "string"
-        },
-        "unverified": {
           "type": "string"
         }
       },

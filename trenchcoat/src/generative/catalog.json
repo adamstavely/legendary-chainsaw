@@ -12,6 +12,16 @@
     ]
   },
   {
+    "tag": "tc-access-review",
+    "name": "AccessReview",
+    "description": "A periodic check of who can see what: keep or remove each one, with a reason for keeping anyone flagged.",
+    "events": [
+      "tc-decisions-change",
+      "tc-filter-change",
+      "tc-review-submit"
+    ]
+  },
+  {
     "tag": "tc-account-list",
     "name": "AccountList",
     "description": "The financial accounts linked to a person or a company – institution, type, a masked identifier shown one at a time,",
@@ -284,6 +294,15 @@
     "name": "AudienceMix",
     "description": "Who is reading – a sector mix as bars, an internal-versus-external split and the top places, each with its share,",
     "events": []
+  },
+  {
+    "tag": "tc-audit-trail",
+    "name": "AuditTrail",
+    "description": "Who did what and when, for the record, with search, a filter by outcome and export.",
+    "events": [
+      "tc-query-change",
+      "tc-export"
+    ]
   },
   {
     "tag": "tc-autonomy-dial",

@@ -2,6 +2,7 @@
 // answer first uses it.
 export const registry: Record<string, { events: string[]; load: () => Promise<unknown>; schema: () => Promise<{ default: object }> }> = {
   "tc-access-request": { events: ["tc-request","tc-status-change","tc-level-change","tc-duration-change","tc-cancel"], load: () => import("../elements/access-request"), schema: () => import("./schemas/tc-access-request.json") },
+  "tc-access-review": { events: ["tc-decisions-change","tc-filter-change","tc-review-submit"], load: () => import("../elements/access-review"), schema: () => import("./schemas/tc-access-review.json") },
   "tc-account-list": { events: ["tc-open","tc-revealed-change"], load: () => import("../elements/account-list"), schema: () => import("./schemas/tc-account-list.json") },
   "tc-activity-calendar": { events: ["tc-selected-change"], load: () => import("../elements/activity-calendar"), schema: () => import("./schemas/tc-activity-calendar.json") },
   "tc-activity-clock": { events: ["tc-selected-change"], load: () => import("../elements/activity-clock"), schema: () => import("./schemas/tc-activity-clock.json") },
@@ -30,6 +31,7 @@ export const registry: Record<string, { events: string[]; load: () => Promise<un
   "tc-attention-pulse": { events: [], load: () => import("../elements/attention-pulse"), schema: () => import("./schemas/tc-attention-pulse.json") },
   "tc-attestation-check": { events: ["tc-verify","tc-result-change"], load: () => import("../elements/attestation-check"), schema: () => import("./schemas/tc-attestation-check.json") },
   "tc-audience-mix": { events: [], load: () => import("../elements/audience-mix"), schema: () => import("./schemas/tc-audience-mix.json") },
+  "tc-audit-trail": { events: ["tc-query-change","tc-export"], load: () => import("../elements/audit-trail"), schema: () => import("./schemas/tc-audit-trail.json") },
   "tc-autonomy-dial": { events: ["tc-level-change","tc-pinned-change"], load: () => import("../elements/autonomy-dial"), schema: () => import("./schemas/tc-autonomy-dial.json") },
   "tc-bibliography": { events: ["tc-citation-style-change","tc-selected-change","tc-sort-change","tc-copy","tc-export"], load: () => import("../elements/bibliography"), schema: () => import("./schemas/tc-bibliography.json") },
   "tc-billing-schedule": { events: ["tc-phase-change","tc-start-change","tc-duration-change","tc-lines-change","tc-schedule-change"], load: () => import("../elements/billing-schedule"), schema: () => import("./schemas/tc-billing-schedule.json") },

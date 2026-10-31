@@ -7,10 +7,12 @@ project, e.g. `components/ui/`, or import the element's wrapper from `trenchcoat
 Every block takes `className`, other DOM props and a `ref` (now the `tc-<slug>` element) on its root; state a parent may
 want follows `x` / `defaultX` / `onXChange`. Blocks follow the nearest `LookProvider`, or take a `look` prop.
 
+- **Access Review** (`access-review.tsx`) – A periodic check of who can see what – keep or remove each one, with anyone flagged first and a written reason for keeping them
 - **Agent Gallery** (`agent-gallery.tsx`) – Slim gradient panels with one open product screen in the middle – pick a panel and it glides open (uses `button`)
 - **AI Side Pane** (`ai-side-pane.tsx`) – An assistant docked beside a page with a chat about what's on it – resizable, collapses to a rail, opens with ⌘. and becomes a sheet on narrow screens; model, settings, prompts and page context in the composer (uses `chat-composer`, `ai-answer`, `claim-answer`, `message-actions`, `prompt-starters`, `chat-history`, `reflection-gate`, `button`)
 - **AI Workspace** (`ai-workspace.tsx`) – Complete assistant app – sidebar, welcome, streaming chat and projects, built on the Chat Composer (uses `chat-composer`, `button`)
 - **App Directory** (`app-directory.tsx`) – Browse, search and connect integrations – categories, filters and app cards with a connect flow (uses `button`)
+- **Audit Trail** (`audit-trail.tsx`) – Who did what and when, for the record – grouped by day, with search, a filter by outcome, details on demand and a safe CSV export
 - **Client Context** (`client-context.tsx`) – A client workspace with live numbers and a shared context timeline – switch clients, search, filter and add notes or files (uses `button`, `segmented-control`)
 - **Evidence Gallery** (`evidence-gallery.tsx`) – The images behind a set of claims – filter by attestation, compare and download in the image grid, and each item's attestation and linked-claim count in a sortable table beside it (uses `trenchcoat/react`: `segmented-control`, `image-grid`, `data-table`)
 - **File Details** (`file-details.tsx`) – One file in one place – what it is, the team's flag on it, what's in it, its versions, and who it's shared with after their entitlements are checked (uses `team-flag-picker`, `file-summary`, `version-history`, `share-panel`)

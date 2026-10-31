@@ -1,0 +1,151 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-audit-trail.json",
+  "title": "tc-audit-trail",
+  "description": "Who did what and when, for the record, with search, a filter by outcome and export.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "A line under the heading"
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AuditEvent"
+      },
+      "description": "What happened, in any order: they show newest first"
+    },
+    "query": {
+      "type": "string",
+      "description": "The search"
+    },
+    "outcome": {
+      "anyOf": [
+        {
+          "type": "string",
+          "const": "all"
+        },
+        {
+          "$ref": "#/definitions/AuditOutcome"
+        }
+      ],
+      "description": "Which outcomes show"
+    },
+    "exportable": {
+      "type": "boolean",
+      "description": "Offer Export"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The locale for dates and times"
+    },
+    "timeZone": {
+      "type": "string",
+      "description": "The time zone for dates and times; by default the browser's"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "search": {
+          "type": "string"
+        },
+        "searchPlaceholder": {
+          "type": "string"
+        },
+        "outcome": {
+          "type": "string"
+        },
+        "all": {
+          "type": "string"
+        },
+        "success": {
+          "type": "string"
+        },
+        "denied": {
+          "type": "string"
+        },
+        "failed": {
+          "type": "string"
+        },
+        "more": {
+          "type": "string"
+        },
+        "less": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "noMatch": {
+          "type": "string"
+        },
+        "export": {
+          "type": "string"
+        },
+        "count": {
+          "type": "string"
+        },
+        "countOne": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "AuditEvent": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "at": {
+          "type": "number",
+          "description": "When it happened, epoch ms"
+        },
+        "actor": {
+          "type": "string",
+          "description": "Who did it"
+        },
+        "action": {
+          "type": "string",
+          "description": "What they did, as a past-tense verb: \"shared\""
+        },
+        "target": {
+          "type": "string",
+          "description": "What they did it to"
+        },
+        "outcome": {
+          "$ref": "#/definitions/AuditOutcome",
+          "description": "By default \"success\""
+        },
+        "detail": {
+          "type": "string",
+          "description": "More about it: shown when the row opens"
+        }
+      },
+      "required": [
+        "id",
+        "at",
+        "actor",
+        "action"
+      ],
+      "additionalProperties": false
+    },
+    "AuditOutcome": {
+      "type": "string",
+      "enum": [
+        "success",
+        "denied",
+        "failed"
+      ]
+    }
+  }
+}
