@@ -402,7 +402,9 @@
   "listeners": [],
   "pauses": {
    "offscreen": [],
-   "hidden": [],
+   "hidden": [
+    "internal/list-motion › shouldAnimate"
+   ],
    "reducedMotion": [
     "CSS (internal/kit › kitCss)"
    ]
@@ -410,7 +412,7 @@
   "windowed": false
  },
  "size": {
-  "min": 27985,
-  "gzip": 8577
+  "min": 29751,
+  "gzip": 9333
  }
 }

@@ -3144,6 +3144,87 @@
     "errors": []
    }
   },
+  "attention-pulse": {
+   "measuredAt": "2026-10-31",
+   "hash": "7a82dbc343fc7cfa",
+   "bundle": {
+    "own": {
+     "min": 3859,
+     "gzip": 1870
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 18878
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2217
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1864
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 441
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 435
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     }
+    ],
+    "withoutLit": {
+     "min": 10616,
+     "gzip": 4016
+    },
+    "withLit": {
+     "min": 30671,
+     "gzip": 10526
+    }
+   },
+   "render": {
+    "tag": "tc-attention-pulse",
+    "source": "demo",
+    "runs": 7,
+    "cold": 0.8,
+    "first": 0.1,
+    "update": 0.1,
+    "updateKind": "re-render with the same data",
+    "nodes": 0,
+    "scale": null,
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
   "attestation-check": {
    "measuredAt": "2026-10-28",
    "hash": "972f8ea4b373010a",
@@ -5961,6 +6042,87 @@
     "update": 0.2,
     "updateKind": "re-render with the same data",
     "nodes": 50,
+    "scale": null,
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
+  "collapse": {
+   "measuredAt": "2026-10-31",
+   "hash": "b7ac4dcd1429f402",
+   "bundle": {
+    "own": {
+     "min": 2975,
+     "gzip": 1642
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 18878
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2217
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1864
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 441
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 435
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     }
+    ],
+    "withoutLit": {
+     "min": 9732,
+     "gzip": 3840
+    },
+    "withLit": {
+     "min": 29787,
+     "gzip": 10363
+    }
+   },
+   "render": {
+    "tag": "tc-collapse",
+    "source": "demo",
+    "runs": 7,
+    "cold": 0.9,
+    "first": 0.1,
+    "update": 0.1,
+    "updateKind": "re-render with the same data",
+    "nodes": 0,
     "scale": null,
     "idle": {
      "visible": {
@@ -11721,7 +11883,7 @@
   },
   "generated-ui": {
    "measuredAt": "2026-10-31",
-   "hash": "341c1057aaa2fdd9",
+   "hash": "b29a956a0e02d31b",
    "bundle": {
     "own": {
      "min": 34126,
@@ -11772,6 +11934,11 @@
       "name": "internal/base",
       "kind": "internal",
       "min": 1943
+     },
+     {
+      "name": "internal/list-motion",
+      "kind": "internal",
+      "min": 1752
      },
      {
       "name": "internal/modal",
@@ -11961,7 +12128,7 @@
      {
       "name": "json-viewer",
       "kind": "element",
-      "min": 49275
+      "min": 49299
      },
      {
       "name": "ai-workspace",
@@ -12451,7 +12618,7 @@
      {
       "name": "kill-switch",
       "kind": "element",
-      "min": 25297
+      "min": 25321
      },
      {
       "name": "file-summary",
@@ -12761,7 +12928,7 @@
      {
       "name": "team-flag-editor",
       "kind": "element",
-      "min": 17504
+      "min": 17551
      },
      {
       "name": "contact-channels",
@@ -13074,6 +13241,11 @@
       "min": 3673
      },
      {
+      "name": "success-check",
+      "kind": "element",
+      "min": 2107
+     },
+     {
       "name": "slider-field",
       "kind": "element",
       "min": 2041
@@ -13084,14 +13256,29 @@
       "min": 1933
      },
      {
+      "name": "attention-pulse",
+      "kind": "element",
+      "min": 1792
+     },
+     {
       "name": "number-field",
       "kind": "element",
       "min": 1784
      },
      {
+      "name": "list-motion",
+      "kind": "element",
+      "min": 1394
+     },
+     {
       "name": "radio-group",
       "kind": "element",
       "min": 1236
+     },
+     {
+      "name": "collapse",
+      "kind": "element",
+      "min": 908
      },
      {
       "name": "checkbox",
@@ -13106,7 +13293,7 @@
      {
       "name": "src/generative/registry.ts",
       "kind": "other",
-      "min": 41882
+      "min": 42389
      },
      {
       "name": "src/generative/schemas/tc-ai-side-pane.json",
@@ -14339,6 +14526,11 @@
       "min": 523
      },
      {
+      "name": "src/generative/schemas/tc-list-motion.json",
+      "kind": "other",
+      "min": 521
+     },
+     {
       "name": "src/generative/schemas/tc-region-dach.json",
       "kind": "other",
       "min": 509
@@ -14347,6 +14539,11 @@
       "name": "src/generative/schemas/tc-outreach-branches.json",
       "kind": "other",
       "min": 493
+     },
+     {
+      "name": "src/generative/schemas/tc-success-check.json",
+      "kind": "other",
+      "min": 481
      },
      {
       "name": "src/generative/schemas/tc-nothing-found.json",
@@ -14394,6 +14591,16 @@
       "min": 389
      },
      {
+      "name": "src/generative/schemas/tc-attention-pulse.json",
+      "kind": "other",
+      "min": 385
+     },
+     {
+      "name": "src/generative/schemas/tc-collapse.json",
+      "kind": "other",
+      "min": 343
+     },
+     {
       "name": "src/vendor/agent-face/element/loop.ts",
       "kind": "other",
       "min": 310
@@ -14425,19 +14632,19 @@
      }
     ],
     "withoutLit": {
-     "min": 8152996,
-     "gzip": 1995065
+     "min": 8163595,
+     "gzip": 1998220
     },
     "withLit": {
-     "min": 8112396,
-     "gzip": 1982191
+     "min": 8122681,
+     "gzip": 1985620
     }
    },
    "render": {
     "tag": "tc-generated-ui",
     "source": "demo",
     "runs": 7,
-    "cold": 2.6,
+    "cold": 2,
     "first": 0.5,
     "update": 0.1,
     "updateKind": "re-render with the same data",
@@ -17856,6 +18063,92 @@
       }
      ]
     },
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
+  "list-motion": {
+   "measuredAt": "2026-10-31",
+   "hash": "b5dcc9744acceb64",
+   "bundle": {
+    "own": {
+     "min": 3509,
+     "gzip": 1821
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 18884
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2217
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1864
+     },
+     {
+      "name": "internal/list-motion",
+      "kind": "internal",
+      "min": 1471
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 441
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 435
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     }
+    ],
+    "withoutLit": {
+     "min": 11666,
+     "gzip": 4645
+    },
+    "withLit": {
+     "min": 31718,
+     "gzip": 11144
+    }
+   },
+   "render": {
+    "tag": "tc-list-motion",
+    "source": "demo",
+    "runs": 7,
+    "cold": 0.8,
+    "first": 0.2,
+    "update": 0.1,
+    "updateKind": "re-render with the same data",
+    "nodes": 0,
+    "scale": null,
     "idle": {
      "visible": {
       "frames": 0,
@@ -27626,6 +27919,87 @@
     "errors": []
    }
   },
+  "success-check": {
+   "measuredAt": "2026-10-31",
+   "hash": "3d1e33447231b9ce",
+   "bundle": {
+    "own": {
+     "min": 4158,
+     "gzip": 2089
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 18883
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2217
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1864
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 440
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 435
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     }
+    ],
+    "withoutLit": {
+     "min": 10923,
+     "gzip": 4270
+    },
+    "withLit": {
+     "min": 30970,
+     "gzip": 10784
+    }
+   },
+   "render": {
+    "tag": "tc-success-check",
+    "source": "demo",
+    "runs": 7,
+    "cold": 5.5,
+    "first": 0.3,
+    "update": 0.1,
+    "updateKind": "re-render with the same data",
+    "nodes": 3,
+    "scale": null,
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
   "switch": {
    "measuredAt": "2026-10-29",
    "hash": "e03908fcd949bfae",
@@ -28092,11 +28466,11 @@
   },
   "team-flag-editor": {
    "measuredAt": "2026-10-31",
-   "hash": "08e809d4a90c4e42",
+   "hash": "85789c87c110b1bc",
    "bundle": {
     "own": {
-     "min": 19688,
-     "gzip": 6144
+     "min": 19792,
+     "gzip": 6181
     },
     "shared": [
      {
@@ -28113,6 +28487,11 @@
       "name": "internal/base",
       "kind": "internal",
       "min": 1868
+     },
+     {
+      "name": "internal/list-motion",
+      "kind": "internal",
+      "min": 1723
      },
      {
       "name": "internal/kit",
@@ -28141,20 +28520,20 @@
      }
     ],
     "withoutLit": {
-     "min": 27985,
-     "gzip": 8577
+     "min": 29751,
+     "gzip": 9333
     },
     "withLit": {
-     "min": 51628,
-     "gzip": 16443
+     "min": 53392,
+     "gzip": 17147
     }
    },
    "render": {
     "tag": "tc-team-flag-editor",
     "source": "demo",
     "runs": 7,
-    "cold": 10.8,
-    "first": 1.2,
+    "cold": 8.5,
+    "first": 1.3,
     "update": 0.3,
     "updateKind": "one item of palette replaced",
     "nodes": 118,
@@ -28165,13 +28544,13 @@
       {
        "items": 100,
        "first": 2.5,
-       "update": 0.5,
+       "update": 0.7,
        "nodes": 394
       },
       {
        "items": 1000,
-       "first": 16.8,
-       "update": 5.2,
+       "first": 17.1,
+       "update": 5.4,
        "nodes": 3094
       }
      ]

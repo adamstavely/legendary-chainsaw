@@ -265,6 +265,12 @@
     ]
   },
   {
+    "tag": "tc-attention-pulse",
+    "name": "AttentionPulse",
+    "description": "Draws the eye once, with a soft ring that passes around the content.",
+    "events": []
+  },
+  {
     "tag": "tc-attestation-check",
     "name": "AttestationCheck",
     "description": "Verify a signed evidence package by its hash or file – signature, chain integrity and what it covers, checked",
@@ -494,6 +500,12 @@
       "tc-apply",
       "tc-view-change"
     ]
+  },
+  {
+    "tag": "tc-collapse",
+    "name": "Collapse",
+    "description": "Content that glides open and shut, to its real height.",
+    "events": []
   },
   {
     "tag": "tc-color-picker",
@@ -1259,6 +1271,12 @@
       "tc-selected-change",
       "tc-view-change"
     ]
+  },
+  {
+    "tag": "tc-list-motion",
+    "name": "ListMotion",
+    "description": "Makes a list's rows glide when they're reordered, added or removed.",
+    "events": []
   },
   {
     "tag": "tc-logo-marquee",
@@ -2027,6 +2045,12 @@
       "tc-copy",
       "tc-validate"
     ]
+  },
+  {
+    "tag": "tc-success-check",
+    "name": "SuccessCheck",
+    "description": "A small tick that draws itself once.",
+    "events": []
   },
   {
     "tag": "tc-switch",
