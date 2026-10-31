@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased – Case review
+
+- **Case Review** (`tc-case-review`) – a block for one case: evidence, a timeline, the assistant's labelled suggestion, and
+  a decision that needs a written reason. Nothing is chosen for you.
+- **Case File** – a screen with Case Review, Donovan and the case's file.
+
 ## Unreleased – Reviewing access and the record
 
 - **Access Review** (`tc-access-review`) – a block for periodic reviews of who can see what: keep or remove each one,

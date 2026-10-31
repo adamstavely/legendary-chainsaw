@@ -49,6 +49,7 @@ export * from "./budget-burn";
 export * from "./budget-guard";
 export * from "./capability-notice";
 export * from "./capacity-bars";
+export * from "./case-review";
 export * from "./change-summary";
 export * from "./chat-composer";
 export * from "./chat-history";

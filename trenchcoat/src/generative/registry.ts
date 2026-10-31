@@ -43,6 +43,7 @@ export const registry: Record<string, { events: string[]; load: () => Promise<un
   "tc-button": { events: [], load: () => import("../elements/button"), schema: () => import("./schemas/tc-button.json") },
   "tc-capability-notice": { events: ["tc-open-change"], load: () => import("../elements/capability-notice"), schema: () => import("./schemas/tc-capability-notice.json") },
   "tc-capacity-bars": { events: ["tc-selected-change"], load: () => import("../elements/capacity-bars"), schema: () => import("./schemas/tc-capacity-bars.json") },
+  "tc-case-review": { events: ["tc-decision-change"], load: () => import("../elements/case-review"), schema: () => import("./schemas/tc-case-review.json") },
   "tc-change-summary": { events: [], load: () => import("../elements/change-summary"), schema: () => import("./schemas/tc-change-summary.json") },
   "tc-chat-history": { events: ["tc-value-change","tc-conversations-change","tc-rename","tc-pin","tc-move","tc-delete","tc-restore","tc-new-chat","tc-context-change"], load: () => import("../elements/chat-history"), schema: () => import("./schemas/tc-chat-history.json") },
   "tc-chat-minimap": { events: ["tc-jump","tc-current-change"], load: () => import("../elements/chat-minimap"), schema: () => import("./schemas/tc-chat-minimap.json") },

@@ -407,6 +407,14 @@
     ]
   },
   {
+    "tag": "tc-case-review",
+    "name": "CaseReview",
+    "description": "One case ready for a person to decide: the evidence, the timeline, the assistant's suggestion and the decision.",
+    "events": [
+      "tc-decision-change"
+    ]
+  },
+  {
     "tag": "tc-change-summary",
     "name": "ChangeSummary",
     "description": "What changed since last time, one metric per row, each with a trend mark.",
