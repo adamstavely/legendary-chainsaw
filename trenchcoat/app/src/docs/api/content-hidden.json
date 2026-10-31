@@ -1,0 +1,348 @@
+{
+ "elements": [
+  {
+   "tag": "tc-content-hidden",
+   "className": "TcContentHidden",
+   "description": "A blurred picture behind a crossed-out eye, for objectionable content that's been covered.",
+   "properties": [
+    {
+     "name": "caption",
+     "attribute": "caption",
+     "type": "string",
+     "default": "\"Content hidden\"",
+     "description": "The words under the drawing; \"\" leaves them out",
+     "readonly": false
+    },
+    {
+     "name": "label",
+     "attribute": "label",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Accessible description, when it should say more than `caption`",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [],
+   "slots": [],
+   "methods": [],
+   "ui": "chd",
+   "cssProperties": [
+    {
+     "name": "--tc-content-hidden-card",
+     "value": "light-dark(#ffffff, #2a2a2e)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-content-hidden-edge",
+     "value": "light-dark(#d9dee6, rgba(255, 255, 255, 0.14))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-content-hidden-shape",
+     "value": "light-dark(#dfe4eb, #44464d)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-content-hidden-badge",
+     "value": "light-dark(#40464f, #e4e6ea)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-content-hidden-ink",
+     "value": "light-dark(#ffffff, #26282d)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-content-hidden-soft",
+     "value": "7px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-content-hidden-beat",
+     "value": "3.2s",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-ease-standard",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-weight-medium",
+    "--tc-line-height-tight",
+    "--tc-text-primary"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "ContentHidden",
+   "exported": false,
+   "props": [],
+   "hides": [],
+   "events": {}
+  }
+ ],
+ "changelog": [
+  "**Content Hidden** (`tc-content-hidden`), **Malware Blocked** (`tc-malware-blocked`) and **First Use** (`tc-first-use`) – illustrations with their words as real text, for objectionable content on an overlay, a file that can't be shown, and a new workspace."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-content-hidden",
+   "className": "TcContentHidden",
+   "module": "trenchcoat/content-hidden",
+   "data": [],
+   "attributes": [
+    {
+     "name": "caption",
+     "attribute": "caption"
+    },
+    {
+     "name": "label",
+     "attribute": "label"
+    }
+   ],
+   "events": [],
+   "controlled": [],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "itself",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "aspect-ratio",
+    "name": "aspect-ratio",
+    "bcd": "css.properties.aspect-ratio",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "89",
+     "safari": "15",
+     "safari_ios": "15"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "intersection-observer",
+    "name": "IntersectionObserver",
+    "bcd": "api.IntersectionObserver",
+    "versions": {
+     "chrome": "51",
+     "edge": "15",
+     "firefox": "55",
+     "safari": "12.1",
+     "safari_ios": "12.2"
+    },
+    "progressive": false,
+    "via": [
+     "internal/controllers"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)",
+   "IntersectionObserver (internal/controllers › OnScreenController)"
+  ],
+  "clock": [],
+  "listeners": [
+   "document visibilitychange (internal/controllers › OnScreenController)"
+  ],
+  "pauses": {
+   "offscreen": [
+    "itself",
+    "internal/controllers › OnScreenController"
+   ],
+   "hidden": [
+    "internal/controllers › OnScreenController"
+   ],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 13016,
+  "gzip": 4959
+ }
+}

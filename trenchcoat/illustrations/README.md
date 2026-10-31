@@ -8,9 +8,11 @@ They are decorative unless given a `label`, loops are finite or rest, and `prefe
 
 - **Agent Scene** (`agent-scene.tsx`) – The assistant in a small scene – happy above an empty tray, thinking beside a stack of pages, or asleep beside a sign
 - **Agent Team** (`agent-team.tsx`) – A prompt types itself and branches out into three agents, each with a role and overlapping tool logos – three times, then the team stays
+- **Content Hidden** (`content-hidden.tsx`) – A blurred picture behind a crossed-out eye, with the words Content hidden, to sit on an overlay covering objectionable content
 - **Cover Flow** (`cover-flow.tsx`) – Browse covers in 3D – drag, flick or scrub the row, it springs to the nearest cover; images drift in their frames over a soft reflection
 - **Empty Calendar** (`empty-calendar.tsx`) – Stack of calendar cards marked empty, fanning out on hover; the shimmer runs a few cycles and rests
 - **Enrichment Orbit** (`enrichment-orbit.tsx`) – Grok tile inside two rings with comets and data nodes orbiting around it – a few rounds, then they rest
+- **First Use** (`first-use.tsx`) – An empty workspace with one highlighted spot to start from, with the words Nothing here yet, for a new team or project
 - **Ghosted Chat** (`ghosted-chat.tsx`) – Unanswered chat messages marked as read, with a thumbs-down reply on hover; the red shine sweeps three times
 - **Glass Folder** (`glass-folder.tsx`) – Glassy blue folder with documents behind a frosted pocket that tips open on hover
 - **Glow Keyboard** (`glow-keyboard.tsx`) – AI chat input that types itself over a glass keyboard – every key press sends a wave up the gradient floor; after typing each prompt once the scene rests
@@ -20,6 +22,7 @@ They are decorative unless given a `label`, loops are finite or rest, and `prefe
 - **Layer Stack** (`layer-stack.tsx`) – Isometric stack of five layers with a list beside it – the chosen entry lifts its layer out in color; steps through twice and rests (`rounds`)
 - **Lead Sourcing** (`lead-sourcing.tsx`) – ChatGPT tile linked to Gmail and Grok, with a shine running along the connection
 - **Logo Cluster** (`logo-cluster.tsx`) – Your mark on a white disc in the middle – company logos bounce out of it and settle around it; the ring turns once
+- **Malware Blocked** (`malware-blocked.tsx`) – A file behind a warning shield with a bug on it, with the words Potential malware, for a file that can't be shown
 - **Model Wheel** (`model-wheel.tsx`) – AI model names on a turning drum – the rows bend away at the edges and each model lands on a soft gray fill; turns once round the drum and rests (`turns`)
 - **No Access** (`no-access.tsx`) – A folder held shut by a padlock, for someone who isn't entitled to see what they opened; the lock settles a few times and rests
 - **Nothing Found** (`nothing-found.tsx`) – A magnifying glass passing over blank results, for a search or filter with no matches; it looks across a few times and rests
