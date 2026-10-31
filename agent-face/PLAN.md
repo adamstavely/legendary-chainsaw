@@ -19,9 +19,8 @@ Donovan is the assistant in the product mocked up in `Donovan (2).html`, a work 
 `Donovan AI Docs.html` is unrelated. The character grows out of what that page already has:
 
 - **Shape:** Donovan's real logo, a stylized spear tip that also reads as a letter A. The four-point star in the mockup
-  isn't the logo, so nothing here builds on it. Until we have the logo file, we use a placeholder spear tip of our own,
-  kept in one file so the real outline can replace it without touching anything else.
-- **Colour:** Donovan's diagonal gradient (confirmed), `#F28C28` to `#7B3FE4` to `#19A7E6`. It should stay readable on the page's
+  isn't the logo, so nothing here builds on it. The artwork is traced in `src/draw/spear-tip.mjs`, in the logo's own colours.
+- **Colour:** the logo's: `#EBA14B` to `#A858A8` on the long stroke, `#2C5C94` to `#19A7D1` on the short one. It should stay readable on the page's
   white and light gray surfaces, and in dark mode.
 - **Tone:** calm and professional. Donovan appears beside approvals and fraud decisions, so `error` and `confused` must
   read as serious, and `happy` stays small.
@@ -106,7 +105,7 @@ Each phase ends with something to look at.
 2. **It ends up in both places.** A standalone, framework-free package here, plus a thin `tc-agent-face` wrapper in
    Trenchcoat, built with the `new-component` skill once Phase 4 is done.
 
-3. **Take B.** A softened spear tip with a small face (`sketches/sheet.html`).
+3. **Take B, then the real logo.** A small face on the mark. `sketches/sheet.html` records the placeholder it was judged on.
 4. **Its own CI.** `.github/workflows/agent-face-ci.yml`, because `trenchcoat-ci.yml` only runs for `trenchcoat/**`.
 
 **Still open**

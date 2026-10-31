@@ -7,8 +7,7 @@ related: voice-orb, thinking-loader, thinking-state, session-state
 ## Overview
 
 Donovan's face. It shows what the agent is doing, in nine states, and moves between them on springs. Each state holds
-for a moment, so an agent that changes its mind quickly doesn't make the face flicker. The shape is a placeholder until
-Donovan's logo artwork is available.
+for a moment, so an agent that changes its mind quickly doesn't make the face flicker.
 
 ## When to use
 

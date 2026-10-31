@@ -34,14 +34,14 @@ export interface Expression {
 const REST: Expression = { eyeOpen: 1, eyeSmile: 0, eyeCross: 0, eyeAsym: 0, gazeX: 0, gazeY: 0, mouthOpen: 0, mouthCurve: 0, tilt: 0, squash: 0, lift: 0, handLeft: 0.2, handRight: 0.2 };
 
 export const EXPRESSIONS: Record<FaceState, Expression> = {
-  idle: REST,
-  listening: { ...REST, eyeOpen: 1.2, tilt: 3, squash: -0.02, handLeft: 0.2, handRight: 0.55 },
+  idle: { ...REST, mouthCurve: 0.4 },
+  listening: { ...REST, eyeOpen: 1.2, mouthCurve: 0.3, tilt: 3, squash: -0.02, handLeft: 0.2, handRight: 0.55 },
   thinking: { ...REST, eyeOpen: 0.9, gazeX: 0.5, gazeY: 0.7, tilt: 6, handLeft: 0.2, handRight: 0.72 },
   speaking: { ...REST, mouthOpen: 0.35, mouthCurve: 0.1, handLeft: 0.28, handRight: 0.2 },
   // Donovan sits beside serious decisions, so happy stays small
   happy: { ...REST, eyeSmile: 1, mouthCurve: 0.7, lift: 2, squash: 0.02, handLeft: 0.5, handRight: 0.5 },
   confused: { ...REST, eyeAsym: 0.45, gazeX: -0.3, mouthCurve: -0.2, tilt: -8, handLeft: 0.42, handRight: 0.42 },
-  sleeping: { ...REST, eyeOpen: 0, gazeY: -0.2, tilt: 5, squash: -0.05, lift: -2, handLeft: 0, handRight: 0 },
+  sleeping: { ...REST, eyeOpen: 0, mouthCurve: 0.15, gazeY: -0.2, tilt: 5, squash: -0.05, lift: -2, handLeft: 0, handRight: 0 },
   error: { ...REST, eyeCross: 1, mouthCurve: -0.5, squash: -0.03, handLeft: 0.82, handRight: 0.82 },
   surprised: { ...REST, eyeOpen: 1.35, mouthOpen: 0.3, squash: 0.06, lift: 2, handLeft: 0.95, handRight: 0.95 },
 };
