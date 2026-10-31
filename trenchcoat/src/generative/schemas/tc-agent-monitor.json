@@ -1,0 +1,184 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-agent-monitor.json",
+  "title": "tc-agent-monitor",
+  "description": "One agent at work: its current step, a clock, the cost so far, a strip of its steps and the finished ones.",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The agent's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "A line under the name"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "running",
+        "done",
+        "failed",
+        "paused"
+      ],
+      "description": "Where the run stands: \"running\", \"paused\", \"done\" or \"failed\""
+    },
+    "currentStep": {
+      "type": "string",
+      "description": "What it's doing now; by default the label of the step still running"
+    },
+    "startedAt": {
+      "type": "number",
+      "description": "When the run started, epoch ms"
+    },
+    "endedAt": {
+      "type": "number",
+      "description": "When it finished or paused, epoch ms; by default when its last step ended"
+    },
+    "now": {
+      "type": "number",
+      "description": "\"Now\", epoch ms; unset, the element keeps its own clock"
+    },
+    "cost": {
+      "type": "number",
+      "description": "The cost so far"
+    },
+    "currency": {
+      "type": "string",
+      "description": "The cost's currency, an ISO 4217 code"
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AgentMonitorStep"
+      },
+      "description": "The steps, in order"
+    },
+    "selected": {
+      "type": "string",
+      "description": "The picked step's id, or null. Changed by the user unless a tc-selected-change listener calls preventDefault()"
+    },
+    "actions": {
+      "type": "boolean",
+      "description": "Offer Pause, Resume and Stop; set actions=\"false\" to only watch"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The locale for the cost"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "running": {
+          "type": "string"
+        },
+        "paused": {
+          "type": "string"
+        },
+        "done": {
+          "type": "string"
+        },
+        "failed": {
+          "type": "string"
+        },
+        "current": {
+          "type": "string"
+        },
+        "noCurrent": {
+          "type": "string"
+        },
+        "elapsed": {
+          "type": "string"
+        },
+        "cost": {
+          "type": "string"
+        },
+        "strip": {
+          "type": "string"
+        },
+        "finished": {
+          "type": "string"
+        },
+        "noFinished": {
+          "type": "string"
+        },
+        "pause": {
+          "type": "string"
+        },
+        "resume": {
+          "type": "string"
+        },
+        "stop": {
+          "type": "string"
+        },
+        "close": {
+          "type": "string"
+        },
+        "tool": {
+          "type": "string"
+        },
+        "took": {
+          "type": "string"
+        },
+        "stepRunning": {
+          "type": "string"
+        },
+        "stepDone": {
+          "type": "string"
+        },
+        "stepFailed": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "AgentMonitorStep": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "tool": {
+          "type": "string",
+          "description": "The tool it used, as a word"
+        },
+        "startedAt": {
+          "type": "number"
+        },
+        "endedAt": {
+          "type": "number",
+          "description": "Unset while it's still running"
+        },
+        "status": {
+          "$ref": "#/definitions/AgentMonitorStepStatus"
+        },
+        "detail": {
+          "type": "string",
+          "description": "More about it, shown when it's picked"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "startedAt",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "AgentMonitorStepStatus": {
+      "type": "string",
+      "enum": [
+        "running",
+        "done",
+        "failed"
+      ]
+    }
+  }
+}

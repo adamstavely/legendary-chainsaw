@@ -30,9 +30,9 @@
     "status": {
       "type": "string",
       "enum": [
-        "paused",
         "running",
-        "done"
+        "done",
+        "paused"
       ],
       "description": "Where the run is: \"running\", \"paused\" or \"done\" – done disables the field"
     },

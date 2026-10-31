@@ -15,10 +15,10 @@
     "status": {
       "type": "string",
       "enum": [
-        "paused",
         "running",
         "done",
-        "failed"
+        "failed",
+        "paused"
       ],
       "description": "The run: \"running\" (a live run), \"paused\", \"done\", \"failed\" – always set by the app"
     },

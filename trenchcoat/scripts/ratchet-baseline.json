@@ -114,6 +114,9 @@
     "clock/environment read": 1,
     "literal spacing": 3
   },
+  "src/elements/agent-monitor.ts": {
+    "clock/environment read": 1
+  },
   "src/elements/agent-plan.ts": {
     "clock/environment read": 5,
     "literal spacing": 30

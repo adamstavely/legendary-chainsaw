@@ -16,10 +16,10 @@
     "severity": {
       "type": "string",
       "enum": [
-        "critical",
-        "high",
+        "low",
         "medium",
-        "low"
+        "high",
+        "critical"
       ],
       "description": "How serious it is, always shown in words"
     },

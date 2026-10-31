@@ -23,13 +23,13 @@
     "statusLabels": {
       "type": "object",
       "properties": {
+        "current": {
+          "type": "string"
+        },
         "stale": {
           "type": "string"
         },
         "none": {
-          "type": "string"
-        },
-        "current": {
           "type": "string"
         }
       },

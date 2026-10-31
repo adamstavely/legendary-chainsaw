@@ -1,0 +1,161 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-agent-handoff.json",
+  "title": "tc-agent-handoff",
+  "description": "A task passed along a chain of agents, with what carried over and what got lost at each handoff.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "A line under the heading"
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AgentHandoffStep"
+      },
+      "description": "The agents, in the order the task reached them"
+    },
+    "handoffs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AgentHandoffLink"
+      },
+      "description": "What passed between them"
+    },
+    "selected": {
+      "type": "string",
+      "description": "The open handoff's id (see agentHandoffId), or null. Changed by the user unless a tc-selected-change listener calls preventDefault()"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "waiting": {
+          "type": "string"
+        },
+        "running": {
+          "type": "string"
+        },
+        "done": {
+          "type": "string"
+        },
+        "failed": {
+          "type": "string"
+        },
+        "carriedCount": {
+          "type": "string"
+        },
+        "lostCount": {
+          "type": "string"
+        },
+        "nothingLost": {
+          "type": "string"
+        },
+        "totalLost": {
+          "type": "string"
+        },
+        "totalNothingLost": {
+          "type": "string"
+        },
+        "carried": {
+          "type": "string"
+        },
+        "lost": {
+          "type": "string"
+        },
+        "noneCarried": {
+          "type": "string"
+        },
+        "noneLost": {
+          "type": "string"
+        },
+        "handoffName": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "AgentHandoffStep": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "agent": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string",
+          "description": "What this agent is for"
+        },
+        "status": {
+          "$ref": "#/definitions/AgentHandoffStatus"
+        },
+        "summary": {
+          "type": "string",
+          "description": "What it did, in a line"
+        }
+      },
+      "required": [
+        "id",
+        "agent",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "AgentHandoffStatus": {
+      "type": "string",
+      "enum": [
+        "waiting",
+        "running",
+        "done",
+        "failed"
+      ]
+    },
+    "AgentHandoffLink": {
+      "type": "object",
+      "properties": {
+        "from": {
+          "type": "string",
+          "description": "The id of the step handing over"
+        },
+        "to": {
+          "type": "string",
+          "description": "The id of the step taking over"
+        },
+        "carried": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "What went along"
+        },
+        "lost": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "What didn't make it"
+        }
+      },
+      "required": [
+        "from",
+        "to",
+        "carried",
+        "lost"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

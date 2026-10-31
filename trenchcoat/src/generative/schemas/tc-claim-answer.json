@@ -170,13 +170,13 @@
     "confidenceLabels": {
       "type": "object",
       "properties": {
-        "high": {
+        "low": {
           "type": "string"
         },
         "medium": {
           "type": "string"
         },
-        "low": {
+        "high": {
           "type": "string"
         }
       },

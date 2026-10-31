@@ -12,9 +12,9 @@
     "risk": {
       "type": "string",
       "enum": [
-        "high",
+        "low",
         "medium",
-        "low"
+        "high"
       ],
       "description": "Tinted badge in the header; leave out to hide it"
     },

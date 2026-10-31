@@ -24,8 +24,8 @@
     "confidence": {
       "type": "string",
       "enum": [
-        "high",
         "low",
+        "high",
         "moderate"
       ],
       "description": "How confident the conclusion is – shown beside it; unset shows no level"
@@ -33,10 +33,10 @@
     "confidenceLabels": {
       "type": "object",
       "properties": {
-        "high": {
+        "low": {
           "type": "string"
         },
-        "low": {
+        "high": {
           "type": "string"
         },
         "moderate": {

@@ -1,0 +1,182 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-conflict-radar.json",
+  "title": "tc-conflict-radar",
+  "description": "Which parallel agents touch the same files, and where they collide.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "A line under the heading"
+    },
+    "agents": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ConflictAgent"
+      },
+      "description": "The agents, one column each"
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ConflictFile"
+      },
+      "description": "The files being changed"
+    },
+    "selected": {
+      "type": "string",
+      "description": "The open file's path. Changed by the user unless a tc-selected-change listener calls preventDefault()"
+    },
+    "filter": {
+      "type": "string",
+      "enum": [
+        "all",
+        "conflicts"
+      ],
+      "description": "\"all\" or \"conflicts\". Changed by the user unless a tc-filter-change listener calls preventDefault()"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "file": {
+          "type": "string"
+        },
+        "all": {
+          "type": "string"
+        },
+        "conflicts": {
+          "type": "string"
+        },
+        "filter": {
+          "type": "string"
+        },
+        "clear": {
+          "type": "string"
+        },
+        "overlap": {
+          "type": "string"
+        },
+        "conflict": {
+          "type": "string"
+        },
+        "edited": {
+          "type": "string"
+        },
+        "untouched": {
+          "type": "string"
+        },
+        "crosses": {
+          "type": "string"
+        },
+        "noFiles": {
+          "type": "string"
+        },
+        "noConflicts": {
+          "type": "string"
+        },
+        "resolve": {
+          "type": "string"
+        },
+        "close": {
+          "type": "string"
+        },
+        "keys": {
+          "type": "string"
+        },
+        "summary": {
+          "type": "string"
+        },
+        "summaryOne": {
+          "type": "string"
+        },
+        "summaryNone": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ConflictAgent": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "branch": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "ConflictFile": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "edits": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ConflictEdit"
+          }
+        },
+        "status": {
+          "$ref": "#/definitions/ConflictStatus"
+        }
+      },
+      "required": [
+        "path",
+        "edits"
+      ],
+      "additionalProperties": false
+    },
+    "ConflictEdit": {
+      "type": "object",
+      "properties": {
+        "agent": {
+          "type": "string",
+          "description": "The agent's id"
+        },
+        "lines": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 2,
+          "maxItems": 2,
+          "description": "The lines it changed, first and last"
+        },
+        "kind": {
+          "type": "string",
+          "description": "What it did, in a word: \"refactor\""
+        }
+      },
+      "required": [
+        "agent"
+      ],
+      "additionalProperties": false
+    },
+    "ConflictStatus": {
+      "type": "string",
+      "enum": [
+        "clear",
+        "overlap",
+        "conflict"
+      ]
+    }
+  }
+}
