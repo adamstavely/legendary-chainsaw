@@ -1,0 +1,228 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-share-panel.json",
+  "title": "tc-share-panel",
+  "description": "Shares something with people and groups, at a level for each, after checking each is entitled to see it.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading; by default \"Share\", or \"Share {resource-name}\""
+    },
+    "description": {
+      "type": "string",
+      "description": "A line under the heading, such as the data's classification"
+    },
+    "resourceName": {
+      "type": "string",
+      "description": "What's being shared"
+    },
+    "directory": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ShareRecipient"
+      },
+      "description": "The people and groups to choose from, filtered as you type. Ignored when `search` is set"
+    },
+    "access": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ShareGrant"
+      },
+      "description": "Who has access now. Updated on Share unless a tc-share listener calls preventDefault()"
+    },
+    "levels": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ShareLevel"
+      },
+      "description": "The levels of access, least first"
+    },
+    "defaultLevel": {
+      "type": "string",
+      "description": "The level someone starts at; by default the first"
+    },
+    "sending": {
+      "type": "boolean",
+      "description": "The page is sending the share: controls are locked"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "heading": {
+          "type": "string"
+        },
+        "headingNamed": {
+          "type": "string"
+        },
+        "search": {
+          "type": "string"
+        },
+        "searchPlaceholder": {
+          "type": "string"
+        },
+        "noResults": {
+          "type": "string"
+        },
+        "person": {
+          "type": "string"
+        },
+        "group": {
+          "type": "string"
+        },
+        "level": {
+          "type": "string"
+        },
+        "checking": {
+          "type": "string"
+        },
+        "notAuthorized": {
+          "type": "string"
+        },
+        "noLongerAuthorized": {
+          "type": "string"
+        },
+        "checkFailed": {
+          "type": "string"
+        },
+        "partial": {
+          "type": "string"
+        },
+        "noReason": {
+          "type": "string"
+        },
+        "retry": {
+          "type": "string"
+        },
+        "remove": {
+          "type": "string"
+        },
+        "undo": {
+          "type": "string"
+        },
+        "removing": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "share": {
+          "type": "string"
+        },
+        "shareWith": {
+          "type": "string"
+        },
+        "saveChanges": {
+          "type": "string"
+        },
+        "waiting": {
+          "type": "string"
+        },
+        "noticeDenied": {
+          "type": "string"
+        },
+        "noticeDeniedOne": {
+          "type": "string"
+        },
+        "noticeError": {
+          "type": "string"
+        },
+        "noticeErrorOne": {
+          "type": "string"
+        },
+        "noticePartial": {
+          "type": "string"
+        },
+        "noticePartialOne": {
+          "type": "string"
+        },
+        "noticeExisting": {
+          "type": "string"
+        },
+        "noticeExistingOne": {
+          "type": "string"
+        },
+        "noticeUnverified": {
+          "type": "string"
+        },
+        "noticeUnverifiedOne": {
+          "type": "string"
+        },
+        "alreadyAdded": {
+          "type": "string"
+        },
+        "done": {
+          "type": "string"
+        },
+        "doneExcluded": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ShareRecipient": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "person",
+            "group"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "detail": {
+          "type": "string",
+          "description": "An email, a team or \"24 members\""
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "ShareGrant": {
+      "type": "object",
+      "properties": {
+        "recipient": {
+          "$ref": "#/definitions/ShareRecipient"
+        },
+        "level": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "recipient",
+        "level"
+      ],
+      "additionalProperties": false
+    },
+    "ShareLevel": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

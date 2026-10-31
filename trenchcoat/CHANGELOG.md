@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased – Sharing
+
+- **Share Panel** (`tc-share-panel`) – shares with people and groups at a level for each, after checking each one's
+  entitlement. Anyone not authorized is flagged, the person sharing is told, and they're left out; a failed check counts
+  as not authorized.
+
 ## Unreleased – Team flags
 
 - **Team Flag Editor** (`tc-team-flag-editor`) – where a team sets each flag's colour, name, meaning and order, and asks

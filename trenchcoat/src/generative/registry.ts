@@ -203,6 +203,7 @@ export const registry: Record<string, { events: string[]; load: () => Promise<un
   "tc-session-context-bar": { events: ["tc-term-edit","tc-terms-changed"], load: () => import("../elements/session-context-bar"), schema: () => import("./schemas/tc-session-context-bar.json") },
   "tc-session-state": { events: ["tc-action"], load: () => import("../elements/session-state"), schema: () => import("./schemas/tc-session-state.json") },
   "tc-setup-guide": { events: ["tc-done-change","tc-open-group-change","tc-minimized-change","tc-edit","tc-close"], load: () => import("../elements/setup-guide"), schema: () => import("./schemas/tc-setup-guide.json") },
+  "tc-share-panel": { events: ["tc-share","tc-share-denied"], load: () => import("../elements/share-panel"), schema: () => import("./schemas/tc-share-panel.json") },
   "tc-sla-status": { events: ["tc-period-change"], load: () => import("../elements/sla-status"), schema: () => import("./schemas/tc-sla-status.json") },
   "tc-slider-field": { events: ["tc-value-change"], load: () => import("../elements/slider-field"), schema: () => import("./schemas/tc-slider-field.json") },
   "tc-smart-recommendation": { events: ["tc-value-change","tc-accepted-change","tc-open-change"], load: () => import("../elements/smart-recommendation"), schema: () => import("./schemas/tc-smart-recommendation.json") },

@@ -230,6 +230,7 @@ export * from "./selection-translate";
 export * from "./session-context-bar";
 export * from "./session-state";
 export * from "./setup-guide";
+export * from "./share-panel";
 export * from "./shimmer-loader";
 export * from "./side-folder";
 export * from "./sla-status";
