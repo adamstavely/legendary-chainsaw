@@ -4,6 +4,7 @@
 
 - **Agent Scene** (`tc-agent-scene`) – the assistant in a small scene for all clear, working and offline.
 - **Lead Sourcing** and **Enrichment Orbit** take `neutral`, which draws plain marks in place of third-party logos.
+- **Fixed:** `tc-agent-face` drew nothing from the built package, because the build dropped the vendored face.
 
 ## Unreleased – Sharing and search screens
 

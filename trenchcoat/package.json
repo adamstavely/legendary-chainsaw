@@ -65,7 +65,9 @@
   ],
   "sideEffects": [
     "*.css",
-    "./dist/*.js"
+    "./dist/*.js",
+    "./src/vendor/**",
+    "./dist/vendor/**"
   ],
   "scripts": {
     "dev": "vite --port 5199",
