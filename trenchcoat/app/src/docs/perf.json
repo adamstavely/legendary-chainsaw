@@ -10895,6 +10895,127 @@
     "errors": []
    }
   },
+  "file-details": {
+   "measuredAt": "2026-10-31",
+   "hash": "7f9f0bcfd760ad56",
+   "bundle": {
+    "own": {
+     "min": 9054,
+     "gzip": 3797
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 22565
+     },
+     {
+      "name": "internal/popover",
+      "kind": "internal",
+      "min": 8531
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 4375
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2968
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1877
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/team-flag",
+      "kind": "internal",
+      "min": 779
+     },
+     {
+      "name": "internal/util",
+      "kind": "internal",
+      "min": 631
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 444
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 436
+     },
+     {
+      "name": "internal/safe-url",
+      "kind": "internal",
+      "min": 342
+     },
+     {
+      "name": "version-history",
+      "kind": "element",
+      "min": 35714
+     },
+     {
+      "name": "share-panel",
+      "kind": "element",
+      "min": 25917
+     },
+     {
+      "name": "file-summary",
+      "kind": "element",
+      "min": 24566
+     },
+     {
+      "name": "team-flag-picker",
+      "kind": "element",
+      "min": 8059
+     }
+    ],
+    "withoutLit": {
+     "min": 126295,
+     "gzip": 34041
+    },
+    "withLit": {
+     "min": 149135,
+     "gzip": 41730
+    }
+   },
+   "render": {
+    "tag": "tc-file-details",
+    "source": "defaults",
+    "runs": 7,
+    "cold": 13.7,
+    "first": 0.7,
+    "update": 0.2,
+    "updateKind": "re-render with the same data",
+    "nodes": 43,
+    "scale": null,
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
   "file-summary": {
    "measuredAt": "2026-10-28",
    "hash": "7069c9d1cd8cb679",
@@ -11600,7 +11721,7 @@
   },
   "generated-ui": {
    "measuredAt": "2026-10-31",
-   "hash": "bcf5e92bfad158a5",
+   "hash": "341c1057aaa2fdd9",
    "bundle": {
     "own": {
      "min": 34126,
@@ -11680,7 +11801,7 @@
      {
       "name": "internal/team-flag",
       "kind": "internal",
-      "min": 805
+      "min": 804
      },
      {
       "name": "internal/source-line",
@@ -12025,7 +12146,7 @@
      {
       "name": "version-history",
       "kind": "element",
-      "min": 36129
+      "min": 36039
      },
      {
       "name": "agent-lanes",
@@ -12080,7 +12201,7 @@
      {
       "name": "knowledge-source-manager",
       "kind": "element",
-      "min": 34463
+      "min": 34515
      },
      {
       "name": "project-card",
@@ -12123,14 +12244,14 @@
       "min": 33196
      },
      {
+      "name": "kpi-board",
+      "kind": "element",
+      "min": 32884
+     },
+     {
       "name": "thinking-state",
       "kind": "element",
       "min": 32875
-     },
-     {
-      "name": "kpi-board",
-      "kind": "element",
-      "min": 32791
      },
      {
       "name": "policy-simulator",
@@ -12305,7 +12426,7 @@
      {
       "name": "share-panel",
       "kind": "element",
-      "min": 26311
+      "min": 26237
      },
      {
       "name": "context-tray",
@@ -12325,17 +12446,17 @@
      {
       "name": "knowledge-promotion",
       "kind": "element",
-      "min": 25509
+      "min": 25578
      },
      {
       "name": "kill-switch",
       "kind": "element",
-      "min": 25249
+      "min": 25297
      },
      {
       "name": "file-summary",
       "kind": "element",
-      "min": 24901
+      "min": 24900
      },
      {
       "name": "coordinate-details",
@@ -12450,7 +12571,7 @@
      {
       "name": "kpi-chart",
       "kind": "element",
-      "min": 22968
+      "min": 23016
      },
      {
       "name": "guardrail-notice",
@@ -12640,7 +12761,7 @@
      {
       "name": "team-flag-editor",
       "kind": "element",
-      "min": 17505
+      "min": 17504
      },
      {
       "name": "contact-channels",
@@ -12900,7 +13021,7 @@
      {
       "name": "team-flag-picker",
       "kind": "element",
-      "min": 8294
+      "min": 8260
      },
      {
       "name": "enrichment-orbit",
@@ -12923,9 +13044,29 @@
       "min": 7495
      },
      {
+      "name": "file-details",
+      "kind": "element",
+      "min": 6911
+     },
+     {
       "name": "evidence-gallery",
       "kind": "element",
       "min": 5434
+     },
+     {
+      "name": "something-wrong",
+      "kind": "element",
+      "min": 4827
+     },
+     {
+      "name": "no-access",
+      "kind": "element",
+      "min": 4407
+     },
+     {
+      "name": "nothing-found",
+      "kind": "element",
+      "min": 3977
      },
      {
       "name": "dialog",
@@ -12965,7 +13106,7 @@
      {
       "name": "src/generative/registry.ts",
       "kind": "other",
-      "min": 41351
+      "min": 41882
      },
      {
       "name": "src/generative/schemas/tc-ai-side-pane.json",
@@ -13006,6 +13147,11 @@
       "name": "src/generative/schemas/tc-reliance-gauge.json",
       "kind": "other",
       "min": 5738
+     },
+     {
+      "name": "src/generative/schemas/tc-file-details.json",
+      "kind": "other",
+      "min": 5432
      },
      {
       "name": "src/generative/schemas/tc-validity-badge.json",
@@ -14203,6 +14349,16 @@
       "min": 493
      },
      {
+      "name": "src/generative/schemas/tc-nothing-found.json",
+      "kind": "other",
+      "min": 472
+     },
+     {
+      "name": "src/generative/schemas/tc-something-wrong.json",
+      "kind": "other",
+      "min": 469
+     },
+     {
       "name": "src/generative/schemas/tc-lead-sourcing.json",
       "kind": "other",
       "min": 467
@@ -14211,6 +14367,11 @@
       "name": "src/generative/schemas/tc-tab-overload.json",
       "kind": "other",
       "min": 459
+     },
+     {
+      "name": "src/generative/schemas/tc-no-access.json",
+      "kind": "other",
+      "min": 457
      },
      {
       "name": "src/generative/schemas/tc-empty-calendar.json",
@@ -14264,19 +14425,19 @@
      }
     ],
     "withoutLit": {
-     "min": 8125032,
-     "gzip": 1988038
+     "min": 8152996,
+     "gzip": 1995065
     },
     "withLit": {
-     "min": 8084804,
-     "gzip": 1975466
+     "min": 8112396,
+     "gzip": 1982191
     }
    },
    "render": {
     "tag": "tc-generated-ui",
     "source": "demo",
     "runs": 7,
-    "cold": 2.1,
+    "cold": 2.6,
     "first": 0.5,
     "update": 0.1,
     "updateKind": "re-render with the same data",
@@ -19393,6 +19554,168 @@
       }
      ]
     },
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
+  "no-access": {
+   "measuredAt": "2026-10-31",
+   "hash": "b995b8cbc374fd47",
+   "bundle": {
+    "own": {
+     "min": 6522,
+     "gzip": 2810
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 18881
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2217
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1864
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 692
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 440
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 435
+     }
+    ],
+    "withoutLit": {
+     "min": 13784,
+     "gzip": 5153
+    },
+    "withLit": {
+     "min": 33834,
+     "gzip": 11639
+    }
+   },
+   "render": {
+    "tag": "tc-no-access",
+    "source": "demo",
+    "runs": 7,
+    "cold": 3.4,
+    "first": 0.4,
+    "update": 0.1,
+    "updateKind": "re-render with the same data",
+    "nodes": 12,
+    "scale": null,
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
+  "nothing-found": {
+   "measuredAt": "2026-10-31",
+   "hash": "32b69d45b26340c8",
+   "bundle": {
+    "own": {
+     "min": 6092,
+     "gzip": 2603
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 18881
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2217
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1864
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 692
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 440
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 435
+     }
+    ],
+    "withoutLit": {
+     "min": 13354,
+     "gzip": 4938
+    },
+    "withLit": {
+     "min": 33404,
+     "gzip": 11417
+    }
+   },
+   "render": {
+    "tag": "tc-nothing-found",
+    "source": "demo",
+    "runs": 7,
+    "cold": 2.5,
+    "first": 0.4,
+    "update": 0.2,
+    "updateKind": "re-render with the same data",
+    "nodes": 17,
+    "scale": null,
     "idle": {
      "visible": {
       "frames": 0,
@@ -26611,6 +26934,87 @@
       }
      ]
     },
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
+  "something-wrong": {
+   "measuredAt": "2026-10-31",
+   "hash": "c07d23980d501d2a",
+   "bundle": {
+    "own": {
+     "min": 6942,
+     "gzip": 2764
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 18881
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2217
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1864
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 692
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 440
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 435
+     }
+    ],
+    "withoutLit": {
+     "min": 14204,
+     "gzip": 5093
+    },
+    "withLit": {
+     "min": 34254,
+     "gzip": 11586
+    }
+   },
+   "render": {
+    "tag": "tc-something-wrong",
+    "source": "demo",
+    "runs": 7,
+    "cold": 2.1,
+    "first": 0.4,
+    "update": 0.1,
+    "updateKind": "re-render with the same data",
+    "nodes": 16,
+    "scale": null,
     "idle": {
      "visible": {
       "frames": 0,

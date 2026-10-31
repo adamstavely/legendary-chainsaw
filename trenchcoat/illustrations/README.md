@@ -20,10 +20,13 @@ They are decorative unless given a `label`, loops are finite or rest, and `prefe
 - **Lead Sourcing** (`lead-sourcing.tsx`) – ChatGPT tile linked to Gmail and Grok, with a shine running along the connection
 - **Logo Cluster** (`logo-cluster.tsx`) – Your mark on a white disc in the middle – company logos bounce out of it and settle around it; the ring turns once
 - **Model Wheel** (`model-wheel.tsx`) – AI model names on a turning drum – the rows bend away at the edges and each model lands on a soft gray fill; turns once round the drum and rests (`turns`)
+- **No Access** (`no-access.tsx`) – A folder held shut by a padlock, for someone who isn't entitled to see what they opened; the lock settles a few times and rests
+- **Nothing Found** (`nothing-found.tsx`) – A magnifying glass passing over blank results, for a search or filter with no matches; it looks across a few times and rests
 - **Outreach Branches** (`outreach-branches.tsx`) – Lines branching out to Gmail, Slack and Notion with colored pulses flowing down
 - **Project Flow** (`project-flow.tsx`) – Animated scene of a client task branching into subtasks, notes and assigned roles; follows the page theme (light or dark scene); `theme` pins one
 - **DACH Region** (`region-dach.tsx`) – DACH map with fading neighbours and a pastel band along the border, switchable to the US, China, India, Brazil or Japan
 - **Side Folder** (`side-folder.tsx`) – Glassy blue folder on its side, documents sliding out to the right as the pocket swings open on hover
+- **Something Wrong** (`something-wrong.tsx`) – Two connected tiles with the line between them broken, for a page or request that failed; the gap pulses a few times and rests
 - **Tab Overload** (`tab-overload.tsx`) – Overlapping browser windows where the highlight follows the hovered tab
 - **Team Invite** (`team-invite.tsx`) – Connected teammates – a cursor drags a new one into the empty slot, the line turns solid and they go online
 - **Voice Orb** (`voice-orb.tsx`) – The face of a voice assistant – a sphere of dots that breathes, catches sound, collapses into a spinning ring while thinking and ripples when it speaks

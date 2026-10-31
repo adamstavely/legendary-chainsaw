@@ -915,6 +915,15 @@
     ]
   },
   {
+    "tag": "tc-file-details",
+    "name": "FileDetails",
+    "description": "One file in one place: its details, the team's flag, a summary, its versions and who it's shared with.",
+    "events": [
+      "tc-flag-change",
+      "tc-open"
+    ]
+  },
+  {
     "tag": "tc-file-summary",
     "name": "FileSummary",
     "description": "An AI summary of a file – the file's type, size and length, a summary that streams in, key points citing their",
@@ -1358,6 +1367,18 @@
       "tc-date-change",
       "tc-visible-change"
     ]
+  },
+  {
+    "tag": "tc-no-access",
+    "name": "NoAccess",
+    "description": "A folder held shut by a padlock, for when someone isn't entitled to see what they opened.",
+    "events": []
+  },
+  {
+    "tag": "tc-nothing-found",
+    "name": "NothingFound",
+    "description": "A magnifying glass passing over a list of blank results, for a search or filter with no matches.",
+    "events": []
   },
   {
     "tag": "tc-notification-stack",
@@ -1953,6 +1974,12 @@
       "tc-accepted-change",
       "tc-open-change"
     ]
+  },
+  {
+    "tag": "tc-something-wrong",
+    "name": "SomethingWrong",
+    "description": "Two connected tiles with the line between them broken, for a page or request that failed.",
+    "events": []
   },
   {
     "tag": "tc-sparkline",
