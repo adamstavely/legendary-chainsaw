@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-success-check.json",
+  "title": "tc-success-check",
+  "description": "A small tick that draws itself once.",
+  "type": "object",
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Accessible description – when set, it's announced as an image; otherwise it's decorative"
+    },
+    "playKey": {
+      "type": [
+        "string",
+        "number"
+      ],
+      "description": "Change this to draw it again"
+    }
+  },
+  "additionalProperties": false
+}

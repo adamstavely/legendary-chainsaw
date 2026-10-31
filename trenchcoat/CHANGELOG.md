@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased – Motion for state changes
+
+- **List Motion** (`tc-list-motion`) – rows glide when reordered, added or removed. Team Flag Editor now uses it.
+- **Collapse** (`tc-collapse`), **Success Check** (`tc-success-check`) and **Attention Pulse** (`tc-attention-pulse`) –
+  opening and shutting, a one-time tick, and a one-time ring to draw the eye.
+
 ## Unreleased – File details and states
 
 - **File Details** (`tc-file-details`) – a block with one file's details, the team's flag, a summary, its versions and

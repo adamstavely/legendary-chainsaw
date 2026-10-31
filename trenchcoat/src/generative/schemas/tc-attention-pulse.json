@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-attention-pulse.json",
+  "title": "tc-attention-pulse",
+  "description": "Draws the eye once, with a soft ring that passes around the content.",
+  "type": "object",
+  "properties": {
+    "pulseKey": {
+      "type": [
+        "string",
+        "number"
+      ],
+      "description": "Change this to pulse once"
+    }
+  },
+  "additionalProperties": false
+}

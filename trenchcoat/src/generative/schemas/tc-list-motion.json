@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-list-motion.json",
+  "title": "tc-list-motion",
+  "description": "Makes a list's rows glide when they're reordered, added or removed.",
+  "type": "object",
+  "properties": {
+    "duration": {
+      "type": "number",
+      "description": "Length of the move in ms; by default the --tc-duration-slow token"
+    },
+    "exits": {
+      "type": "boolean",
+      "description": "Removed rows leave as a fading copy; set exits=\"false\" to have them go at once"
+    }
+  },
+  "additionalProperties": false
+}

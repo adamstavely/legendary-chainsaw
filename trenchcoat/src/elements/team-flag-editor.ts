@@ -5,6 +5,7 @@ import { repeat } from "lit/directives/repeat.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
+import { ListMotionController } from "./internal/list-motion";
 import { flagGlyph, flagGlyphCss, type TeamFlag } from "./internal/team-flag";
 
 /*
@@ -112,6 +113,12 @@ export class TcTeamFlagEditor extends TcElement {
   @state() private accessor announce = "";
   private readonly uid = `tc-tfe-${++instances}`;
   private nextId = 1;
+
+  constructor() {
+    super();
+    // Moving a flag glides instead of jumping
+    new ListMotionController(this, () => this.querySelector(".ui-tfe__list"));
+  }
 
   private get words(): TeamFlagEditorLabels {
     return { ...defaultTeamFlagEditorLabels, ...this.labels };
