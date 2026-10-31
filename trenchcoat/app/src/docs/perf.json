@@ -11473,8 +11473,8 @@
    }
   },
   "generated-ui": {
-   "measuredAt": "2026-10-30",
-   "hash": "e32165ba1fec7a8d",
+   "measuredAt": "2026-10-31",
+   "hash": "0371fee3640c85be",
    "bundle": {
     "own": {
      "min": 34126,
@@ -11614,7 +11614,7 @@
      {
       "name": "agent-graph",
       "kind": "element",
-      "min": 80816
+      "min": 80818
      },
      {
       "name": "stepper-form",
@@ -11629,7 +11629,7 @@
      {
       "name": "memory-panel",
       "kind": "element",
-      "min": 64902
+      "min": 64956
      },
      {
       "name": "evaluation-dataset-editor",
@@ -11724,7 +11724,7 @@
      {
       "name": "agent-tree",
       "kind": "element",
-      "min": 48554
+      "min": 48552
      },
      {
       "name": "email-draft",
@@ -11819,7 +11819,7 @@
      {
       "name": "mcp-connection-manager",
       "kind": "element",
-      "min": 43141
+      "min": 43181
      },
      {
       "name": "combobox",
@@ -12285,6 +12285,11 @@
       "name": "co-occurrence",
       "kind": "element",
       "min": 23497
+     },
+     {
+      "name": "hal-form",
+      "kind": "element",
+      "min": 23426
      },
      {
       "name": "evidence-list",
@@ -12809,7 +12814,7 @@
      {
       "name": "src/generative/registry.ts",
       "kind": "other",
-      "min": 40586
+      "min": 40764
      },
      {
       "name": "src/generative/schemas/tc-ai-side-pane.json",
@@ -12917,6 +12922,11 @@
       "min": 4070
      },
      {
+      "name": "src/generative/schemas/tc-hal-form.json",
+      "kind": "other",
+      "min": 4026
+     },
+     {
       "name": "src/generative/schemas/tc-evaluation-dataset-editor.json",
       "kind": "other",
       "min": 3963
@@ -12994,7 +13004,7 @@
      {
       "name": "src/generative/schemas/tc-app-directory.json",
       "kind": "other",
-      "min": 3407
+      "min": 3379
      },
      {
       "name": "src/generative/schemas/tc-ai-summary.json",
@@ -14033,20 +14043,20 @@
      }
     ],
     "withoutLit": {
-     "min": 8016919,
-     "gzip": 1978245
+     "min": 8044901,
+     "gzip": 1987111
     },
     "withLit": {
-     "min": 7978031,
-     "gzip": 1963088
+     "min": 8005727,
+     "gzip": 1971955
     }
    },
    "render": {
     "tag": "tc-generated-ui",
     "source": "demo",
     "runs": 7,
-    "cold": 6.1,
-    "first": 0.6,
+    "cold": 2.1,
+    "first": 0.5,
     "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 9,
@@ -14880,6 +14890,117 @@
       }
      ]
     },
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
+  "hal-form": {
+   "measuredAt": "2026-10-31",
+   "hash": "423ddfd8183c9056",
+   "bundle": {
+    "own": {
+     "min": 25526,
+     "gzip": 8920
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 22702
+     },
+     {
+      "name": "internal/settings",
+      "kind": "internal",
+      "min": 14617
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2968
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1877
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 892
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 444
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 436
+     },
+     {
+      "name": "internal/safe-url",
+      "kind": "internal",
+      "min": 343
+     },
+     {
+      "name": "internal/util",
+      "kind": "internal",
+      "min": 130
+     },
+     {
+      "name": "internal/safe-media",
+      "kind": "internal",
+      "min": 120
+     },
+     {
+      "name": "combobox",
+      "kind": "element",
+      "min": 42536
+     },
+     {
+      "name": "src/internal/reduced-motion.ts",
+      "kind": "other",
+      "min": 96
+     }
+    ],
+    "withoutLit": {
+     "min": 91973,
+     "gzip": 25533
+    },
+    "withLit": {
+     "min": 115566,
+     "gzip": 33304
+    }
+   },
+   "render": {
+    "tag": "tc-hal-form",
+    "source": "demo",
+    "runs": 7,
+    "cold": 8.4,
+    "first": 1.2,
+    "update": 0.4,
+    "updateKind": "re-render with the same data",
+    "nodes": 69,
+    "scale": null,
     "idle": {
      "visible": {
       "frames": 0,
