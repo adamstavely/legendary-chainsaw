@@ -1,0 +1,709 @@
+{
+ "elements": [
+  {
+   "tag": "tc-file-details",
+   "className": "TcFileDetails",
+   "description": "One file in one place: its details, the team's flag, a summary, its versions and who it's shared with.",
+   "properties": [
+    {
+     "name": "file",
+     "attribute": null,
+     "type": "FileDetailsFile",
+     "default": "{ name: \"Untitled\" }",
+     "description": "The file",
+     "readonly": false
+    },
+    {
+     "name": "href",
+     "attribute": "href",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "Where the file opens; without it, Open only fires tc-open",
+     "readonly": false
+    },
+    {
+     "name": "flags",
+     "attribute": null,
+     "type": "TeamFlag[]",
+     "default": "[]",
+     "description": "The team's flags",
+     "readonly": false
+    },
+    {
+     "name": "flag",
+     "attribute": "flag",
+     "type": "string | null",
+     "default": "null",
+     "description": "The id of the file's flag, or null for none. Changed by the user unless a tc-flag-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "manageFlags",
+     "attribute": "manage-flags",
+     "type": "boolean",
+     "default": "false",
+     "description": "Offer a link to the team's flags in the picker, for people who may edit them",
+     "readonly": false
+    },
+    {
+     "name": "summaryStatus",
+     "attribute": "summary-status",
+     "type": "FileSummaryStatus",
+     "default": "\"idle\"",
+     "description": "Where the summary is: \"idle\", \"summarising\", \"done\" or \"error\". Without a summary and when \"idle\", the section is left out",
+     "readonly": false
+    },
+    {
+     "name": "summary",
+     "attribute": "summary",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The summary; may grow while \"summarising\"",
+     "readonly": false
+    },
+    {
+     "name": "points",
+     "attribute": null,
+     "type": "FileSummaryPoint[]",
+     "default": "[]",
+     "description": "The summary's key points",
+     "readonly": false
+    },
+    {
+     "name": "entities",
+     "attribute": null,
+     "type": "FileSummaryEntity[]",
+     "default": "[]",
+     "description": "The people, organisations, dates and amounts in the file",
+     "readonly": false
+    },
+    {
+     "name": "versions",
+     "attribute": null,
+     "type": "VersionEntry[]",
+     "default": "[]",
+     "description": "The file's versions, newest first",
+     "readonly": false
+    },
+    {
+     "name": "access",
+     "attribute": null,
+     "type": "ShareGrant[]",
+     "default": "[]",
+     "description": "Who has access now. Updated on Share unless a tc-share listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "directory",
+     "attribute": null,
+     "type": "ShareRecipient[]",
+     "default": "[]",
+     "description": "The people and groups to share with",
+     "readonly": false
+    },
+    {
+     "name": "search",
+     "attribute": null,
+     "type": "ShareSearch | undefined",
+     "default": "undefined",
+     "description": "Looks people and groups up on the server, instead of `directory`",
+     "readonly": false
+    },
+    {
+     "name": "levels",
+     "attribute": null,
+     "type": "ShareLevel[] | undefined",
+     "default": "undefined",
+     "description": "The levels of access, least first",
+     "readonly": false
+    },
+    {
+     "name": "checkEntitlement",
+     "attribute": null,
+     "type": "ShareEntitlementCheck | undefined",
+     "default": "undefined",
+     "description": "Asks whether a recipient may see this file at a level. Without it nobody can be added",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The locale for sizes and dates",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-flag-change",
+     "detail": "",
+     "description": "The file's flag was picked or cleared ({ flag, value }: FileDetailsFlagChange); cancelable – prevented, `flag` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-open",
+     "detail": "",
+     "description": "Open was pressed, when there's no `href` (detail: null)",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "fld",
+   "cssProperties": [
+    {
+     "name": "--tc-fld-preview",
+     "value": "88px",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-radius-md",
+    "--tc-fill-hover",
+    "--tc-font-sans",
+    "--tc-font-size-lg",
+    "--tc-font-size-sm",
+    "--tc-font-weight-medium",
+    "--tc-line-height-normal",
+    "--tc-line-height-tight",
+    "--tc-space-1",
+    "--tc-space-2",
+    "--tc-space-4",
+    "--tc-space-6",
+    "--tc-surface-raised",
+    "--tc-text-primary",
+    "--tc-text-secondary"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "FileDetails",
+   "exported": true,
+   "props": [
+    {
+     "name": "flag",
+     "type": "string | null",
+     "optional": true,
+     "description": "The id of the file's flag, or null for none – controlled when given"
+    },
+    {
+     "name": "defaultFlag",
+     "type": "string | null",
+     "optional": true,
+     "description": "The flag on mount when `flag` isn't controlled"
+    },
+    {
+     "name": "onFlagChange",
+     "type": "(flag: string | null) => void",
+     "optional": true,
+     "description": "The file's flag was picked or cleared"
+    }
+   ],
+   "hides": [
+    "flag",
+    "children"
+   ],
+   "events": {
+    "tc-flag-change": null,
+    "tc-open": "onTcOpen",
+    "tc-share": "onTcShare"
+   }
+  }
+ ],
+ "changelog": [
+  "**File Details** (`tc-file-details`) – a block with one file's details, the team's flag, a summary, its versions and entitlement-checked sharing."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-file-details",
+   "className": "TcFileDetails",
+   "module": "trenchcoat/file-details",
+   "data": [
+    "file",
+    "flags",
+    "points",
+    "entities",
+    "versions",
+    "access",
+    "directory",
+    "search",
+    "levels",
+    "checkEntitlement"
+   ],
+   "attributes": [
+    {
+     "name": "href",
+     "attribute": "href"
+    },
+    {
+     "name": "flag",
+     "attribute": "flag"
+    },
+    {
+     "name": "manageFlags",
+     "attribute": "manage-flags"
+    },
+    {
+     "name": "summaryStatus",
+     "attribute": "summary-status"
+    },
+    {
+     "name": "summary",
+     "attribute": "summary"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-flag-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-open",
+     "cancelable": false
+    }
+   ],
+   "controlled": [
+    {
+     "property": "flag",
+     "event": "tc-flag-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "121",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "has"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself",
+     "file-summary",
+     "version-history",
+     "share-panel"
+    ]
+   },
+   {
+    "id": "inert",
+    "name": "inert",
+    "bcd": "api.HTMLElement.inert",
+    "versions": {
+     "chrome": "102",
+     "edge": "102",
+     "firefox": "112",
+     "safari": "15.5",
+     "safari_ios": "15.5"
+    },
+    "progressive": false,
+    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
+    "via": [
+     "internal/controllers",
+     "internal/popover"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "file-summary",
+     "internal/kit",
+     "team-flag-picker",
+     "version-history",
+     "share-panel"
+    ]
+   },
+   {
+    "id": "has",
+    "name": ":has()",
+    "bcd": "css.selectors.has",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "121",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Layout and state that depend on what's inside a part (an icon present, a focused field).",
+    "via": [
+     "version-history"
+    ]
+   },
+   {
+    "id": "dialog",
+    "name": "<dialog> and showModal()",
+    "bcd": "api.HTMLDialogElement.showModal",
+    "versions": {
+     "chrome": "37",
+     "edge": "79",
+     "firefox": "98",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Modals trap focus, close on Escape and sit in the top layer.",
+    "via": [
+     "version-history"
+    ]
+   },
+   {
+    "id": "aspect-ratio",
+    "name": "aspect-ratio",
+    "bcd": "css.properties.aspect-ratio",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "89",
+     "safari": "15",
+     "safari_ios": "15"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "file-summary",
+     "internal/popover"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "file-summary",
+     "internal/base",
+     "team-flag-picker",
+     "version-history",
+     "share-panel",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "clipboard",
+    "name": "Async Clipboard (writeText)",
+    "bcd": "api.Clipboard.writeText",
+    "versions": {
+     "chrome": "66",
+     "edge": "79",
+     "firefox": "63",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "why": "Copy buttons.",
+    "via": [
+     "internal/util"
+    ]
+   },
+   {
+    "id": "resize-observer",
+    "name": "ResizeObserver",
+    "bcd": "api.ResizeObserver",
+    "versions": {
+     "chrome": "64",
+     "edge": "79",
+     "firefox": "69",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "via": [
+     "internal/popover"
+    ]
+   },
+   {
+    "id": "intersection-observer",
+    "name": "IntersectionObserver",
+    "bcd": "api.IntersectionObserver",
+    "versions": {
+     "chrome": "51",
+     "edge": "15",
+     "firefox": "55",
+     "safari": "12.1",
+     "safari_ios": "12.2"
+    },
+    "progressive": false,
+    "via": [
+     "internal/controllers"
+    ]
+   },
+   {
+    "id": "scrollbar-color",
+    "name": "scrollbar-color",
+    "bcd": "css.properties.scrollbar-color",
+    "versions": {
+     "chrome": "121",
+     "edge": "121",
+     "firefox": "64",
+     "safari": "26.2",
+     "safari_ios": "26.2"
+    },
+    "progressive": true,
+    "without": "Scrollbars keep the browser's default colours.",
+    "via": [
+     "version-history"
+    ]
+   },
+   {
+    "id": "scrollbar-width",
+    "name": "scrollbar-width",
+    "bcd": "css.properties.scrollbar-width",
+    "versions": {
+     "chrome": "121",
+     "edge": "121",
+     "firefox": "64",
+     "safari": "18.2",
+     "safari_ios": "18.2"
+    },
+    "progressive": true,
+    "without": "Scrollbars keep the browser's default width.",
+    "via": [
+     "version-history"
+    ]
+   },
+   {
+    "id": "popover",
+    "name": "Popover API",
+    "bcd": "api.HTMLElement.popover",
+    "versions": {
+     "chrome": "114",
+     "edge": "114",
+     "firefox": "125",
+     "safari": "17",
+     "safari_ios": "18.3"
+    },
+    "progressive": true,
+    "without": "Lists open fixed to the window instead of in the top layer, so a clipping ancestor or a modal can cover them.",
+    "via": [
+     "internal/popover"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "file-summary",
+     "internal/card-head",
+     "internal/kit",
+     "team-flag-picker",
+     "internal/popover",
+     "internal/team-flag",
+     "version-history",
+     "share-panel",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "overscroll-contain",
+    "name": "overscroll-behavior: contain",
+    "bcd": "css.properties.overscroll-behavior.contain",
+    "versions": {
+     "chrome": "63",
+     "edge": "18",
+     "firefox": "59",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "Scrolling past the end of a list carries on scrolling the page.",
+    "via": [
+     "version-history"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setTimeout (file-summary)",
+   "setTimeout (internal/popover › PopoverController)",
+   "setTimeout (share-panel)"
+  ],
+  "frames": [
+   "requestAnimationFrame, cancelled (internal/popover › PopoverController)",
+   "requestAnimationFrame, cancelled (internal/controllers › RowWindowController)"
+  ],
+  "animations": 4,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)",
+   "MutationObserver (internal/controllers › FocusRescueController)",
+   "IntersectionObserver (internal/controllers › OffScreenController)",
+   "ResizeObserver (internal/popover › PopoverController)"
+  ],
+  "clock": [
+   "performance.now() (internal/controllers › RowWindowController)"
+  ],
+  "listeners": [
+   "window scroll (internal/controllers › RowWindowController)",
+   "window resize (internal/controllers › RowWindowController)"
+  ],
+  "pauses": {
+   "offscreen": [
+    "file-summary",
+    "internal/controllers › OffScreenController"
+   ],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS (file-summary)",
+    "CSS (internal/kit › kitCss)",
+    "CSS (internal/popover › popoverCss)",
+    "CSS (version-history)",
+    "CSS (share-panel)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 126295,
+  "gzip": 34041
+ }
+}

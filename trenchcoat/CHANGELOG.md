@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased – File details and states
+
+- **File Details** (`tc-file-details`) – a block with one file's details, the team's flag, a summary, its versions and
+  entitlement-checked sharing.
+- **No Access** (`tc-no-access`), **Nothing Found** (`tc-nothing-found`) and **Something Wrong** (`tc-something-wrong`) –
+  illustrations for the states people reach when a page can't show what they wanted.
+
 ## Unreleased – Sharing
 
 - **Share Panel** (`tc-share-panel`) – shares with people and groups at a level for each, after checking each one's

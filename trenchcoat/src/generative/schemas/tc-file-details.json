@@ -1,0 +1,376 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-file-details.json",
+  "title": "tc-file-details",
+  "description": "One file in one place: its details, the team's flag, a summary, its versions and who it's shared with.",
+  "type": "object",
+  "properties": {
+    "file": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "owner": {
+          "type": "string"
+        },
+        "modified": {
+          "type": "number"
+        },
+        "preview": {
+          "type": "string",
+          "format": "uri-reference",
+          "contentMediaType": "image/*"
+        },
+        "name": {
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/definitions/FileSummaryKind",
+          "description": "Picks the icon and the type's name; by default worked out from the name's extension"
+        },
+        "size": {
+          "type": "number",
+          "description": "In bytes"
+        },
+        "pages": {
+          "type": "number",
+          "description": "For documents and slides"
+        },
+        "duration": {
+          "type": "number",
+          "description": "For audio and video, in ms"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "description": "The file"
+    },
+    "href": {
+      "type": "string",
+      "description": "Where the file opens; without it, Open only fires tc-open",
+      "format": "uri-reference"
+    },
+    "flags": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/TeamFlag"
+      },
+      "description": "The team's flags"
+    },
+    "flag": {
+      "type": "string",
+      "description": "The id of the file's flag, or null for none. Changed by the user unless a tc-flag-change listener calls preventDefault()"
+    },
+    "manageFlags": {
+      "type": "boolean",
+      "description": "Offer a link to the team's flags in the picker, for people who may edit them"
+    },
+    "summaryStatus": {
+      "type": "string",
+      "enum": [
+        "idle",
+        "error",
+        "done",
+        "summarising"
+      ],
+      "description": "Where the summary is: \"idle\", \"summarising\", \"done\" or \"error\". Without a summary and when \"idle\", the section is left out"
+    },
+    "summary": {
+      "type": "string",
+      "description": "The summary; may grow while \"summarising\""
+    },
+    "points": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/FileSummaryPoint"
+      },
+      "description": "The summary's key points"
+    },
+    "entities": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/FileSummaryEntity"
+      },
+      "description": "The people, organisations, dates and amounts in the file"
+    },
+    "versions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/VersionEntry"
+      },
+      "description": "The file's versions, newest first"
+    },
+    "access": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ShareGrant"
+      },
+      "description": "Who has access now. Updated on Share unless a tc-share listener calls preventDefault()"
+    },
+    "directory": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ShareRecipient"
+      },
+      "description": "The people and groups to share with"
+    },
+    "levels": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ShareLevel"
+      },
+      "description": "The levels of access, least first"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The locale for sizes and dates"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "FileSummaryKind": {
+      "type": "string",
+      "enum": [
+        "pdf",
+        "doc",
+        "sheet",
+        "slides",
+        "image",
+        "audio",
+        "video",
+        "other"
+      ]
+    },
+    "TeamFlag": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "The flag's name, shown beside it wherever it's used"
+        },
+        "meaning": {
+          "type": "string",
+          "description": "What the flag means, so everyone uses it the same way"
+        },
+        "color": {
+          "type": "string",
+          "description": "A hex colour, \"#rrggbb\""
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "color"
+      ],
+      "additionalProperties": false,
+      "description": "A flag a team has defined: its colour and what it means"
+    },
+    "FileSummaryPoint": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        },
+        "refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FileSummaryRef"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "text"
+      ],
+      "additionalProperties": false
+    },
+    "FileSummaryRef": {
+      "type": "object",
+      "properties": {
+        "page": {
+          "type": "number"
+        },
+        "time": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Where a point comes from: a page, or a time in ms for audio and video"
+    },
+    "FileSummaryEntity": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/definitions/FileSummaryEntityKind"
+        },
+        "count": {
+          "type": "number",
+          "description": "How many times the file mentions it"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "kind"
+      ],
+      "additionalProperties": false
+    },
+    "FileSummaryEntityKind": {
+      "type": "string",
+      "enum": [
+        "person",
+        "organization",
+        "date",
+        "amount"
+      ]
+    },
+    "VersionEntry": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "Short, e.g. \"v1.3\""
+        },
+        "status": {
+          "$ref": "#/definitions/VersionStatus"
+        },
+        "note": {
+          "type": "string",
+          "description": "One line on what this version is, e.g. \"Tightened the review step\""
+        },
+        "author": {
+          "type": "string",
+          "description": "Who made it"
+        },
+        "at": {
+          "type": "string",
+          "description": "When, shown as given: \"Today · 09:12\", \"May 28\""
+        },
+        "changes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/VersionChange"
+          },
+          "description": "What it does differently from the version before it"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "status"
+      ],
+      "additionalProperties": false,
+      "description": "One version of an agent, prompt or workflow"
+    },
+    "VersionStatus": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "active",
+        "deprecated"
+      ],
+      "description": "Where a version stands"
+    },
+    "VersionChange": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "$ref": "#/definitions/VersionChangeKind"
+        },
+        "text": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "text"
+      ],
+      "additionalProperties": false,
+      "description": "One change, said as what it will do differently: \"Asks for approval before sending\""
+    },
+    "VersionChangeKind": {
+      "type": "string",
+      "enum": [
+        "added",
+        "removed",
+        "changed"
+      ],
+      "description": "What a change did to the behaviour"
+    },
+    "ShareGrant": {
+      "type": "object",
+      "properties": {
+        "recipient": {
+          "$ref": "#/definitions/ShareRecipient"
+        },
+        "level": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "recipient",
+        "level"
+      ],
+      "additionalProperties": false
+    },
+    "ShareRecipient": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "person",
+            "group"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "detail": {
+          "type": "string",
+          "description": "An email, a team or \"24 members\""
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "ShareLevel": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

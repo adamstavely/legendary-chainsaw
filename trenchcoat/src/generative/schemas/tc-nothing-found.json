@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-nothing-found.json",
+  "title": "tc-nothing-found",
+  "description": "A magnifying glass passing over a list of blank results, for a search or filter with no matches.",
+  "type": "object",
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Accessible description – when set, the scene is announced as an image; otherwise it is decorative"
+    }
+  },
+  "additionalProperties": false
+}

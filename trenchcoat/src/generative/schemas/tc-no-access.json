@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-no-access.json",
+  "title": "tc-no-access",
+  "description": "A folder held shut by a padlock, for when someone isn't entitled to see what they opened.",
+  "type": "object",
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Accessible description – when set, the scene is announced as an image; otherwise it is decorative"
+    }
+  },
+  "additionalProperties": false
+}

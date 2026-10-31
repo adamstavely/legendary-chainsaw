@@ -1,0 +1,353 @@
+{
+ "elements": [
+  {
+   "tag": "tc-no-access",
+   "className": "TcNoAccess",
+   "description": "A folder held shut by a padlock, for when someone isn't entitled to see what they opened.",
+   "properties": [
+    {
+     "name": "label",
+     "attribute": "label",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Accessible description – when set, the scene is announced as an image; otherwise it is decorative",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [],
+   "slots": [],
+   "methods": [],
+   "ui": "nac",
+   "cssProperties": [
+    {
+     "name": "--tc-no-access-back",
+     "value": "light-dark(#dfe5ee, #33363d)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-no-access-front",
+     "value": "light-dark(#eef2f7, #26282d)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-no-access-edge",
+     "value": "light-dark(#d3dae4, rgba(255, 255, 255, 0.1))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-no-access-page",
+     "value": "light-dark(#ffffff, #3c3f46)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-no-access-line",
+     "value": "light-dark(#e3e7ed, #50545c)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-no-access-lock",
+     "value": "light-dark(#5b6472, #c9ced6)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-no-access-key",
+     "value": "light-dark(#ffffff, #26282d)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-no-access-glow",
+     "value": "light-dark(rgba(200, 168, 229, 0.28), rgba(200, 168, 229, 0.14))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-no-access-soft",
+     "value": "12px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-no-access-beat",
+     "value": "3.2s",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-ease-standard"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "NoAccess",
+   "exported": false,
+   "props": [],
+   "hides": [],
+   "events": {}
+  }
+ ],
+ "changelog": [
+  "**No Access** (`tc-no-access`), **Nothing Found** (`tc-nothing-found`) and **Something Wrong** (`tc-something-wrong`) – illustrations for the states people reach when a page can't show what they wanted."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-no-access",
+   "className": "TcNoAccess",
+   "module": "trenchcoat/no-access",
+   "data": [],
+   "attributes": [
+    {
+     "name": "label",
+     "attribute": "label"
+    }
+   ],
+   "events": [],
+   "controlled": [],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "itself",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "aspect-ratio",
+    "name": "aspect-ratio",
+    "bcd": "css.properties.aspect-ratio",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "89",
+     "safari": "15",
+     "safari_ios": "15"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "intersection-observer",
+    "name": "IntersectionObserver",
+    "bcd": "api.IntersectionObserver",
+    "versions": {
+     "chrome": "51",
+     "edge": "15",
+     "firefox": "55",
+     "safari": "12.1",
+     "safari_ios": "12.2"
+    },
+    "progressive": false,
+    "via": [
+     "internal/controllers"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)",
+   "IntersectionObserver (internal/controllers › OnScreenController)"
+  ],
+  "clock": [],
+  "listeners": [
+   "document visibilitychange (internal/controllers › OnScreenController)"
+  ],
+  "pauses": {
+   "offscreen": [
+    "itself",
+    "internal/controllers › OnScreenController"
+   ],
+   "hidden": [
+    "internal/controllers › OnScreenController"
+   ],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 13784,
+  "gzip": 5153
+ }
+}

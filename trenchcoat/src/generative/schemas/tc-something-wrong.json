@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-something-wrong.json",
+  "title": "tc-something-wrong",
+  "description": "Two connected tiles with the line between them broken, for a page or request that failed.",
+  "type": "object",
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Accessible description – when set, the scene is announced as an image; otherwise it is decorative"
+    }
+  },
+  "additionalProperties": false
+}
