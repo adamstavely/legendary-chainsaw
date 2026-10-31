@@ -44,7 +44,10 @@ const isState = (value: string | null): value is FaceState => FACE_STATES.includ
  * @attr rest-after - How long, in ms, before the small movements fade out when Donovan isn't busy. Default 30000
  * @attr seed - Makes the small movements repeatable
  */
-export class AgentFace extends HTMLElement implements Tickable {
+// Importing this during server rendering, where there's no DOM, mustn't throw
+const ElementBase: typeof HTMLElement = typeof HTMLElement === "undefined" ? (class {} as typeof HTMLElement) : HTMLElement;
+
+export class AgentFace extends ElementBase implements Tickable {
   static observedAttributes = ["state", "size", "name", "label", "announce", "motion", "rest-after"];
 
   private readonly canvas: HTMLCanvasElement;

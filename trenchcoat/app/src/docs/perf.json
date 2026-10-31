@@ -632,7 +632,7 @@
   },
   "agent-face": {
    "measuredAt": "2026-10-31",
-   "hash": "efc4b30f1242e58b",
+   "hash": "d92ed7019a925165",
    "bundle": {
     "own": {
      "min": 3996,
@@ -677,7 +677,7 @@
      {
       "name": "src/vendor/agent-face/element/agent-face.ts",
       "kind": "other",
-      "min": 4975
+      "min": 5012
      },
      {
       "name": "src/vendor/agent-face/engine/engine.ts",
@@ -717,24 +717,24 @@
      {
       "name": "src/vendor/agent-face/element/index.ts",
       "kind": "other",
-      "min": 73
+      "min": 101
      }
     ],
     "withoutLit": {
-     "min": 25624,
-     "gzip": 9414
+     "min": 25689,
+     "gzip": 9449
     },
     "withLit": {
-     "min": 45653,
-     "gzip": 15944
+     "min": 45718,
+     "gzip": 15985
     }
    },
    "render": {
     "tag": "tc-agent-face",
     "source": "demo",
     "runs": 7,
-    "cold": 6.6,
-    "first": 0.4,
+    "cold": 6.2,
+    "first": 0.5,
     "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 1,
@@ -1442,7 +1442,7 @@
   },
   "agent-scene": {
    "measuredAt": "2026-10-31",
-   "hash": "4daefa7100f16423",
+   "hash": "492e34d1ecb7413d",
    "bundle": {
     "own": {
      "min": 5493,
@@ -1492,7 +1492,7 @@
      {
       "name": "src/vendor/agent-face/element/agent-face.ts",
       "kind": "other",
-      "min": 4975
+      "min": 5012
      },
      {
       "name": "src/vendor/agent-face/engine/engine.ts",
@@ -1532,24 +1532,24 @@
      {
       "name": "src/vendor/agent-face/element/index.ts",
       "kind": "other",
-      "min": 73
+      "min": 101
      }
     ],
     "withoutLit": {
-     "min": 29049,
-     "gzip": 10463
+     "min": 29114,
+     "gzip": 10498
     },
     "withLit": {
-     "min": 48978,
-     "gzip": 16933
+     "min": 49043,
+     "gzip": 16968
     }
    },
    "render": {
     "tag": "tc-agent-scene",
     "source": "demo",
     "runs": 7,
-    "cold": 4.5,
-    "first": 0.6,
+    "cold": 4.3,
+    "first": 0.5,
     "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 4,
@@ -5018,7 +5018,7 @@
   },
   "case-review": {
    "measuredAt": "2026-10-31",
-   "hash": "8fc1369fb57082bf",
+   "hash": "3bf88890884ddecc",
    "bundle": {
     "own": {
      "min": 15863,
@@ -5088,7 +5088,7 @@
      {
       "name": "src/vendor/agent-face/element/agent-face.ts",
       "kind": "other",
-      "min": 4975
+      "min": 5012
      },
      {
       "name": "src/vendor/agent-face/engine/engine.ts",
@@ -5128,23 +5128,23 @@
      {
       "name": "src/vendor/agent-face/element/index.ts",
       "kind": "other",
-      "min": 73
+      "min": 101
      }
     ],
     "withoutLit": {
-     "min": 76171,
-     "gzip": 21386
+     "min": 76236,
+     "gzip": 21420
     },
     "withLit": {
-     "min": 98611,
-     "gzip": 28794
+     "min": 98676,
+     "gzip": 28830
     }
    },
    "render": {
     "tag": "tc-case-review",
     "source": "defaults",
     "runs": 7,
-    "cold": 10.2,
+    "cold": 11.4,
     "first": 0.5,
     "update": 0.1,
     "updateKind": "re-render with the same data",
@@ -12342,7 +12342,7 @@
   },
   "generated-ui": {
    "measuredAt": "2026-10-31",
-   "hash": "f49420f8d791f73f",
+   "hash": "cb3bbe0e5abae8c7",
    "bundle": {
     "own": {
      "min": 34126,
@@ -13825,14 +13825,14 @@
       "min": 5432
      },
      {
+      "name": "src/vendor/agent-face/element/agent-face.ts",
+      "kind": "other",
+      "min": 5108
+     },
+     {
       "name": "src/generative/schemas/tc-validity-badge.json",
       "kind": "other",
       "min": 5067
-     },
-     {
-      "name": "src/vendor/agent-face/element/agent-face.ts",
-      "kind": "other",
-      "min": 5065
      },
      {
       "name": "src/generative/schemas/tc-review-center.json",
@@ -15110,14 +15110,14 @@
       "min": 175
      },
      {
+      "name": "src/vendor/agent-face/element/index.ts",
+      "kind": "other",
+      "min": 124
+     },
+     {
       "name": "src/internal/reduced-motion.ts",
       "kind": "other",
       "min": 111
-     },
-     {
-      "name": "src/vendor/agent-face/element/index.ts",
-      "kind": "other",
-      "min": 96
      },
      {
       "name": "src/internal/ease.ts",
@@ -15131,19 +15131,19 @@
      }
     ],
     "withoutLit": {
-     "min": 8218676,
-     "gzip": 2014008
+     "min": 8218747,
+     "gzip": 2014040
     },
     "withLit": {
-     "min": 8177004,
-     "gzip": 1999269
+     "min": 8177075,
+     "gzip": 1999306
     }
    },
    "render": {
     "tag": "tc-generated-ui",
     "source": "demo",
     "runs": 7,
-    "cold": 2.1,
+    "cold": 2.2,
     "first": 0.5,
     "update": 0.1,
     "updateKind": "re-render with the same data",
