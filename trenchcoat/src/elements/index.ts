@@ -8,6 +8,7 @@ export * from "./account-list";
 export * from "./activity-calendar";
 export * from "./activity-clock";
 export * from "./agent-cursors";
+export * from "./agent-face";
 export * from "./agent-gallery";
 export * from "./agent-graph";
 export * from "./agent-inbox";

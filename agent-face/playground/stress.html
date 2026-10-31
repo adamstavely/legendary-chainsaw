@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+  <head><meta charset="utf-8" /><title>Donovan stress test</title></head>
+  <body>
+    <script type="module">
+      import "../src/element/index.ts";
+      const states = ["thinking", "speaking", "listening"];
+      for (let i = 0; i < 20; i++) {
+        const face = document.createElement("agent-face");
+        face.setAttribute("state", states[i % 3]);
+        face.setAttribute("size", "120");
+        face.setAttribute("motion", "full");
+        document.body.append(face);
+      }
+    </script>
+  </body>
+</html>

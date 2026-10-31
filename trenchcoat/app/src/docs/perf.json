@@ -539,6 +539,132 @@
     "errors": []
    }
   },
+  "agent-face": {
+   "measuredAt": "2026-10-31",
+   "hash": "f65ea420166d0d43",
+   "bundle": {
+    "own": {
+     "min": 3996,
+     "gzip": 1967
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 18903
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2217
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1868
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 445
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 436
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     },
+     {
+      "name": "src/vendor/agent-face/element/agent-face.ts",
+      "kind": "other",
+      "min": 4975
+     },
+     {
+      "name": "src/vendor/agent-face/engine/engine.ts",
+      "kind": "other",
+      "min": 4676
+     },
+     {
+      "name": "src/vendor/agent-face/draw/draw-face.ts",
+      "kind": "other",
+      "min": 2395
+     },
+     {
+      "name": "src/vendor/agent-face/engine/states.ts",
+      "kind": "other",
+      "min": 1004
+     },
+     {
+      "name": "src/vendor/agent-face/engine/spring.ts",
+      "kind": "other",
+      "min": 373
+     },
+     {
+      "name": "src/vendor/agent-face/element/loop.ts",
+      "kind": "other",
+      "min": 275
+     },
+     {
+      "name": "src/vendor/agent-face/draw/spear-tip.mjs",
+      "kind": "other",
+      "min": 157
+     },
+     {
+      "name": "src/vendor/agent-face/engine/random.ts",
+      "kind": "other",
+      "min": 156
+     },
+     {
+      "name": "src/vendor/agent-face/element/index.ts",
+      "kind": "other",
+      "min": 73
+     }
+    ],
+    "withoutLit": {
+     "min": 24826,
+     "gzip": 9052
+    },
+    "withLit": {
+     "min": 44852,
+     "gzip": 15562
+    }
+   },
+   "render": {
+    "tag": "tc-agent-face",
+    "source": "demo",
+    "runs": 7,
+    "cold": 6,
+    "first": 0.5,
+    "update": 0,
+    "updateKind": "re-render with the same data",
+    "nodes": 1,
+    "scale": null,
+    "idle": {
+     "visible": {
+      "frames": 60,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
   "agent-gallery": {
    "measuredAt": "2026-10-28",
    "hash": "e51958abb73d169d",
@@ -11474,11 +11600,11 @@
   },
   "generated-ui": {
    "measuredAt": "2026-10-31",
-   "hash": "0371fee3640c85be",
+   "hash": "9becba105bd51cb9",
    "bundle": {
     "own": {
      "min": 34126,
-     "gzip": 10973
+     "gzip": 10892
     },
     "shared": [
      {
@@ -11819,7 +11945,7 @@
      {
       "name": "mcp-connection-manager",
       "kind": "element",
-      "min": 43181
+      "min": 43217
      },
      {
       "name": "combobox",
@@ -11859,7 +11985,7 @@
      {
       "name": "lineage-graph",
       "kind": "element",
-      "min": 38858
+      "min": 38890
      },
      {
       "name": "delegate-board",
@@ -12617,14 +12743,14 @@
       "min": 15092
      },
      {
+      "name": "logo-marquee",
+      "kind": "element",
+      "min": 15044
+     },
+     {
       "name": "sla-status",
       "kind": "element",
       "min": 15030
-     },
-     {
-      "name": "logo-marquee",
-      "kind": "element",
-      "min": 14988
      },
      {
       "name": "work-item",
@@ -12792,6 +12918,11 @@
       "min": 2041
      },
      {
+      "name": "agent-face",
+      "kind": "element",
+      "min": 1933
+     },
+     {
       "name": "number-field",
       "kind": "element",
       "min": 1784
@@ -12814,7 +12945,7 @@
      {
       "name": "src/generative/registry.ts",
       "kind": "other",
-      "min": 40764
+      "min": 40889
      },
      {
       "name": "src/generative/schemas/tc-ai-side-pane.json",
@@ -12862,9 +12993,19 @@
       "min": 5067
      },
      {
+      "name": "src/vendor/agent-face/element/agent-face.ts",
+      "kind": "other",
+      "min": 5065
+     },
+     {
       "name": "src/generative/schemas/tc-review-center.json",
       "kind": "other",
       "min": 4941
+     },
+     {
+      "name": "src/vendor/agent-face/engine/engine.ts",
+      "kind": "other",
+      "min": 4762
      },
      {
       "name": "src/generative/schemas/tc-data-handling-policy.json",
@@ -13004,7 +13145,7 @@
      {
       "name": "src/generative/schemas/tc-app-directory.json",
       "kind": "other",
-      "min": 3379
+      "min": 3383
      },
      {
       "name": "src/generative/schemas/tc-ai-summary.json",
@@ -13310,6 +13451,11 @@
       "name": "src/generative/schemas/tc-experiment-card.json",
       "kind": "other",
       "min": 2567
+     },
+     {
+      "name": "src/vendor/agent-face/draw/draw-face.ts",
+      "kind": "other",
+      "min": 2536
      },
      {
       "name": "src/generative/schemas/tc-breakdown-chart.json",
@@ -13777,6 +13923,11 @@
       "min": 1641
      },
      {
+      "name": "src/generative/schemas/tc-agent-face.json",
+      "kind": "other",
+      "min": 1625
+     },
+     {
       "name": "src/generative/schemas/tc-disagreement-banner.json",
       "kind": "other",
       "min": 1605
@@ -13937,6 +14088,11 @@
       "min": 1051
      },
      {
+      "name": "src/vendor/agent-face/engine/states.ts",
+      "kind": "other",
+      "min": 1038
+     },
+     {
       "name": "src/generative/schemas/tc-model-wheel.json",
       "kind": "other",
       "min": 1026
@@ -14032,30 +14188,60 @@
       "min": 440
      },
      {
+      "name": "src/vendor/agent-face/engine/spring.ts",
+      "kind": "other",
+      "min": 389
+     },
+     {
+      "name": "src/vendor/agent-face/element/loop.ts",
+      "kind": "other",
+      "min": 310
+     },
+     {
+      "name": "src/vendor/agent-face/draw/spear-tip.mjs",
+      "kind": "other",
+      "min": 178
+     },
+     {
+      "name": "src/vendor/agent-face/engine/random.ts",
+      "kind": "other",
+      "min": 175
+     },
+     {
       "name": "src/internal/reduced-motion.ts",
       "kind": "other",
       "min": 111
      },
      {
+      "name": "src/vendor/agent-face/element/index.ts",
+      "kind": "other",
+      "min": 96
+     },
+     {
       "name": "src/internal/ease.ts",
       "kind": "other",
       "min": 43
+     },
+     {
+      "name": "src/vendor/agent-face/engine/index.ts",
+      "kind": "other",
+      "min": 28
      }
     ],
     "withoutLit": {
-     "min": 8044901,
-     "gzip": 1987111
+     "min": 8063436,
+     "gzip": 1973312
     },
     "withLit": {
-     "min": 8005727,
-     "gzip": 1971955
+     "min": 8024115,
+     "gzip": 1961199
     }
    },
    "render": {
     "tag": "tc-generated-ui",
     "source": "demo",
     "runs": 7,
-    "cold": 2.1,
+    "cold": 2.2,
     "first": 0.5,
     "update": 0.1,
     "updateKind": "re-render with the same data",

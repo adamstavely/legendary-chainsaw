@@ -5,6 +5,7 @@ export const registry: Record<string, { events: string[]; load: () => Promise<un
   "tc-account-list": { events: ["tc-open","tc-revealed-change"], load: () => import("../elements/account-list"), schema: () => import("./schemas/tc-account-list.json") },
   "tc-activity-calendar": { events: ["tc-selected-change"], load: () => import("../elements/activity-calendar"), schema: () => import("./schemas/tc-activity-calendar.json") },
   "tc-activity-clock": { events: ["tc-selected-change"], load: () => import("../elements/activity-clock"), schema: () => import("./schemas/tc-activity-clock.json") },
+  "tc-agent-face": { events: [], load: () => import("../elements/agent-face"), schema: () => import("./schemas/tc-agent-face.json") },
   "tc-agent-gallery": { events: ["tc-index-change"], load: () => import("../elements/agent-gallery"), schema: () => import("./schemas/tc-agent-gallery.json") },
   "tc-agent-graph": { events: ["tc-selected-change","tc-select","tc-paused-change"], load: () => import("../elements/agent-graph"), schema: () => import("./schemas/tc-agent-graph.json") },
   "tc-agent-inbox": { events: ["tc-view-change","tc-expanded-change","tc-open"], load: () => import("../elements/agent-inbox"), schema: () => import("./schemas/tc-agent-inbox.json") },

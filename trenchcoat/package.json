@@ -76,7 +76,7 @@
     "test": "vitest run",
     "check:prefixes": "node scripts/check-prefixes.mjs",
     "check:ratchet": "node scripts/check-ratchet.mjs",
-    "ci": "npm run typecheck && npm run lint && npm run check:prefixes && npm run check:ratchet && npm run check:tokens && npm run check:contrast && node scripts/gen-elements.mjs --check && npm run check:angular && npm run check:generative && npm run check:dead-css && npm run check:docs && npm run check:snippets && npm run check:lit && npm test",
+    "ci": "node scripts/sync-agent-face.mjs --check && npm run typecheck && npm run lint && npm run check:prefixes && npm run check:ratchet && npm run check:tokens && npm run check:contrast && node scripts/gen-elements.mjs --check && npm run check:angular && npm run check:generative && npm run check:dead-css && npm run check:docs && npm run check:snippets && npm run check:lit && npm test",
     "check:tokens": "node scripts/tokens.mjs --check && node scripts/check-tokens.mjs && node scripts/tokens-dtcg.mjs --check",
     "check:contrast": "node scripts/contrast.mjs",
     "check:lit": "lit-analyzer src/elements --strict --maxWarnings 0",

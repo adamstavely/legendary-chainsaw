@@ -1,15 +1,17 @@
 name: Trenchcoat CI
 
-# Runs only for changes under trenchcoat/ (and to this file); nothing else in the repo triggers it
+# Runs only for changes under trenchcoat/, the agent-face source it bundles (and to this file); nothing else in the repo triggers it
 on:
   push:
     branches: [main]
     paths:
       - "trenchcoat/**"
+      - "agent-face/src/**"
       - ".github/workflows/trenchcoat-ci.yml"
   pull_request:
     paths:
       - "trenchcoat/**"
+      - "agent-face/src/**"
       - ".github/workflows/trenchcoat-ci.yml"
 
 # A newer push to the same branch cancels the run it replaces
