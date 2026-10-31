@@ -48,6 +48,7 @@ export * from "./capacity-bars";
 export * from "./change-summary";
 export * from "./chat-composer";
 export * from "./chat-history";
+export * from "./chat-minimap";
 export * from "./checkbox";
 export * from "./citation-badge";
 export * from "./citation-sections";

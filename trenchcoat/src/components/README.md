@@ -44,6 +44,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Change Summary** (`change-summary.tsx`) – What moved since last time – one metric per row with a colored trend
 - **Chat Composer** (`chat-composer.tsx`) – Prompt composer with model picker, voice input, app connections and approval request; an optional toolbar row switches the model, opens model settings and the prompt library, connects or disconnects the page context, and adds a disclaimer line – folding to fit a side pane
 - **Chat History** (`chat-history.tsx`) – Your conversations, grouped by date – search, pin, folders, rename and delete with undo, smooth with thousands of chats
+- **Chat Minimap** (`chat-minimap.tsx`) – A rail of ticks beside a long chat, one per message you sent, longer for longer ones – the one in view lit, the message on hover or with the arrow keys, a click to jump back to it – following the chat as it scrolls
 - **Checkbox** (`checkbox.tsx`) – A form-associated boolean choice
 - **Citation Badge** (`citation-badge.tsx`) – A small badge of how a work is cited – publications, supporting, mentioning and contrasting counts with their marks, labelled or compact, a tooltip saying what each means and an optional link to the details
 - **Citation Sections** (`citation-sections.tsx`) – Where a work is cited – a donut of citing sections (Intro, Methods, Results, Discussion, Other) shaded darkest first, a legend with letter chips and counts, and the section under the pointer or focus with its share

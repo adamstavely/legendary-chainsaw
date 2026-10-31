@@ -4854,6 +4854,104 @@
     "errors": []
    }
   },
+  "chat-minimap": {
+   "measuredAt": "2026-10-30",
+   "hash": "979168a49cdab0d4",
+   "bundle": {
+    "own": {
+     "min": 10437,
+     "gzip": 4185
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 18937
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2217
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1864
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 440
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 435
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     }
+    ],
+    "withoutLit": {
+     "min": 17211,
+     "gzip": 6169
+    },
+    "withLit": {
+     "min": 37313,
+     "gzip": 12708
+    }
+   },
+   "render": {
+    "tag": "tc-chat-minimap",
+    "source": "demo",
+    "runs": 7,
+    "cold": 7.1,
+    "first": 0.6,
+    "update": 0.2,
+    "updateKind": "one item of items replaced",
+    "nodes": 73,
+    "scale": {
+     "property": "items",
+     "demoItems": 12,
+     "points": [
+      {
+       "items": 100,
+       "first": 2.9,
+       "update": 0.4,
+       "nodes": 601
+      },
+      {
+       "items": 1000,
+       "first": 21.1,
+       "update": 3,
+       "nodes": 6001
+      }
+     ]
+    },
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
   "checkbox": {
    "measuredAt": "2026-10-29",
    "hash": "960386655e6997b3",
@@ -11376,7 +11474,7 @@
   },
   "generated-ui": {
    "measuredAt": "2026-10-30",
-   "hash": "25092c624ffd4ced",
+   "hash": "e32165ba1fec7a8d",
    "bundle": {
     "own": {
      "min": 34126,
@@ -11531,7 +11629,7 @@
      {
       "name": "memory-panel",
       "kind": "element",
-      "min": 64866
+      "min": 64902
      },
      {
       "name": "evaluation-dataset-editor",
@@ -12649,6 +12747,11 @@
       "min": 9301
      },
      {
+      "name": "chat-minimap",
+      "kind": "element",
+      "min": 8453
+     },
+     {
       "name": "enrichment-orbit",
       "kind": "element",
       "min": 7821
@@ -12706,7 +12809,7 @@
      {
       "name": "src/generative/registry.ts",
       "kind": "other",
-      "min": 40430
+      "min": 40586
      },
      {
       "name": "src/generative/schemas/tc-ai-side-pane.json",
@@ -12891,7 +12994,7 @@
      {
       "name": "src/generative/schemas/tc-app-directory.json",
       "kind": "other",
-      "min": 3415
+      "min": 3407
      },
      {
       "name": "src/generative/schemas/tc-ai-summary.json",
@@ -13744,6 +13847,11 @@
       "min": 1367
      },
      {
+      "name": "src/generative/schemas/tc-chat-minimap.json",
+      "kind": "other",
+      "min": 1340
+     },
+     {
       "name": "src/generative/schemas/tc-integration-grid.json",
       "kind": "other",
       "min": 1340
@@ -13766,7 +13874,7 @@
      {
       "name": "src/generative/schemas/tc-stepper-form.json",
       "kind": "other",
-      "min": 1258
+      "min": 1262
      },
      {
       "name": "src/generative/schemas/tc-smart-recommendation.json",
@@ -13925,20 +14033,20 @@
      }
     ],
     "withoutLit": {
-     "min": 8006840,
-     "gzip": 1975605
+     "min": 8016919,
+     "gzip": 1978245
     },
     "withLit": {
-     "min": 7968050,
-     "gzip": 1960141
+     "min": 7978031,
+     "gzip": 1963088
     }
    },
    "render": {
     "tag": "tc-generated-ui",
     "source": "demo",
     "runs": 7,
-    "cold": 2.2,
-    "first": 0.5,
+    "cold": 6.1,
+    "first": 0.6,
     "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 9,
