@@ -210,6 +210,8 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Switch** (`switch.tsx`) – An accessible on/off setting
 - **Synthesis Notes** (`synthesis-notes.tsx`) – Your own conclusions, assumptions and open questions, kept apart from the model's output and exported with where they came from
 - **Tag Input** (`tag-input.tsx`) – A field of free-text chips: add with Enter, a comma or Tab, or paste several at once, with suggestions, a limit, no duplicates, your own validation with the reason shown, and keyboard removal
+- **Team Flag Editor** (`team-flag-editor.tsx`) – Where a team decides what its flags mean – each flag's colour, name, meaning and order, with a check on names and a question before removing a flag that's on files.
+- **Team Flag Picker** (`team-flag-picker.tsx`) – Picks one of a team's flags for a file – a small button with the flag's colour and name, opening a list of flags with what each one means.
 - **Team Roster** (`team-roster.tsx`) – A team directory with everyone's local time – status, role and team, how far ahead or behind you they are, whether they're working, skills – grouped and filtered as a list or a grid, with the team's best hour to meet
 - **Terms Dialog** (`terms-dialog.tsx`) – Agreeing to terms in a modal designed for reading – version and date, a jump list, what changed since you last agreed, required and optional consents, and Accept that says why it waits
 - **Text Annotator** (`text-annotator.tsx`) – Highlight text in a document in a colour and comment on it – marks in the text, comments in the margin, edit, resolve and filter

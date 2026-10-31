@@ -1,0 +1,452 @@
+{
+ "elements": [
+  {
+   "tag": "tc-team-flag-picker",
+   "className": "TcTeamFlagPicker",
+   "description": "Picks one of a team's flags for a file.",
+   "properties": [
+    {
+     "name": "flags",
+     "attribute": null,
+     "type": "TeamFlag[]",
+     "default": "[]",
+     "description": "The team's flags, in the order they're offered",
+     "readonly": false
+    },
+    {
+     "name": "value",
+     "attribute": "value",
+     "type": "string | null",
+     "default": "null",
+     "description": "The id of the file's flag, or null for none. Changed by the user unless a tc-value-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "fileName",
+     "attribute": "file-name",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The file's name, so the control says which file it's for",
+     "readonly": false
+    },
+    {
+     "name": "manageable",
+     "attribute": "manageable",
+     "type": "boolean",
+     "default": "false",
+     "description": "Show a link to the team's flags at the foot of the list, for people who may edit them",
+     "readonly": false
+    },
+    {
+     "name": "disabled",
+     "attribute": "disabled",
+     "type": "boolean",
+     "default": "false",
+     "description": "Show the flag without letting it change",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "Partial<TeamFlagPickerLabels>",
+     "default": "{}",
+     "description": "Rename any of the words",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-value-change",
+     "detail": "",
+     "description": "A flag was picked or cleared ({ value, flag }: TeamFlagValueChange); cancelable – prevented, `value` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-manage",
+     "detail": "",
+     "description": "Manage team flags was pressed (detail: null)",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "tfp",
+   "cssProperties": [
+    {
+     "name": "--tc-tfp-list-width",
+     "value": "300px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-icon-size-md",
+     "value": "16px",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    }
+   ],
+   "tokens": [
+    "--tc-action-secondary-bg",
+    "--tc-action-secondary-fg",
+    "--tc-action-secondary-shadow",
+    "--tc-action-secondary-shadow-hover",
+    "--tc-control-font-size",
+    "--tc-control-font-weight",
+    "--tc-control-h-sm",
+    "--tc-control-px-sm",
+    "--tc-control-radius-sm",
+    "--tc-fill-hover",
+    "--tc-fill-selected",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-line-height-normal",
+    "--tc-line-height-tight",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-4",
+    "--tc-text-primary",
+    "--tc-text-secondary"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "TeamFlagPicker",
+   "exported": true,
+   "props": [
+    {
+     "name": "value",
+     "type": "string | null",
+     "optional": true,
+     "description": "The id of the file's flag, or null for none – controlled when given"
+    },
+    {
+     "name": "defaultValue",
+     "type": "string | null",
+     "optional": true,
+     "description": "The flag on mount when `value` isn't controlled"
+    },
+    {
+     "name": "onValueChange",
+     "type": "(value: string | null, flag: TeamFlag | null) => void",
+     "optional": true,
+     "description": "A flag was picked or cleared"
+    }
+   ],
+   "hides": [
+    "value",
+    "defaultValue",
+    "children"
+   ],
+   "events": {
+    "tc-value-change": "onValueChange",
+    "tc-manage": "onTcManage"
+   }
+  }
+ ],
+ "changelog": [
+  "**Team Flag Picker** (`tc-team-flag-picker`) – picks one of those flags for a file, with what each one means in the list, and says when a file's flag has since been removed."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-team-flag-picker",
+   "className": "TcTeamFlagPicker",
+   "module": "trenchcoat/team-flag-picker",
+   "data": [
+    "flags",
+    "labels"
+   ],
+   "attributes": [
+    {
+     "name": "value",
+     "attribute": "value"
+    },
+    {
+     "name": "fileName",
+     "attribute": "file-name"
+    },
+    {
+     "name": "manageable",
+     "attribute": "manageable"
+    },
+    {
+     "name": "disabled",
+     "attribute": "disabled"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-value-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-manage",
+     "cancelable": false
+    }
+   ],
+   "controlled": [
+    {
+     "property": "value",
+     "event": "tc-value-change"
+    }
+   ],
+   "form": {
+    "property": "value",
+    "event": "tc-value-change",
+    "formAssociated": false
+   },
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "inert",
+    "name": "inert",
+    "bcd": "api.HTMLElement.inert",
+    "versions": {
+     "chrome": "102",
+     "edge": "102",
+     "firefox": "112",
+     "safari": "15.5",
+     "safari_ios": "15.5"
+    },
+    "progressive": false,
+    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
+    "via": [
+     "internal/popover"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "internal/popover"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "resize-observer",
+    "name": "ResizeObserver",
+    "bcd": "api.ResizeObserver",
+    "versions": {
+     "chrome": "64",
+     "edge": "79",
+     "firefox": "69",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "via": [
+     "internal/popover"
+    ]
+   },
+   {
+    "id": "popover",
+    "name": "Popover API",
+    "bcd": "api.HTMLElement.popover",
+    "versions": {
+     "chrome": "114",
+     "edge": "114",
+     "firefox": "125",
+     "safari": "17",
+     "safari_ios": "18.3"
+    },
+    "progressive": true,
+    "without": "Lists open fixed to the window instead of in the top layer, so a clipping ancestor or a modal can cover them.",
+    "via": [
+     "internal/popover"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "internal/popover",
+     "internal/team-flag",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setTimeout (internal/popover › PopoverController)"
+  ],
+  "frames": [
+   "requestAnimationFrame, cancelled (internal/popover › PopoverController)"
+  ],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)",
+   "ResizeObserver (internal/popover › PopoverController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS (internal/kit › kitCss)",
+    "CSS (internal/popover › popoverCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 26506,
+  "gzip": 9029
+ }
+}

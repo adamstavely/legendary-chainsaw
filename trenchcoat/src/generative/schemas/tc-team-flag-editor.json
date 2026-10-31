@@ -1,0 +1,142 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-team-flag-editor.json",
+  "title": "tc-team-flag-editor",
+  "description": "Lets a team set each flag's colour, name, meaning and order.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "A line under the heading"
+    },
+    "flags": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/TeamFlag"
+      },
+      "description": "The team's flags, in the order they're offered. Changed by the user unless a tc-flags-change listener calls preventDefault()"
+    },
+    "usage": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "number"
+      },
+      "description": "How many files each flag is on, by id"
+    },
+    "palette": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The colours offered as swatches"
+    },
+    "readonly": {
+      "type": "boolean",
+      "description": "Show the flags and what they mean without letting them change"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "meaning": {
+          "type": "string"
+        },
+        "meaningPlaceholder": {
+          "type": "string"
+        },
+        "color": {
+          "type": "string"
+        },
+        "custom": {
+          "type": "string"
+        },
+        "add": {
+          "type": "string"
+        },
+        "remove": {
+          "type": "string"
+        },
+        "moveUp": {
+          "type": "string"
+        },
+        "moveDown": {
+          "type": "string"
+        },
+        "keep": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "usedOn": {
+          "type": "string"
+        },
+        "usedOnOne": {
+          "type": "string"
+        },
+        "confirm": {
+          "type": "string"
+        },
+        "confirmOne": {
+          "type": "string"
+        },
+        "needsName": {
+          "type": "string"
+        },
+        "nameTaken": {
+          "type": "string"
+        },
+        "sameColor": {
+          "type": "string"
+        },
+        "added": {
+          "type": "string"
+        },
+        "removed": {
+          "type": "string"
+        },
+        "moved": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "TeamFlag": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "The flag's name, shown beside it wherever it's used"
+        },
+        "meaning": {
+          "type": "string",
+          "description": "What the flag means, so everyone uses it the same way"
+        },
+        "color": {
+          "type": "string",
+          "description": "A hex colour, \"#rrggbb\""
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "color"
+      ],
+      "additionalProperties": false,
+      "description": "A flag a team has defined: its colour and what it means"
+    }
+  }
+}
