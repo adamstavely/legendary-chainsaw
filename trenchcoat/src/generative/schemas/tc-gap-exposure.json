@@ -23,8 +23,8 @@
     "groupBy": {
       "type": "string",
       "enum": [
-        "priority",
-        "severity"
+        "severity",
+        "priority"
       ],
       "description": "Groups the list by the item's priority or by severity. Changed by the user unless a tc-group-change listener calls preventDefault()"
     },

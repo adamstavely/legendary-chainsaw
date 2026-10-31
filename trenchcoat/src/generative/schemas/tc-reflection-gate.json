@@ -34,13 +34,13 @@
         "task": {
           "type": "string"
         },
+        "decision": {
+          "type": "string"
+        },
         "confidence": {
           "type": "string"
         },
         "claim": {
-          "type": "string"
-        },
-        "decision": {
           "type": "string"
         },
         "stakes": {

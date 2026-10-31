@@ -17,6 +17,7 @@ no restyling of their classes and no `zoom`.
 - **App Shell Workspace Inset** (`app-shell-workspace.tsx`) – App Shell Inset with a resizable work area on the right – tools, browser and suggested sources next to the page, like Claude or Codex
 - **App Shell Workspace Flat** (`app-shell-workspace-flat.tsx`) – The flat App Shell with a resizable work area on the right – sidebar, page and tools, each split by a hairline
 - **Assistant Home** (`assistant-home.tsx`) – AI assistant start page: greeting, prompt box with tools, connected apps and suggestions; the exported Composer's `onSend` may return a promise
+- **Case File** (`case-file.tsx`) – One case as a full page: Case Review with Donovan's read beside the evidence, and the case's file with its flag and entitlement-checked sharing
 - **CRM** (`crm.tsx`) – Company list with pipelines, open views as tabs and the library Data Table (used as is, no restyling); the open view is controllable via `tab`/`defaultTab`/`onTabChange`
 - **Evals** (`evals.tsx`) – Prompt evaluation dashboard: pass rate by version, reviewable prompt changes – KPI Chart (`fill`) and Inline Diff (`fill`); test cases with a keyboard-selectable row, which you can re-run; `version`/`defaultVersion`/`onVersionChange`
 - **Folders** (`files.tsx`) – Folder overview with tabs, search, sort, grid/list toggle and file templates; `view`/`defaultView`/`onViewChange`

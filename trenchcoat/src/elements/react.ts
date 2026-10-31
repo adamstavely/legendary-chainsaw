@@ -60,6 +60,7 @@ export * from "./react/budget-burn";
 export * from "./react/budget-guard";
 export * from "./react/capability-notice";
 export * from "./react/capacity-bars";
+export * from "./react/case-review";
 export * from "./react/change-summary";
 export * from "./react/chat-composer";
 export * from "./react/chat-history";
