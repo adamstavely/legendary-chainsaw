@@ -1,0 +1,197 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-access-review.json",
+  "title": "tc-access-review",
+  "description": "A periodic check of who can see what: keep or remove each one, with a reason for keeping anyone flagged.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "A line under the heading, such as what's in scope and when it's due"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/AccessReviewItem"
+      },
+      "description": "Each person or group's access to one thing"
+    },
+    "decisions": {
+      "type": "object",
+      "additionalProperties": {
+        "$ref": "#/definitions/AccessReviewDecision"
+      },
+      "description": "The decisions so far, by item id. Changed by the user unless a tc-decisions-change listener calls preventDefault()"
+    },
+    "filter": {
+      "type": "string",
+      "enum": [
+        "all",
+        "flagged",
+        "open"
+      ],
+      "description": "Which rows show: \"all\", \"flagged\" or \"open\". Changed by the user unless a tc-filter-change listener calls preventDefault()"
+    },
+    "sending": {
+      "type": "boolean",
+      "description": "The page is sending the review: controls are locked"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The locale for dates"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "all": {
+          "type": "string"
+        },
+        "flagged": {
+          "type": "string"
+        },
+        "open": {
+          "type": "string"
+        },
+        "filter": {
+          "type": "string"
+        },
+        "keep": {
+          "type": "string"
+        },
+        "remove": {
+          "type": "string"
+        },
+        "keepAll": {
+          "type": "string"
+        },
+        "authorized": {
+          "type": "string"
+        },
+        "unauthorized": {
+          "type": "string"
+        },
+        "unverified": {
+          "type": "string"
+        },
+        "noReason": {
+          "type": "string"
+        },
+        "lastUsed": {
+          "type": "string"
+        },
+        "neverUsed": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string"
+        },
+        "notePlaceholder": {
+          "type": "string"
+        },
+        "progress": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "submit": {
+          "type": "string"
+        },
+        "needsDecision": {
+          "type": "string"
+        },
+        "needsNote": {
+          "type": "string"
+        },
+        "submitted": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "AccessReviewItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string",
+          "description": "Who has access"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "person",
+            "group"
+          ]
+        },
+        "resource": {
+          "type": "string",
+          "description": "What they can reach"
+        },
+        "level": {
+          "type": "string",
+          "description": "Their level, in words: \"Can edit\""
+        },
+        "status": {
+          "$ref": "#/definitions/AccessReviewStatus"
+        },
+        "reason": {
+          "type": "string",
+          "description": "Why they were flagged"
+        },
+        "lastUsed": {
+          "type": "number",
+          "description": "When they last used it, epoch ms"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "resource",
+        "level",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "AccessReviewStatus": {
+      "type": "string",
+      "enum": [
+        "authorized",
+        "unauthorized",
+        "unverified"
+      ]
+    },
+    "AccessReviewDecision": {
+      "type": "object",
+      "properties": {
+        "choice": {
+          "$ref": "#/definitions/AccessReviewChoice"
+        },
+        "note": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "choice"
+      ],
+      "additionalProperties": false
+    },
+    "AccessReviewChoice": {
+      "type": "string",
+      "enum": [
+        "keep",
+        "remove"
+      ]
+    }
+  }
+}

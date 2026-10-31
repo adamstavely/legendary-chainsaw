@@ -23,8 +23,8 @@
     "filter": {
       "type": "string",
       "enum": [
-        "done",
         "all",
+        "done",
         "active"
       ],
       "description": "The tab shown. Changed by the user unless tc-filter-change is prevented"

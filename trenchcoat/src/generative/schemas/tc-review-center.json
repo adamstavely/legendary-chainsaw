@@ -51,8 +51,8 @@
     "filter": {
       "type": "string",
       "enum": [
-        "high",
         "all",
+        "high",
         "unsure"
       ],
       "description": "Which items the queue shows: \"all\", \"high\" (high risk only) or \"unsure\" (below `lowConfidence`). Changed by the user unless a tc-filter-change listener calls preventDefault()"

@@ -48,8 +48,8 @@
     "filter": {
       "type": "string",
       "enum": [
-        "questions",
         "all",
+        "questions",
         "edits"
       ],
       "description": "The filter tab"

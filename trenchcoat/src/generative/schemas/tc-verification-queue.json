@@ -200,8 +200,8 @@
     "filter": {
       "type": "string",
       "enum": [
-        "open",
         "all",
+        "open",
         "reviewed"
       ],
       "description": "What the list shows: the claims still to review, the reviewed ones, or all"

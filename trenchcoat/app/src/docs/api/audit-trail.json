@@ -1,0 +1,412 @@
+{
+ "elements": [
+  {
+   "tag": "tc-audit-trail",
+   "className": "TcAuditTrail",
+   "description": "Who did what and when, for the record, with search, a filter by outcome and export.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Audit trail\"",
+     "description": "The heading",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "A line under the heading",
+     "readonly": false
+    },
+    {
+     "name": "events",
+     "attribute": null,
+     "type": "AuditEvent[]",
+     "default": "[]",
+     "description": "What happened, in any order: they show newest first",
+     "readonly": false
+    },
+    {
+     "name": "query",
+     "attribute": "query",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The search",
+     "readonly": false
+    },
+    {
+     "name": "outcome",
+     "attribute": "outcome",
+     "type": "AuditOutcomeFilter",
+     "default": "\"all\"",
+     "description": "Which outcomes show",
+     "readonly": false
+    },
+    {
+     "name": "exportable",
+     "attribute": "exportable",
+     "type": "boolean",
+     "default": "true",
+     "description": "Offer Export",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The locale for dates and times",
+     "readonly": false
+    },
+    {
+     "name": "timeZone",
+     "attribute": "time-zone",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The time zone for dates and times; by default the browser's",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "Partial<AuditTrailLabels>",
+     "default": "{}",
+     "description": "Rename any of the words",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-query-change",
+     "detail": "",
+     "description": "The search changed ({ query }: AuditQueryChange)",
+     "cancelable": false
+    },
+    {
+     "name": "tc-export",
+     "detail": "",
+     "description": "Export was pressed ({ events, csv }: AuditExport); cancelable – without a listener preventing it, the file downloads",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "aud",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-border-subtle",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-h-sm",
+    "--tc-control-radius-sm",
+    "--tc-field-bg",
+    "--tc-field-px",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-hairline",
+    "--tc-line-height-normal",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-6",
+    "--tc-status-danger-fg",
+    "--tc-status-warning-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "auditCsvCell",
+   "signature": "auditCsvCell(value: string): void",
+   "description": "One CSV cell. A leading = + - @ (or tab, return) is a formula to a spreadsheet, so it's kept as text"
+  },
+  {
+   "name": "auditCsv",
+   "signature": "auditCsv(events: AuditEvent[]): void",
+   "description": "The events as CSV, with times in ISO 8601"
+  }
+ ],
+ "react": [
+  {
+   "component": "AuditTrail",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading; by default \"Audit trail\""
+    }
+   ],
+   "hides": [
+    "heading",
+    "children"
+   ],
+   "events": {
+    "tc-query-change": "onTcQueryChange",
+    "tc-export": "onTcExport"
+   }
+  }
+ ],
+ "changelog": [
+  "**Audit Trail** (`tc-audit-trail`) – a block showing who did what and when, with search, a filter by outcome and a CSV export that keeps spreadsheet formulas from running."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-audit-trail",
+   "className": "TcAuditTrail",
+   "module": "trenchcoat/audit-trail",
+   "data": [
+    "events",
+    "labels"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    },
+    {
+     "name": "query",
+     "attribute": "query"
+    },
+    {
+     "name": "outcome",
+     "attribute": "outcome"
+    },
+    {
+     "name": "exportable",
+     "attribute": "exportable"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    },
+    {
+     "name": "timeZone",
+     "attribute": "time-zone"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-query-change",
+     "cancelable": false
+    },
+    {
+     "name": "tc-export",
+     "cancelable": true
+    }
+   ],
+   "controlled": [],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS (collapse)",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 20952,
+  "gzip": 7166
+ }
+}

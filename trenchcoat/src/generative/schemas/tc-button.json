@@ -43,8 +43,8 @@
     "type": {
       "type": "string",
       "enum": [
-        "button",
         "submit",
+        "button",
         "reset"
       ],
       "description": "The inner native button's type: \"button\" does nothing in a form, \"submit\" submits it, \"reset\" resets it"
