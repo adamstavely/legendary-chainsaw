@@ -149,3 +149,12 @@ describe("tc-lead-sourcing", () => {
     expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
   });
 });
+
+describe("tc-lead-sourcing neutral", () => {
+  test("draws plain marks instead of logos", async () => {
+    const plain = await fixture(html`<tc-lead-sourcing neutral></tc-lead-sourcing>`);
+    expect(plain.querySelector(".ui-ls-neutral")).toBeTruthy();
+    const branded = await fixture(html`<tc-lead-sourcing></tc-lead-sourcing>`);
+    expect(branded.querySelector(".ui-ls-neutral")).toBeNull();
+  });
+});

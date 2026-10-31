@@ -19,6 +19,10 @@ export class LeadSourcing {
   @Input() set label(v: TcLeadSourcing["label"]) {
     this.#el.label = v;
   }
+  /** Draw plain marks (a spark, an envelope and a globe) instead of the ChatGPT, Gmail and Grok logos */
+  @Input() set neutral(v: TcLeadSourcing["neutral"] | "" | "true" | "false") {
+    this.#el.neutral = typeof v === "string" ? v !== "false" : v;
+  }
   /** Visual style: "standard" or "clean"; unset follows <tc-look-provider>, else "standard" */
   @Input() set look(v: TcLeadSourcing["look"]) {
     this.#el.look = v;

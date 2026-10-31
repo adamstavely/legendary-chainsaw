@@ -45,6 +45,13 @@ async function everyElement(page, port) {
   await page.goto(`http://localhost:${port}/all.html`);
   await page.waitForSelector("body[data-tags]");
   await page.waitForTimeout(500);
+  // tc-agent-face draws through <agent-face>, which only an import with no bindings brings in, so check it really paints
+  const facePainted = await page.evaluate(() => {
+    const canvas = document.querySelector("tc-agent-face agent-face")?.shadowRoot?.querySelector("canvas");
+    if (!canvas?.width) return false;
+    return canvas.getContext("2d").getImageData(0, 0, canvas.width, canvas.height).data.some((v, i) => i % 4 === 3 && v > 0);
+  });
+  if (!facePainted) return ["tc-agent-face painted nothing: the vendored face may have been left out of the package"];
   const { tags, missing } = await page.evaluate(() => ({
     tags: Number(document.body.dataset.tags),
     // Upgraded: defined, and rendered (every element but the look provider marks its root with data-ui)

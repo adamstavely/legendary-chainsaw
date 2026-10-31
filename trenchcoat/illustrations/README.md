@@ -6,6 +6,7 @@ Some files import another Trenchcoat component from `@/components/ui/<name>` –
 Colours follow the page theme – a `.dark` class, `data-theme` / `data-tc-theme` or the OS setting – through `light-dark()`.
 They are decorative unless given a `label`, loops are finite or rest, and `prefers-reduced-motion` keeps them still.
 
+- **Agent Scene** (`agent-scene.tsx`) – The assistant in a small scene – happy above an empty tray, thinking beside a stack of pages, or asleep beside a sign
 - **Agent Team** (`agent-team.tsx`) – A prompt types itself and branches out into three agents, each with a role and overlapping tool logos – three times, then the team stays
 - **Cover Flow** (`cover-flow.tsx`) – Browse covers in 3D – drag, flick or scrub the row, it springs to the nearest cover; images drift in their frames over a soft reflection
 - **Empty Calendar** (`empty-calendar.tsx`) – Stack of calendar cards marked empty, fanning out on hover; the shimmer runs a few cycles and rests

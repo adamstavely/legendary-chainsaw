@@ -10,6 +10,8 @@ import { OnScreenController } from "./internal/controllers";
  * out. Colours follow the page theme through light-dark(). Decorative unless given a `label`.
  *
  *   <tc-lead-sourcing label="Leads sourced from Gmail and Grok"></tc-lead-sourcing>
+ *
+ * `neutral` draws plain marks in place of the logos, for work where third-party names shouldn't appear.
  */
 
 /** Diagonal tiles: corner, x, y and the inner corner they fade out from */
@@ -33,6 +35,8 @@ export class TcLeadSourcing extends TcElement {
 
   /** Describes the scene to assistive tech (role="img"); without it the illustration is decorative and hidden */
   @property() accessor label: string | undefined = undefined;
+  /** Draw plain marks (a spark, an envelope and a globe) instead of the ChatGPT, Gmail and Grok logos */
+  @property({ type: Boolean }) accessor neutral = false;
 
   /** @internal The visitor asked for reduced motion (SVG <animate> ignores CSS media queries) */
   @state() accessor reducedMotion = false;
@@ -166,16 +170,16 @@ export class TcLeadSourcing extends TcElement {
       <line x1="25" y1="120" x2="295" y2="120" stroke=${`url(#${id}-shine)`} stroke-width="1.5" mask=${`url(#${id}-ends-mask)`}></line>
 
       ${this.tile(45, 95)}
-      ${gmailLogo(`${id}-gm`, 58, 110.45, 24)}
+      ${this.neutral ? neutralMark(MAIL_MARK, 58, 108, 24) : gmailLogo(`${id}-gm`, 58, 110.45, 24)}
 
       ${this.tile(225, 95)}
-      ${grokLogo(238, 107, 26)}
+      ${this.neutral ? neutralMark(GLOBE_MARK, 239, 108, 24) : grokLogo(238, 107, 26)}
 
       ${TILES.map(([corner, x, y]) => svg`<g mask=${`url(#${id}-mask-${corner})`}>${this.tile(x, y)}</g>`)}
 
       ${this.tile(128, 88, 64, 14)}
       <path d="M128 138 A 14 14 0 0 0 142 152 L178 152 A 14 14 0 0 0 192 138" fill="none" stroke=${`url(#${id}-edge)`} stroke-width="0.5"></path>
-      ${chatGptLogo(146, 106, 28)}`}
+      ${this.neutral ? neutralMark(SPARK_MARK, 146, 106, 28) : chatGptLogo(146, 106, 28)}`}
     </svg>`;
   }
 
@@ -241,6 +245,12 @@ const gmailLogo = (id: string, x: number, y: number, width: number) => svg`<svg 
     </linearGradient>
   </defs>
 </svg>`;
+
+/** Plain marks, after Lucide (ISC) */
+const SPARK_MARK = svg`<path d="M12 3v3M12 18v3M3 12h3M18 12h3M6 6l2 2M16 16l2 2M18 6l-2 2M8 16l-2 2"></path>`;
+const MAIL_MARK = svg`<rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-10 6L2 7"></path>`;
+const GLOBE_MARK = svg`<circle cx="12" cy="12" r="10"></circle><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20"></path>`;
+const neutralMark = (mark: unknown, x: number, y: number, size: number) => svg`<svg class="ui-ls-neutral" x=${x} y=${y} width=${size} height=${size} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${mark}</svg>`;
 
 /** ChatGPT mark, monochrome */
 const chatGptLogo = (x: number, y: number, size: number) => svg`<svg x=${x} y=${y} width=${size} height=${size} viewBox="0 0 68.614 68.002" overflow="visible">

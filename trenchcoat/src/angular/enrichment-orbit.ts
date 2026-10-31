@@ -19,6 +19,10 @@ export class EnrichmentOrbit {
   @Input() set label(v: TcEnrichmentOrbit["label"]) {
     this.#el.label = v;
   }
+  /** Draw a plain spark instead of the Grok logo */
+  @Input() set neutral(v: TcEnrichmentOrbit["neutral"] | "" | "true" | "false") {
+    this.#el.neutral = typeof v === "string" ? v !== "false" : v;
+  }
   /** Visual style: "standard" or "clean"; unset follows <tc-look-provider>, else "standard" */
   @Input() set look(v: TcEnrichmentOrbit["look"]) {
     this.#el.look = v;

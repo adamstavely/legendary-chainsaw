@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased – Donovan scenes and neutral marks
+
+- **Agent Scene** (`tc-agent-scene`) – the assistant in a small scene for all clear, working and offline.
+- **Lead Sourcing** and **Enrichment Orbit** take `neutral`, which draws plain marks in place of third-party logos.
+- **Fixed:** `tc-agent-face` drew nothing from the built package, because the build dropped the vendored face.
+
 ## Unreleased – Sharing and search screens
 
 - **Sharing & Access** – a screen with team flags, access reviews and the audit trail.

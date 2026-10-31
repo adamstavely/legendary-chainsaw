@@ -14,6 +14,14 @@
      "readonly": false
     },
     {
+     "name": "neutral",
+     "attribute": "neutral",
+     "type": "boolean",
+     "default": "false",
+     "description": "Draw plain marks (a spark, an envelope and a globe) instead of the ChatGPT, Gmail and Grok logos",
+     "readonly": false
+    },
+    {
      "name": "look",
      "attribute": "look",
      "type": "Look | undefined",
@@ -94,6 +102,10 @@
     {
      "name": "label",
      "attribute": "label"
+    },
+    {
+     "name": "neutral",
+     "attribute": "neutral"
     }
    ],
    "events": [],
@@ -314,7 +326,7 @@
   "windowed": false
  },
  "size": {
-  "min": 23514,
-  "gzip": 8578
+  "min": 24225,
+  "gzip": 8838
  }
 }

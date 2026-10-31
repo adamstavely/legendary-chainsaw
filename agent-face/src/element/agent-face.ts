@@ -1,3 +1,4 @@
+import "./no-dom";
 import { drawFace } from "../draw/draw-face";
 import { FACE_STATES, FaceEngine, type FaceGesture, type FaceState } from "../engine";
 import { addToLoop, removeFromLoop, type Tickable } from "./loop";

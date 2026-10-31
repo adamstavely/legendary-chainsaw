@@ -36,6 +36,7 @@ that label – do that when the scene says something the text around it doesn't.
 
 ## Do
 
+- Set `neutral` for client-facing work: it draws plain marks in place of third-party logos.
 - Let it fill the width of its container – it keeps a 3 : 2 frame and scales its art.
 - Leave it decorative when a heading next to it already says the same thing.
 
