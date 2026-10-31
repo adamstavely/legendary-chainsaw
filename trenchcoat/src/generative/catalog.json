@@ -1920,6 +1920,15 @@
     ]
   },
   {
+    "tag": "tc-share-panel",
+    "name": "SharePanel",
+    "description": "Shares something with people and groups, at a level for each, after checking each is entitled to see it.",
+    "events": [
+      "tc-share",
+      "tc-share-denied"
+    ]
+  },
+  {
     "tag": "tc-sla-status",
     "name": "SlaStatus",
     "description": "Service-level performance – the on-time share, a Met / At risk / Breached split in words and marks, a weekly trend,",

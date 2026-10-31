@@ -241,6 +241,7 @@ export * from "./react/selection-translate";
 export * from "./react/session-context-bar";
 export * from "./react/session-state";
 export * from "./react/setup-guide";
+export * from "./react/share-panel";
 export * from "./react/shimmer-loader";
 export * from "./react/side-folder";
 export * from "./react/sla-status";

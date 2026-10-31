@@ -198,6 +198,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Session Context Bar** (`session-context-bar.tsx`) – The session's declared terms kept in view – intent, knowledge mode, scope, review, posture, limits, deadline and budget
 - **Session State** (`session-state.tsx`) – Where a long LLM session stands – a health pill, tiles for the primary goal, open loops, pending artifacts and context pressure with a meter that warns as it fills, and status chips, the tiles optionally opening what they count
 - **Setup Guide** (`setup-guide.tsx`) – Onboarding panel with a progress bar and collapsible task groups that strike through when done
+- **Share Panel** (`share-panel.tsx`) – Share with people and groups at a level for each – every recipient checked for entitlement first, with anyone not authorized flagged, the person sharing told, and left out of the share.
 - **SLA Status** (`sla-status.tsx`) – How well service levels are met – the share on time, a Met / At risk / Breached split in words and marks, a weekly trend, a bar per type of request with a readout, and a period chooser
 - **Slider Field** (`slider-field.tsx`) – A synchronized slider and numeric input
 - **Smart Recommendation** (`smart-recommendation.tsx`) – Suggestion card with a confidence signal, alternatives to switch to and accept with undo
