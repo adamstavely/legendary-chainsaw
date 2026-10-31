@@ -1,0 +1,95 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-agent-face.json",
+  "title": "tc-agent-face",
+  "description": "Donovan's animated face, which shows what the agent is doing.",
+  "type": "object",
+  "properties": {
+    "state": {
+      "type": "string",
+      "enum": [
+        "idle",
+        "listening",
+        "thinking",
+        "speaking",
+        "happy",
+        "confused",
+        "sleeping",
+        "error",
+        "surprised"
+      ],
+      "description": "idle · listening · thinking · speaking · happy · confused · sleeping · error · surprised"
+    },
+    "size": {
+      "type": "number",
+      "description": "Width and height in px, 16 to 256"
+    },
+    "name": {
+      "type": "string",
+      "description": "Who the screen-reader label names"
+    },
+    "label": {
+      "type": "string",
+      "description": "Replaces the screen-reader label in every state"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "idle": {
+          "type": "string"
+        },
+        "listening": {
+          "type": "string"
+        },
+        "thinking": {
+          "type": "string"
+        },
+        "speaking": {
+          "type": "string"
+        },
+        "happy": {
+          "type": "string"
+        },
+        "confused": {
+          "type": "string"
+        },
+        "sleeping": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string"
+        },
+        "surprised": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Screen-reader labels per state, for translation"
+    },
+    "announce": {
+      "type": "boolean",
+      "description": "Also tells screen readers when the state changes"
+    },
+    "motion": {
+      "type": "string",
+      "enum": [
+        "full",
+        "reduced"
+      ],
+      "description": "full or reduced; unset, it follows the system setting"
+    },
+    "restAfter": {
+      "type": "number",
+      "description": "How long, in ms, before the small movements fade out when Donovan isn't busy"
+    },
+    "seed": {
+      "type": "number",
+      "description": "Makes the small movements repeatable"
+    },
+    "amplitude": {
+      "type": "number",
+      "description": "How loud the agent is, 0 to 1, to drive the mouth while speaking; unset, it makes up speech"
+    }
+  },
+  "additionalProperties": false
+}

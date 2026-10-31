@@ -19,6 +19,7 @@ export * from "./react/account-list";
 export * from "./react/activity-calendar";
 export * from "./react/activity-clock";
 export * from "./react/agent-cursors";
+export * from "./react/agent-face";
 export * from "./react/agent-gallery";
 export * from "./react/agent-graph";
 export * from "./react/agent-inbox";

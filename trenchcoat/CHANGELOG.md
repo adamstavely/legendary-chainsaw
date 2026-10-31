@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased – Donovan's face
+
+- **Agent Face** (`tc-agent-face`) – Donovan's animated face: idle, listening, thinking, speaking, happy, confused,
+  sleeping, error and surprised, blending on springs, with floating white hands, blinks, glances and `playGesture` for a wave, nod, hop or spin. It
+  wraps `<agent-face>` from `agent-face/`, stops drawing when off screen, and rests when it isn't busy. The shape is a
+  placeholder until the logo artwork is available.
+
 ## Unreleased – a form the server describes
 
 - **HAL Form** (`tc-hal-form`) – give it a HAL-FORMS document (`resource`) or its URL (`src`) and it draws the template

@@ -1,0 +1,393 @@
+{
+ "elements": [
+  {
+   "tag": "tc-agent-face",
+   "className": "TcAgentFace",
+   "description": "Donovan's animated face, which shows what the agent is doing.",
+   "properties": [
+    {
+     "name": "state",
+     "attribute": "state",
+     "type": "AgentFaceState",
+     "default": "\"idle\"",
+     "description": "idle · listening · thinking · speaking · happy · confused · sleeping · error · surprised",
+     "readonly": false
+    },
+    {
+     "name": "size",
+     "attribute": "size",
+     "type": "number",
+     "default": "64",
+     "description": "Width and height in px, 16 to 256",
+     "readonly": false
+    },
+    {
+     "name": "name",
+     "attribute": "name",
+     "type": "string",
+     "default": "\"Donovan\"",
+     "description": "Who the screen-reader label names",
+     "readonly": false
+    },
+    {
+     "name": "label",
+     "attribute": "label",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "Replaces the screen-reader label in every state",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "Partial<Record<AgentFaceState, string>>",
+     "default": "{}",
+     "description": "Screen-reader labels per state, for translation",
+     "readonly": false
+    },
+    {
+     "name": "announce",
+     "attribute": "announce",
+     "type": "boolean",
+     "default": "false",
+     "description": "Also tells screen readers when the state changes",
+     "readonly": false
+    },
+    {
+     "name": "motion",
+     "attribute": "motion",
+     "type": "AgentFaceMotion | undefined",
+     "default": "undefined",
+     "description": "full or reduced; unset, it follows the system setting",
+     "readonly": false
+    },
+    {
+     "name": "restAfter",
+     "attribute": "rest-after",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "How long, in ms, before the small movements fade out when Donovan isn't busy",
+     "readonly": false
+    },
+    {
+     "name": "seed",
+     "attribute": "seed",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "Makes the small movements repeatable",
+     "readonly": false
+    },
+    {
+     "name": "amplitude",
+     "attribute": "amplitude",
+     "type": "number | null",
+     "default": "null",
+     "description": "How loud the agent is, 0 to 1, to drive the mouth while speaking; unset, it makes up speech",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [],
+   "slots": [],
+   "methods": [
+    {
+     "name": "playGesture",
+     "params": "gesture: AgentFaceGesture",
+     "returns": "boolean",
+     "description": "Plays wave, nod, hop or spin once. Returns false when reduced motion rules it out"
+    }
+   ],
+   "ui": "afc",
+   "cssProperties": [],
+   "tokens": []
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "AgentFace",
+   "exported": true,
+   "props": [],
+   "hides": [],
+   "events": {}
+  }
+ ],
+ "changelog": [
+  "**Agent Face** (`tc-agent-face`) – Donovan's animated face: idle, listening, thinking, speaking, happy, confused, sleeping, error and surprised, blending on springs, with floating white hands, blinks, glances and `playGesture` for a wave, nod, hop or spin. It wraps `<agent-face>` from `agent-face/`, stops drawing when off screen, and rests when it isn't busy. The shape is a placeholder until the logo artwork is available."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-agent-face",
+   "className": "TcAgentFace",
+   "module": "trenchcoat/agent-face",
+   "data": [
+    "labels"
+   ],
+   "attributes": [
+    {
+     "name": "state",
+     "attribute": "state"
+    },
+    {
+     "name": "size",
+     "attribute": "size"
+    },
+    {
+     "name": "name",
+     "attribute": "name"
+    },
+    {
+     "name": "label",
+     "attribute": "label"
+    },
+    {
+     "name": "announce",
+     "attribute": "announce"
+    },
+    {
+     "name": "motion",
+     "attribute": "motion"
+    },
+    {
+     "name": "restAfter",
+     "attribute": "rest-after"
+    },
+    {
+     "name": "seed",
+     "attribute": "seed"
+    },
+    {
+     "name": "amplitude",
+     "attribute": "amplitude"
+    }
+   ],
+   "events": [],
+   "controlled": [],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "src/vendor/agent-face/element/agent-face"
+    ]
+   },
+   {
+    "id": "individual-transforms",
+    "name": "translate, scale and rotate properties",
+    "bcd": "css.properties.translate",
+    "versions": {
+     "chrome": "104",
+     "edge": "104",
+     "firefox": "72",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "src/vendor/agent-face/draw/draw-face"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "intersection-observer",
+    "name": "IntersectionObserver",
+    "bcd": "api.IntersectionObserver",
+    "versions": {
+     "chrome": "51",
+     "edge": "15",
+     "firefox": "55",
+     "safari": "12.1",
+     "safari_ios": "12.2"
+    },
+    "progressive": false,
+    "via": [
+     "src/vendor/agent-face/element/agent-face"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [
+   "requestAnimationFrame (src/vendor/agent-face/element/loop › addToLoop)",
+   "requestAnimationFrame (src/vendor/agent-face/element/loop › frame)"
+  ],
+  "animations": 0,
+  "observers": [
+   "IntersectionObserver (src/vendor/agent-face/element/agent-face › AgentFace)",
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [
+   "document visibilitychange (src/vendor/agent-face/element/agent-face › AgentFace)",
+   "window resize (src/vendor/agent-face/element/agent-face › AgentFace)"
+  ],
+  "pauses": {
+   "offscreen": [
+    "src/vendor/agent-face/element/agent-face › AgentFace"
+   ],
+   "hidden": [
+    "src/vendor/agent-face/element/agent-face › AgentFace"
+   ],
+   "reducedMotion": [
+    "script (src/vendor/agent-face/element/agent-face › AgentFace)",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 24826,
+  "gzip": 9052
+ }
+}

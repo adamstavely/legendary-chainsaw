@@ -37,6 +37,12 @@
     ]
   },
   {
+    "tag": "tc-agent-face",
+    "name": "AgentFace",
+    "description": "Donovan's animated face, which shows what the agent is doing.",
+    "events": []
+  },
+  {
     "tag": "tc-agent-gallery",
     "name": "AgentGallery",
     "description": "A showcase of agents as slim gradient panels, one open in the middle with its product screen.",

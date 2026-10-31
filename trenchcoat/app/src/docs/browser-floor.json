@@ -11,13 +11,13 @@
    "features": [
     "light-dark"
    ],
-   "elements": 281
+   "elements": 282
   },
   "edge": {
    "features": [
     "light-dark"
    ],
-   "elements": 281
+   "elements": 282
   },
   "firefox": {
    "features": [
@@ -29,13 +29,13 @@
    "features": [
     "light-dark"
    ],
-   "elements": 281
+   "elements": 282
   },
   "safari_ios": {
    "features": [
     "light-dark"
    ],
-   "elements": 281
+   "elements": 282
   }
  },
  "features": [
@@ -52,7 +52,7 @@
    },
    "progressive": false,
    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
-   "elements": 281
+   "elements": 282
   },
   {
    "id": "color-mix",
@@ -67,7 +67,7 @@
    },
    "progressive": false,
    "why": "Tints and washes mixed from the tokens.",
-   "elements": 281
+   "elements": 282
   },
   {
    "id": "is-where",
@@ -82,7 +82,7 @@
    },
    "progressive": false,
    "why": "Every rule is keyed on :where() so the page can override it.",
-   "elements": 281
+   "elements": 282
   },
   {
    "id": "focus-visible",
@@ -97,7 +97,7 @@
    },
    "progressive": false,
    "why": "Focus rings for keyboard users.",
-   "elements": 280
+   "elements": 281
   },
   {
    "id": "container-size",
@@ -126,7 +126,7 @@
     "safari_ios": "14.1"
    },
    "progressive": false,
-   "elements": 139
+   "elements": 140
   },
   {
    "id": "inert",
@@ -169,7 +169,7 @@
     "safari_ios": "12.2"
    },
    "progressive": false,
-   "elements": 87
+   "elements": 88
   },
   {
    "id": "has",
@@ -213,7 +213,7 @@
     "safari_ios": "14.1"
    },
    "progressive": false,
-   "elements": 48
+   "elements": 49
   },
   {
    "id": "clipboard",
@@ -387,7 +387,7 @@
    },
    "progressive": true,
    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
-   "elements": 281
+   "elements": 282
   },
   {
    "id": "adopted-stylesheets",
@@ -402,7 +402,7 @@
    },
    "progressive": true,
    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
-   "elements": 280
+   "elements": 281
   },
   {
    "id": "scrollbar-width",
