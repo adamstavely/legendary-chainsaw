@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-first-use.json",
+  "title": "tc-first-use",
+  "description": "An empty workspace with one highlighted spot to start from, for a new team or project with nothing in it yet.",
+  "type": "object",
+  "properties": {
+    "caption": {
+      "type": "string",
+      "description": "The words under the drawing; \"\" leaves them out"
+    },
+    "label": {
+      "type": "string",
+      "description": "Accessible description, when it should say more than `caption`"
+    }
+  },
+  "additionalProperties": false
+}

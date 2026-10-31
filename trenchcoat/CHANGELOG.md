@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased – Content Hidden, Malware Blocked and First Use
+
+- **Content Hidden** (`tc-content-hidden`), **Malware Blocked** (`tc-malware-blocked`) and **First Use** (`tc-first-use`) –
+  illustrations with their words as real text, for objectionable content on an overlay, a file that can't be shown, and
+  a new workspace.
+
 ## Unreleased – Donovan scenes and neutral marks
 
 - **Agent Scene** (`tc-agent-scene`) – the assistant in a small scene for all clear, working and offline.

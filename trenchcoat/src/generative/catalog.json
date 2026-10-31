@@ -618,6 +618,12 @@
     ]
   },
   {
+    "tag": "tc-content-hidden",
+    "name": "ContentHidden",
+    "description": "A blurred picture behind a crossed-out eye, for objectionable content that's been covered.",
+    "events": []
+  },
+  {
     "tag": "tc-context-map",
     "name": "ContextMap",
     "description": "What fills an agent's context window, as a treemap.",
@@ -1000,6 +1006,12 @@
     ]
   },
   {
+    "tag": "tc-first-use",
+    "name": "FirstUse",
+    "description": "An empty workspace with one highlighted spot to start from, for a new team or project with nothing in it yet.",
+    "events": []
+  },
+  {
     "tag": "tc-friction-profile",
     "name": "FrictionProfile",
     "description": "A mode switch – standard, elevated, deadline – that previews how each safeguard changes (on, shortened, deferred,",
@@ -1318,6 +1330,12 @@
     "events": [
       "tc-paused-change"
     ]
+  },
+  {
+    "tag": "tc-malware-blocked",
+    "name": "MalwareBlocked",
+    "description": "A file behind a warning shield with a bug on it, for a file that can't be shown because it may be malware.",
+    "events": []
   },
   {
     "tag": "tc-mcp-connection-manager",
