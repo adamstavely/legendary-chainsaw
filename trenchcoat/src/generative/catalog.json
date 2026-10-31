@@ -2033,6 +2033,23 @@
     ]
   },
   {
+    "tag": "tc-team-flag-editor",
+    "name": "TeamFlagEditor",
+    "description": "Lets a team set each flag's colour, name, meaning and order.",
+    "events": [
+      "tc-flags-change"
+    ]
+  },
+  {
+    "tag": "tc-team-flag-picker",
+    "name": "TeamFlagPicker",
+    "description": "Picks one of a team's flags for a file.",
+    "events": [
+      "tc-value-change",
+      "tc-manage"
+    ]
+  },
+  {
     "tag": "tc-team-invite",
     "name": "TeamInvite",
     "description": "A third teammate is dragged into the empty slot and joins the team.",

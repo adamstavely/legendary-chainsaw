@@ -541,7 +541,7 @@
   },
   "agent-face": {
    "measuredAt": "2026-10-31",
-   "hash": "f65ea420166d0d43",
+   "hash": "efc4b30f1242e58b",
    "bundle": {
     "own": {
      "min": 3996,
@@ -596,12 +596,17 @@
      {
       "name": "src/vendor/agent-face/draw/draw-face.ts",
       "kind": "other",
-      "min": 2395
+      "min": 2672
      },
      {
       "name": "src/vendor/agent-face/engine/states.ts",
       "kind": "other",
-      "min": 1004
+      "min": 1052
+     },
+     {
+      "name": "src/vendor/agent-face/draw/spear-tip.mjs",
+      "kind": "other",
+      "min": 633
      },
      {
       "name": "src/vendor/agent-face/engine/spring.ts",
@@ -612,11 +617,6 @@
       "name": "src/vendor/agent-face/element/loop.ts",
       "kind": "other",
       "min": 275
-     },
-     {
-      "name": "src/vendor/agent-face/draw/spear-tip.mjs",
-      "kind": "other",
-      "min": 157
      },
      {
       "name": "src/vendor/agent-face/engine/random.ts",
@@ -630,21 +630,21 @@
      }
     ],
     "withoutLit": {
-     "min": 24826,
-     "gzip": 9052
+     "min": 25624,
+     "gzip": 9414
     },
     "withLit": {
-     "min": 44852,
-     "gzip": 15562
+     "min": 45653,
+     "gzip": 15944
     }
    },
    "render": {
     "tag": "tc-agent-face",
     "source": "demo",
     "runs": 7,
-    "cold": 6,
-    "first": 0.5,
-    "update": 0,
+    "cold": 6.6,
+    "first": 0.4,
+    "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 1,
     "scale": null,
@@ -11600,7 +11600,7 @@
   },
   "generated-ui": {
    "measuredAt": "2026-10-31",
-   "hash": "9becba105bd51cb9",
+   "hash": "18d29b59b3d791b4",
    "bundle": {
     "own": {
      "min": 34126,
@@ -11676,6 +11676,11 @@
       "name": "internal/inline-details",
       "kind": "internal",
       "min": 1349
+     },
+     {
+      "name": "internal/team-flag",
+      "kind": "internal",
+      "min": 805
      },
      {
       "name": "internal/source-line",
@@ -11985,7 +11990,7 @@
      {
       "name": "lineage-graph",
       "kind": "element",
-      "min": 38890
+      "min": 38916
      },
      {
       "name": "delegate-board",
@@ -12628,6 +12633,11 @@
       "min": 17854
      },
      {
+      "name": "team-flag-editor",
+      "kind": "element",
+      "min": 17505
+     },
+     {
       "name": "contact-channels",
       "kind": "element",
       "min": 17500
@@ -12760,7 +12770,7 @@
      {
       "name": "lead-sourcing",
       "kind": "element",
-      "min": 14138
+      "min": 14146
      },
      {
       "name": "sparkline",
@@ -12883,6 +12893,11 @@
       "min": 8453
      },
      {
+      "name": "team-flag-picker",
+      "kind": "element",
+      "min": 8294
+     },
+     {
       "name": "enrichment-orbit",
       "kind": "element",
       "min": 7821
@@ -12945,7 +12960,7 @@
      {
       "name": "src/generative/registry.ts",
       "kind": "other",
-      "min": 40889
+      "min": 41197
      },
      {
       "name": "src/generative/schemas/tc-ai-side-pane.json",
@@ -13318,6 +13333,11 @@
       "min": 2830
      },
      {
+      "name": "src/vendor/agent-face/draw/draw-face.ts",
+      "kind": "other",
+      "min": 2822
+     },
+     {
       "name": "src/generative/schemas/tc-extraction-review.json",
       "kind": "other",
       "min": 2788
@@ -13451,11 +13471,6 @@
       "name": "src/generative/schemas/tc-experiment-card.json",
       "kind": "other",
       "min": 2567
-     },
-     {
-      "name": "src/vendor/agent-face/draw/draw-face.ts",
-      "kind": "other",
-      "min": 2536
      },
      {
       "name": "src/generative/schemas/tc-breakdown-chart.json",
@@ -13768,6 +13783,11 @@
       "min": 1970
      },
      {
+      "name": "src/generative/schemas/tc-team-flag-editor.json",
+      "kind": "other",
+      "min": 1962
+     },
+     {
       "name": "src/generative/schemas/tc-agent-ledger.json",
       "kind": "other",
       "min": 1955
@@ -13933,6 +13953,11 @@
       "min": 1605
      },
      {
+      "name": "src/generative/schemas/tc-team-flag-picker.json",
+      "kind": "other",
+      "min": 1601
+     },
+     {
       "name": "src/generative/schemas/tc-inline-diff.json",
       "kind": "other",
       "min": 1598
@@ -14078,6 +14103,11 @@
       "min": 1098
      },
      {
+      "name": "src/vendor/agent-face/engine/states.ts",
+      "kind": "other",
+      "min": 1086
+     },
+     {
       "name": "src/generative/schemas/tc-change-summary.json",
       "kind": "other",
       "min": 1074
@@ -14086,11 +14116,6 @@
       "name": "src/generative/schemas/tc-metrics-dashboard.json",
       "kind": "other",
       "min": 1051
-     },
-     {
-      "name": "src/vendor/agent-face/engine/states.ts",
-      "kind": "other",
-      "min": 1038
      },
      {
       "name": "src/generative/schemas/tc-model-wheel.json",
@@ -14141,6 +14166,11 @@
       "name": "src/generative/schemas/tc-isbn-details.json",
       "kind": "other",
       "min": 717
+     },
+     {
+      "name": "src/vendor/agent-face/draw/spear-tip.mjs",
+      "kind": "other",
+      "min": 681
      },
      {
       "name": "src/generative/schemas/tc-project-flow.json",
@@ -14198,11 +14228,6 @@
       "min": 310
      },
      {
-      "name": "src/vendor/agent-face/draw/spear-tip.mjs",
-      "kind": "other",
-      "min": 178
-     },
-     {
       "name": "src/vendor/agent-face/engine/random.ts",
       "kind": "other",
       "min": 175
@@ -14229,19 +14254,19 @@
      }
     ],
     "withoutLit": {
-     "min": 8063436,
-     "gzip": 1973312
+     "min": 8095369,
+     "gzip": 1980585
     },
     "withLit": {
-     "min": 8024115,
-     "gzip": 1961199
+     "min": 8055461,
+     "gzip": 1968540
     }
    },
    "render": {
     "tag": "tc-generated-ui",
     "source": "demo",
     "runs": 7,
-    "cold": 2.2,
+    "cold": 2.1,
     "first": 0.5,
     "update": 0.1,
     "updateKind": "re-render with the same data",
@@ -27526,6 +27551,217 @@
     "updateKind": "re-render with the same data",
     "nodes": 40,
     "scale": null,
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
+  "team-flag-editor": {
+   "measuredAt": "2026-10-31",
+   "hash": "08e809d4a90c4e42",
+   "bundle": {
+    "own": {
+     "min": 19688,
+     "gzip": 6144
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 22502
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2971
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1868
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/team-flag",
+      "kind": "internal",
+      "min": 780
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 444
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 436
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     }
+    ],
+    "withoutLit": {
+     "min": 27985,
+     "gzip": 8577
+    },
+    "withLit": {
+     "min": 51628,
+     "gzip": 16443
+    }
+   },
+   "render": {
+    "tag": "tc-team-flag-editor",
+    "source": "demo",
+    "runs": 7,
+    "cold": 10.8,
+    "first": 1.2,
+    "update": 0.3,
+    "updateKind": "one item of palette replaced",
+    "nodes": 118,
+    "scale": {
+     "property": "palette",
+     "demoItems": 8,
+     "points": [
+      {
+       "items": 100,
+       "first": 2.5,
+       "update": 0.5,
+       "nodes": 394
+      },
+      {
+       "items": 1000,
+       "first": 16.8,
+       "update": 5.2,
+       "nodes": 3094
+      }
+     ]
+    },
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
+  "team-flag-picker": {
+   "measuredAt": "2026-10-31",
+   "hash": "f2d7f4fff62b09e7",
+   "bundle": {
+    "own": {
+     "min": 10442,
+     "gzip": 4074
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 20098
+     },
+     {
+      "name": "internal/popover",
+      "kind": "internal",
+      "min": 8530
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2217
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1864
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/team-flag",
+      "kind": "internal",
+      "min": 780
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 444
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 435
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     }
+    ],
+    "withoutLit": {
+     "min": 26506,
+     "gzip": 9029
+    },
+    "withLit": {
+     "min": 47644,
+     "gzip": 15899
+    }
+   },
+   "render": {
+    "tag": "tc-team-flag-picker",
+    "source": "demo",
+    "runs": 7,
+    "cold": 10.2,
+    "first": 0.3,
+    "update": 0.1,
+    "updateKind": "one item of flags replaced",
+    "nodes": 7,
+    "scale": {
+     "property": "flags",
+     "demoItems": 3,
+     "points": [
+      {
+       "items": 100,
+       "first": 0.3,
+       "update": 0,
+       "nodes": 7
+      },
+      {
+       "items": 1000,
+       "first": 0.3,
+       "update": 0,
+       "nodes": 7
+      }
+     ]
+    },
     "idle": {
      "visible": {
       "frames": 0,

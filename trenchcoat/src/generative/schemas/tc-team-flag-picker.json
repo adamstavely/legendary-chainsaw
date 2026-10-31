@@ -1,0 +1,96 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-team-flag-picker.json",
+  "title": "tc-team-flag-picker",
+  "description": "Picks one of a team's flags for a file.",
+  "type": "object",
+  "properties": {
+    "flags": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/TeamFlag"
+      },
+      "description": "The team's flags, in the order they're offered"
+    },
+    "value": {
+      "type": "string",
+      "description": "The id of the file's flag, or null for none. Changed by the user unless a tc-value-change listener calls preventDefault()"
+    },
+    "fileName": {
+      "type": "string",
+      "description": "The file's name, so the control says which file it's for"
+    },
+    "manageable": {
+      "type": "boolean",
+      "description": "Show a link to the team's flags at the foot of the list, for people who may edit them"
+    },
+    "disabled": {
+      "type": "boolean",
+      "description": "Show the flag without letting it change"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "add": {
+          "type": "string"
+        },
+        "none": {
+          "type": "string"
+        },
+        "removed": {
+          "type": "string"
+        },
+        "list": {
+          "type": "string"
+        },
+        "listNoFile": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "manage": {
+          "type": "string"
+        },
+        "set": {
+          "type": "string"
+        },
+        "cleared": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "TeamFlag": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "The flag's name, shown beside it wherever it's used"
+        },
+        "meaning": {
+          "type": "string",
+          "description": "What the flag means, so everyone uses it the same way"
+        },
+        "color": {
+          "type": "string",
+          "description": "A hex colour, \"#rrggbb\""
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "color"
+      ],
+      "additionalProperties": false,
+      "description": "A flag a team has defined: its colour and what it means"
+    }
+  }
+}

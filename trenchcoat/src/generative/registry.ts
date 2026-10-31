@@ -216,6 +216,8 @@ export const registry: Record<string, { events: string[]; load: () => Promise<un
   "tc-tab-overload": { events: [], load: () => import("../elements/tab-overload"), schema: () => import("./schemas/tc-tab-overload.json") },
   "tc-tag-input": { events: ["tc-value-change","tc-invalid-tag"], load: () => import("../elements/tag-input"), schema: () => import("./schemas/tc-tag-input.json") },
   "tc-task-board": { events: ["tc-tasks-change"], load: () => import("../elements/task-board"), schema: () => import("./schemas/tc-task-board.json") },
+  "tc-team-flag-editor": { events: ["tc-flags-change"], load: () => import("../elements/team-flag-editor"), schema: () => import("./schemas/tc-team-flag-editor.json") },
+  "tc-team-flag-picker": { events: ["tc-value-change","tc-manage"], load: () => import("../elements/team-flag-picker"), schema: () => import("./schemas/tc-team-flag-picker.json") },
   "tc-team-invite": { events: [], load: () => import("../elements/team-invite"), schema: () => import("./schemas/tc-team-invite.json") },
   "tc-team-roster": { events: ["tc-group-change","tc-filter-change","tc-view-change","tc-selected-change","tc-action"], load: () => import("../elements/team-roster"), schema: () => import("./schemas/tc-team-roster.json") },
   "tc-testimonial-wall": { events: ["tc-paused-change"], load: () => import("../elements/testimonial-wall"), schema: () => import("./schemas/tc-testimonial-wall.json") },

@@ -257,6 +257,8 @@ export * from "./react/synthesis-notes";
 export * from "./react/tab-overload";
 export * from "./react/tag-input";
 export * from "./react/task-board";
+export * from "./react/team-flag-editor";
+export * from "./react/team-flag-picker";
 export * from "./react/team-invite";
 export * from "./react/team-roster";
 export * from "./react/terms-dialog";

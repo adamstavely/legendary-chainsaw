@@ -1,11 +1,17 @@
 # Changelog
 
+## Unreleased – Team flags
+
+- **Team Flag Editor** (`tc-team-flag-editor`) – where a team sets each flag's colour, name, meaning and order, and asks
+  first before removing a flag that's on files. `readonly` shows the flags to people who can't change them.
+- **Team Flag Picker** (`tc-team-flag-picker`) – picks one of those flags for a file, with what each one means in the
+  list, and says when a file's flag has since been removed.
+
 ## Unreleased – Donovan's face
 
 - **Agent Face** (`tc-agent-face`) – Donovan's animated face: idle, listening, thinking, speaking, happy, confused,
   sleeping, error and surprised, blending on springs, with floating white hands, blinks, glances and `playGesture` for a wave, nod, hop or spin. It
-  wraps `<agent-face>` from `agent-face/`, stops drawing when off screen, and rests when it isn't busy. The shape is a
-  placeholder until the logo artwork is available.
+  wraps `<agent-face>` from `agent-face/`, stops drawing when off screen, and rests when it isn't busy.
 
 ## Unreleased – a form the server describes
 

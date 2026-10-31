@@ -246,6 +246,8 @@ export * from "./synthesis-notes";
 export * from "./tab-overload";
 export * from "./tag-input";
 export * from "./task-board";
+export * from "./team-flag-editor";
+export * from "./team-flag-picker";
 export * from "./team-invite";
 export * from "./team-roster";
 export * from "./terms-dialog";
