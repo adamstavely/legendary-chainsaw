@@ -66,6 +66,8 @@ export class TcEnrichmentOrbit extends TcElement {
 
   /** Accessible description – when set, the scene is announced as an image; otherwise it is decorative */
   @property() accessor label = "";
+  /** Draw a plain spark instead of the Grok logo */
+  @property({ type: Boolean }) accessor neutral = false;
 
   private readonly uid = `ui-eo${++uid}`;
   private screen = new OnScreenController(this);
@@ -102,7 +104,9 @@ export class TcEnrichmentOrbit extends TcElement {
       </g>
       <rect class="ui-eo-tile" x="134" y="94" width="52" height="52" rx="12" stroke-width="0.5" filter=${`url(#${id}-tile)`}></rect>
       <svg x="147" y="107" width="26" height="26" viewBox="0 0 33.4 32" overflow="visible">
-        ${MARKS.map((d) => svg`<path class="ui-eo-mark" d=${d}></path>`)}
+        ${this.neutral
+          ? svg`<path class="ui-eo-neutral" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" d="M16.7 3v5M16.7 24v5M4 16h5M24.4 16h5M8 7.5l3.5 3.5M21.9 21l3.5 3.5M25.4 7.5 21.9 11M11.5 21 8 24.5"></path>`
+          : MARKS.map((d) => svg`<path class="ui-eo-mark" d=${d}></path>`)}
       </svg>
       ${nodeOffsets.map((offset) => {
         // Each node starts its offset into the orbit and runs one full round, so it comes to rest where it started

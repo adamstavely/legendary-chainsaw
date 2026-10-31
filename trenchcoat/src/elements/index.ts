@@ -17,6 +17,7 @@ export * from "./agent-lanes";
 export * from "./agent-ledger";
 export * from "./agent-plan";
 export * from "./agent-queue";
+export * from "./agent-scene";
 export * from "./agent-steering";
 export * from "./agent-team";
 export * from "./agent-tree";

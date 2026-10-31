@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-agent-scene.json",
+  "title": "tc-agent-scene",
+  "description": "The assistant in a small scene, for all clear, working and offline.",
+  "type": "object",
+  "properties": {
+    "scene": {
+      "type": "string",
+      "enum": [
+        "all-clear",
+        "working",
+        "offline"
+      ],
+      "description": "Which scene: \"all-clear\", \"working\" or \"offline\""
+    },
+    "name": {
+      "type": "string",
+      "description": "The assistant's name"
+    },
+    "label": {
+      "type": "string",
+      "description": "Accessible description – when set, the scene is announced as an image; otherwise it is decorative"
+    },
+    "size": {
+      "type": "number",
+      "description": "The face's size in pixels"
+    }
+  },
+  "additionalProperties": false
+}

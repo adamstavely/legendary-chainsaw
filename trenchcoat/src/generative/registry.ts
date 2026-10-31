@@ -14,6 +14,7 @@ export const registry: Record<string, { events: string[]; load: () => Promise<un
   "tc-agent-ledger": { events: ["tc-undone-change","tc-undo","tc-redo"], load: () => import("../elements/agent-ledger"), schema: () => import("./schemas/tc-agent-ledger.json") },
   "tc-agent-plan": { events: ["tc-steps-change","tc-run","tc-retry","tc-cancel"], load: () => import("../elements/agent-plan"), schema: () => import("./schemas/tc-agent-plan.json") },
   "tc-agent-queue": { events: ["tc-paused-change","tc-concurrency-change","tc-open-change","tc-promote","tc-cancel"], load: () => import("../elements/agent-queue"), schema: () => import("./schemas/tc-agent-queue.json") },
+  "tc-agent-scene": { events: [], load: () => import("../elements/agent-scene"), schema: () => import("./schemas/tc-agent-scene.json") },
   "tc-agent-steering": { events: ["tc-draft-change","tc-remove","tc-pause","tc-resume"], load: () => import("../elements/agent-steering"), schema: () => import("./schemas/tc-agent-steering.json") },
   "tc-agent-team": { events: [], load: () => import("../elements/agent-team"), schema: () => import("./schemas/tc-agent-team.json") },
   "tc-agent-tree": { events: ["tc-collapsed-change","tc-select","tc-resolve"], load: () => import("../elements/agent-tree"), schema: () => import("./schemas/tc-agent-tree.json") },

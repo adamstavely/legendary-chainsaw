@@ -1440,6 +1440,137 @@
     "errors": []
    }
   },
+  "agent-scene": {
+   "measuredAt": "2026-10-31",
+   "hash": "4daefa7100f16423",
+   "bundle": {
+    "own": {
+     "min": 5493,
+     "gzip": 2539
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 18916
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2217
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1868
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 444
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 436
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     },
+     {
+      "name": "agent-face",
+      "kind": "element",
+      "min": 1773
+     },
+     {
+      "name": "src/vendor/agent-face/element/agent-face.ts",
+      "kind": "other",
+      "min": 4975
+     },
+     {
+      "name": "src/vendor/agent-face/engine/engine.ts",
+      "kind": "other",
+      "min": 4676
+     },
+     {
+      "name": "src/vendor/agent-face/draw/draw-face.ts",
+      "kind": "other",
+      "min": 2672
+     },
+     {
+      "name": "src/vendor/agent-face/engine/states.ts",
+      "kind": "other",
+      "min": 1052
+     },
+     {
+      "name": "src/vendor/agent-face/draw/spear-tip.mjs",
+      "kind": "other",
+      "min": 633
+     },
+     {
+      "name": "src/vendor/agent-face/engine/spring.ts",
+      "kind": "other",
+      "min": 373
+     },
+     {
+      "name": "src/vendor/agent-face/element/loop.ts",
+      "kind": "other",
+      "min": 275
+     },
+     {
+      "name": "src/vendor/agent-face/engine/random.ts",
+      "kind": "other",
+      "min": 156
+     },
+     {
+      "name": "src/vendor/agent-face/element/index.ts",
+      "kind": "other",
+      "min": 73
+     }
+    ],
+    "withoutLit": {
+     "min": 29049,
+     "gzip": 10463
+    },
+    "withLit": {
+     "min": 48978,
+     "gzip": 16933
+    }
+   },
+   "render": {
+    "tag": "tc-agent-scene",
+    "source": "demo",
+    "runs": 7,
+    "cold": 4.5,
+    "first": 0.6,
+    "update": 0.1,
+    "updateKind": "re-render with the same data",
+    "nodes": 4,
+    "scale": null,
+    "idle": {
+     "visible": {
+      "frames": 60,
+      "timers": 0.33
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0.33
+     }
+    },
+    "errors": []
+   }
+  },
   "agent-steering": {
    "measuredAt": "2026-10-28",
    "hash": "3f02d162dfb5acc7",
@@ -9935,18 +10066,18 @@
    }
   },
   "enrichment-orbit": {
-   "measuredAt": "2026-10-28",
-   "hash": "c5c8347d13c338af",
+   "measuredAt": "2026-10-31",
+   "hash": "905fba24bb5ff509",
    "bundle": {
     "own": {
-     "min": 9962,
-     "gzip": 4391
+     "min": 10299,
+     "gzip": 4466
     },
     "shared": [
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 20015
+      "min": 20020
      },
      {
       "name": "internal/card-head",
@@ -9980,20 +10111,20 @@
      }
     ],
     "withoutLit": {
-     "min": 17227,
-     "gzip": 6779
+     "min": 17567,
+     "gzip": 6827
     },
     "withLit": {
-     "min": 38409,
-     "gzip": 13851
+     "min": 38748,
+     "gzip": 13818
     }
    },
    "render": {
     "tag": "tc-enrichment-orbit",
     "source": "demo",
     "runs": 7,
-    "cold": 3.4,
-    "first": 0.6,
+    "cold": 5.7,
+    "first": 0.5,
     "update": 0.2,
     "updateKind": "re-render with the same data",
     "nodes": 60,
@@ -12211,7 +12342,7 @@
   },
   "generated-ui": {
    "measuredAt": "2026-10-31",
-   "hash": "def80fe9d50ba8b2",
+   "hash": "f49420f8d791f73f",
    "bundle": {
     "own": {
      "min": 34126,
@@ -12471,7 +12602,7 @@
      {
       "name": "agent-tree",
       "kind": "element",
-      "min": 48566
+      "min": 48568
      },
      {
       "name": "email-draft",
@@ -12931,7 +13062,7 @@
      {
       "name": "invoice-credit",
       "kind": "element",
-      "min": 25880
+      "min": 25900
      },
      {
       "name": "relationship-graph",
@@ -13356,7 +13487,7 @@
      {
       "name": "investment-balance",
       "kind": "element",
-      "min": 15473
+      "min": 15481
      },
      {
       "name": "reasoning-flags",
@@ -13384,14 +13515,14 @@
       "min": 15029
      },
      {
+      "name": "lead-sourcing",
+      "kind": "element",
+      "min": 14895
+     },
+     {
       "name": "work-item",
       "kind": "element",
       "min": 14681
-     },
-     {
-      "name": "lead-sourcing",
-      "kind": "element",
-      "min": 14146
      },
      {
       "name": "sparkline",
@@ -13536,7 +13667,7 @@
      {
       "name": "enrichment-orbit",
       "kind": "element",
-      "min": 7821
+      "min": 8168
      },
      {
       "name": "empty-calendar",
@@ -13582,6 +13713,11 @@
       "name": "dialog",
       "kind": "element",
       "min": 3674
+     },
+     {
+      "name": "agent-scene",
+      "kind": "element",
+      "min": 3449
      },
      {
       "name": "success-check",
@@ -13636,7 +13772,7 @@
      {
       "name": "src/generative/registry.ts",
       "kind": "other",
-      "min": 42874
+      "min": 43000
      },
      {
       "name": "src/generative/schemas/tc-ai-side-pane.json",
@@ -14874,9 +15010,24 @@
       "min": 681
      },
      {
+      "name": "src/generative/schemas/tc-agent-scene.json",
+      "kind": "other",
+      "min": 680
+     },
+     {
+      "name": "src/generative/schemas/tc-lead-sourcing.json",
+      "kind": "other",
+      "min": 603
+     },
+     {
       "name": "src/generative/schemas/tc-project-flow.json",
       "kind": "other",
       "min": 579
+     },
+     {
+      "name": "src/generative/schemas/tc-enrichment-orbit.json",
+      "kind": "other",
+      "min": 525
      },
      {
       "name": "src/generative/schemas/tc-world-map.json",
@@ -14914,11 +15065,6 @@
       "min": 469
      },
      {
-      "name": "src/generative/schemas/tc-lead-sourcing.json",
-      "kind": "other",
-      "min": 467
-     },
-     {
       "name": "src/generative/schemas/tc-tab-overload.json",
       "kind": "other",
       "min": 459
@@ -14932,11 +15078,6 @@
       "name": "src/generative/schemas/tc-empty-calendar.json",
       "kind": "other",
       "min": 452
-     },
-     {
-      "name": "src/generative/schemas/tc-enrichment-orbit.json",
-      "kind": "other",
-      "min": 442
      },
      {
       "name": "src/generative/schemas/tc-ghosted-chat.json",
@@ -14990,21 +15131,21 @@
      }
     ],
     "withoutLit": {
-     "min": 8212958,
-     "gzip": 2011931
+     "min": 8218676,
+     "gzip": 2014008
     },
     "withLit": {
-     "min": 8171404,
-     "gzip": 1997412
+     "min": 8177004,
+     "gzip": 1999269
     }
    },
    "render": {
     "tag": "tc-generated-ui",
     "source": "demo",
     "runs": 7,
-    "cold": 2,
+    "cold": 2.1,
     "first": 0.5,
-    "update": 0.2,
+    "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 9,
     "scale": null,
@@ -18250,12 +18391,12 @@
    }
   },
   "lead-sourcing": {
-   "measuredAt": "2026-10-28",
-   "hash": "f214ffddd165abd4",
+   "measuredAt": "2026-10-31",
+   "hash": "952d24bc4f43303b",
    "bundle": {
     "own": {
-     "min": 16247,
-     "gzip": 6245
+     "min": 16954,
+     "gzip": 6474
     },
     "shared": [
      {
@@ -18295,21 +18436,21 @@
      }
     ],
     "withoutLit": {
-     "min": 23514,
-     "gzip": 8677
+     "min": 24225,
+     "gzip": 8838
     },
     "withLit": {
-     "min": 43589,
-     "gzip": 15346
+     "min": 44301,
+     "gzip": 15410
     }
    },
    "render": {
     "tag": "tc-lead-sourcing",
     "source": "demo",
     "runs": 7,
-    "cold": 5.4,
+    "cold": 6,
     "first": 0.7,
-    "update": 0.1,
+    "update": 0.2,
     "updateKind": "re-render with the same data",
     "nodes": 115,
     "scale": null,

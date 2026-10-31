@@ -82,3 +82,12 @@ describe("tc-enrichment-orbit", () => {
     expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
   });
 });
+
+describe("tc-enrichment-orbit neutral", () => {
+  test("draws plain marks instead of logos", async () => {
+    const plain = await fixture(html`<tc-enrichment-orbit neutral></tc-enrichment-orbit>`);
+    expect(plain.querySelector(".ui-eo-neutral")).toBeTruthy();
+    const branded = await fixture(html`<tc-enrichment-orbit></tc-enrichment-orbit>`);
+    expect(branded.querySelector(".ui-eo-neutral")).toBeNull();
+  });
+});

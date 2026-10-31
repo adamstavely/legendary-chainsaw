@@ -8,6 +8,10 @@
     "label": {
       "type": "string",
       "description": "Describes the scene to assistive tech (role=\"img\"); without it the illustration is decorative and hidden"
+    },
+    "neutral": {
+      "type": "boolean",
+      "description": "Draw plain marks (a spark, an envelope and a globe) instead of the ChatGPT, Gmail and Grok logos"
     }
   },
   "additionalProperties": false

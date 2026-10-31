@@ -28,6 +28,7 @@ export * from "./react/agent-lanes";
 export * from "./react/agent-ledger";
 export * from "./react/agent-plan";
 export * from "./react/agent-queue";
+export * from "./react/agent-scene";
 export * from "./react/agent-steering";
 export * from "./react/agent-team";
 export * from "./react/agent-tree";

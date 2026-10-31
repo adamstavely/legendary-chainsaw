@@ -124,6 +124,12 @@
     ]
   },
   {
+    "tag": "tc-agent-scene",
+    "name": "AgentScene",
+    "description": "The assistant in a small scene, for all clear, working and offline.",
+    "events": []
+  },
+  {
     "tag": "tc-agent-steering",
     "name": "AgentSteering",
     "description": "Steer an agent while it works: the run, its plan, the queued notes and a field to add one.",

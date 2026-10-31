@@ -8,6 +8,10 @@
     "label": {
       "type": "string",
       "description": "Accessible description – when set, the scene is announced as an image; otherwise it is decorative"
+    },
+    "neutral": {
+      "type": "boolean",
+      "description": "Draw a plain spark instead of the Grok logo"
     }
   },
   "additionalProperties": false
