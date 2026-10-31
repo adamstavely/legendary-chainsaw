@@ -28,16 +28,15 @@ export interface FaceMetrics {
   eyeWidth: number;
   eyeHeight: number;
   line: number;
-  mouth: boolean;
   hands: boolean;
   fingers: boolean;
 }
 
-/** Features grow as the face shrinks, so they survive at 16 and 26 px. Too small for a mouth and hands, it moves the body instead. */
+/** Features grow as the face shrinks, so they survive at 16 and 26 px. Too small for hands, it leaves them out. */
 export function metricsFor(size: number): FaceMetrics {
-  if (size <= 16) return { eyeRadius: 7, eyeWidth: 4.4, eyeHeight: 7.5, line: 6.5, mouth: false, hands: false, fingers: false };
-  if (size <= 26) return { eyeRadius: 5.5, eyeWidth: 3.5, eyeHeight: 6, line: 5, mouth: false, hands: false, fingers: false };
-  return { eyeRadius: 4.2, eyeWidth: 2.3, eyeHeight: 4.75, line: 2.6, mouth: true, hands: true, fingers: size >= FINGERS_FROM_PX };
+  if (size <= 16) return { eyeRadius: 7, eyeWidth: 4.4, eyeHeight: 7.5, line: 6.5, hands: false, fingers: false };
+  if (size <= 26) return { eyeRadius: 5.5, eyeWidth: 3.5, eyeHeight: 6, line: 5, hands: false, fingers: false };
+  return { eyeRadius: 4.2, eyeWidth: 2.3, eyeHeight: 4.75, line: 2.6, hands: true, fingers: size >= FINGERS_FROM_PX };
 }
 
 interface LogoPaths {
@@ -59,7 +58,7 @@ function fillGradient(ctx: CanvasRenderingContext2D, { from, to, stops }: LogoGr
 export function drawFace(ctx: CanvasRenderingContext2D, pose: FacePose, size: number): void {
   const m = metricsFor(size);
   logo ??= { body: new Path2D(BODY_PATH), leg: new Path2D(LEG_PATH), legFace: new Path2D(LEG_FACE_PATH), tip: new Path2D(TIP_PATH) };
-  const stretch = pose.squash + (m.mouth ? 0 : pose.mouthOpen * 0.1);
+  const stretch = pose.squash;
 
   ctx.save();
   ctx.scale(size / 100, size / 100);
@@ -94,7 +93,7 @@ export function drawFace(ctx: CanvasRenderingContext2D, pose: FacePose, size: nu
   const shift = pose.gazeX * 3;
   drawEye(ctx, pose, m, 50 - EYE_GAP + shift, y, 1);
   drawEye(ctx, pose, m, 50 + EYE_GAP + shift, y, 1 - pose.eyeAsym);
-  if (m.mouth) drawMouth(ctx, pose);
+  drawMouth(ctx, pose);
   ctx.restore();
 }
 
@@ -172,12 +171,13 @@ function drawEye(ctx: CanvasRenderingContext2D, pose: FacePose, m: FaceMetrics, 
 }
 
 function drawMouth(ctx: CanvasRenderingContext2D, pose: FacePose): void {
-  const curve = pose.mouthCurve;
-  if (Math.abs(curve) > 0.03) {
-    ctx.globalAlpha = Math.min(1, Math.abs(curve) * 5);
+  // Always a mouth: a line, flat at rest, that gives way to the open shape as it opens
+  const line = 1 - Math.min(1, pose.mouthOpen * 8);
+  if (line > 0.01) {
+    ctx.globalAlpha = line;
     ctx.beginPath();
     ctx.moveTo(50 - MOUTH_HALF_WIDTH, MOUTH_Y);
-    ctx.quadraticCurveTo(50, MOUTH_Y + curve * 8, 50 + MOUTH_HALF_WIDTH, MOUTH_Y);
+    ctx.quadraticCurveTo(50, MOUTH_Y + pose.mouthCurve * 8, 50 + MOUTH_HALF_WIDTH, MOUTH_Y);
     ctx.stroke();
     ctx.globalAlpha = 1;
   }
