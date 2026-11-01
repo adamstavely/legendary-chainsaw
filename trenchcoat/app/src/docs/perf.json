@@ -763,11 +763,11 @@
   },
   "agent-findings": {
    "measuredAt": "2026-10-31",
-   "hash": "3f972bd4c392e13c",
+   "hash": "644b354a16a0dceb",
    "bundle": {
     "own": {
-     "min": 16600,
-     "gzip": 5507
+     "min": 22483,
+     "gzip": 6738
     },
     "shared": [
      {
@@ -817,38 +817,38 @@
      }
     ],
     "withoutLit": {
-     "min": 26907,
-     "gzip": 8834
+     "min": 32794,
+     "gzip": 10029
     },
     "withLit": {
-     "min": 50641,
-     "gzip": 16649
+     "min": 56528,
+     "gzip": 17823
     }
    },
    "render": {
     "tag": "tc-agent-findings",
     "source": "demo",
     "runs": 7,
-    "cold": 11.6,
-    "first": 1.3,
-    "update": 0.5,
+    "cold": 10.8,
+    "first": 1.4,
+    "update": 0.3,
     "updateKind": "one item of agents replaced",
-    "nodes": 79,
+    "nodes": 136,
     "scale": {
      "property": "agents",
      "demoItems": 3,
      "points": [
       {
        "items": 100,
-       "first": 4.8,
-       "update": 0.7,
-       "nodes": 889
+       "first": 8.9,
+       "update": 1.4,
+       "nodes": 2141
       },
       {
        "items": 1000,
-       "first": 36.2,
-       "update": 7.2,
-       "nodes": 8389
+       "first": 87.9,
+       "update": 13.4,
+       "nodes": 20741
       }
      ]
     },
@@ -1059,18 +1059,18 @@
    }
   },
   "agent-handoff": {
-   "measuredAt": "2026-10-31",
-   "hash": "0e168df2a32b8f01",
+   "measuredAt": "2026-11-01",
+   "hash": "a10eca3d5610a34f",
    "bundle": {
     "own": {
-     "min": 12749,
-     "gzip": 4459
+     "min": 23448,
+     "gzip": 6709
     },
     "shared": [
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 18957
+      "min": 20087
      },
      {
       "name": "internal/card-head",
@@ -1080,7 +1080,7 @@
      {
       "name": "internal/base",
       "kind": "internal",
-      "min": 1864
+      "min": 1868
      },
      {
       "name": "internal/kit",
@@ -1095,47 +1095,47 @@
      {
       "name": "internal/look",
       "kind": "internal",
-      "min": 440
+      "min": 444
      },
      {
       "name": "internal/styles",
       "kind": "internal",
-      "min": 435
+      "min": 436
      }
     ],
     "withoutLit": {
-     "min": 21204,
-     "gzip": 7094
+     "min": 31914,
+     "gzip": 9303
     },
     "withLit": {
-     "min": 41291,
-     "gzip": 13533
+     "min": 53133,
+     "gzip": 16218
     }
    },
    "render": {
     "tag": "tc-agent-handoff",
     "source": "demo",
     "runs": 7,
-    "cold": 8.1,
-    "first": 0.8,
-    "update": 0.2,
+    "cold": 8.2,
+    "first": 1.1,
+    "update": 0.3,
     "updateKind": "one item of steps replaced",
-    "nodes": 54,
+    "nodes": 89,
     "scale": {
      "property": "steps",
      "demoItems": 3,
      "points": [
       {
        "items": 100,
-       "first": 3.5,
-       "update": 0.4,
-       "nodes": 733
+       "first": 16.9,
+       "update": 2.4,
+       "nodes": 1738
       },
       {
        "items": 1000,
-       "first": 26.6,
-       "update": 3.1,
-       "nodes": 7033
+       "first": 172.2,
+       "update": 19.4,
+       "nodes": 17038
       }
      ]
     },
@@ -7775,17 +7775,17 @@
   },
   "conflict-radar": {
    "measuredAt": "2026-10-31",
-   "hash": "b24aed42a49558fc",
+   "hash": "d69dc9edfe1fa405",
    "bundle": {
     "own": {
-     "min": 16468,
-     "gzip": 5477
+     "min": 24582,
+     "gzip": 7151
     },
     "shared": [
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 21073
+      "min": 21671
      },
      {
       "name": "internal/card-head",
@@ -7819,38 +7819,38 @@
      }
     ],
     "withoutLit": {
-     "min": 23952,
-     "gzip": 7710
+     "min": 32077,
+     "gzip": 9343
     },
     "withLit": {
-     "min": 46302,
-     "gzip": 15114
+     "min": 55005,
+     "gzip": 16923
     }
    },
    "render": {
     "tag": "tc-conflict-radar",
     "source": "demo",
     "runs": 7,
-    "cold": 10,
-    "first": 1,
+    "cold": 9.5,
+    "first": 1.1,
     "update": 0.2,
     "updateKind": "one item of agents replaced",
-    "nodes": 100,
+    "nodes": 128,
     "scale": {
      "property": "agents",
      "demoItems": 3,
      "points": [
       {
        "items": 100,
-       "first": 5,
+       "first": 5.1,
        "update": 0.7,
-       "nodes": 1264
+       "nodes": 1292
       },
       {
        "items": 1000,
-       "first": 46.1,
-       "update": 5.6,
-       "nodes": 12064
+       "first": 45.3,
+       "update": 5.7,
+       "nodes": 12092
       }
      ]
     },
@@ -13023,8 +13023,8 @@
    }
   },
   "generated-ui": {
-   "measuredAt": "2026-10-31",
-   "hash": "2a335023a2460682",
+   "measuredAt": "2026-11-01",
+   "hash": "9553577b75b5ec34",
    "bundle": {
     "own": {
      "min": 34126,
@@ -13519,7 +13519,7 @@
      {
       "name": "instruction-editor",
       "kind": "element",
-      "min": 34247
+      "min": 34251
      },
      {
       "name": "metrics-dashboard",
@@ -13692,14 +13692,14 @@
       "min": 27305
      },
      {
+      "name": "identifier-details",
+      "kind": "element",
+      "min": 27273
+     },
+     {
       "name": "money-flow",
       "kind": "element",
       "min": 27236
-     },
-     {
-      "name": "identifier-details",
-      "kind": "element",
-      "min": 27220
      },
      {
       "name": "compact-breakdown",
@@ -13882,9 +13882,19 @@
       "min": 23017
      },
      {
+      "name": "scheduled-runs",
+      "kind": "element",
+      "min": 22881
+     },
+     {
       "name": "guardrail-notice",
       "kind": "element",
       "min": 22648
+     },
+     {
+      "name": "conflict-radar",
+      "kind": "element",
+      "min": 22495
      },
      {
       "name": "gap-exposure",
@@ -13904,7 +13914,7 @@
      {
       "name": "heatmap",
       "kind": "element",
-      "min": 21926
+      "min": 21930
      },
      {
       "name": "speed-reader",
@@ -13925,6 +13935,11 @@
       "name": "todo-list",
       "kind": "element",
       "min": 21462
+     },
+     {
+      "name": "agent-handoff",
+      "kind": "element",
+      "min": 21329
      },
      {
       "name": "autonomy-dial",
@@ -13975,6 +13990,11 @@
       "name": "saved-search-alerts",
       "kind": "element",
       "min": 20432
+     },
+     {
+      "name": "agent-findings",
+      "kind": "element",
+      "min": 20171
      },
      {
       "name": "confidence-brief",
@@ -14212,16 +14232,6 @@
       "min": 14681
      },
      {
-      "name": "conflict-radar",
-      "kind": "element",
-      "min": 14383
-     },
-     {
-      "name": "agent-findings",
-      "kind": "element",
-      "min": 14272
-     },
-     {
       "name": "sparkline",
       "kind": "element",
       "min": 14115
@@ -14317,11 +14327,6 @@
       "min": 11549
      },
      {
-      "name": "scheduled-runs",
-      "kind": "element",
-      "min": 11446
-     },
-     {
       "name": "citation-badge",
       "kind": "element",
       "min": 10871
@@ -14330,11 +14335,6 @@
       "name": "coverage-ring",
       "kind": "element",
       "min": 10840
-     },
-     {
-      "name": "agent-handoff",
-      "kind": "element",
-      "min": 10630
      },
      {
       "name": "citation-sections",
@@ -14499,7 +14499,7 @@
      {
       "name": "src/generative/registry.ts",
       "kind": "other",
-      "min": 44374
+      "min": 44448
      },
      {
       "name": "src/generative/schemas/tc-ai-side-pane.json",
@@ -14642,9 +14642,19 @@
       "min": 3933
      },
      {
+      "name": "src/generative/schemas/tc-scheduled-runs.json",
+      "kind": "other",
+      "min": 3862
+     },
+     {
       "name": "src/generative/schemas/tc-provider-connection.json",
       "kind": "other",
       "min": 3838
+     },
+     {
+      "name": "src/generative/schemas/tc-agent-handoff.json",
+      "kind": "other",
+      "min": 3761
      },
      {
       "name": "src/generative/schemas/tc-model-settings.json",
@@ -14685,6 +14695,11 @@
       "name": "src/generative/schemas/tc-oversight-home.json",
       "kind": "other",
       "min": 3593
+     },
+     {
+      "name": "src/generative/schemas/tc-agent-findings.json",
+      "kind": "other",
+      "min": 3528
      },
      {
       "name": "src/generative/schemas/tc-evidence-list.json",
@@ -14770,6 +14785,11 @@
       "name": "src/generative/schemas/tc-status-tracker.json",
       "kind": "other",
       "min": 3109
+     },
+     {
+      "name": "src/generative/schemas/tc-conflict-radar.json",
+      "kind": "other",
+      "min": 3099
      },
      {
       "name": "src/generative/schemas/tc-version-history.json",
@@ -14875,11 +14895,6 @@
       "name": "src/generative/schemas/tc-share-panel.json",
       "kind": "other",
       "min": 2866
-     },
-     {
-      "name": "src/generative/schemas/tc-agent-findings.json",
-      "kind": "other",
-      "min": 2851
      },
      {
       "name": "src/generative/schemas/tc-json-viewer.json",
@@ -15042,11 +15057,6 @@
       "min": 2567
      },
      {
-      "name": "src/generative/schemas/tc-scheduled-runs.json",
-      "kind": "other",
-      "min": 2549
-     },
-     {
       "name": "src/generative/schemas/tc-breakdown-chart.json",
       "kind": "other",
       "min": 2519
@@ -15197,11 +15207,6 @@
       "min": 2243
      },
      {
-      "name": "src/generative/schemas/tc-conflict-radar.json",
-      "kind": "other",
-      "min": 2241
-     },
-     {
       "name": "src/generative/schemas/tc-publish-readiness.json",
       "kind": "other",
       "min": 2235
@@ -15245,11 +15250,6 @@
       "name": "src/generative/schemas/tc-sandbox-log.json",
       "kind": "other",
       "min": 2154
-     },
-     {
-      "name": "src/generative/schemas/tc-agent-handoff.json",
-      "kind": "other",
-      "min": 2135
      },
      {
       "name": "src/generative/schemas/tc-facet-sidebar.json",
@@ -15908,20 +15908,20 @@
      }
     ],
     "withoutLit": {
-     "min": 8328631,
-     "gzip": 2040345
+     "min": 8369671,
+     "gzip": 2049673
     },
     "withLit": {
-     "min": 8285323,
-     "gzip": 2025224
+     "min": 8326077,
+     "gzip": 2034237
     }
    },
    "render": {
     "tag": "tc-generated-ui",
     "source": "demo",
     "runs": 7,
-    "cold": 2.1,
-    "first": 0.6,
+    "cold": 2.2,
+    "first": 0.5,
     "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 9,
@@ -27152,23 +27152,23 @@
    }
   },
   "scheduled-runs": {
-   "measuredAt": "2026-10-31",
-   "hash": "9b26bb96ccc7140c",
+   "measuredAt": "2026-11-01",
+   "hash": "57c99bedb1b7fadc",
    "bundle": {
     "own": {
-     "min": 13550,
-     "gzip": 5066
+     "min": 24980,
+     "gzip": 7954
     },
     "shared": [
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 21669
+      "min": 22676
      },
      {
       "name": "internal/card-head",
       "kind": "internal",
-      "min": 2971
+      "min": 2968
      },
      {
       "name": "internal/base",
@@ -27181,6 +27181,11 @@
       "min": 1348
      },
      {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 892
+     },
+     {
       "name": "internal/look",
       "kind": "internal",
       "min": 444
@@ -27191,44 +27196,44 @@
       "min": 436
      },
      {
-      "name": "internal/controllers",
-      "kind": "internal",
-      "min": 132
+      "name": "segmented-control",
+      "kind": "element",
+      "min": 30546
      }
     ],
     "withoutLit": {
-     "min": 21036,
-     "gzip": 7299
+     "min": 64021,
+     "gzip": 16321
     },
     "withLit": {
-     "min": 43960,
-     "gzip": 14863
+     "min": 87693,
+     "gzip": 24132
     }
    },
    "render": {
     "tag": "tc-scheduled-runs",
     "source": "demo",
     "runs": 7,
-    "cold": 10.4,
-    "first": 1.5,
-    "update": 0.4,
+    "cold": 8.2,
+    "first": 2.6,
+    "update": 0.7,
     "updateKind": "one item of tasks replaced",
-    "nodes": 99,
+    "nodes": 219,
     "scale": {
      "property": "tasks",
      "demoItems": 5,
      "points": [
       {
        "items": 100,
-       "first": 9.6,
-       "update": 2.2,
-       "nodes": 965
+       "first": 15.5,
+       "update": 3.7,
+       "nodes": 2301
       },
       {
        "items": 1000,
-       "first": 123.8,
-       "update": 50.6,
-       "nodes": 9065
+       "first": 184.9,
+       "update": 65.1,
+       "nodes": 21561
       }
      ]
     },

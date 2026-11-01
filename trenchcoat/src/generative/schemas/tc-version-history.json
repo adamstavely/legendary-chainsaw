@@ -55,13 +55,13 @@
     "changeLabels": {
       "type": "object",
       "properties": {
+        "changed": {
+          "type": "string"
+        },
         "added": {
           "type": "string"
         },
         "removed": {
-          "type": "string"
-        },
-        "changed": {
           "type": "string"
         }
       },

@@ -3,7 +3,7 @@ import * as React from "react";
 import { TcAgentFindings, type AgentFinding, type AgentFindingsAgentFilterChange, type AgentFindingsSelectedChange, type AgentFindingsSeverityFilterChange } from "../agent-findings";
 import { h, useControlled } from "./internal";
 
-export type { AgentFinding, AgentFindingSeverity, AgentFindingsAgent, AgentFindingsAgentFilterChange, AgentFindingsLabels, AgentFindingsSelectedChange, AgentFindingsSeverityFilter, AgentFindingsSeverityFilterChange, AgentFindingsStatus } from "../agent-findings";
+export type { AgentFinding, AgentFindingSeverity, AgentFindingsAgent, AgentFindingsAgentFilterChange, AgentFindingsLabels, AgentFindingsLayout, AgentFindingsSelectedChange, AgentFindingsSeverityFilter, AgentFindingsSeverityFilterChange, AgentFindingsStatus } from "../agent-findings";
 export { defaultAgentFindingsLabels } from "../agent-findings";
 
 const RawAgentFindings = createComponent({

@@ -85,7 +85,8 @@
     "name": "AgentHandoff",
     "description": "A task passed along a chain of agents, with what carried over and what got lost at each handoff.",
     "events": [
-      "tc-selected-change"
+      "tc-selected-change",
+      "tc-item-selected-change"
     ]
   },
   {
@@ -641,7 +642,9 @@
     "events": [
       "tc-selected-change",
       "tc-filter-change",
-      "tc-resolve"
+      "tc-resolve",
+      "tc-settled-change",
+      "tc-merge"
     ]
   },
   {
@@ -1990,7 +1993,8 @@
     "name": "ScheduledRuns",
     "description": "Agent tasks placed into a week's sessions under usage limits.",
     "events": [
-      "tc-placements-change"
+      "tc-placements-change",
+      "tc-mode-change"
     ]
   },
   {

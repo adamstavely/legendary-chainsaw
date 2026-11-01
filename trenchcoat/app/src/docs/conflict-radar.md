@@ -6,7 +6,7 @@ related: fan-out-grid, agent-lanes, parallel-attempts, inline-diff
 
 ## Overview
 
-Which agents working in parallel touch the same files, and where they collide. Each row is a file and each column an agent, with conflicts first, and picking a file shows who touched which lines.
+Which agents working in parallel touch the same files, and where they collide. Each row is a file and each column an agent, with conflicts first, and picking a file shows who touched which lines. A conflict can be settled by keeping one agent's way, and with `mergeable` a merge button waits until none are left.
 
 ## When to use
 
@@ -26,6 +26,9 @@ Which agents working in parallel touch the same files, and where they collide. E
 3. **File** `.ui-cfr__file` – the path and `.ui-cfr__status`, in a word and a mark
 4. **Cell** `.ui-cfr__cell` – the lines that agent changed
 5. **Detail** `.ui-cfr__detail` – who touched what, with `.ui-cfr__resolve`
+6. **Legend** `.ui-cfr__legend` – what the cells mean, in words
+7. **Ways** `.ui-cfr__ways` – each agent's `.ui-cfr__approach` to keep, with `.ui-cfr__unsettle` to undo
+8. **Merge** `.ui-cfr__merge` – with `mergeable`, and `.ui-cfr__left` saying how many conflicts are left
 
 ## Looks
 
@@ -39,19 +42,22 @@ Standard puts the header on the gray tray above a white card; Clean is one white
 | Home / End | Go to the row's ends |
 | Enter / Space | Opens or closes the file |
 | Escape | Closes the file |
+| Tab | From the grid to the ways to keep, then the buttons |
+| ↑ ↓ ← → in the ways | Move through the ways and keep one |
 
 ## Screen readers
 
-It's a `grid` named by the heading, with one tab stop and its keys in a hidden description. Files are row headers, agents column headers, and an empty cell says Not touched. Status is always a word, and `role="status"` says how many conflicts there are.
+It's a `grid` named by the heading, with one tab stop and its keys in a hidden description. Files are row headers, agents column headers, and an empty cell says Not touched. Status is always a word, and `role="status"` says how many conflicts there are. The ways are a `radiogroup` named for the file, Settled and Kept are words with a mark, and a disabled Merge is described by how many are left.
 
 ## Content
 
-Give `lines` wherever you know them, because only crossing line ranges count as a conflict. Without them, two agents on a file is an overlap. A file's own `status` wins, for when your merge tool knows better.
+Give `lines` wherever you know them, because only crossing line ranges count as a conflict. Without them, two agents on a file is an overlap. A file's own `status` wins, for when your merge tool knows better. Write `approach` as one plain sentence on what the agent's way does, so the choice can be made without reading the diff. Only a conflict can be settled, and a `settled` entry naming an agent that didn't touch the file is ignored.
 
 ## Do
 
 - Keep `branch` short, because it sits in a column header.
 - Listen for `tc-resolve` and start your own merge flow.
+- Save `settled` on `tc-settled-change`, and run the merge on `tc-merge`. The element only records the choice and asks.
 
 ## Don't
 

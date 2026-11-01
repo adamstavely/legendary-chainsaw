@@ -9,7 +9,7 @@ import { act } from "react";
 import { createRoot } from "react-dom/client";
 import { afterEach, describe, expect, test } from "vitest";
 import "../../src/elements/conflict-radar";
-import { conflictStatus, type ConflictAgent, type ConflictFile, type ConflictResolve, type ConflictSelectedChange, type TcConflictRadar } from "../../src/elements/conflict-radar";
+import { conflictStatus, type ConflictAgent, type ConflictFile, type ConflictMerge, type ConflictResolve, type ConflictSelectedChange, type ConflictSettledChange, type TcConflictRadar } from "../../src/elements/conflict-radar";
 import { ConflictRadar } from "../../src/elements/react/conflict-radar";
 import { cleanup, finish, fixture, settle } from "./helpers";
 
@@ -133,7 +133,153 @@ describe("tc-conflict-radar", () => {
   });
 });
 
+const WAYS: ConflictFile = { path: "src/app/conf.ts", edits: [{ agent: "a", lines: [1, 20], approach: "Splits the table." }, { agent: "b", lines: [10, 12], approach: "Adds a column." }] };
+const settleable = (extra = {}) => fixture<TcConflictRadar>(html`<tc-conflict-radar mergeable .agents=${AGENTS} .files=${[WAYS, CLEAR]} selected=${WAYS.path} .settled=${(extra as { settled?: object }).settled ?? {}}></tc-conflict-radar>`);
+const way = (el: Element, id: string) => el.querySelector<HTMLInputElement>(`.ui-cfr__way input[value="${id}"]`)!;
+const mergeButton = (el: Element) => el.querySelector<HTMLButtonElement>(".ui-cfr__merge")!;
+
+describe("settling", () => {
+  test("offers each agent's approach as one radio group, with nothing chosen", async () => {
+    const el = await settleable();
+    expect(el.querySelector('.ui-cfr__ways[role="radiogroup"]')!.getAttribute("aria-labelledby")).toBeTruthy();
+    expect(text(el.querySelector(".ui-cfr__ways"))).toContain("Splits the table.");
+    expect(text(el.querySelector(".ui-cfr__ways"))).toContain("Adds a column.");
+    expect(new Set([...el.querySelectorAll<HTMLInputElement>(".ui-cfr__way input")].map((i) => i.name)).size).toBe(1);
+    expect(el.querySelectorAll(".ui-cfr__way input:checked")).toHaveLength(0);
+  });
+
+  test("keeping one settles the file, in words, and it can be changed and undone", async () => {
+    const el = await settleable();
+    const seen: ConflictSettledChange[] = [];
+    el.addEventListener("tc-settled-change", (e) => seen.push((e as CustomEvent<ConflictSettledChange>).detail));
+    way(el, "a").click();
+    await settle();
+    expect(seen[0]).toEqual({ settled: { [WAYS.path]: "a" }, file: WAYS, agent: "a" });
+    expect(text(el.querySelector(`[data-file="${WAYS.path}"] .ui-cfr__status`))).toBe("Settled: Alpha kept");
+    expect(text(el.querySelector(".ui-cfr__summary"))).toBe("All settled");
+    const cells = el.querySelectorAll<HTMLElement>(`[data-file="${WAYS.path}"] td`);
+    expect(cells[0]!.dataset.state).toBe("kept");
+    expect(text(cells[0])).toContain("Kept");
+    expect(cells[1]!.dataset.state).toBe("dropped");
+    way(el, "b").click();
+    await settle();
+    expect(el.settled).toEqual({ [WAYS.path]: "b" });
+    el.querySelector<HTMLElement>(".ui-cfr__unsettle")!.click();
+    await settle();
+    expect(el.settled).toEqual({});
+    expect(text(el.querySelector(`[data-file="${WAYS.path}"] .ui-cfr__status`))).toBe("Conflict");
+  });
+
+  test("preventDefault keeps it unsettled, and the radio goes back", async () => {
+    const el = await settleable();
+    el.addEventListener("tc-settled-change", (e) => e.preventDefault());
+    way(el, "a").click();
+    await settle();
+    expect(el.settled).toEqual({});
+    expect(way(el, "a").checked).toBe(false);
+  });
+
+  test("an entry for an agent who didn't touch the file, or a file that isn't a conflict, is ignored", async () => {
+    const el = await settleable({ settled: { [WAYS.path]: "nobody", [CLEAR.path]: "a" } });
+    expect(text(el.querySelector(`[data-file="${WAYS.path}"] .ui-cfr__status`))).toBe("Conflict");
+    expect(text(el.querySelector(`[data-file="${CLEAR.path}"] .ui-cfr__status`))).toBe("Clear");
+    expect(mergeButton(el).disabled).toBe(true);
+  });
+
+  test("no ways are offered without an approach or mergeable, and Resolve still works", async () => {
+    const el = await radar();
+    el.selected = "conf.ts";
+    await settle();
+    expect(el.querySelector(".ui-cfr__ways")).toBeNull();
+    const seen: ConflictResolve[] = [];
+    el.addEventListener("tc-resolve", (e) => seen.push((e as CustomEvent<ConflictResolve>).detail));
+    el.querySelector<HTMLElement>(".ui-cfr__resolve")!.click();
+    expect(seen).toHaveLength(1);
+  });
+
+  test("a settled conflict sorts below open conflicts and above the rest", async () => {
+    const other: ConflictFile = { ...CONF, path: "open.ts" };
+    const el = await fixture<TcConflictRadar>(html`<tc-conflict-radar .agents=${AGENTS} .files=${[CLEAR, WAYS, other]} .settled=${{ [WAYS.path]: "a" }}></tc-conflict-radar>`);
+    expect(rows(el)).toEqual(["open.ts", WAYS.path, "clear.ts"]);
+  });
+});
+
+describe("merging", () => {
+  test("only shows with mergeable, and waits for every conflict, saying how many are left", async () => {
+    const plain = await radar();
+    expect(mergeButton(plain)).toBeNull();
+    const el = await settleable();
+    expect(text(mergeButton(el))).toBe("Merge 2 branches");
+    expect(mergeButton(el).disabled).toBe(true);
+    expect(text(el.querySelector(".ui-cfr__left"))).toBe("1 conflict left to settle");
+    expect(document.getElementById(mergeButton(el).getAttribute("aria-describedby")!)).toBe(el.querySelector(".ui-cfr__left"));
+    way(el, "b").click();
+    await settle();
+    expect(mergeButton(el).disabled).toBe(false);
+    expect(el.querySelector(".ui-cfr__left")).toBeNull();
+  });
+
+  test("fires tc-merge with what was kept, announces it, and preventDefault stays quiet", async () => {
+    const el = await settleable({ settled: { [WAYS.path]: "a" } });
+    const seen: ConflictMerge[] = [];
+    el.addEventListener("tc-merge", (e) => seen.push((e as CustomEvent<ConflictMerge>).detail));
+    el.addEventListener("tc-merge", (e) => e.preventDefault(), { once: true });
+    mergeButton(el).click();
+    await settle();
+    expect(seen).toEqual([{ settled: { [WAYS.path]: "a" } }]);
+    expect(text(el.querySelector(':scope > [role="status"]'))).toBe("All settled");
+    mergeButton(el).click();
+    await settle();
+    expect(text(el.querySelector(':scope > [role="status"]'))).toBe("Merge requested");
+  });
+
+  test("merge-label renames it", async () => {
+    const el = await fixture<TcConflictRadar>(html`<tc-conflict-radar mergeable merge-label="Combine {n}" .agents=${AGENTS} .files=${[CLEAR]}></tc-conflict-radar>`);
+    expect(text(mergeButton(el))).toBe("Combine 2");
+    expect(mergeButton(el).disabled).toBe(false);
+  });
+});
+
+describe("legend and paths", () => {
+  test("names the cell states in words, and dims the folder", async () => {
+    const el = await settleable();
+    expect([...el.querySelectorAll(".ui-cfr__key")].map(text)).toEqual(["Changed", "Overlap", "Conflict", "Settled"]);
+    const path = el.querySelector(`[data-file="${WAYS.path}"] .ui-cfr__path`)!;
+    expect(text(path)).toBe(WAYS.path);
+    expect(text(path.querySelector(".ui-cfr__folder"))).toBe("src/app/");
+    expect(el.querySelector(`[data-file="${CLEAR.path}"] .ui-cfr__folder`)).toBeNull();
+  });
+
+  test("nothing overflows the page when narrow, with the ways stacked", async () => {
+    const wrap = await fixture<HTMLElement>(html`<div style="width: 320px"><tc-conflict-radar mergeable .agents=${AGENTS} .files=${[WAYS]} selected=${WAYS.path}></tc-conflict-radar></div>`);
+    expect(wrap.scrollWidth).toBeLessThanOrEqual(wrap.clientWidth);
+    expect(getComputedStyle(wrap.querySelector(".ui-cfr__ways")!).gridTemplateColumns.split(" ")).toHaveLength(1);
+  });
+});
+
 describe("React", () => {
+  test("settled is controlled when given, and survives re-renders when not", async () => {
+    const host = document.body.appendChild(document.createElement("div"));
+    const root = createRoot(host);
+    const seen: unknown[] = [];
+    const node = (props: object) => React.createElement(ConflictRadar, { agents: AGENTS, files: [WAYS], selected: WAYS.path, ...props });
+    await act(async () => root.render(node({})));
+    await settle();
+    const el = host.querySelector<TcConflictRadar>("tc-conflict-radar")!;
+    await act(async () => way(el, "a").click());
+    await act(async () => root.render(node({})));
+    await settle();
+    expect(el.settled).toEqual({ [WAYS.path]: "a" });
+    await act(async () => root.render(node({ settled: {}, onSettledChange: (v: unknown) => seen.push(v) })));
+    await settle();
+    await act(async () => way(el, "b").click());
+    await settle();
+    expect(seen).toEqual([{ [WAYS.path]: "b" }]);
+    expect(el.settled).toEqual({});
+    await act(async () => root.unmount());
+    host.remove();
+  });
+
   test("a controlled selection stays until the parent changes it, and an uncontrolled one survives re-renders", async () => {
     const host = document.body.appendChild(document.createElement("div"));
     const root = createRoot(host);
@@ -162,6 +308,19 @@ describe("accessibility", () => {
     for (const scheme of ["light", "dark"]) {
       test(`no axe violations, ${look} ${scheme}`, async () => {
         const wrap = await fixture<HTMLElement>(html`<div data-look=${look} style=${`color-scheme: ${scheme}; background: Canvas`}><tc-conflict-radar .agents=${AGENTS} .files=${FILES} selected="conf.ts"></tc-conflict-radar></div>`);
+        await finish(wrap);
+        const { violations } = await axe.run(wrap);
+        expect(violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target).join(", ")}`)).toEqual([]);
+      });
+    }
+  }
+});
+
+describe("accessibility of settling", () => {
+  for (const look of ["standard", "clean"]) {
+    for (const scheme of ["light", "dark"]) {
+      test(`no axe violations, ${look} ${scheme}`, async () => {
+        const wrap = await fixture<HTMLElement>(html`<div data-look=${look} style=${`color-scheme: ${scheme}; background: Canvas`}><tc-conflict-radar mergeable .agents=${AGENTS} .files=${[WAYS, OVER, { ...CONF, path: "kept.ts" }]} selected=${WAYS.path} .settled=${{ "kept.ts": "a" }}></tc-conflict-radar></div>`);
         await finish(wrap);
         const { violations } = await axe.run(wrap);
         expect(violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target).join(", ")}`)).toEqual([]);

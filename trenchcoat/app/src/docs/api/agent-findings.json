@@ -70,6 +70,22 @@
      "readonly": false
     },
     {
+     "name": "layout",
+     "attribute": "layout",
+     "type": "AgentFindingsLayout",
+     "default": "\"columns\"",
+     "description": "How the agents and feed sit: \"columns\", side by side, or \"stacked\", agents above the feed",
+     "readonly": false
+    },
+    {
+     "name": "now",
+     "attribute": "now",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "\"Now\", epoch ms: when given, findings say how long ago, such as \"5 sec. ago\". The element doesn't read the clock",
+     "readonly": false
+    },
+    {
      "name": "labels",
      "attribute": null,
      "type": "Partial<AgentFindingsLabels>",
@@ -132,10 +148,12 @@
     "--tc-fill-selected",
     "--tc-focus-outline",
     "--tc-focus-ring-offset",
+    "--tc-font-mono",
     "--tc-font-sans",
     "--tc-font-size-sm",
     "--tc-font-size-xs",
     "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
     "--tc-hairline",
     "--tc-line-height-normal",
     "--tc-meter-fill",
@@ -153,6 +171,7 @@
     "--tc-surface-on-tray",
     "--tc-surface-raised",
     "--tc-surface-tray",
+    "--tc-text-muted",
     "--tc-text-primary",
     "--tc-text-secondary",
     "--tc-tray-inset",
@@ -240,6 +259,14 @@
     {
      "name": "locale",
      "attribute": "locale"
+    },
+    {
+     "name": "layout",
+     "attribute": "layout"
+    },
+    {
+     "name": "now",
+     "attribute": "now"
     }
    ],
    "events": [
@@ -406,6 +433,22 @@
     ]
    },
    {
+    "id": "relative-time-format",
+    "name": "Intl.RelativeTimeFormat",
+    "bcd": "javascript.builtins.Intl.RelativeTimeFormat",
+    "versions": {
+     "chrome": "71",
+     "edge": "79",
+     "firefox": "65",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
     "id": "adopted-stylesheets",
     "name": "adoptedStyleSheets",
     "bcd": "api.Document.adoptedStyleSheets",
@@ -468,7 +511,7 @@
   "windowed": false
  },
  "size": {
-  "min": 26907,
-  "gzip": 8834
+  "min": 32794,
+  "gzip": 10029
  }
 }

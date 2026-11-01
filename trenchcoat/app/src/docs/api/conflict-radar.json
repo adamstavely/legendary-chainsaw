@@ -54,6 +54,30 @@
      "readonly": false
     },
     {
+     "name": "settled",
+     "attribute": null,
+     "type": "ConflictSettled",
+     "default": "{}",
+     "description": "Which agent's way is kept, by file path. Changed by the user unless a tc-settled-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "mergeable",
+     "attribute": "mergeable",
+     "type": "boolean",
+     "default": "false",
+     "description": "Show the merge button, enabled once no conflict is unsettled",
+     "readonly": false
+    },
+    {
+     "name": "mergeLabel",
+     "attribute": "merge-label",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The merge button's words; {n} is how many agents. By default \"Merge {n} branches\"",
+     "readonly": false
+    },
+    {
      "name": "labels",
      "attribute": null,
      "type": "Partial<ConflictRadarLabels>",
@@ -88,6 +112,18 @@
      "detail": "",
      "description": "Resolve was pressed ({ file }: ConflictResolve)",
      "cancelable": false
+    },
+    {
+     "name": "tc-settled-change",
+     "detail": "",
+     "description": "A way was kept or undone ({ settled, file, agent }: ConflictSettledChange); cancelable – prevented, `settled` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-merge",
+     "detail": "",
+     "description": "Merge was pressed ({ settled }: ConflictMerge); cancelable – prevented, nothing is announced",
+     "cancelable": true
     }
    ],
    "slots": [],
@@ -104,16 +140,23 @@
     }
    ],
    "tokens": [
+    "--tc-action-primary-bg",
+    "--tc-action-primary-bg-hover",
+    "--tc-action-primary-fg",
+    "--tc-action-primary-shadow",
     "--tc-border-subtle",
     "--tc-card-radius",
     "--tc-card-shadow",
     "--tc-control-font-weight",
     "--tc-control-h-sm",
+    "--tc-control-px-md",
     "--tc-control-px-sm",
+    "--tc-control-radius-md",
     "--tc-control-radius-sm",
     "--tc-fill-hover",
     "--tc-fill-selected",
     "--tc-focus-outline",
+    "--tc-focus-ring-offset",
     "--tc-focus-ring-width",
     "--tc-font-mono",
     "--tc-font-sans",
@@ -123,13 +166,18 @@
     "--tc-font-weight-regular",
     "--tc-hairline",
     "--tc-line-height-normal",
+    "--tc-radius-2xs",
+    "--tc-space-0-5",
     "--tc-space-1",
+    "--tc-space-1-5",
     "--tc-space-2",
     "--tc-space-3",
     "--tc-space-4",
     "--tc-space-6",
     "--tc-status-danger-bg",
     "--tc-status-danger-fg",
+    "--tc-status-success-bg",
+    "--tc-status-success-fg",
     "--tc-status-warning-bg",
     "--tc-status-warning-fg",
     "--tc-surface-on-tray",
@@ -202,18 +250,39 @@
      "type": "(file: ConflictFile) => void",
      "optional": true,
      "description": "Resolve was pressed"
+    },
+    {
+     "name": "settled",
+     "type": "ConflictSettled",
+     "optional": true,
+     "description": "Which agent's way is kept, by file path – controlled when given"
+    },
+    {
+     "name": "defaultSettled",
+     "type": "ConflictSettled",
+     "optional": true,
+     "description": "What's kept on mount when `settled` isn't controlled"
+    },
+    {
+     "name": "onSettledChange",
+     "type": "(settled: ConflictSettled, detail: ConflictSettledChange) => void",
+     "optional": true,
+     "description": "A way was kept or undone"
     }
    ],
    "hides": [
     "heading",
     "selected",
     "filter",
+    "settled",
     "children"
    ],
    "events": {
     "tc-selected-change": "onSelectedChange",
     "tc-filter-change": null,
-    "tc-resolve": "onResolve"
+    "tc-resolve": "onResolve",
+    "tc-settled-change": "onSettledChange",
+    "tc-merge": "onTcMerge"
    }
   }
  ],
@@ -228,6 +297,7 @@
    "data": [
     "agents",
     "files",
+    "settled",
     "labels"
    ],
    "attributes": [
@@ -246,6 +316,14 @@
     {
      "name": "filter",
      "attribute": "filter"
+    },
+    {
+     "name": "mergeable",
+     "attribute": "mergeable"
+    },
+    {
+     "name": "mergeLabel",
+     "attribute": "merge-label"
     }
    ],
    "events": [
@@ -260,6 +338,14 @@
     {
      "name": "tc-resolve",
      "cancelable": false
+    },
+    {
+     "name": "tc-settled-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-merge",
+     "cancelable": true
     }
    ],
    "controlled": [
@@ -270,6 +356,10 @@
     {
      "property": "filter",
      "event": "tc-filter-change"
+    },
+    {
+     "property": "settled",
+     "event": "tc-settled-change"
     }
    ],
    "form": null,
@@ -466,7 +556,7 @@
   "windowed": false
  },
  "size": {
-  "min": 23952,
-  "gzip": 7710
+  "min": 32077,
+  "gzip": 9343
  }
 }

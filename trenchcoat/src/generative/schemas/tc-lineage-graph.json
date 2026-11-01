@@ -37,8 +37,8 @@
     "view": {
       "type": "string",
       "enum": [
-        "graph",
-        "chain"
+        "chain",
+        "graph"
       ],
       "description": "\"graph\" or \"chain\" (the event chain). Changed by the user unless a tc-view-change listener calls preventDefault()"
     },

@@ -46,6 +46,30 @@
      "readonly": false
     },
     {
+     "name": "layout",
+     "attribute": "layout",
+     "type": "ScheduledRunsLayout",
+     "default": "\"calendar\"",
+     "description": "\"calendar\" lays sessions out by day and time beside To schedule; \"cards\" lets them wrap",
+     "readonly": false
+    },
+    {
+     "name": "mode",
+     "attribute": "mode",
+     "type": "ScheduledRunsMode",
+     "default": "\"manual\"",
+     "description": "\"manual\" lets tasks move; \"auto\" plans them. Changed by the user unless a tc-mode-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "now",
+     "attribute": "now",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The current time, epoch ms, for the Now line. Unset, there's no line",
+     "readonly": false
+    },
+    {
      "name": "unit",
      "attribute": "unit",
      "type": "string",
@@ -82,7 +106,13 @@
     {
      "name": "tc-placements-change",
      "detail": "",
-     "description": "A task was moved ({ placements, task }: ScheduledPlacementsChange); cancelable – prevented, `placements` stays as it was",
+     "description": "A task was moved, or Auto redid the plan ({ placements, task }: ScheduledPlacementsChange); cancelable – prevented, `placements` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-mode-change",
+     "detail": "",
+     "description": "Auto or Manual was picked ({ mode }: ScheduledModeChange); cancelable – prevented, `mode` stays as it was",
      "cancelable": true
     }
    ],
@@ -120,16 +150,23 @@
     "--tc-field-shadow",
     "--tc-fill-hover",
     "--tc-focus-outline",
+    "--tc-focus-ring",
     "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
     "--tc-font-sans",
     "--tc-font-size-sm",
     "--tc-font-size-xs",
     "--tc-font-weight-medium",
     "--tc-hairline",
     "--tc-line-height-normal",
+    "--tc-menu-bg",
+    "--tc-menu-shadow",
     "--tc-meter-fill",
     "--tc-meter-track",
     "--tc-radius-full",
+    "--tc-sdr-column",
+    "--tc-sdr-columns",
+    "--tc-sdr-row",
     "--tc-space-0-5",
     "--tc-space-1",
     "--tc-space-1-5",
@@ -137,15 +174,20 @@
     "--tc-space-3",
     "--tc-space-4",
     "--tc-space-6",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-warning-bg",
     "--tc-status-warning-fg",
     "--tc-status-warning-solid",
     "--tc-surface-on-tray",
     "--tc-surface-raised",
     "--tc-surface-tray",
+    "--tc-text-muted",
     "--tc-text-primary",
     "--tc-text-secondary",
     "--tc-tray-inset",
-    "--tc-tray-radius"
+    "--tc-tray-radius",
+    "--tc-z-popover"
    ]
   }
  ],
@@ -189,15 +231,35 @@
      "type": "(placements: ScheduledPlacement[], detail: ScheduledPlacementsChange) => void",
      "optional": true,
      "description": "A task was moved"
+    },
+    {
+     "name": "mode",
+     "type": "ScheduledRunsMode",
+     "optional": true,
+     "description": "\"auto\" or \"manual\" – controlled when given"
+    },
+    {
+     "name": "defaultMode",
+     "type": "ScheduledRunsMode",
+     "optional": true,
+     "description": "The mode on mount when `mode` isn't controlled; by default \"manual\""
+    },
+    {
+     "name": "onModeChange",
+     "type": "(mode: ScheduledRunsMode) => void",
+     "optional": true,
+     "description": "Auto or Manual was picked"
     }
    ],
    "hides": [
     "heading",
     "placements",
+    "mode",
     "children"
    ],
    "events": {
-    "tc-placements-change": "onPlacementsChange"
+    "tc-placements-change": "onPlacementsChange",
+    "tc-mode-change": null
    }
   }
  ],
@@ -225,6 +287,18 @@
      "attribute": "description"
     },
     {
+     "name": "layout",
+     "attribute": "layout"
+    },
+    {
+     "name": "mode",
+     "attribute": "mode"
+    },
+    {
+     "name": "now",
+     "attribute": "now"
+    },
+    {
      "name": "unit",
      "attribute": "unit"
     },
@@ -237,12 +311,20 @@
     {
      "name": "tc-placements-change",
      "cancelable": true
+    },
+    {
+     "name": "tc-mode-change",
+     "cancelable": true
     }
    ],
    "controlled": [
     {
      "property": "placements",
      "event": "tc-placements-change"
+    },
+    {
+     "property": "mode",
+     "event": "tc-mode-change"
     }
    ],
    "form": null,
@@ -341,7 +423,24 @@
     "why": "Focus rings for keyboard users.",
     "via": [
      "itself",
+     "segmented-control",
      "internal/kit"
+    ]
+   },
+   {
+    "id": "individual-transforms",
+    "name": "translate, scale and rotate properties",
+    "bcd": "css.properties.translate",
+    "versions": {
+     "chrome": "104",
+     "edge": "104",
+     "firefox": "72",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "segmented-control"
     ]
    },
    {
@@ -359,8 +458,76 @@
     "why": "Every rule is keyed on :where() so the page can override it.",
     "via": [
      "itself",
+     "segmented-control",
      "internal/base",
      "tokens.css"
+    ]
+   },
+   {
+    "id": "resize-observer",
+    "name": "ResizeObserver",
+    "bcd": "api.ResizeObserver",
+    "versions": {
+     "chrome": "64",
+     "edge": "79",
+     "firefox": "69",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "via": [
+     "segmented-control"
+    ]
+   },
+   {
+    "id": "mask",
+    "name": "CSS masks",
+    "bcd": "css.properties.mask-image",
+    "versions": {
+     "chrome": "1",
+     "edge": "79",
+     "firefox": "53",
+     "safari": "4",
+     "safari_ios": "3.2"
+    },
+    "progressive": false,
+    "note": "with the -webkit- prefix",
+    "via": [
+     "segmented-control"
+    ]
+   },
+   {
+    "id": "scrollbar-width",
+    "name": "scrollbar-width",
+    "bcd": "css.properties.scrollbar-width",
+    "versions": {
+     "chrome": "121",
+     "edge": "121",
+     "firefox": "64",
+     "safari": "18.2",
+     "safari_ios": "18.2"
+    },
+    "progressive": true,
+    "without": "Scrollbars keep the browser's default width.",
+    "via": [
+     "segmented-control"
+    ]
+   },
+   {
+    "id": "at-property",
+    "name": "@property",
+    "bcd": "css.at-rules.property",
+    "versions": {
+     "chrome": "85",
+     "edge": "85",
+     "firefox": "128",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "The registered custom properties don't interpolate, so the transitions and spins they drive jump to their end state.",
+    "via": [
+     "segmented-control"
     ]
    },
    {
@@ -399,31 +566,60 @@
      "internal/kit",
      "tokens.css"
     ]
+   },
+   {
+    "id": "overscroll-contain",
+    "name": "overscroll-behavior: contain",
+    "bcd": "css.properties.overscroll-behavior.contain",
+    "versions": {
+     "chrome": "63",
+     "edge": "18",
+     "firefox": "59",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "Scrolling past the end of a list carries on scrolling the page.",
+    "via": [
+     "segmented-control"
+    ]
    }
   ]
  },
  "runtime": {
-  "timers": [],
-  "frames": [],
+  "timers": [
+   "setTimeout (segmented-control)"
+  ],
+  "frames": [
+   "requestAnimationFrame, cancelled (segmented-control)"
+  ],
   "animations": 0,
   "observers": [
+   "ResizeObserver (segmented-control)",
    "MutationObserver (internal/base › TcElement)",
    "MutationObserver (internal/controllers › AriaForwardController)"
   ],
   "clock": [],
-  "listeners": [],
+  "listeners": [
+   "window selectstart",
+   "window pointermove",
+   "window pointerup",
+   "window pointercancel",
+   "window keydown"
+  ],
   "pauses": {
    "offscreen": [],
    "hidden": [],
    "reducedMotion": [
     "CSS",
+    "CSS (segmented-control)",
     "CSS (internal/kit › kitCss)"
    ]
   },
   "windowed": false
  },
  "size": {
-  "min": 21036,
-  "gzip": 7299
+  "min": 64021,
+  "gzip": 16321
  }
 }

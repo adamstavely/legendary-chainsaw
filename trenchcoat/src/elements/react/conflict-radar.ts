@@ -1,9 +1,9 @@
 import { createComponent, type EventName } from "@lit/react";
 import * as React from "react";
-import { TcConflictRadar, type ConflictFile, type ConflictFilter, type ConflictFilterChange, type ConflictResolve, type ConflictSelectedChange } from "../conflict-radar";
+import { TcConflictRadar, type ConflictFile, type ConflictFilter, type ConflictFilterChange, type ConflictMerge, type ConflictResolve, type ConflictSelectedChange, type ConflictSettled, type ConflictSettledChange } from "../conflict-radar";
 import { h, useControlled } from "./internal";
 
-export type { ConflictAgent, ConflictEdit, ConflictFile, ConflictFilter, ConflictFilterChange, ConflictRadarLabels, ConflictResolve, ConflictSelectedChange, ConflictStatus } from "../conflict-radar";
+export type { ConflictAgent, ConflictEdit, ConflictFile, ConflictFilter, ConflictFilterChange, ConflictMerge, ConflictRadarLabels, ConflictResolve, ConflictSelectedChange, ConflictSettled, ConflictSettledChange, ConflictStatus } from "../conflict-radar";
 export { conflictStatus, defaultConflictRadarLabels } from "../conflict-radar";
 
 const RawConflictRadar = createComponent({
@@ -14,10 +14,12 @@ const RawConflictRadar = createComponent({
     onTcSelectedChange: "tc-selected-change" as EventName<CustomEvent<ConflictSelectedChange>>,
     onTcFilterChange: "tc-filter-change" as EventName<CustomEvent<ConflictFilterChange>>,
     onTcResolve: "tc-resolve" as EventName<CustomEvent<ConflictResolve>>,
+    onTcSettledChange: "tc-settled-change" as EventName<CustomEvent<ConflictSettledChange>>,
+    onTcMerge: "tc-merge" as EventName<CustomEvent<ConflictMerge>>,
   },
 });
 type RawProps = React.ComponentProps<typeof RawConflictRadar>;
-type Owned = "heading" | "selected" | "filter" | "onTcSelectedChange" | "onTcFilterChange" | "onTcResolve" | "children";
+type Owned = "heading" | "selected" | "filter" | "settled" | "onTcSelectedChange" | "onTcFilterChange" | "onTcResolve" | "onTcSettledChange" | "children";
 export type ConflictRadarProps = Omit<RawProps, Owned> & {
   /** The heading; by default "Conflict radar" */
   title?: string;
@@ -35,21 +37,35 @@ export type ConflictRadarProps = Omit<RawProps, Owned> & {
   onFilterChange?: (filter: ConflictFilter) => void;
   /** Resolve was pressed */
   onResolve?: (file: ConflictFile) => void;
+  /** Which agent's way is kept, by file path – controlled when given */
+  settled?: ConflictSettled;
+  /** What's kept on mount when `settled` isn't controlled */
+  defaultSettled?: ConflictSettled;
+  /** A way was kept or undone */
+  onSettledChange?: (settled: ConflictSettled, detail: ConflictSettledChange) => void;
 };
 
-export function ConflictRadar({ title, selected, defaultSelected = null, onSelectedChange, filter, defaultFilter = "all", onFilterChange, onResolve, ...props }: ConflictRadarProps) {
+const NONE_SETTLED: ConflictSettled = {};
+
+export function ConflictRadar({ title, selected, defaultSelected = null, onSelectedChange, filter, defaultFilter = "all", onFilterChange, onResolve, settled, defaultSettled = NONE_SETTLED, onSettledChange, ...props }: ConflictRadarProps) {
   const s = useControlled<string | null>(selected, defaultSelected, undefined);
   const f = useControlled<ConflictFilter>(filter, defaultFilter, onFilterChange);
+  const k = useControlled<ConflictSettled>(settled, defaultSettled, undefined);
   return h(RawConflictRadar, {
     ...props,
     heading: title ?? "Conflict radar",
     selected: s.value,
     filter: f.value,
+    settled: k.value,
     onTcSelectedChange: (e: CustomEvent<ConflictSelectedChange>) => {
       s.handler(e.detail.selected, e);
       onSelectedChange?.(e.detail.selected, e.detail.file);
     },
     onTcFilterChange: (e: CustomEvent<ConflictFilterChange>) => f.handler(e.detail.filter, e),
     onTcResolve: (e: CustomEvent<ConflictResolve>) => onResolve?.(e.detail.file),
+    onTcSettledChange: (e: CustomEvent<ConflictSettledChange>) => {
+      k.handler(e.detail.settled, e);
+      onSettledChange?.(e.detail.settled, e.detail);
+    },
   });
 }
