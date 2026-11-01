@@ -8,8 +8,8 @@
     "layout": {
       "type": "string",
       "enum": [
-        "wide",
-        "stacked"
+        "stacked",
+        "wide"
       ],
       "description": "\"stacked\" (default): one column at most 460px wide · \"wide\": full width, two columns from 640px"
     },

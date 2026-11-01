@@ -46,6 +46,46 @@
      "readonly": false
     },
     {
+     "name": "view",
+     "attribute": "view",
+     "type": "AgentHandoffView",
+     "default": "\"chain\"",
+     "description": "How it's drawn: \"chain\", a list of one task's journey, or \"pipeline\", agents across the top with queues between them",
+     "readonly": false
+    },
+    {
+     "name": "queues",
+     "attribute": null,
+     "type": "AgentHandoffQueue[]",
+     "default": "[]",
+     "description": "The work waiting between agents, shown in the pipeline view",
+     "readonly": false
+    },
+    {
+     "name": "itemSelected",
+     "attribute": "item-selected",
+     "type": "string | null",
+     "default": "null",
+     "description": "The picked queue item's id, or null. Changed by the user unless a tc-item-selected-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "currency",
+     "attribute": "currency",
+     "type": "string",
+     "default": "\"USD\"",
+     "description": "The currency for `cost`",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The locale for costs",
+     "readonly": false
+    },
+    {
      "name": "labels",
      "attribute": null,
      "type": "Partial<AgentHandoffLabels>",
@@ -68,6 +108,12 @@
      "detail": "",
      "description": "A handoff was opened or closed ({ selected, handoff }: AgentHandoffSelectedChange); cancelable – prevented, `selected` stays as it was",
      "cancelable": true
+    },
+    {
+     "name": "tc-item-selected-change",
+     "detail": "",
+     "description": "A queue's item was picked or cleared ({ itemSelected, item }: AgentHandoffItemSelectedChange); cancelable – prevented, `itemSelected` stays as it was",
+     "cancelable": true
     }
    ],
    "slots": [],
@@ -87,18 +133,38 @@
      "looks": [
       "both"
      ]
+    },
+    {
+     "name": "--tc-agh-wire",
+     "value": "var(--tc-space-6)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-agh-line",
+     "value": "var(--tc-border-strong)",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
     }
    ],
    "tokens": [
+    "--tc-agh-column",
+    "--tc-agh-columns",
+    "--tc-border-strong",
     "--tc-border-subtle",
     "--tc-card-radius",
     "--tc-card-shadow",
     "--tc-control-h-sm",
+    "--tc-control-radius-md",
     "--tc-control-radius-sm",
     "--tc-fill-hover",
     "--tc-fill-selected",
     "--tc-focus-outline",
     "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
     "--tc-font-sans",
     "--tc-font-size-sm",
     "--tc-font-size-xs",
@@ -108,6 +174,7 @@
     "--tc-radius-full",
     "--tc-space-0-5",
     "--tc-space-1",
+    "--tc-space-1-5",
     "--tc-space-2",
     "--tc-space-2-5",
     "--tc-space-3",
@@ -163,15 +230,35 @@
      "type": "(selected: string | null, handoff: AgentHandoffLink | null) => void",
      "optional": true,
      "description": "A handoff was opened or closed"
+    },
+    {
+     "name": "itemSelected",
+     "type": "string | null",
+     "optional": true,
+     "description": "The picked queue item's id – controlled when given"
+    },
+    {
+     "name": "defaultItemSelected",
+     "type": "string | null",
+     "optional": true,
+     "description": "The picked queue item on mount when `itemSelected` isn't controlled"
+    },
+    {
+     "name": "onItemSelectedChange",
+     "type": "(itemSelected: string | null, item: AgentHandoffQueueItem | null) => void",
+     "optional": true,
+     "description": "A queue's item was picked or cleared"
     }
    ],
    "hides": [
     "heading",
     "selected",
+    "itemSelected",
     "children"
    ],
    "events": {
-    "tc-selected-change": "onSelectedChange"
+    "tc-selected-change": "onSelectedChange",
+    "tc-item-selected-change": "onItemSelectedChange"
    }
   }
  ],
@@ -186,6 +273,7 @@
    "data": [
     "steps",
     "handoffs",
+    "queues",
     "labels"
    ],
    "attributes": [
@@ -200,11 +288,31 @@
     {
      "name": "selected",
      "attribute": "selected"
+    },
+    {
+     "name": "view",
+     "attribute": "view"
+    },
+    {
+     "name": "itemSelected",
+     "attribute": "item-selected"
+    },
+    {
+     "name": "currency",
+     "attribute": "currency"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
     }
    ],
    "events": [
     {
      "name": "tc-selected-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-item-selected-change",
      "cancelable": true
     }
    ],
@@ -212,6 +320,10 @@
     {
      "property": "selected",
      "event": "tc-selected-change"
+    },
+    {
+     "property": "itemSelected",
+     "event": "tc-item-selected-change"
     }
    ],
    "form": null,
@@ -276,6 +388,23 @@
     "why": "Tints and washes mixed from the tokens.",
     "via": [
      "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
     ]
    },
    {
@@ -392,7 +521,7 @@
   "windowed": false
  },
  "size": {
-  "min": 21204,
-  "gzip": 7094
+  "min": 31914,
+  "gzip": 9303
  }
 }

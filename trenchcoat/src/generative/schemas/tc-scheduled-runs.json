@@ -34,6 +34,26 @@
       },
       "description": "Where each task goes; unset, planRuns() decides. Changed by the user unless a tc-placements-change listener calls preventDefault()"
     },
+    "layout": {
+      "type": "string",
+      "enum": [
+        "calendar",
+        "cards"
+      ],
+      "description": "\"calendar\" lays sessions out by day and time beside To schedule; \"cards\" lets them wrap"
+    },
+    "mode": {
+      "type": "string",
+      "enum": [
+        "manual",
+        "auto"
+      ],
+      "description": "\"manual\" lets tasks move; \"auto\" plans them. Changed by the user unless a tc-mode-change listener calls preventDefault()"
+    },
+    "now": {
+      "type": "number",
+      "description": "The current time, epoch ms, for the Now line. Unset, there's no line"
+    },
     "unit": {
       "type": "string",
       "description": "What the numbers count"
@@ -83,6 +103,45 @@
         },
         "moved": {
           "type": "string"
+        },
+        "toSchedule": {
+          "type": "string"
+        },
+        "nothingWaiting": {
+          "type": "string"
+        },
+        "anyDay": {
+          "type": "string"
+        },
+        "mode": {
+          "type": "string"
+        },
+        "auto": {
+          "type": "string"
+        },
+        "manual": {
+          "type": "string"
+        },
+        "autoNote": {
+          "type": "string"
+        },
+        "replanned": {
+          "type": "string"
+        },
+        "now": {
+          "type": "string"
+        },
+        "share": {
+          "type": "string"
+        },
+        "tasks": {
+          "type": "string"
+        },
+        "tasksOne": {
+          "type": "string"
+        },
+        "refused": {
+          "type": "string"
         }
       },
       "additionalProperties": false,
@@ -103,6 +162,18 @@
         "day": {
           "type": "string",
           "description": "When it is, in words: \"Monday\""
+        },
+        "time": {
+          "type": "string",
+          "description": "When in the day, in words: \"07:00\""
+        },
+        "start": {
+          "type": "number",
+          "description": "When it starts, epoch ms, for the Now line"
+        },
+        "end": {
+          "type": "number",
+          "description": "When it ends, epoch ms, for the Now line"
         },
         "limit": {
           "type": "number",
@@ -140,6 +211,37 @@
         "pinned": {
           "type": "string",
           "description": "A session's id it must run in, whole"
+        },
+        "agent": {
+          "type": "string",
+          "description": "Which agent runs it"
+        },
+        "detail": {
+          "type": "string",
+          "description": "One line on what it does"
+        },
+        "stats": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string"
+              },
+              "value": {
+                "type": [
+                  "string",
+                  "number"
+                ]
+              }
+            },
+            "required": [
+              "label",
+              "value"
+            ],
+            "additionalProperties": false
+          },
+          "description": "Small facts about it: { label: \"Files\", value: 48 }"
         }
       },
       "required": [

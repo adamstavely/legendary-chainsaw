@@ -154,6 +154,123 @@ describe("tc-agent-findings", () => {
   });
 });
 
+const RICH_AGENTS: AgentFindingsAgent[] = [
+  { id: "a", name: "Auditor", status: "running", checked: 16, total: 24, activity: "Reading the ledger" },
+  { id: "b", name: "Prover", status: "running", checked: 7, total: 12 },
+  { id: "c", name: "Words", status: "done", progress: 1, checked: "All 8 lines" },
+];
+const RICH: AgentFinding[] = [
+  { id: "1", agent: "a", severity: "critical", title: "Totals can differ", location: "ledger.csv:204", at: 95_000 },
+  { id: "2", agent: "a", severity: "high", title: "No cap on grants", at: 90_000 },
+  { id: "3", agent: "b", severity: "high", title: "Stale rate", location: "rates.csv:57", at: 40_000 },
+  { id: "4", agent: "b", severity: "info", title: "Minor note", at: 1_000 },
+];
+const rich = () => fixture<TcAgentFindings>(html`<tc-agent-findings locale="en-US" .now=${100_000} .agents=${RICH_AGENTS} .findings=${RICH}></tc-agent-findings>`);
+
+describe("tc-agent-findings summary and extras", () => {
+  test("columns stays the default, and a plain setup still reads as before", async () => {
+    const el = await view();
+    expect(el.layout).toBe("columns");
+    expect(el.querySelector(".ui-agf__checks")).toBeNull();
+    expect(text(el.querySelector(".ui-agf__pct"))).toBe("62%");
+    expect(text(el.querySelector(".ui-agf__checked"))).toBe("31 of 50");
+  });
+
+  test("the summary totals the numeric checks and each severity, in words", async () => {
+    const el = await rich();
+    expect(text(el.querySelector(".ui-agf__checks"))).toBe("23 of 36 checks");
+    expect([...el.querySelectorAll(".ui-agf__total")].map(text)).toEqual(["1 critical", "2 high", "1 info"]);
+    expect(el.querySelector(".ui-agf__totals")!.getAttribute("aria-label")).toBe("Found so far");
+  });
+
+  test("totals ignore the filters", async () => {
+    const el = await rich();
+    await pick(filters(el)[1]!, "info");
+    expect([...el.querySelectorAll(".ui-agf__total")].map(text)).toEqual(["1 critical", "2 high", "1 info"]);
+  });
+
+  test("critical comes first in the filter, and it has its own word and mark", async () => {
+    const el = await rich();
+    expect([...filters(el)[1]!.options].map((o) => o.value)).toEqual(["all", "critical", "high", "medium", "low", "info"]);
+    expect(text(el.querySelector('.ui-agf__severity[data-severity="critical"]'))).toBe("Critical");
+    expect(el.querySelector('.ui-agf__severity[data-severity="critical"] svg')).toBeTruthy();
+  });
+
+  test("an agent shows what it's doing, a fraction and a bar worked out from the numbers", async () => {
+    const el = await rich();
+    const row = el.querySelector(".ui-agf__agent")!;
+    expect(text(row.querySelector(".ui-agf__activity"))).toBe("Reading the ledger");
+    expect(text(row.querySelector(".ui-agf__fraction"))).toBe("16/24");
+    expect(row.querySelector(".ui-agf__pct")).toBeNull();
+    expect(row.querySelector('[role="progressbar"]')!.getAttribute("aria-valuenow")).toBe("67");
+  });
+
+  test("words in checked still work beside numbers elsewhere", async () => {
+    const el = await rich();
+    const row = el.querySelectorAll(".ui-agf__agent")[2]!;
+    expect(text(row.querySelector(".ui-agf__checked"))).toBe("All 8 lines");
+    expect(text(row.querySelector(".ui-agf__pct"))).toBe("100%");
+  });
+
+  test("a total of zero gives no bar and doesn't divide by zero", async () => {
+    const el = await fixture<TcAgentFindings>(html`<tc-agent-findings .agents=${[{ id: "z", name: "Z", status: "queued", checked: 0, total: 0 }]}></tc-agent-findings>`);
+    expect(el.querySelector('[role="progressbar"]')).toBeNull();
+    expect(text(el.querySelector(".ui-agf__checks"))).toBe("0 of 0 checks");
+  });
+
+  test("each agent counts the top two severities in use, with words for screen readers, and zero is muted", async () => {
+    const el = await rich();
+    const [first, second] = [...el.querySelectorAll(".ui-agf__agent")];
+    expect([...first!.querySelectorAll(".ui-agf__tally")].map(text)).toEqual(["1 critical", "1 high"]);
+    const tallies = [...second!.querySelectorAll<HTMLElement>(".ui-agf__tally")];
+    expect(tallies.map(text)).toEqual(["0 critical", "1 high"]);
+    expect(tallies[0]!.hasAttribute("data-zero")).toBe(true);
+    expect(tallies[1]!.hasAttribute("data-zero")).toBe(false);
+    const plain = await fixture<TcAgentFindings>(html`<tc-agent-findings .agents=${AGENTS} .findings=${FINDINGS}></tc-agent-findings>`);
+    expect([...plain.querySelector(".ui-agf__agent")!.querySelectorAll(".ui-agf__tally")].map(text)).toEqual(["1 high", "0 medium"]);
+  });
+
+  test("findings show their location, and how long ago when `now` is given", async () => {
+    const el = await rich();
+    const row = el.querySelector('[data-finding="1"]')!;
+    expect(text(row.querySelector(".ui-agf__location"))).toBe("ledger.csv:204");
+    expect(getComputedStyle(row.querySelector(".ui-agf__location")!).fontFamily).toMatch(/mono/i);
+    expect(text(row.querySelector(".ui-agf__when"))).toMatch(/5 sec/);
+    el.now = 3_700_000;
+    await settle();
+    expect(text(row.querySelector(".ui-agf__when"))).toMatch(/hr/);
+  });
+
+  test("stacked puts the agents above the feed", async () => {
+    const wrap = await fixture<HTMLElement>(html`<div style="width: 900px"><tc-agent-findings layout="stacked" .agents=${RICH_AGENTS} .findings=${RICH}></tc-agent-findings></div>`);
+    const agents = wrap.querySelector(".ui-agf__agents-panel")!.getBoundingClientRect();
+    const feed = wrap.querySelector(".ui-agf__feed-panel")!.getBoundingClientRect();
+    expect(feed.top).toBeGreaterThanOrEqual(agents.bottom - 1);
+    expect(getComputedStyle(wrap.querySelector(".ui-agf__finding")!).display).toBe("flex");
+  });
+
+  test("columns keep them side by side, and narrow wraps with no overflow", async () => {
+    const wide = await fixture<HTMLElement>(html`<div style="width: 900px"><tc-agent-findings .agents=${RICH_AGENTS} .findings=${RICH}></tc-agent-findings></div>`);
+    expect(getComputedStyle(wide.querySelector(".ui-agf__grid")!).gridTemplateColumns.split(" ")).toHaveLength(2);
+    const narrow = await fixture<HTMLElement>(html`<div style="width: 300px"><tc-agent-findings layout="stacked" .agents=${RICH_AGENTS} .findings=${RICH}></tc-agent-findings></div>`);
+    const card = narrow.querySelector<HTMLElement>(".ui-agf__card")!;
+    expect(card.scrollWidth).toBeLessThanOrEqual(card.clientWidth + 1);
+    expect(getComputedStyle(narrow.querySelector(".ui-agf__finding")!).display).toBe("grid");
+  });
+
+  test("axe: stacked with everything, in both looks and themes", async () => {
+    for (const look of ["standard", "clean"]) {
+      for (const scheme of ["light", "dark"]) {
+        const wrap = await fixture<HTMLElement>(html`<div data-look=${look} style=${`color-scheme: ${scheme}; background: Canvas`}><tc-agent-findings layout="stacked" .now=${100_000} selected="1" .agents=${RICH_AGENTS} .findings=${RICH}></tc-agent-findings></div>`);
+        await finish(wrap);
+        const { violations } = await axe.run(wrap);
+        expect(violations.map((v) => `${look} ${scheme} ${v.id}: ${v.nodes.map((n) => n.target).join(", ")}`)).toEqual([]);
+        wrap.remove();
+      }
+    }
+  });
+});
+
 describe("React", () => {
   test("an uncontrolled selection survives, and a controlled one stays", async () => {
     const host = document.body.appendChild(document.createElement("div"));

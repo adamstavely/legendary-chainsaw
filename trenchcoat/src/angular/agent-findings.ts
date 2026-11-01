@@ -47,6 +47,14 @@ export class AgentFindings {
   @Input() set locale(v: TcAgentFindings["locale"]) {
     this.#el.locale = v;
   }
+  /** How the agents and feed sit: "columns", side by side, or "stacked", agents above the feed */
+  @Input() set layout(v: TcAgentFindings["layout"]) {
+    this.#el.layout = v;
+  }
+  /** "Now", epoch ms: when given, findings say how long ago, such as "5 sec. ago". The element doesn't read the clock */
+  @Input() set now(v: TcAgentFindings["now"] | `${number}`) {
+    this.#el.now = typeof v === "string" ? Number(v) : v;
+  }
   /** Rename any of the words */
   @Input() set labels(v: TcAgentFindings["labels"]) {
     this.#el.labels = v;

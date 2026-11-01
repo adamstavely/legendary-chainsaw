@@ -13,7 +13,8 @@ import { formatDate } from "./internal/util";
  * <tc-agent-findings> – a group of agents checking something. One row per agent with its progress in numbers and a bar,
  * beside a feed of what they've found, newest first, each with its severity in words and a mark. The feed filters by agent
  * and severity. New findings glide in (not with reduced motion) and are announced politely, several at once as a count.
- * Picking a finding opens its detail below it.
+ * Picking a finding opens its detail below it. With numbers in `checked` and `total`, a line above totals the checks, and
+ * each agent shows a fraction. It always totals what's been found, and with `layout="stacked"` the agents sit above the feed.
  *   · the findings are one tab stop: ↑ ↓ move, Home / End go to the ends, Enter or Space opens, Escape closes
  * Standard: the header on a gray tray above a white card. Clean: one white card, the header its first row. When narrow, the
  * agents sit above the feed.
@@ -22,15 +23,20 @@ import { formatDate } from "./internal/util";
  */
 
 export type AgentFindingsStatus = "queued" | "running" | "done" | "failed";
-export type AgentFindingSeverity = "info" | "low" | "medium" | "high";
+export type AgentFindingSeverity = "info" | "low" | "medium" | "high" | "critical";
+export type AgentFindingsLayout = "columns" | "stacked";
 export type AgentFindingsAgent = {
   id: string;
   name: string;
   status: AgentFindingsStatus;
   /** How far along, 0 to 1 */
   progress?: number;
-  /** What it's checked so far, in words: "412 of 900 records" */
-  checked?: string;
+  /** What it's checked so far: a number, with `total`, or in words: "412 of 900 records" */
+  checked?: number | string;
+  /** How many checks it has to do */
+  total?: number;
+  /** What it's doing now */
+  activity?: string;
 };
 export type AgentFinding = {
   id: string;
@@ -42,6 +48,8 @@ export type AgentFinding = {
   detail?: string;
   /** When it was found, epoch ms */
   at?: number;
+  /** Where it is, such as a file and line */
+  location?: string;
 };
 export type AgentFindingsSeverityFilter = AgentFindingSeverity | "all";
 export type AgentFindingsSelectedChange = { selected: string | null; finding: AgentFinding | null };
@@ -60,6 +68,7 @@ export type AgentFindingsLabels = {
   low: string;
   medium: string;
   high: string;
+  critical: string;
   allAgents: string;
   allSeverities: string;
   filterAgent: string;
@@ -75,6 +84,14 @@ export type AgentFindingsLabels = {
   newOne: string;
   /** {n} */
   newMany: string;
+  /** {checked} and {total}, for all the agents */
+  checks: string;
+  /** {checked} and {total}, for one agent */
+  fraction: string;
+  /** {n} and {severity}, in the totals */
+  severityCount: string;
+  /** Names the totals */
+  totals: string;
 };
 export const defaultAgentFindingsLabels: AgentFindingsLabels = {
   agents: "Agents",
@@ -87,6 +104,7 @@ export const defaultAgentFindingsLabels: AgentFindingsLabels = {
   low: "Low",
   medium: "Medium",
   high: "High",
+  critical: "Critical",
   allAgents: "All agents",
   allSeverities: "All severities",
   filterAgent: "Filter by agent",
@@ -98,6 +116,10 @@ export const defaultAgentFindingsLabels: AgentFindingsLabels = {
   noMatch: "No findings match.",
   newOne: "New finding: {title}, {severity}",
   newMany: "{n} new findings",
+  checks: "{checked} of {total} checks",
+  fraction: "{checked}/{total}",
+  severityCount: "{n} {severity}",
+  totals: "Found so far",
 };
 
 /* search-check: Lucide (ISC, lucide.dev) */
@@ -107,9 +129,10 @@ const MARKS: Record<AgentFindingSeverity, ReturnType<typeof svg>> = {
   info: svg`<circle cx="12" cy="12" r="9"></circle><path d="M12 16v-4M12 8h.01"></path>`,
   low: svg`<circle cx="12" cy="12" r="9"></circle>`,
   medium: svg`<path d="M12 3 21 12 12 21 3 12Z"></path>`,
+  critical: svg`<path d="M7.9 2h8.2L22 7.9v8.2L16.1 22H7.9L2 16.1V7.9Z"></path><path d="M12 8v4M12 16h.01"></path>`,
   high: svg`<path d="m21.7 18-8-14a2 2 0 0 0-3.4 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3Z"></path><path d="M12 9v4M12 17h.01"></path>`,
 };
-const SEVERITIES: AgentFindingSeverity[] = ["high", "medium", "low", "info"];
+const SEVERITIES: AgentFindingSeverity[] = ["critical", "high", "medium", "low", "info"];
 let instances = 0;
 
 /**
@@ -138,6 +161,10 @@ export class TcAgentFindings extends TcElement {
   @property({ attribute: "severity-filter" }) accessor severityFilter: AgentFindingsSeverityFilter = "all";
   /** The locale for times */
   @property() accessor locale: string | undefined = undefined;
+  /** How the agents and feed sit: "columns", side by side, or "stacked", agents above the feed */
+  @property({ reflect: true }) accessor layout: AgentFindingsLayout = "columns";
+  /** "Now", epoch ms: when given, findings say how long ago, such as "5 sec. ago". The element doesn't read the clock */
+  @property({ type: Number }) accessor now: number | undefined = undefined;
   /** Rename any of the words */
   @property({ attribute: false }) accessor labels: Partial<AgentFindingsLabels> = {};
 
@@ -218,22 +245,57 @@ export class TcAgentFindings extends TcElement {
     this.updateComplete.then(() => this.querySelector<HTMLElement>(`[data-finding="${CSS.escape(id)}"]`)?.focus());
   }
 
+  /** The two severities an agent's row counts: the most severe in use, so a critical finding is never left out */
+  private get counted(): [AgentFindingSeverity, AgentFindingSeverity] {
+    return this.findings.some((f) => f.severity === "critical") ? ["critical", "high"] : ["high", "medium"];
+  }
+
+  private lower(word: string) {
+    return word.toLocaleLowerCase(this.locale);
+  }
+
+  private when(at: number) {
+    if (this.now === undefined) return formatDate(at, this.locale, { timeStyle: "short" });
+    const seconds = Math.round((at - this.now) / 1000);
+    const size = Math.abs(seconds);
+    const [value, unit]: [number, Intl.RelativeTimeFormatUnit] = size < 60 ? [seconds, "second"] : size < 3600 ? [Math.round(seconds / 60), "minute"] : size < 86400 ? [Math.round(seconds / 3600), "hour"] : [Math.round(seconds / 86400), "day"];
+    try {
+      return new Intl.RelativeTimeFormat(this.locale, { numeric: "auto", style: "short" }).format(value, unit);
+    } catch {
+      return new Intl.RelativeTimeFormat(undefined, { numeric: "auto", style: "short" }).format(value, unit);
+    }
+  }
+
   private renderAgent(a: AgentFindingsAgent) {
     const w = this.words;
-    const known = typeof a.progress === "number" && Number.isFinite(a.progress);
-    const pct = known ? Math.round(Math.min(1, Math.max(0, a.progress!)) * 100) : null;
+    const numbers = typeof a.checked === "number" && typeof a.total === "number" && a.total > 0 ? { checked: a.checked, total: a.total } : null;
+    const progress = typeof a.progress === "number" ? a.progress : numbers ? numbers.checked / numbers.total : undefined;
+    const known = typeof progress === "number" && Number.isFinite(progress);
+    const pct = known ? Math.round(Math.min(1, Math.max(0, progress)) * 100) : null;
+    const counts = this.counted.map((s) => ({ s, n: this.findings.filter((f) => f.agent === a.id && f.severity === s).length }));
     return html`<li class="ui-agf__agent" data-status=${a.status}>
-      <div class="ui-agf__agent-head">
-        <span class="ui-agf__name">${a.name}</span>
-        <span class="ui-agf__status" data-status=${a.status}>${w[a.status]}</span>
+      <div class="ui-agf__who">
+        <div class="ui-agf__agent-head">
+          <span class="ui-agf__name">${a.name}</span>
+          <span class="ui-agf__status" data-status=${a.status}>${w[a.status]}</span>
+        </div>
+        ${a.activity ? html`<span class="ui-agf__activity">${a.activity}</span>` : nothing}
+        ${typeof a.checked === "string" && a.checked ? html`<span class="ui-agf__checked">${a.checked}</span>` : nothing}
       </div>
       ${pct !== null
         ? html`<div class="ui-agf__progress">
             <span class="ui-agf__track" role="progressbar" aria-label=${w.progress.replace("{agent}", a.name)} aria-valuemin="0" aria-valuemax="100" aria-valuenow=${pct}><span class="ui-agf__fill" style=${styleMap({ width: `${pct}%` })}></span></span>
-            <span class="ui-agf__pct">${pct}%</span>
+            ${numbers ? html`<span class="ui-agf__fraction">${w.fraction.replace("{checked}", String(numbers.checked)).replace("{total}", String(numbers.total))}</span>` : html`<span class="ui-agf__pct">${pct}%</span>`}
           </div>`
         : nothing}
-      ${a.checked ? html`<span class="ui-agf__checked">${a.checked}</span>` : nothing}
+      ${this.findings.length
+        ? html`<div class="ui-agf__counts">
+            ${counts.map(
+              ({ s, n }) =>
+                html`<span class="ui-agf__tally" data-severity=${s} ?data-zero=${n === 0}><svg class="ui-agf__mark" viewBox="0 0 24 24" aria-hidden="true">${MARKS[s]}</svg>${n}<span class="tc-sr-only"> ${this.lower(w[s])}</span></span>`,
+            )}
+          </div>`
+        : nothing}
     </li>`;
   }
 
@@ -246,10 +308,27 @@ export class TcAgentFindings extends TcElement {
       <button type="button" class="ui-agf__finding" data-finding=${f.id} tabindex=${tabStop === f.id ? 0 : -1} aria-expanded=${open ? "true" : "false"} aria-controls=${open ? panel : nothing} @click=${() => this.toggle(f)}>
         <span class="ui-agf__severity" data-severity=${f.severity}><svg class="ui-agf__mark" viewBox="0 0 24 24" aria-hidden="true">${MARKS[f.severity]}</svg>${w[f.severity]}</span>
         <span class="ui-agf__title">${f.title}</span>
-        <span class="ui-agf__meta">${agent}${f.at !== undefined ? html` · ${formatDate(f.at, this.locale, { timeStyle: "short" })}` : nothing}</span>
+        <span class="ui-agf__meta">${agent}${f.location ? html` · <span class="ui-agf__location">${f.location}</span>` : nothing}${f.at !== undefined ? html` · <span class="ui-agf__when">${this.when(f.at)}</span>` : nothing}</span>
       </button>
       ${open ? html`<div class="ui-agf__detail" id=${panel}>${f.detail ?? f.title}</div>` : nothing}
     </li>`;
+  }
+
+  private renderSummary() {
+    const w = this.words;
+    const numeric = this.agents.filter((a) => typeof a.checked === "number" && typeof a.total === "number");
+    const totals = SEVERITIES.map((s) => ({ s, n: this.findings.filter((f) => f.severity === s).length })).filter((t) => t.n > 0);
+    if (!numeric.length && !totals.length) return nothing;
+    const checked = numeric.reduce((n, a) => n + (a.checked as number), 0);
+    const total = numeric.reduce((n, a) => n + a.total!, 0);
+    return html`<div class="ui-agf__summary">
+      ${numeric.length ? html`<span class="ui-agf__checks">${w.checks.replace("{checked}", String(checked)).replace("{total}", String(total))}</span>` : nothing}
+      ${totals.length
+        ? html`<ul class="ui-agf__totals" aria-label=${w.totals}>
+            ${totals.map(({ s, n }) => html`<li class="ui-agf__total" data-severity=${s}><svg class="ui-agf__mark" viewBox="0 0 24 24" aria-hidden="true">${MARKS[s]}</svg>${w.severityCount.replace("{n}", String(n)).replace("{severity}", this.lower(w[s]))}</li>`)}
+          </ul>`
+        : nothing}
+    </div>`;
   }
 
   protected override render() {
@@ -259,6 +338,7 @@ export class TcAgentFindings extends TcElement {
     const count = shown.length === 1 ? w.countOne : w.count.replace("{n}", String(shown.length));
     return html`${cardHead({ icon: ICON, title: this.heading, subtitle: this.description, id: `${this.uid}-title`, aside: html`<span class="ui-agf__count">${count}</span>` })}
       <div class="ui-agf__card">
+        ${this.renderSummary()}
         <div class="ui-agf__grid">
           <section class="ui-agf__agents-panel" aria-labelledby=${`${this.uid}-agents`}>
             <h4 class="ui-agf__section" id=${`${this.uid}-agents`}>${w.agents}</h4>
@@ -311,6 +391,23 @@ export class TcAgentFindings extends TcElement {
 .ui-agf__section { color: var(--tc-text-secondary); font-size: var(--tc-font-size-xs); font-weight: var(--tc-font-weight-medium); }
 .ui-agf__agents { display: grid; gap: var(--tc-space-3); }
 .ui-agf__agent { display: grid; gap: var(--tc-space-1); min-width: 0; }
+.ui-agf__who { display: grid; gap: var(--tc-space-0-5); min-width: 0; }
+.ui-agf__activity { color: var(--tc-text-secondary); font-size: var(--tc-font-size-xs); overflow-wrap: anywhere; }
+.ui-agf__fraction { color: var(--tc-text-secondary); font-size: var(--tc-font-size-xs); font-variant-numeric: tabular-nums; }
+.ui-agf__counts { display: flex; gap: var(--tc-space-2); font-size: var(--tc-font-size-xs); font-variant-numeric: tabular-nums; }
+.ui-agf__tally { display: inline-flex; align-items: center; gap: var(--tc-space-1); font-weight: var(--tc-font-weight-medium); }
+.ui-agf__tally[data-severity="critical"], .ui-agf__total[data-severity="critical"] { color: var(--tc-status-danger-fg); }
+.ui-agf__tally[data-severity="high"], .ui-agf__total[data-severity="high"] { color: var(--tc-status-danger-fg); }
+.ui-agf__tally[data-severity="medium"], .ui-agf__total[data-severity="medium"] { color: var(--tc-status-warning-fg); }
+.ui-agf__tally[data-zero] { color: var(--tc-text-muted); font-weight: var(--tc-font-weight-regular); }
+.ui-agf__summary { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--tc-space-1) var(--tc-space-4); padding: var(--tc-space-3) var(--tc-space-4); box-shadow: inset 0 calc(-1 * var(--tc-hairline)) var(--tc-border-subtle); }
+.ui-agf__checks { font-weight: var(--tc-font-weight-medium); font-variant-numeric: tabular-nums; }
+.ui-agf__totals { display: flex; flex-wrap: wrap; gap: var(--tc-space-1) var(--tc-space-3); font-size: var(--tc-font-size-xs); }
+.ui-agf__total { display: inline-flex; align-items: center; gap: var(--tc-space-1); color: var(--tc-text-secondary); font-weight: var(--tc-font-weight-medium); }
+.ui-agf__location { font-family: var(--tc-font-mono); overflow-wrap: anywhere; }
+.ui-agf__when { white-space: nowrap; }
+[data-ui="agf"][layout="stacked"] .ui-agf__grid { grid-template-columns: minmax(0, 1fr); }
+[data-ui="agf"][layout="stacked"] .ui-agf__feed-panel { box-shadow: inset 0 var(--tc-hairline) var(--tc-border-subtle); }
 .ui-agf__agent-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--tc-space-2); }
 .ui-agf__name { font-weight: var(--tc-font-weight-medium); overflow-wrap: anywhere; }
 .ui-agf__status { flex: none; color: var(--tc-text-secondary); font-size: var(--tc-font-size-xs); }
@@ -333,12 +430,25 @@ export class TcAgentFindings extends TcElement {
 .ui-agf__finding[aria-expanded="true"] { background: var(--tc-fill-selected); }
 .ui-agf__severity { display: inline-flex; align-items: center; gap: var(--tc-space-1); color: var(--tc-text-secondary); font-size: var(--tc-font-size-xs); font-weight: var(--tc-font-weight-medium); }
 .ui-agf__severity[data-severity="medium"] { color: var(--tc-status-warning-fg); }
-.ui-agf__severity[data-severity="high"] { color: var(--tc-status-danger-fg); }
+.ui-agf__severity[data-severity="high"], .ui-agf__severity[data-severity="critical"] { color: var(--tc-status-danger-fg); }
 .ui-agf__mark { flex: none; width: var(--tc-space-3); height: var(--tc-space-3); fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .ui-agf__title { overflow-wrap: anywhere; }
 .ui-agf__meta { color: var(--tc-text-secondary); font-size: var(--tc-font-size-xs); }
 .ui-agf__detail { padding: var(--tc-space-1) var(--tc-space-2) var(--tc-space-2); color: var(--tc-text-secondary); font-size: var(--tc-font-size-xs); overflow-wrap: anywhere; }
 .ui-agf__empty { padding: var(--tc-space-4) 0; color: var(--tc-text-secondary); text-align: center; }
+/* One line when there's room: severity, title, then who and where, wrapping as the width runs out */
+@container (min-width: 640px) {
+  [data-ui="agf"][layout="stacked"] .ui-agf__agent { grid-template-columns: minmax(0, 3fr) minmax(0, 3fr) minmax(0, 1fr); align-items: center; column-gap: var(--tc-space-4); }
+  [data-ui="agf"][layout="stacked"] .ui-agf__counts { justify-content: flex-end; }
+  [data-ui="agf"][layout="stacked"] .ui-agf__finding { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--tc-space-0-5) var(--tc-space-2); }
+  [data-ui="agf"][layout="stacked"] .ui-agf__severity { flex: none; }
+  [data-ui="agf"][layout="stacked"] .ui-agf__title { flex: 1 1 14em; min-width: 0; }
+}
+@container (min-width: 1040px) {
+  .ui-agf__finding { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--tc-space-0-5) var(--tc-space-2); }
+  .ui-agf__severity { flex: none; }
+  .ui-agf__title { flex: 1 1 14em; min-width: 0; }
+}
 @container (max-width: 560px) {
   .ui-agf__grid { grid-template-columns: minmax(0, 1fr); }
   .ui-agf__feed-panel { box-shadow: inset 0 var(--tc-hairline) var(--tc-border-subtle); }

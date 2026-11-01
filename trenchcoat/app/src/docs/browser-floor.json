@@ -112,7 +112,7 @@
    },
    "progressive": false,
    "why": "Components adapt to the width they're given, not the window's.",
-   "elements": 238
+   "elements": 239
   },
   {
    "id": "inset",
@@ -155,7 +155,7 @@
     "safari_ios": "13.4"
    },
    "progressive": false,
-   "elements": 123
+   "elements": 124
   },
   {
    "id": "intersection-observer",
@@ -199,7 +199,7 @@
    },
    "progressive": false,
    "note": "with the -webkit- prefix",
-   "elements": 55
+   "elements": 56
   },
   {
    "id": "individual-transforms",
@@ -213,7 +213,7 @@
     "safari_ios": "14.1"
    },
    "progressive": false,
-   "elements": 51
+   "elements": 52
   },
   {
    "id": "aspect-ratio",
@@ -329,7 +329,7 @@
     "safari_ios": "14"
    },
    "progressive": false,
-   "elements": 7
+   "elements": 8
   },
   {
    "id": "structured-clone",
@@ -417,7 +417,7 @@
    },
    "progressive": true,
    "without": "Scrollbars keep the browser's default width.",
-   "elements": 75
+   "elements": 76
   },
   {
    "id": "overscroll-contain",
@@ -432,7 +432,7 @@
    },
    "progressive": true,
    "without": "Scrolling past the end of a list carries on scrolling the page.",
-   "elements": 59
+   "elements": 60
   },
   {
    "id": "at-property",
@@ -447,7 +447,7 @@
    },
    "progressive": true,
    "without": "The registered custom properties don't interpolate, so the transitions and spins they drive jump to their end state.",
-   "elements": 26
+   "elements": 27
   },
   {
    "id": "popover",

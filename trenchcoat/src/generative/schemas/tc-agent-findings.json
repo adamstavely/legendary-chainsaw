@@ -51,6 +51,18 @@
       "type": "string",
       "description": "The locale for times"
     },
+    "layout": {
+      "type": "string",
+      "enum": [
+        "columns",
+        "stacked"
+      ],
+      "description": "How the agents and feed sit: \"columns\", side by side, or \"stacked\", agents above the feed"
+    },
+    "now": {
+      "type": "number",
+      "description": "\"Now\", epoch ms: when given, findings say how long ago, such as \"5 sec. ago\". The element doesn't read the clock"
+    },
     "labels": {
       "type": "object",
       "properties": {
@@ -82,6 +94,9 @@
           "type": "string"
         },
         "high": {
+          "type": "string"
+        },
+        "critical": {
           "type": "string"
         },
         "allAgents": {
@@ -116,6 +131,18 @@
         },
         "newMany": {
           "type": "string"
+        },
+        "checks": {
+          "type": "string"
+        },
+        "fraction": {
+          "type": "string"
+        },
+        "severityCount": {
+          "type": "string"
+        },
+        "totals": {
+          "type": "string"
         }
       },
       "additionalProperties": false,
@@ -141,8 +168,19 @@
           "description": "How far along, 0 to 1"
         },
         "checked": {
+          "type": [
+            "number",
+            "string"
+          ],
+          "description": "What it's checked so far: a number, with `total`, or in words: \"412 of 900 records\""
+        },
+        "total": {
+          "type": "number",
+          "description": "How many checks it has to do"
+        },
+        "activity": {
           "type": "string",
-          "description": "What it's checked so far, in words: \"412 of 900 records\""
+          "description": "What it's doing now"
         }
       },
       "required": [
@@ -184,6 +222,10 @@
         "at": {
           "type": "number",
           "description": "When it was found, epoch ms"
+        },
+        "location": {
+          "type": "string",
+          "description": "Where it is, such as a file and line"
         }
       },
       "required": [
@@ -200,7 +242,8 @@
         "info",
         "low",
         "medium",
-        "high"
+        "high",
+        "critical"
       ]
     }
   }

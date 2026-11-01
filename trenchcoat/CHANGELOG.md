@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased – Deeper agent views
+
+- **Conflict Radar** can settle conflicts: each agent's approach, a Keep choice, and `mergeable` with Merge once everything's
+  settled. It also has a legend.
+- **Scheduled Runs** defaults to a calendar with Auto and Manual, a Now line, drag and % of the limit. `layout="cards"` keeps
+  the old look, and `task` in `tc-placements-change` can now be null.
+- **Agent Handoff** has `view="pipeline"` with queues between agents, plus model, cost and activity on each step.
+- **Agent Findings** has overall progress, severity totals, a `critical` severity, per-agent counts, locations, relative time
+  and `layout="stacked"`.
+
 ## Unreleased – Six more agent views
 
 - **Conflict Radar** (`tc-conflict-radar`), **Scheduled Runs** (`tc-scheduled-runs`), **Fallback Chain** (`tc-fallback-chain`),
