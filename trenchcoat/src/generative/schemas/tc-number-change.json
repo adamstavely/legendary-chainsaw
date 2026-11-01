@@ -1,0 +1,92 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-number-change.json",
+  "title": "tc-number-change",
+  "description": "A number that briefly highlights when it changes.",
+  "type": "object",
+  "properties": {
+    "value": {
+      "type": "number",
+      "description": "The number"
+    },
+    "format": {
+      "$ref": "#/definitions/Intl.NumberFormatOptions",
+      "description": "How it's written: Intl.NumberFormat options"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The locale for writing it"
+    },
+    "direction": {
+      "type": "string",
+      "enum": [
+        "up",
+        "down",
+        "none",
+        "auto"
+      ],
+      "description": "Which way to show a change: \"auto\" works it out, \"none\" doesn't highlight"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "up": {
+          "type": "string"
+        },
+        "down": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename the words"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "Intl.NumberFormatOptions": {
+      "type": "object",
+      "properties": {
+        "localeMatcher": {
+          "type": "string",
+          "enum": [
+            "lookup",
+            "best fit"
+          ]
+        },
+        "style": {
+          "$ref": "#/definitions/Intl.NumberFormatOptionsStyle"
+        },
+        "currency": {
+          "type": "string"
+        },
+        "currencyDisplay": {
+          "$ref": "#/definitions/Intl.NumberFormatOptionsCurrencyDisplay"
+        },
+        "useGrouping": {
+          "$ref": "#/definitions/Intl.NumberFormatOptionsUseGrouping"
+        },
+        "minimumIntegerDigits": {
+          "type": "number"
+        },
+        "minimumFractionDigits": {
+          "type": "number"
+        },
+        "maximumFractionDigits": {
+          "type": "number"
+        },
+        "minimumSignificantDigits": {
+          "type": "number"
+        },
+        "maximumSignificantDigits": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false
+    },
+    "Intl.NumberFormatOptionsStyle": {},
+    "Intl.NumberFormatOptionsCurrencyDisplay": {},
+    "Intl.NumberFormatOptionsUseGrouping": {
+      "type": "boolean"
+    }
+  }
+}

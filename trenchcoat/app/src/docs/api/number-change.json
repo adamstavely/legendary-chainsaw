@@ -1,0 +1,287 @@
+{
+ "elements": [
+  {
+   "tag": "tc-number-change",
+   "className": "TcNumberChange",
+   "description": "A number that briefly highlights when it changes.",
+   "properties": [
+    {
+     "name": "value",
+     "attribute": "value",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The number",
+     "readonly": false
+    },
+    {
+     "name": "format",
+     "attribute": null,
+     "type": "Intl.NumberFormatOptions | undefined",
+     "default": "undefined",
+     "description": "How it's written: Intl.NumberFormat options",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The locale for writing it",
+     "readonly": false
+    },
+    {
+     "name": "direction",
+     "attribute": "direction",
+     "type": "NumberChangeDirection",
+     "default": "\"auto\"",
+     "description": "Which way to show a change: \"auto\" works it out, \"none\" doesn't highlight",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "Partial<NumberChangeLabels>",
+     "default": "{}",
+     "description": "Rename the words",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [],
+   "slots": [],
+   "methods": [],
+   "ui": "nch",
+   "cssProperties": [
+    {
+     "name": "--tc-number-change-up",
+     "value": "var(--tc-status-success-bg)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-number-change-down",
+     "value": "var(--tc-status-danger-bg)",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-control-radius-sm",
+    "--tc-duration-reveal",
+    "--tc-ease-standard",
+    "--tc-nch-tint",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-status-danger-bg",
+    "--tc-status-success-bg"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "NumberChange",
+   "exported": false,
+   "props": [],
+   "hides": [],
+   "events": {}
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-number-change",
+   "className": "TcNumberChange",
+   "module": "trenchcoat/number-change",
+   "data": [
+    "format",
+    "labels"
+   ],
+   "attributes": [
+    {
+     "name": "value",
+     "attribute": "value"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    },
+    {
+     "name": "direction",
+     "attribute": "direction"
+    }
+   ],
+   "events": [],
+   "controlled": [],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 12416,
+  "gzip": 4668
+ }
+}

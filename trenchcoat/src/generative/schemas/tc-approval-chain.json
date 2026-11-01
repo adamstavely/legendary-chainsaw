@@ -1,0 +1,181 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-approval-chain.json",
+  "title": "tc-approval-chain",
+  "description": "Several people signing off in order, with who's next, who's overdue, and Approve, Decline and Delegate for the person it's waiting on.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "A line under the heading"
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ApprovalStep"
+      },
+      "description": "The sign-offs, in order. Changed by the user unless a tc-steps-change listener calls preventDefault()"
+    },
+    "actor": {
+      "type": "string",
+      "description": "Who's looking. They can decide when the current step is waiting on this name"
+    },
+    "delegates": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Who a step can be handed to"
+    },
+    "now": {
+      "type": "number",
+      "description": "\"Now\" for overdue and for when a decision was made, epoch ms. The element doesn't read the clock"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The locale for dates"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "waiting": {
+          "type": "string"
+        },
+        "current": {
+          "type": "string"
+        },
+        "approved": {
+          "type": "string"
+        },
+        "declined": {
+          "type": "string"
+        },
+        "skipped": {
+          "type": "string"
+        },
+        "notReached": {
+          "type": "string"
+        },
+        "next": {
+          "type": "string"
+        },
+        "complete": {
+          "type": "string"
+        },
+        "stopped": {
+          "type": "string"
+        },
+        "overdue": {
+          "type": "string"
+        },
+        "due": {
+          "type": "string"
+        },
+        "decidedOn": {
+          "type": "string"
+        },
+        "delegatedTo": {
+          "type": "string"
+        },
+        "approve": {
+          "type": "string"
+        },
+        "decline": {
+          "type": "string"
+        },
+        "delegate": {
+          "type": "string"
+        },
+        "note": {
+          "type": "string"
+        },
+        "notePlaceholder": {
+          "type": "string"
+        },
+        "needsNote": {
+          "type": "string"
+        },
+        "confirmDecline": {
+          "type": "string"
+        },
+        "delegateTo": {
+          "type": "string"
+        },
+        "confirmDelegate": {
+          "type": "string"
+        },
+        "cancel": {
+          "type": "string"
+        },
+        "announceApproved": {
+          "type": "string"
+        },
+        "announceDeclined": {
+          "type": "string"
+        },
+        "announceDelegated": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ApprovalStep": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string",
+          "description": "What they sign off as: \"Finance lead\""
+        },
+        "status": {
+          "$ref": "#/definitions/ApprovalStepStatus"
+        },
+        "decidedAt": {
+          "type": "number",
+          "description": "When they decided, epoch ms"
+        },
+        "note": {
+          "type": "string",
+          "description": "What they said; required for a decline"
+        },
+        "dueAt": {
+          "type": "number",
+          "description": "When it's due, epoch ms"
+        },
+        "delegatedTo": {
+          "type": "string",
+          "description": "Who it was handed to"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "ApprovalStepStatus": {
+      "type": "string",
+      "enum": [
+        "waiting",
+        "current",
+        "approved",
+        "declined",
+        "skipped"
+      ]
+    }
+  }
+}

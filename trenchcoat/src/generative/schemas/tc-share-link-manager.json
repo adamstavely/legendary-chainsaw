@@ -1,0 +1,203 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-share-link-manager.json",
+  "title": "tc-share-link-manager",
+  "description": "The links that already share something, with status in words, Copy, Change expiry and Revoke.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading; by default \"Share links\""
+    },
+    "description": {
+      "type": "string",
+      "description": "A line under the heading, such as what's being shared"
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ShareLink"
+      },
+      "description": "The links. Changed by the user unless a tc-links-change listener calls preventDefault()"
+    },
+    "now": {
+      "type": "number",
+      "description": "\"Now\" for expiry, epoch ms. The element doesn't read the clock"
+    },
+    "expiringDays": {
+      "type": "number",
+      "description": "How many days before expiry a link counts as expiring soon"
+    },
+    "creatable": {
+      "type": "boolean",
+      "description": "Offer Create link"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The locale for dates"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "heading": {
+          "type": "string"
+        },
+        "count": {
+          "type": "string"
+        },
+        "active": {
+          "type": "string"
+        },
+        "expiring": {
+          "type": "string"
+        },
+        "expired": {
+          "type": "string"
+        },
+        "revoked": {
+          "type": "string"
+        },
+        "created": {
+          "type": "string"
+        },
+        "expires": {
+          "type": "string"
+        },
+        "noExpiry": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "opens": {
+          "type": "string"
+        },
+        "opensOne": {
+          "type": "string"
+        },
+        "opensNone": {
+          "type": "string"
+        },
+        "lastOpened": {
+          "type": "string"
+        },
+        "copy": {
+          "type": "string"
+        },
+        "copied": {
+          "type": "string"
+        },
+        "changeExpiry": {
+          "type": "string"
+        },
+        "newExpiry": {
+          "type": "string"
+        },
+        "save": {
+          "type": "string"
+        },
+        "cancel": {
+          "type": "string"
+        },
+        "revoke": {
+          "type": "string"
+        },
+        "keep": {
+          "type": "string"
+        },
+        "confirm": {
+          "type": "string"
+        },
+        "confirmOne": {
+          "type": "string"
+        },
+        "confirmNone": {
+          "type": "string"
+        },
+        "unsafe": {
+          "type": "string"
+        },
+        "create": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "announceRevoked": {
+          "type": "string"
+        },
+        "announceExpiry": {
+          "type": "string"
+        },
+        "announceCopied": {
+          "type": "string"
+        },
+        "copyFailed": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ShareLink": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri-reference"
+        },
+        "createdBy": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "number",
+          "description": "Epoch ms"
+        },
+        "expiresAt": {
+          "type": "number",
+          "description": "Epoch ms; none means it doesn't expire"
+        },
+        "access": {
+          "type": "string",
+          "description": "What it allows, in words: \"Can view\""
+        },
+        "password": {
+          "type": "boolean",
+          "description": "It has a password. The password itself never reaches this element"
+        },
+        "opens": {
+          "type": "number"
+        },
+        "lastOpenedAt": {
+          "type": "number",
+          "description": "Epoch ms"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "active",
+            "revoked"
+          ],
+          "description": "Set \"revoked\" when it's been revoked. Otherwise it's worked out from `expiresAt` and `now`"
+        }
+      },
+      "required": [
+        "id",
+        "url",
+        "createdBy",
+        "createdAt",
+        "access"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

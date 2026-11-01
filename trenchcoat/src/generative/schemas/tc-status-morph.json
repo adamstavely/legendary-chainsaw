@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-status-morph.json",
+  "title": "tc-status-morph",
+  "description": "One state's mark changing into the next, with its word.",
+  "type": "object",
+  "properties": {
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "warning",
+        "done",
+        "failed",
+        "checking"
+      ],
+      "description": "The state: \"pending\", \"checking\", \"done\", \"failed\" or \"warning\""
+    },
+    "label": {
+      "type": "string",
+      "description": "The word beside the mark, in place of the status's own word"
+    },
+    "announce": {
+      "type": "boolean",
+      "description": "Read each change out politely"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "pending": {
+          "type": "string"
+        },
+        "warning": {
+          "type": "string"
+        },
+        "done": {
+          "type": "string"
+        },
+        "failed": {
+          "type": "string"
+        },
+        "checking": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words"
+    }
+  },
+  "additionalProperties": false
+}

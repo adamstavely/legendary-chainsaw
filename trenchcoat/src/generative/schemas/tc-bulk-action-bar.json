@@ -1,0 +1,106 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-bulk-action-bar.json",
+  "title": "tc-bulk-action-bar",
+  "description": "What can be done to everything selected: actions, Select all, Clear and Undo.",
+  "type": "object",
+  "properties": {
+    "count": {
+      "type": "number",
+      "description": "How many are selected. At zero the bar isn't shown, unless Undo is on offer"
+    },
+    "total": {
+      "type": "number",
+      "description": "How many there are in all; offers Select all while count is below it"
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/BulkAction"
+      },
+      "description": "What can be done to them"
+    },
+    "undoSeconds": {
+      "type": "number",
+      "description": "How long Undo stays, in seconds"
+    },
+    "sticky": {
+      "type": "boolean",
+      "description": "Stay at the bottom of the scrolling area"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "selected": {
+          "type": "string"
+        },
+        "selectedOf": {
+          "type": "string"
+        },
+        "selectAll": {
+          "type": "string"
+        },
+        "clear": {
+          "type": "string"
+        },
+        "confirm": {
+          "type": "string"
+        },
+        "confirmYes": {
+          "type": "string"
+        },
+        "cancel": {
+          "type": "string"
+        },
+        "done": {
+          "type": "string"
+        },
+        "undo": {
+          "type": "string"
+        },
+        "undoLeft": {
+          "type": "string"
+        },
+        "undone": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "BulkAction": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "danger": {
+          "type": "boolean",
+          "description": "Draws it as destructive"
+        },
+        "confirm": {
+          "type": "boolean",
+          "description": "Ask before acting. The question names how many"
+        },
+        "undoable": {
+          "type": "boolean",
+          "description": "Offer Undo afterwards; by default yes"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-content-shield.json",
+  "title": "tc-content-shield",
+  "description": "Keeps content unloaded until someone chooses to see it.",
+  "type": "object",
+  "properties": {
+    "reason": {
+      "type": "string",
+      "description": "Why it's hidden, in factual words"
+    },
+    "revealable": {
+      "type": "boolean",
+      "description": "Whether it can be revealed; set revealable=\"false\" for people who may not see it"
+    },
+    "revealed": {
+      "type": "boolean",
+      "description": "Whether the content shows. Changed by the user unless a tc-revealed-change listener calls preventDefault()"
+    },
+    "revealLabel": {
+      "type": "string",
+      "description": "The reveal button's words"
+    },
+    "hideLabel": {
+      "type": "string",
+      "description": "The hide button's words"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "caption": {
+          "type": "string"
+        },
+        "reveal": {
+          "type": "string"
+        },
+        "hide": {
+          "type": "string"
+        },
+        "unavailable": {
+          "type": "string"
+        },
+        "revealed": {
+          "type": "string"
+        },
+        "hidden": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words"
+    }
+  },
+  "additionalProperties": false
+}

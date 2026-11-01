@@ -1,0 +1,176 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-redaction-review.json",
+  "title": "tc-redaction-review",
+  "description": "Checking what's been redacted before a document's shared: reveal one at a time, approve or reject, then share.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading; by default \"Redaction review\""
+    },
+    "description": {
+      "type": "string",
+      "description": "A line under the heading"
+    },
+    "blocks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/RedactionBlock"
+      },
+      "description": "The document's text, in order"
+    },
+    "redactions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Redaction"
+      },
+      "description": "What's redacted. Changed by the user unless a tc-redactions-change listener calls preventDefault()"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "heading": {
+          "type": "string"
+        },
+        "left": {
+          "type": "string"
+        },
+        "leftOne": {
+          "type": "string"
+        },
+        "allDone": {
+          "type": "string"
+        },
+        "orphaned": {
+          "type": "string"
+        },
+        "page": {
+          "type": "string"
+        },
+        "redacted": {
+          "type": "string"
+        },
+        "proposed": {
+          "type": "string"
+        },
+        "approved": {
+          "type": "string"
+        },
+        "rejected": {
+          "type": "string"
+        },
+        "proposedBy": {
+          "type": "string"
+        },
+        "reveal": {
+          "type": "string"
+        },
+        "hide": {
+          "type": "string"
+        },
+        "approve": {
+          "type": "string"
+        },
+        "reject": {
+          "type": "string"
+        },
+        "approveAll": {
+          "type": "string"
+        },
+        "share": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "keys": {
+          "type": "string"
+        },
+        "announceApproved": {
+          "type": "string"
+        },
+        "announceRejected": {
+          "type": "string"
+        },
+        "announceAll": {
+          "type": "string"
+        },
+        "shared": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "RedactionBlock": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "page": {
+          "type": "number"
+        },
+        "text": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "text"
+      ],
+      "additionalProperties": false
+    },
+    "Redaction": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "block": {
+          "type": "string",
+          "description": "The id of the block it's in"
+        },
+        "start": {
+          "type": "number",
+          "description": "Where it starts in the block's text"
+        },
+        "end": {
+          "type": "number",
+          "description": "Where it ends, not included"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/RedactionStatus"
+        },
+        "proposedBy": {
+          "type": "string",
+          "description": "Who or what suggested it"
+        }
+      },
+      "required": [
+        "id",
+        "block",
+        "start",
+        "end",
+        "reason",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "RedactionStatus": {
+      "type": "string",
+      "enum": [
+        "proposed",
+        "approved",
+        "rejected"
+      ]
+    }
+  }
+}

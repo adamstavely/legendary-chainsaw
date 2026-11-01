@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-shared-element.json",
+  "title": "tc-shared-element",
+  "description": "A piece of content that grows into its detail view.",
+  "type": "object",
+  "properties": {
+    "open": {
+      "type": "boolean",
+      "description": "Whether the detail shows. Changed by the user unless a tc-open-change listener calls preventDefault()"
+    }
+  },
+  "additionalProperties": false
+}

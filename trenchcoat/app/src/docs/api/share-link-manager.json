@@ -1,0 +1,450 @@
+{
+ "elements": [
+  {
+   "tag": "tc-share-link-manager",
+   "className": "TcShareLinkManager",
+   "description": "The links that already share something, with status in words, Copy, Change expiry and Revoke.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The heading; by default \"Share links\"",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "A line under the heading, such as what's being shared",
+     "readonly": false
+    },
+    {
+     "name": "links",
+     "attribute": null,
+     "type": "ShareLink[]",
+     "default": "[]",
+     "description": "The links. Changed by the user unless a tc-links-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "now",
+     "attribute": "now",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "\"Now\" for expiry, epoch ms. The element doesn't read the clock",
+     "readonly": false
+    },
+    {
+     "name": "expiringDays",
+     "attribute": "expiring-days",
+     "type": "number",
+     "default": "7",
+     "description": "How many days before expiry a link counts as expiring soon",
+     "readonly": false
+    },
+    {
+     "name": "creatable",
+     "attribute": "creatable",
+     "type": "boolean",
+     "default": "false",
+     "description": "Offer Create link",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The locale for dates",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "Partial<ShareLinkManagerLabels>",
+     "default": "{}",
+     "description": "Rename any of the words",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-links-change",
+     "detail": "",
+     "description": "A link was revoked or its expiry changed ({ links, change, link }: ShareLinksChange); cancelable – prevented, `links` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-copy",
+     "detail": "",
+     "description": "Copy was pressed ({ link }: ShareLinkCopy); cancelable – prevented, nothing is written to the clipboard",
+     "cancelable": true
+    },
+    {
+     "name": "tc-create",
+     "detail": "",
+     "description": "Create link was pressed (detail: null)",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "slm",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-border-subtle",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-h-sm",
+    "--tc-control-radius-md",
+    "--tc-field-bg",
+    "--tc-field-radius",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-fill-hover",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-mono",
+    "--tc-font-sans",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-hairline",
+    "--tc-line-height-normal",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-2",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-6",
+    "--tc-status-danger-fg",
+    "--tc-status-success-fg",
+    "--tc-status-warning-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "shareLinkExpiryFromDate",
+   "signature": "shareLinkExpiryFromDate(value: string): void",
+   "description": "A date input's value at the end of that day, local time, in epoch ms"
+  },
+  {
+   "name": "shareLinkStatus",
+   "signature": "shareLinkStatus(link: Pick<ShareLink, \"status\" | \"expiresAt\">, now: number | undefined, expiringDays: unknown): ShareLinkStatus",
+   "description": "Where a link stands. Without `now`, only a revoked link is known not to be active"
+  }
+ ],
+ "react": [
+  {
+   "component": "ShareLinkManager",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading; by default \"Share links\""
+    },
+    {
+     "name": "links",
+     "type": "ShareLink[]",
+     "optional": true,
+     "description": "The links – controlled when given"
+    },
+    {
+     "name": "defaultLinks",
+     "type": "ShareLink[]",
+     "optional": true,
+     "description": "The links on mount when `links` isn't controlled"
+    },
+    {
+     "name": "onLinksChange",
+     "type": "(links: ShareLink[], detail: ShareLinksChange) => void",
+     "optional": true,
+     "description": "A link was revoked or its expiry changed"
+    }
+   ],
+   "hides": [
+    "heading",
+    "links",
+    "children"
+   ],
+   "events": {
+    "tc-links-change": "onLinksChange",
+    "tc-copy": "onTcCopyLink",
+    "tc-create": "onTcCreate"
+   }
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-share-link-manager",
+   "className": "TcShareLinkManager",
+   "module": "trenchcoat/share-link-manager",
+   "data": [
+    "links",
+    "labels"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    },
+    {
+     "name": "now",
+     "attribute": "now"
+    },
+    {
+     "name": "expiringDays",
+     "attribute": "expiring-days"
+    },
+    {
+     "name": "creatable",
+     "attribute": "creatable"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-links-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-copy",
+     "cancelable": true
+    },
+    {
+     "name": "tc-create",
+     "cancelable": false
+    }
+   ],
+   "controlled": [
+    {
+     "property": "links",
+     "event": "tc-links-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "clipboard",
+    "name": "Async Clipboard (writeText)",
+    "bcd": "api.Clipboard.writeText",
+    "versions": {
+     "chrome": "66",
+     "edge": "79",
+     "firefox": "63",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "why": "Copy buttons.",
+    "via": [
+     "internal/util"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 22849,
+  "gzip": 7672
+ }
+}
