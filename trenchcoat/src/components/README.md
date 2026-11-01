@@ -29,6 +29,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Answer Arena** (`answer-arena.tsx`) – Two models answer the same prompt side by side, streaming together – then A is better, B is better or a tie, with a reason
 - **App Picker** (`app-picker.tsx`) – The app launcher for a suite header – a grid button that opens your apps as tiles, with pinned and recent apps, search, the current app marked and arrow keys that move in two dimensions
 - **Approval Card** (`approval-card.tsx`) – An agent asks before it acts – risk badge, preview, Approve and Deny with shortcuts, a pausing countdown, and a smooth morph into a resolved row
+- **Approval Chain** (`approval-chain.tsx`) – Several people signing off in order – who's next and who's overdue in words, with Approve, Decline with a note, and Delegate for the person it's waiting on
 - **Artifact Panel** (`artifact-panel.tsx`) – Everything a run produced in one place – files, code, documents and images with a preview for each, versions you can diff, and download
 - **Asset List** (`asset-list.tsx`) – The assets on record for a person, an account or a company, in groups – each with its kind, name, an identifier masked to its last four characters until shown, a detail line, what it's linked to and a status in words, with Open per row
 - **Attestation Check** (`attestation-check.tsx`) – Verify a signed evidence package by its hash or file – signature, chain integrity and what it covers, checked locally
@@ -42,6 +43,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Breakdown Chart** (`breakdown-chart.tsx`) – Stacked bar chart with measure, slice and segment pickers, a hover breakdown and a linked table
 - **Budget Burn** (`budget-burn.tsx`) – How fast each budget is being spent – spent against budget, the burn as a bar with a pace marker and Ahead, On or Behind pace in words, people and team, totals in the header and a sort by budget or burn
 - **Budget Guard** (`budget-guard.tsx`) – Spend and token limits for a live run – progress against the cap, a warning as it nears it, a hard stop at it, and raising the cap right from the warning
+- **Bulk Action Bar** (`bulk-action-bar.tsx`) – What can be done to everything selected – how many, the page's actions, Select all and Clear, a question before danger, and Undo for a few seconds afterwards
 - **Button** (`button.tsx`) – Primary, secondary, ghost and destructive buttons with icons, sizes and a shimmering loading state
 - **Capability Notice** (`capability-notice.tsx`) – When a request falls where the AI is only partly proven or not proven – a capped confidence, who was notified, and how far the request is from the usual
 - **Capacity Bars** (`capacity-bars.tsx`) – How loaded each person is – their allocation split by what they work on, against their capacity on one shared scale, each piece named with its amount, anyone over capacity marked and counted
@@ -67,6 +69,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Configuration release control** (`configuration-release-control.tsx`) – A configuration version moving through environments: the pipeline, a gate on evidence and approvals, confirmed promote and rollback
 - **Conflict Radar** (`conflict-radar.tsx`) – Which parallel agents touch the same files and where they collide – a grid of files by agents, conflicts first, status in words, and who changed which lines
 - **Contact Channels** (`contact-channels.tsx`) – The ways to reach a person or an account, grouped as Email, Phone, Messaging and Address – each masked until shown, with its role, when it was last used, how far it's verified, Copy and the page's own actions
+- **Content Shield** (`content-shield.tsx`) – Keeps content unloaded until someone chooses to see it – a picture, the reason and Show, with the content cloned in only on reveal and removed again on Hide
 - **Context Map** (`context-map.tsx`) – What fills an agent's context window, as a living treemap – system prompt, tools, memory, every file, the chat and tool results as tiles that glide as it grows, the free space dashed, and compaction squeezing old turns into a summary
 - **Context Tray** (`context-tray.tsx`) – What the model can see, as chips – files, @-mentions and sources, each with its token weight; pin or remove them and watch the total against the window
 - **Context Window** (`context-window.tsx`) – What fills the model's context, as a field of cells – hover a part to light it up, remove files, and compact the conversation while its cells shimmer and clear
@@ -131,6 +134,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Knowledge Promotion** (`knowledge-promotion.tsx`) – Promote a verified fact into shared team knowledge against a checklist, with disputed facts side by side
 - **Knowledge Source Manager** (`knowledge-source-manager.tsx`) – Sources a knowledge base answers from – ingestion state and progress, docs and chunks, sync schedule, stale and duplicate warnings, and a handoff to chunk review
 - **KPI Chart** (`kpi-chart.tsx`) – Metric card with a multi-line chart and a tooltip that follows the pointer
+- **Legal Hold Manager** (`legal-hold-manager.tsx`) – Which items are on legal hold, who placed each hold, why and until when – overdue reviews marked, items added, and Release only with a written reason
 - **Lineage Graph** (`lineage-graph.tsx`) – Where an output came from – run, turns, queries and tools, source chunks, claims and artifacts in columns, every node's record a click away
 - **Live View** (`live-view.tsx`) – Watch the agent's screen as it works – its clicks and typing drawn on top, a caption for each step, and Pause or Take over at any moment
 - **Look Provider** (`look-provider.tsx`) – Sets the look, Standard or Clean, for every Trenchcoat element inside it – one wrapper for a whole app, with any element still free to choose its own
@@ -177,6 +181,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Radio Group** (`radio-group.tsx`) – A native keyboard-operated single choice
 - **Reaction Bar** (`reaction-bar.tsx`) – Like, comment, repost and share in one pill – icons pop and fill, counts roll in digit by digit
 - **Reasoning Flags** (`reasoning-flags.tsx`) – Inline markers for weak reasoning in an answer – circular, hedged then certain, self-contradicting or overconfident – each with an explanation
+- **Redaction Review** (`redaction-review.tsx`) – Checking what's been redacted before a document's shared – solid bars with reasons, reveal one at a time, approve or reject, and Share once none are left
 - **Reflection Gate** (`reflection-gate.tsx`) – A moment to think before relying on AI – state the task and what's at stake, say what you believe, restate the answer, or name what you'll verify
 - **Relationship Graph** (`relationship-graph.tsx`) – Connections between people and organisations around one of them – direct and second-hand rings in a fixed layout, relationships drawn by strength, re-centring on click, and a panel and keyboard list of every connection
 - **Reliance Gauge** (`reliance-gauge.tsx`) – Whether trust in the AI matches how it performs – a reliance index with its trend, signals against review thresholds, and overtrust and undertrust caught
@@ -194,6 +199,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Run Manifest** (`run-manifest.tsx`) – What it takes to reproduce a run – model, settings, instruction hash, sources, intent and the verification summary, ready to export
 - **Sandbox Log** (`sandbox-log.tsx`) – Command output from the agent's sandbox – a block per step with the command, exit code and time, streaming text in colour, copy and search, fast with long logs
 - **Saved Search Alerts** (`saved-search-alerts.tsx`) – Saved searches that tell you about new matches – “12 new since Tue”, how often and where each one checks, pause, Run now, remove with Undo, and Add alert from the current search
+- **Scan Status** (`scan-status.tsx`) – Where a file stands in malware scanning – queued, scanning, clean, suspicious, quarantined or failed, inline or as a card, with Rescan and Request review
 - **Scheduled Runs** (`scheduled-runs.tsx`) – Agent tasks placed into a week's sessions under usage limits – pinned first, big tasks split into linked parts, small ones filling gaps, and an Unscheduled list
 - **Score Summary** (`score-summary.tsx`) – NPS or CSAT results – the score in big type, the change since last time with a sparkline, the target, the bands with shares and counts, and a bar per score you can pick to filter comments
 - **Score Survey** (`score-survey.tsx`) – The NPS or CSAT question a person answers – eleven numbers with the bands shown quietly, or five faces with words; number keys pick, a follow-up per band, Submit and a thank-you with Change answer
@@ -201,9 +207,11 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Secret Field** (`secret-field.tsx`) – A masked credential input with an explicit reveal control
 - **Segmented Control** (`segmented-control.tsx`) – Switch between two to six options – a raised pill or underline that glides, stretches a little and can be dragged across, with icons, counts and badges
 - **Selection Translate** (`selection-translate.tsx`) – Select text and translate it – the translation in a card with the detected language, copy, replace in place and show original
+- **Sensitivity Label Picker** (`sensitivity-label-picker.tsx`) – Sets a file's classification – a mark and word on a small button, a list of labels with what each means, and a reason asked before lowering it
 - **Session Context Bar** (`session-context-bar.tsx`) – The session's declared terms kept in view – intent, knowledge mode, scope, review, posture, limits, deadline and budget
 - **Session State** (`session-state.tsx`) – Where a long LLM session stands – a health pill, tiles for the primary goal, open loops, pending artifacts and context pressure with a meter that warns as it fills, and status chips, the tiles optionally opening what they count
 - **Setup Guide** (`setup-guide.tsx`) – Onboarding panel with a progress bar and collapsible task groups that strike through when done
+- **Share Link Manager** (`share-link-manager.tsx`) – The links that already share something – status in words, expiry, opens and who made them, with Copy, Change expiry and Revoke, which says how many opens it's had
 - **Share Panel** (`share-panel.tsx`) – Share with people and groups at a level for each – every recipient checked for entitlement first, with anyone not authorized flagged, the person sharing told, and left out of the share.
 - **SLA Status** (`sla-status.tsx`) – How well service levels are met – the share on time, a Met / At risk / Breached split in words and marks, a weekly trend, a bar per type of request with a readout, and a period chooser
 - **Slider Field** (`slider-field.tsx`) – A synchronized slider and numeric input

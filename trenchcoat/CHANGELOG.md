@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased – File protection, workflows and motion
+
+- **Components:** Content Shield, Legal Hold Manager, Sensitivity Label Picker, Scan Status, Bulk Action Bar, Approval Chain,
+  Redaction Review and Share Link Manager.
+- **Motion:** Status Morph, Number Change, Progress Bar, Staggered Reveal, Drag Lift and Shared Element.
+
 ## Unreleased – Deeper agent views
 
 - **Conflict Radar** can settle conflicts: each agent's approach, a Keep choice, and `mergeable` with Merge once everything's

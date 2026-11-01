@@ -1,0 +1,99 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-sensitivity-label-picker.json",
+  "title": "tc-sensitivity-label-picker",
+  "description": "Sets a file's classification, asking why before lowering it.",
+  "type": "object",
+  "properties": {
+    "options": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/SensitivityLabel"
+      },
+      "description": "The labels to choose from"
+    },
+    "value": {
+      "type": "string",
+      "description": "The id of the file's label, or null for none. Changed by the user unless a tc-value-change listener calls preventDefault()"
+    },
+    "fileName": {
+      "type": "string",
+      "description": "The file's name, so the control says which file it's for"
+    },
+    "disabled": {
+      "type": "boolean",
+      "description": "Show the label without letting it change"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "set": {
+          "type": "string"
+        },
+        "unknown": {
+          "type": "string"
+        },
+        "list": {
+          "type": "string"
+        },
+        "listNoFile": {
+          "type": "string"
+        },
+        "reasonTitle": {
+          "type": "string"
+        },
+        "reasonHint": {
+          "type": "string"
+        },
+        "reasonPlaceholder": {
+          "type": "string"
+        },
+        "needsReason": {
+          "type": "string"
+        },
+        "confirm": {
+          "type": "string"
+        },
+        "back": {
+          "type": "string"
+        },
+        "changed": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "SensitivityLabel": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "level": {
+          "type": "number",
+          "description": "Higher is more sensitive"
+        },
+        "color": {
+          "type": "string",
+          "description": "A hex colour for the mark"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "level"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

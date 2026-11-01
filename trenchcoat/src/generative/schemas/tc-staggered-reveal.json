@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-staggered-reveal.json",
+  "title": "tc-staggered-reveal",
+  "description": "Children arrive one after another, once, the first time they're seen.",
+  "type": "object",
+  "properties": {
+    "delay": {
+      "type": "number",
+      "description": "The wait between one child and the next, in ms"
+    },
+    "maxDelay": {
+      "type": "number",
+      "description": "The longest any child waits, in ms, however long the list is"
+    },
+    "playKey": {
+      "type": [
+        "string",
+        "number"
+      ],
+      "description": "Change this to play it again"
+    }
+  },
+  "additionalProperties": false
+}

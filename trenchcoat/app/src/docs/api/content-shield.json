@@ -1,0 +1,420 @@
+{
+ "elements": [
+  {
+   "tag": "tc-content-shield",
+   "className": "TcContentShield",
+   "description": "Keeps content unloaded until someone chooses to see it.",
+   "properties": [
+    {
+     "name": "reason",
+     "attribute": "reason",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Why it's hidden, in factual words",
+     "readonly": false
+    },
+    {
+     "name": "revealable",
+     "attribute": "revealable",
+     "type": "boolean",
+     "default": "true",
+     "description": "Whether it can be revealed; set revealable=\"false\" for people who may not see it",
+     "readonly": false
+    },
+    {
+     "name": "revealed",
+     "attribute": "revealed",
+     "type": "boolean",
+     "default": "false",
+     "description": "Whether the content shows. Changed by the user unless a tc-revealed-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "revealLabel",
+     "attribute": "reveal-label",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The reveal button's words",
+     "readonly": false
+    },
+    {
+     "name": "hideLabel",
+     "attribute": "hide-label",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The hide button's words",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "Partial<ContentShieldLabels>",
+     "default": "{}",
+     "description": "Rename any of the words",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-revealed-change",
+     "detail": "",
+     "description": "It was revealed or hidden ({ revealed }: ContentShieldRevealedChange); cancelable – prevented, `revealed` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-reveal",
+     "detail": "",
+     "description": "The content is being shown ({ container }: ContentShieldReveal); fill `container` when the content isn't in a template",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "csh",
+   "cssProperties": [
+    {
+     "name": "--tc-csh-picture",
+     "value": "240px",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-border-subtle",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-font-sans",
+    "--tc-font-size-sm",
+    "--tc-hairline",
+    "--tc-line-height-normal",
+    "--tc-space-2",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "ContentShield",
+   "exported": true,
+   "props": [
+    {
+     "name": "revealed",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether the content shows – controlled when given"
+    },
+    {
+     "name": "defaultRevealed",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether it shows on mount when `revealed` isn't controlled"
+    },
+    {
+     "name": "onRevealedChange",
+     "type": "(revealed: boolean) => void",
+     "optional": true,
+     "description": "It was revealed or hidden"
+    },
+    {
+     "name": "children",
+     "type": "React.ReactNode",
+     "optional": true,
+     "description": "The content: rendered only once it's revealed"
+    }
+   ],
+   "hides": [
+    "revealed",
+    "children"
+   ],
+   "events": {
+    "tc-revealed-change": null,
+    "tc-reveal": "onTcReveal"
+   }
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-content-shield",
+   "className": "TcContentShield",
+   "module": "trenchcoat/content-shield",
+   "data": [
+    "labels"
+   ],
+   "attributes": [
+    {
+     "name": "reason",
+     "attribute": "reason"
+    },
+    {
+     "name": "revealable",
+     "attribute": "revealable"
+    },
+    {
+     "name": "revealed",
+     "attribute": "revealed"
+    },
+    {
+     "name": "revealLabel",
+     "attribute": "reveal-label"
+    },
+    {
+     "name": "hideLabel",
+     "attribute": "hide-label"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-revealed-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-reveal",
+     "cancelable": false
+    }
+   ],
+   "controlled": [
+    {
+     "property": "revealed",
+     "event": "tc-revealed-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "content-hidden",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "aspect-ratio",
+    "name": "aspect-ratio",
+    "bcd": "css.properties.aspect-ratio",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "89",
+     "safari": "15",
+     "safari_ios": "15"
+    },
+    "progressive": false,
+    "via": [
+     "content-hidden"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "content-hidden"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "content-hidden",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "intersection-observer",
+    "name": "IntersectionObserver",
+    "bcd": "api.IntersectionObserver",
+    "versions": {
+     "chrome": "51",
+     "edge": "15",
+     "firefox": "55",
+     "safari": "12.1",
+     "safari_ios": "12.2"
+    },
+    "progressive": false,
+    "via": [
+     "internal/controllers"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)",
+   "IntersectionObserver (internal/controllers › OnScreenController)"
+  ],
+  "clock": [],
+  "listeners": [
+   "document visibilitychange (internal/controllers › OnScreenController)"
+  ],
+  "pauses": {
+   "offscreen": [
+    "content-hidden",
+    "internal/controllers › OnScreenController"
+   ],
+   "hidden": [
+    "internal/controllers › OnScreenController"
+   ],
+   "reducedMotion": [
+    "CSS (content-hidden)",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 17970,
+  "gzip": 6344
+ }
+}

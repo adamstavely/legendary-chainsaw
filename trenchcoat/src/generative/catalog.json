@@ -289,6 +289,14 @@
     ]
   },
   {
+    "tag": "tc-approval-chain",
+    "name": "ApprovalChain",
+    "description": "Several people signing off in order, with who's next, who's overdue, and Approve, Decline and Delegate for the person it's waiting on.",
+    "events": [
+      "tc-steps-change"
+    ]
+  },
+  {
     "tag": "tc-artifact-panel",
     "name": "ArtifactPanel",
     "description": "The files, code and documents a run produced: a list, a preview per type, versions with a diff, download.",
@@ -416,6 +424,17 @@
       "tc-limits-change",
       "tc-cap-reach",
       "tc-stop"
+    ]
+  },
+  {
+    "tag": "tc-bulk-action-bar",
+    "name": "BulkActionBar",
+    "description": "What can be done to everything selected: actions, Select all, Clear and Undo.",
+    "events": [
+      "tc-action",
+      "tc-select-all",
+      "tc-clear",
+      "tc-undo"
     ]
   },
   {
@@ -664,6 +683,15 @@
     "events": []
   },
   {
+    "tag": "tc-content-shield",
+    "name": "ContentShield",
+    "description": "Keeps content unloaded until someone chooses to see it.",
+    "events": [
+      "tc-revealed-change",
+      "tc-reveal"
+    ]
+  },
+  {
     "tag": "tc-context-map",
     "name": "ContextMap",
     "description": "What fills an agent's context window, as a treemap.",
@@ -847,6 +875,16 @@
     "events": [
       "tc-open",
       "tc-revealed-change"
+    ]
+  },
+  {
+    "tag": "tc-drag-lift",
+    "name": "DragLift",
+    "description": "Lifts its child while it's dragged, following the pointer and leaving a gap.",
+    "events": [
+      "tc-drag-start",
+      "tc-drag-end",
+      "tc-drag-cancel"
     ]
   },
   {
@@ -1357,6 +1395,15 @@
     "events": []
   },
   {
+    "tag": "tc-legal-hold-manager",
+    "name": "LegalHoldManager",
+    "description": "Which items are on legal hold, with adding items and releasing a hold for a written reason.",
+    "events": [
+      "tc-holds-change",
+      "tc-selected-change"
+    ]
+  },
+  {
     "tag": "tc-lineage-graph",
     "name": "LineageGraph",
     "description": "Where an output came from: run, turns, queries and tools, source chunks, claims and artifacts in columns, every",
@@ -1504,6 +1551,12 @@
     "events": [
       "tc-dismiss"
     ]
+  },
+  {
+    "tag": "tc-number-change",
+    "name": "NumberChange",
+    "description": "A number that briefly highlights when it changes.",
+    "events": []
   },
   {
     "tag": "tc-number-field",
@@ -1677,6 +1730,12 @@
     ]
   },
   {
+    "tag": "tc-progress-bar",
+    "name": "ProgressBar",
+    "description": "A thin bar for a wait, of known or unknown length.",
+    "events": []
+  },
+  {
     "tag": "tc-progress-tracker",
     "name": "ProgressTracker",
     "description": "A checklist with a progress bar.",
@@ -1806,6 +1865,15 @@
       "tc-finding-change",
       "tc-evidence-open",
       "tc-rerun"
+    ]
+  },
+  {
+    "tag": "tc-redaction-review",
+    "name": "RedactionReview",
+    "description": "Checking what's been redacted before a document's shared: reveal one at a time, approve or reject, then share.",
+    "events": [
+      "tc-redactions-change",
+      "tc-share"
     ]
   },
   {
@@ -1989,6 +2057,14 @@
     ]
   },
   {
+    "tag": "tc-scan-status",
+    "name": "ScanStatus",
+    "description": "Where a file stands in malware scanning.",
+    "events": [
+      "tc-action"
+    ]
+  },
+  {
     "tag": "tc-scheduled-runs",
     "name": "ScheduledRuns",
     "description": "Agent tasks placed into a week's sessions under usage limits.",
@@ -2038,6 +2114,14 @@
     ]
   },
   {
+    "tag": "tc-sensitivity-label-picker",
+    "name": "SensitivityLabelPicker",
+    "description": "Sets a file's classification, asking why before lowering it.",
+    "events": [
+      "tc-value-change"
+    ]
+  },
+  {
     "tag": "tc-session-context-bar",
     "name": "SessionContextBar",
     "description": "The session's declared terms kept in view – intent, knowledge mode, scope, review, posture, limits, deadline and",
@@ -2067,12 +2151,30 @@
     ]
   },
   {
+    "tag": "tc-share-link-manager",
+    "name": "ShareLinkManager",
+    "description": "The links that already share something, with status in words, Copy, Change expiry and Revoke.",
+    "events": [
+      "tc-links-change",
+      "tc-copy",
+      "tc-create"
+    ]
+  },
+  {
     "tag": "tc-share-panel",
     "name": "SharePanel",
     "description": "Shares something with people and groups, at a level for each, after checking each is entitled to see it.",
     "events": [
       "tc-share",
       "tc-share-denied"
+    ]
+  },
+  {
+    "tag": "tc-shared-element",
+    "name": "SharedElement",
+    "description": "A piece of content that grows into its detail view.",
+    "events": [
+      "tc-open-change"
     ]
   },
   {
@@ -2125,6 +2227,18 @@
       "tc-position-change",
       "tc-finish"
     ]
+  },
+  {
+    "tag": "tc-staggered-reveal",
+    "name": "StaggeredReveal",
+    "description": "Children arrive one after another, once, the first time they're seen.",
+    "events": []
+  },
+  {
+    "tag": "tc-status-morph",
+    "name": "StatusMorph",
+    "description": "One state's mark changing into the next, with its word.",
+    "events": []
   },
   {
     "tag": "tc-status-tracker",

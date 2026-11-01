@@ -20,8 +20,8 @@
       "enum": [
         "open",
         "done",
-        "compare",
-        "skipped"
+        "skipped",
+        "compare"
       ],
       "description": "Where the gate is: open, compare (reformulate's second step), done or skipped – set it to restore one"
     },

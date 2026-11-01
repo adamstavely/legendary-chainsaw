@@ -1,0 +1,94 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-scan-status.json",
+  "title": "tc-scan-status",
+  "description": "Where a file stands in malware scanning.",
+  "type": "object",
+  "properties": {
+    "state": {
+      "type": "string",
+      "enum": [
+        "queued",
+        "failed",
+        "scanning",
+        "clean",
+        "suspicious",
+        "quarantined"
+      ],
+      "description": "Where the scan stands: queued, scanning, clean, suspicious, quarantined or failed"
+    },
+    "fileName": {
+      "type": "string",
+      "description": "The file's name"
+    },
+    "engine": {
+      "type": "string",
+      "description": "What scanned it"
+    },
+    "scannedAt": {
+      "type": "number",
+      "description": "When it was scanned, epoch ms"
+    },
+    "detail": {
+      "type": "string",
+      "description": "More about it: what was found, or why it failed"
+    },
+    "progress": {
+      "type": "number",
+      "description": "How far the scan is, 0 to 1"
+    },
+    "layout": {
+      "type": "string",
+      "enum": [
+        "card",
+        "inline"
+      ],
+      "description": "\"inline\", for a row, or \"card\""
+    },
+    "locale": {
+      "type": "string",
+      "description": "The locale for dates"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "queued": {
+          "type": "string"
+        },
+        "failed": {
+          "type": "string"
+        },
+        "scanning": {
+          "type": "string"
+        },
+        "clean": {
+          "type": "string"
+        },
+        "suspicious": {
+          "type": "string"
+        },
+        "quarantined": {
+          "type": "string"
+        },
+        "heading": {
+          "type": "string"
+        },
+        "scannedBy": {
+          "type": "string"
+        },
+        "scannedAt": {
+          "type": "string"
+        },
+        "rescan": {
+          "type": "string"
+        },
+        "requestReview": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words"
+    }
+  },
+  "additionalProperties": false
+}

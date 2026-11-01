@@ -1,0 +1,211 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-legal-hold-manager.json",
+  "title": "tc-legal-hold-manager",
+  "description": "Which items are on legal hold, with adding items and releasing a hold for a written reason.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "A line under the heading"
+    },
+    "holds": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/LegalHold"
+      },
+      "description": "The holds. Changed by the user unless a tc-holds-change listener calls preventDefault()"
+    },
+    "selected": {
+      "type": "string",
+      "description": "The id of the open hold. Changed by the user unless a tc-selected-change listener calls preventDefault()"
+    },
+    "now": {
+      "type": "number",
+      "description": "The current time, epoch ms; without it nothing's marked overdue"
+    },
+    "readonly": {
+      "type": "boolean",
+      "description": "Show the holds without letting them change"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The locale for dates"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "active": {
+          "type": "string"
+        },
+        "released": {
+          "type": "string"
+        },
+        "overdue": {
+          "type": "string"
+        },
+        "items": {
+          "type": "string"
+        },
+        "itemsOne": {
+          "type": "string"
+        },
+        "count": {
+          "type": "string"
+        },
+        "custodian": {
+          "type": "string"
+        },
+        "placedBy": {
+          "type": "string"
+        },
+        "placedOn": {
+          "type": "string"
+        },
+        "reviewBy": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "releaseReason": {
+          "type": "string"
+        },
+        "heldItems": {
+          "type": "string"
+        },
+        "noItems": {
+          "type": "string"
+        },
+        "addLabel": {
+          "type": "string"
+        },
+        "addPlaceholder": {
+          "type": "string"
+        },
+        "add": {
+          "type": "string"
+        },
+        "release": {
+          "type": "string"
+        },
+        "confirm": {
+          "type": "string"
+        },
+        "confirmOne": {
+          "type": "string"
+        },
+        "releaseWhy": {
+          "type": "string"
+        },
+        "releasePlaceholder": {
+          "type": "string"
+        },
+        "needsReason": {
+          "type": "string"
+        },
+        "confirmRelease": {
+          "type": "string"
+        },
+        "keep": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "added": {
+          "type": "string"
+        },
+        "releasedNote": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "LegalHold": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "custodian": {
+          "type": "string"
+        },
+        "placedBy": {
+          "type": "string"
+        },
+        "placedAt": {
+          "type": "number",
+          "description": "When it was placed, epoch ms"
+        },
+        "until": {
+          "type": "number",
+          "description": "When it's due for review, epoch ms"
+        },
+        "reason": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/LegalHoldStatus"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LegalHoldItem"
+          }
+        },
+        "releaseReason": {
+          "type": "string",
+          "description": "Why it was released"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "placedBy",
+        "placedAt",
+        "reason",
+        "status",
+        "items"
+      ],
+      "additionalProperties": false
+    },
+    "LegalHoldStatus": {
+      "type": "string",
+      "enum": [
+        "active",
+        "released"
+      ]
+    },
+    "LegalHoldItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

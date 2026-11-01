@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-drag-lift.json",
+  "title": "tc-drag-lift",
+  "description": "Lifts its child while it's dragged, following the pointer and leaving a gap.",
+  "type": "object",
+  "properties": {
+    "disabled": {
+      "type": "boolean",
+      "description": "Turn dragging off"
+    }
+  },
+  "additionalProperties": false
+}
