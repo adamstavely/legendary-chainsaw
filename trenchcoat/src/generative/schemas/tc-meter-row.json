@@ -1,0 +1,59 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-meter-row.json",
+  "title": "tc-meter-row",
+  "description": "A label, a percentage and a tiny bar on one line, with a word and a mark when it's getting full.",
+  "type": "object",
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "What's being measured; it names the meter, even when `compact` hides it"
+    },
+    "value": {
+      "type": "number",
+      "description": "How much is used, from 0 to `max`"
+    },
+    "max": {
+      "type": "number",
+      "description": "What full is"
+    },
+    "valueText": {
+      "type": "string",
+      "description": "Text to show in place of the percentage, such as \"812 of 1,000\""
+    },
+    "warnAt": {
+      "type": "number",
+      "description": "The fraction of `max` where it starts to warn"
+    },
+    "dangerAt": {
+      "type": "number",
+      "description": "The fraction of `max` where it turns to danger"
+    },
+    "interactive": {
+      "type": "boolean",
+      "description": "Makes the row a button that fires tc-open"
+    },
+    "compact": {
+      "type": "boolean",
+      "description": "Hides the label from sight, leaving the percentage and bar"
+    },
+    "bare": {
+      "type": "boolean",
+      "description": "Drops the tray and shadow, for a row that sits in something else's surface"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "warning": {
+          "type": "string"
+        },
+        "danger": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename the words"
+    }
+  },
+  "additionalProperties": false
+}

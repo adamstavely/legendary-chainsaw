@@ -1,0 +1,171 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-change-list.json",
+  "title": "tc-change-list",
+  "description": "Proposed code changes as compact rows: state, title, where it is, lines added and removed, and its checks, with a menu per row and Show more.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading; empty draws no header"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ChangeItem"
+      },
+      "description": "The changes, in order"
+    },
+    "rowActions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ChangeRowAction"
+      },
+      "description": "What a row's More menu offers; with none there's no More button"
+    },
+    "limit": {
+      "type": "number",
+      "description": "How many rows show until Show more"
+    },
+    "expanded": {
+      "type": "boolean",
+      "description": "Every row is showing. Changed by Show more unless a tc-expanded-change listener calls preventDefault()"
+    },
+    "bare": {
+      "type": "boolean",
+      "description": "Drops the tray and card"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "draft": {
+          "type": "string"
+        },
+        "open": {
+          "type": "string"
+        },
+        "merged": {
+          "type": "string"
+        },
+        "closed": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "showMore": {
+          "type": "string"
+        },
+        "showLess": {
+          "type": "string"
+        },
+        "more": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words, over the defaults"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for numbers, e.g. \"en-GB\"; by default the browser's"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ChangeItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "repo": {
+          "type": "string",
+          "description": "Where it is, such as a repository's name"
+        },
+        "number": {
+          "type": "number",
+          "description": "Its number there"
+        },
+        "state": {
+          "$ref": "#/definitions/ChangeState"
+        },
+        "additions": {
+          "type": "number",
+          "description": "Lines added"
+        },
+        "deletions": {
+          "type": "number",
+          "description": "Lines removed"
+        },
+        "checks": {
+          "$ref": "#/definitions/CheckCounts",
+          "description": "How its checks went"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "repo",
+        "state"
+      ],
+      "additionalProperties": false
+    },
+    "ChangeState": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "open",
+        "merged",
+        "closed"
+      ]
+    },
+    "CheckCounts": {
+      "type": "object",
+      "properties": {
+        "passing": {
+          "type": "number"
+        },
+        "failing": {
+          "type": "number"
+        },
+        "pending": {
+          "type": "number"
+        },
+        "skipped": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "passing",
+        "failing",
+        "pending",
+        "skipped"
+      ],
+      "additionalProperties": false
+    },
+    "ChangeRowAction": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

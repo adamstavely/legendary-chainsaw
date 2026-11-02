@@ -468,6 +468,16 @@
     ]
   },
   {
+    "tag": "tc-change-list",
+    "name": "ChangeList",
+    "description": "Proposed code changes as compact rows: state, title, where it is, lines added and removed, and its checks, with a menu per row and Show more.",
+    "events": [
+      "tc-open",
+      "tc-action",
+      "tc-expanded-change"
+    ]
+  },
+  {
     "tag": "tc-change-summary",
     "name": "ChangeSummary",
     "description": "What changed since last time, one metric per row, each with a trend mark.",
@@ -496,6 +506,15 @@
     "events": [
       "tc-jump",
       "tc-current-change"
+    ]
+  },
+  {
+    "tag": "tc-check-status",
+    "name": "CheckStatus",
+    "description": "The automated checks on a change: a summary in words and a row for each, failing first, or just a mark and \"5/11\" for a list row.",
+    "events": [
+      "tc-open",
+      "tc-retry"
     ]
   },
   {
@@ -939,6 +958,15 @@
     ]
   },
   {
+    "tag": "tc-environment-list",
+    "name": "EnvironmentList",
+    "description": "Where a session runs, as rows of machine, folders, repository and branch, each with an optional small action or a switch.",
+    "events": [
+      "tc-action",
+      "tc-toggles-change"
+    ]
+  },
+  {
     "tag": "tc-eval-scorecard",
     "name": "EvalScorecard",
     "description": "Test cases run against prompt or model versions – pass or fail per case per version, the pass rate across versions,",
@@ -1218,6 +1246,15 @@
     ]
   },
   {
+    "tag": "tc-icon-rail",
+    "name": "IconRail",
+    "description": "A row of icon buttons for a panel: one chosen, each with a tooltip, and an optional More menu.",
+    "events": [
+      "tc-selected-change",
+      "tc-action"
+    ]
+  },
+  {
     "tag": "tc-identifier-details",
     "name": "IdentifierDetails",
     "description": "DOIs, IP addresses, file hashes, CVE ids and tracking numbers in text, marked: hover, focus or right-click one for what it is, Copy and what the app knows.",
@@ -1465,6 +1502,14 @@
     ]
   },
   {
+    "tag": "tc-meter-row",
+    "name": "MeterRow",
+    "description": "A label, a percentage and a tiny bar on one line, with a word and a mark when it's getting full.",
+    "events": [
+      "tc-open"
+    ]
+  },
+  {
     "tag": "tc-metrics-dashboard",
     "name": "MetricsDashboard",
     "description": "A compact sales overview: KPI tabs that pick the charted metric, a line or bar chart with an optional previous-period",
@@ -1616,6 +1661,15 @@
     "events": [
       "tc-role-change",
       "tc-open-focus"
+    ]
+  },
+  {
+    "tag": "tc-panel-card",
+    "name": "PanelCard",
+    "description": "A compact card for one section of a side panel, which folds or opens something else.",
+    "events": [
+      "tc-expanded-change",
+      "tc-open"
     ]
   },
   {
@@ -2128,6 +2182,15 @@
     "events": [
       "tc-term-edit",
       "tc-terms-changed"
+    ]
+  },
+  {
+    "tag": "tc-session-panel",
+    "name": "SessionPanel",
+    "description": "The side panel of a working session: tools, environment, context, connectors, outputs, changes and background tasks.",
+    "events": [
+      "tc-sections-change",
+      "tc-section-open"
     ]
   },
   {
