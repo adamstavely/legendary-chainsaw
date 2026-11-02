@@ -1,0 +1,123 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-diff-viewer.json",
+  "title": "tc-diff-viewer",
+  "description": "The changes to a set of files: a row per file with its status and line counts, opening to a line diff.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading; empty leaves the header out"
+    },
+    "description": {
+      "type": "string",
+      "description": "Small text under the heading – the branch, or what it's compared with"
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/DiffFile"
+      },
+      "description": "The changed files, in the order to show them"
+    },
+    "expanded": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The paths of the open files; unset opens the first `autoExpand`"
+    },
+    "autoExpand": {
+      "type": "number",
+      "description": "How many files start open when `expanded` is unset"
+    },
+    "maxHeight": {
+      "type": "number",
+      "description": "Height in px at which one file's diff scrolls; 0 lets it grow"
+    },
+    "wrap": {
+      "type": "boolean",
+      "description": "Wrap long lines instead of scrolling sideways"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "empty": {
+          "type": "string"
+        },
+        "added": {
+          "type": "string"
+        },
+        "modified": {
+          "type": "string"
+        },
+        "deleted": {
+          "type": "string"
+        },
+        "renamed": {
+          "type": "string"
+        },
+        "binary": {
+          "type": "string"
+        },
+        "expandAll": {
+          "type": "string"
+        },
+        "collapseAll": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Renames the status words and buttons"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "DiffFile": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "description": "The file's path, which also identifies it"
+        },
+        "before": {
+          "type": "string",
+          "description": "Its text before; omit or \"\" for a new file"
+        },
+        "after": {
+          "type": "string",
+          "description": "Its text after; omit or \"\" for a deleted file"
+        },
+        "status": {
+          "$ref": "#/definitions/DiffFileStatus",
+          "description": "By default worked out from the texts and `previousPath`"
+        },
+        "previousPath": {
+          "type": "string",
+          "description": "The old path of a renamed file"
+        },
+        "language": {
+          "type": "string",
+          "description": "The language for the colours; by default the path's extension"
+        },
+        "binary": {
+          "type": "boolean",
+          "description": "A file with no text to compare: the row says so, and doesn't open"
+        }
+      },
+      "required": [
+        "path"
+      ],
+      "additionalProperties": false
+    },
+    "DiffFileStatus": {
+      "type": "string",
+      "enum": [
+        "added",
+        "modified",
+        "deleted",
+        "renamed"
+      ]
+    }
+  }
+}

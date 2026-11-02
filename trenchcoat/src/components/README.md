@@ -89,6 +89,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Decision Tree** (`decision-tree.tsx`) – An agent stuck on a decision lays out its options as a tree – the consequences of each branch, the risky ones marked, its own pick highlighted – and you choose a path or write your own
 - **Delegate Board** (`delegate-board.tsx`) – Hand work to your agents by dragging it onto them – each agent previews its new “busy until” time, or switch to Auto and every new task goes to whoever is free first
 - **Dialog** (`dialog.tsx`) – A native modal with interactive content and restored focus
+- **Diff Viewer** (`diff-viewer.tsx`) – The changes to a set of files – totals, a row per file with its status and lines added and removed, opening to a line diff
 - **Digest** (`digest.tsx`) – A one-minute digest of a pile of information, arranged around what the reader needs – what matters, what to do (ticked off as you go), what changed and what's safe to ignore, with a reading-time estimate and points that cite their sources
 - **Disagreement Banner** (`disagreement-banner.tsx`) – When today's answer contradicts an earlier one on the same question – both side by side, the difference marked
 - **Document List** (`document-list.tsx`) – Identity and record documents at a glance – type, country, masked numbers shown one at a time, expiry and a status each (Verified, Expired, Flagged, Fraudulent or your own), counted in the header, with View per row
@@ -234,6 +235,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Team Flag Editor** (`team-flag-editor.tsx`) – Where a team decides what its flags mean – each flag's colour, name, meaning and order, with a check on names and a question before removing a flag that's on files.
 - **Team Flag Picker** (`team-flag-picker.tsx`) – Picks one of a team's flags for a file – a small button with the flag's colour and name, opening a list of flags with what each one means.
 - **Team Roster** (`team-roster.tsx`) – A team directory with everyone's local time – status, role and team, how far ahead or behind you they are, whether they're working, skills – grouped and filtered as a list or a grid, with the team's best hour to meet
+- **Terminal** (`terminal.tsx`) – A command line for a panel – output in colour above a prompt with history, Ctrl+C and Ctrl+L; the page runs the commands
 - **Terms Dialog** (`terms-dialog.tsx`) – Agreeing to terms in a modal designed for reading – version and date, a jump list, what changed since you last agreed, required and optional consents, and Accept that says why it waits
 - **Text Annotator** (`text-annotator.tsx`) – Highlight text in a document in a colour and comment on it – marks in the text, comments in the margin, edit, resolve and filter
 - **Text To Speech** (`text-to-speech.tsx`) – Reads a passage aloud with the browser's voices – the sentence and the spoken word marked as it goes, click a sentence to read from there, play, pause, skip and stop, and a voice, speed and pitch picker
