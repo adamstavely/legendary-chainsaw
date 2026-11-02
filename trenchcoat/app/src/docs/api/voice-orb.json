@@ -14,6 +14,14 @@
      "readonly": false
     },
     {
+     "name": "variant",
+     "attribute": "variant",
+     "type": "VoiceOrbVariant",
+     "default": "\"sphere\"",
+     "description": "The face: sphere (dots), ring, wave, bars, blob or orbit",
+     "readonly": false
+    },
+    {
      "name": "level",
      "attribute": "level",
      "type": "number | undefined",
@@ -34,7 +42,7 @@
      "attribute": "dots",
      "type": "number",
      "default": "520",
-     "description": "Number of dots – more is denser and costs a little more",
+     "description": "Number of dots in the sphere – more is denser and costs a little more",
      "readonly": false
     },
     {
@@ -58,7 +66,7 @@
      "attribute": null,
      "type": "boolean",
      "default": "true",
-     "description": "Dots give way to the pointer",
+     "description": "The sphere's dots give way to the pointer",
      "readonly": false
     },
     {
@@ -160,6 +168,10 @@
     {
      "name": "state",
      "attribute": "state"
+    },
+    {
+     "name": "variant",
+     "attribute": "variant"
     },
     {
      "name": "level",
@@ -273,6 +285,22 @@
     ]
    },
    {
+    "id": "individual-transforms",
+    "name": "translate, scale and rotate properties",
+    "bcd": "css.properties.translate",
+    "versions": {
+     "chrome": "104",
+     "edge": "104",
+     "firefox": "72",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "internal/voice-orb-painters"
+    ]
+   },
+   {
     "id": "is-where",
     "name": ":is() and :where()",
     "bcd": "css.selectors.where",
@@ -379,7 +407,7 @@
   "windowed": false
  },
  "size": {
-  "min": 21218,
-  "gzip": 8178
+  "min": 25338,
+  "gzip": 9830
  }
 }

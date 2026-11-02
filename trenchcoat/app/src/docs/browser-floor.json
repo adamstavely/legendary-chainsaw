@@ -11,13 +11,13 @@
    "features": [
     "light-dark"
    ],
-   "elements": 329
+   "elements": 330
   },
   "edge": {
    "features": [
     "light-dark"
    ],
-   "elements": 329
+   "elements": 330
   },
   "firefox": {
    "features": [
@@ -29,13 +29,13 @@
    "features": [
     "light-dark"
    ],
-   "elements": 329
+   "elements": 330
   },
   "safari_ios": {
    "features": [
     "light-dark"
    ],
-   "elements": 329
+   "elements": 330
   }
  },
  "features": [
@@ -52,7 +52,7 @@
    },
    "progressive": false,
    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
-   "elements": 329
+   "elements": 330
   },
   {
    "id": "color-mix",
@@ -67,7 +67,7 @@
    },
    "progressive": false,
    "why": "Tints and washes mixed from the tokens.",
-   "elements": 329
+   "elements": 330
   },
   {
    "id": "is-where",
@@ -82,7 +82,7 @@
    },
    "progressive": false,
    "why": "Every rule is keyed on :where() so the page can override it.",
-   "elements": 329
+   "elements": 330
   },
   {
    "id": "focus-visible",
@@ -97,7 +97,7 @@
    },
    "progressive": false,
    "why": "Focus rings for keyboard users.",
-   "elements": 328
+   "elements": 329
   },
   {
    "id": "container-size",
@@ -187,6 +187,20 @@
    "elements": 86
   },
   {
+   "id": "individual-transforms",
+   "name": "translate, scale and rotate properties",
+   "bcd": "css.properties.translate",
+   "versions": {
+    "chrome": "104",
+    "edge": "104",
+    "firefox": "72",
+    "safari": "14.1",
+    "safari_ios": "14.1"
+   },
+   "progressive": false,
+   "elements": 56
+  },
+  {
    "id": "mask",
    "name": "CSS masks",
    "bcd": "css.properties.mask-image",
@@ -200,20 +214,6 @@
    "progressive": false,
    "note": "with the -webkit- prefix",
    "elements": 56
-  },
-  {
-   "id": "individual-transforms",
-   "name": "translate, scale and rotate properties",
-   "bcd": "css.properties.translate",
-   "versions": {
-    "chrome": "104",
-    "edge": "104",
-    "firefox": "72",
-    "safari": "14.1",
-    "safari_ios": "14.1"
-   },
-   "progressive": false,
-   "elements": 54
   },
   {
    "id": "clipboard",
@@ -387,7 +387,7 @@
    },
    "progressive": true,
    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
-   "elements": 329
+   "elements": 330
   },
   {
    "id": "adopted-stylesheets",
@@ -402,7 +402,7 @@
    },
    "progressive": true,
    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
-   "elements": 328
+   "elements": 329
   },
   {
    "id": "scrollbar-width",
@@ -432,7 +432,7 @@
    },
    "progressive": true,
    "without": "Scrolling past the end of a list carries on scrolling the page.",
-   "elements": 62
+   "elements": 63
   },
   {
    "id": "at-property",

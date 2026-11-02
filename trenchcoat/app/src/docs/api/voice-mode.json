@@ -46,6 +46,14 @@
      "readonly": false
     },
     {
+     "name": "orbVariant",
+     "attribute": "orb-variant",
+     "type": "VoiceOrbVariant",
+     "default": "\"sphere\"",
+     "description": "The orb's face: sphere, ring, wave, bars, blob or orbit",
+     "readonly": false
+    },
+    {
      "name": "heading",
      "attribute": "heading",
      "type": "string",
@@ -316,6 +324,10 @@
      "attribute": "muted"
     },
     {
+     "name": "orbVariant",
+     "attribute": "orb-variant"
+    },
+    {
      "name": "heading",
      "attribute": "heading"
     },
@@ -460,6 +472,22 @@
      "itself",
      "voice-orb",
      "internal/kit"
+    ]
+   },
+   {
+    "id": "individual-transforms",
+    "name": "translate, scale and rotate properties",
+    "bcd": "css.properties.translate",
+    "versions": {
+     "chrome": "104",
+     "edge": "104",
+     "firefox": "72",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "internal/voice-orb-painters"
     ]
    },
    {
@@ -626,7 +654,7 @@
   "windowed": false
  },
  "size": {
-  "min": 41125,
-  "gzip": 12929
+  "min": 45408,
+  "gzip": 14657
  }
 }

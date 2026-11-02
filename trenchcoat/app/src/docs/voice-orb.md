@@ -12,6 +12,20 @@ with a light running round it; speaking, waves travel from pole to pole. States 
 way to the pointer, and a short line underneath says the state in words. Feed it `level` from real audio, or leave
 it unset and the orb fakes a natural one.
 
+`variant` changes the face. Every one shows the four states and follows `level`, and they rest and stop for reduced motion
+in the same way.
+
+| Variant | Idle | Listening and speaking | Thinking |
+|---|---|---|---|
+| `sphere` | A turning sphere of dots | Dots jump out, or waves travel across | Collapses to a spinning ring |
+| `ring` | A still circle that breathes | The line ripples | A light runs around it |
+| `wave` | Almost flat lines | The lines swell in the middle | A small packet travels along them |
+| `bars` | Five low pills | An equaliser | A bump passes along them |
+| `blob` | A soft drop of the accent colour | Its edge moves and it grows | Its light circles inside |
+| `orbit` | Beads on three tilted paths | The paths widen and shake | The beads race |
+
+`dots` and the pointer effect apply only to `sphere`.
+
 ## When to use
 
 - The centre of a voice conversation, showing whether the assistant is waiting, hearing, working or talking.
@@ -58,6 +72,7 @@ with each new state. The canvas is hidden from assistive tech.
 
 - Pass a real `level` while listening or speaking, so the dots move with the voice.
 - Set `accent` to your brand colour – the moving dots take it on; the resting dots stay in the text colour.
+- Use `bars` or `wave` when small: they stay readable at 40 px, where a sphere's dots blur.
 - Lower `dots` for small orbs or many on one page – fewer dots draw faster.
 
 ## Don't

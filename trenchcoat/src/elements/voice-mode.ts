@@ -6,6 +6,7 @@ import { TcElement } from "./internal/base";
 import { OffScreenController, ToolbarController } from "./internal/controllers";
 import type { Look } from "./internal/look";
 import "./voice-orb";
+import type { VoiceOrbVariant } from "./voice-orb";
 
 /*
  * <tc-voice-mode> – a spoken conversation with the model. The voice orb shows what the assistant is doing (idle,
@@ -89,6 +90,8 @@ export class TcVoiceMode extends TcElement {
   @property({ type: Boolean, reflect: true }) accessor muted = false;
   /** The captions are shown. Changed by the element unless a tc-captions-change listener calls preventDefault() */
   @property({ attribute: false }) accessor captions = true;
+  /** The orb's face: sphere, ring, wave, bars, blob or orbit */
+  @property({ attribute: "orb-variant" }) accessor orbVariant: VoiceOrbVariant = "sphere";
   /** A title over the orb – unset, there's none */
   @property() accessor heading = "";
   /** The assistant's name on its turns and in what screen readers hear */
@@ -219,7 +222,7 @@ export class TcVoiceMode extends TcElement {
     const body = html`<div class="ui-vm__body">
       ${this.heading ? html`<h3 class="ui-vm__heading">${this.heading}</h3>` : nothing}
       <div class="ui-vm__stage">
-        <tc-voice-orb class="ui-vm__orb" aria-hidden="true" state=${this.state} .level=${level} size=${ORB_SIZE[look]} .label=${false}></tc-voice-orb>
+        <tc-voice-orb class="ui-vm__orb" aria-hidden="true" state=${this.state} variant=${this.orbVariant} .level=${level} size=${ORB_SIZE[look]} .label=${false}></tc-voice-orb>
         ${keyed(
           label,
           html`<p class="ui-vm__state">${label}${this.state !== "idle" && !(this.muted && this.state === "listening")

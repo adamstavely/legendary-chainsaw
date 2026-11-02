@@ -19,6 +19,10 @@ export class VoiceOrb {
   @Input() set state(v: TcVoiceOrb["state"]) {
     this.#el.state = v;
   }
+  /** The face: sphere (dots), ring, wave, bars, blob or orbit */
+  @Input() set variant(v: TcVoiceOrb["variant"]) {
+    this.#el.variant = v;
+  }
   /** Input or output loudness from 0 to 1 – unset, the orb fakes a natural level */
   @Input() set level(v: TcVoiceOrb["level"] | `${number}`) {
     this.#el.level = typeof v === "string" ? Number(v) : v;
@@ -27,7 +31,7 @@ export class VoiceOrb {
   @Input() set size(v: TcVoiceOrb["size"] | `${number}`) {
     this.#el.size = typeof v === "string" ? Number(v) : v;
   }
-  /** Number of dots – more is denser and costs a little more */
+  /** Number of dots in the sphere – more is denser and costs a little more */
   @Input() set dots(v: TcVoiceOrb["dots"] | `${number}`) {
     this.#el.dots = typeof v === "string" ? Number(v) : v;
   }
@@ -39,7 +43,7 @@ export class VoiceOrb {
   @Input() set label(v: TcVoiceOrb["label"]) {
     this.#el.label = v;
   }
-  /** Dots give way to the pointer */
+  /** The sphere's dots give way to the pointer */
   @Input() set interactive(v: TcVoiceOrb["interactive"] | "" | "true" | "false") {
     this.#el.interactive = typeof v === "string" ? v !== "false" : v;
   }

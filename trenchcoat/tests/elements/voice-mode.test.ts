@@ -271,4 +271,9 @@ describe("tc-voice-mode", () => {
       const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
       expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
     });
+
+  test("orb-variant reaches the orb", async () => {
+    const el = await fixture<HTMLElement>(html`<tc-voice-mode orb-variant="bars"></tc-voice-mode>`);
+    expect(el.querySelector("tc-voice-orb")!.getAttribute("variant")).toBe("bars");
+  });
 });

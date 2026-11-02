@@ -138,6 +138,7 @@ export * from "./react/fan-out-grid";
 export * from "./react/feedback-rubric";
 export * from "./react/file-details";
 export * from "./react/file-summary";
+export * from "./react/file-tree";
 export * from "./react/filter-menu";
 export * from "./react/fingerprint-card";
 export * from "./react/first-use";

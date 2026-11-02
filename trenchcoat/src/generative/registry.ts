@@ -119,6 +119,7 @@ export const registry: Record<string, { events: string[]; load: () => Promise<un
   "tc-feedback-rubric": { events: ["tc-value-change","tc-submit","tc-edit"], load: () => import("../elements/feedback-rubric"), schema: () => import("./schemas/tc-feedback-rubric.json") },
   "tc-file-details": { events: ["tc-flag-change","tc-open"], load: () => import("../elements/file-details"), schema: () => import("./schemas/tc-file-details.json") },
   "tc-file-summary": { events: ["tc-summarise","tc-retry","tc-length-change","tc-cite-open","tc-entity-select","tc-copy","tc-open"], load: () => import("../elements/file-summary"), schema: () => import("./schemas/tc-file-summary.json") },
+  "tc-file-tree": { events: ["tc-selected-change","tc-expanded-change","tc-query-change","tc-open","tc-load","tc-search","tc-action"], load: () => import("../elements/file-tree"), schema: () => import("./schemas/tc-file-tree.json") },
   "tc-filter-menu": { events: ["tc-value-change","tc-open-change"], load: () => import("../elements/filter-menu"), schema: () => import("./schemas/tc-filter-menu.json") },
   "tc-fingerprint-card": { events: ["tc-selected-change"], load: () => import("../elements/fingerprint-card"), schema: () => import("./schemas/tc-fingerprint-card.json") },
   "tc-first-use": { events: [], load: () => import("../elements/first-use"), schema: () => import("./schemas/tc-first-use.json") },
