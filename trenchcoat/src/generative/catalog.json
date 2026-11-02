@@ -869,6 +869,14 @@
     ]
   },
   {
+    "tag": "tc-diff-viewer",
+    "name": "DiffViewer",
+    "description": "The changes to a set of files: a row per file with its status and line counts, opening to a line diff.",
+    "events": [
+      "tc-expanded-change"
+    ]
+  },
+  {
     "tag": "tc-digest",
     "name": "Digest",
     "description": "A one-minute digest: what matters, what to do, what changed and what's safe to ignore, with a reading-time",
@@ -2410,6 +2418,18 @@
       "tc-view-change",
       "tc-selected-change",
       "tc-action"
+    ]
+  },
+  {
+    "tag": "tc-terminal",
+    "name": "Terminal",
+    "description": "A command line for a panel: output in colour above a prompt with history; the page runs the commands.",
+    "events": [
+      "tc-command",
+      "tc-value-change",
+      "tc-interrupt",
+      "tc-clear",
+      "tc-copy"
     ]
   },
   {

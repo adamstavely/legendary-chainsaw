@@ -8,6 +8,7 @@ import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
 import { FocusRescueController, RowWindowController } from "./internal/controllers";
 import type { Look } from "./internal/look";
+import { parseOutput, type AnsiLine, type AnsiParsed } from "./internal/ansi";
 import { copyText } from "./internal/util";
 
 /*
@@ -46,174 +47,13 @@ export type SandboxLogOpenChange = { open: string[] };
 export type SandboxLogQueryChange = { query: string };
 export type SandboxLogCopy = { stepId: string | null; text: string };
 
-/* ---------- ANSI (SGR) → token classes ---------- */
-
-const COLOURS = ["black", "red", "green", "yellow", "blue", "magenta", "cyan", "white"] as const;
-type Sgr = { fg: string | null; bg: string | null; b: boolean; d: boolean; i: boolean; u: boolean; inv: boolean };
-const PLAIN: Sgr = { fg: null, bg: null, b: false, d: false, i: false, u: false, inv: false };
-
-/** The nearest of the eight colours (or gray) for a 256-colour or true-colour value */
-function nearest(r: number, g: number, b: number): string {
-  const max = Math.max(r, g, b);
-  const min = Math.min(r, g, b);
-  if (max - min < 48) return max > 200 ? "white" : max < 72 ? "black" : "gray";
-  const d = max - min;
-  const h = max === r ? ((g - b) / d + 6) % 6 : max === g ? (b - r) / d + 2 : (r - g) / d + 4;
-  const deg = h * 60;
-  return deg < 20 || deg >= 330 ? "red" : deg < 70 ? "yellow" : deg < 160 ? "green" : deg < 200 ? "cyan" : deg < 260 ? "blue" : "magenta";
-}
-function indexed(n: number): string | null {
-  if (!Number.isFinite(n) || n < 0 || n > 255) return null;
-  if (n < 8) return COLOURS[n];
-  if (n === 8) return "gray";
-  if (n < 16) return COLOURS[n - 8];
-  if (n < 232) {
-    const v = (k: number) => (k ? 55 + k * 40 : 0);
-    const c = n - 16;
-    return nearest(v(Math.floor(c / 36)), v(Math.floor(c / 6) % 6), v(c % 6));
-  }
-  const level = 8 + (n - 232) * 10;
-  return level > 200 ? "white" : level < 72 ? "black" : "gray";
-}
-
-function applySgr(from: Sgr, params: number[]): Sgr {
-  const s = { ...from };
-  if (!params.length) return { ...PLAIN };
-  for (let i = 0; i < params.length; i++) {
-    const p = params[i];
-    if (p === 0) Object.assign(s, PLAIN);
-    else if (p === 1) s.b = true;
-    else if (p === 2) s.d = true;
-    else if (p === 3) s.i = true;
-    else if (p === 4) s.u = true;
-    else if (p === 7) s.inv = true;
-    else if (p === 21 || p === 22) s.b = s.d = false;
-    else if (p === 23) s.i = false;
-    else if (p === 24) s.u = false;
-    else if (p === 27) s.inv = false;
-    else if (p >= 30 && p <= 37) s.fg = COLOURS[p - 30];
-    else if (p === 39) s.fg = null;
-    else if (p >= 40 && p <= 47) s.bg = COLOURS[p - 40];
-    else if (p === 49) s.bg = null;
-    else if (p >= 90 && p <= 97) s.fg = p === 90 ? "gray" : COLOURS[p - 90];
-    else if (p >= 100 && p <= 107) s.bg = p === 100 ? "gray" : COLOURS[p - 100];
-    else if (p === 38 || p === 48) {
-      let c: string | null = null;
-      if (params[i + 1] === 5) {
-        c = indexed(params[i + 2]);
-        i += 2;
-      } else if (params[i + 1] === 2) {
-        c = nearest(params[i + 2] ?? 0, params[i + 3] ?? 0, params[i + 4] ?? 0);
-        i += 4;
-      }
-      if (p === 38) s.fg = c;
-      else s.bg = c;
-    }
-  }
-  return s;
-}
-
-const classCache = new Map<string, string>();
-/** The span's classes for a style – "" for plain text */
-function classOf(s: Sgr): string {
-  const fg = s.fg ?? (s.d ? "gray" : null);
-  const key = `${fg}|${s.bg}|${+s.b}${+s.i}${+s.u}${+s.inv}`;
-  let cls = classCache.get(key);
-  if (cls === undefined) {
-    const parts: string[] = [];
-    if (fg) parts.push(`ui-sbl__fg-${fg}`);
-    if (s.bg) parts.push(`ui-sbl__bg-${s.bg}`);
-    if (s.b) parts.push("ui-sbl__b");
-    if (s.i) parts.push("ui-sbl__i");
-    if (s.u) parts.push("ui-sbl__u");
-    if (s.inv) parts.push("ui-sbl__inv");
-    cls = parts.join(" ");
-    classCache.set(key, cls);
-  }
-  return cls;
-}
-
-/** One line of output: its plain text, and the styled runs when it has any */
-export type SandboxLogLine = { text: string; runs: Array<[cls: string, text: string]> | null };
-
-// CSI (colours, cursor moves), OSC (titles, links) and the two-byte escapes; only SGR ("m") changes the style
-const ESCAPE = /\x1b(?:\[([0-9;:?]*)[ -/]*([@-~])|\][^\x07\x1b]*(?:\x07|\x1b\\)?|[@-Z\\-_])/g;
-const CONTROL = /[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]/g;
-
-/** Parses one line (no \n) from a style; returns the line and the style after it */
-function parseLine(raw: string, from: Sgr): { line: SandboxLogLine; style: Sgr } {
-  let style = from;
-  if (raw.endsWith("\r")) raw = raw.slice(0, -1);
-  let runs: Array<[string, string]> = [];
-  const push = (piece: string) => {
-    // A carriage return goes back to the start of the line: what came before is overwritten (progress bars)
-    const cr = piece.lastIndexOf("\r");
-    if (cr >= 0) {
-      runs = [];
-      piece = piece.slice(cr + 1);
-    }
-    piece = piece.replace(CONTROL, "");
-    if (!piece) return;
-    const cls = classOf(style);
-    const last = runs[runs.length - 1];
-    if (last && last[0] === cls) last[1] += piece;
-    else runs.push([cls, piece]);
-  };
-  if (raw.indexOf("\x1b") < 0) push(raw);
-  else {
-    ESCAPE.lastIndex = 0;
-    let at = 0;
-    let m: RegExpExecArray | null;
-    while ((m = ESCAPE.exec(raw))) {
-      if (m.index > at) push(raw.slice(at, m.index));
-      if (m[2] === "m") style = applySgr(style, m[1] ? m[1].split(/[;:]/).map((n) => (n === "" ? 0 : Number(n))) : []);
-      at = m.index + m[0].length;
-    }
-    if (at < raw.length) push(raw.slice(at));
-  }
-  const text = runs.map((r) => r[1]).join("");
-  return { line: { text, runs: runs.some((r) => r[0]) ? runs : null }, style };
-}
-
-/** A step's parsed output. Lines up to `frozen` (complete, ending in \n) are kept when the output grows */
-type Parsed = { source: string; lines: SandboxLogLine[]; frozen: number; frozenAt: number; frozenStyle: Sgr };
-
-/** Parses `source`, reusing the complete lines of `prev` when the new text starts with them */
-function parseOutput(source: string, prev?: Parsed): Parsed {
-  if (prev && prev.source === source) return prev;
-  let lines: SandboxLogLine[] = [];
-  let at = 0;
-  let style = PLAIN;
-  if (prev && source.length >= prev.frozenAt && source.startsWith(prev.source.slice(0, prev.frozenAt))) {
-    lines = prev.lines;
-    lines.length = prev.frozen;
-    at = prev.frozenAt;
-    style = prev.frozenStyle;
-  }
-  let frozen = lines.length;
-  let frozenAt = at;
-  let frozenStyle = style;
-  while (at <= source.length) {
-    const nl = source.indexOf("\n", at);
-    if (nl < 0) {
-      // The last line, still being written – parsed again when more arrives; an empty one isn't shown
-      if (at < source.length) lines.push(parseLine(source.slice(at), style).line);
-      break;
-    }
-    const r = parseLine(source.slice(at, nl), style);
-    lines.push(r.line);
-    style = r.style;
-    at = nl + 1;
-    frozen = lines.length;
-    frozenAt = at;
-    frozenStyle = style;
-  }
-  return { source, lines, frozen, frozenAt, frozenStyle };
-}
+export type SandboxLogLine = AnsiLine;
+type Parsed = AnsiParsed;
+const parse = (source: string, prev?: Parsed) => parseOutput(source, "ui-sbl", prev);
 
 /** The output of a step as plain text – what Copy takes */
 export function sandboxLogPlainText(output: string): string {
-  return parseOutput(output)
+  return parse(output)
     .lines.map((l) => l.text)
     .join("\n");
 }
@@ -268,6 +108,7 @@ type Hits = { q: string; upto: number; list: number[]; lines: SandboxLogLine[] }
 /* After Lucide: terminal – the header's icon */
 const terminalIcon = svg`<path d="m4 17 6-6-6-6"></path><path d="M12 19h8"></path>`;
 
+// The classes parseOutput gives styled text: `ui-sbl__fg-${colour}`, `ui-sbl__bg-${colour}`, ui-sbl__b, ui-sbl__i, ui-sbl__u, ui-sbl__inv
 let instances = 0;
 
 /**
@@ -361,7 +202,7 @@ export class TcSandboxLog extends TcElement {
     super.willUpdate(changed);
     // Parse what's new; forget steps that went away
     const ids = new Set(this.steps.map((s) => s.id));
-    for (const s of this.steps) this.parsed.set(s.id, parseOutput(s.output ?? "", this.parsed.get(s.id)));
+    for (const s of this.steps) this.parsed.set(s.id, parse(s.output ?? "", this.parsed.get(s.id)));
     for (const id of [...this.parsed.keys()]) if (!ids.has(id)) this.parsed.delete(id);
     for (const id of [...this.hits.keys()]) if (!ids.has(id)) this.hits.delete(id);
     for (const id of [...this.stuck.keys()]) if (!ids.has(id)) this.stuck.delete(id);

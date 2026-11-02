@@ -2,7 +2,7 @@
 
 ## Unreleased – Workspace & sessions
 
-- **Components:** Panel Card, Icon Rail, Meter Row, Environment List, Change List and Check Status.
+- **Components:** Panel Card, Icon Rail, Meter Row, Environment List, Change List, Check Status, Terminal and Diff Viewer.
 - **Block:** Session Panel, a working session's side panel built from them.
 
 ## Unreleased – Tools

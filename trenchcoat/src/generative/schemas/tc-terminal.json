@@ -1,0 +1,61 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-terminal.json",
+  "title": "tc-terminal",
+  "description": "A command line for a panel: output in colour above a prompt with history; the page runs the commands.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading; empty leaves the header out"
+    },
+    "description": {
+      "type": "string",
+      "description": "Small text under the heading – the machine or working directory"
+    },
+    "output": {
+      "type": "string",
+      "description": "Everything printed so far, with ANSI escape codes; pass a longer string as it streams"
+    },
+    "prompt": {
+      "type": "string",
+      "description": "What stands before the command"
+    },
+    "value": {
+      "type": "string",
+      "description": "The text in the prompt. Changed by typing unless a tc-value-change listener calls preventDefault()"
+    },
+    "history": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Earlier commands, oldest first, for ↑ and ↓; commands entered here are added to it"
+    },
+    "running": {
+      "type": "boolean",
+      "description": "A command is running: Enter waits, and Stop and Ctrl+C fire tc-interrupt"
+    },
+    "disabled": {
+      "type": "boolean",
+      "description": "The prompt can't be used: for a closed session, or output to read only"
+    },
+    "masked": {
+      "type": "boolean",
+      "description": "Hides what's typed, for a password prompt, and keeps it out of the history"
+    },
+    "height": {
+      "type": "number",
+      "description": "Height of the output in px"
+    },
+    "inputLabel": {
+      "type": "string",
+      "description": "Names the prompt for screen readers"
+    },
+    "stopLabel": {
+      "type": "string",
+      "description": "Names the Stop button"
+    }
+  },
+  "additionalProperties": false
+}
