@@ -10,6 +10,6 @@
     "types": [],
     "plugins": []
   },
-  "include": ["src/elements/**/*.ts", "src/generative/**/*.ts"],
+  "include": ["src/elements/**/*.ts", "src/generative/**/*.ts", "src/headless/**/*.ts", "src/testing/**/*.ts"],
   "exclude": ["**/* ?.ts", "**/* ?/**"]
 }

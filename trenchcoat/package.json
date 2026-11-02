@@ -30,6 +30,15 @@
       "types": "./dist/types/generative/index.d.ts",
       "import": "./dist/generative.js"
     },
+    "./headless": {
+      "types": "./dist/types/headless/index.d.ts",
+      "import": "./dist/headless.js"
+    },
+    "./testing": {
+      "types": "./dist/types/testing/index.d.ts",
+      "import": "./dist/testing.js"
+    },
+    "./registry.json": "./dist/registry.json",
     "./vue": {
       "types": "./dist/types/vue.d.ts"
     },
@@ -50,6 +59,10 @@
       "import": "./dist/*.js"
     }
   },
+  "bin": {
+    "trenchcoat": "bin/trenchcoat.mjs",
+    "trenchcoat-mcp": "bin/trenchcoat-mcp.mjs"
+  },
   "types": "./dist/types/elements/index.d.ts",
   "customElements": "custom-elements.json",
   "files": [
@@ -57,6 +70,10 @@
     "dist/**/*.js.map",
     "dist/angular",
     "dist/types",
+    "dist/registry.json",
+    "dist/docs",
+    "dist/registry-files",
+    "bin",
     "tokens/tokens.css",
     "tokens/dtcg",
     "custom-elements.json",
@@ -78,12 +95,13 @@
     "test": "vitest run",
     "check:prefixes": "node scripts/check-prefixes.mjs",
     "check:ratchet": "node scripts/check-ratchet.mjs",
-    "ci": "node scripts/sync-agent-face.mjs --check && npm run typecheck && npm run lint && npm run check:prefixes && npm run check:ratchet && npm run check:tokens && npm run check:contrast && node scripts/gen-elements.mjs --check && npm run check:angular && npm run check:generative && npm run check:dead-css && npm run check:docs && npm run check:snippets && npm run check:lit && npm test",
+    "ci": "node scripts/sync-agent-face.mjs --check && npm run typecheck && npm run lint && npm run check:prefixes && npm run check:ratchet && npm run check:tokens && npm run check:contrast && node scripts/gen-elements.mjs --check && npm run check:angular && npm run check:generative && npm run check:dead-css && npm run check:docs && npm run check:snippets && npm run check:lit && npm run test:tools && npm test",
     "check:tokens": "node scripts/tokens.mjs --check && node scripts/check-tokens.mjs && node scripts/tokens-dtcg.mjs --check",
     "check:contrast": "node scripts/contrast.mjs",
     "check:lit": "lit-analyzer src/elements --strict --maxWarnings 0",
     "visual": "node scripts/visual.mjs",
-    "build:package": "vite build -c vite.package.config.ts && tsc -p tsconfig.package.json && ngc -p tsconfig.angular.json && cem analyze --config custom-elements-manifest.config.mjs",
+    "build:package": "vite build -c vite.package.config.ts && tsc -p tsconfig.package.json && ngc -p tsconfig.angular.json && cem analyze --config custom-elements-manifest.config.mjs && node scripts/gen-registry.mjs",
+    "test:tools": "node scripts/gen-registry.mjs && node --test tests/tools/*.test.mjs",
     "examples": "node scripts/examples.mjs",
     "gen:elements": "node scripts/gen-elements.mjs",
     "check:dead-css": "node scripts/dead-css.mjs",

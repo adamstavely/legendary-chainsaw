@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased – Tools
+
+- **CLI** (`trenchcoat`): `list`, `info`, `add` and `init`, from a registry built with the package.
+- **Linter** (`trenchcoat lint`): checks a project's use of elements, attributes, events, imports and tokens against the package's API.
+- **MCP server** (`trenchcoat-mcp`): `search_components`, `get_component`, `get_usage` and `lint_code`, read-only.
+- **Fixed:** the Angular example gave its combobox a `heading` it doesn't have; it's now `label`. The linter found this.
+- **`trenchcoat/headless`** and **`trenchcoat/testing`**: behaviour without markup, and helpers for testing apps.
+
 ## Unreleased – File protection, workflows and motion
 
 - **Components:** Content Shield, Legal Hold Manager, Sensitivity Label Picker, Scan Status, Bulk Action Bar, Approval Chain,

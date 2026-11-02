@@ -36,3 +36,29 @@ Edit `src/components/<name>.tsx`. There's no build step: the gallery and the tes
 - **Design tokens** (`scripts/check-tokens.mjs`): no legacy `--ui-` tokens; in blocks, screens, illustrations and motion every dictionary token reference carries the exact fallback for its file's look, so a single copied file renders without `tokens.css` (components rely on `tokens.css`). After editing `tokens/tokens.css`, run `node scripts/tokens.mjs && node scripts/check-tokens.mjs --fix`.
 - **Visual regression** (`scripts/visual.mjs`): deterministic screenshots of every gallery entry in both styles and themes; `capture <dir>` then `compare <base> <dir>` (reports changed, and colour shifts too subtle for pixelmatch as "subtle").
 - **Ratchet** (`scripts/check-ratchet.mjs`) counts risky patterns per file (unexplained eslint-disables, hard-coded ids, render-time clock reads, `any`, `dangerouslySetInnerHTML`); counts may only go down. Lock in an improvement with `node scripts/check-ratchet.mjs --update`.
+
+## Tools
+
+**CLI.** `npx trenchcoat list share` finds things, `npx trenchcoat info share-panel` shows how to import one in each framework,
+and `npx trenchcoat add case-file` copies a React block or screen into `components/ui`, with the files it needs. It never replaces
+a file unless you pass `--overwrite`.
+
+**Linting a project.** `npx trenchcoat lint [paths]` checks HTML, Vue, Svelte, Angular and Lit templates, and CSS, against the package's API:
+unknown elements, attributes, events, imports and tokens; text set on a property with no attribute; `="false"` on a boolean; values
+outside a closed list. It warns about missing imports and tokens, and fixed colours on an element. It exits 1 on errors, or on warnings
+with `--strict`, and has `--json` for CI. `--rules` lists the rules, and `<!-- trenchcoat-lint-disable-next-line rule -->` silences one
+line. It reads text only: values in expressions are skipped, and React props are left to TypeScript.
+
+**For AI coding tools.** `trenchcoat-mcp` is an MCP server over stdio, with `search_components`, `get_component`, `get_usage` and `lint_code`.
+It's read-only and answers from the package's own files. Add it to your tool's MCP settings:
+
+```json
+{ "mcpServers": { "trenchcoat": { "command": "npx", "args": ["trenchcoat-mcp"] } } }
+```
+
+**Build your own.** `trenchcoat/headless` is the behaviour inside the elements, with no markup or styles: popovers and focus, list
+motion, text selection, and link safety. The controllers plug into Lit; the plain functions need only the DOM.
+
+**Test your app.** `trenchcoat/testing` has drivers that act as a person does, such as `pickFlag`, `addRecipient` and `decideCase`,
+with `settled`, `waitFor`, `mockEntitlement` and `fixtures`. It works with any test runner and throws clear errors.
+
