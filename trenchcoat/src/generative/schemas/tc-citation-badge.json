@@ -22,8 +22,8 @@
     "layout": {
       "type": "string",
       "enum": [
-        "labelled",
-        "compact"
+        "compact",
+        "labelled"
       ],
       "description": "\"labelled\": name, mark and count; \"compact\": the mark and the count"
     },

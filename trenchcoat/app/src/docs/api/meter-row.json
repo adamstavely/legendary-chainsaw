@@ -1,0 +1,412 @@
+{
+ "elements": [
+  {
+   "tag": "tc-meter-row",
+   "className": "TcMeterRow",
+   "description": "A label, a percentage and a tiny bar on one line, with a word and a mark when it's getting full.",
+   "properties": [
+    {
+     "name": "label",
+     "attribute": "label",
+     "type": "string",
+     "default": "\"\"",
+     "description": "What's being measured; it names the meter, even when `compact` hides it",
+     "readonly": false
+    },
+    {
+     "name": "value",
+     "attribute": "value",
+     "type": "number",
+     "default": "0",
+     "description": "How much is used, from 0 to `max`",
+     "readonly": false
+    },
+    {
+     "name": "max",
+     "attribute": "max",
+     "type": "number",
+     "default": "1",
+     "description": "What full is",
+     "readonly": false
+    },
+    {
+     "name": "valueText",
+     "attribute": "value-text",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Text to show in place of the percentage, such as \"812 of 1,000\"",
+     "readonly": false
+    },
+    {
+     "name": "warnAt",
+     "attribute": "warn-at",
+     "type": "number",
+     "default": "0.8",
+     "description": "The fraction of `max` where it starts to warn",
+     "readonly": false
+    },
+    {
+     "name": "dangerAt",
+     "attribute": "danger-at",
+     "type": "number",
+     "default": "0.95",
+     "description": "The fraction of `max` where it turns to danger",
+     "readonly": false
+    },
+    {
+     "name": "interactive",
+     "attribute": "interactive",
+     "type": "boolean",
+     "default": "false",
+     "description": "Makes the row a button that fires tc-open",
+     "readonly": false
+    },
+    {
+     "name": "compact",
+     "attribute": "compact",
+     "type": "boolean",
+     "default": "false",
+     "description": "Hides the label from sight, leaving the percentage and bar",
+     "readonly": false
+    },
+    {
+     "name": "bare",
+     "attribute": "bare",
+     "type": "boolean",
+     "default": "false",
+     "description": "Drops the tray and shadow, for a row that sits in something else's surface",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "Partial<MeterRowLabels>",
+     "default": "{}",
+     "description": "Rename the words",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-open",
+     "detail": "",
+     "description": "The row was pressed, when `interactive` (detail: null)",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "mrw",
+   "cssProperties": [
+    {
+     "name": "--tc-mrw-bar",
+     "value": "var(--tc-space-10)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-mrw-bar-h",
+     "value": "var(--tc-space-1)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-mrw-glyph",
+     "value": "var(--tc-space-3-5)",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent-solid",
+    "--tc-border-default",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-h-sm",
+    "--tc-duration-base",
+    "--tc-ease-move",
+    "--tc-focus-outline",
+    "--tc-focus-ring-width",
+    "--tc-font-size-sm",
+    "--tc-font-weight-medium",
+    "--tc-line-height-normal",
+    "--tc-mrw-fill",
+    "--tc-radius-full",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-10",
+    "--tc-space-2",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-status-danger-fg",
+    "--tc-status-danger-solid",
+    "--tc-status-warning-fg",
+    "--tc-status-warning-solid",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "MeterRow",
+   "exported": false,
+   "props": [],
+   "hides": [],
+   "events": {
+    "tc-open": "onTcOpen"
+   }
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-meter-row",
+   "className": "TcMeterRow",
+   "module": "trenchcoat/meter-row",
+   "data": [
+    "labels"
+   ],
+   "attributes": [
+    {
+     "name": "label",
+     "attribute": "label"
+    },
+    {
+     "name": "value",
+     "attribute": "value"
+    },
+    {
+     "name": "max",
+     "attribute": "max"
+    },
+    {
+     "name": "valueText",
+     "attribute": "value-text"
+    },
+    {
+     "name": "warnAt",
+     "attribute": "warn-at"
+    },
+    {
+     "name": "dangerAt",
+     "attribute": "danger-at"
+    },
+    {
+     "name": "interactive",
+     "attribute": "interactive"
+    },
+    {
+     "name": "compact",
+     "attribute": "compact"
+    },
+    {
+     "name": "bare",
+     "attribute": "bare"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-open",
+     "cancelable": false
+    }
+   ],
+   "controlled": [],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 15328,
+  "gzip": 5527
+ }
+}

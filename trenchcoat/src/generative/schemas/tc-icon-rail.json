@@ -1,0 +1,93 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-icon-rail.json",
+  "title": "tc-icon-rail",
+  "description": "A row of icon buttons for a panel: one chosen, each with a tooltip, and an optional More menu.",
+  "type": "object",
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "Names the toolbar"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/IconRailItem"
+      },
+      "description": "The buttons"
+    },
+    "selected": {
+      "type": "string",
+      "description": "The chosen button's id, or null for none"
+    },
+    "moreItems": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/IconRailMoreItem"
+      },
+      "description": "The items of a final More menu; without them there's no More button"
+    },
+    "moreLabel": {
+      "type": "string",
+      "description": "Names the More button"
+    },
+    "bare": {
+      "type": "boolean",
+      "description": "Drops the tray and shadow, for a rail that sits in something else's surface"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "IconRailItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "Names the button, and is its tooltip"
+        },
+        "icon": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ],
+          "description": "SVG path data for a 24×24 stroked icon, or several paths"
+        },
+        "disabled": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "icon"
+      ],
+      "additionalProperties": false
+    },
+    "IconRailMoreItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

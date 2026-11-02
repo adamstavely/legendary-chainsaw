@@ -1,0 +1,402 @@
+{
+ "elements": [
+  {
+   "tag": "tc-icon-rail",
+   "className": "TcIconRail",
+   "description": "A row of icon buttons for a panel: one chosen, each with a tooltip, and an optional More menu.",
+   "properties": [
+    {
+     "name": "label",
+     "attribute": "label",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Names the toolbar",
+     "readonly": false
+    },
+    {
+     "name": "items",
+     "attribute": null,
+     "type": "IconRailItem[]",
+     "default": "[]",
+     "description": "The buttons",
+     "readonly": false
+    },
+    {
+     "name": "selected",
+     "attribute": "selected",
+     "type": "string | null",
+     "default": "null",
+     "description": "The chosen button's id, or null for none",
+     "readonly": false
+    },
+    {
+     "name": "moreItems",
+     "attribute": null,
+     "type": "IconRailMoreItem[]",
+     "default": "[]",
+     "description": "The items of a final More menu; without them there's no More button",
+     "readonly": false
+    },
+    {
+     "name": "moreLabel",
+     "attribute": "more-label",
+     "type": "string",
+     "default": "\"More\"",
+     "description": "Names the More button",
+     "readonly": false
+    },
+    {
+     "name": "bare",
+     "attribute": "bare",
+     "type": "boolean",
+     "default": "false",
+     "description": "Drops the tray and shadow, for a rail that sits in something else's surface",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-selected-change",
+     "detail": "",
+     "description": "A button was chosen or let go ({ selected, item }: IconRailSelectedChange); cancelable – prevented, `selected` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-action",
+     "detail": "",
+     "description": "A More menu item was chosen ({ id }: IconRailAction)",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "irl",
+   "cssProperties": [
+    {
+     "name": "--tc-irl-size",
+     "value": "var(--tc-control-h-sm)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-irl-glyph",
+     "value": "var(--tc-space-4)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-irl-menu",
+     "value": "var(--tc-space-16)",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-action-ghost-bg-hover",
+    "--tc-border-default",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-h-sm",
+    "--tc-control-radius-sm",
+    "--tc-focus-outline",
+    "--tc-focus-ring-width",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-line-height-normal",
+    "--tc-radius-md",
+    "--tc-radius-sm",
+    "--tc-shadow-overlay",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-16",
+    "--tc-space-2",
+    "--tc-space-4",
+    "--tc-surface-inverse",
+    "--tc-surface-on-tray",
+    "--tc-surface-overlay",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-surface-well",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-on-inverse",
+    "--tc-text-primary",
+    "--tc-tray-inset",
+    "--tc-tray-radius",
+    "--tc-z-dropdown"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "IconRail",
+   "exported": true,
+   "props": [
+    {
+     "name": "selected",
+     "type": "string | null",
+     "optional": true,
+     "description": "The chosen button's id – controlled when given"
+    },
+    {
+     "name": "defaultSelected",
+     "type": "string | null",
+     "optional": true,
+     "description": "The chosen button at first, when `selected` isn't controlled"
+    },
+    {
+     "name": "onSelectedChange",
+     "type": "(selected: string | null, item?: IconRailItem) => void",
+     "optional": true,
+     "description": "A button was chosen or let go"
+    }
+   ],
+   "hides": [
+    "selected",
+    "children"
+   ],
+   "events": {
+    "tc-selected-change": null,
+    "tc-action": "onTcAction"
+   }
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-icon-rail",
+   "className": "TcIconRail",
+   "module": "trenchcoat/icon-rail",
+   "data": [
+    "items",
+    "moreItems"
+   ],
+   "attributes": [
+    {
+     "name": "label",
+     "attribute": "label"
+    },
+    {
+     "name": "selected",
+     "attribute": "selected"
+    },
+    {
+     "name": "moreLabel",
+     "attribute": "more-label"
+    },
+    {
+     "name": "bare",
+     "attribute": "bare"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-selected-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-action",
+     "cancelable": false
+    }
+   ],
+   "controlled": [
+    {
+     "property": "selected",
+     "event": "tc-selected-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "individual-transforms",
+    "name": "translate, scale and rotate properties",
+    "bcd": "css.properties.translate",
+    "versions": {
+     "chrome": "104",
+     "edge": "104",
+     "firefox": "72",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [
+   "document pointerdown"
+  ],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 17484,
+  "gzip": 5993
+ }
+}

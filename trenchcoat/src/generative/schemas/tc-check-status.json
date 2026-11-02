@@ -1,0 +1,120 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-check-status.json",
+  "title": "tc-check-status",
+  "description": "The automated checks on a change: a summary in words and a row for each, failing first, or just a mark and \"5/11\" for a list row.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "checks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/CheckItem"
+      },
+      "description": "The checks. Wins over `counts`"
+    },
+    "counts": {
+      "type": "object",
+      "properties": {
+        "passing": {
+          "type": "number"
+        },
+        "failing": {
+          "type": "number"
+        },
+        "pending": {
+          "type": "number"
+        },
+        "skipped": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "passing",
+        "failing",
+        "pending",
+        "skipped"
+      ],
+      "additionalProperties": false,
+      "description": "Totals, when there are no details"
+    },
+    "compact": {
+      "type": "boolean",
+      "description": "Just a mark and \"5/11\", to sit inline in a list row"
+    },
+    "retryable": {
+      "type": "boolean",
+      "description": "Offers Re-run on failing checks"
+    },
+    "bare": {
+      "type": "boolean",
+      "description": "Drops the tray and card"
+    },
+    "statusLabels": {
+      "type": "object",
+      "properties": {
+        "pending": {
+          "type": "string"
+        },
+        "skipped": {
+          "type": "string"
+        },
+        "passing": {
+          "type": "string"
+        },
+        "failing": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any state's word, over the defaults"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "CheckItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "state": {
+          "$ref": "#/definitions/CheckState"
+        },
+        "detail": {
+          "type": "string",
+          "description": "One quiet line, such as what failed"
+        },
+        "durationMs": {
+          "type": "number",
+          "description": "How long it took, in ms"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "state"
+      ],
+      "additionalProperties": false
+    },
+    "CheckState": {
+      "type": "string",
+      "enum": [
+        "passing",
+        "failing",
+        "pending",
+        "skipped"
+      ]
+    }
+  }
+}
