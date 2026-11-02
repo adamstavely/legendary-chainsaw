@@ -77,6 +77,8 @@ jobs:
         run: npm run check:docs
       - name: Lit templates
         run: npm run check:lit
+      - name: CLI and MCP server
+        run: npm run test:tools
       # The React components, the gallery and its docs, in jsdom; the Lit elements run in the jobs below
       - name: Tests (jsdom)
         run: npx vitest run --project react

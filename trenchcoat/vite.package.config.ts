@@ -30,6 +30,9 @@ export default defineConfig({
         "look-provider": here("src/elements/internal/look.ts"),
         // What an app needs to let a model place components: the catalogue, schemas, tools and checks
         generative: here("src/generative/index.ts"),
+        // Behaviour without markup, and helpers for testing apps
+        headless: here("src/headless/index.ts"),
+        testing: here("src/testing/index.ts"),
       },
     },
     rollupOptions: {
