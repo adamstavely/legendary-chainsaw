@@ -1,0 +1,324 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-session-panel.json",
+  "title": "tc-session-panel",
+  "description": "The side panel of a working session: tools, environment, context, connectors, outputs, changes and background tasks.",
+  "type": "object",
+  "properties": {
+    "tools": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/IconRailItem"
+      },
+      "description": "The tool buttons at the top; without any, the rail is left out"
+    },
+    "tool": {
+      "type": "string",
+      "description": "The id of the chosen tool. Changed by the user unless a tc-selected-change listener calls preventDefault()"
+    },
+    "moreTools": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/IconRailMoreItem"
+      },
+      "description": "The rail's More menu"
+    },
+    "environment": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/EnvironmentItem"
+      },
+      "description": "Where the session runs"
+    },
+    "toggles": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "boolean"
+      },
+      "description": "The environment rows' switches. Changed by the user unless a tc-toggles-change listener calls preventDefault()"
+    },
+    "context": {
+      "type": "number",
+      "description": "How full the context is, from 0 to 1; without it, the row is left out"
+    },
+    "connectors": {
+      "type": "string",
+      "description": "The Connectors row's value, such as \"14 to reconnect\"; without it, the row is left out"
+    },
+    "outputs": {
+      "type": "string",
+      "description": "The Outputs row's value, such as \"51\"; without it, the row is left out"
+    },
+    "changes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ChangeItem"
+      },
+      "description": "The changes the session has made"
+    },
+    "changeActions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ChangeRowAction"
+      },
+      "description": "The menu on each change"
+    },
+    "changeLimit": {
+      "type": "number",
+      "description": "How many changes show before Show more"
+    },
+    "background": {
+      "type": "string",
+      "description": "The Background tasks row's value, such as \"4 running\"; without it, the row is left out"
+    },
+    "sections": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/SessionPanelSection"
+      },
+      "description": "The sections folded open. Changed by the user unless a tc-sections-change listener calls preventDefault()"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "changes": {
+          "type": "string"
+        },
+        "context": {
+          "type": "string"
+        },
+        "environment": {
+          "type": "string"
+        },
+        "tools": {
+          "type": "string"
+        },
+        "connectors": {
+          "type": "string"
+        },
+        "outputs": {
+          "type": "string"
+        },
+        "background": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "IconRailItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "Names the button, and is its tooltip"
+        },
+        "icon": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ],
+          "description": "SVG path data for a 24×24 stroked icon, or several paths"
+        },
+        "disabled": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "icon"
+      ],
+      "additionalProperties": false
+    },
+    "IconRailMoreItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "EnvironmentItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/definitions/EnvironmentKind"
+        },
+        "icon": {
+          "type": "string",
+          "description": "SVG path data for a 24×24 icon, for a custom row"
+        },
+        "label": {
+          "type": "string"
+        },
+        "detail": {
+          "type": "string",
+          "description": "Quieter text after the label, cut off at its end when there isn't room"
+        },
+        "action": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "label": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "label"
+          ],
+          "additionalProperties": false,
+          "description": "A small button at the row's end"
+        },
+        "toggle": {
+          "type": "boolean",
+          "description": "Draws a switch at the row's end, named by the label"
+        }
+      },
+      "required": [
+        "id",
+        "kind",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "EnvironmentKind": {
+      "type": "string",
+      "enum": [
+        "computer",
+        "folder",
+        "repo",
+        "branch",
+        "custom"
+      ]
+    },
+    "ChangeItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "repo": {
+          "type": "string",
+          "description": "Where it is, such as a repository's name"
+        },
+        "number": {
+          "type": "number",
+          "description": "Its number there"
+        },
+        "state": {
+          "$ref": "#/definitions/ChangeState"
+        },
+        "additions": {
+          "type": "number",
+          "description": "Lines added"
+        },
+        "deletions": {
+          "type": "number",
+          "description": "Lines removed"
+        },
+        "checks": {
+          "$ref": "#/definitions/CheckCounts",
+          "description": "How its checks went"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "repo",
+        "state"
+      ],
+      "additionalProperties": false
+    },
+    "ChangeState": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "open",
+        "merged",
+        "closed"
+      ]
+    },
+    "CheckCounts": {
+      "type": "object",
+      "properties": {
+        "passing": {
+          "type": "number"
+        },
+        "failing": {
+          "type": "number"
+        },
+        "pending": {
+          "type": "number"
+        },
+        "skipped": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "passing",
+        "failing",
+        "pending",
+        "skipped"
+      ],
+      "additionalProperties": false
+    },
+    "ChangeRowAction": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "SessionPanelSection": {
+      "type": "string",
+      "enum": [
+        "environment",
+        "context",
+        "connectors",
+        "outputs",
+        "changes",
+        "background"
+      ]
+    }
+  }
+}

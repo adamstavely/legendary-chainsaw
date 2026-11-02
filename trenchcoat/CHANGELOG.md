@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased – Workspace & sessions
+
+- **Components:** Panel Card, Icon Rail, Meter Row, Environment List, Change List and Check Status.
+- **Block:** Session Panel, a working session's side panel built from them.
+
 ## Unreleased – Tools
 
 - **CLI** (`trenchcoat`): `list`, `info`, `add` and `init`, from a registry built with the package.

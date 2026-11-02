@@ -47,10 +47,12 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Button** (`button.tsx`) – Primary, secondary, ghost and destructive buttons with icons, sizes and a shimmering loading state
 - **Capability Notice** (`capability-notice.tsx`) – When a request falls where the AI is only partly proven or not proven – a capped confidence, who was notified, and how far the request is from the usual
 - **Capacity Bars** (`capacity-bars.tsx`) – How loaded each person is – their allocation split by what they work on, against their capacity on one shared scale, each piece named with its amount, anyone over capacity marked and counted
+- **Change List** (`change-list.tsx`) – Proposed code changes as compact rows – state, title, where it is, lines added and removed, and its checks, with a menu per row and Show more.
 - **Change Summary** (`change-summary.tsx`) – What moved since last time – one metric per row with a colored trend
 - **Chat Composer** (`chat-composer.tsx`) – Prompt composer with model picker, voice input, app connections and approval request; an optional toolbar row switches the model, opens model settings and the prompt library, connects or disconnects the page context, and adds a disclaimer line – folding to fit a side pane
 - **Chat History** (`chat-history.tsx`) – Your conversations, grouped by date – search, pin, folders, rename and delete with undo, smooth with thousands of chats
 - **Chat Minimap** (`chat-minimap.tsx`) – A rail of ticks beside a long chat, one per message you sent, longer for longer ones – the one in view lit, the message on hover or with the arrow keys, a click to jump back to it – following the chat as it scrolls
+- **Check Status** (`check-status.tsx`) – The automated checks on a change – a summary in words and a row for each, failing first, with Re-run, or just a mark and "5/11" for a list row.
 - **Checkbox** (`checkbox.tsx`) – A form-associated boolean choice
 - **Citation Badge** (`citation-badge.tsx`) – A small badge of how a work is cited – publications, supporting, mentioning and contrasting counts with their marks, labelled or compact, a tooltip saying what each means and an optional link to the details
 - **Citation Sections** (`citation-sections.tsx`) – Where a work is cited – a donut of citing sections (Intro, Methods, Results, Discussion, Other) shaded darkest first, a legend with letter chips and counts, and the section under the pointer or focus with its share
@@ -95,6 +97,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Engagement Quality** (`engagement-quality.tsx`) – Whether reviews are genuine – an index from reused text, time on the source, batch dismissals and repeated commitments, shown as quality, not a violation
 - **Entity Details** (`entity-details.tsx`) – Email addresses, phone numbers, links and @handles in text, found and marked – hover, focus or right-click one for its domain, country or site (with an http warning), Copy, Write email / Call / Open, and what your directory knows about it
 - **Entity Timeline** (`entity-timeline.tsx`) – What happened to a person, account or case, in order – events under month headers, each with a category, its source and Admiralty grade tinted by confidence, an optional flag and a detail that opens in place, filtered by category chips with counts
+- **Environment List** (`environment-list.tsx`) – Where a session runs, as rows of machine, folders, repository and branch, each with an optional small action or a switch.
 - **Eval Scorecard** (`eval-scorecard.tsx`) – Test cases run against prompt or model versions – pass and fail per case, the score across versions, and a failing case opened beside its expected answer
 - **Evaluation Dataset Editor** (`evaluation-dataset-editor.tsx`) – Edit an eval set's cases, checks, tags and splits, compare it with an earlier version, and import or export it as JSON Lines
 - **Evidence Coverage** (`evidence-coverage.tsx`) – What an answer could and couldn't see – each source category current, stale or missing, with a request for coverage
@@ -121,6 +124,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Handoff Brief** (`handoff-brief.tsx`) – Work passing from one person to another – summary, open items and commitments, each acknowledged by the receiver, blocked when they lack access
 - **Handoff** (`handoff.tsx`) – The agent hands the task to you mid-run – what it did, why it stopped and what it needs – and takes it back when you're done
 - **Heatmap** (`heatmap.tsx`) – A matrix of rows by columns shaded by value – sequential or diverging, binned or continuous – with a legend, the highest and lowest cells, a tooltip per cell, an optional crosshair, selection and a table view
+- **Icon Rail** (`icon-rail.tsx`) – A row of icon buttons for a panel – one chosen, a tooltip on each, one tab stop, and an optional More menu.
 - **Identifier Details** (`identifier-details.tsx`) – DOIs, IP addresses, file hashes, CVE ids and tracking numbers in text, found, checked and marked – hover, focus or right-click one for its normalised value with Copy, its range, algorithm, year or carrier, doi.org and NVD links, and what your sources know (severity, owner, status)
 - **Image Grid** (`image-grid.tsx`) – Generated images as a grid of variations – upscale, regenerate one tile, compare two, download, and alt text for every image
 - **Inline Diff** (`inline-diff.tsx`) – AI edits to prose shown inline – struck and added words you accept or reject one by one, with keys, a popover and undo
@@ -143,6 +147,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Memory Panel** (`memory-panel.tsx`) – What the assistant remembers about you, grouped and editable – a master switch, category filters, and on every memory edit in place, pause or forget with Undo on the tray
 - **Mention Picker** (`mention-picker.tsx`) – The / and @ picker inside a composer – grouped results, arrow keys and Enter, and the pick lands as a chip
 - **Message Actions** (`message-actions.tsx`) – The quiet bar under an AI message – copy turns into a check, regenerate spins and unfolds a version switcher, thumbs pop and ask why, read aloud becomes a tiny equalizer
+- **Meter Row** (`meter-row.tsx`) – How full something is on one line – a label, a percentage and a tiny bar, with a mark and a word when it's getting full; can open the details or sit compact beside a value.
 - **Model Picker** (`model-picker.tsx`) – The model menu of an AI chat – point at a model and its speed, quality and cost bars fill, switch on extended thinking and its effort unfolds, while the tray rolls the first-token time and price
 - **Model Routing** (`model-routing.tsx`) – Routing rules as a route with a fallback chain, target health, breakers and residency, and a route test that lights up the path taken
 - **Model Settings** (`model-settings.tsx`) – The parameters a model supports, explained, with presets, a value signature, incompatible-setting feedback and what differs from the defaults
@@ -157,6 +162,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Org Unit Card** (`org-unit-card.tsx`) – An organisational unit at a glance – code, name, lead, On track / Watch / At risk counts, the page's stats with a spent-of-budget bar, and teams that fold open onto their topics' priority, coverage, open gaps and momentum
 - **OTP Input** (`otp-input.tsx`) – The verification code field done right – a gliding focus ring, paste and SMS autofill, a calm shake on errors and a morph into Verified
 - **Output Schema Builder** (`output-schema-builder.tsx`) – Build a structured-output schema as a tree beside a rendered preview of the answer – types visible, problems flagged on their rows – with raw JSON and the JSON Schema as tabs
+- **Panel Card** (`panel-card.tsx`) – One section of a side panel – a heading, a short value and content that glides open and shut, or a row that opens something else.
 - **Parallel Attempts** (`parallel-attempts.tsx`) – An agent tries the same task several ways at once and the best one wins – every attempt races as a row with its model, approach and live bar, then gets a score; the best is marked and picked, and you can switch to another
 - **Permission Request** (`permission-request.tsx`) – An agent asks for one specific right – who, why and exactly what will happen – and you allow it once, for an hour or always; then it folds into one line with the time left and Revoke
 - **Person Hovercard** (`person-hovercard.tsx`) – The profile card behind any name – picture, pronouns, title and team, status, local time and time difference, manager, Email, Message, View profile and links – on hover, focus or tap

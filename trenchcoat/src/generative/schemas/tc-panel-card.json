@@ -1,0 +1,34 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-panel-card.json",
+  "title": "tc-panel-card",
+  "description": "A compact card for one section of a side panel, which folds or opens something else.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The section's name"
+    },
+    "value": {
+      "type": "string",
+      "description": "Short text at the right, such as a count"
+    },
+    "mode": {
+      "type": "string",
+      "enum": [
+        "link",
+        "fold"
+      ],
+      "description": "\"fold\" opens and shuts the content; \"link\" makes the whole row a button that fires tc-open"
+    },
+    "expanded": {
+      "type": "boolean",
+      "description": "Whether the content shows, in \"fold\" mode"
+    },
+    "bare": {
+      "type": "boolean",
+      "description": "Drops the tray and shadow, for a card that sits in something else's surface"
+    }
+  },
+  "additionalProperties": false
+}

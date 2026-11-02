@@ -1,0 +1,385 @@
+{
+ "elements": [
+  {
+   "tag": "tc-panel-card",
+   "className": "TcPanelCard",
+   "description": "A compact card for one section of a side panel, which folds or opens something else.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The section's name",
+     "readonly": false
+    },
+    {
+     "name": "value",
+     "attribute": "value",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Short text at the right, such as a count",
+     "readonly": false
+    },
+    {
+     "name": "mode",
+     "attribute": "mode",
+     "type": "PanelCardMode",
+     "default": "\"fold\"",
+     "description": "\"fold\" opens and shuts the content; \"link\" makes the whole row a button that fires tc-open",
+     "readonly": false
+    },
+    {
+     "name": "expanded",
+     "attribute": "expanded",
+     "type": "boolean",
+     "default": "false",
+     "description": "Whether the content shows, in \"fold\" mode",
+     "readonly": false
+    },
+    {
+     "name": "bare",
+     "attribute": "bare",
+     "type": "boolean",
+     "default": "false",
+     "description": "Drops the tray and shadow, for a card that sits in something else's surface",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-expanded-change",
+     "detail": "",
+     "description": "The section was opened or shut ({ expanded }: PanelCardExpandedChange); cancelable – prevented, `expanded` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-open",
+     "detail": "",
+     "description": "The row was pressed in \"link\" mode (detail: null)",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "pnc",
+   "cssProperties": [
+    {
+     "name": "--tc-pnc-pad",
+     "value": "var(--tc-space-3)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-pnc-glyph",
+     "value": "var(--tc-space-3-5)",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-h-sm",
+    "--tc-control-radius-md",
+    "--tc-duration-base",
+    "--tc-ease-move",
+    "--tc-focus-outline",
+    "--tc-focus-ring-width",
+    "--tc-font-size-sm",
+    "--tc-font-weight-medium",
+    "--tc-line-height-normal",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "PanelCard",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The section's name"
+    },
+    {
+     "name": "expanded",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether the content shows – controlled when given"
+    },
+    {
+     "name": "defaultExpanded",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether the content shows at first, when `expanded` isn't controlled"
+    },
+    {
+     "name": "onExpandedChange",
+     "type": "(expanded: boolean) => void",
+     "optional": true,
+     "description": "The section was opened or shut"
+    }
+   ],
+   "hides": [
+    "heading",
+    "expanded"
+   ],
+   "events": {
+    "tc-expanded-change": null,
+    "tc-open": "onTcOpen"
+   }
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-panel-card",
+   "className": "TcPanelCard",
+   "module": "trenchcoat/panel-card",
+   "data": [],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "value",
+     "attribute": "value"
+    },
+    {
+     "name": "mode",
+     "attribute": "mode"
+    },
+    {
+     "name": "expanded",
+     "attribute": "expanded"
+    },
+    {
+     "name": "bare",
+     "attribute": "bare"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-expanded-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-open",
+     "cancelable": false
+    }
+   ],
+   "controlled": [
+    {
+     "property": "expanded",
+     "event": "tc-expanded-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "script",
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 15285,
+  "gzip": 5475
+ }
+}
