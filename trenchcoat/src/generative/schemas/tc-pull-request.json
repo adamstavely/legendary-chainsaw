@@ -1,0 +1,318 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-pull-request.json",
+  "title": "tc-pull-request",
+  "description": "One pull request at a glance: branches, author, lines changed, review, checks and whether it can merge, with the button its state calls for.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading; empty draws no header"
+    },
+    "number": {
+      "type": "number",
+      "description": "Its number; with neither this nor `prTitle` the empty state shows"
+    },
+    "prTitle": {
+      "type": "string",
+      "description": "Its title"
+    },
+    "url": {
+      "type": "string",
+      "description": "Where it lives; the title becomes a link to it",
+      "format": "uri-reference"
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "open",
+        "merged",
+        "closed"
+      ],
+      "description": "Draft, open, merged or closed"
+    },
+    "head": {
+      "type": "string",
+      "description": "The branch with the changes"
+    },
+    "base": {
+      "type": "string",
+      "description": "The branch it goes into"
+    },
+    "author": {
+      "type": "string",
+      "description": "Who opened it"
+    },
+    "updatedAt": {
+      "type": [
+        "string",
+        "number"
+      ],
+      "description": "When it last changed: epoch ms or an ISO string"
+    },
+    "additions": {
+      "type": "number",
+      "description": "Lines added"
+    },
+    "deletions": {
+      "type": "number",
+      "description": "Lines removed"
+    },
+    "files": {
+      "type": "number",
+      "description": "Files changed"
+    },
+    "review": {
+      "type": "string",
+      "enum": [
+        "approved",
+        "none",
+        "changes",
+        "requested",
+        "commented"
+      ],
+      "description": "The review as a whole"
+    },
+    "reviewers": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/PullRequestReviewer"
+      },
+      "description": "Who reviewed it, or was asked to"
+    },
+    "checks": {
+      "type": "object",
+      "properties": {
+        "passing": {
+          "type": "number"
+        },
+        "failing": {
+          "type": "number"
+        },
+        "pending": {
+          "type": "number"
+        },
+        "skipped": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "passing",
+        "failing",
+        "pending",
+        "skipped"
+      ],
+      "additionalProperties": false,
+      "description": "How its checks went; unset draws no checks row"
+    },
+    "mergeable": {
+      "type": "string",
+      "enum": [
+        "conflicts",
+        "blocked",
+        "unknown",
+        "clean",
+        "behind"
+      ],
+      "description": "Whether it can merge into its base"
+    },
+    "autoMerge": {
+      "type": "boolean",
+      "description": "Merge on its own once the checks pass. Changed by the switch unless a tc-auto-merge-change listener calls preventDefault()"
+    },
+    "mergeMethod": {
+      "type": "string",
+      "enum": [
+        "merge",
+        "squash",
+        "rebase"
+      ],
+      "description": "How Merge merges. Changed by the picker unless a tc-merge-method-change listener calls preventDefault()"
+    },
+    "mergeMethods": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/PullRequestMergeMethod"
+      },
+      "description": "The methods offered; with one, there's no picker"
+    },
+    "busy": {
+      "type": "boolean",
+      "description": "Something is under way: the buttons wait"
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/PullRequestActionItem"
+      },
+      "description": "Small buttons in the header"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "draft": {
+          "type": "string"
+        },
+        "open": {
+          "type": "string"
+        },
+        "merged": {
+          "type": "string"
+        },
+        "closed": {
+          "type": "string"
+        },
+        "merge": {
+          "type": "string"
+        },
+        "squash": {
+          "type": "string"
+        },
+        "rebase": {
+          "type": "string"
+        },
+        "mergeButton": {
+          "type": "string"
+        },
+        "ready": {
+          "type": "string"
+        },
+        "updateBranch": {
+          "type": "string"
+        },
+        "resolve": {
+          "type": "string"
+        },
+        "autoMerge": {
+          "type": "string"
+        },
+        "method": {
+          "type": "string"
+        },
+        "checks": {
+          "type": "string"
+        },
+        "noChecks": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "create": {
+          "type": "string"
+        },
+        "clean": {
+          "type": "string"
+        },
+        "conflicts": {
+          "type": "string"
+        },
+        "blocked": {
+          "type": "string"
+        },
+        "behind": {
+          "type": "string"
+        },
+        "unknown": {
+          "type": "string"
+        },
+        "failingReason": {
+          "type": "string"
+        },
+        "reviewNone": {
+          "type": "string"
+        },
+        "reviewRequested": {
+          "type": "string"
+        },
+        "reviewApproved": {
+          "type": "string"
+        },
+        "reviewChanges": {
+          "type": "string"
+        },
+        "reviewCommented": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words, over the defaults"
+    },
+    "now": {
+      "type": "number",
+      "description": "The time now, epoch ms; by default the element's own clock"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for times and numbers, e.g. \"en-GB\"; by default the browser's"
+    },
+    "bare": {
+      "type": "boolean",
+      "description": "Drops the tray and card"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "PullRequestReviewer": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string",
+          "enum": [
+            "requested",
+            "approved",
+            "changes",
+            "commented"
+          ]
+        }
+      },
+      "required": [
+        "name",
+        "state"
+      ],
+      "additionalProperties": false
+    },
+    "PullRequestMergeMethod": {
+      "type": "string",
+      "enum": [
+        "merge",
+        "squash",
+        "rebase"
+      ]
+    },
+    "PullRequestActionItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "icon": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "icon"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

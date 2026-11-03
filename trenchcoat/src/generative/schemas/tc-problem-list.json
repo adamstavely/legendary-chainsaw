@@ -1,0 +1,224 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-problem-list.json",
+  "title": "tc-problem-list",
+  "description": "Diagnostics from a build, type check or linter: grouped by file, a severity filter with counts, a text filter, and quick fixes.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading; empty leaves the header out"
+    },
+    "description": {
+      "type": "string",
+      "description": "Small text under the heading – what was checked"
+    },
+    "problems": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ProblemItem"
+      },
+      "description": "What was found"
+    },
+    "filter": {
+      "anyOf": [
+        {
+          "type": "string",
+          "const": "all"
+        },
+        {
+          "$ref": "#/definitions/ProblemSeverity"
+        }
+      ],
+      "description": "Which severities show: all, error, warning or info"
+    },
+    "query": {
+      "type": "string",
+      "description": "The text filter: matches the message, path, source or code"
+    },
+    "groupBy": {
+      "type": "string",
+      "enum": [
+        "file",
+        "none"
+      ],
+      "description": "\"file\" groups problems under their file; \"none\" lists them with their path"
+    },
+    "expanded": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The open files' paths; null opens them all"
+    },
+    "selected": {
+      "type": "string",
+      "description": "The chosen problem's key (its id, or `problemKey`)"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "idle",
+        "running",
+        "done"
+      ],
+      "description": "idle, running or done"
+    },
+    "hideFilter": {
+      "type": "boolean",
+      "description": "Leaves out the severity and text filters"
+    },
+    "maxHeight": {
+      "type": "number",
+      "description": "Height in px at which the list scrolls"
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ProblemListActionItem"
+      },
+      "description": "Buttons in the header"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "info": {
+          "type": "string"
+        },
+        "warning": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string"
+        },
+        "filter": {
+          "type": "string"
+        },
+        "all": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "running": {
+          "type": "string"
+        },
+        "severity": {
+          "type": "string"
+        },
+        "noMatches": {
+          "type": "string"
+        },
+        "errors": {
+          "type": "string"
+        },
+        "problems": {
+          "type": "string"
+        },
+        "line": {
+          "type": "string"
+        },
+        "warnings": {
+          "type": "string"
+        },
+        "infos": {
+          "type": "string"
+        },
+        "problem": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Renames the words it uses"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ProblemItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Stable identity; path, line, column and message stand in when it's left out"
+        },
+        "path": {
+          "type": "string"
+        },
+        "line": {
+          "type": "number",
+          "description": "1-based"
+        },
+        "column": {
+          "type": "number",
+          "description": "1-based"
+        },
+        "severity": {
+          "$ref": "#/definitions/ProblemSeverity"
+        },
+        "message": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string",
+          "description": "What found it, such as \"ts\" or \"eslint\""
+        },
+        "code": {
+          "type": "string",
+          "description": "Its rule or error code, such as \"TS2322\""
+        },
+        "fix": {
+          "type": "string",
+          "description": "The label of a quick fix the page can apply"
+        }
+      },
+      "required": [
+        "path",
+        "line",
+        "severity",
+        "message"
+      ],
+      "additionalProperties": false
+    },
+    "ProblemSeverity": {
+      "type": "string",
+      "enum": [
+        "error",
+        "warning",
+        "info"
+      ]
+    },
+    "ProblemListActionItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "icon": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "pressed": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "icon"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

@@ -58,8 +58,8 @@
     "mode": {
       "type": "string",
       "enum": [
-        "edit",
-        "create"
+        "create",
+        "edit"
       ],
       "description": "\"create\" for a new routine, \"edit\" for one that exists – it names the heading and the main button"
     },

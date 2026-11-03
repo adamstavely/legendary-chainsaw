@@ -1,0 +1,214 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-session-list.json",
+  "title": "tc-session-list",
+  "description": "The sessions in a sidebar: pinned first, then grouped by project or status, each with its status, title, unread dot, branch and time, plus Pin and Archive.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading; empty draws no header"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "sessions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/SessionItem"
+      },
+      "description": "The sessions, any order; within a group the newest comes first"
+    },
+    "groupBy": {
+      "type": "string",
+      "enum": [
+        "status",
+        "none",
+        "project"
+      ],
+      "description": "How the unpinned sessions are grouped"
+    },
+    "selected": {
+      "type": "string",
+      "description": "The open session's id. Changed by the user unless a tc-selected-change listener calls preventDefault()"
+    },
+    "query": {
+      "type": "string",
+      "description": "What the filter holds. Changed by typing unless a tc-query-change listener calls preventDefault()"
+    },
+    "hideFilter": {
+      "type": "boolean",
+      "description": "Hides the filter"
+    },
+    "hideCreate": {
+      "type": "boolean",
+      "description": "Hides New session"
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/SessionListActionItem"
+      },
+      "description": "Small buttons in the header"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "idle": {
+          "type": "string"
+        },
+        "running": {
+          "type": "string"
+        },
+        "done": {
+          "type": "string"
+        },
+        "failed": {
+          "type": "string"
+        },
+        "waiting": {
+          "type": "string"
+        },
+        "pinned": {
+          "type": "string"
+        },
+        "other": {
+          "type": "string"
+        },
+        "filter": {
+          "type": "string"
+        },
+        "create": {
+          "type": "string"
+        },
+        "pin": {
+          "type": "string"
+        },
+        "unpin": {
+          "type": "string"
+        },
+        "archive": {
+          "type": "string"
+        },
+        "unread": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "noMatch": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words, over the defaults"
+    },
+    "maxHeight": {
+      "type": "string",
+      "description": "The tallest the list grows before it scrolls, a CSS length"
+    },
+    "now": {
+      "type": "number",
+      "description": "The time now, epoch ms; by default the element's own clock"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for times, e.g. \"en-GB\"; by default the browser's"
+    },
+    "bare": {
+      "type": "boolean",
+      "description": "Drops the tray and card"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "SessionItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/SessionStatus"
+        },
+        "project": {
+          "type": "string",
+          "description": "The project or repository it belongs to"
+        },
+        "branch": {
+          "type": "string",
+          "description": "The branch it works on"
+        },
+        "updated": {
+          "type": [
+            "number",
+            "string"
+          ],
+          "description": "When it last changed: epoch ms or an ISO string"
+        },
+        "unread": {
+          "type": "boolean",
+          "description": "Something new since it was last opened"
+        },
+        "pinned": {
+          "type": "boolean",
+          "description": "Kept at the top"
+        },
+        "detail": {
+          "type": "string",
+          "description": "One quiet line, such as what it's doing now"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "SessionStatus": {
+      "type": "string",
+      "enum": [
+        "running",
+        "waiting",
+        "idle",
+        "done",
+        "failed"
+      ]
+    },
+    "SessionListActionItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "icon": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "icon"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

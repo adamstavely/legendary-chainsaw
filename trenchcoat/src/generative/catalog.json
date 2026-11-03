@@ -388,6 +388,18 @@
     ]
   },
   {
+    "tag": "tc-branch-switcher",
+    "name": "BranchSwitcher",
+    "description": "The current branch with ahead and behind counts, and a filterable list of worktrees, local and remote branches to switch to or create from.",
+    "events": [
+      "tc-current-change",
+      "tc-query-change",
+      "tc-open-change",
+      "tc-create",
+      "tc-sync"
+    ]
+  },
+  {
     "tag": "tc-breadcrumbs",
     "name": "Breadcrumbs",
     "description": "A trail of links to the current page that folds its middle into \"…\" when it doesn't fit.",
@@ -1770,6 +1782,24 @@
     ]
   },
   {
+    "tag": "tc-preview-frame",
+    "name": "PreviewFrame",
+    "description": "A browser pane around a page the app supplies, with an address field, back, forward and reload, phone, tablet and desktop widths, a console count and tabs.",
+    "events": [
+      "tc-navigate",
+      "tc-viewport-change",
+      "tc-active-change",
+      "tc-close",
+      "tc-new-tab",
+      "tc-back",
+      "tc-forward",
+      "tc-reload",
+      "tc-start",
+      "tc-open-external",
+      "tc-console"
+    ]
+  },
+  {
     "tag": "tc-pricing-plans",
     "name": "PricingPlans",
     "description": "A pricing section: a Monthly / Yearly switch and a card per plan with limits, a call to action and collapsible details.",
@@ -1794,6 +1824,36 @@
     "events": [
       "tc-open",
       "tc-filter-change"
+    ]
+  },
+  {
+    "tag": "tc-problem-list",
+    "name": "ProblemList",
+    "description": "Diagnostics from a build, type check or linter: grouped by file, a severity filter with counts, a text filter, and quick fixes.",
+    "events": [
+      "tc-selected-change",
+      "tc-filter-change",
+      "tc-query-change",
+      "tc-expanded-change",
+      "tc-open",
+      "tc-fix",
+      "tc-action"
+    ]
+  },
+  {
+    "tag": "tc-process-list",
+    "name": "ProcessList",
+    "description": "The dev servers and background jobs of a session, with status, port, uptime, load and last output, and Stop, Start, Restart and View output.",
+    "events": [
+      "tc-selected-change",
+      "tc-open",
+      "tc-stop",
+      "tc-start",
+      "tc-restart",
+      "tc-logs",
+      "tc-stop-all",
+      "tc-create",
+      "tc-action"
     ]
   },
   {
@@ -1889,6 +1949,23 @@
       "tc-open-change",
       "tc-open-blocker",
       "tc-publish"
+    ]
+  },
+  {
+    "tag": "tc-pull-request",
+    "name": "PullRequest",
+    "description": "One pull request at a glance: branches, author, lines changed, review, checks and whether it can merge, with the button its state calls for.",
+    "events": [
+      "tc-open",
+      "tc-merge",
+      "tc-ready",
+      "tc-update-branch",
+      "tc-resolve",
+      "tc-checks",
+      "tc-create",
+      "tc-action",
+      "tc-auto-merge-change",
+      "tc-merge-method-change"
     ]
   },
   {
@@ -2182,6 +2259,20 @@
     ]
   },
   {
+    "tag": "tc-search-results",
+    "name": "SearchResults",
+    "description": "Results of a search across files: grouped by file, each matching line with the match marked, with a field to search again and optional replace.",
+    "events": [
+      "tc-search",
+      "tc-options-change",
+      "tc-expanded-change",
+      "tc-selected-change",
+      "tc-open",
+      "tc-replace",
+      "tc-action"
+    ]
+  },
+  {
     "tag": "tc-segmented-control",
     "name": "SegmentedControl",
     "description": "Switch between two to six options, with a sliding indicator.",
@@ -2204,6 +2295,19 @@
     "events": [
       "tc-term-edit",
       "tc-terms-changed"
+    ]
+  },
+  {
+    "tag": "tc-session-list",
+    "name": "SessionList",
+    "description": "The sessions in a sidebar: pinned first, then grouped by project or status, each with its status, title, unread dot, branch and time, plus Pin and Archive.",
+    "events": [
+      "tc-selected-change",
+      "tc-query-change",
+      "tc-pin",
+      "tc-archive",
+      "tc-create",
+      "tc-action"
     ]
   },
   {

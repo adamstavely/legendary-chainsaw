@@ -1,0 +1,204 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-preview-frame.json",
+  "title": "tc-preview-frame",
+  "description": "A browser pane around a page the app supplies, with an address field, back, forward and reload, phone, tablet and desktop widths, a console count and tabs.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading; empty draws no header"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "src": {
+      "type": "string",
+      "description": "The page the iframe loads: http, https or about:blank. Children, when there are any, show instead"
+    },
+    "url": {
+      "type": "string",
+      "description": "The address shown; by default the active tab's url, else `src`"
+    },
+    "sandbox": {
+      "type": "string",
+      "description": "The iframe's sandbox attribute"
+    },
+    "viewport": {
+      "type": "string",
+      "enum": [
+        "phone",
+        "tablet",
+        "desktop"
+      ],
+      "description": "The width the page is drawn at. Changed by the switch unless a tc-viewport-change listener calls preventDefault()"
+    },
+    "height": {
+      "type": "number",
+      "description": "The page area's height in px"
+    },
+    "loading": {
+      "type": "boolean",
+      "description": "The page is loading: a bar runs and Reload spins"
+    },
+    "error": {
+      "type": "string",
+      "description": "Why the page couldn't load; set, the error state shows instead of the page"
+    },
+    "startable": {
+      "type": "boolean",
+      "description": "Shows the Start button in the empty state"
+    },
+    "canGoBack": {
+      "type": "boolean",
+      "description": "Back can be pressed"
+    },
+    "canGoForward": {
+      "type": "boolean",
+      "description": "Forward can be pressed"
+    },
+    "consoleCount": {
+      "type": "object",
+      "properties": {
+        "errors": {
+          "type": "number"
+        },
+        "warnings": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The console's counts; unset hides the badge"
+    },
+    "tabs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/PreviewTab"
+      },
+      "description": "Open pages; with none there's no tab row"
+    },
+    "active": {
+      "type": "string",
+      "description": "The active tab's id. Changed by choosing a tab unless a tc-active-change listener calls preventDefault()"
+    },
+    "noNewTab": {
+      "type": "boolean",
+      "description": "Hides the New tab button"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "back": {
+          "type": "string"
+        },
+        "forward": {
+          "type": "string"
+        },
+        "reload": {
+          "type": "string"
+        },
+        "address": {
+          "type": "string"
+        },
+        "viewport": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "tablet": {
+          "type": "string"
+        },
+        "desktop": {
+          "type": "string"
+        },
+        "openExternal": {
+          "type": "string"
+        },
+        "console": {
+          "type": "string"
+        },
+        "errors": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string"
+        },
+        "warnings": {
+          "type": "string"
+        },
+        "warning": {
+          "type": "string"
+        },
+        "newTab": {
+          "type": "string"
+        },
+        "closeTab": {
+          "type": "string"
+        },
+        "tabs": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "emptyHint": {
+          "type": "string"
+        },
+        "start": {
+          "type": "string"
+        },
+        "couldNotLoad": {
+          "type": "string"
+        },
+        "badScheme": {
+          "type": "string"
+        },
+        "retry": {
+          "type": "string"
+        },
+        "secure": {
+          "type": "string"
+        },
+        "local": {
+          "type": "string"
+        },
+        "insecure": {
+          "type": "string"
+        },
+        "loading": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words, over the defaults"
+    },
+    "bare": {
+      "type": "boolean",
+      "description": "Drops the tray and card"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "PreviewTab": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "title"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

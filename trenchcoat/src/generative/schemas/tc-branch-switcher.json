@@ -1,0 +1,154 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-branch-switcher.json",
+  "title": "tc-branch-switcher",
+  "description": "The current branch with ahead and behind counts, and a filterable list of worktrees, local and remote branches to switch to or create from.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading; empty draws no header"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "branches": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/BranchItem"
+      },
+      "description": "Every branch and worktree"
+    },
+    "current": {
+      "type": "string",
+      "description": "The branch in use. Changed by picking one unless a tc-current-change listener calls preventDefault()"
+    },
+    "base": {
+      "type": "string",
+      "description": "The branch that ahead and behind count against, and new branches start from"
+    },
+    "query": {
+      "type": "string",
+      "description": "What the filter holds. Changed by typing unless a tc-query-change listener calls preventDefault()"
+    },
+    "open": {
+      "type": "boolean",
+      "description": "The list is open. Changed by the trigger, Escape and picking unless a tc-open-change listener prevents opening"
+    },
+    "inline": {
+      "type": "boolean",
+      "description": "Draws the list in place, without the trigger"
+    },
+    "busy": {
+      "type": "boolean",
+      "description": "Something is under way: picking and Sync wait"
+    },
+    "syncable": {
+      "type": "boolean",
+      "description": "Offers Sync beside the trigger"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "local": {
+          "type": "string"
+        },
+        "remote": {
+          "type": "string"
+        },
+        "worktree": {
+          "type": "string"
+        },
+        "filter": {
+          "type": "string"
+        },
+        "create": {
+          "type": "string"
+        },
+        "sync": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "noMatch": {
+          "type": "string"
+        },
+        "current": {
+          "type": "string"
+        },
+        "dirty": {
+          "type": "string"
+        },
+        "change": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words, over the defaults"
+    },
+    "now": {
+      "type": "number",
+      "description": "The time now, epoch ms; by default the element's own clock"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for times, e.g. \"en-GB\"; by default the browser's"
+    },
+    "bare": {
+      "type": "boolean",
+      "description": "Drops the tray and card"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "BranchItem": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/definitions/BranchKind"
+        },
+        "ahead": {
+          "type": "number",
+          "description": "Commits it has that the base doesn't"
+        },
+        "behind": {
+          "type": "number",
+          "description": "Commits the base has that it doesn't"
+        },
+        "updated": {
+          "type": [
+            "number",
+            "string"
+          ],
+          "description": "When its last commit was made: epoch ms or an ISO string"
+        },
+        "dirty": {
+          "type": "boolean",
+          "description": "It has uncommitted changes"
+        },
+        "path": {
+          "type": "string",
+          "description": "A worktree's folder"
+        }
+      },
+      "required": [
+        "name",
+        "kind"
+      ],
+      "additionalProperties": false
+    },
+    "BranchKind": {
+      "type": "string",
+      "enum": [
+        "local",
+        "remote",
+        "worktree"
+      ]
+    }
+  }
+}
