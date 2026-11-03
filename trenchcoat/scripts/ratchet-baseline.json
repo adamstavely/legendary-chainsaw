@@ -165,6 +165,9 @@
   "src/elements/billing-schedule.ts": {
     "literal spacing": 19
   },
+  "src/elements/branch-switcher.ts": {
+    "clock/environment read": 1
+  },
   "src/elements/breakdown-chart.ts": {
     "literal spacing": 7
   },
@@ -362,6 +365,9 @@
     "clock/environment read": 1,
     "literal spacing": 21
   },
+  "src/elements/process-list.ts": {
+    "clock/environment read": 1
+  },
   "src/elements/profile-menu.ts": {
     "literal spacing": 4
   },
@@ -387,6 +393,9 @@
     "literal border-radius": 1,
     "literal spacing": 6
   },
+  "src/elements/pull-request.ts": {
+    "clock/environment read": 1
+  },
   "src/elements/region-dach.ts": {
     "literal spacing": 4
   },
@@ -408,6 +417,9 @@
   },
   "src/elements/segmented-control.ts": {
     "literal line-height": 1
+  },
+  "src/elements/session-list.ts": {
+    "clock/environment read": 1
   },
   "src/elements/stepper-form.ts": {
     "literal spacing": 12

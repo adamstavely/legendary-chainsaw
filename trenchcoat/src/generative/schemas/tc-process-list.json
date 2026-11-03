@@ -1,0 +1,196 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-process-list.json",
+  "title": "tc-process-list",
+  "description": "The dev servers and background jobs of a session, with status, port, uptime, load and last output, and Stop, Start, Restart and View output.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading; empty draws no header"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "processes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ProcessItem"
+      },
+      "description": "The processes, in order"
+    },
+    "selected": {
+      "type": "string",
+      "description": "The selected row's id. Changed by pressing a row unless a tc-selected-change listener calls preventDefault()"
+    },
+    "now": {
+      "type": "number",
+      "description": "The time uptime is counted to, in epoch ms; unset, the element keeps its own clock"
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ProcessListAction"
+      },
+      "description": "Buttons in the header, beside Stop all"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "running": {
+          "type": "string"
+        },
+        "stopped": {
+          "type": "string"
+        },
+        "starting": {
+          "type": "string"
+        },
+        "crashed": {
+          "type": "string"
+        },
+        "exited": {
+          "type": "string"
+        },
+        "stop": {
+          "type": "string"
+        },
+        "start": {
+          "type": "string"
+        },
+        "restart": {
+          "type": "string"
+        },
+        "logs": {
+          "type": "string"
+        },
+        "stopAll": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "create": {
+          "type": "string"
+        },
+        "exit": {
+          "type": "string"
+        },
+        "cpu": {
+          "type": "string"
+        },
+        "memory": {
+          "type": "string"
+        },
+        "up": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Rename any of the words, over the defaults"
+    },
+    "maxHeight": {
+      "type": "number",
+      "description": "The list's tallest height in px before it scrolls; 0 for no limit"
+    },
+    "bare": {
+      "type": "boolean",
+      "description": "Drops the tray and card"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for numbers, e.g. \"en-GB\"; by default the browser's"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ProcessItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "command": {
+          "type": "string",
+          "description": "The command that started it"
+        },
+        "status": {
+          "$ref": "#/definitions/ProcessStatus"
+        },
+        "port": {
+          "type": "number",
+          "description": "The port it listens on"
+        },
+        "url": {
+          "type": "string",
+          "description": "Where the port link goes; by default http://localhost:<port>"
+        },
+        "pid": {
+          "type": "number"
+        },
+        "started": {
+          "type": [
+            "string",
+            "number"
+          ],
+          "description": "When it started, as an ISO date or epoch ms"
+        },
+        "exitCode": {
+          "type": "number",
+          "description": "How it ended, for \"crashed\" and \"exited\""
+        },
+        "cpu": {
+          "type": "number",
+          "description": "CPU use from 0 to 100"
+        },
+        "memory": {
+          "type": "number",
+          "description": "Memory use in bytes"
+        },
+        "lastLine": {
+          "type": "string",
+          "description": "The last line it printed; escape codes are dropped"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "ProcessStatus": {
+      "type": "string",
+      "enum": [
+        "starting",
+        "running",
+        "stopped",
+        "crashed",
+        "exited"
+      ]
+    },
+    "ProcessListAction": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "icon": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

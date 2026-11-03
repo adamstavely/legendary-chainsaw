@@ -43,6 +43,9 @@
         "claim": {
           "type": "string"
         },
+        "method": {
+          "type": "string"
+        },
         "stakes": {
           "type": "string"
         },
@@ -53,9 +56,6 @@
           "type": "string"
         },
         "restatement": {
-          "type": "string"
-        },
-        "method": {
           "type": "string"
         },
         "brief": {

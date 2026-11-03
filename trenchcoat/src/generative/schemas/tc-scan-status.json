@@ -10,8 +10,8 @@
       "enum": [
         "queued",
         "failed",
-        "scanning",
         "clean",
+        "scanning",
         "suspicious",
         "quarantined"
       ],
@@ -58,10 +58,10 @@
         "failed": {
           "type": "string"
         },
-        "scanning": {
+        "clean": {
           "type": "string"
         },
-        "clean": {
+        "scanning": {
           "type": "string"
         },
         "suspicious": {

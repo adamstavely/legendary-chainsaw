@@ -39,6 +39,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Bibliography** (`bibliography.tsx`) – A reading list set in APA, MLA, Chicago (notes–bibliography), Harvard or IEEE, with live DOIs, tags, search and sort, Copy, and export as BibTeX, RIS or plain text
 - **Billing Schedule** (`billing-schedule.tsx`) – Build a billing phase – start date, duration, products with repeats and timing, discount, minimum and live totals
 - **Biometric Status** (`biometric-status.tsx`) – Where someone's biometric enrolment stands – face, fingerprints, iris, voice and more, each with its status, detail and quality meter, the count enrolled and an optional match score
+- **Branch Switcher** (`branch-switcher.tsx`) – the current branch with ahead/behind counts and a filterable list of worktrees, local and remote branches to switch to or create from.
 - **Breadcrumbs** (`breadcrumbs.tsx`) – Where you are in a hierarchy as a trail of links: the current page last, the middle folding into "…" when it doesn't fit or passes `max`, a cancelable `tc-navigate` for routing, and Copy path
 - **Breakdown Chart** (`breakdown-chart.tsx`) – Stacked bar chart with measure, slice and segment pickers, a hover breakdown and a linked table
 - **Budget Burn** (`budget-burn.tsx`) – How fast each budget is being spent – spent against budget, the burn as a bar with a pace marker and Ahead, On or Behind pace in words, people and team, totals in the header and a sort by budget or burn
@@ -173,8 +174,11 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Plan vs Actual (Clean only)** (`plan-vs-actual.tsx`) – An agent's plan against what really happens – every step's bar grows over its dashed planned ghost, overruns turn amber, the steps after it slide right, and the expected finish moves away from the planned one
 - **Playbook Canvas** (`playbook-canvas.tsx`) – An agent workflow, phase by phase – triggers, intake, context, analysis and review as steps you add and order, with review gates, versions and a dry run
 - **Policy Simulator** (`policy-simulator.tsx`) – Try an action against the policy before it's real – allow, needs approval, deny or hard stop, the rule that decided it and why
+- **Preview Frame** (`preview-frame.tsx`) – a browser pane around a page the app supplies: address, back, forward and reload, phone, tablet and desktop widths zoomed to fit, a console count, tabs, and loading, error and empty states.
 - **Prioritisation Matrix** (`prioritisation-matrix.tsx`) – Value against effort as a 2 × 2 – numbered points you drag or move with the arrow keys, gathered when they overlap, and the items listed by quadrant beside it
 - **Priority List** (`priority-list.tsx`) – A portfolio's topics or projects by priority – a tier badge, owner and team, health in words, momentum as a line with its change, coverage as a bar, what's open and the work in flight, with health filters and groups per priority
+- **Problem List** (`problem-list.tsx`) – diagnostics from a build, type check or linter, grouped by file, with a severity filter with counts, a text filter, severity marks that aren't colour alone, and quick fixes.
+- **Process List** (`process-list.tsx`) – dev servers and background jobs with status, port link, uptime, CPU and memory, and last output, with Stop, Start, Restart and View output.
 - **Profile Header** (`profile-header.tsx`) – The top of a person's or an account's page – picture or initials, name, status and tags, other names as chips, a line of key facts, the page's actions and a row of section tabs
 - **Profile Menu** (`profile-menu.tsx`) – Account card with the signed-in user, menu actions and profile setup progress
 - **Progress Tracker** (`progress-tracker.tsx`) – Onboarding checklist with an animated progress bar, ticks that draw themselves and auto play
@@ -184,6 +188,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Provenance Summary** (`provenance-summary.tsx`) – What a document is made of – how much came from sources, from AI and from its authors, section by section
 - **Provider connection** (`provider-connection.tsx`) – A model provider connection read as a path – endpoint, credential, deployment – with each hop's health from an app-run test, the last check and the models it reports
 - **Publication Impact** (`publication-impact.tsx`) – One paper's impact on one card – venue, topic, grade and authors, downloads, views, citations and attention with a reads sparkline, mentions, who is reading, and peer, reader and sponsor feedback with a sentiment each
+- **Pull Request** (`pull-request.tsx`) – one pull request at a glance: branches, review, checks, whether it can merge, and the button its state calls for.
 - **Query Builder** (`query-builder.tsx`) – A search query built from conditions – a field, an operator that fits its type and a value per condition, AND / OR per group with one level of nesting, and the query read back in words and as a query string with Copy and Run
 - **Radar Chart** (`radar-chart.tsx`) – A few measures on axes round a centre, joined into a shape – one series with its value on each axis, or up to three compared – as a cross of axes or a web of rings, with a table view
 - **Radio Group** (`radio-group.tsx`) – A native keyboard-operated single choice
@@ -212,11 +217,13 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Score Summary** (`score-summary.tsx`) – NPS or CSAT results – the score in big type, the change since last time with a sparkline, the target, the bands with shares and counts, and a bar per score you can pick to filter comments
 - **Score Survey** (`score-survey.tsx`) – The NPS or CSAT question a person answers – eleven numbers with the bands shown quietly, or five faces with words; number keys pick, a follow-up per band, Submit and a thank-you with Change answer
 - **Search History** (`search-history.tsx`) – Recent and saved searches – tabs with counts, a filter, searches grouped by day with scope chips, result counts and times, and Run again, a save star and Remove with Undo on each
+- **Search Results** (`search-results.tsx`) – results of a search across files, grouped by file with the matched text marked, with match case, whole word and regular expression toggles, collapse all, and an optional replace preview.
 - **Secret Field** (`secret-field.tsx`) – A masked credential input with an explicit reveal control
 - **Segmented Control** (`segmented-control.tsx`) – Switch between two to six options – a raised pill or underline that glides, stretches a little and can be dragged across, with icons, counts and badges
 - **Selection Translate** (`selection-translate.tsx`) – Select text and translate it – the translation in a card with the detected language, copy, replace in place and show original
 - **Sensitivity Label Picker** (`sensitivity-label-picker.tsx`) – Sets a file's classification – a mark and word on a small button, a list of labels with what each means, and a reason asked before lowering it
 - **Session Context Bar** (`session-context-bar.tsx`) – The session's declared terms kept in view – intent, knowledge mode, scope, review, posture, limits, deadline and budget
+- **Session List** (`session-list.tsx`) – sessions in a sidebar, pinned first and grouped by project or status, with status, unread dot, branch, time, Pin and Archive.
 - **Session State** (`session-state.tsx`) – Where a long LLM session stands – a health pill, tiles for the primary goal, open loops, pending artifacts and context pressure with a meter that warns as it fills, and status chips, the tiles optionally opening what they count
 - **Setup Guide** (`setup-guide.tsx`) – Onboarding panel with a progress bar and collapsible task groups that strike through when done
 - **Share Link Manager** (`share-link-manager.tsx`) – The links that already share something – status in words, expiry, opens and who made them, with Copy, Change expiry and Revoke, which says how many opens it's had

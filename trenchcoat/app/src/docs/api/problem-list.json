@@ -1,0 +1,652 @@
+{
+ "elements": [
+  {
+   "tag": "tc-problem-list",
+   "className": "TcProblemList",
+   "description": "Diagnostics from a build, type check or linter: grouped by file, a severity filter with counts, a text filter, and quick fixes.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Problems\"",
+     "description": "The heading; empty leaves the header out",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Small text under the heading – what was checked",
+     "readonly": false
+    },
+    {
+     "name": "problems",
+     "attribute": null,
+     "type": "ProblemItem[]",
+     "default": "[]",
+     "description": "What was found",
+     "readonly": false
+    },
+    {
+     "name": "filter",
+     "attribute": "filter",
+     "type": "ProblemFilter",
+     "default": "\"all\"",
+     "description": "Which severities show: all, error, warning or info",
+     "readonly": false
+    },
+    {
+     "name": "query",
+     "attribute": "query",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The text filter: matches the message, path, source or code",
+     "readonly": false
+    },
+    {
+     "name": "groupBy",
+     "attribute": "group-by",
+     "type": "\"file\" | \"none\"",
+     "default": "\"file\"",
+     "description": "\"file\" groups problems under their file; \"none\" lists them with their path",
+     "readonly": false
+    },
+    {
+     "name": "expanded",
+     "attribute": null,
+     "type": "string[] | null",
+     "default": "null",
+     "description": "The open files' paths; null opens them all",
+     "readonly": false
+    },
+    {
+     "name": "selected",
+     "attribute": "selected",
+     "type": "string | null",
+     "default": "null",
+     "description": "The chosen problem's key (its id, or `problemKey`)",
+     "readonly": false
+    },
+    {
+     "name": "status",
+     "attribute": "status",
+     "type": "ProblemListStatus",
+     "default": "\"done\"",
+     "description": "idle, running or done",
+     "readonly": false
+    },
+    {
+     "name": "hideFilter",
+     "attribute": "hide-filter",
+     "type": "boolean",
+     "default": "false",
+     "description": "Leaves out the severity and text filters",
+     "readonly": false
+    },
+    {
+     "name": "maxHeight",
+     "attribute": "max-height",
+     "type": "number",
+     "default": "480",
+     "description": "Height in px at which the list scrolls",
+     "readonly": false
+    },
+    {
+     "name": "actions",
+     "attribute": null,
+     "type": "ProblemListActionItem[]",
+     "default": "[]",
+     "description": "Buttons in the header",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "Partial<ProblemListLabels>",
+     "default": "{}",
+     "description": "Renames the words it uses",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-selected-change",
+     "detail": "",
+     "description": "Another problem was chosen ({ selected, problem }: ProblemSelectedChange); cancelable – prevented, `selected` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-filter-change",
+     "detail": "",
+     "description": "The severity filter changed ({ filter }: ProblemFilterChange); cancelable – prevented, `filter` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-query-change",
+     "detail": "",
+     "description": "The text filter changed ({ query }: ProblemQueryChange); cancelable – prevented, `query` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-expanded-change",
+     "detail": "",
+     "description": "A file was opened or closed ({ expanded, path }: ProblemExpandedChange); cancelable – prevented, `expanded` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-open",
+     "detail": "",
+     "description": "A problem was clicked, or Enter or Space pressed on it ({ path, line, column, problem }: ProblemOpen)",
+     "cancelable": false
+    },
+    {
+     "name": "tc-fix",
+     "detail": "",
+     "description": "A problem's fix was pressed ({ problem }: ProblemFix); cancelable – prevented, the page has dealt with it and nothing else is said",
+     "cancelable": true
+    },
+    {
+     "name": "tc-action",
+     "detail": "",
+     "description": "A header button was pressed ({ id }: ProblemListAction)",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "prob",
+   "cssProperties": [
+    {
+     "name": "--tc-prob-indent",
+     "value": "var(--tc-space-4)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-prob-mark-nudge",
+     "value": "3px",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent-text",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-h-sm",
+    "--tc-control-radius-sm",
+    "--tc-duration-fast",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-font-size",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-field-shadow-hover",
+    "--tc-fill-default",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-mono",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-weight-medium",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-prob-level",
+    "--tc-radius-sm",
+    "--tc-seg-pad",
+    "--tc-seg-thumb-bg",
+    "--tc-seg-thumb-shadow",
+    "--tc-seg-track-bg",
+    "--tc-seg-track-radius",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-space-6",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-info-fg",
+    "--tc-status-success-fg",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-placeholder",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "problemKey",
+   "signature": "problemKey(p: ProblemItem): void",
+   "description": "A problem's identity: its id, or where it is and what it says"
+  }
+ ],
+ "react": [
+  {
+   "component": "ProblemList",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading; \"\" leaves the header out"
+    },
+    {
+     "name": "selected",
+     "type": "string | null",
+     "optional": true,
+     "description": "The chosen problem's key – controlled when given"
+    },
+    {
+     "name": "defaultSelected",
+     "type": "string | null",
+     "optional": true,
+     "description": "The chosen problem at first, when `selected` isn't controlled"
+    },
+    {
+     "name": "onSelectedChange",
+     "type": "(selected: string | null, problem?: ProblemItem) => void",
+     "optional": true,
+     "description": "Another problem was chosen"
+    },
+    {
+     "name": "filter",
+     "type": "ProblemFilter",
+     "optional": true,
+     "description": "Which severities show – controlled when given"
+    },
+    {
+     "name": "defaultFilter",
+     "type": "ProblemFilter",
+     "optional": true,
+     "description": "The severity filter at first, when `filter` isn't controlled"
+    },
+    {
+     "name": "onFilterChange",
+     "type": "(filter: ProblemFilter) => void",
+     "optional": true,
+     "description": "The severity filter changed"
+    },
+    {
+     "name": "query",
+     "type": "string",
+     "optional": true,
+     "description": "The text filter – controlled when given"
+    },
+    {
+     "name": "defaultQuery",
+     "type": "string",
+     "optional": true,
+     "description": "The text filter at first, when `query` isn't controlled"
+    },
+    {
+     "name": "onQueryChange",
+     "type": "(query: string) => void",
+     "optional": true,
+     "description": "The text filter changed"
+    },
+    {
+     "name": "expanded",
+     "type": "string[] | null",
+     "optional": true,
+     "description": "The open files' paths, null for all – controlled when given"
+    },
+    {
+     "name": "defaultExpanded",
+     "type": "string[] | null",
+     "optional": true,
+     "description": "The open files at first, when `expanded` isn't controlled (null: all)"
+    },
+    {
+     "name": "onExpandedChange",
+     "type": "(expanded: string[] | null) => void",
+     "optional": true,
+     "description": "A file was opened or closed"
+    }
+   ],
+   "hides": [
+    "heading",
+    "selected",
+    "filter",
+    "query",
+    "expanded",
+    "children"
+   ],
+   "events": {
+    "tc-selected-change": "onSelectedChange",
+    "tc-filter-change": null,
+    "tc-query-change": null,
+    "tc-expanded-change": null,
+    "tc-open": "onTcOpen",
+    "tc-fix": "onTcFix",
+    "tc-action": "onTcAction"
+   }
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-problem-list",
+   "className": "TcProblemList",
+   "module": "trenchcoat/problem-list",
+   "data": [
+    "problems",
+    "expanded",
+    "actions",
+    "labels"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    },
+    {
+     "name": "filter",
+     "attribute": "filter"
+    },
+    {
+     "name": "query",
+     "attribute": "query"
+    },
+    {
+     "name": "groupBy",
+     "attribute": "group-by"
+    },
+    {
+     "name": "selected",
+     "attribute": "selected"
+    },
+    {
+     "name": "status",
+     "attribute": "status"
+    },
+    {
+     "name": "hideFilter",
+     "attribute": "hide-filter"
+    },
+    {
+     "name": "maxHeight",
+     "attribute": "max-height"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-selected-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-filter-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-query-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-expanded-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-open",
+     "cancelable": false
+    },
+    {
+     "name": "tc-fix",
+     "cancelable": true
+    },
+    {
+     "name": "tc-action",
+     "cancelable": false
+    }
+   ],
+   "controlled": [
+    {
+     "property": "filter",
+     "event": "tc-filter-change"
+    },
+    {
+     "property": "query",
+     "event": "tc-query-change"
+    },
+    {
+     "property": "expanded",
+     "event": "tc-expanded-change"
+    },
+    {
+     "property": "selected",
+     "event": "tc-selected-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "overscroll-contain",
+    "name": "overscroll-behavior: contain",
+    "bcd": "css.properties.overscroll-behavior.contain",
+    "versions": {
+     "chrome": "63",
+     "edge": "18",
+     "firefox": "59",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "Scrolling past the end of a list carries on scrolling the page.",
+    "via": [
+     "itself"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 31340,
+  "gzip": 9630
+ }
+}
