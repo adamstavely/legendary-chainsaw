@@ -136,15 +136,16 @@ function bars(f: Frame) {
 function blob(f: Frame) {
   const { ctx, w, t, level, weight, ink, tint } = f;
   const c = w / 2;
-  const R = w * (0.29 + 0.012 * weight.idle * Math.sin(t * 1.3) + 0.04 * energy(f) - 0.025 * weight.thinking);
-  const amp = w * (0.014 + weight.listening * level * 0.05 + weight.speaking * level * 0.035 + weight.thinking * 0.012);
-  const pace = 1 + energy(f) * 1.4 + weight.thinking * 0.8;
-  const edge = (s: number) => (a: number) => R * s + amp * (Math.sin(a * 2 + t * 1.1 * pace) + 0.6 * Math.sin(a * 3 - t * 1.6 * pace + s * 4) + 0.35 * Math.sin(a * 5 + t * 2.1 * pace));
+  const R = w * (0.29 + 0.008 * weight.idle * Math.sin(t * 0.8) + 0.02 * energy(f) - 0.02 * weight.thinking);
+  const amp = w * (0.012 + weight.listening * level * 0.026 + weight.speaking * level * 0.02 + weight.thinking * 0.008);
+  // Steady speeds: scaling `t` by something that changes would jump the phase by however long the page has been open
+  const edge = (s: number) => (a: number) => R * s + amp * (Math.sin(a * 2 + t * 0.5) + 0.6 * Math.sin(a * 3 - t * 0.7 + s * 4) + 0.35 * Math.sin(a * 5 + t * 0.9));
   // A wider, fainter edge behind the drop
   closed(f, edge(1.13));
   ctx.fillStyle = rgba(tint, 0.14 + energy(f) * 0.16);
   ctx.fill();
-  const orbit = t * (0.6 + weight.thinking * 2.4);
+  // The sphere's angle already speeds up smoothly while thinking
+  const orbit = f.angle * 1.4;
   const lx = c + Math.cos(orbit) * R * 0.42;
   const ly = c + Math.sin(orbit) * R * 0.42;
   const g = ctx.createRadialGradient(lx, ly, R * 0.05, c, c, R * 1.2);
