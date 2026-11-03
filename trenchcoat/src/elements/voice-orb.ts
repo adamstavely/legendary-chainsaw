@@ -4,6 +4,7 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { keyed } from "lit/directives/keyed.js";
 import { TcElement } from "./internal/base";
 import { AriaForwardController } from "./internal/controllers";
+import { voiceOrbPainters, type VoiceOrbVariant } from "./internal/voice-orb-painters";
 
 /*
  * <tc-voice-orb> – the Lit port of illustrations/voice-orb.tsx: the face of a voice assistant, a sphere of dots drawn
@@ -12,7 +13,8 @@ import { AriaForwardController } from "./internal/controllers";
  *   · listening  dots jump outward with the input level
  *   · thinking   the sphere collapses into a fast spinning ring with a light running around it
  *   · speaking   waves travel from pole to pole with the output level
- * States melt into each other; the dots give way to the pointer. `level` (0–1) drives it from real audio.
+ * `variant` swaps the sphere for another face with the same states: ring, wave, bars, blob or orbit.
+ * States melt into each other; the sphere's dots give way to the pointer. `level` (0–1) drives it from real audio.
  * The canvas draws only while on screen and the tab is visible; reduced motion draws one still frame per state. Idle,
  * it breathes for a few seconds and then rests (WCAG 2.2.2). Colours are read again whenever the theme changes.
  *
@@ -24,6 +26,7 @@ import { AriaForwardController } from "./internal/controllers";
  */
 
 export type VoiceOrbState = "idle" | "listening" | "thinking" | "speaking";
+export type { VoiceOrbVariant };
 
 const LABELS: Record<VoiceOrbState, string> = {
   idle: "Tap to speak",
@@ -49,7 +52,7 @@ function toRgb(color: string, probe: HTMLElement): [number, number, number] {
   return m ? [Number(m[0]), Number(m[1]), Number(m[2])] : [23, 23, 23];
 }
 
-type Live = { state: VoiceOrbState; level?: number; interactive: boolean };
+type Live = { state: VoiceOrbState; level?: number; interactive: boolean; variant: VoiceOrbVariant };
 
 /**
  * A voice assistant's dot sphere that shows whether it's idle, listening, thinking or speaking.
@@ -62,17 +65,19 @@ export class TcVoiceOrb extends TcElement {
 
   /** idle · listening · thinking · speaking */
   @property() accessor state: VoiceOrbState = "idle";
+  /** The face: sphere (dots), ring, wave, bars, blob or orbit */
+  @property({ reflect: true }) accessor variant: VoiceOrbVariant = "sphere";
   /** Input or output loudness from 0 to 1 – unset, the orb fakes a natural level */
   @property({ type: Number }) accessor level: number | undefined = undefined;
   /** Edge length in px */
   @property({ type: Number }) accessor size = 220;
-  /** Number of dots – more is denser and costs a little more */
+  /** Number of dots in the sphere – more is denser and costs a little more */
   @property({ type: Number }) accessor dots = 520;
   /** Colour the moving dots take on – any CSS colour. The resting dots use the text colour */
   @property() accessor accent: string | undefined = undefined;
   /** The line under the orb; false hides it, an object replaces single texts */
   @property({ attribute: false }) accessor label: boolean | Partial<Record<VoiceOrbState, string>> = true;
-  /** Dots give way to the pointer */
+  /** The sphere's dots give way to the pointer */
   @property({ attribute: false }) accessor interactive = true;
   /** Makes the orb a button (a native one inside) that fires tc-press */
   @property({ type: Boolean, reflect: true }) accessor pressable = false;
@@ -129,7 +134,7 @@ export class TcVoiceOrb extends TcElement {
     if (canvas && (!this.loop || this.loop.canvas !== canvas || this.loop.size !== this.size || this.loop.dots !== this.dots)) {
       this.loop?.stop();
       this.loop = this.startLoop(canvas, this.size, this.dots);
-    } else if (changed.has("state") || changed.has("level")) this.loop?.redraw();
+    } else if (changed.has("state") || changed.has("level") || changed.has("variant")) this.loop?.redraw();
   }
 
   private press = () => {
@@ -151,7 +156,7 @@ export class TcVoiceOrb extends TcElement {
 
   /** The drawing loop: a dot sphere on the canvas, reading the element's props every frame */
   private startLoop(canvas: HTMLCanvasElement, size: number, dots: number) {
-    const live = (): Live => ({ state: this.state, level: this.level, interactive: this.interactive });
+    const live = (): Live => ({ state: this.state, level: this.level, interactive: this.interactive, variant: voiceOrbPainters[this.variant as keyof typeof voiceOrbPainters] ? this.variant : "sphere" });
     const ctx = canvas.getContext("2d");
     const loop = { canvas, size, dots, redraw: () => {}, stop: () => {} };
     if (!ctx) return loop;
@@ -254,7 +259,9 @@ export class TcVoiceOrb extends TcElement {
         ctx.fillRect(0, 0, w, w);
       }
 
-      for (let i = 0; i < count; i++) {
+      const paint = cur.variant === "sphere" ? null : voiceOrbPainters[cur.variant];
+      paint?.({ ctx, w, t, angle, level: shownLevel, weight, ink, tint });
+      for (let i = 0; !paint && i < count; i++) {
         const bx = points[i * 3];
         const by = points[i * 3 + 1];
         const bz = points[i * 3 + 2];

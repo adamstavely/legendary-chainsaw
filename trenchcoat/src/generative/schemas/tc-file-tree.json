@@ -1,0 +1,182 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-file-tree.json",
+  "title": "tc-file-tree",
+  "description": "A project's files: folders that fold, a filter, an icon per kind of file and an optional Git status.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading; empty leaves the header out"
+    },
+    "description": {
+      "type": "string",
+      "description": "Small text under the heading – the project or branch"
+    },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/FileTreeNode"
+      },
+      "description": "The top level of the tree; `fileTreeFromPaths` builds it from paths"
+    },
+    "selected": {
+      "type": "string",
+      "description": "The chosen file's path, or null"
+    },
+    "expanded": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The paths of the open folders"
+    },
+    "query": {
+      "type": "string",
+      "description": "The filter's text"
+    },
+    "sort": {
+      "type": "boolean",
+      "description": "Folders first, then by name with numbers in order; off keeps the order given"
+    },
+    "hideFilter": {
+      "type": "boolean",
+      "description": "Leaves out the filter"
+    },
+    "searchable": {
+      "type": "boolean",
+      "description": "\"?\" then text and Enter fires tc-search, for searching inside files"
+    },
+    "maxHeight": {
+      "type": "number",
+      "description": "Height in px at which the tree scrolls"
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/FileTreeActionItem"
+      },
+      "description": "Buttons in the header"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "filter": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "loading": {
+          "type": "string"
+        },
+        "added": {
+          "type": "string"
+        },
+        "modified": {
+          "type": "string"
+        },
+        "deleted": {
+          "type": "string"
+        },
+        "untracked": {
+          "type": "string"
+        },
+        "searchHint": {
+          "type": "string"
+        },
+        "noMatches": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Renames the words it uses"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "FileTreeNode": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FileTreeNode"
+          },
+          "description": "Makes it a folder; omit for a file"
+        },
+        "lazy": {
+          "type": "boolean",
+          "description": "A folder whose children aren't known yet: opening it fires tc-load"
+        },
+        "status": {
+          "$ref": "#/definitions/FileTreeStatus",
+          "description": "Its Git status, shown as a letter"
+        },
+        "icon": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ],
+          "description": "SVG path data for a 24×24 stroked icon, in place of the one for its kind"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "FileTreeStatus": {
+      "type": "string",
+      "enum": [
+        "added",
+        "modified",
+        "deleted",
+        "untracked"
+      ]
+    },
+    "FileTreeActionItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "icon": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ]
+        },
+        "pressed": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "id",
+        "label",
+        "icon"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

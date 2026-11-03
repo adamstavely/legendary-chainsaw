@@ -12,6 +12,8 @@ they missed, or follow without sound. A toolbar holds Mute, Captions, Interrupt 
 conversation; the audio stays with your app, which passes in the state, the turns and the loudness and listens for
 the buttons.
 
+Set `orb-variant` to change the orb's face: `sphere`, `ring`, `wave`, `bars`, `blob` or `orbit`.
+
 ## When to use
 
 - A hands-free or voice-first conversation with an assistant.

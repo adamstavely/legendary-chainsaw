@@ -34,12 +34,12 @@ const EDITS: DiffFile[] = [
 const PRINTED = "\x1b[2m~/institute/sample-tracker\x1b[0m\n$ npm test\n \x1b[32m✓\x1b[0m tests/gaps.test.ts (7)\n\n\x1b[1mTests\x1b[0m  \x1b[32m7 passed\x1b[0m\n";
 
 export default function Demo({ ui }: { ui: typeof UI }) {
-  const { DiffViewer, SessionPanel, Terminal } = ui;
+  const { DiffViewer, FileTree, SessionPanel, Terminal, fileTreeFromPaths } = ui;
   const [note, setNote] = useState("");
   const [tool, setTool] = useState<string | null>("overview");
   const [printed, setPrinted] = useState(PRINTED);
   return (
-    <div style={{ width: "100%", maxWidth: tool === "terminal" || tool === "changes" ? 980 : 340, display: "flex", flexWrap: "wrap", alignItems: "flex-start", justifyContent: "center", gap: 8 }}>
+    <div style={{ width: "100%", maxWidth: tool === "terminal" || tool === "changes" || tool === "files" ? 980 : 340, display: "flex", flexWrap: "wrap", alignItems: "flex-start", justifyContent: "center", gap: 8 }}>
       <div style={{ flex: "1 1 280px", maxWidth: 340, minWidth: 0, display: "grid", gap: 8 }}>
       <SessionPanel
         tools={TOOLS}
@@ -63,6 +63,11 @@ export default function Demo({ ui }: { ui: typeof UI }) {
       {tool === "terminal" ? (
         <div style={{ flex: "2 1 320px", minWidth: 0 }}>
           <Terminal output={printed} height={420} onTcCommand={(e) => setPrinted((p) => `${p}$ ${e.detail.command}\n`)} onTcClear={() => setPrinted("")} />
+        </div>
+      ) : null}
+      {tool === "files" ? (
+        <div style={{ flex: "2 1 320px", minWidth: 0 }}>
+          <FileTree description="sample-tracker" nodes={fileTreeFromPaths(EDITS.map((f) => f.path).concat("README.md", "package.json"))} defaultExpanded={["src", "src/alerts"]} />
         </div>
       ) : null}
       {tool === "changes" ? (

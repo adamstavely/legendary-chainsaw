@@ -220,4 +220,22 @@ describe("tc-voice-orb", () => {
     const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
     expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
   });
+
+  test("every variant draws something in every state, and the state still names it", async () => {
+    for (const variant of ["ring", "wave", "bars", "blob", "orbit"] as const)
+      for (const state of ["idle", "listening", "thinking", "speaking"] as const) {
+        const el = await fixture<TcVoiceOrb>(html`<tc-voice-orb variant=${variant} state=${state} .level=${0.8} size="80"></tc-voice-orb>`);
+        const canvas = el.querySelector("canvas")!;
+        const painted = () => canvas.getContext("2d")!.getImageData(0, 0, canvas.width, canvas.height).data.some((v) => v > 0);
+        await expect.poll(painted).toBe(true);
+        expect(el.getAttribute("aria-label")).toContain(state === "idle" ? "Tap to speak" : state[0].toUpperCase() + state.slice(1));
+        cleanup();
+      }
+  });
+
+  test("an unknown variant falls back to the sphere", async () => {
+    const el = await fixture<TcVoiceOrb>(html`<tc-voice-orb variant="nope" size="80"></tc-voice-orb>`);
+    const canvas = el.querySelector("canvas")!;
+    await expect.poll(() => canvas.getContext("2d")!.getImageData(0, 0, canvas.width, canvas.height).data.some((v) => v > 0)).toBe(true);
+  });
 });

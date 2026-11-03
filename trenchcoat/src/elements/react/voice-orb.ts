@@ -3,7 +3,7 @@ import * as React from "react";
 import { TcVoiceOrb } from "../voice-orb";
 import { h } from "./internal";
 
-export type { VoiceOrbState } from "../voice-orb";
+export type { VoiceOrbState, VoiceOrbVariant } from "../voice-orb";
 
 const RawVoiceOrb = createComponent({ tagName: "tc-voice-orb", elementClass: TcVoiceOrb, react: React });
 type RawVoiceOrbProps = React.ComponentProps<typeof RawVoiceOrb>;

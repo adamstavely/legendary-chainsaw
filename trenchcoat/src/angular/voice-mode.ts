@@ -35,6 +35,10 @@ export class VoiceMode {
   @Input() set captions(v: TcVoiceMode["captions"] | "" | "true" | "false") {
     this.#el.captions = typeof v === "string" ? v !== "false" : v;
   }
+  /** The orb's face: sphere, ring, wave, bars, blob or orbit */
+  @Input() set orbVariant(v: TcVoiceMode["orbVariant"]) {
+    this.#el.orbVariant = v;
+  }
   /** A title over the orb – unset, there's none */
   @Input() set heading(v: TcVoiceMode["heading"]) {
     this.#el.heading = v;

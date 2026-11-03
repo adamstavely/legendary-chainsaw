@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type * as UI from "../../../src/elements/react";
-import type { VoiceModeState, VoiceTurn } from "../../../src/elements/react";
+import type { VoiceModeState, VoiceOrbVariant, VoiceTurn } from "../../../src/elements/react";
 import { caption, textButton } from "../demo-kit";
 
 const OPENING: VoiceTurn[] = [
@@ -78,12 +78,14 @@ export default function Demo({ ui }: { ui: typeof UI }) {
   const { VoiceMode } = ui;
   const talk = useConversation();
   const [note, setNote] = useState("");
+  const [orb, setOrb] = useState<VoiceOrbVariant>("sphere");
   const ended = talk.state === "idle";
 
   return (
     <div style={{ width: "100%", maxWidth: 420, display: "grid", gap: 8 }}>
       <VoiceMode
         name="Atlas"
+        orbVariant={orb}
         state={talk.state}
         turns={talk.turns}
         onMutedChange={(m) => setNote(m ? "Muted – Atlas can't hear you." : "")}
@@ -96,6 +98,13 @@ export default function Demo({ ui }: { ui: typeof UI }) {
           setNote("");
         }}
       />
+      <div style={{ ...caption, display: "flex", flexWrap: "wrap", gap: 12, justifyContent: "center" }}>
+        {(["sphere", "ring", "wave", "bars", "blob", "orbit"] as const).map((v) => (
+          <button key={v} type="button" aria-pressed={v === orb} style={{ ...textButton, fontWeight: v === orb ? 600 : undefined }} onClick={() => setOrb(v)}>
+            {v}
+          </button>
+        ))}
+      </div>
       <div style={{ ...caption, textAlign: "center", minHeight: 18 }}>
         {ended ? (
           <>

@@ -111,6 +111,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Fan-out Grid** (`fan-out-grid.tsx`) – One agent hands a big job to many workers – every task a cell on a live grid that fills in as they get through it, with retries, failures, cost and the time left, and the details of any task on hover
 - **Feedback Rubric** (`feedback-rubric.tsx`) – Rate an answer the useful way – rubric criteria, what kind of failure it was, and the answer it should have been, ready for training and evals
 - **File Summary** (`file-summary.tsx`) – What's in a file without opening it – an AI summary that streams in, key points citing their pages or times, the people, organisations, dates and amounts it mentions, and Copy, Regenerate and Open file
+- **File Tree** (`file-tree.tsx`) – A project's files – folders that fold, a filter, an icon per kind of file and a Git status, with search inside files left to the page
 - **Filter Menu** (`filter-menu.tsx`) – Grouped filters with removable chips, collapsible checkbox groups, Clear all and full keyboard control
 - **Fingerprint Card** (`fingerprint-card.tsx`) – A ten-print card – each finger's print and status in ANSI/NIST positions, captured with its NFIQ quality, poor, not captured, unable to print or bandaged, and a finger's detail
 - **Friction Profile** (`friction-profile.tsx`) – Switch between standard, elevated and deadline modes and see how each safeguard changes – shortened, deferred or tightened

@@ -127,6 +127,7 @@ export * from "./fan-out-grid";
 export * from "./feedback-rubric";
 export * from "./file-details";
 export * from "./file-summary";
+export * from "./file-tree";
 export * from "./filter-menu";
 export * from "./fingerprint-card";
 export * from "./first-use";

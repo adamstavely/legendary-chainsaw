@@ -2,8 +2,9 @@
 
 ## Unreleased – Workspace & sessions
 
-- **Components:** Panel Card, Icon Rail, Meter Row, Environment List, Change List, Check Status, Terminal and Diff Viewer.
+- **Components:** Panel Card, Icon Rail, Meter Row, Environment List, Change List, Check Status, Terminal, Diff Viewer and File Tree.
 - **Block:** Session Panel, a working session's side panel built from them.
+- **Voice Orb:** `variant` adds ring, wave, bars, blob and orbit faces; Voice Mode takes them as `orb-variant`.
 
 ## Unreleased – Tools
 

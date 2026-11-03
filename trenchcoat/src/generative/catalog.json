@@ -1111,6 +1111,20 @@
     ]
   },
   {
+    "tag": "tc-file-tree",
+    "name": "FileTree",
+    "description": "A project's files: folders that fold, a filter, an icon per kind of file and an optional Git status.",
+    "events": [
+      "tc-selected-change",
+      "tc-expanded-change",
+      "tc-query-change",
+      "tc-open",
+      "tc-load",
+      "tc-search",
+      "tc-action"
+    ]
+  },
+  {
     "tag": "tc-filter-menu",
     "name": "FilterMenu",
     "description": "Grouped filters: removable chips on top, collapsible groups of checkboxes below.",
