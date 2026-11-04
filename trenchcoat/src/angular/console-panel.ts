@@ -71,7 +71,7 @@ export class ConsolePanel {
    */
   @Output("tc-expanded-change") readonly tcExpandedChange = new EventEmitter<CustomEvent<ConsoleExpandedChange>>();
   /**
-   * Clear was pressed (detail: null); cancelable – prevented, `entries` stay; otherwise the element empties them
+   * Clear was pressed (detail: null); cancelable – prevented, `entries` stay; otherwise the element empties them, and those messages stay hidden if the same list is passed again (new ones show)
    * Types $event; the element dispatches the event itself.
    */
   @Output("tc-clear") readonly tcClear = new EventEmitter<CustomEvent<null>>();

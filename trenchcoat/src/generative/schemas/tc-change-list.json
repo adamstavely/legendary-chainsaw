@@ -29,7 +29,7 @@
     },
     "limit": {
       "type": "number",
-      "description": "How many rows show until Show more"
+      "description": "How many rows show until Show more; anything that isn't a whole number of at least 1 counts as 5"
     },
     "expanded": {
       "type": "boolean",

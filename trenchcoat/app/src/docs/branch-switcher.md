@@ -60,7 +60,10 @@ grouped by section, and the current branch is the selected option. Picking or cr
 
 - Pass `ahead` and `behind` against the same `base` the element is given.
 - Give worktrees their `path`, so two worktrees on similar branches can be told apart.
-- Remote branches keep their remote's prefix (`origin/main`); creating a branch named after one isn't offered.
+- Remote branches keep their remote's prefix (`origin/main`); creating a branch named after one isn't offered. A local
+  `feature/login` doesn't stop "Create login".
+- A typed name is cleaned into one git accepts (`toBranchName`): spaces become dashes, and `..`, `~`, `//`, a leading dot
+  in a part and a trailing `.lock` are dropped.
 
 ## Do
 

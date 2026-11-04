@@ -68,8 +68,8 @@ export const defaultProblemListLabels: ProblemListLabels = {
   line: "Line",
 };
 
-/** A problem's identity: its id, or where it is and what it says */
-export const problemKey = (p: ProblemItem) => p.id ?? `${p.path}:${p.line}:${p.column ?? 0}:${p.message}`;
+/** A problem's identity: its id, or where it is, what found it and what it says. Exact copies in one list get "#2", "#3"… after it. */
+export const problemKey = (p: ProblemItem) => p.id ?? [p.path, p.line, p.column ?? 0, p.severity, p.source ?? "", p.code ?? "", p.message].join(":");
 
 type Row =
   | { kind: "file"; key: string; path: string; problems: ProblemItem[]; open: boolean; pos: number; size: number }
@@ -98,7 +98,7 @@ const headIcon = svg`<path d="M11 12H3"></path><path d="M16 6H3"></path><path d=
  * @fires tc-query-change - The text filter changed ({ query }: ProblemQueryChange); cancelable – prevented, `query` stays as it was
  * @fires tc-expanded-change - A file was opened or closed ({ expanded, path }: ProblemExpandedChange); cancelable – prevented, `expanded` stays as it was
  * @fires tc-open - A problem was clicked, or Enter or Space pressed on it ({ path, line, column, problem }: ProblemOpen)
- * @fires tc-fix - A problem's fix was pressed ({ problem }: ProblemFix); cancelable – prevented, the page has dealt with it and nothing else is said
+ * @fires tc-fix - A problem's fix was pressed ({ problem }: ProblemFix); the page applies it
  * @fires tc-action - A header button was pressed ({ id }: ProblemListAction)
  */
 export class TcProblemList extends TcElement {
@@ -118,7 +118,7 @@ export class TcProblemList extends TcElement {
   @property({ attribute: "group-by" }) accessor groupBy: "file" | "none" = "file";
   /** The open files' paths; null opens them all */
   @property({ attribute: false }) accessor expanded: string[] | null = null;
-  /** The chosen problem's key (its id, or `problemKey`) */
+  /** The chosen problem's key (its id, or `problemKey`; an exact copy's key ends in "#2", "#3"…) */
   @property() accessor selected: string | null = null;
   /** idle, running or done */
   @property() accessor status: ProblemListStatus = "done";
@@ -137,6 +137,12 @@ export class TcProblemList extends TcElement {
   @state() private accessor onFix: string | null = null;
 
   private rows: Row[] = [];
+  /** Each problem's key, unique in this list */
+  private keys = new Map<ProblemItem, string>();
+
+  private keyOf(p: ProblemItem) {
+    return this.keys.get(p) ?? problemKey(p);
+  }
 
   private get words() {
     return { ...defaultProblemListLabels, ...this.labels };
@@ -158,11 +164,21 @@ export class TcProblemList extends TcElement {
 
   private build(): Row[] {
     const rows: Row[] = [];
+    // Two problems can match in every field; the second and later copies get a count so each row stays its own
+    const seen = new Map<string, number>();
+    this.keys = new Map(
+      this.problems.map((p) => {
+        const key = problemKey(p);
+        const n = (seen.get(key) ?? 0) + 1;
+        seen.set(key, n);
+        return [p, n > 1 ? `${key}#${n}` : key];
+      }),
+    );
     const sort = (a: ProblemItem, b: ProblemItem) => RANK[a.severity] - RANK[b.severity] || a.line - b.line || (a.column ?? 0) - (b.column ?? 0);
     const shown = this.shown;
     if (this.groupBy === "none") {
       const list = [...shown].sort((a, b) => RANK[a.severity] - RANK[b.severity] || a.path.localeCompare(b.path) || sort(a, b));
-      list.forEach((problem, i) => rows.push({ kind: "problem", key: `p\u001f${problemKey(problem)}`, path: problem.path, problem, level: 1, pos: i + 1, size: list.length }));
+      list.forEach((problem, i) => rows.push({ kind: "problem", key: `p\u001f${this.keyOf(problem)}`, path: problem.path, problem, level: 1, pos: i + 1, size: list.length }));
       return rows;
     }
     const files = new Map<string, ProblemItem[]>();
@@ -172,7 +188,7 @@ export class TcProblemList extends TcElement {
     order.forEach(([path, list], i) => {
       const open = this.isOpen(path);
       rows.push({ kind: "file", key: `f\u001f${path}`, path, problems: list, open, pos: i + 1, size: order.length });
-      if (open) [...list].sort(sort).forEach((problem, j) => rows.push({ kind: "problem", key: `p\u001f${problemKey(problem)}`, path, problem, level: 2, pos: j + 1, size: list.length }));
+      if (open) [...list].sort(sort).forEach((problem, j) => rows.push({ kind: "problem", key: `p\u001f${this.keyOf(problem)}`, path, problem, level: 2, pos: j + 1, size: list.length }));
     });
     return rows;
   }
@@ -180,7 +196,7 @@ export class TcProblemList extends TcElement {
   protected override willUpdate(changed: PropertyValues) {
     super.willUpdate(changed);
     this.rows = this.build();
-    if (!this.rows.some((r) => r.key === this.active)) this.active = this.rows.find((r) => r.kind === "problem" && problemKey(r.problem) === this.selected)?.key ?? this.rows[0]?.key ?? null;
+    if (!this.rows.some((r) => r.key === this.active)) this.active = this.rows.find((r) => r.kind === "problem" && this.keyOf(r.problem) === this.selected)?.key ?? this.rows[0]?.key ?? null;
     if (this.onFix && this.onFix !== this.active) this.onFix = null;
   }
 
@@ -196,14 +212,14 @@ export class TcProblemList extends TcElement {
   private press(r: Row) {
     this.active = r.key;
     if (r.kind === "file") return this.toggle(r.path);
-    const key = problemKey(r.problem);
+    const key = this.keyOf(r.problem);
     if (key !== this.selected && this.emit<ProblemSelectedChange>("tc-selected-change", { selected: key, problem: r.problem }, { cancelable: true })) this.selected = key;
     this.emit<ProblemOpen>("tc-open", { path: r.path, line: r.problem.line, column: r.problem.column, problem: r.problem });
   }
 
   private fix(problem: ProblemItem, e: Event) {
     e.stopPropagation();
-    this.emit<ProblemFix>("tc-fix", { problem }, { cancelable: true });
+    this.emit<ProblemFix>("tc-fix", { problem });
   }
 
   private async focusRow(key: string, fix = false) {
@@ -317,7 +333,7 @@ export class TcProblemList extends TcElement {
       </div>`;
     }
     const p = r.problem;
-    const key = problemKey(p);
+    const key = this.keyOf(p);
     const meta = [p.source, p.code].filter(Boolean).join(" ");
     return html`<div
       class="ui-prob__row ui-prob__problem"

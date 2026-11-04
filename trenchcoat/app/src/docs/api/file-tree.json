@@ -213,7 +213,7 @@
   {
    "name": "fileTreeFromPaths",
    "signature": "fileTreeFromPaths(paths: readonly string[]): FileTreeNode[]",
-   "description": "Builds nodes from paths such as \"src/a.ts\"; a path ending in \"/\" is an empty folder"
+   "description": "Builds nodes from paths such as \"src/a.ts\"; a path ending in \"/\" is an empty folder. Backslashes count as slashes,\n\".\" parts are dropped and \"..\" goes up a folder, so \"./lib/a.ts\" and \"lib\\\\a.ts\" land in the same place"
   }
  ],
  "react": [
@@ -574,7 +574,7 @@
   "windowed": true
  },
  "size": {
-  "min": 27258,
-  "gzip": 9352
+  "min": 27752,
+  "gzip": 9551
  }
 }

@@ -179,3 +179,25 @@ test("custom metric IDs cannot inherit built-in defaults from Object.prototype",
   const el = await fixture<TcWebVitals>(html`<tc-web-vitals .metrics=${[{id:"constructor",value:5,unit:"s"}]}></tc-web-vitals>`);
   expect(el.querySelector<HTMLElement>(".ui-wvit__marker")!.style.left).toMatch(/^\d+(?:\.\d+)?%$/);
 });
+
+describe("tc-web-vitals – ids in capitals and missing readings", () => {
+  test("“LCP” uses the LCP defaults", async () => {
+    const el = await fixture<TcWebVitals>(html`<tc-web-vitals .metrics=${[{ id: "LCP", value: 1200 }]}></tc-web-vitals>`);
+    const t = tile(el, "LCP");
+    expect(t.dataset.rating).toBe("good");
+    expect(text(t.querySelector(".ui-wvit__value"))).toBe("1.2 s");
+    expect(text(t.querySelector(".ui-wvit__name"))).toBe("Largest Contentful Paint");
+  });
+
+  test("a NaN reading shows as missing: no rating, no marker, a dash, and no NaN in the trend", async () => {
+    const el = await fixture<TcWebVitals>(html`<tc-web-vitals .metrics=${[{ id: "lcp", value: NaN, history: [2000, NaN, 1800] }, { id: "cls", value: 0.02 }]}></tc-web-vitals>`);
+    const t = tile(el, "lcp");
+    expect(t.dataset.rating).toBe("none");
+    expect(t.querySelector(".ui-wvit__rating")).toBeNull();
+    expect(t.querySelector(".ui-wvit__marker")).toBeNull();
+    expect(text(t.querySelector(".ui-wvit__value"))).toContain("–");
+    expect(t.querySelector("polyline")!.getAttribute("points")).not.toContain("NaN");
+    // The count is of the rated ones
+    expect(text(el.querySelector(".ui-wvit__count"))).toBe("1/1 good");
+  });
+});

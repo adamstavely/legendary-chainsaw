@@ -37,10 +37,12 @@ const NOT_JSON = /\b(Element|HTMLElement|Node|DocumentFragment|File|FileList|Blo
 /** Properties every element has that a model shouldn't set: the look is the page's */
 const SKIP_PROPS = new Set(["look"]);
 /** Per-element properties a model shouldn't set: geo-location's and coordinate-details' maps stay behind "Show map", so a generated map
- *  never loads from a third party by itself, whatever allowedOrigins says */
+ *  never loads from a third party by itself, whatever allowedOrigins says; and a generated terminal can't become a password
+ *  prompt, for the reason secret-field and otp-input are denied */
 const SKIP_ELEMENT_PROPS = {
   "tc-geo-location": new Set(["embed", "embedSrc"]),
   "tc-coordinate-details": new Set(["embed", "embedSrc"]),
+  "tc-terminal": new Set(["masked"]),
 };
 
 execSync("npx cem analyze --config custom-elements-manifest.config.mjs", { stdio: "ignore" });

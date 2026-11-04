@@ -49,6 +49,22 @@ describe("tc-branch-switcher", () => {
     });
   }
 
+  test("times and counts follow locale and labels; a date from another year shows its year", async () => {
+    const branches: BranchItem[] = [
+      { name: "feature/booking-calendar", kind: "local", ahead: 2, behind: 5, updated: NOW - 10_000 },
+      { name: "old", kind: "local", updated: Date.UTC(2025, 3, 9) },
+    ];
+    const el = await fixture<TcBranchSwitcher>(
+      html`<tc-branch-switcher inline locale="de" current="feature/booking-calendar" base="main" .branches=${branches} .now=${NOW}
+        .labels=${{ ahead: "{count} voraus", behind: "{count} zurück", aheadOf: "{counts} gegenüber {base}" }}></tc-branch-switcher>`,
+    );
+    const metas = [...el.querySelectorAll(".ui-brsw__meta")].map((m) => m.textContent);
+    expect(metas[0]).toBe(new Intl.RelativeTimeFormat("de", { numeric: "auto", style: "short" }).format(0, "second"));
+    expect(metas[0]).not.toContain("just now");
+    expect(metas[1]).toContain("2025");
+    expect(el.textContent).toContain("2 voraus, 5 zurück gegenüber main");
+  });
+
   test("opens a popup with sections, the current one selected, focus in the filter", async () => {
     const el = await make();
     trigger(el).click();
@@ -144,6 +160,47 @@ describe("tc-branch-switcher", () => {
     expect(toBranchName("  fix sample  export ")).toBe("fix-sample-export");
     expect(toBranchName("feature/a..b~c")).toBe("feature/abc");
     expect(toBranchName("/lead/")).toBe("lead");
+  });
+
+  test("toBranchName never leaves something git refuses, even once a character is dropped", () => {
+    // Each of these came out of the old one as a name `git check-ref-format --branch` rejects
+    expect(toBranchName("a.~.b")).toBe("ab");
+    expect(toBranchName("a/../b")).toBe("a/b");
+    expect(toBranchName("feature//x")).toBe("feature/x");
+    expect(toBranchName("x.lock")).toBe("x");
+    expect(toBranchName("feat/.hidden")).toBe("feat/hidden");
+    expect(toBranchName("a.lock/b")).toBe("a/b");
+    expect(toBranchName("-x")).toBe("x");
+    expect(toBranchName("@")).toBe("");
+    expect(toBranchName("a\u0007b")).toBe("ab");
+  });
+
+  test("a local branch with a prefix doesn't hide Create; a remote one under its local name does", async () => {
+    const el = await make("standard", true);
+    el.branches = [{ name: "feature/login", kind: "local" }, { name: "origin/fix", kind: "remote" }];
+    type(filter(el), "login");
+    await settle();
+    expect(names(el)).toEqual(["feature/login", "create"]);
+    type(filter(el), "fix");
+    await settle();
+    expect(names(el)).toEqual(["origin/fix"]);
+  });
+
+  test("typed text with {base} or $ stays as typed in the Create label", async () => {
+    const el = await make("standard", true);
+    type(filter(el), "{base}$&");
+    await settle();
+    expect(el.querySelector(".ui-brsw__create")!.textContent!.trim()).toBe("Create branch “{base}$&” from main");
+  });
+
+  test("option ids stay unique when branches come and go", async () => {
+    const el = await make("standard", true);
+    el.branches = [{ name: "a", kind: "local" }, { name: "b", kind: "local" }];
+    await settle();
+    el.branches = [{ name: "b", kind: "local" }, { name: "c", kind: "local" }, { name: "d", kind: "local" }];
+    await settle();
+    const ids = [...el.querySelectorAll(".ui-brsw__option")].map((o) => o.id);
+    expect(new Set(ids).size).toBe(ids.length);
   });
 
   test("Sync sends the counts; opening can be prevented", async () => {

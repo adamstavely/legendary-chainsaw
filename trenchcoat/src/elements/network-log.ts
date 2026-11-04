@@ -258,7 +258,11 @@ export class TcNetworkLog extends TcElement {
   private close() {
     const id = this.selected;
     this.choose(null);
-    if (id && this.selected === null) void this.focusRow(id);
+    // Back to the request's row, or the row with the tab stop when the request isn't shown
+    if (id && this.selected === null) {
+      const to = this.shownCache.some((r) => r.id === id) ? id : this.active;
+      if (to) void this.focusRow(to);
+    }
   }
 
   private row(r: NetworkRequest, span: number): TemplateResult {
@@ -282,7 +286,7 @@ export class TcNetworkLog extends TcElement {
       <span class="ui-netl__cell ui-netl__status" role="gridcell">${r.status === 0 ? words.failed : r.status}</span>
       <span class="ui-netl__cell ui-netl__method" role="gridcell">${r.method}</span>
       <span class="ui-netl__cell ui-netl__name" role="gridcell" title=${r.url}><span class="ui-netl__file">${requestName(r.url)}</span><span class="ui-netl__url">${r.url}</span></span>
-      <span class="ui-netl__cell ui-netl__type" role="gridcell">${words[r.type]}</span>
+      <span class="ui-netl__cell ui-netl__type" role="gridcell">${networkTypes.includes(r.type) ? words[r.type] : words.other}</span>
       <span class="ui-netl__cell ui-netl__size" role="gridcell">${r.size === undefined ? "–" : this.size(r.size)}</span>
       <span class="ui-netl__cell ui-netl__time" role="gridcell">${this.ms(r.duration)}</span>
       <span class="ui-netl__cell ui-netl__fall" role="gridcell"><span class="ui-netl__bar" aria-hidden="true" style=${styleMap({ left: `${left}%`, width: `${width}%` })}></span></span>
@@ -331,7 +335,8 @@ export class TcNetworkLog extends TcElement {
     const span = Math.max(0, ...list.map((r) => r.start + r.duration));
     const total = list.reduce((n, r) => n + (r.size ?? 0), 0);
     const failed = this.requests.filter((r) => statusTone(r.status) === "danger").length;
-    const open = this.requests.find((r) => r.id === this.selected);
+    // The details follow the list: a request the type chips hide has no row to belong to, so they close with it
+    const open = list.find((r) => r.id === this.selected);
     const counts = new Map<NetworkType, number>();
     for (const r of this.requests) counts.set(r.type, (counts.get(r.type) ?? 0) + 1);
     const chips: ("all" | NetworkType)[] = ["all", ...networkTypes];

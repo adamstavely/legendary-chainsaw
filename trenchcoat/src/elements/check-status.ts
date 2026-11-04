@@ -2,6 +2,7 @@ import { html, nothing, svg, type PropertyValues } from "lit";
 import { property, state } from "lit/decorators.js";
 import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
+import { FocusRescueController } from "./internal/controllers";
 import { cardHead } from "./internal/card-head";
 
 /*
@@ -102,11 +103,19 @@ export class TcCheckStatus extends TcElement {
   /** Rename any state's word, over the defaults */
   @property({ attribute: false }) accessor statusLabels: Partial<CheckStatusLabels> = {};
 
-  /** The tab stop: a row and a button in it (0 the row, 1 Re-run) */
-  @state() private accessor active = { r: 0, c: 0 };
+  /** The tab stop: a check's id and a button in its row (0 the row, 1 Re-run) – by id, as the rows re-sort by state */
+  @state() private accessor active = { id: "", c: 0 };
+  /** Where the tab stop's row was, so it can fall to the neighbour when that check goes */
+  private at = 0;
   @state() private accessor announce = "";
 
   private uid = `tc-cks-${++uidCount}`;
+
+  constructor() {
+    super();
+    // Re-run goes when the page marks the check pending; focus moves to the row rather than the page
+    new FocusRescueController(this, () => this.querySelector<HTMLElement>('.ui-cks__list [data-at][tabindex="0"]'));
+  }
 
   private word(state: CheckState) {
     return this.statusLabels[state] ?? defaultCheckStatusLabels[state];
@@ -132,6 +141,7 @@ export class TcCheckStatus extends TcElement {
     return this.retryable && check?.state === "failing";
   }
   private retry(check: CheckItem) {
+    this.active = { id: check.id, c: 1 };
     this.emit<CheckRetry>("tc-retry", { id: check.id, check });
     this.announce = `Re-running ${check.name}`;
   }
@@ -141,7 +151,8 @@ export class TcCheckStatus extends TcElement {
     if (!rows.length) return;
     r = Math.max(0, Math.min(rows.length - 1, r));
     if (c === 1 && !this.canRetry(rows[r])) c = 0;
-    this.active = { r, c };
+    this.at = r;
+    this.active = { id: rows[r].id, c };
     void this.updateComplete.then(() => this.querySelector<HTMLElement>(`[data-at="${r}:${c}"]`)?.focus());
   }
   private onKey = (e: KeyboardEvent) => {
@@ -166,9 +177,12 @@ export class TcCheckStatus extends TcElement {
     super.willUpdate(changed);
     // The tab stop stays on a button that exists
     const rows = this.sorted;
-    if (rows.length && (this.active.r >= rows.length || (this.active.c === 1 && !this.canRetry(rows[this.active.r])))) {
-      this.active = { r: Math.min(this.active.r, rows.length - 1), c: 0 };
-    }
+    if (!rows.length) return;
+    const found = rows.findIndex((c) => c.id === this.active.id);
+    const r = found >= 0 ? found : Math.min(this.at, rows.length - 1);
+    const c = this.active.c === 1 && this.canRetry(rows[r]) ? 1 : 0;
+    this.at = r;
+    if (rows[r].id !== this.active.id || c !== this.active.c) this.active = { id: rows[r].id, c };
   }
 
   private renderCompact(c: CheckCounts) {
@@ -182,9 +196,12 @@ export class TcCheckStatus extends TcElement {
   }
 
   private renderRow(check: CheckItem, r: number) {
-    const tab = (c: number) => (this.active.r === r && this.active.c === c ? 0 : -1);
+    const tab = (c: number) => (this.active.id === check.id && this.active.c === c ? 0 : -1);
     return html`<li class="ui-cks__row" data-id=${check.id} data-state=${check.state}>
-      <button type="button" class="ui-cks__open" data-at=${`${r}:0`} tabindex=${tab(0)} @click=${() => this.emit<CheckOpen>("tc-open", { id: check.id, check })}>
+      <button type="button" class="ui-cks__open" data-at=${`${r}:0`} tabindex=${tab(0)} @click=${() => {
+          this.active = { id: check.id, c: 0 };
+          this.emit<CheckOpen>("tc-open", { id: check.id, check });
+        }}>
         <span class="ui-cks__mark" aria-hidden="true">${lucide(14, MARK[check.state])}</span>
         <span class="ui-cks__text">
           <span class="ui-cks__name">${check.name}</span>

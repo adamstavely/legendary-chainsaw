@@ -149,6 +149,82 @@ describe("tc-search-results", () => {
     expect(el.selected).toEqual({ path: "src/lib/freezer.ts", line: 3 });
   });
 
+  test("two matches on one line can each be chosen, and only the chosen one is selected", async () => {
+    const el = await make("standard", [{ path: "a.ts", matches: [{ line: 4, column: 1, text: "x = x" }, { line: 4, column: 5, text: "x = x" }] }], "x");
+    const changes: unknown[] = [];
+    el.addEventListener("tc-selected-change", (e) => changes.push((e as CustomEvent).detail.selected));
+    match(el, 0).click();
+    await el.updateComplete;
+    match(el, 1).click();
+    await el.updateComplete;
+    expect(changes).toEqual([
+      { path: "a.ts", line: 4, column: 1 },
+      { path: "a.ts", line: 4, column: 5 },
+    ]);
+    expect([match(el, 0), match(el, 1)].map((m) => m.getAttribute("aria-selected"))).toEqual(["false", "true"]);
+    el.replaceable = true;
+    await el.updateComplete;
+    let replaced: unknown = null;
+    el.addEventListener("tc-replace", (e) => (replaced = (e as CustomEvent).detail));
+    el.querySelector<HTMLButtonElement>(".ui-srh__button")!.click();
+    expect(replaced).toMatchObject({ path: "a.ts", line: 4, column: 5 });
+  });
+
+  test("a selection without a column is the first match on its line", async () => {
+    const el = await make("standard", [{ path: "a.ts", matches: [{ line: 4, column: 1, text: "x = x" }, { line: 4, column: 5, text: "x = x" }] }], "x");
+    el.selected = { path: "a.ts", line: 4 };
+    await el.updateComplete;
+    expect([match(el, 0), match(el, 1)].map((m) => m.getAttribute("aria-selected"))).toEqual(["true", "false"]);
+  });
+
+  test("whole word matches a query that starts or ends with punctuation", () => {
+    const o = { caseSensitive: false, wholeWord: true, regex: false };
+    expect(searchResultsPattern("@media", o)!.test("  @media (x) {")).toBe(true);
+    expect(searchResultsPattern("fn(", o)!.test("call fn(1)")).toBe(true);
+    expect(searchResultsPattern("media", o)!.test("@media")).toBe(true);
+    expect(searchResultsPattern("media", o)!.test("multimedia")).toBe(false);
+  });
+
+  test("$ in the query stays as typed in the messages", async () => {
+    const el = await make("standard", [], "a$&b$$");
+    el.status = "done";
+    await el.updateComplete;
+    expect(el.querySelector(".ui-srh__empty")!.textContent).toBe("No results for “a$&b$$”");
+  });
+
+  test("scrolled far from the active row, the tree still has one tab stop", async () => {
+    const big: SearchResultsFile[] = Array.from({ length: 30 }, (_, i) => ({ path: `f${i}.ts`, matches: Array.from({ length: 20 }, (_, j) => ({ line: j + 1, text: `freezer ${j}` })) }));
+    const el = await make("standard", big);
+    el.querySelector<HTMLElement>(".ui-srh__scroll")!.scrollTop = 10_000;
+    await expect.poll(() => el.querySelector<HTMLElement>(".ui-srh__row")!.dataset.key).not.toBe("f\u001ff0.ts");
+    expect(el.querySelectorAll('.ui-srh__row[tabindex="0"]')).toHaveLength(1);
+    const stop = el.querySelector<HTMLElement>('.ui-srh__row[tabindex="0"]')!;
+    stop.focus();
+    const next = (stop.nextElementSibling as HTMLElement).dataset.key;
+    await key(el, "ArrowDown");
+    expect((document.activeElement as HTMLElement).dataset.key).toBe(next);
+  });
+
+  test("typing a replacement fires tc-replacement-change; prevented keeps it", async () => {
+    const el = await make();
+    el.replaceable = true;
+    await el.updateComplete;
+    const field = el.querySelector<HTMLInputElement>('.ui-srh__replace .ui-srh__input')!;
+    const got: string[] = [];
+    el.addEventListener("tc-replacement-change", (e) => got.push((e as CustomEvent).detail.replacement));
+    field.value = "fridge";
+    field.dispatchEvent(new Event("input", { bubbles: true }));
+    await el.updateComplete;
+    expect(got).toEqual(["fridge"]);
+    expect(el.replacement).toBe("fridge");
+    el.addEventListener("tc-replacement-change", (e) => e.preventDefault());
+    field.value = "fridges";
+    field.dispatchEvent(new Event("input", { bubbles: true }));
+    await el.updateComplete;
+    expect(el.replacement).toBe("fridge");
+    expect(field.value).toBe("fridge");
+  });
+
   test("keyboard: into the tree from the field, arrows, folding, parent, End, Enter", async () => {
     const el = await make();
     input(el).focus();
@@ -233,6 +309,32 @@ describe("tc-search-results", () => {
     await settle(host);
     expect(el.selected).toEqual({ path: "README.md", line: 1 });
     expect(told).toEqual({ path: "src/lib/freezer.ts", line: 3 });
+    await act(async () => root.unmount());
+  });
+
+  test("React: what was searched and typed to replace survive a parent's re-render", async () => {
+    const host = document.createElement("div");
+    document.body.append(host);
+    const root = createRoot(host);
+    const searched: string[] = [];
+    const props = { results: RESULTS, replaceable: true, defaultQuery: "freezer", onSearch: (q: string) => searched.push(q) };
+    await act(async () => root.render(React.createElement(SearchResults, props)));
+    const el = host.querySelector("tc-search-results") as TcSearchResults;
+    const field = el.querySelector<HTMLInputElement>(".ui-srh__replace .ui-srh__input")!;
+    await act(async () => {
+      field.value = "fridge";
+      field.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+    await act(async () => {
+      input(el).value = "log";
+      input(el).dispatchEvent(new Event("input", { bubbles: true }));
+      input(el).dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true, cancelable: true }));
+    });
+    await act(async () => root.render(React.createElement(SearchResults, { ...props, title: "Find" })));
+    await settle(host);
+    expect(searched).toEqual(["log"]);
+    expect(el.query).toBe("log");
+    expect(el.replacement).toBe("fridge");
     await act(async () => root.unmount());
   });
 

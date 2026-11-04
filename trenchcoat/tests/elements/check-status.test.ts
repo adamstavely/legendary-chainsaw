@@ -142,3 +142,29 @@ describe("tc-check-status", () => {
     });
   }
 });
+
+describe("tc-check-status – focus and the tab stop when checks change", () => {
+  test("after Re-run, when the page marks the check pending, focus moves to its row instead of the page", async () => {
+    const el = await make();
+    el.addEventListener("tc-retry", (e) => {
+      const id = (e as CustomEvent).detail.id;
+      el.checks = CHECKS.map((c) => (c.id === id ? { ...c, state: "pending" as const } : c));
+    });
+    const retry = el.querySelector<HTMLButtonElement>('.ui-cks__row[data-id="unit"] .ui-cks__retry')!;
+    retry.focus();
+    retry.click();
+    await expect.poll(() => (document.activeElement as HTMLElement | null)?.closest(".ui-cks__row")?.getAttribute("data-id") ?? document.activeElement?.tagName).toBe("unit");
+    expect((document.activeElement as HTMLElement).classList.contains("ui-cks__open")).toBe(true);
+  });
+
+  test("the tab stop stays on its check when a failing one is added and the rows re-sort", async () => {
+    const el = await make();
+    el.querySelector<HTMLElement>('.ui-cks__row[data-id="lint"] .ui-cks__open')!.click();
+    await settle();
+    el.checks = [...CHECKS, { id: "types", name: "Types", state: "failing" }];
+    await settle();
+    const stops = [...el.querySelectorAll<HTMLElement>(".ui-cks__list [data-at]")].filter((b) => b.tabIndex === 0);
+    expect(stops).toHaveLength(1);
+    expect(stops[0].closest(".ui-cks__row")!.getAttribute("data-id")).toBe("lint");
+  });
+});

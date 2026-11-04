@@ -42,7 +42,7 @@
      "attribute": "limit",
      "type": "number",
      "default": "5",
-     "description": "How many rows show until Show more",
+     "description": "How many rows show until Show more; anything that isn't a whole number of at least 1 counts as 5",
      "readonly": false
     },
     {
@@ -354,6 +354,7 @@
     "progressive": false,
     "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
     "via": [
+     "internal/controllers",
      "internal/popover"
     ]
    },
@@ -497,6 +498,7 @@
   "observers": [
    "MutationObserver (internal/base › TcElement)",
    "MutationObserver (internal/controllers › AriaForwardController)",
+   "MutationObserver (internal/controllers › FocusRescueController)",
    "ResizeObserver (internal/popover › PopoverController)"
   ],
   "clock": [],
@@ -512,7 +514,7 @@
   "windowed": false
  },
  "size": {
-  "min": 41357,
-  "gzip": 12004
+  "min": 43009,
+  "gzip": 12585
  }
 }

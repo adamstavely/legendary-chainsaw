@@ -316,7 +316,9 @@ export default function Demo({ ui }: { ui: typeof UI }) {
           background="4 running"
           onTcSectionOpen={(e) => setNote(`Open the details for ${e.detail.section}.`)}
           onTcAction={(e) => {
-            if ("itemId" in e.detail && e.detail.itemId === "branch") setTool("branch");
+            // Only the environment's branch row: a change could be called "branch" too
+            const fromEnvironment = e.target instanceof Element && e.target.closest("tc-environment-list");
+            if (fromEnvironment && "itemId" in e.detail && e.detail.itemId === "branch") setTool("branch");
           }}
           onTcOpen={(e) => (e.detail.item.id === "a" ? setTool("pr") : setNote(`Open “${e.detail.item.title}”.`))}
         />

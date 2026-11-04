@@ -64,9 +64,9 @@ export type PreviewFrameProps = Omit<RawProps, "heading" | "viewport" | "active"
 };
 
 export function PreviewFrame({ title = "Preview", viewport, defaultViewport = "desktop", onViewportChange, active, defaultActive = null, onActiveChange, children, ...props }: PreviewFrameProps) {
-  const v = useControlled<PreviewViewport>(viewport, defaultViewport, onViewportChange);
+  const v = useControlled<PreviewViewport>(viewport, defaultViewport, onViewportChange, { ownEvents: true });
   const tab = React.useRef<PreviewTab | undefined>(undefined);
-  const a = useControlled<string | null>(active, defaultActive, onActiveChange ? (next) => onActiveChange(next, tab.current) : undefined);
+  const a = useControlled<string | null>(active, defaultActive, onActiveChange ? (next) => onActiveChange(next, tab.current) : undefined, { ownEvents: true });
   return h(
     RawPreviewFrame,
     {

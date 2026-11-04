@@ -44,6 +44,16 @@ const ICON: Record<Exclude<EnvironmentKind, "custom">, TemplateResult> = {
 };
 const CUSTOM = svg`<circle cx="12" cy="12" r="9"></circle>`;
 
+/** Keys for repeat(): the id, with a count added for a later row that reuses an id, so the rows still render apart */
+const keysOf = (ids: string[]) => {
+  const seen = new Map<string, number>();
+  return ids.map((id) => {
+    const n = seen.get(id) ?? 0;
+    seen.set(id, n + 1);
+    return n ? `${id}\u0000${n}` : id;
+  });
+};
+
 /**
  * Where a session runs, as rows of machine, folders, repository and branch, each with an optional small action or a switch.
  * @tag tc-environment-list
@@ -97,16 +107,17 @@ export class TcEnvironmentList extends TcElement {
           >${item.action.label}</button>`
         : nothing}
       ${item.toggle
-        ? html`<tc-switch class="ui-enl__switch" .label=${item.label} .value=${!!this.toggles[item.id]} @tc-value-change=${(e: CustomEvent<{ value: boolean }>) => this.onToggle(item, e)}></tc-switch>`
+        ? html`<tc-switch class="ui-enl__switch" .label=${item.label} .value=${Object.hasOwn(this.toggles, item.id) && this.toggles[item.id] === true} @tc-value-change=${(e: CustomEvent<{ value: boolean }>) => this.onToggle(item, e)}></tc-switch>`
         : nothing}
     </li>`;
   }
 
   protected override render() {
+    const keys = keysOf(this.items.map((i) => i.id));
     return html`${this.heading ? cardHead({ icon: ICON.computer, title: this.heading, subtitle: this.description }) : nothing}
       <div class="ui-enl__card">
         ${this.items.length
-          ? html`<ul class="ui-enl__list" aria-label=${this.heading || "Environment"}>${repeat(this.items, (i) => i.id, (i) => this.renderRow(i))}</ul>`
+          ? html`<ul class="ui-enl__list" aria-label=${this.heading || "Environment"}>${repeat(this.items, (_, n) => keys[n], (i) => this.renderRow(i))}</ul>`
           : html`<p class="ui-enl__empty">Nothing to show</p>`}
       </div>`;
   }

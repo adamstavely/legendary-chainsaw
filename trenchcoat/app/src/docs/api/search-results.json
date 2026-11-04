@@ -174,9 +174,15 @@
      "cancelable": false
     },
     {
+     "name": "tc-replacement-change",
+     "detail": "",
+     "description": "The replace field was typed in ({ replacement }: SearchResultsReplacementChange); cancelable – prevented, `replacement` stays as it was",
+     "cancelable": true
+    },
+    {
      "name": "tc-replace",
      "detail": "",
-     "description": "Replace or Replace all was pressed, with `replaceable` ({ query, replacement, options, path, line }: SearchResultsReplace); one match carries its path and line",
+     "description": "Replace or Replace all was pressed, with `replaceable` ({ query, replacement, options, path, line, column }: SearchResultsReplace); one match carries its path, line and column",
      "cancelable": false
     },
     {
@@ -287,6 +293,48 @@
      "description": "The heading; \"\" leaves the header out"
     },
     {
+     "name": "query",
+     "type": "string",
+     "optional": true,
+     "description": "What was searched for – controlled when given"
+    },
+    {
+     "name": "defaultQuery",
+     "type": "string",
+     "optional": true,
+     "description": "What was searched for at first, when `query` isn't controlled"
+    },
+    {
+     "name": "onSearch",
+     "type": "(query: string, options: SearchResultsOptions) => void",
+     "optional": true,
+     "description": "Enter was pressed in the search field"
+    },
+    {
+     "name": "onTcSearch",
+     "type": "(event: CustomEvent<SearchResultsSearch>) => void",
+     "optional": true,
+     "description": "The raw event, for `query` and `options` together"
+    },
+    {
+     "name": "replacement",
+     "type": "string",
+     "optional": true,
+     "description": "The replace field's text – controlled when given"
+    },
+    {
+     "name": "defaultReplacement",
+     "type": "string",
+     "optional": true,
+     "description": "The replace field's text at first, when `replacement` isn't controlled"
+    },
+    {
+     "name": "onReplacementChange",
+     "type": "(replacement: string) => void",
+     "optional": true,
+     "description": "The replace field was typed in"
+    },
+    {
      "name": "selected",
      "type": "SearchResultsSelection | null",
      "optional": true,
@@ -343,18 +391,21 @@
    ],
    "hides": [
     "heading",
+    "query",
+    "replacement",
     "selected",
     "expanded",
     "options",
     "children"
    ],
    "events": {
-    "tc-search": "onTcSearch",
+    "tc-search": null,
     "tc-options-change": null,
     "tc-expanded-change": null,
     "tc-selected-change": "onSelectedChange",
     "tc-open": "onTcOpen",
     "tc-replace": "onTcReplace",
+    "tc-replacement-change": null,
     "tc-action": "onTcAction"
    }
   }
@@ -437,6 +488,10 @@
      "cancelable": false
     },
     {
+     "name": "tc-replacement-change",
+     "cancelable": true
+    },
+    {
      "name": "tc-replace",
      "cancelable": false
     },
@@ -457,6 +512,10 @@
     {
      "property": "selected",
      "event": "tc-selected-change"
+    },
+    {
+     "property": "replacement",
+     "event": "tc-replacement-change"
     }
    ],
    "form": null,
@@ -556,6 +615,22 @@
     "via": [
      "itself",
      "internal/kit"
+    ]
+   },
+   {
+    "id": "object-hasown",
+    "name": "Object.hasOwn()",
+    "bcd": "javascript.builtins.Object.hasOwn",
+    "versions": {
+     "chrome": "93",
+     "edge": "93",
+     "firefox": "92",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
     ]
    },
    {
@@ -660,7 +735,7 @@
   "windowed": true
  },
  "size": {
-  "min": 33669,
-  "gzip": 10738
+  "min": 34379,
+  "gzip": 10976
  }
 }

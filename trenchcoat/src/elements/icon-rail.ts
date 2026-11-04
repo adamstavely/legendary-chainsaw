@@ -5,7 +5,7 @@ import { TcElement } from "./internal/base";
 /*
  * <tc-icon-rail> – a row of icon buttons at the top of a panel, one of them chosen, with a tooltip for each and an
  * optional More menu at the end. One tab stop: arrows, Home and End move along it. It wraps when narrow, and the buttons
- * keep their size.
+ * keep their size. Ids should be unique: when two buttons share one, only the first can be chosen or hold the tab stop.
  * Standard: a white card on a gray tray. Clean: one white card.
  *
  *   <tc-icon-rail label="Panel views" .items=${[{ id: "notes", label: "Notes", icon: "M4 6h16M4 12h16" }]} selected="notes"></tc-icon-rail>
@@ -39,7 +39,7 @@ export class TcIconRail extends TcElement {
 
   /** Names the toolbar */
   @property() accessor label = "";
-  /** The buttons */
+  /** The buttons; give each its own id – of two with the same id, only the first can be chosen or take the tab stop */
   @property({ attribute: false }) accessor items: IconRailItem[] = [];
   /** The chosen button's id, or null for none */
   @property() accessor selected: string | null = null;
@@ -62,6 +62,12 @@ export class TcIconRail extends TcElement {
     document.removeEventListener("pointerdown", this.outside);
   }
 
+  protected override willUpdate(changed: PropertyValues) {
+    super.willUpdate(changed);
+    // No More button, no menu: an old open menu mustn't come back when items return
+    if (!this.moreItems.length) this.menuOpen = false;
+  }
+
   protected override updated(changed: PropertyValues) {
     super.updated(changed);
     if (changed.has("menuOpen")) {
@@ -71,7 +77,7 @@ export class TcIconRail extends TcElement {
   }
 
   private get stops() {
-    const ids = this.items.filter((i) => !i.disabled).map((i) => i.id);
+    const ids = [...new Set(this.items.filter((i) => !i.disabled).map((i) => i.id))];
     return this.moreItems.length ? [...ids, MORE_ID] : ids;
   }
 
@@ -140,15 +146,27 @@ export class TcIconRail extends TcElement {
     else if (e.key === "ArrowUp") next = (at - 1 + items.length) % items.length;
     else if (e.key === "Home") next = 0;
     else if (e.key === "End") next = items.length - 1;
-    else if (e.key === "Escape" || e.key === "Tab") {
-      if (e.key === "Escape") e.preventDefault();
+    else if (e.key === "Escape") {
+      e.preventDefault();
       e.stopPropagation();
       this.closeToButton();
+      return;
+    } else if (e.key === "Tab") {
+      // Tab goes on to wherever it goes; the menu just closes behind it
+      e.stopPropagation();
+      this.menuOpen = false;
       return;
     } else return;
     e.preventDefault();
     e.stopPropagation();
     items[next]?.focus();
+  }
+
+  /** Focus left the More button and its menu for somewhere else on the page */
+  private onMoreFocusOut(e: FocusEvent) {
+    const to = e.relatedTarget as Node | null;
+    // No new target is a click on something that doesn't take focus – the outside pointerdown handles that
+    if (to && !(e.currentTarget as Element).contains(to)) this.menuOpen = false;
   }
 
   private pick(item: IconRailMoreItem) {
@@ -158,6 +176,13 @@ export class TcIconRail extends TcElement {
 
   protected override render() {
     const current = this.current;
+    // Of buttons that share an id, only the first is chosen or holds the tab stop
+    const first = new Map<string, IconRailItem>();
+    const firstStop = new Map<string, IconRailItem>();
+    for (const item of this.items) {
+      if (!first.has(item.id)) first.set(item.id, item);
+      if (!firstStop.has(item.id) && !item.disabled) firstStop.set(item.id, item);
+    }
     return html`<div class="ui-irl__rail" role="toolbar" aria-label=${this.label || nothing} @keydown=${this.onRailKey}>
       ${this.items.map(
         (item) => html`<span class="ui-irl__slot">
@@ -166,8 +191,8 @@ export class TcIconRail extends TcElement {
             class="ui-irl__button"
             data-id=${item.id}
             aria-label=${item.label}
-            aria-pressed=${this.selected === item.id ? "true" : "false"}
-            tabindex=${item.id === current ? 0 : -1}
+            aria-pressed=${this.selected === item.id && first.get(item.id) === item ? "true" : "false"}
+            tabindex=${item.id === current && firstStop.get(item.id) === item ? 0 : -1}
             ?disabled=${!!item.disabled}
             @click=${() => this.choose(item)}
           >${glyph(item.icon)}</button>
@@ -175,7 +200,7 @@ export class TcIconRail extends TcElement {
         </span>`,
       )}
       ${this.moreItems.length
-        ? html`<span class="ui-irl__slot">
+        ? html`<span class="ui-irl__slot" @focusout=${this.onMoreFocusOut}>
             <button
               type="button"
               class="ui-irl__button"
@@ -184,7 +209,7 @@ export class TcIconRail extends TcElement {
               aria-haspopup="menu"
               aria-expanded=${this.menuOpen ? "true" : "false"}
               tabindex=${current === MORE_ID ? 0 : -1}
-              @click=${() => this.toggleMenu()}
+              @click=${(e: MouseEvent) => this.toggleMenu(undefined, e.detail === 0 ? "first" : null)}
               @keydown=${this.onMoreKey}
             >${glyph(MORE)}</button>
             ${this.menuOpen

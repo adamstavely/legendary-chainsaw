@@ -28,7 +28,7 @@ export type PanelCardProps = Omit<RawProps, "heading" | "expanded" | "onTcExpand
 
 /** A compact card for one section of a side panel. A child with slot="aside" sits beside the value */
 export function PanelCard({ title, expanded, defaultExpanded = false, onExpandedChange, ...props }: PanelCardProps) {
-  const v = useControlled<boolean>(expanded, defaultExpanded, onExpandedChange);
+  const v = useControlled<boolean>(expanded, defaultExpanded, onExpandedChange, { ownEvents: true });
   return h(RawPanelCard, {
     ...props,
     heading: title ?? "",

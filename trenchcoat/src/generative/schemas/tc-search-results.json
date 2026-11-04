@@ -78,6 +78,9 @@
         },
         "line": {
           "type": "number"
+        },
+        "column": {
+          "type": "number"
         }
       },
       "required": [

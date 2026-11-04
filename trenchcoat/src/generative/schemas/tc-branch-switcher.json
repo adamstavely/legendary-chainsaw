@@ -83,6 +83,15 @@
         },
         "change": {
           "type": "string"
+        },
+        "ahead": {
+          "type": "string"
+        },
+        "behind": {
+          "type": "string"
+        },
+        "aheadOf": {
+          "type": "string"
         }
       },
       "additionalProperties": false,

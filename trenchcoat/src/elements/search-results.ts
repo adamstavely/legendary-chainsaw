@@ -35,13 +35,14 @@ export type SearchResultsMatch = {
 export type SearchResultsFile = { path: string; matches: SearchResultsMatch[] };
 export type SearchResultsOptions = { caseSensitive: boolean; wholeWord: boolean; regex: boolean };
 export type SearchResultsStatus = "idle" | "searching" | "done" | "error";
-export type SearchResultsSelection = { path: string; line: number };
+export type SearchResultsSelection = { path: string; line: number; /** 1-based; tells two matches on one line apart */ column?: number };
 export type SearchResultsSearch = { query: string; options: SearchResultsOptions };
 export type SearchResultsOptionsChange = { options: SearchResultsOptions };
 export type SearchResultsExpandedChange = { expanded: string[]; path?: string };
 export type SearchResultsSelectedChange = { selected: SearchResultsSelection | null; match?: SearchResultsMatch };
 export type SearchResultsOpen = { path: string; line: number; column?: number };
-export type SearchResultsReplace = { query: string; replacement: string; options: SearchResultsOptions; path?: string; line?: number };
+export type SearchResultsReplace = { query: string; replacement: string; options: SearchResultsOptions; path?: string; line?: number; column?: number };
+export type SearchResultsReplacementChange = { replacement: string };
 export type SearchResultsAction = { id: string };
 export type SearchResultsActionItem = { id: string; label: string; icon: string | string[]; pressed?: boolean };
 export type SearchResultsLabels = {
@@ -92,7 +93,7 @@ export const defaultSearchResultsLabels: SearchResultsLabels = {
 
 type Row =
   | { kind: "file"; key: string; path: string; file: SearchResultsFile; open: boolean; pos: number; size: number }
-  | { kind: "match"; key: string; path: string; match: SearchResultsMatch; pos: number; size: number };
+  | { kind: "match"; key: string; path: string; file: SearchResultsFile; match: SearchResultsMatch; pos: number; size: number };
 
 /** How far before the first match a cut line starts */
 const LEAD = 16;
@@ -126,13 +127,21 @@ const glyph = (paths: string | string[], cls: string) =>
   html`<svg class=${cls} viewBox="0 0 24 24" aria-hidden="true">${(Array.isArray(paths) ? paths : [paths]).map((d) => svg`<path d=${d}></path>`)}</svg>`;
 const headIcon = svg`<path d="M21 6H3"></path><path d="M10 12H3"></path><path d="M10 18H3"></path><circle cx="17" cy="15" r="3"></circle><path d="m21 19-1.9-1.9"></path>`;
 
+/** Fills "{name}" placeholders from `values` in one pass; "$&" and the like in a value stay as typed */
+const fill = (template: string, values: Record<string, string>) => template.replace(/\{(\w+)\}/g, (all, key: string) => (Object.hasOwn(values, key) ? values[key] : all));
 const escapeRe = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 /** The search as a regular expression, or null when it can't be one */
 export function searchResultsPattern(query: string, options: SearchResultsOptions): RegExp | null {
   if (!query) return null;
   try {
     let src = options.regex ? query : escapeRe(query);
-    if (options.wholeWord) src = `\\b(?:${src})\\b`;
+    // A word edge only where the search has one: \b on both ends would never match "@media" or "fn(" at all.
+    // A regular expression's ends aren't known, so it gets the edges on both sides
+    if (options.wholeWord) {
+      const start = options.regex || /^\w/.test(query) ? "(?<!\\w)" : "";
+      const end = options.regex || /\w$/.test(query) ? "(?!\\w)" : "";
+      src = `${start}(?:${src})${end}`;
+    }
     return new RegExp(src, options.caseSensitive ? "g" : "gi");
   } catch {
     return null;
@@ -160,7 +169,8 @@ function rangesOf(text: string, re: RegExp | null): [number, number][] {
  * @fires tc-expanded-change - A file was opened or closed, or all were ({ expanded, path }: SearchResultsExpandedChange); cancelable – prevented, `expanded` stays as it was
  * @fires tc-selected-change - Another match was chosen ({ selected, match }: SearchResultsSelectedChange); cancelable – prevented, `selected` stays as it was
  * @fires tc-open - A match was clicked, or Enter or Space pressed on it ({ path, line, column }: SearchResultsOpen)
- * @fires tc-replace - Replace or Replace all was pressed, with `replaceable` ({ query, replacement, options, path, line }: SearchResultsReplace); one match carries its path and line
+ * @fires tc-replacement-change - The replace field was typed in ({ replacement }: SearchResultsReplacementChange); cancelable – prevented, `replacement` stays as it was
+ * @fires tc-replace - Replace or Replace all was pressed, with `replaceable` ({ query, replacement, options, path, line, column }: SearchResultsReplace); one match carries its path, line and column
  * @fires tc-action - A header button was pressed ({ id }: SearchResultsAction)
  */
 export class TcSearchResults extends TcElement {
@@ -230,7 +240,7 @@ export class TcSearchResults extends TcElement {
       const open = this.isOpen(file.path);
       rows.push({ kind: "file", key: `f\u001f${file.path}`, path: file.path, file, open, pos: i + 1, size: this.results.length });
       if (open)
-        file.matches.forEach((match, j) => rows.push({ kind: "match", key: `m\u001f${file.path}\u001f${j}`, path: file.path, match, pos: j + 1, size: file.matches.length }));
+        file.matches.forEach((match, j) => rows.push({ kind: "match", key: `m\u001f${file.path}\u001f${j}`, path: file.path, file, match, pos: j + 1, size: file.matches.length }));
     });
     return rows;
   }
@@ -243,8 +253,16 @@ export class TcSearchResults extends TcElement {
     this.win.compute();
   }
 
+  /** Where a match starts, 1-based, when it's known */
+  private columnOf(m: SearchResultsMatch) {
+    return m.column ?? (m.ranges?.[0] ? m.ranges[0][0] + 1 : undefined);
+  }
   private isSelected(r: Row) {
-    return r.kind === "match" && !!this.selected && this.selected.path === r.path && this.selected.line === r.match.line;
+    const s = this.selected;
+    if (r.kind !== "match" || !s || s.path !== r.path || s.line !== r.match.line) return false;
+    if (s.column !== undefined) return this.columnOf(r.match) === s.column;
+    // A selection without a column is the first match on its line
+    return r.file.matches.find((m) => m.line === s.line) === r.match;
   }
 
   private setExpanded(expanded: string[], path?: string) {
@@ -259,7 +277,8 @@ export class TcSearchResults extends TcElement {
   }
 
   private choose(r: Row & { kind: "match" }) {
-    const selected = { path: r.path, line: r.match.line };
+    const column = this.columnOf(r.match);
+    const selected: SearchResultsSelection = column === undefined ? { path: r.path, line: r.match.line } : { path: r.path, line: r.match.line, column };
     if (!this.isSelected(r) && this.emit<SearchResultsSelectedChange>("tc-selected-change", { selected, match: r.match }, { cancelable: true })) this.selected = selected;
     this.emit<SearchResultsOpen>("tc-open", { path: r.path, line: r.match.line, column: r.match.column });
   }
@@ -343,10 +362,15 @@ export class TcSearchResults extends TcElement {
     if (this.emit<SearchResultsOptionsChange>("tc-options-change", { options }, { cancelable: true })) this.options = options;
   }
 
+  private setReplacement(replacement: string) {
+    if (this.emit<SearchResultsReplacementChange>("tc-replacement-change", { replacement }, { cancelable: true })) this.replacement = replacement;
+    else this.requestUpdate();
+  }
+
   private replace(one: boolean) {
     const at = one ? this.selected : null;
     if (one && !at) return;
-    this.emit<SearchResultsReplace>("tc-replace", { query: this.query, replacement: this.replacement, options: { ...this.options }, path: at?.path, line: at?.line });
+    this.emit<SearchResultsReplace>("tc-replace", { query: this.query, replacement: this.replacement, options: { ...this.options }, path: at?.path, line: at?.line, column: at?.column });
   }
 
   /** The line, cut around its first match, with the matches marked – and, while replacing, shown as replaced */
@@ -373,7 +397,7 @@ export class TcSearchResults extends TcElement {
     return html`${parts}`;
   }
 
-  private row(r: Row) {
+  private row(r: Row, stop: string | null) {
     const words = this.words;
     if (r.kind === "file") {
       const slash = r.path.lastIndexOf("/");
@@ -389,9 +413,10 @@ export class TcSearchResults extends TcElement {
         aria-setsize=${r.size}
         aria-posinset=${r.pos}
         aria-expanded=${r.open ? "true" : "false"}
-        tabindex=${r.key === this.active ? 0 : -1}
+        tabindex=${r.key === stop ? 0 : -1}
         title=${r.path}
         @click=${() => this.press(r)}
+        @focus=${() => this.active !== r.key && (this.active = r.key)}
       >
         <svg class="ui-srh__chevron" viewBox="0 0 24 24" aria-hidden="true">${svg`<path d="m9 18 6-6-6-6"></path>`}</svg>
         ${glyph(ICONS[kindOf(name)], "ui-srh__icon")}
@@ -408,8 +433,9 @@ export class TcSearchResults extends TcElement {
       aria-setsize=${r.size}
       aria-posinset=${r.pos}
       aria-selected=${this.isSelected(r) ? "true" : "false"}
-      tabindex=${r.key === this.active ? 0 : -1}
+      tabindex=${r.key === stop ? 0 : -1}
       @click=${() => this.press(r)}
+      @focus=${() => this.active !== r.key && (this.active = r.key)}
     >
       <span class="ui-srh__line"><span class="ui-srh__sr">${words.line} </span>${r.match.line}</span>
       <span class="ui-srh__text">${this.line(r.match)}</span>
@@ -434,12 +460,15 @@ export class TcSearchResults extends TcElement {
     if (!rows.length) {
       if (this.status === "searching") return nothing;
       if (!this.query || this.status === "idle") return html`<p class="ui-srh__empty">${words.idle}</p>`;
-      return html`<p class="ui-srh__empty">${words.noResults.replace("{query}", this.query)}</p>`;
+      return html`<p class="ui-srh__empty">${fill(words.noResults, { query: this.query })}</p>`;
     }
     const { start, end } = this.win;
     const h = this.win.rowHeight;
+    // Only the rows near the view render; when the active one has scrolled out, the first rendered row takes the tab stop
+    const at = rows.findIndex((r) => r.key === this.active);
+    const stop = at >= start && at < end ? this.active : (rows[start]?.key ?? null);
     const shown: TemplateResult[] = [];
-    for (let n = start; n < end; n++) shown.push(this.row(rows[n]));
+    for (let n = start; n < end; n++) shown.push(this.row(rows[n], stop));
     return html`<div class="ui-srh__scroll" style=${styleMap({ maxHeight: `${this.maxHeight}px` })}>
       <div class="ui-srh__rows" role="tree" aria-label=${this.heading || words.search} aria-busy=${this.status === "searching" ? "true" : "false"} @keydown=${this.onTreeKey}>
         ${start > 0 ? html`<div aria-hidden="true" style=${styleMap({ height: `${start * h}px` })}></div>` : nothing}${shown}${end < rows.length ? html`<div aria-hidden="true" style=${styleMap({ height: `${(rows.length - end) * h}px` })}></div>` : nothing}
@@ -466,7 +495,7 @@ export class TcSearchResults extends TcElement {
         ? html`<div class="ui-srh__replace">
             <div class="ui-srh__field">
               <svg class="ui-srh__glass" viewBox="0 0 24 24" aria-hidden="true">${svg`<path d="M14 4a2 2 0 0 1 2-2"></path><path d="M16 10a2 2 0 0 1-2-2"></path><path d="M20 2a2 2 0 0 1 2 2"></path><path d="M22 8a2 2 0 0 1-2 2"></path><path d="m3 7 3 3 3-3"></path><path d="M6 10V5a3 3 0 0 1 3-3h1"></path><rect x="2" y="14" width="8" height="8" rx="2"></rect>`}</svg>
-              <input class="ui-srh__input" type="text" aria-label=${words.replace} placeholder=${words.replace} autocomplete="off" spellcheck="false" .value=${live(this.replacement)} @input=${(e: Event) => (this.replacement = (e.target as HTMLInputElement).value)} />
+              <input class="ui-srh__input" type="text" aria-label=${words.replace} placeholder=${words.replace} autocomplete="off" spellcheck="false" .value=${live(this.replacement)} @input=${(e: Event) => this.setReplacement((e.target as HTMLInputElement).value)} />
             </div>
             <button type="button" class="ui-srh__button" ?disabled=${!this.selected || !this.total} @click=${() => this.replace(true)}>${words.replaceOne}</button>
             <button type="button" class="ui-srh__button" ?disabled=${!this.total} @click=${() => this.replace(false)}>${words.replaceAll}</button>
@@ -491,7 +520,7 @@ export class TcSearchResults extends TcElement {
       <div class="ui-srh__card">
         ${this.hideField ? nothing : this.field()}
         <p class="ui-srh__summary" role="status" ?hidden=${!summary && !this.truncated}>
-          ${summary}${this.truncated && this.status !== "error" ? html`<span class="ui-srh__note">${words.truncated.replace("{n}", String(this.total))}</span>` : nothing}
+          ${summary}${this.truncated && this.status !== "error" ? html`<span class="ui-srh__note">${fill(words.truncated, { n: String(this.total) })}</span>` : nothing}
         </p>
         ${this.body()}
       </div>`;

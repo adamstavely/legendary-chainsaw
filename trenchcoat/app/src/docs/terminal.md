@@ -53,6 +53,7 @@ named by `input-label`. `role="status"` says when a command starts and finishes.
 
 - Echo the command into `output` yourself, in whatever form your shell does; the terminal only shows what it's given.
 - Set `masked` while a program asks for a password. What's typed is hidden and stays out of the history.
+  Only the app sets it: generated UI can't, so a model can't put up a password prompt.
 
 ## Do
 

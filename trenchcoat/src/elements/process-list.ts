@@ -6,6 +6,8 @@ import { styleMap } from "lit/directives/style-map.js";
 import { parseOutput } from "./internal/ansi";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
+import { FocusRescueController } from "./internal/controllers";
+import { safeUrl } from "./internal/safe-url";
 
 /*
  * <tc-process-list> – the dev servers and background jobs of a session, as rows: a status mark and word, the name, the
@@ -30,7 +32,7 @@ export type ProcessItem = {
   status: ProcessStatus;
   /** The port it listens on */
   port?: number;
-  /** Where the port link goes; by default http://localhost:<port> */
+  /** Where the port link goes; by default http://localhost:<port>. A link that isn't safe (a `javascript:` one) is ignored */
   url?: string;
   pid?: number;
   /** When it started, as an ISO date or epoch ms */
@@ -160,8 +162,10 @@ export class TcProcessList extends TcElement {
   /** The language for numbers, e.g. "en-GB"; by default the browser's */
   @property() accessor locale: string | undefined = undefined;
 
-  /** The tab stop: a row and the index of a control in it */
-  @state() private accessor active = { r: 0, c: 0 };
+  /** The tab stop: a row's id and the index of a control in it – by id, so it stays on its row when rows move */
+  @state() private accessor active = { id: "", c: 0 };
+  /** Where the tab stop's row was, so it can fall to the neighbour when that row goes */
+  private at = 0;
   @state() private accessor clock = 0;
   @state() private accessor announcement = "";
   private timer: ReturnType<typeof setInterval> | undefined;
@@ -182,15 +186,27 @@ export class TcProcessList extends TcElement {
     this.stopClock();
   }
 
+  constructor() {
+    super();
+    // A row (or its port) can go while it has focus; focus moves to the new tab stop, not the page
+    new FocusRescueController(this, () => this.querySelector<HTMLElement>('.ui-rproc__list [data-at][tabindex="0"]'));
+  }
+
   protected override willUpdate(changed: PropertyValues) {
     super.willUpdate(changed);
     const n = this.processes.length;
     if (n) {
-      const r = Math.max(0, Math.min(this.active.r, n - 1));
+      const found = this.processes.findIndex((p) => p.id === this.active.id);
+      const r = found >= 0 ? found : Math.max(0, Math.min(this.at, n - 1));
       const c = Math.max(0, Math.min(this.active.c, this.controls(this.processes[r]).length - 1));
-      if (r !== this.active.r || c !== this.active.c) this.active = { r, c };
-    } else if (this.active.r || this.active.c) this.active = { r: 0, c: 0 };
+      this.at = r;
+      if (this.processes[r].id !== this.active.id || c !== this.active.c) this.active = { id: this.processes[r].id, c };
+    } else if (this.active.id || this.active.c) this.active = { id: "", c: 0 };
     if (changed.has("now") || changed.has("processes")) this.tick();
+  }
+  private setActive(r: number, c: number) {
+    this.at = r;
+    this.active = { id: this.processes[r]?.id ?? "", c };
   }
 
   /** Runs the clock only when it's needed: no `now`, and something live with a start time */
@@ -215,7 +231,7 @@ export class TcProcessList extends TcElement {
 
   private controls(p: ProcessItem): Control[] {
     const list: Control[] = ["row"];
-    if (p.port !== undefined || p.url) list.push("port");
+    if (this.urlOf(p)) list.push("port");
     list.push("toggle", "restart", "logs");
     return list;
   }
@@ -227,7 +243,7 @@ export class TcProcessList extends TcElement {
     if (!rows.length) return;
     r = Math.max(0, Math.min(rows.length - 1, r));
     c = Math.max(0, Math.min(this.controls(rows[r]).length - 1, c));
-    this.active = { r, c };
+    this.setActive(r, c);
     void this.updateComplete.then(() => this.querySelector<HTMLElement>(`[data-at="${r}:${c}"]`)?.focus());
   }
   private onKey = (e: KeyboardEvent) => {
@@ -251,19 +267,21 @@ export class TcProcessList extends TcElement {
   /* ---------- Actions ---------- */
 
   private select(p: ProcessItem, r: number) {
-    this.active = { r, c: 0 };
+    this.setActive(r, 0);
     if (this.selected === p.id) return;
     if (this.emit<ProcessSelectedChange>("tc-selected-change", { selected: p.id, process: p }, { cancelable: true })) this.selected = p.id;
   }
   private act(name: "tc-stop" | "tc-start" | "tc-restart", p: ProcessItem, r: number, c: number, said: string) {
-    this.active = { r, c };
+    this.setActive(r, c);
     if (this.emit<ProcessEvent>(name, { id: p.id, process: p }, { cancelable: true })) this.announcement = `${said} ${p.name}`;
   }
   private stopAll() {
     if (this.emit("tc-stop-all", null, { cancelable: true })) this.announcement = this.word("stopAll");
   }
+  /** The link to open, or undefined when there's none that's safe – a `javascript:` url from data never reaches tc-open */
   private urlOf(p: ProcessItem) {
-    return p.url ?? `http://localhost:${p.port}`;
+    const port = typeof p.port === "number" && Number.isInteger(p.port) && p.port > 0 ? p.port : undefined;
+    return (p.url !== undefined ? safeUrl(p.url) : undefined) ?? (port !== undefined ? `http://localhost:${port}` : undefined);
   }
   private portText(p: ProcessItem) {
     if (p.port !== undefined) return `localhost:${p.port}`;
@@ -292,8 +310,10 @@ export class TcProcessList extends TcElement {
   }
 
   private renderMeters(p: ProcessItem) {
-    if (p.cpu === undefined && p.memory === undefined) return nothing;
-    const cpu = p.cpu === undefined ? undefined : Math.max(0, Math.min(100, p.cpu));
+    // NaN, Infinity and negative amounts are missing readings, not "NaN% CPU" or "-2 KB"
+    const cpu = typeof p.cpu === "number" && Number.isFinite(p.cpu) ? Math.max(0, Math.min(100, p.cpu)) : undefined;
+    const memory = typeof p.memory === "number" && Number.isFinite(p.memory) && p.memory >= 0 ? p.memory : undefined;
+    if (cpu === undefined && memory === undefined) return nothing;
     return html`<span class="ui-rproc__meters">
       ${cpu !== undefined
         ? html`<span class="ui-rproc__meter"
@@ -301,7 +321,7 @@ export class TcProcessList extends TcElement {
             >${Math.round(cpu).toLocaleString(this.locale)}% ${this.word("cpu")}</span
           >`
         : nothing}
-      ${p.memory !== undefined ? html`<span class="ui-rproc__meter">${this.bytes(p.memory)} ${this.word("memory")}</span>` : nothing}
+      ${memory !== undefined ? html`<span class="ui-rproc__meter">${this.bytes(memory)} ${this.word("memory")}</span>` : nothing}
     </span>`;
   }
 
@@ -317,7 +337,7 @@ export class TcProcessList extends TcElement {
           : which === "restart"
             ? () => this.act("tc-restart", p, r, c, this.word("restart"))
             : () => {
-                this.active = { r, c };
+                this.setActive(r, c);
                 this.emit<ProcessEvent>("tc-logs", { id: p.id, process: p });
               };
     return html`<button type="button" class="ui-rproc__act" data-act=${which} data-at=${`${r}:${c}`} tabindex=${tab} title=${`${word} ${p.name}`} @click=${click}>
@@ -327,7 +347,8 @@ export class TcProcessList extends TcElement {
 
   private renderRow(p: ProcessItem, r: number) {
     const controls = this.controls(p);
-    const tab = (c: number) => (this.active.r === r && this.active.c === c ? 0 : -1);
+    const url = this.urlOf(p);
+    const tab = (c: number) => (this.active.id === p.id && this.active.c === c ? 0 : -1);
     const started = startedAt(p);
     const up = isLive(p) && started !== undefined && !Number.isNaN(started) && this.time ? formatUptime(this.time - started) : "";
     const line = p.lastLine ? plainLine(p.lastLine) : "";
@@ -343,16 +364,16 @@ export class TcProcessList extends TcElement {
         ${line ? html`<span class="ui-rproc__last">${line}</span>` : nothing}
       </button>
       <span class="ui-rproc__side">
-        ${controls.includes("port")
+        ${url
           ? html`<button
               type="button"
               class="ui-rproc__port"
               data-at=${`${r}:1`}
               tabindex=${tab(1)}
-              title=${this.urlOf(p)}
+              title=${url}
               @click=${() => {
-                this.active = { r, c: 1 };
-                this.emit<ProcessOpen>("tc-open", { id: p.id, process: p, url: this.urlOf(p) });
+                this.setActive(r, 1);
+                this.emit<ProcessOpen>("tc-open", { id: p.id, process: p, url });
               }}
             >${this.portText(p)}</button>`
           : nothing}

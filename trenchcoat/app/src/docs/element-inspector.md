@@ -60,7 +60,8 @@ box-model drawing is hidden from screen readers; a sentence under it reads the c
 
 - Give each node a stable `id` – the one `selected`, `expanded` and the events hold.
 - Keep `text` to a few words: it's a hint, not the element's content.
-- Pass `details` for the chosen element only, and swap them when `tc-selected-change` fires.
+- Pass `details` for the chosen element only, and swap them when `tc-selected-change` fires. Until they change, the new
+  element's heading shows with "Loading details" rather than the last element's box and styles.
 
 ## Do
 

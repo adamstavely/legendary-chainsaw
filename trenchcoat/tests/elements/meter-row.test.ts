@@ -117,3 +117,14 @@ describe("tc-meter-row", () => {
     }
   }
 });
+
+describe("tc-meter-row – a name without a label", () => {
+  test("an empty label still gives the meter an accessible name", async () => {
+    const el = await fixture<TcMeterRow>(html`<tc-meter-row .value=${0.4}></tc-meter-row>`);
+    const m = meter(el);
+    expect(m.hasAttribute("aria-labelledby")).toBe(false);
+    expect(m.getAttribute("aria-label")).toBe("Amount used");
+    const r = await axe.run(el, { runOnly: ["aria-meter-name"] });
+    expect(r.violations).toEqual([]);
+  });
+});

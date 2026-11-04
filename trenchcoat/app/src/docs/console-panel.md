@@ -75,6 +75,8 @@ read properties of undefined", and a repeat badge as "4 times". The level chips 
 
 - Keep `entries` in the order they arrived, and append new ones.
 - Prevent `tc-clear` when the page clears its own store, then pass the empty list.
+- Unprevented, Clear hides the messages that were there, by `id`, even when the same list is passed again – as React does
+  on every render – so a cleared console stays clear; messages with new ids show.
 
 ## Don't
 

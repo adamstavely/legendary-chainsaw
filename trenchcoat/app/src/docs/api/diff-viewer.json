@@ -136,7 +136,7 @@
   {
    "name": "diffFileCounts",
    "signature": "diffFileCounts(file: DiffFile): { additions: number; deletions: number }",
-   "description": "Lines added and removed in a file"
+   "description": "Lines added and removed in a file: a line-level Myers diff, counted rather than drawn, so a scattered change to a\nlong file counts only the lines that changed"
   }
  ],
  "react": [
@@ -521,7 +521,7 @@
   "windowed": false
  },
  "size": {
-  "min": 97598,
-  "gzip": 25968
+  "min": 98209,
+  "gzip": 26274
  }
 }

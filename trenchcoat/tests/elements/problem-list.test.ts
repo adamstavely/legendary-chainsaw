@@ -121,6 +121,38 @@ describe("tc-problem-list", () => {
     expect(problemKey(PROBLEMS[3])).toBe("md-1");
   });
 
+  test("problems at the same place each get their own row: the arrows pass them and one click selects one", async () => {
+    const twins: ProblemItem[] = [
+      { path: "src/a.ts", line: 3, column: 5, severity: "error", message: "Cannot find name 'x'.", source: "ts" },
+      { path: "src/a.ts", line: 3, column: 5, severity: "error", message: "Cannot find name 'x'.", source: "eslint" },
+      { path: "src/a.ts", line: 3, column: 5, severity: "error", message: "Cannot find name 'x'.", source: "eslint" },
+      { path: "src/a.ts", line: 9, column: 5, severity: "error", message: "Other." },
+    ];
+    const el = await make("standard", twins);
+    const keys = rows(el).map((r) => r.dataset.key);
+    expect(new Set(keys).size).toBe(keys.length);
+    expect(problemKey(twins[0])).not.toBe(problemKey(twins[1]));
+    problem(el, 0).click();
+    await el.updateComplete;
+    problem(el, 0).focus();
+    await key(el, "ArrowDown");
+    await key(el, "ArrowDown");
+    await key(el, "ArrowDown");
+    expect(document.activeElement).toBe(problem(el, 3));
+    problem(el, 2).click();
+    await el.updateComplete;
+    expect(el.selected).toBe(`${problemKey(twins[2])}#2`);
+    expect(rows(el).filter((r) => r.getAttribute("aria-selected") === "true")).toEqual([problem(el, 2)]);
+  });
+
+  test("tc-fix is a request: it isn't cancelable", async () => {
+    const el = await make();
+    let event: CustomEvent | null = null;
+    el.addEventListener("tc-fix", (e) => (event = e as CustomEvent));
+    problem(el, 1).querySelector<HTMLButtonElement>(".ui-prob__fix")!.click();
+    expect(event!.cancelable).toBe(false);
+  });
+
   test("keyboard: arrows, into a fix and back, folding, parent, End, Enter", async () => {
     const el = await make();
     file(el, "src/lib/freezer.ts").focus();

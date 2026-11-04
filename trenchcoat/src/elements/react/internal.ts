@@ -25,19 +25,25 @@ export function useStaged(nodes: [string, React.ReactNode][]) {
 }
 export const isNode = (v: unknown) => v != null && typeof v === "object" && !(v instanceof Element);
 
-/** A value that's controlled when `value` is given, else kept by the element from `defaultValue` */
-export function useControlled<T>(value: T | undefined, defaultValue: T, onChange: ((next: T) => void) | undefined) {
+/**
+ * A value that's controlled when `value` is given, else kept by the element from `defaultValue`. `ownEvents` is for
+ * elements that hold the page's children (a card, a dialog): a child's change event of the same name bubbles through
+ * them and isn't theirs. Composite elements leave it off, since the events of the parts they render are their API.
+ */
+export function useControlled<T>(value: T | undefined, defaultValue: T, onChange: ((next: T) => void) | undefined, { ownEvents = false } = {}) {
   // Uncontrolled, the element's own changes are kept here: @lit/react sets every prop on every render, so passing
   // the starting value back would undo them whenever the parent re-renders
   const [own, setOwn] = React.useState(defaultValue);
   const controlled = value !== undefined;
   const handler = React.useCallback(
     (next: T, event: Event) => {
+      // A child's change event bubbling through (a list's Show more inside a card) isn't this one's
+      if (ownEvents && event.currentTarget && event.target !== event.currentTarget) return;
       if (controlled) event.preventDefault();
       else setOwn(next);
       onChange?.(next);
     },
-    [controlled, onChange],
+    [controlled, onChange, ownEvents],
   );
   return { value: controlled ? value : own, handler, controlled };
 }

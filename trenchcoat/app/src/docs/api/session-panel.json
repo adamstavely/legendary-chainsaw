@@ -401,6 +401,7 @@
     "progressive": false,
     "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
     "via": [
+     "internal/controllers",
      "internal/popover"
     ]
    },
@@ -426,6 +427,22 @@
      "icon-rail",
      "meter-row",
      "panel-card"
+    ]
+   },
+   {
+    "id": "object-hasown",
+    "name": "Object.hasOwn()",
+    "bcd": "javascript.builtins.Object.hasOwn",
+    "versions": {
+     "chrome": "93",
+     "edge": "93",
+     "firefox": "92",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "via": [
+     "environment-list"
     ]
    },
    {
@@ -593,6 +610,7 @@
   "observers": [
    "MutationObserver (internal/base › TcElement)",
    "MutationObserver (internal/controllers › AriaForwardController)",
+   "MutationObserver (internal/controllers › FocusRescueController)",
    "ResizeObserver (internal/popover › PopoverController)"
   ],
   "clock": [],
@@ -614,7 +632,7 @@
   "windowed": false
  },
  "size": {
-  "min": 90054,
-  "gzip": 22503
+  "min": 92491,
+  "gzip": 23314
  }
 }

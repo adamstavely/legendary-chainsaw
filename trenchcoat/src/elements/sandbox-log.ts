@@ -109,6 +109,19 @@ type Hits = { q: string; upto: number; list: number[]; lines: SandboxLogLine[] }
 const terminalIcon = svg`<path d="m4 17 6-6-6-6"></path><path d="M12 19h8"></path>`;
 
 // The classes parseOutput gives styled text: `ui-sbl__fg-${colour}`, `ui-sbl__bg-${colour}`, ui-sbl__b, ui-sbl__i, ui-sbl__u, ui-sbl__inv
+/** Lower case that keeps every offset: a character whose lower case is longer ("İ" → "i̇") stays as it is, so a match's
+ *  position in the folded text is its position in the line */
+function fold(text: string) {
+  const lower = text.toLowerCase();
+  if (lower.length === text.length) return lower;
+  let out = "";
+  for (const ch of text) {
+    const l = ch.toLowerCase();
+    out += l.length === ch.length ? l : ch;
+  }
+  return out;
+}
+
 let instances = 0;
 
 /**
@@ -206,6 +219,8 @@ export class TcSandboxLog extends TcElement {
     for (const id of [...this.parsed.keys()]) if (!ids.has(id)) this.parsed.delete(id);
     for (const id of [...this.hits.keys()]) if (!ids.has(id)) this.hits.delete(id);
     for (const id of [...this.stuck.keys()]) if (!ids.has(id)) this.stuck.delete(id);
+    // A step that comes back with its old id starts afresh, rather than being announced from its old status
+    for (const id of [...this.prevStatus.keys()]) if (!ids.has(id)) this.prevStatus.delete(id);
 
     // One row window per long step
     for (const [id, win] of this.windows)
@@ -229,7 +244,9 @@ export class TcSandboxLog extends TcElement {
     for (const win of this.windows.values()) win.compute();
 
     // Search: only lines that are new (or still being written) are scanned again
-    const q = this.query.trim().toLowerCase();
+    const q = fold(this.query.trim());
+    // The match the search is on, by where it is: an earlier step that streams new matches mustn't move it
+    const on = changed.has("query") ? null : this.hitAt(this.current);
     for (const s of this.steps) {
       const lines = this.linesOf(s.id);
       let h = this.hits.get(s.id);
@@ -243,7 +260,7 @@ export class TcSandboxLog extends TcElement {
       h.list.length = n;
       if (q) {
         for (let i = keep; i < lines.length && h.list.length < MAX_HITS * 2; i++) {
-          const text = lines[i].text.toLowerCase();
+          const text = fold(lines[i].text);
           for (let at = text.indexOf(q); at >= 0 && h.list.length < MAX_HITS * 2; at = text.indexOf(q, at + q.length)) h.list.push(i, at);
         }
       }
@@ -251,6 +268,10 @@ export class TcSandboxLog extends TcElement {
       this.hits.set(s.id, h);
     }
     if (changed.has("query")) this.current = 0;
+    else if (on) {
+      const at = this.indexOfHit(on.step.id, on.line, on.at);
+      if (at >= 0) this.current = at;
+    }
     const total = this.totalHits;
     if (this.current >= total) this.current = Math.max(0, total - 1);
 
@@ -270,6 +291,20 @@ export class TcSandboxLog extends TcElement {
     let n = 0;
     for (const s of this.steps) n += (this.hits.get(s.id)?.list.length ?? 0) / 2;
     return Math.min(n, MAX_HITS);
+  }
+
+  /** Which match (0-based, across all steps) is at this step, line and offset; -1 when none is */
+  private indexOfHit(id: string, line: number, at: number) {
+    let n = 0;
+    for (const s of this.steps) {
+      const list = this.hits.get(s.id)?.list ?? [];
+      if (s.id === id) {
+        for (let i = 0; i < list.length; i += 2) if (list[i] === line && list[i + 1] === at) return n + i / 2;
+        return -1;
+      }
+      n += list.length / 2;
+    }
+    return -1;
   }
 
   /** The step, line and offset of the n-th match */
@@ -350,6 +385,8 @@ export class TcSandboxLog extends TcElement {
   };
 
   private onSearchKey = (e: KeyboardEvent) => {
+    // Enter belongs to an input method while it's composing
+    if (e.isComposing || e.keyCode === 229) return;
     if (e.key === "Enter") {
       e.preventDefault();
       void this.go(e.shiftKey ? -1 : 1);

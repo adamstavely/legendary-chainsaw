@@ -238,4 +238,60 @@ describe("tc-voice-orb", () => {
     const canvas = el.querySelector("canvas")!;
     await expect.poll(() => canvas.getContext("2d")!.getImageData(0, 0, canvas.width, canvas.height).data.some((v) => v > 0)).toBe(true);
   });
+
+  test("a level that isn't a number is ignored: the orb keeps drawing with its own level, and recovers", async () => {
+    for (const variant of ["sphere", "ring", "blob"] as const) {
+      const el = await fixture<TcVoiceOrb>(html`<tc-voice-orb variant=${variant} state="listening" .level=${0.4} size="80"></tc-voice-orb>`);
+      const canvas = el.querySelector("canvas")!;
+      const painted = () => canvas.getContext("2d")!.getImageData(0, 0, canvas.width, canvas.height).data.some((v) => v > 0);
+      await expect.poll(painted).toBe(true);
+      el.level = NaN;
+      await frames();
+      await expect.poll(() => [variant, "NaN", painted()]).toEqual([variant, "NaN", true]);
+      el.setAttribute("level", "abc");
+      await frames();
+      await expect.poll(() => [variant, "abc", painted()]).toEqual([variant, "abc", true]);
+      el.level = 0.5;
+      await frames();
+      await expect.poll(() => [variant, "0.5", painted()]).toEqual([variant, "0.5", true]);
+      cleanup();
+    }
+  });
+
+  test("reduced motion: the still frame clamps the level too", async () => {
+    reduceMotion();
+    for (const level of [-2, 7, NaN]) {
+      const el = await fixture<TcVoiceOrb>(html`<tc-voice-orb variant="orbit" state="listening" .level=${level} size="80"></tc-voice-orb>`);
+      await el.updateComplete;
+      const canvas = el.querySelector("canvas")!;
+      await expect.poll(() => [level, canvas.getContext("2d")!.getImageData(0, 0, canvas.width, canvas.height).data.some((v) => v > 0)]).toEqual([level, true]);
+      cleanup();
+    }
+  });
+
+  test("turning reduced motion on while the page is open rebuilds the drawing", async () => {
+    const listeners: (() => void)[] = [];
+    let matches = false;
+    const real = window.matchMedia.bind(window);
+    vi.stubGlobal("matchMedia", (q: string) =>
+      q.includes("reduced-motion")
+        ? { get matches() { return matches; }, media: q, addEventListener: (_: string, f: () => void) => listeners.push(f), removeEventListener() {} }
+        : real(q),
+    );
+    const el = await fixture<TcVoiceOrb>(html`<tc-voice-orb state="speaking" size="80"></tc-voice-orb>`);
+    const loopOf = () => (el as unknown as { loop?: object }).loop;
+    const before = loopOf();
+    expect(before).toBeTruthy();
+    matches = true;
+    listeners.forEach((f) => f());
+    await el.updateComplete;
+    expect(loopOf()).toBeTruthy();
+    expect(loopOf()).not.toBe(before);
+    // Still now: no frames are drawn on their own
+    const clear = vi.spyOn(CanvasRenderingContext2D.prototype, "clearRect");
+    await frames();
+    const n = clear.mock.calls.length;
+    await frames();
+    expect(clear.mock.calls.length).toBe(n);
+  });
 });

@@ -38,7 +38,7 @@ export function Dialog({
   ref,
   ...props
 }: DialogProps) {
-  const state = useControlled(open, defaultOpen, onOpenChange);
+  const state = useControlled(open, defaultOpen, onOpenChange, { ownEvents: true });
   const [element, setElement] = React.useState<TcDialog | null>(null);
   const [body, setBody] = React.useState<Element | null>(null);
   const [footer, setFooter] = React.useState<Element | null>(null);

@@ -241,3 +241,41 @@ describe("tc-pull-request", () => {
     });
   }
 });
+
+describe("tc-pull-request – unsafe links, words and dates", () => {
+  test("a javascript: url is never put in the href, and tc-open doesn't pass it on", async () => {
+    const el = await fixture<TcPullRequest>(html`<tc-pull-request number="1" pr-title="T" state="open" .url=${"javascript:opener&&(opener.__prq=1)"}></tc-pull-request>`);
+    expect(el.querySelector("a.ui-prq__title")).toBeNull();
+    const seen: unknown[] = [];
+    el.addEventListener("tc-open", (e) => seen.push((e as CustomEvent).detail));
+    el.querySelector<HTMLElement>(".ui-prq__title")!.click();
+    expect(seen).toEqual([{ number: 1, url: undefined }]);
+    el.url = "https://code.example/pr/1";
+    await settle();
+    expect(el.querySelector("a.ui-prq__title")!.getAttribute("href")).toBe("https://code.example/pr/1");
+  });
+
+  test("the words come from labels and the locale; a date from another year says the year", async () => {
+    const el = await fixture<TcPullRequest>(
+      html`<tc-pull-request
+        locale="de"
+        number="1"
+        pr-title="T"
+        state="open"
+        .updatedAt=${NOW - 1000}
+        .now=${NOW}
+        .files=${2}
+        .checks=${{ passing: 1, failing: 1, pending: 0, skipped: 0 }}
+        .labels=${{ checksPassed: "{passed} von {total} bestanden", checksFailed: "{count} fehlgeschlagen", files: "{count} Dateien" }}
+      ></tc-pull-request>`,
+    );
+    const all = el.textContent!.replace(/\s+/g, " ");
+    expect(all).not.toContain("just now");
+    expect(all).toContain(new Intl.RelativeTimeFormat("de", { numeric: "auto", style: "short" }).format(0, "second"));
+    expect(all).toContain("1 von 2 bestanden, 1 fehlgeschlagen");
+    expect(all).toContain("2 Dateien");
+    el.updatedAt = NOW - 400 * 24 * 60 * 60_000;
+    await settle();
+    expect(el.textContent).toContain(String(new Date(NOW - 400 * 24 * 60 * 60_000).getFullYear()));
+  });
+});

@@ -14,7 +14,7 @@
       "items": {
         "$ref": "#/definitions/IconRailItem"
       },
-      "description": "The buttons"
+      "description": "The buttons; give each its own id – of two with the same id, only the first can be chosen or take the tab stop"
     },
     "selected": {
       "type": "string",

@@ -18,7 +18,7 @@
      "attribute": null,
      "type": "IconRailItem[]",
      "default": "[]",
-     "description": "The buttons",
+     "description": "The buttons; give each its own id – of two with the same id, only the first can be chosen or take the tab stop",
      "readonly": false
     },
     {
@@ -396,7 +396,7 @@
   "windowed": false
  },
  "size": {
-  "min": 17484,
-  "gzip": 5993
+  "min": 17910,
+  "gzip": 6139
  }
 }

@@ -46,6 +46,9 @@ export type BranchSwitcherLabels = Record<BranchKind, string> & {
   current: string;
   dirty: string;
   change: string;
+  ahead: string;
+  behind: string;
+  aheadOf: string;
 };
 
 /** Details of the events */
@@ -55,7 +58,8 @@ export type BranchOpenChange = { open: boolean };
 export type BranchCreate = { name: string; from: string };
 export type BranchSync = { branch: string; ahead: number; behind: number };
 
-/** The words used when the page gives none. `create` takes {name} and {base} */
+/** The words used when the page gives none. `create` takes {name} and {base}; `ahead` and `behind` take {count};
+ * `aheadOf` joins them to the base as {counts} and {base} */
 export const defaultBranchSwitcherLabels: BranchSwitcherLabels = {
   worktree: "Worktrees",
   local: "Local",
@@ -68,6 +72,9 @@ export const defaultBranchSwitcherLabels: BranchSwitcherLabels = {
   current: "current",
   dirty: "uncommitted changes",
   change: "Change branch",
+  ahead: "{count} ahead",
+  behind: "{count} behind",
+  aheadOf: "{counts} of {base}",
 };
 
 /* Icons: Lucide (ISC, lucide.dev) */
@@ -93,14 +100,25 @@ const toMs = (v: number | string | undefined) => {
   const ms = typeof v === "number" ? v : Date.parse(v);
   return Number.isFinite(ms) ? ms : undefined;
 };
-/** A typed name as a branch name: spaces become dashes, characters git refuses are dropped */
+/** A typed name as a branch name git accepts (`git check-ref-format --branch`): spaces become dashes, and what git refuses is dropped */
 export function toBranchName(text: string) {
-  return text
-    .trim()
-    .replace(/\s+/g, "-")
-    .replace(/[~^:?*[\\\]]|\.\.|@\{/g, "")
-    .replace(/^[-/.]+|[/.]+$/g, "");
+  let name = text.trim().replace(/\s+/g, "-").replace(/[\u0000-\u001f\u007f~^:?*[\\\]]/g, "");
+  // Dropping one thing can make another ("a.~.b" → "a..b"), so go round until nothing changes
+  for (let before = ""; before !== name; ) {
+    before = name;
+    name = name
+      .replace(/\.\.|@\{/g, "")
+      .split("/")
+      // No empty parts ("a//b"), none starting with a dot, none ending in ".lock"
+      .map((part) => part.replace(/^\.+/, "").replace(/\.lock$/, ""))
+      .filter(Boolean)
+      .join("/")
+      .replace(/^-+|\.+$/g, "");
+  }
+  return name === "@" ? "" : name;
 }
+/** Fills "{name}" placeholders from `values` in one pass; text inside the values is left as it is */
+const fill = (template: string, values: Record<string, string>) => template.replace(/\{(\w+)\}/g, (all, key: string) => (Object.hasOwn(values, key) ? values[key] : all));
 
 type Row = { type: "branch"; branch: BranchItem; id: string } | { type: "create"; name: string; id: string };
 
@@ -187,6 +205,11 @@ export class TcBranchSwitcher extends TcElement {
   protected override willUpdate(changed: PropertyValues) {
     super.willUpdate(changed);
     if (changed.has("now") && this.isConnected) this.tick();
+    // Forget ids for branches that are gone, so a long session doesn't keep every name it ever saw
+    if (changed.has("branches")) {
+      const ids = new Set(["create", ...this.branches.map((b) => `${b.kind}:${b.name}`)]);
+      for (const id of this.optionIds.keys()) if (!ids.has(id)) this.optionIds.delete(id);
+    }
     const rows = this.rows;
     if (!rows.some((r) => r.id === this.activeId)) this.activeId = rows.find((r) => r.type === "branch" && r.branch.name === this.current)?.id ?? rows[0]?.id ?? "";
   }
@@ -217,7 +240,8 @@ export class TcBranchSwitcher extends TcElement {
   /** The name Create would make, or "" when there's nothing new to make */
   private get newName() {
     const name = toBranchName(this.query);
-    return name && !this.branches.some((b) => b.name === name || b.name.replace(/^[^/]+\//, "") === name) ? name : "";
+    // A remote branch counts under its local name: "origin/fix" is there already when "fix" is typed; "feature/fix" isn't
+    return name && !this.branches.some((b) => b.name === name || (b.kind === "remote" && b.name.replace(/^[^/]+\//, "") === name)) ? name : "";
   }
   private get sections() {
     return KINDS.map((kind) => ({ kind, items: this.branches.filter((b) => b.kind === kind && this.passes(b)) })).filter((s) => s.items.length);
@@ -229,10 +253,12 @@ export class TcBranchSwitcher extends TcElement {
     return rows;
   }
   private readonly optionIds = new Map<string, string>();
+  /** Counts up for good: ids are dropped from the map, so its size could hand out one that's in use */
+  private optionCount = 0;
   private optionId(id: string) {
     let option = this.optionIds.get(id);
     if (!option) {
-      option = `${this.uid}-o-${this.optionIds.size}`;
+      option = `${this.uid}-o-${this.optionCount++}`;
       this.optionIds.set(id, option);
     }
     return option;
@@ -241,18 +267,21 @@ export class TcBranchSwitcher extends TcElement {
     const time = this.now ?? this.clock;
     const diff = Math.max(0, time - ms);
     const rtf = new Intl.RelativeTimeFormat(this.locale, { numeric: "auto", style: "short" });
-    if (diff < MIN) return "just now";
+    if (diff < MIN) return rtf.format(0, "second");
     if (diff < 60 * MIN) return rtf.format(-Math.floor(diff / MIN), "minute");
     if (diff < 24 * 60 * MIN) return rtf.format(-Math.floor(diff / (60 * MIN)), "hour");
     if (diff < 7 * 24 * 60 * MIN) return rtf.format(-Math.floor(diff / (24 * 60 * MIN)), "day");
-    return formatDate(ms, this.locale, { month: "short", day: "numeric" });
+    // Older than a week: a date, with the year when it isn't this year's
+    const sameYear = new Date(ms).getFullYear() === new Date(time).getFullYear();
+    return formatDate(ms, this.locale, sameYear ? { month: "short", day: "numeric" } : { year: "numeric", month: "short", day: "numeric" });
   }
   /** "2 ahead, 5 behind main" for screen readers */
   private aheadWords(b: BranchItem) {
     const parts = [];
-    if (b.ahead) parts.push(`${b.ahead} ahead`);
-    if (b.behind) parts.push(`${b.behind} behind`);
-    return parts.length ? `${parts.join(", ")} of ${this.base}` : "";
+    const count = (n: number) => new Intl.NumberFormat(this.locale).format(n);
+    if (b.ahead) parts.push(fill(this.word("ahead"), { count: count(b.ahead) }));
+    if (b.behind) parts.push(fill(this.word("behind"), { count: count(b.behind) }));
+    return parts.length ? fill(this.word("aheadOf"), { counts: parts.join(", "), base: this.base }) : "";
   }
 
   /* ---------- Acting ---------- */
@@ -325,7 +354,7 @@ export class TcBranchSwitcher extends TcElement {
     if (row.type === "create")
       return html`<div id=${id} class="ui-brsw__option ui-brsw__create" role="option" aria-selected="false" ?data-active=${active} @click=${() => this.choose(row)}>
         <span class="ui-brsw__check">${lucide(14, plusIcon)}</span>
-        <span class="ui-brsw__text"><span class="ui-brsw__name">${this.word("create").replace("{name}", row.name).replace("{base}", this.base)}</span></span>
+        <span class="ui-brsw__text"><span class="ui-brsw__name">${fill(this.word("create"), { name: row.name, base: this.base })}</span></span>
       </div>`;
     const b = row.branch;
     const isCurrent = b.name === this.current;

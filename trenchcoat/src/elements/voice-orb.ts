@@ -39,7 +39,8 @@ const STATES: VoiceOrbState[] = ["idle", "listening", "thinking", "speaking"];
 const SPIN: Record<VoiceOrbState, number> = { idle: 0.16, listening: 0.3, thinking: 1.9, speaking: 0.42 };
 
 const clamp = (n: number, lo = 0, hi = 1) => Math.min(hi, Math.max(lo, n));
-const reduced = () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+/** A level the canvas can use: 0–1, or unset when it isn't a number at all (NaN from an analyser, "abc" from an attribute) */
+const levelOf = (n: number | undefined) => (typeof n === "number" && Number.isFinite(n) ? clamp(n) : undefined);
 /** Idle breathing settles into a still frame after this long, in ms */
 const IDLE_REST = 8000;
 /** Attributes that switch the theme on an ancestor */
@@ -156,7 +157,7 @@ export class TcVoiceOrb extends TcElement {
 
   /** The drawing loop: a dot sphere on the canvas, reading the element's props every frame */
   private startLoop(canvas: HTMLCanvasElement, size: number, dots: number) {
-    const live = (): Live => ({ state: this.state, level: this.level, interactive: this.interactive, variant: voiceOrbPainters[this.variant as keyof typeof voiceOrbPainters] ? this.variant : "sphere" });
+    const live = (): Live => ({ state: this.state, level: levelOf(this.level), interactive: this.interactive, variant: voiceOrbPainters[this.variant as keyof typeof voiceOrbPainters] ? this.variant : "sphere" });
     const ctx = canvas.getContext("2d");
     const loop = { canvas, size, dots, redraw: () => {}, stop: () => {} };
     if (!ctx) return loop;
@@ -205,7 +206,8 @@ export class TcVoiceOrb extends TcElement {
     let frames = 0;
     let inView = true;
     let visible = !document.hidden;
-    const still = reduced();
+    const motion = typeof window.matchMedia === "function" ? window.matchMedia("(prefers-reduced-motion: reduce)") : null;
+    const still = !!motion?.matches;
     // Idle and untouched for IDLE_REST: the loop stops on a still frame until something moves it again
     // -1: not measured yet – the next frame starts the count
     let calmSince = -1;
@@ -231,8 +233,10 @@ export class TcVoiceOrb extends TcElement {
         cur.state === "listening"
           ? clamp(0.35 + 0.35 * Math.sin(t * 2.1) * Math.sin(t * 5.3) + 0.3 * Math.sin(t * 9.7 + 1) * Math.sin(t * 0.9))
           : clamp(0.3 + 0.7 * Math.abs(Math.sin(t * 4.1)) * (0.5 + 0.5 * Math.sin(t * 1.3 + 2)));
-      const target = cur.level !== undefined ? clamp(cur.level) : fake;
+      const target = cur.level ?? fake;
       shownLevel += (target - shownLevel) * Math.min(1, dt * 12);
+      // Never carry a broken value into the next frame: one NaN would blank every frame after it
+      if (!Number.isFinite(shownLevel)) shownLevel = target;
       pointer.strength += ((pointer.on && cur.interactive ? 1 : 0) - pointer.strength) * Math.min(1, dt * 8);
 
       const w = size;
@@ -378,6 +382,16 @@ export class TcVoiceOrb extends TcElement {
     themeObserver?.observe(document.documentElement, { attributes: true, attributeFilter: THEME_ATTRS, subtree: true });
     const scheme = window.matchMedia?.("(prefers-color-scheme: dark)");
     scheme?.addEventListener?.("change", onTheme);
+    // Reduced motion turned on or off, or the window moved to a screen with another pixel ratio: build the canvas again
+    const sharpness = window.matchMedia?.(`(resolution: ${window.devicePixelRatio || 1}dppx)`);
+    const rebuild = () => {
+      if (this.loop !== loop) return;
+      loop.stop();
+      this.loop = undefined;
+      this.requestUpdate();
+    };
+    motion?.addEventListener?.("change", rebuild);
+    sharpness?.addEventListener?.("change", rebuild);
     // Both count: a tab coming back to the front doesn't restart an orb that is scrolled away
     const onVisibility = () => {
       visible = inView && !document.hidden;
@@ -414,6 +428,8 @@ export class TcVoiceOrb extends TcElement {
       io?.disconnect();
       themeObserver?.disconnect();
       scheme?.removeEventListener?.("change", onTheme);
+      motion?.removeEventListener?.("change", rebuild);
+      sharpness?.removeEventListener?.("change", rebuild);
       document.removeEventListener("visibilitychange", onVisibility);
       canvas.removeEventListener("pointermove", move);
       canvas.removeEventListener("pointerleave", leave);

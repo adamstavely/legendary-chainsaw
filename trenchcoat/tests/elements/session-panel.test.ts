@@ -140,6 +140,27 @@ describe("tc-session-panel", () => {
     host.remove();
   });
 
+  test("React: a tool from the rail and a switch from the list reach the page – the parts' events are the panel's own", async () => {
+    const host = document.createElement("div");
+    document.body.append(host);
+    const root = createRoot(host);
+    const tools: (string | null)[] = [];
+    const toggles: Record<string, boolean>[] = [];
+    await act(async () =>
+      root.render(React.createElement(SessionPanel, { tools: TOOLS, environment: WHERE, onToolChange: (t) => void tools.push(t), onTogglesChange: (t) => void toggles.push(t) })),
+    );
+    const el = host.querySelector("tc-session-panel") as TcSessionPanel;
+    await settle(el);
+    await act(async () => el.querySelector<HTMLButtonElement>('.ui-irl__button[data-id="files"]')!.click());
+    await expect.poll(() => el.tool).toBe("files");
+    expect(tools).toEqual(["files"]);
+    await act(async () => el.querySelector<HTMLElement>('[role="switch"]')!.click());
+    await expect.poll(() => el.toggles.remote).toBe(true);
+    expect(toggles).toEqual([{ remote: true }]);
+    await act(async () => root.unmount());
+    host.remove();
+  });
+
   for (const look of ["standard", "clean"]) {
     for (const dark of [false, true]) {
       test(`axe: ${look}, ${dark ? "dark" : "light"}`, async () => {

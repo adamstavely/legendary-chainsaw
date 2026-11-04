@@ -82,6 +82,17 @@ describe("tc-environment-list", () => {
     await expect.poll(() => input(el).checked).toBe(true);
   });
 
+  test("a switch whose id is a built-in name (constructor, toString) starts off", async () => {
+    const items: EnvironmentItem[] = ["constructor", "toString", "__proto__"].map((id) => ({ id, kind: "custom", label: id, toggle: true }));
+    const el = await fixture<TcEnvironmentList>(html`<tc-environment-list .items=${items}></tc-environment-list>`);
+    const checked = () => [...el.querySelectorAll<HTMLInputElement>('input[role="switch"]')].map((i) => i.checked);
+    expect(checked()).toEqual([false, false, false]);
+    el.querySelector<HTMLInputElement>('[data-id="constructor"] input')!.click();
+    await settle();
+    expect(checked()).toEqual([true, false, false]);
+    expect(Object.keys(el.toggles)).toEqual(["constructor"]);
+  });
+
   test("no heading draws no header; bare drops the tray; empty says so", async () => {
     const el = await fixture<TcEnvironmentList>(html`<tc-environment-list bare .items=${ITEMS}></tc-environment-list>`);
     expect(el.querySelector(".tc-head")).toBeNull();

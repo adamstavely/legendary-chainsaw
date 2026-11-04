@@ -38,7 +38,7 @@ export type WebVital = {
   history?: number[];
 };
 export type WebVitalsDeviceChange = { device: WebVitalDevice };
-export type WebVitalsLabels = Record<WebVitalRating | WebVitalDevice | "device" | "empty" | "trend" | "goodCount", string>;
+export type WebVitalsLabels = Record<WebVitalRating | WebVitalDevice | "device" | "empty" | "trend" | "goodCount" | "missing", string>;
 export const defaultWebVitalsLabels: WebVitalsLabels = {
   good: "Good",
   needs: "Needs improvement",
@@ -49,6 +49,7 @@ export const defaultWebVitalsLabels: WebVitalsLabels = {
   empty: "No measurements yet",
   trend: "Earlier readings",
   goodCount: "good",
+  missing: "No reading",
 };
 
 /** The usual limits and names (web.dev, 2024) */
@@ -65,7 +66,10 @@ export function rateWebVital(value: number, good: number, poor: number): WebVita
   return value <= good ? "good" : value > poor ? "poor" : "needs";
 }
 
-type Resolved = Required<Pick<WebVital, "id" | "value" | "good" | "poor">> & { label: string; name: string; unit: WebVitalUnit; history: number[]; rating: WebVitalRating };
+/** `value` and `rating` are null when the reading is missing or isn't a finite number */
+type Resolved = Required<Pick<WebVital, "id" | "good" | "poor">> & { value: number | null; label: string; name: string; unit: WebVitalUnit; history: number[]; rating: WebVitalRating | null };
+
+const finite = (n: unknown): n is number => typeof n === "number" && Number.isFinite(n);
 
 /* Icons: Lucide (ISC, lucide.dev) – gauge */
 const headIcon = svg`<path d="m12 14 4-4"></path><path d="M3.34 19a10 10 0 1 1 17.32 0"></path>`;
@@ -106,13 +110,18 @@ export class TcWebVitals extends TcElement {
   protected override willUpdate(changed: PropertyValues) {
     super.willUpdate(changed);
     this.resolved = this.metrics.map((m) => {
-      const d = Object.hasOwn(webVitalDefaults, m.id) ? webVitalDefaults[m.id as WebVitalId] : undefined;
+      // "LCP" and "lcp" are the same measure
+      const key = String(m.id).toLowerCase();
+      const d = Object.hasOwn(webVitalDefaults, key) ? webVitalDefaults[key as WebVitalId] : undefined;
       const unit = m.unit ?? d?.unit ?? "";
       // Supplied limits already use the metric's unit; convert only defaults defined in milliseconds.
       const scale = d?.unit === "ms" && unit === "s" ? 1 / 1000 : 1;
-      const good = m.good ?? (d ? d.good * scale : 0);
-      const poor = Math.max(good, m.poor ?? (d ? d.poor * scale : good));
-      return { id: m.id, value: m.value, good, poor, label: m.label ?? m.id.toUpperCase(), name: m.name ?? d?.name ?? "", unit, history: m.history ?? [], rating: rateWebVital(m.value, good, poor) };
+      // NaN or Infinity is a missing number, not a reading or a limit
+      const good = finite(m.good) ? m.good : d ? d.good * scale : 0;
+      const poor = Math.max(good, finite(m.poor) ? m.poor : d ? d.poor * scale : good);
+      const value = finite(m.value) ? m.value : null;
+      const history = (m.history ?? []).filter(finite);
+      return { id: m.id, value, good, poor, label: m.label ?? m.id.toUpperCase(), name: m.name ?? d?.name ?? "", unit, history, rating: value === null ? null : rateWebVital(value, good, poor) };
     });
   }
 
@@ -139,13 +148,13 @@ export class TcWebVitals extends TcElement {
 
   private track(m: Resolved) {
     // The scale runs to half again past the poor limit, or further when the value is past that
-    const max = Math.max(m.poor * 1.5, m.value * 1.05, m.good * 2) || 1;
+    const max = Math.max(m.poor * 1.5, (m.value ?? 0) * 1.05, m.good * 2) || 1;
     const pct = (v: number) => `${Math.min(100, Math.max(0, (v / max) * 100))}%`;
     return html`<div class="ui-wvit__track" aria-hidden="true">
       <span class="ui-wvit__zone" data-zone="good" style=${styleMap({ width: pct(m.good) })}></span>
       <span class="ui-wvit__zone" data-zone="needs" style=${styleMap({ width: `calc(${pct(m.poor)} - ${pct(m.good)})` })}></span>
       <span class="ui-wvit__zone" data-zone="poor"></span>
-      <span class="ui-wvit__marker" style=${styleMap({ left: pct(m.value) })}></span>
+      ${m.value !== null ? html`<span class="ui-wvit__marker" style=${styleMap({ left: pct(m.value) })}></span>` : nothing}
     </div>`;
   }
 
@@ -164,13 +173,15 @@ export class TcWebVitals extends TcElement {
 
   private tile(m: Resolved) {
     const w = this.words;
-    return html`<li class="ui-wvit__tile" data-id=${m.id} data-rating=${m.rating}>
+    return html`<li class="ui-wvit__tile" data-id=${m.id} data-rating=${m.rating ?? "none"}>
       <div class="ui-wvit__names">
         <span class="ui-wvit__short">${m.label}</span>${m.name ? html` <span class="ui-wvit__name">${m.name}</span>` : nothing}
       </div>
       <div class="ui-wvit__reading">
-        <span class="ui-wvit__value">${this.format(m.value, m.unit)}</span>
-        <span class="ui-wvit__rating"><svg class="ui-wvit__mark" viewBox="0 0 12 12" aria-hidden="true">${MARK[m.rating]}</svg>${w[m.rating]}</span>
+        ${m.value === null || m.rating === null
+          ? html`<span class="ui-wvit__value"><span aria-hidden="true">–</span><span class="ui-wvit__sr">${w.missing}</span></span>`
+          : html`<span class="ui-wvit__value">${this.format(m.value, m.unit)}</span>
+              <span class="ui-wvit__rating"><svg class="ui-wvit__mark" viewBox="0 0 12 12" aria-hidden="true">${MARK[m.rating]}</svg>${w[m.rating]}</span>`}
       </div>
       ${this.track(m)}${this.spark(m)}
     </li>`;
@@ -179,7 +190,8 @@ export class TcWebVitals extends TcElement {
   protected override render() {
     const w = this.words;
     const good = this.resolved.filter((m) => m.rating === "good").length;
-    const count = this.resolved.length ? html`<span class="ui-wvit__count">${good}/${this.resolved.length} ${w.goodCount}</span>` : nothing;
+    const rated = this.resolved.filter((m) => m.rating !== null).length;
+    const count = rated ? html`<span class="ui-wvit__count">${good}/${rated} ${w.goodCount}</span>` : nothing;
     const devices = this.device
       ? html`<div class="ui-wvit__devs" role="radiogroup" aria-label=${w.device} @keydown=${this.onDeviceKey}>
           ${(["mobile", "desktop"] as const).map(

@@ -64,8 +64,10 @@ problems are shown, or that a check is running, and the list is `aria-busy` whil
 ## Content
 
 - Write messages as the tool gives them. Put the tool in `source` and its rule or error number in `code`.
-- Give each problem an `id` if the same message can appear twice on a line. Otherwise `problemKey` builds one.
-- A `fix` is the fix's label, such as "Import 'Reading'". The page applies it on `tc-fix`.
+- Give each problem an `id` if the same message can appear twice on a line. Otherwise `problemKey` builds one from its
+  place, severity, source, code and message, and exact copies get `#2`, `#3`… so each row is still its own.
+- A `fix` is the fix's label, such as "Import 'Reading'". The element does nothing else with it: the page applies it on
+  `tc-fix`.
 - `group-by="none"` lists problems without files, each with its path, for a short list.
 
 ## Do

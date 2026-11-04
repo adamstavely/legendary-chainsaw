@@ -121,7 +121,7 @@ const glyph = (body: TemplateResult, cls = "ui-pvf__glyph") =>
 export function normalizePreviewUrl(typed: string) {
   const text = typed.trim();
   if (!text) return "";
-  if (/^[a-z][a-z0-9+.-]*:/i.test(text) && !/^[^/:]+:\d+(\/|$)/.test(text)) return text;
+  if (/^[a-z][a-z0-9+.-]*:/i.test(text) && !/^[^/:]+:\d+([/?#]|$)/.test(text)) return text;
   const host = text.split(/[/:?#]/)[0];
   return `${LOCAL.test(host) ? "http" : "https"}://${text}`;
 }
@@ -148,6 +148,8 @@ const frameable = (url: string) => {
     return false;
   }
 };
+/** An address that may leave the frame for a new window: http(s) only, so a `javascript:` tab url never reaches window.open */
+const openable = (url: string) => frameable(url) && url !== "about:blank";
 /** "localhost:5173" for the error line */
 const hostOf = (url: string) => {
   try {
@@ -220,6 +222,8 @@ export class TcPreviewFrame extends TcElement {
   @state() private accessor zoom = 1;
   @state() private accessor announcement = "";
 
+  /** Where the user went from the address, per tab id ("" without tabs) – kept here, not in `src` or `url`, so a React
+   * re-render that sets them again doesn't undo it */
   @state() private accessor navigations = new Map<string, { base: string | undefined; url: string }>();
   private readonly uid = `tc-pvf${++instances}`;
   private children$?: MutationObserver;
@@ -240,8 +244,9 @@ export class TcPreviewFrame extends TcElement {
   }
   private get navigation() {
     const tab = this.activeTab;
-    const visited = tab && this.navigations.get(tab.id);
-    return visited && visited.base === tab?.url ? visited.url : undefined;
+    if (!tab) return this.navigations.get("")?.url;
+    const visited = this.navigations.get(tab.id);
+    return visited && visited.base === tab.url ? visited.url : undefined;
   }
   private get width() {
     return this.viewport === "desktop" ? 0 : PREVIEW_WIDTHS[this.viewport];
@@ -274,7 +279,7 @@ export class TcPreviewFrame extends TcElement {
     if (changed.has("url") || changed.has("src") || changed.has("active")) this.draft = null;
     // Explicit application updates take precedence; removed/revised tabs discard their old local navigation.
     if (changed.has("url") || changed.has("src")) this.navigations = new Map();
-    else if (changed.has("tabs")) this.navigations = new Map([...this.navigations].filter(([id, visit]) => this.tabs.some(tab => tab.id === id && tab.url === visit.base)));
+    else if (changed.has("tabs")) this.navigations = new Map([...this.navigations].filter(([id, visit]) => (id === "" && !this.tabs.length) || this.tabs.some((tab) => tab.id === id && tab.url === visit.base)));
     if (changed.has("loading") && this.hasUpdated) this.announcement = this.loading ? this.word("loading") : "";
   }
 
@@ -321,13 +326,14 @@ export class TcPreviewFrame extends TcElement {
     if (this.draft === null) return;
     const url = normalizePreviewUrl(this.draft);
     if (!url) return;
+    // Only an address the frame can show is passed on: a typed `javascript:` never reaches tc-navigate
+    if (!frameable(url)) {
+      this.announcement = this.word("badScheme");
+      return;
+    }
     if (!this.emit<PreviewNavigate>("tc-navigate", { url }, { cancelable: true })) return;
     const tab = this.activeTab;
-    if (tab) this.navigations = new Map(this.navigations).set(tab.id, { base: tab.url, url });
-    else {
-      this.url = url;
-      if (!this.hasContent) this.src = url;
-    }
+    this.navigations = new Map(this.navigations).set(tab?.id ?? "", { base: tab?.url, url });
     this.draft = null;
   }
   private onAddressKey = (e: KeyboardEvent) => {
@@ -373,9 +379,10 @@ export class TcPreviewFrame extends TcElement {
     this.tabs = tabs;
     this.announcement = `${this.word("closeTab")} ${tab.title}`;
     if (wasActive && tabs.length) {
+      // The neighbour becomes active the same way a chosen tab does: cancelable, and a controlled page is told
       const next = tabs[Math.min(i, tabs.length - 1)];
-      this.active = next.id;
-      void this.updateComplete.then(() => this.querySelector<HTMLElement>(`.ui-pvf__tab[data-id="${CSS.escape(next.id)}"]`)?.focus());
+      if (this.emit<PreviewActiveChange>("tc-active-change", { active: next.id, tab: next }, { cancelable: true })) this.active = next.id;
+      void this.updateComplete.then(() => this.querySelector<HTMLElement>(`.ui-pvf__tab[aria-selected="true"]`)?.focus());
     }
   }
   private onTabKey = (e: KeyboardEvent) => {
@@ -496,8 +503,10 @@ export class TcPreviewFrame extends TcElement {
           class="ui-pvf__tool"
           data-tool="external"
           title=${this.word("openExternal")}
-          ?disabled=${!this.address}
-          @click=${() => this.emit<PreviewExternal>("tc-open-external", { url: this.address })}
+          ?disabled=${!openable(this.address)}
+          @click=${() => {
+            if (openable(this.address)) this.emit<PreviewExternal>("tc-open-external", { url: this.address });
+          }}
         >
           ${glyph(ICON.external)}<span class="ui-pvf__sr">${this.word("openExternal")}</span>
         </button>

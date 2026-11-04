@@ -49,6 +49,9 @@
         },
         "danger": {
           "type": "string"
+        },
+        "unnamed": {
+          "type": "string"
         }
       },
       "additionalProperties": false,

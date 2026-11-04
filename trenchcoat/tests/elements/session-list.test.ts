@@ -202,3 +202,43 @@ describe("tc-session-list", () => {
     });
   }
 });
+
+describe("tc-session-list – archive focus, words and dates", () => {
+  test("after Archive, when the page removes the row, focus moves to the neighbour instead of the page", async () => {
+    const el = await make();
+    el.addEventListener("tc-archive", (e) => {
+      const id = (e as CustomEvent).detail.id;
+      el.sessions = el.sessions.filter((s) => s.id !== id);
+    });
+    const order = ids(el);
+    const at = order.indexOf("b");
+    const archive = row(el, "b").querySelector<HTMLButtonElement>('[data-c="2"]')!;
+    archive.focus();
+    archive.click();
+    await expect.poll(() => (document.activeElement as HTMLElement | null)?.closest("[data-row]")?.getAttribute("data-row") ?? document.activeElement?.tagName).toBe(order[at + 1]);
+  });
+
+  test("the announcements come from labels, and keep a $ in a title as it is", async () => {
+    const el = await make();
+    el.labels = { archivedOne: "Archivé : {title}" };
+    el.sessions = SESSIONS.map((s) => (s.id === "b" ? { ...s, title: "Costs in $$" } : s));
+    await settle();
+    row(el, "b").querySelector<HTMLButtonElement>('[data-c="2"]')!.click();
+    await settle();
+    expect(el.querySelector('[role="status"]')!.textContent).toBe("Archivé : Costs in $$");
+  });
+
+  test("“now” follows the locale, and a date from another year says the year", async () => {
+    const el = await fixture<TcSessionList>(
+      html`<tc-session-list locale="de" .now=${NOW} .sessions=${[
+        { id: "x", title: "X", status: "idle", updated: NOW - 1000 },
+        { id: "y", title: "Y", status: "idle", updated: NOW - 400 * 24 * 60 * M },
+      ]}></tc-session-list>`,
+    );
+    const x = row(el, "x").textContent!;
+    const y = row(el, "y").textContent!;
+    expect(x).not.toContain("now");
+    expect(x).toContain(new Intl.RelativeTimeFormat("de", { numeric: "auto", style: "narrow" }).format(0, "second"));
+    expect(y).toContain(String(new Date(NOW - 400 * 24 * 60 * M).getFullYear()));
+  });
+});

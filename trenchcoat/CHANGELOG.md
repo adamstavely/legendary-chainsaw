@@ -1,5 +1,21 @@
 # Changelog
 
+## Unreleased – Review fixes for workspace components
+
+- **Security:** links from data go through `safeUrl` before Process List, Preview Frame and Pull Request render or emit them,
+  and the docs open them with `noopener`; models can no longer set the Terminal's `masked` prompt.
+- **React:** the wrappers of elements that hold the page's children (Panel Card, Dialog, Tool Call Card, Preview Frame)
+  ignore change events bubbling up from those children, so a Change List inside a Panel Card no longer folds the card. Console Clear and Preview Frame navigation survive re-renders; Search Results owns `query` and
+  `replacement` (new `tc-replacement-change`).
+- **Keyboard and focus:** unique row keys in Problem List, tab stops kept by item rather than position, focus kept after
+  Clear, Archive and Re-run, long trees and lists keep a tab stop after scrolling, Icon Rail's More menu follows the
+  menu-button pattern, Enter during IME composition no longer runs a command.
+- **Correct results:** Branch Switcher offers "Create" for names like `login` beside `feature/login` and only suggests names
+  git accepts; Search Results selects each match on a line (`column`) and whole-word matches around symbols; File Tree
+  opens folders whose name matches the filter; Element Inspector hides stale details; Diff Viewer counts lines exactly;
+  Web Vitals accepts any case of ids; the Voice Orb and number fields shrug off non-numeric values.
+- **Words:** Pull Request, Session List and Branch Switcher text comes from `labels` and `locale`, with the year on older dates.
+
 ## Unreleased – Production readiness fixes
 
 - **Generative UI:** browser-normalized URLs are checked against allowed origins. HAL Form is application-owned and excluded from model-generated tools and component blocks.

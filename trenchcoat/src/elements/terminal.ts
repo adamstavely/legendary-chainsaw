@@ -113,8 +113,10 @@ export class TcTerminal extends TcElement {
   protected override willUpdate(changed: PropertyValues) {
     super.willUpdate(changed);
     this.parsed = parseOutput(this.output, "ui-trm", this.parsed);
-    // A window that has been told to follow the end has to be there before it renders
-    if (this.stuck && this.win.virtual) this.win.reveal(this.parsed.lines.length - 1);
+    // A window that follows the end moves there when new output lands past it. Only then: revealing on every update
+    // fights the window's own measure, which places it a little differently, and the two would re-render every frame
+    const last = this.parsed.lines.length - 1;
+    if (this.stuck && this.win.virtual && changed.has("output") && (last < this.win.start || last >= this.win.end)) this.win.reveal(last);
     this.win.compute();
     if (changed.has("running") && changed.get("running") === true && !this.running) this.announcement = "Command finished";
     else if (changed.has("running") && this.running) this.announcement = "Command running";
@@ -164,6 +166,8 @@ export class TcTerminal extends TcElement {
 
   private onKey = (e: KeyboardEvent) => {
     const input = e.target as HTMLInputElement;
+    // Enter and the arrows belong to an input method while it's composing (Japanese, Chinese…)
+    if (e.isComposing || e.keyCode === 229) return;
     if (e.key === "Enter") {
       e.preventDefault();
       this.run();
@@ -194,6 +198,14 @@ export class TcTerminal extends TcElement {
     if (!this.disabled && !window.getSelection()?.toString()) this.focus();
   };
 
+  /** Clear empties the output, which disables the button: focus goes to the prompt (or the output) first, not to <body> */
+  private clear() {
+    const input = this.querySelector<HTMLInputElement>(".ui-trm__input");
+    if (input && !input.disabled) input.focus();
+    else this.querySelector<HTMLElement>(".ui-trm__out")?.focus();
+    this.emit("tc-clear", null);
+  }
+
   private copy() {
     const text = this.text;
     void copyText(text).then((ok) => {
@@ -221,7 +233,7 @@ export class TcTerminal extends TcElement {
     const title = `${this.uid}-title`;
     const tools = html`<div class="ui-trm__tools">
       <button type="button" class="ui-trm__tool" title="Copy the output" aria-label="Copy the output" ?disabled=${!this.output} @click=${() => this.copy()}>${copyIcon}</button>
-      <button type="button" class="ui-trm__tool" title="Clear" aria-label="Clear" ?disabled=${!this.output} @click=${() => this.emit("tc-clear", null)}>${clearIcon}</button>
+      <button type="button" class="ui-trm__tool" title="Clear" aria-label="Clear" ?disabled=${!this.output} @click=${() => this.clear()}>${clearIcon}</button>
     </div>`;
     return html`${this.heading ? cardHead({ icon: terminalIcon, title: this.heading, subtitle: this.description, id: title, aside: tools }) : nothing}
       <div class="ui-trm__card">

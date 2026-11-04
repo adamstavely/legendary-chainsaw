@@ -243,7 +243,7 @@ export const registry: Record<string, { events: string[]; load: () => Promise<un
   "tc-score-summary": { events: ["tc-score-select"], load: () => import("../elements/score-summary"), schema: () => import("./schemas/tc-score-summary.json") },
   "tc-score-survey": { events: ["tc-score-change","tc-submit","tc-edit","tc-dismiss"], load: () => import("../elements/score-survey"), schema: () => import("./schemas/tc-score-survey.json") },
   "tc-search-history": { events: ["tc-select","tc-saved-change","tc-remove","tc-restore","tc-tab-change","tc-schedule"], load: () => import("../elements/search-history"), schema: () => import("./schemas/tc-search-history.json") },
-  "tc-search-results": { events: ["tc-search","tc-options-change","tc-expanded-change","tc-selected-change","tc-open","tc-replace","tc-action"], load: () => import("../elements/search-results"), schema: () => import("./schemas/tc-search-results.json") },
+  "tc-search-results": { events: ["tc-search","tc-options-change","tc-expanded-change","tc-selected-change","tc-open","tc-replacement-change","tc-replace","tc-action"], load: () => import("../elements/search-results"), schema: () => import("./schemas/tc-search-results.json") },
   "tc-segmented-control": { events: ["tc-value-change"], load: () => import("../elements/segmented-control"), schema: () => import("./schemas/tc-segmented-control.json") },
   "tc-sensitivity-label-picker": { events: ["tc-value-change"], load: () => import("../elements/sensitivity-label-picker"), schema: () => import("./schemas/tc-sensitivity-label-picker.json") },
   "tc-session-context-bar": { events: ["tc-term-edit","tc-terms-changed"], load: () => import("../elements/session-context-bar"), schema: () => import("./schemas/tc-session-context-bar.json") },

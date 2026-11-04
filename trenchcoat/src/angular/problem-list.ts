@@ -43,7 +43,7 @@ export class ProblemList {
   @Input() set expanded(v: TcProblemList["expanded"]) {
     this.#el.expanded = v;
   }
-  /** The chosen problem's key (its id, or `problemKey`) */
+  /** The chosen problem's key (its id, or `problemKey`; an exact copy's key ends in "#2", "#3"…) */
   @Input() set selected(v: TcProblemList["selected"]) {
     this.#el.selected = v;
   }
@@ -97,7 +97,7 @@ export class ProblemList {
    */
   @Output("tc-open") readonly tcOpen = new EventEmitter<CustomEvent<ProblemOpen>>();
   /**
-   * A problem's fix was pressed ({ problem }: ProblemFix); cancelable – prevented, the page has dealt with it and nothing else is said
+   * A problem's fix was pressed ({ problem }: ProblemFix); the page applies it
    * Types $event; the element dispatches the event itself.
    */
   @Output("tc-fix") readonly tcFix = new EventEmitter<CustomEvent<ProblemFix>>();
