@@ -698,6 +698,17 @@
     ]
   },
   {
+    "tag": "tc-console-panel",
+    "name": "ConsolePanel",
+    "description": "A web page's browser console: level chips with counts, a text filter, repeat badges, sources, and stacks that fold open.",
+    "events": [
+      "tc-levels-change",
+      "tc-filter-change",
+      "tc-expanded-change",
+      "tc-clear"
+    ]
+  },
+  {
     "tag": "tc-contact-channels",
     "name": "ContactChannels",
     "description": "The ways to reach a person or an account – email, phone, messaging and address – each masked until revealed, with",
@@ -924,6 +935,16 @@
       "tc-drag-start",
       "tc-drag-end",
       "tc-drag-cancel"
+    ]
+  },
+  {
+    "tag": "tc-element-inspector",
+    "name": "ElementInspector",
+    "description": "A page's elements as a tree beside the chosen element's box model and styles.",
+    "events": [
+      "tc-selected-change",
+      "tc-expanded-change",
+      "tc-highlight"
     ]
   },
   {
@@ -1612,6 +1633,15 @@
     ]
   },
   {
+    "tag": "tc-network-log",
+    "name": "NetworkLog",
+    "description": "The requests a web page made: status, method, name, type, size, time and a waterfall, with type chips and a detail of headers and response.",
+    "events": [
+      "tc-types-change",
+      "tc-selected-change"
+    ]
+  },
+  {
     "tag": "tc-no-access",
     "name": "NoAccess",
     "description": "A folder held shut by a padlock, for when someone isn't entitled to see what they opened.",
@@ -2149,6 +2179,16 @@
     "events": [
       "tc-selected-change",
       "tc-scale-change"
+    ]
+  },
+  {
+    "tag": "tc-route-map",
+    "name": "RouteMap",
+    "description": "An app's routes as an indented list, with status, load time and last visit, filterable by status; pressing one opens it.",
+    "events": [
+      "tc-selected-change",
+      "tc-statuses-change",
+      "tc-open"
     ]
   },
   {
@@ -2753,6 +2793,14 @@
       "tc-open",
       "tc-filter-change",
       "tc-action"
+    ]
+  },
+  {
+    "tag": "tc-web-vitals",
+    "name": "WebVitals",
+    "description": "Core Web Vitals for a page: a tile per measure with its value, a rating word, a three-zone track and earlier readings.",
+    "events": [
+      "tc-device-change"
     ]
   },
   {

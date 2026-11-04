@@ -70,6 +70,9 @@
         "loading": {
           "type": "string"
         },
+        "noMatches": {
+          "type": "string"
+        },
         "added": {
           "type": "string"
         },
@@ -83,9 +86,6 @@
           "type": "string"
         },
         "searchHint": {
-          "type": "string"
-        },
-        "noMatches": {
           "type": "string"
         }
       },

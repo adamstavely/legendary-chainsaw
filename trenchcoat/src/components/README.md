@@ -71,6 +71,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Confidence Brief** (`confidence-brief.tsx`) – An answer explained for someone who wasn't there – what we conclude, the kind of uncertainty, what would change it, assumptions, signs to watch and the track record
 - **Configuration release control** (`configuration-release-control.tsx`) – A configuration version moving through environments: the pipeline, a gate on evidence and approvals, confirmed promote and rollback
 - **Conflict Radar** (`conflict-radar.tsx`) – Which parallel agents touch the same files and where they collide – a grid of files by agents, conflicts first, status in words, and who changed which lines
+- **Console Panel** (`console-panel.tsx`) – A web page's browser console: level chips with counts, a text filter, repeat badges, sources, and stacks that fold open.
 - **Contact Channels** (`contact-channels.tsx`) – The ways to reach a person or an account, grouped as Email, Phone, Messaging and Address – each masked until shown, with its role, when it was last used, how far it's verified, Copy and the page's own actions
 - **Content Shield** (`content-shield.tsx`) – Keeps content unloaded until someone chooses to see it – a picture, the reason and Show, with the content cloned in only on reveal and removed again on Hide
 - **Context Map** (`context-map.tsx`) – What fills an agent's context window, as a living treemap – system prompt, tools, memory, every file, the chat and tool results as tiles that glide as it grows, the free space dashed, and compaction squeezing old turns into a summary
@@ -95,6 +96,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Disagreement Banner** (`disagreement-banner.tsx`) – When today's answer contradicts an earlier one on the same question – both side by side, the difference marked
 - **Document List** (`document-list.tsx`) – Identity and record documents at a glance – type, country, masked numbers shown one at a time, expiry and a status each (Verified, Expired, Flagged, Fraudulent or your own), counted in the header, with View per row
 - **Dropzone** (`dropzone.tsx`) – Drag files in and watch them upload – fanning documents, colored type badges, progress with time left, errors with retry
+- **Element Inspector** (`element-inspector.tsx`) – A page's elements as a tree written like the markup, beside the chosen element's box model and styles; hovering an element fires an event so the page can outline it in a preview.
 - **Email Draft** (`email-draft.tsx`) – Agent-written email for review – switch recipient and tone, edit inline, remove the attachment, send or discard with undo
 - **Engagement Quality** (`engagement-quality.tsx`) – Whether reviews are genuine – an index from reused text, time on the source, batch dismissals and repeated commitments, shown as quality, not a violation
 - **Entity Details** (`entity-details.tsx`) – Email addresses, phone numbers, links and @handles in text, found and marked – hover, focus or right-click one for its domain, country or site (with an http warning), Copy, Write email / Call / Open, and what your directory knows about it
@@ -157,6 +159,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Money Flow** (`money-flow.tsx`) – How money moved between entities – people, companies, shells and banks in columns, transfers as bands sized by amount with flag chips, an entity's or a transfer's flows lit with a readout in words, a list of every transfer and a table view
 - **Multi Calendar** (`multi-calendar.tsx`) – A calendar of calendars: many people's Google, Outlook, Exchange and iCal calendars in one Day, Week, Month, Agenda or People view, with show/hide per calendar, conflicts across a person's calendars, and create, edit, drag-to-move and delete on writable ones
 - **Multimodal input** (`multimodal-input.tsx`) – Attach mixed media with local previews, upload state, format limits, and token estimates.
+- **Network Log** (`network-log.tsx`) – The requests a web page made: status, method, name, size, time and a waterfall, with type chips and a detail of headers and response.
 - **Notification Stack** (`notification-stack.tsx`) – Notice cards stacked behind each other – dismiss the front one to reveal the next
 - **Notifications** (`notifications.tsx`) – The notification center – a bell with an unread badge that opens a panel of notifications grouped by day, with tabs, read state, inline actions, Mark all as read and Load more
 - **Number Field** (`number-field.tsx`) – A bounded numeric input with native validation
@@ -206,6 +209,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Review Conflict** (`review-conflict.tsx`) – Two reviewers disagree – both verdicts with who gave them, resolved by a third person with a reason, or kept blind
 - **Risk Register** (`risk-register.tsx`) – A 5 × 5 likelihood × impact heat grid with counts and moves since the last review, beside a sortable register whose risks open with their mitigation and can be rescored
 - **Roadmap Timeline** (`roadmap-timeline.tsx`) – Workstreams on a calendar, Gantt style – lanes, bars with progress and status, milestones, a Today line and dependency arrows (red when dates clash), at week, month or quarter scale, with details for the work you select
+- **Route Map** (`route-map.tsx`) – An app's routes as an indented list with :params picked out, a status mark and word, load time and last visit; status chips filter it, and pressing a route opens it.
 - **Routine Form** (`routine-form.tsx`) – Set up a routine: name, frequency and start time in a time zone with the next run worked out, first run now or on schedule, email notifications and instructions, with Dismiss and Create routine
 - **Run Checkpoints** (`run-checkpoints.tsx`) – A run's restore points on a timeline – what each one captured, what going back discards, and “go back to step 4 and try again”
 - **Run Compare** (`run-compare.tsx`) – Two runs or two prompt versions side by side – outputs, steps, cost and time, with every difference highlighted
@@ -268,6 +272,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Version History** (`version-history.tsx`) – The versions of an agent, prompt or workflow – draft, active or deprecated, who and when, and what changed in behaviour
 - **Voice Mode** (`voice-mode.tsx`) – A spoken conversation with the model – live transcript, listening and speaking states, interrupt, mute and end, with captions for every turn
 - **Watchlist** (`watchlist.tsx`) – The people, accounts or entities a team is watching, most at risk first – avatar, reference, case tag and a risk badge in words, with a count, filters by risk and View all
+- **Web Vitals** (`web-vitals.tsx`) – A tile per measure (LCP, INP, CLS, FCP, TTFB or the page's own) with its value, a Good / Needs improvement / Poor word, a three-zone track and earlier readings, plus an optional Mobile / Desktop switch.
 - **Work Item** (`work-item.tsx`) – One piece of work as a card – status in words, a note, progress, a due date marked when overdue, people, what it delivers, spent against budget, effort and a "Synced · read-only" source, the whole card opening it
 - **Writing Assistant** (`writing-assistant.tsx`) – AI chat card with a soft gradient glow, suggestions, streaming replies and live voice dictation
 - **Year List** (`year-list.tsx`) – Years to choose one from, newest first – a column, or a row that scrolls – with a count on each, keyboard moves that don't choose, and typing a year to jump to it

@@ -1,0 +1,152 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-console-panel.json",
+  "title": "tc-console-panel",
+  "description": "A web page's browser console: level chips with counts, a text filter, repeat badges, sources, and stacks that fold open.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading; empty leaves the header out"
+    },
+    "description": {
+      "type": "string",
+      "description": "Small text under the heading – the page or tab it belongs to"
+    },
+    "entries": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ConsoleEntry"
+      },
+      "description": "The messages, oldest first"
+    },
+    "levels": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ConsoleLevel"
+      },
+      "description": "The levels that show"
+    },
+    "filter": {
+      "type": "string",
+      "description": "The text filter: matches the message and source"
+    },
+    "expanded": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The ids of the entries whose stack is open"
+    },
+    "maxHeight": {
+      "type": "number",
+      "description": "Height in px at which the list scrolls"
+    },
+    "locale": {
+      "type": "string",
+      "description": "Locale for times"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "info": {
+          "type": "string"
+        },
+        "error": {
+          "type": "string"
+        },
+        "warn": {
+          "type": "string"
+        },
+        "log": {
+          "type": "string"
+        },
+        "debug": {
+          "type": "string"
+        },
+        "levels": {
+          "type": "string"
+        },
+        "filter": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "messages": {
+          "type": "string"
+        },
+        "clear": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "noMatches": {
+          "type": "string"
+        },
+        "stack": {
+          "type": "string"
+        },
+        "times": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Renames the words it uses"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ConsoleEntry": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Stable identity"
+        },
+        "level": {
+          "$ref": "#/definitions/ConsoleLevel"
+        },
+        "message": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string",
+          "description": "Where it came from, such as \"app.js:42\""
+        },
+        "time": {
+          "type": "number",
+          "description": "When, in epoch ms"
+        },
+        "count": {
+          "type": "number",
+          "description": "How many times it repeated in a row; 2 or more shows a badge"
+        },
+        "stack": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Stack frames, innermost first, such as \"at loadGrants (app.js:42:13)\""
+        }
+      },
+      "required": [
+        "id",
+        "level",
+        "message"
+      ],
+      "additionalProperties": false
+    },
+    "ConsoleLevel": {
+      "type": "string",
+      "enum": [
+        "error",
+        "warn",
+        "info",
+        "log",
+        "debug"
+      ]
+    }
+  }
+}

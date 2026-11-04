@@ -406,6 +406,9 @@
   "src/elements/roadmap-timeline.ts": {
     "clock/environment read": 1
   },
+  "src/elements/route-map.ts": {
+    "clock/environment read": 1
+  },
   "src/elements/routine-form.ts": {
     "clock/environment read": 1
   },
