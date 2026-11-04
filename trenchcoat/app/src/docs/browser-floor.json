@@ -198,7 +198,7 @@
     "safari_ios": "14.1"
    },
    "progressive": false,
-   "elements": 56
+   "elements": 57
   },
   {
    "id": "mask",
@@ -315,7 +315,7 @@
     "safari_ios": "15.4"
    },
    "progressive": false,
-   "elements": 10
+   "elements": 11
   },
   {
    "id": "array-at",

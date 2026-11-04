@@ -127,3 +127,5 @@ export function NewTask({ onDone }: { onDone: () => void }) {
   return <HalForm resource={doc} onTcResponse={(e) => e.detail.ok && onDone()} />;
 }
 ```
+
+HAL forms are application-owned and excluded from `trenchcoat/generative`: supply templates and request targets from trusted application code.

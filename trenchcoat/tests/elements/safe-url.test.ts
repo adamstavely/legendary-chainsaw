@@ -73,3 +73,7 @@ describe("elements never render a javascript: link from their data", () => {
     expect(noScriptLinks(people)).toEqual([]);
   });
 });
+
+test("normalizes browser-ignored controls before downstream origin checks", () => {
+  for (const url of ["ht\ttps://attacker.example/x", "h\nttps://attacker.example/x", "\u0001https://attacker.example/x"]) expect(safeUrl(url)).toBe("https://attacker.example/x");
+});

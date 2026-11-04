@@ -213,3 +213,15 @@ describe("tc-branch-switcher", () => {
     });
   }
 });
+
+test("punctuation in valid branch names never collides in option IDs", async () => {
+  const el = await fixture<TcBranchSwitcher>(html`<tc-branch-switcher inline current="feature/a" .branches=${[{name:"feature/a",kind:"local"},{name:"feature_a",kind:"local"}]}></tc-branch-switcher>`);
+  const options = [...el.querySelectorAll<HTMLElement>(".ui-brsw__option")];
+  expect(new Set(options.map(o=>o.id)).size).toBe(2);
+  key(filter(el),"ArrowDown"); await settle();
+  const active = document.getElementById(filter(el).getAttribute("aria-activedescendant")!);
+  expect(active?.dataset.name).toBe("feature_a");
+  const id = active!.id;
+  type(filter(el),"feature_a"); await settle();
+  expect(el.querySelector<HTMLElement>(".ui-brsw__option")!.id).toBe(id);
+});

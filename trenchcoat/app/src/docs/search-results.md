@@ -63,8 +63,11 @@ is a `role="status"`, so a finished search is announced; an error is an alert. T
 
 ## Content
 
-- Pass `ranges` when the search engine knows where the matches are. Without them, the element marks them using `query`
-  and `options`, the same way `searchResultsPattern` builds its pattern.
+- Pass `ranges` as UTF-16 `[start, end)` offsets from the search engine. Regex searches require these ranges for highlighting
+  and replacement previews; without them the line is shown as plain text. The element never executes an arbitrary regex
+  during rendering. Literal queries can still calculate their own highlights with match-case and whole-word options.
+- `searchResultsPattern` constructs a regex for application code; execute untrusted patterns only in a search service or
+  isolated worker with execution limits, not on the UI thread.
 - Long lines are cut so the first match shows, with "…" where text was left out. Leading indentation is dropped.
 - Set `truncated` when the page stopped early, and the summary says how many are shown.
 - `selected` is a path and line, so it stays put when the same search runs again.

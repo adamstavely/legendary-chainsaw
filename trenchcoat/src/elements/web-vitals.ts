@@ -106,10 +106,13 @@ export class TcWebVitals extends TcElement {
   protected override willUpdate(changed: PropertyValues) {
     super.willUpdate(changed);
     this.resolved = this.metrics.map((m) => {
-      const d = webVitalDefaults[m.id as WebVitalId];
-      const good = m.good ?? d?.good ?? 0;
-      const poor = Math.max(good, m.poor ?? d?.poor ?? good);
-      return { id: m.id, value: m.value, good, poor, label: m.label ?? m.id.toUpperCase(), name: m.name ?? d?.name ?? "", unit: m.unit ?? d?.unit ?? "", history: m.history ?? [], rating: rateWebVital(m.value, good, poor) };
+      const d = Object.hasOwn(webVitalDefaults, m.id) ? webVitalDefaults[m.id as WebVitalId] : undefined;
+      const unit = m.unit ?? d?.unit ?? "";
+      // Supplied limits already use the metric's unit; convert only defaults defined in milliseconds.
+      const scale = d?.unit === "ms" && unit === "s" ? 1 / 1000 : 1;
+      const good = m.good ?? (d ? d.good * scale : 0);
+      const poor = Math.max(good, m.poor ?? (d ? d.poor * scale : good));
+      return { id: m.id, value: m.value, good, poor, label: m.label ?? m.id.toUpperCase(), name: m.name ?? d?.name ?? "", unit, history: m.history ?? [], rating: rateWebVital(m.value, good, poor) };
     });
   }
 

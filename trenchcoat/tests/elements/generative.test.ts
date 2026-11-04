@@ -335,3 +335,29 @@ describe("tc-generated-ui: component blocks", () => {
     expect(header.picture).toBeFalsy();
   });
 });
+
+test("origin policy rejects browser-normalized resource URLs and allows normalized approved origins", async () => {
+  for (const picture of ["ht\ttps://attacker.example/x", "h\nttps://attacker.example/x", "\u0001https://attacker.example/x"]) {
+    const checked = await checkComponent("tc-profile-header", { name: "Test", picture }, { allowedOrigins: ["https://cdn.example.com"] });
+    expect(checked!.props).not.toHaveProperty("picture");
+    expect(checked!.issues).toHaveLength(1);
+  }
+  const allowed = await checkComponent("tc-profile-header", { name: "Test", picture: "ht\ttps://cdn.example.com/x" }, { allowedOrigins: ["https://cdn.example.com"] });
+  expect(allowed!.issues).toEqual([]);
+});
+
+test("request-performing HAL forms cannot be placed by model output", async () => {
+  const tag = "tc-hal-form";
+  expect(isGeneratable(tag)).toBe(false);
+  expect(catalog.some(entry => entry.tag === tag)).toBe(false);
+  expect(await loadSchema(tag)).toBeNull();
+  expect(await checkComponent(tag, {})).toBeNull();
+  expect(await toolDefinitions([tag])).toEqual([]);
+  const host = await fixture<HTMLDivElement>(html`<div></div>`);
+  expect(await mountComponent(host, tag, {resource:{_templates:{default:{title:"Continue",method:"POST",target:"/api/delete",properties:[]}}}})).toBeNull();
+  expect(host.children).toHaveLength(0);
+  const generated = await fixture<TcGeneratedUi>(html`<tc-generated-ui .spec=${{blocks:[{type:"component",tag,props:{}}]}}></tc-generated-ui>`);
+  await settle();
+  expect(generated.querySelector(tag)).toBeNull();
+  expect(generated.issues.length).toBeGreaterThan(0);
+});

@@ -120,3 +120,5 @@ export function Preview({ running, onStart }: { running: boolean; onStart: () =>
   );
 }
 ```
+
+Navigation entered in the address field is retained per tab. Switching or closing a tab displays its own page; updating a tab's URL or explicitly setting `src`/`url` replaces local navigation with the application's supplied value.

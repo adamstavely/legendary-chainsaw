@@ -185,7 +185,11 @@ export class TcProcessList extends TcElement {
   protected override willUpdate(changed: PropertyValues) {
     super.willUpdate(changed);
     const n = this.processes.length;
-    if (n && this.active.r >= n) this.active = { r: n - 1, c: 0 };
+    if (n) {
+      const r = Math.max(0, Math.min(this.active.r, n - 1));
+      const c = Math.max(0, Math.min(this.active.c, this.controls(this.processes[r]).length - 1));
+      if (r !== this.active.r || c !== this.active.c) this.active = { r, c };
+    } else if (this.active.r || this.active.c) this.active = { r: 0, c: 0 };
     if (changed.has("now") || changed.has("processes")) this.tick();
   }
 

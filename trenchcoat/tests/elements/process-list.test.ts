@@ -230,3 +230,15 @@ describe("tc-process-list", () => {
     });
   }
 });
+
+test("dynamic row controls always retain a keyboard entry point", async () => {
+  const el = await fixture<TcProcessList>(html`<tc-process-list .processes=${[{id:"web",name:"web",status:"running",port:5173}]}></tc-process-list>`);
+  const logs = btn(el,"web","logs"); logs.focus(); logs.click(); await settle();
+  el.processes = [{id:"web",name:"web",status:"stopped"}]; await settle();
+  const stops = [...el.querySelectorAll<HTMLElement>("[data-at][tabindex='0']")];
+  expect(stops).toHaveLength(1); expect(stops[0].dataset.at).toBe("0:3");
+  stops[0].focus(); stops[0].dispatchEvent(new KeyboardEvent("keydown",{key:"ArrowLeft",bubbles:true})); await settle();
+  expect((document.activeElement as HTMLElement).dataset.at).toBe("0:2");
+  el.processes=[]; await settle(); el.processes=[{id:"new",name:"new",status:"running"}]; await settle();
+  expect(el.querySelectorAll("[data-at][tabindex='0']")).toHaveLength(1);
+});

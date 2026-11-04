@@ -21,7 +21,9 @@ const check = process.argv.includes("--check");
 
 /** Elements a model shouldn't place: they're app-controlled (modals, inputs that own the page's state, global
  *  shortcuts), wrap other content, or decorate the page */
+// HAL forms perform requests themselves; only application-owned code may supply their templates and targets.
 const DENY = new Set([
+  "tc-hal-form",
   "tc-look-provider", "tc-dialog", "tc-terms-dialog", "tc-stories", "tc-toaster", "tc-tooltip", "tc-loupe", "tc-chat-composer", "tc-multimodal-input",
   "tc-voice-mode", "tc-voice-orb", "tc-dropzone", "tc-command-menu", "tc-selection-translate", "tc-ai-search", "tc-mention-picker",
   "tc-generated-ui", "tc-grid-background", "tc-gradient-floor", "tc-gradient-text", "tc-glow-keyboard", "tc-shimmer-loader", "tc-skeleton",

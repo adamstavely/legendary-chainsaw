@@ -320,3 +320,20 @@ describe("tc-preview-frame", () => {
     });
   }
 });
+
+test("navigation belongs to its tab across selection, controlled changes, closing, and parent updates", async () => {
+  const a="https://a.example/", b="https://b.example/", edited="https://edited.example/";
+  const el = await fixture<TcPreviewFrame>(html`<tc-preview-frame .tabs=${[{id:"a",title:"A",url:a},{id:"b",title:"B",url:b}]} active="a"></tc-preview-frame>`);
+  const navigate = async (url:string) => { const field=input(el);field.value=url;field.dispatchEvent(new Event("input",{bubbles:true}));field.dispatchEvent(new KeyboardEvent("keydown",{key:"Enter",bubbles:true}));await settle(); };
+  await navigate(edited);
+  expect(el.address).toBe(edited);
+  expect(el.querySelector("iframe")!.getAttribute("src")).toBe(edited);
+  el.querySelector<HTMLElement>('.ui-pvf__tab[data-id="b"]')!.click(); await settle();
+  expect(el.address).toBe(b);expect(el.querySelector("iframe")!.getAttribute("src")).toBe(b);
+  // An application-controlled tab update follows the same path.
+  el.active="a";await settle();expect(el.address).toBe(edited);
+  el.tabs=[{id:"a",title:"A",url:"https://server.example/"},{id:"b",title:"B",url:b}];await settle();expect(el.address).toBe("https://server.example/");
+  await navigate(edited);
+  el.querySelector<HTMLElement>('.ui-pvf__tab[data-id="a"]')!.dispatchEvent(new KeyboardEvent("keydown",{key:"Delete",bubbles:true}));await settle();
+  expect(el.address).toBe(b);
+});

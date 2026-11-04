@@ -221,7 +221,7 @@
             "minItems": 2,
             "maxItems": 2
           },
-          "description": "Where the matches are in `text`, as [start, end) offsets; worked out from the query when left out"
+          "description": "Where the matches are in `text`, as [start, end) offsets. Required for regex highlighting; literal queries are matched locally when omitted."
         }
       },
       "required": [

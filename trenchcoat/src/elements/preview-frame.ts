@@ -220,6 +220,7 @@ export class TcPreviewFrame extends TcElement {
   @state() private accessor zoom = 1;
   @state() private accessor announcement = "";
 
+  @state() private accessor navigations = new Map<string, { base: string | undefined; url: string }>();
   private readonly uid = `tc-pvf${++instances}`;
   private children$?: MutationObserver;
   private sizer?: ResizeObserver;
@@ -232,10 +233,15 @@ export class TcPreviewFrame extends TcElement {
   }
   /** The address shown */
   get address() {
-    return this.url || this.activeTab?.url || this.src;
+    return this.navigation || this.url || this.activeTab?.url || this.src;
   }
   private get frameSrc() {
-    return this.src || this.activeTab?.url || "";
+    return this.navigation || this.src || this.activeTab?.url || "";
+  }
+  private get navigation() {
+    const tab = this.activeTab;
+    const visited = tab && this.navigations.get(tab.id);
+    return visited && visited.base === tab?.url ? visited.url : undefined;
   }
   private get width() {
     return this.viewport === "desktop" ? 0 : PREVIEW_WIDTHS[this.viewport];
@@ -266,6 +272,9 @@ export class TcPreviewFrame extends TcElement {
   protected override willUpdate(changed: PropertyValues) {
     super.willUpdate(changed);
     if (changed.has("url") || changed.has("src") || changed.has("active")) this.draft = null;
+    // Explicit application updates take precedence; removed/revised tabs discard their old local navigation.
+    if (changed.has("url") || changed.has("src")) this.navigations = new Map();
+    else if (changed.has("tabs")) this.navigations = new Map([...this.navigations].filter(([id, visit]) => this.tabs.some(tab => tab.id === id && tab.url === visit.base)));
     if (changed.has("loading") && this.hasUpdated) this.announcement = this.loading ? this.word("loading") : "";
   }
 
@@ -313,8 +322,12 @@ export class TcPreviewFrame extends TcElement {
     const url = normalizePreviewUrl(this.draft);
     if (!url) return;
     if (!this.emit<PreviewNavigate>("tc-navigate", { url }, { cancelable: true })) return;
-    this.url = url;
-    if (!this.hasContent) this.src = url;
+    const tab = this.activeTab;
+    if (tab) this.navigations = new Map(this.navigations).set(tab.id, { base: tab.url, url });
+    else {
+      this.url = url;
+      if (!this.hasContent) this.src = url;
+    }
     this.draft = null;
   }
   private onAddressKey = (e: KeyboardEvent) => {

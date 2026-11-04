@@ -160,3 +160,7 @@ and the cancelable ones can be prevented.
 `scripts/gen-schemas.mjs` writes the schemas, the catalogue and the lazy-loading registry from the elements' types,
 and `npm run check:generative` fails in CI when they're out of date. A new component can be placed by a model as soon
 as it's in the library, unless it's on the list of app-controlled elements in that script.
+
+## Application-owned request forms
+
+`tc-hal-form` is excluded from the generative catalog, tools, and component blocks because its templates can perform network requests. Mount HAL forms explicitly from trusted application code. Model-generated forms should use Generated UI form blocks, whose submissions are events for the application to authorize and handle.

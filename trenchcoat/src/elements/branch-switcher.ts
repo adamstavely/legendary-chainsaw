@@ -228,8 +228,14 @@ export class TcBranchSwitcher extends TcElement {
     if (this.newName) rows.push({ type: "create", name: this.newName, id: "create" });
     return rows;
   }
+  private readonly optionIds = new Map<string, string>();
   private optionId(id: string) {
-    return `${this.uid}-o-${id.replace(/[^\w-]/g, "_")}`;
+    let option = this.optionIds.get(id);
+    if (!option) {
+      option = `${this.uid}-o-${this.optionIds.size}`;
+      this.optionIds.set(id, option);
+    }
+    return option;
   }
   private ago(ms: number) {
     const time = this.now ?? this.clock;

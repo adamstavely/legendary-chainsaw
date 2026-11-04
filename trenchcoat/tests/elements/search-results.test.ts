@@ -254,3 +254,15 @@ describe("tc-search-results", () => {
         expect(r.violations.map((v) => v.id)).toEqual([]);
       });
 });
+
+test("regex results never execute the supplied expression during rendering; explicit ranges still highlight", async () => {
+  const options = {caseSensitive:false,wholeWord:false,regex:true};
+  const text = "a".repeat(100) + "!";
+  // Running this expression on text would hang the browser. A successful mount proves the fallback doesn't execute it.
+  const el = await fixture<TcSearchResults>(html`<tc-search-results query="(a+)+$" .options=${options} .results=${[{path:"a.txt",matches:[{line:1,text}]}]}></tc-search-results>`);
+  expect(el.querySelector(".ui-srh__text")!.textContent).toBe(text);
+  expect(el.querySelector("mark")).toBeNull();
+  el.results = [{path:"a.txt",matches:[{line:1,text:"abc123def",ranges:[[3,6]]}]}];
+  await settle();
+  expect(el.querySelector("mark")!.textContent).toBe("123");
+});

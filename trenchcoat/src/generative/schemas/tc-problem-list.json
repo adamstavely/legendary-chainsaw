@@ -109,16 +109,16 @@
         "noMatches": {
           "type": "string"
         },
-        "errors": {
-          "type": "string"
-        },
-        "problems": {
-          "type": "string"
-        },
         "line": {
           "type": "string"
         },
+        "errors": {
+          "type": "string"
+        },
         "warnings": {
+          "type": "string"
+        },
+        "problems": {
           "type": "string"
         },
         "infos": {

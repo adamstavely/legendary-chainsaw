@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased – Production readiness fixes
+
+- **Generative UI:** browser-normalized URLs are checked against allowed origins. HAL Form is application-owned and excluded from model-generated tools and component blocks.
+- **Search Results:** arbitrary regexes no longer execute during rendering; search providers supply `ranges` for regex highlights and replacement previews.
+- **Web Vitals:** default timing thresholds follow the selected milliseconds/seconds unit.
+- **Preview Frame:** address navigation is retained per tab and follows application updates.
+- **Process List:** dynamic controls retain a keyboard entry point. **Branch Switcher:** distinct branch names retain distinct accessible option IDs.
+
 ## Unreleased – Workspace & sessions
 
 - **Components:** Panel Card, Icon Rail, Meter Row, Environment List, Change List, Check Status, Terminal, Diff Viewer, File Tree, Search Results,

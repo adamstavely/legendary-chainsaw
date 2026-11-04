@@ -29,7 +29,7 @@ export type SearchResultsMatch = {
   column?: number;
   /** The line's text */
   text: string;
-  /** Where the matches are in `text`, as [start, end) offsets; worked out from the query when left out */
+  /** Where the matches are in `text`, as [start, end) offsets. Required for regex highlighting; literal queries are matched locally when omitted. */
   ranges?: [number, number][];
 };
 export type SearchResultsFile = { path: string; matches: SearchResultsMatch[] };
@@ -352,7 +352,8 @@ export class TcSearchResults extends TcElement {
   /** The line, cut around its first match, with the matches marked – and, while replacing, shown as replaced */
   private line(m: SearchResultsMatch): TemplateResult {
     let text = m.text;
-    let ranges = m.ranges ?? rangesOf(text, searchResultsPattern(this.query, this.options));
+    // Regex evaluation belongs to the search provider: a single exec can block forever, regardless of match limits.
+    let ranges = m.ranges ?? (this.options.regex ? [] : rangesOf(text, searchResultsPattern(this.query, this.options)));
     // Leading indentation says nothing here
     const indent = text.length - text.trimStart().length;
     let cut = indent;

@@ -162,3 +162,20 @@ describe("tc-web-vitals", () => {
     });
   }
 });
+
+test("known timing defaults are converted to seconds while explicit limits retain their supplied unit", async () => {
+  const el = await fixture<TcWebVitals>(html`<tc-web-vitals .metrics=${[{id:"lcp",value:5,unit:"s"},{id:"inp",value:0.3,unit:"s"},{id:"fcp",value:1,unit:"s",good:0.5,poor:0.8}]}></tc-web-vitals>`);
+  expect(el.textContent).toContain("5.0 s");
+  expect(tile(el,"lcp").textContent).toContain("Poor");
+  expect(tile(el,"inp").textContent).toContain("Needs improvement");
+  expect(tile(el,"fcp").textContent).toContain("Poor");
+  const secondsMarker = tile(el,"lcp").querySelector<HTMLElement>(".ui-wvit__marker")!.style.left;
+  el.metrics = [{id:"lcp",value:5000}]; await settle();
+  expect(tile(el,"lcp").querySelector<HTMLElement>(".ui-wvit__marker")!.style.left).toBe(secondsMarker);
+});
+
+
+test("custom metric IDs cannot inherit built-in defaults from Object.prototype", async () => {
+  const el = await fixture<TcWebVitals>(html`<tc-web-vitals .metrics=${[{id:"constructor",value:5,unit:"s"}]}></tc-web-vitals>`);
+  expect(el.querySelector<HTMLElement>(".ui-wvit__marker")!.style.left).toMatch(/^\d+(?:\.\d+)?%$/);
+});

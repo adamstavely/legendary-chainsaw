@@ -15,15 +15,15 @@ const SCHEMES = new Set(["http:", "https:", "mailto:", "tel:"]);
 export function safeUrl(url: unknown): string | undefined {
   if (typeof url !== "string") return undefined;
   // Browsers ignore leading/trailing spaces and controls, and tabs and newlines anywhere – "java\tscript:" is javascript:
-  // eslint-disable-next-line no-control-regex
   const bare = url.replace(/^[\u0000- ]+|[\u0000- ]+$/g, "").replace(/[\t\n\r]/g, "");
   if (!bare) return undefined;
   const scheme = /^([a-z][a-z\d+.-]*):/i.exec(bare);
-  if (scheme) return SCHEMES.has(`${scheme[1].toLowerCase()}:`) ? url.trim() : undefined;
+  if (scheme) return SCHEMES.has(`${scheme[1].toLowerCase()}:`) ? bare : undefined;
   if (/^[\\/]{2}/.test(bare)) return undefined;
   // A colon before any / ? # that isn't a valid scheme ("1x:y", "&#58;") – refuse rather than guess
   if (/^[^/?#]*:/.test(bare)) return undefined;
-  return url.trim();
+  // Return the same browser-normalized spelling that was checked, so downstream origin checks agree.
+  return bare;
 }
 
 /** True when safeUrl keeps it */
