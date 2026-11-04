@@ -1,0 +1,142 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-web-vitals.json",
+  "title": "tc-web-vitals",
+  "description": "Core Web Vitals for a page: a tile per measure with its value, a rating word, a three-zone track and earlier readings.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading; empty leaves the header out"
+    },
+    "description": {
+      "type": "string",
+      "description": "Small text under the heading – the page or route measured"
+    },
+    "metrics": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/WebVital"
+      },
+      "description": "The measures, in order"
+    },
+    "device": {
+      "type": "string",
+      "enum": [
+        "desktop",
+        "mobile"
+      ],
+      "description": "Which device the numbers are for; set, the header shows the switch"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "empty": {
+          "type": "string"
+        },
+        "trend": {
+          "type": "string"
+        },
+        "poor": {
+          "type": "string"
+        },
+        "good": {
+          "type": "string"
+        },
+        "needs": {
+          "type": "string"
+        },
+        "desktop": {
+          "type": "string"
+        },
+        "device": {
+          "type": "string"
+        },
+        "mobile": {
+          "type": "string"
+        },
+        "goodCount": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Renames the words it uses"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for numbers, e.g. \"en-GB\"; by default the browser's"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "WebVital": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/WebVitalId"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "description": "\"lcp\", \"inp\", \"cls\", \"fcp\", \"ttfb\" or a measure of the page's own"
+        },
+        "label": {
+          "type": "string",
+          "description": "The short name shown; by default the id in capitals"
+        },
+        "name": {
+          "type": "string",
+          "description": "The full name; known ids have one"
+        },
+        "value": {
+          "type": "number"
+        },
+        "unit": {
+          "$ref": "#/definitions/WebVitalUnit",
+          "description": "\"ms\" (the default for known timings), \"s\", or \"\" for a score such as CLS"
+        },
+        "good": {
+          "type": "number",
+          "description": "At or under this it's good; known ids have defaults"
+        },
+        "poor": {
+          "type": "number",
+          "description": "Over this it's poor; known ids have defaults"
+        },
+        "history": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Earlier readings, oldest first"
+        }
+      },
+      "required": [
+        "id",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "WebVitalId": {
+      "type": "string",
+      "enum": [
+        "lcp",
+        "inp",
+        "cls",
+        "fcp",
+        "ttfb"
+      ]
+    },
+    "WebVitalUnit": {
+      "type": "string",
+      "enum": [
+        "ms",
+        "s",
+        ""
+      ]
+    }
+  }
+}

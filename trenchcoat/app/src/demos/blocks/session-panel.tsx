@@ -1,6 +1,22 @@
 import { useState } from "react";
 import type * as UI from "../../../../src/elements/react";
-import type { BranchItem, ChangeItem, DiffFile, EnvironmentItem, IconRailItem, ProblemItem, ProcessItem, SearchResultsFile, SessionItem } from "../../../../src/elements/react";
+import type {
+  BranchItem,
+  ChangeItem,
+  ConsoleEntry,
+  DiffFile,
+  EnvironmentItem,
+  IconRailItem,
+  InspectorDetails,
+  InspectorNode,
+  NetworkRequest,
+  ProblemItem,
+  ProcessItem,
+  RouteItem,
+  SearchResultsFile,
+  SessionItem,
+  WebVital,
+} from "../../../../src/elements/react";
 import { caption } from "../../demo-kit";
 
 /* A session working on a research institute's sample tracker. Icons are from Lucide (ISC). */
@@ -62,6 +78,60 @@ const PROCESSES: ProcessItem[] = [
   { id: "api", name: "API", command: "npm run api", status: "crashed", port: 8080, exitCode: 1, lastLine: "Error: listen EADDRINUSE :::8080" },
 ];
 
+// What the browser view's tools show about the page being built
+const DEVTOOLS = [
+  { value: "console", label: "Console" },
+  { value: "network", label: "Network" },
+  { value: "elements", label: "Elements" },
+  { value: "vitals", label: "Vitals" },
+  { value: "routes", label: "Routes" },
+];
+const LOGGED: ConsoleEntry[] = [
+  { id: "c1", level: "info", message: "[vite] connected.", source: "client:912", time: NOW - 3 * M },
+  { id: "c2", level: "warn", message: "Freezer B-12 has no reading for 3 h – showing the gap.", source: "freezers.tsx:48", time: NOW - 2 * M, count: 3 },
+  { id: "c3", level: "log", message: "Loaded 24 freezers in 182 ms", source: "api.ts:21", time: NOW - 2 * M },
+];
+const REQUESTS: NetworkRequest[] = [
+  { id: "n1", method: "GET", url: "http://localhost:5173/freezers", status: 200, type: "document", size: 2_140, start: 0, duration: 38 },
+  { id: "n2", method: "GET", url: "http://localhost:5173/src/main.tsx", status: 200, type: "script", size: 48_200, start: 42, duration: 96 },
+  { id: "n3", method: "GET", url: "http://localhost:5173/api/freezers", status: 200, type: "fetch", size: 6_310, start: 150, duration: 182, body: { freezers: 24, gaps: [{ id: "B-12", hours: 3 }] } },
+  { id: "n4", method: "GET", url: "http://localhost:8080/api/alerts", status: 0, type: "fetch", start: 152, duration: 12 },
+];
+const PAGE: InspectorNode[] = [
+  {
+    id: "main",
+    tag: "main",
+    attrs: { class: "page" },
+    children: [
+      { id: "title", tag: "h1", text: "Freezers" },
+      { id: "gap", tag: "p", attrs: { class: "gap-note" }, text: "Freezer B-12: a 3-hour gap in its log." },
+    ],
+  },
+];
+const PAGE_DETAILS: Record<string, InspectorDetails> = {
+  title: { box: { width: 520, height: 28, margin: [0, 0, 8, 0], padding: [0, 0, 0, 0] }, styles: [{ property: "font-size", value: "20px", source: "page.css:4" }, { property: "font-weight", value: "600", source: "page.css:5" }] },
+  gap: { box: { width: 520, height: 20, margin: [0, 0, 0, 0], padding: [0, 0, 0, 0] }, styles: [{ property: "color", value: "var(--text-secondary)", source: "freezers.css:12" }] },
+};
+const VITALS: WebVital[] = [
+  { id: "lcp", value: 1840, unit: "ms", history: [2600, 2300, 2100, 1900, 1840] },
+  { id: "inp", value: 240, unit: "ms", history: [180, 210, 260, 230, 240] },
+  { id: "cls", value: 0.02, unit: "", history: [0.08, 0.05, 0.03, 0.02, 0.02] },
+];
+const ROUTES: RouteItem[] = [
+  { id: "home", path: "/", name: "Home", status: "ok", lastVisited: NOW - 30 * M, loadMs: 140 },
+  {
+    id: "freezers",
+    path: "/freezers",
+    name: "Freezers",
+    status: "ok",
+    lastVisited: NOW - 2 * M,
+    loadMs: 380,
+    children: [{ id: "freezer", path: "/freezers/:id", name: "One freezer", status: "slow", lastVisited: NOW - 20 * M, loadMs: 1_900 }],
+  },
+  { id: "alerts", path: "/alerts", name: "Alerts", status: "error", lastVisited: NOW - 5 * M },
+  { id: "bookings", path: "/bookings", name: "Bookings", status: "unvisited" },
+];
+
 /** Every line that holds the query, without case, the way a simple search in files would */
 function search(query: string): SearchResultsFile[] {
   const q = query.toLowerCase();
@@ -78,7 +148,31 @@ function search(query: string): SearchResultsFile[] {
 }
 
 export default function Demo({ ui }: { ui: typeof UI }) {
-  const { BranchSwitcher, DiffViewer, FileTree, PreviewFrame, ProblemList, ProcessList, PullRequest, SearchResults, SessionList, SessionPanel, Terminal, fileTreeFromPaths } = ui;
+  const {
+    BranchSwitcher,
+    ConsolePanel,
+    DiffViewer,
+    ElementInspector,
+    FileTree,
+    NetworkLog,
+    PreviewFrame,
+    ProblemList,
+    ProcessList,
+    PullRequest,
+    RouteMap,
+    SearchResults,
+    SegmentedControl,
+    SessionList,
+    SessionPanel,
+    Terminal,
+    WebVitals,
+    fileTreeFromPaths,
+  } = ui;
+  const [devtool, setDevtool] = useState("console");
+  const [logged, setLogged] = useState(LOGGED);
+  const [inspected, setInspected] = useState<string | null>("gap");
+  const [outlined, setOutlined] = useState<string | null>(null);
+  const [route, setRoute] = useState(ROUTES[1]);
   const [note, setNote] = useState("");
   const [tool, setTool] = useState<string | null>("overview");
   const [printed, setPrinted] = useState(PRINTED);
@@ -100,15 +194,62 @@ export default function Demo({ ui }: { ui: typeof UI }) {
         return <Terminal output={printed} height={420} onTcCommand={(e) => setPrinted((p) => `${p}$ ${e.detail.command}\n`)} onTcClear={() => setPrinted("")} />;
       case "changes":
         return <DiffViewer description={`${branch}, compared with main`} files={EDITS} />;
-      case "browser":
+      case "browser": {
+        // The element under the inspector's pointer is outlined in the page, the way a browser's tools do it
+        const outline = (id: string) => (outlined === id ? { outline: "var(--tc-focus-outline)", outlineOffset: "var(--tc-focus-ring-offset)" } : undefined);
+        const tally = (level: ConsoleEntry["level"]) => logged.reduce((n, c) => n + (c.level === level ? (c.count ?? 1) : 0), 0);
+        const tools = (() => {
+          switch (devtool) {
+            case "network":
+              return <NetworkLog requests={REQUESTS} defaultSelected="n3" maxHeight={260} />;
+            case "elements":
+              return (
+                <ElementInspector
+                  nodes={PAGE}
+                  defaultExpanded={["main"]}
+                  selected={inspected}
+                  onSelectedChange={(id) => setInspected(id)}
+                  details={inspected ? (PAGE_DETAILS[inspected] ?? null) : null}
+                  onTcHighlight={(e) => setOutlined(e.detail.id)}
+                  maxHeight={260}
+                />
+              );
+            case "vitals":
+              return <WebVitals description={route.path} metrics={VITALS} defaultDevice="desktop" />;
+            case "routes":
+              return (
+                <RouteMap
+                  routes={ROUTES}
+                  selected={route.id}
+                  now={NOW}
+                  maxHeight={260}
+                  onTcOpen={(e) => setRoute(e.detail.route)}
+                />
+              );
+            default:
+              return <ConsolePanel entries={logged} maxHeight={260} onTcClear={() => setLogged([])} />;
+          }
+        })();
         return (
-          <PreviewFrame url="http://localhost:5173/freezers" consoleCount={{ errors: 0, warnings: 1 }} height={380} onTcConsole={() => setNote("Show the console.")}>
-            <div style={{ padding: 24, display: "grid", alignContent: "start", gap: 8, fontFamily: "var(--tc-font-sans)", color: "var(--tc-text-primary)" }}>
-              <strong style={{ fontSize: 20 }}>Freezers</strong>
-              <span style={{ color: "var(--tc-text-secondary)" }}>Freezer B-12: a 3-hour gap in its log. The team was told at 14:02.</span>
-            </div>
-          </PreviewFrame>
+          <div style={{ display: "grid", gap: 8 }}>
+            <PreviewFrame
+              url={`http://localhost:5173${route.path}`}
+              consoleCount={{ errors: tally("error"), warnings: tally("warn") }}
+              height={240}
+              onTcConsole={() => setDevtool("console")}
+            >
+              <div style={{ padding: 24, display: "grid", alignContent: "start", gap: 8, fontFamily: "var(--tc-font-sans)", color: "var(--tc-text-primary)" }}>
+                <strong style={{ fontSize: 20, ...outline("title") }}>{route.name}</strong>
+                {route.id === "freezers" ? (
+                  <span style={{ color: "var(--tc-text-secondary)", ...outline("gap") }}>Freezer B-12: a 3-hour gap in its log. The team was told at 14:02.</span>
+                ) : null}
+              </div>
+            </PreviewFrame>
+            <SegmentedControl aria-label="Page tools" size="sm" value={devtool} onChange={setDevtool} options={DEVTOOLS} />
+            {tools}
+          </div>
         );
+      }
       case "files":
         return (
           <FileTree

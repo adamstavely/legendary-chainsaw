@@ -1,0 +1,138 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-route-map.json",
+  "title": "tc-route-map",
+  "description": "An app's routes as an indented list, with status, load time and last visit, filterable by status; pressing one opens it.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading; empty leaves the header out"
+    },
+    "description": {
+      "type": "string",
+      "description": "Small text under the heading – the site or environment"
+    },
+    "routes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/RouteItem"
+      },
+      "description": "The routes; children are indented under their parent"
+    },
+    "selected": {
+      "type": "string",
+      "description": "The chosen route's id, or null"
+    },
+    "statuses": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/RouteStatus"
+      },
+      "description": "The statuses shown; empty shows every route"
+    },
+    "now": {
+      "type": "number",
+      "description": "The time \"last visited\" counts to, in epoch ms; unset, the element keeps its own clock"
+    },
+    "maxHeight": {
+      "type": "number",
+      "description": "Height in px at which the list scrolls; 0 for no limit"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "slow": {
+          "type": "string"
+        },
+        "ok": {
+          "type": "string"
+        },
+        "unvisited": {
+          "type": "string"
+        },
+        "filter": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "noMatches": {
+          "type": "string"
+        },
+        "never": {
+          "type": "string"
+        },
+        "opening": {
+          "type": "string"
+        },
+        "keys": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Renames the words it uses"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for numbers and times, e.g. \"en-GB\"; by default the browser's"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "RouteItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string",
+          "description": "Such as \"/grants/:id\"; a child's path includes its parent's"
+        },
+        "name": {
+          "type": "string",
+          "description": "A name for people, such as \"Grant details\""
+        },
+        "status": {
+          "$ref": "#/definitions/RouteStatus"
+        },
+        "lastVisited": {
+          "type": [
+            "string",
+            "number"
+          ],
+          "description": "When it was last visited, as an ISO date or epoch ms"
+        },
+        "loadMs": {
+          "type": "number",
+          "description": "How long it took to load, in ms"
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RouteItem"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "path",
+        "status"
+      ],
+      "additionalProperties": false
+    },
+    "RouteStatus": {
+      "type": "string",
+      "enum": [
+        "ok",
+        "slow",
+        "error",
+        "unvisited"
+      ]
+    }
+  }
+}

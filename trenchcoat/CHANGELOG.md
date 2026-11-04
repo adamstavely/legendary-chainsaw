@@ -4,6 +4,8 @@
 
 - **Components:** Panel Card, Icon Rail, Meter Row, Environment List, Change List, Check Status, Terminal, Diff Viewer, File Tree, Search Results,
   Problem List, Pull Request, Branch Switcher, Session List, Preview Frame and Process List.
+- **Web development:** Console Panel, Network Log, Element Inspector, Web Vitals and Route Map, for looking inside the page a
+  session is building.
 - **Block:** Session Panel, a working session's side panel built from them.
 - **Voice Orb:** `variant` adds ring, wave, bars, blob and orbit faces; Voice Mode takes them as `orb-variant`.
 - **Fixed:** the blob variant's edge lurched when the level changed; it now moves at a steady pace.

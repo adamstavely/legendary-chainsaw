@@ -1,0 +1,255 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-network-log.json",
+  "title": "tc-network-log",
+  "description": "The requests a web page made: status, method, name, type, size, time and a waterfall, with type chips and a detail of headers and response.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading; empty leaves the header out"
+    },
+    "description": {
+      "type": "string",
+      "description": "Small text under the heading – the page they belong to"
+    },
+    "requests": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/NetworkRequest"
+      },
+      "description": "The requests, in the order they started"
+    },
+    "types": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/NetworkType"
+      },
+      "description": "The types that show; empty shows them all"
+    },
+    "selected": {
+      "type": "string",
+      "description": "The open request's id"
+    },
+    "maxHeight": {
+      "type": "number",
+      "description": "Height in px at which the list scrolls"
+    },
+    "locale": {
+      "type": "string",
+      "description": "Locale for sizes and times"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "image": {
+          "type": "string"
+        },
+        "other": {
+          "type": "string"
+        },
+        "document": {
+          "type": "string"
+        },
+        "script": {
+          "type": "string"
+        },
+        "style": {
+          "type": "string"
+        },
+        "fetch": {
+          "type": "string"
+        },
+        "font": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "all": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "size": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "failed": {
+          "type": "string"
+        },
+        "finished": {
+          "type": "string"
+        },
+        "close": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "time": {
+          "type": "string"
+        },
+        "noMatches": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "request": {
+          "type": "string"
+        },
+        "requests": {
+          "type": "string"
+        },
+        "types": {
+          "type": "string"
+        },
+        "method": {
+          "type": "string"
+        },
+        "waterfall": {
+          "type": "string"
+        },
+        "headers": {
+          "type": "string"
+        },
+        "response": {
+          "type": "string"
+        },
+        "general": {
+          "type": "string"
+        },
+        "requestHeaders": {
+          "type": "string"
+        },
+        "responseHeaders": {
+          "type": "string"
+        },
+        "noHeaders": {
+          "type": "string"
+        },
+        "noBody": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Renames the words it uses"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "NetworkRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Stable identity"
+        },
+        "method": {
+          "type": "string",
+          "description": "GET, POST…"
+        },
+        "url": {
+          "type": "string"
+        },
+        "status": {
+          "type": "number",
+          "description": "The HTTP status; 0 when it failed or hasn't answered"
+        },
+        "type": {
+          "$ref": "#/definitions/NetworkType"
+        },
+        "size": {
+          "type": "number",
+          "description": "Bytes transferred"
+        },
+        "start": {
+          "type": "number",
+          "description": "When it started, in ms from the page's start"
+        },
+        "duration": {
+          "type": "number",
+          "description": "How long it took, in ms"
+        },
+        "requestHeaders": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "responseHeaders": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "body": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/definitions/JsonValue"
+            }
+          ],
+          "description": "The response: an object is shown in a JSON Viewer, a string as text"
+        }
+      },
+      "required": [
+        "id",
+        "method",
+        "url",
+        "status",
+        "type",
+        "start",
+        "duration"
+      ],
+      "additionalProperties": false
+    },
+    "NetworkType": {
+      "type": "string",
+      "enum": [
+        "document",
+        "script",
+        "style",
+        "fetch",
+        "image",
+        "font",
+        "other"
+      ]
+    },
+    "JsonValue": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/JsonValue"
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/JsonValue"
+          }
+        }
+      ],
+      "description": "Any JSON value"
+    }
+  }
+}

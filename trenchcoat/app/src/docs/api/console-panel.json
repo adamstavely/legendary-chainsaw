@@ -1,0 +1,539 @@
+{
+ "elements": [
+  {
+   "tag": "tc-console-panel",
+   "className": "TcConsolePanel",
+   "description": "A web page's browser console: level chips with counts, a text filter, repeat badges, sources, and stacks that fold open.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Console\"",
+     "description": "The heading; empty leaves the header out",
+     "readonly": false
+    },
+    {
+     "name": "description",
+     "attribute": "description",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Small text under the heading – the page or tab it belongs to",
+     "readonly": false
+    },
+    {
+     "name": "entries",
+     "attribute": null,
+     "type": "ConsoleEntry[]",
+     "default": "[]",
+     "description": "The messages, oldest first",
+     "readonly": false
+    },
+    {
+     "name": "levels",
+     "attribute": null,
+     "type": "ConsoleLevel[]",
+     "default": "[...consoleLevels]",
+     "description": "The levels that show",
+     "readonly": false
+    },
+    {
+     "name": "filter",
+     "attribute": "filter",
+     "type": "string",
+     "default": "\"\"",
+     "description": "The text filter: matches the message and source",
+     "readonly": false
+    },
+    {
+     "name": "expanded",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[]",
+     "description": "The ids of the entries whose stack is open",
+     "readonly": false
+    },
+    {
+     "name": "maxHeight",
+     "attribute": "max-height",
+     "type": "number",
+     "default": "360",
+     "description": "Height in px at which the list scrolls",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "Locale for times",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "Partial<ConsolePanelLabels>",
+     "default": "{}",
+     "description": "Renames the words it uses",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-levels-change",
+     "detail": "",
+     "description": "A level chip was toggled ({ levels, level }: ConsoleLevelsChange); cancelable – prevented, `levels` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-filter-change",
+     "detail": "",
+     "description": "The text filter changed ({ filter }: ConsoleFilterChange); cancelable – prevented, `filter` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-expanded-change",
+     "detail": "",
+     "description": "A stack was opened or closed ({ expanded, id }: ConsoleExpandedChange); cancelable – prevented, `expanded` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-clear",
+     "detail": "",
+     "description": "Clear was pressed (detail: null); cancelable – prevented, `entries` stay; otherwise the element empties them",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "dcon",
+   "cssProperties": [
+    {
+     "name": "--tc-dcon-indent",
+     "value": "var(--tc-space-8)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-dcon-mark-nudge",
+     "value": "3px",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-border-default",
+    "--tc-border-selected",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-h-sm",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-duration-fast",
+    "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-font-size",
+    "--tc-field-shadow",
+    "--tc-field-shadow-focus",
+    "--tc-field-shadow-hover",
+    "--tc-fill-default",
+    "--tc-fill-selected",
+    "--tc-fill-strong",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-focus-ring-width",
+    "--tc-font-mono",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-line-height-normal",
+    "--tc-pill-font-size",
+    "--tc-pill-font-weight",
+    "--tc-pill-h",
+    "--tc-pill-px",
+    "--tc-pill-radius",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-3",
+    "--tc-space-6",
+    "--tc-space-8",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-info-fg",
+    "--tc-status-warning-bg",
+    "--tc-status-warning-fg",
+    "--tc-surface-on-tray",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-placeholder",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "ConsolePanel",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading; \"\" leaves the header out"
+    },
+    {
+     "name": "levels",
+     "type": "ConsoleLevel[]",
+     "optional": true,
+     "description": "The levels that show – controlled when given"
+    },
+    {
+     "name": "defaultLevels",
+     "type": "ConsoleLevel[]",
+     "optional": true,
+     "description": "The levels that show at first, when `levels` isn't controlled"
+    },
+    {
+     "name": "onLevelsChange",
+     "type": "(levels: ConsoleLevel[]) => void",
+     "optional": true,
+     "description": "A level chip was toggled"
+    },
+    {
+     "name": "filter",
+     "type": "string",
+     "optional": true,
+     "description": "The text filter – controlled when given"
+    },
+    {
+     "name": "defaultFilter",
+     "type": "string",
+     "optional": true,
+     "description": "The text filter at first, when `filter` isn't controlled"
+    },
+    {
+     "name": "onFilterChange",
+     "type": "(filter: string) => void",
+     "optional": true,
+     "description": "The text filter changed"
+    },
+    {
+     "name": "expanded",
+     "type": "string[]",
+     "optional": true,
+     "description": "The ids of the entries whose stack is open – controlled when given"
+    },
+    {
+     "name": "defaultExpanded",
+     "type": "string[]",
+     "optional": true,
+     "description": "The open stacks at first, when `expanded` isn't controlled"
+    },
+    {
+     "name": "onExpandedChange",
+     "type": "(expanded: string[]) => void",
+     "optional": true,
+     "description": "A stack was opened or closed"
+    }
+   ],
+   "hides": [
+    "heading",
+    "levels",
+    "filter",
+    "expanded",
+    "children"
+   ],
+   "events": {
+    "tc-levels-change": null,
+    "tc-filter-change": null,
+    "tc-expanded-change": null,
+    "tc-clear": "onTcClear"
+   }
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-console-panel",
+   "className": "TcConsolePanel",
+   "module": "trenchcoat/console-panel",
+   "data": [
+    "entries",
+    "levels",
+    "expanded",
+    "labels"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "description",
+     "attribute": "description"
+    },
+    {
+     "name": "filter",
+     "attribute": "filter"
+    },
+    {
+     "name": "maxHeight",
+     "attribute": "max-height"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-levels-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-filter-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-expanded-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-clear",
+     "cancelable": true
+    }
+   ],
+   "controlled": [
+    {
+     "property": "levels",
+     "event": "tc-levels-change"
+    },
+    {
+     "property": "filter",
+     "event": "tc-filter-change"
+    },
+    {
+     "property": "expanded",
+     "event": "tc-expanded-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "overscroll-contain",
+    "name": "overscroll-behavior: contain",
+    "bcd": "css.properties.overscroll-behavior.contain",
+    "versions": {
+     "chrome": "63",
+     "edge": "18",
+     "firefox": "59",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "Scrolling past the end of a list carries on scrolling the page.",
+    "via": [
+     "itself"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 27134,
+  "gzip": 8518
+ }
+}
