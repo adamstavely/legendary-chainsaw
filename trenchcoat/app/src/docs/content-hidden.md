@@ -6,11 +6,11 @@ related: nothing-found, no-access, malware-blocked, dialog
 
 ## Overview
 
-A blurred picture behind a crossed-out eye, with the words Content hidden. It's made to sit on an overlay that covers objectionable content, so people choose whether to see it and aren't shown it by surprise.
+A photo pixelated down to a person's outline, with a warning sign on it and the words Sensitive content. It's made to sit on an overlay that covers obscene, sexual or graphic content, so people choose whether to see it and aren't shown it by surprise. It's drawn like the other state illustrations – a soft tile, one pastel mark – and the mosaic is only squares: it depicts nothing.
 
 ## When to use
 
-- Covering an image, video or message that's been flagged as objectionable.
+- Covering an image, video or message that's been flagged as obscene, sexual or graphic.
 - Evidence that reviewers may need to see, but shouldn't see without choosing to.
 
 ## When not to use
@@ -21,9 +21,9 @@ A blurred picture behind a crossed-out eye, with the words Content hidden. It's 
 
 ## Anatomy
 
-1. **Picture** `.ui-chd-card` – a stand-in, blurred, never the real content
-2. **Mark** `.ui-chd-mark` – the crossed-out eye
-3. **Words** `.ui-chd-caption` – what's happened; the default is Content hidden
+1. **Picture** `.ui-chd-card` – a stand-in, pixelated to an outline, never the real content
+2. **Mark** `.ui-chd-mark` – the warning sign
+3. **Words** `.ui-chd-caption` – what's happened; the default is Sensitive content
 
 ## Looks
 

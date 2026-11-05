@@ -18,9 +18,9 @@ describe("tc-content-hidden", () => {
   test("says what's happened, in visible words and in its name", async () => {
     const el = await fixture<TcContentHidden>(html`<tc-content-hidden></tc-content-hidden>`);
     expect(el.dataset.ui).toBe("chd");
-    expect(el.querySelector(".ui-chd-caption")!.textContent).toBe("Content hidden");
+    expect(el.querySelector(".ui-chd-caption")!.textContent).toBe("Sensitive content");
     expect(el.getAttribute("role")).toBe("img");
-    expect(el.getAttribute("aria-label")).toBe("Content hidden");
+    expect(el.getAttribute("aria-label")).toBe("Sensitive content");
     expect(getComputedStyle(el).aspectRatio).toBe("3 / 2");
   });
 

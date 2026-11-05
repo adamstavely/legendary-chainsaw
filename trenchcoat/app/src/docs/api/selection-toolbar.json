@@ -1,0 +1,588 @@
+{
+ "elements": [
+  {
+   "tag": "tc-selection-toolbar",
+   "className": "TcSelectionToolbar",
+   "description": "A formatting bar that floats over selected text: actions, toggles that show their state, and option menus. It fires commands; the page's editor applies them.",
+   "properties": [
+    {
+     "name": "items",
+     "attribute": null,
+     "type": "SelectionToolbarItem[]",
+     "default": "[ { type: \"button\", id: \"ask\", label: \"Ask about this\", icon: I.ask }, { type: \"button\", id: \"comment\", label: \"Comment\", icon: I.comment, keys: \"Control+Alt+M Meta+Alt+M\" }, { type: \"button\", id: \"react\", label: \"Add a reaction\", icon: I.emoji }, { type: \"separator\" }, { type: \"menu\", id: \"style\", label: \"Text style\", icon: I.style, options: [ { value: \"p\", label: \"Text\" }, { value: \"h1\", label: \"Heading 1\" }, { value: \"h2\", label: \"Heading 2\" }, { value: \"h3\", label: \"Heading 3\" }, { value: \"small\", label: \"Small\" }, ], }, { type: \"separator\" }, { type: \"toggle\", id: \"bold\", label: \"Bold\", icon: I.bold, keys: \"Control+B Meta+B\" }, { type: \"toggle\", id: \"italic\", label: \"Italic\", icon: I.italic, keys: \"Control+I Meta+I\" }, { type: \"toggle\", id: \"underline\", label: \"Underline\", icon: I.underline, keys: \"Control+U Meta+U\" }, { type: \"toggle\", id: \"strike\", label: \"Strikethrough\", icon: I.strike, keys: \"Control+Shift+X Meta+Shift+X\" }, { type: \"toggle\", id: \"code\", label: \"Code\", icon: I.code, keys: \"Control+E Meta+E\" }, { type: \"menu\", id: \"color\", label: \"Text colour\", icon: I.color, options: [ { value: \"default\", label: \"Default\", color: \"var(--tc-text-primary)\" }, { value: \"gray\", label: \"Gray\", color: \"var(--tc-text-muted)\" }, { value: \"red\", label: \"Red\", color: \"var(--tc-status-danger-fg)\" }, { value: \"orange\", label: \"Orange\", color: \"var(--tc-status-warning-fg)\" }, { value: \"green\", label: \"Green\", color: \"var(--tc-status-success-fg)\" }, { value: \"blue\", label: \"Blue\", color: \"var(--tc-accent-text)\" }, { value: \"purple\", label: \"Purple\", color: \"var(--tc-chart-2)\" }, ], }, { type: \"separator\" }, { type: \"menu\", id: \"list\", label: \"List\", icon: I.bullets, options: [ { value: \"none\", label: \"No list\", icon: [\"M4 6h16\", \"M4 12h16\", \"M4 18h10\"] }, { value: \"bullets\", label: \"Bulleted list\", icon: I.bullets }, { value: \"numbers\", label: \"Numbered list\", icon: I.numbers }, { value: \"checks\", label: \"Checklist\", icon: I.checks }, ], }, { type: \"separator\" }, { type: \"button\", id: \"link\", label: \"Link\", icon: I.link, keys: \"Control+K Meta+K\" }, ]",
+     "description": "The controls, in order; `{ type: \"separator\" }` draws a divider",
+     "readonly": false
+    },
+    {
+     "name": "pressed",
+     "attribute": null,
+     "type": "string[]",
+     "default": "[]",
+     "description": "The ids of the toggles that are on, for the text that's selected",
+     "readonly": false
+    },
+    {
+     "name": "values",
+     "attribute": null,
+     "type": "Record<string, string>",
+     "default": "{}",
+     "description": "Each menu's chosen option, by the menu's id; a menu without one shows its own icon",
+     "readonly": false
+    },
+    {
+     "name": "anchor",
+     "attribute": null,
+     "type": "PopoverRect | Element | null",
+     "default": "null",
+     "description": "What it floats over: a rectangle in viewport pixels (`selectionRect()`) or an element. Without one it sits in the page's flow",
+     "readonly": false
+    },
+    {
+     "name": "open",
+     "attribute": "open",
+     "type": "boolean",
+     "default": "false",
+     "description": "Whether the floating bar shows; it sets itself false when it closes itself. No effect without an `anchor`",
+     "readonly": false
+    },
+    {
+     "name": "editor",
+     "attribute": null,
+     "type": "HTMLElement | null",
+     "default": "null",
+     "description": "The editor it formats: a click there doesn't close the bar, and Escape puts focus back in it",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "Partial<SelectionToolbarLabels>",
+     "default": "{}",
+     "description": "Words the page can change",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-command",
+     "detail": "",
+     "description": "A control was used: a button ({ id }), a toggle ({ id, value: on }) or a menu option ({ id, value }) (SelectionToolbarCommand)",
+     "cancelable": false
+    },
+    {
+     "name": "tc-pressed-change",
+     "detail": "",
+     "description": "A toggle was pressed ({ pressed, id }: SelectionToolbarPressedChange); cancelable – prevented, `pressed` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-values-change",
+     "detail": "",
+     "description": "A menu option was chosen ({ values, id, value }: SelectionToolbarValuesChange); cancelable – prevented, `values` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-close",
+     "detail": "",
+     "description": "The floating bar closed itself – Escape, or a click outside it and the editor ({ reason }: SelectionToolbarClose)",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [
+    {
+     "name": "focusToolbar",
+     "params": "",
+     "returns": "void",
+     "description": "Moves focus to the bar's current control – for the editor's \"go to toolbar\" key (Alt + F10 is usual)"
+    }
+   ],
+   "ui": "stb",
+   "cssProperties": [
+    {
+     "name": "--tc-stb-size",
+     "value": "var(--tc-control-h-sm)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-stb-glyph",
+     "value": "var(--tc-space-4)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-stb-swatch",
+     "value": "var(--tc-space-3-5)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-stb-menu",
+     "value": "calc(var(--tc-space-16) * 2.5)",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent-subtle",
+    "--tc-accent-text",
+    "--tc-action-ghost-bg-hover",
+    "--tc-border-default",
+    "--tc-border-subtle",
+    "--tc-control-h-sm",
+    "--tc-control-radius-sm",
+    "--tc-focus-outline",
+    "--tc-focus-ring-width",
+    "--tc-font-sans",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-line-height-normal",
+    "--tc-menu-bg",
+    "--tc-menu-item-font-size",
+    "--tc-menu-item-h",
+    "--tc-menu-item-hover",
+    "--tc-menu-item-px",
+    "--tc-menu-item-radius",
+    "--tc-menu-item-selected-fg",
+    "--tc-menu-padding",
+    "--tc-menu-radius",
+    "--tc-menu-shadow",
+    "--tc-radius-full",
+    "--tc-radius-lg",
+    "--tc-radius-sm",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-16",
+    "--tc-space-2",
+    "--tc-space-3",
+    "--tc-space-3-5",
+    "--tc-space-4",
+    "--tc-surface-inverse",
+    "--tc-surface-well",
+    "--tc-text-disabled",
+    "--tc-text-muted",
+    "--tc-text-on-inverse",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-z-dropdown"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "defaultSelectionToolbarItems",
+   "signature": "defaultSelectionToolbarItems: SelectionToolbarItem[]",
+   "description": "The bar in the reference layout: ask, comment and react; text style; bold to code; colour; list type; link"
+  },
+  {
+   "name": "selectionRect",
+   "signature": "selectionRect(doc: Document): PopoverRect | null",
+   "description": "The current selection's box in viewport pixels – an `anchor` for the bar – or null when nothing is selected"
+  }
+ ],
+ "react": [
+  {
+   "component": "SelectionToolbar",
+   "exported": true,
+   "props": [
+    {
+     "name": "pressed",
+     "type": "string[]",
+     "optional": true,
+     "description": "The toggles that are on – controlled when given (usually from the editor's state at the selection)"
+    },
+    {
+     "name": "defaultPressed",
+     "type": "string[]",
+     "optional": true,
+     "description": "The toggles on at first, when `pressed` isn't controlled"
+    },
+    {
+     "name": "onPressedChange",
+     "type": "(pressed: string[], id: string) => void",
+     "optional": true,
+     "description": "A toggle was pressed"
+    },
+    {
+     "name": "values",
+     "type": "Record<string, string>",
+     "optional": true,
+     "description": "Each menu's chosen option – controlled when given"
+    },
+    {
+     "name": "defaultValues",
+     "type": "Record<string, string>",
+     "optional": true,
+     "description": "The menus' options at first, when `values` isn't controlled"
+    },
+    {
+     "name": "onValuesChange",
+     "type": "(values: Record<string, string>, id: string, value: string) => void",
+     "optional": true,
+     "description": "A menu option was chosen"
+    }
+   ],
+   "hides": [
+    "pressed",
+    "values",
+    "children"
+   ],
+   "events": {
+    "tc-command": "onTcCommand",
+    "tc-pressed-change": null,
+    "tc-values-change": null,
+    "tc-close": "onTcClose"
+   }
+  }
+ ],
+ "changelog": [
+  "**Selection Toolbar** (`tc-selection-toolbar`): the formatting bar that floats over selected text – quick actions, toggles that show what's on, menus for text style, colour and list type, and a link. It fires `tc-command` for the page's editor to apply; `selectionRect()` gives it an anchor, and `focusToolbar()` is for the editor's Alt + F10."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-selection-toolbar",
+   "className": "TcSelectionToolbar",
+   "module": "trenchcoat/selection-toolbar",
+   "data": [
+    "items",
+    "pressed",
+    "values",
+    "anchor",
+    "editor",
+    "labels"
+   ],
+   "attributes": [
+    {
+     "name": "open",
+     "attribute": "open"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-command",
+     "cancelable": false
+    },
+    {
+     "name": "tc-pressed-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-values-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-close",
+     "cancelable": false
+    }
+   ],
+   "controlled": [
+    {
+     "property": "pressed",
+     "event": "tc-pressed-change"
+    },
+    {
+     "property": "values",
+     "event": "tc-values-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "inert",
+    "name": "inert",
+    "bcd": "api.HTMLElement.inert",
+    "versions": {
+     "chrome": "102",
+     "edge": "102",
+     "firefox": "112",
+     "safari": "15.5",
+     "safari_ios": "15.5"
+    },
+    "progressive": false,
+    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
+    "via": [
+     "internal/popover"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "array-at",
+    "name": "Array.prototype.at()",
+    "bcd": "javascript.builtins.Array.at",
+    "versions": {
+     "chrome": "92",
+     "edge": "92",
+     "firefox": "90",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "object-hasown",
+    "name": "Object.hasOwn()",
+    "bcd": "javascript.builtins.Object.hasOwn",
+    "versions": {
+     "chrome": "93",
+     "edge": "93",
+     "firefox": "92",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "internal/popover"
+    ]
+   },
+   {
+    "id": "individual-transforms",
+    "name": "translate, scale and rotate properties",
+    "bcd": "css.properties.translate",
+    "versions": {
+     "chrome": "104",
+     "edge": "104",
+     "firefox": "72",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "resize-observer",
+    "name": "ResizeObserver",
+    "bcd": "api.ResizeObserver",
+    "versions": {
+     "chrome": "64",
+     "edge": "79",
+     "firefox": "69",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "via": [
+     "internal/popover"
+    ]
+   },
+   {
+    "id": "popover",
+    "name": "Popover API",
+    "bcd": "api.HTMLElement.popover",
+    "versions": {
+     "chrome": "114",
+     "edge": "114",
+     "firefox": "125",
+     "safari": "17",
+     "safari_ios": "18.3"
+    },
+    "progressive": true,
+    "without": "Lists open fixed to the window instead of in the top layer, so a clipping ancestor or a modal can cover them.",
+    "via": [
+     "internal/popover"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "internal/popover",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setTimeout (internal/popover › PopoverController)"
+  ],
+  "frames": [
+   "requestAnimationFrame, cancelled (internal/popover › PopoverController)"
+  ],
+  "animations": 0,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)",
+   "ResizeObserver (internal/popover › PopoverController)"
+  ],
+  "clock": [],
+  "listeners": [
+   "document pointerdown"
+  ],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS (internal/kit › kitCss)",
+    "CSS (internal/popover › popoverCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 34367,
+  "gzip": 11401
+ }
+}
