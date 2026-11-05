@@ -1,0 +1,250 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-selection-toolbar.json",
+  "title": "tc-selection-toolbar",
+  "description": "A formatting bar that floats over selected text: actions, toggles that show their state, and option menus. It fires commands; the page's editor applies them.",
+  "type": "object",
+  "properties": {
+    "items": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/SelectionToolbarItem"
+      },
+      "description": "The controls, in order; `{ type: \"separator\" }` draws a divider"
+    },
+    "pressed": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The ids of the toggles that are on, for the text that's selected"
+    },
+    "values": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      },
+      "description": "Each menu's chosen option, by the menu's id; a menu without one shows its own icon"
+    },
+    "open": {
+      "type": "boolean",
+      "description": "Whether the floating bar shows; it sets itself false when it closes itself. No effect without an `anchor`"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "toolbar": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Words the page can change"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "SelectionToolbarItem": {
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "type": "string",
+              "const": "button"
+            },
+            "id": {
+              "type": "string"
+            },
+            "label": {
+              "type": "string",
+              "description": "Names the control, and is its tooltip"
+            },
+            "icon": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "description": "SVG path data for a 24×24 stroked icon, or several paths"
+            },
+            "keys": {
+              "type": "string",
+              "description": "For aria-keyshortcuts, e.g. \"Control+B Meta+B\" – the editor handles the keys"
+            },
+            "shortcut": {
+              "type": "string",
+              "description": "A shortcut shown in the tooltip, e.g. \"⌘B\""
+            },
+            "disabled": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "icon",
+            "id",
+            "label",
+            "type"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "type": "string",
+              "const": "toggle"
+            },
+            "id": {
+              "type": "string"
+            },
+            "label": {
+              "type": "string",
+              "description": "Names the control, and is its tooltip"
+            },
+            "icon": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "description": "SVG path data for a 24×24 stroked icon, or several paths"
+            },
+            "keys": {
+              "type": "string",
+              "description": "For aria-keyshortcuts, e.g. \"Control+B Meta+B\" – the editor handles the keys"
+            },
+            "shortcut": {
+              "type": "string",
+              "description": "A shortcut shown in the tooltip, e.g. \"⌘B\""
+            },
+            "disabled": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "icon",
+            "id",
+            "label",
+            "type"
+          ]
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "type": "string",
+              "const": "menu"
+            },
+            "options": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SelectionToolbarOption"
+              }
+            },
+            "id": {
+              "type": "string"
+            },
+            "label": {
+              "type": "string",
+              "description": "Names the control, and is its tooltip"
+            },
+            "icon": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "description": "SVG path data for a 24×24 stroked icon, or several paths"
+            },
+            "keys": {
+              "type": "string",
+              "description": "For aria-keyshortcuts, e.g. \"Control+B Meta+B\" – the editor handles the keys"
+            },
+            "shortcut": {
+              "type": "string",
+              "description": "A shortcut shown in the tooltip, e.g. \"⌘B\""
+            },
+            "disabled": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "icon",
+            "id",
+            "label",
+            "options",
+            "type"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "const": "separator"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "additionalProperties": false
+        }
+      ],
+      "description": "A button that acts once (comment, link); one that stays on or off (bold); a menu of options (colour); or a divider"
+    },
+    "SelectionToolbarOption": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "icon": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          ],
+          "description": "SVG path data for a 24×24 stroked icon; the menu's button shows the chosen option's icon"
+        },
+        "color": {
+          "type": "string",
+          "description": "A CSS colour for a swatch, for a colour menu"
+        }
+      },
+      "required": [
+        "value",
+        "label"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

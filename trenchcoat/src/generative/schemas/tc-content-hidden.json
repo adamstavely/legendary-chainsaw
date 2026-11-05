@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "trenchcoat/generative/schemas/tc-content-hidden.json",
   "title": "tc-content-hidden",
-  "description": "A blurred picture behind a crossed-out eye, for objectionable content that's been covered.",
+  "description": "A photo pixelated to a person's outline, with a warning sign on it, for sensitive content that's been covered.",
   "type": "object",
   "properties": {
     "caption": {

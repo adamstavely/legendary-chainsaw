@@ -4,7 +4,7 @@ import type { TcContentHidden } from "trenchcoat/content-hidden";
 import "trenchcoat/content-hidden";
 
 /**
- * <tc-content-hidden> for Angular: A blurred picture behind a crossed-out eye, for objectionable content that's been covered.
+ * <tc-content-hidden> for Angular: A photo pixelated to a person's outline, with a warning sign on it, for sensitive content that's been covered.
  * 
  * imports: [ContentHidden] in a standalone component – no CUSTOM_ELEMENTS_SCHEMA, and bindings are type-checked.
  */

@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased – Selection Toolbar
+
+- **Selection Toolbar** (`tc-selection-toolbar`): the formatting bar that floats over selected text – quick actions,
+  toggles that show what's on, menus for text style, colour and list type, and a link. It fires `tc-command` for the
+  page's editor to apply; `selectionRect()` gives it an anchor, and `focusToolbar()` is for the editor's Alt + F10.
+- **Malware Blocked** is redrawn in the style of the other state illustrations (Something Wrong, No Access, Nothing
+  Found): a soft page tile, a pastel shield with a darker edge and ink, chunkier strokes and a soft glow beneath.
+- **Content Hidden** is redrawn for sensitive content: a photo pixelated to a person's outline with the family's warning
+  sign on it, in the same style; its default caption is now Sensitive content.
+- **Illustrations:** Offline, Limit Reached, Preview Unavailable, Upload Failed, Link Expired, Awaiting Review, All Done and Processing,
+  in the same style as the other state illustrations, each with its words as real text.
+
 ## Unreleased – Review fixes for workspace components
 
 - **Security:** links from data go through `safeUrl` before Process List, Preview Frame and Pull Request render or emit them,

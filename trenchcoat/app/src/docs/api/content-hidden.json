@@ -3,13 +3,13 @@
   {
    "tag": "tc-content-hidden",
    "className": "TcContentHidden",
-   "description": "A blurred picture behind a crossed-out eye, for objectionable content that's been covered.",
+   "description": "A photo pixelated to a person's outline, with a warning sign on it, for sensitive content that's been covered.",
    "properties": [
     {
      "name": "caption",
      "attribute": "caption",
      "type": "string",
-     "default": "\"Content hidden\"",
+     "default": "\"Sensitive content\"",
      "description": "The words under the drawing; \"\" leaves them out",
      "readonly": false
     },
@@ -44,35 +44,63 @@
     },
     {
      "name": "--tc-content-hidden-edge",
-     "value": "light-dark(#d9dee6, rgba(255, 255, 255, 0.14))",
+     "value": "light-dark(#e4e7ec, rgba(255, 255, 255, 0.1))",
      "looks": [
       "both"
      ]
     },
     {
-     "name": "--tc-content-hidden-shape",
-     "value": "light-dark(#dfe4eb, #44464d)",
+     "name": "--tc-content-hidden-tile-1",
+     "value": "light-dark(#eef1f5, #34363c)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-content-hidden-tile-2",
+     "value": "light-dark(#d9dfe8, #43464d)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-content-hidden-tile-3",
+     "value": "light-dark(#b8c1ce, #5a5e67)",
      "looks": [
       "both"
      ]
     },
     {
      "name": "--tc-content-hidden-badge",
-     "value": "light-dark(#40464f, #e4e6ea)",
+     "value": "light-dark(#fbe7cf, #5a4426)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-content-hidden-badge-edge",
+     "value": "light-dark(#e9b872, #c79a57)",
      "looks": [
       "both"
      ]
     },
     {
      "name": "--tc-content-hidden-ink",
-     "value": "light-dark(#ffffff, #26282d)",
+     "value": "light-dark(#8a5a17, #f3d6a6)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-content-hidden-glow",
+     "value": "light-dark(rgba(250, 176, 130, 0.22), rgba(250, 176, 130, 0.1))",
      "looks": [
       "both"
      ]
     },
     {
      "name": "--tc-content-hidden-soft",
-     "value": "7px",
+     "value": "12px",
      "looks": [
       "both"
      ]
@@ -342,7 +370,7 @@
   "windowed": false
  },
  "size": {
-  "min": 13016,
-  "gzip": 4959
+  "min": 14069,
+  "gzip": 5288
  }
 }

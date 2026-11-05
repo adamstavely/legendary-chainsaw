@@ -224,6 +224,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Search Results** (`search-results.tsx`) – results of a search across files, grouped by file with the matched text marked, with match case, whole word and regular expression toggles, collapse all, and an optional replace preview.
 - **Secret Field** (`secret-field.tsx`) – A masked credential input with an explicit reveal control
 - **Segmented Control** (`segmented-control.tsx`) – Switch between two to six options – a raised pill or underline that glides, stretches a little and can be dragged across, with icons, counts and badges
+- **Selection Toolbar** (`selection-toolbar.tsx`) – The formatting bar that floats over selected text: quick actions, toggles like bold and italic that show what's on, menus for text style, colour and list, and a link – it fires commands for the page's editor to apply.
 - **Selection Translate** (`selection-translate.tsx`) – Select text and translate it – the translation in a card with the detected language, copy, replace in place and show original
 - **Sensitivity Label Picker** (`sensitivity-label-picker.tsx`) – Sets a file's classification – a mark and word on a small button, a list of labels with what each means, and a reason asked before lowering it
 - **Session Context Bar** (`session-context-bar.tsx`) – The session's declared terms kept in view – intent, knowledge mode, scope, review, posture, limits, deadline and budget
