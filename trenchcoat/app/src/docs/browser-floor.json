@@ -141,7 +141,7 @@
    },
    "progressive": false,
    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
-   "elements": 143
+   "elements": 146
   },
   {
    "id": "resize-observer",
@@ -275,6 +275,20 @@
    "elements": 19
   },
   {
+   "id": "object-hasown",
+   "name": "Object.hasOwn()",
+   "bcd": "javascript.builtins.Object.hasOwn",
+   "versions": {
+    "chrome": "93",
+    "edge": "93",
+    "firefox": "92",
+    "safari": "15.4",
+    "safari_ios": "15.4"
+   },
+   "progressive": false,
+   "elements": 16
+  },
+  {
    "id": "relative-time-format",
    "name": "Intl.RelativeTimeFormat",
    "bcd": "javascript.builtins.Intl.RelativeTimeFormat",
@@ -302,20 +316,6 @@
    "progressive": false,
    "why": "Modals trap focus, close on Escape and sit in the top layer.",
    "elements": 12
-  },
-  {
-   "id": "object-hasown",
-   "name": "Object.hasOwn()",
-   "bcd": "javascript.builtins.Object.hasOwn",
-   "versions": {
-    "chrome": "93",
-    "edge": "93",
-    "firefox": "92",
-    "safari": "15.4",
-    "safari_ios": "15.4"
-   },
-   "progressive": false,
-   "elements": 11
   },
   {
    "id": "array-at",

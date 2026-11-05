@@ -162,6 +162,24 @@ describe("tc-element-inspector", () => {
     expect(el.querySelector(".ui-elin__none")!.textContent).toBe("Keine Stile");
   });
 
+  test("choosing another element hides the last one's box and styles until the page sends its details", async () => {
+    const el = await make();
+    el.selected = "form";
+    el.details = DETAILS;
+    await settle();
+    row(el, "h1").click();
+    await settle();
+    expect(el.selected).toBe("h1");
+    expect(el.querySelector(".ui-elin__picked")!.textContent).toBe("h1");
+    expect(el.querySelector(".ui-elin__box")).toBeNull();
+    expect(el.querySelector(".ui-elin__styles")).toBeNull();
+    expect(el.querySelector(".ui-elin__details [role=\"status\"]")!.textContent).toBe("Loading details");
+    el.details = { styles: [{ property: "font-size", value: "20px" }] };
+    await settle();
+    expect(el.querySelector(".ui-elin__details [role=\"status\"]")).toBeNull();
+    expect(el.querySelector(".ui-elin__styles")!.textContent).toContain("font-size");
+  });
+
   test("empty tree; wide sits side by side, narrow stacks without overflowing", async () => {
     const empty = await fixture<TcElementInspector>(html`<tc-element-inspector></tc-element-inspector>`);
     expect(empty.querySelector(".ui-elin__tree-pane .ui-elin__empty")!.textContent).toBe("No elements");

@@ -49,6 +49,8 @@ export const defaultRouteMapLabels: RouteMapLabels = {
 };
 
 const STATUSES: RouteStatus[] = ["ok", "slow", "error", "unvisited"];
+/** A status from data it doesn't know (a typo, a newer server) counts as not visited, not as a broken count */
+const statusOf = (route: RouteItem): RouteStatus => (STATUSES.includes(route.status) ? route.status : "unvisited");
 
 /* Icons: Lucide (ISC, lucide.dev) – route, circle-check, clock, circle-x, circle-dashed */
 const headIcon = svg`<circle cx="6" cy="19" r="3"></circle><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"></path><circle cx="18" cy="5" r="3"></circle>`;
@@ -128,9 +130,10 @@ export class TcRouteMap extends TcElement {
     const walk = (routes: RouteItem[], level: number, parentPath: string): boolean => {
       let any = false;
       for (const route of routes) {
-        counts[route.status]++;
+        const status = statusOf(route);
+        counts[status]++;
         const at = rows.length;
-        const match = !shown.size || shown.has(route.status);
+        const match = !shown.size || shown.has(status);
         const below = route.children ? walk(route.children, level + 1, route.path) : false;
         if (match || below) {
           rows.splice(at, 0, { route, level, parentPath, context: !match });
@@ -166,10 +169,12 @@ export class TcRouteMap extends TcElement {
   private ago(at: number) {
     const s = Math.round((at - this.time) / 1000);
     const rtf = new Intl.RelativeTimeFormat(this.locale, { numeric: "auto", style: "short" });
-    const a = Math.abs(s);
-    if (a < 60) return rtf.format(s, "second");
-    if (a < 3600) return rtf.format(Math.round(s / 60), "minute");
-    if (a < 86400) return rtf.format(Math.round(s / 3600), "hour");
+    // The unit is picked from the rounded value, so 59 min 50 s reads "1 hr. ago", not "60 min. ago"
+    const min = Math.round(s / 60);
+    const hr = Math.round(s / 3600);
+    if (Math.abs(s) < 60) return rtf.format(s, "second");
+    if (Math.abs(min) < 60) return rtf.format(min, "minute");
+    if (Math.abs(hr) < 24) return rtf.format(hr, "hour");
     return rtf.format(Math.round(s / 86400), "day");
   }
 
@@ -239,7 +244,7 @@ export class TcRouteMap extends TcElement {
         type="button"
         class="ui-rmap__row"
         data-id=${route.id}
-        data-status=${route.status}
+        data-status=${statusOf(route)}
         ?data-context=${r.context}
         aria-current=${route.id === this.selected ? "true" : "false"}
         tabindex=${route.id === this.active ? 0 : -1}
@@ -249,7 +254,7 @@ export class TcRouteMap extends TcElement {
         <span class="ui-rmap__where">
           <span class="ui-rmap__path">${this.path(r)}</span>${route.name ? html`<span class="ui-rmap__name">${route.name}</span>` : nothing}
         </span>
-        <span class="ui-rmap__status"><svg class="ui-rmap__mark" viewBox="0 0 24 24" aria-hidden="true">${MARK[route.status]}</svg>${w[route.status]}</span>
+        <span class="ui-rmap__status"><svg class="ui-rmap__mark" viewBox="0 0 24 24" aria-hidden="true">${MARK[statusOf(route)]}</svg>${w[statusOf(route)]}</span>
         <span class="ui-rmap__load">${route.loadMs !== undefined ? this.load(route.loadMs) : html`<span aria-hidden="true">–</span>`}</span>
         <span class="ui-rmap__visited">${at !== undefined && Number.isFinite(at) ? this.ago(at) : html`<span aria-hidden="true">–</span> <span class="ui-rmap__sr">${w.never}</span>`}</span>
       </button>

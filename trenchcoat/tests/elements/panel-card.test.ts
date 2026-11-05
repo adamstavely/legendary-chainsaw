@@ -10,7 +10,9 @@ import { createRoot } from "react-dom/client";
 import { afterEach, describe, expect, test } from "vitest";
 import "../../src/elements/panel-card";
 import type { TcPanelCard } from "../../src/elements/panel-card";
+import { ChangeList } from "../../src/elements/react/change-list";
 import { PanelCard } from "../../src/elements/react/panel-card";
+import "../../src/elements/change-list";
 import { cleanup, finish, fixture, settle } from "./helpers";
 
 afterEach(cleanup);
@@ -153,6 +155,29 @@ describe("tc-panel-card", () => {
       });
     }
   }
+
+  test("React: a list inside the card showing more or less doesn't fold the card", async () => {
+    const wrap = document.body.appendChild(document.createElement("div"));
+    const root = createRoot(wrap);
+    const seen: boolean[] = [];
+    const items = ["a", "b", "c", "d", "e", "f"].map((id) => ({ id, title: `Change ${id}`, repo: "institute/sample-tracker", state: "open" as const }));
+    for (const controlled of [false, true]) {
+      seen.length = 0;
+      const props = controlled ? { expanded: true, onExpandedChange: (x: boolean) => void seen.push(x) } : { defaultExpanded: true, onExpandedChange: (x: boolean) => void seen.push(x) };
+      await act(async () => root.render(React.createElement(PanelCard, { title: "Changes", ...props }, React.createElement(ChangeList, { items, limit: 3 }))));
+      await settle();
+      const el = wrap.querySelector<TcPanelCard>("tc-panel-card")!;
+      const toggle = () => el.querySelector<HTMLElement>(".ui-chl__toggle")!;
+      await act(async () => toggle().click());
+      await settle();
+      expect(el.querySelectorAll(".ui-chl__row")).toHaveLength(6);
+      await act(async () => toggle().click());
+      await settle();
+      expect(el.querySelectorAll(".ui-chl__row")).toHaveLength(3);
+      expect([controlled, el.expanded, seen]).toEqual([controlled, true, []]);
+    }
+    await act(async () => root.unmount());
+  });
 
   test("Standard's white surface sits behind the children, and they can be pressed", async () => {
     const el = await fixture<HTMLElement>(html`<tc-panel-card look="standard" heading="Freezers" expanded><button type="button" id="inside">Inside</button></tc-panel-card>`);

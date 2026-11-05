@@ -273,6 +273,50 @@ describe("tc-sandbox-log", () => {
     expect(el.querySelector(".ui-sbl__empty")!.textContent).toBe("No output.");
   });
 
+  test("search marks the right letters when lower case changes a line's length (İ)", async () => {
+    const el = await mount([{ id: "x", command: "check", output: "İİİ error here", exitCode: 0 }], { open: ["x"] });
+    await type(el, "error");
+    expect([...el.querySelectorAll(".ui-sbl__hit")].map((m) => m.textContent)).toEqual(["error"]);
+  });
+
+  test("Enter while an input method is composing doesn't move to the next match", async () => {
+    const el = await mount();
+    await type(el, "s");
+    const count = () => el.querySelector(".ui-sbl__count")!.textContent;
+    const was = count();
+    key(input(el), "Enter", { isComposing: true });
+    key(input(el), "Enter", { keyCode: 229 });
+    await settle();
+    expect(count()).toBe(was);
+  });
+
+  test("the current match stays put when an earlier step streams new matches", async () => {
+    const el = await mount([
+      { id: "a", command: "one", output: "error 1\n" },
+      { id: "b", command: "two", output: "error 2\nerror 3\n", exitCode: 1 },
+    ]);
+    await type(el, "error");
+    key(input(el), "Enter");
+    await settle();
+    key(input(el), "Enter");
+    await settle();
+    expect(el.querySelector(".ui-sbl__count")!.textContent).toBe("3/3");
+    expect(el.querySelector(".ui-sbl__line[data-current]")!.textContent).toContain("error 3");
+    el.steps = [{ ...el.steps[0], output: "error 1\nerror 1b\n" }, el.steps[1]];
+    await settle();
+    expect(el.querySelector(".ui-sbl__count")!.textContent).toBe("4/4");
+    expect(el.querySelector(".ui-sbl__line[data-current]")!.textContent).toContain("error 3");
+  });
+
+  test("a step that goes away and comes back with its id isn't announced as finished", async () => {
+    const el = await mount([{ id: "t", command: "npm test", output: "…" }]);
+    el.steps = [];
+    await settle();
+    el.steps = [{ id: "t", command: "npm test", output: "…", exitCode: 0 }];
+    await settle();
+    expect(el.querySelector('[role="status"]')!.textContent).toBe("");
+  });
+
   test("announces when a step finishes", async () => {
     const el = await mount([{ id: "t", command: "npm test", output: "…" }]);
     const status = el.querySelector('[role="status"]')!;

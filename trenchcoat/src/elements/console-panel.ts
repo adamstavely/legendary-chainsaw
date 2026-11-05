@@ -82,7 +82,7 @@ const headIcon = svg`<rect width="18" height="18" x="3" y="3" rx="2"></rect><pat
  * @fires tc-levels-change - A level chip was toggled ({ levels, level }: ConsoleLevelsChange); cancelable – prevented, `levels` stays as it was
  * @fires tc-filter-change - The text filter changed ({ filter }: ConsoleFilterChange); cancelable – prevented, `filter` stays as it was
  * @fires tc-expanded-change - A stack was opened or closed ({ expanded, id }: ConsoleExpandedChange); cancelable – prevented, `expanded` stays as it was
- * @fires tc-clear - Clear was pressed (detail: null); cancelable – prevented, `entries` stay; otherwise the element empties them
+ * @fires tc-clear - Clear was pressed (detail: null); cancelable – prevented, `entries` stay; otherwise the element empties them, and those messages stay hidden if the same list is passed again (new ones show)
  */
 export class TcConsolePanel extends TcElement {
   static override ui = "dcon";
@@ -112,20 +112,29 @@ export class TcConsolePanel extends TcElement {
   @state() private accessor chip: ConsoleLevel = "error";
 
   private rows: Row[] = [];
+  /** The ids that were there when Clear was last pressed (unprevented): hidden while the page still passes them, so a
+   *  re-render that sets the same list (React sets every prop on every render) doesn't bring them back */
+  private cleared = new Set<string>();
+  /** Clear emptied `entries` itself: that update mustn't forget the cleared ids */
+  private ownClear = false;
   private timeFormat?: Intl.DateTimeFormat;
   private timeLocale?: string;
 
   private get words() {
     return { ...defaultConsolePanelLabels, ...this.labels };
   }
+  /** The messages since the last Clear */
+  private get kept() {
+    return this.cleared.size ? this.entries.filter((e) => !this.cleared.has(e.id)) : this.entries;
+  }
   private counts() {
     const c: Record<ConsoleLevel, number> = { error: 0, warn: 0, info: 0, log: 0, debug: 0 };
-    for (const e of this.entries) c[e.level] += Math.max(1, e.count ?? 1);
+    for (const e of this.kept) c[e.level] += Math.max(1, e.count ?? 1);
     return c;
   }
   private get shown() {
     const q = this.filter.trim().toLowerCase();
-    return this.entries.filter((e) => this.levels.includes(e.level) && (!q || e.message.toLowerCase().includes(q) || !!e.source?.toLowerCase().includes(q)));
+    return this.kept.filter((e) => this.levels.includes(e.level) && (!q || e.message.toLowerCase().includes(q) || !!e.source?.toLowerCase().includes(q)));
   }
 
   private build(): Row[] {
@@ -141,6 +150,12 @@ export class TcConsolePanel extends TcElement {
 
   protected override willUpdate(changed: PropertyValues) {
     super.willUpdate(changed);
+    // Forget cleared ids the page no longer passes: it has cleared its own store, or moved on
+    if (changed.has("entries") && this.cleared.size && !this.ownClear) {
+      const ids = new Set(this.entries.map((e) => e.id));
+      for (const id of this.cleared) if (!ids.has(id)) this.cleared.delete(id);
+    }
+    this.ownClear = false;
     this.rows = this.build();
     if (!this.rows.some((r) => r.key === this.active)) this.active = this.rows[0]?.key ?? null;
   }
@@ -150,7 +165,7 @@ export class TcConsolePanel extends TcElement {
       this.timeLocale = this.locale;
       this.timeFormat = new Intl.DateTimeFormat(this.locale, { hour: "2-digit", minute: "2-digit", second: "2-digit", fractionalSecondDigits: 3, hourCycle: "h23" });
     }
-    return this.timeFormat.format(ms);
+    return Number.isFinite(ms) ? this.timeFormat.format(ms) : "";
   }
 
   private toggleStack(entry: ConsoleEntry) {
@@ -172,7 +187,11 @@ export class TcConsolePanel extends TcElement {
   }
 
   private clear() {
+    // Clearing disables the button: focus goes to the filter first, not to <body>
+    this.querySelector<HTMLInputElement>(".ui-dcon__input")?.focus();
     if (this.emit("tc-clear", null, { cancelable: true })) {
+      this.cleared = new Set([...this.cleared, ...this.entries.map((e) => e.id)]);
+      this.ownClear = true;
       this.entries = [];
       this.expanded = [];
     }
@@ -261,7 +280,7 @@ export class TcConsolePanel extends TcElement {
       ${stack ? html`<svg class="ui-dcon__chevron" viewBox="0 0 24 24" aria-hidden="true">${svg`<path d="m9 18 6-6-6-6"></path>`}</svg>` : html`<span class="ui-dcon__chevron" aria-hidden="true"></span>`}
       ${glyph(MARK[e.level], "ui-dcon__mark")}
       <span class="ui-dcon__main">
-        ${e.time !== undefined ? html`<span class="ui-dcon__time">${this.time(e.time)}</span>` : nothing}
+        ${e.time !== undefined && Number.isFinite(e.time) ? html`<span class="ui-dcon__time">${this.time(e.time)}</span>` : nothing}
         <span class="ui-dcon__message"><span class="ui-dcon__sr">${LEVEL_WORD[e.level]}: </span>${e.message}</span>
         ${n > 1 ? html`<span class="ui-dcon__count">${n}<span class="ui-dcon__sr"> ${words.times}</span></span>` : nothing}
         ${e.source ? html`<span class="ui-dcon__source">${e.source}</span>` : nothing}
@@ -292,13 +311,13 @@ export class TcConsolePanel extends TcElement {
           }
         }} />
       </label>
-      <button type="button" class="ui-dcon__clear" title=${words.clear} aria-label=${words.clear} ?disabled=${!this.entries.length} @click=${() => this.clear()}>${glyph(CLEAR, "ui-dcon__clear-glyph")}</button>
+      <button type="button" class="ui-dcon__clear" title=${words.clear} aria-label=${words.clear} ?disabled=${!this.kept.length} @click=${() => this.clear()}>${glyph(CLEAR, "ui-dcon__clear-glyph")}</button>
     </div>`;
   }
 
   private body() {
     const words = this.words;
-    if (!this.rows.length) return html`<p class="ui-dcon__empty">${this.entries.length ? words.noMatches : words.empty}</p>`;
+    if (!this.rows.length) return html`<p class="ui-dcon__empty">${this.kept.length ? words.noMatches : words.empty}</p>`;
     return html`<div class="ui-dcon__scroll" style=${styleMap({ maxHeight: `${this.maxHeight}px` })}>
       <div class="ui-dcon__rows" role="tree" aria-label=${this.heading || words.messages} @keydown=${this.onListKey}>${this.rows.map((r) => this.row(r))}</div>
     </div>`;

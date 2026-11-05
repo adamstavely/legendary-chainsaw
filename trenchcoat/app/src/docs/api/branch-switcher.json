@@ -234,12 +234,12 @@
   {
    "name": "defaultBranchSwitcherLabels",
    "signature": "defaultBranchSwitcherLabels: BranchSwitcherLabels",
-   "description": "The words used when the page gives none. `create` takes {name} and {base}"
+   "description": "The words used when the page gives none. `create` takes {name} and {base}; `ahead` and `behind` take {count};\n`aheadOf` joins them to the base as {counts} and {base}"
   },
   {
    "name": "toBranchName",
    "signature": "toBranchName(text: string): void",
-   "description": "A typed name as a branch name: spaces become dashes, characters git refuses are dropped"
+   "description": "A typed name as a branch name git accepts (`git check-ref-format --branch`): spaces become dashes, and what git refuses is dropped"
   }
  ],
  "react": [
@@ -520,6 +520,22 @@
     ]
    },
    {
+    "id": "object-hasown",
+    "name": "Object.hasOwn()",
+    "bcd": "javascript.builtins.Object.hasOwn",
+    "versions": {
+     "chrome": "93",
+     "edge": "93",
+     "firefox": "92",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
     "id": "inset",
     "name": "inset",
     "bcd": "css.properties.inset",
@@ -672,7 +688,7 @@
   "windowed": false
  },
  "size": {
-  "min": 36277,
-  "gzip": 11838
+  "min": 37049,
+  "gzip": 12099
  }
 }

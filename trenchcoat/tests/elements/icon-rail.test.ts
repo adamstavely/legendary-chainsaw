@@ -133,6 +133,56 @@ describe("tc-icon-rail", () => {
     expect(btn(plain, "More")).toBeNull();
   });
 
+  test("Enter or Space on More opens the menu with focus on its first item; Tab or leaving closes it", async () => {
+    const el = await rail();
+    const more = btn(el, "More");
+    more.focus();
+    await userEvent.keyboard("{Enter}");
+    await expect.poll(() => document.activeElement?.textContent).toBe("Export");
+    await userEvent.keyboard("{Tab}");
+    await expect.poll(() => el.querySelector('[role="menu"]')).toBeNull();
+    expect(more.getAttribute("aria-expanded")).toBe("false");
+    // Opened, then focus moves out from the button itself
+    const after = document.body.appendChild(document.createElement("button"));
+    more.focus();
+    await userEvent.keyboard(" ");
+    await expect.poll(() => document.activeElement?.textContent).toBe("Export");
+    more.focus();
+    after.focus();
+    await expect.poll(() => el.querySelector('[role="menu"]')).toBeNull();
+    after.remove();
+  });
+
+  test("a mouse click on More opens the menu without moving focus into it", async () => {
+    const el = await rail();
+    await userEvent.click(btn(el, "More"));
+    await expect.poll(() => el.querySelector('[role="menu"]')).not.toBeNull();
+    expect(document.activeElement?.getAttribute("role")).not.toBe("menuitem");
+    await userEvent.click(el.querySelectorAll<HTMLButtonElement>('[role="menuitem"]')[0]);
+    await expect.poll(() => el.querySelector('[role="menu"]')).toBeNull();
+  });
+
+  test("emptying moreItems shuts the menu, so it doesn't reopen when they come back", async () => {
+    const el = await rail();
+    btn(el, "More").click();
+    await settle();
+    expect(el.querySelector('[role="menu"]')).not.toBeNull();
+    el.moreItems = [];
+    await settle();
+    el.moreItems = MORE;
+    await settle();
+    expect(el.querySelector('[role="menu"]')).toBeNull();
+    expect(btn(el, "More").getAttribute("aria-expanded")).toBe("false");
+  });
+
+  test("two buttons with the same id: one tab stop and one pressed button, the first", async () => {
+    const items: IconRailItem[] = [...ITEMS, { id: "a", label: "Alpha again", icon: "M4 4h16" }];
+    const el = await fixture<TcIconRail>(html`<tc-icon-rail label="Views" .items=${items} selected="a"></tc-icon-rail>`);
+    expect(el.querySelectorAll('.ui-irl__button[tabindex="0"]')).toHaveLength(1);
+    expect([...el.querySelectorAll('.ui-irl__button[aria-pressed="true"]')].map((b) => b.getAttribute("aria-label"))).toEqual(["Alpha"]);
+    expect(btn(el, "Alpha").tabIndex).toBe(0);
+  });
+
   test("narrow: it wraps, and the buttons keep their size", async () => {
     const wrap = await fixture<HTMLElement>(html`<div style="width: 80px"><tc-icon-rail label="V" .items=${ITEMS} .moreItems=${MORE}></tc-icon-rail></div>`);
     const buttons = [...wrap.querySelectorAll(".ui-irl__button")].map((b) => b.getBoundingClientRect());

@@ -70,7 +70,9 @@ is a `role="status"`, so a finished search is announced; an error is an alert. T
   isolated worker with execution limits, not on the UI thread.
 - Long lines are cut so the first match shows, with "…" where text was left out. Leading indentation is dropped.
 - Set `truncated` when the page stopped early, and the summary says how many are shown.
-- `selected` is a path and line, so it stays put when the same search runs again.
+- `selected` is a path, line and column, so it stays put when the same search runs again and tells two matches on one
+  line apart. Without a column it's the first match on that line.
+- Whole word matches where the query isn't next to a letter, digit or `_`, so `@media` and `fn(` work too.
 
 ## Do
 
@@ -117,10 +119,10 @@ export function Search({ find, open }: { find: (q: string) => Promise<SearchResu
       query={query}
       results={results}
       status={status}
-      onTcSearch={async (e) => {
-        setQuery(e.detail.query);
+      onSearch={async (q) => {
+        setQuery(q);
         setStatus("searching");
-        setResults(await find(e.detail.query));
+        setResults(await find(q));
         setStatus("done");
       }}
       onTcOpen={(e) => open(e.detail.path, e.detail.line)}

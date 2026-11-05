@@ -31,7 +31,7 @@ export class ChangeList {
   @Input() set rowActions(v: TcChangeList["rowActions"]) {
     this.#el.rowActions = v;
   }
-  /** How many rows show until Show more */
+  /** How many rows show until Show more; anything that isn't a whole number of at least 1 counts as 5 */
   @Input() set limit(v: TcChangeList["limit"] | `${number}`) {
     this.#el.limit = typeof v === "string" ? Number(v) : v;
   }

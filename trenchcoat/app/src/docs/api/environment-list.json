@@ -286,6 +286,22 @@
     ]
    },
    {
+    "id": "object-hasown",
+    "name": "Object.hasOwn()",
+    "bcd": "javascript.builtins.Object.hasOwn",
+    "versions": {
+     "chrome": "93",
+     "edge": "93",
+     "firefox": "92",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
     "id": "structured-clone",
     "name": "structuredClone()",
     "bcd": "api.structuredClone",
@@ -381,7 +397,7 @@
   "windowed": false
  },
  "size": {
-  "min": 31579,
-  "gzip": 8784
+  "min": 31750,
+  "gzip": 8870
  }
 }

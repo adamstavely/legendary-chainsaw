@@ -242,3 +242,47 @@ test("dynamic row controls always retain a keyboard entry point", async () => {
   el.processes=[]; await settle(); el.processes=[{id:"new",name:"new",status:"running"}]; await settle();
   expect(el.querySelectorAll("[data-at][tabindex='0']")).toHaveLength(1);
 });
+
+describe("tc-process-list – unsafe links, bad numbers and a tab stop that follows its row", () => {
+  test("a javascript: url never reaches tc-open; the port falls back to localhost or the link goes", async () => {
+    const procs: ProcessItem[] = [
+      { id: "a", name: "a", status: "running", port: 3000, url: "javascript:opener.__proc=1" },
+      { id: "b", name: "b", status: "running", url: "javascript:opener.__proc=1" },
+    ];
+    const el = await fixture<TcProcessList>(html`<tc-process-list .processes=${procs} .now=${NOW}></tc-process-list>`);
+    const seen: string[] = [];
+    el.addEventListener("tc-open", (e) => seen.push((e as CustomEvent).detail.url));
+    row(el, "a").querySelector<HTMLElement>(".ui-rproc__port")!.click();
+    expect(seen).toEqual(["http://localhost:3000"]);
+    expect(row(el, "b").querySelector(".ui-rproc__port")).toBeNull();
+  });
+
+  test("NaN, Infinity and negative readings are left out rather than shown", async () => {
+    const procs: ProcessItem[] = [{ id: "a", name: "a", status: "running", cpu: NaN, memory: -2048 }, { id: "b", name: "b", status: "running", cpu: Infinity, memory: 2048 }];
+    const el = await fixture<TcProcessList>(html`<tc-process-list .processes=${procs} .now=${NOW}></tc-process-list>`);
+    expect(row(el, "a").querySelector(".ui-rproc__meters")).toBeNull();
+    const b = row(el, "b").querySelector(".ui-rproc__meters")!.textContent!.replace(/\s+/g, " ").trim();
+    expect(b).not.toMatch(/NaN|Infinity|CPU/);
+    expect(b).toContain("2 KB memory");
+  });
+
+  test("the tab stop stays on its row when a row is added above it", async () => {
+    const el = await make();
+    row(el, "api").querySelector<HTMLElement>(".ui-rproc__main")!.click();
+    await settle();
+    expect(row(el, "api").querySelector<HTMLElement>(".ui-rproc__main")!.tabIndex).toBe(0);
+    el.processes = [{ id: "z", name: "z", status: "stopped" }, ...PROCS];
+    await settle();
+    expect(row(el, "api").querySelector<HTMLElement>(".ui-rproc__main")!.tabIndex).toBe(0);
+    expect([...el.querySelectorAll<HTMLElement>(".ui-rproc__list [data-at]")].filter((b) => b.tabIndex === 0)).toHaveLength(1);
+  });
+
+  test("when the focused row goes, focus moves to its neighbour, not the page", async () => {
+    const el = await make();
+    const stop = btn(el, "api", "stop");
+    stop.focus();
+    stop.click();
+    el.processes = PROCS.filter((p) => p.id !== "api");
+    await expect.poll(() => (document.activeElement as HTMLElement | null)?.closest(".ui-rproc__row")?.getAttribute("data-id") ?? document.activeElement?.tagName).toBe("tests");
+  });
+});

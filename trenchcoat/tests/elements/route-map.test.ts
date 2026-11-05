@@ -130,6 +130,30 @@ describe("tc-route-map", () => {
     expect([...el.querySelectorAll<HTMLElement>(".ui-rmap__row")].filter((b) => b.tabIndex === 0).map((b) => b.dataset.id)).toEqual(["home"]);
   });
 
+  test("the unit follows the rounded time: just under an hour reads 1 hr., just under a day yesterday", async () => {
+    const el = await make();
+    el.routes = [
+      { id: "a", path: "/a", status: "ok", lastVisited: NOW - 3590_000 },
+      { id: "b", path: "/b", status: "ok", lastVisited: NOW - 86_000_000 },
+      { id: "c", path: "/c", status: "ok", lastVisited: NOW - 59_600 },
+    ];
+    await settle();
+    expect(["a", "b", "c"].map((id) => text(row(el, id).querySelector(".ui-rmap__visited")))).toEqual(["1 hr. ago", "yesterday", "1 min. ago"]);
+  });
+
+  test("a status it doesn't know counts as not visited, and the chips stay", async () => {
+    const el = await make();
+    el.routes = [
+      { id: "a", path: "/a", status: "ok" },
+      { id: "b", path: "/b", status: "redirect" as never },
+    ];
+    await settle();
+    expect(row(el, "b").dataset.status).toBe("unvisited");
+    expect(text(row(el, "b").querySelector(".ui-rmap__status"))).toBe("Not visited");
+    expect(text(chip(el, "unvisited"))).toContain("1");
+    expect(text(chip(el, "ok"))).toContain("1");
+  });
+
   test("its own clock runs when there's no now", async () => {
     const el = await fixture<TcRouteMap>(html`<tc-route-map locale="en-US" .routes=${[{ id: "a", path: "/", status: "ok", lastVisited: Date.now() - 5 * 60_000 } satisfies RouteItem]}></tc-route-map>`);
     await expect.poll(() => text(el.querySelector(".ui-rmap__visited"))).toBe("5 min. ago");

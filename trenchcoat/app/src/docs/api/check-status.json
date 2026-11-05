@@ -279,6 +279,23 @@
     ]
    },
    {
+    "id": "inert",
+    "name": "inert",
+    "bcd": "api.HTMLElement.inert",
+    "versions": {
+     "chrome": "102",
+     "edge": "102",
+     "firefox": "112",
+     "safari": "15.5",
+     "safari_ios": "15.5"
+    },
+    "progressive": false,
+    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
+    "via": [
+     "internal/controllers"
+    ]
+   },
+   {
     "id": "focus-visible",
     "name": ":focus-visible",
     "bcd": "css.selectors.focus-visible",
@@ -360,7 +377,8 @@
   "animations": 0,
   "observers": [
    "MutationObserver (internal/base › TcElement)",
-   "MutationObserver (internal/controllers › AriaForwardController)"
+   "MutationObserver (internal/controllers › AriaForwardController)",
+   "MutationObserver (internal/controllers › FocusRescueController)"
   ],
   "clock": [],
   "listeners": [],
@@ -374,7 +392,7 @@
   "windowed": false
  },
  "size": {
-  "min": 20216,
-  "gzip": 6833
+  "min": 21497,
+  "gzip": 7334
  }
 }

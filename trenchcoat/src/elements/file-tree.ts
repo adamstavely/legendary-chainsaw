@@ -52,16 +52,20 @@ export const defaultFileTreeLabels: FileTreeLabels = {
   loading: "Loading",
 };
 
-/** Builds nodes from paths such as "src/a.ts"; a path ending in "/" is an empty folder */
+/** Builds nodes from paths such as "src/a.ts"; a path ending in "/" is an empty folder. Backslashes count as slashes,
+ *  "." parts are dropped and ".." goes up a folder, so "./lib/a.ts" and "lib\\a.ts" land in the same place */
 export function fileTreeFromPaths(paths: readonly string[]): FileTreeNode[] {
   const root: FileTreeNode[] = [];
-  for (const path of paths) {
-    const parts = path.split("/");
+  for (const raw of paths) {
+    const path = raw.replace(/\\/g, "/");
     const folder = path.endsWith("/");
-    if (folder) parts.pop();
+    const parts: string[] = [];
+    for (const part of path.split("/")) {
+      if (part === "..") parts.pop();
+      else if (part && part !== ".") parts.push(part);
+    }
     let level = root;
     parts.forEach((name, i) => {
-      if (!name) return;
       const last = i === parts.length - 1;
       let node = level.find((n) => n.name === name);
       if (!node) {
@@ -149,6 +153,8 @@ export class TcFileTree extends TcElement {
   /** The path of the row that holds the tab stop */
   @state() private accessor active: string | null = null;
   @state() private accessor message = "";
+  /** Folders opened or closed by hand while a filter is on; forgotten when the filter changes */
+  @state() private accessor filterOpen = new Map<string, boolean>();
 
   private rows: Row[] = [];
   private typed = "";
@@ -175,23 +181,26 @@ export class TcFileTree extends TcElement {
     const q = this.filter;
     const open = new Set(this.expanded);
     const rows: Row[] = [];
-    const matches = (n: FileTreeNode): boolean => n.name.toLowerCase().includes(q) || (n.children ?? []).some(matches);
-    const walk = (nodes: FileTreeNode[], parent: string | null, level: number) => {
-      const shown = (this.sort ? sorted(nodes) : nodes).filter((n) => !q || matches(n));
+    const hit = (n: FileTreeNode) => n.name.toLowerCase().includes(q);
+    const matches = (n: FileTreeNode): boolean => hit(n) || (n.children ?? []).some(matches);
+    // `inside`: under a folder whose own name matched, so everything in it shows
+    const walk = (nodes: FileTreeNode[], parent: string | null, level: number, inside: boolean) => {
+      const shown = (this.sort ? sorted(nodes) : nodes).filter((n) => !q || inside || matches(n));
       shown.forEach((node, i) => {
         const path = parent ? `${parent}/${node.name}` : node.name;
-        // While filtering, a folder with a match inside stays open
-        const isOpen = isFolder(node) && (q ? (node.children ?? []).some(matches) : open.has(path));
+        // While filtering, a folder with a match inside starts open; any folder can still be opened or closed by hand
+        const isOpen = isFolder(node) && (q ? (this.filterOpen.get(path) ?? (node.children ?? []).some(matches)) : open.has(path));
         rows.push({ node, path, parent, level, size: shown.length, pos: i + 1, open: isOpen });
-        if (isOpen && node.children) walk(node.children, path, level + 1);
+        if (isOpen && node.children) walk(node.children, path, level + 1, inside || (!!q && hit(node)));
       });
     };
-    walk(this.nodes, null, 1);
+    walk(this.nodes, null, 1, false);
     return rows;
   }
 
   protected override willUpdate(changed: PropertyValues) {
     super.willUpdate(changed);
+    if (changed.has("query") && this.filterOpen.size) this.filterOpen = new Map();
     this.rows = this.build();
     if (!this.rows.some((r) => r.path === this.active)) this.active = this.rows.find((r) => r.path === this.selected)?.path ?? this.rows[0]?.path ?? null;
     this.win.compute();
@@ -205,9 +214,10 @@ export class TcFileTree extends TcElement {
   }
 
   private toggle(row: Row) {
-    // A filter decides what's open until it's cleared
-    if (this.filter) return;
-    if (this.setExpanded(row.path, !row.open) && !row.open && row.node.lazy && !row.node.children) this.emit<FileTreeLoad>("tc-load", { path: row.path, node: row.node });
+    // While filtering, opening and closing is the filter's own view: it doesn't change `expanded`
+    if (this.filter) this.filterOpen = new Map(this.filterOpen).set(row.path, !row.open);
+    else if (!this.setExpanded(row.path, !row.open)) return;
+    if (!row.open && row.node.lazy && !row.node.children) this.emit<FileTreeLoad>("tc-load", { path: row.path, node: row.node });
   }
 
   private press(row: Row) {
@@ -312,7 +322,7 @@ export class TcFileTree extends TcElement {
     return html`${name.slice(0, at)}<mark class="ui-ftr__hit">${name.slice(at, at + q.length)}</mark>${name.slice(at + q.length)}`;
   }
 
-  private row(r: Row) {
+  private row(r: Row, stop: string | null) {
     const words = this.words;
     const folder = isFolder(r.node);
     const loading = folder && r.open && !!r.node.lazy && !r.node.children;
@@ -327,10 +337,11 @@ export class TcFileTree extends TcElement {
       aria-expanded=${ifDefined(folder ? (r.open ? "true" : "false") : undefined)}
       aria-selected=${r.path === this.selected ? "true" : "false"}
       aria-busy=${ifDefined(loading ? "true" : undefined)}
-      tabindex=${r.path === this.active ? 0 : -1}
+      tabindex=${r.path === stop ? 0 : -1}
       title=${r.path}
       style=${styleMap({ "--tc-file-tree-level": String(r.level - 1) })}
       @click=${() => this.press(r)}
+      @focus=${() => this.active !== r.path && (this.active = r.path)}
     >
       ${folder ? html`<svg class="ui-ftr__chevron" viewBox="0 0 24 24" aria-hidden="true">${svg`<path d="m9 18 6-6-6-6"></path>`}</svg>` : glyph(r.node.icon ?? ICONS[kindOf(r.node.name)], "ui-ftr__icon")}
       <span class="ui-ftr__name">${this.name(r.node.name)}</span>
@@ -345,8 +356,12 @@ export class TcFileTree extends TcElement {
     if (!rows.length) return html`<p class="ui-ftr__empty">${this.filter ? words.noMatches : words.empty}</p>`;
     const { start, end } = this.win;
     const h = this.win.rowHeight;
+    // A long tree only renders the rows near the view; when the active row has scrolled out, the first rendered row
+    // takes the tab stop, so Tab never skips the tree
+    const at = rows.findIndex((r) => r.path === this.active);
+    const stop = at >= start && at < end ? this.active : (rows[start]?.path ?? null);
     const shown: TemplateResult[] = [];
-    for (let n = start; n < end; n++) shown.push(this.row(rows[n]));
+    for (let n = start; n < end; n++) shown.push(this.row(rows[n], stop));
     return html`<div class="ui-ftr__scroll" style=${styleMap({ maxHeight: `${this.maxHeight}px` })}>
       <div class="ui-ftr__rows" role="tree" aria-label=${this.heading || "Files"} @keydown=${this.onTreeKey}>
         ${start > 0 ? html`<div aria-hidden="true" style=${styleMap({ height: `${start * h}px` })}></div>` : nothing}${shown}${end < rows.length ? html`<div aria-hidden="true" style=${styleMap({ height: `${(rows.length - end) * h}px` })}></div>` : nothing}

@@ -5,6 +5,7 @@ import { live } from "lit/directives/live.js";
 import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
+import { FocusRescueController } from "./internal/controllers";
 import { formatDate } from "./internal/util";
 
 /*
@@ -52,6 +53,12 @@ export type SessionListLabels = Record<SessionStatus, string> & {
   unread: string;
   empty: string;
   noMatch: string;
+  /** Said when a session is pinned; {title} is the session's title */
+  pinnedOne: string;
+  /** Said when a session is unpinned; {title} is the session's title */
+  unpinnedOne: string;
+  /** Said when a session is archived; {title} is the session's title */
+  archivedOne: string;
 };
 
 /** Details of the events */
@@ -78,7 +85,13 @@ export const defaultSessionListLabels: SessionListLabels = {
   unread: "unread",
   empty: "No sessions yet",
   noMatch: "No sessions match",
+  pinnedOne: "Pinned {title}",
+  unpinnedOne: "Unpinned {title}",
+  archivedOne: "Archived {title}",
 };
+
+/** A label with the session's title in it – a function replacement, so a "$" in a title stays a "$" */
+const withTitle = (label: string, title: string) => label.replace("{title}", () => title);
 
 /* Icons: Lucide (ISC, lucide.dev) */
 const lucide = (size: number, body: ReturnType<typeof svg>) =>
@@ -158,6 +171,12 @@ export class TcSessionList extends TcElement {
   private timer = 0;
   private uid = `tc-sesl-${++uidCount}`;
 
+  constructor() {
+    super();
+    // Archive usually takes the row away while its button has focus; focus moves to the neighbour that's now the tab stop
+    new FocusRescueController(this, () => this.querySelector<HTMLElement>('.ui-sesl__row [data-c][tabindex="0"]'));
+  }
+
   override connectedCallback() {
     super.connectedCallback();
     this.tick();
@@ -219,11 +238,13 @@ export class TcSessionList extends TcElement {
     const time = this.now ?? this.clock;
     const diff = Math.max(0, time - ms);
     const rtf = new Intl.RelativeTimeFormat(this.locale, { numeric: "auto", style: "narrow" });
-    if (diff < MIN) return "now";
+    if (diff < MIN) return rtf.format(0, "second");
     if (diff < 60 * MIN) return rtf.format(-Math.floor(diff / MIN), "minute");
     if (diff < 24 * 60 * MIN) return rtf.format(-Math.floor(diff / (60 * MIN)), "hour");
     if (diff < 7 * 24 * 60 * MIN) return rtf.format(-Math.floor(diff / (24 * 60 * MIN)), "day");
-    return formatDate(ms, this.locale, { month: "short", day: "numeric" });
+    // Older than a week: a date, with the year when it isn't this year's
+    const sameYear = new Date(ms).getFullYear() === new Date(time).getFullYear();
+    return formatDate(ms, this.locale, sameYear ? { month: "short", day: "numeric" } : { year: "numeric", month: "short", day: "numeric" });
   }
 
   /* ---------- Acting ---------- */
@@ -237,13 +258,13 @@ export class TcSessionList extends TcElement {
   private pin(s: SessionItem) {
     this.active = { id: s.id, c: 1 };
     const pinned = !s.pinned;
-    if (this.emit<SessionPin>("tc-pin", { id: s.id, pinned, session: s }, { cancelable: true })) this.announce = `${pinned ? "Pinned" : "Unpinned"} ${s.title}`;
+    if (this.emit<SessionPin>("tc-pin", { id: s.id, pinned, session: s }, { cancelable: true })) this.announce = withTitle(this.word(pinned ? "pinnedOne" : "unpinnedOne"), s.title);
   }
   private archive(s: SessionItem) {
     const order = this.order;
     const i = order.findIndex((x) => x.id === s.id);
     if (!this.emit<SessionArchive>("tc-archive", { id: s.id, session: s }, { cancelable: true })) return;
-    this.announce = `Archived ${s.title}`;
+    this.announce = withTitle(this.word("archivedOne"), s.title);
     // The tab stop moves to a neighbour, in case the page takes the row away
     const next = order[i + 1] ?? order[i - 1];
     if (next) this.active = { id: next.id, c: 0 };

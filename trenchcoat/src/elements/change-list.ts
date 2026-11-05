@@ -67,6 +67,15 @@ const MARK: Record<ChangeState, ReturnType<typeof svg>> = {
   merged: svg`<circle cx="18" cy="18" r="3"></circle><circle cx="6" cy="6" r="3"></circle><path d="M6 21V9a9 9 0 0 0 9 9"></path>`,
   closed: svg`<circle cx="6" cy="6" r="3"></circle><path d="M6 9v12"></path><path d="m21 3-6 6"></path><path d="m21 9-6-6"></path><path d="M18 11.5V15"></path><circle cx="18" cy="18" r="3"></circle>`,
 };
+/** Keys for repeat(): the id, with a count added for a later row that reuses an id, so the rows still render apart */
+const keysOf = (ids: string[]) => {
+  const seen = new Map<string, number>();
+  return ids.map((id) => {
+    const n = seen.get(id) ?? 0;
+    seen.set(id, n + 1);
+    return n ? `${id}\u0000${n}` : id;
+  });
+};
 const headIcon = MARK.open;
 const moreIcon = svg`<circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="19" r="1"></circle>`;
 
@@ -88,7 +97,7 @@ export class TcChangeList extends TcElement {
   @property({ attribute: false }) accessor items: ChangeItem[] = [];
   /** What a row's More menu offers; with none there's no More button */
   @property({ attribute: false }) accessor rowActions: ChangeRowAction[] = [];
-  /** How many rows show until Show more */
+  /** How many rows show until Show more; anything that isn't a whole number of at least 1 counts as 5 */
   @property({ type: Number }) accessor limit = 5;
   /** Every row is showing. Changed by Show more unless a tc-expanded-change listener calls preventDefault() */
   @property({ type: Boolean, reflect: true }) accessor expanded = false;
@@ -104,6 +113,8 @@ export class TcChangeList extends TcElement {
   /** The row whose menu is open */
   @state() private accessor menuFor: string | null = null;
   private menuTrigger: HTMLElement | null = null;
+  /** Show more was pressed while `expanded` is controlled: the first revealed row takes focus once the page expands it */
+  private revealFrom: number | null = null;
 
   private readonly pop = new PopoverController(this, {
     popover: () => this.querySelector<HTMLElement>(".ui-chl__menu"),
@@ -120,8 +131,12 @@ export class TcChangeList extends TcElement {
   private word<K extends keyof ChangeListLabels>(key: K) {
     return this.labels[key] ?? defaultChangeListLabels[key];
   }
+  /** `limit`, made usable: an attribute like "abc", "" or "0" would otherwise hide every row */
+  private get rowLimit() {
+    return Number.isFinite(this.limit) && this.limit >= 1 ? Math.floor(this.limit) : 5;
+  }
   private get shown() {
-    return this.expanded ? this.items : this.items.slice(0, Math.max(0, this.limit));
+    return this.expanded ? this.items : this.items.slice(0, this.rowLimit);
   }
   private num(n: number) {
     return n.toLocaleString(this.locale);
@@ -186,14 +201,23 @@ export class TcChangeList extends TcElement {
 
   private toggleExpanded() {
     const expanded = !this.expanded;
-    if (!this.emit<ChangeExpandedChange>("tc-expanded-change", { expanded }, { cancelable: true })) return;
     const firstNew = this.shown.length;
+    this.revealFrom = null;
+    if (!this.emit<ChangeExpandedChange>("tc-expanded-change", { expanded }, { cancelable: true })) {
+      // Controlled: the page may still expand the list from its listener, and focus should follow then too
+      if (expanded) this.revealFrom = firstNew;
+      return;
+    }
     this.expanded = expanded;
     if (expanded) this.focusAt(firstNew, 0);
   }
 
   protected override willUpdate(changed: PropertyValues) {
     super.willUpdate(changed);
+    if (changed.has("expanded") && this.revealFrom !== null) {
+      if (this.expanded) this.focusAt(this.revealFrom, 0);
+      this.revealFrom = null;
+    }
     const n = this.shown.length;
     if (n && (this.active.r >= n || (this.active.c === 1 && !this.rowActions.length))) this.active = { r: Math.min(this.active.r, n - 1), c: 0 };
     // A row whose menu is open went away
@@ -250,11 +274,12 @@ export class TcChangeList extends TcElement {
 
   protected override render() {
     const rows = this.shown;
-    const hidden = this.items.length - Math.max(0, this.limit);
+    const hidden = this.items.length - this.rowLimit;
+    const keys = keysOf(rows.map((i) => i.id));
     return html`${this.heading ? cardHead({ icon: headIcon, title: this.heading, subtitle: this.description }) : nothing}
       <div class="ui-chl__card">
         ${rows.length
-          ? html`<ul class="ui-chl__list" aria-label=${this.heading || "Changes"} @keydown=${this.onKey}>${repeat(rows, (i) => i.id, (i, r) => this.renderRow(i, r))}</ul>`
+          ? html`<ul class="ui-chl__list" aria-label=${this.heading || "Changes"} @keydown=${this.onKey}>${repeat(rows, (_, r) => keys[r], (i, r) => this.renderRow(i, r))}</ul>`
           : html`<p class="ui-chl__empty">${this.word("empty")}</p>`}
         ${hidden > 0
           ? html`<button type="button" class="ui-chl__toggle" aria-expanded=${this.expanded ? "true" : "false"} @click=${() => this.toggleExpanded()}>${this.word(this.expanded ? "showLess" : "showMore")}</button>`

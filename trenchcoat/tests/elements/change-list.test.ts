@@ -123,6 +123,44 @@ describe("tc-change-list", () => {
     expect(el.querySelector(".ui-chl__toggle")).toBeNull();
   });
 
+  test("a limit that isn't a whole number of at least 1 counts as 5; the empty text is only for no changes", async () => {
+    const six = [...ITEMS, { ...ITEMS[0], id: "e" }, { ...ITEMS[1], id: "f" }];
+    for (const limit of ["0", "", "abc", "-3"]) {
+      const el = await fixture<TcChangeList>(html`<tc-change-list .items=${six} limit=${limit}></tc-change-list>`);
+      expect([limit, rows(el).length]).toEqual([limit, 5]);
+      expect(el.querySelector(".ui-chl__empty")).toBeNull();
+      expect(el.querySelector(".ui-chl__toggle")).not.toBeNull();
+      cleanup();
+    }
+  });
+
+  test("two changes with the same id both show, in order", async () => {
+    const el = await fixture<TcChangeList>(html`<tc-change-list .items=${[ITEMS[0], { ...ITEMS[1], id: "a" }, ITEMS[2]]}></tc-change-list>`);
+    expect(rows(el).map((r) => r.querySelector(".ui-chl__title")!.textContent)).toEqual(["Add freezer locations", "Warn before consent expires", "Barcode support"]);
+    el.items = [ITEMS[2], { ...ITEMS[1], id: "a" }, ITEMS[0]];
+    await settle();
+    expect(rows(el).map((r) => r.querySelector(".ui-chl__title")!.textContent)).toEqual(["Barcode support", "Warn before consent expires", "Add freezer locations"]);
+  });
+
+  test("React, controlled: Show more still moves focus to the first new row once the parent expands", async () => {
+    const wrap = document.body.appendChild(document.createElement("div"));
+    const root = createRoot(wrap);
+    function Parent() {
+      const [open, setOpen] = React.useState(false);
+      return React.createElement(ChangeList, { items: ITEMS, limit: 2, expanded: open, onExpandedChange: setOpen });
+    }
+    await act(async () => root.render(React.createElement(Parent)));
+    const el = wrap.querySelector<TcChangeList>("tc-change-list")!;
+    await settle();
+    const toggle = el.querySelector<HTMLElement>(".ui-chl__toggle")!;
+    toggle.focus();
+    await act(async () => toggle.click());
+    await settle();
+    expect(rows(el)).toHaveLength(4);
+    await expect.poll(() => at()).toBe("2:0");
+    await act(async () => root.unmount());
+  });
+
   test("keyboard: arrows, Home and End move the one tab stop", async () => {
     const el = await make("standard", 4);
     el.querySelector<HTMLElement>('[data-at="0:0"]')!.focus();

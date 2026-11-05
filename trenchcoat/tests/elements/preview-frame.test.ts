@@ -98,8 +98,10 @@ describe("tc-preview-frame", () => {
     key("Enter");
     await settle();
     expect(seen).toEqual(["http://localhost:5173/freezers"]);
-    expect(el.url).toBe("http://localhost:5173/freezers");
-    expect(el.src).toBe("http://localhost:5173/freezers");
+    // Kept as the element's own navigation: the public src and url stay what the page set
+    expect(el.address).toBe("http://localhost:5173/freezers");
+    expect(el.querySelector("iframe")!.getAttribute("src")).toBe("http://localhost:5173/freezers");
+    expect(el.src).toBe("about:blank");
     expect(el.querySelector(".ui-pvf__address")!.getAttribute("data-kind")).toBe("local");
     expect(el.querySelector(".ui-pvf__lock")!.textContent).toContain("Local");
     // Prevented: nothing changes
@@ -109,7 +111,7 @@ describe("tc-preview-frame", () => {
     key("Enter");
     await settle();
     expect(seen.at(-1)).toBe("https://example.org");
-    expect(el.url).toBe("http://localhost:5173/freezers");
+    expect(el.address).toBe("http://localhost:5173/freezers");
     // Escape goes back to the address
     key("Escape");
     await settle();
@@ -336,4 +338,80 @@ test("navigation belongs to its tab across selection, controlled changes, closin
   await navigate(edited);
   el.querySelector<HTMLElement>('.ui-pvf__tab[data-id="a"]')!.dispatchEvent(new KeyboardEvent("keydown",{key:"Delete",bubbles:true}));await settle();
   expect(el.address).toBe(b);
+});
+
+describe("tc-preview-frame – unsafe addresses, React navigation and closing tabs", () => {
+  const typeAddress = async (el: TcPreviewFrame, text: string) => {
+    const field = input(el);
+    field.focus();
+    field.value = text;
+    field.dispatchEvent(new Event("input", { bubbles: true }));
+    key("Enter");
+    await settle();
+  };
+
+  test("a javascript: tab url never reaches tc-open-external, and the button is off", async () => {
+    const el = await fixture<TcPreviewFrame>(html`<tc-preview-frame .tabs=${[{ id: "x", title: "X", url: "javascript:opener.__pvf=1" }]}></tc-preview-frame>`);
+    const seen: unknown[] = [];
+    el.addEventListener("tc-open-external", (e) => seen.push((e as CustomEvent).detail));
+    expect(tool(el, "external").disabled).toBe(true);
+    tool(el, "external").click();
+    expect(seen).toEqual([]);
+    // A real address still opens, with the url it shows
+    el.tabs = [{ id: "x", title: "X", url: "https://example.org/" }];
+    await settle();
+    tool(el, "external").click();
+    expect(seen).toEqual([{ url: "https://example.org/" }]);
+  });
+
+  test("a typed address the frame can't show isn't passed on, and says why", async () => {
+    const el = await fixture<TcPreviewFrame>(html`<tc-preview-frame src="about:blank"></tc-preview-frame>`);
+    const seen: string[] = [];
+    el.addEventListener("tc-navigate", (e) => seen.push((e as CustomEvent).detail.url));
+    await typeAddress(el, "javascript:alert(1)");
+    expect(seen).toEqual([]);
+    expect(el.querySelector(".ui-pvf__status")!.textContent).toContain("Only http and https");
+    expect(el.querySelector("iframe")!.getAttribute("src")).toBe("about:blank");
+  });
+
+  test("a host and port followed by ? or # gets a scheme", () => {
+    expect(normalizePreviewUrl("localhost:5173?x=1")).toBe("http://localhost:5173?x=1");
+    expect(normalizePreviewUrl("localhost:5173#top")).toBe("http://localhost:5173#top");
+  });
+
+  test("closing the active tab makes its neighbour active through a cancelable tc-active-change", async () => {
+    const el = await fixture<TcPreviewFrame>(html`<tc-preview-frame active="b" .tabs=${TABS}></tc-preview-frame>`);
+    const seen: string[] = [];
+    el.addEventListener("tc-active-change", (e) => seen.push((e as CustomEvent).detail.active));
+    el.querySelector<HTMLElement>('.ui-pvf__tabwrap:has([data-id="b"]) .ui-pvf__tabclose')!.click();
+    await settle();
+    expect(seen).toEqual(["c"]);
+    expect(el.active).toBe("c");
+    // Prevented: the page keeps `active` as it is
+    el.addEventListener("tc-active-change", (e) => e.preventDefault(), { once: true });
+    el.querySelector<HTMLElement>('.ui-pvf__tabwrap:has([data-id="c"]) .ui-pvf__tabclose')!.click();
+    await settle();
+    expect(seen).toEqual(["c", "a"]);
+    expect(el.active).toBe("c");
+  });
+
+  test("React without tabs: a navigation survives an unrelated re-render", async () => {
+    const wrap = document.body.appendChild(document.createElement("div"));
+    const root = createRoot(wrap);
+    const render = (description: string) => act(async () => root.render(React.createElement(PreviewFrame, { src: "about:blank", description })));
+    await render("One");
+    const el = wrap.querySelector<TcPreviewFrame>("tc-preview-frame")!;
+    await settle();
+    await typeAddress(el, "https://x.example/");
+    await render("Two");
+    await settle();
+    expect(el.address).toBe("https://x.example/");
+    expect(el.querySelector("iframe")!.getAttribute("src")).toBe("https://x.example/");
+    // The page setting src again is an explicit update, and wins
+    await act(async () => root.render(React.createElement(PreviewFrame, { src: "https://y.example/", description: "Two" })));
+    await settle();
+    expect(el.address).toBe("https://y.example/");
+    await act(async () => root.unmount());
+    wrap.remove();
+  });
 });

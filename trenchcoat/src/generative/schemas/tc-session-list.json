@@ -99,6 +99,15 @@
         },
         "noMatch": {
           "type": "string"
+        },
+        "pinnedOne": {
+          "type": "string"
+        },
+        "unpinnedOne": {
+          "type": "string"
+        },
+        "archivedOne": {
+          "type": "string"
         }
       },
       "additionalProperties": false,

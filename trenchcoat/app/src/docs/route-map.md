@@ -59,6 +59,7 @@ route is announced through a polite status.
 - Write paths as the router does, with `:params`; a child's path includes its parent's.
 - Pass `loadMs` and `lastVisited` from the last real visit; leave them out for routes never visited.
 - Pass `now` to keep the times still, as in a screenshot.
+- A `status` it doesn't know counts as not visited.
 
 ## Do
 

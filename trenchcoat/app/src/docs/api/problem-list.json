@@ -66,7 +66,7 @@
      "attribute": "selected",
      "type": "string | null",
      "default": "null",
-     "description": "The chosen problem's key (its id, or `problemKey`)",
+     "description": "The chosen problem's key (its id, or `problemKey`; an exact copy's key ends in \"#2\", \"#3\"…)",
      "readonly": false
     },
     {
@@ -152,8 +152,8 @@
     {
      "name": "tc-fix",
      "detail": "",
-     "description": "A problem's fix was pressed ({ problem }: ProblemFix); cancelable – prevented, the page has dealt with it and nothing else is said",
-     "cancelable": true
+     "description": "A problem's fix was pressed ({ problem }: ProblemFix); the page applies it",
+     "cancelable": false
     },
     {
      "name": "tc-action",
@@ -247,7 +247,7 @@
   {
    "name": "problemKey",
    "signature": "problemKey(p: ProblemItem): void",
-   "description": "A problem's identity: its id, or where it is and what it says"
+   "description": "A problem's identity: its id, or where it is, what found it and what it says. Exact copies in one list get \"#2\", \"#3\"… after it."
   }
  ],
  "react": [
@@ -426,7 +426,7 @@
     },
     {
      "name": "tc-fix",
-     "cancelable": true
+     "cancelable": false
     },
     {
      "name": "tc-action",
@@ -646,7 +646,7 @@
   "windowed": false
  },
  "size": {
-  "min": 31340,
-  "gzip": 9630
+  "min": 31590,
+  "gzip": 9728
  }
 }

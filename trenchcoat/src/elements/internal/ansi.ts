@@ -31,12 +31,34 @@ function indexed(n: number): string | null {
   return level > 200 ? "white" : level < 72 ? "black" : "gray";
 }
 
-function applySgr(from: Sgr, params: number[]): Sgr {
+/** Applies SGR parameters. Each is a code with any colon sub-parameters (`4:3`, `38:2::255:0:0`), so a sub-parameter is
+ *  never read as a code of its own; the older `38;5;n` and `38;2;r;g;b` spell the colour across several parameters */
+function applySgr(from: Sgr, params: number[][]): Sgr {
   const s = { ...from };
   if (!params.length) return { ...PLAIN };
   for (let i = 0; i < params.length; i++) {
-    const p = params[i];
-    if (p === 0) Object.assign(s, PLAIN);
+    const [p, ...sub] = params[i];
+    if (p === 38 || p === 48) {
+      let c: string | null = null;
+      if (sub.length) {
+        // 38:5:n, and 38:2:r:g:b or 38:2:<colour space>:r:g:b
+        if (sub[0] === 5) c = indexed(sub[1]);
+        else if (sub[0] === 2) {
+          const rgb = sub.length >= 5 ? sub.slice(-3) : sub.slice(1, 4);
+          c = nearest(rgb[0] ?? 0, rgb[1] ?? 0, rgb[2] ?? 0);
+        }
+      } else if (params[i + 1]?.[0] === 5) {
+        c = indexed(params[i + 2]?.[0]);
+        i += 2;
+      } else if (params[i + 1]?.[0] === 2) {
+        c = nearest(params[i + 2]?.[0] ?? 0, params[i + 3]?.[0] ?? 0, params[i + 4]?.[0] ?? 0);
+        i += 4;
+      }
+      if (p === 38) s.fg = c;
+      else s.bg = c;
+    } else if (p === 4 && sub.length) s.u = sub[0] !== 0; // 4:0 is no underline; 4:1–4:5 are underline styles
+    else if (sub.length) continue; // Other codes with sub-parameters (such as 58, the underline's colour) aren't drawn
+    else if (p === 0) Object.assign(s, PLAIN);
     else if (p === 1) s.b = true;
     else if (p === 2) s.d = true;
     else if (p === 3) s.i = true;
@@ -52,18 +74,6 @@ function applySgr(from: Sgr, params: number[]): Sgr {
     else if (p === 49) s.bg = null;
     else if (p >= 90 && p <= 97) s.fg = p === 90 ? "gray" : COLOURS[p - 90];
     else if (p >= 100 && p <= 107) s.bg = p === 100 ? "gray" : COLOURS[p - 100];
-    else if (p === 38 || p === 48) {
-      let c: string | null = null;
-      if (params[i + 1] === 5) {
-        c = indexed(params[i + 2]);
-        i += 2;
-      } else if (params[i + 1] === 2) {
-        c = nearest(params[i + 2] ?? 0, params[i + 3] ?? 0, params[i + 4] ?? 0);
-        i += 4;
-      }
-      if (p === 38) s.fg = c;
-      else s.bg = c;
-    }
   }
   return s;
 }
@@ -91,8 +101,11 @@ function classOf(s: Sgr, prefix: string): string {
 /** One line of output: its plain text, and the styled runs when it has any */
 export type AnsiLine = { text: string; runs: Array<[cls: string, text: string]> | null };
 
-// CSI (colours, cursor moves), OSC (titles, links) and the two-byte escapes; only SGR ("m") changes the style
-const ESCAPE = /\x1b(?:\[([0-9;:?]*)[ -/]*([@-~])|\][^\x07\x1b]*(?:\x07|\x1b\\)?|[@-Z\\-_])/g;
+// CSI (colours, cursor moves), OSC (titles, links) and the two-byte escapes; only SGR ("m") changes the style. CSI's
+// parameter bytes are 0x30–0x3F, which includes the private markers < = > ? that TUIs send (`\x1b[>4;2m`)
+const ESCAPE = /\x1b(?:\[([0-?]*)[ -/]*([@-~])|\][^\x07\x1b]*(?:\x07|\x1b\\)?|[@-Z\\-_])/g;
+/** An SGR's parameters: `;` separates them, `:` separates a parameter's sub-parameters; empty is 0 */
+const sgrParams = (raw: string) => (raw ? raw.split(";").map((p) => p.split(":").map((n) => (n === "" ? 0 : Number(n)))) : []);
 const CONTROL = /[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]/g;
 
 /** Parses one line (no \n) from a style; returns the line and the style after it */
@@ -121,7 +134,8 @@ function parseLine(raw: string, from: Sgr, prefix: string): { line: AnsiLine; st
     let m: RegExpExecArray | null;
     while ((m = ESCAPE.exec(raw))) {
       if (m.index > at) push(raw.slice(at, m.index));
-      if (m[2] === "m") style = applySgr(style, m[1] ? m[1].split(/[;:]/).map((n) => (n === "" ? 0 : Number(n))) : []);
+      // A private marker (`\x1b[>4;2m` sets a key mode) makes it something other than a style
+      if (m[2] === "m" && !/[<=>?]/.test(m[1])) style = applySgr(style, sgrParams(m[1]));
       at = m.index + m[0].length;
     }
     if (at < raw.length) push(raw.slice(at));

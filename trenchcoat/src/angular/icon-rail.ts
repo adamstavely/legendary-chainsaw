@@ -19,7 +19,7 @@ export class IconRail {
   @Input() set label(v: TcIconRail["label"]) {
     this.#el.label = v;
   }
-  /** The buttons */
+  /** The buttons; give each its own id – of two with the same id, only the first can be chosen or take the tab stop */
   @Input() set items(v: TcIconRail["items"]) {
     this.#el.items = v;
   }

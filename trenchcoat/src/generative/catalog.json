@@ -2297,6 +2297,7 @@
       "tc-expanded-change",
       "tc-selected-change",
       "tc-open",
+      "tc-replacement-change",
       "tc-replace",
       "tc-action"
     ]

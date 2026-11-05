@@ -11,6 +11,7 @@ import { afterEach, describe, expect, test } from "vitest";
 import "../../src/elements/terminal";
 import type { TcTerminal } from "../../src/elements/terminal";
 import { Terminal } from "../../src/elements/react/terminal";
+import { checkProps, loadSchema } from "../../src/generative";
 import { cleanup, finish, fixture, settle } from "./helpers";
 
 afterEach(cleanup);
@@ -18,6 +19,9 @@ afterEach(cleanup);
 const make = (output = "", look: "standard" | "clean" = "standard") => fixture<TcTerminal>(html`<tc-terminal look=${look} .output=${output}></tc-terminal>`);
 const input = (el: Element) => el.querySelector<HTMLInputElement>(".ui-trm__input")!;
 const press = (el: Element, key: string, init: KeyboardEventInit = {}) => input(el).dispatchEvent(new KeyboardEvent("keydown", { key, bubbles: true, cancelable: true, ...init }));
+const frames = async (n: number) => {
+  for (let i = 0; i < n; i++) await new Promise((r) => requestAnimationFrame(r));
+};
 async function type(el: TcTerminal, text: string) {
   input(el).value = text;
   input(el).dispatchEvent(new Event("input", { bubbles: true }));
@@ -36,6 +40,21 @@ describe("tc-terminal", () => {
       expect(el.querySelector('[role="log"]')).not.toBeNull();
     });
   }
+
+  test("colon sub-parameters are part of their code, and private CSI sequences are consumed", async () => {
+    const el = await make("\x1b[1;4mA\x1b[4:0mB\x1b[0m\n\x1b[4:3mC\x1b[0m\n\x1b[38:2::255:0:0mR\x1b[0m\n\x1b[>4;2mkeys\n");
+    const lines = [...el.querySelectorAll(".ui-trm__line")];
+    // 4:0 turns the underline off and keeps the bold
+    expect([...lines[0].querySelectorAll("span")].map((s) => [s.className, s.textContent])).toEqual([
+      ["ui-trm__b ui-trm__u", "A"],
+      ["ui-trm__b", "B"],
+    ]);
+    // 4:3, a curly underline, is an underline – not italic
+    expect(lines[1].querySelector("span")!.className).toBe("ui-trm__u");
+    // The colour space's empty slot isn't a reset
+    expect(lines[2].querySelector("span")!.className).toBe("ui-trm__fg-red");
+    expect(lines[3].textContent).toBe("keys");
+  });
 
   test("Enter fires tc-command, empties the prompt and remembers the command", async () => {
     const el = await make();
@@ -147,6 +166,59 @@ describe("tc-terminal", () => {
     const el = await make(big);
     await expect.poll(() => el.querySelector(".ui-trm__lines")!.textContent).toContain("line 19999");
     expect(el.querySelectorAll(".ui-trm__line").length).toBeLessThan(500);
+  });
+
+  test("long output that follows the end settles: no update per frame while idle, and a jump to the top shows rows", async () => {
+    const big = Array.from({ length: 2000 }, (_, i) => `line ${i}`).join("\n") + "\n";
+    const el = await make(big);
+    await expect.poll(() => el.querySelector(".ui-trm__lines")!.textContent).toContain("line 1999");
+    await frames(3);
+    // Count the element's updates by wrapping its (protected) updated()
+    let updates = 0;
+    const probe = el as unknown as { updated: (c: Map<string, unknown>) => void };
+    const was = probe.updated.bind(el);
+    probe.updated = (c) => {
+      updates++;
+      was(c);
+    };
+    await frames(20);
+    expect(updates).toBeLessThan(3);
+    const out = el.querySelector<HTMLElement>(".ui-trm__out")!;
+    out.scrollTop = 0;
+    out.dispatchEvent(new Event("scroll"));
+    await expect.poll(() => el.querySelector(".ui-trm__lines")!.textContent).toContain("line 0");
+  });
+
+  test("Clear keeps focus in the terminal when the page empties the output", async () => {
+    const el = await make("text\n");
+    el.addEventListener("tc-clear", () => (el.output = ""));
+    const clear = el.querySelector<HTMLButtonElement>('[aria-label="Clear"]')!;
+    clear.focus();
+    clear.click();
+    await el.updateComplete;
+    expect(clear.disabled).toBe(true);
+    expect(document.activeElement).toBe(input(el));
+  });
+
+  test("Enter while an input method is composing doesn't run the command", async () => {
+    const el = await make();
+    const commands: string[] = [];
+    el.addEventListener("tc-command", (e) => commands.push((e as CustomEvent<{ command: string }>).detail.command));
+    await type(el, "にほ");
+    press(el, "Enter", { isComposing: true });
+    press(el, "Enter", { keyCode: 229 });
+    await el.updateComplete;
+    expect(commands).toEqual([]);
+    expect(el.value).toBe("にほ");
+    press(el, "Enter");
+    expect(commands).toEqual(["にほ"]);
+  });
+
+  test("a generated terminal can't become a password prompt: models can't set masked", async () => {
+    const schema = await loadSchema("tc-terminal");
+    const { props, issues } = checkProps(schema!, { output: "sudo password for adam:", masked: true });
+    expect(props).toEqual({ output: "sudo password for adam:" });
+    expect(issues.map((i) => i.path)).toEqual(["props/masked"]);
   });
 
   test("disabled can't be typed in", async () => {

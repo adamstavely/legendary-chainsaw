@@ -4,6 +4,7 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { live } from "lit/directives/live.js";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
+import { safeUrl } from "./internal/safe-url";
 import { formatDate } from "./internal/util";
 import type { CheckCounts } from "./check-status";
 import "./switch";
@@ -53,6 +54,33 @@ export type PullRequestLabels = Record<PullRequestState, string> & {
   reviewApproved: string;
   reviewChanges: string;
   reviewCommented: string;
+  /** "{passed} of {total} passed" */
+  checksPassed: string;
+  /** "{count} failed" */
+  checksFailed: string;
+  /** "{count} pending" */
+  checksPending: string;
+  /** "{count} skipped" */
+  checksSkipped: string;
+  /** "{count} file" */
+  file: string;
+  /** "{count} files" */
+  files: string;
+  /** Read after the added count, e.g. "lines added" */
+  linesAdded: string;
+  /** Read after the removed count, e.g. "lines removed" */
+  linesRemoved: string;
+  /** Read between the head and base branches */
+  into: string;
+  /** Between a requested review and the people asked */
+  reviewFrom: string;
+  /** Between a review and the people who gave it */
+  reviewBy: string;
+  /** Said as the actions start */
+  updating: string;
+  resolving: string;
+  markingReady: string;
+  merging: string;
 };
 
 /** Details of the events */
@@ -93,7 +121,25 @@ export const defaultPullRequestLabels: PullRequestLabels = {
   reviewApproved: "Approved",
   reviewChanges: "Changes requested",
   reviewCommented: "Commented",
+  checksPassed: "{passed} of {total} passed",
+  checksFailed: "{count} failed",
+  checksPending: "{count} pending",
+  checksSkipped: "{count} skipped",
+  file: "{count} file",
+  files: "{count} files",
+  linesAdded: "lines added",
+  linesRemoved: "lines removed",
+  into: "into",
+  reviewFrom: "from",
+  reviewBy: "by",
+  updating: "Updating the branch",
+  resolving: "Resolving conflicts",
+  markingReady: "Marking ready for review",
+  merging: "Merging",
 };
+
+/** Fills {name} placeholders in one pass, so a "$" or a "{…}" in a value stays as it is */
+const fill = (label: string, values: Record<string, string>) => label.replace(/\{(\w+)\}/g, (m, k: string) => (Object.hasOwn(values, k) ? values[k] : m));
 
 /* Marks and the header's icon: Lucide (ISC, lucide.dev) */
 const lucide = (size: number, body: ReturnType<typeof svg>) =>
@@ -245,11 +291,13 @@ export class TcPullRequest extends TcElement {
     const time = this.now ?? this.clock;
     const diff = Math.max(0, time - ms);
     const rtf = new Intl.RelativeTimeFormat(this.locale, { numeric: "auto", style: "short" });
-    if (diff < MIN) return "just now";
+    if (diff < MIN) return rtf.format(0, "second");
     if (diff < 60 * MIN) return rtf.format(-Math.floor(diff / MIN), "minute");
     if (diff < 24 * 60 * MIN) return rtf.format(-Math.floor(diff / (60 * MIN)), "hour");
     if (diff < 7 * 24 * 60 * MIN) return rtf.format(-Math.floor(diff / (24 * 60 * MIN)), "day");
-    return formatDate(ms, this.locale, { month: "short", day: "numeric" });
+    // Older than a week: a date, with the year when it isn't this year's
+    const sameYear = new Date(ms).getFullYear() === new Date(time).getFullYear();
+    return formatDate(ms, this.locale, sameYear ? { month: "short", day: "numeric" } : { year: "numeric", month: "short", day: "numeric" });
   }
   private get empty() {
     return this.number === undefined && !this.prTitle;
@@ -274,10 +322,11 @@ export class TcPullRequest extends TcElement {
   /** "5 of 7 passed, 1 failed, 1 pending" */
   private checkWords(c: CheckCounts) {
     const total = c.passing + c.failing + c.pending;
-    if (!total) return c.skipped ? `${c.skipped} skipped` : this.word("noChecks");
-    const parts = [`${c.passing} of ${total} passed`];
-    if (c.failing) parts.push(`${c.failing} failed`);
-    if (c.pending) parts.push(`${c.pending} pending`);
+    const n = (v: number) => this.num(v);
+    if (!total) return c.skipped ? fill(this.word("checksSkipped"), { count: n(c.skipped) }) : this.word("noChecks");
+    const parts = [fill(this.word("checksPassed"), { passed: n(c.passing), total: n(total) })];
+    if (c.failing) parts.push(fill(this.word("checksFailed"), { count: n(c.failing) }));
+    if (c.pending) parts.push(fill(this.word("checksPending"), { count: n(c.pending) }));
     return parts.join(", ");
   }
 
@@ -285,7 +334,7 @@ export class TcPullRequest extends TcElement {
     const w = this.word(REVIEW_WORD[this.review]);
     const names = this.reviewers.filter((r) => (this.review === "requested" ? r.state === "requested" : r.state === this.review)).map((r) => r.name);
     if (!names.length) return w;
-    const by = this.review === "requested" ? "from" : "by";
+    const by = this.word(this.review === "requested" ? "reviewFrom" : "reviewBy");
     return `${w} ${by} ${new Intl.ListFormat(this.locale, { type: "conjunction" }).format(names)}`;
   }
 
@@ -294,9 +343,14 @@ export class TcPullRequest extends TcElement {
     if (this.emit(name, detail, { cancelable: true })) this.announce = note;
   }
 
+  /** The link to follow, or undefined when there's none that's safe – a `javascript:` url is never put in the href */
+  private get href() {
+    return safeUrl(this.url);
+  }
   private onOpen(e: MouseEvent) {
-    const go = this.emit<PullRequestOpen>("tc-open", { number: this.number, url: this.url }, { cancelable: true });
-    if (!go || !this.url) e.preventDefault();
+    const url = this.href;
+    const go = this.emit<PullRequestOpen>("tc-open", { number: this.number, url }, { cancelable: true });
+    if (!go || !url) e.preventDefault();
   }
 
   private onAutoMerge(e: CustomEvent<{ value: boolean }>) {
@@ -333,9 +387,9 @@ export class TcPullRequest extends TcElement {
     const m = this.mergeable;
     const extra =
       m === "behind"
-        ? html`<button type="button" class="tc-btn-sm ui-prq__update" ?disabled=${this.busy} @click=${() => this.fire("tc-update-branch", "Updating the branch")}>${this.word("updateBranch")}</button>`
+        ? html`<button type="button" class="tc-btn-sm ui-prq__update" ?disabled=${this.busy} @click=${() => this.fire("tc-update-branch", this.word("updating"))}>${this.word("updateBranch")}</button>`
         : m === "conflicts"
-          ? html`<button type="button" class="tc-btn-sm ui-prq__resolve" ?disabled=${this.busy} @click=${() => this.fire("tc-resolve", "Resolving conflicts")}>${this.word("resolve")}</button>`
+          ? html`<button type="button" class="tc-btn-sm ui-prq__resolve" ?disabled=${this.busy} @click=${() => this.fire("tc-resolve", this.word("resolving"))}>${this.word("resolve")}</button>`
           : nothing;
     return html`<div class="ui-prq__row ui-prq__mergeable" data-mergeable=${m}>
       <span class="ui-prq__mark" aria-hidden="true">${lucide(14, MERGE_MARK[m])}</span>
@@ -347,7 +401,7 @@ export class TcPullRequest extends TcElement {
   private renderFoot() {
     if (this.state === "draft")
       return html`<div class="ui-prq__foot">
-        <button type="button" class="ui-prq__primary" ?disabled=${this.busy} @click=${() => this.fire("tc-ready", "Marking ready for review")}>${this.word("ready")}</button>
+        <button type="button" class="ui-prq__primary" ?disabled=${this.busy} @click=${() => this.fire("tc-ready", this.word("markingReady"))}>${this.word("ready")}</button>
       </div>`;
     if (this.state !== "open") return nothing;
     const reason = this.blockedReason();
@@ -366,7 +420,7 @@ export class TcPullRequest extends TcElement {
           class="ui-prq__primary"
           ?disabled=${this.busy || !!reason}
           aria-describedby=${ifDefined(reason ? reasonId : undefined)}
-          @click=${() => this.fire("tc-merge", "Merging")}
+          @click=${() => this.fire("tc-merge", this.word("merging"))}
         >${this.word("mergeButton")}</button>
       </div>
       ${reason ? html`<p class="ui-prq__reason" id=${reasonId}>${reason}</p>` : nothing}
@@ -389,20 +443,20 @@ export class TcPullRequest extends TcElement {
           <span class="ui-prq__state" data-state=${this.state}>${lucide(14, MARK[this.state])}${this.word(this.state)}</span>
           ${by ? html`<span class="ui-prq__by">${by}</span>` : nothing}
         </div>
-        ${this.url
-          ? html`<a class="ui-prq__title" href=${this.url} target="_blank" rel="noopener noreferrer" @click=${(e: MouseEvent) => this.onOpen(e)}>${titleText}</a>`
+        ${this.href
+          ? html`<a class="ui-prq__title" href=${this.href} target="_blank" rel="noopener noreferrer" @click=${(e: MouseEvent) => this.onOpen(e)}>${titleText}</a>`
           : html`<button type="button" class="ui-prq__title" @click=${(e: MouseEvent) => this.onOpen(e)}>${titleText}</button>`}
         ${this.head || this.base
           ? html`<p class="ui-prq__branches">
-              <span class="ui-prq__branch" title=${this.head}>${this.head}</span><span aria-hidden="true">→</span><span class="tc-sr-only"> into </span
+              <span class="ui-prq__branch" title=${this.head}>${this.head}</span><span aria-hidden="true">→</span><span class="tc-sr-only"> ${this.word("into")} </span
               ><span class="ui-prq__branch" title=${this.base}>${this.base}</span>
             </p>`
           : nothing}
         ${lines
           ? html`<p class="ui-prq__lines">
-              ${this.additions !== undefined ? html`<span class="ui-prq__add"><span aria-hidden="true">+${this.num(this.additions)}</span><span class="tc-sr-only">${this.num(this.additions)} lines added</span></span>` : nothing}
-              ${this.deletions !== undefined ? html`<span class="ui-prq__del"><span aria-hidden="true">−${this.num(this.deletions)}</span><span class="tc-sr-only">${this.num(this.deletions)} lines removed</span></span>` : nothing}
-              ${this.files !== undefined ? html`<span class="ui-prq__files">${this.num(this.files)} ${this.files === 1 ? "file" : "files"}</span>` : nothing}
+              ${this.additions !== undefined ? html`<span class="ui-prq__add"><span aria-hidden="true">+${this.num(this.additions)}</span><span class="tc-sr-only">${this.num(this.additions)} ${this.word("linesAdded")}</span></span>` : nothing}
+              ${this.deletions !== undefined ? html`<span class="ui-prq__del"><span aria-hidden="true">−${this.num(this.deletions)}</span><span class="tc-sr-only">${this.num(this.deletions)} ${this.word("linesRemoved")}</span></span>` : nothing}
+              ${this.files !== undefined ? html`<span class="ui-prq__files">${fill(this.word(this.files === 1 ? "file" : "files"), { count: this.num(this.files) })}</span>` : nothing}
             </p>`
           : nothing}
       </div>

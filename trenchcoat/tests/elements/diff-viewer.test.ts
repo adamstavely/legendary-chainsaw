@@ -34,6 +34,14 @@ describe("tc-diff-viewer", () => {
     expect(diffFileCounts(FILES[4])).toEqual({ additions: 0, deletions: 0 });
   });
 
+  test("counts include blank lines, and a long file with scattered edits counts only those lines", () => {
+    expect(diffFileCounts({ path: "n", after: "a\n\nb\n" })).toEqual({ additions: 3, deletions: 0 });
+    expect(diffFileCounts({ path: "d", before: "a\n\n\nb\n" })).toEqual({ additions: 0, deletions: 4 });
+    const before = Array.from({ length: 20000 }, (_, i) => `line ${i}`);
+    const after = before.map((l, i) => (i % 100 === 0 ? `${l} changed` : l));
+    expect(diffFileCounts({ path: "big", before: before.join("\n"), after: after.join("\n") })).toEqual({ additions: 200, deletions: 200 });
+  });
+
   for (const look of ["standard", "clean"] as const) {
     test(`${look}: totals, a row per file, the first ones open`, async () => {
       const el = await make(look);
@@ -66,6 +74,8 @@ describe("tc-diff-viewer", () => {
     toggle.click();
     await el.updateComplete;
     expect(toggle.getAttribute("aria-expanded")).toBe("false");
+    // Nothing happened, so nothing is said
+    expect(el.querySelector('[role="status"]')!.textContent).not.toContain("open");
   });
 
   test("a binary file says so and doesn't open", async () => {

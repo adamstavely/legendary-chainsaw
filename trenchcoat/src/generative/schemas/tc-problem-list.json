@@ -53,7 +53,7 @@
     },
     "selected": {
       "type": "string",
-      "description": "The chosen problem's key (its id, or `problemKey`)"
+      "description": "The chosen problem's key (its id, or `problemKey`; an exact copy's key ends in \"#2\", \"#3\"…)"
     },
     "status": {
       "type": "string",

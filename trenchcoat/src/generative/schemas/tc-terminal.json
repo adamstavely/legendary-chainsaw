@@ -40,10 +40,6 @@
       "type": "boolean",
       "description": "The prompt can't be used: for a closed session, or output to read only"
     },
-    "masked": {
-      "type": "boolean",
-      "description": "Hides what's typed, for a password prompt, and keeps it out of the history"
-    },
     "height": {
       "type": "number",
       "description": "Height of the output in px"

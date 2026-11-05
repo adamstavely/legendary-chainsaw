@@ -108,7 +108,7 @@
     {
      "name": "tc-clear",
      "detail": "",
-     "description": "Clear was pressed (detail: null); cancelable – prevented, `entries` stay; otherwise the element empties them",
+     "description": "Clear was pressed (detail: null); cancelable – prevented, `entries` stay; otherwise the element empties them, and those messages stay hidden if the same list is passed again (new ones show)",
      "cancelable": true
     }
    ],
@@ -533,7 +533,7 @@
   "windowed": false
  },
  "size": {
-  "min": 27134,
-  "gzip": 8518
+  "min": 27620,
+  "gzip": 8686
  }
 }

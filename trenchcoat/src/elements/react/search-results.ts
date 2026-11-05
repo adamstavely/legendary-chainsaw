@@ -9,6 +9,7 @@ import {
   type SearchResultsOptions,
   type SearchResultsOptionsChange,
   type SearchResultsReplace,
+  type SearchResultsReplacementChange,
   type SearchResultsSearch,
   type SearchResultsSelectedChange,
   type SearchResultsSelection,
@@ -26,6 +27,7 @@ export type {
   SearchResultsOptions,
   SearchResultsOptionsChange,
   SearchResultsReplace,
+  SearchResultsReplacementChange,
   SearchResultsSearch,
   SearchResultsSelectedChange,
   SearchResultsSelection,
@@ -44,15 +46,42 @@ const RawSearchResults = createComponent({
     onTcSelectedChange: "tc-selected-change" as EventName<CustomEvent<SearchResultsSelectedChange>>,
     onTcOpen: "tc-open" as EventName<CustomEvent<SearchResultsOpen>>,
     onTcReplace: "tc-replace" as EventName<CustomEvent<SearchResultsReplace>>,
+    onTcReplacementChange: "tc-replacement-change" as EventName<CustomEvent<SearchResultsReplacementChange>>,
     onTcAction: "tc-action" as EventName<CustomEvent<SearchResultsAction>>,
   },
 });
 type RawProps = React.ComponentProps<typeof RawSearchResults>;
-type Owned = "heading" | "selected" | "expanded" | "options" | "onTcSelectedChange" | "onTcExpandedChange" | "onTcOptionsChange" | "children";
+type Owned =
+  | "heading"
+  | "query"
+  | "replacement"
+  | "selected"
+  | "expanded"
+  | "options"
+  | "onTcSearch"
+  | "onTcReplacementChange"
+  | "onTcSelectedChange"
+  | "onTcExpandedChange"
+  | "onTcOptionsChange"
+  | "children";
 const NO_OPTIONS: SearchResultsOptions = { caseSensitive: false, wholeWord: false, regex: false };
 export type SearchResultsProps = Omit<RawProps, Owned> & {
   /** The heading; "" leaves the header out */
   title?: string;
+  /** What was searched for – controlled when given */
+  query?: string;
+  /** What was searched for at first, when `query` isn't controlled */
+  defaultQuery?: string;
+  /** Enter was pressed in the search field */
+  onSearch?: (query: string, options: SearchResultsOptions) => void;
+  /** The raw event, for `query` and `options` together */
+  onTcSearch?: (event: CustomEvent<SearchResultsSearch>) => void;
+  /** The replace field's text – controlled when given */
+  replacement?: string;
+  /** The replace field's text at first, when `replacement` isn't controlled */
+  defaultReplacement?: string;
+  /** The replace field was typed in */
+  onReplacementChange?: (replacement: string) => void;
   /** The chosen match – controlled when given */
   selected?: SearchResultsSelection | null;
   /** The chosen match at first, when `selected` isn't controlled */
@@ -73,16 +102,48 @@ export type SearchResultsProps = Omit<RawProps, Owned> & {
   onOptionsChange?: (options: SearchResultsOptions) => void;
 };
 
-export function SearchResults({ title = "Search", selected, defaultSelected = null, onSelectedChange, expanded, defaultExpanded = null, onExpandedChange, options, defaultOptions = NO_OPTIONS, onOptionsChange, ...props }: SearchResultsProps) {
+export function SearchResults({
+  title = "Search",
+  query,
+  defaultQuery = "",
+  onSearch,
+  onTcSearch,
+  replacement,
+  defaultReplacement = "",
+  onReplacementChange,
+  selected,
+  defaultSelected = null,
+  onSelectedChange,
+  expanded,
+  defaultExpanded = null,
+  onExpandedChange,
+  options,
+  defaultOptions = NO_OPTIONS,
+  onOptionsChange,
+  ...props
+}: SearchResultsProps) {
+  // The element keeps what was searched and typed itself; @lit/react sets every prop on every render, so these are kept
+  // here too, or a parent's unrelated re-render would put the field back
+  const q = useControlled<string>(query, defaultQuery, undefined);
+  const r = useControlled<string>(replacement, defaultReplacement, onReplacementChange);
   const s = useControlled<SearchResultsSelection | null>(selected, defaultSelected, undefined);
   const e = useControlled<string[] | null>(expanded, defaultExpanded, onExpandedChange);
   const o = useControlled<SearchResultsOptions>(options, defaultOptions, onOptionsChange);
   return h(RawSearchResults, {
     ...props,
     heading: title,
+    query: q.value,
+    replacement: r.value,
     selected: s.value,
     expanded: e.value,
     options: o.value,
+    onTcSearch: (ev: CustomEvent<SearchResultsSearch>) => {
+      onTcSearch?.(ev);
+      if (ev.defaultPrevented) return;
+      q.handler(ev.detail.query, ev);
+      onSearch?.(ev.detail.query, ev.detail.options);
+    },
+    onTcReplacementChange: (ev: CustomEvent<SearchResultsReplacementChange>) => r.handler(ev.detail.replacement, ev),
     onTcSelectedChange: (ev: CustomEvent<SearchResultsSelectedChange>) => {
       s.handler(ev.detail.selected, ev);
       onSelectedChange?.(ev.detail.selected, ev.detail.match);

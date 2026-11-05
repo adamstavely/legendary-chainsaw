@@ -19,8 +19,7 @@
     },
     "url": {
       "type": "string",
-      "description": "Where it lives; the title becomes a link to it",
-      "format": "uri-reference"
+      "description": "Where it lives; the title becomes a link to it"
     },
     "state": {
       "type": "string",
@@ -109,11 +108,11 @@
     "mergeable": {
       "type": "string",
       "enum": [
+        "behind",
         "conflicts",
         "blocked",
         "unknown",
-        "clean",
-        "behind"
+        "clean"
       ],
       "description": "Whether it can merge into its base"
     },
@@ -233,6 +232,51 @@
           "type": "string"
         },
         "reviewCommented": {
+          "type": "string"
+        },
+        "checksPassed": {
+          "type": "string"
+        },
+        "checksFailed": {
+          "type": "string"
+        },
+        "checksPending": {
+          "type": "string"
+        },
+        "checksSkipped": {
+          "type": "string"
+        },
+        "file": {
+          "type": "string"
+        },
+        "files": {
+          "type": "string"
+        },
+        "linesAdded": {
+          "type": "string"
+        },
+        "linesRemoved": {
+          "type": "string"
+        },
+        "into": {
+          "type": "string"
+        },
+        "reviewFrom": {
+          "type": "string"
+        },
+        "reviewBy": {
+          "type": "string"
+        },
+        "updating": {
+          "type": "string"
+        },
+        "resolving": {
+          "type": "string"
+        },
+        "markingReady": {
+          "type": "string"
+        },
+        "merging": {
           "type": "string"
         }
       },

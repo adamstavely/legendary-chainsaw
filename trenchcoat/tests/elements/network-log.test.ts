@@ -151,6 +151,25 @@ describe("tc-network-log", () => {
     expect(el.querySelector('[role="tabpanel"]')!.getAttribute("aria-labelledby")).toBe(document.activeElement!.id);
   });
 
+  test("details close with a request the type chips hide, and come back with it", async () => {
+    const el = await make();
+    el.selected = "api";
+    await el.updateComplete;
+    expect(el.querySelector(".ui-netl__detail")).not.toBeNull();
+    el.types = ["script"];
+    await el.updateComplete;
+    expect(rows(el).map((r) => r.dataset.id)).toEqual(["js"]);
+    expect(el.querySelector(".ui-netl__detail")).toBeNull();
+    el.types = [];
+    await el.updateComplete;
+    expect(el.querySelector(".ui-netl__detail")).not.toBeNull();
+  });
+
+  test("a type the log doesn't know shows as Other, never a built-in's text", async () => {
+    const el = await make("standard", [{ ...REQUESTS[0], type: "toString" as NetworkRequest["type"] }]);
+    expect(el.querySelector(".ui-netl__row .ui-netl__type")!.textContent).toBe("Other");
+  });
+
   test("no requests and nothing matching say so", async () => {
     const el = await make("standard", []);
     expect(el.querySelector(".ui-netl__empty")!.textContent).toBe("No requests");

@@ -1,5 +1,6 @@
 import { html, nothing, svg } from "lit";
 import { property } from "lit/decorators.js";
+import { ifDefined } from "lit/directives/if-defined.js";
 import { styleMap } from "lit/directives/style-map.js";
 import { TcElement } from "./internal/base";
 
@@ -18,8 +19,10 @@ export type MeterRowLabels = {
   warning: string;
   /** Said and shown past dangerAt */
   danger: string;
+  /** The meter's name for screen readers when `label` is empty */
+  unnamed: string;
 };
-export const defaultMeterRowLabels: MeterRowLabels = { warning: "Getting full", danger: "Nearly full" };
+export const defaultMeterRowLabels: MeterRowLabels = { warning: "Getting full", danger: "Nearly full", unnamed: "Amount used" };
 
 let nextId = 0;
 
@@ -86,7 +89,12 @@ export class TcMeterRow extends TcElement {
           >`;
     return html`<div class="ui-mrw__row" data-tone=${tone}>
       ${this.interactive ? html`<button type="button" class="ui-mrw__open" @click=${() => this.emit("tc-open", null)}>${name}</button>` : name}
-      <div class="ui-mrw__meter" .role=${"meter"} aria-labelledby=${labelId} aria-valuemin="0" aria-valuemax=${max} aria-valuenow=${value} aria-valuetext=${word ? `${shown}, ${word}` : shown}>
+      <div
+        class="ui-mrw__meter"
+        .role=${"meter"}
+        aria-labelledby=${ifDefined(this.label ? labelId : undefined)}
+        aria-label=${ifDefined(this.label ? undefined : words.unnamed)}
+        aria-valuemin="0" aria-valuemax=${max} aria-valuenow=${value} aria-valuetext=${word ? `${shown}, ${word}` : shown}>
         ${mark}<span class="ui-mrw__value">${shown}</span>${word ? html`<span class="tc-sr-only">${word}</span>` : nothing}
         <span class="ui-mrw__bar" aria-hidden="true"><span class="ui-mrw__fill" style=${styleMap({ "--tc-mrw-fill": String(fraction) })}></span></span>
       </div>

@@ -155,6 +155,38 @@ describe("tc-console-panel", () => {
     await expect.poll(() => el.querySelector('[role="status"]')!.textContent).toBe("1 line");
   });
 
+  test("Clear keeps focus in the panel, and an unparseable time doesn't break the list", async () => {
+    const el = await make();
+    const clear = el.querySelector<HTMLButtonElement>(".ui-dcon__clear")!;
+    clear.focus();
+    clear.click();
+    await el.updateComplete;
+    expect(clear.disabled).toBe(true);
+    expect(document.activeElement).toBe(el.querySelector(".ui-dcon__input"));
+    el.entries = [{ id: "n", level: "log", message: "no clock", time: NaN }];
+    await el.updateComplete;
+    expect(el.querySelector(".ui-dcon__row")!.textContent).toContain("no clock");
+    expect(el.querySelector(".ui-dcon__time")).toBeNull();
+  });
+
+  test("React: Clear sticks when the parent re-renders with the same entries; new messages show", async () => {
+    const host = document.createElement("div");
+    document.body.append(host);
+    const root = createRoot(host);
+    await act(async () => root.render(React.createElement(ConsolePanel, { entries: ENTRIES })));
+    const el = host.querySelector("tc-console-panel") as TcConsolePanel;
+    await act(async () => el.querySelector<HTMLButtonElement>(".ui-dcon__clear")!.click());
+    expect(el.querySelectorAll(".ui-dcon__row")).toHaveLength(0);
+    await act(async () => root.render(React.createElement(ConsolePanel, { entries: ENTRIES, title: "Page console" })));
+    await settle(host);
+    expect(el.querySelectorAll(".ui-dcon__row")).toHaveLength(0);
+    const later = [...ENTRIES, { id: "later", level: "info" as const, message: "after the clear" }];
+    await act(async () => root.render(React.createElement(ConsolePanel, { entries: later })));
+    await settle(host);
+    expect([...el.querySelectorAll(".ui-dcon__row")].map((r) => r.textContent)).toEqual([expect.stringContaining("after the clear")]);
+    await act(async () => root.unmount());
+  });
+
   test("React: uncontrolled levels survive re-renders; controlled stay until changed", async () => {
     const host = document.createElement("div");
     document.body.append(host);

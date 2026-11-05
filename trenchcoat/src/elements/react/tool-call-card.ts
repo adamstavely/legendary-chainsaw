@@ -41,7 +41,7 @@ export function ToolCallCard({ summary, icon, defaultOpen = false, open, onOpenC
   if (isNode(icon)) nodes.push(["icon", icon]);
   if (summary != null && text === undefined && isNode(summary)) nodes.push(["summary", h("span", null, summary)]);
   const { stage, els } = useStaged(nodes);
-  const o = useControlled(open, defaultOpen, onOpenChange);
+  const o = useControlled(open, defaultOpen, onOpenChange, { ownEvents: true });
   return h(React.Fragment, null, stage, h(RawToolCallCard, {
     ...props,
     icon: isNode(icon) ? els.icon : (icon as Element | undefined),
@@ -65,7 +65,7 @@ export type ToolCallGroupProps = Omit<RawGroupProps, "open" | "onTcOpenChange" |
   onOpenChange?: (open: boolean) => void;
 };
 export function ToolCallGroup({ children, defaultOpen = false, open, onOpenChange, ...props }: ToolCallGroupProps) {
-  const o = useControlled(open, defaultOpen, onOpenChange);
+  const o = useControlled(open, defaultOpen, onOpenChange, { ownEvents: true });
   return h(
     RawToolCallGroup,
     { ...props, open: o.value, onTcOpenChange: (e: CustomEvent<ToolCallOpenChange>) => o.handler(e.detail.open, e) },

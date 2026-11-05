@@ -30,7 +30,8 @@ plain data, listens for the actions and passes the new statuses.
 4. **Uptime** `.ui-rproc__up` – how long a live process has been running
 5. **Command** `.ui-rproc__cmd` – what started it, in mono
 6. **Last line** `.ui-rproc__last` – the last thing it printed, escape codes dropped
-7. **Port** `.ui-rproc__port` – `localhost:5173`, which fires `tc-open`
+7. **Port** `.ui-rproc__port` – `localhost:5173`, which fires `tc-open`. A `url` that isn't a safe link is ignored, so a
+   `javascript:` url never reaches the page's handler
 8. **Meters** `.ui-rproc__meters` – CPU and memory, when given
 9. **Buttons** `.ui-rproc__act` – Stop or Start, Restart and View output
 10. **Count** `.ui-rproc__count` – how many are running, beside Stop all in the header
@@ -92,7 +93,7 @@ icons show. Stop, Start, Restart and Stop all are announced through a polite sta
     { id: "docs", name: "docs", status: "crashed", exitCode: 1, lastLine: "Cannot find module" },
   ];
   el.addEventListener("tc-stop", (e) => console.log("stop", e.detail.id));
-  el.addEventListener("tc-open", (e) => window.open(e.detail.url));
+  el.addEventListener("tc-open", (e) => window.open(e.detail.url, "_blank", "noopener"));
 </script>
 ```
 

@@ -36,6 +36,10 @@ describe("tc-file-tree", () => {
     expect(fileTreeFromPaths(["a/b/c.ts", "a/d.ts", "e/"])).toEqual([{ name: "a", children: [{ name: "b", children: [{ name: "c.ts" }] }, { name: "d.ts" }] }, { name: "e", children: [] }]);
   });
 
+  test("fileTreeFromPaths reads backslashes, drops . and resolves ..", () => {
+    expect(fileTreeFromPaths(["./lib/b.ts", "lib\\a.ts", "x/../y.ts", "lib/./c/../d.ts"])).toEqual([{ name: "lib", children: [{ name: "b.ts" }, { name: "a.ts" }, { name: "d.ts" }] }, { name: "y.ts" }]);
+  });
+
   for (const look of ["standard", "clean"] as const) {
     test(`${look}: folders first, numbers in order, one tab stop`, async () => {
       const el = await make(look);
@@ -102,6 +106,26 @@ describe("tc-file-tree", () => {
     expect(paths(el)).toHaveLength(5);
   });
 
+  test("a folder whose own name matches shows what's in it, and opens and closes while filtering", async () => {
+    const el = await make("standard", fileTreeFromPaths(["src/components/Button.tsx", "src/components/Card.tsx", "src/index.ts"]));
+    const changes: unknown[] = [];
+    el.addEventListener("tc-expanded-change", (e) => changes.push((e as CustomEvent).detail));
+    await filter(el, "components");
+    expect(paths(el)).toEqual(["src", "src/components"]);
+    expect(row(el, "src/components").getAttribute("aria-expanded")).toBe("false");
+    row(el, "src/components").click();
+    await settle(el.parentElement!);
+    expect(paths(el)).toEqual(["src", "src/components", "src/components/Button.tsx", "src/components/Card.tsx"]);
+    row(el, "src").click();
+    await settle(el.parentElement!);
+    expect(paths(el)).toEqual(["src"]);
+    // The filter's own view: `expanded` isn't touched, and a new filter starts afresh
+    expect(changes).toEqual([]);
+    expect(el.expanded).toEqual([]);
+    await filter(el, "card");
+    expect(paths(el)).toEqual(["src", "src/components", "src/components/Card.tsx"]);
+  });
+
   test("searchable: ? text and Enter fires tc-search, and doesn't filter", async () => {
     const el = await make();
     el.searchable = true;
@@ -157,6 +181,18 @@ describe("tc-file-tree", () => {
     el.querySelector<HTMLElement>('.ui-ftr__row[tabindex="0"]')!.focus();
     await key(el, "End");
     await expect.poll(() => (document.activeElement as HTMLElement).dataset.path).toBe("f4999.ts");
+  });
+
+  test("scrolled far from the active row, a long tree still has one tab stop", async () => {
+    const el = await make("standard", fileTreeFromPaths(Array.from({ length: 600 }, (_, i) => `f${String(i).padStart(3, "0")}.ts`)));
+    el.querySelector<HTMLElement>(".ui-ftr__scroll")!.scrollTop = 10_000;
+    await expect.poll(() => el.querySelector<HTMLElement>(".ui-ftr__row")!.dataset.path).not.toBe("f000.ts");
+    expect(el.querySelectorAll('.ui-ftr__row[tabindex="0"]')).toHaveLength(1);
+    const stop = el.querySelector<HTMLElement>('.ui-ftr__row[tabindex="0"]')!;
+    stop.focus();
+    const next = (stop.nextElementSibling as HTMLElement).dataset.path;
+    await key(el, "ArrowDown");
+    expect((document.activeElement as HTMLElement).dataset.path).toBe(next);
   });
 
   test("a status is a letter with a word; no files says so", async () => {

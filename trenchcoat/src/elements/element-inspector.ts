@@ -41,6 +41,7 @@ export type InspectorLabels = {
   empty: string;
   noElements: string;
   noStyles: string;
+  loading: string;
   boxModel: string;
   styles: string;
   margin: string;
@@ -55,6 +56,7 @@ export const defaultInspectorLabels: InspectorLabels = {
   empty: "Select an element",
   noElements: "No elements",
   noStyles: "No styles",
+  loading: "Loading details",
   boxModel: "Box model",
   styles: "Styles",
   margin: "margin",
@@ -112,6 +114,8 @@ export class TcElementInspector extends TcElement {
   private rows: Row[] = [];
   private byId = new Map<string, InspectorNode>();
   private lit: string | null = null;
+  /** The element `details` was given for: another element chosen since then hasn't had its details yet */
+  private detailsFor: string | null = null;
   private uid = `tc-element-inspector-${++nextId}`;
 
   private get words() {
@@ -120,6 +124,7 @@ export class TcElementInspector extends TcElement {
 
   protected override willUpdate(changed: PropertyValues) {
     super.willUpdate(changed);
+    if (changed.has("details")) this.detailsFor = this.selected;
     const open = new Set(this.expanded);
     const rows: Row[] = [];
     this.byId = new Map();
@@ -273,18 +278,22 @@ export class TcElementInspector extends TcElement {
     const w = this.words;
     const node = this.selected ? this.byId.get(this.selected) : undefined;
     if (!node) return html`<p class="ui-elin__empty">${w.empty}</p>`;
+    // Until the page answers for the newly chosen element, its heading shows without the last one's box and styles
+    const waiting = !!this.details && this.detailsFor !== this.selected;
     const d = this.details ?? {};
     const cls = node.attrs?.class?.trim().split(/\s+/).filter(Boolean) ?? [];
     return html`<p class="ui-elin__picked"><span class="ui-elin__tag">${node.tag}</span>${node.attrs?.id ? html`<span class="ui-elin__value">#${node.attrs.id}</span>` : nothing}${cls.map((c) => html`<span class="ui-elin__attr">.${c}</span>`)}</p>
-      ${d.box ? this.box(d.box) : nothing}
-      <section class="ui-elin__section" aria-labelledby="${this.uid}-styles">
-        <h4 class="ui-elin__label" id="${this.uid}-styles">${w.styles}</h4>
-        ${d.styles?.length
-          ? html`<dl class="ui-elin__styles">${d.styles.map(
-              (s) => html`<div class="ui-elin__style"><dt class="ui-elin__prop">${s.property}</dt><dd class="ui-elin__val">${s.value}${s.source ? html`<span class="ui-elin__source">${s.source}</span>` : nothing}</dd></div>`,
-            )}</dl>`
-          : html`<p class="ui-elin__none">${w.noStyles}</p>`}
-      </section>`;
+      ${waiting
+        ? html`<p class="ui-elin__none" role="status">${w.loading}</p>`
+        : html`${d.box ? this.box(d.box) : nothing}
+            <section class="ui-elin__section" aria-labelledby="${this.uid}-styles">
+              <h4 class="ui-elin__label" id="${this.uid}-styles">${w.styles}</h4>
+              ${d.styles?.length
+                ? html`<dl class="ui-elin__styles">${d.styles.map(
+                    (s) => html`<div class="ui-elin__style"><dt class="ui-elin__prop">${s.property}</dt><dd class="ui-elin__val">${s.value}${s.source ? html`<span class="ui-elin__source">${s.source}</span>` : nothing}</dd></div>`,
+                  )}</dl>`
+                : html`<p class="ui-elin__none">${w.noStyles}</p>`}
+            </section>`}`;
   }
 
   protected override render() {

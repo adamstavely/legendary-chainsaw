@@ -127,7 +127,7 @@
         },
         "url": {
           "type": "string",
-          "description": "Where the port link goes; by default http://localhost:<port>"
+          "description": "Where the port link goes; by default http://localhost:<port>. A link that isn't safe (a `javascript:` one) is ignored"
         },
         "pid": {
           "type": "number"

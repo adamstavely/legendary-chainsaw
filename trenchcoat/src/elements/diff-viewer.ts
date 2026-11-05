@@ -4,7 +4,6 @@ import { ifDefined } from "lit/directives/if-defined.js";
 import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
-import { codeBlockDiff } from "./code-block";
 import "./code-block";
 
 /*
@@ -55,12 +54,57 @@ export function diffFileStatus(file: DiffFile): DiffFileStatus {
   return "modified";
 }
 
-/** Lines added and removed in a file */
+/** A text's lines; "" is none, and a final newline doesn't start another */
+const linesOf = (text: string) => (text === "" ? [] : text.replace(/\n$/, "").split("\n"));
+/** Myers' diff is O((n + m) · edits); past this many steps the counts come from the lines each side has that the other lacks */
+const MAX_STEPS = 50_000_000;
+
+/** Lines added and removed in a file: a line-level Myers diff, counted rather than drawn, so a scattered change to a
+ *  long file counts only the lines that changed */
 export function diffFileCounts(file: DiffFile): { additions: number; deletions: number } {
   if (file.binary) return { additions: 0, deletions: 0 };
-  // An empty text is no lines, not one empty line
-  const rows = codeBlockDiff(file.before ?? "", file.after ?? "").filter((r) => r.text !== "" || (file.before && file.after));
-  return { additions: rows.filter((r) => r.kind === "added").length, deletions: rows.filter((r) => r.kind === "removed").length };
+  const a = linesOf(file.before ?? "");
+  const b = linesOf(file.after ?? "");
+  // The unchanged start and end don't take part
+  let lo = 0;
+  while (lo < a.length && lo < b.length && a[lo] === b[lo]) lo++;
+  let ha = a.length;
+  let hb = b.length;
+  while (ha > lo && hb > lo && a[ha - 1] === b[hb - 1]) {
+    ha--;
+    hb--;
+  }
+  const n = ha - lo;
+  const m = hb - lo;
+  if (!n || !m) return { additions: m, deletions: n };
+  const total = n + m;
+  const budget = Math.max(1, Math.floor(MAX_STEPS / total));
+  // Forward Myers: v[k] is the furthest x on diagonal k after d edits; the first d that reaches the end is the shortest
+  const v = new Int32Array(2 * Math.min(total, budget) + 3);
+  const off = Math.min(total, budget) + 1;
+  for (let d = 0; d <= Math.min(total, budget); d++) {
+    for (let k = -d; k <= d; k += 2) {
+      let x = k === -d || (k !== d && v[off + k - 1] < v[off + k + 1]) ? v[off + k + 1] : v[off + k - 1] + 1;
+      let y = x - k;
+      while (x < n && y < m && a[lo + x] === b[lo + y]) {
+        x++;
+        y++;
+      }
+      v[off + k] = x;
+      // d edits, and the common lines are (n + m - d) / 2
+      if (x >= n && y >= m) return { additions: (m - n + d) / 2, deletions: (n - m + d) / 2 };
+    }
+  }
+  // Too far apart to diff exactly: the lines on each side that the other side doesn't have, counted with repeats
+  const left = new Map<string, number>();
+  for (let i = lo; i < ha; i++) left.set(a[i], (left.get(a[i]) ?? 0) + 1);
+  let additions = 0;
+  for (let i = lo; i < hb; i++) {
+    const had = left.get(b[i]) ?? 0;
+    if (had) left.set(b[i], had - 1);
+    else additions++;
+  }
+  return { additions, deletions: n - (m - additions) };
 }
 
 /* After Lucide: file-diff, chevron-right (ISC licence) */
@@ -120,15 +164,17 @@ export class TcDiffViewer extends TcElement {
   }
 
   private setExpanded(expanded: string[], path: string) {
-    if (this.emit<DiffViewerExpandedChange>("tc-expanded-change", { expanded, path }, { cancelable: true })) this.expanded = expanded;
+    if (!this.emit<DiffViewerExpandedChange>("tc-expanded-change", { expanded, path }, { cancelable: true })) return false;
+    this.expanded = expanded;
+    return true;
   }
 
   private toggle(path: string) {
     const open = this.open;
     const name = path.slice(path.lastIndexOf("/") + 1);
     const closing = open.includes(path);
-    this.setExpanded(closing ? open.filter((p) => p !== path) : [...open, path], path);
-    this.message = `${name} ${closing ? "closed" : "open"}`;
+    // Said only when it happened: a prevented change leaves the file as it was
+    if (this.setExpanded(closing ? open.filter((p) => p !== path) : [...open, path], path)) this.message = `${name} ${closing ? "closed" : "open"}`;
   }
 
   private onKey = (e: KeyboardEvent) => {

@@ -57,9 +57,11 @@ A Git status is read as a word. `role="status"` says how many files match the fi
 
 ## Content
 
-- `fileTreeFromPaths` builds `nodes` from a flat list such as Git's. A path ending in `/` is an empty folder.
+- `fileTreeFromPaths` builds `nodes` from a flat list such as Git's. A path ending in `/` is an empty folder. Backslashes
+  count as slashes, `.` parts are dropped and `..` goes up a folder, so `./lib/a.ts` and `lib\a.ts` are one file.
 - Set `lazy` on a folder whose children aren't known, then add `children` when `tc-load` fires.
-- While filtering, folders with a match stay open and can't be closed.
+- While filtering, folders with a match start open, and a folder whose own name matches shows everything in it. Folders
+  can still be opened and closed; that's the filter's own view and doesn't change `expanded`.
 - `selected` and `expanded` hold paths from the root, so two files can't share one.
 
 ## Do

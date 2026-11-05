@@ -100,7 +100,7 @@ heading. The page area is `aria-busy` while loading, and a load failure is an al
     el.src = "";
     requestAnimationFrame(() => (el.src = "http://localhost:5173/"));
   });
-  el.addEventListener("tc-open-external", (e) => window.open(e.detail.url));
+  el.addEventListener("tc-open-external", (e) => window.open(e.detail.url, "_blank", "noopener"));
 </script>
 ```
 
@@ -115,7 +115,7 @@ export function Preview({ running, onStart }: { running: boolean; onStart: () =>
       startable
       defaultViewport="tablet"
       onTcStart={onStart}
-      onTcOpenExternal={(e) => window.open(e.detail.url)}
+      onTcOpenExternal={(e) => window.open(e.detail.url, "_blank", "noopener")}
     />
   );
 }
