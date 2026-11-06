@@ -100,9 +100,9 @@
             "format": {
               "type": "string",
               "enum": [
-                "json",
+                "auto",
                 "csv",
-                "auto"
+                "json"
               ]
             },
             "select": {

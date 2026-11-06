@@ -17081,7 +17081,7 @@
   },
   "generated-ui": {
    "measuredAt": "2026-11-06",
-   "hash": "509aa48d4b6f1bf1",
+   "hash": "6ffdcaf2e2b93b04",
    "bundle": {
     "own": {
      "min": 34126,
@@ -20971,18 +20971,18 @@
     ],
     "withoutLit": {
      "min": 9492052,
-     "gzip": 2356602
+     "gzip": 2356761
     },
     "withLit": {
      "min": 9435003,
-     "gzip": 2336299
+     "gzip": 2336460
     }
    },
    "render": {
     "tag": "tc-generated-ui",
     "source": "demo",
     "runs": 7,
-    "cold": 2.6,
+    "cold": 4.7,
     "first": 0.5,
     "update": 0.1,
     "updateKind": "re-render with the same data",
