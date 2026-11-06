@@ -12,8 +12,8 @@
     "variant": {
       "type": "string",
       "enum": [
-        "starters",
-        "follow-ups"
+        "follow-ups",
+        "starters"
       ],
       "description": "\"starters\" for an empty chat (icon tiles and hints), or \"follow-ups\" after an answer (compact rows)"
     },
@@ -97,29 +97,29 @@
     "PromptStarterIconName": {
       "type": "string",
       "enum": [
-        "sparkle",
+        "calendar",
         "chart",
-        "document",
-        "search",
-        "write",
         "code",
+        "document",
+        "lightbulb",
         "list",
         "question",
-        "lightbulb",
-        "calendar"
+        "search",
+        "sparkle",
+        "write"
       ],
       "description": "Built-in icons, by name"
     },
     "PromptStarterTone": {
       "type": "string",
       "enum": [
-        "blue",
-        "violet",
-        "pink",
         "amber",
-        "teal",
+        "blue",
+        "gray",
         "green",
-        "gray"
+        "pink",
+        "teal",
+        "violet"
       ],
       "description": "A tone for a group's icon tiles"
     },
@@ -159,8 +159,8 @@
     "PromptStarterMode": {
       "type": "string",
       "enum": [
-        "send",
-        "fill"
+        "fill",
+        "send"
       ],
       "description": "What choosing a suggestion does: send it as it is, or put it in the composer to edit first"
     }

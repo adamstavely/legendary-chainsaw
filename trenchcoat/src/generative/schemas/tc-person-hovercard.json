@@ -122,8 +122,8 @@
           "type": "string",
           "enum": [
             "available",
-            "busy",
             "away",
+            "busy",
             "offline"
           ]
         },

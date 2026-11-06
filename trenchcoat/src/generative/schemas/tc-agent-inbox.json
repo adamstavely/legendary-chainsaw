@@ -98,10 +98,10 @@
     "AgentTaskStatus": {
       "type": "string",
       "enum": [
-        "running",
-        "waiting",
         "done",
-        "failed"
+        "failed",
+        "running",
+        "waiting"
       ]
     },
     "AgentTaskStep": {

@@ -119,11 +119,11 @@
     "status": {
       "type": "string",
       "enum": [
-        "draft",
-        "pending",
         "approved",
         "denied",
-        "expired"
+        "draft",
+        "expired",
+        "pending"
       ],
       "description": "Where the request stands. Changed by the element unless a tc-status-change listener calls preventDefault()"
     },
@@ -161,20 +161,20 @@
       "type": "string",
       "enum": [
         "dataset",
-        "table",
+        "field",
         "file",
         "report",
-        "field"
+        "table"
       ]
     },
     "AccessTone": {
       "type": "string",
       "enum": [
-        "success",
-        "info",
-        "warning",
         "danger",
-        "neutral"
+        "info",
+        "neutral",
+        "success",
+        "warning"
       ]
     },
     "AccessLevel": {

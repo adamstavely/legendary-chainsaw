@@ -15,9 +15,9 @@
     "status": {
       "type": "string",
       "enum": [
-        "running",
         "done",
-        "paused"
+        "paused",
+        "running"
       ],
       "description": "The run: \"running\", \"paused\" or \"done\" – always set by the app"
     },
@@ -93,8 +93,8 @@
       "type": "string",
       "enum": [
         "currency",
-        "tokens",
-        "number"
+        "number",
+        "tokens"
       ]
     }
   }

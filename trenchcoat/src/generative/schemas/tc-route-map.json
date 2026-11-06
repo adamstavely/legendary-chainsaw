@@ -128,9 +128,9 @@
     "RouteStatus": {
       "type": "string",
       "enum": [
+        "error",
         "ok",
         "slow",
-        "error",
         "unvisited"
       ]
     }

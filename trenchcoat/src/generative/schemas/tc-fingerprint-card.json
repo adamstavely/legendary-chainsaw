@@ -23,8 +23,8 @@
     "order": {
       "type": "string",
       "enum": [
-        "right-first",
-        "left-first"
+        "left-first",
+        "right-first"
       ],
       "description": "Which hand's row comes first"
     },
@@ -134,20 +134,20 @@
     "FingerStatus": {
       "type": "string",
       "enum": [
+        "bandaged",
         "captured",
-        "poor",
         "missing",
-        "unable",
-        "bandaged"
+        "poor",
+        "unable"
       ],
       "description": "captured: a usable print · poor: on file but low quality · missing: not captured yet · unable: can't be printed (amputated, scarred) · bandaged: temporarily can't be printed"
     },
     "FingerPattern": {
       "type": "string",
       "enum": [
-        "whorl",
+        "arch",
         "loop",
-        "arch"
+        "whorl"
       ]
     }
   }

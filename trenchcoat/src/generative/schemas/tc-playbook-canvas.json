@@ -161,9 +161,9 @@
     "PlaybookFailure": {
       "type": "string",
       "enum": [
-        "stop",
+        "retry",
         "skip",
-        "retry"
+        "stop"
       ],
       "description": "What happens when a step fails"
     },
@@ -287,9 +287,9 @@
     "PlaybookDryRunOutcome": {
       "type": "string",
       "enum": [
+        "pause",
         "run",
-        "skip",
-        "pause"
+        "skip"
       ]
     },
     "GateCondition": {

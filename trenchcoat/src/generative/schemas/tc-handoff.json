@@ -58,9 +58,9 @@
     "status": {
       "type": "string",
       "enum": [
-        "waiting",
         "active",
-        "returned"
+        "returned",
+        "waiting"
       ],
       "description": "Who has control"
     },

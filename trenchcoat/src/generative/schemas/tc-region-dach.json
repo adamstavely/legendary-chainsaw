@@ -8,12 +8,12 @@
     "region": {
       "type": "string",
       "enum": [
-        "dach",
-        "us",
-        "cn",
-        "in",
         "br",
-        "jp"
+        "cn",
+        "dach",
+        "in",
+        "jp",
+        "us"
       ],
       "description": "Shown region"
     },

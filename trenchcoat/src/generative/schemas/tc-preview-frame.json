@@ -28,9 +28,9 @@
     "viewport": {
       "type": "string",
       "enum": [
+        "desktop",
         "phone",
-        "tablet",
-        "desktop"
+        "tablet"
       ],
       "description": "The width the page is drawn at. Changed by the switch unless a tc-viewport-change listener calls preventDefault()"
     },

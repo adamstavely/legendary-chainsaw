@@ -20,8 +20,8 @@
       "type": "string",
       "enum": [
         "both",
-        "hover",
-        "contextmenu"
+        "contextmenu",
+        "hover"
       ],
       "description": "What opens a card: \"both\" (hover, focus and right-click), \"hover\" (hover and focus) or \"contextmenu\" (right-click, Menu key, Enter)"
     },
@@ -65,10 +65,10 @@
     "IdentifierKind": {
       "type": "string",
       "enum": [
-        "doi",
-        "ip",
-        "hash",
         "cve",
+        "doi",
+        "hash",
+        "ip",
         "tracking"
       ],
       "description": "What can be found: DOIs, IP addresses, file hashes, CVE ids and parcel tracking numbers"

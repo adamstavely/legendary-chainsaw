@@ -8,9 +8,9 @@
     "stack": {
       "type": "string",
       "enum": [
-        "stacked",
         "none",
-        "percent"
+        "percent",
+        "stacked"
       ],
       "description": "\"none\" overlaps the areas, \"stacked\" piles them up, \"percent\" stacks them to 100%; by default stacked when there are several"
     },
@@ -39,8 +39,8 @@
     "curve": {
       "type": "string",
       "enum": [
-        "smooth",
         "linear",
+        "smooth",
         "step"
       ],
       "description": "How lines bend between points: \"smooth\", \"linear\", \"step\" or \"monotone\""
@@ -48,9 +48,9 @@
     "xType": {
       "type": "string",
       "enum": [
-        "number",
+        "band",
         "date",
-        "band"
+        "number"
       ],
       "description": "What x is, when guessing from the values isn't right: \"date\", \"number\" or \"band\""
     },
@@ -70,8 +70,8 @@
     "colorMode": {
       "type": "string",
       "enum": [
-        "highlight",
-        "categorical"
+        "categorical",
+        "highlight"
       ],
       "description": "\"highlight\" paints the emphasised series and leaves the rest quiet; \"categorical\" gives each its own ink"
     },
@@ -156,8 +156,8 @@
             "localeMatcher": {
               "type": "string",
               "enum": [
-                "lookup",
-                "best fit"
+                "best fit",
+                "lookup"
               ]
             },
             "style": {
@@ -211,10 +211,10 @@
     "easing": {
       "type": "string",
       "enum": [
-        "linear",
-        "spring",
+        "easeInOut",
         "easeOut",
-        "easeInOut"
+        "linear",
+        "spring"
       ],
       "description": "How marks move: \"spring\", \"easeOut\", \"easeInOut\" or \"linear\""
     },
@@ -237,8 +237,8 @@
     "view": {
       "type": "string",
       "enum": [
-        "table",
-        "chart"
+        "chart",
+        "table"
       ],
       "description": "The chart or the same numbers as a table. Changed by the Table button unless a tc-view-change listener calls preventDefault()"
     },
@@ -299,13 +299,13 @@
     "FormatName": {
       "type": "string",
       "enum": [
-        "number",
-        "integer",
-        "percent",
-        "ratio",
         "compact",
         "currency",
-        "decimal"
+        "decimal",
+        "integer",
+        "number",
+        "percent",
+        "ratio"
       ],
       "description": "Number and date formats, through Intl; the default locale is en-US"
     },

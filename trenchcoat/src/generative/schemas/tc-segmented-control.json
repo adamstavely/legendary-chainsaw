@@ -19,17 +19,17 @@
     "size": {
       "type": "string",
       "enum": [
-        "sm",
+        "lg",
         "md",
-        "lg"
+        "sm"
       ],
       "description": "Height and text size of the control: \"sm\", \"md\" or \"lg\""
     },
     "variant": {
       "type": "string",
       "enum": [
-        "tray",
         "buttons",
+        "tray",
         "underline"
       ],
       "description": "\"tray\", \"underline\" or \"buttons\" (Clean only – Standard shows it as \"tray\"). Unset: \"tray\" in Standard, \"buttons\" in Clean"
@@ -41,8 +41,8 @@
     "kind": {
       "type": "string",
       "enum": [
-        "tabs",
-        "radio"
+        "radio",
+        "tabs"
       ],
       "description": "\"radio\" (a radiogroup, the default) or \"tabs\" (a tablist that switches panels)"
     },

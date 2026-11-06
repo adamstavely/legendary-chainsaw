@@ -73,8 +73,8 @@
       "type": "string",
       "enum": [
         "high",
-        "medium",
-        "low"
+        "low",
+        "medium"
       ]
     },
     "TreeDecisionOption": {

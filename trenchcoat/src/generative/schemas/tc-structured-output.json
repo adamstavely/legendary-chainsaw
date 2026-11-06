@@ -113,13 +113,13 @@
     "StructuredOutputType": {
       "type": "string",
       "enum": [
-        "object",
         "array",
-        "string",
-        "number",
-        "integer",
         "boolean",
-        "null"
+        "integer",
+        "null",
+        "number",
+        "object",
+        "string"
       ],
       "description": "A JSON Schema type name"
     },

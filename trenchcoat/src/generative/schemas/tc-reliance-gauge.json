@@ -70,18 +70,18 @@
     "reviewLevel": {
       "type": "string",
       "enum": [
+        "mandatory",
         "routine",
-        "spot-check",
-        "mandatory"
+        "spot-check"
       ],
       "description": "The review level in force – when it differs from the recommendation, the footer offers to switch"
     },
     "recommended": {
       "type": "string",
       "enum": [
+        "mandatory",
         "routine",
-        "spot-check",
-        "mandatory"
+        "spot-check"
       ],
       "description": "Overrides the recommended level worked out from the signals and the index"
     },

@@ -49,8 +49,8 @@
       "type": "string",
       "enum": [
         "all",
-        "questions",
-        "edits"
+        "edits",
+        "questions"
       ],
       "description": "The filter tab"
     },

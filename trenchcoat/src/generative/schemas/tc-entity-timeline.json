@@ -154,12 +154,12 @@
     "TimelineTone": {
       "type": "string",
       "enum": [
-        "success",
-        "info",
-        "warning",
         "danger",
+        "info",
         "neutral",
-        "violet"
+        "success",
+        "violet",
+        "warning"
       ],
       "description": "The tone a category is drawn in"
     }

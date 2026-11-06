@@ -8,12 +8,12 @@
     "state": {
       "type": "string",
       "enum": [
-        "queued",
-        "failed",
         "clean",
+        "failed",
+        "quarantined",
+        "queued",
         "scanning",
-        "suspicious",
-        "quarantined"
+        "suspicious"
       ],
       "description": "Where the scan stands: queued, scanning, clean, suspicious, quarantined or failed"
     },

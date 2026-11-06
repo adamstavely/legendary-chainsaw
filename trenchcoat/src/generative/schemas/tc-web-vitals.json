@@ -126,19 +126,19 @@
     "WebVitalId": {
       "type": "string",
       "enum": [
-        "lcp",
-        "inp",
         "cls",
         "fcp",
+        "inp",
+        "lcp",
         "ttfb"
       ]
     },
     "WebVitalUnit": {
       "type": "string",
       "enum": [
+        "",
         "ms",
-        "s",
-        ""
+        "s"
       ]
     }
   }

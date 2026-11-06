@@ -142,9 +142,9 @@
     "AuditOutcome": {
       "type": "string",
       "enum": [
-        "success",
         "denied",
-        "failed"
+        "failed",
+        "success"
       ]
     }
   }

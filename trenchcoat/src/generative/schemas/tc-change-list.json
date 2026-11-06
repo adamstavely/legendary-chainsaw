@@ -121,10 +121,10 @@
     "ChangeState": {
       "type": "string",
       "enum": [
+        "closed",
         "draft",
-        "open",
         "merged",
-        "closed"
+        "open"
       ]
     },
     "CheckCounts": {

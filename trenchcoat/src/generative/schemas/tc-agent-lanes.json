@@ -144,9 +144,9 @@
       "type": "string",
       "enum": [
         "done",
+        "failed",
         "running",
-        "waiting",
-        "failed"
+        "waiting"
       ]
     }
   }

@@ -65,8 +65,8 @@
     "panel": {
       "type": "string",
       "enum": [
-        "apps",
         "account",
+        "apps",
         "notifications"
       ],
       "description": "The open popover, or null for none"
@@ -82,21 +82,21 @@
       "type": "string",
       "enum": [
         "accent",
-        "teal",
-        "violet",
         "amber",
         "pink",
-        "rose"
+        "rose",
+        "teal",
+        "violet"
       ],
       "description": "The tone behind initials when there's no image"
     },
     "HeaderNavPresence": {
       "type": "string",
       "enum": [
-        "online",
         "away",
         "busy",
-        "offline"
+        "offline",
+        "online"
       ],
       "description": "Presence: a dot on the avatar's bottom corner"
     },

@@ -48,9 +48,9 @@
     "status": {
       "type": "string",
       "enum": [
-        "idle",
-        "error",
         "done",
+        "error",
+        "idle",
         "searching"
       ],
       "description": "idle, searching, done or error"

@@ -124,11 +124,11 @@
     "FallbackState": {
       "type": "string",
       "enum": [
-        "waiting",
-        "trying",
-        "failed",
         "answered",
-        "skipped"
+        "failed",
+        "skipped",
+        "trying",
+        "waiting"
       ]
     }
   }

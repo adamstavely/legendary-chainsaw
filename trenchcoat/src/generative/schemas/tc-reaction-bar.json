@@ -52,8 +52,8 @@
     "ReactionKey": {
       "type": "string",
       "enum": [
-        "like",
         "comment",
+        "like",
         "repost",
         "share"
       ]

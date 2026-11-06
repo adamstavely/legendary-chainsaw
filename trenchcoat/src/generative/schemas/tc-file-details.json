@@ -68,9 +68,9 @@
     "summaryStatus": {
       "type": "string",
       "enum": [
-        "idle",
-        "error",
         "done",
+        "error",
+        "idle",
         "summarising"
       ],
       "description": "Where the summary is: \"idle\", \"summarising\", \"done\" or \"error\". Without a summary and when \"idle\", the section is left out"
@@ -131,14 +131,14 @@
     "FileSummaryKind": {
       "type": "string",
       "enum": [
-        "pdf",
+        "audio",
         "doc",
+        "image",
+        "other",
+        "pdf",
         "sheet",
         "slides",
-        "image",
-        "audio",
-        "video",
-        "other"
+        "video"
       ]
     },
     "TeamFlag": {
@@ -230,10 +230,10 @@
     "FileSummaryEntityKind": {
       "type": "string",
       "enum": [
-        "person",
-        "organization",
+        "amount",
         "date",
-        "amount"
+        "organization",
+        "person"
       ]
     },
     "VersionEntry": {
@@ -280,9 +280,9 @@
     "VersionStatus": {
       "type": "string",
       "enum": [
-        "draft",
         "active",
-        "deprecated"
+        "deprecated",
+        "draft"
       ],
       "description": "Where a version stands"
     },
@@ -307,8 +307,8 @@
       "type": "string",
       "enum": [
         "added",
-        "removed",
-        "changed"
+        "changed",
+        "removed"
       ],
       "description": "What a change did to the behaviour"
     },
@@ -337,8 +337,8 @@
         "kind": {
           "type": "string",
           "enum": [
-            "person",
-            "group"
+            "group",
+            "person"
           ]
         },
         "name": {
