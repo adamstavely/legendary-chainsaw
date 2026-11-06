@@ -6,6 +6,9 @@ import { cardHead } from "./internal/card-head";
 import { HotkeyController } from "./internal/controllers";
 import { safeUrl } from "./internal/safe-url";
 import { isMac } from "./internal/util";
+import { breakpointApplies, breakpointRange, breakpointTone, currentBreakpoint, defaultBreakpoints, type ViewBreakpoint } from "./internal/breakpoints";
+
+export { breakpointApplies, breakpointRange };
 
 /*
  * <tc-loupe> – a design-system inspector laid over a live page, for the people building it. Turn it on (⌘⇧L / Ctrl
@@ -48,7 +51,7 @@ export type LoupeComponentMeta = Omit<LoupeComponentInfo, "name" | "links"> & {
   design?: string;
   links?: LoupeLink[];
 };
-export type LoupeBreakpoint = { id: string; label?: string; min?: number; max?: number };
+export type LoupeBreakpoint = ViewBreakpoint;
 export type LoupeFeature = "components" | "ruler" | "layouts";
 
 /** Details of the events */
@@ -56,19 +59,12 @@ export type LoupeActiveChange = { active: boolean };
 export type LoupeFeatureChange = { feature: LoupeFeature; on: boolean };
 export type LoupeSelect = { element: Element; info: LoupeComponentInfo };
 
-export const defaultLoupeBreakpoints: LoupeBreakpoint[] = [
-  { id: "sm", label: "Small", min: 640 },
-  { id: "md", label: "Medium", min: 768 },
-  { id: "lg", label: "Large", min: 1024 },
-  { id: "xl", label: "Extra large", min: 1280 },
-  { id: "2xl", label: "2× large", min: 1536 },
-];
+export const defaultLoupeBreakpoints: LoupeBreakpoint[] = defaultBreakpoints;
 
 let uidCount = 0;
 const MAX_SCAN = 4000;
 /** How long page changes are gathered before the components are found again */
 const RESCAN_MS = 150;
-const TONES = ["violet", "info", "pink", "amber", "teal", "success", "rose"];
 
 /* scan-eye, x, book-open, code, pen-tool, external-link, layout-grid, columns, rows: Lucide (ISC, lucide.dev) */
 const lucide = (size: number, body: ReturnType<typeof svg>) =>
@@ -91,13 +87,6 @@ const tagWords = (tag: string) => {
   const w = tag.replace(/^tc-/, "").replace(/-/g, " ");
   return w.charAt(0).toUpperCase() + w.slice(1);
 };
-
-/** Whether a breakpoint applies at this width */
-export const breakpointApplies = (bp: LoupeBreakpoint, width: number) =>
-  (bp.min === undefined || width >= bp.min) && (bp.max === undefined || width <= bp.max) && (bp.min !== undefined || bp.max !== undefined);
-/** A breakpoint's range in words: "≥ 640 px", "≤ 767 px", "640–1023 px" */
-export const breakpointRange = (bp: LoupeBreakpoint) =>
-  bp.min !== undefined && bp.max !== undefined ? `${bp.min}–${bp.max} px` : bp.min !== undefined ? `≥ ${bp.min} px` : bp.max !== undefined ? `≤ ${bp.max} px` : "All widths";
 
 type Box = { x: number; y: number; w: number; h: number };
 type Found = { el: Element; info: LoupeComponentInfo; box: Box | null };
@@ -478,16 +467,11 @@ export class TcLoupe extends TcElement {
   /* ---------- Rendering ---------- */
 
   private get currentBreakpoint() {
-    const w = this.viewport.w;
-    const on = this.breakpoints.filter((b) => breakpointApplies(b, w));
-    if (!on.length) return null;
-    return on.reduce((a, b) => ((b.min ?? 0) > (a.min ?? 0) ? b : a));
+    return currentBreakpoint(this.breakpoints, this.viewport.w);
   }
 
   private tone(id: string) {
-    const i = this.breakpoints.findIndex((b) => b.id === id);
-    const t = TONES[(i < 0 ? 0 : i) % TONES.length];
-    return t === "info" || t === "success" ? `var(--tc-status-${t}-solid)` : `var(--tc-tone-${t}-solid)`;
+    return breakpointTone(this.breakpoints, id);
   }
 
   private renderRuler() {

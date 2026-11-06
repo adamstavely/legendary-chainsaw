@@ -1,0 +1,526 @@
+{
+ "elements": [
+  {
+   "tag": "tc-breakpoint-overlay",
+   "className": "TcBreakpointOverlay",
+   "description": "Which breakpoint the page is at – a badge in the window's corner that opens a panel of every breakpoint, with a\nruler across the top of the window; ⌥⇧O to open it.",
+   "properties": [
+    {
+     "name": "heading",
+     "attribute": "heading",
+     "type": "string",
+     "default": "\"Breakpoints\"",
+     "description": "The panel's heading",
+     "readonly": false
+    },
+    {
+     "name": "open",
+     "attribute": "open",
+     "type": "boolean",
+     "default": "false",
+     "description": "Whether the panel is open. Changed by the user unless a tc-open-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
+     "name": "breakpoints",
+     "attribute": null,
+     "type": "BreakpointOverlayBreakpoint[]",
+     "default": "defaultBreakpoints",
+     "description": "The breakpoints, in px: min only, max only, or a range. Tailwind's by default",
+     "readonly": false
+    },
+    {
+     "name": "hotkey",
+     "attribute": null,
+     "type": "string | false",
+     "default": "\"alt+shift+o\"",
+     "description": "Opens and closes it from anywhere (\"alt+shift+o\" is ⌥⇧O on Apple keyboards, Alt Shift O elsewhere); false turns it off",
+     "readonly": false
+    },
+    {
+     "name": "showRuler",
+     "attribute": "show-ruler",
+     "type": "boolean",
+     "default": "true",
+     "description": "While open, a ruler across the top of the window with each breakpoint and the width. Only when it follows the window",
+     "readonly": false
+    },
+    {
+     "name": "floating",
+     "attribute": "floating",
+     "type": "boolean",
+     "default": "true",
+     "description": "The badge and panel float at the window's corner; off, it's a card in the page, always open",
+     "readonly": false
+    },
+    {
+     "name": "corner",
+     "attribute": "corner",
+     "type": "BreakpointOverlayCorner",
+     "default": "\"bottom-left\"",
+     "description": "Which corner of the window it floats in",
+     "readonly": false
+    },
+    {
+     "name": "target",
+     "attribute": null,
+     "type": "Element | null",
+     "default": "null",
+     "description": "Follow this element's width instead of the window's",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-open-change",
+     "detail": "",
+     "description": "Opened or closed ({ open }: BreakpointOverlayOpenChange), by the badge, the hotkey, Escape or Close; cancelable – prevented, `open` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-breakpoint-change",
+     "detail": "",
+     "description": "The breakpoint in force changed as the width changed ({ breakpoint, width }: BreakpointOverlayBreakpointChange)",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "bpo",
+   "cssProperties": [
+    {
+     "name": "--tc-bpo-w",
+     "value": "340px",
+     "looks": [
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-bpo-ruler-h",
+     "value": "28px",
+     "looks": [
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-action-ghost-bg-hover",
+    "--tc-border-default",
+    "--tc-card-radius",
+    "--tc-card-shadow",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-px-md",
+    "--tc-control-radius-sm",
+    "--tc-divider",
+    "--tc-fill-default",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-mono",
+    "--tc-font-sans",
+    "--tc-font-size-md",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-font-weight-regular",
+    "--tc-hairline",
+    "--tc-icon-muted",
+    "--tc-kbd-bg",
+    "--tc-kbd-fg",
+    "--tc-kbd-font-size",
+    "--tc-kbd-font-weight",
+    "--tc-kbd-h",
+    "--tc-kbd-px",
+    "--tc-kbd-radius",
+    "--tc-kbd-shadow",
+    "--tc-line-height-normal",
+    "--tc-line-height-tight",
+    "--tc-radius-full",
+    "--tc-radius-md",
+    "--tc-radius-xs",
+    "--tc-shadow-overlay",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-space-3",
+    "--tc-space-4",
+    "--tc-surface-inverse",
+    "--tc-surface-on-tray",
+    "--tc-surface-overlay",
+    "--tc-surface-raised",
+    "--tc-surface-tray",
+    "--tc-text-muted",
+    "--tc-text-on-inverse",
+    "--tc-text-primary",
+    "--tc-text-secondary",
+    "--tc-tray-inset",
+    "--tc-tray-radius",
+    "--tc-z-toast"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "BreakpointOverlay",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The panel's heading"
+    },
+    {
+     "name": "open",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether the panel is open – controlled when given"
+    },
+    {
+     "name": "defaultOpen",
+     "type": "boolean",
+     "optional": true,
+     "description": "Whether an uncontrolled overlay starts open"
+    },
+    {
+     "name": "onOpenChange",
+     "type": "(open: boolean) => void",
+     "optional": true,
+     "description": "Opened or closed (the badge, the hotkey, Escape, Close)"
+    },
+    {
+     "name": "onBreakpointChange",
+     "type": "(detail: BreakpointOverlayBreakpointChange) => void",
+     "optional": true,
+     "description": "The breakpoint in force changed as the width changed"
+    }
+   ],
+   "hides": [
+    "heading",
+    "open",
+    "children"
+   ],
+   "events": {
+    "tc-open-change": null,
+    "tc-breakpoint-change": "onBreakpointChange"
+   }
+  }
+ ],
+ "changelog": [
+  "**Breakpoint Overlay** (`tc-breakpoint-overlay`): which breakpoint the page is at – a corner badge that opens a scale and list of every breakpoint with its range and media query, and a ruler across the window; ⌥⇧O to open it. It follows the window or a `target` element. Loupe now shares its breakpoint helpers."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-breakpoint-overlay",
+   "className": "TcBreakpointOverlay",
+   "module": "trenchcoat/breakpoint-overlay",
+   "data": [
+    "breakpoints",
+    "hotkey",
+    "target"
+   ],
+   "attributes": [
+    {
+     "name": "heading",
+     "attribute": "heading"
+    },
+    {
+     "name": "open",
+     "attribute": "open"
+    },
+    {
+     "name": "showRuler",
+     "attribute": "show-ruler"
+    },
+    {
+     "name": "floating",
+     "attribute": "floating"
+    },
+    {
+     "name": "corner",
+     "attribute": "corner"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-open-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-breakpoint-change",
+     "cancelable": false
+    }
+   ],
+   "controlled": [
+    {
+     "property": "open",
+     "event": "tc-open-change"
+    }
+   ],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "itself",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "resize-observer",
+    "name": "ResizeObserver",
+    "bcd": "api.ResizeObserver",
+    "versions": {
+     "chrome": "64",
+     "edge": "79",
+     "firefox": "69",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "scrollbar-width",
+    "name": "scrollbar-width",
+    "bcd": "css.properties.scrollbar-width",
+    "versions": {
+     "chrome": "121",
+     "edge": "121",
+     "firefox": "64",
+     "safari": "18.2",
+     "safari_ios": "18.2"
+    },
+    "progressive": true,
+    "without": "Scrollbars keep the browser's default width.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "backdrop-filter",
+    "name": "backdrop-filter",
+    "bcd": "css.properties.backdrop-filter",
+    "versions": {
+     "chrome": "76",
+     "edge": "79",
+     "firefox": "103",
+     "safari": "18",
+     "safari_ios": "18"
+    },
+    "progressive": true,
+    "without": "What's behind a translucent surface isn't blurred; the surface keeps its fill.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "popover",
+    "name": "Popover API",
+    "bcd": "api.HTMLElement.popover",
+    "versions": {
+     "chrome": "114",
+     "edge": "114",
+     "firefox": "125",
+     "safari": "17",
+     "safari_ios": "18.3"
+    },
+    "progressive": true,
+    "without": "Lists open fixed to the window instead of in the top layer, so a clipping ancestor or a modal can cover them.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setTimeout"
+  ],
+  "frames": [
+   "requestAnimationFrame, cancelled"
+  ],
+  "animations": 0,
+  "observers": [
+   "ResizeObserver",
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [],
+  "listeners": [
+   "window resize",
+   "window keydown (internal/controllers › HotkeyController)"
+  ],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 30067,
+  "gzip": 9460
+ }
+}

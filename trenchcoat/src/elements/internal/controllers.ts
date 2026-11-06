@@ -296,7 +296,9 @@ const parseCombo = (combo: string): Combo => {
   return { key, mod: has("mod"), ctrl: has("ctrl") || has("control"), meta: has("meta") || has("cmd"), shift: has("shift"), alt: has("alt") || has("option") };
 };
 const comboMatches = (e: KeyboardEvent, c: Combo) => {
-  if (e.key.toLowerCase() !== c.key && e.code.toLowerCase() !== c.key) return false;
+  // The key, or the physical key – Option on a Mac turns "o" into "ø", but the code is still KeyO
+  const code = e.code.toLowerCase();
+  if (e.key.toLowerCase() !== c.key && code !== c.key && code !== `key${c.key}` && code !== `digit${c.key}`) return false;
   if (c.mod ? !(e.metaKey || e.ctrlKey) : (c.ctrl && !e.ctrlKey) || (c.meta && !e.metaKey)) return false;
   if (!c.mod && !c.ctrl && !c.meta && (e.ctrlKey || e.metaKey)) return false;
   return (!c.shift || e.shiftKey) && (!c.alt || e.altKey);

@@ -368,6 +368,9 @@
     "clock/environment read": 1,
     "literal spacing": 21
   },
+  "src/elements/pr-link.ts": {
+    "clock/environment read": 1
+  },
   "src/elements/process-list.ts": {
     "clock/environment read": 1
   },

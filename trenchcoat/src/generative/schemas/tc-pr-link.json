@@ -1,0 +1,112 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-pr-link.json",
+  "title": "tc-pr-link",
+  "description": "A pull request in running text – its state's mark and owner/repo#number · title as a link, with a card of its state,\nauthor, lines changed and files on hover or focus.",
+  "type": "object",
+  "properties": {
+    "repo": {
+      "type": "string",
+      "description": "The repository, \"owner/name\""
+    },
+    "number": {
+      "type": "number",
+      "description": "The pull request's number"
+    },
+    "prTitle": {
+      "type": "string",
+      "description": "Its title"
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "open",
+        "merged",
+        "closed"
+      ],
+      "description": "Open, draft, merged or closed"
+    },
+    "href": {
+      "type": "string",
+      "description": "Where the link goes; without one it's text with the card, not a link",
+      "format": "uri-reference"
+    },
+    "author": {
+      "type": "string",
+      "description": "Who wrote it"
+    },
+    "avatar": {
+      "type": "string",
+      "description": "The author's picture URL; without one the card shows initials"
+    },
+    "additions": {
+      "type": "number",
+      "description": "Lines added"
+    },
+    "deletions": {
+      "type": "number",
+      "description": "Lines removed"
+    },
+    "files": {
+      "type": "number",
+      "description": "Files changed"
+    },
+    "updatedAt": {
+      "type": "number",
+      "description": "When it last changed state (opened, merged, closed), epoch ms"
+    },
+    "now": {
+      "type": "number",
+      "description": "The time now, epoch ms; by default the element's own clock when the card opens"
+    },
+    "compact": {
+      "type": "boolean",
+      "description": "Just the mark and #number, without the repository and title"
+    },
+    "newTab": {
+      "type": "boolean",
+      "description": "Open the link in a new tab"
+    },
+    "hoverDelay": {
+      "type": "number",
+      "description": "How long the pointer rests on the link before the card opens, ms"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for numbers and times, e.g. \"en-GB\"; by default the browser's"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "draft": {
+          "type": "string"
+        },
+        "open": {
+          "type": "string"
+        },
+        "merged": {
+          "type": "string"
+        },
+        "closed": {
+          "type": "string"
+        },
+        "files": {
+          "type": "string"
+        },
+        "file": {
+          "type": "string"
+        },
+        "lines": {
+          "type": "string"
+        },
+        "by": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The words it uses, to translate or reword"
+    }
+  },
+  "additionalProperties": false
+}

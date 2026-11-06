@@ -1140,12 +1140,12 @@
    }
   },
   "agent-handoff": {
-   "measuredAt": "2026-11-01",
-   "hash": "a10eca3d5610a34f",
+   "measuredAt": "2026-11-06",
+   "hash": "3917984a964022e8",
    "bundle": {
     "own": {
      "min": 23448,
-     "gzip": 6709
+     "gzip": 6741
     },
     "shared": [
      {
@@ -1186,19 +1186,19 @@
     ],
     "withoutLit": {
      "min": 31914,
-     "gzip": 9303
+     "gzip": 9344
     },
     "withLit": {
      "min": 53133,
-     "gzip": 16218
+     "gzip": 16294
     }
    },
    "render": {
     "tag": "tc-agent-handoff",
     "source": "demo",
     "runs": 7,
-    "cold": 8.2,
-    "first": 1.1,
+    "cold": 14.8,
+    "first": 1.2,
     "update": 0.3,
     "updateKind": "one item of steps replaced",
     "nodes": 89,
@@ -1208,14 +1208,14 @@
      "points": [
       {
        "items": 100,
-       "first": 16.9,
-       "update": 2.4,
+       "first": 16.8,
+       "update": 2.6,
        "nodes": 1738
       },
       {
        "items": 1000,
-       "first": 172.2,
-       "update": 19.4,
+       "first": 205.2,
+       "update": 19.5,
        "nodes": 17038
       }
      ]
@@ -2460,8 +2460,8 @@
    }
   },
   "ai-search": {
-   "measuredAt": "2026-10-28",
-   "hash": "b7eb13ca89dd86f3",
+   "measuredAt": "2026-11-06",
+   "hash": "697b812e91d733a1",
    "bundle": {
     "own": {
      "min": 28912,
@@ -2486,7 +2486,7 @@
      {
       "name": "internal/controllers",
       "kind": "internal",
-      "min": 1435
+      "min": 1492
      },
      {
       "name": "internal/kit",
@@ -2510,20 +2510,20 @@
      }
     ],
     "withoutLit": {
-     "min": 37015,
-     "gzip": 10330
+     "min": 37072,
+     "gzip": 10357
     },
     "withLit": {
-     "min": 58201,
-     "gzip": 17267
+     "min": 58258,
+     "gzip": 17291
     }
    },
    "render": {
     "tag": "tc-ai-search",
     "source": "demo",
     "runs": 7,
-    "cold": 15.4,
-    "first": 0.7,
+    "cold": 26.1,
+    "first": 0.8,
     "update": 0.2,
     "updateKind": "one item of suggestions replaced",
     "nodes": 29,
@@ -2533,14 +2533,14 @@
      "points": [
       {
        "items": 100,
-       "first": 0.8,
-       "update": 0,
+       "first": 0.7,
+       "update": 0.1,
        "nodes": 29
       },
       {
        "items": 1000,
        "first": 0.7,
-       "update": 0.1,
+       "update": 0.2,
        "nodes": 29
       }
      ]
@@ -3023,8 +3023,8 @@
    }
   },
   "alert-feed": {
-   "measuredAt": "2026-10-28",
-   "hash": "6b585cabc82f1057",
+   "measuredAt": "2026-11-06",
+   "hash": "d1782a6a859ede74",
    "bundle": {
     "own": {
      "min": 21250,
@@ -3074,7 +3074,7 @@
     ],
     "withoutLit": {
      "min": 28929,
-     "gzip": 8949
+     "gzip": 8950
     },
     "withLit": {
      "min": 51280,
@@ -3085,8 +3085,8 @@
     "tag": "tc-alert-feed",
     "source": "demo",
     "runs": 7,
-    "cold": 10.4,
-    "first": 1.3,
+    "cold": 13.1,
+    "first": 1.1,
     "update": 0.3,
     "updateKind": "one item of items replaced",
     "nodes": 96,
@@ -3096,14 +3096,14 @@
      "points": [
       {
        "items": 100,
-       "first": 8.5,
+       "first": 9.3,
        "update": 1.1,
        "nodes": 1824
       },
       {
        "items": 1000,
-       "first": 78,
-       "update": 8.2,
+       "first": 105.8,
+       "update": 7.9,
        "nodes": 18024
       }
      ]
@@ -3207,8 +3207,8 @@
    }
   },
   "answer-arena": {
-   "measuredAt": "2026-10-28",
-   "hash": "3e76028babb81dd6",
+   "measuredAt": "2026-11-06",
+   "hash": "5902e78ca82c0020",
    "bundle": {
     "own": {
      "min": 23712,
@@ -3253,7 +3253,7 @@
     ],
     "withoutLit": {
      "min": 32598,
-     "gzip": 9574
+     "gzip": 9575
     },
     "withLit": {
      "min": 53324,
@@ -3264,8 +3264,8 @@
     "tag": "tc-answer-arena",
     "source": "demo",
     "runs": 7,
-    "cold": 11.9,
-    "first": 0.8,
+    "cold": 11.6,
+    "first": 0.9,
     "update": 0.2,
     "updateKind": "one item of reasons replaced",
     "nodes": 37,
@@ -3276,12 +3276,12 @@
       {
        "items": 100,
        "first": 0.8,
-       "update": 0.1,
+       "update": 0,
        "nodes": 37
       },
       {
        "items": 1000,
-       "first": 0.8,
+       "first": 0.7,
        "update": 0,
        "nodes": 37
       }
@@ -4032,12 +4032,12 @@
    }
   },
   "attention-pulse": {
-   "measuredAt": "2026-10-31",
-   "hash": "7a82dbc343fc7cfa",
+   "measuredAt": "2026-11-06",
+   "hash": "bba3bdd5ef7a82ea",
    "bundle": {
     "own": {
      "min": 3859,
-     "gzip": 1870
+     "gzip": 1871
     },
     "shared": [
      {
@@ -4078,19 +4078,19 @@
     ],
     "withoutLit": {
      "min": 10616,
-     "gzip": 4016
+     "gzip": 4017
     },
     "withLit": {
      "min": 30671,
-     "gzip": 10526
+     "gzip": 10585
     }
    },
    "render": {
     "tag": "tc-attention-pulse",
     "source": "demo",
     "runs": 7,
-    "cold": 0.8,
-    "first": 0.1,
+    "cold": 0.9,
+    "first": 0.2,
     "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 0,
@@ -4113,8 +4113,8 @@
    }
   },
   "attestation-check": {
-   "measuredAt": "2026-10-28",
-   "hash": "972f8ea4b373010a",
+   "measuredAt": "2026-11-06",
+   "hash": "5bf78efa7382e82f",
    "bundle": {
     "own": {
      "min": 30829,
@@ -4175,9 +4175,9 @@
     "tag": "tc-attestation-check",
     "source": "demo",
     "runs": 7,
-    "cold": 14.5,
+    "cold": 114.2,
     "first": 0.8,
-    "update": 0.2,
+    "update": 0.1,
     "updateKind": "one item of accept replaced",
     "nodes": 30,
     "scale": {
@@ -4186,13 +4186,13 @@
      "points": [
       {
        "items": 100,
-       "first": 0.7,
+       "first": 0.9,
        "update": 0,
        "nodes": 30
       },
       {
        "items": 1000,
-       "first": 0.7,
+       "first": 1,
        "update": 0,
        "nodes": 30
       }
@@ -4498,8 +4498,8 @@
    }
   },
   "awaiting-review": {
-   "measuredAt": "2026-11-05",
-   "hash": "1b22942eefb005f5",
+   "measuredAt": "2026-11-06",
+   "hash": "397fcf578bc74007",
    "bundle": {
     "own": {
      "min": 6777,
@@ -4555,8 +4555,8 @@
     "tag": "tc-awaiting-review",
     "source": "demo",
     "runs": 7,
-    "cold": 7.3,
-    "first": 0.3,
+    "cold": 9.7,
+    "first": 0.4,
     "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 12,
@@ -4579,8 +4579,8 @@
    }
   },
   "background-tasks": {
-   "measuredAt": "2026-11-04",
-   "hash": "4e1827a1c1d606a8",
+   "measuredAt": "2026-11-06",
+   "hash": "10daca60975b7ba4",
    "bundle": {
     "own": {
      "min": 29713,
@@ -4646,9 +4646,9 @@
     "tag": "tc-background-tasks",
     "source": "demo",
     "runs": 7,
-    "cold": 5.7,
-    "first": 0.5,
-    "update": 0.1,
+    "cold": 7.1,
+    "first": 0.4,
+    "update": 0.2,
     "updateKind": "one item of tasks replaced",
     "nodes": 10,
     "scale": {
@@ -4657,8 +4657,8 @@
      "points": [
       {
        "items": 10000,
-       "first": 3.6,
-       "update": 1.8,
+       "first": 4.4,
+       "update": 1.7,
        "nodes": 10
       }
      ]
@@ -4887,8 +4887,8 @@
    }
   },
   "biometric-status": {
-   "measuredAt": "2026-10-28",
-   "hash": "a998e2f20f34902b",
+   "measuredAt": "2026-11-06",
+   "hash": "392f2345d55644ad",
    "bundle": {
     "own": {
      "min": 18154,
@@ -4944,7 +4944,7 @@
     "tag": "tc-biometric-status",
     "source": "demo",
     "runs": 7,
-    "cold": 8.1,
+    "cold": 10.9,
     "first": 1.1,
     "update": 0.2,
     "updateKind": "one item of modalities replaced",
@@ -4955,14 +4955,14 @@
      "points": [
       {
        "items": 100,
-       "first": 6.9,
+       "first": 6.6,
        "update": 0.8,
        "nodes": 2219
       },
       {
        "items": 1000,
-       "first": 63.3,
-       "update": 8.3,
+       "first": 66.6,
+       "update": 8,
        "nodes": 21886
       }
      ]
@@ -4985,8 +4985,8 @@
    }
   },
   "blur-crossfade": {
-   "measuredAt": "2026-10-28",
-   "hash": "ccb9d3ab418d0c74",
+   "measuredAt": "2026-11-06",
+   "hash": "7ad887d83d20d807",
    "bundle": {
     "own": {
      "min": 8369,
@@ -5031,7 +5031,7 @@
     ],
     "withoutLit": {
      "min": 15141,
-     "gzip": 5533
+     "gzip": 5532
     },
     "withLit": {
      "min": 35227,
@@ -5044,7 +5044,7 @@
     "runs": 7,
     "cold": 1.3,
     "first": 0.2,
-    "update": 0.2,
+    "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 0,
     "scale": null,
@@ -5066,8 +5066,8 @@
    }
   },
   "branch-switcher": {
-   "measuredAt": "2026-11-04",
-   "hash": "78cfcc4ae04f14d0",
+   "measuredAt": "2026-11-06",
+   "hash": "c622bdd7b5e850f0",
    "bundle": {
     "own": {
      "min": 20883,
@@ -5133,8 +5133,8 @@
     "tag": "tc-branch-switcher",
     "source": "demo",
     "runs": 7,
-    "cold": 11.2,
-    "first": 0.6,
+    "cold": 11,
+    "first": 0.4,
     "update": 0.2,
     "updateKind": "one item of branches replaced",
     "nodes": 22,
@@ -5144,13 +5144,13 @@
      "points": [
       {
        "items": 100,
-       "first": 0.5,
+       "first": 0.4,
        "update": 0.1,
        "nodes": 22
       },
       {
        "items": 1000,
-       "first": 0.8,
+       "first": 0.7,
        "update": 0.2,
        "nodes": 22
       }
@@ -5359,6 +5359,114 @@
        "first": 1.9,
        "update": 0.5,
        "nodes": 207
+      }
+     ]
+    },
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
+  "breakpoint-overlay": {
+   "measuredAt": "2026-11-06",
+   "hash": "8d6ad29ee1bc11cc",
+   "bundle": {
+    "own": {
+     "min": 20489,
+     "gzip": 6474
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 18957
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2971
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1864
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 1492
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/breakpoints",
+      "kind": "internal",
+      "min": 889
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 440
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 435
+     },
+     {
+      "name": "internal/util",
+      "kind": "internal",
+      "min": 113
+     }
+    ],
+    "withoutLit": {
+     "min": 30067,
+     "gzip": 9508
+    },
+    "withLit": {
+     "min": 50156,
+     "gzip": 15990
+    }
+   },
+   "render": {
+    "tag": "tc-breakpoint-overlay",
+    "source": "demo",
+    "runs": 7,
+    "cold": 11.3,
+    "first": 0.8,
+    "update": 0.2,
+    "updateKind": "one item of breakpoints replaced",
+    "nodes": 52,
+    "scale": {
+     "property": "breakpoints",
+     "demoItems": 3,
+     "points": [
+      {
+       "items": 100,
+       "first": 7.2,
+       "update": 0.6,
+       "nodes": 989
+      },
+      {
+       "items": 1000,
+       "first": 53.4,
+       "update": 11.2,
+       "nodes": 9689
       }
      ]
     },
@@ -5591,12 +5699,12 @@
    }
   },
   "bulk-action-bar": {
-   "measuredAt": "2026-11-01",
-   "hash": "4a8d8eddd5457e95",
+   "measuredAt": "2026-11-06",
+   "hash": "c19e05f254c59b38",
    "bundle": {
     "own": {
      "min": 10629,
-     "gzip": 4064
+     "gzip": 4085
     },
     "shared": [
      {
@@ -5637,20 +5745,20 @@
     ],
     "withoutLit": {
      "min": 17904,
-     "gzip": 6184
+     "gzip": 6208
     },
     "withLit": {
      "min": 37993,
-     "gzip": 12625
+     "gzip": 12706
     }
    },
    "render": {
     "tag": "tc-bulk-action-bar",
     "source": "demo",
     "runs": 7,
-    "cold": 1.6,
+    "cold": 1.9,
     "first": 0.4,
-    "update": 0.1,
+    "update": 0.2,
     "updateKind": "one item of actions replaced",
     "nodes": 10,
     "scale": {
@@ -5659,14 +5767,14 @@
      "points": [
       {
        "items": 100,
-       "first": 1.3,
-       "update": 0.3,
+       "first": 1.4,
+       "update": 0.2,
        "nodes": 107
       },
       {
        "items": 1000,
-       "first": 15.4,
-       "update": 8.3,
+       "first": 17.1,
+       "update": 7.3,
        "nodes": 1007
       }
      ]
@@ -5689,8 +5797,8 @@
    }
   },
   "button": {
-   "measuredAt": "2026-10-28",
-   "hash": "440aa67c1dae9ff6",
+   "measuredAt": "2026-11-06",
+   "hash": "635ad53be03a4836",
    "bundle": {
     "own": {
      "min": 15074,
@@ -5751,8 +5859,8 @@
     "tag": "tc-button",
     "source": "demo",
     "runs": 7,
-    "cold": 9.1,
-    "first": 0.4,
+    "cold": 9.3,
+    "first": 0.3,
     "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 2,
@@ -5775,8 +5883,8 @@
    }
   },
   "capability-notice": {
-   "measuredAt": "2026-10-28",
-   "hash": "e4b95d3ed5f1c19c",
+   "measuredAt": "2026-11-06",
+   "hash": "2d67761a8c396ec8",
    "bundle": {
     "own": {
      "min": 18719,
@@ -5821,7 +5929,7 @@
     ],
     "withoutLit": {
      "min": 25501,
-     "gzip": 7771
+     "gzip": 7772
     },
     "withLit": {
      "min": 46675,
@@ -5832,8 +5940,8 @@
     "tag": "tc-capability-notice",
     "source": "demo",
     "runs": 7,
-    "cold": 8.3,
-    "first": 0.8,
+    "cold": 10.6,
+    "first": 0.7,
     "update": 0.2,
     "updateKind": "re-render with the same data",
     "nodes": 36,
@@ -6233,8 +6341,8 @@
    }
   },
   "change-summary": {
-   "measuredAt": "2026-10-28",
-   "hash": "b0ab3c62912e7d0d",
+   "measuredAt": "2026-11-06",
+   "hash": "b3990d223746cf57",
    "bundle": {
     "own": {
      "min": 11979,
@@ -6290,7 +6398,7 @@
     "tag": "tc-change-summary",
     "source": "demo",
     "runs": 7,
-    "cold": 7.5,
+    "cold": 9,
     "first": 0.7,
     "update": 0.1,
     "updateKind": "one item of changes replaced",
@@ -6301,14 +6409,14 @@
      "points": [
       {
        "items": 100,
-       "first": 4.3,
+       "first": 4.4,
        "update": 0.5,
        "nodes": 791
       },
       {
        "items": 1000,
-       "first": 39.9,
-       "update": 4.2,
+       "first": 41.9,
+       "update": 3.9,
        "nodes": 7811
       }
      ]
@@ -6684,8 +6792,8 @@
    }
   },
   "check-status": {
-   "measuredAt": "2026-11-04",
-   "hash": "c1c9cdaf4d3b3d59",
+   "measuredAt": "2026-11-06",
+   "hash": "b6f3673ffea6bad7",
    "bundle": {
     "own": {
      "min": 13039,
@@ -6730,7 +6838,7 @@
     ],
     "withoutLit": {
      "min": 21497,
-     "gzip": 7379
+     "gzip": 7380
     },
     "withLit": {
      "min": 43844,
@@ -6741,8 +6849,8 @@
     "tag": "tc-check-status",
     "source": "demo",
     "runs": 7,
-    "cold": 9.4,
-    "first": 0.8,
+    "cold": 8.9,
+    "first": 0.7,
     "update": 0.2,
     "updateKind": "one item of checks replaced",
     "nodes": 69,
@@ -6752,14 +6860,14 @@
      "points": [
       {
        "items": 100,
-       "first": 3.4,
+       "first": 3.3,
        "update": 0.5,
        "nodes": 948
       },
       {
        "items": 1000,
-       "first": 33.5,
-       "update": 4.8,
+       "first": 29.3,
+       "update": 4.1,
        "nodes": 9348
       }
      ]
@@ -6782,8 +6890,8 @@
    }
   },
   "checkbox": {
-   "measuredAt": "2026-10-29",
-   "hash": "960386655e6997b3",
+   "measuredAt": "2026-11-06",
+   "hash": "b325553c7e53761a",
    "bundle": {
     "own": {
      "min": 911,
@@ -6844,9 +6952,9 @@
     "tag": "tc-checkbox",
     "source": "demo",
     "runs": 7,
-    "cold": 10.1,
+    "cold": 13.3,
     "first": 0.3,
-    "update": 0.2,
+    "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 5,
     "scale": null,
@@ -7074,8 +7182,8 @@
    }
   },
   "cited-answer": {
-   "measuredAt": "2026-11-04",
-   "hash": "f1baa3d76db34974",
+   "measuredAt": "2026-11-06",
+   "hash": "2d25e87f846d9fac",
    "bundle": {
     "own": {
      "min": 50131,
@@ -7136,9 +7244,9 @@
     "tag": "tc-cited-answer",
     "source": "demo",
     "runs": 7,
-    "cold": 10.3,
-    "first": 1.1,
-    "update": 0.2,
+    "cold": 8.7,
+    "first": 1.2,
+    "update": 0.3,
     "updateKind": "one item of segments replaced",
     "nodes": 68,
     "scale": {
@@ -7148,13 +7256,13 @@
       {
        "items": 100,
        "first": 4.9,
-       "update": 0.5,
+       "update": 0.6,
        "nodes": 562
       },
       {
        "items": 1000,
-       "first": 38.4,
-       "update": 3.9,
+       "first": 37.3,
+       "update": 3.8,
        "nodes": 5242
       }
      ]
@@ -7683,12 +7791,12 @@
    }
   },
   "collapse": {
-   "measuredAt": "2026-10-31",
-   "hash": "b7ac4dcd1429f402",
+   "measuredAt": "2026-11-06",
+   "hash": "b2c2f33ddb650e98",
    "bundle": {
     "own": {
      "min": 2975,
-     "gzip": 1642
+     "gzip": 1643
     },
     "shared": [
      {
@@ -7729,11 +7837,11 @@
     ],
     "withoutLit": {
      "min": 9732,
-     "gzip": 3840
+     "gzip": 3844
     },
     "withLit": {
      "min": 29787,
-     "gzip": 10363
+     "gzip": 10422
     }
    },
    "render": {
@@ -7741,7 +7849,7 @@
     "source": "demo",
     "runs": 7,
     "cold": 0.9,
-    "first": 0.1,
+    "first": 0.2,
     "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 0,
@@ -8083,8 +8191,8 @@
    }
   },
   "command-menu": {
-   "measuredAt": "2026-10-28",
-   "hash": "0c97c0b27b6d1da1",
+   "measuredAt": "2026-11-06",
+   "hash": "b64153dd35ea4866",
    "bundle": {
     "own": {
      "min": 39388,
@@ -8109,7 +8217,7 @@
      {
       "name": "internal/controllers",
       "kind": "internal",
-      "min": 1435
+      "min": 1492
      },
      {
       "name": "internal/kit",
@@ -8128,20 +8236,20 @@
      }
     ],
     "withoutLit": {
-     "min": 47419,
-     "gzip": 15476
+     "min": 47476,
+     "gzip": 15502
     },
     "withLit": {
-     "min": 70443,
-     "gzip": 23122
+     "min": 70500,
+     "gzip": 23141
     }
    },
    "render": {
     "tag": "tc-command-menu",
     "source": "demo",
     "runs": 7,
-    "cold": 19,
-    "first": 1.9,
+    "cold": 22,
+    "first": 1.8,
     "update": 0.3,
     "updateKind": "one item of groups replaced",
     "nodes": 214,
@@ -8151,13 +8259,13 @@
      "points": [
       {
        "items": 100,
-       "first": 7.3,
-       "update": 1.1,
+       "first": 7.2,
+       "update": 1.2,
        "nodes": 1384
       },
       {
        "items": 1000,
-       "first": 6.9,
+       "first": 7.4,
        "update": 1.2,
        "nodes": 1384
       }
@@ -8505,8 +8613,8 @@
    }
   },
   "confidence-brief": {
-   "measuredAt": "2026-10-28",
-   "hash": "c7a5a93fc78b24be",
+   "measuredAt": "2026-11-06",
+   "hash": "30482058a643125a",
    "bundle": {
     "own": {
      "min": 21749,
@@ -8556,7 +8664,7 @@
     ],
     "withoutLit": {
      "min": 29472,
-     "gzip": 9256
+     "gzip": 9255
     },
     "withLit": {
      "min": 49561,
@@ -8567,7 +8675,7 @@
     "tag": "tc-confidence-brief",
     "source": "demo",
     "runs": 7,
-    "cold": 9.1,
+    "cold": 12.9,
     "first": 1.1,
     "update": 0.2,
     "updateKind": "one item of uncertainty replaced",
@@ -8578,13 +8686,13 @@
      "points": [
       {
        "items": 100,
-       "first": 2.8,
+       "first": 2.7,
        "update": 0.3,
        "nodes": 686
       },
       {
        "items": 1000,
-       "first": 20.1,
+       "first": 19.3,
        "update": 2,
        "nodes": 6086
       }
@@ -8907,8 +9015,8 @@
    }
   },
   "contact-channels": {
-   "measuredAt": "2026-10-28",
-   "hash": "d8e9a32dc28249e0",
+   "measuredAt": "2026-11-06",
+   "hash": "5ffb76ab9fb95cbd",
    "bundle": {
     "own": {
      "min": 19610,
@@ -8969,8 +9077,8 @@
     "tag": "tc-contact-channels",
     "source": "demo",
     "runs": 7,
-    "cold": 8.1,
-    "first": 1.5,
+    "cold": 7.9,
+    "first": 1.4,
     "update": 0.4,
     "updateKind": "one item of channels replaced",
     "nodes": 158,
@@ -8980,14 +9088,14 @@
      "points": [
       {
        "items": 100,
-       "first": 9.4,
-       "update": 2.9,
+       "first": 9.6,
+       "update": 2.8,
        "nodes": 1943
       },
       {
        "items": 1000,
-       "first": 90.2,
-       "update": 23.5,
+       "first": 89.2,
+       "update": 27.9,
        "nodes": 19043
       }
      ]
@@ -9913,8 +10021,8 @@
    }
   },
   "cover-flow": {
-   "measuredAt": "2026-11-04",
-   "hash": "2c3d3e5bef96e6f6",
+   "measuredAt": "2026-11-06",
+   "hash": "06e2cee3ab0290b1",
    "bundle": {
     "own": {
      "min": 24188,
@@ -9969,7 +10077,7 @@
     ],
     "withoutLit": {
      "min": 31370,
-     "gzip": 10394
+     "gzip": 10395
     },
     "withLit": {
      "min": 53814,
@@ -9980,9 +10088,9 @@
     "tag": "tc-cover-flow",
     "source": "demo",
     "runs": 7,
-    "cold": 4.2,
-    "first": 1.4,
-    "update": 0.4,
+    "cold": 3.7,
+    "first": 1.3,
+    "update": 0.3,
     "updateKind": "one item of items replaced",
     "nodes": 86,
     "scale": {
@@ -9991,14 +10099,14 @@
      "points": [
       {
        "items": 100,
-       "first": 6.8,
-       "update": 0.7,
+       "first": 6.4,
+       "update": 0.8,
        "nodes": 1016
       },
       {
        "items": 1000,
-       "first": 59.8,
-       "update": 6.1,
+       "first": 56.9,
+       "update": 5.5,
        "nodes": 10016
       }
      ]
@@ -10124,8 +10232,8 @@
    }
   },
   "coverage-ring": {
-   "measuredAt": "2026-10-28",
-   "hash": "5270a420d74a919c",
+   "measuredAt": "2026-11-06",
+   "hash": "e3450a38d8c5f2cd",
    "bundle": {
     "own": {
      "min": 12854,
@@ -10181,9 +10289,9 @@
     "tag": "tc-coverage-ring",
     "source": "demo",
     "runs": 7,
-    "cold": 8.7,
-    "first": 0.6,
-    "update": 0.2,
+    "cold": 9,
+    "first": 0.7,
+    "update": 0.3,
     "updateKind": "one item of segments replaced",
     "nodes": 21,
     "scale": {
@@ -10192,14 +10300,14 @@
      "points": [
       {
        "items": 100,
-       "first": 2.9,
-       "update": 2,
+       "first": 3.1,
+       "update": 1.9,
        "nodes": 117
       },
       {
        "items": 1000,
-       "first": 27.5,
-       "update": 22.5,
+       "first": 28,
+       "update": 23,
        "nodes": 1017
       }
      ]
@@ -10623,8 +10731,8 @@
    }
   },
   "decision-inbox": {
-   "measuredAt": "2026-10-28",
-   "hash": "5d400d7e3494ff1a",
+   "measuredAt": "2026-11-06",
+   "hash": "e459d42c7667e0ec",
    "bundle": {
     "own": {
      "min": 18953,
@@ -10680,8 +10788,8 @@
     "tag": "tc-decision-inbox",
     "source": "demo",
     "runs": 7,
-    "cold": 9.8,
-    "first": 0.7,
+    "cold": 10.4,
+    "first": 0.8,
     "update": 0.2,
     "updateKind": "one item of decisions replaced",
     "nodes": 52,
@@ -10697,8 +10805,8 @@
       },
       {
        "items": 1000,
-       "first": 44.8,
-       "update": 7.6,
+       "first": 51.6,
+       "update": 5.2,
        "nodes": 10012
       }
      ]
@@ -10927,8 +11035,8 @@
    }
   },
   "dialog": {
-   "measuredAt": "2026-10-29",
-   "hash": "6b1696be451e3320",
+   "measuredAt": "2026-11-06",
+   "hash": "1edba7abf84877c2",
    "bundle": {
     "own": {
      "min": 5774,
@@ -10994,9 +11102,9 @@
     "tag": "tc-dialog",
     "source": "demo",
     "runs": 7,
-    "cold": 2.6,
+    "cold": 3.1,
     "first": 0.2,
-    "update": 0,
+    "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 9,
     "scale": null,
@@ -11315,8 +11423,8 @@
    }
   },
   "document-list": {
-   "measuredAt": "2026-10-28",
-   "hash": "7dfa6f39f90630aa",
+   "measuredAt": "2026-11-06",
+   "hash": "e277c940e586b955",
    "bundle": {
     "own": {
      "min": 17194,
@@ -11377,8 +11485,8 @@
     "tag": "tc-document-list",
     "source": "demo",
     "runs": 7,
-    "cold": 10.7,
-    "first": 1.5,
+    "cold": 8.5,
+    "first": 1.4,
     "update": 0.4,
     "updateKind": "one item of documents replaced",
     "nodes": 187,
@@ -11388,14 +11496,14 @@
      "points": [
       {
        "items": 100,
-       "first": 13.2,
-       "update": 3.2,
+       "first": 12.9,
+       "update": 3.4,
        "nodes": 3246
       },
       {
        "items": 1000,
-       "first": 139.2,
-       "update": 25.6,
+       "first": 139.9,
+       "update": 25.9,
        "nodes": 32226
       }
      ]
@@ -11418,12 +11526,12 @@
    }
   },
   "drag-lift": {
-   "measuredAt": "2026-11-01",
-   "hash": "ef8257c8000be41c",
+   "measuredAt": "2026-11-06",
+   "hash": "06e9266825fd3ac1",
    "bundle": {
     "own": {
      "min": 6297,
-     "gzip": 2692
+     "gzip": 2694
     },
     "shared": [
      {
@@ -11464,19 +11572,19 @@
     ],
     "withoutLit": {
      "min": 13060,
-     "gzip": 4841
+     "gzip": 4845
     },
     "withLit": {
      "min": 33115,
-     "gzip": 11335
+     "gzip": 11388
     }
    },
    "render": {
     "tag": "tc-drag-lift",
     "source": "demo",
     "runs": 7,
-    "cold": 0.9,
-    "first": 0.1,
+    "cold": 1,
+    "first": 0.2,
     "update": 0,
     "updateKind": "re-render with the same data",
     "nodes": 0,
@@ -11977,12 +12085,12 @@
    }
   },
   "enrichment-orbit": {
-   "measuredAt": "2026-10-31",
-   "hash": "905fba24bb5ff509",
+   "measuredAt": "2026-11-06",
+   "hash": "7b2402b478ca9a3f",
    "bundle": {
     "own": {
      "min": 10299,
-     "gzip": 4466
+     "gzip": 4526
     },
     "shared": [
      {
@@ -12023,18 +12131,18 @@
     ],
     "withoutLit": {
      "min": 17567,
-     "gzip": 6827
+     "gzip": 6914
     },
     "withLit": {
      "min": 38748,
-     "gzip": 13818
+     "gzip": 13982
     }
    },
    "render": {
     "tag": "tc-enrichment-orbit",
     "source": "demo",
     "runs": 7,
-    "cold": 5.7,
+    "cold": 4.7,
     "first": 0.5,
     "update": 0.2,
     "updateKind": "re-render with the same data",
@@ -12058,8 +12166,8 @@
    }
   },
   "entity-details": {
-   "measuredAt": "2026-11-04",
-   "hash": "c1c16fd73bb9343b",
+   "measuredAt": "2026-11-06",
+   "hash": "fdaa97965a8de9ce",
    "bundle": {
     "own": {
      "min": 26424,
@@ -12134,7 +12242,7 @@
     ],
     "withoutLit": {
      "min": 44358,
-     "gzip": 15411
+     "gzip": 15410
     },
     "withLit": {
      "min": 64373,
@@ -12145,7 +12253,7 @@
     "tag": "tc-entity-details",
     "source": "demo",
     "runs": 7,
-    "cold": 2.9,
+    "cold": 3.8,
     "first": 0.6,
     "update": 0.2,
     "updateKind": "one item of kinds replaced",
@@ -12156,13 +12264,13 @@
      "points": [
       {
        "items": 100,
-       "first": 0.5,
+       "first": 0.6,
        "update": 0.1,
        "nodes": 14
       },
       {
        "items": 1000,
-       "first": 0.4,
+       "first": 0.6,
        "update": 0.1,
        "nodes": 14
       }
@@ -12606,8 +12714,8 @@
    }
   },
   "evidence-coverage": {
-   "measuredAt": "2026-10-28",
-   "hash": "17f710933cf76883",
+   "measuredAt": "2026-11-06",
+   "hash": "641bbaa19cea607d",
    "bundle": {
     "own": {
      "min": 18145,
@@ -12663,7 +12771,7 @@
     "tag": "tc-evidence-coverage",
     "source": "demo",
     "runs": 7,
-    "cold": 8.6,
+    "cold": 11.1,
     "first": 0.8,
     "update": 0.2,
     "updateKind": "one item of sources replaced",
@@ -12680,8 +12788,8 @@
       },
       {
        "items": 1000,
-       "first": 45.9,
-       "update": 4.7,
+       "first": 52.2,
+       "update": 5.8,
        "nodes": 11029
       }
      ]
@@ -13227,8 +13335,8 @@
    }
   },
   "fact-sheet": {
-   "measuredAt": "2026-10-28",
-   "hash": "9ab90c2e0ee79057",
+   "measuredAt": "2026-11-06",
+   "hash": "dd98abc72d3e8100",
    "bundle": {
     "own": {
      "min": 18798,
@@ -13278,7 +13386,7 @@
     ],
     "withoutLit": {
      "min": 26515,
-     "gzip": 8474
+     "gzip": 8476
     },
     "withLit": {
      "min": 48863,
@@ -13289,8 +13397,8 @@
     "tag": "tc-fact-sheet",
     "source": "demo",
     "runs": 7,
-    "cold": 9,
-    "first": 1.4,
+    "cold": 8.5,
+    "first": 1.3,
     "update": 0.3,
     "updateKind": "one item of sections replaced",
     "nodes": 180,
@@ -13300,14 +13408,14 @@
      "points": [
       {
        "items": 100,
-       "first": 31.6,
-       "update": 4.6,
+       "first": 33.7,
+       "update": 4.5,
        "nodes": 8167
       },
       {
        "items": 1000,
-       "first": 326.6,
-       "update": 30.2,
+       "first": 312.6,
+       "update": 30,
        "nodes": 81517
       }
      ]
@@ -13330,12 +13438,12 @@
    }
   },
   "fallback-chain": {
-   "measuredAt": "2026-10-31",
-   "hash": "ffc054d534174b84",
+   "measuredAt": "2026-11-06",
+   "hash": "452d4c77bcf7bf7a",
    "bundle": {
     "own": {
      "min": 14793,
-     "gzip": 4871
+     "gzip": 4893
     },
     "shared": [
      {
@@ -13376,11 +13484,11 @@
     ],
     "withoutLit": {
      "min": 22277,
-     "gzip": 7104
+     "gzip": 7134
     },
     "withLit": {
      "min": 44626,
-     "gzip": 14498
+     "gzip": 14568
     }
    },
    "render": {
@@ -13388,8 +13496,8 @@
     "source": "demo",
     "runs": 7,
     "cold": 8.2,
-    "first": 0.8,
-    "update": 0.3,
+    "first": 0.7,
+    "update": 0.2,
     "updateKind": "one item of attempts replaced",
     "nodes": 49,
     "scale": {
@@ -13398,14 +13506,14 @@
      "points": [
       {
        "items": 100,
-       "first": 3.5,
-       "update": 0.4,
+       "first": 3.4,
+       "update": 0.5,
        "nodes": 825
       },
       {
        "items": 1000,
-       "first": 28,
-       "update": 3.5,
+       "first": 27.6,
+       "update": 4.9,
        "nodes": 8025
       }
      ]
@@ -14030,8 +14138,8 @@
    }
   },
   "fingerprint-card": {
-   "measuredAt": "2026-11-04",
-   "hash": "dcb96aa1f84ad316",
+   "measuredAt": "2026-11-06",
+   "hash": "429016027a998b17",
    "bundle": {
     "own": {
      "min": 23125,
@@ -14102,8 +14210,8 @@
     "tag": "tc-fingerprint-card",
     "source": "demo",
     "runs": 7,
-    "cold": 14.1,
-    "first": 1.7,
+    "cold": 11.2,
+    "first": 1.9,
     "update": 0.5,
     "updateKind": "one item of prints replaced",
     "nodes": 276,
@@ -14113,14 +14221,14 @@
      "points": [
       {
        "items": 100,
-       "first": 1.8,
-       "update": 0.3,
+       "first": 1.9,
+       "update": 0.2,
        "nodes": 276
       },
       {
        "items": 1000,
-       "first": 1.6,
-       "update": 0.3,
+       "first": 1.8,
+       "update": 0.2,
        "nodes": 276
       }
      ]
@@ -14143,12 +14251,12 @@
    }
   },
   "first-use": {
-   "measuredAt": "2026-10-31",
-   "hash": "7ab346b966bf4667",
+   "measuredAt": "2026-11-06",
+   "hash": "6d77c7ab197ac8ef",
    "bundle": {
     "own": {
      "min": 5925,
-     "gzip": 2613
+     "gzip": 2623
     },
     "shared": [
      {
@@ -14189,19 +14297,19 @@
     ],
     "withoutLit": {
      "min": 13192,
-     "gzip": 4904
+     "gzip": 4924
     },
     "withLit": {
      "min": 33221,
-     "gzip": 11384
+     "gzip": 11463
     }
    },
    "render": {
     "tag": "tc-first-use",
     "source": "demo",
     "runs": 7,
-    "cold": 7.2,
-    "first": 0.4,
+    "cold": 8.8,
+    "first": 0.3,
     "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 11,
@@ -14327,8 +14435,8 @@
    }
   },
   "gap-exposure": {
-   "measuredAt": "2026-10-28",
-   "hash": "d6cfaff0439e11f1",
+   "measuredAt": "2026-11-06",
+   "hash": "1070d2bc8a415658",
    "bundle": {
     "own": {
      "min": 24338,
@@ -14389,7 +14497,7 @@
     "tag": "tc-gap-exposure",
     "source": "demo",
     "runs": 7,
-    "cold": 8,
+    "cold": 9.4,
     "first": 2,
     "update": 0.5,
     "updateKind": "one item of gaps replaced",
@@ -14400,14 +14508,14 @@
      "points": [
       {
        "items": 100,
-       "first": 10.5,
+       "first": 10.9,
        "update": 2.3,
        "nodes": 2413
       },
       {
        "items": 1000,
-       "first": 111.8,
-       "update": 25.7,
+       "first": 116,
+       "update": 18.6,
        "nodes": 23653
       }
      ]
@@ -14632,7 +14740,7 @@
   },
   "generated-ui": {
    "measuredAt": "2026-11-06",
-   "hash": "7a9568462a0d7e84",
+   "hash": "4f29b7f4dfe00262",
    "bundle": {
     "own": {
      "min": 34126,
@@ -14657,7 +14765,7 @@
      {
       "name": "internal/controllers",
       "kind": "internal",
-      "min": 8963
+      "min": 9020
      },
      {
       "name": "internal/popover",
@@ -14718,6 +14826,11 @@
       "name": "internal/inline-details",
       "kind": "internal",
       "min": 1349
+     },
+     {
+      "name": "internal/breakpoints",
+      "kind": "internal",
+      "min": 935
      },
      {
       "name": "internal/team-flag",
@@ -15225,14 +15338,14 @@
       "min": 30714
      },
      {
+      "name": "fan-out-grid",
+      "kind": "element",
+      "min": 30712
+     },
+     {
       "name": "retrieval-inspector",
       "kind": "element",
       "min": 30695
-     },
-     {
-      "name": "fan-out-grid",
-      "kind": "element",
-      "min": 30688
      },
      {
       "name": "bibliography",
@@ -15385,6 +15498,11 @@
       "min": 24959
      },
      {
+      "name": "feedback-rubric",
+      "kind": "element",
+      "min": 24734
+     },
+     {
       "name": "coordinate-details",
       "kind": "element",
       "min": 24722
@@ -15393,11 +15511,6 @@
       "name": "integration-grid",
       "kind": "element",
       "min": 24679
-     },
-     {
-      "name": "feedback-rubric",
-      "kind": "element",
-      "min": 24678
      },
      {
       "name": "synthesis-notes",
@@ -15720,6 +15833,11 @@
       "min": 18372
      },
      {
+      "name": "breakpoint-overlay",
+      "kind": "element",
+      "min": 18202
+     },
+     {
       "name": "gauge",
       "kind": "element",
       "min": 18014
@@ -16005,6 +16123,11 @@
       "min": 12424
      },
      {
+      "name": "pr-link",
+      "kind": "element",
+      "min": 12343
+     },
+     {
       "name": "redaction-review",
       "kind": "element",
       "min": 12329
@@ -16173,6 +16296,11 @@
       "name": "environment-list",
       "kind": "element",
       "min": 6654
+     },
+     {
+      "name": "soup-cans",
+      "kind": "element",
+      "min": 6478
      },
      {
       "name": "panel-card",
@@ -16382,7 +16510,7 @@
      {
       "name": "src/generative/registry.ts",
       "kind": "other",
-      "min": 53178
+      "min": 53612
      },
      {
       "name": "src/generative/schemas/tc-ai-side-pane.json",
@@ -17355,6 +17483,11 @@
       "min": 2017
      },
      {
+      "name": "src/generative/schemas/tc-pr-link.json",
+      "kind": "other",
+      "min": 1999
+     },
+     {
       "name": "src/generative/schemas/tc-investment-balance.json",
       "kind": "other",
       "min": 1985
@@ -17513,6 +17646,11 @@
       "name": "src/generative/schemas/tc-check-status.json",
       "kind": "other",
       "min": 1687
+     },
+     {
+      "name": "src/generative/schemas/tc-breakpoint-overlay.json",
+      "kind": "other",
+      "min": 1683
      },
      {
       "name": "src/generative/schemas/tc-answer-arena.json",
@@ -17890,6 +18028,11 @@
       "min": 532
      },
      {
+      "name": "src/generative/schemas/tc-soup-cans.json",
+      "kind": "other",
+      "min": 527
+     },
+     {
       "name": "src/generative/schemas/tc-in-coordination.json",
       "kind": "other",
       "min": 526
@@ -18061,20 +18204,20 @@
      }
     ],
     "withoutLit": {
-     "min": 9035069,
-     "gzip": 2234434
+     "min": 9078294,
+     "gzip": 2246361
     },
     "withLit": {
-     "min": 8981361,
-     "gzip": 2217121
+     "min": 9024099,
+     "gzip": 2225842
     }
    },
    "render": {
     "tag": "tc-generated-ui",
     "source": "demo",
     "runs": 7,
-    "cold": 6.2,
-    "first": 0.6,
+    "cold": 3.7,
+    "first": 0.5,
     "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 9,
@@ -18661,8 +18804,8 @@
    }
   },
   "gradient-text": {
-   "measuredAt": "2026-10-28",
-   "hash": "46161889ff53020d",
+   "measuredAt": "2026-11-06",
+   "hash": "d0ab56467e42018c",
    "bundle": {
     "own": {
      "min": 8555,
@@ -18707,7 +18850,7 @@
     ],
     "withoutLit": {
      "min": 15329,
-     "gzip": 5632
+     "gzip": 5631
     },
     "withLit": {
      "min": 35433,
@@ -18718,7 +18861,7 @@
     "tag": "tc-gradient-text",
     "source": "demo",
     "runs": 7,
-    "cold": 3.8,
+    "cold": 6,
     "first": 0.4,
     "update": 0.2,
     "updateKind": "re-render with the same data",
@@ -19140,8 +19283,8 @@
    }
   },
   "handoff-brief": {
-   "measuredAt": "2026-10-28",
-   "hash": "b546869a8b4b9685",
+   "measuredAt": "2026-11-06",
+   "hash": "9f4ab07898c2130d",
    "bundle": {
     "own": {
      "min": 23041,
@@ -19197,7 +19340,7 @@
     "tag": "tc-handoff-brief",
     "source": "demo",
     "runs": 7,
-    "cold": 11.3,
+    "cold": 11.7,
     "first": 1.1,
     "update": 0.2,
     "updateKind": "one item of unresolved replaced",
@@ -19214,7 +19357,7 @@
       },
       {
        "items": 1000,
-       "first": 22.9,
+       "first": 24.5,
        "update": 1.9,
        "nodes": 4401
       }
@@ -19772,7 +19915,7 @@
   },
   "in-coordination": {
    "measuredAt": "2026-11-06",
-   "hash": "ce850af62df950d3",
+   "hash": "5c69fddabb3a98cb",
    "bundle": {
     "own": {
      "min": 7082,
@@ -19828,8 +19971,8 @@
     "tag": "tc-in-coordination",
     "source": "demo",
     "runs": 7,
-    "cold": 11.4,
-    "first": 0.4,
+    "cold": 9.7,
+    "first": 0.5,
     "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 13,
@@ -19853,7 +19996,7 @@
   },
   "in-quality-control": {
    "measuredAt": "2026-11-06",
-   "hash": "303d997d1b3c1ae5",
+   "hash": "0c7251ef219dd510",
    "bundle": {
     "own": {
      "min": 6865,
@@ -19909,7 +20052,7 @@
     "tag": "tc-in-quality-control",
     "source": "demo",
     "runs": 7,
-    "cold": 7.5,
+    "cold": 10.7,
     "first": 0.4,
     "update": 0.1,
     "updateKind": "re-render with the same data",
@@ -19934,7 +20077,7 @@
   },
   "in-translation": {
    "measuredAt": "2026-11-06",
-   "hash": "ff15a71c5698d98d",
+   "hash": "0816e0c193ea105a",
    "bundle": {
     "own": {
      "min": 7255,
@@ -19990,7 +20133,7 @@
     "tag": "tc-in-translation",
     "source": "demo",
     "runs": 7,
-    "cold": 7.9,
+    "cold": 7.4,
     "first": 0.4,
     "update": 0.2,
     "updateKind": "re-render with the same data",
@@ -20370,8 +20513,8 @@
    }
   },
   "integration-grid": {
-   "measuredAt": "2026-10-28",
-   "hash": "f84debb34a9f1b11",
+   "measuredAt": "2026-11-06",
+   "hash": "4a8778dd8c119afa",
    "bundle": {
     "own": {
      "min": 26707,
@@ -20427,7 +20570,7 @@
     "tag": "tc-integration-grid",
     "source": "demo",
     "runs": 7,
-    "cold": 4.7,
+    "cold": 5.3,
     "first": 1.3,
     "update": 0.3,
     "updateKind": "one item of logos replaced",
@@ -20438,7 +20581,7 @@
      "points": [
       {
        "items": 100,
-       "first": 1.3,
+       "first": 1.1,
        "update": 0.1,
        "nodes": 78
       },
@@ -20468,8 +20611,8 @@
    }
   },
   "integration-picker": {
-   "measuredAt": "2026-10-28",
-   "hash": "95a0e1d27e641f50",
+   "measuredAt": "2026-11-06",
+   "hash": "8782e52ebc9738d0",
    "bundle": {
     "own": {
      "min": 52632,
@@ -20494,7 +20637,7 @@
      {
       "name": "internal/controllers",
       "kind": "internal",
-      "min": 1435
+      "min": 1492
      },
      {
       "name": "internal/kit",
@@ -20513,20 +20656,20 @@
      }
     ],
     "withoutLit": {
-     "min": 60663,
-     "gzip": 17403
+     "min": 60720,
+     "gzip": 17429
     },
     "withLit": {
-     "min": 84492,
-     "gzip": 25310
+     "min": 84549,
+     "gzip": 25332
     }
    },
    "render": {
     "tag": "tc-integration-picker",
     "source": "demo",
     "runs": 7,
-    "cold": 13.7,
-    "first": 1.7,
+    "cold": 16.4,
+    "first": 1.5,
     "update": 0.3,
     "updateKind": "one item of integrations replaced",
     "nodes": 141,
@@ -20537,13 +20680,13 @@
       {
        "items": 100,
        "first": 4.7,
-       "update": 0.4,
+       "update": 0.6,
        "nodes": 771
       },
       {
        "items": 1000,
-       "first": 34.6,
-       "update": 5.8,
+       "first": 36.1,
+       "update": 4,
        "nodes": 7071
       }
      ]
@@ -21846,8 +21989,8 @@
    }
   },
   "limit-reached": {
-   "measuredAt": "2026-11-05",
-   "hash": "7bce33c297eaa7f7",
+   "measuredAt": "2026-11-06",
+   "hash": "cb7639a60f2a1019",
    "bundle": {
     "own": {
      "min": 6681,
@@ -21903,9 +22046,9 @@
     "tag": "tc-limit-reached",
     "source": "demo",
     "runs": 7,
-    "cold": 9.2,
-    "first": 0.4,
-    "update": 0.1,
+    "cold": 7.3,
+    "first": 0.3,
+    "update": 0.2,
     "updateKind": "re-render with the same data",
     "nodes": 11,
     "scale": null,
@@ -21927,8 +22070,8 @@
    }
   },
   "lineage-graph": {
-   "measuredAt": "2026-10-28",
-   "hash": "a9e7b9ed51099d02",
+   "measuredAt": "2026-11-06",
+   "hash": "0b03d0f032c6ed05",
    "bundle": {
     "own": {
      "min": 41076,
@@ -21983,7 +22126,7 @@
     ],
     "withoutLit": {
      "min": 51018,
-     "gzip": 13949
+     "gzip": 13951
     },
     "withLit": {
      "min": 74182,
@@ -22005,14 +22148,14 @@
      "points": [
       {
        "items": 100,
-       "first": 1.1,
-       "update": 0,
+       "first": 0.9,
+       "update": 0.1,
        "nodes": 83
       },
       {
        "items": 1000,
-       "first": 1.1,
-       "update": 0.3,
+       "first": 1,
+       "update": 0.1,
        "nodes": 83
       }
      ]
@@ -22035,8 +22178,8 @@
    }
   },
   "link-expired": {
-   "measuredAt": "2026-11-05",
-   "hash": "c252d8cf9b6adaa0",
+   "measuredAt": "2026-11-06",
+   "hash": "5ca09dc503e05303",
    "bundle": {
     "own": {
      "min": 6269,
@@ -22092,7 +22235,7 @@
     "tag": "tc-link-expired",
     "source": "demo",
     "runs": 7,
-    "cold": 10.2,
+    "cold": 9.7,
     "first": 0.4,
     "update": 0.1,
     "updateKind": "re-render with the same data",
@@ -22116,12 +22259,12 @@
    }
   },
   "list-motion": {
-   "measuredAt": "2026-10-31",
-   "hash": "b5dcc9744acceb64",
+   "measuredAt": "2026-11-06",
+   "hash": "fd62a3a426336b05",
    "bundle": {
     "own": {
      "min": 3509,
-     "gzip": 1821
+     "gzip": 1822
     },
     "shared": [
      {
@@ -22167,20 +22310,20 @@
     ],
     "withoutLit": {
      "min": 11666,
-     "gzip": 4645
+     "gzip": 4649
     },
     "withLit": {
      "min": 31718,
-     "gzip": 11144
+     "gzip": 11202
     }
    },
    "render": {
     "tag": "tc-list-motion",
     "source": "demo",
     "runs": 7,
-    "cold": 0.8,
-    "first": 0.2,
-    "update": 0.1,
+    "cold": 1,
+    "first": 0.1,
+    "update": 0,
     "updateKind": "re-render with the same data",
     "nodes": 0,
     "scale": null,
@@ -22202,8 +22345,8 @@
    }
   },
   "live-view": {
-   "measuredAt": "2026-11-04",
-   "hash": "1c879731bf8bfdde",
+   "measuredAt": "2026-11-06",
+   "hash": "a37de63643280ba2",
    "bundle": {
     "own": {
      "min": 29477,
@@ -22258,7 +22401,7 @@
     ],
     "withoutLit": {
      "min": 37759,
-     "gzip": 12052
+     "gzip": 12053
     },
     "withLit": {
      "min": 61008,
@@ -22269,7 +22412,7 @@
     "tag": "tc-live-view",
     "source": "demo",
     "runs": 7,
-    "cold": 11.8,
+    "cold": 13.1,
     "first": 0.8,
     "update": 0.3,
     "updateKind": "one item of actions replaced",
@@ -22287,7 +22430,7 @@
       {
        "items": 1000,
        "first": 0.9,
-       "update": 0.1,
+       "update": 0,
        "nodes": 41
       }
      ]
@@ -22310,8 +22453,8 @@
    }
   },
   "logo-cluster": {
-   "measuredAt": "2026-10-28",
-   "hash": "fc39f1426c178dff",
+   "measuredAt": "2026-11-06",
+   "hash": "07fda03b31cdb70e",
    "bundle": {
     "own": {
      "min": 31098,
@@ -22367,9 +22510,9 @@
     "tag": "tc-logo-cluster",
     "source": "demo",
     "runs": 7,
-    "cold": 3.1,
+    "cold": 4.6,
     "first": 0.5,
-    "update": 0.7,
+    "update": 0.6,
     "updateKind": "re-render with the same data",
     "nodes": 33,
     "scale": null,
@@ -22391,8 +22534,8 @@
    }
   },
   "logo-marquee": {
-   "measuredAt": "2026-11-04",
-   "hash": "ad4234ce950cfbbc",
+   "measuredAt": "2026-11-06",
+   "hash": "dbf0981b537a826b",
    "bundle": {
     "own": {
      "min": 17174,
@@ -22457,7 +22600,7 @@
     ],
     "withoutLit": {
      "min": 38483,
-     "gzip": 12081
+     "gzip": 12082
     },
     "withLit": {
      "min": 59881,
@@ -22468,7 +22611,7 @@
     "tag": "tc-logo-marquee",
     "source": "defaults",
     "runs": 7,
-    "cold": 9.4,
+    "cold": 9.3,
     "first": 0.6,
     "update": 0.1,
     "updateKind": "re-render with the same data",
@@ -22543,12 +22686,12 @@
    }
   },
   "loupe": {
-   "measuredAt": "2026-11-04",
-   "hash": "7a09189e3d7cd315",
+   "measuredAt": "2026-11-06",
+   "hash": "8ad748c7efb90627",
    "bundle": {
     "own": {
-     "min": 39618,
-     "gzip": 11430
+     "min": 39073,
+     "gzip": 11175
     },
     "shared": [
      {
@@ -22569,12 +22712,17 @@
      {
       "name": "internal/controllers",
       "kind": "internal",
-      "min": 1435
+      "min": 1492
      },
      {
       "name": "internal/kit",
       "kind": "internal",
       "min": 1348
+     },
+     {
+      "name": "internal/breakpoints",
+      "kind": "internal",
+      "min": 762
      },
      {
       "name": "internal/look",
@@ -22598,19 +22746,19 @@
      }
     ],
     "withoutLit": {
-     "min": 48714,
-     "gzip": 14268
+     "min": 48835,
+     "gzip": 14320
     },
     "withLit": {
-     "min": 68744,
-     "gzip": 20739
+     "min": 68865,
+     "gzip": 20775
     }
    },
    "render": {
     "tag": "tc-loupe",
     "source": "demo",
     "runs": 7,
-    "cold": 1.8,
+    "cold": 2.1,
     "first": 0.5,
     "update": 0.2,
     "updateKind": "one item of breakpoints replaced",
@@ -22621,14 +22769,14 @@
      "points": [
       {
        "items": 100,
-       "first": 0.3,
+       "first": 0.4,
        "update": 0.1,
        "nodes": 26
       },
       {
        "items": 1000,
        "first": 0.4,
-       "update": 0.1,
+       "update": 0,
        "nodes": 26
       }
      ]
@@ -22651,8 +22799,8 @@
    }
   },
   "malware-blocked": {
-   "measuredAt": "2026-11-05",
-   "hash": "c09190c6b30f07fa",
+   "measuredAt": "2026-11-06",
+   "hash": "1051994bbd0eb38b",
    "bundle": {
     "own": {
      "min": 6675,
@@ -22708,8 +22856,8 @@
     "tag": "tc-malware-blocked",
     "source": "demo",
     "runs": 7,
-    "cold": 9.8,
-    "first": 0.4,
+    "cold": 8.5,
+    "first": 0.3,
     "update": 0.2,
     "updateKind": "re-render with the same data",
     "nodes": 13,
@@ -22835,8 +22983,8 @@
    }
   },
   "memory-panel": {
-   "measuredAt": "2026-10-28",
-   "hash": "9f0ecb7e8a495c6d",
+   "measuredAt": "2026-11-06",
+   "hash": "55f36e441736bbea",
    "bundle": {
     "own": {
      "min": 66876,
@@ -22881,7 +23029,7 @@
     ],
     "withoutLit": {
      "min": 75477,
-     "gzip": 17147
+     "gzip": 17153
     },
     "withLit": {
      "min": 97918,
@@ -22892,7 +23040,7 @@
     "tag": "tc-memory-panel",
     "source": "demo",
     "runs": 7,
-    "cold": 12.9,
+    "cold": 13.4,
     "first": 2.2,
     "update": 0.6,
     "updateKind": "one item of memories replaced",
@@ -22903,14 +23051,14 @@
      "points": [
       {
        "items": 100,
-       "first": 11.4,
+       "first": 11,
        "update": 1.5,
        "nodes": 1996
       },
       {
        "items": 1000,
-       "first": 135.3,
-       "update": 12,
+       "first": 110.8,
+       "update": 11.1,
        "nodes": 19096
       }
      ]
@@ -22933,8 +23081,8 @@
    }
   },
   "mention-picker": {
-   "measuredAt": "2026-11-04",
-   "hash": "238b449399a7a9b3",
+   "measuredAt": "2026-11-06",
+   "hash": "564c4fdc36fc6eef",
    "bundle": {
     "own": {
      "min": 33091,
@@ -22994,7 +23142,7 @@
     ],
     "withoutLit": {
      "min": 41362,
-     "gzip": 13336
+     "gzip": 13335
     },
     "withLit": {
      "min": 63807,
@@ -23005,8 +23153,8 @@
     "tag": "tc-mention-picker",
     "source": "demo",
     "runs": 7,
-    "cold": 2.4,
-    "first": 0.3,
+    "cold": 2.5,
+    "first": 0.4,
     "update": 0.1,
     "updateKind": "one item of triggers replaced",
     "nodes": 16,
@@ -23022,7 +23170,7 @@
       },
       {
        "items": 1000,
-       "first": 0.3,
+       "first": 0.4,
        "update": 0,
        "nodes": 16
       }
@@ -23150,7 +23298,7 @@
   },
   "message-status": {
    "measuredAt": "2026-11-06",
-   "hash": "04bece6c47bcc65d",
+   "hash": "cea1a9ed16564935",
    "bundle": {
     "own": {
      "min": 19830,
@@ -23206,8 +23354,8 @@
     "tag": "tc-message-status",
     "source": "demo",
     "runs": 7,
-    "cold": 11,
-    "first": 0.7,
+    "cold": 9.5,
+    "first": 0.6,
     "update": 0.3,
     "updateKind": "one item of actions replaced",
     "nodes": 34,
@@ -23217,13 +23365,13 @@
      "points": [
       {
        "items": 100,
-       "first": 0.7,
-       "update": 0.1,
+       "first": 0.5,
+       "update": 0.2,
        "nodes": 34
       },
       {
        "items": 1000,
-       "first": 0.8,
+       "first": 0.7,
        "update": 0,
        "nodes": 34
       }
@@ -23723,8 +23871,8 @@
    }
   },
   "model-wheel": {
-   "measuredAt": "2026-10-28",
-   "hash": "c6a08be3191ef75b",
+   "measuredAt": "2026-11-06",
+   "hash": "a8a5ed02fca4bb28",
    "bundle": {
     "own": {
      "min": 19000,
@@ -23769,7 +23917,7 @@
     ],
     "withoutLit": {
      "min": 25781,
-     "gzip": 11208
+     "gzip": 11209
     },
     "withLit": {
      "min": 48059,
@@ -23780,7 +23928,7 @@
     "tag": "tc-model-wheel",
     "source": "demo",
     "runs": 7,
-    "cold": 8.1,
+    "cold": 6,
     "first": 0.7,
     "update": 0.2,
     "updateKind": "one item of models replaced",
@@ -23791,14 +23939,14 @@
      "points": [
       {
        "items": 100,
-       "first": 2.5,
+       "first": 2.6,
        "update": 0.2,
        "nodes": 402
       },
       {
        "items": 1000,
-       "first": 18.6,
-       "update": 1.6,
+       "first": 22.9,
+       "update": 1.9,
        "nodes": 4002
       }
      ]
@@ -24047,8 +24195,8 @@
    }
   },
   "multimodal-input": {
-   "measuredAt": "2026-11-04",
-   "hash": "3ab28cab628fe687",
+   "measuredAt": "2026-11-06",
+   "hash": "df85e1dfd7171c3a",
    "bundle": {
     "own": {
      "min": 29243,
@@ -24119,7 +24267,7 @@
     "tag": "tc-multimodal-input",
     "source": "demo",
     "runs": 7,
-    "cold": 11.8,
+    "cold": 9.6,
     "first": 0.5,
     "update": 0.2,
     "updateKind": "one item of accept replaced",
@@ -24131,13 +24279,13 @@
       {
        "items": 100,
        "first": 0.5,
-       "update": 0,
+       "update": 0.1,
        "nodes": 14
       },
       {
        "items": 1000,
-       "first": 0.5,
-       "update": 0,
+       "first": 0.4,
+       "update": 0.1,
        "nodes": 14
       }
      ]
@@ -24278,12 +24426,12 @@
    }
   },
   "no-access": {
-   "measuredAt": "2026-10-31",
-   "hash": "b995b8cbc374fd47",
+   "measuredAt": "2026-11-06",
+   "hash": "a6ebc262fabc9976",
    "bundle": {
     "own": {
      "min": 6522,
-     "gzip": 2810
+     "gzip": 2820
     },
     "shared": [
      {
@@ -24324,11 +24472,11 @@
     ],
     "withoutLit": {
      "min": 13784,
-     "gzip": 5153
+     "gzip": 5170
     },
     "withLit": {
      "min": 33834,
-     "gzip": 11639
+     "gzip": 11721
     }
    },
    "render": {
@@ -24337,7 +24485,7 @@
     "runs": 7,
     "cold": 3.4,
     "first": 0.4,
-    "update": 0.1,
+    "update": 0.2,
     "updateKind": "re-render with the same data",
     "nodes": 12,
     "scale": null,
@@ -24359,12 +24507,12 @@
    }
   },
   "nothing-found": {
-   "measuredAt": "2026-10-31",
-   "hash": "32b69d45b26340c8",
+   "measuredAt": "2026-11-06",
+   "hash": "73d10b6e216dac93",
    "bundle": {
     "own": {
      "min": 6092,
-     "gzip": 2603
+     "gzip": 2607
     },
     "shared": [
      {
@@ -24405,20 +24553,20 @@
     ],
     "withoutLit": {
      "min": 13354,
-     "gzip": 4938
+     "gzip": 4953
     },
     "withLit": {
      "min": 33404,
-     "gzip": 11417
+     "gzip": 11499
     }
    },
    "render": {
     "tag": "tc-nothing-found",
     "source": "demo",
     "runs": 7,
-    "cold": 2.5,
+    "cold": 2.1,
     "first": 0.4,
-    "update": 0.2,
+    "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 17,
     "scale": null,
@@ -24742,8 +24890,8 @@
    }
   },
   "number-field": {
-   "measuredAt": "2026-10-29",
-   "hash": "bdde06be3891c134",
+   "measuredAt": "2026-11-06",
+   "hash": "116436cc38b820b2",
    "bundle": {
     "own": {
      "min": 3882,
@@ -24804,7 +24952,7 @@
     "tag": "tc-number-field",
     "source": "demo",
     "runs": 7,
-    "cold": 10.5,
+    "cold": 11.3,
     "first": 0.4,
     "update": 0.1,
     "updateKind": "re-render with the same data",
@@ -24828,8 +24976,8 @@
    }
   },
   "number-ticker": {
-   "measuredAt": "2026-10-28",
-   "hash": "0b7f8bc816d7efa3",
+   "measuredAt": "2026-11-06",
+   "hash": "7a35b4617887dce2",
    "bundle": {
     "own": {
      "min": 8114,
@@ -24874,7 +25022,7 @@
     ],
     "withoutLit": {
      "min": 14889,
-     "gzip": 5749
+     "gzip": 5748
     },
     "withLit": {
      "min": 37207,
@@ -24885,7 +25033,7 @@
     "tag": "tc-number-ticker",
     "source": "demo",
     "runs": 7,
-    "cold": 5.2,
+    "cold": 4.4,
     "first": 0.7,
     "update": 0.2,
     "updateKind": "re-render with the same data",
@@ -24893,7 +25041,7 @@
     "scale": null,
     "idle": {
      "visible": {
-      "frames": 42,
+      "frames": 43,
       "timers": 0
      },
      "away": {
@@ -24909,8 +25057,8 @@
    }
   },
   "offline": {
-   "measuredAt": "2026-11-05",
-   "hash": "22a0184b485d526a",
+   "measuredAt": "2026-11-06",
+   "hash": "333453e8a6cd952c",
    "bundle": {
     "own": {
      "min": 6248,
@@ -24966,8 +25114,8 @@
     "tag": "tc-offline",
     "source": "demo",
     "runs": 7,
-    "cold": 13,
-    "first": 0.3,
+    "cold": 7.8,
+    "first": 0.4,
     "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 10,
@@ -24990,8 +25138,8 @@
    }
   },
   "ops-overview": {
-   "measuredAt": "2026-10-28",
-   "hash": "6ab2e921ab46732b",
+   "measuredAt": "2026-11-06",
+   "hash": "d20cd5128945dc60",
    "bundle": {
     "own": {
      "min": 13720,
@@ -25041,7 +25189,7 @@
     ],
     "withoutLit": {
      "min": 21241,
-     "gzip": 7203
+     "gzip": 7202
     },
     "withLit": {
      "min": 43589,
@@ -25052,8 +25200,8 @@
     "tag": "tc-ops-overview",
     "source": "demo",
     "runs": 7,
-    "cold": 8.8,
-    "first": 1,
+    "cold": 10.1,
+    "first": 0.9,
     "update": 0.3,
     "updateKind": "one item of tiles replaced",
     "nodes": 74,
@@ -25063,14 +25211,14 @@
      "points": [
       {
        "items": 100,
-       "first": 7.1,
-       "update": 2.1,
+       "first": 7.2,
+       "update": 2.2,
        "nodes": 1195
       },
       {
        "items": 1000,
-       "first": 71.8,
-       "update": 19.7,
+       "first": 65.1,
+       "update": 20,
        "nodes": 11815
       }
      ]
@@ -25319,8 +25467,8 @@
    }
   },
   "otp-input": {
-   "measuredAt": "2026-10-28",
-   "hash": "3bf79fe2b38cdf05",
+   "measuredAt": "2026-11-06",
+   "hash": "1fb3cc25cad11680",
    "bundle": {
     "own": {
      "min": 40447,
@@ -25370,7 +25518,7 @@
     ],
     "withoutLit": {
      "min": 47968,
-     "gzip": 12763
+     "gzip": 12761
     },
     "withLit": {
      "min": 70112,
@@ -25381,9 +25529,9 @@
     "tag": "tc-otp-input",
     "source": "demo",
     "runs": 7,
-    "cold": 12.5,
-    "first": 1.1,
-    "update": 0.3,
+    "cold": 13.4,
+    "first": 1,
+    "update": 0.2,
     "updateKind": "re-render with the same data",
     "nodes": 28,
     "scale": null,
@@ -25715,12 +25863,12 @@
    }
   },
   "panel-card": {
-   "measuredAt": "2026-11-02",
-   "hash": "6a023200f73e12b0",
+   "measuredAt": "2026-11-06",
+   "hash": "6f74309e33f59aeb",
    "bundle": {
     "own": {
      "min": 8414,
-     "gzip": 3454
+     "gzip": 3458
     },
     "shared": [
      {
@@ -25766,18 +25914,18 @@
     ],
     "withoutLit": {
      "min": 15285,
-     "gzip": 5475
+     "gzip": 5487
     },
     "withLit": {
      "min": 35318,
-     "gzip": 11954
+     "gzip": 12029
     }
    },
    "render": {
     "tag": "tc-panel-card",
     "source": "demo",
     "runs": 7,
-    "cold": 3,
+    "cold": 4.5,
     "first": 0.3,
     "update": 0.1,
     "updateKind": "re-render with the same data",
@@ -25905,7 +26053,7 @@
   },
   "pending-release": {
    "measuredAt": "2026-11-06",
-   "hash": "b20cb9277bb9050b",
+   "hash": "b568ef1156baec6d",
    "bundle": {
     "own": {
      "min": 6648,
@@ -25961,8 +26109,8 @@
     "tag": "tc-pending-release",
     "source": "demo",
     "runs": 7,
-    "cold": 11.9,
-    "first": 0.4,
+    "cold": 9,
+    "first": 0.3,
     "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 11,
@@ -26201,8 +26349,8 @@
    }
   },
   "person-links": {
-   "measuredAt": "2026-11-04",
-   "hash": "48333b975f2d79c2",
+   "measuredAt": "2026-11-06",
+   "hash": "420d15e234fdcc02",
    "bundle": {
     "own": {
      "min": 17431,
@@ -26273,8 +26421,8 @@
     "tag": "tc-person-links",
     "source": "demo",
     "runs": 7,
-    "cold": 8.9,
-    "first": 0.8,
+    "cold": 9.3,
+    "first": 0.9,
     "update": 0.2,
     "updateKind": "one item of people replaced",
     "nodes": 76,
@@ -26285,12 +26433,12 @@
       {
        "items": 100,
        "first": 0.8,
-       "update": 0.1,
+       "update": 0,
        "nodes": 76
       },
       {
        "items": 1000,
-       "first": 0.6,
+       "first": 0.8,
        "update": 0.1,
        "nodes": 76
       }
@@ -26725,9 +26873,110 @@
     "errors": []
    }
   },
+  "pr-link": {
+   "measuredAt": "2026-11-06",
+   "hash": "0b2a77526ef1dfc4",
+   "bundle": {
+    "own": {
+     "min": 14443,
+     "gzip": 5159
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 18976
+     },
+     {
+      "name": "internal/popover",
+      "kind": "internal",
+      "min": 8530
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2217
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1864
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 444
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 435
+     },
+     {
+      "name": "internal/util",
+      "kind": "internal",
+      "min": 361
+     },
+     {
+      "name": "internal/safe-url",
+      "kind": "internal",
+      "min": 329
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     },
+     {
+      "name": "internal/safe-media",
+      "kind": "internal",
+      "min": 120
+     }
+    ],
+    "withoutLit": {
+     "min": 30363,
+     "gzip": 10257
+    },
+    "withLit": {
+     "min": 50401,
+     "gzip": 16706
+    }
+   },
+   "render": {
+    "tag": "tc-pr-link",
+    "source": "demo",
+    "runs": 7,
+    "cold": 8.2,
+    "first": 0.4,
+    "update": 0.1,
+    "updateKind": "re-render with the same data",
+    "nodes": 7,
+    "scale": null,
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
   "preview-card": {
    "measuredAt": "2026-11-06",
-   "hash": "d59124dd0f0311a4",
+   "hash": "eff7626bd1a98fc3",
    "bundle": {
     "own": {
      "min": 12617,
@@ -26783,9 +27032,9 @@
     "tag": "tc-preview-card",
     "source": "demo",
     "runs": 7,
-    "cold": 8.2,
-    "first": 0.9,
-    "update": 0,
+    "cold": 6.2,
+    "first": 0.8,
+    "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 8,
     "scale": null,
@@ -26905,8 +27154,8 @@
    }
   },
   "preview-unavailable": {
-   "measuredAt": "2026-11-05",
-   "hash": "19fbf616c94f0ca7",
+   "measuredAt": "2026-11-06",
+   "hash": "edcd2046cda0e0df",
    "bundle": {
     "own": {
      "min": 6737,
@@ -26962,8 +27211,8 @@
     "tag": "tc-preview-unavailable",
     "source": "demo",
     "runs": 7,
-    "cold": 7.4,
-    "first": 0.3,
+    "cold": 10.3,
+    "first": 0.4,
     "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 10,
@@ -26986,8 +27235,8 @@
    }
   },
   "pricing-plans": {
-   "measuredAt": "2026-10-28",
-   "hash": "83a2e628422f9af9",
+   "measuredAt": "2026-11-06",
+   "hash": "a132e948602b2683",
    "bundle": {
     "own": {
      "min": 25674,
@@ -27058,7 +27307,7 @@
     "tag": "tc-pricing-plans",
     "source": "defaults",
     "runs": 7,
-    "cold": 18.5,
+    "cold": 18.1,
     "first": 3.5,
     "update": 0.5,
     "updateKind": "re-render with the same data",
@@ -27376,8 +27625,8 @@
    }
   },
   "process-list": {
-   "measuredAt": "2026-11-04",
-   "hash": "9f57175e9f9a1048",
+   "measuredAt": "2026-11-06",
+   "hash": "b739844c6184ac97",
    "bundle": {
     "own": {
      "min": 21990,
@@ -27432,7 +27681,7 @@
     ],
     "withoutLit": {
      "min": 33676,
-     "gzip": 11330
+     "gzip": 11332
     },
     "withLit": {
      "min": 56783,
@@ -27443,7 +27692,7 @@
     "tag": "tc-process-list",
     "source": "demo",
     "runs": 7,
-    "cold": 9.2,
+    "cold": 10,
     "first": 1.3,
     "update": 0.4,
     "updateKind": "one item of processes replaced",
@@ -27454,14 +27703,14 @@
      "points": [
       {
        "items": 100,
-       "first": 13.8,
-       "update": 3.2,
+       "first": 14.3,
+       "update": 3.3,
        "nodes": 3441
       },
       {
        "items": 1000,
-       "first": 146.6,
-       "update": 24.2,
+       "first": 151.9,
+       "update": 23.8,
        "nodes": 34266
       }
      ]
@@ -27484,8 +27733,8 @@
    }
   },
   "processing": {
-   "measuredAt": "2026-11-05",
-   "hash": "d8764a1ab4306f2f",
+   "measuredAt": "2026-11-06",
+   "hash": "836bdad92be632b1",
    "bundle": {
     "own": {
      "min": 6530,
@@ -27541,8 +27790,8 @@
     "tag": "tc-processing",
     "source": "demo",
     "runs": 7,
-    "cold": 9.1,
-    "first": 0.3,
+    "cold": 10.5,
+    "first": 0.4,
     "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 11,
@@ -27565,8 +27814,8 @@
    }
   },
   "profile-header": {
-   "measuredAt": "2026-11-04",
-   "hash": "ea4edd26bed901bc",
+   "measuredAt": "2026-11-06",
+   "hash": "01174dac0cf8d7a7",
    "bundle": {
     "own": {
      "min": 20437,
@@ -27637,8 +27886,8 @@
     "tag": "tc-profile-header",
     "source": "demo",
     "runs": 7,
-    "cold": 2,
-    "first": 0.7,
+    "cold": 2.6,
+    "first": 0.8,
     "update": 0.2,
     "updateKind": "one item of tabs replaced",
     "nodes": 52,
@@ -27648,14 +27897,14 @@
      "points": [
       {
        "items": 100,
-       "first": 1.8,
-       "update": 0.2,
+       "first": 2.4,
+       "update": 0.4,
        "nodes": 190
       },
       {
        "items": 1000,
-       "first": 12.2,
-       "update": 1.9,
+       "first": 15.2,
+       "update": 2.1,
        "nodes": 1540
       }
      ]
@@ -27857,8 +28106,8 @@
    }
   },
   "progress-tracker": {
-   "measuredAt": "2026-10-28",
-   "hash": "3a2bc0b480e0641e",
+   "measuredAt": "2026-11-06",
+   "hash": "b91d929cdde9b76b",
    "bundle": {
     "own": {
      "min": 23806,
@@ -27914,8 +28163,8 @@
     "tag": "tc-progress-tracker",
     "source": "demo",
     "runs": 7,
-    "cold": 10.5,
-    "first": 1.4,
+    "cold": 10.4,
+    "first": 1.3,
     "update": 0.5,
     "updateKind": "one item of steps replaced",
     "nodes": 77,
@@ -27925,14 +28174,14 @@
      "points": [
       {
        "items": 100,
-       "first": 5.7,
-       "update": 1.4,
+       "first": 5.5,
+       "update": 1.3,
        "nodes": 923
       },
       {
        "items": 1000,
-       "first": 47.1,
-       "update": 17.2,
+       "first": 60.9,
+       "update": 24,
        "nodes": 9023
       }
      ]
@@ -29094,8 +29343,8 @@
    }
   },
   "radio-group": {
-   "measuredAt": "2026-10-29",
-   "hash": "65ef2c98fb55aedf",
+   "measuredAt": "2026-11-06",
+   "hash": "e6668ef08ad1930e",
    "bundle": {
     "own": {
      "min": 3364,
@@ -29156,9 +29405,9 @@
     "tag": "tc-radio-group",
     "source": "demo",
     "runs": 7,
-    "cold": 7.2,
+    "cold": 8,
     "first": 0.4,
-    "update": 0.2,
+    "update": 0.1,
     "updateKind": "one item of options replaced",
     "nodes": 8,
     "scale": {
@@ -29168,13 +29417,13 @@
       {
        "items": 100,
        "first": 2.1,
-       "update": 0.2,
+       "update": 0.3,
        "nodes": 204
       },
       {
        "items": 1000,
-       "first": 37.8,
-       "update": 2.2,
+       "first": 37.7,
+       "update": 2.1,
        "nodes": 2004
       }
      ]
@@ -29197,8 +29446,8 @@
    }
   },
   "reaction-bar": {
-   "measuredAt": "2026-10-28",
-   "hash": "76ab452d89747728",
+   "measuredAt": "2026-11-06",
+   "hash": "58957d9d57e96d07",
    "bundle": {
     "own": {
      "min": 13692,
@@ -29243,7 +29492,7 @@
     ],
     "withoutLit": {
      "min": 20466,
-     "gzip": 6748
+     "gzip": 6746
     },
     "withLit": {
      "min": 42923,
@@ -29254,7 +29503,7 @@
     "tag": "tc-reaction-bar",
     "source": "demo",
     "runs": 7,
-    "cold": 8.8,
+    "cold": 10.1,
     "first": 0.8,
     "update": 0.3,
     "updateKind": "one item of actions replaced",
@@ -29265,14 +29514,14 @@
      "points": [
       {
        "items": 100,
-       "first": 10.1,
+       "first": 9.9,
        "update": 1,
        "nodes": 925
       },
       {
        "items": 1000,
-       "first": 488.5,
-       "update": 7.9,
+       "first": 528.4,
+       "update": 7,
        "nodes": 9250
       }
      ]
@@ -29863,7 +30112,7 @@
   },
   "released": {
    "measuredAt": "2026-11-06",
-   "hash": "49fbe9cb246775a3",
+   "hash": "0a1d7b38357f827b",
    "bundle": {
     "own": {
      "min": 6720,
@@ -29919,9 +30168,9 @@
     "tag": "tc-released",
     "source": "demo",
     "runs": 7,
-    "cold": 10.1,
+    "cold": 8.4,
     "first": 0.4,
-    "update": 0.1,
+    "update": 0.2,
     "updateKind": "re-render with the same data",
     "nodes": 11,
     "scale": null,
@@ -30267,8 +30516,8 @@
    }
   },
   "retrieval-inspector": {
-   "measuredAt": "2026-11-04",
-   "hash": "09c375dec3e7beb8",
+   "measuredAt": "2026-11-06",
+   "hash": "890a9b51d3c24b56",
    "bundle": {
     "own": {
      "min": 32869,
@@ -30334,9 +30583,9 @@
     "tag": "tc-retrieval-inspector",
     "source": "demo",
     "runs": 7,
-    "cold": 9.5,
-    "first": 8.2,
-    "update": 0.6,
+    "cold": 12.8,
+    "first": 8.8,
+    "update": 0.7,
     "updateKind": "one item of chunks replaced",
     "nodes": 1336,
     "scale": {
@@ -30345,8 +30594,8 @@
      "points": [
       {
        "items": 10000,
-       "first": 9.6,
-       "update": 1.7,
+       "first": 9.7,
+       "update": 1.6,
        "nodes": 1336
       }
      ]
@@ -30678,8 +30927,8 @@
    }
   },
   "risk-register": {
-   "measuredAt": "2026-10-29",
-   "hash": "39dbbeed55197c7d",
+   "measuredAt": "2026-11-06",
+   "hash": "3c1f5b7401e7b5df",
    "bundle": {
     "own": {
      "min": 31548,
@@ -30740,7 +30989,7 @@
     "tag": "tc-risk-register",
     "source": "demo",
     "runs": 7,
-    "cold": 10,
+    "cold": 10.5,
     "first": 2.4,
     "update": 0.5,
     "updateKind": "one item of risks replaced",
@@ -30751,14 +31000,14 @@
      "points": [
       {
        "items": 100,
-       "first": 8.8,
-       "update": 0.9,
+       "first": 8.2,
+       "update": 0.8,
        "nodes": 1745
       },
       {
        "items": 1000,
-       "first": 78.5,
-       "update": 7.1,
+       "first": 83,
+       "update": 9,
        "nodes": 16045
       }
      ]
@@ -31360,8 +31609,8 @@
    }
   },
   "sandbox-log": {
-   "measuredAt": "2026-11-04",
-   "hash": "a620e6d3480f6370",
+   "measuredAt": "2026-11-06",
+   "hash": "1843e5b4960a5234",
    "bundle": {
     "own": {
      "min": 35425,
@@ -31416,7 +31665,7 @@
     ],
     "withoutLit": {
      "min": 48826,
-     "gzip": 15236
+     "gzip": 15235
     },
     "withLit": {
      "min": 72707,
@@ -31427,7 +31676,7 @@
     "tag": "tc-sandbox-log",
     "source": "demo",
     "runs": 7,
-    "cold": 9,
+    "cold": 10.4,
     "first": 1.5,
     "update": 0.4,
     "updateKind": "one item of steps replaced",
@@ -31438,8 +31687,8 @@
      "points": [
       {
        "items": 10000,
-       "first": 9846.1,
-       "update": 8254.5,
+       "first": 12369.4,
+       "update": 9803.7,
        "nodes": 500036
       }
      ]
@@ -31656,12 +31905,12 @@
    }
   },
   "scheduled-runs": {
-   "measuredAt": "2026-11-01",
-   "hash": "57c99bedb1b7fadc",
+   "measuredAt": "2026-11-06",
+   "hash": "aed0126d14f27ca0",
    "bundle": {
     "own": {
      "min": 24980,
-     "gzip": 7954
+     "gzip": 7998
     },
     "shared": [
      {
@@ -31707,20 +31956,20 @@
     ],
     "withoutLit": {
      "min": 64021,
-     "gzip": 16321
+     "gzip": 16391
     },
     "withLit": {
      "min": 87693,
-     "gzip": 24132
+     "gzip": 24223
     }
    },
    "render": {
     "tag": "tc-scheduled-runs",
     "source": "demo",
     "runs": 7,
-    "cold": 8.2,
-    "first": 2.6,
-    "update": 0.7,
+    "cold": 8.5,
+    "first": 2.7,
+    "update": 0.8,
     "updateKind": "one item of tasks replaced",
     "nodes": 219,
     "scale": {
@@ -31729,14 +31978,14 @@
      "points": [
       {
        "items": 100,
-       "first": 15.5,
-       "update": 3.7,
+       "first": 16.7,
+       "update": 3.6,
        "nodes": 2301
       },
       {
        "items": 1000,
-       "first": 184.9,
-       "update": 65.1,
+       "first": 202.1,
+       "update": 73.9,
        "nodes": 21561
       }
      ]
@@ -32646,8 +32895,8 @@
    }
   },
   "session-context-bar": {
-   "measuredAt": "2026-10-29",
-   "hash": "dcb50b8d821e1759",
+   "measuredAt": "2026-11-06",
+   "hash": "944149ad5eb11388",
    "bundle": {
     "own": {
      "min": 21152,
@@ -32713,9 +32962,9 @@
     "tag": "tc-session-context-bar",
     "source": "demo",
     "runs": 7,
-    "cold": 8.4,
-    "first": 1.2,
-    "update": 0.4,
+    "cold": 9.8,
+    "first": 1,
+    "update": 0.5,
     "updateKind": "one item of terms replaced",
     "nodes": 66,
     "scale": {
@@ -32724,14 +32973,14 @@
      "points": [
       {
        "items": 100,
-       "first": 7.2,
-       "update": 1.6,
+       "first": 7.3,
+       "update": 1.5,
        "nodes": 1238
       },
       {
        "items": 1000,
-       "first": 71.3,
-       "update": 16.5,
+       "first": 73.2,
+       "update": 15.8,
        "nodes": 12590
       }
      ]
@@ -32754,8 +33003,8 @@
    }
   },
   "session-list": {
-   "measuredAt": "2026-11-04",
-   "hash": "73e224cb8f4630f0",
+   "measuredAt": "2026-11-06",
+   "hash": "d7404d6a470fcdfa",
    "bundle": {
     "own": {
      "min": 20496,
@@ -32816,8 +33065,8 @@
     "tag": "tc-session-list",
     "source": "demo",
     "runs": 7,
-    "cold": 8.2,
-    "first": 1.4,
+    "cold": 8.8,
+    "first": 1.5,
     "update": 0.4,
     "updateKind": "one item of sessions replaced",
     "nodes": 180,
@@ -32827,14 +33076,14 @@
      "points": [
       {
        "items": 100,
-       "first": 9.7,
-       "update": 1.7,
+       "first": 9.9,
+       "update": 1.8,
        "nodes": 2530
       },
       {
        "items": 1000,
-       "first": 94.5,
-       "update": 18.3,
+       "first": 96.9,
+       "update": 18.6,
        "nodes": 25030
       }
      ]
@@ -32988,8 +33237,8 @@
    }
   },
   "session-state": {
-   "measuredAt": "2026-10-28",
-   "hash": "5f8a8b41cc6fa1cb",
+   "measuredAt": "2026-11-06",
+   "hash": "f91804182727f3f1",
    "bundle": {
     "own": {
      "min": 15131,
@@ -33045,9 +33294,9 @@
     "tag": "tc-session-state",
     "source": "demo",
     "runs": 7,
-    "cold": 9.2,
-    "first": 0.9,
-    "update": 0.3,
+    "cold": 10,
+    "first": 0.8,
+    "update": 0.2,
     "updateKind": "one item of chips replaced",
     "nodes": 46,
     "scale": {
@@ -33056,13 +33305,13 @@
      "points": [
       {
        "items": 100,
-       "first": 1.8,
-       "update": 0.3,
+       "first": 1.9,
+       "update": 0.4,
        "nodes": 238
       },
       {
        "items": 1000,
-       "first": 9.8,
+       "first": 15.5,
        "update": 1.6,
        "nodes": 2038
       }
@@ -33184,8 +33433,8 @@
    }
   },
   "share-link-manager": {
-   "measuredAt": "2026-11-04",
-   "hash": "c688b9d7b51d293d",
+   "measuredAt": "2026-11-06",
+   "hash": "2804cdcfcc4d763f",
    "bundle": {
     "own": {
      "min": 14622,
@@ -33251,7 +33500,7 @@
     "tag": "tc-share-link-manager",
     "source": "demo",
     "runs": 7,
-    "cold": 7.7,
+    "cold": 11.2,
     "first": 1.1,
     "update": 0.5,
     "updateKind": "one item of links replaced",
@@ -33262,14 +33511,14 @@
      "points": [
       {
        "items": 100,
-       "first": 11.9,
-       "update": 5.5,
+       "first": 13.1,
+       "update": 5.6,
        "nodes": 1664
       },
       {
        "items": 1000,
-       "first": 124.9,
-       "update": 53.9,
+       "first": 138.2,
+       "update": 58,
        "nodes": 16514
       }
      ]
@@ -33292,12 +33541,12 @@
    }
   },
   "share-panel": {
-   "measuredAt": "2026-10-31",
-   "hash": "889f7615c4201ff4",
+   "measuredAt": "2026-11-06",
+   "hash": "1669026a8f31b38c",
    "bundle": {
     "own": {
      "min": 28437,
-     "gzip": 8496
+     "gzip": 8538
     },
     "shared": [
      {
@@ -33348,20 +33597,20 @@
     ],
     "withoutLit": {
      "min": 44503,
-     "gzip": 13551
+     "gzip": 13619
     },
     "withLit": {
      "min": 67373,
-     "gzip": 21000
+     "gzip": 21095
     }
    },
    "render": {
     "tag": "tc-share-panel",
     "source": "demo",
     "runs": 7,
-    "cold": 10.8,
+    "cold": 10.2,
     "first": 1.1,
-    "update": 0.2,
+    "update": 0.3,
     "updateKind": "one item of directory replaced",
     "nodes": 53,
     "scale": {
@@ -33370,14 +33619,14 @@
      "points": [
       {
        "items": 100,
-       "first": 0.9,
-       "update": 0,
+       "first": 1,
+       "update": 0.1,
        "nodes": 53
       },
       {
        "items": 1000,
-       "first": 0.9,
-       "update": 0,
+       "first": 0.7,
+       "update": 0.1,
        "nodes": 53
       }
      ]
@@ -33400,12 +33649,12 @@
    }
   },
   "shared-element": {
-   "measuredAt": "2026-11-01",
-   "hash": "944b6386699e045d",
+   "measuredAt": "2026-11-06",
+   "hash": "104d0f342b74e729",
    "bundle": {
     "own": {
      "min": 5098,
-     "gzip": 2493
+     "gzip": 2483
     },
     "shared": [
      {
@@ -33446,20 +33695,20 @@
     ],
     "withoutLit": {
      "min": 11861,
-     "gzip": 4633
+     "gzip": 4636
     },
     "withLit": {
      "min": 31918,
-     "gzip": 11120
+     "gzip": 11180
     }
    },
    "render": {
     "tag": "tc-shared-element",
     "source": "demo",
     "runs": 7,
-    "cold": 0.9,
-    "first": 0.2,
-    "update": 0,
+    "cold": 1,
+    "first": 0.1,
+    "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 0,
     "scale": null,
@@ -33481,8 +33730,8 @@
    }
   },
   "shimmer-loader": {
-   "measuredAt": "2026-10-28",
-   "hash": "6e5525d312663875",
+   "measuredAt": "2026-11-06",
+   "hash": "de0a89925afc4bd1",
    "bundle": {
     "own": {
      "min": 8213,
@@ -33527,7 +33776,7 @@
     ],
     "withoutLit": {
      "min": 14986,
-     "gzip": 5459
+     "gzip": 5460
     },
     "withLit": {
      "min": 35040,
@@ -33538,8 +33787,8 @@
     "tag": "tc-skeleton",
     "source": "demo",
     "runs": 7,
-    "cold": 4,
-    "first": 0.2,
+    "cold": 4.3,
+    "first": 0.3,
     "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 0,
@@ -33562,8 +33811,8 @@
    }
   },
   "side-folder": {
-   "measuredAt": "2026-10-28",
-   "hash": "2cd0ffc9ec443714",
+   "measuredAt": "2026-11-06",
+   "hash": "aef958c872a7fce3",
    "bundle": {
     "own": {
      "min": 8520,
@@ -33619,8 +33868,8 @@
     "tag": "tc-side-folder",
     "source": "demo",
     "runs": 7,
-    "cold": 4,
-    "first": 0.6,
+    "cold": 5.1,
+    "first": 0.5,
     "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 33,
@@ -33643,8 +33892,8 @@
    }
   },
   "sla-status": {
-   "measuredAt": "2026-10-28",
-   "hash": "0b7dd292da0db65f",
+   "measuredAt": "2026-11-06",
+   "hash": "5e48a6663da7d7a4",
    "bundle": {
     "own": {
      "min": 17040,
@@ -33693,8 +33942,8 @@
      }
     ],
     "withoutLit": {
-     "min": 56071,
-     "gzip": 14246
+     "min": 56077,
+     "gzip": 14248
     },
     "withLit": {
      "min": 78362,
@@ -33705,8 +33954,8 @@
     "tag": "tc-sla-status",
     "source": "demo",
     "runs": 7,
-    "cold": 12.3,
-    "first": 1.8,
+    "cold": 12.1,
+    "first": 1.7,
     "update": 0.7,
     "updateKind": "one item of rows replaced",
     "nodes": 98,
@@ -33716,14 +33965,14 @@
      "points": [
       {
        "items": 100,
-       "first": 9.7,
-       "update": 5.9,
+       "first": 9.6,
+       "update": 5.7,
        "nodes": 746
       },
       {
        "items": 1000,
-       "first": 84.5,
-       "update": 55.9,
+       "first": 81.1,
+       "update": 55.3,
        "nodes": 6821
       }
      ]
@@ -33746,8 +33995,8 @@
    }
   },
   "slider-field": {
-   "measuredAt": "2026-10-29",
-   "hash": "a258a80e808fdd1e",
+   "measuredAt": "2026-11-06",
+   "hash": "170fb40905cb027e",
    "bundle": {
     "own": {
      "min": 4139,
@@ -33797,7 +34046,7 @@
     ],
     "withoutLit": {
      "min": 25557,
-     "gzip": 7205
+     "gzip": 7204
     },
     "withLit": {
      "min": 46766,
@@ -33808,7 +34057,7 @@
     "tag": "tc-slider-field",
     "source": "demo",
     "runs": 7,
-    "cold": 9.4,
+    "cold": 10.7,
     "first": 0.4,
     "update": 0.2,
     "updateKind": "re-render with the same data",
@@ -33930,12 +34179,12 @@
    }
   },
   "something-wrong": {
-   "measuredAt": "2026-10-31",
-   "hash": "c07d23980d501d2a",
+   "measuredAt": "2026-11-06",
+   "hash": "2c130c843229ab44",
    "bundle": {
     "own": {
      "min": 6942,
-     "gzip": 2764
+     "gzip": 2774
     },
     "shared": [
      {
@@ -33976,22 +34225,103 @@
     ],
     "withoutLit": {
      "min": 14204,
-     "gzip": 5093
+     "gzip": 5119
     },
     "withLit": {
      "min": 34254,
-     "gzip": 11586
+     "gzip": 11676
     }
    },
    "render": {
     "tag": "tc-something-wrong",
     "source": "demo",
     "runs": 7,
-    "cold": 2.1,
-    "first": 0.4,
+    "cold": 3.4,
+    "first": 0.3,
     "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 16,
+    "scale": null,
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
+  "soup-cans": {
+   "measuredAt": "2026-11-06",
+   "hash": "49810b0aa98f3078",
+   "bundle": {
+    "own": {
+     "min": 8594,
+     "gzip": 3144
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 18883
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2217
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1864
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 692
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 440
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 435
+     }
+    ],
+    "withoutLit": {
+     "min": 15861,
+     "gzip": 5441
+    },
+    "withLit": {
+     "min": 35890,
+     "gzip": 11989
+    }
+   },
+   "render": {
+    "tag": "tc-soup-cans",
+    "source": "demo",
+    "runs": 7,
+    "cold": 3.4,
+    "first": 0.4,
+    "update": 0.2,
+    "updateKind": "re-render with the same data",
+    "nodes": 31,
     "scale": null,
     "idle": {
      "visible": {
@@ -34190,12 +34520,12 @@
    }
   },
   "staggered-reveal": {
-   "measuredAt": "2026-11-01",
-   "hash": "4b3e6c6ed9431821",
+   "measuredAt": "2026-11-06",
+   "hash": "3300773e673b12ea",
    "bundle": {
     "own": {
      "min": 3995,
-     "gzip": 2065
+     "gzip": 2055
     },
     "shared": [
      {
@@ -34240,16 +34570,16 @@
     },
     "withLit": {
      "min": 30817,
-     "gzip": 10766
+     "gzip": 10819
     }
    },
    "render": {
     "tag": "tc-staggered-reveal",
     "source": "demo",
     "runs": 7,
-    "cold": 0.8,
-    "first": 0.1,
-    "update": 0,
+    "cold": 0.9,
+    "first": 0.2,
+    "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 0,
     "scale": null,
@@ -34271,12 +34601,12 @@
    }
   },
   "status-morph": {
-   "measuredAt": "2026-11-01",
-   "hash": "393307ed732ec415",
+   "measuredAt": "2026-11-06",
+   "hash": "4e20370a56974a4e",
    "bundle": {
     "own": {
      "min": 6103,
-     "gzip": 2732
+     "gzip": 2743
     },
     "shared": [
      {
@@ -34317,20 +34647,20 @@
     ],
     "withoutLit": {
      "min": 12877,
-     "gzip": 4847
+     "gzip": 4866
     },
     "withLit": {
      "min": 33594,
-     "gzip": 11579
+     "gzip": 11654
     }
    },
    "render": {
     "tag": "tc-status-morph",
     "source": "demo",
     "runs": 7,
-    "cold": 7.9,
-    "first": 0.2,
-    "update": 0.1,
+    "cold": 8.1,
+    "first": 0.3,
+    "update": 0.2,
     "updateKind": "re-render with the same data",
     "nodes": 5,
     "scale": null,
@@ -34460,8 +34790,8 @@
    }
   },
   "stepper-form": {
-   "measuredAt": "2026-10-28",
-   "hash": "8e54a34389cf02e1",
+   "measuredAt": "2026-11-06",
+   "hash": "e6783b62326c4593",
    "bundle": {
     "own": {
      "min": 80966,
@@ -34511,7 +34841,7 @@
     ],
     "withoutLit": {
      "min": 88840,
-     "gzip": 19832
+     "gzip": 19831
     },
     "withLit": {
      "min": 111886,
@@ -34522,9 +34852,9 @@
     "tag": "tc-stepper-form",
     "source": "demo",
     "runs": 7,
-    "cold": 10.8,
-    "first": 0.9,
-    "update": 0.2,
+    "cold": 14,
+    "first": 1,
+    "update": 0.3,
     "updateKind": "one item of steps replaced",
     "nodes": 46,
     "scale": {
@@ -34533,14 +34863,14 @@
      "points": [
       {
        "items": 100,
-       "first": 4.9,
+       "first": 4.7,
        "update": 0.5,
        "nodes": 622
       },
       {
        "items": 1000,
-       "first": 40.2,
-       "update": 3.9,
+       "first": 39.6,
+       "update": 5.8,
        "nodes": 6022
       }
      ]
@@ -34767,12 +35097,12 @@
    }
   },
   "success-check": {
-   "measuredAt": "2026-10-31",
-   "hash": "3d1e33447231b9ce",
+   "measuredAt": "2026-11-06",
+   "hash": "b2a09f272d987a8d",
    "bundle": {
     "own": {
      "min": 4158,
-     "gzip": 2089
+     "gzip": 2095
     },
     "shared": [
      {
@@ -34813,19 +35143,19 @@
     ],
     "withoutLit": {
      "min": 10923,
-     "gzip": 4270
+     "gzip": 4277
     },
     "withLit": {
      "min": 30970,
-     "gzip": 10784
+     "gzip": 10847
     }
    },
    "render": {
     "tag": "tc-success-check",
     "source": "demo",
     "runs": 7,
-    "cold": 5.5,
-    "first": 0.3,
+    "cold": 3.9,
+    "first": 0.2,
     "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 3,
@@ -34848,8 +35178,8 @@
    }
   },
   "switch": {
-   "measuredAt": "2026-10-29",
-   "hash": "e03908fcd949bfae",
+   "measuredAt": "2026-11-06",
+   "hash": "b81ec8c9db49b2fb",
    "bundle": {
     "own": {
      "min": 899,
@@ -34910,8 +35240,8 @@
     "tag": "tc-switch",
     "source": "demo",
     "runs": 7,
-    "cold": 10.6,
-    "first": 0.3,
+    "cold": 9.6,
+    "first": 0.4,
     "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 5,
@@ -35032,8 +35362,8 @@
    }
   },
   "tab-overload": {
-   "measuredAt": "2026-10-28",
-   "hash": "fcc9108d2394df63",
+   "measuredAt": "2026-11-06",
+   "hash": "3f6b2c2428b06032",
    "bundle": {
     "own": {
      "min": 9616,
@@ -35089,7 +35419,7 @@
     "tag": "tc-tab-overload",
     "source": "demo",
     "runs": 7,
-    "cold": 3.7,
+    "cold": 4.3,
     "first": 0.7,
     "update": 0.2,
     "updateKind": "re-render with the same data",
@@ -35420,12 +35750,12 @@
    }
   },
   "team-flag-picker": {
-   "measuredAt": "2026-10-31",
-   "hash": "f2d7f4fff62b09e7",
+   "measuredAt": "2026-11-06",
+   "hash": "3388a7b6d01734aa",
    "bundle": {
     "own": {
      "min": 10442,
-     "gzip": 4074
+     "gzip": 4089
     },
     "shared": [
      {
@@ -35476,19 +35806,19 @@
     ],
     "withoutLit": {
      "min": 26506,
-     "gzip": 9029
+     "gzip": 9083
     },
     "withLit": {
      "min": 47644,
-     "gzip": 15899
+     "gzip": 15990
     }
    },
    "render": {
     "tag": "tc-team-flag-picker",
     "source": "demo",
     "runs": 7,
-    "cold": 10.2,
-    "first": 0.3,
+    "cold": 9.1,
+    "first": 0.4,
     "update": 0.1,
     "updateKind": "one item of flags replaced",
     "nodes": 7,
@@ -35499,12 +35829,12 @@
       {
        "items": 100,
        "first": 0.3,
-       "update": 0,
+       "update": 0.1,
        "nodes": 7
       },
       {
        "items": 1000,
-       "first": 0.3,
+       "first": 0.2,
        "update": 0,
        "nodes": 7
       }
@@ -35954,8 +36284,8 @@
    }
   },
   "testimonial-wall": {
-   "measuredAt": "2026-11-04",
-   "hash": "f5f758f8606c6fc9",
+   "measuredAt": "2026-11-06",
+   "hash": "656189663c00c2b2",
    "bundle": {
     "own": {
      "min": 18209,
@@ -36020,19 +36350,19 @@
     ],
     "withoutLit": {
      "min": 39566,
-     "gzip": 12727
+     "gzip": 12728
     },
     "withLit": {
      "min": 60078,
-     "gzip": 19381
+     "gzip": 19377
     }
    },
    "render": {
     "tag": "tc-testimonial-wall",
     "source": "defaults",
     "runs": 7,
-    "cold": 10.3,
-    "first": 0.8,
+    "cold": 9.2,
+    "first": 0.7,
     "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 21,
@@ -36173,8 +36503,8 @@
    }
   },
   "text-reveal": {
-   "measuredAt": "2026-10-28",
-   "hash": "30aca6276ad99b3d",
+   "measuredAt": "2026-11-06",
+   "hash": "a51f7080d9d373a2",
    "bundle": {
     "own": {
      "min": 6973,
@@ -36230,7 +36560,7 @@
     "tag": "tc-text-reveal",
     "source": "demo",
     "runs": 7,
-    "cold": 3.7,
+    "cold": 5.6,
     "first": 0.5,
     "update": 0.5,
     "updateKind": "re-render with the same data",
@@ -36536,8 +36866,8 @@
    }
   },
   "tilt-card": {
-   "measuredAt": "2026-10-28",
-   "hash": "2cceacd3cf69083e",
+   "measuredAt": "2026-11-06",
+   "hash": "ecfc90dc60ccf043",
    "bundle": {
     "own": {
      "min": 8581,
@@ -36593,8 +36923,8 @@
     "tag": "tc-tilt-card",
     "source": "demo",
     "runs": 7,
-    "cold": 4.5,
-    "first": 0.2,
+    "cold": 4.9,
+    "first": 0.3,
     "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 2,
@@ -36617,8 +36947,8 @@
    }
   },
   "tips-panel": {
-   "measuredAt": "2026-10-28",
-   "hash": "0799678806601e56",
+   "measuredAt": "2026-11-06",
+   "hash": "91297c9d5e0c68ce",
    "bundle": {
     "own": {
      "min": 15925,
@@ -36674,7 +37004,7 @@
     "tag": "tc-tips-panel",
     "source": "demo",
     "runs": 7,
-    "cold": 11.1,
+    "cold": 9.6,
     "first": 0.9,
     "update": 0.4,
     "updateKind": "one item of tips replaced",
@@ -36685,14 +37015,14 @@
      "points": [
       {
        "items": 100,
-       "first": 5,
+       "first": 5.4,
        "update": 1.4,
        "nodes": 498
       },
       {
        "items": 1000,
-       "first": 46,
-       "update": 12.8,
+       "first": 45.7,
+       "update": 14.8,
        "nodes": 4848
       }
      ]
@@ -36715,8 +37045,8 @@
    }
   },
   "toaster": {
-   "measuredAt": "2026-10-28",
-   "hash": "77b30c56a64b28bf",
+   "measuredAt": "2026-11-06",
+   "hash": "24bd7ba981ac4d42",
    "bundle": {
     "own": {
      "min": 35020,
@@ -36731,7 +37061,7 @@
      {
       "name": "internal/controllers",
       "kind": "internal",
-      "min": 2620
+      "min": 2677
      },
      {
       "name": "internal/card-head",
@@ -36760,19 +37090,19 @@
      }
     ],
     "withoutLit": {
-     "min": 44189,
-     "gzip": 13462
+     "min": 44246,
+     "gzip": 13487
     },
     "withLit": {
-     "min": 67449,
-     "gzip": 21126
+     "min": 67506,
+     "gzip": 21149
     }
    },
    "render": {
     "tag": "tc-toaster",
     "source": "demo",
     "runs": 7,
-    "cold": 2.6,
+    "cold": 2.8,
     "first": 0.9,
     "update": 0.2,
     "updateKind": "re-render with the same data",
@@ -37191,8 +37521,8 @@
    }
   },
   "tooltip": {
-   "measuredAt": "2026-10-29",
-   "hash": "e8a98d12cfce4f0f",
+   "measuredAt": "2026-11-06",
+   "hash": "2f55fae620b7cf10",
    "bundle": {
     "own": {
      "min": 4039,
@@ -37253,7 +37583,7 @@
     "tag": "tc-tooltip",
     "source": "demo",
     "runs": 7,
-    "cold": 7.3,
+    "cold": 6.8,
     "first": 0.3,
     "update": 0.1,
     "updateKind": "re-render with the same data",
@@ -38008,8 +38338,8 @@
    }
   },
   "upload-failed": {
-   "measuredAt": "2026-11-05",
-   "hash": "f67d2c1481e11d28",
+   "measuredAt": "2026-11-06",
+   "hash": "797a472b6ecd641c",
    "bundle": {
     "own": {
      "min": 6733,
@@ -38065,8 +38395,8 @@
     "tag": "tc-upload-failed",
     "source": "demo",
     "runs": 7,
-    "cold": 8.8,
-    "first": 0.4,
+    "cold": 8.9,
+    "first": 0.3,
     "update": 0.2,
     "updateKind": "re-render with the same data",
     "nodes": 12,
@@ -38278,8 +38608,8 @@
    }
   },
   "verification-queue": {
-   "measuredAt": "2026-11-04",
-   "hash": "6cf1558f2e7fc2a0",
+   "measuredAt": "2026-11-06",
+   "hash": "58c6d6d9711faeb4",
    "bundle": {
     "own": {
      "min": 34147,
@@ -38339,7 +38669,7 @@
     ],
     "withoutLit": {
      "min": 64571,
-     "gzip": 18731
+     "gzip": 18732
     },
     "withLit": {
      "min": 87389,
@@ -38350,9 +38680,9 @@
     "tag": "tc-verification-queue",
     "source": "demo",
     "runs": 7,
-    "cold": 9.1,
-    "first": 1.7,
-    "update": 0.4,
+    "cold": 11,
+    "first": 1.9,
+    "update": 0.3,
     "updateKind": "one item of claims replaced",
     "nodes": 145,
     "scale": {
@@ -38361,8 +38691,8 @@
      "points": [
       {
        "items": 10000,
-       "first": 8.1,
-       "update": 2.3,
+       "first": 6.1,
+       "update": 1.9,
        "nodes": 687
       }
      ]
@@ -38784,8 +39114,8 @@
    }
   },
   "web-vitals": {
-   "measuredAt": "2026-11-04",
-   "hash": "c45f821e7126becf",
+   "measuredAt": "2026-11-06",
+   "hash": "d9d158355ca7ab5f",
    "bundle": {
     "own": {
      "min": 13414,
@@ -38841,9 +39171,9 @@
     "tag": "tc-web-vitals",
     "source": "demo",
     "runs": 7,
-    "cold": 7.9,
-    "first": 1.3,
-    "update": 0.5,
+    "cold": 8.1,
+    "first": 1.4,
+    "update": 0.6,
     "updateKind": "one item of metrics replaced",
     "nodes": 106,
     "scale": {
@@ -38852,14 +39182,14 @@
      "points": [
       {
        "items": 100,
-       "first": 12.9,
+       "first": 12.7,
        "update": 6.6,
        "nodes": 1721
       },
       {
        "items": 1000,
-       "first": 130.8,
-       "update": 60.2,
+       "first": 132.3,
+       "update": 59.6,
        "nodes": 17021
       }
      ]
@@ -38882,8 +39212,8 @@
    }
   },
   "work-item": {
-   "measuredAt": "2026-11-04",
-   "hash": "51987b4775c379ba",
+   "measuredAt": "2026-11-06",
+   "hash": "de4cf68dcda62f6c",
    "bundle": {
     "own": {
      "min": 16740,
@@ -38943,7 +39273,7 @@
     ],
     "withoutLit": {
      "min": 24173,
-     "gzip": 7671
+     "gzip": 7672
     },
     "withLit": {
      "min": 44213,
@@ -38954,9 +39284,9 @@
     "tag": "tc-work-item",
     "source": "demo",
     "runs": 7,
-    "cold": 7.7,
-    "first": 0.7,
-    "update": 0.3,
+    "cold": 9.7,
+    "first": 0.8,
+    "update": 0.2,
     "updateKind": "one item of people replaced",
     "nodes": 40,
     "scale": {
@@ -38965,7 +39295,7 @@
      "points": [
       {
        "items": 100,
-       "first": 0.9,
+       "first": 0.7,
        "update": 0.1,
        "nodes": 43
       },
@@ -39174,8 +39504,8 @@
    }
   },
   "year-list": {
-   "measuredAt": "2026-10-30",
-   "hash": "79a29932fc24304f",
+   "measuredAt": "2026-11-06",
+   "hash": "0538ac624447e6a7",
    "bundle": {
     "own": {
      "min": 9438,
@@ -39231,7 +39561,7 @@
     "tag": "tc-year-list",
     "source": "demo",
     "runs": 7,
-    "cold": 7,
+    "cold": 6.4,
     "first": 0.6,
     "update": 0.2,
     "updateKind": "re-render with the same data",

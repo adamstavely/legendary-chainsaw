@@ -45,6 +45,7 @@ They are decorative unless given a `label`, loops are finite or rest, and `prefe
 - **Released** (`released.tsx`) – A document with a check on it and a few sparks around it, with the words Released, for content that's out and live
 - **Side Folder** (`side-folder.tsx`) – Glassy blue folder on its side, documents sliding out to the right as the pocket swings open on hover
 - **Something Wrong** (`something-wrong.tsx`) – Two connected tiles with the line between them broken, for a page or request that failed; the gap pulses a few times and rests
+- **Soup Cans** (`soup-cans.tsx`) – Three plain soup cans with no labels, standing together at different heights with ridge rings, for items that are there but not yet labelled or sorted
 - **Tab Overload** (`tab-overload.tsx`) – Overlapping browser windows where the highlight follows the hovered tab
 - **Team Invite** (`team-invite.tsx`) – Connected teammates – a cursor drags a new one into the empty slot, the line turns solid and they go online
 - **Upload Failed** (`upload-failed.tsx`) – A file lifted above an open tray, its upload arrow stopping short, with a red cross badge and the words Upload failed, for a file that's too large, isn't accepted or didn't finish uploading

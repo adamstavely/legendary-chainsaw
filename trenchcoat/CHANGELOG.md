@@ -1,5 +1,20 @@
 # Changelog
 
+## Unreleased – PR Link, Breakpoint Overlay, Soup Cans and design system screens
+
+- **PR Link** (`tc-pr-link`): a pull request named in running text – its state's mark and owner/repo#number · title as
+  a link, with a card of its state, repository, time, author, lines added and removed, and files changed on hover or
+  focus; `compact` for just #number. The card is a tooltip the link is described by.
+- **Breakpoint Overlay** (`tc-breakpoint-overlay`): which breakpoint the page is at – a corner badge that opens a scale
+  and list of every breakpoint with its range and media query, and a ruler across the window; ⌥⇧O to open it. It
+  follows the window or a `target` element. Loupe now shares its breakpoint helpers.
+- **Soup Cans** (`tc-soup-cans`): three unlabeled tins standing at different heights, for things not yet labelled or
+  sorted.
+- **Screens:** Design System Home, Design System Component, Design System Illustrations and Design System Releases – a
+  design system's site built from the library, its stage and spot illustrations. Spot illustrations can be imported
+  as URLs from `trenchcoat/illustrations/spot/…` in the gallery and the screens.
+- **Hotkeys** match the physical key too, so Option combinations work on a Mac (⌥⇧O types "Ø" but is still KeyO).
+
 ## Unreleased – Workflow stage illustrations
 
 - **Illustrations:** In Translation, In Quality Control, In Coordination, Pending Release and Released – the workflow

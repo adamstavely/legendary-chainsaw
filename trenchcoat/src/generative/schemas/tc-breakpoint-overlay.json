@@ -1,0 +1,79 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-breakpoint-overlay.json",
+  "title": "tc-breakpoint-overlay",
+  "description": "Which breakpoint the page is at – a badge in the window's corner that opens a panel of every breakpoint, with a\nruler across the top of the window; ⌥⇧O to open it.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The panel's heading"
+    },
+    "open": {
+      "type": "boolean",
+      "description": "Whether the panel is open. Changed by the user unless a tc-open-change listener calls preventDefault()"
+    },
+    "breakpoints": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ViewBreakpoint"
+      },
+      "description": "The breakpoints, in px: min only, max only, or a range. Tailwind's by default"
+    },
+    "hotkey": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "boolean",
+          "const": false
+        }
+      ],
+      "description": "Opens and closes it from anywhere (\"alt+shift+o\" is ⌥⇧O on Apple keyboards, Alt Shift O elsewhere); false turns it off"
+    },
+    "showRuler": {
+      "type": "boolean",
+      "description": "While open, a ruler across the top of the window with each breakpoint and the width. Only when it follows the window"
+    },
+    "floating": {
+      "type": "boolean",
+      "description": "The badge and panel float at the window's corner; off, it's a card in the page, always open"
+    },
+    "corner": {
+      "type": "string",
+      "enum": [
+        "bottom-left",
+        "bottom-right",
+        "top-left",
+        "top-right"
+      ],
+      "description": "Which corner of the window it floats in"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ViewBreakpoint": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "min": {
+          "type": "number"
+        },
+        "max": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "additionalProperties": false,
+      "description": "A breakpoint: min-width only, max-width only, or a range between them, in px"
+    }
+  }
+}
