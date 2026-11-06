@@ -612,6 +612,16 @@
     ]
   },
   {
+    "tag": "tc-chord-chart",
+    "name": "ChordChart",
+    "description": "Exchanges between groups as ribbons round a circle – each group an arc sized by what it sends and receives, one group",
+    "events": [
+      "tc-view-change",
+      "tc-mark-hover",
+      "tc-mark-click"
+    ]
+  },
+  {
     "tag": "tc-citation-badge",
     "name": "CitationBadge",
     "description": "A small badge of citation counts by kind – Publications, Supporting, Mentioning, Contrasting – with a tooltip",
@@ -1291,6 +1301,16 @@
     ]
   },
   {
+    "tag": "tc-funnel-chart",
+    "name": "FunnelChart",
+    "description": "Steps of a process as centred bars narrowing down the page, with each step's conversion rate and the biggest drop",
+    "events": [
+      "tc-view-change",
+      "tc-mark-hover",
+      "tc-mark-click"
+    ]
+  },
+  {
     "tag": "tc-gap-exposure",
     "name": "GapExposure",
     "description": "Gaps or risks and whether anyone is working on them – severity, the item and its priority, coverage, owner and",
@@ -1665,6 +1685,16 @@
     "name": "MalwareBlocked",
     "description": "A file behind a warning shield with a bug on it, for a file that can't be shown because it may be malware.",
     "events": []
+  },
+  {
+    "tag": "tc-marimekko-chart",
+    "name": "MarimekkoChart",
+    "description": "Columns as wide as their share of the whole, each stacked to 100% by series – two shares in one picture – with one",
+    "events": [
+      "tc-view-change",
+      "tc-mark-hover",
+      "tc-mark-click"
+    ]
   },
   {
     "tag": "tc-mcp-connection-manager",
@@ -2459,6 +2489,16 @@
     ]
   },
   {
+    "tag": "tc-sankey-chart",
+    "name": "SankeyChart",
+    "description": "Flows between stages as bands sized by value – nodes in columns, one node and its flows emphasised, names and values",
+    "events": [
+      "tc-view-change",
+      "tc-mark-hover",
+      "tc-mark-click"
+    ]
+  },
+  {
     "tag": "tc-saved-search-alerts",
     "name": "SavedSearchAlerts",
     "description": "Saved searches that tell you about new matches – the new count, how often and where each checks, pause, Run now,",
@@ -2761,6 +2801,16 @@
     "events": []
   },
   {
+    "tag": "tc-sunburst-chart",
+    "name": "SunburstChart",
+    "description": "A hierarchy as rings – the top level innermost – with the largest leaf and its path emphasised, the outer names",
+    "events": [
+      "tc-view-change",
+      "tc-mark-hover",
+      "tc-mark-click"
+    ]
+  },
+  {
     "tag": "tc-switch",
     "name": "Switch",
     "description": "Switch for AI product settings.",
@@ -2988,6 +3038,16 @@
     ]
   },
   {
+    "tag": "tc-treemap",
+    "name": "Treemap",
+    "description": "Parts of a whole as tiles sized by value – nested in their groups, the largest emphasised, names and shares on",
+    "events": [
+      "tc-view-change",
+      "tc-mark-hover",
+      "tc-mark-click"
+    ]
+  },
+  {
     "tag": "tc-trigger-builder",
     "name": "TriggerBuilder",
     "description": "When an automation runs: an event or a schedule, conditions, a plain-language summary and the next run times.",
@@ -3046,6 +3106,16 @@
       "tc-compare",
       "tc-restore",
       "tc-activate"
+    ]
+  },
+  {
+    "tag": "tc-waffle-chart",
+    "name": "WaffleChart",
+    "description": "Shares of a whole as a grid of cells, one category emphasised with its share written large beside it, the rest in",
+    "events": [
+      "tc-view-change",
+      "tc-mark-hover",
+      "tc-mark-click"
     ]
   },
   {

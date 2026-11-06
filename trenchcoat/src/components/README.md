@@ -60,6 +60,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Chat Minimap** (`chat-minimap.tsx`) – A rail of ticks beside a long chat, one per message you sent, longer for longer ones – the one in view lit, the message on hover or with the arrow keys, a click to jump back to it – following the chat as it scrolls
 - **Check Status** (`check-status.tsx`) – The automated checks on a change – a summary in words and a row for each, failing first, with Re-run, or just a mark and "5/11" for a list row.
 - **Checkbox** (`checkbox.tsx`) – A form-associated boolean choice
+- **Chord Chart** (`chord-chart.tsx`) – What a handful of groups exchange with each other – an arc per group sized by what it sends and receives, a ribbon per pair showing both directions, the largest group and its ribbons in the accent, and a table view
 - **Citation Badge** (`citation-badge.tsx`) – A small badge of how a work is cited – publications, supporting, mentioning and contrasting counts with their marks, labelled or compact, a tooltip saying what each means and an optional link to the details
 - **Citation Sections** (`citation-sections.tsx`) – Where a work is cited – a donut of citing sections (Intro, Methods, Results, Discussion, Other) shaded darkest first, a legend with letter chips and counts, and the section under the pointer or focus with its share
 - **Cited Answer** (`cited-answer.tsx`) – An AI answer wired to its sources – point at a citation to light up its sentence and source, click to unfold the quoted passage with the matching words marked
@@ -126,6 +127,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Filter Menu** (`filter-menu.tsx`) – Grouped filters with removable chips, collapsible checkbox groups, Clear all and full keyboard control
 - **Fingerprint Card** (`fingerprint-card.tsx`) – A ten-print card – each finger's print and status in ANSI/NIST positions, captured with its NFIQ quality, poor, not captured, unable to print or bandaged, and a finger's detail
 - **Friction Profile** (`friction-profile.tsx`) – Switch between standard, elevated and deadline modes and see how each safeguard changes – shortened, deferred or tightened
+- **Funnel Chart** (`funnel-chart.tsx`) – How many are left at each step of a process as centred bars narrowing down the page, joined by curved necks, each step's rate against the one before or the first, the biggest drop emphasised, and a table view
 - **Gap Exposure** (`gap-exposure.tsx`) – Gaps or risks and whether anyone is working on them – severity in words and a mark, the item and its priority, coverage, owner and what's invested, with the severe uncovered ones called out, grouping by priority or severity and an uncovered-only switch
 - **Gate Config** (`gate-config.tsx`) – When a person decides – the conditions that pause a run, who reviews, what they see, and what they're allowed to do
 - **Gauge** (`gauge.tsx`) – One value against its range as a 270° dial, a half dial or a bar – the value in big type with the band it's in, bands and ticks round it, a target line and the change since last time; optionally a slider you drag or move with the keys
@@ -158,6 +160,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Lollipop Chart** (`lollipop-chart.tsx`) – One value per item as a thin stem and dot, ordered from the largest, lying down or upright, the largest emphasised, values past the dots, missing ones written "–", stems that grow in and glide when the data changes, and a table view
 - **Look Provider** (`look-provider.tsx`) – Sets the look, Standard or Clean, for every Trenchcoat element inside it – one wrapper for a whole app, with any element still free to choose its own
 - **Loupe** (`loupe.tsx`) – A design-system inspector over the live page – components outlined with a card of their name, path and links, a breakpoint ruler, flex and grid containers listed – ⌘⇧L to turn it on
+- **Marimekko Chart** (`marimekko-chart.tsx`) – Two shares in one picture – columns as wide as their share of the whole, each stacked to 100% by series – one series emphasised and named in a legend, blocks that rise and glide when the data changes, and a table view
 - **MCP connection manager** (`mcp-connection-manager.tsx`) – MCP servers at a glance – status and what each exposes; add one (transport, auth, test), inspect its tools, resources and prompts, connect, retry and remove
 - **Memory Panel** (`memory-panel.tsx`) – What the assistant remembers about you, grouped and editable – a master switch, category filters, and on every memory edit in place, pause or forget with Undo on the tray
 - **Mention Picker** (`mention-picker.tsx`) – The / and @ picker inside a composer – grouped results, arrow keys and Enter, and the pick lands as a chip
@@ -230,6 +233,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Run Compare** (`run-compare.tsx`) – Two runs or two prompt versions side by side – outputs, steps, cost and time, with every difference highlighted
 - **Run Manifest** (`run-manifest.tsx`) – What it takes to reproduce a run – model, settings, instruction hash, sources, intent and the verification summary, ready to export
 - **Sandbox Log** (`sandbox-log.tsx`) – Command output from the agent's sandbox – a block per step with the command, exit code and time, streaming text in colour, copy and search, fast with long logs
+- **Sankey Chart** (`sankey-chart.tsx`) – How an amount flows between stages – nodes in columns by step, flows as bands as wide as their value, one node and its flows in the accent, a node's or flow's path lit on hover, and a table view
 - **Saved Search Alerts** (`saved-search-alerts.tsx`) – Saved searches that tell you about new matches – “12 new since Tue”, how often and where each one checks, pause, Run now, remove with Undo, and Add alert from the current search
 - **Scan Status** (`scan-status.tsx`) – Where a file stands in malware scanning – queued, scanning, clean, suspicious, quarantined or failed, inline or as a card, with Rescan and Request review
 - **Scheduled Runs** (`scheduled-runs.tsx`) – Agent tasks placed into a week's sessions under usage limits – pinned first, big tasks split into linked parts, small ones filling gaps, and an Unscheduled list
@@ -259,6 +263,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Stepper Form** (`stepper-form.tsx`) – A multi-step flow for onboarding and setup – steps that fill and check off, sliding steps, a card that morphs to each step, inline validation and a success state
 - **Stories** (`stories.tsx`) – Avatars for people and accounts with a gradient ring for something new – open one for a "what changed" brief: a bento grid of metric, status, note, list, image and link tiles
 - **Structured Output** (`structured-output.tsx`) – Streaming JSON as a typed tree, checked against its schema as it arrives – missing and invalid fields flagged, copy as JSON or code
+- **Sunburst Chart** (`sunburst-chart.tsx`) – A hierarchy as rings, top level innermost – the largest leaf and its path to the centre emphasised, outer names and shares beside the circle, inner names on card-coloured chips, rings that sweep round in turn
 - **Switch** (`switch.tsx`) – An accessible on/off setting
 - **Synthesis Notes** (`synthesis-notes.tsx`) – Your own conclusions, assumptions and open questions, kept apart from the model's output and exported with where they came from
 - **Tag Input** (`tag-input.tsx`) – A field of free-text chips: add with Enter, a comma or Tab, or paste several at once, with suggestions, a limit, no duplicates, your own validation with the reason shown, and keyboard removal
@@ -283,12 +288,14 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Transcript Review** (`transcript-review.tsx`) – Recorded audio or video with a transcript that follows playback – speakers, timestamps, recognition confidence and low-confidence segments to verify
 - **Travel Itinerary** (`travel-itinerary.tsx`) – Trips as legs for a travel or expense audit – route codes, mode and carrier, the document used, confidence as a meter and %, source and grade, flags such as No record or Cash ticket in words, and connecting legs grouped into journeys
 - **Tree Select** (`tree-select.tsx`) – Pick one or many from a nested hierarchy: the picked path in the field, a filterable tree with the parents of every match kept, ARIA tree keys, and parent checkboxes that check what's beneath them
+- **Treemap** (`treemap.tsx`) – Parts of a whole as squarified tiles sized by value, nested under group headers with their shares – the largest emphasised, names and shares on card-coloured chips in tiles big enough, tiles that grow in and glide on change
 - **Trigger Builder** (`trigger-builder.tsx`) – “Run when X happens, or every Monday at 9” – an event or a schedule, conditions, a plain-language summary and the next run times
 - **Usage Meter** (`usage-meter.tsx`) – Plan usage and AI credits – a stacked credits meter by category, daily sparkline, limits and a button that speaks up near the limit
 - **Validity Badge** (`validity-badge.tsx`) – How fresh a piece of evidence is – a band from high to stale that ages over time, contested and superseded marks, and a margin strip for a document
 - **Verification Queue** (`verification-queue.tsx`) – Every claim worth checking from a session in one queue – verified, can't verify, incorrect or dismissed, with its source, before anything is exported
 - **Version History** (`version-history.tsx`) – The versions of an agent, prompt or workflow – draft, active or deprecated, who and when, and what changed in behaviour
 - **Voice Mode** (`voice-mode.tsx`) – A spoken conversation with the model – live transcript, listening and speaking states, interrupt, mute and end, with captions for every turn
+- **Waffle Chart** (`waffle-chart.tsx`) – Shares of a whole as a grid of 100 cells, one category emphasised with its share written large beside it, the rest in the chart inks with a legend, cells that pop in one by one and a share that counts up, and a table view
 - **Watchlist** (`watchlist.tsx`) – The people, accounts or entities a team is watching, most at risk first – avatar, reference, case tag and a risk badge in words, with a count, filters by risk and View all
 - **Waterfall Chart** (`waterfall-chart.tsx`) – How a starting figure becomes an ending one – steps up and down bridged by dashed connectors, totals on the baseline, rises and falls in the status inks with a legend, signed changes beside each bar and a table view
 - **Web Vitals** (`web-vitals.tsx`) – A tile per measure (LCP, INP, CLS, FCP, TTFB or the page's own) with its value, a Good / Needs improvement / Poor word, a three-zone track and earlier readings, plus an optional Mobile / Desktop switch.
