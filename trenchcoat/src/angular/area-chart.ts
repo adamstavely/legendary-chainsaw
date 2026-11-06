@@ -67,6 +67,10 @@ export class AreaChart {
   @Input() set yLabel(v: TcAreaChart["yLabel"]) {
     this.#el.yLabel = v;
   }
+  /** Dragging across the plot (or Shift+arrows, then Enter) picks a range of x: "select" shows its change, high and low; "zoom" narrows the chart to it */
+  @Input() set brush(v: TcAreaChart["brush"]) {
+    this.#el.brush = v;
+  }
   /** The heading, and the chart's name */
   @Input() set heading(v: TcAreaChart["heading"]) {
     this.#el.heading = v;
@@ -150,4 +154,9 @@ export class AreaChart {
    * Types $event; the element dispatches the event itself.
    */
   @Output("tc-mark-click") readonly tcMarkClick = new EventEmitter<CustomEvent<{ event: unknown }>>();
+  /**
+   * A range of x was picked by dragging or Shift+arrows and Enter, or cleared ({ range }: ChartBrushChange)
+   * Types $event; the element dispatches the event itself.
+   */
+  @Output("tc-brush") readonly tcBrush = new EventEmitter<CustomEvent<{ range: unknown }>>();
 }

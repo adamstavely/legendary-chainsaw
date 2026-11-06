@@ -155,7 +155,7 @@ export abstract class PieBase<T = Row> extends TcChartElement<Item<T>, T> {
     if (!s) return null;
     const { cx, cy, R, start } = this.g;
     const [x, y] = polar(cx, cy, R * 0.9, start + (s.a0 + s.a1) / 2);
-    return { x, y, title: s.label, rows: [{ label: this.words.value, value: f.fv(s.value), color: s.ink }, { label: "Share", value: f.pct(s.pct) }] };
+    return { x, y, title: s.label, rows: [{ label: this.words.value, value: f.fv(s.value), color: s.ink }, { label: this.words.share, value: f.pct(s.pct) }] };
   }
 
   protected override tableHeader() {

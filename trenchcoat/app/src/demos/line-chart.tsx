@@ -18,9 +18,9 @@ export default function Demo({ ui }: { ui: typeof UI }) {
   const data = MONTHS.flatMap((m, k) => Object.entries(year).map(([series, v]) => ({ x: i === 0 ? m : m.replace("2026", "2025"), y: v[k], series })));
   return (
     <div style={{ width: "100%", maxWidth: 760, display: "grid", gap: 8 }}>
-      <LineChart title="Median queue time" description="Minutes from submit to start" unit=" min" data={data} series="series" highlight="GPU" referenceLines={[{ y: 45, label: "Target 45 min" }]} />
+      <LineChart title="Median queue time" description="Minutes from submit to start" unit=" min" data={data} series="series" highlight="GPU" referenceLines={[{ y: 45, label: "Target 45 min" }]} brush="select" />
       <div style={{ ...caption, textAlign: "center" }}>
-        Move along the lines to read every partition.{" "}
+        Move along the lines to read every partition, or drag across them to compare a stretch.{" "}
         <button type="button" style={textButton} onClick={() => setI(1 - i)}>
           Show {i === 0 ? "2025" : "2026"}
         </button>

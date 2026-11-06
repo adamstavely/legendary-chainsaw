@@ -53,8 +53,8 @@ tools with them.
 2. **Comparison** – Lollipop, Dumbbell, Slope, Bump, Bullet, Segmented, Waterfall, Pareto.
 3. **Part-to-whole and flow** – Waffle, Funnel, Marimekko, Treemap, Sunburst, Sankey, Chord.
 4. **Distribution and time** – Box, Beeswarm, Ridgeline, Bubble, Candlestick, Stream, Calendar Heatmap,
-   Parallel Coordinates, Radial Bar; and Line and Area Chart's drag-to-select range with its change and extremes
-   (ztd's brush and zoom), left out of Part 1.
+   Parallel Coordinates, Radial Bar. (Line and Area Chart's drag-to-select range, left out of Part 1, shipped in
+   Part 2.)
 5. **Spec, server and agents** – `tc-chart`, the schema in generative UI, `renderChartToSVG`, the CLI and the MCP
    server.
 6. **Fold into ours** – what ztd's Gauge, Heatmap, Radar and Sparkline have that ours lack (to be listed when Part 5
@@ -62,8 +62,8 @@ tools with them.
 
 ## Status
 
-- [ ] Part 1
-- [ ] Part 2
+- [x] Part 1 (#76)
+- [x] Part 2
 - [ ] Part 3
 - [ ] Part 4
 - [ ] Part 5

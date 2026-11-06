@@ -4,15 +4,16 @@
  * nearest x under the pointer read across every series, names at the lines' ends, reference lines, and long series
  * thinned to about two points per pixel.
  */
-import { nothing, svg } from "lit";
-import { property } from "lit/decorators.js";
+import { html, nothing, svg } from "lit";
+import { property, state } from "lit/decorators.js";
 import { fitTickLabels, gridY, thinLabels, txt, yAxisWidth } from "./axis";
 import { adoptStyles } from "../styles";
+import { brushBand, brushCss, ChartBrush, changeRatio, defaultBrushWords, extremeTags, signedPercent, type BrushMode, type BrushRange, type XRange } from "./brush";
 import { AXIS_FONT, categoricalInk, emphasisInk, TcChartElement, type ChartFrame, type ChartModel } from "./element";
 import { makeTickFormatter } from "./format";
 import { areaPath, linePath, nearestIndex, type Curve } from "./geometry";
 import { resolveHighlight } from "./highlight";
-import { lttb } from "./parse";
+import { dataSignature, lttb } from "./parse";
 import { extent, fitDomain, scaleLinear, timeTicks } from "./scale";
 import { bucketSeries, prepSeries, type SeriesModel, type XType } from "./series";
 import { stack } from "./stack";
@@ -22,6 +23,9 @@ import type { Accessor, Row, TooltipData } from "./types";
 export type XYColorMode = "highlight" | "categorical";
 export type XYReferenceLine = { y: number; label?: string };
 
+/** Details of tc-brush */
+export type ChartBrushChange = { range: XRange | null };
+
 type SeriesDraw = { s: number; name: string; pts: number[]; xs: number[]; base?: number[]; ink: string; hi: boolean };
 
 let gradCount = 0;
@@ -29,6 +33,25 @@ let gradCount = 0;
 /** The quiet ink for lines that aren't emphasised – stronger than an area's, so a thin line still reads */
 const LINE_REST = "var(--tc-plot-line-rest)";
 
+/** Keeps x indexes a…b (both included) of a model */
+function sliceModel<T>(m: SeriesModel<T>, a: number, b: number): SeriesModel<T> {
+  const lo = Math.max(0, Math.min(a, b));
+  const hi = Math.min(m.keys.length - 1, Math.max(a, b));
+  const keys = m.keys.slice(lo, hi + 1);
+  return {
+    type: m.type,
+    keys,
+    xnum: m.type === "band" ? keys.map((_, i) => i) : m.xnum.slice(lo, hi + 1),
+    labels: m.labels.slice(lo, hi + 1),
+    series: m.series,
+    values: m.values.map((r) => r.slice(lo, hi + 1)),
+    rows: m.rows.map((r) => r.slice(lo, hi + 1)),
+  };
+}
+
+/**
+ * @fires tc-brush - A range of x was picked by dragging or Shift+arrows and Enter, or cleared ({ range }: ChartBrushChange)
+ */
 export abstract class XYChart<T = Row> extends TcChartElement<SeriesDraw, T> {
   /** The x field – dates ("2026-03"), numbers or categories; by default "x" */
   @property({ attribute: false }) accessor x: Accessor<T, unknown> | undefined = undefined;
@@ -54,10 +77,27 @@ export abstract class XYChart<T = Row> extends TcChartElement<SeriesDraw, T> {
   @property({ attribute: false }) accessor referenceLines: XYReferenceLine[] = [];
   /** The y axis' title, above it: a unit, "Requests / min" */
   @property({ attribute: "y-label" }) accessor yLabel: string | undefined = undefined;
+  /** Dragging across the plot (or Shift+arrows, then Enter) picks a range of x: "select" shows its change, high and low; "zoom" narrows the chart to it */
+  @property() accessor brush: BrushMode = "none";
+
+  /** @internal The zoomed range in the full x order, with the data it was picked on */
+  @state() accessor zoomed: { sig: string; range: [number, number] } | null = null;
+  /** @internal Bumped when the picked range changes */
+  @state() accessor brushTick = 0;
+
+  private picker = new ChartBrush({
+    count: () => this.sm.keys.length,
+    indexAt: (x) => nearestIndex(this.g.centers, x),
+    inPlot: (x, y) => x >= this.g.x0 - 4 && x <= this.g.x1 + 4 && y >= this.g.top && y <= this.frame.height - this.g.bottom,
+    keep: () => this.brush !== "zoom",
+    changed: () => this.brushTick++,
+    commit: (r) => this.commitBrush(r),
+  });
+  private full: SeriesModel<T> | null = null;
 
   protected override defaultDuration = 1100;
   protected override stagger = 120;
-  protected override modelKeys = ["x", "y", "series", "curve", "xType", "yDomain", "zero", "colorMode", "endLabels", "maxPoints", "referenceLines", "yLabel", ...this.extraKeys()];
+  protected override modelKeys = ["x", "y", "series", "curve", "xType", "yDomain", "zero", "colorMode", "endLabels", "maxPoints", "referenceLines", "yLabel", "zoomed", ...this.extraKeys()];
 
   protected abstract readonly isArea: boolean;
   /** "none" (overlapping), "stacked" or "percent" – areas only */
@@ -114,7 +154,11 @@ export abstract class XYChart<T = Row> extends TcChartElement<SeriesDraw, T> {
   protected override buildModel(f: ChartFrame): ChartModel<SeriesDraw, T> {
     const { width: W, height: H } = f;
     const isArea = this.isArea;
-    const model0 = prepSeries(this.data, this.x, this.y as never, this.series, { xType: this.xType, locale: f.locale });
+    const full = prepSeries(this.data, this.x, this.y as never, this.series, { xType: this.xType, locale: f.locale });
+    this.full = full;
+    // A zoom holds only for the data it was picked on
+    const z = this.zoomed && this.zoomed.sig === dataSignature(this.data as never) ? this.zoomed.range : null;
+    const model0 = z ? sliceModel(full, z[0], z[1]) : full;
     const nS = model0.series.length;
     const mode = this.stackMode();
     // Stacked layers must share their x, so they're thinned by averaging buckets rather than LTTB
@@ -197,11 +241,84 @@ export abstract class XYChart<T = Row> extends TcChartElement<SeriesDraw, T> {
 
   protected override plotMove(x: number, _y: number, e: PointerEvent) {
     if (!this.g.centers.length) return;
+    // While dragging, the pointed-at point still follows (dragging is mouse and pen only)
+    this.picker.move(x);
     const k = nearestIndex(this.g.centers, x);
     if (k >= 0) this.setActive(k, e.pointerType === "touch" ? "touch" : "pointer");
   }
 
+  protected override plotDown(x: number, y: number, e: PointerEvent) {
+    return this.brush !== "none" && this.picker.down(x, y, e);
+  }
+  protected override plotUp(x: number, _y: number, e: PointerEvent) {
+    if (this.brush !== "none") this.picker.up(x, e);
+  }
+  protected override keyFirst(e: KeyboardEvent) {
+    if (this.brush === "none") return false;
+    if (e.key === "Escape" && this.zoomed && !this.picker.range) {
+      this.zoomed = null;
+      return true;
+    }
+    return this.picker.key(e, this.active);
+  }
+
+  private commitBrush(r: BrushRange | null) {
+    const model = this.sm;
+    const full = this.full ?? model;
+    const at = (key: string, fallback: number) => {
+      const i = full.keys.indexOf(key);
+      return i < 0 ? fallback : i;
+    };
+    const range: XRange | null = r
+      ? { from: at(model.keys[r.from], r.from), to: at(model.keys[r.to], r.to), fromKey: model.keys[r.from], toKey: model.keys[r.to], fromLabel: model.labels[r.from], toLabel: model.labels[r.to] }
+      : null;
+    this.emit<ChartBrushChange>("tc-brush", { range });
+    if (this.brush === "zoom" && range && range.to > range.from) {
+      this.zoomed = { sig: dataSignature(this.data as never), range: [range.from, range.to] };
+      this.picker.clear();
+    }
+  }
+
+  /** The picked range's change, span, highest and lowest point, from the emphasised series */
+  private picked(f: ChartFrame) {
+    const r = this.picker.range;
+    const model = this.sm;
+    if (!r || r.to >= model.keys.length) return null;
+    const hs = [...this.hiSet][0] ?? 0;
+    const vals = model.values[hs] ?? [];
+    let first = NaN;
+    let last = NaN;
+    let maxK = -1;
+    let minK = -1;
+    for (let k = r.from; k <= r.to; k++) {
+      const v = vals[k];
+      if (!Number.isFinite(v)) continue;
+      if (!Number.isFinite(first)) first = v;
+      last = v;
+      if (maxK < 0 || v > vals[maxK]) maxK = k;
+      if (minK < 0 || v < vals[minK]) minK = k;
+    }
+    const ratio = changeRatio(first, last);
+    const main = ratio !== null ? signedPercent(ratio, f.locale) : Number.isFinite(last - first) ? `${last - first >= 0 ? "+" : ""}${f.fv(last - first)}` : "–";
+    const sub = defaultBrushWords.range.replace("{from}", model.labels[r.from]).replace("{to}", model.labels[r.to]);
+    return { r, hs, vals, maxK, minK, main, sub };
+  }
+
+  protected override announcement() {
+    const p = this.picked(this.frame);
+    if (!p || this.picker.dragging) return null;
+    const w = defaultBrushWords;
+    const ext = p.maxK >= 0 ? `, ${w.high.toLowerCase()} ${this.frame.fv(p.vals[p.maxK])}, ${w.low.toLowerCase()} ${this.frame.fv(p.vals[p.minK])}` : "";
+    return `${p.sub}: ${p.main}${ext}.${this.picker.keyboard ? (this.brush === "zoom" ? w.zoomHint : w.pickHint) : ""}`;
+  }
+
+  protected override overlay() {
+    if (!this.zoomed) return nothing;
+    return html`<button type="button" class="tc-btn-sm tc-chart__reset" @click=${() => (this.zoomed = null)}>${defaultBrushWords.reset}<span class="tc-sr-only"> (reset zoom)</span></button>`;
+  }
+
   protected override tip(k: number, f: ChartFrame): TooltipData | null {
+    if (this.picker.dragging) return null;
     const model = this.sm;
     const stacked = this.st;
     const { y, xs, top } = this.g;
@@ -327,11 +444,26 @@ export abstract class XYChart<T = Row> extends TcChartElement<SeriesDraw, T> {
         return svg`<g pointer-events="none"><rect class="tc-xy__ref-back" x=${x1 - w - 8} y=${y(r.y) - 17} width=${w + 8} height="15" rx="5"></rect>${txt(x1 - 4, y(r.y) - 9.5, r.label, { anchor: "end" })}</g>`;
       })}
       ${ends}
+      ${this.brushLayer(f)}
       ${this.xAxis(f)}`;
+  }
+
+  private brushLayer(f: ChartFrame) {
+    const p = this.picked(f);
+    if (!p) return nothing;
+    const { top, bottom, centers, y } = this.g;
+    const stacked = this.st;
+    const yAt = (k: number) => y(stacked ? stacked.y1[p.hs][k] : p.vals[k]);
+    const plotBottom = f.height - bottom;
+    return svg`${brushBand({ x0: centers[p.r.from], x1: centers[p.r.to], top, bottom: plotBottom, width: f.width, main: p.main, sub: p.sub, dragging: this.picker.dragging })}
+      ${p.maxK >= 0 && p.minK >= 0 && p.maxK !== p.minK
+        ? extremeTags({ width: f.width, top, bottom: plotBottom, max: { x: centers[p.maxK], y: yAt(p.maxK), text: f.fv(p.vals[p.maxK]) }, min: { x: centers[p.minK], y: yAt(p.minK), text: f.fv(p.vals[p.minK]) }, words: defaultBrushWords })
+        : nothing}`;
   }
 
   override connectedCallback() {
     adoptStyles("tc-xy", xyCss, this.ownerDocument);
+    adoptStyles("tc-brush", brushCss, this.ownerDocument);
     super.connectedCallback();
   }
 }

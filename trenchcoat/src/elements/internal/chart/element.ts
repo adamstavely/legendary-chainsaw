@@ -38,6 +38,8 @@ export type ChartLabels = {
   table: string;
   empty: string;
   value: string;
+  /** "Share", a part's share of the whole */
+  share: string;
   /** "Chart", read as the plot's role */
   chart: string;
   /** "{label}: {value}, {n} of {count}" – read when the keyboard moves */
@@ -48,6 +50,7 @@ export const defaultChartLabels: ChartLabels = {
   table: "Table",
   empty: "No data to show.",
   value: "Value",
+  share: "Share",
   chart: "Chart",
   position: "{label}: {value}, {n} of {count}",
   more: "and {count} more",
@@ -80,6 +83,16 @@ export type ChartFrame = {
 export const emphasisInk = (hi: boolean) => (hi ? "var(--tc-plot-accent)" : "var(--tc-plot-rest)");
 /** The nth categorical ink (0-based), the accent first, cycling through the six */
 export const categoricalInk = (i: number) => `var(--tc-plot-ink-${(i % 6) + 1})`;
+
+/**
+ * Inks for categories where some are emphasised: the highlighted ones take the accent, the rest the chart inks from
+ * the second on (the first is the accent's own); with nothing highlighted, every one takes the next ink
+ */
+export const emphasisCategorical = (n: number, hi: ReadonlySet<number>) => {
+  if (!hi.size) return Array.from({ length: n }, (_, i) => categoricalInk(i));
+  let k = 0;
+  return Array.from({ length: n }, (_, i) => (hi.has(i) ? emphasisInk(true) : n - hi.size === 1 ? emphasisInk(false) : categoricalInk(1 + (k++ % 5))));
+};
 
 /** The font size the axes are drawn at – the same as --tc-font-size-xs, for measuring labels before drawing */
 export const AXIS_FONT = 11;
@@ -153,6 +166,12 @@ export abstract class TcChartElement<M, T = Row> extends TcElement {
   protected headerLegend(): TemplateResult | typeof nothing {
     return nothing;
   }
+  /** HTML drawn under the SVG – a canvas for charts with too many marks for SVG (internal/chart/canvas.ts) */
+  protected underlay(_frame: ChartFrame): TemplateResult | typeof nothing {
+    return nothing;
+  }
+  /** Called after every render while the plot is drawn – paints the underlay's canvas */
+  protected paintUnderlay?(plot: HTMLElement, frame: ChartFrame): void;
   /** The default move length in ms */
   protected defaultDuration = 900;
   /** The delay between marks when data changes, in ms */
@@ -169,6 +188,11 @@ export abstract class TcChartElement<M, T = Row> extends TcElement {
   private ro?: ResizeObserver;
   private io?: IntersectionObserver;
   private plotEl: Element | null = null;
+
+  /** Whether marks move: not `still`, and the system doesn't ask for reduced motion */
+  protected get motionEnabled() {
+    return !this.still && !reducedMotion() && typeof window !== "undefined";
+  }
 
   /** The words, with the page's over the defaults */
   protected get words(): ChartLabels {
@@ -223,9 +247,8 @@ export abstract class TcChartElement<M, T = Row> extends TcElement {
     const sig = dataSignature(this.data as never);
     if (!this.hasUpdated || shared.some((k) => changed.has(k)) || this.modelKeys.some((k) => changed.has(k)) || changed.has("still") || changed.has("onScreen")) {
       if ([...changed.keys()].some((k) => k !== "onScreen" && k !== "still")) this.model = this.buildModel(this.frame);
-      const enabled = !this.still && !reducedMotion() && typeof window !== "undefined";
       this.motion.sync(this.model.marks, {
-        enabled,
+        enabled: this.motionEnabled,
         active: this.onScreen && this.measured !== null,
         dataKey: sig,
         easing: this.easing,
@@ -239,7 +262,8 @@ export abstract class TcChartElement<M, T = Row> extends TcElement {
 
   protected override updated(changed: PropertyValues) {
     super.updated(changed);
-    const plot = this.querySelector(`#${this.uid}-plot`);
+    const plot = this.querySelector<HTMLElement>(`#${this.uid}-plot`);
+    if (plot && this.measured !== null && this.view === "chart") this.paintUnderlay?.(plot, this.frame);
     if (plot !== this.plotEl) {
       this.ro?.disconnect();
       this.plotEl = plot;
@@ -282,6 +306,10 @@ export abstract class TcChartElement<M, T = Row> extends TcElement {
 
   private onKey = (e: KeyboardEvent) => {
     if (e.target !== e.currentTarget) return;
+    if (this.keyFirst?.(e)) {
+      e.preventDefault();
+      return;
+    }
     const count = this.model.events.length;
     if (!count) return;
     const cur = this.active;
@@ -322,12 +350,41 @@ export abstract class TcChartElement<M, T = Row> extends TcElement {
 
   /** The pointer moved over the plot, at (x, y) in plot px – for charts that read the nearest point, not a mark */
   protected plotMove?(x: number, y: number, e: PointerEvent): void;
+  /** A press on the plot (plot px) – a drag to pick a range; return true to take it */
+  protected plotDown?(x: number, y: number, e: PointerEvent): boolean;
+  /** The press ended (plot px) */
+  protected plotUp?(x: number, y: number, e: PointerEvent): void;
+  /** A key on the plot before the shared keyboard model; return true when handled */
+  protected keyFirst?(e: KeyboardEvent): boolean;
+  /** What the status region says instead of the active mark – a picked range; null for the default */
+  protected announcement(): string | null {
+    return null;
+  }
+  /** HTML over the plot: a button that resets a zoom */
+  protected overlay(_frame: ChartFrame): TemplateResult | typeof nothing {
+    return nothing;
+  }
+  /** The pointer's position in plot px */
+  private plotXY(e: PointerEvent) {
+    const r = (e.currentTarget as Element).querySelector(".tc-chart__svg")?.getBoundingClientRect();
+    if (!r || !r.width) return null;
+    return [((e.clientX - r.left) / r.width) * this.frame.width, ((e.clientY - r.top) / r.height) * this.frame.height] as const;
+  }
   private onMove = (e: PointerEvent) => {
     if (!this.plotMove) return;
-    const svgEl = (e.currentTarget as Element).querySelector("svg");
-    const r = svgEl?.getBoundingClientRect();
-    if (!r || !r.width) return;
-    this.plotMove(((e.clientX - r.left) / r.width) * this.frame.width, ((e.clientY - r.top) / r.height) * this.frame.height, e);
+    const p = this.plotXY(e);
+    if (p) this.plotMove(p[0], p[1], e);
+  };
+  private onDown = (e: PointerEvent) => {
+    const p = this.plotXY(e);
+    if (!p) return;
+    if (this.plotDown?.(p[0], p[1], e)) return;
+    // A tap reads the point under the finger, as a move would
+    if (e.pointerType === "touch") this.plotMove?.(p[0], p[1], e);
+  };
+  private onUp = (e: PointerEvent) => {
+    const p = this.plotXY(e);
+    if (p) this.plotUp?.(p[0], p[1], e);
   };
 
   private onLeave = (e: PointerEvent) => {
@@ -410,9 +467,10 @@ export abstract class TcChartElement<M, T = Row> extends TcElement {
     const name = this.heading || this.kind;
     const activeEvent = this.active !== null ? ev[this.active] : null;
     const live =
-      this.via === "keyboard" && activeEvent
+      this.announcement() ??
+      (this.via === "keyboard" && activeEvent
         ? fill(w.position, { label: activeEvent.series ? `${activeEvent.label} ${activeEvent.series}` : activeEvent.label, value: activeEvent.formatted ?? activeEvent.value ?? "", n: (this.active ?? 0) + 1, count: ev.length })
-        : "";
+        : "");
     const legend = this.headerLegend();
     const head = this.bare
       ? nothing
@@ -437,13 +495,17 @@ export abstract class TcChartElement<M, T = Row> extends TcElement {
         @keydown=${this.onKey}
         @pointerleave=${this.onLeave}
         @pointermove=${this.onMove}
-        @pointerdown=${this.onMove}
+        @pointerdown=${this.onDown}
+        @pointerup=${this.onUp}
+        @pointercancel=${this.onUp}
         @focusout=${this.onBlur}
         ?data-pending=${this.measured === null}
       >
+        ${has && this.measured !== null ? this.underlay(f) : nothing}
         ${has
           ? svg`<svg class="tc-chart__svg" viewBox=${`0 0 ${Math.max(1, f.width)} ${Math.max(1, f.height)}`} height=${f.height} aria-hidden="true">${this.measured === null ? nothing : this.draw(f)}</svg>`
           : html`<p class="tc-chart__empty">${w.empty}</p>`}
+        ${has && this.measured !== null ? this.overlay(f) : nothing}
         ${this.renderTip(f)}
       </div>
       <span class="tc-sr-only" id=${`${id}-read`}>${has ? this.model.summary : w.empty}</span>
@@ -523,7 +585,9 @@ export const chartCss = /* css */ `
 .tc-chart__plot { position: relative; width: 100%; border-radius: var(--tc-radius-sm); }
 .tc-chart__plot:focus-visible { outline: var(--tc-focus-outline); outline-offset: var(--tc-focus-ring-offset); }
 .tc-chart__plot[data-pending] .tc-chart__svg { visibility: hidden; }
-.tc-chart__svg { display: block; width: 100%; overflow: visible; touch-action: pan-y; font-family: inherit; }
+.tc-chart__svg { position: relative; display: block; width: 100%; overflow: visible; touch-action: pan-y; font-family: inherit; }
+/* A canvas under the SVG, for charts with too many marks for SVG */
+.tc-chart__canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
 /* Drawn text: the axes, the values on marks */
 .tc-chart__tick { font-size: var(--tc-font-size-xs); fill: var(--tc-text-muted); font-variant-numeric: tabular-nums; pointer-events: none; }
 .tc-chart__tick[data-strong] { font-weight: var(--tc-font-weight-strong); fill: var(--tc-text-primary); }
@@ -555,7 +619,7 @@ export const chartCss = /* css */ `
 .tc-chart__tip-row { display: flex; align-items: center; justify-content: space-between; gap: var(--tc-space-3); margin-top: var(--tc-space-0-5); }
 .tc-chart__tip-label { display: inline-flex; align-items: center; gap: var(--tc-space-1-5); }
 .tc-chart__tip-row[data-strong] .tc-chart__tip-value { font-weight: var(--tc-font-weight-strong); }
-.tc-chart__tip-swatch { width: 8px; height: 8px; border-radius: var(--tc-radius-xs); }
+.tc-chart__tip-swatch { width: 8px; height: 8px; border-radius: var(--tc-radius-xs); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tc-tooltip-fg) 35%, transparent); }
 /* ----- The legend, in the header ----- */
 .tc-chart__legend { display: flex; flex-wrap: wrap; align-items: center; gap: var(--tc-space-1) var(--tc-space-3); margin: 0; padding: 0; list-style: none; font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); color: var(--tc-text-secondary); }
 .tc-chart__key { display: inline-flex; align-items: center; gap: var(--tc-space-1-5); }

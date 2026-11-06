@@ -42,8 +42,8 @@
     "sort": {
       "type": "string",
       "enum": [
-        "score",
         "share",
+        "score",
         "recent"
       ],
       "description": "The order of the rows. Changed by the user unless a tc-sort-change listener calls preventDefault()"

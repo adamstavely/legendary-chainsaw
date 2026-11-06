@@ -92,6 +92,13 @@ export class MotionController<M> implements ReactiveController {
     if (!this.marks || !this.opts.enabled) return;
     this.engine.hold(this.marks);
     this.phase = "idle";
+    // On screen already: start at once (sync() only runs when a property changes)
+    if (this.opts.active) {
+      this.engine.start(clock());
+      this.generation++;
+      this.phase = "running";
+      this.tickIfMoving();
+    }
     this.host.requestUpdate();
   }
 

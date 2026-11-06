@@ -98,6 +98,16 @@ describe("tc-bar-chart", () => {
     await expect.poll(h, { timeout: 4000 }).toBeLessThan(80);
   });
 
+  test("replay() plays the entrance again from the baseline", async () => {
+    const el = await drawn(await make());
+    const h = () => bars(el)[0].getBBox().height;
+    await expect.poll(h, { timeout: 4000 }).toBeGreaterThan(100);
+    el.replay();
+    await settle();
+    expect(h()).toBeLessThan(100);
+    await expect.poll(h, { timeout: 4000 }).toBeGreaterThan(100);
+  });
+
   test("React wrapper: props reach the element; view is controllable; mark events", async () => {
     const host = document.body.appendChild(document.createElement("div"));
     host.style.width = "600px";

@@ -190,6 +190,9 @@
         "value": {
           "type": "string"
         },
+        "share": {
+          "type": "string"
+        },
         "chart": {
           "type": "string"
         },

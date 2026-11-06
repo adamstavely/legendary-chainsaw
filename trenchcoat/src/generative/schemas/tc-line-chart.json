@@ -101,6 +101,15 @@
       "type": "string",
       "description": "The y axis' title, above it: a unit, \"Requests / min\""
     },
+    "brush": {
+      "type": "string",
+      "enum": [
+        "none",
+        "select",
+        "zoom"
+      ],
+      "description": "Dragging across the plot (or Shift+arrows, then Enter) picks a range of x: \"select\" shows its change, high and low; \"zoom\" narrows the chart to it"
+    },
     "heading": {
       "type": "string",
       "description": "The heading, and the chart's name"
@@ -250,6 +259,9 @@
           "type": "string"
         },
         "value": {
+          "type": "string"
+        },
+        "share": {
           "type": "string"
         },
         "chart": {

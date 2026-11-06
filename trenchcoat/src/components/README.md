@@ -48,6 +48,8 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Budget Burn** (`budget-burn.tsx`) – How fast each budget is being spent – spent against budget, the burn as a bar with a pace marker and Ahead, On or Behind pace in words, people and team, totals in the header and a sort by budget or burn
 - **Budget Guard** (`budget-guard.tsx`) – Spend and token limits for a live run – progress against the cap, a warning as it nears it, a hard stop at it, and raising the cap right from the warning
 - **Bulk Action Bar** (`bulk-action-bar.tsx`) – What can be done to everything selected – how many, the page's actions, Select all and Clear, a question before danger, and Undo for a few seconds afterwards
+- **Bullet Chart** (`bullet-chart.tsx`) – Each measure against its target and poor–fair–good ranges, one row each – the one furthest behind in the accent, its own scale or one shared, quiet or status-tinted bands, values at the right
+- **Bump Chart** (`bump-chart.tsx`) – How items' ranks change step to step, one line each with first place on top – ranks given or worked out from values, the biggest climber in the accent, names at both ends, lines that draw in and glide
 - **Button** (`button.tsx`) – Primary, secondary, ghost and destructive buttons with icons, sizes and a shimmering loading state
 - **Capability Notice** (`capability-notice.tsx`) – When a request falls where the AI is only partly proven or not proven – a capped confidence, who was notified, and how far the request is from the usual
 - **Capacity Bars** (`capacity-bars.tsx`) – How loaded each person is – their allocation split by what they work on, against their capacity on one shared scale, each piece named with its amount, anyone over capacity marked and counted
@@ -101,6 +103,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Document List** (`document-list.tsx`) – Identity and record documents at a glance – type, country, masked numbers shown one at a time, expiry and a status each (Verified, Expired, Flagged, Fraudulent or your own), counted in the header, with View per row
 - **Donut Chart** (`donut-chart.tsx`) – Shares of a whole round a hole holding the total, with a legend of every slice and its share beside or under it, slices that sweep round and a total that counts up
 - **Dropzone** (`dropzone.tsx`) – Drag files in and watch them upload – fanning documents, colored type badges, progress with time left, errors with retry
+- **Dumbbell Chart** (`dumbbell-chart.tsx`) – Two values per item, before and after or target and actual, as a hollow and a solid dot joined by a bar, ordered by the second, the biggest move emphasised, bars that stretch in, and a table view
 - **Element Inspector** (`element-inspector.tsx`) – A page's elements as a tree written like the markup, beside the chosen element's box model and styles; hovering an element fires an event so the page can outline it in a preview.
 - **Email Draft** (`email-draft.tsx`) – Agent-written email for review – switch recipient and tone, edit inline, remove the attachment, send or discard with undo
 - **Engagement Quality** (`engagement-quality.tsx`) – Whether reviews are genuine – an index from reused text, time on the source, batch dismissals and repeated commitments, shown as quality, not a violation
@@ -152,6 +155,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Line Chart** (`line-chart.tsx`) – Values over time as lines – one emphasised against quiet others or each in its own ink – with names at their ends, reference lines and the nearest point read across every series
 - **Lineage Graph** (`lineage-graph.tsx`) – Where an output came from – run, turns, queries and tools, source chunks, claims and artifacts in columns, every node's record a click away
 - **Live View** (`live-view.tsx`) – Watch the agent's screen as it works – its clicks and typing drawn on top, a caption for each step, and Pause or Take over at any moment
+- **Lollipop Chart** (`lollipop-chart.tsx`) – One value per item as a thin stem and dot, ordered from the largest, lying down or upright, the largest emphasised, values past the dots, missing ones written "–", stems that grow in and glide when the data changes, and a table view
 - **Look Provider** (`look-provider.tsx`) – Sets the look, Standard or Clean, for every Trenchcoat element inside it – one wrapper for a whole app, with any element still free to choose its own
 - **Loupe** (`loupe.tsx`) – A design-system inspector over the live page – components outlined with a card of their name, path and links, a breakpoint ruler, flex and grid containers listed – ⌘⇧L to turn it on
 - **MCP connection manager** (`mcp-connection-manager.tsx`) – MCP servers at a glance – status and what each exposes; add one (transport, auth, test), inspect its tools, resources and prompts, connect, retry and remove
@@ -177,6 +181,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Output Schema Builder** (`output-schema-builder.tsx`) – Build a structured-output schema as a tree beside a rendered preview of the answer – types visible, problems flagged on their rows – with raw JSON and the JSON Schema as tabs
 - **Panel Card** (`panel-card.tsx`) – One section of a side panel – a heading, a short value and content that glides open and shut, or a row that opens something else.
 - **Parallel Attempts** (`parallel-attempts.tsx`) – An agent tries the same task several ways at once and the best one wins – every attempt races as a row with its model, approach and live bar, then gets a score; the best is marked and picked, and you can switch to another
+- **Pareto Chart** (`pareto-chart.tsx`) – Which few items make most of a whole – bars from the largest down, the running share as a line across them, a dashed 80% threshold, the bars that reach it emphasised and their share beside the line, with a table view
 - **Permission Request** (`permission-request.tsx`) – An agent asks for one specific right – who, why and exactly what will happen – and you allow it once, for an hour or always; then it folds into one line with the time left and Revoke
 - **Person Hovercard** (`person-hovercard.tsx`) – The profile card behind any name – picture, pronouns, title and team, status, local time and time difference, manager, Email, Message, View profile and links – on hover, focus or tap
 - **Person Links** (`person-links.tsx`) – The people linked to a person or an account – role, an ID or second line, and how strong each link is in words and bars, with a count, a "View network" action and "Show all"
@@ -233,6 +238,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Search History** (`search-history.tsx`) – Recent and saved searches – tabs with counts, a filter, searches grouped by day with scope chips, result counts and times, and Run again, a save star and Remove with Undo on each
 - **Search Results** (`search-results.tsx`) – results of a search across files, grouped by file with the matched text marked, with match case, whole word and regular expression toggles, collapse all, and an optional replace preview.
 - **Secret Field** (`secret-field.tsx`) – A masked credential input with an explicit reveal control
+- **Segmented Bar** (`segmented-bar.tsx`) – Shares of one whole as a single bar cut into parts, with a list of names, values and shares – largest first in the accent, the rest in quiet shades or chart inks, tall or thin, parts that grow and glide
 - **Segmented Control** (`segmented-control.tsx`) – Switch between two to six options – a raised pill or underline that glides, stretches a little and can be dragged across, with icons, counts and badges
 - **Selection Toolbar** (`selection-toolbar.tsx`) – The formatting bar that floats over selected text: quick actions, toggles like bold and italic that show what's on, menus for text style, colour and list, and a link – it fires commands for the page's editor to apply.
 - **Selection Translate** (`selection-translate.tsx`) – Select text and translate it – the translation in a card with the detected language, copy, replace in place and show original
@@ -245,6 +251,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Share Panel** (`share-panel.tsx`) – Share with people and groups at a level for each – every recipient checked for entitlement first, with anyone not authorized flagged, the person sharing told, and left out of the share.
 - **SLA Status** (`sla-status.tsx`) – How well service levels are met – the share on time, a Met / At risk / Breached split in words and marks, a weekly trend, a bar per type of request with a readout, and a period chooser
 - **Slider Field** (`slider-field.tsx`) – A synchronized slider and numeric input
+- **Slope Chart** (`slope-chart.tsx`) – How each item changed between two moments, as lines from first value to last, the biggest rise emphasised, names and values nudged apart on both sides, lines that draw themselves in, and a table view
 - **Smart Recommendation** (`smart-recommendation.tsx`) – Suggestion card with a confidence signal, alternatives to switch to and accept with undo
 - **Sparkline** (`sparkline.tsx`) – A small trend chart that sits in text or a table cell – line, area, bars or win-loss, sized from the text – with markers, a reference line, a tone for which way it went and, when interactive, a tooltip per point
 - **Speed Reader** (`speed-reader.tsx`) – Speed reading one word at a time in a fixed frame – the recognition point on a guide mark, longer pauses at sentence ends, 100–1000 words a minute, 1–3 words at a time, a scrubber with the time left, and the sentence around the word when paused
@@ -283,6 +290,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Version History** (`version-history.tsx`) – The versions of an agent, prompt or workflow – draft, active or deprecated, who and when, and what changed in behaviour
 - **Voice Mode** (`voice-mode.tsx`) – A spoken conversation with the model – live transcript, listening and speaking states, interrupt, mute and end, with captions for every turn
 - **Watchlist** (`watchlist.tsx`) – The people, accounts or entities a team is watching, most at risk first – avatar, reference, case tag and a risk badge in words, with a count, filters by risk and View all
+- **Waterfall Chart** (`waterfall-chart.tsx`) – How a starting figure becomes an ending one – steps up and down bridged by dashed connectors, totals on the baseline, rises and falls in the status inks with a legend, signed changes beside each bar and a table view
 - **Web Vitals** (`web-vitals.tsx`) – A tile per measure (LCP, INP, CLS, FCP, TTFB or the page's own) with its value, a Good / Needs improvement / Poor word, a three-zone track and earlier readings, plus an optional Mobile / Desktop switch.
 - **Work Item** (`work-item.tsx`) – One piece of work as a card – status in words, a note, progress, a due date marked when overdue, people, what it delivers, spent against budget, effort and a "Synced · read-only" source, the whole card opening it
 - **Writing Assistant** (`writing-assistant.tsx`) – AI chat card with a soft gradient glow, suggestions, streaming replies and live voice dictation

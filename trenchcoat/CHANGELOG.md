@@ -1,5 +1,22 @@
 # Changelog
 
+## Unreleased – Charts, part 2: comparison
+
+Part 2 of the ztd-charts port (`audit/ztd-charts-port-plan.md`): eight comparison charts, and more for every chart.
+
+- **Lollipop Chart** (`tc-lollipop-chart`): one value per item as a stem and dot, from the largest.
+- **Dumbbell Chart** (`tc-dumbbell-chart`): two values per item – before and after – as a hollow and a solid dot.
+- **Slope Chart** (`tc-slope-chart`): how each item changed between two moments.
+- **Bump Chart** (`tc-bump-chart`): how ranks change step to step.
+- **Bullet Chart** (`tc-bullet-chart`): measures against targets and ranges, with quiet or status-tinted bands.
+- **Segmented Bar** (`tc-segmented-bar`): shares of one whole as a single bar, with a list.
+- **Waterfall Chart** (`tc-waterfall-chart`): steps up and down from a start to an end, with totals.
+- **Pareto Chart** (`tc-pareto-chart`): bars from the largest with the running share and a threshold.
+- **Line and Area Chart:** `brush="select"` picks a range by dragging (or Shift+arrows and Enter) and shows its change
+  with its high and low; `brush="zoom"` narrows the chart to it, with Show all to undo; `tc-brush` reports the range.
+- **Every chart:** `replay()` plays the entrance again; "Share" is renameable through `labels`; a canvas underlay for
+  charts with thousands of marks.
+
 ## Unreleased – Charts, ported from ztd-charts
 
 The first part of porting [ztd-charts](https://github.com/Junhan2/ztd-charts) (MIT) to Lit

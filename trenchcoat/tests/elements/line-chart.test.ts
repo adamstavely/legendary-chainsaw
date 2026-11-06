@@ -79,6 +79,64 @@ describe("tc-line-chart", () => {
     expect(el.querySelector('[role="status"]')!.textContent).toContain("5000 of 5000");
   });
 
+  const shiftKey = (el: Element, k: string) => el.dispatchEvent(new KeyboardEvent("keydown", { key: k, shiftKey: true, bubbles: true, cancelable: true }));
+
+  test("brush select: Shift+arrows pick a range, Enter settles it with its change, high and low; Escape clears", async () => {
+    const el = await drawn(await make({ still: true }));
+    el.brush = "select";
+    await settle();
+    const ranges: unknown[] = [];
+    el.addEventListener("tc-brush", (e) => ranges.push((e as CustomEvent).detail.range));
+    const p = plot(el);
+    key(p, "Home");
+    shiftKey(p, "ArrowRight");
+    shiftKey(p, "ArrowRight");
+    await settle();
+    expect(el.querySelector(".tc-brush__band")).not.toBeNull();
+    expect(el.querySelector('[role="status"]')!.textContent).toMatch(/to Mar.*: \+45\.2%, high 61 min, low 42 min\. Press Enter to select\./);
+    key(p, "Enter");
+    await settle();
+    expect(ranges).toHaveLength(1);
+    expect(ranges[0]).toMatchObject({ from: 0, to: 2 });
+    expect((ranges[0] as { toLabel: string }).toLabel).toMatch(/^Mar/);
+    expect([...el.querySelectorAll(".tc-brush__tag-text")].map((t) => t.textContent)).toEqual(["High 61 min", "Low 42 min"]);
+    key(p, "Escape");
+    await settle();
+    expect(el.querySelector(".tc-brush__band")).toBeNull();
+    expect(ranges.at(-1)).toBeNull();
+  });
+
+  test("brush zoom: dragging narrows the chart to the range; Show all and Escape undo it", async () => {
+    const el = await drawn(await make({ still: true }));
+    el.brush = "zoom";
+    await settle();
+    const svg = el.querySelector(".tc-chart__svg")!.getBoundingClientRect();
+    const p = plot(el);
+    const at = (type: string, fx: number) =>
+      p.dispatchEvent(new PointerEvent(type, { clientX: svg.left + svg.width * fx, clientY: svg.top + svg.height / 2, bubbles: true, pointerType: "mouse", button: 0, pointerId: 1 }));
+    at("pointerdown", 0.15);
+    at("pointermove", 0.4);
+    at("pointermove", 0.6);
+    at("pointerup", 0.6);
+    await settle();
+    const rows = () => el.querySelectorAll(".tc-sr-only tbody tr").length;
+    expect(rows()).toBeLessThan(5);
+    expect(rows()).toBeGreaterThan(1);
+    el.querySelector<HTMLButtonElement>(".tc-chart__reset")!.click();
+    await settle();
+    expect(rows()).toBe(5);
+    expect(el.querySelector(".tc-chart__reset")).toBeNull();
+    // From the keyboard: pick, Enter zooms, Escape shows everything again
+    key(p, "Home");
+    shiftKey(p, "ArrowRight");
+    key(p, "Enter");
+    await settle();
+    expect(rows()).toBe(2);
+    key(p, "Escape");
+    await settle();
+    expect(rows()).toBe(5);
+  });
+
   test("React wrapper: props reach the element", async () => {
     const host = document.body.appendChild(document.createElement("div"));
     host.style.width = "600px";

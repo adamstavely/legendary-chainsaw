@@ -315,7 +315,8 @@
     "events": [
       "tc-view-change",
       "tc-mark-hover",
-      "tc-mark-click"
+      "tc-mark-click",
+      "tc-brush"
     ]
   },
   {
@@ -500,6 +501,26 @@
       "tc-select-all",
       "tc-clear",
       "tc-undo"
+    ]
+  },
+  {
+    "tag": "tc-bullet-chart",
+    "name": "BulletChart",
+    "description": "Measures against their targets and qualitative ranges, one row each, with the one furthest behind emphasised, the",
+    "events": [
+      "tc-view-change",
+      "tc-mark-hover",
+      "tc-mark-click"
+    ]
+  },
+  {
+    "tag": "tc-bump-chart",
+    "name": "BumpChart",
+    "description": "Ranks changing over steps – one line per item, first place at the top – with the biggest climber emphasised, names",
+    "events": [
+      "tc-view-change",
+      "tc-mark-hover",
+      "tc-mark-click"
     ]
   },
   {
@@ -1006,6 +1027,16 @@
       "tc-drag-start",
       "tc-drag-end",
       "tc-drag-cancel"
+    ]
+  },
+  {
+    "tag": "tc-dumbbell-chart",
+    "name": "DumbbellChart",
+    "description": "Two values per item – before and after, target and actual – as dots joined by a bar, the item that moved most",
+    "events": [
+      "tc-view-change",
+      "tc-mark-hover",
+      "tc-mark-click"
     ]
   },
   {
@@ -1586,7 +1617,8 @@
     "events": [
       "tc-view-change",
       "tc-mark-hover",
-      "tc-mark-click"
+      "tc-mark-click",
+      "tc-brush"
     ]
   },
   {
@@ -1616,6 +1648,16 @@
     "description": "The endless \"Trusted by\" strip: rows of logos that loop, ease to a stop on hover, scrub with inertia and pause for good.",
     "events": [
       "tc-paused-change"
+    ]
+  },
+  {
+    "tag": "tc-lollipop-chart",
+    "name": "LollipopChart",
+    "description": "One value per item as a stem and a dot, ordered from the largest, the largest emphasised, with values past the dots",
+    "events": [
+      "tc-view-change",
+      "tc-mark-hover",
+      "tc-mark-click"
     ]
   },
   {
@@ -1859,6 +1901,16 @@
     "description": "Several attempts at one task, side by side like a race; the best finished one is marked and picked, and you can",
     "events": [
       "tc-picked-change"
+    ]
+  },
+  {
+    "tag": "tc-pareto-chart",
+    "name": "ParetoChart",
+    "description": "Items from the largest down with their running share as a line and a threshold, the few that reach it emphasised,",
+    "events": [
+      "tc-view-change",
+      "tc-mark-hover",
+      "tc-mark-click"
     ]
   },
   {
@@ -2481,6 +2533,16 @@
     ]
   },
   {
+    "tag": "tc-segmented-bar",
+    "name": "SegmentedBar",
+    "description": "Shares of one whole as a single bar cut into parts, the largest emphasised, with a list of names, values and shares",
+    "events": [
+      "tc-view-change",
+      "tc-mark-hover",
+      "tc-mark-click"
+    ]
+  },
+  {
     "tag": "tc-segmented-control",
     "name": "SegmentedControl",
     "description": "Switch between two to six options, with a sliding indicator.",
@@ -2599,6 +2661,16 @@
     "description": "Slider field for AI product settings.",
     "events": [
       "tc-value-change"
+    ]
+  },
+  {
+    "tag": "tc-slope-chart",
+    "name": "SlopeChart",
+    "description": "How each item changed between two moments, as lines from the first value to the last, the biggest rise",
+    "events": [
+      "tc-view-change",
+      "tc-mark-hover",
+      "tc-mark-click"
     ]
   },
   {
@@ -2984,6 +3056,16 @@
       "tc-open",
       "tc-filter-change",
       "tc-action"
+    ]
+  },
+  {
+    "tag": "tc-waterfall-chart",
+    "name": "WaterfallChart",
+    "description": "Steps from a starting figure to an ending one – increases and decreases bridged by connectors, totals on the",
+    "events": [
+      "tc-view-change",
+      "tc-mark-hover",
+      "tc-mark-click"
     ]
   },
   {

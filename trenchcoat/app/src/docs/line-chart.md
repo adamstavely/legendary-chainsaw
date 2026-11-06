@@ -14,6 +14,10 @@ series are thinned to about two points per pixel without losing their peaks.
 The pointer reads the nearest x across every series; dashed `referenceLines` mark a target or a limit. Lines draw
 themselves in when the chart scrolls into view and glide when the data changes. Ported from ztd-charts (MIT).
 
+With `brush="select"`, dragging across the plot (or Shift+arrows and Enter) picks a range and shows its change
+with its highest and lowest points, firing `tc-brush`; `brush="zoom"` narrows the chart to the range, with a Show
+all button to undo it.
+
 ## When to use
 
 - A trend over time, with one series to watch against others.
@@ -50,7 +54,8 @@ they stay legible whatever the inks are. `still` (or the system's reduced-motion
 | Arrow keys | Move to the next or previous point; the tooltip shows it and it's read with its value |
 | Home / End | The first or last point |
 | Enter / Space | Picks the point (fires `tc-mark-click`) |
-| Escape | Lets go of the point; pressed again, it's the page's |
+| Shift + ← / → | With `brush`, widens a range from the point; Enter settles it (or zooms into it) |
+| Escape | Clears a picked range, then a zoom, then lets go of the point; pressed again, it's the page's |
 
 ## Screen readers
 

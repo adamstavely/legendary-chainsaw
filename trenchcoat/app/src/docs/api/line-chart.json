@@ -48,6 +48,12 @@
      "detail": "",
      "description": "An x was clicked, or picked with Enter or Space ({ event }: ChartMarkClick)",
      "cancelable": false
+    },
+    {
+     "name": "tc-brush",
+     "detail": "",
+     "description": "A range of x was picked by dragging or Shift+arrows and Enter, or cleared ({ range }: ChartBrushChange)",
+     "cancelable": false
     }
    ],
    "slots": [],
@@ -98,6 +104,12 @@
      "type": "(event: ChartEvent) => void",
      "optional": true,
      "description": "A mark was clicked, or picked with Enter or Space"
+    },
+    {
+     "name": "onBrush",
+     "type": "(range: XRange | null) => void",
+     "optional": true,
+     "description": "A range of x was picked (with `brush`), or cleared (null)"
     }
    ],
    "hides": [
@@ -108,7 +120,8 @@
    "events": {
     "tc-view-change": null,
     "tc-mark-hover": "onMarkHover",
-    "tc-mark-click": "onMarkClick"
+    "tc-mark-click": "onMarkClick",
+    "tc-brush": "onBrush"
    }
   }
  ],
@@ -140,6 +153,10 @@
     },
     {
      "name": "tc-mark-click",
+     "cancelable": false
+    },
+    {
+     "name": "tc-brush",
      "cancelable": false
     }
    ],
@@ -205,6 +222,7 @@
     "progressive": false,
     "why": "Tints and washes mixed from the tokens.",
     "via": [
+     "internal/chart/element",
      "tokens.css"
     ]
    },
@@ -361,6 +379,7 @@
      "internal/card-head",
      "internal/kit",
      "internal/chart/element",
+     "internal/chart/brush",
      "tokens.css"
     ]
    }
@@ -398,7 +417,7 @@
   "windowed": false
  },
  "size": {
-  "min": 61418,
-  "gzip": 22199
+  "min": 70273,
+  "gzip": 25229
  }
 }
