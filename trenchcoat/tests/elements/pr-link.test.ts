@@ -12,7 +12,7 @@ import { afterEach, describe, expect, test } from "vitest";
 import "../../src/elements/pr-link";
 import type { PrLinkOpenChange, TcPrLink } from "../../src/elements/pr-link";
 import { PrLink } from "../../src/elements/react/pr-link";
-import { cleanup, fixture, settle } from "./helpers";
+import { cleanup, finish, fixture, settle } from "./helpers";
 
 afterEach(cleanup);
 
@@ -192,6 +192,8 @@ describe("tc-pr-link", () => {
       expect(closed.violations.flatMap((v) => v.nodes.map((n) => `${scheme} ${v.id} ${n.html.slice(0, 90)} ${n.any[0]?.message ?? ""}`))).toEqual([]);
       link.focus();
       await settle();
+      // Contrast is measured on the card's settled colours, not mid fade-in
+      await finish(document.body);
       // The whole page, as the card sits in the top layer – without "region", which is about the test page's landmarks
       const r = await axe.run(document.body, { rules: { region: { enabled: false } } });
       expect(r.violations.flatMap((v) => v.nodes.map((n) => `${scheme} ${v.id} ${n.html.slice(0, 90)} ${n.any[0]?.message ?? ""}`))).toEqual([]);

@@ -53,8 +53,8 @@
     "fit": {
       "type": "string",
       "enum": [
-        "fill",
         "compact",
+        "fill",
         "wide"
       ],
       "description": "The card's width: \"compact\" (up to 360 px), \"wide\" (up to 560 px) or \"fill\" (no maximum)"

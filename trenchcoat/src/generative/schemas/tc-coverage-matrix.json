@@ -64,8 +64,8 @@
     "defaultStatus": {
       "type": "string",
       "enum": [
-        "partial",
         "none",
+        "partial",
         "covered",
         "gap"
       ],
@@ -78,10 +78,10 @@
     "statusLabels": {
       "type": "object",
       "properties": {
-        "partial": {
+        "none": {
           "type": "string"
         },
-        "none": {
+        "partial": {
           "type": "string"
         },
         "covered": {

@@ -76,6 +76,9 @@
         "messages": {
           "type": "string"
         },
+        "stack": {
+          "type": "string"
+        },
         "clear": {
           "type": "string"
         },
@@ -83,9 +86,6 @@
           "type": "string"
         },
         "noMatches": {
-          "type": "string"
-        },
-        "stack": {
           "type": "string"
         },
         "times": {

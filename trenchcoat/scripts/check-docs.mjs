@@ -80,8 +80,10 @@ for (const slug of slugs) {
   for (const r of (meta.related ?? "").split(",").map((x) => x.trim()).filter(Boolean)) if (!library.has(r)) add(slug, `related "${r}" isn't a component`);
 
   // Anatomy selectors: every class they name must appear in the element's or the wrapper's source (or be the shared
-  // card header's, .tc-head*, which internal/card-head.ts renders)
-  const code = [`src/elements/${slug}.ts`, `src/elements/react/${slug}.ts`].filter(existsSync).map((f) => readFileSync(f, "utf8")).join("\n");
+  // card header's, .tc-head*, which internal/card-head.ts renders); a chart built on internal/chart also renders the
+  // shared chart parts there
+  let code = [`src/elements/${slug}.ts`, `src/elements/react/${slug}.ts`].filter(existsSync).map((f) => readFileSync(f, "utf8")).join("\n");
+  if (code.includes("./internal/chart/")) code += readdirSync("src/elements/internal/chart").map((f) => readFileSync(join("src/elements/internal/chart", f), "utf8")).join("\n");
   for (const m of source.matchAll(/^\d+\.\s+\*\*.+?\*\*\s+`([^`]+)`/gm))
     for (const cls of m[1].match(/\.([\w-]+)/g) ?? []) if (!cls.startsWith(".tc-head") && !code.includes(cls.slice(1))) add(slug, `anatomy selector ${m[1]} names ${cls}, which the element never renders`);
 
