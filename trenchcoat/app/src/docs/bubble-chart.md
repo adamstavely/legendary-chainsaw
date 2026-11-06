@@ -15,6 +15,10 @@ Circles grow in from left to right when the chart scrolls into view and glide wh
 `canvas-threshold` points (1,500 by default) they're painted on a canvas under the drawing, which keeps the axes and
 the active point. Ported from ztd-charts (MIT).
 
+`trend="linear"` fits a least-squares line across the points' x range, dashed over them, with its r² beside its end
+on a chip of the card's colour, and `trend-band` shades the 95% confidence band of the fit. `trend="smooth"` draws a
+LOESS curve instead, for a relationship that bends. The summary says which trend is drawn and its r².
+
 ## When to use
 
 - Showing how two measures relate across a set of items – staff and papers, cost and speed.
@@ -33,15 +37,16 @@ the active point. Ported from ztd-charts (MIT).
 2. **Circle** `.ui-bbl__dot` – one per point; the emphasised one in the accent
 3. **Name** `.tc-chart__value` – a point's name beside its circle
 4. **Axis** `.tc-chart__grid` – the y grid lines and their values, the x values below, and the axes' names
-5. **Canvas** `.tc-chart__canvas` – the circles, painted, past the threshold
-6. **Tooltip** `.tc-chart__tip` – the point's name, x, y and size
+5. **Trend** `.ui-bbl__trend` – the fitted line, with its r² and, with `trend-band`, its band `.ui-bbl__band`
+6. **Canvas** `.tc-chart__canvas` – the circles, painted, past the threshold
+7. **Tooltip** `.tc-chart__tip` – the point's name, x, y and size
 
 ## Looks
 
 Standard puts the header on the gray tray above a white card; Clean is one white card with the header as its first
 row; `bare` drops both, for a chart inside another component. Inks come from the chart tokens through overridable
 component tokens on the element: `--tc-plot-accent` and `--tc-plot-rest` for emphasis, `--tc-plot-grid` for grid
-lines, and `--tc-plot-bg` for the line parting overlapping circles. The canvas reads the same tokens, so it follows the
+lines, `--tc-plot-bg` for the line parting overlapping circles, and `--tc-bbl-trend` for the trend line and its band. The canvas reads the same tokens, so it follows the
 look and the theme. Names are written in the text inks beside the circles, never on them. `still` (or the system's
 reduced-motion setting) draws everything at once.
 
@@ -68,6 +73,7 @@ reduced-motion setting) draws everything at once.
 - Name the axes with `x-label` and `y-label`, and say what size means in the description.
 - Give each point a `label` so it can be named; without one it's numbered.
 - Use `x-format` and `format` for the two axes' numbers.
+- Draw a trend only where a straight (or smooth) relationship is the point; say in the description what it shows.
 
 ## Do
 

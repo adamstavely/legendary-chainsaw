@@ -71,6 +71,14 @@ export class LineChart {
   @Input() set yLabel(v: TcLineChart["yLabel"]) {
     this.#el.yLabel = v;
   }
+  /** A band's low edge round each line – an uncertainty or forecast range – with `upper`; with a list of y fields only the emphasised series has one. Not for stacked areas */
+  @Input() set lower(v: TcLineChart["lower"]) {
+    this.#el.lower = v;
+  }
+  /** A band's high edge, with `lower` */
+  @Input() set upper(v: TcLineChart["upper"]) {
+    this.#el.upper = v;
+  }
   /** Dragging across the plot (or Shift+arrows, then Enter) picks a range of x: "select" shows its change, high and low; "zoom" narrows the chart to it */
   @Input() set brush(v: TcLineChart["brush"]) {
     this.#el.brush = v;

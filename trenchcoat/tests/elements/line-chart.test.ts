@@ -137,6 +137,38 @@ describe("tc-line-chart", () => {
     expect(rows()).toBe(5);
   });
 
+  test("lower and upper shade a band round each series, inside the y range, and read with its values", async () => {
+    const data = QUEUE.map((r) => ({ ...r, lo: r.y * 0.8, hi: r.y * 1.25 }));
+    const el = await drawn(await make({ still: true, data }));
+    expect(el.querySelector(".tc-xy__band")).toBeNull();
+    el.lower = "lo";
+    el.upper = "hi";
+    await settle();
+    const bands = [...el.querySelectorAll<SVGPathElement>(".tc-xy__band")];
+    expect(bands).toHaveLength(2);
+    expect(bands.filter((b) => b.hasAttribute("data-hi"))).toHaveLength(1);
+    // Each in its series' ink, drawn under its line
+    expect(bands.map((b) => b.style.fill).sort()).toEqual(["var(--tc-plot-accent)", "var(--tc-plot-line-rest)"]);
+    expect(bands[0].nextElementSibling?.classList.contains("tc-xy__line")).toBe(true);
+    // The axis grows to hold the band (GPU's top is 70 × 1.25): no edge goes above the plot's top
+    const ys = bands.flatMap((b) => b.getAttribute("d")!.match(/-?\d+(\.\d+)?/g)!.map(Number).filter((_, i) => i % 2 === 1));
+    expect(Math.min(...ys)).toBeGreaterThanOrEqual(9);
+    expect(el.querySelector(".tc-sr-only table tbody tr")!.textContent).toMatch(/GPU 42 min \(33\.6 min–52\.5 min\)/);
+  });
+
+  test("a wide table's band belongs to the emphasised series; stacked areas have none", async () => {
+    const wide = MONTHS.map((x, k) => ({ x, gpu: [42, 48, 61, 55, 70][k], cpu: [12, 14, 13, 16, 18][k], lo: 30, hi: 80 }));
+    const el = await drawn(await make({ still: true, data: wide }));
+    el.series = undefined;
+    el.y = ["gpu", "cpu"];
+    el.lower = "lo";
+    el.upper = "hi";
+    await settle();
+    const bands = [...el.querySelectorAll(".tc-xy__band")];
+    expect(bands).toHaveLength(1);
+    expect(bands[0].hasAttribute("data-hi")).toBe(true);
+  });
+
   test("React wrapper: props reach the element", async () => {
     const host = document.body.appendChild(document.createElement("div"));
     host.style.width = "600px";

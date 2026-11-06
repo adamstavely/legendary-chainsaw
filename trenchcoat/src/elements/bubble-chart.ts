@@ -5,11 +5,13 @@ import { canvasUnderlay, paintCanvas } from "./internal/chart/canvas";
 import { AXIS_FONT, emphasisInk, TcChartElement, type ChartFrame, type ChartModel } from "./internal/chart/element";
 import { numGetter, strGetter } from "./internal/chart/accessor";
 import { makeTickFormatter, type FormatSpec, type ValueFormatter } from "./internal/chart/format";
+import { areaPath, linePath } from "./internal/chart/geometry";
 import { resolveHighlight } from "./internal/chart/highlight";
 import { plural } from "./internal/chart/i18n";
 import { lazyArray } from "./internal/chart/lazy";
 import { extent, fitDomain, scaleLinear, scaleSqrt } from "./internal/chart/scale";
-import { labelBox, overlaps, type Box } from "./internal/chart/text";
+import { linearFit, loess } from "./internal/chart/stats";
+import { labelBox, overlaps, textWidth, type Box } from "./internal/chart/text";
 import type { Accessor, ChartEvent, Row, TooltipData } from "./internal/chart/types";
 
 /*
@@ -18,7 +20,8 @@ import type { Accessor, ChartEvent, Row, TooltipData } from "./internal/chart/ty
  * stay quiet (`highlight` picks others; a scatter plot emphasises none by default); the emphasised and then the
  * largest are named beside their circles where the names fit, up to `max-labels`. Circles grow in from left to right
  * when the chart comes on screen and glide when the data changes. Above `canvas-threshold` points (1500) they're
- * painted on a canvas under the SVG, which keeps the axes and the active point.
+ * painted on a canvas under the SVG, which keeps the axes and the active point. `trend` fits a line through them –
+ * least squares ("linear", with its r² beside it and, with `trend-band`, its 95% confidence band) or LOESS ("smooth").
  *   · one tab stop: arrows move point to point in data order, each read with x, y and size
  * Standard: the header on a gray tray above a white card. Clean: one white card, the header its first row.
  *
@@ -32,6 +35,13 @@ type Dot = { i: number; x: number; y: number; r: number; vx: number; vy: number;
 /** A circle, or null for the canvas's single progress mark */
 type DotMark = Dot | null;
 type Label = { d: Dot; x: number; y: number; anchor: "start" | "end" | "middle" };
+/** A trend line's samples across x, in px, with its band and its label */
+type Trend = { xs: number[]; ys: number[]; lo: number[] | null; up: number[] | null; label: { text: string; x: number; y: number } | null };
+
+export type BubbleTrend = "none" | "linear" | "smooth";
+
+/** Samples along a trend line */
+const TS = 48;
 
 /** Drawing order: the emphasised on top, then the smaller. Above 0, a is drawn over b */
 const drawOrder = (a: Dot, b: Dot) => Number(a.hi) - Number(b.hi) || b.r - a.r;
@@ -69,13 +79,17 @@ export class TcBubbleChart<T = Row> extends TcChartElement<DotMark, T> {
   @property({ type: Number, attribute: "canvas-threshold" }) accessor canvasThreshold = 1500;
   /** How x values are written; `format` writes y */
   @property({ attribute: false }) accessor xFormat: FormatSpec | undefined = undefined;
+  /** A line fitted through the points: "linear" (least squares, its r² beside it) or "smooth" (LOESS); none by default */
+  @property() accessor trend: BubbleTrend = "none";
+  /** Shades the 95% confidence band round a linear trend */
+  @property({ type: Boolean, attribute: "trend-band" }) accessor trendBand = false;
 
   protected override get kind() {
     return this.size !== undefined ? "Bubble chart" : "Scatter plot";
   }
   protected override readonly icon = bubbleIcon;
   protected override defaultDuration = 800;
-  protected override modelKeys = ["x", "y", "size", "label", "sizeRange", "xLabel", "yLabel", "zero", "maxLabels", "canvasThreshold", "xFormat"];
+  protected override modelKeys = ["x", "y", "size", "label", "sizeRange", "xLabel", "yLabel", "zero", "maxLabels", "canvasThreshold", "xFormat", "trend", "trendBand"];
 
   private dots: Dot[] = [];
   private grid = { cells: new Map<string, number[]>(), cell: 24 };
@@ -92,6 +106,7 @@ export class TcBubbleChart<T = Row> extends TcChartElement<DotMark, T> {
     yFmt: String as ValueFormatter,
     labels: [] as Label[],
     canvas: false,
+    trend: null as Trend | null,
   };
   private painted = "";
 
@@ -174,20 +189,68 @@ export class TcBubbleChart<T = Row> extends TcChartElement<DotMark, T> {
       }
     }
     const xTicks = xs.ticks(Math.max(2, Math.round(W / 110)));
-    this.geo = { left, top, bottom, rMax, xs, ys, xTicks, yTicks, xFmt, yFmt, labels, canvas };
+
+    // The trend, sampled across the points' own x range, never past it
+    let trend: Trend | null = null;
+    let trendWords = "";
+    if (this.trend !== "none" && n >= 3 && xmx > xmn) {
+      const vx = raw.map((r) => r.x);
+      const vy = raw.map((r) => r.y);
+      const at = Array.from({ length: TS }, (_, k) => xmn + ((xmx - xmn) * k) / (TS - 1));
+      const fit = this.trend === "linear" ? linearFit(vx, vy) : null;
+      const line = fit ? at.map((x) => fit.at(x)) : this.trend === "smooth" ? loess(vx, vy, at) : [];
+      if (line.length && line.every(Number.isFinite)) {
+        // Kept inside the plot: a steep line or a wide band is cut at its edges
+        const clampY = (v: number) => Math.max(top, Math.min(H - bottom, ys(v)));
+        const band = fit && this.trendBand;
+        trend = {
+          xs: at.map((x) => xs(x)),
+          ys: line.map(clampY),
+          lo: band ? at.map((x, k) => clampY(line[k] - fit.half(x))) : null,
+          up: band ? at.map((x, k) => clampY(line[k] + fit.half(x))) : null,
+          label: null,
+        };
+        const r2 = fit ? fit.r2.toLocaleString(f.locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "";
+        trendWords = fit ? ` Linear trend, r² ${r2}.` : " Smooth trend.";
+        if (fit && !this.hideLabels) {
+          // r² beside the line's right end, above it or below, where it overlaps no circle or name
+          const text = `r² ${r2}`;
+          const ex = trend.xs[TS - 1];
+          const ey = trend.ys[TS - 1];
+          const taken: Box[] = [
+            ...dots.map((d) => ({ x: d.x - d.r, y: d.y - d.r, w: d.r * 2, h: d.r * 2 })),
+            ...labels.map((l) => labelBox(l.d.label, l.x, l.y, AXIS_FONT, l.anchor, l.d.hi ? 700 : 500)),
+          ];
+          for (const ty of [ey - 9, ey + 13]) {
+            const b = labelBox(text, ex, ty, AXIS_FONT, "end", 600);
+            if (b.x < left || b.y < top - 8 || b.y + b.h > H - bottom) continue;
+            if (n <= 400 && taken.some((q) => overlaps(q, b, 1))) continue;
+            trend.label = { text, x: ex, y: ty };
+            break;
+          }
+        }
+      }
+    }
+    this.geo = { left, top, bottom, rMax, xs, ys, xTicks, yTicks, xFmt, yFmt, labels, canvas, trend };
     this.painted = "";
 
     const D = this.duration ?? this.defaultDuration;
     const xr = W || 1;
-    const marks = canvas
+    const marks: ChartModel<DotMark, T>["marks"] = canvas
       ? [{ key: "__p", to: [1], from: [0], data: null }]
       : [...dots].sort(drawOrder).map((d) => ({ key: `b${d.i}:${d.label}`, to: [d.x, d.y, d.r], from: [d.x, d.y, 0], enter: [d.x, d.y, 0], delay: (d.x / xr) * D * 0.55, data: d as DotMark }));
+    // The trend glides with the data; it comes in after the points
+    if (trend) {
+      const to = [...trend.ys, ...(trend.lo ?? []), ...(trend.up ?? [])];
+      const mid = [...trend.ys, ...trend.ys, ...trend.ys].slice(0, to.length);
+      marks.push({ key: "__t", to, from: mid, enter: mid, delay: D * 0.45, data: null });
+    }
     const { fv, fmt } = f;
     const events: ChartEvent<T>[] = lazyArray(n, (k) => {
       const d = dots[k];
       return { datum: raw[k].d, index: k, key: `${k}`, label: d.label || this.nth(k + 1), value: hasSize ? d.vs : d.vy, formatted: `x ${xFmt(d.vx)}, y ${fv(d.vy)}${hasSize ? `, size ${fmt(d.vs)}` : ""}` };
     });
-    const summary = `${plural(n, "point")}. x from ${xFmt(xmn)} to ${xFmt(xmx)}, y from ${yFmt(ymn)} to ${yFmt(ymx)}.`;
+    const summary = `${plural(n, "point")}. x from ${xFmt(xmn)} to ${xFmt(xmx)}, y from ${yFmt(ymn)} to ${yFmt(ymx)}.${trendWords}`;
     return { marks, events, summary };
   }
 
@@ -279,18 +342,29 @@ export class TcBubbleChart<T = Row> extends TcChartElement<DotMark, T> {
 
   protected override draw(f: ChartFrame) {
     const { width: W, height: H } = f;
-    const { left, bottom, xs, ys, xTicks, yTicks, xFmt, yFmt, labels, canvas } = this.geo;
+    const { left, bottom, xs, ys, xTicks, yTicks, xFmt, yFmt, labels, canvas, trend } = this.geo;
     const hasSize = this.size !== undefined;
     const m = this.motion;
     const D = this.duration ?? this.defaultDuration;
     const active = this.active !== null ? this.dots[this.active] : undefined;
     const fade = m.fade(D * 0.6, 300);
+    // The trend's samples as they glide: the line, then the band's low and high edges
+    let trendLine: unknown = nothing;
+    let trendBand: unknown = nothing;
+    if (trend) {
+      const v = m.get("__t") ?? [...trend.ys, ...(trend.lo ?? []), ...(trend.up ?? [])];
+      const pt = (off: number) => trend.xs.map((x, k) => [x, v[off + k] ?? trend.ys[k]] as [number, number]);
+      const tf = m.fade(D * 0.9, 300);
+      trendLine = svg`<path class="ui-bbl__trend" d=${linePath(pt(0), this.trend === "smooth" ? "smooth" : "linear")} opacity=${tf}></path>`;
+      if (trend.lo && trend.up) trendBand = svg`<path class="ui-bbl__band" d=${areaPath(pt(TS * 2), pt(TS), "smooth")} opacity=${tf}></path>`;
+    }
     return svg`
       <rect class="tc-chart__hit" x="0" y="0" width=${W} height=${H} @click=${() => this.active !== null && this.clickMark(this.active)}></rect>
       ${this.yLabel ? txt(left, 6, this.yLabel) : nothing}
       ${gridY({ ticks: yTicks, y: ys, x0: left, x1: W, fmt: yFmt, locale: f.locale })}
       <g>${xTicks.map((t) => txt(xs(t), H - bottom + 13, xFmt(t), { anchor: "middle" }))}</g>
       ${this.xLabel ? txt(W - 2, H - bottom - 8, this.xLabel, { anchor: "end" }) : nothing}
+      ${trendBand}
       ${canvas
         ? active
           ? svg`<circle class="tc-chart__focus" cx=${active.x} cy=${active.y} r=${active.r + 2}></circle>`
@@ -306,14 +380,29 @@ export class TcBubbleChart<T = Row> extends TcChartElement<DotMark, T> {
               opacity=${it.exiting ? 0.3 : this.active === null || isA ? 1 : 0.55}
               @pointerenter=${h.enter} @click=${h.click}></circle>`;
           })}
-      ${labels.map((l) => txt(l.x, l.y, l.d.label, { anchor: l.anchor, cls: "value", strong: l.d.hi, opacity: fade }))}`;
+      ${trendLine}
+      ${labels.map((l) => txt(l.x, l.y, l.d.label, { anchor: l.anchor, cls: "value", strong: l.d.hi, opacity: fade }))}
+      ${trend?.label ? this.trendLabel(trend.label, m.fade(D * 0.9, 300)) : nothing}`;
+  }
+
+  /** r² on a chip of the card's colour: on a canvas, past the threshold, it may sit over painted points */
+  private trendLabel(l: { text: string; x: number; y: number }, opacity: number) {
+    const w = textWidth(l.text, AXIS_FONT, 600);
+    return svg`<g pointer-events="none" opacity=${opacity}><rect class="ui-bbl__trend-back" x=${l.x - w - 5} y=${l.y - 8} width=${w + 8} height="16" rx="5"></rect>${txt(l.x - 1, l.y, l.text, { anchor: "end", cls: "value" })}</g>`;
   }
 
   static override css = /* css */ `
+[data-ui="bbl"] {
+  --tc-bbl-trend: var(--tc-text-primary);
+}
 /* Circles are parted by a line of the card's colour; the active one is ringed */
 .ui-bbl__dot { stroke: var(--tc-plot-bg); stroke-width: 0.6; }
 .ui-bbl__dot[data-sized] { stroke-width: 1.2; }
 .ui-bbl__dot[data-active] { stroke: var(--tc-plot-focus); stroke-width: 2; }
+/* The trend: a dashed line over the points, its band a faint wash under them */
+.ui-bbl__trend { fill: none; stroke: var(--tc-bbl-trend); stroke-width: 1.8; stroke-dasharray: 6 4; stroke-linecap: round; pointer-events: none; }
+.ui-bbl__band { fill: var(--tc-bbl-trend); fill-opacity: 0.08; stroke: none; pointer-events: none; }
+.ui-bbl__trend-back { fill: var(--tc-plot-bg); opacity: 0.94; }
 @media (forced-colors: active) {
   .ui-bbl__dot { forced-color-adjust: none; }
 }

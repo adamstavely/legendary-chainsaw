@@ -2,13 +2,15 @@
  * What Line Chart and Area Chart share (ported from ztd-charts' XYChart, MIT, © 2026 Junhan2 –
  * https://github.com/Junhan2/ztd-charts): values over x – dates, numbers or categories – as lines or filled areas, the
  * nearest x under the pointer read across every series, names at the lines' ends, reference lines, and long series
- * thinned to about two points per pixel.
+ * thinned to about two points per pixel. Not from ztd: `lower` and `upper` shade a band round each line – an
+ * uncertainty or forecast range – that glides with it.
  */
 import { html, nothing, svg } from "lit";
 import { property, state } from "lit/decorators.js";
 import { fitTickLabels, gridY, thinLabels, txt, yAxisWidth } from "./axis";
 import { brushBand, ChartBrush, changeRatio, defaultBrushWords, extremeTags, signedPercent, type BrushMode, type BrushRange, type XRange } from "./brush";
 import { AXIS_FONT, categoricalInk, emphasisInk, registerChartSheet, TcChartElement, type ChartFrame, type ChartModel } from "./element";
+import { numGetter } from "./accessor";
 import { makeTickFormatter } from "./format";
 import { areaPath, linePath, nearestIndex, type Curve } from "./geometry";
 import { resolveHighlight } from "./highlight";
@@ -25,7 +27,8 @@ export type XYReferenceLine = { y: number; label?: string };
 /** Details of tc-brush */
 export type ChartBrushChange = { range: XRange | null };
 
-type SeriesDraw = { s: number; name: string; pts: number[]; xs: number[]; base?: number[]; ink: string; hi: boolean };
+/** A series as drawn: its points, an area's floor, and its band's x, low and high edges (px) where it has one */
+type SeriesDraw = { s: number; name: string; pts: number[]; xs: number[]; base?: number[]; band?: { xs: number[]; lo: number[]; up: number[] }; ink: string; hi: boolean };
 
 let gradCount = 0;
 
@@ -76,6 +79,10 @@ export abstract class XYChart<T = Row> extends TcChartElement<SeriesDraw, T> {
   @property({ attribute: false }) accessor referenceLines: XYReferenceLine[] = [];
   /** The y axis' title, above it: a unit, "Requests / min" */
   @property({ attribute: "y-label" }) accessor yLabel: string | undefined = undefined;
+  /** A band's low edge round each line – an uncertainty or forecast range – with `upper`; with a list of y fields only the emphasised series has one. Not for stacked areas */
+  @property({ attribute: false }) accessor lower: Accessor<T, number> | undefined = undefined;
+  /** A band's high edge, with `lower` */
+  @property({ attribute: false }) accessor upper: Accessor<T, number> | undefined = undefined;
   /** Dragging across the plot (or Shift+arrows, then Enter) picks a range of x: "select" shows its change, high and low; "zoom" narrows the chart to it */
   @property() accessor brush: BrushMode = "none";
 
@@ -96,7 +103,7 @@ export abstract class XYChart<T = Row> extends TcChartElement<SeriesDraw, T> {
 
   protected override defaultDuration = 1100;
   protected override stagger = 120;
-  protected override modelKeys = ["x", "y", "series", "curve", "xType", "yDomain", "zero", "colorMode", "endLabels", "maxPoints", "referenceLines", "yLabel", "zoomed", ...this.extraKeys()];
+  protected override modelKeys = ["x", "y", "series", "curve", "xType", "yDomain", "zero", "colorMode", "endLabels", "maxPoints", "referenceLines", "yLabel", "lower", "upper", "zoomed", ...this.extraKeys()];
 
   protected abstract readonly isArea: boolean;
   /** "none" (overlapping), "stacked" or "percent" – areas only */
@@ -118,6 +125,8 @@ export abstract class XYChart<T = Row> extends TcChartElement<SeriesDraw, T> {
   private gid = `tc-xy-${++gradCount}`;
   private sm: SeriesModel<T> = { type: "band", keys: [], xnum: [], labels: [], series: [], values: [], rows: [] };
   private st: ReturnType<typeof stack> | null = null;
+  /** Each series' band, [low, high] at each x, or null where it has none */
+  private bands: ([number, number] | null)[][] | null = null;
   private draws: SeriesDraw[] = [];
   private hiSet: ReadonlySet<number> = new Set();
   private g = {
@@ -170,11 +179,29 @@ export abstract class XYChart<T = Row> extends TcChartElement<SeriesDraw, T> {
     this.hiSet = hi;
     // Lines emphasise by default; several areas take the inks in order
     const categorical = this.colorMode ? this.colorMode === "categorical" : isArea && nS > 1;
+    // Bands, read from each series' own rows: a wide table's rows are shared, so only the emphasised series takes them
+    const wide = Array.isArray(this.y);
+    let bands: ([number, number] | null)[][] | null = null;
+    if (mode === "none" && this.lower !== undefined && this.upper !== undefined) {
+      const gl = numGetter(this.lower, "lower");
+      const gu = numGetter(this.upper, "upper");
+      bands = model.series.map((_, s) =>
+        model.keys.map((_, k) => {
+          const r = model.rows[s]?.[k];
+          if (!r || (wide && !hi.has(s))) return null;
+          const a = gl(r, k);
+          const b = gu(r, k);
+          return Number.isFinite(a) && Number.isFinite(b) ? [Math.min(a, b), Math.max(a, b)] : null;
+        }),
+      );
+    }
+    this.bands = bands;
     const inkOf = (s: number) => (categorical ? categoricalInk(s) : hi.has(s) ? emphasisInk(true) : isArea ? emphasisInk(false) : LINE_REST);
 
     const allY: number[] = [];
     if (stacked) stacked.y1.forEach((r) => r.forEach((v) => allY.push(v)));
     else model.values.forEach((r) => r.forEach((v) => Number.isFinite(v) && allY.push(v)));
+    bands?.forEach((r) => r.forEach((b) => b && allY.push(b[0], b[1])));
     // A reference line outside the data still fits in the drawing
     this.referenceLines.forEach((r) => allY.push(r.y));
     const [mn, mx] = extent(allY.length ? allY : [0, 1]);
@@ -202,18 +229,26 @@ export abstract class XYChart<T = Row> extends TcChartElement<SeriesDraw, T> {
       if (idx.length > maxPts) idx = lttb(idx.map((k) => ({ x: xs(k), y: stacked ? stacked.y1[s][k] : model.values[s][k], k })), maxPts).map((q) => q.k);
       const pts = idx.map((k) => y(stacked ? stacked.y1[s][k] : model.values[s][k]));
       const base = stacked ? idx.map((k) => y(stacked.y0[s][k])) : isArea ? idx.map(() => y(base0)) : undefined;
-      return { s, name, pts, xs: idx.map((k) => xs(k)), base, ink: inkOf(s), hi: hi.has(s) };
+      const bk = bands ? idx.filter((k) => bands[s][k]) : [];
+      const band = bk.length > 1 ? { xs: bk.map((k) => xs(k)), lo: bk.map((k) => y(bands![s][k]![0])), up: bk.map((k) => y(bands![s][k]![1])) } : undefined;
+      return { s, name, pts, xs: idx.map((k) => xs(k)), base, band, ink: inkOf(s), hi: hi.has(s) };
     });
 
     // The emphasised series is drawn last, on top
     const order = [...this.draws].sort((a, b) => Number(a.hi) - Number(b.hi));
     const baseLine = y(base0);
+    // A band opens out from its line: it starts on the line's own y at each of its x
+    const lineAt = (d: SeriesDraw) => d.band?.xs.map((bx) => d.pts[d.xs.indexOf(bx)] ?? baseLine) ?? [];
     const marks = order.map((d, k) => {
+      const bl = d.band ? [...d.band.lo, ...d.band.up] : [];
+      const bp = d.band ? [d.band.lo.length, d.band.up.length] : [];
       if (isArea) {
         const b = d.base ?? d.pts.map(() => baseLine);
-        return { key: `s:${d.name}`, to: [1, ...d.pts, ...b], from: [0, ...d.pts.map(() => baseLine), ...b.map(() => baseLine)], delay: k * this.stagger * 0.5, parts: [1, d.pts.length, b.length], data: d };
+        const bFrom = bl.map(() => baseLine);
+        return { key: `s:${d.name}`, to: [1, ...d.pts, ...b, ...bl], from: [0, ...d.pts.map(() => baseLine), ...b.map(() => baseLine), ...bFrom], delay: k * this.stagger * 0.5, parts: [1, d.pts.length, b.length, ...bp], data: d };
       }
-      return { key: `s:${d.name}`, to: [1, ...d.pts], from: [0, ...d.pts], enter: [0, ...d.pts], delay: k * this.stagger, parts: [1, d.pts.length], data: d };
+      const mid = lineAt(d);
+      return { key: `s:${d.name}`, to: [1, ...d.pts, ...bl], from: [0, ...d.pts, ...mid, ...mid], enter: [0, ...d.pts, ...mid, ...mid], delay: k * this.stagger, parts: [1, d.pts.length, ...bp], data: d };
     });
 
     const many = nS > 1;
@@ -227,7 +262,7 @@ export abstract class XYChart<T = Row> extends TcChartElement<SeriesDraw, T> {
         label: model.labels[k],
         value: Number.isFinite(v) ? v : null,
         formatted: model.series
-          .map((s, si) => (Number.isFinite(model.values[si][k]) ? `${many && s ? `${s} ` : ""}${f.fv(model.values[si][k])}` : null))
+          .map((s, si) => (Number.isFinite(model.values[si][k]) ? `${many && s ? `${s} ` : ""}${f.fv(model.values[si][k])}${this.bandText(si, k, f)}` : null))
           .filter(Boolean)
           .join(", "),
       };
@@ -330,12 +365,18 @@ export abstract class XYChart<T = Row> extends TcChartElement<SeriesDraw, T> {
       .slice(0, 8)
       .map((r) => ({
         label: r.s || this.words.value,
-        value: percent && stacked ? `${Math.round(stacked.y1[r.si][k] - stacked.y0[r.si][k])}% · ${f.fv(r.v)}` : f.fv(r.v),
+        value: percent && stacked ? `${Math.round(stacked.y1[r.si][k] - stacked.y0[r.si][k])}% · ${f.fv(r.v)}` : `${f.fv(r.v)}${this.bandText(r.si, k, f)}`,
         color: this.draws[r.si]?.ink,
         strong: this.hiSet.has(r.si),
       }));
     const yy = Math.min(...model.series.map((_, si) => (stacked ? y(stacked.y1[si][k]) : Number.isFinite(model.values[si][k]) ? y(model.values[si][k]) : f.height)));
     return { x: xs(k), y: Math.max(top, yy), title: model.labels[k], rows };
+  }
+
+  /** " (low–high)" after a value whose series has a band at x */
+  private bandText(s: number, k: number, f: ChartFrame) {
+    const b = this.bands?.[s]?.[k];
+    return b ? ` (${f.fv(b[0])}–${f.fv(b[1])})` : "";
   }
 
   private xAxis(f: ChartFrame) {
@@ -376,16 +417,28 @@ export abstract class XYChart<T = Row> extends TcChartElement<SeriesDraw, T> {
       const drawn = v[0];
       const ys = v.slice(1, 1 + n);
       const pts = d.xs.map((xx, i) => [xx, ys[i] ?? ys[ys.length - 1] ?? 0] as [number, number]);
+      // The band's edges follow the line's (and an area's floor's) values in the mark
+      const bandAt = isArea ? 1 + 2 * n : 1 + n;
+      const nb = d.band?.xs.length ?? 0;
+      const band = d.band
+        ? svg`<path class="tc-xy__band" ?data-hi=${d.hi} d=${areaPath(
+            d.band.xs.map((xx, i) => [xx, v[bandAt + nb + i] ?? d.band!.up[i]] as [number, number]),
+            d.band.xs.map((xx, i) => [xx, v[bandAt + i] ?? d.band!.lo[i]] as [number, number]),
+            curve,
+          )} style=${`fill: ${d.ink}`}></path>`
+        : nothing;
       if (isArea) {
         const bs = v.slice(1 + n, 1 + 2 * n);
         const floor = d.xs.map((xx, i) => [xx, bs[i] ?? y(base0)] as [number, number]);
         return svg`<g opacity=${it.exiting ? 0.4 : 1}>
+          ${band}
           <path class="tc-xy__area" ?data-stacked=${mode !== "none"} ?data-hi=${d.hi} d=${areaPath(pts, floor, curve)} style=${`fill: ${d.ink}`}></path>
           <path class="tc-xy__edge" ?data-stacked=${mode !== "none"} ?data-hi=${d.hi} d=${linePath(pts, curve)} style=${`stroke: ${d.ink}`} opacity=${Math.min(1, drawn * 1.4)}></path>
         </g>`;
       }
       const dash = drawn < 0.999;
       return svg`<g opacity=${it.exiting ? 0.4 : 1}>
+        ${band}
         ${this.underFill() && d.hi ? svg`<path d=${areaPath(pts, pts.map(([xx]) => [xx, y(base0)] as [number, number]), curve)} fill=${`url(#${this.gid})`} opacity=${drawn}></path>` : nothing}
         <path class="tc-xy__line" ?data-hi=${d.hi} d=${linePath(pts, curve)} style=${`stroke: ${d.ink}`}
           pathLength=${dash ? 1 : nothing} stroke-dasharray=${dash ? "1 1" : nothing} stroke-dashoffset=${dash ? 1 - drawn : nothing}></path>
@@ -473,6 +526,8 @@ const xyCss = /* css */ `
 .tc-xy__edge { fill: none; stroke-width: 1.4; stroke-linejoin: round; }
 .tc-xy__edge[data-hi] { stroke-width: 2.2; }
 .tc-xy__edge[data-stacked] { stroke: var(--tc-plot-bg) !important; stroke-width: 1.2; }
+.tc-xy__band { fill-opacity: 0.14; stroke: none; }
+.tc-xy__band[data-hi] { fill-opacity: 0.2; }
 .tc-xy__cursor { stroke: var(--tc-plot-zero); stroke-width: 1; }
 .tc-xy__point { stroke: var(--tc-plot-bg); stroke-width: 2; }
 .tc-xy__ref { stroke: var(--tc-plot-zero); stroke-dasharray: 3 3; }

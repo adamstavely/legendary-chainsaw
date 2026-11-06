@@ -11,13 +11,13 @@
    "features": [
     "light-dark"
    ],
-   "elements": 394
+   "elements": 397
   },
   "edge": {
    "features": [
     "light-dark"
    ],
-   "elements": 394
+   "elements": 397
   },
   "firefox": {
    "features": [
@@ -29,13 +29,13 @@
    "features": [
     "light-dark"
    ],
-   "elements": 394
+   "elements": 397
   },
   "safari_ios": {
    "features": [
     "light-dark"
    ],
-   "elements": 394
+   "elements": 397
   }
  },
  "features": [
@@ -52,7 +52,7 @@
    },
    "progressive": false,
    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
-   "elements": 394
+   "elements": 397
   },
   {
    "id": "color-mix",
@@ -67,7 +67,7 @@
    },
    "progressive": false,
    "why": "Tints and washes mixed from the tokens.",
-   "elements": 394
+   "elements": 397
   },
   {
    "id": "is-where",
@@ -82,7 +82,7 @@
    },
    "progressive": false,
    "why": "Every rule is keyed on :where() so the page can override it.",
-   "elements": 394
+   "elements": 397
   },
   {
    "id": "focus-visible",
@@ -97,7 +97,7 @@
    },
    "progressive": false,
    "why": "Focus rings for keyboard users.",
-   "elements": 393
+   "elements": 396
   },
   {
    "id": "container-size",
@@ -112,7 +112,7 @@
    },
    "progressive": false,
    "why": "Components adapt to the width they're given, not the window's.",
-   "elements": 288
+   "elements": 291
   },
   {
    "id": "inset",
@@ -140,7 +140,7 @@
     "safari_ios": "13.4"
    },
    "progressive": false,
-   "elements": 165
+   "elements": 168
   },
   {
    "id": "intersection-observer",
@@ -154,7 +154,7 @@
     "safari_ios": "12.2"
    },
    "progressive": false,
-   "elements": 150
+   "elements": 153
   },
   {
    "id": "inert",
@@ -230,6 +230,20 @@
    "elements": 56
   },
   {
+   "id": "object-hasown",
+   "name": "Object.hasOwn()",
+   "bcd": "javascript.builtins.Object.hasOwn",
+   "versions": {
+    "chrome": "93",
+    "edge": "93",
+    "firefox": "92",
+    "safari": "15.4",
+    "safari_ios": "15.4"
+   },
+   "progressive": false,
+   "elements": 49
+  },
+  {
    "id": "clipboard",
    "name": "Async Clipboard (writeText)",
    "bcd": "api.Clipboard.writeText",
@@ -243,20 +257,6 @@
    "progressive": false,
    "why": "Copy buttons.",
    "elements": 47
-  },
-  {
-   "id": "object-hasown",
-   "name": "Object.hasOwn()",
-   "bcd": "javascript.builtins.Object.hasOwn",
-   "versions": {
-    "chrome": "93",
-    "edge": "93",
-    "firefox": "92",
-    "safari": "15.4",
-    "safari_ios": "15.4"
-   },
-   "progressive": false,
-   "elements": 46
   },
   {
    "id": "form-associated",
@@ -387,7 +387,7 @@
    },
    "progressive": true,
    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
-   "elements": 394
+   "elements": 397
   },
   {
    "id": "adopted-stylesheets",
@@ -402,7 +402,7 @@
    },
    "progressive": true,
    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
-   "elements": 393
+   "elements": 396
   },
   {
    "id": "scrollbar-width",
@@ -417,7 +417,7 @@
    },
    "progressive": true,
    "without": "Scrollbars keep the browser's default width.",
-   "elements": 108
+   "elements": 111
   },
   {
    "id": "overscroll-contain",

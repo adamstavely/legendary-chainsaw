@@ -94,6 +94,22 @@
      "readonly": false
     },
     {
+     "name": "trend",
+     "attribute": "trend",
+     "type": "BubbleTrend",
+     "default": "\"none\"",
+     "description": "A line fitted through the points: \"linear\" (least squares, its r² beside it) or \"smooth\" (LOESS); none by default",
+     "readonly": false
+    },
+    {
+     "name": "trendBand",
+     "attribute": "trend-band",
+     "type": "boolean",
+     "default": "false",
+     "description": "Shades the 95% confidence band round a linear trend",
+     "readonly": false
+    },
+    {
      "name": "look",
      "attribute": "look",
      "type": "Look | undefined",
@@ -125,10 +141,19 @@
    "slots": [],
    "methods": [],
    "ui": "bbl",
-   "cssProperties": [],
+   "cssProperties": [
+    {
+     "name": "--tc-bbl-trend",
+     "value": "var(--tc-text-primary)",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
    "tokens": [
     "--tc-plot-bg",
-    "--tc-plot-focus"
+    "--tc-plot-focus",
+    "--tc-text-primary"
    ]
   }
  ],
@@ -223,6 +248,14 @@
     {
      "name": "canvasThreshold",
      "attribute": "canvas-threshold"
+    },
+    {
+     "name": "trend",
+     "attribute": "trend"
+    },
+    {
+     "name": "trendBand",
+     "attribute": "trend-band"
     }
    ],
    "events": [
@@ -496,7 +529,7 @@
   "windowed": false
  },
  "size": {
-  "min": 51296,
-  "gzip": 18388
+  "min": 56380,
+  "gzip": 20421
  }
 }

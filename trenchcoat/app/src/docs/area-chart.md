@@ -14,6 +14,9 @@ aligned however long the series are.
 The pointer reads the nearest x across every layer. Areas rise from the floor when the chart scrolls into view and
 glide when the data changes. Ported from ztd-charts (MIT).
 
+Overlapping areas (`stack="none"`) take a band round each edge with `lower` and `upper`, as Line Chart does; stacked
+layers have none, since a range on one layer would move every layer above it.
+
 With `brush="select"`, dragging across the plot (or Shift+arrows and Enter) picks a range and shows its change
 with its highest and lowest points, firing `tc-brush`; `brush="zoom"` narrows the chart to the range, with a Show
 all button to undo it.

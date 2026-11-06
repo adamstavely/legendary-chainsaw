@@ -3,12 +3,18 @@ import type * as UI from "../../../src/elements/react";
 import { caption, textButton } from "../demo-kit";
 
 /* A research institute's compute cluster: median job queue time by month for three partitions, the GPU partition
-   emphasised against a target line (“Show 2025” glides the lines to the year before). */
+   emphasised against a target line (“Show 2025” glides the lines to the year before); and the GPU queue forecast for
+   the next five months, its 80% range shaded round the line. */
 
 const MONTHS = ["2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06", "2026-07", "2026-08", "2026-09", "2026-10"];
 const YEARS: Record<string, number[]>[] = [
   { GPU: [42, 48, 61, 55, 70, 64, 52, 47, 39, 35], CPU: [12, 14, 13, 16, 18, 15, 14, 12, 11, 12], "High memory": [25, 22, 28, 31, 27, 24, 26, 29, 23, 21] },
   { GPU: [30, 33, 38, 45, 52, 58, 61, 57, 50, 44], CPU: [15, 16, 14, 13, 15, 17, 16, 14, 13, 14], "High memory": [20, 23, 21, 25, 29, 33, 30, 27, 26, 24] },
+];
+
+const FORECAST = [
+  ...MONTHS.map((x, k) => ({ x, y: YEARS[0].GPU[k] })),
+  ...[33, 36, 41, 47, 52].map((y, k) => ({ x: ["2026-11", "2026-12", "2027-01", "2027-02", "2027-03"][k], y, low: y - 4 - k * 3, high: y + 5 + k * 4 })),
 ];
 
 export default function Demo({ ui }: { ui: typeof UI }) {
@@ -19,6 +25,7 @@ export default function Demo({ ui }: { ui: typeof UI }) {
   return (
     <div style={{ width: "100%", maxWidth: 760, display: "grid", gap: 8 }}>
       <LineChart title="Median queue time" description="Minutes from submit to start" unit=" min" data={data} series="series" highlight="GPU" referenceLines={[{ y: 45, label: "Target 45 min" }]} brush="select" />
+      <LineChart title="GPU queue forecast" description="Minutes, with an 80% range for the months ahead" unit=" min" data={FORECAST} lower="low" upper="high" />
       <div style={{ ...caption, textAlign: "center" }}>
         Move along the lines to read every partition, or drag across them to compare a stretch.{" "}
         <button type="button" style={textButton} onClick={() => setI(1 - i)}>

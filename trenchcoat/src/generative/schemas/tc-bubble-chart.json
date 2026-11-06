@@ -104,6 +104,19 @@
       ],
       "description": "How x values are written; `format` writes y"
     },
+    "trend": {
+      "type": "string",
+      "enum": [
+        "linear",
+        "none",
+        "smooth"
+      ],
+      "description": "A line fitted through the points: \"linear\" (least squares, its r² beside it) or \"smooth\" (LOESS); none by default"
+    },
+    "trendBand": {
+      "type": "boolean",
+      "description": "Shades the 95% confidence band round a linear trend"
+    },
     "heading": {
       "type": "string",
       "description": "The heading, and the chart's name"

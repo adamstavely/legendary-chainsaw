@@ -59,6 +59,14 @@ export class BubbleChart {
   @Input() set xFormat(v: TcBubbleChart["xFormat"]) {
     this.#el.xFormat = v;
   }
+  /** A line fitted through the points: "linear" (least squares, its r² beside it) or "smooth" (LOESS); none by default */
+  @Input() set trend(v: TcBubbleChart["trend"]) {
+    this.#el.trend = v;
+  }
+  /** Shades the 95% confidence band round a linear trend */
+  @Input() set trendBand(v: TcBubbleChart["trendBand"] | "" | "true" | "false") {
+    this.#el.trendBand = typeof v === "string" ? v !== "false" : v;
+  }
   /** The heading, and the chart's name */
   @Input() set heading(v: TcBubbleChart["heading"]) {
     this.#el.heading = v;
