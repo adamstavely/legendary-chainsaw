@@ -1,0 +1,225 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-funnel-chart.json",
+  "title": "tc-funnel-chart",
+  "description": "Steps of a process as centred bars narrowing down the page, with each step's conversion rate and the biggest drop\nemphasised, and a table view.",
+  "type": "object",
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "The step's name field; by default \"label\""
+    },
+    "value": {
+      "type": "string",
+      "description": "The count field; by default \"value\""
+    },
+    "hideRates": {
+      "type": "boolean",
+      "description": "Leaves out the rates at the right"
+    },
+    "rateBase": {
+      "type": "string",
+      "enum": [
+        "previous",
+        "first"
+      ],
+      "description": "What each rate is measured against: \"previous\" (the step before) or \"first\""
+    },
+    "rateLabel": {
+      "type": "string",
+      "description": "The rates' column heading; by default \"vs. previous\" or \"vs. first\""
+    },
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the chart's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "data": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Row"
+      },
+      "description": "The rows to draw"
+    },
+    "highlight": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": [
+              "string",
+              "number"
+            ]
+          }
+        }
+      ],
+      "description": "What to emphasise: an index, a label, a list of them, \"max\", \"min\", \"first\", \"last\", \"none\", or a test"
+    },
+    "format": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/FormatName"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "suffix": {
+              "type": "string"
+            },
+            "prefix": {
+              "type": "string"
+            },
+            "localeMatcher": {
+              "type": "string",
+              "enum": [
+                "lookup",
+                "best fit"
+              ]
+            },
+            "style": {
+              "$ref": "#/definitions/Intl.NumberFormatOptionsStyle"
+            },
+            "currency": {
+              "type": "string"
+            },
+            "currencyDisplay": {
+              "$ref": "#/definitions/Intl.NumberFormatOptionsCurrencyDisplay"
+            },
+            "useGrouping": {
+              "$ref": "#/definitions/Intl.NumberFormatOptionsUseGrouping"
+            },
+            "minimumIntegerDigits": {
+              "type": "number"
+            },
+            "minimumFractionDigits": {
+              "type": "number"
+            },
+            "maximumFractionDigits": {
+              "type": "number"
+            },
+            "minimumSignificantDigits": {
+              "type": "number"
+            },
+            "maximumSignificantDigits": {
+              "type": "number"
+            }
+          }
+        }
+      ],
+      "description": "How values are written: \"number\", \"integer\", \"percent\", \"compact\", \"currency\", Intl options, or a function"
+    },
+    "unit": {
+      "type": "string",
+      "description": "The unit after each value: \"%\", \"ms\", \" runs\""
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for numbers and dates, e.g. \"de\"; by default the browser's"
+    },
+    "height": {
+      "type": "number",
+      "description": "The plot's height in px; by default the chart's own for its width"
+    },
+    "still": {
+      "type": "boolean",
+      "description": "Draws everything at once: no entrance and no transitions"
+    },
+    "easing": {
+      "type": "string",
+      "enum": [
+        "linear",
+        "spring",
+        "easeOut",
+        "easeInOut"
+      ],
+      "description": "How marks move: \"spring\", \"easeOut\", \"easeInOut\" or \"linear\""
+    },
+    "duration": {
+      "type": "number",
+      "description": "How long a move takes, in ms; by default the chart's own"
+    },
+    "hideLabels": {
+      "type": "boolean",
+      "description": "Leaves the values off the marks"
+    },
+    "hideTooltip": {
+      "type": "boolean",
+      "description": "No tooltip on hover or focus"
+    },
+    "bare": {
+      "type": "boolean",
+      "description": "No card: just the plot, for a chart inside another component"
+    },
+    "view": {
+      "type": "string",
+      "enum": [
+        "table",
+        "chart"
+      ],
+      "description": "The chart or the same numbers as a table. Changed by the Table button unless a tc-view-change listener calls preventDefault()"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "table": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "share": {
+          "type": "string"
+        },
+        "chart": {
+          "type": "string"
+        },
+        "position": {
+          "type": "string"
+        },
+        "more": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The words it shows and says, merged over defaultChartLabels"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "Row": {
+      "type": "object",
+      "additionalProperties": {}
+    },
+    "FormatName": {
+      "type": "string",
+      "enum": [
+        "number",
+        "integer",
+        "percent",
+        "ratio",
+        "compact",
+        "currency",
+        "decimal"
+      ],
+      "description": "Number and date formats, through Intl; the default locale is en-US"
+    },
+    "Intl.NumberFormatOptionsStyle": {},
+    "Intl.NumberFormatOptionsCurrencyDisplay": {},
+    "Intl.NumberFormatOptionsUseGrouping": {
+      "type": "boolean"
+    }
+  }
+}

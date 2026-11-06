@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased – Charts, part 3: part-to-whole and flow
+
+Part 3 of the ztd-charts port (`audit/ztd-charts-port-plan.md`).
+
+- **Waffle Chart** (`tc-waffle-chart`): shares as a grid of 100 cells, one emphasised with its share written large.
+- **Funnel Chart** (`tc-funnel-chart`): what's left at each step, with each step's rate and the biggest drop.
+- **Marimekko Chart** (`tc-marimekko-chart`): columns as wide as their share, each stacked to 100%.
+- **Treemap** (`tc-treemap`): nested tiles sized by value, names on card-coloured chips.
+- **Sunburst Chart** (`tc-sunburst-chart`): a hierarchy as rings, the largest leaf's path emphasised.
+- **Sankey Chart** (`tc-sankey-chart`): flows between stages as bands as wide as their value.
+- **Chord Chart** (`tc-chord-chart`): what groups exchange, as arcs and ribbons.
+
 ## Unreleased – Charts, part 2: comparison
 
 Part 2 of the ztd-charts port (`audit/ztd-charts-port-plan.md`): eight comparison charts, and more for every chart.
