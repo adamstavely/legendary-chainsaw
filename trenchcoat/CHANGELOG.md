@@ -1,8 +1,14 @@
 # Changelog
 
+## Unreleased – Compass rose
+
+- **Compass rose** (`illustrations/spot/site/compass-rose.svg`): the homepage hero illustration, a step up from the
+  other spots – a raised medallion with a compass rose, an ink north point and a dotted route around it – in the same
+  one-blue family. The rose settles into place once, and holds still under reduced motion.
+
 ## Unreleased – Spot illustrations
 
-- **Spot illustrations** (`illustrations/spot/`): 223 small illustrations for page headers, cards, empty states and
+- **Spot illustrations** (`illustrations/spot/`): 224 small illustrations for page headers, cards, empty states and
   docs, in the soft style with one blue mark – foundations, guidelines, patterns, design principles, the 30 Laws of UX,
   research, AI, tools, admin and site topics. Each is one self-contained SVG: light colours as plain attributes for
   design tools, and a scoped style that adds dark, following the OS as an image and the page's theme when inlined.

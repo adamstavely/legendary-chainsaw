@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="tcs-site-compass-rose">
+  <title>Compass rose</title>
+  <defs>
+    <filter id="tcs-site-compass-rose-glow" x="-50%" y="-150%" width="200%" height="400%"><feGaussianBlur stdDeviation="8"/></filter>
+    <style>
+    svg.tcs-site-compass-rose:root{color-scheme:light dark}
+    :where(.dark,[data-theme="dark"],[data-tc-theme="dark"]) .tcs-site-compass-rose{color-scheme:dark}
+    :where(.light,[data-theme="light"],[data-tc-theme="light"]) .tcs-site-compass-rose{color-scheme:light}
+    .tcs-site-compass-rose .tile{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#e4e7ec,rgba(255,255,255,0.1))}
+    .tcs-site-compass-rose .face{fill:light-dark(#f3f7fe,#22293a);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-site-compass-rose .sub{stroke:light-dark(#c9ced6,#5c5f67)}
+    .tcs-site-compass-rose .tick{stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-site-compass-rose .soft{fill:light-dark(#e8f0fd,#2a3958);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-site-compass-rose .mark{fill:light-dark(#dce8fb,#263a5c);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-site-compass-rose .facet{fill:light-dark(#b9cff4,#3a5888);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-site-compass-rose .ink{stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-site-compass-rose .dot{fill:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-site-compass-rose .base{fill:light-dark(#e8f0fd,#2a3958);stroke:light-dark(#c9ced6,#5c5f67)}
+    .tcs-site-compass-rose .northl{fill:light-dark(#2f5ea8,#cfdffb);stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-site-compass-rose .northr{fill:light-dark(#b9cff4,#3a5888);stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-site-compass-rose .hub{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-site-compass-rose .glow{fill:light-dark(rgba(120,160,230,0.26),rgba(120,160,230,0.14))}
+    .tcs-site-compass-rose .rose{transform-origin:100px 98px;animation:tcs-site-compass-rose-settle 1.8s cubic-bezier(.2,.75,.25,1) both}
+    @keyframes tcs-site-compass-rose-settle{0%{transform:rotate(-32deg)}55%{transform:rotate(7deg)}80%{transform:rotate(-2deg)}100%{transform:rotate(0)}}
+    @media (prefers-reduced-motion:reduce){.tcs-site-compass-rose .rose{animation:none}}
+    </style>
+  </defs>
+  <ellipse class="glow" cx="100" cy="172" rx="58" ry="9" fill="rgba(120,160,230,0.26)" filter="url(#tcs-site-compass-rose-glow)"/>
+  <circle class="base" cx="100" cy="106" r="70" fill="#e8f0fd" stroke="#c9ced6" stroke-width="2"/>
+  <circle class="tile" cx="100" cy="98" r="70" fill="#ffffff" stroke="#e4e7ec" stroke-width="2"/>
+  <circle class="face" cx="100" cy="98" r="54" fill="#f3f7fe" stroke="#8fb0e8" stroke-width="2.5"/>
+  <path class="tick" d="M55.8 163.5 A79 79 0 0 1 47.1 39.3" fill="none" stroke="#8fb0e8" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 7"/>
+  <circle class="dot" cx="51.4" cy="35.7" r="4.5" fill="#2f5ea8"/>
+  <g class="rose">
+    <circle class="soft" cx="121.2" cy="76.8" r="4" fill="#e8f0fd" stroke="#8fb0e8" stroke-width="2.5"/>
+    <circle class="soft" cx="121.2" cy="119.2" r="4" fill="#e8f0fd" stroke="#8fb0e8" stroke-width="2.5"/>
+    <circle class="soft" cx="78.8" cy="119.2" r="4" fill="#e8f0fd" stroke="#8fb0e8" stroke-width="2.5"/>
+    <circle class="soft" cx="78.8" cy="76.8" r="4" fill="#e8f0fd" stroke="#8fb0e8" stroke-width="2.5"/>
+    <path class="mark" d="M146.0 98.0 Q121.5 93.4 109.2 88.8 L100 98 Z" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <path class="facet" d="M146.0 98.0 Q121.5 102.6 109.2 107.2 L100 98 Z" fill="#b9cff4" stroke="#8fb0e8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <path class="mark" d="M100.0 144.0 Q104.6 119.5 109.2 107.2 L100 98 Z" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <path class="facet" d="M100.0 144.0 Q95.4 119.5 90.8 107.2 L100 98 Z" fill="#b9cff4" stroke="#8fb0e8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <path class="mark" d="M54.0 98.0 Q78.5 102.6 90.8 107.2 L100 98 Z" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <path class="facet" d="M54.0 98.0 Q78.5 93.4 90.8 88.8 L100 98 Z" fill="#b9cff4" stroke="#8fb0e8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <path class="northl" d="M100.0 48.0 Q95.0 74.5 90.1 88.1 L100 98 Z" fill="#2f5ea8" stroke="#2f5ea8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <path class="northr" d="M100.0 48.0 Q105.0 74.5 109.9 88.1 L100 98 Z" fill="#b9cff4" stroke="#2f5ea8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <circle class="hub" cx="100" cy="98" r="7" fill="#ffffff" stroke="#2f5ea8" stroke-width="4"/>
+</svg>

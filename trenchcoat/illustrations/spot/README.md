@@ -1,6 +1,6 @@
 # Trenchcoat – spot illustrations
 
-223 small illustrations for page headers, cards, empty states and docs, in Trenchcoat's soft style: a tile,
+224 small illustrations for page headers, cards, empty states and docs, in Trenchcoat's soft style: a tile,
 one pastel blue mark with a darker edge and ink, and a soft glow beneath. Each is one self-contained SVG on a 200 × 200
 viewBox, with nothing to install and no stylesheet to load.
 
@@ -234,13 +234,14 @@ The gallery's Foundations → Spot illustrations page shows them all, with searc
 - Visual Regression – `admin/visual-regression.svg`
 - Workspace Management – `admin/workspace-management.svg`
 
-### Site and guides – `site/` (36)
+### Site and guides – `site/` (37)
 
 - Accessibility Reports – `site/accessibility-reports.svg`
 - Adopt – `site/adopt.svg`
 - Atomic Design – `site/atomic-design.svg`
 - Best Practices – `site/best-practices.svg`
 - Building Trust – `site/building-trust.svg`
+- Compass rose – `site/compass-rose.svg`
 - Contribute – `site/contribute.svg`
 - Design Sync – `site/design-sync.svg`
 - Design System API – `site/design-system-api.svg`
