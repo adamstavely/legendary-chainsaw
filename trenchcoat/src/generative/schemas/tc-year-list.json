@@ -42,8 +42,8 @@
     "orientation": {
       "type": "string",
       "enum": [
-        "horizontal",
-        "vertical"
+        "vertical",
+        "horizontal"
       ],
       "description": "A column (\"vertical\") or a row that scrolls (\"horizontal\")"
     },

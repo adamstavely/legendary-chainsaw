@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="tcs-ai-designing-for-mcp-ui">
+  <title>Designing for MCP UI</title>
+  <defs>
+    <filter id="tcs-ai-designing-for-mcp-ui-glow" x="-50%" y="-150%" width="200%" height="400%"><feGaussianBlur stdDeviation="7.5"/></filter>
+    <style>
+    svg.tcs-ai-designing-for-mcp-ui:root{color-scheme:light dark}
+    :where(.dark,[data-theme="dark"],[data-tc-theme="dark"]) .tcs-ai-designing-for-mcp-ui{color-scheme:dark}
+    :where(.light,[data-theme="light"],[data-tc-theme="light"]) .tcs-ai-designing-for-mcp-ui{color-scheme:light}
+    .tcs-ai-designing-for-mcp-ui .tile{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#e4e7ec,rgba(255,255,255,0.1))}
+    .tcs-ai-designing-for-mcp-ui .line{stroke:light-dark(#e6e9ee,#44464d)}
+    .tcs-ai-designing-for-mcp-ui .line-fill{fill:light-dark(#e6e9ee,#44464d)}
+    .tcs-ai-designing-for-mcp-ui .sub-box{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#c9ced6,#5c5f67)}
+    .tcs-ai-designing-for-mcp-ui .mark{fill:light-dark(#dce8fb,#263a5c);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-ai-designing-for-mcp-ui .ink{stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-ai-designing-for-mcp-ui .glow{fill:light-dark(rgba(120,160,230,0.22),rgba(120,160,230,0.11))}
+    </style>
+  </defs>
+  <ellipse class="glow" cx="100" cy="162" rx="34" ry="9" fill="rgba(120,160,230,0.22)" filter="url(#tcs-ai-designing-for-mcp-ui-glow)"/>
+  <rect class="tile" x="30" y="36" width="140" height="92" rx="14" fill="#ffffff" stroke="#e4e7ec" stroke-width="2"/>
+  <circle class="line-fill" cx="46" cy="48" r="3.5" fill="#e6e9ee"/><circle class="line-fill" cx="58" cy="48" r="3.5" fill="#e6e9ee"/><circle class="line-fill" cx="70" cy="48" r="3.5" fill="#e6e9ee"/><path class="line" style="stroke-width:2" d="M30 60 H170" fill="none" stroke="#e6e9ee" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="line" d="M46 80 H112 M46 96 H94" fill="none" stroke="#e6e9ee" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="sub-box" x="124" y="74" width="30" height="32" rx="6" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" d="M90 132 V118 M110 132 V118" fill="none" stroke="#2f5ea8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="mark" x="80" y="128" width="40" height="26" rx="8" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" d="M100 154 V166" fill="none" stroke="#2f5ea8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

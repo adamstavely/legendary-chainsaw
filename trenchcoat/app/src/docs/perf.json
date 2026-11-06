@@ -203,6 +203,87 @@
     "errors": []
    }
   },
+  "accessibility-principles": {
+   "measuredAt": "2026-11-05",
+   "hash": "dfb3f61ae25648a1",
+   "bundle": {
+    "own": {
+     "min": 10528,
+     "gzip": 4042
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 18887
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2217
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1864
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 692
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 440
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 435
+     }
+    ],
+    "withoutLit": {
+     "min": 17802,
+     "gzip": 6329
+    },
+    "withLit": {
+     "min": 37841,
+     "gzip": 12870
+    }
+   },
+   "render": {
+    "tag": "tc-accessibility-principles",
+    "source": "demo",
+    "runs": 7,
+    "cold": 15.6,
+    "first": 0.8,
+    "update": 0.2,
+    "updateKind": "re-render with the same data",
+    "nodes": 62,
+    "scale": null,
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
   "account-list": {
    "measuredAt": "2026-10-28",
    "hash": "d2412b2f39006e22",
@@ -3852,6 +3933,87 @@
       }
      ]
     },
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
+  "atomic-design": {
+   "measuredAt": "2026-11-05",
+   "hash": "73c8bc8aff9066fb",
+   "bundle": {
+    "own": {
+     "min": 17631,
+     "gzip": 6150
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 18891
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2217
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1868
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 692
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 444
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 436
+     }
+    ],
+    "withoutLit": {
+     "min": 24910,
+     "gzip": 8462
+    },
+    "withLit": {
+     "min": 44951,
+     "gzip": 14991
+    }
+   },
+   "render": {
+    "tag": "tc-atomic-design",
+    "source": "demo",
+    "runs": 7,
+    "cold": 15.1,
+    "first": 0.9,
+    "update": 0.2,
+    "updateKind": "re-render with the same data",
+    "nodes": 83,
+    "scale": null,
     "idle": {
      "visible": {
       "frames": 0,
@@ -7584,6 +7746,104 @@
     "updateKind": "re-render with the same data",
     "nodes": 0,
     "scale": null,
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
+  "collection-card": {
+   "measuredAt": "2026-11-05",
+   "hash": "76b7565323d5ef2c",
+   "bundle": {
+    "own": {
+     "min": 11743,
+     "gzip": 4628
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 18956
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2217
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1864
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 440
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 435
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     }
+    ],
+    "withoutLit": {
+     "min": 18525,
+     "gzip": 6579
+    },
+    "withLit": {
+     "min": 38562,
+     "gzip": 13101
+    }
+   },
+   "render": {
+    "tag": "tc-collection-card",
+    "source": "demo",
+    "runs": 7,
+    "cold": 11.4,
+    "first": 0.8,
+    "update": 0.2,
+    "updateKind": "one item of items replaced",
+    "nodes": 51,
+    "scale": {
+     "property": "items",
+     "demoItems": 18,
+     "points": [
+      {
+       "items": 100,
+       "first": 1.2,
+       "update": 0.4,
+       "nodes": 215
+      },
+      {
+       "items": 1000,
+       "first": 6.4,
+       "update": 2.3,
+       "nodes": 2015
+      }
+     ]
+    },
     "idle": {
      "visible": {
       "frames": 0,
@@ -14371,8 +14631,8 @@
    }
   },
   "generated-ui": {
-   "measuredAt": "2026-11-05",
-   "hash": "c7c874046410311e",
+   "measuredAt": "2026-11-06",
+   "hash": "1fff9fac5b9e494a",
    "bundle": {
     "own": {
      "min": 34126,
@@ -14462,7 +14722,7 @@
      {
       "name": "internal/team-flag",
       "kind": "internal",
-      "min": 804
+      "min": 805
      },
      {
       "name": "internal/source-line",
@@ -14807,7 +15067,7 @@
      {
       "name": "version-history",
       "kind": "element",
-      "min": 36082
+      "min": 36127
      },
      {
       "name": "agent-lanes",
@@ -15092,7 +15352,7 @@
      {
       "name": "share-panel",
       "kind": "element",
-      "min": 26235
+      "min": 26305
      },
      {
       "name": "context-tray",
@@ -15122,7 +15382,7 @@
      {
       "name": "file-summary",
       "kind": "element",
-      "min": 24898
+      "min": 24927
      },
      {
       "name": "coordinate-details",
@@ -15475,6 +15735,11 @@
       "min": 17968
      },
      {
+      "name": "message-status",
+      "kind": "element",
+      "min": 17936
+     },
+     {
       "name": "tag-input",
       "kind": "element",
       "min": 17853
@@ -15482,7 +15747,7 @@
      {
       "name": "team-flag-editor",
       "kind": "element",
-      "min": 17548
+      "min": 17549
      },
      {
       "name": "contact-channels",
@@ -15593,6 +15858,11 @@
       "name": "publish-readiness",
       "kind": "element",
       "min": 15853
+     },
+     {
+      "name": "atomic-design",
+      "kind": "element",
+      "min": 15634
      },
      {
       "name": "investment-balance",
@@ -15800,6 +16070,11 @@
       "min": 10839
      },
      {
+      "name": "preview-card",
+      "kind": "element",
+      "min": 10619
+     },
+     {
       "name": "citation-sections",
       "kind": "element",
       "min": 10607
@@ -15818,6 +16093,11 @@
       "name": "change-summary",
       "kind": "element",
       "min": 9844
+     },
+     {
+      "name": "collection-card",
+      "kind": "element",
+      "min": 9721
      },
      {
       "name": "uncertainty-mix",
@@ -15840,6 +16120,11 @@
       "min": 8573
      },
      {
+      "name": "accessibility-principles",
+      "kind": "element",
+      "min": 8500
+     },
+     {
       "name": "chat-minimap",
       "kind": "element",
       "min": 8453
@@ -15852,7 +16137,7 @@
      {
       "name": "team-flag-picker",
       "kind": "element",
-      "min": 8260
+      "min": 8294
      },
      {
       "name": "enrichment-orbit",
@@ -15877,7 +16162,7 @@
      {
       "name": "file-details",
       "kind": "element",
-      "min": 6976
+      "min": 6979
      },
      {
       "name": "meter-row",
@@ -16072,7 +16357,7 @@
      {
       "name": "src/generative/registry.ts",
       "kind": "other",
-      "min": 51817
+      "min": 52533
      },
      {
       "name": "src/generative/schemas/tc-ai-side-pane.json",
@@ -16915,6 +17200,11 @@
       "min": 2153
      },
      {
+      "name": "src/generative/schemas/tc-message-status.json",
+      "kind": "other",
+      "min": 2143
+     },
+     {
       "name": "src/generative/schemas/tc-console-panel.json",
       "kind": "other",
       "min": 2140
@@ -17000,6 +17290,11 @@
       "min": 2045
      },
      {
+      "name": "src/generative/schemas/tc-collection-card.json",
+      "kind": "other",
+      "min": 2038
+     },
+     {
       "name": "src/generative/schemas/tc-relationship-graph.json",
       "kind": "other",
       "min": 2037
@@ -17018,6 +17313,11 @@
       "name": "src/generative/schemas/tc-capacity-bars.json",
       "kind": "other",
       "min": 2029
+     },
+     {
+      "name": "src/generative/schemas/tc-atomic-design.json",
+      "kind": "other",
+      "min": 2027
      },
      {
       "name": "src/generative/schemas/tc-score-survey.json",
@@ -17265,6 +17565,11 @@
       "min": 1542
      },
      {
+      "name": "src/generative/schemas/tc-preview-card.json",
+      "kind": "other",
+      "min": 1522
+     },
+     {
       "name": "src/generative/schemas/tc-button.json",
       "kind": "other",
       "min": 1503
@@ -17373,6 +17678,11 @@
       "name": "src/generative/schemas/tc-stepper-form.json",
       "kind": "other",
       "min": 1262
+     },
+     {
+      "name": "src/generative/schemas/tc-accessibility-principles.json",
+      "kind": "other",
+      "min": 1253
      },
      {
       "name": "src/generative/schemas/tc-smart-recommendation.json",
@@ -17701,20 +18011,20 @@
      }
     ],
     "withoutLit": {
-     "min": 8934100,
-     "gzip": 2207901
+     "min": 9007274,
+     "gzip": 2227502
     },
     "withLit": {
-     "min": 8881798,
-     "gzip": 2191004
+     "min": 8954090,
+     "gzip": 2210173
     }
    },
    "render": {
     "tag": "tc-generated-ui",
     "source": "demo",
     "runs": 7,
-    "cold": 2.7,
-    "first": 0.5,
+    "cold": 2.8,
+    "first": 0.6,
     "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 9,
@@ -22545,6 +22855,104 @@
     "errors": []
    }
   },
+  "message-status": {
+   "measuredAt": "2026-11-06",
+   "hash": "04bece6c47bcc65d",
+   "bundle": {
+    "own": {
+     "min": 19830,
+     "gzip": 6899
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 19459
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2217
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1868
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 444
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 436
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     }
+    ],
+    "withoutLit": {
+     "min": 26617,
+     "gzip": 8739
+    },
+    "withLit": {
+     "min": 47295,
+     "gzip": 15478
+    }
+   },
+   "render": {
+    "tag": "tc-message-status",
+    "source": "demo",
+    "runs": 7,
+    "cold": 11,
+    "first": 0.7,
+    "update": 0.3,
+    "updateKind": "one item of actions replaced",
+    "nodes": 34,
+    "scale": {
+     "property": "actions",
+     "demoItems": 3,
+     "points": [
+      {
+       "items": 100,
+       "first": 0.7,
+       "update": 0.1,
+       "nodes": 34
+      },
+      {
+       "items": 1000,
+       "first": 0.8,
+       "update": 0,
+       "nodes": 34
+      }
+     ]
+    },
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
   "meter-row": {
    "measuredAt": "2026-11-04",
    "hash": "9b474a7d4ba0dd6c",
@@ -25926,6 +26334,87 @@
       }
      ]
     },
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
+  "preview-card": {
+   "measuredAt": "2026-11-06",
+   "hash": "d59124dd0f0311a4",
+   "bundle": {
+    "own": {
+     "min": 12617,
+     "gzip": 4298
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 18883
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2217
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1864
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 692
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 440
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 435
+     }
+    ],
+    "withoutLit": {
+     "min": 19893,
+     "gzip": 6439
+    },
+    "withLit": {
+     "min": 39938,
+     "gzip": 12925
+    }
+   },
+   "render": {
+    "tag": "tc-preview-card",
+    "source": "demo",
+    "runs": 7,
+    "cold": 8.2,
+    "first": 0.9,
+    "update": 0,
+    "updateKind": "re-render with the same data",
+    "nodes": 8,
+    "scale": null,
     "idle": {
      "visible": {
       "frames": 0,

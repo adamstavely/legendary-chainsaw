@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="tcs-patterns-empty-loading-states">
+  <title>Empty Loading States</title>
+  <defs>
+    <filter id="tcs-patterns-empty-loading-states-glow" x="-50%" y="-150%" width="200%" height="400%"><feGaussianBlur stdDeviation="7.5"/></filter>
+    <style>
+    svg.tcs-patterns-empty-loading-states:root{color-scheme:light dark}
+    :where(.dark,[data-theme="dark"],[data-tc-theme="dark"]) .tcs-patterns-empty-loading-states{color-scheme:dark}
+    :where(.light,[data-theme="light"],[data-tc-theme="light"]) .tcs-patterns-empty-loading-states{color-scheme:light}
+    .tcs-patterns-empty-loading-states .tile{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#e4e7ec,rgba(255,255,255,0.1))}
+    .tcs-patterns-empty-loading-states .line-fill{fill:light-dark(#e6e9ee,#44464d)}
+    .tcs-patterns-empty-loading-states .mark{fill:light-dark(#dce8fb,#263a5c);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-patterns-empty-loading-states .edge{stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-patterns-empty-loading-states .ink{stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-patterns-empty-loading-states .glow{fill:light-dark(rgba(120,160,230,0.22),rgba(120,160,230,0.11))}
+    </style>
+  </defs>
+  <ellipse class="glow" cx="100" cy="156" rx="40" ry="9" fill="rgba(120,160,230,0.22)" filter="url(#tcs-patterns-empty-loading-states-glow)"/>
+  <rect class="tile" x="30" y="40" width="140" height="112" rx="14" fill="#ffffff" stroke="#e4e7ec" stroke-width="2"/>
+  <rect class="line-fill" x="46" y="54" width="62" height="10" rx="5" fill="#e6e9ee"/>
+  <rect class="line-fill" x="46" y="70" width="96" height="8" rx="4" fill="#e6e9ee"/>
+  <circle class="mark" cx="100" cy="114" r="26" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="edge" cx="100" cy="114" r="13" fill="none" stroke="#8fb0e8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" d="M100 101 A13 13 0 0 1 113 114" fill="none" stroke="#2f5ea8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

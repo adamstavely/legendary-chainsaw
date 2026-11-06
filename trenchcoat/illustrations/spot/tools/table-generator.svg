@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="tcs-tools-table-generator">
+  <title>Table Generator</title>
+  <defs>
+    <filter id="tcs-tools-table-generator-glow" x="-50%" y="-150%" width="200%" height="400%"><feGaussianBlur stdDeviation="7.5"/></filter>
+    <style>
+    svg.tcs-tools-table-generator:root{color-scheme:light dark}
+    :where(.dark,[data-theme="dark"],[data-tc-theme="dark"]) .tcs-tools-table-generator{color-scheme:dark}
+    :where(.light,[data-theme="light"],[data-tc-theme="light"]) .tcs-tools-table-generator{color-scheme:light}
+    .tcs-tools-table-generator .tile{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#e4e7ec,rgba(255,255,255,0.1))}
+    .tcs-tools-table-generator .line{stroke:light-dark(#e6e9ee,#44464d)}
+    .tcs-tools-table-generator .sub-box{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#c9ced6,#5c5f67)}
+    .tcs-tools-table-generator .mark{fill:light-dark(#dce8fb,#263a5c);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-tools-table-generator .ink{stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-tools-table-generator .ink-box{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-tools-table-generator .glow{fill:light-dark(rgba(120,160,230,0.22),rgba(120,160,230,0.11))}
+    </style>
+  </defs>
+  <ellipse class="glow" cx="100" cy="154" rx="50" ry="9" fill="rgba(120,160,230,0.22)" filter="url(#tcs-tools-table-generator-glow)"/>
+  <rect class="tile" x="30" y="40" width="140" height="112" rx="14" fill="#ffffff" stroke="#e4e7ec" stroke-width="2"/>
+  <rect class="mark" x="42" y="52" width="116" height="24" rx="8" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" d="M54 64 H80 M96 64 H118" fill="none" stroke="#2f5ea8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" style="stroke-width:3.5" d="M140 58 V70 M135 65 L140 70 L145 65" fill="none" stroke="#2f5ea8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="line" style="stroke-width:2" d="M42 100 H158 M42 122 H158 M90 76 V144" fill="none" stroke="#e6e9ee" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="ink-box" x="50" y="82" width="12" height="12" rx="3" style="stroke-width:3" fill="#ffffff" stroke="#2f5ea8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="sub-box" x="50" y="105" width="12" height="12" rx="3" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="sub-box" x="50" y="128" width="12" height="12" rx="3" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="line" style="stroke-width:5" d="M100 88 H140 M100 111 H130 M100 133 H136" fill="none" stroke="#e6e9ee" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

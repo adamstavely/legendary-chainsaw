@@ -1,0 +1,111 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-collection-card.json",
+  "title": "tc-collection-card",
+  "description": "A card that introduces a collection – previews, counts, a description, what's inside – and links into it.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The collection's name"
+    },
+    "headingLevel": {
+      "type": "number",
+      "description": "The heading's level, 2–6"
+    },
+    "subtitle": {
+      "type": "string",
+      "description": "The bold line under the title"
+    },
+    "description": {
+      "type": "string",
+      "description": "A short paragraph on what the collection is for"
+    },
+    "previews": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/CollectionPreview"
+      },
+      "description": "Up to three previews across the top"
+    },
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "The names of what's inside; as many as fit in two lines show"
+    },
+    "meta": {
+      "type": "string",
+      "description": "The counts at the right of the title, as written; overrides `count` and `files`"
+    },
+    "count": {
+      "type": "number",
+      "description": "How many items the collection holds"
+    },
+    "files": {
+      "type": "number",
+      "description": "How many files they come to"
+    },
+    "href": {
+      "type": "string",
+      "description": "Where the link goes; without it the link is a button that fires tc-open",
+      "format": "uri-reference"
+    },
+    "actionLabel": {
+      "type": "string",
+      "description": "The link's words; by default \"Browse\" and the heading"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "item": {
+          "type": "string"
+        },
+        "items": {
+          "type": "string"
+        },
+        "file": {
+          "type": "string"
+        },
+        "files": {
+          "type": "string"
+        },
+        "more": {
+          "type": "string"
+        },
+        "action": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Words the page can change: counts, \"and N more\", the link"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The locale for numbers"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "CollectionPreview": {
+      "type": "object",
+      "properties": {
+        "src": {
+          "type": "string",
+          "description": "The picture's address; leave it out for a placeholder or for `content`",
+          "format": "uri-reference",
+          "contentMediaType": "image/*"
+        },
+        "alt": {
+          "type": "string",
+          "description": "What the picture shows; \"\" when it adds nothing to the words"
+        }
+      },
+      "required": [
+        "alt"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

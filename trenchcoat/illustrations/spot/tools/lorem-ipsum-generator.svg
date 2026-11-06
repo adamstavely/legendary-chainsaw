@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="tcs-tools-lorem-ipsum-generator">
+  <title>Lorem Ipsum Generator</title>
+  <defs>
+    <filter id="tcs-tools-lorem-ipsum-generator-glow" x="-50%" y="-150%" width="200%" height="400%"><feGaussianBlur stdDeviation="7.5"/></filter>
+    <style>
+    svg.tcs-tools-lorem-ipsum-generator:root{color-scheme:light dark}
+    :where(.dark,[data-theme="dark"],[data-tc-theme="dark"]) .tcs-tools-lorem-ipsum-generator{color-scheme:dark}
+    :where(.light,[data-theme="light"],[data-tc-theme="light"]) .tcs-tools-lorem-ipsum-generator{color-scheme:light}
+    .tcs-tools-lorem-ipsum-generator .tile{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#e4e7ec,rgba(255,255,255,0.1))}
+    .tcs-tools-lorem-ipsum-generator .line{stroke:light-dark(#e6e9ee,#44464d)}
+    .tcs-tools-lorem-ipsum-generator .mark{fill:light-dark(#dce8fb,#263a5c);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-tools-lorem-ipsum-generator .ink{stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-tools-lorem-ipsum-generator .glow{fill:light-dark(rgba(120,160,230,0.22),rgba(120,160,230,0.11))}
+    </style>
+  </defs>
+  <ellipse class="glow" cx="100" cy="154" rx="50" ry="9" fill="rgba(120,160,230,0.22)" filter="url(#tcs-tools-lorem-ipsum-generator-glow)"/>
+  <rect class="tile" x="30" y="40" width="140" height="112" rx="14" fill="#ffffff" stroke="#e4e7ec" stroke-width="2"/>
+  <path class="line" d="M48 60 H120 M48 76 H152 M48 92 H136" fill="none" stroke="#e6e9ee" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="mark" x="42" y="104" width="116" height="38" rx="10" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" d="M54 118 Q60 112 66 118 T78 118 T90 118 T102 118 T114 118 T126 118 T138 118 T146 118" fill="none" stroke="#2f5ea8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" d="M54 130 Q60 124 66 130 T78 130 T90 130 T102 130 T110 130" fill="none" stroke="#2f5ea8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

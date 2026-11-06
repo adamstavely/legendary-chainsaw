@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="tcs-tools-loading-spinner-generator">
+  <title>Loading Spinner Generator</title>
+  <defs>
+    <filter id="tcs-tools-loading-spinner-generator-glow" x="-50%" y="-150%" width="200%" height="400%"><feGaussianBlur stdDeviation="7.5"/></filter>
+    <style>
+    svg.tcs-tools-loading-spinner-generator:root{color-scheme:light dark}
+    :where(.dark,[data-theme="dark"],[data-tc-theme="dark"]) .tcs-tools-loading-spinner-generator{color-scheme:dark}
+    :where(.light,[data-theme="light"],[data-tc-theme="light"]) .tcs-tools-loading-spinner-generator{color-scheme:light}
+    .tcs-tools-loading-spinner-generator .tile{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#e4e7ec,rgba(255,255,255,0.1))}
+    .tcs-tools-loading-spinner-generator .line{stroke:light-dark(#e6e9ee,#44464d)}
+    .tcs-tools-loading-spinner-generator .line-fill{fill:light-dark(#e6e9ee,#44464d)}
+    .tcs-tools-loading-spinner-generator .mark{fill:light-dark(#dce8fb,#263a5c);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-tools-loading-spinner-generator .ink-fill{fill:light-dark(#2f5ea8,#cfdffb);stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-tools-loading-spinner-generator .glow{fill:light-dark(rgba(120,160,230,0.22),rgba(120,160,230,0.11))}
+    </style>
+  </defs>
+  <ellipse class="glow" cx="100" cy="154" rx="44" ry="9" fill="rgba(120,160,230,0.22)" filter="url(#tcs-tools-loading-spinner-generator-glow)"/>
+  <rect class="tile" x="30" y="40" width="140" height="112" rx="14" fill="#ffffff" stroke="#e4e7ec" stroke-width="2"/>
+  <circle class="mark" cx="100" cy="84" r="32" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="ink-fill" cx="100.0" cy="64.0" r="5.5" fill="#2f5ea8" stroke="#2f5ea8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="ink-fill" cx="114.1" cy="69.9" r="5.0" fill="#2f5ea8" stroke="#2f5ea8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="ink-fill" cx="120.0" cy="84.0" r="4.5" fill="#2f5ea8" stroke="#2f5ea8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="ink-fill" cx="114.1" cy="98.1" r="4.0" fill="#2f5ea8" stroke="#2f5ea8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="ink-fill" cx="100.0" cy="104.0" r="3.5" fill="#2f5ea8" stroke="#2f5ea8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="ink-fill" cx="85.9" cy="98.1" r="3.0" fill="#2f5ea8" stroke="#2f5ea8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="ink-fill" cx="80.0" cy="84.0" r="2.5" fill="#2f5ea8" stroke="#2f5ea8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="ink-fill" cx="85.9" cy="69.9" r="2.0" fill="#2f5ea8" stroke="#2f5ea8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="line-fill" x="48" y="128" width="20" height="14" rx="7" fill="#e6e9ee"/>
+  <path class="line" d="M80 129 H152" fill="none" stroke="#e6e9ee" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="line" d="M80 141 H124" fill="none" stroke="#e6e9ee" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

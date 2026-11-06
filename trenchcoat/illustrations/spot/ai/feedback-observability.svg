@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="tcs-ai-feedback-observability">
+  <title>Feedback Observability</title>
+  <defs>
+    <filter id="tcs-ai-feedback-observability-glow" x="-50%" y="-150%" width="200%" height="400%"><feGaussianBlur stdDeviation="7.5"/></filter>
+    <style>
+    svg.tcs-ai-feedback-observability:root{color-scheme:light dark}
+    :where(.dark,[data-theme="dark"],[data-tc-theme="dark"]) .tcs-ai-feedback-observability{color-scheme:dark}
+    :where(.light,[data-theme="light"],[data-tc-theme="light"]) .tcs-ai-feedback-observability{color-scheme:light}
+    .tcs-ai-feedback-observability .tile{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#e4e7ec,rgba(255,255,255,0.1))}
+    .tcs-ai-feedback-observability .line{stroke:light-dark(#e6e9ee,#44464d)}
+    .tcs-ai-feedback-observability .mark{fill:light-dark(#dce8fb,#263a5c);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-ai-feedback-observability .ink{stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-ai-feedback-observability .ink-fill{fill:light-dark(#2f5ea8,#cfdffb);stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-ai-feedback-observability .glow{fill:light-dark(rgba(120,160,230,0.22),rgba(120,160,230,0.11))}
+    </style>
+  </defs>
+  <ellipse class="glow" cx="100" cy="154" rx="46" ry="9" fill="rgba(120,160,230,0.22)" filter="url(#tcs-ai-feedback-observability-glow)"/>
+  <rect class="tile" x="30" y="40" width="140" height="112" rx="14" fill="#ffffff" stroke="#e4e7ec" stroke-width="2"/>
+  <path class="line" d="M46 138 L72 126 L96 132 L122 116 L154 122" fill="none" stroke="#e6e9ee" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="mark" d="M54 84 Q100 40 146 84 Q100 128 54 84 Z" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="ink" cx="100" cy="84" r="13" fill="none" stroke="#2f5ea8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><circle class="ink-fill" cx="100" cy="84" r="5" fill="#2f5ea8" stroke="#2f5ea8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

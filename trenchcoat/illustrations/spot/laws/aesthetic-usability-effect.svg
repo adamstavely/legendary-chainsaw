@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="tcs-laws-aesthetic-usability-effect">
+  <title>Aesthetic Usability Effect</title>
+  <defs>
+    <filter id="tcs-laws-aesthetic-usability-effect-glow" x="-50%" y="-150%" width="200%" height="400%"><feGaussianBlur stdDeviation="7.5"/></filter>
+    <style>
+    svg.tcs-laws-aesthetic-usability-effect:root{color-scheme:light dark}
+    :where(.dark,[data-theme="dark"],[data-tc-theme="dark"]) .tcs-laws-aesthetic-usability-effect{color-scheme:dark}
+    :where(.light,[data-theme="light"],[data-tc-theme="light"]) .tcs-laws-aesthetic-usability-effect{color-scheme:light}
+    .tcs-laws-aesthetic-usability-effect .tile{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#e4e7ec,rgba(255,255,255,0.1))}
+    .tcs-laws-aesthetic-usability-effect .line{stroke:light-dark(#e6e9ee,#44464d)}
+    .tcs-laws-aesthetic-usability-effect .mark{fill:light-dark(#dce8fb,#263a5c);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-laws-aesthetic-usability-effect .ink{stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-laws-aesthetic-usability-effect .ink-fill{fill:light-dark(#2f5ea8,#cfdffb);stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-laws-aesthetic-usability-effect .glow{fill:light-dark(rgba(120,160,230,0.22),rgba(120,160,230,0.11))}
+    </style>
+  </defs>
+  <ellipse class="glow" cx="100" cy="150" rx="44" ry="9" fill="rgba(120,160,230,0.22)" filter="url(#tcs-laws-aesthetic-usability-effect-glow)"/>
+  <rect class="tile" x="30" y="44" width="140" height="104" rx="14" fill="#ffffff" stroke="#e4e7ec" stroke-width="2"/>
+  <path class="line" d="M50 66 H100" fill="none" stroke="#e6e9ee" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="mark" x="52" y="88" width="96" height="36" rx="18" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" d="M86 106 L96 115 L115 96" fill="none" stroke="#2f5ea8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink-fill" d="M146 52 Q148 62 158 64 Q148 66 146 76 Q144 66 134 64 Q144 62 146 52 Z" fill="#2f5ea8" stroke="#2f5ea8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="ink-fill" cx="128" cy="56" r="2.5" fill="#2f5ea8" stroke="#2f5ea8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

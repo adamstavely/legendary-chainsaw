@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="tcs-research-research-insights">
+  <title>Research Insights</title>
+  <defs>
+    <filter id="tcs-research-research-insights-glow" x="-50%" y="-150%" width="200%" height="400%"><feGaussianBlur stdDeviation="7.5"/></filter>
+    <style>
+    svg.tcs-research-research-insights:root{color-scheme:light dark}
+    :where(.dark,[data-theme="dark"],[data-tc-theme="dark"]) .tcs-research-research-insights{color-scheme:dark}
+    :where(.light,[data-theme="light"],[data-tc-theme="light"]) .tcs-research-research-insights{color-scheme:light}
+    .tcs-research-research-insights .tile{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#e4e7ec,rgba(255,255,255,0.1))}
+    .tcs-research-research-insights .mark{fill:light-dark(#dce8fb,#263a5c);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-research-research-insights .ink{stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-research-research-insights .glow{fill:light-dark(rgba(120,160,230,0.22),rgba(120,160,230,0.11))}
+    </style>
+  </defs>
+  <ellipse class="glow" cx="100" cy="156" rx="36" ry="9" fill="rgba(120,160,230,0.22)" filter="url(#tcs-research-research-insights-glow)"/>
+  <rect class="tile" x="36" y="40" width="128" height="112" rx="14" fill="#ffffff" stroke="#e4e7ec" stroke-width="2"/>
+  <path class="ink" d="M62 70 L70 76 M138 70 L130 76 M56 98 H66 M144 98 H134 M100 50 V58" fill="none" stroke="#2f5ea8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="mark" d="M100 64 Q126 64 126 92 Q126 106 114 116 V124 H86 V116 Q74 106 74 92 Q74 64 100 64 Z" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" d="M92 102 L100 92 L108 102" fill="none" stroke="#2f5ea8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" d="M88 134 H112 M92 144 H108" fill="none" stroke="#2f5ea8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

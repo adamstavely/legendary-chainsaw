@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="tcs-research-hcd-principles">
+  <title>HCD Principles</title>
+  <defs>
+    <filter id="tcs-research-hcd-principles-glow" x="-50%" y="-150%" width="200%" height="400%"><feGaussianBlur stdDeviation="7.5"/></filter>
+    <style>
+    svg.tcs-research-hcd-principles:root{color-scheme:light dark}
+    :where(.dark,[data-theme="dark"],[data-tc-theme="dark"]) .tcs-research-hcd-principles{color-scheme:dark}
+    :where(.light,[data-theme="light"],[data-tc-theme="light"]) .tcs-research-hcd-principles{color-scheme:light}
+    .tcs-research-hcd-principles .tile{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#e4e7ec,rgba(255,255,255,0.1))}
+    .tcs-research-hcd-principles .mark{fill:light-dark(#dce8fb,#263a5c);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-research-hcd-principles .edge{stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-research-hcd-principles .ink{stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-research-hcd-principles .ink-fill{fill:light-dark(#2f5ea8,#cfdffb);stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-research-hcd-principles .ink-box{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-research-hcd-principles .glow{fill:light-dark(rgba(120,160,230,0.22),rgba(120,160,230,0.11))}
+    </style>
+  </defs>
+  <ellipse class="glow" cx="100" cy="156" rx="44" ry="9" fill="rgba(120,160,230,0.22)" filter="url(#tcs-research-hcd-principles-glow)"/>
+  <rect class="tile" x="36" y="40" width="128" height="112" rx="14" fill="#ffffff" stroke="#e4e7ec" stroke-width="2"/>
+  <circle class="mark" cx="100" cy="94" r="40" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="edge" d="M100 60 V66 M100 122 V128 M66 94 H72 M128 94 H134" fill="none" stroke="#8fb0e8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink-fill" d="M100 70 L110 94 H90 Z" fill="#2f5ea8" stroke="#2f5ea8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" d="M90 94 L100 118 L110 94" fill="none" stroke="#2f5ea8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="ink-box" cx="100" cy="94" r="5" fill="#ffffff" stroke="#2f5ea8" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="tcs-tools-design-extractor">
+  <title>Design Extractor</title>
+  <defs>
+    <filter id="tcs-tools-design-extractor-glow" x="-50%" y="-150%" width="200%" height="400%"><feGaussianBlur stdDeviation="7.5"/></filter>
+    <style>
+    svg.tcs-tools-design-extractor:root{color-scheme:light dark}
+    :where(.dark,[data-theme="dark"],[data-tc-theme="dark"]) .tcs-tools-design-extractor{color-scheme:dark}
+    :where(.light,[data-theme="light"],[data-tc-theme="light"]) .tcs-tools-design-extractor{color-scheme:light}
+    .tcs-tools-design-extractor .tile{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#e4e7ec,rgba(255,255,255,0.1))}
+    .tcs-tools-design-extractor .line{stroke:light-dark(#e6e9ee,#44464d)}
+    .tcs-tools-design-extractor .line-fill{fill:light-dark(#e6e9ee,#44464d)}
+    .tcs-tools-design-extractor .sub{stroke:light-dark(#c9ced6,#5c5f67)}
+    .tcs-tools-design-extractor .mark{fill:light-dark(#dce8fb,#263a5c);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-tools-design-extractor .ink{stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-tools-design-extractor .glow{fill:light-dark(rgba(120,160,230,0.22),rgba(120,160,230,0.11))}
+    </style>
+  </defs>
+  <ellipse class="glow" cx="138" cy="156" rx="26" ry="9" fill="rgba(120,160,230,0.22)" filter="url(#tcs-tools-design-extractor-glow)"/>
+  <rect class="tile" x="30" y="40" width="112" height="96" rx="14" fill="#ffffff" stroke="#e4e7ec" stroke-width="2"/>
+  <circle class="line-fill" cx="46" cy="52" r="3.5" fill="#e6e9ee"/>
+  <circle class="line-fill" cx="58" cy="52" r="3.5" fill="#e6e9ee"/>
+  <circle class="line-fill" cx="70" cy="52" r="3.5" fill="#e6e9ee"/>
+  <path class="line" style="stroke-width:2" d="M30 64 H142" fill="none" stroke="#e6e9ee" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="line" d="M44 82 H92 M44 120 H80" fill="none" stroke="#e6e9ee" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="sub" style="stroke-dasharray:3 6" x="42" y="94" width="60" height="16" rx="5" fill="none" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="sub" d="M104 102 Q124 102 128 114" fill="none" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="mark" d="M140 104 Q162 128 162 134 A22 22 0 0 1 118 134 Q118 128 140 104 Z" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" d="M130 134 Q130 142 138 144" fill="none" stroke="#2f5ea8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

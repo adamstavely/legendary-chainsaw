@@ -6,9 +6,11 @@ Some files import another Trenchcoat component from `@/components/ui/<name>` –
 Colours follow the page theme – a `.dark` class, `data-theme` / `data-tc-theme` or the OS setting – through `light-dark()`.
 They are decorative unless given a `label`, loops are finite or rest, and `prefers-reduced-motion` keeps them still.
 
+- **Accessibility Principles** (`accessibility-principles.tsx`) – Visual, hearing, motor and cognitive needs on pastel tiles, with arrows up from the four principles that serve them – perceivable, operable, understandable and robust – for an accessibility statement or design guide
 - **Agent Scene** (`agent-scene.tsx`) – The assistant in a small scene – happy above an empty tray, thinking beside a stack of pages, or asleep beside a sign
 - **Agent Team** (`agent-team.tsx`) – A prompt types itself and branches out into three agents, each with a role and overlapping tool logos – three times, then the team stays
 - **All Done** (`all-done.tsx`) – An empty tray with a check above it, with the words You're all caught up, for an inbox or queue with nothing waiting
+- **Atomic Design** (`atomic-design.tsx`) – Atomic design one stage at a time – the five stages from abstract to concrete, then atoms, a search-form molecule, a header organism, a wireframe template and the finished page (`stage`)
 - **Awaiting Review** (`awaiting-review.tsx`) – A document with an hourglass on it, with the words Awaiting review, for content held until someone approves it
 - **Content Hidden** (`content-hidden.tsx`) – A photo pixelated to a person's outline with a warning sign on it, with the words Sensitive content, to sit on an overlay covering obscene, sexual or graphic content
 - **Cover Flow** (`cover-flow.tsx`) – Browse covers in 3D – drag, flick or scrub the row, it springs to the nearest cover; images drift in their frames over a soft reflection

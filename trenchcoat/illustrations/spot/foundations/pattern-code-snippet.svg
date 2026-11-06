@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="tcs-foundations-pattern-code-snippet">
+  <title>Pattern Code Snippet</title>
+  <defs>
+    <filter id="tcs-foundations-pattern-code-snippet-glow" x="-50%" y="-150%" width="200%" height="400%"><feGaussianBlur stdDeviation="7.5"/></filter>
+    <style>
+    svg.tcs-foundations-pattern-code-snippet:root{color-scheme:light dark}
+    :where(.dark,[data-theme="dark"],[data-tc-theme="dark"]) .tcs-foundations-pattern-code-snippet{color-scheme:dark}
+    :where(.light,[data-theme="light"],[data-tc-theme="light"]) .tcs-foundations-pattern-code-snippet{color-scheme:light}
+    .tcs-foundations-pattern-code-snippet .tile{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#e4e7ec,rgba(255,255,255,0.1))}
+    .tcs-foundations-pattern-code-snippet .line{stroke:light-dark(#e6e9ee,#44464d)}
+    .tcs-foundations-pattern-code-snippet .sub{stroke:light-dark(#c9ced6,#5c5f67)}
+    .tcs-foundations-pattern-code-snippet .mark{fill:light-dark(#dce8fb,#263a5c);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-foundations-pattern-code-snippet .ink{stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-foundations-pattern-code-snippet .glow{fill:light-dark(rgba(120,160,230,0.22),rgba(120,160,230,0.11))}
+    </style>
+  </defs>
+  <ellipse class="glow" cx="130" cy="150" rx="30" ry="9" fill="rgba(120,160,230,0.22)" filter="url(#tcs-foundations-pattern-code-snippet-glow)"/>
+  <rect class="tile" x="30" y="44" width="140" height="104" rx="14" fill="#ffffff" stroke="#e4e7ec" stroke-width="2"/>
+  <circle class="sub" cx="46" cy="58" r="3" fill="none" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle class="sub" cx="57" cy="58" r="3" fill="none" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle class="sub" cx="68" cy="58" r="3" fill="none" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="line" d="M46 78 H98 M60 94 H112 M60 110 H88 M46 126 H80" fill="none" stroke="#e6e9ee" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="mark" x="102" y="98" width="56" height="40" rx="10" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" d="M119 110 L112 118 L119 126 M141 110 L148 118 L141 126 M133 108 L127 128" fill="none" stroke="#2f5ea8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

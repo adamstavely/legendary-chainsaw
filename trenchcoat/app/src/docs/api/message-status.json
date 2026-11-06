@@ -1,0 +1,515 @@
+{
+ "elements": [
+  {
+   "tag": "tc-message-status",
+   "className": "TcMessageStatus",
+   "description": "The row under a sent message: its read receipt, a relative time, and Copy, Send again, Branch and Edit.",
+   "properties": [
+    {
+     "name": "receipt",
+     "attribute": "receipt",
+     "type": "MessageReceipt",
+     "default": "\"sent\"",
+     "description": "Where the message is: \"sending\", \"sent\", \"delivered\", \"read\" or \"failed\"",
+     "readonly": false
+    },
+    {
+     "name": "time",
+     "attribute": null,
+     "type": "Date | string | number | undefined",
+     "default": "undefined",
+     "description": "When it was sent – a Date, an ISO string or epoch ms. Unset, no time shows",
+     "readonly": false
+    },
+    {
+     "name": "now",
+     "attribute": "now",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "The current time in epoch ms, for tests and stories; unset, the row keeps its own clock",
+     "readonly": false
+    },
+    {
+     "name": "text",
+     "attribute": "text",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The message text – what Copy puts on the clipboard",
+     "readonly": false
+    },
+    {
+     "name": "actions",
+     "attribute": null,
+     "type": "MessageStatusAction[]",
+     "default": "[\"copy\", \"retry\", \"branch\"]",
+     "description": "Which controls to show, in this order. Retry shows anyway while the message has failed",
+     "readonly": false
+    },
+    {
+     "name": "onRetry",
+     "attribute": null,
+     "type": "(() => void | Promise<unknown>) | undefined",
+     "default": "undefined",
+     "description": "Called after tc-retry when it isn't prevented. Return a promise to keep the arrow spinning until it settles",
+     "readonly": false
+    },
+    {
+     "name": "align",
+     "attribute": "align",
+     "type": "\"start\" | \"end\"",
+     "default": "\"end\"",
+     "description": "\"end\" for the person's own message (the default), \"start\" to line up on the left",
+     "readonly": false
+    },
+    {
+     "name": "quiet",
+     "attribute": "quiet",
+     "type": "boolean",
+     "default": "true",
+     "description": "Controls stay hidden until the message is hovered or focused (default true; quiet=\"false\" shows them always). Put data-ui-message on the message wrapper",
+     "readonly": false
+    },
+    {
+     "name": "labels",
+     "attribute": null,
+     "type": "Partial<MessageStatusLabels>",
+     "default": "{}",
+     "description": "Every word the row shows or says, merged over the defaults",
+     "readonly": false
+    },
+    {
+     "name": "locale",
+     "attribute": "locale",
+     "type": "string | undefined",
+     "default": "undefined",
+     "description": "The locale for dates older than yesterday",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-copy",
+     "detail": "",
+     "description": "`text` is on the clipboard (or Copy was pressed without `text`); detail `{ text?: string }`",
+     "cancelable": false
+    },
+    {
+     "name": "tc-retry",
+     "detail": "",
+     "description": "Send again or Retry was pressed; detail `{ receipt }`. Cancelable: preventDefault() skips `onRetry`",
+     "cancelable": true
+    },
+    {
+     "name": "tc-branch",
+     "detail": "",
+     "description": "Branch into a new chat was pressed; detail `{}`. Cancelable",
+     "cancelable": true
+    },
+    {
+     "name": "tc-edit",
+     "detail": "",
+     "description": "Edit was pressed; detail `{}`. Cancelable",
+     "cancelable": true
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "mst",
+   "cssProperties": [
+    {
+     "name": "--tc-mst-btn",
+     "value": "36px",
+     "looks": [
+      "standard",
+      "clean",
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-mst-radius",
+     "value": "var(--tc-control-radius-md)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-mst-hover",
+     "value": "var(--tc-fill-subtle)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-mst-stroke",
+     "value": "1.3",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-mst-quiet-color",
+     "value": "var(--tc-icon-muted)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-accent-text",
+    "--tc-control-h-md",
+    "--tc-control-h-sm",
+    "--tc-control-radius-md",
+    "--tc-control-radius-sm",
+    "--tc-duration-base",
+    "--tc-duration-fast",
+    "--tc-duration-reveal",
+    "--tc-duration-reveal-slow",
+    "--tc-duration-slow",
+    "--tc-duration-slower",
+    "--tc-ease-in-out",
+    "--tc-ease-move",
+    "--tc-ease-standard",
+    "--tc-fill-hover",
+    "--tc-fill-subtle",
+    "--tc-focus-outline",
+    "--tc-focus-ring-offset",
+    "--tc-font-sans",
+    "--tc-font-size-sm",
+    "--tc-font-size-xs",
+    "--tc-font-weight-medium",
+    "--tc-icon-muted",
+    "--tc-line-height-tight",
+    "--tc-shadow-overlay",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-space-1-5",
+    "--tc-space-2",
+    "--tc-status-danger-bg",
+    "--tc-status-danger-fg",
+    "--tc-status-success-fg",
+    "--tc-surface-overlay",
+    "--tc-text-muted",
+    "--tc-text-primary",
+    "--tc-tooltip-bg",
+    "--tc-tooltip-fg",
+    "--tc-tooltip-radius"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "relativeMessageTime",
+   "signature": "relativeMessageTime(at: number, now: number, labels: MessageStatusLabels, locale?: string): void",
+   "description": "\"Just now\", \"2 min ago\", \"3 hr ago\", \"Yesterday\" or a short date"
+  }
+ ],
+ "react": [
+  {
+   "component": "MessageStatus",
+   "exported": true,
+   "props": [
+    {
+     "name": "onCopyText",
+     "type": "(text?: string) => void",
+     "optional": true,
+     "description": "Called once `text` is on the clipboard (or right away when there's no `text`)"
+    },
+    {
+     "name": "onBranch",
+     "type": "() => void",
+     "optional": true,
+     "description": "Called when Branch into a new chat is pressed"
+    },
+    {
+     "name": "onEdit",
+     "type": "() => void",
+     "optional": true,
+     "description": "Called when Edit is pressed"
+    }
+   ],
+   "hides": [
+    "children"
+   ],
+   "events": {
+    "tc-copy": "onCopyText",
+    "tc-retry": "onTcRetry",
+    "tc-branch": "onBranch",
+    "tc-edit": "onEdit"
+   }
+  }
+ ],
+ "changelog": [
+  "**Message Status** (`tc-message-status`): the quiet row under a sent message – a read receipt (sending, sent, delivered, read, or Not sent with Retry), a relative time that keeps itself fresh, and Copy, Send again, Branch into a new chat and Edit, with cancelable `tc-retry`, `tc-branch` and `tc-edit`."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-message-status",
+   "className": "TcMessageStatus",
+   "module": "trenchcoat/message-status",
+   "data": [
+    "time",
+    "actions",
+    "onRetry",
+    "labels"
+   ],
+   "attributes": [
+    {
+     "name": "receipt",
+     "attribute": "receipt"
+    },
+    {
+     "name": "now",
+     "attribute": "now"
+    },
+    {
+     "name": "text",
+     "attribute": "text"
+    },
+    {
+     "name": "align",
+     "attribute": "align"
+    },
+    {
+     "name": "quiet",
+     "attribute": "quiet"
+    },
+    {
+     "name": "locale",
+     "attribute": "locale"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-copy",
+     "cancelable": false
+    },
+    {
+     "name": "tc-retry",
+     "cancelable": true
+    },
+    {
+     "name": "tc-branch",
+     "cancelable": true
+    },
+    {
+     "name": "tc-edit",
+     "cancelable": true
+    }
+   ],
+   "controlled": [],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "itself",
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "clipboard",
+    "name": "Async Clipboard (writeText)",
+    "bcd": "api.Clipboard.writeText",
+    "versions": {
+     "chrome": "66",
+     "edge": "79",
+     "firefox": "63",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "why": "Copy buttons.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setInterval, cleared",
+   "setTimeout"
+  ],
+  "frames": [],
+  "animations": 2,
+  "observers": [
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [
+   "Date.now()"
+  ],
+  "listeners": [],
+  "pauses": {
+   "offscreen": [],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 26617,
+  "gzip": 8696
+ }
+}

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="tcs-laws-paradox-of-the-active-user">
+  <title>Paradox of the Active User</title>
+  <defs>
+    <filter id="tcs-laws-paradox-of-the-active-user-glow" x="-50%" y="-150%" width="200%" height="400%"><feGaussianBlur stdDeviation="7.5"/></filter>
+    <style>
+    svg.tcs-laws-paradox-of-the-active-user:root{color-scheme:light dark}
+    :where(.dark,[data-theme="dark"],[data-tc-theme="dark"]) .tcs-laws-paradox-of-the-active-user{color-scheme:dark}
+    :where(.light,[data-theme="light"],[data-tc-theme="light"]) .tcs-laws-paradox-of-the-active-user{color-scheme:light}
+    .tcs-laws-paradox-of-the-active-user .tile{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#e4e7ec,rgba(255,255,255,0.1))}
+    .tcs-laws-paradox-of-the-active-user .sub{stroke:light-dark(#c9ced6,#5c5f67)}
+    .tcs-laws-paradox-of-the-active-user .sub-box{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#c9ced6,#5c5f67)}
+    .tcs-laws-paradox-of-the-active-user .mark{fill:light-dark(#dce8fb,#263a5c);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-laws-paradox-of-the-active-user .ink{stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-laws-paradox-of-the-active-user .ink-box{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-laws-paradox-of-the-active-user .glow{fill:light-dark(rgba(120,160,230,0.22),rgba(120,160,230,0.11))}
+    </style>
+  </defs>
+  <ellipse class="glow" cx="124" cy="150" rx="34" ry="9" fill="rgba(120,160,230,0.22)" filter="url(#tcs-laws-paradox-of-the-active-user-glow)"/>
+  <rect class="tile" x="30" y="44" width="140" height="104" rx="14" fill="#ffffff" stroke="#e4e7ec" stroke-width="2"/>
+  <g transform="rotate(-8 64 92)">
+  <rect class="sub-box" x="44" y="66" width="40" height="52" rx="4" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="sub" d="M52 80 H76 M52 92 H76 M52 104 H70" fill="none" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <rect class="mark" x="96" y="76" width="60" height="28" rx="14" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" d="M112 90 H132" fill="none" stroke="#2f5ea8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink-box" d="M132 96 L132 126 L139 120 L144 131 L150 128 L145 118 L154 117 Z" fill="#ffffff" stroke="#2f5ea8" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

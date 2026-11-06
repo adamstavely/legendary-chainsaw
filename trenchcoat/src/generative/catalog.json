@@ -22,6 +22,12 @@
     ]
   },
   {
+    "tag": "tc-accessibility-principles",
+    "name": "AccessibilityPrinciples",
+    "description": "The four kinds of need accessibility serves, above the four principles that serve them, joined by connectors.",
+    "events": []
+  },
+  {
     "tag": "tc-account-list",
     "name": "AccountList",
     "description": "The financial accounts linked to a person or a company – institution, type, a masked identifier shown one at a time,",
@@ -321,6 +327,12 @@
       "tc-open",
       "tc-revealed-change"
     ]
+  },
+  {
+    "tag": "tc-atomic-design",
+    "name": "AtomicDesign",
+    "description": "Atomic design, one stage at a time – from the five stages in a row to atoms, a molecule, an organism, a template and a page.",
+    "events": []
   },
   {
     "tag": "tc-attention-pulse",
@@ -629,6 +641,14 @@
     "name": "Collapse",
     "description": "Content that glides open and shut, to its real height.",
     "events": []
+  },
+  {
+    "tag": "tc-collection-card",
+    "name": "CollectionCard",
+    "description": "A card that introduces a collection – previews, counts, a description, what's inside – and links into it.",
+    "events": [
+      "tc-open"
+    ]
   },
   {
     "tag": "tc-color-picker",
@@ -1570,6 +1590,17 @@
     ]
   },
   {
+    "tag": "tc-message-status",
+    "name": "MessageStatus",
+    "description": "The row under a sent message: its read receipt, a relative time, and Copy, Send again, Branch and Edit.",
+    "events": [
+      "tc-copy",
+      "tc-retry",
+      "tc-branch",
+      "tc-edit"
+    ]
+  },
+  {
     "tag": "tc-meter-row",
     "name": "MeterRow",
     "description": "A label, a percentage and a tiny bar on one line, with a word and a mark when it's getting full.",
@@ -1828,6 +1859,14 @@
       "tc-input-change",
       "tc-simulate",
       "tc-result"
+    ]
+  },
+  {
+    "tag": "tc-preview-card",
+    "name": "PreviewCard",
+    "description": "A gallery tile: a large preview above a title and a short description, which opens what it previews.",
+    "events": [
+      "tc-open"
     ]
   },
   {

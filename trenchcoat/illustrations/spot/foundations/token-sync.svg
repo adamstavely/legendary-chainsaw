@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="tcs-foundations-token-sync">
+  <title>Token Sync</title>
+  <defs>
+    <filter id="tcs-foundations-token-sync-glow" x="-50%" y="-150%" width="200%" height="400%"><feGaussianBlur stdDeviation="7.5"/></filter>
+    <style>
+    svg.tcs-foundations-token-sync:root{color-scheme:light dark}
+    :where(.dark,[data-theme="dark"],[data-tc-theme="dark"]) .tcs-foundations-token-sync{color-scheme:dark}
+    :where(.light,[data-theme="light"],[data-tc-theme="light"]) .tcs-foundations-token-sync{color-scheme:light}
+    .tcs-foundations-token-sync .tile{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#e4e7ec,rgba(255,255,255,0.1))}
+    .tcs-foundations-token-sync .line{stroke:light-dark(#e6e9ee,#44464d)}
+    .tcs-foundations-token-sync .line-fill{fill:light-dark(#e6e9ee,#44464d)}
+    .tcs-foundations-token-sync .sub-box{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#c9ced6,#5c5f67)}
+    .tcs-foundations-token-sync .mark{fill:light-dark(#dce8fb,#263a5c);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-foundations-token-sync .edge{stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-foundations-token-sync .ink{stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-foundations-token-sync .glow{fill:light-dark(rgba(120,160,230,0.22),rgba(120,160,230,0.11))}
+    </style>
+  </defs>
+  <ellipse class="glow" cx="100" cy="148" rx="34" ry="9" fill="rgba(120,160,230,0.22)" filter="url(#tcs-foundations-token-sync-glow)"/>
+  <rect class="tile" x="30" y="48" width="140" height="96" rx="14" fill="#ffffff" stroke="#e4e7ec" stroke-width="2"/>
+  <path class="edge" d="M72 96 H78 M122 96 H128" fill="none" stroke="#8fb0e8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="sub-box" x="42" y="74" width="30" height="44" rx="6" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="line-fill" cx="57" cy="88" r="6" fill="#e6e9ee"/>
+  <path class="line" style="stroke-width:5" d="M50 106 H64" fill="none" stroke="#e6e9ee" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="sub-box" x="128" y="74" width="30" height="44" rx="6" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="line" style="stroke-width:5" d="M136 86 H150 M136 97 H150 M136 108 H145" fill="none" stroke="#e6e9ee" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="mark" cx="100" cy="96" r="22" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" style="stroke-width:4" d="M88.7 91.9 A12 12 0 0 1 110.4 90.0 M111.7 82.3 L110.4 90.0 L103.1 87.3 M111.3 100.1 A12 12 0 0 1 89.6 102.0 M88.3 109.7 L89.6 102.0 L96.9 104.7" fill="none" stroke="#2f5ea8" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

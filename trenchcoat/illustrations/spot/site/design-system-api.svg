@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="tcs-site-design-system-api">
+  <title>Design System API</title>
+  <defs>
+    <filter id="tcs-site-design-system-api-glow" x="-50%" y="-150%" width="200%" height="400%"><feGaussianBlur stdDeviation="7.5"/></filter>
+    <style>
+    svg.tcs-site-design-system-api:root{color-scheme:light dark}
+    :where(.dark,[data-theme="dark"],[data-tc-theme="dark"]) .tcs-site-design-system-api{color-scheme:dark}
+    :where(.light,[data-theme="light"],[data-tc-theme="light"]) .tcs-site-design-system-api{color-scheme:light}
+    .tcs-site-design-system-api .tile{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#e4e7ec,rgba(255,255,255,0.1))}
+    .tcs-site-design-system-api .sub{stroke:light-dark(#c9ced6,#5c5f67)}
+    .tcs-site-design-system-api .sub-box{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#c9ced6,#5c5f67)}
+    .tcs-site-design-system-api .mark{fill:light-dark(#dce8fb,#263a5c);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-site-design-system-api .ink{stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-site-design-system-api .glow{fill:light-dark(rgba(120,160,230,0.22),rgba(120,160,230,0.11))}
+    </style>
+  </defs>
+  <ellipse class="glow" cx="80" cy="154" rx="34" ry="9" fill="rgba(120,160,230,0.22)" filter="url(#tcs-site-design-system-api-glow)"/>
+  <rect class="tile" x="30" y="44" width="140" height="104" rx="14" fill="#ffffff" stroke="#e4e7ec" stroke-width="2"/>
+  <path class="sub" d="M108 96 H118 M118 66 V126 M118 66 H128 M118 96 H128 M118 126 H128" fill="none" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="sub-box" cx="138" cy="66" r="9" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle class="sub-box" cx="138" cy="96" r="9" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><circle class="sub-box" cx="138" cy="126" r="9" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="mark" x="44" y="62" width="64" height="68" rx="12" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" d="M68 78 Q62 78 62 84 V90 Q62 96 57 96 Q62 96 62 102 V108 Q62 114 68 114" fill="none" stroke="#2f5ea8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" d="M84 78 Q90 78 90 84 V90 Q90 96 95 96 Q90 96 90 102 V108 Q90 114 84 114" fill="none" stroke="#2f5ea8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

@@ -3,6 +3,7 @@
 import { marked } from "marked";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Table, kb, type PerfFile } from "./DocsSections";
+import { SpotIllustrations } from "./SpotIllustrations";
 import type { Browser } from "./usage";
 import changelog from "../../../CHANGELOG.md?raw";
 import tokensCss from "../../../tokens/tokens.css?raw";
@@ -18,6 +19,7 @@ export const FOUNDATIONS: [string, string][] = [
   ["accessibility", "Accessibility"],
   ["frameworks", "Frameworks"],
   ["generative-ui", "Generative UI"],
+  ["spot-illustrations", "Spot illustrations"],
   ["browser-support", "Browser support"],
   ["performance", "Performance"],
   ["changelog", "Changelog"],
@@ -27,6 +29,7 @@ export const FOUNDATIONS: [string, string][] = [
 const GENERATED: Record<string, () => ReactNode> = {
   floor: () => <Floor />,
   summary: () => <PerfSummary />,
+  spots: () => <SpotIllustrations />,
 };
 const html = (text: string) => ({ __html: marked.parse(text, { async: false }) as string });
 

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="tcs-laws-parkinsons-law">
+  <title>Parkinson's Law</title>
+  <defs>
+    <filter id="tcs-laws-parkinsons-law-glow" x="-50%" y="-150%" width="200%" height="400%"><feGaussianBlur stdDeviation="7.5"/></filter>
+    <style>
+    svg.tcs-laws-parkinsons-law:root{color-scheme:light dark}
+    :where(.dark,[data-theme="dark"],[data-tc-theme="dark"]) .tcs-laws-parkinsons-law{color-scheme:dark}
+    :where(.light,[data-theme="light"],[data-tc-theme="light"]) .tcs-laws-parkinsons-law{color-scheme:light}
+    .tcs-laws-parkinsons-law .tile{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#e4e7ec,rgba(255,255,255,0.1))}
+    .tcs-laws-parkinsons-law .sub{stroke:light-dark(#c9ced6,#5c5f67)}
+    .tcs-laws-parkinsons-law .sub-box{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#c9ced6,#5c5f67)}
+    .tcs-laws-parkinsons-law .mark{fill:light-dark(#dce8fb,#263a5c);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-laws-parkinsons-law .ink{stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-laws-parkinsons-law .glow{fill:light-dark(rgba(120,160,230,0.22),rgba(120,160,230,0.11))}
+    </style>
+  </defs>
+  <ellipse class="glow" cx="100" cy="150" rx="50" ry="9" fill="rgba(120,160,230,0.22)" filter="url(#tcs-laws-parkinsons-law-glow)"/>
+  <rect class="tile" x="30" y="44" width="140" height="104" rx="14" fill="#ffffff" stroke="#e4e7ec" stroke-width="2"/>
+  <circle class="sub-box" cx="100" cy="56" r="8" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="sub" style="stroke-width:2.5" d="M100 52 V56 L103 58" fill="none" stroke="#c9ced6" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="sub" style="stroke-dasharray:7 7" x="42" y="72" width="116" height="52" rx="12" fill="none" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="mark" x="50" y="80" width="100" height="36" rx="10" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" d="M94 98 H62 M70 90 L62 98 L70 106 M106 98 H138 M130 90 L138 98 L130 106" fill="none" stroke="#2f5ea8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

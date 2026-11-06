@@ -1,0 +1,129 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-atomic-design.json",
+  "title": "tc-atomic-design",
+  "description": "Atomic design, one stage at a time – from the five stages in a row to atoms, a molecule, an organism, a template and a page.",
+  "type": "object",
+  "properties": {
+    "stage": {
+      "type": "string",
+      "enum": [
+        "overview",
+        "atoms",
+        "molecule",
+        "organism",
+        "template",
+        "page"
+      ],
+      "description": "Which stage to draw: \"overview\" (the five stages in a row), \"atoms\", \"molecule\", \"organism\", \"template\" or \"page\""
+    },
+    "scale": {
+      "type": "boolean",
+      "description": "On the overview, the line from abstract to concrete above the stages"
+    },
+    "labels": {
+      "$ref": "#/definitions/AtomicDesignLabels",
+      "description": "The words drawn in: stage names, tags and the content drawn into the parts"
+    },
+    "caption": {
+      "type": "string",
+      "description": "Words under the drawing; \"\" (the default) leaves them out"
+    },
+    "label": {
+      "type": "string",
+      "description": "Accessible description; by default a sentence for the stage"
+    },
+    "decorative": {
+      "type": "boolean",
+      "description": "Leave the drawing out of the accessibility tree, for when the text beside it says the same"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "AtomicDesignLabels": {
+      "type": "object",
+      "properties": {
+        "atoms": {
+          "type": "string"
+        },
+        "molecules": {
+          "type": "string"
+        },
+        "organisms": {
+          "type": "string"
+        },
+        "templates": {
+          "type": "string"
+        },
+        "pages": {
+          "type": "string"
+        },
+        "abstract": {
+          "type": "string"
+        },
+        "concrete": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "description": "Tags naming the parts: the atoms, then the molecules in the organism"
+        },
+        "input": {
+          "type": "string"
+        },
+        "button": {
+          "type": "string"
+        },
+        "logo": {
+          "type": "string"
+        },
+        "navigation": {
+          "type": "string"
+        },
+        "search": {
+          "type": "string"
+        },
+        "searchLabel": {
+          "type": "string",
+          "description": "The content drawn into the parts"
+        },
+        "placeholder": {
+          "type": "string"
+        },
+        "searchButton": {
+          "type": "string"
+        },
+        "nav": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "headline": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "atoms",
+        "molecules",
+        "organisms",
+        "templates",
+        "pages",
+        "abstract",
+        "concrete",
+        "label",
+        "input",
+        "button",
+        "logo",
+        "navigation",
+        "search",
+        "searchLabel",
+        "placeholder",
+        "searchButton",
+        "nav",
+        "headline"
+      ],
+      "additionalProperties": false
+    }
+  }
+}
