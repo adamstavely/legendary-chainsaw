@@ -16,14 +16,14 @@
     "observed": {
       "anyOf": [
         {
-          "type": "string"
-        },
-        {
           "type": "number"
         },
         {
           "type": "string",
           "format": "date-time"
+        },
+        {
+          "type": "string"
         }
       ],
       "description": "When the evidence was observed or published: epoch ms, an ISO date string or a Date"
@@ -31,10 +31,10 @@
     "profile": {
       "anyOf": [
         {
-          "$ref": "#/definitions/ValidityProfileName"
+          "$ref": "#/definitions/ValidityProfile"
         },
         {
-          "$ref": "#/definitions/ValidityProfile"
+          "$ref": "#/definitions/ValidityProfileName"
         }
       ],
       "description": "How fast it decays: \"fast\", \"standard\", \"slow\", \"lasting\", or your own band boundaries in days"
@@ -179,10 +179,10 @@
         "profile": {
           "anyOf": [
             {
-              "$ref": "#/definitions/ValidityProfileName"
+              "$ref": "#/definitions/ValidityProfile"
             },
             {
-              "$ref": "#/definitions/ValidityProfile"
+              "$ref": "#/definitions/ValidityProfileName"
             }
           ],
           "description": "How fast it decays (default \"standard\")"
@@ -217,11 +217,11 @@
           "type": "number"
         },
         {
-          "type": "string"
-        },
-        {
           "type": "string",
           "format": "date-time"
+        },
+        {
+          "type": "string"
         }
       ],
       "description": "A moment: epoch ms, an ISO date string or a Date"

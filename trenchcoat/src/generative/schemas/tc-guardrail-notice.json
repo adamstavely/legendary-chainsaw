@@ -42,13 +42,13 @@
     "original": {
       "anyOf": [
         {
-          "type": "string"
-        },
-        {
           "type": "array",
           "items": {
             "$ref": "#/definitions/GuardrailSegment"
           }
+        },
+        {
+          "type": "string"
         }
       ],
       "description": "The content as it was, with personal data already masked by the app – text, or segments"
@@ -56,13 +56,13 @@
     "revised": {
       "anyOf": [
         {
-          "type": "string"
-        },
-        {
           "type": "array",
           "items": {
             "$ref": "#/definitions/GuardrailSegment"
           }
+        },
+        {
+          "type": "string"
         }
       ],
       "description": "The content as it went out – text, or segments; leave it out when nothing went out"

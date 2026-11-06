@@ -15,13 +15,13 @@
     "value": {
       "anyOf": [
         {
-          "type": "string"
-        },
-        {
           "type": "array",
           "items": {
             "type": "string"
           }
+        },
+        {
+          "type": "string"
         }
       ],
       "description": "The picked id (or ids, with `multiple`); null for nothing. Changed by the user unless a tc-value-change listener calls preventDefault()"

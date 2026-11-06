@@ -178,9 +178,6 @@
     "ColorPickerSwatch": {
       "anyOf": [
         {
-          "type": "string"
-        },
-        {
           "type": "object",
           "properties": {
             "value": {
@@ -194,6 +191,9 @@
             "value"
           ],
           "additionalProperties": false
+        },
+        {
+          "type": "string"
         }
       ],
       "description": "A swatch: a hex colour, or one with a name (\"Primary\")"

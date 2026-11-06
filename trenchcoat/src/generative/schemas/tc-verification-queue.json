@@ -284,22 +284,22 @@
     "ClaimSourceType": {
       "anyOf": [
         {
-          "type": "string",
-          "const": "grounded"
+          "$ref": "#/definitions/ClaimMediaType"
+        },
+        {
+          "$ref": "#/definitions/ClaimMemoryType"
         },
         {
           "type": "string",
-          "const": "model"
+          "const": "grounded"
         },
         {
           "type": "string",
           "const": "inferred"
         },
         {
-          "$ref": "#/definitions/ClaimMediaType"
-        },
-        {
-          "$ref": "#/definitions/ClaimMemoryType"
+          "type": "string",
+          "const": "model"
         }
       ],
       "description": "Where a claim came from: a retrieved source, the model's own knowledge, an inference from other claims – or a medium, or memory"
@@ -381,10 +381,10 @@
         "profile": {
           "anyOf": [
             {
-              "$ref": "#/definitions/ValidityProfileName"
+              "$ref": "#/definitions/ValidityProfile"
             },
             {
-              "$ref": "#/definitions/ValidityProfile"
+              "$ref": "#/definitions/ValidityProfileName"
             }
           ],
           "description": "How fast it decays (default \"standard\")"
@@ -419,24 +419,14 @@
           "type": "number"
         },
         {
-          "type": "string"
-        },
-        {
           "type": "string",
           "format": "date-time"
+        },
+        {
+          "type": "string"
         }
       ],
       "description": "A moment: epoch ms, an ISO date string or a Date"
-    },
-    "ValidityProfileName": {
-      "type": "string",
-      "enum": [
-        "fast",
-        "lasting",
-        "slow",
-        "standard"
-      ],
-      "description": "Built-in decay profiles – fast: hours and days (prices, status, news) · standard: weeks and months · slow: years (reference material) · lasting: never decays"
     },
     "ValidityProfile": {
       "type": "object",
@@ -458,6 +448,16 @@
       ],
       "additionalProperties": false,
       "description": "The band boundaries, as an age in days: younger than `high` is high, than `good` good, than `aging` aging; older is stale"
+    },
+    "ValidityProfileName": {
+      "type": "string",
+      "enum": [
+        "fast",
+        "lasting",
+        "slow",
+        "standard"
+      ],
+      "description": "Built-in decay profiles – fast: hours and days (prices, status, news) · standard: weeks and months · slow: years (reference material) · lasting: never decays"
     },
     "ValidityBand": {
       "type": "string",

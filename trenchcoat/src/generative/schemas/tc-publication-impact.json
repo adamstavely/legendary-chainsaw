@@ -137,11 +137,11 @@
     "filter": {
       "anyOf": [
         {
-          "type": "string",
-          "const": "all"
+          "$ref": "#/definitions/PublicationFeedbackKind"
         },
         {
-          "$ref": "#/definitions/PublicationFeedbackKind"
+          "type": "string",
+          "const": "all"
         }
       ],
       "description": "The feedback kind shown. Changed by the user unless a tc-filter-change listener calls preventDefault()"

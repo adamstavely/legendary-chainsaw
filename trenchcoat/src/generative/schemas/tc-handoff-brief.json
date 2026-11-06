@@ -80,11 +80,11 @@
     "accessRequest": {
       "anyOf": [
         {
-          "type": "string",
-          "const": ""
+          "$ref": "#/definitions/HandoffBriefRequest"
         },
         {
-          "$ref": "#/definitions/HandoffBriefRequest"
+          "type": "string",
+          "const": ""
         }
       ],
       "description": "Where the access request stands, when the app owns it; the element sets it when not prevented"

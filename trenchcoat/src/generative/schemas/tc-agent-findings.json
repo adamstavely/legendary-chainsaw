@@ -38,11 +38,11 @@
     "severityFilter": {
       "anyOf": [
         {
-          "type": "string",
-          "const": "all"
+          "$ref": "#/definitions/AgentFindingSeverity"
         },
         {
-          "$ref": "#/definitions/AgentFindingSeverity"
+          "type": "string",
+          "const": "all"
         }
       ],
       "description": "The severity the feed shows, or \"all\". Changed by the user unless a tc-severity-filter-change listener calls preventDefault()"
