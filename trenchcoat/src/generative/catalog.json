@@ -1356,6 +1356,24 @@
     ]
   },
   {
+    "tag": "tc-in-coordination",
+    "name": "InCoordination",
+    "description": "A document with three linked points on it, for work being agreed between teams before it goes ahead.",
+    "events": []
+  },
+  {
+    "tag": "tc-in-quality-control",
+    "name": "InQualityControl",
+    "description": "A document with a magnifying glass over a check on it, for content being checked before it moves on.",
+    "events": []
+  },
+  {
+    "tag": "tc-in-translation",
+    "name": "InTranslation",
+    "description": "A document with two speech bubbles on it, for content being translated into other languages.",
+    "events": []
+  },
+  {
     "tag": "tc-inline-diff",
     "name": "InlineDiff",
     "description": "Review an AI's word-level edits to prose: accept or reject each change in place.",
@@ -1795,6 +1813,12 @@
     ]
   },
   {
+    "tag": "tc-pending-release",
+    "name": "PendingRelease",
+    "description": "A document with an arrow ready to go up on it, for content approved and waiting for its release.",
+    "events": []
+  },
+  {
     "tag": "tc-permission-request",
     "name": "PermissionRequest",
     "description": "An agent asks for one specific right: what will happen, for how long, Allow or Deny – then one line with a countdown.",
@@ -2158,6 +2182,12 @@
       "tc-kinds-change",
       "tc-selected-change"
     ]
+  },
+  {
+    "tag": "tc-released",
+    "name": "Released",
+    "description": "A document with a check on it and a few sparks around, for content that's out and live.",
+    "events": []
   },
   {
     "tag": "tc-reliance-gauge",

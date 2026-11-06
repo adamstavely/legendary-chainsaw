@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-in-quality-control.json",
+  "title": "tc-in-quality-control",
+  "description": "A document with a magnifying glass over a check on it, for content being checked before it moves on.",
+  "type": "object",
+  "properties": {
+    "caption": {
+      "type": "string",
+      "description": "The words under the drawing; \"\" leaves them out"
+    },
+    "label": {
+      "type": "string",
+      "description": "Accessible description, when it should say more than `caption`"
+    }
+  },
+  "additionalProperties": false
+}

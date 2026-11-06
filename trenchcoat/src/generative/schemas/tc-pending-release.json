@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-pending-release.json",
+  "title": "tc-pending-release",
+  "description": "A document with an arrow ready to go up on it, for content approved and waiting for its release.",
+  "type": "object",
+  "properties": {
+    "caption": {
+      "type": "string",
+      "description": "The words under the drawing; \"\" leaves them out"
+    },
+    "label": {
+      "type": "string",
+      "description": "Accessible description, when it should say more than `caption`"
+    }
+  },
+  "additionalProperties": false
+}

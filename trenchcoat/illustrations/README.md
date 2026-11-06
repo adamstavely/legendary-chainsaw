@@ -21,6 +21,9 @@ They are decorative unless given a `label`, loops are finite or rest, and `prefe
 - **Ghosted Chat** (`ghosted-chat.tsx`) – Unanswered chat messages marked as read, with a thumbs-down reply on hover; the red shine sweeps three times
 - **Glass Folder** (`glass-folder.tsx`) – Glassy blue folder with documents behind a frosted pocket that tips open on hover
 - **Glow Keyboard** (`glow-keyboard.tsx`) – AI chat input that types itself over a glass keyboard – every key press sends a wave up the gradient floor; after typing each prompt once the scene rests
+- **In Coordination** (`in-coordination.tsx`) – A document with three linked points on it, with the words In coordination, for work being agreed between teams before it goes ahead
+- **In Quality Control** (`in-quality-control.tsx`) – A document with a magnifying glass over a check on it, with the words In quality control, for content being checked before it moves on
+- **In Translation** (`in-translation.tsx`) – A document with two speech bubbles on it, with the words In translation, for content being translated into other languages
 - **Integration Beam** (`integration-beam.tsx`) – Your product between the tools it connects – light pulses flow along curved beams, hover to focus a tool, click to pause it; a few sync cycles each time it comes into view
 - **Integration Flow** (`integration-flow.tsx`) – Integration pills rotating along a dashed arc, each beaming its data into a central analysis hub – once round the integrations, then it rests
 - **Integration Grid** (`integration-grid.tsx`) – Honeycomb-like wall of integration logos around a bright centre tile with your product mark, fading out toward the edges
@@ -35,9 +38,11 @@ They are decorative unless given a `label`, loops are finite or rest, and `prefe
 - **Nothing Found** (`nothing-found.tsx`) – A magnifying glass passing over blank results, for a search or filter with no matches; it looks across a few times and rests
 - **Offline** (`offline.tsx`) – A cloud and a device with the dashed link between them broken, with the words You're offline, for a page that can't reach the server right now
 - **Outreach Branches** (`outreach-branches.tsx`) – Lines branching out to Gmail, Slack and Notion with colored pulses flowing down
+- **Pending Release** (`pending-release.tsx`) – A document with an arrow ready to go up on it, with the words Pending release, for content approved and waiting for its release
 - **Preview Unavailable** (`preview-unavailable.tsx`) – A file whose contents have faded to a dashed outline, with a question mark, and the words Preview not available, for a file type the viewer can't show
 - **Processing** (`processing.tsx`) – A document with a progress ring on it, with the word Processing, for a long job that's still running – an export, a scan or a background task
 - **Project Flow** (`project-flow.tsx`) – Animated scene of a client task branching into subtasks, notes and assigned roles; follows the page theme (light or dark scene); `theme` pins one
+- **Released** (`released.tsx`) – A document with a check on it and a few sparks around it, with the words Released, for content that's out and live
 - **Side Folder** (`side-folder.tsx`) – Glassy blue folder on its side, documents sliding out to the right as the pocket swings open on hover
 - **Something Wrong** (`something-wrong.tsx`) – Two connected tiles with the line between them broken, for a page or request that failed; the gap pulses a few times and rests
 - **Tab Overload** (`tab-overload.tsx`) – Overlapping browser windows where the highlight follows the hovered tab
