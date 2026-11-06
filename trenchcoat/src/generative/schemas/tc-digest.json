@@ -77,9 +77,6 @@
     "DigestItem": {
       "anyOf": [
         {
-          "type": "string"
-        },
-        {
           "type": "object",
           "properties": {
             "id": {
@@ -96,6 +93,9 @@
             "text"
           ],
           "additionalProperties": false
+        },
+        {
+          "type": "string"
         }
       ]
     },

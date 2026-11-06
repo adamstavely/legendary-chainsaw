@@ -19,13 +19,13 @@
     "versions": {
       "anyOf": [
         {
-          "type": "number"
-        },
-        {
           "type": "array",
           "items": {
             "type": "string"
           }
+        },
+        {
+          "type": "number"
         }
       ],
       "description": "All versions of the message, or just how many there are. From 2 on the version switcher shows"

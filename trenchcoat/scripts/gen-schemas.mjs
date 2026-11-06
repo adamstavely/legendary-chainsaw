@@ -205,11 +205,13 @@ for (const el of elements.filter((e) => e.props.length)) {
   };
   for (const def of Object.values(defs)) prune(def);
   prune(schema);
-  // A union's members come out in the type checker's order, which differs between machines: sort them, so the files
-  // are the same wherever they're generated
+  // A union's members come out in the type checker's order, which differs between machines: sort them (and the
+  // alternatives of an anyOf), so the files are the same wherever they're generated
   const sortEnums = (node) => {
     if (!node || typeof node !== "object") return;
     if (Array.isArray(node.enum) && node.enum.every((v) => typeof v === "string")) node.enum.sort();
+    // A union's alternatives too, by their text
+    for (const k of ["anyOf", "oneOf"]) if (Array.isArray(node[k])) node[k].sort((a, b) => JSON.stringify(a).localeCompare(JSON.stringify(b)));
     for (const v of Object.values(node)) if (v && typeof v === "object") sortEnums(v);
   };
   sortEnums(schema);
@@ -266,7 +268,18 @@ for (const el of elements.filter((e) => e.props.length)) {
 
 const generatable = elements.filter((el) => schemas.has(el.tag));
 const files = new Map();
-for (const [tag, schema] of schemas) files.set(`schemas/${tag}.json`, `${JSON.stringify(schema, null, 2)}\n`);
+/**
+ * The same text wherever it's generated: the generator names some definitions after a hash of the type's place in the
+ * checker ("alias-2073358172-74138-…"), which differs between machines – they're numbered in order of appearance
+ */
+function canonical(text) {
+  const names = new Map();
+  return text.replace(/alias(?:-+\d+)+/g, (m) => {
+    if (!names.has(m)) names.set(m, `alias-${names.size + 1}`);
+    return names.get(m);
+  });
+}
+for (const [tag, schema] of schemas) files.set(`schemas/${tag}.json`, canonical(`${JSON.stringify(schema, null, 2)}\n`));
 const oneLine = (d) => d.split("\n")[0].replace(/\s+/g, " ").trim();
 files.set(
   "catalog.json",
