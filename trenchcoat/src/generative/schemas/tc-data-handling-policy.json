@@ -195,10 +195,10 @@
     "DataPolicyField": {
       "type": "string",
       "enum": [
-        "retention",
-        "memory",
         "logging",
+        "memory",
         "redact",
+        "retention",
         "training"
       ],
       "description": "One of the policy's settings"
@@ -262,10 +262,10 @@
         "state": {
           "type": "string",
           "enum": [
-            "received",
-            "in-progress",
             "completed",
-            "failed"
+            "failed",
+            "in-progress",
+            "received"
           ]
         },
         "detail": {

@@ -50,8 +50,8 @@
     "defaultLevel": {
       "type": "string",
       "enum": [
-        "ask",
         "allow",
+        "ask",
         "deny"
       ],
       "description": "A cell missing from the value"
@@ -154,9 +154,9 @@
     "ToolPermissionRisk": {
       "type": "string",
       "enum": [
-        "safe",
+        "destructive",
         "risky",
-        "destructive"
+        "safe"
       ]
     },
     "ToolPermissionLevel": {

@@ -16,9 +16,9 @@
     "health": {
       "type": "string",
       "enum": [
+        "degraded",
         "down",
-        "nominal",
-        "degraded"
+        "nominal"
       ],
       "description": "The feeds' or systems' health; unset hides the pill"
     },
@@ -87,9 +87,9 @@
         "goodWhen": {
           "type": "string",
           "enum": [
-            "up",
             "down",
-            "none"
+            "none",
+            "up"
           ],
           "description": "Which way is good: \"up\" (default), \"down\" (alerts, risks) or \"none\" (neither – the badge stays neutral)"
         },
@@ -115,10 +115,10 @@
     "OpsTone": {
       "type": "string",
       "enum": [
+        "danger",
         "neutral",
         "success",
-        "warning",
-        "danger"
+        "warning"
       ]
     }
   }

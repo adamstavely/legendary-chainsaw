@@ -170,11 +170,11 @@
     "ApprovalStepStatus": {
       "type": "string",
       "enum": [
-        "waiting",
-        "current",
         "approved",
+        "current",
         "declined",
-        "skipped"
+        "skipped",
+        "waiting"
       ]
     }
   }

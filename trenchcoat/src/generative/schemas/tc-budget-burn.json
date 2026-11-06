@@ -31,8 +31,8 @@
     "sort": {
       "type": "string",
       "enum": [
-        "burn",
-        "budget"
+        "budget",
+        "burn"
       ],
       "description": "\"budget\" puts the biggest budgets first, \"burn\" the highest burn. Changed by the user unless a tc-sort-change listener calls preventDefault()"
     },

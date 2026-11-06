@@ -13,8 +13,8 @@
       "type": "string",
       "enum": [
         "both",
-        "hover",
-        "contextmenu"
+        "contextmenu",
+        "hover"
       ],
       "description": "What opens a card: \"both\" (hover, focus and right-click), \"hover\" (hover and focus) or \"contextmenu\" (right-click, Menu key, Enter)"
     },

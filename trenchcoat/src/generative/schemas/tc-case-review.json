@@ -16,10 +16,10 @@
     "severity": {
       "type": "string",
       "enum": [
-        "low",
-        "medium",
+        "critical",
         "high",
-        "critical"
+        "low",
+        "medium"
       ],
       "description": "How serious it is, always shown in words"
     },
@@ -271,8 +271,8 @@
       "type": "string",
       "enum": [
         "high",
-        "medium",
         "low",
+        "medium",
         "unknown"
       ],
       "description": "How far a value can be trusted, from its grade"
@@ -407,12 +407,12 @@
     "TimelineTone": {
       "type": "string",
       "enum": [
-        "success",
-        "info",
-        "warning",
         "danger",
+        "info",
         "neutral",
-        "violet"
+        "success",
+        "violet",
+        "warning"
       ],
       "description": "The tone a category is drawn in"
     },

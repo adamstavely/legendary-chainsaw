@@ -205,6 +205,15 @@ for (const el of elements.filter((e) => e.props.length)) {
   };
   for (const def of Object.values(defs)) prune(def);
   prune(schema);
+  // A union's members come out in the type checker's order, which differs between machines: sort them, so the files
+  // are the same wherever they're generated
+  const sortEnums = (node) => {
+    if (!node || typeof node !== "object") return;
+    if (Array.isArray(node.enum) && node.enum.every((v) => typeof v === "string")) node.enum.sort();
+    for (const v of Object.values(node)) if (v && typeof v === "object") sortEnums(v);
+  };
+  sortEnums(schema);
+  for (const def of Object.values(defs)) sortEnums(def);
   // Mark the strings the element binds to href or src as links, so the validator checks them whatever they're called
   // (policyHref, cover …): format uri-reference, and contentMediaType image/* for what loads by itself
   const bound = boundFields(el.slug);

@@ -65,8 +65,8 @@
     "NoticePattern": {
       "type": "string",
       "enum": [
-        "orbit",
         "grid",
+        "orbit",
         "rays"
       ]
     }

@@ -58,9 +58,9 @@
     "status": {
       "type": "string",
       "enum": [
+        "done",
         "idle",
-        "running",
-        "done"
+        "running"
       ],
       "description": "idle, running or done"
     },
@@ -183,8 +183,8 @@
       "type": "string",
       "enum": [
         "error",
-        "warning",
-        "info"
+        "info",
+        "warning"
       ]
     },
     "ProblemListActionItem": {

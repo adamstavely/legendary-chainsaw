@@ -47,9 +47,9 @@
     "scale": {
       "type": "string",
       "enum": [
-        "week",
         "month",
-        "quarter"
+        "quarter",
+        "week"
       ],
       "description": "Weeks, months or quarters. Changed by the user unless a tc-scale-change listener calls preventDefault()"
     },
@@ -160,11 +160,11 @@
     "RoadmapStatus": {
       "type": "string",
       "enum": [
-        "planned",
         "active",
-        "done",
         "at-risk",
-        "blocked"
+        "blocked",
+        "done",
+        "planned"
       ]
     }
   }

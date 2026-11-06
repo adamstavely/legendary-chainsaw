@@ -30,11 +30,11 @@
     "view": {
       "type": "string",
       "enum": [
-        "people",
+        "agenda",
         "day",
-        "week",
         "month",
-        "agenda"
+        "people",
+        "week"
       ],
       "description": "The view: \"day\", \"week\", \"month\", \"agenda\" or \"people\". Changed by the user unless a tc-view-change listener calls preventDefault()"
     },
@@ -365,9 +365,9 @@
         "status": {
           "type": "string",
           "enum": [
+            "cancelled",
             "confirmed",
-            "tentative",
-            "cancelled"
+            "tentative"
           ],
           "description": "Tentative events have a dashed edge; cancelled ones are struck through. Default \"confirmed\""
         }

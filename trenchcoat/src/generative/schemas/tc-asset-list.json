@@ -127,21 +127,21 @@
       "type": "string",
       "enum": [
         "car",
-        "motorcycle",
-        "phone",
-        "laptop",
         "drive",
-        "other"
+        "laptop",
+        "motorcycle",
+        "other",
+        "phone"
       ]
     },
     "AssetTone": {
       "type": "string",
       "enum": [
-        "success",
-        "info",
-        "warning",
         "danger",
-        "neutral"
+        "info",
+        "neutral",
+        "success",
+        "warning"
       ],
       "description": "The tone a status is drawn in"
     }

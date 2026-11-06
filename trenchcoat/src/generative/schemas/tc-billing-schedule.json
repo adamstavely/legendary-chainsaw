@@ -38,11 +38,11 @@
     "duration": {
       "type": "string",
       "enum": [
-        "milestone",
+        "12m",
         "1m",
         "3m",
         "6m",
-        "12m"
+        "milestone"
       ],
       "description": "Phase length"
     },
@@ -80,8 +80,8 @@
     "BillingRepeat": {
       "type": "string",
       "enum": [
-        "once",
         "monthly",
+        "once",
         "quarterly",
         "yearly"
       ]

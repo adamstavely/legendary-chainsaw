@@ -23,9 +23,9 @@
     "status": {
       "type": "string",
       "enum": [
-        "idle",
-        "error",
         "done",
+        "error",
+        "idle",
         "summarising"
       ],
       "description": "Where the summary is: \"idle\", \"summarising\", \"done\" or \"error\""
@@ -55,8 +55,8 @@
     "length": {
       "type": "string",
       "enum": [
-        "short",
-        "detailed"
+        "detailed",
+        "short"
       ],
       "description": "Short or detailed. Changed by the user unless a tc-length-change listener calls preventDefault()"
     },
@@ -86,8 +86,8 @@
     "feedback": {
       "type": "string",
       "enum": [
-        "up",
-        "down"
+        "down",
+        "up"
       ],
       "description": "Whether it helped: \"up\", \"down\" or null. Changed by the user unless a tc-feedback listener calls preventDefault()"
     },
@@ -138,12 +138,12 @@
     "AiSummarySourceKind": {
       "type": "string",
       "enum": [
-        "message",
         "document",
         "meeting",
+        "message",
+        "other",
         "ticket",
-        "web",
-        "other"
+        "web"
       ]
     },
     "AiSummaryPoint": {

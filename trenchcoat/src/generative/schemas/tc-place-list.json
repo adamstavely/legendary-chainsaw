@@ -135,21 +135,21 @@
     "PlaceTone": {
       "type": "string",
       "enum": [
-        "success",
-        "info",
-        "warning",
         "danger",
-        "neutral"
+        "info",
+        "neutral",
+        "success",
+        "warning"
       ]
     },
     "PlaceIcon": {
       "type": "string",
       "enum": [
-        "home",
-        "work",
-        "star",
         "history",
-        "pin"
+        "home",
+        "pin",
+        "star",
+        "work"
       ]
     }
   }

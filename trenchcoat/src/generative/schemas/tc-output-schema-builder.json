@@ -79,11 +79,11 @@
         "itemType": {
           "type": "string",
           "enum": [
-            "string",
-            "number",
-            "integer",
             "boolean",
-            "object"
+            "integer",
+            "number",
+            "object",
+            "string"
           ],
           "description": "A list's item type; \"string\" when unset"
         }
@@ -98,12 +98,12 @@
     "OutputFieldType": {
       "type": "string",
       "enum": [
-        "string",
-        "number",
-        "integer",
+        "array",
         "boolean",
+        "integer",
+        "number",
         "object",
-        "array"
+        "string"
       ],
       "description": "A JSON Schema type a field can have"
     }

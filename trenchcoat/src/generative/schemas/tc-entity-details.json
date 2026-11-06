@@ -20,8 +20,8 @@
       "type": "string",
       "enum": [
         "both",
-        "hover",
-        "contextmenu"
+        "contextmenu",
+        "hover"
       ],
       "description": "What opens a card: \"both\" (hover, focus and right-click), \"hover\" (hover and focus) or \"contextmenu\" (right-click, Menu key, Enter)"
     },
@@ -64,9 +64,9 @@
       "type": "string",
       "enum": [
         "email",
+        "handle",
         "phone",
-        "url",
-        "handle"
+        "url"
       ],
       "description": "What can be found: email addresses, phone numbers, links and"
     }

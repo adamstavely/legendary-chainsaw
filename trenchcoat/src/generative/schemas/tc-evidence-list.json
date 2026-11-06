@@ -87,9 +87,9 @@
         "integrity": {
           "type": "string",
           "enum": [
-            "verified",
             "mismatch",
-            "unchecked"
+            "unchecked",
+            "verified"
           ],
           "description": "Whether the hashes agree; unset works it out from `custody` (all equal → verified)"
         }
@@ -105,13 +105,13 @@
     "ExhibitType": {
       "type": "string",
       "enum": [
-        "photo",
-        "document",
         "audio",
-        "video",
-        "forensic",
+        "document",
         "financial",
-        "other"
+        "forensic",
+        "other",
+        "photo",
+        "video"
       ]
     },
     "ExhibitSource": {
@@ -184,22 +184,22 @@
     "ExhibitTone": {
       "type": "string",
       "enum": [
-        "neutral",
+        "danger",
         "info",
+        "neutral",
         "success",
-        "warning",
-        "danger"
+        "warning"
       ]
     },
     "ExhibitMark": {
       "type": "string",
       "enum": [
-        "lock",
-        "flask",
-        "clock",
         "check",
-        "out",
-        "dot"
+        "clock",
+        "dot",
+        "flask",
+        "lock",
+        "out"
       ]
     }
   }

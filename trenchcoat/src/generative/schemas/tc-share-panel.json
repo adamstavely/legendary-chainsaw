@@ -173,8 +173,8 @@
         "kind": {
           "type": "string",
           "enum": [
-            "person",
-            "group"
+            "group",
+            "person"
           ]
         },
         "name": {

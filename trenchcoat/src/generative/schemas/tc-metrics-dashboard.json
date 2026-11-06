@@ -16,8 +16,8 @@
     "range": {
       "type": "string",
       "enum": [
-        "7d",
         "30d",
+        "7d",
         "90d"
       ],
       "description": "The period: \"7d\", \"30d\" or \"90d\""
@@ -25,18 +25,18 @@
     "metric": {
       "type": "string",
       "enum": [
-        "revenue",
-        "orders",
         "aov",
-        "refunds"
+        "orders",
+        "refunds",
+        "revenue"
       ],
       "description": "The charted metric: \"revenue\", \"orders\", \"aov\" or \"refunds\""
     },
     "chart": {
       "type": "string",
       "enum": [
-        "line",
-        "bars"
+        "bars",
+        "line"
       ],
       "description": "The chart type: \"line\" or \"bars\""
     },

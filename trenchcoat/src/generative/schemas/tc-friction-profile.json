@@ -104,8 +104,8 @@
     "FrictionTone": {
       "type": "string",
       "enum": [
-        "neutral",
         "info",
+        "neutral",
         "warning"
       ]
     },
@@ -152,11 +152,11 @@
     "FrictionState": {
       "type": "string",
       "enum": [
+        "deferred",
+        "off",
         "on",
         "shortened",
-        "deferred",
-        "tightened",
-        "off"
+        "tightened"
       ]
     }
   }

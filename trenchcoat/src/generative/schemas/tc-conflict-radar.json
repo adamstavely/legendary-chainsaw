@@ -235,8 +235,8 @@
       "type": "string",
       "enum": [
         "clear",
-        "overlap",
-        "conflict"
+        "conflict",
+        "overlap"
       ]
     }
   }

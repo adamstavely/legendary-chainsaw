@@ -210,8 +210,8 @@
         "kind": {
           "type": "string",
           "enum": [
-            "url",
-            "command"
+            "command",
+            "url"
           ],
           "description": "What it needs: a URL, or a command the app runs"
         },

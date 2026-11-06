@@ -39,11 +39,11 @@
     "filter": {
       "type": "string",
       "enum": [
-        "queued",
-        "running",
         "done",
         "failed",
-        "retrying"
+        "queued",
+        "retrying",
+        "running"
       ],
       "description": "The state every other cell steps back from (null: none). Changed by the user unless a tc-filter-change listener calls preventDefault()"
     },
@@ -104,11 +104,11 @@
     "FanoutStatus": {
       "type": "string",
       "enum": [
-        "queued",
-        "running",
-        "retrying",
         "done",
-        "failed"
+        "failed",
+        "queued",
+        "retrying",
+        "running"
       ]
     }
   }

@@ -86,10 +86,10 @@
     "ReadinessState": {
       "type": "string",
       "enum": [
-        "passed",
         "failed",
-        "pending",
-        "manual"
+        "manual",
+        "passed",
+        "pending"
       ]
     },
     "ReadinessBlocker": {

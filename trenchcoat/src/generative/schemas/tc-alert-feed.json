@@ -123,8 +123,8 @@
       "enum": [
         "critical",
         "high",
-        "medium",
-        "info"
+        "info",
+        "medium"
       ]
     },
     "AlertAction": {

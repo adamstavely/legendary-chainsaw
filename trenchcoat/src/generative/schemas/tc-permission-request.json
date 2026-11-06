@@ -33,8 +33,8 @@
       "type": "string",
       "enum": [
         "destructive",
-        "safe",
-        "risky"
+        "risky",
+        "safe"
       ],
       "description": "How much harm the action can do: safe shows no pill, risky a warning, destructive a danger pill and no \"always\""
     },
@@ -68,9 +68,9 @@
       "type": "string",
       "enum": [
         "always",
+        "emergency",
         "once",
-        "timed",
-        "emergency"
+        "timed"
       ],
       "description": "How long an Allow holds"
     },
@@ -161,10 +161,10 @@
     "PermissionScope": {
       "type": "string",
       "enum": [
-        "once",
-        "timed",
         "always",
-        "emergency"
+        "emergency",
+        "once",
+        "timed"
       ]
     },
     "PermissionUrgency": {

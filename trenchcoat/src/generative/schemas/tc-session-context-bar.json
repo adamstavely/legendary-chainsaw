@@ -95,11 +95,11 @@
     "SessionTermTone": {
       "type": "string",
       "enum": [
-        "neutral",
+        "danger",
         "info",
+        "neutral",
         "success",
-        "warning",
-        "danger"
+        "warning"
       ],
       "description": "A term's colour – the value's words carry the meaning, the colour points at it"
     }

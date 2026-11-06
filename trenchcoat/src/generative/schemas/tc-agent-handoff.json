@@ -165,10 +165,10 @@
     "AgentHandoffStatus": {
       "type": "string",
       "enum": [
-        "waiting",
-        "running",
         "done",
-        "failed"
+        "failed",
+        "running",
+        "waiting"
       ]
     },
     "AgentHandoffLink": {

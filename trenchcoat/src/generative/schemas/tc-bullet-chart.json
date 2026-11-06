@@ -31,8 +31,8 @@
     "rangeTone": {
       "type": "string",
       "enum": [
-        "status",
-        "neutral"
+        "neutral",
+        "status"
       ],
       "description": "The bands in quiet shades (\"neutral\"), or from the danger to the success tint (\"status\")"
     },
@@ -89,8 +89,8 @@
             "localeMatcher": {
               "type": "string",
               "enum": [
-                "lookup",
-                "best fit"
+                "best fit",
+                "lookup"
               ]
             },
             "style": {
@@ -144,10 +144,10 @@
     "easing": {
       "type": "string",
       "enum": [
-        "linear",
-        "spring",
+        "easeInOut",
         "easeOut",
-        "easeInOut"
+        "linear",
+        "spring"
       ],
       "description": "How marks move: \"spring\", \"easeOut\", \"easeInOut\" or \"linear\""
     },
@@ -170,8 +170,8 @@
     "view": {
       "type": "string",
       "enum": [
-        "table",
-        "chart"
+        "chart",
+        "table"
       ],
       "description": "The chart or the same numbers as a table. Changed by the Table button unless a tc-view-change listener calls preventDefault()"
     },
@@ -213,13 +213,13 @@
     "FormatName": {
       "type": "string",
       "enum": [
-        "number",
-        "integer",
-        "percent",
-        "ratio",
         "compact",
         "currency",
-        "decimal"
+        "decimal",
+        "integer",
+        "number",
+        "percent",
+        "ratio"
       ],
       "description": "Number and date formats, through Intl; the default locale is en-US"
     },

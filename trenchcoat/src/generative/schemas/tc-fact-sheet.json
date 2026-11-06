@@ -139,8 +139,8 @@
       "type": "string",
       "enum": [
         "high",
-        "medium",
         "low",
+        "medium",
         "unknown"
       ],
       "description": "How far a value can be trusted, from its grade"
