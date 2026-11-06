@@ -22,13 +22,13 @@
           "additionalProperties": {
             "anyOf": [
               {
-                "type": "string"
-              },
-              {
                 "type": "array",
                 "items": {
                   "type": "string"
                 }
+              },
+              {
+                "type": "string"
               }
             ]
           }
@@ -66,22 +66,6 @@
         {
           "type": "object",
           "properties": {
-            "values": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "additionalProperties": {}
-              }
-            }
-          },
-          "required": [
-            "values"
-          ],
-          "additionalProperties": false
-        },
-        {
-          "type": "object",
-          "properties": {
             "csv": {
               "type": "string"
             }
@@ -111,6 +95,22 @@
           },
           "required": [
             "url"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "values": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": {}
+              }
+            }
+          },
+          "required": [
+            "values"
           ],
           "additionalProperties": false
         }
