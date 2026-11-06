@@ -243,7 +243,9 @@
    }
   }
  ],
- "changelog": [],
+ "changelog": [
+  "**PR Link** (`tc-pr-link`): a pull request named in running text – its state's mark and owner/repo#number · title as a link, with a card of its state, repository, time, author, lines added and removed, and files changed on hover or focus; `compact` for just #number. The card is a tooltip the link is described by."
+ ],
  "frameworks": [
   {
    "tag": "tc-pr-link",

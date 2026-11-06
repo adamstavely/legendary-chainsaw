@@ -217,7 +217,9 @@
    }
   }
  ],
- "changelog": [],
+ "changelog": [
+  "**Breakpoint Overlay** (`tc-breakpoint-overlay`): which breakpoint the page is at – a corner badge that opens a scale and list of every breakpoint with its range and media query, and a ruler across the window; ⌥⇧O to open it. It follows the window or a `target` element. Loupe now shares its breakpoint helpers."
+ ],
  "frameworks": [
   {
    "tag": "tc-breakpoint-overlay",

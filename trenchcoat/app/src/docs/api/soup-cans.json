@@ -120,7 +120,9 @@
    "events": {}
   }
  ],
- "changelog": [],
+ "changelog": [
+  "**Soup Cans** (`tc-soup-cans`): three unlabeled tins standing at different heights, for things not yet labelled or sorted."
+ ],
  "frameworks": [
   {
    "tag": "tc-soup-cans",
