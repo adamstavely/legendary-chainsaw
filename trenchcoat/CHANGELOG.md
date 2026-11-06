@@ -1,5 +1,24 @@
 # Changelog
 
+## Unreleased – Charts, ported from ztd-charts
+
+The first part of porting [ztd-charts](https://github.com/Junhan2/ztd-charts) (MIT) to Lit
+(`audit/ztd-charts-port-plan.md`): its framework-free engine and five charts, in a new **Charts** section of the
+gallery.
+
+- **Chart engine** (`internal/chart/`): scales, layouts, data parsing, text measuring and ztd's spring motion engine,
+  translated to English; a chart base that measures its plot, plays the entrance once on screen, glides on data
+  changes, and gives every chart the same card, keyboard model, tooltip, announcements and table view. Charts paint
+  with the chart tokens through overridable `--tc-plot-*` component tokens: one accent against quiet ink for emphasis,
+  `--tc-chart-1…6` for categories.
+- **Bar Chart** (`tc-bar-chart`): grouped, stacked or 100% bars, upright or lying down, the highest emphasised.
+- **Line Chart** (`tc-line-chart`): lines over time, one emphasised against quiet others or each in its own ink, with
+  end labels, reference lines and the nearest point read across every series.
+- **Area Chart** (`tc-area-chart`): stacked, 100% or overlapping areas over time.
+- **Pie Chart** (`tc-pie-chart`) and **Donut Chart** (`tc-donut-chart`): shares of a whole; the donut holds the total
+  and a legend of every share.
+- `THIRD-PARTY-NOTICES.md` carries ztd-charts' licence and ships in the package.
+
 ## Unreleased – PR Link, Breakpoint Overlay, Soup Cans and design system screens
 
 - **PR Link** (`tc-pr-link`): a pull request named in running text – its state's mark and owner/repo#number · title as

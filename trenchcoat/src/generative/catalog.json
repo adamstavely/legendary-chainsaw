@@ -309,6 +309,16 @@
     ]
   },
   {
+    "tag": "tc-area-chart",
+    "name": "AreaChart",
+    "description": "Totals and their make-up over time as filled areas – stacked, stacked to 100% or overlapping – with names at their",
+    "events": [
+      "tc-view-change",
+      "tc-mark-hover",
+      "tc-mark-click"
+    ]
+  },
+  {
     "tag": "tc-artifact-panel",
     "name": "ArtifactPanel",
     "description": "The files, code and documents a run produced: a list, a preview per type, versions with a diff, download.",
@@ -378,6 +388,16 @@
     "name": "AwaitingReview",
     "description": "A document with an hourglass on it, for content that's held until someone approves it.",
     "events": []
+  },
+  {
+    "tag": "tc-bar-chart",
+    "name": "BarChart",
+    "description": "Values by category as bars – grouped, stacked or stacked to 100%, upright or lying down – with the highest one",
+    "events": [
+      "tc-view-change",
+      "tc-mark-hover",
+      "tc-mark-click"
+    ]
   },
   {
     "tag": "tc-bibliography",
@@ -969,6 +989,16 @@
     ]
   },
   {
+    "tag": "tc-donut-chart",
+    "name": "DonutChart",
+    "description": "Shares of a whole round a hole holding the total, each slice in its own ink or one emphasised, with a legend of",
+    "events": [
+      "tc-view-change",
+      "tc-mark-hover",
+      "tc-mark-click"
+    ]
+  },
+  {
     "tag": "tc-drag-lift",
     "name": "DragLift",
     "description": "Lifts its child while it's dragged, following the pointer and leaving a gap.",
@@ -1550,6 +1580,16 @@
     "events": []
   },
   {
+    "tag": "tc-line-chart",
+    "name": "LineChart",
+    "description": "Values over time or along x as lines – one emphasised or each in its own ink – with names at their ends, reference",
+    "events": [
+      "tc-view-change",
+      "tc-mark-hover",
+      "tc-mark-click"
+    ]
+  },
+  {
     "tag": "tc-lineage-graph",
     "name": "LineageGraph",
     "description": "Where an output came from: run, turns, queries and tools, source chunks, claims and artifacts in columns, every",
@@ -1856,6 +1896,16 @@
     "events": [
       "tc-selected-change",
       "tc-action"
+    ]
+  },
+  {
+    "tag": "tc-pie-chart",
+    "name": "PieChart",
+    "description": "A few shares of a whole as slices, each in its own ink or one emphasised, with the shares beside them and a table",
+    "events": [
+      "tc-view-change",
+      "tc-mark-hover",
+      "tc-mark-click"
     ]
   },
   {

@@ -30,12 +30,14 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **App Picker** (`app-picker.tsx`) – The app launcher for a suite header – a grid button that opens your apps as tiles, with pinned and recent apps, search, the current app marked and arrow keys that move in two dimensions
 - **Approval Card** (`approval-card.tsx`) – An agent asks before it acts – risk badge, preview, Approve and Deny with shortcuts, a pausing countdown, and a smooth morph into a resolved row
 - **Approval Chain** (`approval-chain.tsx`) – Several people signing off in order – who's next and who's overdue in words, with Approve, Decline with a note, and Delegate for the person it's waiting on
+- **Area Chart** (`area-chart.tsx`) – Totals and their make-up over time as filled areas – stacked, stacked to 100% or overlapping – with names at their ends, the nearest month read across every series, and a table view
 - **Artifact Panel** (`artifact-panel.tsx`) – Everything a run produced in one place – files, code, documents and images with a preview for each, versions you can diff, and download
 - **Asset List** (`asset-list.tsx`) – The assets on record for a person, an account or a company, in groups – each with its kind, name, an identifier masked to its last four characters until shown, a detail line, what it's linked to and a status in words, with Open per row
 - **Attestation Check** (`attestation-check.tsx`) – Verify a signed evidence package by its hash or file – signature, chain integrity and what it covers, checked locally
 - **Audience Mix** (`audience-mix.tsx`) – Who is reading – a sector mix as bars, an internal-versus-external split and the top places, each with its share, and the row under the pointer or focus named in full
 - **Autonomy Dial** (`autonomy-dial.tsx`) – How much an agent may do on its own – a three-stop dial, and its real actions gliding between “Runs on its own” and “Asks you first”, with a lock for what always asks
 - **Background Tasks** (`background-tasks.tsx`) – Your long-running jobs at a glance – a header indicator with overall progress, and a panel of running, queued, done and failed tasks with cancel, retry and open
+- **Bar Chart** (`bar-chart.tsx`) – Values by category as bars – grouped, stacked or stacked to 100%, upright or lying down – the highest one emphasised, values at the bars' ends, bars that grow in and glide when the data changes, and a table view
 - **Bibliography** (`bibliography.tsx`) – A reading list set in APA, MLA, Chicago (notes–bibliography), Harvard or IEEE, with live DOIs, tags, search and sort, Copy, and export as BibTeX, RIS or plain text
 - **Billing Schedule** (`billing-schedule.tsx`) – Build a billing phase – start date, duration, products with repeats and timing, discount, minimum and live totals
 - **Biometric Status** (`biometric-status.tsx`) – Where someone's biometric enrolment stands – face, fingerprints, iris, voice and more, each with its status, detail and quality meter, the count enrolled and an optional match score
@@ -97,6 +99,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Digest** (`digest.tsx`) – A one-minute digest of a pile of information, arranged around what the reader needs – what matters, what to do (ticked off as you go), what changed and what's safe to ignore, with a reading-time estimate and points that cite their sources
 - **Disagreement Banner** (`disagreement-banner.tsx`) – When today's answer contradicts an earlier one on the same question – both side by side, the difference marked
 - **Document List** (`document-list.tsx`) – Identity and record documents at a glance – type, country, masked numbers shown one at a time, expiry and a status each (Verified, Expired, Flagged, Fraudulent or your own), counted in the header, with View per row
+- **Donut Chart** (`donut-chart.tsx`) – Shares of a whole round a hole holding the total, with a legend of every slice and its share beside or under it, slices that sweep round and a total that counts up
 - **Dropzone** (`dropzone.tsx`) – Drag files in and watch them upload – fanning documents, colored type badges, progress with time left, errors with retry
 - **Element Inspector** (`element-inspector.tsx`) – A page's elements as a tree written like the markup, beside the chosen element's box model and styles; hovering an element fires an event so the page can outline it in a preview.
 - **Email Draft** (`email-draft.tsx`) – Agent-written email for review – switch recipient and tone, edit inline, remove the attachment, send or discard with undo
@@ -146,6 +149,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Knowledge Source Manager** (`knowledge-source-manager.tsx`) – Sources a knowledge base answers from – ingestion state and progress, docs and chunks, sync schedule, stale and duplicate warnings, and a handoff to chunk review
 - **KPI Chart** (`kpi-chart.tsx`) – Metric card with a multi-line chart and a tooltip that follows the pointer
 - **Legal Hold Manager** (`legal-hold-manager.tsx`) – Which items are on legal hold, who placed each hold, why and until when – overdue reviews marked, items added, and Release only with a written reason
+- **Line Chart** (`line-chart.tsx`) – Values over time as lines – one emphasised against quiet others or each in its own ink – with names at their ends, reference lines and the nearest point read across every series
 - **Lineage Graph** (`lineage-graph.tsx`) – Where an output came from – run, turns, queries and tools, source chunks, claims and artifacts in columns, every node's record a click away
 - **Live View** (`live-view.tsx`) – Watch the agent's screen as it works – its clicks and typing drawn on top, a caption for each step, and Pause or Take over at any moment
 - **Look Provider** (`look-provider.tsx`) – Sets the look, Standard or Clean, for every Trenchcoat element inside it – one wrapper for a whole app, with any element still free to choose its own
@@ -176,6 +180,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Permission Request** (`permission-request.tsx`) – An agent asks for one specific right – who, why and exactly what will happen – and you allow it once, for an hour or always; then it folds into one line with the time left and Revoke
 - **Person Hovercard** (`person-hovercard.tsx`) – The profile card behind any name – picture, pronouns, title and team, status, local time and time difference, manager, Email, Message, View profile and links – on hover, focus or tap
 - **Person Links** (`person-links.tsx`) – The people linked to a person or an account – role, an ID or second line, and how strong each link is in words and bars, with a count, a "View network" action and "Show all"
+- **Pie Chart** (`pie-chart.tsx`) – A few shares of a whole as slices, each in its own ink or one emphasised, the shares written beside them and the pointed-at slice lifting out
 - **Place List** (`place-list.tsx`) – The places on record – type with an icon, Confirmed / Unverified / Vacated in words, address, coordinates and when each applies, with a place picked for a map
 - **Plan vs Actual (Clean only)** (`plan-vs-actual.tsx`) – An agent's plan against what really happens – every step's bar grows over its dashed planned ghost, overruns turn amber, the steps after it slide right, and the expected finish moves away from the planned one
 - **Playbook Canvas** (`playbook-canvas.tsx`) – An agent workflow, phase by phase – triggers, intake, context, analysis and review as steps you add and order, with review gates, versions and a dry run

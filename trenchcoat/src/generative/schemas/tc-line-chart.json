@@ -1,0 +1,313 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-line-chart.json",
+  "title": "tc-line-chart",
+  "description": "Values over time or along x as lines – one emphasised or each in its own ink – with names at their ends, reference\nlines, the nearest point read across series, and a table view.",
+  "type": "object",
+  "properties": {
+    "dots": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "string",
+          "const": "auto"
+        }
+      ],
+      "description": "Marks the points: always, never, or \"auto\" – when there are 16 or fewer"
+    },
+    "area": {
+      "type": "boolean",
+      "description": "A soft fill under the emphasised line"
+    },
+    "x": {
+      "type": "string",
+      "description": "The x field – dates (\"2026-03\"), numbers or categories; by default \"x\""
+    },
+    "y": {
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        {
+          "$ref": "#/definitions/Accessor%3CRow%2Cnumber%3E"
+        }
+      ],
+      "description": "The y field; a list of fields draws each as a series (a wide table); by default \"y\""
+    },
+    "series": {
+      "type": "string",
+      "description": "The series field, for a long table with one row per x and series"
+    },
+    "curve": {
+      "type": "string",
+      "enum": [
+        "smooth",
+        "linear",
+        "step"
+      ],
+      "description": "How lines bend between points: \"smooth\", \"linear\", \"step\" or \"monotone\""
+    },
+    "xType": {
+      "type": "string",
+      "enum": [
+        "number",
+        "date",
+        "band"
+      ],
+      "description": "What x is, when guessing from the values isn't right: \"date\", \"number\" or \"band\""
+    },
+    "yDomain": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 2,
+      "maxItems": 2,
+      "description": "A fixed y range, [low, high]"
+    },
+    "zero": {
+      "type": "boolean",
+      "description": "Starts the y axis at zero; by default only for areas"
+    },
+    "colorMode": {
+      "type": "string",
+      "enum": [
+        "highlight",
+        "categorical"
+      ],
+      "description": "\"highlight\" paints the emphasised series and leaves the rest quiet; \"categorical\" gives each its own ink"
+    },
+    "endLabels": {
+      "type": "boolean",
+      "description": "Names the series at their lines' ends; by default when there are several"
+    },
+    "maxPoints": {
+      "type": "number",
+      "description": "Above this many points a series is thinned (LTTB); by default about two per pixel"
+    },
+    "referenceLines": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/XYReferenceLine"
+      },
+      "description": "Dashed horizontal lines, with an optional label: a target, a limit"
+    },
+    "yLabel": {
+      "type": "string",
+      "description": "The y axis' title, above it: a unit, \"Requests / min\""
+    },
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the chart's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "data": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Row"
+      },
+      "description": "The rows to draw"
+    },
+    "highlight": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": [
+              "string",
+              "number"
+            ]
+          }
+        }
+      ],
+      "description": "What to emphasise: an index, a label, a list of them, \"max\", \"min\", \"first\", \"last\", \"none\", or a test"
+    },
+    "format": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/FormatName"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "suffix": {
+              "type": "string"
+            },
+            "prefix": {
+              "type": "string"
+            },
+            "localeMatcher": {
+              "type": "string",
+              "enum": [
+                "lookup",
+                "best fit"
+              ]
+            },
+            "style": {
+              "$ref": "#/definitions/Intl.NumberFormatOptionsStyle"
+            },
+            "currency": {
+              "type": "string"
+            },
+            "currencyDisplay": {
+              "$ref": "#/definitions/Intl.NumberFormatOptionsCurrencyDisplay"
+            },
+            "useGrouping": {
+              "$ref": "#/definitions/Intl.NumberFormatOptionsUseGrouping"
+            },
+            "minimumIntegerDigits": {
+              "type": "number"
+            },
+            "minimumFractionDigits": {
+              "type": "number"
+            },
+            "maximumFractionDigits": {
+              "type": "number"
+            },
+            "minimumSignificantDigits": {
+              "type": "number"
+            },
+            "maximumSignificantDigits": {
+              "type": "number"
+            }
+          }
+        }
+      ],
+      "description": "How values are written: \"number\", \"integer\", \"percent\", \"compact\", \"currency\", Intl options, or a function"
+    },
+    "unit": {
+      "type": "string",
+      "description": "The unit after each value: \"%\", \"ms\", \" runs\""
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for numbers and dates, e.g. \"de\"; by default the browser's"
+    },
+    "height": {
+      "type": "number",
+      "description": "The plot's height in px; by default the chart's own for its width"
+    },
+    "still": {
+      "type": "boolean",
+      "description": "Draws everything at once: no entrance and no transitions"
+    },
+    "easing": {
+      "type": "string",
+      "enum": [
+        "linear",
+        "spring",
+        "easeOut",
+        "easeInOut"
+      ],
+      "description": "How marks move: \"spring\", \"easeOut\", \"easeInOut\" or \"linear\""
+    },
+    "duration": {
+      "type": "number",
+      "description": "How long a move takes, in ms; by default the chart's own"
+    },
+    "hideLabels": {
+      "type": "boolean",
+      "description": "Leaves the values off the marks"
+    },
+    "hideTooltip": {
+      "type": "boolean",
+      "description": "No tooltip on hover or focus"
+    },
+    "bare": {
+      "type": "boolean",
+      "description": "No card: just the plot, for a chart inside another component"
+    },
+    "view": {
+      "type": "string",
+      "enum": [
+        "table",
+        "chart"
+      ],
+      "description": "The chart or the same numbers as a table. Changed by the Table button unless a tc-view-change listener calls preventDefault()"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "table": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "chart": {
+          "type": "string"
+        },
+        "position": {
+          "type": "string"
+        },
+        "more": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The words it shows and says, merged over defaultChartLabels"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "Accessor<Row,number>": {
+      "type": "string",
+      "description": "A field name (dot paths allowed) or a function"
+    },
+    "XYReferenceLine": {
+      "type": "object",
+      "properties": {
+        "y": {
+          "type": "number"
+        },
+        "label": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "y"
+      ],
+      "additionalProperties": false
+    },
+    "Row": {
+      "type": "object",
+      "additionalProperties": {}
+    },
+    "FormatName": {
+      "type": "string",
+      "enum": [
+        "number",
+        "integer",
+        "percent",
+        "ratio",
+        "compact",
+        "currency",
+        "decimal"
+      ],
+      "description": "Number and date formats, through Intl; the default locale is en-US"
+    },
+    "Intl.NumberFormatOptionsStyle": {},
+    "Intl.NumberFormatOptionsCurrencyDisplay": {},
+    "Intl.NumberFormatOptionsUseGrouping": {
+      "type": "boolean"
+    }
+  }
+}
