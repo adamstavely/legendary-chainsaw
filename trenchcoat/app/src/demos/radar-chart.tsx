@@ -3,7 +3,8 @@ import type * as UI from "../../../src/elements/react";
 import { caption, textButton } from "../demo-kit";
 
 /* A research institute's code repository: how one engineer's work split across commits, pull requests, reviews and
-   issues, year by year (“Show next year” steps through), and three lab teams compared on the same five practices. */
+   issues, year by year (“Show next year” steps through – the shape glides to the new year), and three lab teams
+   compared on the same five practices, scored out of 5 on five round rings. */
 
 const AXES = ["Code review", "Issues", "Pull requests", "Commits"];
 const YEARS = [
@@ -20,11 +21,12 @@ export default function Demo({ ui }: { ui: typeof UI }) {
   return (
     <div style={{ width: "100%", maxWidth: 980, display: "grid", gap: 8 }}>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 12 }}>
-        <RadarChart title="Activity overview" description={`Contributions in ${shown.year}`} unit="%" axes={AXES} series={[{ name: "Contributions", values: shown.values }]} />
+        <RadarChart title="Activity overview" description={`Contributions in ${shown.year}`} grid="web" unit="%" axes={AXES} series={[{ name: "Contributions", values: shown.values }]} />
         <RadarChart
           title="Lab practices"
           description="Self-assessed, out of 5"
-          grid="web"
+          grid="circle"
+          levels={5}
           max={5}
           axes={PRACTICES}
           series={[

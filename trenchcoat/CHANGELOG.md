@@ -1,5 +1,18 @@
 # Changelog
 
+## Unreleased – Charts, part 6: what ztd-charts' versions added to ours
+
+The last part of the ztd-charts port (`audit/ztd-charts-port-plan.md`): Trenchcoat kept its own Gauge, Heatmap, Radar
+Chart and Sparkline, and gains what ztd-charts' versions of them did.
+
+- **Radar Chart:** `levels` (how many rings `grid="web"` draws) and `grid="circle"` for round rings; shapes grow from
+  the centre on screen and glide when the data changes; `still` and `replay()`, as the other charts have.
+- **Gauge:** `variant="ticks"` – a ring of marks lit up to the value, `ticks` for how many; a new value lights or dims
+  them one after another.
+- **Heatmap:** `legendLabels` – words at the legend's ends ("Fewer", "More"); a canvas for big matrices above
+  `canvas-threshold` cells, with the keyboard, tooltip, selection and table view unchanged.
+- **Sparkline:** `show-value` writes the last value after the line, still fitting the text it sits in.
+
 ## Unreleased – Charts, part 5: specs, server rendering and agents
 
 Part 5 of the ztd-charts port (`audit/ztd-charts-port-plan.md`).

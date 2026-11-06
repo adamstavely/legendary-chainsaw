@@ -3,8 +3,8 @@ import type * as UI from "../../../src/elements/react";
 import type { SparklineType } from "../../../src/elements/react";
 import { caption, surface, textButton } from "../demo-kit";
 
-/* A laboratory's sample throughput over the last fortnight: one sparkline per bench in a table, and an interactive one
-   in a sentence. "Show as bars" cycles the type through line, area, bars and win-loss (each day against the day
+/* A research institute's sample throughput over the last fortnight: one sparkline per bench in a table, each with
+   today's figure written after it (show-value), and an interactive one in a sentence. "Show as bars" cycles the type through line, area, bars and win-loss (each day against the day
    before). */
 
 /** A small deterministic noise, so the demo looks the same every time */
@@ -36,8 +36,7 @@ export default function Demo({ ui }: { ui: typeof UI }) {
         <thead>
           <tr style={{ textAlign: "left", color: "var(--tc-text-muted, light-dark(#646464, #9a9aa1))", fontSize: 12 }}>
             <th style={{ padding: "8px 12px", fontWeight: 500 }}>Bench</th>
-            <th style={{ padding: "8px 12px", fontWeight: 500 }}>Last 14 days</th>
-            <th style={{ padding: "8px 12px", fontWeight: 500, textAlign: "right" }}>Today</th>
+            <th style={{ padding: "8px 12px", fontWeight: 500 }}>Last 14 days, then today</th>
           </tr>
         </thead>
         <tbody>
@@ -45,10 +44,7 @@ export default function Demo({ ui }: { ui: typeof UI }) {
             <tr key={b.name}>
               <td style={cell}>{b.name}</td>
               <td style={cell}>
-                <Sparkline label={`${b.name}, last 14 days`} type={type} values={show(b.values)} unit={type === "win-loss" ? undefined : b.unit} good={b.good} markers="last min max" width={120} />
-              </td>
-              <td style={{ ...cell, textAlign: "right", fontVariantNumeric: "tabular-nums" }}>
-                {b.values[13]} {b.unit}
+                <Sparkline label={`${b.name}, last 14 days`} type={type} values={show(b.values)} unit={type === "win-loss" ? undefined : b.unit} good={b.good} markers="last min max" width={120} showValue />
               </td>
             </tr>
           ))}

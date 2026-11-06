@@ -98,7 +98,7 @@
      "attribute": "variant",
      "type": "GaugeVariant",
      "default": "\"arc\"",
-     "description": "The shape: a 270° dial, a half dial or a straight bar",
+     "description": "The shape: a 270° dial, a half dial, a straight bar, or a 270° ring of tick marks lit up to the value (\"ticks\")",
      "readonly": false
     },
     {
@@ -107,6 +107,14 @@
      "type": "\"sm\" | \"md\" | \"lg\"",
      "default": "\"md\"",
      "description": "The size of the dial",
+     "readonly": false
+    },
+    {
+     "name": "ticks",
+     "attribute": "ticks",
+     "type": "number | undefined",
+     "default": "undefined",
+     "description": "How many tick marks the ticks ring has (2–120); by default as many as fit the size",
      "readonly": false
     },
     {
@@ -198,12 +206,27 @@
      "looks": [
       "both"
      ]
+    },
+    {
+     "name": "--tc-gau-tick-w",
+     "value": "2",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-gau-delay",
+     "value": "0",
+     "looks": [
+      "both"
+     ]
     }
    ],
    "tokens": [
     "--tc-card-radius",
     "--tc-card-shadow",
     "--tc-chart-neutral",
+    "--tc-duration-fast",
     "--tc-duration-moderate",
     "--tc-duration-slowest",
     "--tc-ease-move",
@@ -350,6 +373,10 @@
     {
      "name": "size",
      "attribute": "size"
+    },
+    {
+     "name": "ticks",
+     "attribute": "ticks"
     },
     {
      "name": "tone",
@@ -582,7 +609,7 @@
   "windowed": false
  },
  "size": {
-  "min": 26653,
-  "gzip": 8304
+  "min": 29150,
+  "gzip": 9005
  }
 }

@@ -83,6 +83,10 @@ export class Sparkline {
   @Input() set locale(v: TcSparkline["locale"]) {
     this.#el.locale = v;
   }
+  /** Writes the last value after the line, in the text's ink, with `format` / `unit` */
+  @Input() set showValue(v: TcSparkline["showValue"] | "" | "true" | "false") {
+    this.#el.showValue = typeof v === "string" ? v !== "false" : v;
+  }
   /** Visual style: "standard" or "clean"; unset follows <tc-look-provider>, else "standard" */
   @Input() set look(v: TcSparkline["look"]) {
     this.#el.look = v;

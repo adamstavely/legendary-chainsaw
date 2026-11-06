@@ -87,6 +87,14 @@ export class Heatmap {
   @Input() set locale(v: TcHeatmap["locale"]) {
     this.#el.locale = v;
   }
+  /** Words at the two ends of the legend, low then high, e.g. ["Fewer", "More"]; by default the end values */
+  @Input() set legendLabels(v: TcHeatmap["legendLabels"]) {
+    this.#el.legendLabels = v;
+  }
+  /** Above this many cells (rows × columns) they're painted on a canvas; the focused cell stays in the DOM */
+  @Input() set canvasThreshold(v: TcHeatmap["canvasThreshold"] | `${number}`) {
+    this.#el.canvasThreshold = typeof v === "string" ? Number(v) : v;
+  }
   /** Visual style: "standard" or "clean"; unset follows <tc-look-provider>, else "standard" */
   @Input() set look(v: TcHeatmap["look"]) {
     this.#el.look = v;

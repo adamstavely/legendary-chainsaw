@@ -6,17 +6,21 @@ related: coverage-ring, reliance-gauge, usage-meter, slider-field
 
 ## Overview
 
-One value against its range: a 270° dial, a half dial or a straight bar. The value is in big type in the middle, with
+One value against its range: a 270° dial, a half dial, a straight bar, or a 270° ring of tick marks lit up to the
+value (`variant="ticks"`). The value is in big type in the middle, with
 the band it falls in under it – “Warning”, in the band's colour with a mark. The bands themselves (normal, warning,
 critical …) run round the outside with a tick between each, a target is a line across the dial, and `previous` adds
-the change under it, coloured by whether it went the good way. A new value sweeps to its place. With `editable` it's a
-slider the user can drag or move with the arrow keys.
+the change under it, coloured by whether it went the good way. A new value sweeps to its place; on the ticks ring the
+marks light (or go out) one after another from the old value to the new. With `editable` it's a slider the user can
+drag or move with the arrow keys – on every shape, the ticks ring included.
 
 ## When to use
 
 - A reading against limits: a temperature, a pressure, a load, a fill level.
 - A single figure on a dashboard where the band it's in matters more than the exact number.
 - Setting a threshold by feel, with `editable`, where the bands give context.
+- A progress-like reading on a dashboard tile, where the ticks ring reads at a glance and looks quieter than a solid
+  arc.
 
 ## When not to use
 
@@ -33,15 +37,19 @@ slider the user can drag or move with the arrow keys.
 4. **Target** `.ui-gau__target` – a line across the dial at `target`
 5. **Value** `.ui-gau__value` – the value in big type
 6. **Band** `.ui-gau__band-label` – the band the value is in, with a mark in its colour
-7. **Bar** `.ui-gau__rail` – the track, fill, bands and target for `bar`
-8. **Change** `.ui-gau__change` – the change since `previous`
-9. **Target text** `.ui-gau__target-text` – the target's name and value
+7. **Ticks** `.ui-gau__ticks` – for `ticks`, the ring of `.ui-gau__mark`s, those up to the value lit (`data-on`)
+8. **Bar** `.ui-gau__rail` – the track, fill, bands and target for `bar`
+9. **Change** `.ui-gau__change` – the change since `previous`
+10. **Target text** `.ui-gau__target-text` – the target's name and value
 
 ## Looks
 
 Standard is a white card on a gray tray; Clean is one white card. The dial is the same in both. The fill takes the
 current band's solid status colour (`--tc-gau-ink` without bands, from `tone`), and `size` sets the dial to 112, 168 or
-216 px through `--tc-gau-dial`, which a page can also set directly.
+216 px through `--tc-gau-dial`, which a page can also set directly. On the ticks ring the lit marks take the same
+colour and the unlit ones the meter's track; `ticks` sets how many marks there are (2–120), and by default the count
+fits `size` – about one per 8 px of ring, 25 at `sm`, 38 at `md` and 48 at `lg`. With reduced motion the marks change
+at once.
 
 ## Keyboard
 
@@ -54,7 +62,7 @@ Only when `editable`, where it's one tab stop.
 | Page Down / Page Up | Lowers or raises it by ten steps |
 | Home / End | Goes to `min` or `max` |
 
-Pressing or dragging along the dial or the bar sets the value too.
+Pressing or dragging along the dial, the ticks ring or the bar sets the value too.
 
 ## Screen readers
 
@@ -73,6 +81,8 @@ they're hidden; the change (“Up 4% from last time”) and the target (“Targe
 
 - Set `good` when a change has a direction that's welcome, so the change is coloured.
 - Use the bar for narrow spaces and lists; the dial where there's room for it to be the focus.
+- Leave `ticks` unset unless the count means something (say, one mark per rack); the default keeps the marks evenly
+  spaced at every size.
 - Show the target when the reading is being held to one.
 
 ## Don't
@@ -80,6 +90,7 @@ they're hidden; the change (“Up 4% from last time”) and the target (“Targe
 - Don't use a gauge for a value without a meaningful range – a plain number reads better.
 - Don't put several gauges in a row for things people need to compare – use a bar chart.
 - Don't use colour alone for the band – keep the band's word.
+- Don't set so many ticks on a small dial that they run together; the count is capped at 120.
 
 ## Example
 
@@ -109,5 +120,9 @@ import "trenchcoat/tokens.css";
 export function AlarmLevel() {
   const [value, setValue] = useState(-70);
   return <Gauge label="Alarm level" variant="bar" unit="°C" min={-90} max={-60} step={0.5} editable value={value} onValueChange={setValue} />;
+}
+
+export function SequencerRun() {
+  return <Gauge label="Sequencer run" description="Flow cell 2" variant="ticks" unit="%" value={64} target={80} targetLabel="Today's goal" />;
 }
 ```

@@ -11,7 +11,9 @@ spiky – without axes or labels, and takes its height from the text around it, 
 it. It draws a line, an area, bars from zero, or win-loss bars (up for a gain, down for a loss). Gaps in the data break
 the line. Markers can pick out the last, first, highest and lowest points, a dashed reference line can show a target,
 and with `good` it turns green when it moved the good way and red when it didn't. With `interactive` it becomes one tab
-stop that steps through the points with a tooltip.
+stop that steps through the points with a tooltip. `show-value` writes the last value after it, in the text's ink and
+with its `format` or `unit` (after ztd-charts' showValue, MIT, © 2026 Junhan2), so the shape and today's figure read
+as one phrase.
 
 ## When to use
 
@@ -34,12 +36,15 @@ stop that steps through the points with a tooltip.
 4. **Reference** `.ui-spk__ref` – the dashed line at `reference`
 5. **Marker** `.ui-spk__dot` – the last, first, highest or lowest point, and the point being read
 6. **Tooltip** `.ui-spk__tip` – the point's label and value, in interactive mode
+7. **Value** `.ui-spk__value` – the last value after the chart, with `show-value`
 
 ## Looks
 
 There's no tray or card: it's inline, so Standard and Clean draw it the same. It takes the colour of its tone –
 `--tc-spk-ink`, by default `--tc-chart-1` – and its size from `--tc-spk-w` (5em) and `--tc-spk-h` (1.25em), or from
-`width` and `height` in px. `--tc-spk-stroke` sets the line's width. All of them can be set on the element.
+`width` and `height` in px. `--tc-spk-stroke` sets the line's width. All of them can be set on the element. The value
+from `show-value` is set at the surrounding font size in `--tc-text-primary`, centred beside the chart, so the whole
+thing is still no taller than the line it sits in.
 
 ## Keyboard
 
@@ -57,7 +62,8 @@ Only in interactive mode, where it's one tab stop.
 It's an image named by its summary: “Samples per day: from 112 to 148, high 152, low 98”, with “; target 140” when
 there's a reference line. Win-loss charts count instead: “Trend: 7 up, 3 down, 1 level”. In interactive mode it's a
 group with the role description “sparkline”, the same name, and the description “Left and right arrows step through
-the points”; each step is announced politely, “Wed 21: 148 runs, 7 of 14”.
+the points”; each step is announced politely, “Wed 21: 148 runs, 7 of 14”. The value from `show-value` is hidden from
+screen readers – the summary already ends on it.
 
 ## Content
 
@@ -68,7 +74,7 @@ the points”; each step is announced politely, “Wed 21: 148 runs, 7 of 14”.
 
 ## Do
 
-- Keep it next to the number it explains, such as today's value in the cell beside it.
+- Keep it next to the number it explains – or let `show-value` write it, when the number is simply the latest value.
 - Set `min` and `max` when sparklines in one table should share a scale.
 - Use `good` when the direction matters, so the colour says whether the change is welcome.
 
@@ -81,7 +87,7 @@ the points”; each step is announced politely, “Wed 21: 148 runs, 7 of 14”.
 ## Example
 
 ```html
-<p>Samples this week <tc-sparkline id="spark" label="Samples per day" unit="samples" good="up" markers="last max"></tc-sparkline></p>
+<p>Samples this week <tc-sparkline id="spark" label="Samples per day" unit="samples" good="up" markers="last max" show-value></tc-sparkline></p>
 
 <script type="module">
   import "trenchcoat/sparkline";
@@ -100,7 +106,7 @@ import "trenchcoat/tokens.css";
 export function Throughput({ values, days }: { values: number[]; days: string[] }) {
   return (
     <p>
-      Sequencing ran <Sparkline interactive label="Runs per day" unit="runs" values={values} labels={days} reference={50} good="up" onPointFocus={(i, v) => console.log(i, v)} /> this fortnight.
+      Sequencing ran <Sparkline interactive label="Runs per day" unit="runs" values={values} labels={days} reference={50} good="up" showValue onPointFocus={(i, v) => console.log(i, v)} /> this fortnight.
     </p>
   );
 }

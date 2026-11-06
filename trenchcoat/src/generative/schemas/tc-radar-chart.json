@@ -35,9 +35,18 @@
       "type": "string",
       "enum": [
         "axes",
+        "circle",
         "web"
       ],
-      "description": "Bare axes from the centre (\"axes\"), or rings at each quarter as well (\"web\")"
+      "description": "Bare axes from the centre (\"axes\"), or rings as well: polygons (\"web\") or circles (\"circle\")"
+    },
+    "levels": {
+      "type": "number",
+      "description": "How many rings the grid has, evenly spaced out to the edge, when `grid` is \"web\" or \"circle\""
+    },
+    "still": {
+      "type": "boolean",
+      "description": "Draws the shapes in place at once: no growing from the centre and no gliding to new values"
     },
     "unit": {
       "type": "string",

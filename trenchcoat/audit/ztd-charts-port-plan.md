@@ -59,8 +59,8 @@ tools with them.
    Part 2.)
 5. **Spec, server and agents** – `tc-chart`, the schema in generative UI, `renderChartToSVG`, the CLI and the MCP
    server.
-6. **Fold into ours** – what ztd's Gauge, Heatmap, Radar and Sparkline have that ours lack (to be listed when Part 5
-   lands).
+6. **Fold into ours** – what ztd's Gauge, Heatmap, Radar and Sparkline have that ours lack: Radar's ring count, round
+   rings and motion; Gauge's ticks variant; Heatmap's legend words and canvas; Sparkline's last value.
 
 ## Status
 
@@ -69,4 +69,4 @@ tools with them.
 - [x] Part 3
 - [x] Part 4
 - [x] Part 5
-- [ ] Part 6
+- [x] Part 6

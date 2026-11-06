@@ -142,6 +142,14 @@
      "readonly": false
     },
     {
+     "name": "showValue",
+     "attribute": "show-value",
+     "type": "boolean",
+     "default": "false",
+     "description": "Writes the last value after the line, in the text's ink, with `format` / `unit`",
+     "readonly": false
+    },
+    {
      "name": "look",
      "attribute": "look",
      "type": "Look | undefined",
@@ -205,6 +213,7 @@
     "--tc-line-height-none",
     "--tc-line-height-tight",
     "--tc-radius-2xs",
+    "--tc-space-1",
     "--tc-space-1-5",
     "--tc-status-danger-fg",
     "--tc-status-info-fg",
@@ -212,6 +221,7 @@
     "--tc-status-warning-fg",
     "--tc-surface-raised",
     "--tc-text-muted",
+    "--tc-text-primary",
     "--tc-tooltip-bg",
     "--tc-tooltip-fg",
     "--tc-tooltip-font-size",
@@ -311,6 +321,10 @@
     {
      "name": "locale",
      "attribute": "locale"
+    },
+    {
+     "name": "showValue",
+     "attribute": "show-value"
     }
    ],
    "events": [
@@ -481,7 +495,7 @@
   "windowed": false
  },
  "size": {
-  "min": 22813,
-  "gzip": 7786
+  "min": 23605,
+  "gzip": 7992
  }
 }
