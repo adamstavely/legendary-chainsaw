@@ -780,6 +780,16 @@
     ]
   },
   {
+    "tag": "tc-combo-chart",
+    "name": "ComboChart",
+    "description": "Bars and lines over one shared x – grouped or stacked bars, lines with dots – with an optional second axis at the",
+    "events": [
+      "tc-view-change",
+      "tc-mark-hover",
+      "tc-mark-click"
+    ]
+  },
+  {
     "tag": "tc-combobox",
     "name": "Combobox",
     "description": "Pick one or many options from a searchable, grouped list; picked options show as chips.",
@@ -1468,6 +1478,16 @@
     "events": [
       "tc-selected-change",
       "tc-view-change"
+    ]
+  },
+  {
+    "tag": "tc-histogram",
+    "name": "Histogram",
+    "description": "How raw numbers spread, as touching bars on round bin edges – counts or a running total, a density curve and mean",
+    "events": [
+      "tc-view-change",
+      "tc-mark-hover",
+      "tc-mark-click"
     ]
   },
   {
@@ -3183,6 +3203,16 @@
     "description": "Evidence freshness as a band that decays with age, plus contested and superseded marks – a badge, or a margin",
     "events": [
       "tc-locate"
+    ]
+  },
+  {
+    "tag": "tc-venn-diagram",
+    "name": "VennDiagram",
+    "description": "How two or three sets overlap, as circles sized by the sets with each region's count on a chip, and a table view.",
+    "events": [
+      "tc-view-change",
+      "tc-mark-hover",
+      "tc-mark-click"
     ]
   },
   {

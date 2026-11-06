@@ -1,0 +1,450 @@
+{
+ "elements": [
+  {
+   "tag": "tc-venn-diagram",
+   "className": "TcVennDiagram",
+   "description": "How two or three sets overlap, as circles sized by the sets with each region's count on a chip, and a table view.",
+   "properties": [
+    {
+     "name": "sets",
+     "attribute": null,
+     "type": "Accessor<T, string[]> | undefined",
+     "default": "undefined",
+     "description": "The field naming the sets a row is about – one set, or the two or three it overlaps; by default \"sets\"",
+     "readonly": false
+    },
+    {
+     "name": "size",
+     "attribute": null,
+     "type": "Accessor<T, number> | undefined",
+     "default": "undefined",
+     "description": "The size field: a set's size, or all that a pair or triple shares; by default \"size\"",
+     "readonly": false
+    },
+    {
+     "name": "vennLabels",
+     "attribute": null,
+     "type": "Partial<VennLabels>",
+     "default": "{}",
+     "description": "The Venn diagram's own words, merged over defaultVennLabels",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-view-change",
+     "detail": "",
+     "description": "The Table button was pressed ({ view }: ChartViewChange); cancelable – prevented, `view` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-mark-hover",
+     "detail": "",
+     "description": "The pointer or keyboard moved to a region, or off them ({ event }: ChartMarkHover)",
+     "cancelable": false
+    },
+    {
+     "name": "tc-mark-click",
+     "detail": "",
+     "description": "A region was clicked, or picked with Enter or Space ({ event }: ChartMarkClick)",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "vnn",
+   "cssProperties": [
+    {
+     "name": "--tc-vnn-fill-opacity",
+     "value": "0.22",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-vnn-active-opacity",
+     "value": "0.4",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-duration-fast",
+    "--tc-ease-standard",
+    "--tc-font-size-sm",
+    "--tc-plot-accent",
+    "--tc-plot-bg",
+    "--tc-plot-focus",
+    "--tc-space-2",
+    "--tc-text-muted",
+    "--tc-vnn-ink"
+   ]
+  }
+ ],
+ "functions": [
+  {
+   "name": "lensArea",
+   "signature": "lensArea(r1: number, r2: number, d: number): number",
+   "description": "The area two circles share, radii r1 and r2 with centres d apart"
+  },
+  {
+   "name": "distanceFor",
+   "signature": "distanceFor(r1: number, r2: number, overlap: number): number",
+   "description": "How far apart two circles' centres are for them to share `overlap`: bisection, as the lens shrinks with distance"
+  },
+  {
+   "name": "vennLayout",
+   "signature": "vennLayout(sizes: readonly number[], pair: (a: number, b: number) => number): { x: number; y: number; r: number }[]",
+   "description": "Circles for up to three sets, in data units (area = size): the first two side by side, the third placed from its\ndistances to both, or at the nearest point it can go when they can't both be met"
+  }
+ ],
+ "react": [
+  {
+   "component": "VennDiagram",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading, and the chart's name"
+    },
+    {
+     "name": "view",
+     "type": "ChartView",
+     "optional": true,
+     "description": "The chart or the table – controlled when given"
+    },
+    {
+     "name": "defaultView",
+     "type": "ChartView",
+     "optional": true,
+     "description": "The view on mount when `view` isn't controlled"
+    },
+    {
+     "name": "onViewChange",
+     "type": "(view: ChartView) => void",
+     "optional": true,
+     "description": "The Table button was pressed"
+    },
+    {
+     "name": "onMarkHover",
+     "type": "(event: ChartEvent | null) => void",
+     "optional": true,
+     "description": "The pointer or keyboard moved to a mark (null: off them)"
+    },
+    {
+     "name": "onMarkClick",
+     "type": "(event: ChartEvent) => void",
+     "optional": true,
+     "description": "A mark was clicked, or picked with Enter or Space"
+    }
+   ],
+   "hides": [
+    "heading",
+    "view",
+    "children"
+   ],
+   "events": {
+    "tc-view-change": null,
+    "tc-mark-hover": "onMarkHover",
+    "tc-mark-click": "onMarkClick"
+   }
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-venn-diagram",
+   "className": "TcVennDiagram",
+   "module": "trenchcoat/venn-diagram",
+   "data": [
+    "sets",
+    "size",
+    "vennLabels"
+   ],
+   "attributes": [],
+   "events": [
+    {
+     "name": "tc-view-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-mark-hover",
+     "cancelable": false
+    },
+    {
+     "name": "tc-mark-click",
+     "cancelable": false
+    }
+   ],
+   "controlled": [],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "internal/chart/element",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "internal/chart/element"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "internal/kit",
+     "internal/chart/element"
+    ]
+   },
+   {
+    "id": "object-hasown",
+    "name": "Object.hasOwn()",
+    "bcd": "javascript.builtins.Object.hasOwn",
+    "versions": {
+     "chrome": "93",
+     "edge": "93",
+     "firefox": "92",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "via": [
+     "internal/chart/accessor"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "internal/base",
+     "internal/chart/element",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "resize-observer",
+    "name": "ResizeObserver",
+    "bcd": "api.ResizeObserver",
+    "versions": {
+     "chrome": "64",
+     "edge": "79",
+     "firefox": "69",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "via": [
+     "internal/chart/element"
+    ]
+   },
+   {
+    "id": "intersection-observer",
+    "name": "IntersectionObserver",
+    "bcd": "api.IntersectionObserver",
+    "versions": {
+     "chrome": "51",
+     "edge": "15",
+     "firefox": "55",
+     "safari": "12.1",
+     "safari_ios": "12.2"
+    },
+    "progressive": false,
+    "via": [
+     "internal/chart/element"
+    ]
+   },
+   {
+    "id": "scrollbar-width",
+    "name": "scrollbar-width",
+    "bcd": "css.properties.scrollbar-width",
+    "versions": {
+     "chrome": "121",
+     "edge": "121",
+     "firefox": "64",
+     "safari": "18.2",
+     "safari_ios": "18.2"
+    },
+    "progressive": true,
+    "without": "Scrollbars keep the browser's default width.",
+    "via": [
+     "internal/chart/element"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "internal/chart/element",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [
+   "requestAnimationFrame (internal/chart/motion › subscribeTick)",
+   "requestAnimationFrame (internal/chart/motion › loop)"
+  ],
+  "animations": 0,
+  "observers": [
+   "ResizeObserver (internal/chart/element › TcChartElement)",
+   "IntersectionObserver (internal/chart/element › TcChartElement)",
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [
+   "performance.now() (internal/chart/motion-controller › clock)"
+  ],
+  "listeners": [
+   "document pointerdown (internal/chart/element › TcChartElement)"
+  ],
+  "pauses": {
+   "offscreen": [
+    "internal/chart/element › TcChartElement"
+   ],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS (internal/kit › kitCss)",
+    "CSS (internal/chart/element › chartCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 48647,
+  "gzip": 17140
+ }
+}

@@ -1,5 +1,23 @@
 # Changelog
 
+## Unreleased – Charts: Histogram, Combo Chart, Venn Diagram, trend lines and bands
+
+Charts the library still lacked after the ztd-charts port – not from ztd.
+
+- **Histogram:** raw numbers binned into touching bars on round edges (Freedman–Diaconis by default, or `bins` /
+  `bin-width`), the tallest bin emphasised; `cumulative`, a `density` curve, and `markers` for the mean and median.
+- **Combo Chart:** bars and lines over one x – grouped or `stacked` bars, lines with dots – with the lines on a second
+  axis at the right when their range is far from the bars' (`line-axis` to choose); the legend tells bars from lines
+  and names each one's axis.
+- **Venn Diagram:** how two or three sets overlap, circle areas proportional to the sets and overlaps as close as they
+  can be; each region's count on a chip, every region a keyboard stop; with more sets, the three largest are drawn.
+- **Bubble Chart:** `trend="linear"` fits a least-squares line with its r², `trend-band` shades its 95% confidence
+  band, and `trend="smooth"` draws a LOESS curve.
+- **Line Chart and Area Chart:** `lower` and `upper` shade a band round each line – a forecast range or an
+  uncertainty – read with each value.
+- **`tc-chart`, the CLI and MCP tools:** 36 chart types (`histogram`, `combo`, `venn`); `suggestCharts` proposes a
+  histogram for one measure with no groups, and a combo chart for two measures on very different scales.
+
 ## Unreleased – Charts, part 6: what ztd-charts' versions added to ours
 
 The last part of the ztd-charts port (`audit/ztd-charts-port-plan.md`): Trenchcoat kept its own Gauge, Heatmap, Radar

@@ -1,5 +1,5 @@
 /* Ported from ztd-charts (MIT, © 2026 Junhan2 – https://github.com/Junhan2/ztd-charts), src/layout/stats.ts. */
-/** Statistics: box-plot summaries, kernel density, beeswarm layout, ranks */
+/** Statistics: box-plot summaries, kernel density, beeswarm layout, ranks; and trend lines (least squares, LOESS) */
 import { quantileSorted } from "./geometry";
 
 export interface BoxStats {
@@ -182,4 +182,91 @@ export function ranks(values: readonly number[], desc = true): number[] {
     prev = d.v;
   });
   return out;
+}
+
+/* Trend lines (not from ztd-charts) */
+
+/** A least-squares line through points: its slope, intercept and r², and the 95% confidence band's half-width at x */
+export interface LinearFit {
+  slope: number;
+  intercept: number;
+  r2: number;
+  n: number;
+  at(x: number): number;
+  /** Half the 95% confidence band of the fitted mean at x */
+  half(x: number): number;
+}
+
+/** Student's t at 97.5% for df degrees of freedom: the table for 1–2, a Cornish–Fisher expansion above */
+function t975(df: number): number {
+  if (df <= 1) return 12.706;
+  if (df === 2) return 4.303;
+  const z = 1.959964;
+  return z + (z ** 3 + z) / (4 * df) + (5 * z ** 5 + 16 * z ** 3 + 3 * z) / (96 * df * df);
+}
+
+/** The least-squares line through the finite pairs; null with fewer than 3 or when every x is the same */
+export function linearFit(xs: readonly number[], ys: readonly number[]): LinearFit | null {
+  const px: number[] = [];
+  const py: number[] = [];
+  for (let i = 0; i < Math.min(xs.length, ys.length); i++)
+    if (Number.isFinite(xs[i]) && Number.isFinite(ys[i])) {
+      px.push(xs[i]);
+      py.push(ys[i]);
+    }
+  const n = px.length;
+  if (n < 3) return null;
+  const mx = px.reduce((a, b) => a + b, 0) / n;
+  const my = py.reduce((a, b) => a + b, 0) / n;
+  let sxx = 0;
+  let sxy = 0;
+  let syy = 0;
+  for (let i = 0; i < n; i++) {
+    sxx += (px[i] - mx) ** 2;
+    sxy += (px[i] - mx) * (py[i] - my);
+    syy += (py[i] - my) ** 2;
+  }
+  if (sxx <= 0) return null;
+  const slope = sxy / sxx;
+  const intercept = my - slope * mx;
+  let sse = 0;
+  for (let i = 0; i < n; i++) sse += (py[i] - (intercept + slope * px[i])) ** 2;
+  const r2 = syy > 0 ? Math.max(0, 1 - sse / syy) : 1;
+  const se = Math.sqrt(sse / (n - 2));
+  const t = t975(n - 2);
+  return { slope, intercept, r2, n, at: (x) => intercept + slope * x, half: (x) => t * se * Math.sqrt(1 / n + (x - mx) ** 2 / sxx) };
+}
+
+/** A LOESS curve: at each of `at`, a line fitted to the nearest `span` share of the points, weighted by distance (tricube) */
+export function loess(xs: readonly number[], ys: readonly number[], at: readonly number[], span = 0.75): number[] {
+  const pts: [number, number][] = [];
+  for (let i = 0; i < Math.min(xs.length, ys.length); i++) if (Number.isFinite(xs[i]) && Number.isFinite(ys[i])) pts.push([xs[i], ys[i]]);
+  const n = pts.length;
+  if (n < 3) return at.map(() => NaN);
+  const q = Math.min(n, Math.max(3, Math.ceil(span * n)));
+  return at.map((x0) => {
+    const d = pts.map(([x]) => Math.abs(x - x0)).sort((a, b) => a - b);
+    const h = d[q - 1] || 1e-9;
+    let sw = 0;
+    let swx = 0;
+    let swy = 0;
+    let swxx = 0;
+    let swxy = 0;
+    for (const [x, y] of pts) {
+      const u = Math.abs(x - x0) / h;
+      if (u >= 1) continue;
+      const w = (1 - u ** 3) ** 3;
+      sw += w;
+      swx += w * x;
+      swy += w * y;
+      swxx += w * x * x;
+      swxy += w * x * y;
+    }
+    if (sw <= 0) return NaN;
+    const den = sw * swxx - swx * swx;
+    // Every nearby point at one x: their weighted mean
+    if (Math.abs(den) < 1e-12 * Math.max(1, sw * swxx)) return swy / sw;
+    const b = (sw * swxy - swx * swy) / den;
+    return (swy - b * swx) / sw + b * x0;
+  });
 }

@@ -94,6 +94,14 @@
       "type": "string",
       "description": "The y axis' title, above it: a unit, \"Requests / min\""
     },
+    "lower": {
+      "type": "string",
+      "description": "A band's low edge round each line – an uncertainty or forecast range – with `upper`; with a list of y fields only the emphasised series has one. Not for stacked areas"
+    },
+    "upper": {
+      "type": "string",
+      "description": "A band's high edge, with `lower`"
+    },
     "brush": {
       "type": "string",
       "enum": [

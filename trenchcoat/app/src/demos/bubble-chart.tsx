@@ -2,9 +2,9 @@ import { useState } from "react";
 import type * as UI from "../../../src/elements/react";
 import { caption, textButton } from "../demo-kit";
 
-/* A research institute's labs by staff and papers published, each circle sized by its grant funding (“Show last year”
-   glides them to the year before), and 2,000 instrument calibration readings as a scatter plot – past the threshold,
-   so they're painted on a canvas. */
+/* A research institute's labs by staff and papers published, each circle sized by its grant funding, with a
+   least-squares trend and its confidence band (“Show last year” glides them to the year before); and 2,000 instrument
+   calibration readings as a scatter plot – past the threshold, so they're painted on a canvas. */
 
 const LABS = ["Genomics", "Imaging", "Proteomics", "Field ecology", "Neuro", "Climate", "Chemistry", "Materials"];
 const YEARS = [
@@ -40,6 +40,8 @@ export default function Demo({ ui }: { ui: typeof UI }) {
           size="grants"
           xLabel="Staff"
           yLabel="Papers"
+          trend="linear"
+          trendBand
         />
         <BubbleChart title="Calibration readings" description="Measured against reference, 2,000 readings" data={READINGS} x="reference" y="measured" xLabel="Reference" yLabel="Measured" />
       </div>

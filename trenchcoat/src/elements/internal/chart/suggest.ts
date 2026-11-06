@@ -213,6 +213,21 @@ export function suggestCharts(rows: readonly Record<string, unknown>[], opts: { 
     out.push(mk("gauge", 0.95, "A single value works best as a large gauge", rows, { value: val.name, ...(tg ? { target: tg.name } : {}) }));
   }
 
+  // One measure and no groups: its distribution
+  if (v0 && !t0 && !cat && n >= 20) out.push(mk("histogram", 0.88, `${n} values of ${v0.name}, so a histogram shows how they spread`, rows, { value: v0.name }));
+
+  // Two measures on one x whose ranges are far apart: bars for the larger, a line on its own axis for the other
+  const along = t0 ?? cat;
+  if (along && nums.length === 2 && !src) {
+    const [a, b] = nums;
+    const span = (c: typeof a) => Math.max(Math.abs(c.min ?? 0), Math.abs(c.max ?? 0)) || 1;
+    const ratio = span(a) / span(b);
+    if ((ratio > 3 || ratio < 1 / 3) && along.distinct <= 24) {
+      const [big, small] = ratio > 1 ? [a, b] : [b, a];
+      out.push(mk("combo", 0.84, `${big.name} and ${small.name} differ in scale, so bars and a line on a second axis show both`, rows, { x: along.name, bars: [big.name], lines: [small.name] }));
+    }
+  }
+
   // Relationships
   if (nums.length >= 2 && !src) {
     const label = cats[0] ?? cols.find((c) => c.kind === "text");

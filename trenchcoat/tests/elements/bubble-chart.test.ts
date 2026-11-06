@@ -149,6 +149,48 @@ describe("tc-bubble-chart", () => {
     await expect.poll(() => num(field(), "cy"), { timeout: 4000 }).toBeLessThan(y0 - 50);
   });
 
+  test("trend: a least-squares line across the points' x range with its r², a confidence band, and a smooth LOESS curve", async () => {
+    const el = await drawn(await make({ still: true, data: many(14) }));
+    expect(el.querySelector(".ui-bbl__trend")).toBeNull();
+    el.size = undefined;
+    el.trend = "linear";
+    await settle();
+    const line = el.querySelector<SVGPathElement>(".ui-bbl__trend")!;
+    expect(line).not.toBeNull();
+    // It spans the points: from the leftmost circle's x to the rightmost
+    const xs = circles(el).map((c) => num(c, "cx"));
+    const d = line.getAttribute("d")!;
+    const nums = d.match(/-?\d+(\.\d+)?/g)!.map(Number);
+    expect(nums[0]).toBeCloseTo(Math.min(...xs), 0);
+    expect(nums[nums.length - 2]).toBeCloseTo(Math.max(...xs), 0);
+    // papers ≈ 0.6 × staff + noise: rising, so the right end is higher on screen (smaller y)
+    expect(nums[nums.length - 1]).toBeLessThan(nums[1]);
+    const r2 = [...el.querySelectorAll(".tc-chart__value")].find((t) => t.textContent!.startsWith("r²"));
+    expect(r2?.textContent).toMatch(/^r² 0\.\d\d$/);
+    expect(document.getElementById(plot(el).getAttribute("aria-describedby")!)!.textContent).toMatch(/Linear trend, r² 0\.\d\d\.$/);
+    expect(el.querySelector(".ui-bbl__band")).toBeNull();
+    el.trendBand = true;
+    await settle();
+    expect(el.querySelector(".ui-bbl__band")!.getAttribute("d")).toMatch(/Z$/);
+    el.trend = "smooth";
+    await settle();
+    expect(el.querySelector(".ui-bbl__trend")).not.toBeNull();
+    // The band is for a linear fit only; a smooth trend has no r²
+    expect(el.querySelector(".ui-bbl__band")).toBeNull();
+    expect([...el.querySelectorAll(".tc-chart__value")].some((t) => t.textContent!.startsWith("r²"))).toBe(false);
+    expect(document.getElementById(plot(el).getAttribute("aria-describedby")!)!.textContent).toMatch(/Smooth trend\.$/);
+  });
+
+  test("trend: no line with fewer than three points, or when every x is the same", async () => {
+    const el = await drawn(await make({ still: true, data: LABS.slice(0, 2) }));
+    el.trend = "linear";
+    await settle();
+    expect(el.querySelector(".ui-bbl__trend")).toBeNull();
+    el.data = LABS.map((l) => ({ ...l, staff: 10 }));
+    await settle();
+    expect(el.querySelector(".ui-bbl__trend")).toBeNull();
+  });
+
   test("React wrapper: props reach the element; mark events", async () => {
     const host = document.body.appendChild(document.createElement("div"));
     host.style.width = "600px";

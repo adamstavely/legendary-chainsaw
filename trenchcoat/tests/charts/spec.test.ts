@@ -15,8 +15,8 @@ const LABS = [
 
 describe("chart specs", () => {
   test("every type maps to a chart tag, by name or tag, with ztd's aliases", () => {
-    expect(chartTypes.length).toBe(33);
-    expect(new Set(chartTypes.map((t) => t.tag)).size).toBe(33);
+    expect(chartTypes.length).toBe(36);
+    expect(new Set(chartTypes.map((t) => t.tag)).size).toBe(36);
     expect(chartType("bar")?.tag).toBe("tc-bar-chart");
     expect(chartType("tc-sankey-chart")?.type).toBe("sankey");
     expect(chartType("radialBar")?.tag).toBe("tc-radial-bar-chart");

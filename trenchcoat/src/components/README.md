@@ -76,6 +76,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Code Block** (`code-block.tsx`) – Code that streams in with syntax colours from the theme – Copy, Apply, and a diff against the current file before you apply it
 - **Collection Card** (`collection-card.tsx`) – A card that introduces a whole collection and links into it – up to three previews, the title with its counts, a bold line, a description, the names inside as many as fit in two lines, and Browse →; the whole card is one target and its words stay selectable
 - **Color Picker** (`color-picker.tsx`) – Pick a colour – a saturation and brightness square, hue and opacity sliders, HEX / RGB / CMYK fields that convert as you type, an eyedropper where the browser has one, swatches, Copy, and the previous colour one press away
+- **Combo Chart** (`combo-chart.tsx`) – Bars and lines over one shared x, grouped or stacked bars with lines and dots, a second axis at the right when the ranges are far apart, and a legend that tells bars from lines and names their axis.
 - **Combobox** (`combobox.tsx`) – Pick one or many from a searchable, grouped list – chips with avatars, highlighted matches, create-on-the-fly and full keyboard support
 - **Command Menu** (`command-menu.tsx`) – Search and run anything from one field – tool actions with logos and ⌘1–⌘5, everyday commands with icons
 - **Comment Thread** (`comment-thread.tsx`) – One comment with replies – an assistant reports what it did, folds open details and answers @mentions
@@ -145,6 +146,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Handoff Brief** (`handoff-brief.tsx`) – Work passing from one person to another – summary, open items and commitments, each acknowledged by the receiver, blocked when they lack access
 - **Handoff** (`handoff.tsx`) – The agent hands the task to you mid-run – what it did, why it stopped and what it needs – and takes it back when you're done
 - **Heatmap** (`heatmap.tsx`) – A matrix of rows by columns shaded by value – sequential or diverging, binned or continuous – with a legend, the highest and lowest cells, a tooltip per cell, an optional crosshair, selection and a table view
+- **Histogram** (`histogram.tsx`) – How raw numbers spread, as touching bars on round bin edges, with the tallest bin emphasised, a running total, a density curve and mean and median lines if wanted.
 - **Icon Rail** (`icon-rail.tsx`) – A row of icon buttons for a panel – one chosen, a tooltip on each, one tab stop, and an optional More menu.
 - **Identifier Details** (`identifier-details.tsx`) – DOIs, IP addresses, file hashes, CVE ids and tracking numbers in text, found, checked and marked – hover, focus or right-click one for its normalised value with Copy, its range, algorithm, year or carrier, doi.org and NVD links, and what your sources know (severity, owner, status)
 - **Image Grid** (`image-grid.tsx`) – Generated images as a grid of variations – upscale, regenerate one tile, compare two, download, and alt text for every image
@@ -302,6 +304,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Trigger Builder** (`trigger-builder.tsx`) – “Run when X happens, or every Monday at 9” – an event or a schedule, conditions, a plain-language summary and the next run times
 - **Usage Meter** (`usage-meter.tsx`) – Plan usage and AI credits – a stacked credits meter by category, daily sparkline, limits and a button that speaks up near the limit
 - **Validity Badge** (`validity-badge.tsx`) – How fresh a piece of evidence is – a band from high to stale that ages over time, contested and superseded marks, and a margin strip for a document
+- **Venn Diagram** (`venn-diagram.tsx`) – How two or three sets overlap, as circles sized by the sets, with each region's own count on a chip and the three largest drawn when there are more.
 - **Verification Queue** (`verification-queue.tsx`) – Every claim worth checking from a session in one queue – verified, can't verify, incorrect or dismissed, with its source, before anything is exported
 - **Version History** (`version-history.tsx`) – The versions of an agent, prompt or workflow – draft, active or deprecated, who and when, and what changed in behaviour
 - **Voice Mode** (`voice-mode.tsx`) – A spoken conversation with the model – live transcript, listening and speaking states, interrupt, mute and end, with captions for every turn

@@ -14,6 +14,11 @@ series are thinned to about two points per pixel without losing their peaks.
 The pointer reads the nearest x across every series; dashed `referenceLines` mark a target or a limit. Lines draw
 themselves in when the chart scrolls into view and glide when the data changes. Ported from ztd-charts (MIT).
 
+`lower` and `upper` shade a band round each line – a forecast's range or a measurement's uncertainty – in the
+line's own ink, faint, drawn under it; the axis grows to hold it, the band glides with its line, and each value with
+a band is read with its range ("42 min (34 min–53 min)"). With a list of y fields the rows are shared, so only the
+emphasised series takes the band.
+
 With `brush="select"`, dragging across the plot (or Shift+arrows and Enter) picks a range and shows its change
 with its highest and lowest points, firing `tc-brush`; `brush="zoom"` narrows the chart to the range, with a Show
 all button to undo it.
@@ -34,9 +39,10 @@ all button to undo it.
 1. **Header** `.tc-head` – the icon, heading, description and the Table button
 2. **Line** `.tc-xy__line` – one per series; the emphasised one thicker, in the accent
 3. **Dot** `.tc-xy__dot` – the points, when there are few
-4. **Reference line** `.tc-xy__ref` – a dashed target or limit with its label
-5. **Cursor** `.tc-xy__cursor` – the line at the pointed-at x, with a point on every series
-6. **Tooltip** `.tc-chart__tip` – the x and every series' value there
+4. **Band** `.tc-xy__band` – the range round a line, from `lower` to `upper`
+5. **Reference line** `.tc-xy__ref` – a dashed target or limit with its label
+6. **Cursor** `.tc-xy__cursor` – the line at the pointed-at x, with a point on every series
+7. **Tooltip** `.tc-chart__tip` – the x and every series' value there
 
 ## Looks
 
