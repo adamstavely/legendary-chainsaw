@@ -51,10 +51,10 @@
     "profile": {
       "anyOf": [
         {
-          "$ref": "#/definitions/ValidityProfileName"
+          "$ref": "#/definitions/ValidityProfile"
         },
         {
-          "$ref": "#/definitions/ValidityProfile"
+          "$ref": "#/definitions/ValidityProfileName"
         }
       ],
       "description": "How fast sources go stale, for chunks without their own `profile` – see tc-validity-badge"
@@ -125,10 +125,10 @@
         "profile": {
           "anyOf": [
             {
-              "$ref": "#/definitions/ValidityProfileName"
+              "$ref": "#/definitions/ValidityProfile"
             },
             {
-              "$ref": "#/definitions/ValidityProfile"
+              "$ref": "#/definitions/ValidityProfileName"
             }
           ],
           "description": "How fast this source goes stale – defaults to the inspector's `profile`"
@@ -167,11 +167,11 @@
           "type": "number"
         },
         {
-          "type": "string"
-        },
-        {
           "type": "string",
           "format": "date-time"
+        },
+        {
+          "type": "string"
         }
       ],
       "description": "A moment: epoch ms, an ISO date string or a Date"

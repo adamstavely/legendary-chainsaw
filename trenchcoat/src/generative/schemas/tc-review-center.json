@@ -64,11 +64,11 @@
     "undoTimeout": {
       "anyOf": [
         {
-          "type": "number"
-        },
-        {
           "type": "boolean",
           "const": false
+        },
+        {
+          "type": "number"
         }
       ],
       "description": "How long the Undo chip stays after a decision, in ms – false keeps it until the next decision"
@@ -208,20 +208,20 @@
     "ReviewText": {
       "anyOf": [
         {
-          "type": "string"
-        },
-        {
           "type": "array",
           "items": {
             "anyOf": [
               {
-                "type": "string"
+                "$ref": "#/definitions/ReviewFlag"
               },
               {
-                "$ref": "#/definitions/ReviewFlag"
+                "type": "string"
               }
             ]
           }
+        },
+        {
+          "type": "string"
         }
       ],
       "description": "Plain text, or text with flagged spans in it"

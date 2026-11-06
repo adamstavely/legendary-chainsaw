@@ -349,22 +349,22 @@
     "ClaimSourceType": {
       "anyOf": [
         {
-          "type": "string",
-          "const": "grounded"
+          "$ref": "#/definitions/ClaimMediaType"
+        },
+        {
+          "$ref": "#/definitions/ClaimMemoryType"
         },
         {
           "type": "string",
-          "const": "model"
+          "const": "grounded"
         },
         {
           "type": "string",
           "const": "inferred"
         },
         {
-          "$ref": "#/definitions/ClaimMediaType"
-        },
-        {
-          "$ref": "#/definitions/ClaimMemoryType"
+          "type": "string",
+          "const": "model"
         }
       ],
       "description": "Where a claim came from: a retrieved source, the model's own knowledge, an inference from other claims – or a medium, or memory"
@@ -445,10 +445,10 @@
         "profile": {
           "anyOf": [
             {
-              "$ref": "#/definitions/ValidityProfileName"
+              "$ref": "#/definitions/ValidityProfile"
             },
             {
-              "$ref": "#/definitions/ValidityProfile"
+              "$ref": "#/definitions/ValidityProfileName"
             }
           ],
           "description": "How fast it decays (default \"standard\")"
@@ -483,11 +483,11 @@
           "type": "number"
         },
         {
-          "type": "string"
-        },
-        {
           "type": "string",
           "format": "date-time"
+        },
+        {
+          "type": "string"
         }
       ],
       "description": "A moment: epoch ms, an ISO date string or a Date"
@@ -613,11 +613,11 @@
               "type": "number"
             },
             {
-              "type": "string"
-            },
-            {
               "type": "string",
               "format": "date-time"
+            },
+            {
+              "type": "string"
             }
           ],
           "description": "Last activity: epoch ms, an ISO string or a Date"

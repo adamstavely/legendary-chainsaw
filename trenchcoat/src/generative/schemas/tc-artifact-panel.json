@@ -126,10 +126,10 @@
         "content": {
           "anyOf": [
             {
-              "type": "string"
+              "$ref": "#/definitions/ArtifactTable"
             },
             {
-              "$ref": "#/definitions/ArtifactTable"
+              "type": "string"
             }
           ],
           "description": "Text or code; an image URL; a table (or CSV text)"

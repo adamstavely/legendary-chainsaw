@@ -27,11 +27,11 @@
     "outcome": {
       "anyOf": [
         {
-          "type": "string",
-          "const": "all"
+          "$ref": "#/definitions/AuditOutcome"
         },
         {
-          "$ref": "#/definitions/AuditOutcome"
+          "type": "string",
+          "const": "all"
         }
       ],
       "description": "Which outcomes show"

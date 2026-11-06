@@ -130,13 +130,13 @@
       "additionalProperties": {
         "anyOf": [
           {
-            "type": "string"
+            "not": {}
           },
           {
             "type": "number"
           },
           {
-            "not": {}
+            "type": "string"
           }
         ]
       }

@@ -19,14 +19,14 @@
     "time": {
       "anyOf": [
         {
-          "type": "string"
-        },
-        {
           "type": "number"
         },
         {
           "type": "string",
           "format": "date-time"
+        },
+        {
+          "type": "string"
         }
       ],
       "description": "When it was sent – a Date, an ISO string or epoch ms. Unset, no time shows"
