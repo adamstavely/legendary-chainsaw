@@ -103,11 +103,11 @@
     "DocumentTone": {
       "type": "string",
       "enum": [
-        "success",
-        "info",
-        "warning",
         "danger",
-        "neutral"
+        "info",
+        "neutral",
+        "success",
+        "warning"
       ],
       "description": "The tone a status is drawn in"
     }

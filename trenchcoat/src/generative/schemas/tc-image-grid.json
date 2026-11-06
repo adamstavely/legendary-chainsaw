@@ -125,29 +125,29 @@
     "ImageGridTileStatus": {
       "type": "string",
       "enum": [
-        "pending",
         "done",
-        "failed"
+        "failed",
+        "pending"
       ]
     },
     "ImageGridBadgeTone": {
       "type": "string",
       "enum": [
+        "danger",
+        "info",
         "neutral",
         "success",
-        "warning",
-        "danger",
-        "info"
+        "warning"
       ],
       "description": "The colours a tile badge can take"
     },
     "ImageGridAction": {
       "type": "string",
       "enum": [
-        "regenerate",
-        "upscale",
         "compare",
-        "download"
+        "download",
+        "regenerate",
+        "upscale"
       ]
     }
   }

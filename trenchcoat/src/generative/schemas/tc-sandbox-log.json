@@ -90,10 +90,10 @@
     "SandboxLogStatus": {
       "type": "string",
       "enum": [
+        "error",
         "queued",
         "running",
-        "success",
-        "error"
+        "success"
       ]
     }
   }

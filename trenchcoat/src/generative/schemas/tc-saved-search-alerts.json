@@ -96,10 +96,10 @@
     "AlertFrequency": {
       "type": "string",
       "enum": [
-        "instant",
         "daily",
-        "weekly",
-        "off"
+        "instant",
+        "off",
+        "weekly"
       ]
     },
     "AlertChannel": {

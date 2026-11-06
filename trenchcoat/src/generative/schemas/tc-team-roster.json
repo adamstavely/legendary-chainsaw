@@ -32,8 +32,8 @@
       "type": "string",
       "enum": [
         "none",
-        "team",
         "role",
+        "team",
         "timezone"
       ],
       "description": "How members are grouped. Changed by the user unless a tc-group-change listener calls preventDefault()"
@@ -45,8 +45,8 @@
     "view": {
       "type": "string",
       "enum": [
-        "list",
-        "grid"
+        "grid",
+        "list"
       ],
       "description": "A list or a grid of cards. Changed by the user unless tc-view-change is prevented"
     },
@@ -124,8 +124,8 @@
       "type": "string",
       "enum": [
         "available",
-        "busy",
         "away",
+        "busy",
         "offline"
       ]
     }

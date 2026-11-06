@@ -45,8 +45,8 @@
         "value": {
           "type": "string",
           "enum": [
-            "up",
-            "down"
+            "down",
+            "up"
           ]
         },
         "reason": {

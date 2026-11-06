@@ -98,8 +98,8 @@
     "ClarifyingKind": {
       "type": "string",
       "enum": [
-        "single",
         "multiple",
+        "single",
         "text"
       ]
     },

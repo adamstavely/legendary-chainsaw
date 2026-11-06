@@ -124,10 +124,10 @@
     "stage": {
       "type": "string",
       "enum": [
-        "filter",
         "context",
-        "retrieve",
-        "rerank"
+        "filter",
+        "rerank",
+        "retrieve"
       ],
       "description": "The stage whose settings show under the pipeline: \"retrieve\", \"filter\", \"rerank\" or \"context\""
     },
@@ -182,13 +182,13 @@
     "RetrievalFilterOperator": {
       "type": "string",
       "enum": [
-        "is",
-        "is-not",
-        "contains",
-        "before",
         "after",
         "at-least",
-        "at-most"
+        "at-most",
+        "before",
+        "contains",
+        "is",
+        "is-not"
       ]
     },
     "RetrievalFilterField": {
@@ -204,10 +204,10 @@
         "type": {
           "type": "string",
           "enum": [
-            "text",
-            "number",
+            "choice",
             "date",
-            "choice"
+            "number",
+            "text"
           ],
           "description": "Picks the operators and the value control; \"text\" by default"
         },

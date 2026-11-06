@@ -8,12 +8,12 @@
     "continent": {
       "type": "string",
       "enum": [
-        "north-america",
-        "south-america",
-        "europe",
         "africa",
         "asia",
-        "oceania"
+        "europe",
+        "north-america",
+        "oceania",
+        "south-america"
       ],
       "description": "Highlighted continent"
     },

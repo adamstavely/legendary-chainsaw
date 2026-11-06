@@ -89,8 +89,8 @@
       "type": "string",
       "enum": [
         "agreed",
-        "pushed-back",
-        "neutral"
+        "neutral",
+        "pushed-back"
       ]
     }
   }

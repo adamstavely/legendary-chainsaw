@@ -117,10 +117,10 @@
     "FlowNodeKind": {
       "type": "string",
       "enum": [
-        "person",
-        "company",
-        "shell",
         "bank",
+        "company",
+        "person",
+        "shell",
         "unknown"
       ]
     },

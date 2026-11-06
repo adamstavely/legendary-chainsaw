@@ -48,8 +48,8 @@
         "state": {
           "type": "string",
           "enum": [
-            "running",
-            "done"
+            "done",
+            "running"
           ]
         },
         "passRate": {
@@ -295,9 +295,9 @@
     "ReleaseSuiteStatus": {
       "type": "string",
       "enum": [
-        "pass",
+        "conditional",
         "fail",
-        "conditional"
+        "pass"
       ],
       "description": "A gate suite's result: pass, fail, or conditional – passing only on a waiver"
     },

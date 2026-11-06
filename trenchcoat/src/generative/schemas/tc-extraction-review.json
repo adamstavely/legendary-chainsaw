@@ -110,9 +110,9 @@
     "ExtractionFieldStatus": {
       "type": "string",
       "enum": [
-        "pending",
         "accepted",
         "corrected",
+        "pending",
         "rejected"
       ]
     },

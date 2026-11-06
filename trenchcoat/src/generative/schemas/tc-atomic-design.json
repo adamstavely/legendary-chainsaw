@@ -8,12 +8,12 @@
     "stage": {
       "type": "string",
       "enum": [
-        "overview",
         "atoms",
         "molecule",
         "organism",
-        "template",
-        "page"
+        "overview",
+        "page",
+        "template"
       ],
       "description": "Which stage to draw: \"overview\" (the five stages in a row), \"atoms\", \"molecule\", \"organism\", \"template\" or \"page\""
     },

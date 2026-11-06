@@ -65,8 +65,8 @@
     "view": {
       "type": "string",
       "enum": [
-        "before",
-        "after"
+        "after",
+        "before"
       ],
       "description": "Which side of the compaction shows"
     },
@@ -129,13 +129,13 @@
     "ContextKind": {
       "type": "string",
       "enum": [
-        "system",
-        "tools",
-        "memory",
-        "file",
         "chat",
+        "file",
+        "memory",
         "result",
-        "summary"
+        "summary",
+        "system",
+        "tools"
       ]
     },
     "ContextAgent": {

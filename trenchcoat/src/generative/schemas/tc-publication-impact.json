@@ -188,11 +188,11 @@
     "PublicationTone": {
       "type": "string",
       "enum": [
-        "neutral",
+        "danger",
         "info",
+        "neutral",
         "success",
-        "warning",
-        "danger"
+        "warning"
       ]
     },
     "PublicationAuthor": {
@@ -309,9 +309,9 @@
     "PublicationSentiment": {
       "type": "string",
       "enum": [
-        "positive",
         "mixed",
-        "negative"
+        "negative",
+        "positive"
       ]
     }
   }

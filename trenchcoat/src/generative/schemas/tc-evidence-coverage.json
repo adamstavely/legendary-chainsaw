@@ -100,16 +100,16 @@
       "type": "string",
       "enum": [
         "current",
-        "stale",
-        "none"
+        "none",
+        "stale"
       ]
     },
     "CoverageRequest": {
       "type": "string",
       "enum": [
+        "failed",
         "pending",
-        "requested",
-        "failed"
+        "requested"
       ],
       "description": "Where a coverage request stands: \"pending\" while the app sends it, \"requested\" once sent, \"failed\" if it couldn't"
     }

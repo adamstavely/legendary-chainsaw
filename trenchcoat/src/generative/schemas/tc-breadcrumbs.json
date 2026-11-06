@@ -67,9 +67,9 @@
     "BreadcrumbIcon": {
       "type": "string",
       "enum": [
-        "home",
+        "file",
         "folder",
-        "file"
+        "home"
       ]
     }
   }

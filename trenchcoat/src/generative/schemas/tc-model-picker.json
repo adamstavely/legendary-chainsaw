@@ -27,9 +27,9 @@
     "effort": {
       "type": "string",
       "enum": [
+        "high",
         "low",
-        "medium",
-        "high"
+        "medium"
       ],
       "description": "How hard the model thinks – only shown while extended thinking is on"
     },

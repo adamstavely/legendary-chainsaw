@@ -36,8 +36,8 @@
         "tone": {
           "type": "string",
           "enum": [
-            "good",
             "bad",
+            "good",
             "neutral"
           ],
           "description": "good: green arrow · bad: red arrow · neutral: gray dash"
@@ -45,8 +45,8 @@
         "direction": {
           "type": "string",
           "enum": [
-            "up",
-            "down"
+            "down",
+            "up"
           ],
           "description": "Direction of the arrow – defaults to up for good, down for bad"
         }

@@ -12,8 +12,8 @@
     "kind": {
       "type": "string",
       "enum": [
-        "nps",
-        "csat"
+        "csat",
+        "nps"
       ],
       "description": "\"nps\" for 0–10 likelihood to recommend, \"csat\" for 1–5 satisfaction"
     },

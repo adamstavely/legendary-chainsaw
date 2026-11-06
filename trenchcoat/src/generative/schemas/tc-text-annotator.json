@@ -155,11 +155,11 @@
     "HighlightColor": {
       "type": "string",
       "enum": [
-        "yellow",
-        "green",
         "blue",
+        "green",
         "pink",
-        "purple"
+        "purple",
+        "yellow"
       ],
       "description": "The highlighter colours – the --tc-highlight-<color>-bg / -fg tokens"
     }

@@ -8,19 +8,19 @@
     "variant": {
       "type": "string",
       "enum": [
-        "primary",
-        "secondary",
+        "destructive",
         "ghost",
-        "destructive"
+        "primary",
+        "secondary"
       ],
       "description": "primary: dark and filled · secondary: white with an outline (Clean: a hairline shadow) · ghost: text only · destructive: red, for deleting"
     },
     "size": {
       "type": "string",
       "enum": [
-        "sm",
+        "lg",
         "md",
-        "lg"
+        "sm"
       ],
       "description": "Height and padding: sm, md or lg (Standard 28 · 32 · 40 px, Clean 24 · 28 · 32 px)"
     },
@@ -43,9 +43,9 @@
     "type": {
       "type": "string",
       "enum": [
-        "submit",
         "button",
-        "reset"
+        "reset",
+        "submit"
       ],
       "description": "The inner native button's type: \"button\" does nothing in a form, \"submit\" submits it, \"reset\" resets it"
     },

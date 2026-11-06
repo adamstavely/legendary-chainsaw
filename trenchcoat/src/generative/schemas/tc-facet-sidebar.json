@@ -54,9 +54,9 @@
           "type": "string",
           "enum": [
             "checkbox",
+            "date",
             "radio",
-            "range",
-            "date"
+            "range"
           ]
         },
         "options": {

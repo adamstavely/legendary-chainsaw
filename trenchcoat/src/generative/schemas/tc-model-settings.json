@@ -114,8 +114,8 @@
         "kind": {
           "type": "string",
           "enum": [
-            "range",
-            "choice"
+            "choice",
+            "range"
           ]
         },
         "default": {

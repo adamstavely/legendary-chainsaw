@@ -108,11 +108,11 @@
     "ProfileTone": {
       "type": "string",
       "enum": [
-        "neutral",
+        "danger",
         "info",
+        "neutral",
         "success",
-        "warning",
-        "danger"
+        "warning"
       ]
     },
     "ProfilePill": {
@@ -187,10 +187,10 @@
     "ProfileIconName": {
       "type": "string",
       "enum": [
-        "flag",
-        "report",
-        "message",
         "edit",
+        "flag",
+        "message",
+        "report",
         "share",
         "star"
       ],

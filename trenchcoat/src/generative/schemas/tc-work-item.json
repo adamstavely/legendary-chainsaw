@@ -12,10 +12,10 @@
     "status": {
       "type": "string",
       "enum": [
+        "active",
+        "blocked",
         "done",
         "paused",
-        "blocked",
-        "active",
         "review"
       ],
       "description": "Where the work stands: active, blocked, review, done or paused – shown in words with a mark"

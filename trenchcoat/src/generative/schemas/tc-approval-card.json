@@ -12,9 +12,9 @@
     "risk": {
       "type": "string",
       "enum": [
+        "high",
         "low",
-        "medium",
-        "high"
+        "medium"
       ],
       "description": "Tinted badge in the header; leave out to hide it"
     },
@@ -28,9 +28,9 @@
     "status": {
       "type": "string",
       "enum": [
-        "pending",
         "approved",
-        "denied"
+        "denied",
+        "pending"
       ],
       "description": "The status"
     },

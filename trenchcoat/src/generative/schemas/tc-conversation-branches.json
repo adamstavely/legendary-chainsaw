@@ -79,16 +79,16 @@
     "BranchRole": {
       "type": "string",
       "enum": [
-        "user",
-        "assistant"
+        "assistant",
+        "user"
       ]
     },
     "MessageActionKey": {
       "type": "string",
       "enum": [
         "copy",
-        "regenerate",
         "feedback",
+        "regenerate",
         "speak"
       ]
     }

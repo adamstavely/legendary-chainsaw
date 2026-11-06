@@ -8,11 +8,11 @@
     "receipt": {
       "type": "string",
       "enum": [
-        "sending",
+        "delivered",
         "failed",
         "read",
-        "sent",
-        "delivered"
+        "sending",
+        "sent"
       ],
       "description": "Where the message is: \"sending\", \"sent\", \"delivered\", \"read\" or \"failed\""
     },
@@ -132,10 +132,10 @@
     "MessageStatusAction": {
       "type": "string",
       "enum": [
-        "copy",
-        "retry",
         "branch",
-        "edit"
+        "copy",
+        "edit",
+        "retry"
       ]
     }
   }

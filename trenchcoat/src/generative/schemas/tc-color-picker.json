@@ -24,9 +24,9 @@
     "format": {
       "type": "string",
       "enum": [
+        "cmyk",
         "hex",
-        "rgb",
-        "cmyk"
+        "rgb"
       ],
       "description": "Which fields show: \"hex\", \"rgb\" or \"cmyk\". Changed by the user unless a tc-format-change listener calls preventDefault()"
     },

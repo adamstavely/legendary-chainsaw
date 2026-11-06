@@ -66,9 +66,9 @@
     "ActionRisk": {
       "type": "string",
       "enum": [
-        "safe",
+        "destructive",
         "risky",
-        "destructive"
+        "safe"
       ]
     }
   }

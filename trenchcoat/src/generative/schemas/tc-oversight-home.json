@@ -214,9 +214,9 @@
     "ServiceState": {
       "type": "string",
       "enum": [
-        "normal",
-        "limited",
         "down",
+        "limited",
+        "normal",
         "unknown"
       ]
     }

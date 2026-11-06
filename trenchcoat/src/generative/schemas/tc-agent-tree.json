@@ -85,12 +85,12 @@
     "TreeAgentStatus": {
       "type": "string",
       "enum": [
-        "queued",
-        "running",
-        "waiting",
         "done",
         "failed",
-        "stopped"
+        "queued",
+        "running",
+        "stopped",
+        "waiting"
       ]
     },
     "TreeAgent": {

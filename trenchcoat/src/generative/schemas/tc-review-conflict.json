@@ -128,9 +128,9 @@
     "ReviewTone": {
       "type": "string",
       "enum": [
-        "positive",
         "negative",
-        "neutral"
+        "neutral",
+        "positive"
       ]
     }
   }

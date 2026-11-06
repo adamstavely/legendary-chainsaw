@@ -77,14 +77,14 @@
     "LineageTone": {
       "type": "string",
       "enum": [
-        "neutral",
-        "blue",
-        "teal",
-        "green",
-        "violet",
         "amber",
+        "blue",
+        "green",
+        "neutral",
         "pink",
-        "rose"
+        "rose",
+        "teal",
+        "violet"
       ]
     },
     "LineageNode": {

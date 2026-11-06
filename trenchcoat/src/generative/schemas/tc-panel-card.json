@@ -16,8 +16,8 @@
     "mode": {
       "type": "string",
       "enum": [
-        "link",
-        "fold"
+        "fold",
+        "link"
       ],
       "description": "\"fold\" opens and shuts the content; \"link\" makes the whole row a button that fires tc-open"
     },

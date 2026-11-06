@@ -100,8 +100,8 @@
       "type": "string",
       "enum": [
         "attested",
-        "unverified",
-        "failed"
+        "failed",
+        "unverified"
       ]
     }
   }

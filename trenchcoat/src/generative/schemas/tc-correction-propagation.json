@@ -97,10 +97,10 @@
     "CorrectionState": {
       "type": "string",
       "enum": [
+        "dismissed",
         "pending",
         "reviewed",
-        "superseded",
-        "dismissed"
+        "superseded"
       ]
     }
   }

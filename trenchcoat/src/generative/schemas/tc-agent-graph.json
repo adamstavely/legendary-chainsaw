@@ -113,11 +113,11 @@
     "GraphNodeStatus": {
       "type": "string",
       "enum": [
-        "idle",
-        "working",
-        "waiting",
+        "done",
         "error",
-        "done"
+        "idle",
+        "waiting",
+        "working"
       ]
     },
     "GraphCall": {
@@ -141,9 +141,9 @@
         "status": {
           "type": "string",
           "enum": [
-            "pending",
+            "error",
             "ok",
-            "error"
+            "pending"
           ],
           "description": "\"pending\" sends the pulse out; once it turns \"ok\" or \"error\" the answer travels back"
         },

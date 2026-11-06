@@ -167,8 +167,8 @@
     "RedactionStatus": {
       "type": "string",
       "enum": [
-        "proposed",
         "approved",
+        "proposed",
         "rejected"
       ]
     }

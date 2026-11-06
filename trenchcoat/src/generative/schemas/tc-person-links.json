@@ -115,20 +115,20 @@
     "LinkStrength": {
       "type": "string",
       "enum": [
-        "strong",
         "medium",
-        "weak",
-        "unknown"
+        "strong",
+        "unknown",
+        "weak"
       ]
     },
     "LinkTone": {
       "type": "string",
       "enum": [
-        "neutral",
+        "danger",
         "info",
+        "neutral",
         "success",
-        "warning",
-        "danger"
+        "warning"
       ]
     }
   }
