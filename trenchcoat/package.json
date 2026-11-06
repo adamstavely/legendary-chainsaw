@@ -30,6 +30,10 @@
       "types": "./dist/types/generative/index.d.ts",
       "import": "./dist/generative.js"
     },
+    "./charts": {
+      "types": "./dist/types/charts/index.d.ts",
+      "import": "./dist/charts.js"
+    },
     "./headless": {
       "types": "./dist/types/headless/index.d.ts",
       "import": "./dist/headless.js"
@@ -104,7 +108,7 @@
     "check:lit": "lit-analyzer src/elements --strict --maxWarnings 0",
     "visual": "node scripts/visual.mjs",
     "build:package": "vite build -c vite.package.config.ts && tsc -p tsconfig.package.json && ngc -p tsconfig.angular.json && cem analyze --config custom-elements-manifest.config.mjs && node scripts/gen-registry.mjs",
-    "test:tools": "node scripts/gen-registry.mjs && node --test tests/tools/*.test.mjs",
+    "test:tools": "vite build -c vite.package.config.ts --logLevel error && node scripts/gen-registry.mjs && node --test tests/tools/*.test.mjs",
     "examples": "node scripts/examples.mjs",
     "gen:elements": "node scripts/gen-elements.mjs",
     "check:dead-css": "node scripts/dead-css.mjs",

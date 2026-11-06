@@ -84,6 +84,7 @@ export * from "./react/capacity-bars";
 export * from "./react/case-review";
 export * from "./react/change-list";
 export * from "./react/change-summary";
+export * from "./react/chart";
 export * from "./react/chat-composer";
 export * from "./react/chat-history";
 export * from "./react/chat-minimap";

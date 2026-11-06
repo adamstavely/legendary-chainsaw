@@ -49,8 +49,14 @@ outside a closed list. It warns about missing imports and tokens, and fixed colo
 with `--strict`, and has `--json` for CI. `--rules` lists the rules, and `<!-- trenchcoat-lint-disable-next-line rule -->` silences one
 line. It reads text only: values in expressions are skipped, and React props are left to TypeScript.
 
-**For AI coding tools.** `trenchcoat-mcp` is an MCP server over stdio, with `search_components`, `get_component`, `get_usage` and `lint_code`.
-It's read-only and answers from the package's own files. Add it to your tool's MCP settings:
+**Charts from data.** `npx trenchcoat chart types` lists the chart types a JSON spec can draw; `chart validate spec.json` checks a
+spec; `chart render spec.json --out chart.svg` draws it as a standalone SVG, the tokens resolved for `--look` and `--theme`; and
+`chart suggest data.csv` proposes charts for a table, each with a spec. In code, `trenchcoat/charts` does the same (in Node, call
+`installDomShim()` first), and `<tc-chart>` draws a spec as a live chart.
+
+**For AI coding tools.** `trenchcoat-mcp` is an MCP server over stdio, with `search_components`, `get_component`, `get_usage` and `lint_code`,
+and for charts `list_chart_types`, `validate_chart_spec`, `render_chart` and `suggest_charts`. It's read-only and answers from the
+package's own files; a chart's data is given inline. Add it to your tool's MCP settings:
 
 ```json
 { "mcpServers": { "trenchcoat": { "command": "npx", "args": ["trenchcoat-mcp"] } } }

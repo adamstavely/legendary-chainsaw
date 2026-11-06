@@ -67,6 +67,7 @@ export const registry: Record<string, { events: string[]; load: () => Promise<un
   "tc-case-review": { events: ["tc-decision-change"], load: () => import("../elements/case-review"), schema: () => import("./schemas/tc-case-review.json") },
   "tc-change-list": { events: ["tc-open","tc-action","tc-expanded-change"], load: () => import("../elements/change-list"), schema: () => import("./schemas/tc-change-list.json") },
   "tc-change-summary": { events: [], load: () => import("../elements/change-summary"), schema: () => import("./schemas/tc-change-summary.json") },
+  "tc-chart": { events: ["tc-spec-check"], load: () => import("../elements/chart"), schema: () => import("./schemas/tc-chart.json") },
   "tc-chat-history": { events: ["tc-value-change","tc-conversations-change","tc-rename","tc-pin","tc-move","tc-delete","tc-restore","tc-new-chat","tc-context-change"], load: () => import("../elements/chat-history"), schema: () => import("./schemas/tc-chat-history.json") },
   "tc-chat-minimap": { events: ["tc-jump","tc-current-change"], load: () => import("../elements/chat-minimap"), schema: () => import("./schemas/tc-chat-minimap.json") },
   "tc-check-status": { events: ["tc-open","tc-retry"], load: () => import("../elements/check-status"), schema: () => import("./schemas/tc-check-status.json") },

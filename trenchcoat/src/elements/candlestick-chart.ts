@@ -1,11 +1,10 @@
 import { html, nothing, svg } from "lit";
 import { property, state } from "lit/decorators.js";
 import { fitTickLabels, gridY, tickLabels, txt, yAxisWidth } from "./internal/chart/axis";
-import { brushBand, brushCss, ChartBrush, changeRatio, defaultBrushWords, extremeTags, signedPercent, type BrushMode, type BrushRange, type XRange } from "./internal/chart/brush";
+import { brushBand, ChartBrush, changeRatio, defaultBrushWords, extremeTags, signedPercent, type BrushMode, type BrushRange, type XRange } from "./internal/chart/brush";
 import { AXIS_FONT, TcChartElement, type ChartFrame, type ChartModel } from "./internal/chart/element";
 import { formatDate, makeTickFormatter, toDate } from "./internal/chart/format";
 import { dataSignature } from "./internal/chart/parse";
-import { adoptStyles } from "./internal/styles";
 import { resolveHighlight } from "./internal/chart/highlight";
 import { getter, numGetter } from "./internal/chart/accessor";
 import { fitDomain, scaleLinear, timeTicks } from "./internal/chart/scale";
@@ -184,10 +183,7 @@ export class TcCandlestickChart<T = Row> extends TcChartElement<number, T> {
   protected override defaultFormat = "number" as const;
   protected override modelKeys = ["x", "open", "high", "low", "close", "volume", "ma", "maxCandles", "yDomain", "candleLabels", "zoomed"];
 
-  override connectedCallback() {
-    adoptStyles("tc-brush", brushCss, this.ownerDocument);
-    super.connectedCallback();
-  }
+
 
   private cs: Candle<T>[] = [];
   private dated = false;

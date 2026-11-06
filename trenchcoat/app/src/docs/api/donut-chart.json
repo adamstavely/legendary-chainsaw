@@ -276,8 +276,8 @@
     "progressive": false,
     "why": "Focus rings for keyboard users.",
     "via": [
-     "internal/kit",
-     "internal/chart/element"
+     "internal/chart/element",
+     "internal/kit"
     ]
    },
    {
@@ -310,8 +310,8 @@
     "progressive": false,
     "why": "Every rule is keyed on :where() so the page can override it.",
     "via": [
-     "internal/base",
      "internal/chart/element",
+     "internal/base",
      "tokens.css"
     ]
    },
@@ -395,9 +395,9 @@
     "progressive": true,
     "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
     "via": [
+     "internal/chart/element",
      "internal/card-head",
      "internal/kit",
-     "internal/chart/element",
      "tokens.css"
     ]
    }
@@ -428,14 +428,14 @@
    ],
    "hidden": [],
    "reducedMotion": [
-    "CSS (internal/kit › kitCss)",
-    "CSS (internal/chart/element › chartCss)"
+    "CSS (internal/chart/element › chartCss)",
+    "CSS (internal/kit › kitCss)"
    ]
   },
   "windowed": false
  },
  "size": {
-  "min": 49545,
-  "gzip": 17472
+  "min": 49802,
+  "gzip": 17585
  }
 }

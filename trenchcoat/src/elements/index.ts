@@ -73,6 +73,7 @@ export * from "./capacity-bars";
 export * from "./case-review";
 export * from "./change-list";
 export * from "./change-summary";
+export * from "./chart";
 export * from "./chat-composer";
 export * from "./chat-history";
 export * from "./chat-minimap";

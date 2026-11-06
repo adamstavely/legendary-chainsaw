@@ -1,5 +1,18 @@
 # Changelog
 
+## Unreleased – Charts, part 5: specs, server rendering and agents
+
+Part 5 of the ztd-charts port (`audit/ztd-charts-port-plan.md`).
+
+- **Chart** (`tc-chart`): any chart from a JSON spec – `{ type, data, encoding, options, title, description }` – checked
+  first, what's wrong shown instead of a chart, only declared properties set. ztd-charts' specs draw as they are, and
+  specs also draw Gauge, Heatmap, Radar Chart and Sparkline, their rows reshaped into those elements' properties.
+- **`trenchcoat/charts`:** the chart types, `validateSpec`, `specToElement`, `resolveSpecData` (`{ url }` and CSV),
+  `suggestCharts`, and `renderChartToSVG` – a standalone SVG without a browser, the tokens resolved for a look and theme.
+- **CLI:** `trenchcoat chart types | validate | render | suggest`.
+- **MCP server:** `list_chart_types`, `validate_chart_spec`, `render_chart` (inline data only) and `suggest_charts`.
+- The charts' shared sheets register in one place (`chartSheets`), so the server renderer can collect them.
+
 ## Unreleased – Charts, part 4: distribution and time
 
 Part 4 of the ztd-charts port (`audit/ztd-charts-port-plan.md`).

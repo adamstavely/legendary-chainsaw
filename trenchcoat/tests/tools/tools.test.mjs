@@ -170,6 +170,50 @@ describe("trenchcoat CLI", () => {
   });
 });
 
+describe("trenchcoat chart", () => {
+  const write = (name, text) => writeFileSync(join(dir, name), text);
+  const ROWS = "lab,samples\nGenomics,182\nImaging,96";
+
+  test("types lists every chart a spec can draw", () => {
+    const out = run("chart", "types");
+    assert.equal(out.status, 0, out.stderr);
+    assert.match(out.stdout, /^bar\s+tc-bar-chart/m);
+    assert.match(out.stdout, /33 chart types/);
+    assert.equal(JSON.parse(run("chart", "types", "--json").stdout).length, 33);
+  });
+
+  test("validate: exits 0 on a valid spec, 1 with the problems on a bad one", () => {
+    write("ok.json", JSON.stringify({ type: "bar", data: { csv: ROWS }, encoding: { x: "lab", y: "samples" } }));
+    write("bad.json", JSON.stringify({ type: "pie", data: { csv: ROWS } }));
+    assert.equal(run("chart", "validate", "ok.json").status, 0);
+    const bad = run("chart", "validate", "bad.json");
+    assert.equal(bad.status, 1);
+    assert.match(bad.stdout, /error\s+encoding\.label\s+No field "label"/);
+    assert.equal(run("chart", "validate", "missing.json").status, 1);
+  });
+
+  test("render writes a standalone SVG for the look and theme asked", () => {
+    write("pie.json", JSON.stringify({ type: "pie", title: "Funding", data: [{ label: "Federal", value: 48 }, { label: "Industry", value: 14 }] }));
+    const out = run("chart", "render", "pie.json", "--out", "pie.svg", "--width", "400", "--theme", "dark", "--look", "clean");
+    assert.equal(out.status, 0, out.stderr);
+    const svg = readFileSync(join(dir, "pie.svg"), "utf8");
+    assert.match(svg, /^<svg [^>]*viewBox="0 0 400 [^>]*aria-label="Funding"[^>]*data-look="clean"/);
+    assert.match(run("chart", "render", "pie.json").stdout, /^<svg /);
+    assert.equal(run("chart", "render", "bad.json").status, 1);
+    assert.equal(run("chart", "render", "pie.json", "--theme", "sepia").status, 1);
+  });
+
+  test("suggest proposes charts for a data file, each with a spec", () => {
+    write("labs.csv", "lab,before,after\nGenomics,64,81\nImaging,70,72\nClimate,58,66\n");
+    const out = run("chart", "suggest", "labs.csv", "--json");
+    assert.equal(out.status, 0, out.stderr);
+    const { suggestions } = JSON.parse(out.stdout);
+    assert.equal(suggestions[0].type, "dumbbell");
+    assert.deepEqual(suggestions[0].spec.encoding, { label: "lab", start: "before", end: "after" });
+    assert.match(run("chart", "suggest", "labs.csv").stdout, /dumbbell\s+0\.9/);
+  });
+});
+
 describe("trenchcoat-mcp", () => {
   let server;
   let lines;
@@ -211,7 +255,7 @@ describe("trenchcoat-mcp", () => {
 
   test("lists read-only tools", async () => {
     const { result } = await call("tools/list");
-    assert.deepEqual(result.tools.map((t) => t.name), ["search_components", "get_component", "get_usage", "lint_code"]);
+    assert.deepEqual(result.tools.map((t) => t.name), ["search_components", "get_component", "get_usage", "lint_code", "list_chart_types", "validate_chart_spec", "render_chart", "suggest_charts"]);
     assert.ok(result.tools.every((t) => t.annotations.readOnlyHint && t.inputSchema.type === "object"));
   });
 
@@ -231,6 +275,21 @@ describe("trenchcoat-mcp", () => {
 
   test("gives usage for a framework", async () => {
     assert.match((await tool("get_usage", { name: "share-panel", framework: "react" })).content[0].text, /SharePanel/);
+  });
+
+  test("charts: types, checking a spec, drawing one as SVG (inline data only), and suggestions", async () => {
+    const types = JSON.parse((await tool("list_chart_types", {})).content[0].text);
+    assert.equal(types.length, 33);
+    assert.ok(types.every((t) => t.tag.startsWith("tc-") && t.channels.length));
+    const bad = JSON.parse((await tool("validate_chart_spec", { spec: { type: "bar", data: [{ a: 1 }] } })).content[0].text);
+    assert.equal(bad.valid, false);
+    const svg = (await tool("render_chart", { spec: { type: "donut", data: [{ label: "A", value: 3 }, { label: "B", value: 5 }] }, width: 320, theme: "dark" })).content[0].text;
+    assert.match(svg, /^<svg [^>]*viewBox="0 0 320 /);
+    assert.doesNotMatch(svg.replace(/<style>[\s\S]*<\/style>/, ""), /var\(--tc-/);
+    assert.equal((await tool("render_chart", { spec: { type: "bar", data: { url: "https://example.test/rows.json" } } })).isError, true);
+    assert.equal((await tool("render_chart", { spec: { type: "nope", data: [] } })).isError, true);
+    const { suggestions } = JSON.parse((await tool("suggest_charts", { csv: "source,target,amount\nFederal,Genomics,6\nIndustry,Genomics,2" })).content[0].text);
+    assert.equal(suggestions[0].type, "sankey");
   });
 
   test("errors are reported properly, and the server keeps going", async () => {

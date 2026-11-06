@@ -200,7 +200,7 @@ export abstract class TcChartElement<M, T = Row> extends TcElement {
   }
 
   override connectedCallback() {
-    adoptStyles("tc-chart", chartCss, this.ownerDocument);
+    for (const [key, css] of chartSheets) adoptStyles(key, css, this.ownerDocument);
     this.dataset.chart = "";
     super.connectedCallback();
     document.addEventListener("pointerdown", this.onDocDown);
@@ -238,6 +238,11 @@ export abstract class TcChartElement<M, T = Row> extends TcElement {
 
   protected override willUpdate(changed: PropertyValues) {
     super.willUpdate(changed);
+    this.prepare(changed);
+  }
+
+  /** The frame for the width, then – when anything it depends on changed – the model and the marks' motion */
+  private prepare(changed: PropertyValues) {
     const width = this.measured ?? 480;
     const height = this.height ?? Math.round(this.defaultHeight(width));
     const fmt = makeFormatter(this.format, this.locale, this.defaultFormat);
@@ -258,6 +263,18 @@ export abstract class TcChartElement<M, T = Row> extends TcElement {
       // The active mark went with the data
       if (this.active !== null && this.active >= this.model.events.length) this.active = null;
     }
+  }
+
+  /**
+   * @internal The drawing at `width` with every mark where it ends, without a document – for the server renderer
+   * (internal/chart/render.ts). Returns the plot's size and its SVG content
+   */
+  drawStatic(width: number) {
+    this.still = true;
+    this.measured = width;
+    const all = new Map<PropertyKey, unknown>([["data", undefined], ["measured", undefined]]);
+    this.prepare(all as PropertyValues);
+    return { width: this.frame.width, height: this.frame.height, content: this.draw(this.frame), summary: this.model.summary };
   }
 
   protected override updated(changed: PropertyValues) {
@@ -517,7 +534,7 @@ export abstract class TcChartElement<M, T = Row> extends TcElement {
 }
 
 /* The shared look of every ported chart – adopted once, like the card header. Each chart adds its own marks' CSS */
-export const chartCss = /* css */ `
+const chartCss = /* css */ `
 /* Standard: a gray tray holding a white card */
 :where([data-look="standard"], [data-look="standard"] *)[data-chart] {
   position: relative;
@@ -643,3 +660,12 @@ export const chartCss = /* css */ `
   [data-chart] *, [data-chart] *::before, [data-chart] *::after { animation: none !important; transition: none !important; }
 }
 `;
+
+/**
+ * The sheets every chart shares, by key: the chart base's, and those of the shared parts (xy, pie, brush), which add
+ * themselves here. A chart adopts them all when it connects; the server renderer collects them
+ */
+export const chartSheets = new Map<string, string>([["tc-chart", chartCss]]);
+export function registerChartSheet(key: string, css: string) {
+  chartSheets.set(key, css);
+}
