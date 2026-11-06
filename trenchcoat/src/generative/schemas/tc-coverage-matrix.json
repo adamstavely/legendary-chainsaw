@@ -66,8 +66,8 @@
       "enum": [
         "none",
         "partial",
-        "covered",
-        "gap"
+        "gap",
+        "covered"
       ],
       "description": "A cell missing from `coverage`"
     },
@@ -84,10 +84,10 @@
         "partial": {
           "type": "string"
         },
-        "covered": {
+        "gap": {
           "type": "string"
         },
-        "gap": {
+        "covered": {
           "type": "string"
         }
       },

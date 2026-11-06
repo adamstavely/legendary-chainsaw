@@ -401,6 +401,16 @@
     ]
   },
   {
+    "tag": "tc-beeswarm-chart",
+    "name": "BeeswarmChart",
+    "description": "A distribution point by point – every value a dot, in one row or a row per group with its median – that switches to",
+    "events": [
+      "tc-view-change",
+      "tc-mark-hover",
+      "tc-mark-click"
+    ]
+  },
+  {
     "tag": "tc-bibliography",
     "name": "Bibliography",
     "description": "A reading list set in a citation style – APA, MLA, Chicago (notes–bibliography), Harvard or IEEE – with links,",
@@ -430,6 +440,16 @@
     "description": "Biometric enrolment across modalities – each with its status, detail and a quality meter – with the count",
     "events": [
       "tc-selected-change"
+    ]
+  },
+  {
+    "tag": "tc-box-plot",
+    "name": "BoxPlot",
+    "description": "How values spread within each group, as boxes with whiskers and outliers or as violins, the group with the highest",
+    "events": [
+      "tc-view-change",
+      "tc-mark-hover",
+      "tc-mark-click"
     ]
   },
   {
@@ -471,6 +491,16 @@
     "events": [
       "tc-open-change",
       "tc-breakpoint-change"
+    ]
+  },
+  {
+    "tag": "tc-bubble-chart",
+    "name": "BubbleChart",
+    "description": "Points by x and y, sized by a third value – a bubble chart, or a scatter plot without `size` – with the largest",
+    "events": [
+      "tc-view-change",
+      "tc-mark-hover",
+      "tc-mark-click"
     ]
   },
   {
@@ -528,6 +558,27 @@
     "name": "Button",
     "description": "A button: primary, secondary, ghost or destructive, in three sizes, with a loading state.",
     "events": []
+  },
+  {
+    "tag": "tc-calendar-heatmap",
+    "name": "CalendarHeatmap",
+    "description": "An amount per day on a grid of weeks – each day shaded by its value, the busiest outlined, a year per row over",
+    "events": [
+      "tc-view-change",
+      "tc-mark-hover",
+      "tc-mark-click"
+    ]
+  },
+  {
+    "tag": "tc-candlestick-chart",
+    "name": "CandlestickChart",
+    "description": "A reading's open, high, low and close per period as candles – hollow when it rose, solid when it fell – with moving",
+    "events": [
+      "tc-view-change",
+      "tc-mark-hover",
+      "tc-mark-click",
+      "tc-brush"
+    ]
   },
   {
     "tag": "tc-capability-notice",
@@ -1934,6 +1985,16 @@
     ]
   },
   {
+    "tag": "tc-parallel-chart",
+    "name": "ParallelChart",
+    "description": "Parallel coordinates: rows as lines across a vertical axis per measure – each axis on its own scale, one row",
+    "events": [
+      "tc-view-change",
+      "tc-mark-hover",
+      "tc-mark-click"
+    ]
+  },
+  {
     "tag": "tc-pareto-chart",
     "name": "ParetoChart",
     "description": "Items from the largest down with their running share as a line and a threshold, the few that reach it emphasised,",
@@ -2259,6 +2320,16 @@
     ]
   },
   {
+    "tag": "tc-radial-bar-chart",
+    "name": "RadialBarChart",
+    "description": "A few ratios as rings round a centre – progress towards a target – the largest emphasised, each named with its",
+    "events": [
+      "tc-view-change",
+      "tc-mark-hover",
+      "tc-mark-click"
+    ]
+  },
+  {
     "tag": "tc-radio-group",
     "name": "RadioGroup",
     "description": "Radio group for AI product settings.",
@@ -2408,6 +2479,16 @@
     "description": "Two reviewers disagree: both verdicts with who gave them, resolved by a third person with a reason, or kept blind.",
     "events": [
       "tc-resolve"
+    ]
+  },
+  {
+    "tag": "tc-ridgeline-chart",
+    "name": "RidgelineChart",
+    "description": "How values spread in several groups, as overlapping density ridges with a tick at each median, the highest median",
+    "events": [
+      "tc-view-change",
+      "tc-mark-hover",
+      "tc-mark-click"
     ]
   },
   {
@@ -2782,6 +2863,16 @@
       "tc-values-change",
       "tc-step-change",
       "tc-panes-change"
+    ]
+  },
+  {
+    "tag": "tc-stream-graph",
+    "name": "StreamGraph",
+    "description": "Several series flowing over time as a streamgraph – one emphasised against shades of the quiet ink – with names",
+    "events": [
+      "tc-view-change",
+      "tc-mark-hover",
+      "tc-mark-click"
     ]
   },
   {

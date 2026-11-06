@@ -1,5 +1,20 @@
 # Changelog
 
+## Unreleased – Charts, part 4: distribution and time
+
+Part 4 of the ztd-charts port (`audit/ztd-charts-port-plan.md`).
+
+- **Beeswarm Chart** (`tc-beeswarm-chart`) and **Bubble Chart** (`tc-bubble-chart`): every point drawn, switching to a
+  canvas for thousands of them.
+- **Calendar Heatmap** (`tc-calendar-heatmap`): a value per day on a grid of weeks, years stacked.
+- **Parallel Chart** (`tc-parallel-chart`): parallel coordinates, a canvas for many rows.
+- **Box Plot** (`tc-box-plot`) and **Ridgeline Chart** (`tc-ridgeline-chart`): spreads within groups – boxes, violins
+  and density ridges.
+- **Candlestick Chart** (`tc-candlestick-chart`): open, high, low and close per period, hollow when rising, with moving
+  averages, volume, and a range to pick or zoom into (`brush`).
+- **Stream Graph** (`tc-stream-graph`): series flowing round a moving centre line.
+- **Radial Bar Chart** (`tc-radial-bar-chart`): a few ratios as rings towards their targets.
+
 ## Unreleased – Charts, part 3: part-to-whole and flow
 
 Part 3 of the ztd-charts port (`audit/ztd-charts-port-plan.md`).
