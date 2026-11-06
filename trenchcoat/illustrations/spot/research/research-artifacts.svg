@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="tcs-research-research-artifacts">
+  <title>Research Artifacts</title>
+  <defs>
+    <filter id="tcs-research-research-artifacts-glow" x="-50%" y="-150%" width="200%" height="400%"><feGaussianBlur stdDeviation="7.5"/></filter>
+    <style>
+    svg.tcs-research-research-artifacts:root{color-scheme:light dark}
+    :where(.dark,[data-theme="dark"],[data-tc-theme="dark"]) .tcs-research-research-artifacts{color-scheme:dark}
+    :where(.light,[data-theme="light"],[data-tc-theme="light"]) .tcs-research-research-artifacts{color-scheme:light}
+    .tcs-research-research-artifacts .tile{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#e4e7ec,rgba(255,255,255,0.1))}
+    .tcs-research-research-artifacts .sub{stroke:light-dark(#c9ced6,#5c5f67)}
+    .tcs-research-research-artifacts .sub-box{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#c9ced6,#5c5f67)}
+    .tcs-research-research-artifacts .mark{fill:light-dark(#dce8fb,#263a5c);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-research-research-artifacts .ink{stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-research-research-artifacts .glow{fill:light-dark(rgba(120,160,230,0.22),rgba(120,160,230,0.11))}
+    </style>
+  </defs>
+  <ellipse class="glow" cx="100" cy="156" rx="48" ry="9" fill="rgba(120,160,230,0.22)" filter="url(#tcs-research-research-artifacts-glow)"/>
+  <rect class="tile" x="30" y="40" width="140" height="112" rx="14" fill="#ffffff" stroke="#e4e7ec" stroke-width="2"/>
+  <rect class="sub-box" x="58" y="52" width="48" height="56" rx="6" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="sub" d="M68 66 H96 M68 78 H90" fill="none" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="sub-box" x="96" y="58" width="48" height="44" rx="6" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="sub" d="M104 94 L116 80 L124 88 L130 82 L138 94" fill="none" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="mark" d="M46 94 H84 L92 102 H154 V136 Q154 144 146 144 H54 Q46 144 46 136 Z" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" d="M88 124 H112" fill="none" stroke="#2f5ea8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

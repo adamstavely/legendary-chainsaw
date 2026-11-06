@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="tcs-guidelines-iconography">
+  <title>Iconography</title>
+  <defs>
+    <filter id="tcs-guidelines-iconography-glow" x="-50%" y="-150%" width="200%" height="400%"><feGaussianBlur stdDeviation="7.5"/></filter>
+    <style>
+    svg.tcs-guidelines-iconography:root{color-scheme:light dark}
+    :where(.dark,[data-theme="dark"],[data-tc-theme="dark"]) .tcs-guidelines-iconography{color-scheme:dark}
+    :where(.light,[data-theme="light"],[data-tc-theme="light"]) .tcs-guidelines-iconography{color-scheme:light}
+    .tcs-guidelines-iconography .tile{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#e4e7ec,rgba(255,255,255,0.1))}
+    .tcs-guidelines-iconography .sub{stroke:light-dark(#c9ced6,#5c5f67)}
+    .tcs-guidelines-iconography .mark{fill:light-dark(#dce8fb,#263a5c);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-guidelines-iconography .ink{stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-guidelines-iconography .glow{fill:light-dark(rgba(120,160,230,0.22),rgba(120,160,230,0.11))}
+    </style>
+  </defs>
+  <ellipse class="glow" cx="100" cy="156" rx="40" ry="9" fill="rgba(120,160,230,0.22)" filter="url(#tcs-guidelines-iconography-glow)"/>
+  <rect class="tile" x="34" y="40" width="132" height="112" rx="14" fill="#ffffff" stroke="#e4e7ec" stroke-width="2"/>
+  <circle class="sub" cx="60" cy="64" r="10" fill="none" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="sub" x="90" y="54" width="20" height="20" rx="4" fill="none" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="sub" d="M140 54 L151 74 H129 Z" fill="none" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="mark" x="72" y="88" width="56" height="56" rx="14" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" style="stroke-width:3.5" d="M100.0 98.0 L104.7 109.5 L117.1 110.4 L107.6 118.5 L110.6 130.6 L100.0 124.0 L89.4 130.6 L92.4 118.5 L82.9 110.4 L95.3 109.5 Z" fill="none" stroke="#2f5ea8" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

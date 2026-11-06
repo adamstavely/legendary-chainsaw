@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="tcs-principles-raise-expectations">
+  <title>Raise Expectations</title>
+  <defs>
+    <filter id="tcs-principles-raise-expectations-glow" x="-50%" y="-150%" width="200%" height="400%"><feGaussianBlur stdDeviation="7.5"/></filter>
+    <style>
+    svg.tcs-principles-raise-expectations:root{color-scheme:light dark}
+    :where(.dark,[data-theme="dark"],[data-tc-theme="dark"]) .tcs-principles-raise-expectations{color-scheme:dark}
+    :where(.light,[data-theme="light"],[data-tc-theme="light"]) .tcs-principles-raise-expectations{color-scheme:light}
+    .tcs-principles-raise-expectations .tile{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#e4e7ec,rgba(255,255,255,0.1))}
+    .tcs-principles-raise-expectations .sub-box{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#c9ced6,#5c5f67)}
+    .tcs-principles-raise-expectations .mark{fill:light-dark(#dce8fb,#263a5c);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-principles-raise-expectations .glow{fill:light-dark(rgba(120,160,230,0.22),rgba(120,160,230,0.11))}
+    </style>
+  </defs>
+  <ellipse class="glow" cx="142" cy="150" rx="26" ry="9" fill="rgba(120,160,230,0.22)" filter="url(#tcs-principles-raise-expectations-glow)"/>
+  <rect class="tile" x="30" y="40" width="140" height="112" rx="14" fill="#ffffff" stroke="#e4e7ec" stroke-width="2"/>
+  <rect class="sub-box" x="40" y="118" width="36" height="22" rx="4" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="sub-box" x="82" y="102" width="36" height="38" rx="4" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="sub-box" x="124" y="86" width="36" height="54" rx="4" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="mark" d="M142 48 L146.7 59.5 L159.1 60.4 L149.6 68.5 L152.6 80.6 L142 74 L131.4 80.6 L134.4 68.5 L124.9 60.4 L137.3 59.5 Z" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

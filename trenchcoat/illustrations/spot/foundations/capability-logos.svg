@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="tcs-foundations-capability-logos">
+  <title>Capability Logos</title>
+  <defs>
+    <filter id="tcs-foundations-capability-logos-glow" x="-50%" y="-150%" width="200%" height="400%"><feGaussianBlur stdDeviation="7.5"/></filter>
+    <style>
+    svg.tcs-foundations-capability-logos:root{color-scheme:light dark}
+    :where(.dark,[data-theme="dark"],[data-tc-theme="dark"]) .tcs-foundations-capability-logos{color-scheme:dark}
+    :where(.light,[data-theme="light"],[data-tc-theme="light"]) .tcs-foundations-capability-logos{color-scheme:light}
+    .tcs-foundations-capability-logos .tile{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#e4e7ec,rgba(255,255,255,0.1))}
+    .tcs-foundations-capability-logos .line{stroke:light-dark(#e6e9ee,#44464d)}
+    .tcs-foundations-capability-logos .sub-box{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#c9ced6,#5c5f67)}
+    .tcs-foundations-capability-logos .mark{fill:light-dark(#dce8fb,#263a5c);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-foundations-capability-logos .ink-fill{fill:light-dark(#2f5ea8,#cfdffb);stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-foundations-capability-logos .glow{fill:light-dark(rgba(120,160,230,0.22),rgba(120,160,230,0.11))}
+    </style>
+  </defs>
+  <ellipse class="glow" cx="78" cy="150" rx="34" ry="9" fill="rgba(120,160,230,0.22)" filter="url(#tcs-foundations-capability-logos-glow)"/>
+  <rect class="tile" x="30" y="44" width="140" height="104" rx="14" fill="#ffffff" stroke="#e4e7ec" stroke-width="2"/>
+  <path class="mark" d="M78 64 L106 80 V112 L78 128 L50 112 V80 Z" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink-fill" d="M83 76 L68 99 H79 L73 116 L89 92 H78 Z" fill="#2f5ea8" stroke="#2f5ea8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="line" d="M120 80 H152 M120 96 H144" fill="none" stroke="#e6e9ee" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="sub-box" x="120" y="110" width="30" height="14" rx="7" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

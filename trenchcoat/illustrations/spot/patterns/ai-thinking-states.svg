@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="tcs-patterns-ai-thinking-states">
+  <title>AI Thinking States</title>
+  <defs>
+    <filter id="tcs-patterns-ai-thinking-states-glow" x="-50%" y="-150%" width="200%" height="400%"><feGaussianBlur stdDeviation="7.5"/></filter>
+    <style>
+    svg.tcs-patterns-ai-thinking-states:root{color-scheme:light dark}
+    :where(.dark,[data-theme="dark"],[data-tc-theme="dark"]) .tcs-patterns-ai-thinking-states{color-scheme:dark}
+    :where(.light,[data-theme="light"],[data-tc-theme="light"]) .tcs-patterns-ai-thinking-states{color-scheme:light}
+    .tcs-patterns-ai-thinking-states .tile{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#e4e7ec,rgba(255,255,255,0.1))}
+    .tcs-patterns-ai-thinking-states .line-fill{fill:light-dark(#e6e9ee,#44464d)}
+    .tcs-patterns-ai-thinking-states .mark{fill:light-dark(#dce8fb,#263a5c);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-patterns-ai-thinking-states .ink-fill{fill:light-dark(#2f5ea8,#cfdffb);stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-patterns-ai-thinking-states .glow{fill:light-dark(rgba(120,160,230,0.22),rgba(120,160,230,0.11))}
+    </style>
+  </defs>
+  <ellipse class="glow" cx="88" cy="154" rx="40" ry="9" fill="rgba(120,160,230,0.22)" filter="url(#tcs-patterns-ai-thinking-states-glow)"/>
+  <rect class="tile" x="30" y="40" width="140" height="112" rx="14" fill="#ffffff" stroke="#e4e7ec" stroke-width="2"/>
+  <rect class="line-fill" x="92" y="54" width="62" height="22" rx="11" fill="#e6e9ee"/>
+  <path class="mark" d="M66 88 H110 Q130 88 130 108 Q130 128 110 128 H70 L52 138 L57 122 Q46 116 46 108 Q46 88 66 88 Z" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="ink-fill" cx="70" cy="108" r="5" fill="#2f5ea8" stroke="#2f5ea8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle class="ink-fill" cx="88" cy="108" r="5" fill="#2f5ea8" stroke="#2f5ea8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle class="ink-fill" cx="106" cy="108" r="5" fill="#2f5ea8" stroke="#2f5ea8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

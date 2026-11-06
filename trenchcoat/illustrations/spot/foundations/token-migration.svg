@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="tcs-foundations-token-migration">
+  <title>Token Migration</title>
+  <defs>
+    <filter id="tcs-foundations-token-migration-glow" x="-50%" y="-150%" width="200%" height="400%"><feGaussianBlur stdDeviation="7.5"/></filter>
+    <style>
+    svg.tcs-foundations-token-migration:root{color-scheme:light dark}
+    :where(.dark,[data-theme="dark"],[data-tc-theme="dark"]) .tcs-foundations-token-migration{color-scheme:dark}
+    :where(.light,[data-theme="light"],[data-tc-theme="light"]) .tcs-foundations-token-migration{color-scheme:light}
+    .tcs-foundations-token-migration .tile{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#e4e7ec,rgba(255,255,255,0.1))}
+    .tcs-foundations-token-migration .line{stroke:light-dark(#e6e9ee,#44464d)}
+    .tcs-foundations-token-migration .sub-box{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#c9ced6,#5c5f67)}
+    .tcs-foundations-token-migration .mark{fill:light-dark(#dce8fb,#263a5c);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-foundations-token-migration .edge{stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-foundations-token-migration .ink{stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-foundations-token-migration .glow{fill:light-dark(rgba(120,160,230,0.22),rgba(120,160,230,0.11))}
+    </style>
+  </defs>
+  <ellipse class="glow" cx="135" cy="150" rx="26" ry="9" fill="rgba(120,160,230,0.22)" filter="url(#tcs-foundations-token-migration-glow)"/>
+  <rect class="tile" x="30" y="44" width="140" height="104" rx="14" fill="#ffffff" stroke="#e4e7ec" stroke-width="2"/>
+  <path class="sub-box" d="M46 62 H74 L84 72 V130 H46 Z" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="line" style="stroke-width:5" d="M54 86 H74 M54 100 H76 M54 114 H68" fill="none" stroke="#e6e9ee" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" d="M90 96 H108 M102 90 L108 96 L102 102" fill="none" stroke="#2f5ea8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="mark" d="M116 62 H144 L154 72 V130 H116 Z" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="edge" d="M144 62 V72 H154" fill="none" stroke="#8fb0e8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" style="stroke-width:4" d="M124 86 H144 M124 100 H146 M124 114 H138" fill="none" stroke="#2f5ea8" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

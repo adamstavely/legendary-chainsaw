@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="tcs-guidelines-text-graphics">
+  <title>Text Graphics</title>
+  <defs>
+    <filter id="tcs-guidelines-text-graphics-glow" x="-50%" y="-150%" width="200%" height="400%"><feGaussianBlur stdDeviation="7.5"/></filter>
+    <style>
+    svg.tcs-guidelines-text-graphics:root{color-scheme:light dark}
+    :where(.dark,[data-theme="dark"],[data-tc-theme="dark"]) .tcs-guidelines-text-graphics{color-scheme:dark}
+    :where(.light,[data-theme="light"],[data-tc-theme="light"]) .tcs-guidelines-text-graphics{color-scheme:light}
+    .tcs-guidelines-text-graphics .tile{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#e4e7ec,rgba(255,255,255,0.1))}
+    .tcs-guidelines-text-graphics .line{stroke:light-dark(#e6e9ee,#44464d)}
+    .tcs-guidelines-text-graphics .mark{fill:light-dark(#dce8fb,#263a5c);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-guidelines-text-graphics .ink{stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-guidelines-text-graphics .glow{fill:light-dark(rgba(120,160,230,0.22),rgba(120,160,230,0.11))}
+    </style>
+  </defs>
+  <ellipse class="glow" cx="78" cy="156" rx="40" ry="9" fill="rgba(120,160,230,0.22)" filter="url(#tcs-guidelines-text-graphics-glow)"/>
+  <rect class="tile" x="30" y="40" width="140" height="112" rx="14" fill="#ffffff" stroke="#e4e7ec" stroke-width="2"/>
+  <rect class="mark" x="46" y="56" width="64" height="56" rx="10" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" d="M55 102 L72 82 L84 95 L92 87 L102 102" fill="none" stroke="#2f5ea8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="ink" style="stroke-width:3.5" cx="94" cy="70" r="5" fill="none" stroke="#2f5ea8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="line" d="M124 64 H154 M124 80 H150 M124 96 H146 M46 128 H154" fill="none" stroke="#e6e9ee" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

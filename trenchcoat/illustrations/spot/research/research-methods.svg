@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="tcs-research-research-methods">
+  <title>Research Methods</title>
+  <defs>
+    <filter id="tcs-research-research-methods-glow" x="-50%" y="-150%" width="200%" height="400%"><feGaussianBlur stdDeviation="7.5"/></filter>
+    <style>
+    svg.tcs-research-research-methods:root{color-scheme:light dark}
+    :where(.dark,[data-theme="dark"],[data-tc-theme="dark"]) .tcs-research-research-methods{color-scheme:dark}
+    :where(.light,[data-theme="light"],[data-tc-theme="light"]) .tcs-research-research-methods{color-scheme:light}
+    .tcs-research-research-methods .tile{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#e4e7ec,rgba(255,255,255,0.1))}
+    .tcs-research-research-methods .sub{stroke:light-dark(#c9ced6,#5c5f67)}
+    .tcs-research-research-methods .sub-box{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#c9ced6,#5c5f67)}
+    .tcs-research-research-methods .mark{fill:light-dark(#dce8fb,#263a5c);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-research-research-methods .ink{stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-research-research-methods .ink-fill{fill:light-dark(#2f5ea8,#cfdffb);stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-research-research-methods .glow{fill:light-dark(rgba(120,160,230,0.22),rgba(120,160,230,0.11))}
+    </style>
+  </defs>
+  <ellipse class="glow" cx="126" cy="156" rx="30" ry="9" fill="rgba(120,160,230,0.22)" filter="url(#tcs-research-research-methods-glow)"/>
+  <rect class="tile" x="30" y="40" width="140" height="112" rx="14" fill="#ffffff" stroke="#e4e7ec" stroke-width="2"/>
+  <rect class="sub-box" x="46" y="54" width="48" height="40" rx="8" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="sub" d="M56 68 H84 M56 80 H76" fill="none" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="sub-box" x="106" y="54" width="48" height="40" rx="8" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="sub" d="M118 64 H142 Q146 64 146 68 V76 Q146 80 142 80 H126 L120 86 V80 Q118 80 118 76 V68 Q118 64 122 64 Z" fill="none" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="sub-box" x="46" y="102" width="48" height="40" rx="8" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="sub" d="M58 128 L66 120 L74 126 L84 114" fill="none" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="mark" x="106" y="102" width="48" height="40" rx="8" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" d="M114 122 Q130 106 146 122 Q130 138 114 122 Z" fill="none" stroke="#2f5ea8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="ink-fill" cx="130" cy="122" r="3.5" fill="#2f5ea8" stroke="#2f5ea8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

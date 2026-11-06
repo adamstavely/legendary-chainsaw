@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="tcs-foundations-icon-library">
+  <title>Icon Library</title>
+  <defs>
+    <filter id="tcs-foundations-icon-library-glow" x="-50%" y="-150%" width="200%" height="400%"><feGaussianBlur stdDeviation="7.5"/></filter>
+    <style>
+    svg.tcs-foundations-icon-library:root{color-scheme:light dark}
+    :where(.dark,[data-theme="dark"],[data-tc-theme="dark"]) .tcs-foundations-icon-library{color-scheme:dark}
+    :where(.light,[data-theme="light"],[data-tc-theme="light"]) .tcs-foundations-icon-library{color-scheme:light}
+    .tcs-foundations-icon-library .tile{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#e4e7ec,rgba(255,255,255,0.1))}
+    .tcs-foundations-icon-library .sub{stroke:light-dark(#c9ced6,#5c5f67)}
+    .tcs-foundations-icon-library .sub-box{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#c9ced6,#5c5f67)}
+    .tcs-foundations-icon-library .mark{fill:light-dark(#dce8fb,#263a5c);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-foundations-icon-library .ink{stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-foundations-icon-library .ink-fill{fill:light-dark(#2f5ea8,#cfdffb);stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-foundations-icon-library .glow{fill:light-dark(rgba(120,160,230,0.22),rgba(120,160,230,0.11))}
+    </style>
+  </defs>
+  <ellipse class="glow" cx="100" cy="156" rx="44" ry="9" fill="rgba(120,160,230,0.22)" filter="url(#tcs-foundations-icon-library-glow)"/>
+  <rect class="tile" x="30" y="40" width="140" height="112" rx="14" fill="#ffffff" stroke="#e4e7ec" stroke-width="2"/>
+  <rect class="sub-box" x="44" y="52" width="112" height="20" rx="10" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="ink" style="stroke-width:3" cx="57" cy="61" r="4.5" fill="none" stroke="#2f5ea8" stroke-linecap="round" stroke-linejoin="round"/><path class="ink" style="stroke-width:3" d="M60.5 64.5 L64 68" fill="none" stroke="#2f5ea8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="sub-box" x="48" y="82" width="28" height="28" rx="7" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="sub" cx="62" cy="96" r="6" fill="none" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="mark" x="86" y="82" width="28" height="28" rx="7" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink-fill" d="M100 104 C94 100 90 96 92 92 C93 88 98 88 100 92 C102 88 107 88 108 92 C110 96 106 100 100 104 Z" fill="#2f5ea8" stroke="#2f5ea8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="sub-box" x="124" y="82" width="28" height="28" rx="7" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="sub" d="M132 103 L138 90 L144 103 Z" fill="none" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="sub-box" x="48" y="116" width="28" height="28" rx="7" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="sub-box" x="86" y="116" width="28" height="28" rx="7" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="sub" d="M94 130 H106 M100 124 V136" fill="none" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="sub-box" x="124" y="116" width="28" height="28" rx="7" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

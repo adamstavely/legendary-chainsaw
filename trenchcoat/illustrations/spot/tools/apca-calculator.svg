@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="tcs-tools-apca-calculator">
+  <title>APCA Calculator</title>
+  <defs>
+    <filter id="tcs-tools-apca-calculator-glow" x="-50%" y="-150%" width="200%" height="400%"><feGaussianBlur stdDeviation="7.5"/></filter>
+    <style>
+    svg.tcs-tools-apca-calculator:root{color-scheme:light dark}
+    :where(.dark,[data-theme="dark"],[data-tc-theme="dark"]) .tcs-tools-apca-calculator{color-scheme:dark}
+    :where(.light,[data-theme="light"],[data-tc-theme="light"]) .tcs-tools-apca-calculator{color-scheme:light}
+    .tcs-tools-apca-calculator .tile{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#e4e7ec,rgba(255,255,255,0.1))}
+    .tcs-tools-apca-calculator .line{stroke:light-dark(#e6e9ee,#44464d)}
+    .tcs-tools-apca-calculator .sub-box{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#c9ced6,#5c5f67)}
+    .tcs-tools-apca-calculator .mark{fill:light-dark(#dce8fb,#263a5c);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-tools-apca-calculator .ink{stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-tools-apca-calculator .ink-fill{fill:light-dark(#2f5ea8,#cfdffb);stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-tools-apca-calculator .glow{fill:light-dark(rgba(120,160,230,0.22),rgba(120,160,230,0.11))}
+    </style>
+  </defs>
+  <ellipse class="glow" cx="100" cy="154" rx="48" ry="9" fill="rgba(120,160,230,0.22)" filter="url(#tcs-tools-apca-calculator-glow)"/>
+  <rect class="tile" x="30" y="40" width="140" height="112" rx="14" fill="#ffffff" stroke="#e4e7ec" stroke-width="2"/>
+  <rect class="sub-box" x="46" y="54" width="20" height="20" rx="6" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="ink-fill" x="134" y="54" width="20" height="20" rx="6" fill="#2f5ea8" stroke="#2f5ea8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="mark" d="M52 126 A48 48 0 0 1 148 126 H124 A24 24 0 0 0 76 126 Z" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" d="M100 126 L126 96" fill="none" stroke="#2f5ea8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="ink-fill" cx="100" cy="126" r="5" fill="#2f5ea8" stroke="#2f5ea8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="line" d="M64 140 H136" fill="none" stroke="#e6e9ee" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

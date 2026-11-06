@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="tcs-principles-consistent-and-integrated">
+  <title>Consistent and Integrated</title>
+  <defs>
+    <filter id="tcs-principles-consistent-and-integrated-glow" x="-50%" y="-150%" width="200%" height="400%"><feGaussianBlur stdDeviation="7.5"/></filter>
+    <style>
+    svg.tcs-principles-consistent-and-integrated:root{color-scheme:light dark}
+    :where(.dark,[data-theme="dark"],[data-tc-theme="dark"]) .tcs-principles-consistent-and-integrated{color-scheme:dark}
+    :where(.light,[data-theme="light"],[data-tc-theme="light"]) .tcs-principles-consistent-and-integrated{color-scheme:light}
+    .tcs-principles-consistent-and-integrated .tile{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#e4e7ec,rgba(255,255,255,0.1))}
+    .tcs-principles-consistent-and-integrated .sub{stroke:light-dark(#c9ced6,#5c5f67)}
+    .tcs-principles-consistent-and-integrated .sub-box{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#c9ced6,#5c5f67)}
+    .tcs-principles-consistent-and-integrated .mark{fill:light-dark(#dce8fb,#263a5c);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-principles-consistent-and-integrated .ink{stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-principles-consistent-and-integrated .glow{fill:light-dark(rgba(120,160,230,0.22),rgba(120,160,230,0.11))}
+    </style>
+  </defs>
+  <ellipse class="glow" cx="100" cy="150" rx="30" ry="9" fill="rgba(120,160,230,0.22)" filter="url(#tcs-principles-consistent-and-integrated-glow)"/>
+  <rect class="tile" x="30" y="44" width="140" height="104" rx="14" fill="#ffffff" stroke="#e4e7ec" stroke-width="2"/>
+  <path class="ink" d="M70 96 H85 M115 96 H130" fill="none" stroke="#2f5ea8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="sub-box" x="40" y="76" width="30" height="40" rx="8" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="sub" d="M47 87 H63 M47 103 H58" fill="none" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="mark" x="85" y="76" width="30" height="40" rx="8" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" style="stroke-width:4" d="M92 87 H108 M92 103 H103" fill="none" stroke="#2f5ea8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="sub-box" x="130" y="76" width="30" height="40" rx="8" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="sub" d="M137 87 H153 M137 103 H148" fill="none" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

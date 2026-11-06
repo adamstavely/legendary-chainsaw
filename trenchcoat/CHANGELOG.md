@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased – Spot illustrations
+
+- **Spot illustrations** (`illustrations/spot/`): 223 small illustrations for page headers, cards, empty states and
+  docs, in the soft style with one blue mark – foundations, guidelines, patterns, design principles, the 30 Laws of UX,
+  research, AI, tools, admin and site topics. Each is one self-contained SVG: light colours as plain attributes for
+  design tools, and a scoped style that adds dark, following the OS as an image and the page's theme when inlined.
+  Shipped in the package as `trenchcoat/illustrations/spot/<folder>/<name>.svg`, indexed in its README, and browsable
+  with search under Foundations → Spot illustrations.
+
 ## Unreleased – Message Status, Collection Card and Preview Card
 
 - **Message Status** (`tc-message-status`): the quiet row under a sent message – a read receipt (sending, sent,

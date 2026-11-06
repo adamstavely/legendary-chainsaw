@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="tcs-site-getting-started">
+  <title>Getting Started</title>
+  <defs>
+    <filter id="tcs-site-getting-started-glow" x="-50%" y="-150%" width="200%" height="400%"><feGaussianBlur stdDeviation="7.5"/></filter>
+    <style>
+    svg.tcs-site-getting-started:root{color-scheme:light dark}
+    :where(.dark,[data-theme="dark"],[data-tc-theme="dark"]) .tcs-site-getting-started{color-scheme:dark}
+    :where(.light,[data-theme="light"],[data-tc-theme="light"]) .tcs-site-getting-started{color-scheme:light}
+    .tcs-site-getting-started .tile{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#e4e7ec,rgba(255,255,255,0.1))}
+    .tcs-site-getting-started .sub-box{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#c9ced6,#5c5f67)}
+    .tcs-site-getting-started .mark{fill:light-dark(#dce8fb,#263a5c);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-site-getting-started .ink{stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-site-getting-started .glow{fill:light-dark(rgba(120,160,230,0.22),rgba(120,160,230,0.11))}
+    </style>
+  </defs>
+  <ellipse class="glow" cx="100" cy="156" rx="32" ry="9" fill="rgba(120,160,230,0.22)" filter="url(#tcs-site-getting-started-glow)"/>
+  <rect class="tile" x="36" y="40" width="128" height="112" rx="14" fill="#ffffff" stroke="#e4e7ec" stroke-width="2"/>
+  <path class="sub-box" d="M82 100 L66 120 V128 H82 Z" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path class="sub-box" d="M118 100 L134 120 V128 H118 Z" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="mark" d="M100 50 Q124 72 118 124 H82 Q76 72 100 50 Z" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="ink" cx="100" cy="86" r="9" fill="none" stroke="#2f5ea8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" d="M92 134 V142 M100 134 V148 M108 134 V142" fill="none" stroke="#2f5ea8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

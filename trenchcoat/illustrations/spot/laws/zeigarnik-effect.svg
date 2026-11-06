@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="tcs-laws-zeigarnik-effect">
+  <title>Zeigarnik Effect</title>
+  <defs>
+    <filter id="tcs-laws-zeigarnik-effect-glow" x="-50%" y="-150%" width="200%" height="400%"><feGaussianBlur stdDeviation="7.5"/></filter>
+    <style>
+    svg.tcs-laws-zeigarnik-effect:root{color-scheme:light dark}
+    :where(.dark,[data-theme="dark"],[data-tc-theme="dark"]) .tcs-laws-zeigarnik-effect{color-scheme:dark}
+    :where(.light,[data-theme="light"],[data-tc-theme="light"]) .tcs-laws-zeigarnik-effect{color-scheme:light}
+    .tcs-laws-zeigarnik-effect .tile{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#e4e7ec,rgba(255,255,255,0.1))}
+    .tcs-laws-zeigarnik-effect .line{stroke:light-dark(#e6e9ee,#44464d)}
+    .tcs-laws-zeigarnik-effect .sub{stroke:light-dark(#c9ced6,#5c5f67)}
+    .tcs-laws-zeigarnik-effect .sub-box{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#c9ced6,#5c5f67)}
+    .tcs-laws-zeigarnik-effect .mark{fill:light-dark(#dce8fb,#263a5c);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-laws-zeigarnik-effect .ink{stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-laws-zeigarnik-effect .ink-box{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-laws-zeigarnik-effect .glow{fill:light-dark(rgba(120,160,230,0.22),rgba(120,160,230,0.11))}
+    </style>
+  </defs>
+  <ellipse class="glow" cx="100" cy="152" rx="48" ry="9" fill="rgba(120,160,230,0.22)" filter="url(#tcs-laws-zeigarnik-effect-glow)"/>
+  <rect class="tile" x="30" y="40" width="140" height="112" rx="14" fill="#ffffff" stroke="#e4e7ec" stroke-width="2"/>
+  <rect class="sub-box" x="46" y="52" width="16" height="16" rx="4" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="sub" d="M50 60 L53 63 L58 56" fill="none" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="line" d="M72 60 H128" fill="none" stroke="#e6e9ee" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="sub-box" x="46" y="78" width="16" height="16" rx="4" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="sub" d="M50 86 L53 89 L58 82" fill="none" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="line" d="M72 86 H118" fill="none" stroke="#e6e9ee" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="mark" x="38" y="106" width="124" height="32" rx="10" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="ink-box" x="48" y="114" width="16" height="16" rx="4" fill="#ffffff" stroke="#2f5ea8" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" d="M76 122 H128" fill="none" stroke="#2f5ea8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

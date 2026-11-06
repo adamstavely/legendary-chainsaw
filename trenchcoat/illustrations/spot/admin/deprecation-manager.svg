@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="tcs-admin-deprecation-manager">
+  <title>Deprecation Manager</title>
+  <defs>
+    <filter id="tcs-admin-deprecation-manager-glow" x="-50%" y="-150%" width="200%" height="400%"><feGaussianBlur stdDeviation="7.5"/></filter>
+    <style>
+    svg.tcs-admin-deprecation-manager:root{color-scheme:light dark}
+    :where(.dark,[data-theme="dark"],[data-tc-theme="dark"]) .tcs-admin-deprecation-manager{color-scheme:dark}
+    :where(.light,[data-theme="light"],[data-tc-theme="light"]) .tcs-admin-deprecation-manager{color-scheme:light}
+    .tcs-admin-deprecation-manager .tile{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#e4e7ec,rgba(255,255,255,0.1))}
+    .tcs-admin-deprecation-manager .sub{stroke:light-dark(#c9ced6,#5c5f67)}
+    .tcs-admin-deprecation-manager .sub-box{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#c9ced6,#5c5f67)}
+    .tcs-admin-deprecation-manager .mark{fill:light-dark(#dce8fb,#263a5c);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-admin-deprecation-manager .ink{stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-admin-deprecation-manager .ink-box{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-admin-deprecation-manager .glow{fill:light-dark(rgba(120,160,230,0.22),rgba(120,160,230,0.11))}
+    </style>
+  </defs>
+  <ellipse class="glow" cx="78" cy="154" rx="34" ry="9" fill="rgba(120,160,230,0.22)" filter="url(#tcs-admin-deprecation-manager-glow)"/>
+  <rect class="tile" x="30" y="40" width="140" height="112" rx="14" fill="#ffffff" stroke="#e4e7ec" stroke-width="2"/>
+  <rect class="mark" x="44" y="62" width="64" height="54" rx="10" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" d="M56 78 H92 M56 92 H82" fill="none" stroke="#2f5ea8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" d="M50 112 L102 66" fill="none" stroke="#2f5ea8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="ink-box" cx="136" cy="64" r="11" style="stroke-width:3.5" fill="#ffffff" stroke="#2f5ea8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" style="stroke-width:3" d="M136 58 V64 L140 67" fill="none" stroke="#2f5ea8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="sub" style="stroke-dasharray:3 6" d="M80 126 Q86 140 118 134" fill="none" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="sub" d="M112 129 L119 134 L113 140" fill="none" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="sub-box" x="126" y="114" width="30" height="30" rx="7" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

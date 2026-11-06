@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="tcs-tools-px-converter">
+  <title>PX Converter</title>
+  <defs>
+    <filter id="tcs-tools-px-converter-glow" x="-50%" y="-150%" width="200%" height="400%"><feGaussianBlur stdDeviation="7.5"/></filter>
+    <style>
+    svg.tcs-tools-px-converter:root{color-scheme:light dark}
+    :where(.dark,[data-theme="dark"],[data-tc-theme="dark"]) .tcs-tools-px-converter{color-scheme:dark}
+    :where(.light,[data-theme="light"],[data-tc-theme="light"]) .tcs-tools-px-converter{color-scheme:light}
+    .tcs-tools-px-converter .tile{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#e4e7ec,rgba(255,255,255,0.1))}
+    .tcs-tools-px-converter .line{stroke:light-dark(#e6e9ee,#44464d)}
+    .tcs-tools-px-converter .sub{stroke:light-dark(#c9ced6,#5c5f67)}
+    .tcs-tools-px-converter .sub-box{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#c9ced6,#5c5f67)}
+    .tcs-tools-px-converter .mark{fill:light-dark(#dce8fb,#263a5c);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-tools-px-converter .ink{stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-tools-px-converter .glow{fill:light-dark(rgba(120,160,230,0.22),rgba(120,160,230,0.11))}
+    </style>
+  </defs>
+  <ellipse class="glow" cx="100" cy="154" rx="48" ry="9" fill="rgba(120,160,230,0.22)" filter="url(#tcs-tools-px-converter-glow)"/>
+  <rect class="tile" x="30" y="40" width="140" height="112" rx="14" fill="#ffffff" stroke="#e4e7ec" stroke-width="2"/>
+  <rect class="mark" x="48" y="52" width="104" height="44" rx="10" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" d="M62 74 H138 M70 66 L62 74 L70 82 M130 66 L138 74 L130 82" fill="none" stroke="#2f5ea8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="sub-box" x="48" y="108" width="30" height="14" rx="7" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="sub" d="M86 115 H102 M97 110 L102 115 L97 120" fill="none" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="line" d="M112 115 H150" fill="none" stroke="#e6e9ee" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="sub-box" x="48" y="130" width="30" height="14" rx="7" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="sub" d="M86 137 H102 M97 132 L102 137 L97 142" fill="none" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="line" d="M112 137 H140" fill="none" stroke="#e6e9ee" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

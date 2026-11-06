@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="tcs-ai-ai-patterns">
+  <title>AI Patterns</title>
+  <defs>
+    <filter id="tcs-ai-ai-patterns-glow" x="-50%" y="-150%" width="200%" height="400%"><feGaussianBlur stdDeviation="7.5"/></filter>
+    <style>
+    svg.tcs-ai-ai-patterns:root{color-scheme:light dark}
+    :where(.dark,[data-theme="dark"],[data-tc-theme="dark"]) .tcs-ai-ai-patterns{color-scheme:dark}
+    :where(.light,[data-theme="light"],[data-tc-theme="light"]) .tcs-ai-ai-patterns{color-scheme:light}
+    .tcs-ai-ai-patterns .tile{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#e4e7ec,rgba(255,255,255,0.1))}
+    .tcs-ai-ai-patterns .line{stroke:light-dark(#e6e9ee,#44464d)}
+    .tcs-ai-ai-patterns .line-fill{fill:light-dark(#e6e9ee,#44464d)}
+    .tcs-ai-ai-patterns .sub{stroke:light-dark(#c9ced6,#5c5f67)}
+    .tcs-ai-ai-patterns .sub-box{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#c9ced6,#5c5f67)}
+    .tcs-ai-ai-patterns .mark{fill:light-dark(#dce8fb,#263a5c);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-ai-ai-patterns .ink{stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-ai-ai-patterns .glow{fill:light-dark(rgba(120,160,230,0.22),rgba(120,160,230,0.11))}
+    </style>
+  </defs>
+  <ellipse class="glow" cx="100" cy="154" rx="36" ry="9" fill="rgba(120,160,230,0.22)" filter="url(#tcs-ai-ai-patterns-glow)"/>
+  <rect class="tile" x="30" y="40" width="140" height="112" rx="14" fill="#ffffff" stroke="#e4e7ec" stroke-width="2"/>
+  <path class="sub" d="M140 76 Q140 56 100 56 Q60 56 60 76" fill="none" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="sub" d="M54 70 L60 77 L66 70" fill="none" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="sub-box" x="42" y="82" width="36" height="36" rx="8" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="line" style="stroke-width:5" d="M52 94 H68 M52 106 H62" fill="none" stroke="#e6e9ee" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="sub" d="M80 100 H84 M116 100 H120" fill="none" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="mark" cx="100" cy="100" r="20" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" d="M100 89 Q103.1 96.9 111 100 Q103.1 103.1 100 111 Q96.9 103.1 89 100 Q96.9 96.9 100 89 Z" fill="none" stroke="#2f5ea8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="sub-box" x="122" y="82" width="36" height="36" rx="8" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="line-fill" x="130" y="90" width="20" height="10" rx="3" fill="#e6e9ee"/>
+  <path class="line" style="stroke-width:5" d="M131 110 H149" fill="none" stroke="#e6e9ee" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="line" d="M64 138 H136" fill="none" stroke="#e6e9ee" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

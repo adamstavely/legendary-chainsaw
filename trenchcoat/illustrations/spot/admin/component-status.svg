@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="tcs-admin-component-status">
+  <title>Component Status</title>
+  <defs>
+    <filter id="tcs-admin-component-status-glow" x="-50%" y="-150%" width="200%" height="400%"><feGaussianBlur stdDeviation="7.5"/></filter>
+    <style>
+    svg.tcs-admin-component-status:root{color-scheme:light dark}
+    :where(.dark,[data-theme="dark"],[data-tc-theme="dark"]) .tcs-admin-component-status{color-scheme:dark}
+    :where(.light,[data-theme="light"],[data-tc-theme="light"]) .tcs-admin-component-status{color-scheme:light}
+    .tcs-admin-component-status .tile{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#e4e7ec,rgba(255,255,255,0.1))}
+    .tcs-admin-component-status .line{stroke:light-dark(#e6e9ee,#44464d)}
+    .tcs-admin-component-status .sub-box{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#c9ced6,#5c5f67)}
+    .tcs-admin-component-status .mark{fill:light-dark(#dce8fb,#263a5c);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-admin-component-status .ink{stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-admin-component-status .ink-box{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-admin-component-status .glow{fill:light-dark(rgba(120,160,230,0.22),rgba(120,160,230,0.11))}
+    </style>
+  </defs>
+  <ellipse class="glow" cx="76" cy="154" rx="34" ry="9" fill="rgba(120,160,230,0.22)" filter="url(#tcs-admin-component-status-glow)"/>
+  <rect class="tile" x="30" y="40" width="140" height="112" rx="14" fill="#ffffff" stroke="#e4e7ec" stroke-width="2"/>
+  <rect class="mark" x="44" y="62" width="64" height="64" rx="14" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" style="stroke-width:3.5" d="M76 72 L84 80 L76 88 L68 80 Z M76 100 L84 108 L76 116 L68 108 Z M62 86 L70 94 L62 102 L54 94 Z M90 86 L98 94 L90 102 L82 94 Z" fill="none" stroke="#2f5ea8" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="ink-box" cx="126" cy="70" r="7" style="stroke-width:3" fill="#ffffff" stroke="#2f5ea8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" style="stroke-width:3" d="M123 70 L125.5 72.5 L130 67" fill="none" stroke="#2f5ea8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="line" style="stroke-width:5" d="M140 70 H156" fill="none" stroke="#e6e9ee" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="sub-box" cx="126" cy="94" r="7" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="line" style="stroke-width:5" d="M140 94 H152" fill="none" stroke="#e6e9ee" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="sub-box" cx="126" cy="118" r="7" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="line" style="stroke-width:5" d="M140 118 H156" fill="none" stroke="#e6e9ee" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

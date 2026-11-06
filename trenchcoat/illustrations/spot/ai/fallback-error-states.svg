@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="tcs-ai-fallback-error-states">
+  <title>Fallback Error States</title>
+  <defs>
+    <filter id="tcs-ai-fallback-error-states-glow" x="-50%" y="-150%" width="200%" height="400%"><feGaussianBlur stdDeviation="7.5"/></filter>
+    <style>
+    svg.tcs-ai-fallback-error-states:root{color-scheme:light dark}
+    :where(.dark,[data-theme="dark"],[data-tc-theme="dark"]) .tcs-ai-fallback-error-states{color-scheme:dark}
+    :where(.light,[data-theme="light"],[data-tc-theme="light"]) .tcs-ai-fallback-error-states{color-scheme:light}
+    .tcs-ai-fallback-error-states .tile{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#e4e7ec,rgba(255,255,255,0.1))}
+    .tcs-ai-fallback-error-states .line{stroke:light-dark(#e6e9ee,#44464d)}
+    .tcs-ai-fallback-error-states .mark{fill:light-dark(#dce8fb,#263a5c);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-ai-fallback-error-states .ink{stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-ai-fallback-error-states .ink-fill{fill:light-dark(#2f5ea8,#cfdffb);stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-ai-fallback-error-states .glow{fill:light-dark(rgba(120,160,230,0.22),rgba(120,160,230,0.11))}
+    </style>
+  </defs>
+  <ellipse class="glow" cx="90" cy="156" rx="44" ry="9" fill="rgba(120,160,230,0.22)" filter="url(#tcs-ai-fallback-error-states-glow)"/>
+  <rect class="tile" x="34" y="40" width="132" height="112" rx="14" fill="#ffffff" stroke="#e4e7ec" stroke-width="2"/>
+  <path class="line" d="M52 62 H148 M52 78 H120" fill="none" stroke="#e6e9ee" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="mark" cx="80" cy="116" r="24" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" d="M80 104 V117" fill="none" stroke="#2f5ea8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><circle class="ink-fill" cx="80" cy="127" r="2.5" fill="#2f5ea8" stroke="#2f5ea8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" d="M112 116 H128 Q144 116 144 100" fill="none" stroke="#2f5ea8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" d="M137 106 L144 99 L151 106" fill="none" stroke="#2f5ea8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

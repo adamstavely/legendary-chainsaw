@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="tcs-laws-hicks-law">
+  <title>Hick's Law</title>
+  <defs>
+    <filter id="tcs-laws-hicks-law-glow" x="-50%" y="-150%" width="200%" height="400%"><feGaussianBlur stdDeviation="7.5"/></filter>
+    <style>
+    svg.tcs-laws-hicks-law:root{color-scheme:light dark}
+    :where(.dark,[data-theme="dark"],[data-tc-theme="dark"]) .tcs-laws-hicks-law{color-scheme:dark}
+    :where(.light,[data-theme="light"],[data-tc-theme="light"]) .tcs-laws-hicks-law{color-scheme:light}
+    .tcs-laws-hicks-law .tile{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#e4e7ec,rgba(255,255,255,0.1))}
+    .tcs-laws-hicks-law .sub-box{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#c9ced6,#5c5f67)}
+    .tcs-laws-hicks-law .mark{fill:light-dark(#dce8fb,#263a5c);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-laws-hicks-law .edge{stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-laws-hicks-law .ink-fill{fill:light-dark(#2f5ea8,#cfdffb);stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-laws-hicks-law .glow{fill:light-dark(rgba(120,160,230,0.22),rgba(120,160,230,0.11))}
+    </style>
+  </defs>
+  <ellipse class="glow" cx="62" cy="148" rx="30" ry="9" fill="rgba(120,160,230,0.22)" filter="url(#tcs-laws-hicks-law-glow)"/>
+  <rect class="tile" x="30" y="40" width="140" height="112" rx="14" fill="#ffffff" stroke="#e4e7ec" stroke-width="2"/>
+  <path class="edge" style="stroke-width:4" d="M78 96 C100 96 100 60 122 60 M78 96 C100 96 104 84 122 84 M78 96 C100 96 104 108 122 108 M78 96 C100 96 100 132 122 132" fill="none" stroke="#8fb0e8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="sub-box" x="124" y="53" width="28" height="14" rx="7" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="sub-box" x="124" y="77" width="28" height="14" rx="7" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="sub-box" x="124" y="101" width="28" height="14" rx="7" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="sub-box" x="124" y="125" width="28" height="14" rx="7" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="mark" cx="62" cy="96" r="16" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="ink-fill" cx="62" cy="96" r="5" fill="#2f5ea8" stroke="#2f5ea8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

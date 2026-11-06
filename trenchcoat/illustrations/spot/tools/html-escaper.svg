@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="tcs-tools-html-escaper">
+  <title>HTML Escaper</title>
+  <defs>
+    <filter id="tcs-tools-html-escaper-glow" x="-50%" y="-150%" width="200%" height="400%"><feGaussianBlur stdDeviation="7.5"/></filter>
+    <style>
+    svg.tcs-tools-html-escaper:root{color-scheme:light dark}
+    :where(.dark,[data-theme="dark"],[data-tc-theme="dark"]) .tcs-tools-html-escaper{color-scheme:dark}
+    :where(.light,[data-theme="light"],[data-tc-theme="light"]) .tcs-tools-html-escaper{color-scheme:light}
+    .tcs-tools-html-escaper .tile{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#e4e7ec,rgba(255,255,255,0.1))}
+    .tcs-tools-html-escaper .line{stroke:light-dark(#e6e9ee,#44464d)}
+    .tcs-tools-html-escaper .sub-box{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#c9ced6,#5c5f67)}
+    .tcs-tools-html-escaper .mark{fill:light-dark(#dce8fb,#263a5c);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-tools-html-escaper .ink{stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-tools-html-escaper .glow{fill:light-dark(rgba(120,160,230,0.22),rgba(120,160,230,0.11))}
+    </style>
+  </defs>
+  <ellipse class="glow" cx="100" cy="154" rx="48" ry="9" fill="rgba(120,160,230,0.22)" filter="url(#tcs-tools-html-escaper-glow)"/>
+  <rect class="tile" x="30" y="40" width="140" height="112" rx="14" fill="#ffffff" stroke="#e4e7ec" stroke-width="2"/>
+  <rect class="mark" x="46" y="52" width="108" height="42" rx="12" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" d="M76 62 L64 73 L76 84 M124 62 L136 73 L124 84 M106 60 L94 86" fill="none" stroke="#2f5ea8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" style="stroke-width:3.5" d="M92 100 V114 M87 109 L92 114 L97 109 M108 114 V100 M103 105 L108 100 L113 105" fill="none" stroke="#2f5ea8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="sub-box" x="46" y="120" width="108" height="22" rx="8" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="line" style="stroke-width:5" d="M60 131 H72 M84 131 H96 M108 131 H120 M132 131 H140" fill="none" stroke="#e6e9ee" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

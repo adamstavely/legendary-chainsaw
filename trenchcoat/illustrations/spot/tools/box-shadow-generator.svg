@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="tcs-tools-box-shadow-generator">
+  <title>Box Shadow Generator</title>
+  <defs>
+    <filter id="tcs-tools-box-shadow-generator-glow" x="-50%" y="-150%" width="200%" height="400%"><feGaussianBlur stdDeviation="7.5"/></filter>
+    <style>
+    svg.tcs-tools-box-shadow-generator:root{color-scheme:light dark}
+    :where(.dark,[data-theme="dark"],[data-tc-theme="dark"]) .tcs-tools-box-shadow-generator{color-scheme:dark}
+    :where(.light,[data-theme="light"],[data-tc-theme="light"]) .tcs-tools-box-shadow-generator{color-scheme:light}
+    .tcs-tools-box-shadow-generator .tile{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#e4e7ec,rgba(255,255,255,0.1))}
+    .tcs-tools-box-shadow-generator .line-fill{fill:light-dark(#e6e9ee,#44464d)}
+    .tcs-tools-box-shadow-generator .mark{fill:light-dark(#dce8fb,#263a5c);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-tools-box-shadow-generator .ink{stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-tools-box-shadow-generator .ink-box{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-tools-box-shadow-generator .glow{fill:light-dark(rgba(120,160,230,0.22),rgba(120,160,230,0.11))}
+    </style>
+  </defs>
+  <ellipse class="glow" cx="104" cy="154" rx="46" ry="9" fill="rgba(120,160,230,0.22)" filter="url(#tcs-tools-box-shadow-generator-glow)"/>
+  <rect class="tile" x="30" y="40" width="140" height="112" rx="14" fill="#ffffff" stroke="#e4e7ec" stroke-width="2"/>
+  <rect class="line-fill" x="66" y="70" width="80" height="62" rx="12" fill="#e6e9ee"/>
+  <rect class="mark" x="52" y="56" width="80" height="62" rx="12" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" d="M66 74 H102 M66 88 H90" fill="none" stroke="#2f5ea8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="ink-box" x="66" y="98" width="28" height="10" rx="5" style="stroke-width:3" fill="#ffffff" stroke="#2f5ea8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" style="stroke-width:3.5" d="M140 66 L154 80 M154 70 V80 H144" fill="none" stroke="#2f5ea8" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="tcs-foundations-usg-seals">
+  <title>USG Seals</title>
+  <defs>
+    <filter id="tcs-foundations-usg-seals-glow" x="-50%" y="-150%" width="200%" height="400%"><feGaussianBlur stdDeviation="7.5"/></filter>
+    <style>
+    svg.tcs-foundations-usg-seals:root{color-scheme:light dark}
+    :where(.dark,[data-theme="dark"],[data-tc-theme="dark"]) .tcs-foundations-usg-seals{color-scheme:dark}
+    :where(.light,[data-theme="light"],[data-tc-theme="light"]) .tcs-foundations-usg-seals{color-scheme:light}
+    .tcs-foundations-usg-seals .tile{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#e4e7ec,rgba(255,255,255,0.1))}
+    .tcs-foundations-usg-seals .sub{stroke:light-dark(#c9ced6,#5c5f67)}
+    .tcs-foundations-usg-seals .sub-box{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#c9ced6,#5c5f67)}
+    .tcs-foundations-usg-seals .mark{fill:light-dark(#dce8fb,#263a5c);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-foundations-usg-seals .ink{stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-foundations-usg-seals .ink-fill{fill:light-dark(#2f5ea8,#cfdffb);stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-foundations-usg-seals .glow{fill:light-dark(rgba(120,160,230,0.22),rgba(120,160,230,0.11))}
+    </style>
+  </defs>
+  <ellipse class="glow" cx="100" cy="154" rx="40" ry="9" fill="rgba(120,160,230,0.22)" filter="url(#tcs-foundations-usg-seals-glow)"/>
+  <rect class="tile" x="30" y="40" width="140" height="112" rx="14" fill="#ffffff" stroke="#e4e7ec" stroke-width="2"/>
+  <path class="sub" style="stroke-width:4" d="M58.7 107.0 A44 44 0 0 0 92.4 135.3" fill="none" stroke="#c9ced6" stroke-linecap="round" stroke-linejoin="round"/>
+  <ellipse class="sub-box" cx="61.5" cy="113.3" rx="7.5" ry="3.5" transform="rotate(281 61.5 113.3)" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <ellipse class="sub-box" cx="68.3" cy="122.6" rx="7.5" ry="3.5" transform="rotate(266 68.3 122.6)" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <ellipse class="sub-box" cx="77.3" cy="129.7" rx="7.5" ry="3.5" transform="rotate(251 77.3 129.7)" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <ellipse class="sub-box" cx="87.9" cy="134.3" rx="7.5" ry="3.5" transform="rotate(236 87.9 134.3)" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="sub" style="stroke-width:4" d="M141.3 107.0 A44 44 0 0 1 107.6 135.3" fill="none" stroke="#c9ced6" stroke-linecap="round" stroke-linejoin="round"/>
+  <ellipse class="sub-box" cx="138.5" cy="113.3" rx="7.5" ry="3.5" transform="rotate(79 138.5 113.3)" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <ellipse class="sub-box" cx="131.7" cy="122.6" rx="7.5" ry="3.5" transform="rotate(94 131.7 122.6)" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <ellipse class="sub-box" cx="122.7" cy="129.7" rx="7.5" ry="3.5" transform="rotate(109 122.7 129.7)" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <ellipse class="sub-box" cx="112.1" cy="134.3" rx="7.5" ry="3.5" transform="rotate(124 112.1 134.3)" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="mark" cx="100" cy="92" r="33" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="ink" style="stroke-width:3" cx="100" cy="92" r="24" fill="none" stroke="#2f5ea8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink-fill" d="M100.0 80.0 L102.9 88.0 L111.4 88.3 L104.8 93.5 L107.1 101.7 L100.0 97.0 L92.9 101.7 L95.2 93.5 L88.6 88.3 L97.1 88.0 Z" fill="#2f5ea8" stroke="#2f5ea8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="tcs-laws-peak-end-rule">
+  <title>Peak-End Rule</title>
+  <defs>
+    <filter id="tcs-laws-peak-end-rule-glow" x="-50%" y="-150%" width="200%" height="400%"><feGaussianBlur stdDeviation="7.5"/></filter>
+    <style>
+    svg.tcs-laws-peak-end-rule:root{color-scheme:light dark}
+    :where(.dark,[data-theme="dark"],[data-tc-theme="dark"]) .tcs-laws-peak-end-rule{color-scheme:dark}
+    :where(.light,[data-theme="light"],[data-tc-theme="light"]) .tcs-laws-peak-end-rule{color-scheme:light}
+    .tcs-laws-peak-end-rule .tile{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#e4e7ec,rgba(255,255,255,0.1))}
+    .tcs-laws-peak-end-rule .line{stroke:light-dark(#e6e9ee,#44464d)}
+    .tcs-laws-peak-end-rule .sub{stroke:light-dark(#c9ced6,#5c5f67)}
+    .tcs-laws-peak-end-rule .mark{fill:light-dark(#dce8fb,#263a5c);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-laws-peak-end-rule .ink-fill{fill:light-dark(#2f5ea8,#cfdffb);stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-laws-peak-end-rule .glow{fill:light-dark(rgba(120,160,230,0.22),rgba(120,160,230,0.11))}
+    </style>
+  </defs>
+  <ellipse class="glow" cx="108" cy="150" rx="44" ry="9" fill="rgba(120,160,230,0.22)" filter="url(#tcs-laws-peak-end-rule-glow)"/>
+  <rect class="tile" x="30" y="44" width="140" height="104" rx="14" fill="#ffffff" stroke="#e4e7ec" stroke-width="2"/>
+  <path class="line" d="M46 132 H154" fill="none" stroke="#e6e9ee" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="sub" d="M44 116 C58 110 62 70 76 70 C90 70 90 114 104 114 C118 114 124 96 140 92" fill="none" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="mark" cx="76" cy="70" r="12" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="ink-fill" cx="76" cy="70" r="4" fill="#2f5ea8" stroke="#2f5ea8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="mark" cx="140" cy="92" r="12" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="ink-fill" cx="140" cy="92" r="4" fill="#2f5ea8" stroke="#2f5ea8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

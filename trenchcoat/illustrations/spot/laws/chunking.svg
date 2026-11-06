@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="tcs-laws-chunking">
+  <title>Chunking</title>
+  <defs>
+    <filter id="tcs-laws-chunking-glow" x="-50%" y="-150%" width="200%" height="400%"><feGaussianBlur stdDeviation="7.5"/></filter>
+    <style>
+    svg.tcs-laws-chunking:root{color-scheme:light dark}
+    :where(.dark,[data-theme="dark"],[data-tc-theme="dark"]) .tcs-laws-chunking{color-scheme:dark}
+    :where(.light,[data-theme="light"],[data-tc-theme="light"]) .tcs-laws-chunking{color-scheme:light}
+    .tcs-laws-chunking .tile{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#e4e7ec,rgba(255,255,255,0.1))}
+    .tcs-laws-chunking .line-fill{fill:light-dark(#e6e9ee,#44464d)}
+    .tcs-laws-chunking .mark{fill:light-dark(#dce8fb,#263a5c);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-laws-chunking .ink-fill{fill:light-dark(#2f5ea8,#cfdffb);stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-laws-chunking .glow{fill:light-dark(rgba(120,160,230,0.22),rgba(120,160,230,0.11))}
+    </style>
+  </defs>
+  <ellipse class="glow" cx="100" cy="150" rx="50" ry="9" fill="rgba(120,160,230,0.22)" filter="url(#tcs-laws-chunking-glow)"/>
+  <rect class="tile" x="30" y="44" width="140" height="104" rx="14" fill="#ffffff" stroke="#e4e7ec" stroke-width="2"/>
+  <circle class="line-fill" cx="52" cy="68" r="4" fill="#e6e9ee"/><circle class="line-fill" cx="64" cy="68" r="4" fill="#e6e9ee"/>
+  <circle class="line-fill" cx="76" cy="68" r="4" fill="#e6e9ee"/><circle class="line-fill" cx="88" cy="68" r="4" fill="#e6e9ee"/>
+  <circle class="line-fill" cx="100" cy="68" r="4" fill="#e6e9ee"/><circle class="line-fill" cx="112" cy="68" r="4" fill="#e6e9ee"/>
+  <circle class="line-fill" cx="124" cy="68" r="4" fill="#e6e9ee"/><circle class="line-fill" cx="136" cy="68" r="4" fill="#e6e9ee"/>
+  <circle class="line-fill" cx="148" cy="68" r="4" fill="#e6e9ee"/>
+  <rect class="mark" x="42" y="92" width="34" height="30" rx="12" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="mark" x="83" y="92" width="34" height="30" rx="12" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="mark" x="124" y="92" width="34" height="30" rx="12" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="ink-fill" cx="51" cy="107" r="3" fill="#2f5ea8" stroke="#2f5ea8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle class="ink-fill" cx="59" cy="107" r="3" fill="#2f5ea8" stroke="#2f5ea8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle class="ink-fill" cx="67" cy="107" r="3" fill="#2f5ea8" stroke="#2f5ea8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="ink-fill" cx="92" cy="107" r="3" fill="#2f5ea8" stroke="#2f5ea8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle class="ink-fill" cx="100" cy="107" r="3" fill="#2f5ea8" stroke="#2f5ea8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle class="ink-fill" cx="108" cy="107" r="3" fill="#2f5ea8" stroke="#2f5ea8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="ink-fill" cx="133" cy="107" r="3" fill="#2f5ea8" stroke="#2f5ea8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle class="ink-fill" cx="141" cy="107" r="3" fill="#2f5ea8" stroke="#2f5ea8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle class="ink-fill" cx="149" cy="107" r="3" fill="#2f5ea8" stroke="#2f5ea8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

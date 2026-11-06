@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="tcs-tools-font-scale">
+  <title>Font Scale</title>
+  <defs>
+    <filter id="tcs-tools-font-scale-glow" x="-50%" y="-150%" width="200%" height="400%"><feGaussianBlur stdDeviation="7.5"/></filter>
+    <style>
+    svg.tcs-tools-font-scale:root{color-scheme:light dark}
+    :where(.dark,[data-theme="dark"],[data-tc-theme="dark"]) .tcs-tools-font-scale{color-scheme:dark}
+    :where(.light,[data-theme="light"],[data-tc-theme="light"]) .tcs-tools-font-scale{color-scheme:light}
+    .tcs-tools-font-scale .tile{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#e4e7ec,rgba(255,255,255,0.1))}
+    .tcs-tools-font-scale .line{stroke:light-dark(#e6e9ee,#44464d)}
+    .tcs-tools-font-scale .sub{stroke:light-dark(#c9ced6,#5c5f67)}
+    .tcs-tools-font-scale .mark{fill:light-dark(#dce8fb,#263a5c);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-tools-font-scale .ink{stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-tools-font-scale .glow{fill:light-dark(rgba(120,160,230,0.22),rgba(120,160,230,0.11))}
+    </style>
+  </defs>
+  <ellipse class="glow" cx="126" cy="154" rx="34" ry="9" fill="rgba(120,160,230,0.22)" filter="url(#tcs-tools-font-scale-glow)"/>
+  <rect class="tile" x="30" y="40" width="140" height="112" rx="14" fill="#ffffff" stroke="#e4e7ec" stroke-width="2"/>
+  <path class="line" style="stroke-width:2" d="M42 136 H158" fill="none" stroke="#e6e9ee" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="sub" d="M44 132 L52 108 L60 132 M47 124 H57" fill="none" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="sub" d="M66 132 L79 92 L92 132 M71 118 H87" fill="none" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="mark" x="100" y="54" width="56" height="78" rx="10" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" d="M110 120 L128 66 L146 120 M116 102 H140" fill="none" stroke="#2f5ea8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

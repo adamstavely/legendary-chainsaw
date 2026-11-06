@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="tcs-guidelines-metadata-seo">
+  <title>Metadata SEO</title>
+  <defs>
+    <filter id="tcs-guidelines-metadata-seo-glow" x="-50%" y="-150%" width="200%" height="400%"><feGaussianBlur stdDeviation="7.5"/></filter>
+    <style>
+    svg.tcs-guidelines-metadata-seo:root{color-scheme:light dark}
+    :where(.dark,[data-theme="dark"],[data-tc-theme="dark"]) .tcs-guidelines-metadata-seo{color-scheme:dark}
+    :where(.light,[data-theme="light"],[data-tc-theme="light"]) .tcs-guidelines-metadata-seo{color-scheme:light}
+    .tcs-guidelines-metadata-seo .tile{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#e4e7ec,rgba(255,255,255,0.1))}
+    .tcs-guidelines-metadata-seo .line{stroke:light-dark(#e6e9ee,#44464d)}
+    .tcs-guidelines-metadata-seo .sub-box{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#c9ced6,#5c5f67)}
+    .tcs-guidelines-metadata-seo .mark{fill:light-dark(#dce8fb,#263a5c);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-guidelines-metadata-seo .ink{stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-guidelines-metadata-seo .glow{fill:light-dark(rgba(120,160,230,0.22),rgba(120,160,230,0.11))}
+    </style>
+  </defs>
+  <ellipse class="glow" cx="122" cy="156" rx="38" ry="9" fill="rgba(120,160,230,0.22)" filter="url(#tcs-guidelines-metadata-seo-glow)"/>
+  <rect class="tile" x="30" y="40" width="140" height="112" rx="14" fill="#ffffff" stroke="#e4e7ec" stroke-width="2"/>
+  <rect class="sub-box" x="44" y="52" width="112" height="20" rx="10" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="ink" style="stroke-width:3.5" cx="57" cy="61" r="5" fill="none" stroke="#2f5ea8" stroke-linecap="round" stroke-linejoin="round"/><path class="ink" style="stroke-width:3.5" d="M61 65 L65 69" fill="none" stroke="#2f5ea8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="line" d="M44 90 H128 M44 104 H110 M44 120 H76 M44 134 H70" fill="none" stroke="#e6e9ee" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="mark" d="M98 116 H136 L150 130 L136 144 H98 Q92 144 92 138 V122 Q92 116 98 116 Z" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="ink" style="stroke-width:3.5" cx="134" cy="130" r="4" fill="none" stroke="#2f5ea8" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" d="M104 130 H120" fill="none" stroke="#2f5ea8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

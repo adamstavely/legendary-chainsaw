@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="tcs-tools-html-viewer">
+  <title>HTML Viewer</title>
+  <defs>
+    <filter id="tcs-tools-html-viewer-glow" x="-50%" y="-150%" width="200%" height="400%"><feGaussianBlur stdDeviation="7.5"/></filter>
+    <style>
+    svg.tcs-tools-html-viewer:root{color-scheme:light dark}
+    :where(.dark,[data-theme="dark"],[data-tc-theme="dark"]) .tcs-tools-html-viewer{color-scheme:dark}
+    :where(.light,[data-theme="light"],[data-tc-theme="light"]) .tcs-tools-html-viewer{color-scheme:light}
+    .tcs-tools-html-viewer .tile{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#e4e7ec,rgba(255,255,255,0.1))}
+    .tcs-tools-html-viewer .line{stroke:light-dark(#e6e9ee,#44464d)}
+    .tcs-tools-html-viewer .line-fill{fill:light-dark(#e6e9ee,#44464d)}
+    .tcs-tools-html-viewer .sub{stroke:light-dark(#c9ced6,#5c5f67)}
+    .tcs-tools-html-viewer .mark{fill:light-dark(#dce8fb,#263a5c);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-tools-html-viewer .ink{stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-tools-html-viewer .ink-fill{fill:light-dark(#2f5ea8,#cfdffb);stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-tools-html-viewer .glow{fill:light-dark(rgba(120,160,230,0.22),rgba(120,160,230,0.11))}
+    </style>
+  </defs>
+  <ellipse class="glow" cx="126" cy="156" rx="32" ry="9" fill="rgba(120,160,230,0.22)" filter="url(#tcs-tools-html-viewer-glow)"/>
+  <rect class="tile" x="30" y="40" width="140" height="112" rx="14" fill="#ffffff" stroke="#e4e7ec" stroke-width="2"/>
+  <circle class="line-fill" cx="46" cy="52" r="3.5" fill="#e6e9ee"/>
+  <circle class="line-fill" cx="58" cy="52" r="3.5" fill="#e6e9ee"/>
+  <circle class="line-fill" cx="70" cy="52" r="3.5" fill="#e6e9ee"/>
+  <path class="line" style="stroke-width:2" d="M30 64 H170" fill="none" stroke="#e6e9ee" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="sub" d="M48 84 L42 90 L48 96" fill="none" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="line" style="stroke-width:5" d="M54 90 H82 M54 104 H90 M60 118 H86 M54 132 H76" fill="none" stroke="#e6e9ee" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="line" style="stroke-width:2" d="M98 72 V146" fill="none" stroke="#e6e9ee" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="mark" x="106" y="76" width="52" height="64" rx="8" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" d="M116 88 H148" fill="none" stroke="#2f5ea8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="ink-fill" cx="122" cy="110" r="6" fill="#2f5ea8" stroke="#2f5ea8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" d="M134 106 H148 M134 118 H144 M116 128 H140" fill="none" stroke="#2f5ea8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

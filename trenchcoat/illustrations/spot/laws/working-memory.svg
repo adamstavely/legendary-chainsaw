@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="tcs-laws-working-memory">
+  <title>Working Memory</title>
+  <defs>
+    <filter id="tcs-laws-working-memory-glow" x="-50%" y="-150%" width="200%" height="400%"><feGaussianBlur stdDeviation="7.5"/></filter>
+    <style>
+    svg.tcs-laws-working-memory:root{color-scheme:light dark}
+    :where(.dark,[data-theme="dark"],[data-tc-theme="dark"]) .tcs-laws-working-memory{color-scheme:dark}
+    :where(.light,[data-theme="light"],[data-tc-theme="light"]) .tcs-laws-working-memory{color-scheme:light}
+    .tcs-laws-working-memory .tile{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#e4e7ec,rgba(255,255,255,0.1))}
+    .tcs-laws-working-memory .line{stroke:light-dark(#e6e9ee,#44464d)}
+    .tcs-laws-working-memory .mark{fill:light-dark(#dce8fb,#263a5c);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-laws-working-memory .edge{stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-laws-working-memory .ink-fill{fill:light-dark(#2f5ea8,#cfdffb);stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-laws-working-memory .glow{fill:light-dark(rgba(120,160,230,0.22),rgba(120,160,230,0.11))}
+    </style>
+  </defs>
+  <ellipse class="glow" cx="100" cy="150" rx="46" ry="9" fill="rgba(120,160,230,0.22)" filter="url(#tcs-laws-working-memory-glow)"/>
+  <rect class="tile" x="30" y="44" width="140" height="104" rx="14" fill="#ffffff" stroke="#e4e7ec" stroke-width="2"/>
+  <path class="line" d="M50 62 H96" fill="none" stroke="#e6e9ee" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="mark" x="56" y="74" width="88" height="52" rx="12" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="ink-fill" x="66" y="86" width="14" height="28" rx="4" fill="#2f5ea8" stroke="#2f5ea8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="ink-fill" x="84" y="86" width="14" height="28" rx="4" fill="#2f5ea8" stroke="#2f5ea8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="ink-fill" x="102" y="86" width="14" height="28" rx="4" fill="#2f5ea8" stroke="#2f5ea8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="edge" style="stroke-dasharray:4 5" x="120" y="86" width="14" height="28" rx="4" fill="none" stroke="#8fb0e8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

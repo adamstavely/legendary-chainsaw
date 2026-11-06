@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="tcs-admin-visual-regression">
+  <title>Visual Regression</title>
+  <defs>
+    <filter id="tcs-admin-visual-regression-glow" x="-50%" y="-150%" width="200%" height="400%"><feGaussianBlur stdDeviation="7.5"/></filter>
+    <style>
+    svg.tcs-admin-visual-regression:root{color-scheme:light dark}
+    :where(.dark,[data-theme="dark"],[data-tc-theme="dark"]) .tcs-admin-visual-regression{color-scheme:dark}
+    :where(.light,[data-theme="light"],[data-tc-theme="light"]) .tcs-admin-visual-regression{color-scheme:light}
+    .tcs-admin-visual-regression .tile{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#e4e7ec,rgba(255,255,255,0.1))}
+    .tcs-admin-visual-regression .line{stroke:light-dark(#e6e9ee,#44464d)}
+    .tcs-admin-visual-regression .line-fill{fill:light-dark(#e6e9ee,#44464d)}
+    .tcs-admin-visual-regression .sub-box{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#c9ced6,#5c5f67)}
+    .tcs-admin-visual-regression .mark{fill:light-dark(#dce8fb,#263a5c);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-admin-visual-regression .ink{stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-admin-visual-regression .ink-fill{fill:light-dark(#2f5ea8,#cfdffb);stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-admin-visual-regression .glow{fill:light-dark(rgba(120,160,230,0.22),rgba(120,160,230,0.11))}
+    </style>
+  </defs>
+  <ellipse class="glow" cx="122" cy="154" rx="38" ry="9" fill="rgba(120,160,230,0.22)" filter="url(#tcs-admin-visual-regression-glow)"/>
+  <rect class="tile" x="30" y="40" width="140" height="112" rx="14" fill="#ffffff" stroke="#e4e7ec" stroke-width="2"/>
+  <rect class="sub-box" x="40" y="50" width="74" height="62" rx="8" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="line" style="stroke-width:5" d="M50 64 H96 M50 78 H86" fill="none" stroke="#e6e9ee" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="line-fill" x="50" y="88" width="24" height="14" rx="4" fill="#e6e9ee"/>
+  <rect class="mark" x="86" y="78" width="74" height="66" rx="8" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" d="M96 92 H142 M96 106 H130" fill="none" stroke="#2f5ea8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="ink-fill" x="100" y="120" width="20" height="12" rx="3" fill="#2f5ea8" stroke="#2f5ea8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="ink" style="stroke-width:3;stroke-dasharray:4 5" x="94" y="114" width="56" height="24" rx="5" fill="none" stroke="#2f5ea8" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="tcs-site-guidelines">
+  <title>Guidelines</title>
+  <defs>
+    <filter id="tcs-site-guidelines-glow" x="-50%" y="-150%" width="200%" height="400%"><feGaussianBlur stdDeviation="7.5"/></filter>
+    <style>
+    svg.tcs-site-guidelines:root{color-scheme:light dark}
+    :where(.dark,[data-theme="dark"],[data-tc-theme="dark"]) .tcs-site-guidelines{color-scheme:dark}
+    :where(.light,[data-theme="light"],[data-tc-theme="light"]) .tcs-site-guidelines{color-scheme:light}
+    .tcs-site-guidelines .tile{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#e4e7ec,rgba(255,255,255,0.1))}
+    .tcs-site-guidelines .mark{fill:light-dark(#dce8fb,#263a5c);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-site-guidelines .ink{stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-site-guidelines .glow{fill:light-dark(rgba(120,160,230,0.22),rgba(120,160,230,0.11))}
+    </style>
+  </defs>
+  <ellipse class="glow" cx="100" cy="154" rx="52" ry="9" fill="rgba(120,160,230,0.22)" filter="url(#tcs-site-guidelines-glow)"/>
+  <rect class="tile" x="30" y="40" width="140" height="112" rx="14" fill="#ffffff" stroke="#e4e7ec" stroke-width="2"/>
+  <path class="mark" d="M100 62 Q80 54 48 58 V134 Q80 130 100 138 Q120 130 152 134 V58 Q120 54 100 62 Z" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" d="M100 64 V134" fill="none" stroke="#2f5ea8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" style="stroke-width:3.5" d="M60 78 Q74 76 88 80 M60 94 Q74 92 88 96 M60 110 Q70 109 80 111 M112 80 Q126 76 140 78 M112 96 Q126 92 140 94 M112 112 Q126 108 140 110" fill="none" stroke="#2f5ea8" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

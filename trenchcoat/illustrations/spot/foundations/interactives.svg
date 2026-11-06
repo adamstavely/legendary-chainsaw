@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="tcs-foundations-interactives">
+  <title>Interactives</title>
+  <defs>
+    <filter id="tcs-foundations-interactives-glow" x="-50%" y="-150%" width="200%" height="400%"><feGaussianBlur stdDeviation="7.5"/></filter>
+    <style>
+    svg.tcs-foundations-interactives:root{color-scheme:light dark}
+    :where(.dark,[data-theme="dark"],[data-tc-theme="dark"]) .tcs-foundations-interactives{color-scheme:dark}
+    :where(.light,[data-theme="light"],[data-tc-theme="light"]) .tcs-foundations-interactives{color-scheme:light}
+    .tcs-foundations-interactives .tile{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#e4e7ec,rgba(255,255,255,0.1))}
+    .tcs-foundations-interactives .line{stroke:light-dark(#e6e9ee,#44464d)}
+    .tcs-foundations-interactives .sub{stroke:light-dark(#c9ced6,#5c5f67)}
+    .tcs-foundations-interactives .mark{fill:light-dark(#dce8fb,#263a5c);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-foundations-interactives .edge{stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-foundations-interactives .ink-fill{fill:light-dark(#2f5ea8,#cfdffb);stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-foundations-interactives .glow{fill:light-dark(rgba(120,160,230,0.22),rgba(120,160,230,0.11))}
+    </style>
+  </defs>
+  <ellipse class="glow" cx="94" cy="150" rx="40" ry="9" fill="rgba(120,160,230,0.22)" filter="url(#tcs-foundations-interactives-glow)"/>
+  <rect class="tile" x="30" y="48" width="140" height="96" rx="14" fill="#ffffff" stroke="#e4e7ec" stroke-width="2"/>
+  <path class="line" d="M48 66 H108" fill="none" stroke="#e6e9ee" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="sub" cx="114" cy="100" r="26" fill="none" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="mark" x="48" y="80" width="88" height="40" rx="20" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="edge" d="M66 94 H84 M70 106 H88" fill="none" stroke="#8fb0e8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="ink-fill" cx="116" cy="100" r="13" fill="#2f5ea8" stroke="#2f5ea8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="sub" d="M146 76 L152 70 M150 100 H158 M146 124 L152 130" fill="none" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

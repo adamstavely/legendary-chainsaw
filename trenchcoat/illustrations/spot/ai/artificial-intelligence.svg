@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="tcs-ai-artificial-intelligence">
+  <title>Artificial Intelligence</title>
+  <defs>
+    <filter id="tcs-ai-artificial-intelligence-glow" x="-50%" y="-150%" width="200%" height="400%"><feGaussianBlur stdDeviation="7.5"/></filter>
+    <style>
+    svg.tcs-ai-artificial-intelligence:root{color-scheme:light dark}
+    :where(.dark,[data-theme="dark"],[data-tc-theme="dark"]) .tcs-ai-artificial-intelligence{color-scheme:dark}
+    :where(.light,[data-theme="light"],[data-tc-theme="light"]) .tcs-ai-artificial-intelligence{color-scheme:light}
+    .tcs-ai-artificial-intelligence .tile{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#e4e7ec,rgba(255,255,255,0.1))}
+    .tcs-ai-artificial-intelligence .sub{stroke:light-dark(#c9ced6,#5c5f67)}
+    .tcs-ai-artificial-intelligence .sub-box{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#c9ced6,#5c5f67)}
+    .tcs-ai-artificial-intelligence .mark{fill:light-dark(#dce8fb,#263a5c);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-ai-artificial-intelligence .ink{stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-ai-artificial-intelligence .glow{fill:light-dark(rgba(120,160,230,0.22),rgba(120,160,230,0.11))}
+    </style>
+  </defs>
+  <ellipse class="glow" cx="100" cy="154" rx="44" ry="9" fill="rgba(120,160,230,0.22)" filter="url(#tcs-ai-artificial-intelligence-glow)"/>
+  <rect class="tile" x="30" y="40" width="140" height="112" rx="14" fill="#ffffff" stroke="#e4e7ec" stroke-width="2"/>
+  <ellipse class="sub" cx="100" cy="96" rx="56" ry="38" fill="none" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="mark" cx="100" cy="96" r="30" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" d="M100 78 Q105.0 91.0 118 96 Q105.0 101.0 100 114 Q95.0 101.0 82 96 Q95.0 91.0 100 78 Z" fill="none" stroke="#2f5ea8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" style="stroke-width:3.5" d="M118 74 V82 M114 78 H122" fill="none" stroke="#2f5ea8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect class="sub-box" x="34" y="84" width="22" height="22" rx="6" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="sub-box" cx="146" cy="68" r="10" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="sub-box" d="M134 120 L146 140 H122 Z" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

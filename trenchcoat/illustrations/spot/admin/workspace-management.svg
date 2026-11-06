@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="tcs-admin-workspace-management">
+  <title>Workspace Management</title>
+  <defs>
+    <filter id="tcs-admin-workspace-management-glow" x="-50%" y="-150%" width="200%" height="400%"><feGaussianBlur stdDeviation="7.5"/></filter>
+    <style>
+    svg.tcs-admin-workspace-management:root{color-scheme:light dark}
+    :where(.dark,[data-theme="dark"],[data-tc-theme="dark"]) .tcs-admin-workspace-management{color-scheme:dark}
+    :where(.light,[data-theme="light"],[data-tc-theme="light"]) .tcs-admin-workspace-management{color-scheme:light}
+    .tcs-admin-workspace-management .tile{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#e4e7ec,rgba(255,255,255,0.1))}
+    .tcs-admin-workspace-management .sub-box{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#c9ced6,#5c5f67)}
+    .tcs-admin-workspace-management .mark{fill:light-dark(#dce8fb,#263a5c);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-admin-workspace-management .edge{stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-admin-workspace-management .ink{stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-admin-workspace-management .glow{fill:light-dark(rgba(120,160,230,0.22),rgba(120,160,230,0.11))}
+    </style>
+  </defs>
+  <ellipse class="glow" cx="104" cy="154" rx="46" ry="9" fill="rgba(120,160,230,0.22)" filter="url(#tcs-admin-workspace-management-glow)"/>
+  <rect class="tile" x="30" y="40" width="140" height="112" rx="14" fill="#ffffff" stroke="#e4e7ec" stroke-width="2"/>
+  <path class="sub-box" d="M58 50 H80 L86 56 H144 V70 H58 Z" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="mark" d="M44 68 H76 L84 76 H156 V142 H44 Z" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="edge" d="M44 86 H156" fill="none" stroke="#8fb0e8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="ink" cx="86" cy="104" r="7" fill="none" stroke="#2f5ea8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><path class="ink" d="M74 128 Q74 116 86 116 Q98 116 98 128" fill="none" stroke="#2f5ea8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="ink" cx="116" cy="104" r="7" fill="none" stroke="#2f5ea8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/><path class="ink" d="M104 128 Q104 116 116 116 Q128 116 128 128" fill="none" stroke="#2f5ea8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

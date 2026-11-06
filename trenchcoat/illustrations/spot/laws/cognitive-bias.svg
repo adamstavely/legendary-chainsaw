@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" class="tcs-laws-cognitive-bias">
+  <title>Cognitive Bias</title>
+  <defs>
+    <filter id="tcs-laws-cognitive-bias-glow" x="-50%" y="-150%" width="200%" height="400%"><feGaussianBlur stdDeviation="7.5"/></filter>
+    <style>
+    svg.tcs-laws-cognitive-bias:root{color-scheme:light dark}
+    :where(.dark,[data-theme="dark"],[data-tc-theme="dark"]) .tcs-laws-cognitive-bias{color-scheme:dark}
+    :where(.light,[data-theme="light"],[data-tc-theme="light"]) .tcs-laws-cognitive-bias{color-scheme:light}
+    .tcs-laws-cognitive-bias .tile{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#e4e7ec,rgba(255,255,255,0.1))}
+    .tcs-laws-cognitive-bias .line{stroke:light-dark(#e6e9ee,#44464d)}
+    .tcs-laws-cognitive-bias .sub{stroke:light-dark(#c9ced6,#5c5f67)}
+    .tcs-laws-cognitive-bias .sub-box{fill:light-dark(#ffffff,#2a2a2e);stroke:light-dark(#c9ced6,#5c5f67)}
+    .tcs-laws-cognitive-bias .mark{fill:light-dark(#dce8fb,#263a5c);stroke:light-dark(#8fb0e8,#6f93d1)}
+    .tcs-laws-cognitive-bias .ink{stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-laws-cognitive-bias .ink-fill{fill:light-dark(#2f5ea8,#cfdffb);stroke:light-dark(#2f5ea8,#cfdffb)}
+    .tcs-laws-cognitive-bias .glow{fill:light-dark(rgba(120,160,230,0.22),rgba(120,160,230,0.11))}
+    </style>
+  </defs>
+  <ellipse class="glow" cx="62" cy="150" rx="30" ry="9" fill="rgba(120,160,230,0.22)" filter="url(#tcs-laws-cognitive-bias-glow)"/>
+  <rect class="tile" x="30" y="44" width="140" height="104" rx="14" fill="#ffffff" stroke="#e4e7ec" stroke-width="2"/>
+  <path class="line" d="M100 74 V132 M80 134 H120" fill="none" stroke="#e6e9ee" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="sub" d="M62 80 L50 106 M62 80 L74 106 M138 60 L126 86 M138 60 L150 86" fill="none" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="sub-box" d="M120 86 H156 Q154 100 138 100 Q122 100 120 86 Z" fill="#ffffff" stroke="#c9ced6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="mark" d="M44 106 H80 Q78 122 62 122 Q46 122 44 106 Z" fill="#dce8fb" stroke="#8fb0e8" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path class="ink" d="M62 80 L138 60" fill="none" stroke="#2f5ea8" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle class="ink-fill" cx="100" cy="70" r="5" fill="#2f5ea8" stroke="#2f5ea8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
