@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased – Workflow stage illustrations
+
+- **Illustrations:** In Translation, In Quality Control, In Coordination, Pending Release and Released – the workflow
+  stages beside Awaiting Review, drawn the same way: a document with a pastel badge, each stage in its own colour, its
+  words as real text, and a short motion that rests.
+
 ## Unreleased – Compass rose
 
 - **Compass rose** (`illustrations/spot/site/compass-rose.svg`): the homepage hero illustration, a step up from the
