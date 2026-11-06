@@ -10,7 +10,7 @@ import { afterEach, describe, expect, test, vi } from "vitest";
 import "../../src/elements/integration-settings";
 import type { IntegrationValues, TcIntegrationSettings } from "../../src/elements/integration-settings";
 import { IntegrationSettings } from "../../src/elements/react/integration-settings";
-import { cleanup, fixture, settle } from "./helpers";
+import { cleanup, fixture, settle, finish } from "./helpers";
 
 afterEach(() => {
   vi.useRealTimers();
@@ -322,6 +322,8 @@ describe("tc-integration-settings", () => {
       <tc-integration-settings name="Shopify" demo .values=${{ apiKey: "sk_test_123456789abc" }}></tc-integration-settings>
       <tc-integration-settings look="clean" name="Stripe" demo></tc-integration-settings>
     </div>`);
+    // Contrast is measured on settled colours, not mid-transition (WebKit runners are slow)
+    await finish(wrap);
     const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
     expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
   });
