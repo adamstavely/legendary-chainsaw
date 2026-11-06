@@ -61,9 +61,10 @@
       "enum": [
         "arc",
         "bar",
-        "semicircle"
+        "semicircle",
+        "ticks"
       ],
-      "description": "The shape: a 270° dial, a half dial or a straight bar"
+      "description": "The shape: a 270° dial, a half dial, a straight bar, or a 270° ring of tick marks lit up to the value (\"ticks\")"
     },
     "size": {
       "type": "string",
@@ -73,6 +74,10 @@
         "sm"
       ],
       "description": "The size of the dial"
+    },
+    "ticks": {
+      "type": "number",
+      "description": "How many tick marks the ticks ring has (2–120); by default as many as fit the size"
     },
     "tone": {
       "type": "string",

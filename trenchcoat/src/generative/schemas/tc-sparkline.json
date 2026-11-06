@@ -95,6 +95,10 @@
     "locale": {
       "type": "string",
       "description": "The language for numbers, e.g. \"de\"; by default the browser's"
+    },
+    "showValue": {
+      "type": "boolean",
+      "description": "Writes the last value after the line, in the text's ink, with `format` / `unit`"
     }
   },
   "additionalProperties": false

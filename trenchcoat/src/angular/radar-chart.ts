@@ -35,9 +35,17 @@ export class RadarChart {
   @Input() set max(v: TcRadarChart["max"] | `${number}`) {
     this.#el.max = typeof v === "string" ? Number(v) : v;
   }
-  /** Bare axes from the centre ("axes"), or rings at each quarter as well ("web") */
+  /** Bare axes from the centre ("axes"), or rings as well: polygons ("web") or circles ("circle") */
   @Input() set grid(v: TcRadarChart["grid"]) {
     this.#el.grid = v;
+  }
+  /** How many rings the grid has, evenly spaced out to the edge, when `grid` is "web" or "circle" */
+  @Input() set levels(v: TcRadarChart["levels"] | `${number}`) {
+    this.#el.levels = typeof v === "string" ? Number(v) : v;
+  }
+  /** Draws the shapes in place at once: no growing from the centre and no gliding to new values */
+  @Input() set still(v: TcRadarChart["still"] | "" | "true" | "false") {
+    this.#el.still = typeof v === "string" ? v !== "false" : v;
   }
   /** The unit after each number: "%", "pts" */
   @Input() set unit(v: TcRadarChart["unit"]) {

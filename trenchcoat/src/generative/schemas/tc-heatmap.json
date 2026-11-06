@@ -108,6 +108,19 @@
     "locale": {
       "type": "string",
       "description": "The language for numbers, e.g. \"de\"; by default the browser's"
+    },
+    "legendLabels": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 2,
+      "maxItems": 2,
+      "description": "Words at the two ends of the legend, low then high, e.g. [\"Fewer\", \"More\"]; by default the end values"
+    },
+    "canvasThreshold": {
+      "type": "number",
+      "description": "Above this many cells (rows × columns) they're painted on a canvas; the focused cell stays in the DOM"
     }
   },
   "additionalProperties": false

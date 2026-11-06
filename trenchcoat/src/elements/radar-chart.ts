@@ -1,14 +1,20 @@
-import { html, nothing, svg } from "lit";
-import { property } from "lit/decorators.js";
+import { html, nothing, svg, type PropertyValues } from "lit";
+import { property, state } from "lit/decorators.js";
+import { reducedMotion } from "../internal/reduced-motion";
 import { TcElement } from "./internal/base";
 import { cardHead } from "./internal/card-head";
+import type { Mark } from "./internal/chart/motion";
+import { MotionController } from "./internal/chart/motion-controller";
 
 /*
  * <tc-radar-chart> – a few measures of one thing on axes round a centre, the values joined into a shape: how someone's
  * work splits across commits, reviews, issues and pull requests, or how three teams score on the same five skills. The
- * axes run from the centre (nothing) to the edge (`max`, by default the largest value); with `grid="web"` rings mark
- * each quarter. One series shows its value over each axis's name (“90% Commits”); up to three compare, each in its own
- * colour, named in a legend under the chart. The Table button swaps the drawing for the same numbers as a table.
+ * axes run from the centre (nothing) to the edge (`max`, by default the largest value); with `grid="web"` polygon rings
+ * (or round ones with `grid="circle"`) mark each `levels`th of the way, quarters by default. One series shows its value
+ * over each axis's name (“90% Commits”); up to three compare, each in its own colour, named in a legend under the
+ * chart. The Table button swaps the drawing for the same numbers as a table.
+ *   · the shapes grow from the centre when the chart comes on screen and glide to new values when the data changes
+ *     (motion ported from ztd-charts, MIT, © 2026 Junhan2); `still` or reduced motion draws them in place at once
  *   · the drawing is an image named by the heading and read as its numbers (“Commits 90%, Code review 0%, …”); the
  *     names and values on it repeat that and are hidden
  *   · narrow, the drawing shrinks to fit, up to `--tc-rdr-width` wide
@@ -27,7 +33,7 @@ export type RadarSeries = {
   /** One value per axis, in the axes' order; null (or missing) is no data */
   values: (number | null)[];
 };
-export type RadarGrid = "axes" | "web";
+export type RadarGrid = "axes" | "web" | "circle";
 export type RadarView = "chart" | "table";
 
 /** Details of the events */
@@ -43,6 +49,14 @@ const CY = H / 2;
 const R = 31;
 /** The most series it draws */
 const MAX_SERIES = 3;
+/** The most rings it draws */
+const MAX_LEVELS = 12;
+/** How long a shape takes to grow or glide (ms), and the delay between series as they enter */
+const DURATION = 900;
+const STAGGER = 160;
+
+/** What a moving shape needs besides its values: its place among the series and where it has dots */
+type ShapeData = { k: number; dots: boolean[] };
 
 /**
  * Values on three or more axes round a centre, joined into a shape – one series with its values on the axes, or up to
@@ -63,8 +77,12 @@ export class TcRadarChart extends TcElement {
   @property({ attribute: false }) accessor series: RadarSeries[] = [];
   /** The value at the edge; by default the largest value (100 when the unit is "%") */
   @property({ type: Number }) accessor max: number | undefined = undefined;
-  /** Bare axes from the centre ("axes"), or rings at each quarter as well ("web") */
+  /** Bare axes from the centre ("axes"), or rings as well: polygons ("web") or circles ("circle") */
   @property() accessor grid: RadarGrid = "axes";
+  /** How many rings the grid has, evenly spaced out to the edge, when `grid` is "web" or "circle" */
+  @property({ type: Number }) accessor levels = 4;
+  /** Draws the shapes in place at once: no growing from the centre and no gliding to new values */
+  @property({ type: Boolean }) accessor still = false;
   /** The unit after each number: "%", "pts" */
   @property() accessor unit: string | undefined = undefined;
   /** Writes a value, e.g. (v) => `${v} of 5`; replaces the number and `unit` */
@@ -78,7 +96,57 @@ export class TcRadarChart extends TcElement {
   /** The language for numbers, e.g. "de"; by default the browser's */
   @property() accessor locale: string | undefined = undefined;
 
+  /** @internal On screen enough to play the entrance */
+  @state() accessor onScreen = false;
+
   private uid = `tc-rdr-${++uidCount}`;
+  private readonly motion = new MotionController<ShapeData>(this);
+  private io?: IntersectionObserver;
+  /** Goes up when the data does, so a change glides */
+  private dataGen = 0;
+
+  /** Whether shapes move: not `still`, and the system doesn't ask for reduced motion */
+  private get motionEnabled() {
+    return !this.still && !reducedMotion() && typeof window !== "undefined";
+  }
+
+  override connectedCallback() {
+    super.connectedCallback();
+    if (this.onScreen) return;
+    if (typeof IntersectionObserver === "function") {
+      this.io = new IntersectionObserver(
+        (entries) => {
+          const e = entries[entries.length - 1];
+          const rootH = e.rootBounds?.height ?? window.innerHeight;
+          // Taller than the screen, a quarter never shows at once: half the screen counts too
+          const on = e.isIntersecting && (e.intersectionRatio >= 0.25 || e.intersectionRect.height >= rootH * 0.5);
+          if (on) {
+            this.onScreen = true;
+            this.io?.disconnect();
+          }
+        },
+        { threshold: [0, 0.05, 0.1, 0.25], rootMargin: "0px 0px -8% 0px" },
+      );
+      this.io.observe(this);
+    } else this.onScreen = true;
+  }
+
+  override disconnectedCallback() {
+    super.disconnectedCallback();
+    this.io?.disconnect();
+    this.io = undefined;
+  }
+
+  /** Grows the shapes from the centre again */
+  replay() {
+    this.motion.replay();
+  }
+
+  protected override willUpdate(changed: PropertyValues) {
+    super.willUpdate(changed);
+    if (["axes", "series", "max", "unit", "format"].some((k) => changed.has(k))) this.dataGen++;
+    this.motion.sync(this.marks, { enabled: this.motionEnabled, active: this.onScreen, dataKey: this.dataGen, easing: "spring", duration: DURATION, stagger: STAGGER });
+  }
 
   /* ---------- The model ---------- */
 
@@ -111,6 +179,19 @@ export class TcRadarChart extends TcElement {
     const a = this.angle(i);
     return [CX + R * f * Math.cos(a), CY + R * f * Math.sin(a)] as const;
   }
+  /** The rings' count, a whole number from 1 */
+  private get ringCount() {
+    const n = Math.round(Number.isFinite(this.levels) ? this.levels : 4);
+    return Math.max(1, Math.min(MAX_LEVELS, n));
+  }
+  /** Each series as a moving shape: its share of the way out on every axis, from the centre */
+  private get marks(): Mark<ShapeData>[] {
+    return this.drawn.map((s, k) => {
+      const to = this.axes.map((_, i) => this.frac(this.valueAt(s, i)));
+      const zero = to.map(() => 0);
+      return { key: `s:${s.name}`, to, from: zero, enter: zero, delay: k * STAGGER, data: { k, dots: this.axes.map((_, i) => !!this.valueAt(s, i)) } };
+    });
+  }
   private frac(v: number | null) {
     return v === null ? 0 : Math.max(0, Math.min(1, v / this.top));
   }
@@ -131,20 +212,27 @@ export class TcRadarChart extends TcElement {
 
   private renderDrawing() {
     const n = this.axes.length;
-    const drawn = this.drawn;
     const ring = (f: number) =>
       Array.from({ length: n }, (_, i) => this.point(i, f).map((c) => c.toFixed(2)).join(",")).join(" ");
+    const levels = Array.from({ length: this.ringCount }, (_, l) => (l + 1) / this.ringCount);
+    const at = (v: number[], i: number) => {
+      // A leaving shape may have another axis count than the axes now
+      const a = -Math.PI / 2 + (i * 2 * Math.PI) / Math.max(1, v.length);
+      const f = Number.isFinite(v[i]) ? v[i] : 0;
+      return [CX + R * f * Math.cos(a), CY + R * f * Math.sin(a)] as const;
+    };
     return svg`<svg class="ui-rdr__svg" viewBox=${`0 0 ${W} ${H}`} aria-hidden="true">
-      ${this.grid === "web" && n >= 3 ? [0.25, 0.5, 0.75, 1].map((f) => svg`<polygon class="ui-rdr__ring" points=${ring(f)}></polygon>`) : nothing}
+      ${this.grid === "web" && n >= 3 ? levels.map((f) => svg`<polygon class="ui-rdr__ring" points=${ring(f)}></polygon>`) : nothing}
+      ${this.grid === "circle" ? levels.map((f) => svg`<circle class="ui-rdr__ring" cx=${CX} cy=${CY} r=${(R * f).toFixed(2)}></circle>`) : nothing}
       ${this.axes.map((_, i) => {
         const [x, y] = this.point(i, 1);
         return svg`<line class="ui-rdr__axis" x1=${CX} y1=${CY} x2=${x.toFixed(2)} y2=${y.toFixed(2)}></line>`;
       })}
-      ${drawn.map((s, k) => {
-        const pts = this.axes.map((_, i) => this.point(i, this.frac(this.valueAt(s, i))));
-        return svg`<g class="ui-rdr__series" data-series=${k + 1}>
+      ${this.motion.items.map((it) => {
+        const pts = it.v.map((_, i) => at(it.v, i));
+        return svg`<g class="ui-rdr__series" data-series=${it.data.k + 1} ?data-leaving=${it.exiting}>
           <polygon class="ui-rdr__shape" points=${pts.map((p) => p.map((c) => c.toFixed(2)).join(",")).join(" ")}></polygon>
-          ${pts.map(([x, y], i) => (!this.valueAt(s, i) ? nothing : svg`<circle class="ui-rdr__dot" cx=${x.toFixed(2)} cy=${y.toFixed(2)} r="2"></circle>`))}
+          ${pts.map(([x, y], i) => (!it.data.dots[i] ? nothing : svg`<circle class="ui-rdr__dot" cx=${x.toFixed(2)} cy=${y.toFixed(2)} r="2"></circle>`))}
         </g>`;
       })}
     </svg>`;
@@ -286,6 +374,7 @@ export class TcRadarChart extends TcElement {
 .ui-rdr__series[data-series="1"] { --tc-rdr-ink: var(--tc-rdr-ink-1); }
 .ui-rdr__series[data-series="2"] { --tc-rdr-ink: var(--tc-rdr-ink-2); }
 .ui-rdr__series[data-series="3"] { --tc-rdr-ink: var(--tc-rdr-ink-3); }
+.ui-rdr__series[data-leaving] { opacity: 0.4; }
 .ui-rdr__shape { fill: color-mix(in srgb, var(--tc-rdr-ink) 32%, transparent); stroke: var(--tc-rdr-ink); stroke-width: 1; stroke-linejoin: round; }
 .ui-rdr__dot { fill: var(--tc-rdr-bg); stroke: var(--tc-rdr-ink); stroke-width: 1; }
 /* The axes' names, at their ends; one series' value over each */

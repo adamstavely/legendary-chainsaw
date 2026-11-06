@@ -1,20 +1,24 @@
 /*
  * <tc-radar-chart> in real browsers: the drawing and how it's read, the scale (largest value, 100 for %, `max`), the
- * axes' names and one series' values on them, the web rings, several series and their legend, the table view and its
- * switch, empty data, the React wrapper and axe in both looks and both themes.
+ * axes' names and one series' values on them, the web and circle rings and their `levels`, several series and their
+ * legend, the motion (growing from the centre on screen, gliding on a data change, `still` and reduced motion
+ * snapping), the table view and its switch, empty data, the React wrapper and axe in both looks and both themes.
  */
 import { html } from "lit";
 import axe from "axe-core";
 import * as React from "react";
 import { act } from "react";
 import { createRoot } from "react-dom/client";
-import { afterEach, describe, expect, test } from "vitest";
+import { afterEach, describe, expect, test, vi } from "vitest";
 import "../../src/elements/radar-chart";
 import type { RadarSeries, RadarViewChange, TcRadarChart } from "../../src/elements/radar-chart";
 import { RadarChart } from "../../src/elements/react/radar-chart";
 import { cleanup, finish, fixture, settle } from "./helpers";
 
-afterEach(cleanup);
+afterEach(() => {
+  cleanup();
+  vi.restoreAllMocks();
+});
 
 const AXES = ["Code review", "Issues", "Pull requests", "Commits"];
 const ONE: RadarSeries[] = [{ name: "Contributions", values: [0, 0, 10, 90] }];
@@ -24,7 +28,7 @@ const THREE: RadarSeries[] = [
   { name: "Field ecology", values: [2, 5, 3] },
 ];
 const make = (look: "standard" | "clean" = "standard") =>
-  fixture<TcRadarChart>(html`<tc-radar-chart look=${look} heading="Activity overview" unit="%" .axes=${AXES} .series=${ONE}></tc-radar-chart>`);
+  fixture<TcRadarChart>(html`<tc-radar-chart look=${look} still heading="Activity overview" unit="%" .axes=${AXES} .series=${ONE}></tc-radar-chart>`);
 const plot = (el: Element) => el.querySelector<HTMLElement>(".ui-rdr__plot")!;
 const read = (el: Element) =>
   plot(el)
@@ -80,7 +84,7 @@ describe("tc-radar-chart", () => {
   });
 
   test("web rings; several series in their own colours, with a legend; null at the centre, said as No data", async () => {
-    const el = await fixture<TcRadarChart>(html`<tc-radar-chart heading="Lab practices" grid="web" .max=${5} .axes=${["Testing", "Docs", "Review"]} .series=${THREE}></tc-radar-chart>`);
+    const el = await fixture<TcRadarChart>(html`<tc-radar-chart still heading="Lab practices" grid="web" .max=${5} .axes=${["Testing", "Docs", "Review"]} .series=${THREE}></tc-radar-chart>`);
     expect(el.querySelectorAll(".ui-rdr__ring")).toHaveLength(4);
     expect([...el.querySelectorAll<SVGGElement>(".ui-rdr__series")].map((g) => g.dataset.series)).toEqual(["1", "2", "3"]);
     expect([...el.querySelectorAll(".ui-rdr__key")].map((k) => k.textContent!.trim())).toEqual(["Genomics", "Imaging", "Field ecology"]);
@@ -94,6 +98,97 @@ describe("tc-radar-chart", () => {
     el.series = [...THREE, { name: "Extra", values: [1, 1, 1] }];
     await settle();
     expect(el.querySelectorAll(".ui-rdr__series")).toHaveLength(3);
+  });
+
+  test("levels sets the rings' count, evenly out to the edge; grid=circle draws them round", async () => {
+    const el = await fixture<TcRadarChart>(html`<tc-radar-chart still heading="Lab practices" grid="web" .levels=${5} .max=${5} .axes=${["Testing", "Docs", "Review"]} .series=${THREE}></tc-radar-chart>`);
+    expect(el.querySelectorAll("polygon.ui-rdr__ring")).toHaveLength(5);
+    // The innermost ring is a fifth of the way out: its top point 31 / 5 above the centre
+    const top = el.querySelector("polygon.ui-rdr__ring")!.getAttribute("points")!.split(" ")[0].split(",").map(Number);
+    expect(50 - top[1]).toBeCloseTo(6.2, 1);
+    el.grid = "circle";
+    await settle();
+    expect(el.querySelectorAll("polygon.ui-rdr__ring")).toHaveLength(0);
+    const rings = [...el.querySelectorAll<SVGCircleElement>("circle.ui-rdr__ring")];
+    expect(rings.map((c) => Number(c.getAttribute("r")))).toEqual([6.2, 12.4, 18.6, 24.8, 31]);
+    expect(rings.every((c) => c.getAttribute("cx") === "75" && c.getAttribute("cy") === "50")).toBe(true);
+    // Whole numbers from 1 to 12; anything else falls back to the default 4
+    el.levels = 0;
+    await settle();
+    expect(el.querySelectorAll(".ui-rdr__ring")).toHaveLength(1);
+    el.levels = 2.6;
+    await settle();
+    expect(el.querySelectorAll(".ui-rdr__ring")).toHaveLength(3);
+    el.levels = Number.NaN;
+    await settle();
+    expect(el.querySelectorAll(".ui-rdr__ring")).toHaveLength(4);
+    // Bare axes: no rings, whatever the levels
+    el.grid = "axes";
+    await settle();
+    expect(el.querySelectorAll(".ui-rdr__ring")).toHaveLength(0);
+  });
+
+  test("the levels attribute and grid=circle from markup", async () => {
+    const el = await fixture<TcRadarChart>(html`<tc-radar-chart still heading="Lab practices" grid="circle" levels="3" .axes=${AXES} .series=${ONE}></tc-radar-chart>`);
+    expect(el.levels).toBe(3);
+    expect(el.querySelectorAll("circle.ui-rdr__ring")).toHaveLength(3);
+  });
+
+  test("motion: off screen the shapes wait at the centre; on screen they grow out; a data change glides from where they are", async () => {
+    const wrap = await fixture(html`<div style="padding-top: 300vh"><tc-radar-chart heading="Activity" unit="%" .axes=${AXES} .series=${ONE}></tc-radar-chart></div>`);
+    const el = wrap.querySelector<TcRadarChart>("tc-radar-chart")!;
+    await settle();
+    // Not on screen: every point at the centre
+    expect(points(el).every(([x, y]) => x === 75 && y === 50)).toBe(true);
+    el.scrollIntoView({ block: "center" });
+    // Commits (left) grows out to 90% of the radius
+    const commits = () => 75 - points(el)[3][0];
+    await expect.poll(commits, { timeout: 4000 }).toBeGreaterThan(5);
+    await expect.poll(commits, { timeout: 4000 }).toBeCloseTo(27.9, 1);
+    // A new year: Commits falls to 30%. Straight after the update the shape is still where it was, then it glides there
+    el.series = [{ name: "Contributions", values: [20, 20, 30, 30] }];
+    await el.updateComplete;
+    expect(commits()).toBeCloseTo(27.9, 1);
+    await expect.poll(commits, { timeout: 4000 }).toBeLessThan(25);
+    await expect.poll(commits, { timeout: 4000 }).toBeCloseTo(9.3, 1);
+    // replay() grows it from the centre again
+    el.replay();
+    await el.updateComplete;
+    expect(commits()).toBeLessThan(9);
+    await expect.poll(commits, { timeout: 4000 }).toBeCloseTo(9.3, 1);
+  });
+
+  test("motion: a removed series shrinks to the centre and goes; a new one grows from it", async () => {
+    const el = await fixture<TcRadarChart>(html`<tc-radar-chart heading="Lab practices" grid="web" .max=${5} .axes=${["Testing", "Docs", "Review"]} .series=${THREE.slice(0, 2)}></tc-radar-chart>`);
+    // Grown: Genomics' Testing is 4 of 5, 24.8 above the centre
+    await expect.poll(() => 50 - points(el)[0][1], { timeout: 4000 }).toBeCloseTo(24.8, 1);
+    el.series = [THREE[0], THREE[2]];
+    await el.updateComplete;
+    // Imaging leaves (still drawn, faded) while Field ecology arrives at the centre
+    expect(el.querySelectorAll(".ui-rdr__series[data-leaving]")).toHaveLength(1);
+    await expect.poll(() => el.querySelectorAll(".ui-rdr__series").length, { timeout: 4000 }).toBe(2);
+    expect(el.querySelector(".ui-rdr__series[data-leaving]")).toBeNull();
+    expect([...el.querySelectorAll<SVGGElement>(".ui-rdr__series")].map((g) => g.dataset.series)).toEqual(["1", "2"]);
+  });
+
+  test("still: the shapes are drawn in place at once, and a change snaps", async () => {
+    const wrap = await fixture(html`<div style="padding-top: 300vh"><tc-radar-chart still heading="Activity" unit="%" .axes=${AXES} .series=${ONE}></tc-radar-chart></div>`);
+    const el = wrap.querySelector<TcRadarChart>("tc-radar-chart")!;
+    // Off screen, yet already at its values
+    expect(75 - points(el)[3][0]).toBeCloseTo(27.9, 1);
+    el.series = [{ name: "Contributions", values: [20, 20, 30, 30] }];
+    await el.updateComplete;
+    expect(75 - points(el)[3][0]).toBeCloseTo(9.3, 1);
+  });
+
+  test("reduced motion: the shapes are drawn in place at once, and a change snaps", async () => {
+    const real = window.matchMedia.bind(window);
+    vi.spyOn(window, "matchMedia").mockImplementation((q: string) => (q.includes("prefers-reduced-motion") ? ({ matches: true, media: q } as MediaQueryList) : real(q)));
+    const el = await fixture<TcRadarChart>(html`<tc-radar-chart heading="Activity" unit="%" .axes=${AXES} .series=${ONE}></tc-radar-chart>`);
+    expect(75 - points(el)[3][0]).toBeCloseTo(27.9, 1);
+    el.series = [{ name: "Contributions", values: [20, 20, 30, 30] }];
+    await el.updateComplete;
+    expect(75 - points(el)[3][0]).toBeCloseTo(9.3, 1);
   });
 
   test("the Table button: the same numbers as a table; tc-view-change, preventable", async () => {
@@ -126,7 +221,7 @@ describe("tc-radar-chart", () => {
   });
 
   test("narrow: the drawing shrinks to fit; wide, it stops at --tc-rdr-width", async () => {
-    const wrap = await fixture(html`<div style="width: 300px"><tc-radar-chart heading="Activity" unit="%" .axes=${AXES} .series=${ONE}></tc-radar-chart></div>`);
+    const wrap = await fixture(html`<div style="width: 300px"><tc-radar-chart still heading="Activity" unit="%" .axes=${AXES} .series=${ONE}></tc-radar-chart></div>`);
     const el = wrap.querySelector("tc-radar-chart")!;
     await settle();
     expect(plot(el).getBoundingClientRect().width).toBeLessThanOrEqual(300);
@@ -146,12 +241,15 @@ describe("tc-radar-chart", () => {
     function App() {
       const [n, setN] = React.useState(0);
       bump = () => setN((x) => x + 1);
-      return React.createElement(RadarChart, { title: "Activity", unit: "%", axes: AXES, series: ONE, onViewChange: (v) => void seen.push(v), "data-n": n } as React.ComponentProps<typeof RadarChart>);
+      return React.createElement(RadarChart, { title: "Activity", unit: "%", axes: AXES, series: ONE, grid: "circle", levels: 5, still: true, onViewChange: (v) => void seen.push(v), "data-n": n } as React.ComponentProps<typeof RadarChart>);
     }
     await act(async () => root.render(React.createElement(App)));
     await settle();
     const el = host.querySelector("tc-radar-chart")!;
     expect(el.heading).toBe("Activity");
+    // The new options reach the element
+    expect([el.grid, el.levels, el.still]).toEqual(["circle", 5, true]);
+    expect(el.querySelectorAll("circle.ui-rdr__ring")).toHaveLength(5);
     el.querySelector<HTMLButtonElement>(".ui-rdr__toggle")!.click();
     await settle();
     await act(async () => bump());
@@ -173,6 +271,7 @@ describe("tc-radar-chart", () => {
       const wrap = await fixture(html`<div data-tc-theme=${theme} style="display: grid; gap: 16px; padding: 16px; background: var(--tc-surface-base)">
         <tc-radar-chart heading="Activity overview" description="Contributions in 2026" unit="%" .axes=${AXES} .series=${ONE}></tc-radar-chart>
         <tc-radar-chart look="clean" heading="Lab practices" grid="web" .max=${5} .axes=${["Testing", "Docs", "Review"]} .series=${THREE}></tc-radar-chart>
+        <tc-radar-chart heading="Lab practices, round" grid="circle" levels="5" .max=${5} .axes=${["Testing", "Docs", "Review"]} .series=${THREE}></tc-radar-chart>
         <tc-radar-chart heading="As a table" view="table" unit="%" .axes=${AXES} .series=${ONE}></tc-radar-chart>
       </div>`);
       await finish(wrap);

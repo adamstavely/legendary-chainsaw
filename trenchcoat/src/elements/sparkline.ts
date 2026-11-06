@@ -8,7 +8,9 @@ import { TcElement } from "./internal/base";
  * win-loss bars (up for a gain, down for a loss). It takes its height from the font size, so it matches the text
  * around it, and stays crisp at any width. Gaps (null values) break the line. Optional markers pick out the last,
  * highest and lowest points, and a dashed reference line shows a target. With `good` it's coloured by which way it
- * went – green when it moved the good way, red when it didn't.
+ * went – green when it moved the good way, red when it didn't. `show-value` writes the last value after it, in the
+ * text's ink, so “▁▃▅ 148 samples” reads as one phrase (after ztd-charts' showValue, MIT, © 2026 Junhan2 –
+ * https://github.com/Junhan2/ztd-charts); it's set at the surrounding font size and never taller than the line.
  *   · read as one picture: “Samples per day: from 112 to 148, high 152, low 98”
  *   · `interactive` makes it one tab stop: ← / → step through the points with a tooltip, Home / End to the ends,
  *     Escape hides the tooltip; pointing at it does the same
@@ -77,6 +79,8 @@ export class TcSparkline extends TcElement {
   @property() accessor unit: string | undefined = undefined;
   /** The language for numbers, e.g. "de"; by default the browser's */
   @property() accessor locale: string | undefined = undefined;
+  /** Writes the last value after the line, in the text's ink, with `format` / `unit` */
+  @property({ type: Boolean, attribute: "show-value", reflect: true }) accessor showValue = false;
 
   /** The point shown in the tooltip, in interactive mode */
   @state() private accessor point: number | null = null;
@@ -299,6 +303,12 @@ export class TcSparkline extends TcElement {
       <span class="ui-spk__tip" data-side=${side} style=${`left: ${left.toFixed(2)}%`}>${this.pointText(i)}</span>`;
   }
 
+  /** The last value, written after the drawing */
+  private valueText(known: { v: number }[]) {
+    if (!this.showValue || !known.length) return nothing;
+    return html`<span class="ui-spk__value" aria-hidden="true">${this.num(known[known.length - 1].v)}</span>`;
+  }
+
   protected override render() {
     const known = this.known;
     const { lo, hi } = this.domain(known);
@@ -315,7 +325,7 @@ export class TcSparkline extends TcElement {
     if (!this.interactive)
       return html`<span class="ui-spk__plot" role="img" aria-label=${this.summary} data-tone=${this.toneNow} data-type=${this.type} style=${ifDefined(size || undefined)}
         >${drawing}${this.dots(lo, hi)}</span
-      >`;
+      >${this.valueText(known)}`;
     const id = this.uid;
     return html`<span
         class="ui-spk__plot"
@@ -333,7 +343,7 @@ export class TcSparkline extends TcElement {
         @pointerleave=${() => (this.point = null)}
         @blur=${() => (this.point = null)}
         >${drawing}${this.dots(lo, hi)}${this.tip(lo, hi)}</span
-      ><span class="tc-sr-only" id=${`${id}-keys`}>Left and right arrows step through the points</span
+      >${this.valueText(known)}<span class="tc-sr-only" id=${`${id}-keys`}>Left and right arrows step through the points</span
       ><span class="tc-sr-only" role="status">${this.announce}</span>`;
   }
 
@@ -349,7 +359,10 @@ export class TcSparkline extends TcElement {
   vertical-align: middle;
   line-height: var(--tc-line-height-none);
 }
-.ui-spk__plot { position: relative; display: block; width: var(--tc-spk-w); height: var(--tc-spk-h); color: var(--tc-spk-ink); outline: none; }
+/* With show-value: the drawing and the number side by side, centred on the line, no taller than it */
+[data-ui="spk"][show-value] { display: inline-flex; align-items: center; gap: var(--tc-space-1); }
+.ui-spk__value { flex: none; font-size: 1em; font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-none); color: var(--tc-text-primary); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ui-spk__plot { position: relative; display: block; flex: none; width: var(--tc-spk-w); height: var(--tc-spk-h); color: var(--tc-spk-ink); outline: none; }
 .ui-spk__plot[data-tone="info"] { --tc-spk-ink: var(--tc-status-info-fg); }
 .ui-spk__plot[data-tone="success"] { --tc-spk-ink: var(--tc-status-success-fg); }
 .ui-spk__plot[data-tone="warning"] { --tc-spk-ink: var(--tc-status-warning-fg); }
@@ -399,6 +412,7 @@ export class TcSparkline extends TcElement {
   .ui-spk__bar, .ui-spk__area { fill: CanvasText; }
   .ui-spk__dot { background: Highlight; }
   .ui-spk__tip { border: 1px solid CanvasText; }
+  .ui-spk__value { color: CanvasText; }
 }
 @media (prefers-reduced-motion: reduce) {
   [data-ui="spk"] *, [data-ui="spk"] *::before, [data-ui="spk"] *::after { animation: none !important; transition: none !important; }

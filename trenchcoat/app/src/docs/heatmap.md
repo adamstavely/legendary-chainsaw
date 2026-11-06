@@ -11,7 +11,13 @@ service and region, scores by team and quarter. The scale is sequential, from li
 colours either side of a midpoint for a change or a difference. It bins the values into a few shades (5 by default) or
 shades them continuously. A legend says what the shades mean, the footer names the highest and lowest cells, and a
 cell with no data is hatched. Pointing at or focusing a cell shows “Row · Column: value”, and Enter or a click selects
-it. The Table button swaps the chart for the same numbers as a plain table.
+it. The Table button swaps the chart for the same numbers as a plain table. `legendLabels` puts words at the legend's
+ends – “Fewer” and “More” – in place of the end values.
+
+Big matrices – more than `canvas-threshold` cells, 2,500 by default – are painted on a canvas that fits the card's
+width, as ztd-charts does (MIT, © 2026 Junhan2). The interaction layer stays on top: the keyboard, the tooltip, the
+crosshair, selection and the Table view work as before, but only the focused cell is an element, the row and column
+labels thin out to what fits, and `show-values` is off because the cells are too small to write in.
 
 ## When to use
 
@@ -37,6 +43,8 @@ it. The Table button swaps the chart for the same numbers as a plain table.
 7. **Summary** `.ui-heat__summary` – the highest and lowest cells
 8. **Legend** `.ui-heat__legend` – the scale's ends and its shades, and no data when some cells have none
 9. **Data table** `.ui-heat__table` – the table view
+10. **Plot** `.ui-heat__plot` – canvas mode: the painted cells under the focused cell `.ui-heat__vcell` and the
+    selection and pointer marks `.ui-heat__mark`; the labels are `.ui-heat__ylabel` and `.ui-heat__xlabel`
 
 ## Looks
 
@@ -44,6 +52,7 @@ Standard is a white card on a gray tray, with the header on the tray above it. C
 as its first row. The cells mix `--tc-heat-ink` (by default `--tc-chart-1`) into `--tc-heat-track`; a diverging scale
 uses `--tc-heat-ink-low` (`--tc-chart-3`) below the midpoint. `--tc-heat-cell-w`, `--tc-heat-cell-h`,
 `--tc-heat-label` and `--tc-heat-gap` size the cells, the row labels and the gaps. All can be set on the element.
+The canvas reads the same inks, resolved to real colours when it paints.
 
 ## Keyboard
 
@@ -59,7 +68,7 @@ The chart is one tab stop, on the selected cell or else the first; inside it the
 | Escape | Clears the selection, or hides the tooltip |
 | Tab | Leaves the chart |
 
-A cell moved to off the edge of the scrolling area scrolls into view.
+A cell moved to off the edge of the scrolling area scrolls into view. Canvas mode keeps the same keys.
 
 ## Screen readers
 
@@ -67,7 +76,12 @@ The chart is a `grid` named by the heading and described by “Arrow keys move b
 and the summary, “Highest Wed · 14:00 100%. Lowest Mon · 08:00 0%.” Rows are labelled by row headers and columns by
 column headers; each cell reads “Wed · 14:00: 96%”, or “No data”, and the selected cell is `aria-selected`. Selecting
 is confirmed politely, “Selected Wed · 14:00: 96%”. The Table button is a toggle (`aria-pressed`), and the table view
-is a plain data table captioned by the heading.
+is a plain data table captioned by the heading. With `legendLabels` the legend's ends read as the word and the value,
+“Fewer (0%)”.
+
+In canvas mode the grid holds only the focused cell, with `aria-rowcount` and `aria-colcount` for the whole matrix and
+`aria-rowindex` / `aria-colindex` for where the cell is, and that cell's row and column headers; it reads the same
+“Wed · 14:00: 96%”. The canvas itself is `aria-hidden`. The Table view has every value.
 
 ## Content
 
@@ -75,6 +89,7 @@ is a plain data table captioned by the heading.
 - Set `unit` or `format` so the tooltip, legend and summary read as values.
 - Use null for a cell you have no data for: it's hatched and read as “No data”, not as zero.
 - For a change, use `scale="diverging"` with `midpoint` at no change (usually 0), and `min` / `max` equal either side.
+- Legend words are short and plain – “Fewer” / “More”, “Quieter” / “Busier” – low first.
 
 ## Do
 
@@ -85,13 +100,14 @@ is a plain data table captioned by the heading.
 ## Don't
 
 - Don't use a diverging scale for values that only go one way – it suggests a meaning the data doesn't have.
-- Don't use more than about 30 columns – past that, the cells are too small to point at.
+- Don't use more than about 30 columns for a grid people point at cell by cell – past that, let it go to the canvas
+  and lean on the keyboard, the tooltip and the Table view for single values.
 - Don't rely on shade alone to compare two close cells – the tooltip and the table give the numbers.
 
 ## Example
 
 ```html
-<tc-heatmap id="use" heading="Instrument use" unit="%" row-header="Day" crosshair></tc-heatmap>
+<tc-heatmap id="use" heading="Instrument use" unit="%" row-header="Day" crosshair canvas-threshold="2500"></tc-heatmap>
 
 <script type="module">
   import "trenchcoat/heatmap";
@@ -105,6 +121,7 @@ is a plain data table captioned by the heading.
     [20, 71, null, 80],
     [35, 88, 92, 96],
   ];
+  map.legendLabels = ["Quieter", "Busier"];
   map.addEventListener("tc-selected-change", (e) => console.log(e.detail.selected, e.detail.value));
 </script>
 ```
@@ -124,6 +141,7 @@ export function InstrumentUse({ values }: { values: (number | null)[][] }) {
       columns={["08:00", "10:00", "12:00", "14:00"]}
       values={values}
       crosshair
+      legendLabels={["Quieter", "Busier"]}
       selected={selected}
       onSelectedChange={setSelected}
     />

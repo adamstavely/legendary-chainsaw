@@ -7838,7 +7838,7 @@
   },
   "chart": {
    "measuredAt": "2026-11-06",
-   "hash": "02fdb39217e091f5",
+   "hash": "e54676c9a85b161c",
    "bundle": {
     "own": {
      "min": 4871,
@@ -7868,7 +7868,7 @@
      {
       "name": "internal/chart/pie",
       "kind": "internal",
-      "min": 6464
+      "min": 6466
      },
      {
       "name": "internal/chart/motion",
@@ -8013,12 +8013,12 @@
      {
       "name": "heatmap",
       "kind": "element",
-      "min": 21860
+      "min": 30823
      },
      {
       "name": "gauge",
       "kind": "element",
-      "min": 17853
+      "min": 20379
      },
      {
       "name": "candlestick-chart",
@@ -8028,12 +8028,12 @@
      {
       "name": "sparkline",
       "kind": "element",
-      "min": 13978
+      "min": 14774
      },
      {
       "name": "radar-chart",
       "kind": "element",
-      "min": 12741
+      "min": 14716
      },
      {
       "name": "calendar-heatmap",
@@ -8148,7 +8148,7 @@
      {
       "name": "marimekko-chart",
       "kind": "element",
-      "min": 4624
+      "min": 4626
      },
      {
       "name": "radial-bar-chart",
@@ -8182,21 +8182,21 @@
      }
     ],
     "withoutLit": {
-     "min": 358954,
-     "gzip": 113355
+     "min": 373247,
+     "gzip": 117185
     },
     "withLit": {
-     "min": 376983,
-     "gzip": 118842
+     "min": 391247,
+     "gzip": 122713
     }
    },
    "render": {
     "tag": "tc-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 1,
+    "cold": 1.7,
     "first": 0.2,
-    "update": 0.3,
+    "update": 0.4,
     "updateKind": "re-render with the same data",
     "nodes": 0,
     "scale": null,
@@ -16982,18 +16982,18 @@
    }
   },
   "gauge": {
-   "measuredAt": "2026-10-29",
-   "hash": "c04d5194078d431b",
+   "measuredAt": "2026-11-06",
+   "hash": "8a9d4825bacada28",
    "bundle": {
     "own": {
-     "min": 19866,
-     "gzip": 6396
+     "min": 22363,
+     "gzip": 7083
     },
     "shared": [
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 18902
+      "min": 18916
      },
      {
       "name": "internal/card-head",
@@ -17013,7 +17013,7 @@
      {
       "name": "internal/look",
       "kind": "internal",
-      "min": 440
+      "min": 444
      },
      {
       "name": "internal/styles",
@@ -17027,19 +17027,19 @@
      }
     ],
     "withoutLit": {
-     "min": 26653,
-     "gzip": 8354
+     "min": 29150,
+     "gzip": 9005
     },
     "withLit": {
-     "min": 46649,
-     "gzip": 14871
+     "min": 49152,
+     "gzip": 15481
     }
    },
    "render": {
     "tag": "tc-gauge",
     "source": "demo",
     "runs": 7,
-    "cold": 10.5,
+    "cold": 11.5,
     "first": 0.6,
     "update": 0.2,
     "updateKind": "one item of bands replaced",
@@ -17050,14 +17050,14 @@
      "points": [
       {
        "items": 100,
-       "first": 0.7,
+       "first": 0.5,
        "update": 0.2,
        "nodes": 24
       },
       {
        "items": 1000,
-       "first": 0.8,
-       "update": 0.2,
+       "first": 0.9,
+       "update": 0.3,
        "nodes": 24
       }
      ]
@@ -17081,7 +17081,7 @@
   },
   "generated-ui": {
    "measuredAt": "2026-11-06",
-   "hash": "6ffdcaf2e2b93b04",
+   "hash": "98283dd1d06a54a4",
    "bundle": {
     "own": {
      "min": 34126,
@@ -17096,7 +17096,7 @@
      {
       "name": "internal/chart/element",
       "kind": "internal",
-      "min": 19006
+      "min": 19005
      },
      {
       "name": "internal/chart/spec",
@@ -17226,7 +17226,7 @@
      {
       "name": "internal/chart/motion-controller",
       "kind": "internal",
-      "min": 1921
+      "min": 1920
      },
      {
       "name": "internal/list-motion",
@@ -17794,6 +17794,11 @@
       "min": 31007
      },
      {
+      "name": "heatmap",
+      "kind": "element",
+      "min": 30905
+     },
+     {
       "name": "mention-picker",
       "kind": "element",
       "min": 30880
@@ -18119,11 +18124,6 @@
       "min": 22048
      },
      {
-      "name": "heatmap",
-      "kind": "element",
-      "min": 21925
-     },
-     {
       "name": "speed-reader",
       "kind": "element",
       "min": 21912
@@ -18192,6 +18192,11 @@
       "name": "score-summary",
       "kind": "element",
       "min": 20527
+     },
+     {
+      "name": "gauge",
+      "kind": "element",
+      "min": 20458
      },
      {
       "name": "saved-search-alerts",
@@ -18319,11 +18324,6 @@
       "min": 17939
      },
      {
-      "name": "gauge",
-      "kind": "element",
-      "min": 17927
-     },
-     {
       "name": "tag-input",
       "kind": "element",
       "min": 17857
@@ -18336,7 +18336,7 @@
      {
       "name": "contact-channels",
       "kind": "element",
-      "min": 17502
+      "min": 17546
      },
      {
       "name": "provenance-summary",
@@ -18499,6 +18499,16 @@
       "min": 14896
      },
      {
+      "name": "sparkline",
+      "kind": "element",
+      "min": 14837
+     },
+     {
+      "name": "radar-chart",
+      "kind": "element",
+      "min": 14778
+     },
+     {
       "name": "work-item",
       "kind": "element",
       "min": 14683
@@ -18507,11 +18517,6 @@
       "name": "approval-chain",
       "kind": "element",
       "min": 14680
-     },
-     {
-      "name": "sparkline",
-      "kind": "element",
-      "min": 14038
      },
      {
       "name": "case-review",
@@ -18572,11 +18577,6 @@
       "name": "button",
       "kind": "element",
       "min": 12835
-     },
-     {
-      "name": "radar-chart",
-      "kind": "element",
-      "min": 12797
      },
      {
       "name": "team-invite",
@@ -18901,7 +18901,7 @@
      {
       "name": "content-shield",
       "kind": "element",
-      "min": 5016
+      "min": 5029
      },
      {
       "name": "in-coordination",
@@ -18926,7 +18926,7 @@
      {
       "name": "content-hidden",
       "kind": "element",
-      "min": 4689
+      "min": 4698
      },
      {
       "name": "marimekko-chart",
@@ -19126,7 +19126,7 @@
      {
       "name": "src/generative/registry.ts",
       "kind": "other",
-      "min": 58801
+      "min": 58802
      },
      {
       "name": "src/generative/schemas/tc-ai-side-pane.json",
@@ -19744,6 +19744,11 @@
       "min": 2767
      },
      {
+      "name": "src/generative/schemas/tc-gauge.json",
+      "kind": "other",
+      "min": 2765
+     },
+     {
       "name": "src/generative/schemas/tc-fingerprint-card.json",
       "kind": "other",
       "min": 2751
@@ -19814,6 +19819,11 @@
       "min": 2658
      },
      {
+      "name": "src/generative/schemas/tc-heatmap.json",
+      "kind": "other",
+      "min": 2646
+     },
+     {
       "name": "src/generative/schemas/tc-tool-configuration.json",
       "kind": "other",
       "min": 2645
@@ -19877,11 +19887,6 @@
       "name": "src/generative/schemas/tc-asset-list.json",
       "kind": "other",
       "min": 2583
-     },
-     {
-      "name": "src/generative/schemas/tc-gauge.json",
-      "kind": "other",
-      "min": 2572
      },
      {
       "name": "src/generative/schemas/tc-experiment-card.json",
@@ -19989,14 +19994,14 @@
       "min": 2316
      },
      {
-      "name": "src/generative/schemas/tc-heatmap.json",
-      "kind": "other",
-      "min": 2307
-     },
-     {
       "name": "src/generative/schemas/tc-evidence-coverage.json",
       "kind": "other",
       "min": 2305
+     },
+     {
+      "name": "src/generative/schemas/tc-sparkline.json",
+      "kind": "other",
+      "min": 2302
      },
      {
       "name": "src/generative/schemas/tc-project-card.json",
@@ -20074,14 +20079,14 @@
       "min": 2200
      },
      {
+      "name": "src/generative/schemas/tc-radar-chart.json",
+      "kind": "other",
+      "min": 2192
+     },
+     {
       "name": "src/generative/schemas/tc-kpi-chart.json",
       "kind": "other",
       "min": 2191
-     },
-     {
-      "name": "src/generative/schemas/tc-sparkline.json",
-      "kind": "other",
-      "min": 2181
      },
      {
       "name": "src/generative/schemas/tc-thinking-state.json",
@@ -20292,11 +20297,6 @@
       "name": "src/generative/schemas/tc-comment-thread.json",
       "kind": "other",
       "min": 1914
-     },
-     {
-      "name": "src/generative/schemas/tc-radar-chart.json",
-      "kind": "other",
-      "min": 1909
      },
      {
       "name": "src/generative/schemas/tc-parallel-attempts.json",
@@ -20970,20 +20970,20 @@
      }
     ],
     "withoutLit": {
-     "min": 9492052,
-     "gzip": 2356761
+     "min": 9507392,
+     "gzip": 2360937
     },
     "withLit": {
-     "min": 9435003,
-     "gzip": 2336460
+     "min": 9450295,
+     "gzip": 2340626
     }
    },
    "render": {
     "tag": "tc-generated-ui",
     "source": "demo",
     "runs": 7,
-    "cold": 4.7,
-    "first": 0.5,
+    "cold": 3.5,
+    "first": 0.6,
     "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 9,
@@ -22248,18 +22248,18 @@
    }
   },
   "heatmap": {
-   "measuredAt": "2026-10-29",
-   "hash": "936ec60d8b62851d",
+   "measuredAt": "2026-11-06",
+   "hash": "3cfb2f8d44936d10",
    "bundle": {
     "own": {
-     "min": 23931,
-     "gzip": 7625
+     "min": 32942,
+     "gzip": 9863
     },
     "shared": [
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 18957
+      "min": 18965
      },
      {
       "name": "internal/card-head",
@@ -22277,9 +22277,14 @@
       "min": 1348
      },
      {
+      "name": "internal/chart/canvas",
+      "kind": "internal",
+      "min": 647
+     },
+     {
       "name": "internal/look",
       "kind": "internal",
-      "min": 440
+      "min": 444
      },
      {
       "name": "internal/styles",
@@ -22298,38 +22303,38 @@
      }
     ],
     "withoutLit": {
-     "min": 31500,
-     "gzip": 9929
+     "min": 41111,
+     "gzip": 12402
     },
     "withLit": {
-     "min": 51591,
-     "gzip": 16450
+     "min": 61174,
+     "gzip": 18873
     }
    },
    "render": {
     "tag": "tc-heatmap",
     "source": "demo",
     "runs": 7,
-    "cold": 10.2,
-    "first": 2.6,
+    "cold": 8.2,
+    "first": 2.7,
     "update": 1.2,
     "updateKind": "one item of columns replaced",
-    "nodes": 249,
+    "nodes": 251,
     "scale": {
      "property": "columns",
      "demoItems": 12,
      "points": [
       {
        "items": 100,
-       "first": 10.7,
-       "update": 2.4,
-       "nodes": 1657
+       "first": 10.3,
+       "update": 2.3,
+       "nodes": 1659
       },
       {
        "items": 1000,
-       "first": 100.4,
-       "update": 14,
-       "nodes": 16057
+       "first": 2.9,
+       "update": 0.5,
+       "nodes": 155
       }
      ]
     },
@@ -22347,7 +22352,9 @@
       "timers": 0
      }
     },
-    "errors": []
+    "errors": [
+     "ResizeObserver loop completed with undelivered notifications."
+    ]
    }
   },
   "icon-rail": {
@@ -32904,18 +32911,23 @@
    }
   },
   "radar-chart": {
-   "measuredAt": "2026-10-30",
-   "hash": "9d840750ddcc3b30",
+   "measuredAt": "2026-11-06",
+   "hash": "8d45297a1b311456",
    "bundle": {
     "own": {
-     "min": 14786,
-     "gzip": 5248
+     "min": 16863,
+     "gzip": 5992
     },
     "shared": [
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 18902
+      "min": 18960
+     },
+     {
+      "name": "internal/chart/motion",
+      "kind": "internal",
+      "min": 5203
      },
      {
       "name": "internal/card-head",
@@ -32923,9 +32935,14 @@
       "min": 2971
      },
      {
+      "name": "internal/chart/motion-controller",
+      "kind": "internal",
+      "min": 1897
+     },
+     {
       "name": "internal/base",
       "kind": "internal",
-      "min": 1864
+      "min": 1868
      },
      {
       "name": "internal/kit",
@@ -32935,58 +32952,63 @@
      {
       "name": "internal/look",
       "kind": "internal",
-      "min": 440
+      "min": 444
      },
      {
       "name": "internal/styles",
       "kind": "internal",
-      "min": 435
+      "min": 436
      },
      {
       "name": "internal/controllers",
       "kind": "internal",
       "min": 132
+     },
+     {
+      "name": "src/internal/reduced-motion.ts",
+      "kind": "other",
+      "min": 96
      }
     ],
     "withoutLit": {
-     "min": 22277,
-     "gzip": 7557
+     "min": 31429,
+     "gzip": 10763
     },
     "withLit": {
-     "min": 42324,
-     "gzip": 14070
+     "min": 51525,
+     "gzip": 17187
     }
    },
    "render": {
     "tag": "tc-radar-chart",
     "source": "demo",
     "runs": 7,
-    "cold": 9.6,
+    "cold": 8.6,
     "first": 0.8,
     "update": 0.3,
     "updateKind": "one item of axes replaced",
-    "nodes": 37,
+    "nodes": 41,
     "scale": {
      "property": "axes",
      "demoItems": 4,
      "points": [
       {
        "items": 100,
-       "first": 2.4,
+       "first": 2.3,
        "update": 0.5,
-       "nodes": 325
+       "nodes": 329
       },
       {
        "items": 1000,
-       "first": 15.5,
-       "update": 2.5,
-       "nodes": 3025
+       "first": 16.3,
+       "update": 3.2,
+       "nodes": 3029
       }
      ]
     },
     "idle": {
      "visible": {
-      "frames": 0,
+      "frames": 46,
       "timers": 0
      },
      "away": {
@@ -38700,12 +38722,12 @@
    }
   },
   "sparkline": {
-   "measuredAt": "2026-10-29",
-   "hash": "9df34fc471cd1e77",
+   "measuredAt": "2026-11-06",
+   "hash": "0263a3f9f815683a",
    "bundle": {
     "own": {
-     "min": 16027,
-     "gzip": 5814
+     "min": 16818,
+     "gzip": 6012
     },
     "shared": [
      {
@@ -38745,38 +38767,38 @@
      }
     ],
     "withoutLit": {
-     "min": 22813,
-     "gzip": 7828
+     "min": 23605,
+     "gzip": 7992
     },
     "withLit": {
-     "min": 42849,
-     "gzip": 14373
+     "min": 43641,
+     "gzip": 14497
     }
    },
    "render": {
     "tag": "tc-sparkline",
     "source": "demo",
     "runs": 7,
-    "cold": 5.7,
-    "first": 0.4,
+    "cold": 4.2,
+    "first": 0.5,
     "update": 0.2,
     "updateKind": "one item of values replaced",
-    "nodes": 6,
+    "nodes": 7,
     "scale": {
      "property": "values",
      "demoItems": 14,
      "points": [
       {
        "items": 100,
-       "first": 0.4,
-       "update": 0,
-       "nodes": 6
+       "first": 0.5,
+       "update": 0.1,
+       "nodes": 7
       },
       {
        "items": 1000,
        "first": 0.8,
-       "update": 0.2,
-       "nodes": 6
+       "update": 0.3,
+       "nodes": 7
       }
      ]
     },

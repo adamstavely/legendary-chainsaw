@@ -1,6 +1,6 @@
 /*
  * <tc-sparkline> in real browsers: the summary it's read as, sizing from the text, gaps, the four types, markers, the
- * reference line, the tone from `good`, interactive stepping with a tooltip and tc-point-focus, the React wrapper and
+ * reference line, the tone from `good`, show-value writing the last value within the line, interactive stepping with a tooltip and tc-point-focus, the React wrapper and
  * axe in both looks and both themes.
  */
 import { html } from "lit";
@@ -186,16 +186,56 @@ describe("tc-sparkline", () => {
     expect(plot(el).getAttribute("role")).toBe("img");
   });
 
+  test("show-value writes the last value after the chart, formatted, in the text ink – and the line keeps its height", async () => {
+    const wrap = await fixture<HTMLElement>(html`<p style="font-size: 16px; line-height: 1.5; margin: 0">
+      <span>Runs</span> <tc-sparkline .values=${[3, 4, null, 7, null]} unit="runs"></tc-sparkline> today
+    </p>`);
+    const el = wrap.querySelector<TcSparkline>("tc-sparkline")!;
+    const lineH = wrap.getBoundingClientRect().height;
+    expect(el.querySelector(".ui-spk__value")).toBeNull();
+    el.showValue = true;
+    await settle();
+    expect(el.hasAttribute("show-value")).toBe(true);
+    const value = el.querySelector<HTMLElement>(".ui-spk__value")!;
+    // The last known value, with the unit; after the drawing; hidden from screen readers (the summary ends on it)
+    expect(value.textContent).toBe("7 runs");
+    expect(value.getAttribute("aria-hidden")).toBe("true");
+    expect(value.getBoundingClientRect().left).toBeGreaterThanOrEqual(plot(el).getBoundingClientRect().right);
+    const probe = document.createElement("span");
+    probe.style.color = "var(--tc-text-primary)";
+    el.append(probe);
+    expect(getComputedStyle(value).color).toBe(getComputedStyle(probe).color);
+    probe.remove();
+    // Still one line, no taller than before; the value at the text's size, within the chart's height
+    expect(wrap.getBoundingClientRect().height).toBe(lineH);
+    expect(getComputedStyle(value).fontSize).toBe("16px");
+    expect(el.getBoundingClientRect().height).toBeLessThanOrEqual(Math.ceil(plot(el).getBoundingClientRect().height));
+    // format replaces the number and unit; interactive keeps it; no values, no number
+    el.format = (v) => `${v} °C`;
+    el.interactive = true;
+    await settle();
+    expect(el.querySelector(".ui-spk__value")!.textContent).toBe("7 °C");
+    expect(wrap.getBoundingClientRect().height).toBe(lineH);
+    el.values = [null];
+    await settle();
+    expect(el.querySelector(".ui-spk__value")).toBeNull();
+    // The attribute works too
+    const byAttr = await fixture<TcSparkline>(html`<tc-sparkline show-value .values=${[1, 2.5]}></tc-sparkline>`);
+    expect(byAttr.showValue).toBe(true);
+    expect(byAttr.querySelector(".ui-spk__value")!.textContent).toBe("2.5");
+  });
+
   test("React wrapper: props reach the element; onPointFocus hears the points", async () => {
     (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
     const host = document.createElement("div");
     document.body.append(host);
     const root = createRoot(host);
     const seen: unknown[] = [];
-    await act(async () => root.render(React.createElement(Sparkline, { values: [2, 4, 3], labels: ["a", "b", "c"], interactive: true, type: "area", label: "Runs", onPointFocus: (i, v, l) => void seen.push([i, v, l]) })));
+    await act(async () => root.render(React.createElement(Sparkline, { values: [2, 4, 3], labels: ["a", "b", "c"], interactive: true, type: "area", label: "Runs", showValue: true, onPointFocus: (i, v, l) => void seen.push([i, v, l]) })));
     await settle();
     const el = host.querySelector("tc-sparkline")!;
     expect(el.type).toBe("area");
+    expect(el.querySelector(".ui-spk__value")!.textContent).toBe("3");
     expect(plot(el).getAttribute("aria-label")).toBe("Runs: from 2 to 3, high 4, low 2");
     key(plot(el), "Home");
     await settle();
@@ -209,7 +249,8 @@ describe("tc-sparkline", () => {
         <p>Plain <tc-sparkline .values=${VALUES} markers="min max last"></tc-sparkline></p>
         <p><tc-sparkline look="clean" type="area" good="up" .values=${VALUES} .reference=${130}></tc-sparkline></p>
         <p><tc-sparkline type="win-loss" .values=${[1, -1, 1]}></tc-sparkline> <tc-sparkline type="bars" .values=${[1, 3, 2]}></tc-sparkline></p>
-        <p><tc-sparkline interactive label="Samples" .values=${VALUES} .labels=${LABELS}></tc-sparkline></p>
+        <p><tc-sparkline interactive show-value unit="samples" label="Samples" .values=${VALUES} .labels=${LABELS}></tc-sparkline></p>
+        <p>Today <tc-sparkline show-value look="clean" good="down" .values=${VALUES}></tc-sparkline></p>
       </div>`);
       const interactive = wrap.querySelector<TcSparkline>("tc-sparkline[interactive]")!;
       plot(interactive).focus();

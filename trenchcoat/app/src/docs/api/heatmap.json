@@ -150,6 +150,22 @@
      "readonly": false
     },
     {
+     "name": "legendLabels",
+     "attribute": null,
+     "type": "[string, string] | undefined",
+     "default": "undefined",
+     "description": "Words at the two ends of the legend, low then high, e.g. [\"Fewer\", \"More\"]; by default the end values",
+     "readonly": false
+    },
+    {
+     "name": "canvasThreshold",
+     "attribute": "canvas-threshold",
+     "type": "number",
+     "default": "2500",
+     "description": "Above this many cells (rows × columns) they're painted on a canvas; the focused cell stays in the DOM",
+     "readonly": false
+    },
+    {
      "name": "look",
      "attribute": "look",
      "type": "Look | undefined",
@@ -256,6 +272,7 @@
     "--tc-font-weight-medium",
     "--tc-font-weight-regular",
     "--tc-font-weight-strong",
+    "--tc-heat-min",
     "--tc-line-height-none",
     "--tc-line-height-normal",
     "--tc-line-height-tight",
@@ -360,7 +377,8 @@
     "columns",
     "values",
     "format",
-    "selected"
+    "selected",
+    "legendLabels"
    ],
    "attributes": [
     {
@@ -414,6 +432,10 @@
     {
      "name": "locale",
      "attribute": "locale"
+    },
+    {
+     "name": "canvasThreshold",
+     "attribute": "canvas-threshold"
     }
    ],
    "events": [
@@ -572,6 +594,22 @@
     ]
    },
    {
+    "id": "resize-observer",
+    "name": "ResizeObserver",
+    "bcd": "api.ResizeObserver",
+    "versions": {
+     "chrome": "64",
+     "edge": "79",
+     "firefox": "69",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
     "id": "scrollbar-width",
     "name": "scrollbar-width",
     "bcd": "css.properties.scrollbar-width",
@@ -632,6 +670,7 @@
   "frames": [],
   "animations": 0,
   "observers": [
+   "ResizeObserver",
    "MutationObserver (internal/base › TcElement)",
    "MutationObserver (internal/controllers › AriaForwardController)"
   ],
@@ -648,7 +687,7 @@
   "windowed": false
  },
  "size": {
-  "min": 31500,
-  "gzip": 9889
+  "min": 41111,
+  "gzip": 12402
  }
 }

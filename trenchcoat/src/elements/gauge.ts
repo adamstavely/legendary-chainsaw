@@ -1,17 +1,19 @@
-import { html, nothing, svg } from "lit";
+import { html, nothing, svg, type PropertyValues } from "lit";
 import { property } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { TcElement } from "./internal/base";
 
 /*
- * <tc-gauge> – one value against its range: a 270° dial (`variant` arc), a half dial (semicircle) or a straight bar.
+ * <tc-gauge> – one value against its range: a 270° dial (`variant` arc), a half dial (semicircle), a straight bar, or
+ * a 270° ring of tick marks lit up to the value (ticks, after ztd-charts' gauge, MIT, © 2026 Junhan2; `ticks` sets how
+ * many, by default fitted to `size`).
  * The value is in big type in the middle with the band it falls in under it – “Warning”, in the band's colour with a
  * mark – and the bands themselves (good, warning, bad …) run round the outside with a tick between each. A target is
  * a line across the dial; `previous` adds the change under it (“Up 1.2 °C from the last reading”). A new value
- * sweeps to its place (at once with reduced motion).
+ * sweeps to its place – tick by tick on the ticks ring, in the direction it moves (at once with reduced motion).
  *   · a `meter` named by its label, read as “72%, Warning”
  *   · `editable` makes it a slider: ← / → or ↑ / ↓ move by `step`, Page Up / Down by ten steps, Home / End to the
- *     ends; dragging along the dial or bar sets it too
+ *     ends; dragging along the dial, ring or bar sets it too
  * Standard: a white card on a gray tray. Clean: one white card.
  *
  *   <tc-gauge label="Freezer B" unit="°C" min="-90" max="-60" value="-78" .bands=${[…]}></tc-gauge>
@@ -25,7 +27,7 @@ export type GaugeBand = {
   /** Its name, said with the value: "Warning" */
   label: string;
 };
-export type GaugeVariant = "arc" | "semicircle" | "bar";
+export type GaugeVariant = "arc" | "semicircle" | "bar" | "ticks";
 
 /** Details of the events */
 export type GaugeValueChange = { value: number };
@@ -42,6 +44,14 @@ const CY = 60;
 const R = 46;
 /** The ring of bands, outside the dial */
 const RB = 56;
+/** The tick marks' inner and outer radius, over the same ring as the arc's stroke */
+const TICK_IN = 40;
+const TICK_OUT = 51;
+/** The fewest and most tick marks */
+const MIN_TICKS = 2;
+const MAX_TICKS = 120;
+/** The dial's width in px at each size, to fit the tick count to (as --tc-gau-dial sets it) */
+const DIAL_PX = { sm: 112, md: 168, lg: 216 } as const;
 
 const rad = (deg: number) => (deg * Math.PI) / 180;
 const at = (deg: number, r: number) => `${(CX + r * Math.cos(rad(deg))).toFixed(2)} ${(CY + r * Math.sin(rad(deg))).toFixed(2)}`;
@@ -79,10 +89,12 @@ export class TcGauge extends TcElement {
   @property({ attribute: "previous-label" }) accessor previousLabel = "last time";
   /** Which way is good, to colour the change: "up" or "down"; unset leaves it neutral */
   @property() accessor good: "up" | "down" | undefined = undefined;
-  /** The shape: a 270° dial, a half dial or a straight bar */
+  /** The shape: a 270° dial, a half dial, a straight bar, or a 270° ring of tick marks lit up to the value ("ticks") */
   @property() accessor variant: GaugeVariant = "arc";
   /** The size of the dial */
   @property() accessor size: "sm" | "md" | "lg" = "md";
+  /** How many tick marks the ticks ring has (2–120); by default as many as fit the size */
+  @property({ type: Number }) accessor ticks: number | undefined = undefined;
   /** The colour without bands */
   @property() accessor tone: GaugeTone = "info";
   /** The unit after the number: "%", "°C", "GB" */
@@ -98,6 +110,9 @@ export class TcGauge extends TcElement {
 
   private uid = `tc-gau-${++uidCount}`;
   private dragging = false;
+  /** The share lit before this update, so ticks change in order from there */
+  private litFrom = 0;
+  private litNow = 0;
 
   /* ---------- The model ---------- */
 
@@ -138,6 +153,22 @@ export class TcGauge extends TcElement {
     const v = Number.isFinite(this.value) ? this.value : this.range.lo;
     const band = this.current;
     return band ? `${this.num(v)}, ${band.label}` : this.num(v);
+  }
+
+  /** The number of tick marks: `ticks`, or about one per 8 px of the ring at this size (24–64) */
+  private get tickCount() {
+    if (this.ticks !== undefined && Number.isFinite(this.ticks)) return Math.max(MIN_TICKS, Math.min(MAX_TICKS, Math.round(this.ticks)));
+    const px = DIAL_PX[this.size] ?? DIAL_PX.md;
+    const ring = (((TICK_IN + TICK_OUT) / 2) * px) / 120;
+    return Math.max(24, Math.min(64, Math.round((ring * rad(SHAPES.arc.sweep)) / 8)));
+  }
+
+  protected override willUpdate(changed: PropertyValues) {
+    super.willUpdate(changed);
+    const f = this.frac(Number.isFinite(this.value) ? this.value : this.range.lo);
+    // Only a new value moves the lights; a first render, or the shape or count changing, starts where it is
+    this.litFrom = this.hasUpdated && changed.has("value") && !changed.has("variant") && !changed.has("ticks") ? this.litNow : f;
+    this.litNow = f;
   }
 
   /* ---------- Editing ---------- */
@@ -234,6 +265,42 @@ export class TcGauge extends TcElement {
     </svg>`;
   }
 
+  /** The ring of tick marks, lit up to the value; each one changes in turn from where the value was */
+  private renderTicks() {
+    const shape = SHAPES.arc;
+    const deg = (f: number) => shape.start + f * shape.sweep;
+    const n = this.tickCount;
+    const f = this.litNow;
+    const from = this.litFrom;
+    const lit = (x: number, i: number) => x > 0.002 && i / (n - 1) <= x + 1e-6;
+    const before = Array.from({ length: n }, (_, i) => lit(from, i));
+    const after = Array.from({ length: n }, (_, i) => lit(f, i));
+    // The ticks that change, in the order they change: up from the old value, or down from it
+    const changing = after.map((on, i) => (on !== before[i] ? i : -1)).filter((i) => i >= 0);
+    if (f < from) changing.reverse();
+    const gap = ((((TICK_IN + TICK_OUT) / 2) * rad(shape.sweep)) / (n - 1));
+    const width = Math.max(0.8, Math.min(2.6, gap * 0.42));
+    const spans = this.spans;
+    const target = this.target !== undefined && Number.isFinite(this.target) ? deg(this.frac(this.target)) : null;
+    const tone = this.current?.tone ?? this.tone;
+    return svg`<svg class="ui-gau__svg" viewBox=${shape.box} aria-hidden="true">
+      <g class="ui-gau__ticks" data-tone=${tone} style=${`--tc-gau-tick-w: ${width.toFixed(2)}`}>
+        ${after.map((on, i) => {
+          const a = deg(i / (n - 1));
+          const k = changing.indexOf(i);
+          const delay = k < 0 || changing.length < 2 ? 0 : k / (changing.length - 1);
+          return svg`<path class="ui-gau__mark" ?data-on=${on} style=${`--tc-gau-delay: ${delay.toFixed(3)}`} d=${`M ${at(a, TICK_IN)} L ${at(a, TICK_OUT)}`}></path>`;
+        })}
+      </g>
+      ${spans.map((s) => svg`<path class="ui-gau__band" data-tone=${s.band.tone} d=${arcPath(deg(this.frac(s.from)), deg(this.frac(s.to)), RB)}></path>`)}
+      ${spans.slice(1).map((s) => {
+        const a = deg(this.frac(s.from));
+        return svg`<path class="ui-gau__tick" d=${`M ${at(a, RB - 4)} L ${at(a, RB + 3)}`}></path>`;
+      })}
+      ${target !== null ? svg`<path class="ui-gau__target" d=${`M ${at(target, TICK_IN - 4)} L ${at(target, RB + 3)}`}></path>` : nothing}
+    </svg>`;
+  }
+
   private renderBar() {
     const v = Number.isFinite(this.value) ? this.value : this.range.lo;
     const f = this.frac(v);
@@ -285,12 +352,12 @@ export class TcGauge extends TcElement {
         aria-valuemax=${hi}
         aria-valuetext=${this.valueText}
         aria-orientation=${ifDefined(this.editable ? "horizontal" : undefined)}
-        data-variant=${bar ? "bar" : this.variant === "semicircle" ? "semicircle" : "arc"}
+        data-variant=${bar ? "bar" : this.variant === "semicircle" || this.variant === "ticks" ? this.variant : "arc"}
         data-size=${this.size}
         @keydown=${this.onKey}
       >
         <div class="ui-gau__face" @pointerdown=${this.onDown} @pointermove=${this.onMove} @pointerup=${this.onUp} @pointercancel=${this.onUp}>
-          ${bar ? this.renderBar() : this.renderDial()}
+          ${bar ? this.renderBar() : this.variant === "ticks" ? this.renderTicks() : this.renderDial()}
           <div class="ui-gau__read" aria-hidden="true">
             <span class="ui-gau__value">${this.num(v)}</span>
             ${band ? html`<span class="ui-gau__band-label" data-tone=${band.tone}><span class="ui-gau__dot"></span>${band.label}</span>` : nothing}
@@ -345,7 +412,7 @@ export class TcGauge extends TcElement {
   -webkit-font-smoothing: antialiased;
 }
 /* The dial's size and the fill's colour – override them on the element */
-[data-ui="gau"] { --tc-gau-dial: 168px; --tc-gau-ink: var(--tc-status-info-solid); --tc-gau-band: var(--tc-text-muted); }
+[data-ui="gau"] { --tc-gau-dial: 168px; --tc-gau-ink: var(--tc-status-info-solid); --tc-gau-band: var(--tc-text-muted); --tc-gau-tick-w: 2; --tc-gau-delay: 0; }
 [data-ui="gau"] *, [data-ui="gau"] *::before, [data-ui="gau"] *::after { box-sizing: border-box; }
 [data-ui="gau"] p { margin: 0; }
 .ui-gau__card { display: grid; gap: var(--tc-space-3); padding: var(--tc-space-4); }
@@ -367,6 +434,9 @@ export class TcGauge extends TcElement {
 .ui-gau__track { stroke: var(--tc-meter-track); }
 .ui-gau__fill { stroke: var(--tc-gau-ink); stroke-dasharray: 100 100; transition: stroke-dashoffset var(--tc-duration-slowest) var(--tc-ease-move), stroke var(--tc-duration-moderate) var(--tc-ease-standard); }
 .ui-gau__fill[data-empty] { stroke: none; }
+/* The ticks ring: unlit marks on the track colour, lit ones in the band's; each lights in turn, --tc-gau-delay of the way */
+.ui-gau__mark { fill: none; stroke: var(--tc-meter-track); stroke-width: var(--tc-gau-tick-w); stroke-linecap: round; transition: stroke var(--tc-duration-fast) var(--tc-ease-standard); transition-delay: calc(var(--tc-duration-slowest) * var(--tc-gau-delay)); }
+.ui-gau__mark[data-on] { stroke: var(--tc-gau-ink); }
 .ui-gau__band { fill: none; stroke: var(--tc-gau-band); stroke-width: 3; }
 .ui-gau__tick { stroke: var(--tc-surface-raised); stroke-width: 2; }
 :where([data-look="standard"], [data-look="standard"] *) .ui-gau__tick { stroke: var(--tc-surface-on-tray); }
@@ -403,7 +473,8 @@ export class TcGauge extends TcElement {
 .ui-gau__target-text { display: inline-flex; align-items: center; gap: var(--tc-space-1-5); color: var(--tc-text-muted); font-variant-numeric: tabular-nums; }
 .ui-gau__target-mark { width: 2.5px; height: 10px; border-radius: var(--tc-radius-full); background: var(--tc-text-primary); }
 @media (forced-colors: active) {
-  .ui-gau__fill, .ui-gau__band { stroke: Highlight; }
+  .ui-gau__fill, .ui-gau__band, .ui-gau__mark[data-on] { stroke: Highlight; }
+  .ui-gau__mark { stroke: GrayText; }
   .ui-gau__track { stroke: GrayText; }
   .ui-gau__target { stroke: CanvasText; }
   .ui-gau__bar-fill, .ui-gau__bar-band, .ui-gau__dot { background: Highlight; }

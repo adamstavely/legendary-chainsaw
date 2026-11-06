@@ -1,7 +1,8 @@
 /*
  * <tc-gauge> in real browsers: the meter and what it's read as, the band the value falls in, the bands, ticks and
- * target, the change from `previous`, the three shapes and sizes, the editable slider by keyboard and pointer,
- * controlled use, the React wrapper and axe in both looks and both themes.
+ * target, the change from `previous`, the shapes and sizes, the ticks ring (its count, what's lit, the lights changing
+ * in turn, reduced motion), the editable slider by keyboard and pointer, controlled use, the React wrapper and axe in
+ * both looks and both themes.
  */
 import { html } from "lit";
 import axe from "axe-core";
@@ -11,6 +12,7 @@ import { createRoot } from "react-dom/client";
 import { afterEach, describe, expect, test } from "vitest";
 import "../../src/elements/gauge";
 import type { GaugeBand, GaugeValueChange, TcGauge } from "../../src/elements/gauge";
+import { TcGauge as GaugeClass } from "../../src/elements/gauge";
 import { Gauge } from "../../src/elements/react/gauge";
 import { cleanup, finish, fixture, settle } from "./helpers";
 
@@ -120,6 +122,118 @@ describe("tc-gauge", () => {
     expect([...el.querySelectorAll(".ui-gau__ends span")].map((s) => s.textContent)).toEqual(["0%", "100%"]);
   });
 
+  test("ticks: a 270° ring of marks lit up to the value, with the bands round it, their ticks and the target", async () => {
+    const el = await fixture<TcGauge>(html`<tc-gauge variant="ticks" label="Storage used" unit="%" .value=${72} .bands=${BANDS} .target=${80}></tc-gauge>`);
+    const marks = () => [...el.querySelectorAll<SVGPathElement>(".ui-gau__mark")];
+    expect(meter(el).dataset.variant).toBe("ticks");
+    expect(meter(el).getAttribute("role")).toBe("meter");
+    expect(meter(el).getAttribute("aria-valuetext")).toBe("72%, Warning");
+    // No arc: the marks are the dial
+    expect(el.querySelector(".ui-gau__fill")).toBeNull();
+    // Fitted to the size: 38 at md; lit while i / 37 ≤ 0.72, so the first 27
+    expect(marks()).toHaveLength(38);
+    expect(marks().filter((m) => m.hasAttribute("data-on"))).toHaveLength(27);
+    expect(marks().findIndex((m) => !m.hasAttribute("data-on"))).toBe(27);
+    // Lit in the band's colour
+    expect(el.querySelector<SVGGElement>(".ui-gau__ticks")!.dataset.tone).toBe("warning");
+    expect(el.querySelectorAll(".ui-gau__band")).toHaveLength(3);
+    expect(el.querySelectorAll(".ui-gau__tick")).toHaveLength(2);
+    expect(el.querySelector(".ui-gau__target")).not.toBeNull();
+    // The first and last marks sit at the sweep's ends: down-left and down-right of the centre
+    const end = (m: SVGPathElement) => m.getAttribute("d")!.split(" L ")[1].split(" ").map(Number);
+    const [x0, y0] = end(marks()[0]);
+    const [x1, y1] = end(marks()[37]);
+    expect([x0 < 60, y0 > 60, x1 > 60, y1 > 60]).toEqual([true, true, true, true]);
+    expect(x0 + x1).toBeCloseTo(120, 1);
+    // Nothing lit at the start of the range; everything at the end
+    el.value = 0;
+    await settle();
+    expect(marks().filter((m) => m.hasAttribute("data-on"))).toHaveLength(0);
+    el.value = 100;
+    await settle();
+    expect(marks().filter((m) => m.hasAttribute("data-on"))).toHaveLength(38);
+  });
+
+  test("ticks: the count fits the size, or `ticks` sets it (2–120, whole)", async () => {
+    const el = await fixture<TcGauge>(html`<tc-gauge variant="ticks" size="sm" label="Storage used" .value=${50}></tc-gauge>`);
+    const count = () => el.querySelectorAll(".ui-gau__mark").length;
+    expect(count()).toBe(25);
+    el.size = "lg";
+    await settle();
+    expect(count()).toBe(48);
+    el.ticks = 12;
+    await settle();
+    expect(count()).toBe(12);
+    // Halfway: i / 11 ≤ 0.5 lights the first 6
+    expect(el.querySelectorAll(".ui-gau__mark[data-on]")).toHaveLength(6);
+    el.ticks = 1;
+    await settle();
+    expect(count()).toBe(2);
+    el.ticks = 500;
+    await settle();
+    expect(count()).toBe(120);
+    el.ticks = 20.4;
+    await settle();
+    expect(count()).toBe(20);
+    // From markup
+    const attr = await fixture<TcGauge>(html`<tc-gauge variant="ticks" ticks="30" label="Storage used" .value=${50}></tc-gauge>`);
+    expect(attr.ticks).toBe(30);
+    expect(attr.querySelectorAll(".ui-gau__mark")).toHaveLength(30);
+  });
+
+  test("ticks: a new value lights the marks in turn from the old one – up the ring going up, down it going down", async () => {
+    const el = await fixture<TcGauge>(html`<tc-gauge variant="ticks" ticks="11" label="Storage used" unit="%" .value=${20}></tc-gauge>`);
+    const marks = () => [...el.querySelectorAll<SVGPathElement>(".ui-gau__mark")];
+    const delay = (m: SVGPathElement) => Number(m.style.getPropertyValue("--tc-gau-delay"));
+    const stroke = (m: SVGPathElement) => getComputedStyle(m).stroke;
+    await finish(el);
+    // Start: 0, 0.1 and 0.2 lit
+    const on = stroke(marks()[0]);
+    const off = stroke(marks()[10]);
+    expect(on).not.toBe(off);
+    expect(marks().map(delay).every((d) => d === 0)).toBe(true);
+    el.value = 80;
+    await el.updateComplete;
+    // The five newly lit marks (0.3 … 0.7, 0.8) change one after another: the nearest the old value first
+    expect(marks().filter((m) => m.hasAttribute("data-on"))).toHaveLength(9);
+    expect(marks().slice(3, 9).map(delay)).toEqual([0, 0.2, 0.4, 0.6, 0.8, 1]);
+    expect(marks().slice(0, 3).concat(marks().slice(9)).every((m) => delay(m) === 0)).toBe(true);
+    // The last to light still shows unlit at first, then ends lit
+    expect(stroke(marks()[8])).toBe(off);
+    await expect.poll(() => stroke(marks()[8]), { timeout: 4000 }).toBe(on);
+    // Going down: the highest goes out first
+    el.value = 50;
+    await el.updateComplete;
+    expect(marks().slice(6, 9).map(delay)).toEqual([1, 0.5, 0]);
+    await finish(el);
+    expect(stroke(marks()[6])).toBe(off);
+    expect(stroke(marks()[5])).toBe(on);
+  });
+
+  test("ticks: reduced motion turns the lights' transitions off", () => {
+    const css = GaugeClass.css;
+    const block = css.slice(css.indexOf("@media (prefers-reduced-motion: reduce)"));
+    expect(block).toMatch(/\[data-ui="gau"\] \*[^{]*\{ animation: none !important; transition: none !important; \}/);
+    // The marks' delays come from the transition, so with it off every mark changes at once
+    expect(css).toMatch(/\.ui-gau__mark \{[^}]*transition: stroke[^}]*transition-delay: calc\(var\(--tc-duration-slowest\) \* var\(--tc-gau-delay\)\)/);
+  });
+
+  test("ticks, editable: a slider round the ring, by keyboard and pointer", async () => {
+    const el = await fixture<TcGauge>(html`<tc-gauge editable variant="ticks" label="Alarm level" .value=${10}></tc-gauge>`);
+    expect(meter(el).getAttribute("role")).toBe("slider");
+    key(meter(el), "End");
+    await settle();
+    expect(el.value).toBe(100);
+    expect(el.querySelectorAll(".ui-gau__mark:not([data-on])")).toHaveLength(0);
+    const face = el.querySelector<HTMLElement>(".ui-gau__face")!;
+    const box = face.getBoundingClientRect();
+    // Straight up is halfway through the 270° sweep
+    face.dispatchEvent(new PointerEvent("pointerdown", { button: 0, pointerId: 4, clientX: box.left + box.width / 2, clientY: box.top + 2, bubbles: true }));
+    face.dispatchEvent(new PointerEvent("pointerup", { pointerId: 4, bubbles: true }));
+    await settle();
+    expect(el.value).toBe(50);
+  });
+
   test("editable: a slider – arrows by `step`, Page Up / Down by ten, Home / End; tc-value-change, preventable", async () => {
     const el = await fixture<TcGauge>(html`<tc-gauge editable label="Alarm level" .value=${50} .step=${0.5}></tc-gauge>`);
     const m = meter(el);
@@ -191,11 +305,14 @@ describe("tc-gauge", () => {
     function App() {
       const [n, setN] = React.useState(0);
       bump = () => setN((x) => x + 1);
-      return React.createElement(Gauge, { label: "Alarm", editable: true, defaultValue: 20, onValueChange: (v) => void seen.push(v), "data-n": n } as React.ComponentProps<typeof Gauge>);
+      return React.createElement(Gauge, { label: "Alarm", editable: true, defaultValue: 20, variant: "ticks", ticks: 21, onValueChange: (v) => void seen.push(v), "data-n": n } as React.ComponentProps<typeof Gauge>);
     }
     await act(async () => root.render(React.createElement(App)));
     await settle();
     const el = host.querySelector("tc-gauge")!;
+    // The ticks options reach the element
+    expect([el.variant, el.ticks]).toEqual(["ticks", 21]);
+    expect(el.querySelectorAll(".ui-gau__mark")).toHaveLength(21);
     key(meter(el), "ArrowRight");
     await settle();
     await act(async () => bump());
@@ -219,6 +336,8 @@ describe("tc-gauge", () => {
         <tc-gauge label="Storage used" description="Biobank, all racks" unit="%" .value=${72} .bands=${BANDS} .target=${80} .previous=${68} good="down"></tc-gauge>
         <tc-gauge look="clean" variant="semicircle" size="sm" label="Freezer A" unit="°C" .min=${-90} .max=${-60} .value=${-81} .bands=${[{ to: -75, tone: "success", label: "In range" }, { to: -60, tone: "danger", label: "Too warm" }]}></tc-gauge>
         <tc-gauge editable variant="bar" label="Alarm level" .value=${30} .bands=${BANDS} .previous=${40} good="up"></tc-gauge>
+        <tc-gauge look="clean" variant="ticks" label="Run progress" unit="%" .value=${64} .bands=${BANDS} .target=${70}></tc-gauge>
+        <tc-gauge editable variant="ticks" size="lg" label="Fan speed" unit="%" .value=${40}></tc-gauge>
       </div>`);
       await finish(wrap);
       const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });

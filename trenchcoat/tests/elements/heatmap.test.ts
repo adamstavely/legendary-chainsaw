@@ -1,7 +1,7 @@
 /*
  * <tc-heatmap> in real browsers: the grid of rows and columns, shading on a sequential or diverging scale in bins or
  * continuously, no-data cells, the legend and the highest and lowest cells, the tooltip, the grid keyboard, selecting
- * a cell, the crosshair, the table view, data that changes under a selection, controlled use, the React wrapper and
+ * a cell, the crosshair, the table view, words at the legend's ends, the canvas for big matrices, data that changes under a selection, controlled use, the React wrapper and
  * axe in both looks and both themes.
  */
 import { html } from "lit";
@@ -73,6 +73,25 @@ describe("tc-heatmap", () => {
     el.max = 200;
     await settle();
     expect(mix(2, 3)).toBe("53%");
+  });
+
+  test("legendLabels: words at the legend's ends in place of the values, which screen readers still hear", async () => {
+    const el = await make();
+    el.legendLabels = ["Fewer", "More"];
+    await settle();
+    const ends = [...el.querySelectorAll<HTMLElement>(".ui-heat__end")];
+    expect(ends.map(text)).toEqual(["Fewer (0%)", "More (100%)"]);
+    expect(ends.map((e) => text(e.querySelector(".tc-sr-only")))).toEqual(["(0%)", "(100%)"]);
+    expect(text(el.querySelector(".ui-heat__legend"))).toBe("No data Fewer (0%) More (100%)");
+    // Diverging and continuous keep them at the ends
+    el.scale = "diverging";
+    el.midpoint = 50;
+    el.steps = 0;
+    await settle();
+    expect(text(el.querySelector(".ui-heat__legend"))).toBe("No data Fewer (0%) , 50% in the middle, More (100%)");
+    el.legendLabels = undefined;
+    await settle();
+    expect(text(el.querySelector(".ui-heat__legend"))).toBe("No data 0% , 50% in the middle, 100%");
   });
 
   test("diverging: either side of the midpoint, each in its own ink", async () => {
@@ -223,6 +242,160 @@ describe("tc-heatmap", () => {
     expect(getComputedStyle(el.querySelector(".ui-heat__rowhead")!).position).toBe("sticky");
   });
 
+  describe("canvas: above canvas-threshold cells", () => {
+    /** 60 × 60 = 3,600 cells, above the default 2,500: the value rises left to right, row 59 column 59 is the highest */
+    const N = 60;
+    const BIG_ROWS = Array.from({ length: N }, (_, i) => `R${i}`);
+    const BIG_COLS = Array.from({ length: N }, (_, i) => `C${i}`);
+    const BIG = BIG_ROWS.map((_, r) => BIG_COLS.map((_, c) => (r === 3 && c === 3 ? null : c * 10 + r / 100)));
+    const big = async (attrs = html``) => {
+      const wrap = await fixture<HTMLElement>(html`<div style="width: 720px"><tc-heatmap heading="Detector" unit="counts" .rows=${BIG_ROWS} .columns=${BIG_COLS} .values=${BIG}></tc-heatmap>${attrs}</div>`);
+      const el = wrap.querySelector("tc-heatmap")!;
+      const cv = () => el.querySelector<HTMLCanvasElement>(".tc-chart__canvas")!;
+      await expect.poll(() => cv()?.width ?? 0).toBeGreaterThan(300);
+      return { el, cv };
+    };
+    const geo = (el: TcHeatmap) => (el as unknown as { geo: { cw: number; ch: number } }).geo;
+    /** The canvas pixel at the middle of a cell */
+    const px = (el: TcHeatmap, cv: HTMLCanvasElement, r: number, c: number) => {
+      const { cw, ch } = geo(el);
+      const k = cv.width / cv.getBoundingClientRect().width;
+      return [...cv.getContext("2d")!.getImageData(Math.floor((c + 0.5) * cw * k), Math.floor((r + 0.5) * ch * k), 1, 1).data];
+    };
+    const vcell = (el: Element) => el.querySelector<HTMLElement>('[role="gridcell"]')!;
+    /** Points at the middle of a cell on the plot */
+    const point = (el: TcHeatmap, type: string, r: number, c: number) => {
+      const plot = el.querySelector<HTMLElement>(".ui-heat__plot")!;
+      const box = plot.getBoundingClientRect();
+      const { cw, ch } = geo(el);
+      plot.dispatchEvent(new PointerEvent(type, { clientX: box.left + (c + 0.5) * cw, clientY: box.top + (r + 0.5) * ch, bubbles: true, pointerType: "mouse" }));
+    };
+
+    test("the cells are painted on a canvas that fills the width, not drawn as DOM cells; below the threshold they are", async () => {
+      const { el, cv } = await big();
+      expect(el.querySelectorAll(".ui-heat__cell")).toHaveLength(0);
+      expect(el.querySelectorAll("td, th")).toHaveLength(0);
+      expect(cv().getAttribute("aria-hidden")).toBe("true");
+      const plot = el.querySelector<HTMLElement>(".ui-heat__plot")!;
+      expect(Math.abs(cv().getBoundingClientRect().width - plot.getBoundingClientRect().width)).toBeLessThan(1);
+      expect(geo(el).cw * N).toBeCloseTo(plot.getBoundingClientRect().width, 0);
+      // Painted pixels (the track is translucent), darker to the right; the no-data cell isn't a shade
+      const low = px(el, cv(), 10, 0);
+      const high = px(el, cv(), 10, N - 1);
+      expect(low[3]).toBeGreaterThan(0);
+      expect(high[3]).toBeGreaterThan(low[3] - 1);
+      expect(high).not.toEqual(low);
+      expect(px(el, cv(), 3, 3)).not.toEqual(px(el, cv(), 4, 3));
+      // The labels thin out, and the canvas has no values written on it
+      expect(el.querySelectorAll(".ui-heat__ylabel").length).toBeLessThan(N);
+      expect(el.querySelectorAll(".ui-heat__xlabel").length).toBeLessThan(N);
+      el.showValues = true;
+      await settle();
+      expect(el.querySelector(".ui-heat__num")).toBeNull();
+      // A higher threshold: back to DOM cells
+      el.canvasThreshold = 5000;
+      await settle();
+      expect(el.querySelector(".tc-chart__canvas")).toBeNull();
+      expect(el.querySelectorAll(".ui-heat__cell")).toHaveLength(N * N);
+    });
+
+    test("the grid keeps its keyboard: one cell element, placed by aria-rowindex / aria-colindex", async () => {
+      const { el } = await big();
+      const grid = el.querySelector('[role="grid"]')!;
+      expect(document.getElementById(grid.getAttribute("aria-labelledby")!)!.textContent).toBe("Detector");
+      expect(grid.getAttribute("aria-rowcount")).toBe(String(N + 1));
+      expect(grid.getAttribute("aria-colcount")).toBe(String(N + 1));
+      expect(grid.querySelectorAll('[role="gridcell"]')).toHaveLength(1);
+      expect(grid.querySelectorAll('[tabindex="0"]')).toHaveLength(1);
+      const seen: HeatmapSelectedChange[] = [];
+      el.addEventListener("tc-selected-change", (e) => seen.push((e as CustomEvent<HeatmapSelectedChange>).detail));
+      vcell(el).focus();
+      await settle();
+      expect(said(vcell(el))).toBe("R0 · C0: 0 counts");
+      const press = async (k: string, init: KeyboardEventInit = {}) => {
+        key(document.activeElement!, k, init);
+        await settle();
+      };
+      await press("ArrowRight");
+      await press("ArrowDown");
+      expect(document.activeElement).toBe(vcell(el));
+      expect(vcell(el).dataset.cell).toBe("1:1");
+      expect(vcell(el).getAttribute("aria-colindex")).toBe("3");
+      expect(vcell(el).closest('[role="row"]')!.getAttribute("aria-rowindex")).toBe("3");
+      expect(text(grid.querySelector('[role="rowheader"]'))).toBe("R1");
+      expect(text(grid.querySelector('[role="columnheader"]'))).toBe("C1");
+      expect(said(vcell(el))).toBe("R1 · C1: 10.01 counts");
+      // The tooltip follows the keyboard
+      expect(text(el.querySelector(".ui-heat__tip"))).toBe("R1 · C1: 10.01 counts");
+      await press("End", { ctrlKey: true, metaKey: true });
+      expect(vcell(el).dataset.cell).toBe(`${N - 1}:${N - 1}`);
+      await press("PageUp");
+      await press("Home");
+      expect(vcell(el).dataset.cell).toBe("0:0");
+      await press("Enter");
+      expect(el.selected).toEqual({ row: 0, column: 0 });
+      expect(vcell(el).getAttribute("aria-selected")).toBe("true");
+      expect(el.querySelector('[role="status"]')!.textContent).toBe("Selected R0 · C0: 0 counts");
+      await press("Escape");
+      expect(el.selected).toBeNull();
+      expect(seen).toEqual([
+        { selected: { row: 0, column: 0 }, value: 0 },
+        { selected: null, value: undefined },
+      ]);
+    });
+
+    test("pointing shows the tooltip and the crosshair; a click selects and moves the focus there; the Table view has every value", async () => {
+      const { el } = await big();
+      el.crosshair = true;
+      await settle();
+      point(el, "pointermove", 20, 30);
+      await settle();
+      expect(text(el.querySelector(".ui-heat__mark[data-hot] .ui-heat__tip"))).toBe("R20 · C30: 300.2 counts");
+      expect(el.querySelectorAll(".ui-heat__band")).toHaveLength(2);
+      expect(text(el.querySelector(".ui-heat__ylabel[data-hot]"))).toBe("R20");
+      expect(text(el.querySelector(".ui-heat__xlabel[data-hot]"))).toBe("C30");
+      el.querySelector(".ui-heat__plot")!.dispatchEvent(new PointerEvent("pointerleave"));
+      await settle();
+      expect(el.querySelector(".ui-heat__tip")).toBeNull();
+      point(el, "pointerdown", 5, 7);
+      point(el, "click", 5, 7);
+      await settle();
+      expect(el.selected).toEqual({ row: 5, column: 7 });
+      expect(document.activeElement).toBe(vcell(el));
+      expect(vcell(el).dataset.cell).toBe("5:7");
+      expect(vcell(el).hasAttribute("data-selected")).toBe(true);
+      // Moving off the selected cell leaves a mark on it
+      key(vcell(el), "ArrowRight");
+      await settle();
+      expect(el.querySelector(".ui-heat__mark[data-selected]")).not.toBeNull();
+      // Prevented, the selection stays
+      el.addEventListener("tc-selected-change", (e) => e.preventDefault(), { once: true });
+      point(el, "click", 9, 9);
+      await settle();
+      expect(el.selected).toEqual({ row: 5, column: 7 });
+      el.querySelector<HTMLButtonElement>(".ui-heat__toggle")!.click();
+      await settle();
+      expect(el.querySelector(".tc-chart__canvas")).toBeNull();
+      expect(el.querySelectorAll(".ui-heat__table tbody tr")).toHaveLength(N);
+      el.view = "chart";
+      await settle();
+      // Back to the chart: a new canvas, painted again
+      await expect.poll(() => el.querySelector<HTMLCanvasElement>(".tc-chart__canvas")!.width).toBeGreaterThan(300);
+      const cv = el.querySelector<HTMLCanvasElement>(".tc-chart__canvas")!;
+      await expect.poll(() => px(el, cv, 10, N - 1)[3]).toBeGreaterThan(0);
+    });
+
+    test("a data change repaints", async () => {
+      const { el, cv } = await big();
+      const before = px(el, cv(), 10, N - 1);
+      // Reversed: the right side is now the lowest
+      el.values = BIG.map((row) => [...row].reverse());
+      await settle();
+      expect(px(el, cv(), 10, N - 1)).not.toEqual(before);
+      expect(px(el, cv(), 10, 0)).toEqual(before);
+    });
+  });
+
   test("React wrapper: an uncontrolled selection survives re-renders; controlled ones wait for the parent", async () => {
     (globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
     const host = document.createElement("div");
@@ -271,7 +444,10 @@ describe("tc-heatmap", () => {
         <tc-heatmap heading="Instrument use" description="Share of hours booked" unit="%" show-values crosshair .rows=${ROWS} .columns=${COLUMNS} .values=${VALUES} .selected=${{ row: 2, column: 1 }}></tc-heatmap>
         <tc-heatmap look="clean" scale="diverging" .steps=${0} show-values .rows=${["A"]} .columns=${["1", "2", "3"]} .values=${[[-5, 0, 5]]}></tc-heatmap>
         <tc-heatmap view="table" unit="%" .rows=${ROWS} .columns=${COLUMNS} .values=${VALUES}></tc-heatmap>
+        <tc-heatmap heading="Detector" unit="counts" crosshair .legendLabels=${["Fewer", "More"]} .canvasThreshold=${10} .rows=${ROWS} .columns=${COLUMNS} .values=${VALUES} .selected=${{ row: 0, column: 1 }}></tc-heatmap>
       </div>`);
+      const painted = wrap.querySelectorAll("tc-heatmap")[3];
+      painted.querySelector<HTMLElement>('[role="gridcell"]')!.focus();
       const first = wrap.querySelector("tc-heatmap")!;
       cell(first, 1, 1).focus();
       await settle();

@@ -50,7 +50,23 @@
      "attribute": "grid",
      "type": "RadarGrid",
      "default": "\"axes\"",
-     "description": "Bare axes from the centre (\"axes\"), or rings at each quarter as well (\"web\")",
+     "description": "Bare axes from the centre (\"axes\"), or rings as well: polygons (\"web\") or circles (\"circle\")",
+     "readonly": false
+    },
+    {
+     "name": "levels",
+     "attribute": "levels",
+     "type": "number",
+     "default": "4",
+     "description": "How many rings the grid has, evenly spaced out to the edge, when `grid` is \"web\" or \"circle\"",
+     "readonly": false
+    },
+    {
+     "name": "still",
+     "attribute": "still",
+     "type": "boolean",
+     "default": "false",
+     "description": "Draws the shapes in place at once: no growing from the centre and no gliding to new values",
      "readonly": false
     },
     {
@@ -119,7 +135,14 @@
     }
    ],
    "slots": [],
-   "methods": [],
+   "methods": [
+    {
+     "name": "replay",
+     "params": "",
+     "returns": "void",
+     "description": "Grows the shapes from the centre again"
+    }
+   ],
    "ui": "rdr",
    "cssProperties": [
     {
@@ -274,6 +297,14 @@
     {
      "name": "grid",
      "attribute": "grid"
+    },
+    {
+     "name": "levels",
+     "attribute": "levels"
+    },
+    {
+     "name": "still",
+     "attribute": "still"
     },
     {
      "name": "unit",
@@ -459,6 +490,22 @@
     ]
    },
    {
+    "id": "intersection-observer",
+    "name": "IntersectionObserver",
+    "bcd": "api.IntersectionObserver",
+    "versions": {
+     "chrome": "51",
+     "edge": "15",
+     "firefox": "55",
+     "safari": "12.1",
+     "safari_ios": "12.2"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
     "id": "scrollbar-width",
     "name": "scrollbar-width",
     "bcd": "css.properties.scrollbar-width",
@@ -516,16 +563,24 @@
  },
  "runtime": {
   "timers": [],
-  "frames": [],
+  "frames": [
+   "requestAnimationFrame (internal/chart/motion › subscribeTick)",
+   "requestAnimationFrame (internal/chart/motion › loop)"
+  ],
   "animations": 0,
   "observers": [
+   "IntersectionObserver",
    "MutationObserver (internal/base › TcElement)",
    "MutationObserver (internal/controllers › AriaForwardController)"
   ],
-  "clock": [],
+  "clock": [
+   "performance.now() (internal/chart/motion-controller › clock)"
+  ],
   "listeners": [],
   "pauses": {
-   "offscreen": [],
+   "offscreen": [
+    "itself"
+   ],
    "hidden": [],
    "reducedMotion": [
     "CSS",
@@ -535,7 +590,7 @@
   "windowed": false
  },
  "size": {
-  "min": 22277,
-  "gzip": 7514
+  "min": 31429,
+  "gzip": 10763
  }
 }

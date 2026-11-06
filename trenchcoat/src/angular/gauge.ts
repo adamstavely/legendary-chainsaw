@@ -59,13 +59,17 @@ export class Gauge {
   @Input() set good(v: TcGauge["good"]) {
     this.#el.good = v;
   }
-  /** The shape: a 270° dial, a half dial or a straight bar */
+  /** The shape: a 270° dial, a half dial, a straight bar, or a 270° ring of tick marks lit up to the value ("ticks") */
   @Input() set variant(v: TcGauge["variant"]) {
     this.#el.variant = v;
   }
   /** The size of the dial */
   @Input() set size(v: TcGauge["size"]) {
     this.#el.size = v;
+  }
+  /** How many tick marks the ticks ring has (2–120); by default as many as fit the size */
+  @Input() set ticks(v: TcGauge["ticks"] | `${number}`) {
+    this.#el.ticks = typeof v === "string" ? Number(v) : v;
   }
   /** The colour without bands */
   @Input() set tone(v: TcGauge["tone"]) {

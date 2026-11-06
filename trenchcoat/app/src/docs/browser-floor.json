@@ -140,7 +140,21 @@
     "safari_ios": "13.4"
    },
    "progressive": false,
-   "elements": 164
+   "elements": 165
+  },
+  {
+   "id": "intersection-observer",
+   "name": "IntersectionObserver",
+   "bcd": "api.IntersectionObserver",
+   "versions": {
+    "chrome": "51",
+    "edge": "15",
+    "firefox": "55",
+    "safari": "12.1",
+    "safari_ios": "12.2"
+   },
+   "progressive": false,
+   "elements": 150
   },
   {
    "id": "inert",
@@ -155,20 +169,6 @@
    },
    "progressive": false,
    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
-   "elements": 149
-  },
-  {
-   "id": "intersection-observer",
-   "name": "IntersectionObserver",
-   "bcd": "api.IntersectionObserver",
-   "versions": {
-    "chrome": "51",
-    "edge": "15",
-    "firefox": "55",
-    "safari": "12.1",
-    "safari_ios": "12.2"
-   },
-   "progressive": false,
    "elements": 149
   },
   {
