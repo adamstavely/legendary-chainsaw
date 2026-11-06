@@ -134,9 +134,6 @@
     "ProfileMeta": {
       "anyOf": [
         {
-          "type": "string"
-        },
-        {
           "type": "object",
           "properties": {
             "label": {
@@ -150,6 +147,9 @@
             "label"
           ],
           "additionalProperties": false
+        },
+        {
+          "type": "string"
         }
       ],
       "description": "A short fact on the meta line; `tone` puts a coloured dot before it"

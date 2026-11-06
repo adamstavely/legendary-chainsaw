@@ -77,11 +77,11 @@
         "createdAt": {
           "anyOf": [
             {
-              "type": "string",
-              "format": "date-time"
+              "type": "number"
             },
             {
-              "type": "number"
+              "type": "string",
+              "format": "date-time"
             }
           ]
         },

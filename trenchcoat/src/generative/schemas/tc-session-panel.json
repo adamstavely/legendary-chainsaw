@@ -122,13 +122,13 @@
         "icon": {
           "anyOf": [
             {
-              "type": "string"
-            },
-            {
               "type": "array",
               "items": {
                 "type": "string"
               }
+            },
+            {
+              "type": "string"
             }
           ],
           "description": "SVG path data for a 24×24 stroked icon, or several paths"

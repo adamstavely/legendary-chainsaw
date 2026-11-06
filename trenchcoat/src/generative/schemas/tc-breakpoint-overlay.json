@@ -23,11 +23,11 @@
     "hotkey": {
       "anyOf": [
         {
-          "type": "string"
-        },
-        {
           "type": "boolean",
           "const": false
+        },
+        {
+          "type": "string"
         }
       ],
       "description": "Opens and closes it from anywhere (\"alt+shift+o\" is ⌥⇧O on Apple keyboards, Alt Shift O elsewhere); false turns it off"

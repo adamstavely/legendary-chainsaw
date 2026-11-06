@@ -190,10 +190,10 @@
         "body": {
           "anyOf": [
             {
-              "type": "string"
+              "$ref": "#/definitions/JsonValue"
             },
             {
-              "$ref": "#/definitions/JsonValue"
+              "type": "string"
             }
           ],
           "description": "The response: an object is shown in a JSON Viewer, a string as text"
@@ -225,28 +225,28 @@
     "JsonValue": {
       "anyOf": [
         {
-          "type": "null"
-        },
-        {
-          "type": "boolean"
-        },
-        {
-          "type": "number"
-        },
-        {
-          "type": "string"
-        },
-        {
           "type": "array",
           "items": {
             "$ref": "#/definitions/JsonValue"
           }
         },
         {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        },
+        {
+          "type": "number"
+        },
+        {
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/JsonValue"
           }
+        },
+        {
+          "type": "string"
         }
       ],
       "description": "Any JSON value"
