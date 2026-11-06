@@ -51,8 +51,8 @@
     "good": {
       "type": "string",
       "enum": [
-        "up",
-        "down"
+        "down",
+        "up"
       ],
       "description": "Which way is good, to colour the change: \"up\" or \"down\"; unset leaves it neutral"
     },
@@ -60,28 +60,28 @@
       "type": "string",
       "enum": [
         "arc",
-        "semicircle",
-        "bar"
+        "bar",
+        "semicircle"
       ],
       "description": "The shape: a 270° dial, a half dial or a straight bar"
     },
     "size": {
       "type": "string",
       "enum": [
-        "sm",
+        "lg",
         "md",
-        "lg"
+        "sm"
       ],
       "description": "The size of the dial"
     },
     "tone": {
       "type": "string",
       "enum": [
-        "success",
-        "info",
-        "warning",
         "danger",
-        "neutral"
+        "info",
+        "neutral",
+        "success",
+        "warning"
       ],
       "description": "The colour without bands"
     },
@@ -129,11 +129,11 @@
     "GaugeTone": {
       "type": "string",
       "enum": [
-        "success",
+        "danger",
         "info",
         "neutral",
-        "warning",
-        "danger"
+        "success",
+        "warning"
       ]
     }
   }

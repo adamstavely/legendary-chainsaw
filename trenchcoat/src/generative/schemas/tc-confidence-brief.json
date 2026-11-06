@@ -24,8 +24,8 @@
     "confidence": {
       "type": "string",
       "enum": [
-        "low",
         "high",
+        "low",
         "moderate"
       ],
       "description": "How confident the conclusion is – shown beside it; unset shows no level"
@@ -144,8 +144,8 @@
       "type": "string",
       "enum": [
         "data",
-        "model",
         "disagreement",
+        "model",
         "time"
       ]
     }

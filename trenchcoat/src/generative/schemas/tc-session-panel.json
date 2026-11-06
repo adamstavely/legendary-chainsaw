@@ -212,11 +212,11 @@
     "EnvironmentKind": {
       "type": "string",
       "enum": [
-        "computer",
-        "folder",
-        "repo",
         "branch",
-        "custom"
+        "computer",
+        "custom",
+        "folder",
+        "repo"
       ]
     },
     "ChangeItem": {
@@ -263,10 +263,10 @@
     "ChangeState": {
       "type": "string",
       "enum": [
+        "closed",
         "draft",
-        "open",
         "merged",
-        "closed"
+        "open"
       ]
     },
     "CheckCounts": {
@@ -312,12 +312,12 @@
     "SessionPanelSection": {
       "type": "string",
       "enum": [
-        "environment",
-        "context",
-        "connectors",
-        "outputs",
+        "background",
         "changes",
-        "background"
+        "connectors",
+        "context",
+        "environment",
+        "outputs"
       ]
     }
   }

@@ -23,9 +23,9 @@
     "groupBy": {
       "type": "string",
       "enum": [
-        "status",
         "none",
-        "project"
+        "project",
+        "status"
       ],
       "description": "How the unpinned sessions are grouped"
     },
@@ -182,11 +182,11 @@
     "SessionStatus": {
       "type": "string",
       "enum": [
-        "running",
-        "waiting",
-        "idle",
         "done",
-        "failed"
+        "failed",
+        "idle",
+        "running",
+        "waiting"
       ]
     },
     "SessionListActionItem": {

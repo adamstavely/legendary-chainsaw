@@ -80,8 +80,8 @@
         "status": {
           "type": "string",
           "enum": [
-            "running",
-            "done"
+            "done",
+            "running"
           ],
           "description": "\"running\" while its results still come in"
         }
@@ -168,9 +168,9 @@
     "EvalOutcome": {
       "type": "string",
       "enum": [
-        "pass",
-        "fail",
         "error",
+        "fail",
+        "pass",
         "pending"
       ]
     }

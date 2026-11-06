@@ -64,10 +64,10 @@
     "defaultStatus": {
       "type": "string",
       "enum": [
-        "none",
-        "partial",
+        "covered",
         "gap",
-        "covered"
+        "none",
+        "partial"
       ],
       "description": "A cell missing from `coverage`"
     },
@@ -165,9 +165,9 @@
       "type": "string",
       "enum": [
         "covered",
-        "partial",
         "gap",
-        "none"
+        "none",
+        "partial"
       ]
     }
   }

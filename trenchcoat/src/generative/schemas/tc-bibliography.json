@@ -24,10 +24,10 @@
       "type": "string",
       "enum": [
         "apa",
-        "mla",
         "chicago",
         "harvard",
-        "ieee"
+        "ieee",
+        "mla"
       ],
       "description": "The citation style (not `style`, which every element has for CSS). Changed by the user unless tc-citation-style-change is prevented"
     },
@@ -42,8 +42,8 @@
       "type": "string",
       "enum": [
         "author",
-        "year",
-        "title"
+        "title",
+        "year"
       ],
       "description": "The order. Changed by the user unless tc-sort-change is prevented"
     },
@@ -138,8 +138,8 @@
         "book",
         "chapter",
         "report",
-        "web",
-        "thesis"
+        "thesis",
+        "web"
       ]
     },
     "ReferenceAuthor": {

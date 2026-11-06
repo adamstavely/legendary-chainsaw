@@ -24,8 +24,8 @@
     "view": {
       "type": "string",
       "enum": [
-        "diff",
-        "code"
+        "code",
+        "diff"
       ],
       "description": "\"code\" or \"diff\". Changed by the user unless a tc-view-change listener calls preventDefault()"
     },

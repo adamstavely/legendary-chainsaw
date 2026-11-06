@@ -30,9 +30,9 @@
     "fit": {
       "type": "string",
       "enum": [
-        "scale",
+        "contain",
         "cover",
-        "contain"
+        "scale"
       ],
       "description": "How the preview fills its frame: \"cover\", \"contain\", or \"scale\" – laid out at `preview-width` and shrunk to fit"
     },
@@ -52,8 +52,8 @@
     "orientation": {
       "type": "string",
       "enum": [
-        "vertical",
-        "horizontal"
+        "horizontal",
+        "vertical"
       ],
       "description": "\"vertical\" puts the preview above the words; \"horizontal\" beside them, for a list"
     },

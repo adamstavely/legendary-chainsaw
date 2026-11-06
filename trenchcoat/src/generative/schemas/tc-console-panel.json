@@ -141,11 +141,11 @@
     "ConsoleLevel": {
       "type": "string",
       "enum": [
+        "debug",
         "error",
-        "warn",
         "info",
         "log",
-        "debug"
+        "warn"
       ]
     }
   }

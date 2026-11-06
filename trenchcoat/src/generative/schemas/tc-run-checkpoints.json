@@ -15,10 +15,10 @@
     "status": {
       "type": "string",
       "enum": [
-        "running",
         "done",
         "failed",
-        "paused"
+        "paused",
+        "running"
       ],
       "description": "The run: \"running\" (a live run), \"paused\", \"done\", \"failed\" – always set by the app"
     },
@@ -112,8 +112,8 @@
     "RunCheckpointStatus": {
       "type": "string",
       "enum": [
-        "done",
         "active",
+        "done",
         "failed"
       ]
     },

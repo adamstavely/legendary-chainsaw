@@ -129,20 +129,20 @@
     "ContactKind": {
       "type": "string",
       "enum": [
+        "address",
         "email",
-        "phone",
         "messaging",
-        "address"
+        "phone"
       ]
     },
     "ContactTone": {
       "type": "string",
       "enum": [
-        "success",
-        "info",
-        "warning",
         "danger",
-        "neutral"
+        "info",
+        "neutral",
+        "success",
+        "warning"
       ],
       "description": "The tone a verification state is drawn in"
     },

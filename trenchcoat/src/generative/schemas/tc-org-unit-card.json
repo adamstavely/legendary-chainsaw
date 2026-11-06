@@ -138,10 +138,10 @@
         "tone": {
           "type": "string",
           "enum": [
+            "danger",
             "default",
             "success",
-            "warning",
-            "danger"
+            "warning"
           ],
           "description": "\"danger\" marks the value, e.g. over budget; the sub-line should say why"
         }
@@ -281,9 +281,9 @@
     "OrgHealth": {
       "type": "string",
       "enum": [
+        "at-risk",
         "on-track",
-        "watch",
-        "at-risk"
+        "watch"
       ]
     },
     "OrgAction": {

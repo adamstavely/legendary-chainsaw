@@ -55,9 +55,9 @@
     "labels": {
       "type": "string",
       "enum": [
-        "none",
         "below",
-        "beside"
+        "beside",
+        "none"
       ],
       "description": "Show the brand name under each mark or beside it, like a wordmark"
     },

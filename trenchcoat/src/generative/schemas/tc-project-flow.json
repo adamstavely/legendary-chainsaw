@@ -8,8 +8,8 @@
     "theme": {
       "type": "string",
       "enum": [
-        "light",
-        "dark"
+        "dark",
+        "light"
       ],
       "description": "Light or dark cards; without it the scene follows the page theme"
     },

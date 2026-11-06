@@ -226,27 +226,27 @@
     "RoutineFirstRun": {
       "type": "string",
       "enum": [
-        "scheduled",
-        "now"
+        "now",
+        "scheduled"
       ]
     },
     "RoutineNotify": {
       "type": "string",
       "enum": [
-        "never",
         "every-run",
-        "updates",
-        "failures"
+        "failures",
+        "never",
+        "updates"
       ]
     },
     "RoutineFrequency": {
       "type": "string",
       "enum": [
-        "hourly",
         "daily",
+        "hourly",
+        "monthly",
         "weekdays",
-        "weekly",
-        "monthly"
+        "weekly"
       ]
     }
   }

@@ -20,10 +20,10 @@
     "direction": {
       "type": "string",
       "enum": [
-        "up",
+        "auto",
         "down",
         "none",
-        "auto"
+        "up"
       ],
       "description": "Which way to show a change: \"auto\" works it out, \"none\" doesn't highlight"
     },
@@ -49,8 +49,8 @@
         "localeMatcher": {
           "type": "string",
           "enum": [
-            "lookup",
-            "best fit"
+            "best fit",
+            "lookup"
           ]
         },
         "style": {

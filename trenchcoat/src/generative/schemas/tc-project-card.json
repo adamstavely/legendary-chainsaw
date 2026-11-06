@@ -45,8 +45,8 @@
     "trigger": {
       "type": "string",
       "enum": [
-        "hover",
-        "click"
+        "click",
+        "hover"
       ],
       "description": "\"hover\" opens under the pointer (taps and the keyboard still toggle), \"click\" only on click"
     },
@@ -103,12 +103,12 @@
     "ProjectTone": {
       "type": "string",
       "enum": [
-        "red",
         "amber",
-        "green",
         "blue",
-        "violet",
-        "gray"
+        "gray",
+        "green",
+        "red",
+        "violet"
       ]
     },
     "ProjectMember": {

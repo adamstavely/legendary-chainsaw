@@ -17,8 +17,8 @@
       "type": "string",
       "enum": [
         "at-risk",
-        "healthy",
         "drifting",
+        "healthy",
         "stalled"
       ],
       "description": "How the session is going: healthy, drifting, at-risk or stalled; unset hides the pill"
@@ -136,13 +136,13 @@
     "SessionTone": {
       "type": "string",
       "enum": [
-        "neutral",
-        "info",
-        "success",
-        "warning",
         "danger",
+        "info",
+        "neutral",
+        "success",
+        "teal",
         "violet",
-        "teal"
+        "warning"
       ]
     },
     "SessionChip": {

@@ -88,8 +88,8 @@
     "view": {
       "type": "string",
       "enum": [
-        "invoice",
-        "credit"
+        "credit",
+        "invoice"
       ],
       "description": "The sheet in front"
     }

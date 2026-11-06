@@ -17,8 +17,8 @@
     "layout": {
       "type": "string",
       "enum": [
-        "inline",
-        "banner"
+        "banner",
+        "inline"
       ],
       "description": "Where it sits: \"inline\" in a thread, where the content would have been, or \"banner\" across the top of a view"
     },
@@ -111,9 +111,9 @@
         "mark": {
           "type": "string",
           "enum": [
-            "removed",
             "added",
-            "masked"
+            "masked",
+            "removed"
           ]
         }
       },

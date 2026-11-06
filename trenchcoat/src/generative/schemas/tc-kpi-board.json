@@ -211,8 +211,8 @@
         "kind": {
           "type": "string",
           "enum": [
-            "money",
-            "count"
+            "count",
+            "money"
           ],
           "description": "\"money\" runs the value through formatMoney, \"count\" shows a whole number"
         },

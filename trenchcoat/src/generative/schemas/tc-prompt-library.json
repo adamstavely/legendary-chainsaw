@@ -76,12 +76,12 @@
     "PromptTone": {
       "type": "string",
       "enum": [
-        "blue",
-        "violet",
         "amber",
+        "blue",
+        "gray",
         "green",
         "red",
-        "gray"
+        "violet"
       ]
     },
     "PromptVariable": {

@@ -42,9 +42,9 @@
     "order": {
       "type": "string",
       "enum": [
-        "risk",
+        "given",
         "oldest",
-        "given"
+        "risk"
       ],
       "description": "\"risk\" (default): high risk first, then oldest · \"oldest\" · \"given\": as passed"
     },
@@ -143,8 +143,8 @@
         "format": {
           "type": "string",
           "enum": [
-            "text",
-            "code"
+            "code",
+            "text"
           ],
           "description": "\"code\" sets the body as a diff"
         },
@@ -185,8 +185,8 @@
       "type": "string",
       "enum": [
         "high",
-        "medium",
-        "low"
+        "low",
+        "medium"
       ]
     },
     "ReviewField": {

@@ -8,11 +8,11 @@
     "status": {
       "type": "string",
       "enum": [
-        "pending",
-        "warning",
+        "checking",
         "done",
         "failed",
-        "checking"
+        "pending",
+        "warning"
       ],
       "description": "The state: \"pending\", \"checking\", \"done\", \"failed\" or \"warning\""
     },

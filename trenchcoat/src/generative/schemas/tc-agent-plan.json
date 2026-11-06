@@ -15,9 +15,9 @@
     "status": {
       "type": "string",
       "enum": [
+        "done",
         "draft",
-        "running",
-        "done"
+        "running"
       ],
       "description": "\"draft\" = review and edit, \"running\" = executing, \"done\" = finished – always set by the app"
     },
@@ -82,10 +82,10 @@
     "AgentPlanStepStatus": {
       "type": "string",
       "enum": [
-        "pending",
         "active",
         "done",
         "failed",
+        "pending",
         "skipped"
       ]
     }

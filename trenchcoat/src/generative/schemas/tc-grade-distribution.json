@@ -61,11 +61,11 @@
     "GradeTone": {
       "type": "string",
       "enum": [
-        "neutral",
+        "danger",
         "info",
+        "neutral",
         "success",
-        "warning",
-        "danger"
+        "warning"
       ]
     }
   }

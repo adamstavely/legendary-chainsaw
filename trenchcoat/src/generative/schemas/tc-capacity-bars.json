@@ -27,8 +27,8 @@
     "sort": {
       "type": "string",
       "enum": [
-        "none",
-        "load"
+        "load",
+        "none"
       ],
       "description": "\"load\" puts the most loaded first; \"none\" keeps the order given"
     },

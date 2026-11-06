@@ -42,8 +42,8 @@
     "orientation": {
       "type": "string",
       "enum": [
-        "vertical",
-        "horizontal"
+        "horizontal",
+        "vertical"
       ],
       "description": "\"horizontal\" (the default; stacks below 480 px) or \"vertical\""
     },
@@ -167,11 +167,11 @@
     "StatusTone": {
       "type": "string",
       "enum": [
-        "success",
-        "warning",
         "danger",
         "info",
-        "neutral"
+        "neutral",
+        "success",
+        "warning"
       ]
     }
   }

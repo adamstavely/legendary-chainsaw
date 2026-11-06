@@ -9,8 +9,8 @@
       "type": "string",
       "enum": [
         "all-clear",
-        "working",
-        "offline"
+        "offline",
+        "working"
       ],
       "description": "Which scene: \"all-clear\", \"working\" or \"offline\""
     },

@@ -165,27 +165,27 @@
     "QueueJobKind": {
       "type": "string",
       "enum": [
-        "llm",
-        "tool",
         "agent",
-        "human"
+        "human",
+        "llm",
+        "tool"
       ]
     },
     "QueueJobStatus": {
       "type": "string",
       "enum": [
-        "queued",
-        "running",
         "done",
-        "failed"
+        "failed",
+        "queued",
+        "running"
       ]
     },
     "QueueJobPriority": {
       "type": "string",
       "enum": [
         "high",
-        "normal",
-        "low"
+        "low",
+        "normal"
       ]
     },
     "QueueWorker": {

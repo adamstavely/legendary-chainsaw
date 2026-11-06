@@ -171,9 +171,9 @@
       "type": "string",
       "enum": [
         "allow",
-        "require-approval",
         "deny",
-        "hard-stop"
+        "hard-stop",
+        "require-approval"
       ]
     },
     "PolicyMatchedRule": {

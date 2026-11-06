@@ -39,8 +39,8 @@
       "type": "string",
       "enum": [
         "all",
-        "used",
-        "unused"
+        "unused",
+        "used"
       ],
       "description": "Which chunks show: \"all\", \"used\" (by the answer) or \"unused\""
     },
@@ -180,9 +180,9 @@
       "type": "string",
       "enum": [
         "fast",
-        "standard",
+        "lasting",
         "slow",
-        "lasting"
+        "standard"
       ],
       "description": "Built-in decay profiles – fast: hours and days (prices, status, news) · standard: weeks and months · slow: years (reference material) · lasting: never decays"
     },

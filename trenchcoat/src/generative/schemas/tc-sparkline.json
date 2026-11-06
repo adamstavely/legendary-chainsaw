@@ -26,8 +26,8 @@
       "type": "string",
       "enum": [
         "area",
-        "line",
         "bars",
+        "line",
         "win-loss"
       ],
       "description": "How it's drawn"
@@ -59,20 +59,20 @@
     "good": {
       "type": "string",
       "enum": [
-        "up",
-        "down"
+        "down",
+        "up"
       ],
       "description": "Which way is good: \"up\" or \"down\"; with tone \"auto\", it's green when it moved that way and red when it didn't"
     },
     "tone": {
       "type": "string",
       "enum": [
-        "success",
-        "info",
-        "warning",
+        "auto",
         "danger",
+        "info",
         "neutral",
-        "auto"
+        "success",
+        "warning"
       ],
       "description": "The colour: \"auto\" follows `good` (neutral without it), or a fixed tone"
     },

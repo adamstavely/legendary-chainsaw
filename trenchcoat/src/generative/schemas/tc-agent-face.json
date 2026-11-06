@@ -8,15 +8,15 @@
     "state": {
       "type": "string",
       "enum": [
+        "confused",
+        "error",
+        "happy",
         "idle",
         "listening",
-        "thinking",
-        "speaking",
-        "happy",
-        "confused",
         "sleeping",
-        "error",
-        "surprised"
+        "speaking",
+        "surprised",
+        "thinking"
       ],
       "description": "idle · listening · thinking · speaking · happy · confused · sleeping · error · surprised"
     },

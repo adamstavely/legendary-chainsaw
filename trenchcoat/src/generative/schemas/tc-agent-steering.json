@@ -30,9 +30,9 @@
     "status": {
       "type": "string",
       "enum": [
-        "running",
         "done",
-        "paused"
+        "paused",
+        "running"
       ],
       "description": "Where the run is: \"running\", \"paused\" or \"done\" – done disables the field"
     },
@@ -116,8 +116,8 @@
     "SteerStepStatus": {
       "type": "string",
       "enum": [
-        "done",
         "active",
+        "done",
         "pending"
       ]
     },

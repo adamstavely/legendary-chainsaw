@@ -35,10 +35,10 @@
     "tab": {
       "type": "string",
       "enum": [
-        "settings",
         "context",
+        "financials",
         "reports",
-        "financials"
+        "settings"
       ],
       "description": "The section shown: context, reports, financials or settings"
     }
@@ -314,10 +314,10 @@
         "type": {
           "type": "string",
           "enum": [
-            "pdf",
-            "xlsx",
             "csv",
-            "doc"
+            "doc",
+            "pdf",
+            "xlsx"
           ]
         }
       },

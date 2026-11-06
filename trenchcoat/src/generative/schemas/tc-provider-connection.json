@@ -196,9 +196,9 @@
     "ProviderConnectionHealth": {
       "type": "string",
       "enum": [
-        "healthy",
         "auth-failed",
         "expired",
+        "healthy",
         "model-unavailable",
         "unreachable"
       ],

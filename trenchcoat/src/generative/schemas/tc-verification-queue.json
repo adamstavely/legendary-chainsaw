@@ -273,11 +273,11 @@
     "VerificationStatus": {
       "type": "string",
       "enum": [
-        "pending",
-        "verified",
-        "unverifiable",
+        "dismissed",
         "incorrect",
-        "dismissed"
+        "pending",
+        "unverifiable",
+        "verified"
       ],
       "description": "Where a claim stands: not yet reviewed, or the reviewer's verdict"
     },
@@ -307,29 +307,29 @@
     "ClaimMediaType": {
       "type": "string",
       "enum": [
-        "transcript",
-        "video",
         "audio",
         "image",
-        "ocr"
+        "ocr",
+        "transcript",
+        "video"
       ],
       "description": "Read from a medium rather than a text: a machine transcript, a video, a recording, an image, or text read off a scan (OCR)"
     },
     "ClaimMemoryType": {
       "type": "string",
       "enum": [
+        "agent",
         "session",
-        "team",
-        "agent"
+        "team"
       ],
       "description": "Remembered rather than retrieved now: an earlier session, the team's shared knowledge, or another agent's finding"
     },
     "ClaimUncertainty": {
       "type": "string",
       "enum": [
-        "unsettled",
+        "beyond",
         "evidence",
-        "beyond"
+        "unsettled"
       ],
       "description": "Why a claim can't be certain: the world hasn't decided · the evidence is thin · it's beyond what the model can know"
     },
@@ -432,9 +432,9 @@
       "type": "string",
       "enum": [
         "fast",
-        "standard",
+        "lasting",
         "slow",
-        "lasting"
+        "standard"
       ],
       "description": "Built-in decay profiles – fast: hours and days (prices, status, news) · standard: weeks and months · slow: years (reference material) · lasting: never decays"
     },
@@ -462,9 +462,9 @@
     "ValidityBand": {
       "type": "string",
       "enum": [
-        "high",
-        "good",
         "aging",
+        "good",
+        "high",
         "stale"
       ]
     },
@@ -482,10 +482,10 @@
         "status": {
           "type": "string",
           "enum": [
-            "verified",
-            "unverifiable",
+            "dismissed",
             "incorrect",
-            "dismissed"
+            "unverifiable",
+            "verified"
           ],
           "description": "The status it counts as"
         },

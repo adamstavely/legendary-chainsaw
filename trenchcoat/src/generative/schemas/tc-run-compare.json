@@ -20,9 +20,9 @@
         "status": {
           "type": "string",
           "enum": [
-            "running",
             "done",
-            "failed"
+            "failed",
+            "running"
           ]
         },
         "output": {
@@ -72,9 +72,9 @@
         "status": {
           "type": "string",
           "enum": [
-            "running",
             "done",
-            "failed"
+            "failed",
+            "running"
           ]
         },
         "output": {
@@ -112,9 +112,9 @@
     "view": {
       "type": "string",
       "enum": [
-        "steps",
+        "output",
         "prompt",
-        "output"
+        "steps"
       ],
       "description": "The open tab"
     },
@@ -156,8 +156,8 @@
     "RunCompareStepStatus": {
       "type": "string",
       "enum": [
-        "ok",
         "error",
+        "ok",
         "skipped"
       ]
     }

@@ -92,9 +92,9 @@
     "ResponseAction": {
       "type": "string",
       "enum": [
+        "edit",
         "reply",
-        "why",
-        "edit"
+        "why"
       ],
       "description": "The toolbar's actions"
     },

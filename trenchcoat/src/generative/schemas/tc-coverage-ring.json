@@ -24,11 +24,11 @@
     "tone": {
       "type": "string",
       "enum": [
-        "success",
-        "info",
-        "warning",
         "danger",
-        "neutral"
+        "info",
+        "neutral",
+        "success",
+        "warning"
       ],
       "description": "The ring's colour"
     },
@@ -90,11 +90,11 @@
     "CoverageTone": {
       "type": "string",
       "enum": [
-        "success",
+        "danger",
         "info",
         "neutral",
-        "warning",
-        "danger"
+        "success",
+        "warning"
       ]
     }
   }

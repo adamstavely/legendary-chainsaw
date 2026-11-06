@@ -85,20 +85,20 @@
     "CitationIcon": {
       "type": "string",
       "enum": [
+        "contrasting",
         "document",
-        "supporting",
         "mentioning",
-        "contrasting"
+        "supporting"
       ]
     },
     "CitationTone": {
       "type": "string",
       "enum": [
+        "danger",
+        "info",
         "neutral",
         "success",
-        "info",
-        "warning",
-        "danger"
+        "warning"
       ]
     }
   }

@@ -24,8 +24,8 @@
       "type": "string",
       "enum": [
         "name",
-        "risk",
-        "none"
+        "none",
+        "risk"
       ],
       "description": "\"risk\": most at risk first, then by name (default) · \"name\": by name · \"none\": as given"
     },

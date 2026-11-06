@@ -26,8 +26,8 @@
     "mode": {
       "type": "string",
       "enum": [
-        "manual",
-        "auto"
+        "auto",
+        "manual"
       ],
       "description": "Auto hands every unassigned task to the least busy agent on its own; Manual waits for a drag. Changed by the user unless a tc-mode-change listener calls preventDefault()"
     },

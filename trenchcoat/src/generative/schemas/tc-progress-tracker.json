@@ -45,8 +45,8 @@
     "doneStyle": {
       "type": "string",
       "enum": [
-        "strike",
-        "plain"
+        "plain",
+        "strike"
       ],
       "description": "How done steps look: \"strike\" draws a line through them, \"plain\" only grays them"
     },

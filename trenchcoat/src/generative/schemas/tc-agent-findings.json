@@ -193,10 +193,10 @@
     "AgentFindingsStatus": {
       "type": "string",
       "enum": [
-        "queued",
-        "running",
         "done",
-        "failed"
+        "failed",
+        "queued",
+        "running"
       ]
     },
     "AgentFinding": {
@@ -239,11 +239,11 @@
     "AgentFindingSeverity": {
       "type": "string",
       "enum": [
+        "critical",
+        "high",
         "info",
         "low",
-        "medium",
-        "high",
-        "critical"
+        "medium"
       ]
     }
   }

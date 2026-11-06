@@ -127,12 +127,12 @@
     "ToolParameterType": {
       "type": "string",
       "enum": [
-        "string",
-        "number",
-        "integer",
-        "boolean",
         "array",
-        "object"
+        "boolean",
+        "integer",
+        "number",
+        "object",
+        "string"
       ]
     },
     "ToolApprovalOption": {
