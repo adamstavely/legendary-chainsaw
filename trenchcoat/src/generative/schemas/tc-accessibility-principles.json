@@ -1,0 +1,68 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-accessibility-principles.json",
+  "title": "tc-accessibility-principles",
+  "description": "The four kinds of need accessibility serves, above the four principles that serve them, joined by connectors.",
+  "type": "object",
+  "properties": {
+    "labels": {
+      "$ref": "#/definitions/AccessibilityPrinciplesLabels",
+      "description": "The words drawn in: the four needs and the four principles"
+    },
+    "caption": {
+      "type": "string",
+      "description": "Words under the drawing; \"\" (the default) leaves them out"
+    },
+    "label": {
+      "type": "string",
+      "description": "Accessible description; by default a sentence saying which principle serves which need"
+    },
+    "decorative": {
+      "type": "boolean",
+      "description": "Leave the drawing out of the accessibility tree, for when the text beside it says the same"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "AccessibilityPrinciplesLabels": {
+      "type": "object",
+      "properties": {
+        "visual": {
+          "type": "string"
+        },
+        "hearing": {
+          "type": "string"
+        },
+        "motor": {
+          "type": "string"
+        },
+        "cognitive": {
+          "type": "string"
+        },
+        "perceivable": {
+          "type": "string"
+        },
+        "operable": {
+          "type": "string"
+        },
+        "understandable": {
+          "type": "string"
+        },
+        "robust": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "visual",
+        "hearing",
+        "motor",
+        "cognitive",
+        "perceivable",
+        "operable",
+        "understandable",
+        "robust"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

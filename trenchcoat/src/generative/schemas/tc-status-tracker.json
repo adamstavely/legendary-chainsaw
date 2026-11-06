@@ -42,8 +42,8 @@
     "orientation": {
       "type": "string",
       "enum": [
-        "horizontal",
-        "vertical"
+        "vertical",
+        "horizontal"
       ],
       "description": "\"horizontal\" (the default; stacks below 480 px) or \"vertical\""
     },

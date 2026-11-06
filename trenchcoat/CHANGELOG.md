@@ -1,5 +1,29 @@
 # Changelog
 
+## Unreleased – Message Status, Collection Card and Preview Card
+
+- **Message Status** (`tc-message-status`): the quiet row under a sent message – a read receipt (sending, sent,
+  delivered, read, or Not sent with Retry), a relative time that keeps itself fresh, and Copy, Send again, Branch into
+  a new chat and Edit, with cancelable `tc-retry`, `tc-branch` and `tc-edit`.
+- **Collection Card** (`tc-collection-card`): a card that introduces a collection and links into it – up to three
+  previews, the title with its counts, a bold line, a description, the item names that fit in two lines, and Browse →.
+- **Preview Card** (`tc-preview-card`): a gallery tile – a picture or a live component scaled down from its design
+  width, a one-line title and a two-line description, a badge, a horizontal form and a loading skeleton.
+
+## Unreleased – Atomic Design illustration
+
+- **Atomic Design** (`tc-atomic-design`, `AtomicDesign`): atomic design one stage at a time, picked by `stage` – the
+  five stages from abstract to concrete, then atoms (label, input, button), a molecule (a search form), an organism (a
+  site header), a template (the layout in placeholders) and a page (the layout with its content). The same parts carry
+  from stage to stage; the words come from `labels`, and its name is a sentence for the stage.
+
+## Unreleased – Accessibility Principles illustration
+
+- **Accessibility Principles** (`tc-accessibility-principles`, `AccessibilityPrinciples`): the four kinds of need
+  accessibility serves – visual, hearing, motor and cognitive – above the four principles that serve them, with a
+  connector from each principle to its needs. Drawn like the other illustrations, in a 4 : 3 frame so the words fit;
+  the words come from `labels`, and its name is a sentence saying which principle serves which need.
+
 ## Unreleased – Selection Toolbar
 
 - **Selection Toolbar** (`tc-selection-toolbar`): the formatting bar that floats over selected text – quick actions,

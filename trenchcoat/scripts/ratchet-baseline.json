@@ -323,6 +323,9 @@
     "literal duration": 1,
     "literal spacing": 5
   },
+  "src/elements/message-status.ts": {
+    "clock/environment read": 1
+  },
   "src/elements/metrics-dashboard.ts": {
     "clock/environment read": 1
   },

@@ -1,0 +1,66 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-preview-card.json",
+  "title": "tc-preview-card",
+  "description": "A gallery tile: a large preview above a title and a short description, which opens what it previews.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The title, on one line"
+    },
+    "headingLevel": {
+      "type": "number",
+      "description": "The heading's level, 2–6"
+    },
+    "description": {
+      "type": "string",
+      "description": "A line or two under the title"
+    },
+    "src": {
+      "type": "string",
+      "description": "The preview picture; without it the page's children are the preview",
+      "format": "uri-reference",
+      "contentMediaType": "image/*"
+    },
+    "alt": {
+      "type": "string",
+      "description": "What the picture shows; \"\" when the title says it"
+    },
+    "fit": {
+      "type": "string",
+      "enum": [
+        "scale",
+        "cover",
+        "contain"
+      ],
+      "description": "How the preview fills its frame: \"cover\", \"contain\", or \"scale\" – laid out at `preview-width` and shrunk to fit"
+    },
+    "previewWidth": {
+      "type": "number",
+      "description": "The width a scaled preview is laid out at, in pixels"
+    },
+    "badge": {
+      "type": "string",
+      "description": "A short tag at the preview's top right, such as \"New\""
+    },
+    "href": {
+      "type": "string",
+      "description": "Where the card goes; without it the card is a button that fires tc-open",
+      "format": "uri-reference"
+    },
+    "orientation": {
+      "type": "string",
+      "enum": [
+        "vertical",
+        "horizontal"
+      ],
+      "description": "\"vertical\" puts the preview above the words; \"horizontal\" beside them, for a list"
+    },
+    "loading": {
+      "type": "boolean",
+      "description": "Shows a placeholder while the card's content loads"
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,142 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-message-status.json",
+  "title": "tc-message-status",
+  "description": "The row under a sent message: its read receipt, a relative time, and Copy, Send again, Branch and Edit.",
+  "type": "object",
+  "properties": {
+    "receipt": {
+      "type": "string",
+      "enum": [
+        "sending",
+        "failed",
+        "read",
+        "sent",
+        "delivered"
+      ],
+      "description": "Where the message is: \"sending\", \"sent\", \"delivered\", \"read\" or \"failed\""
+    },
+    "time": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "string",
+          "format": "date-time"
+        }
+      ],
+      "description": "When it was sent – a Date, an ISO string or epoch ms. Unset, no time shows"
+    },
+    "now": {
+      "type": "number",
+      "description": "The current time in epoch ms, for tests and stories; unset, the row keeps its own clock"
+    },
+    "text": {
+      "type": "string",
+      "description": "The message text – what Copy puts on the clipboard"
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/MessageStatusAction"
+      },
+      "description": "Which controls to show, in this order. Retry shows anyway while the message has failed"
+    },
+    "align": {
+      "type": "string",
+      "enum": [
+        "end",
+        "start"
+      ],
+      "description": "\"end\" for the person's own message (the default), \"start\" to line up on the left"
+    },
+    "quiet": {
+      "type": "boolean",
+      "description": "Controls stay hidden until the message is hovered or focused (default true; quiet=\"false\" shows them always). Put data-ui-message on the message wrapper"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "controls": {
+          "type": "string"
+        },
+        "sending": {
+          "type": "string"
+        },
+        "sent": {
+          "type": "string"
+        },
+        "delivered": {
+          "type": "string"
+        },
+        "read": {
+          "type": "string"
+        },
+        "failed": {
+          "type": "string"
+        },
+        "copy": {
+          "type": "string"
+        },
+        "copied": {
+          "type": "string"
+        },
+        "copyFailed": {
+          "type": "string"
+        },
+        "sendAgain": {
+          "type": "string"
+        },
+        "retry": {
+          "type": "string"
+        },
+        "sendingAgain": {
+          "type": "string"
+        },
+        "retryFailed": {
+          "type": "string"
+        },
+        "branch": {
+          "type": "string"
+        },
+        "edit": {
+          "type": "string"
+        },
+        "justNow": {
+          "type": "string"
+        },
+        "minutesAgo": {
+          "not": {}
+        },
+        "hoursAgo": {
+          "not": {}
+        },
+        "yesterday": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "Every word the row shows or says, merged over the defaults"
+    },
+    "locale": {
+      "type": "string",
+      "description": "The locale for dates older than yesterday"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "MessageStatusAction": {
+      "type": "string",
+      "enum": [
+        "copy",
+        "retry",
+        "branch",
+        "edit"
+      ]
+    }
+  }
+}
