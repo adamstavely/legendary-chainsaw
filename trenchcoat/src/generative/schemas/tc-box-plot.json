@@ -82,12 +82,6 @@
     "highlight": {
       "anyOf": [
         {
-          "type": "string"
-        },
-        {
-          "type": "number"
-        },
-        {
           "type": "array",
           "items": {
             "type": [
@@ -95,6 +89,12 @@
               "number"
             ]
           }
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
         }
       ],
       "description": "What to emphasise: an index, a label, a list of them, \"max\", \"min\", \"first\", \"last\", \"none\", or a test"

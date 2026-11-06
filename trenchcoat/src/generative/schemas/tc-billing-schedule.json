@@ -96,39 +96,6 @@
             },
             "kind": {
               "type": "string",
-              "const": "product"
-            },
-            "name": {
-              "type": "string"
-            },
-            "repeat": {
-              "$ref": "#/definitions/BillingRepeat"
-            },
-            "price": {
-              "type": "number"
-            },
-            "timing": {
-              "$ref": "#/definitions/BillingTiming"
-            }
-          },
-          "required": [
-            "id",
-            "kind",
-            "name",
-            "repeat",
-            "price",
-            "timing"
-          ],
-          "additionalProperties": false
-        },
-        {
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "string"
-            },
-            "kind": {
-              "type": "string",
               "const": "discount"
             },
             "name": {
@@ -168,6 +135,39 @@
             "kind",
             "name",
             "amount"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "kind": {
+              "type": "string",
+              "const": "product"
+            },
+            "name": {
+              "type": "string"
+            },
+            "repeat": {
+              "$ref": "#/definitions/BillingRepeat"
+            },
+            "price": {
+              "type": "number"
+            },
+            "timing": {
+              "$ref": "#/definitions/BillingTiming"
+            }
+          },
+          "required": [
+            "id",
+            "kind",
+            "name",
+            "repeat",
+            "price",
+            "timing"
           ],
           "additionalProperties": false
         }

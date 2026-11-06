@@ -174,64 +174,6 @@
             },
             "kind": {
               "type": "string",
-              "const": "note"
-            },
-            "author": {
-              "$ref": "#/definitions/ContextPerson"
-            },
-            "when": {
-              "type": "string"
-            },
-            "text": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "id",
-            "kind",
-            "author",
-            "when",
-            "text"
-          ],
-          "additionalProperties": false
-        },
-        {
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "string"
-            },
-            "kind": {
-              "type": "string",
-              "const": "report"
-            },
-            "author": {
-              "$ref": "#/definitions/ContextPerson"
-            },
-            "when": {
-              "type": "string"
-            },
-            "report": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "id",
-            "kind",
-            "author",
-            "when",
-            "report"
-          ],
-          "additionalProperties": false
-        },
-        {
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "string"
-            },
-            "kind": {
-              "type": "string",
               "const": "files"
             },
             "author": {
@@ -285,6 +227,64 @@
             "when",
             "app",
             "connected"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "kind": {
+              "type": "string",
+              "const": "note"
+            },
+            "author": {
+              "$ref": "#/definitions/ContextPerson"
+            },
+            "when": {
+              "type": "string"
+            },
+            "text": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "kind",
+            "author",
+            "when",
+            "text"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "kind": {
+              "type": "string",
+              "const": "report"
+            },
+            "author": {
+              "$ref": "#/definitions/ContextPerson"
+            },
+            "when": {
+              "type": "string"
+            },
+            "report": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "kind",
+            "author",
+            "when",
+            "report"
           ],
           "additionalProperties": false
         }

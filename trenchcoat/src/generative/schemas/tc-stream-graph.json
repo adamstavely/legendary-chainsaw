@@ -12,13 +12,13 @@
     "y": {
       "anyOf": [
         {
+          "$ref": "#/definitions/Accessor%3CRow%2Cnumber%3E"
+        },
+        {
           "type": "array",
           "items": {
             "type": "string"
           }
-        },
-        {
-          "$ref": "#/definitions/Accessor%3CRow%2Cnumber%3E"
         }
       ],
       "description": "The value field; a list of fields draws each as a series (a wide table); by default \"y\""
@@ -75,12 +75,6 @@
     "highlight": {
       "anyOf": [
         {
-          "type": "string"
-        },
-        {
-          "type": "number"
-        },
-        {
           "type": "array",
           "items": {
             "type": [
@@ -88,6 +82,12 @@
               "number"
             ]
           }
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
         }
       ],
       "description": "What to emphasise: an index, a label, a list of them, \"max\", \"min\", \"first\", \"last\", \"none\", or a test"

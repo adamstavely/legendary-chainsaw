@@ -34,11 +34,11 @@
     "hotkey": {
       "anyOf": [
         {
-          "type": "string"
-        },
-        {
           "type": "boolean",
           "const": false
+        },
+        {
+          "type": "string"
         }
       ],
       "description": "Window shortcut that jumps into the search: \"mod+/\" by default, any other combination, or false for none"

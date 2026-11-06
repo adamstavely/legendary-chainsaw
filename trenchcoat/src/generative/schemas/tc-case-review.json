@@ -210,13 +210,13 @@
         "value": {
           "anyOf": [
             {
-              "type": "string"
-            },
-            {
               "type": "array",
               "items": {
                 "type": "string"
               }
+            },
+            {
+              "type": "string"
             }
           ],
           "description": "The value – a string, or several; empty or missing reads `missingLabel`"
@@ -283,13 +283,13 @@
         "value": {
           "anyOf": [
             {
-              "type": "string"
-            },
-            {
               "type": "array",
               "items": {
                 "type": "string"
               }
+            },
+            {
+              "type": "string"
             }
           ]
         },
