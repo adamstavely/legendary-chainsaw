@@ -444,6 +444,15 @@
     ]
   },
   {
+    "tag": "tc-breakpoint-overlay",
+    "name": "BreakpointOverlay",
+    "description": "Which breakpoint the page is at – a badge in the window's corner that opens a panel of every breakpoint, with a",
+    "events": [
+      "tc-open-change",
+      "tc-breakpoint-change"
+    ]
+  },
+  {
     "tag": "tc-budget-burn",
     "name": "BudgetBurn",
     "description": "Budget burn: each item's spend against its budget, with a pace marker and words for ahead, on or behind pace, its",
@@ -1886,6 +1895,14 @@
     ]
   },
   {
+    "tag": "tc-pr-link",
+    "name": "PrLink",
+    "description": "A pull request in running text – its state's mark and owner/repo#number · title as a link, with a card of its state,",
+    "events": [
+      "tc-open-change"
+    ]
+  },
+  {
     "tag": "tc-preview-card",
     "name": "PreviewCard",
     "description": "A gallery tile: a large preview above a title and a short description, which opens what it previews.",
@@ -2548,6 +2565,12 @@
     "tag": "tc-something-wrong",
     "name": "SomethingWrong",
     "description": "Two connected tiles with the line between them broken, for a page or request that failed.",
+    "events": []
+  },
+  {
+    "tag": "tc-soup-cans",
+    "name": "SoupCans",
+    "description": "Three plain soup cans with no labels, standing together at different heights.",
     "events": []
   },
   {

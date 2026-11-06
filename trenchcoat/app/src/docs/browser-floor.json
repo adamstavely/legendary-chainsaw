@@ -11,13 +11,13 @@
    "features": [
     "light-dark"
    ],
-   "elements": 361
+   "elements": 364
   },
   "edge": {
    "features": [
     "light-dark"
    ],
-   "elements": 361
+   "elements": 364
   },
   "firefox": {
    "features": [
@@ -29,13 +29,13 @@
    "features": [
     "light-dark"
    ],
-   "elements": 361
+   "elements": 364
   },
   "safari_ios": {
    "features": [
     "light-dark"
    ],
-   "elements": 361
+   "elements": 364
   }
  },
  "features": [
@@ -52,7 +52,7 @@
    },
    "progressive": false,
    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
-   "elements": 361
+   "elements": 364
   },
   {
    "id": "color-mix",
@@ -67,7 +67,7 @@
    },
    "progressive": false,
    "why": "Tints and washes mixed from the tokens.",
-   "elements": 361
+   "elements": 364
   },
   {
    "id": "is-where",
@@ -82,7 +82,7 @@
    },
    "progressive": false,
    "why": "Every rule is keyed on :where() so the page can override it.",
-   "elements": 361
+   "elements": 364
   },
   {
    "id": "focus-visible",
@@ -97,7 +97,7 @@
    },
    "progressive": false,
    "why": "Focus rings for keyboard users.",
-   "elements": 360
+   "elements": 363
   },
   {
    "id": "container-size",
@@ -126,7 +126,7 @@
     "safari_ios": "14.1"
    },
    "progressive": false,
-   "elements": 177
+   "elements": 180
   },
   {
    "id": "inert",
@@ -141,7 +141,7 @@
    },
    "progressive": false,
    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
-   "elements": 148
+   "elements": 149
   },
   {
    "id": "resize-observer",
@@ -155,7 +155,7 @@
     "safari_ios": "13.4"
    },
    "progressive": false,
-   "elements": 133
+   "elements": 135
   },
   {
    "id": "intersection-observer",
@@ -169,7 +169,7 @@
     "safari_ios": "12.2"
    },
    "progressive": false,
-   "elements": 119
+   "elements": 120
   },
   {
    "id": "has",
@@ -198,7 +198,7 @@
     "safari_ios": "15"
    },
    "progressive": false,
-   "elements": 61
+   "elements": 62
   },
   {
    "id": "individual-transforms",
@@ -300,7 +300,7 @@
     "safari_ios": "14"
    },
    "progressive": false,
-   "elements": 12
+   "elements": 13
   },
   {
    "id": "dialog",
@@ -387,7 +387,7 @@
    },
    "progressive": true,
    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
-   "elements": 361
+   "elements": 364
   },
   {
    "id": "adopted-stylesheets",
@@ -402,7 +402,7 @@
    },
    "progressive": true,
    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
-   "elements": 360
+   "elements": 363
   },
   {
    "id": "scrollbar-width",
@@ -417,7 +417,7 @@
    },
    "progressive": true,
    "without": "Scrollbars keep the browser's default width.",
-   "elements": 78
+   "elements": 79
   },
   {
    "id": "overscroll-contain",
@@ -447,7 +447,7 @@
    },
    "progressive": true,
    "without": "Lists open fixed to the window instead of in the top layer, so a clipping ancestor or a modal can cover them.",
-   "elements": 28
+   "elements": 30
   },
   {
    "id": "at-property",
@@ -515,15 +515,14 @@
    "bcd": "css.properties.backdrop-filter",
    "versions": {
     "chrome": "76",
-    "edge": "17",
+    "edge": "79",
     "firefox": "103",
-    "safari": "9",
-    "safari_ios": "9"
+    "safari": "18",
+    "safari_ios": "18"
    },
    "progressive": true,
    "without": "What's behind a translucent surface isn't blurred; the surface keeps its fill.",
-   "note": "with the -webkit- prefix",
-   "elements": 9
+   "elements": 10
   },
   {
    "id": "text-wrap-balance",

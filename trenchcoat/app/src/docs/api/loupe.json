@@ -65,7 +65,7 @@
      "name": "breakpoints",
      "attribute": null,
      "type": "LoupeBreakpoint[]",
-     "default": "[ { id: \"sm\", label: \"Small\", min: 640 }, { id: \"md\", label: \"Medium\", min: 768 }, { id: \"lg\", label: \"Large\", min: 1024 }, { id: \"xl\", label: \"Extra large\", min: 1280 }, { id: \"2xl\", label: \"2× large\", min: 1536 }, ]",
+     "default": "defaultBreakpoints",
      "description": "The breakpoints the ruler and the panel show",
      "readonly": false
     },
@@ -267,18 +267,7 @@
    ]
   }
  ],
- "functions": [
-  {
-   "name": "breakpointApplies",
-   "signature": "breakpointApplies(bp: LoupeBreakpoint, width: number): void",
-   "description": "Whether a breakpoint applies at this width"
-  },
-  {
-   "name": "breakpointRange",
-   "signature": "breakpointRange(bp: LoupeBreakpoint): void",
-   "description": "A breakpoint's range in words: \"≥ 640 px\", \"≤ 767 px\", \"640–1023 px\""
-  }
- ],
+ "functions": [],
  "react": [
   {
    "component": "Loupe",
@@ -679,7 +668,7 @@
   "windowed": false
  },
  "size": {
-  "min": 48714,
-  "gzip": 14196
+  "min": 48835,
+  "gzip": 14241
  }
 }

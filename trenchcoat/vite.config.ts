@@ -74,7 +74,7 @@ export default defineConfig({
   esbuild: { target: "es2022" },
   // Blocks built on the elements import them as a consumer would, from "trenchcoat/react" (decision O): here that is
   // the source, so the gallery and tests run the elements being edited, not a stale dist
-  resolve: { alias: { ...LIBS, "trenchcoat/react": here("src/elements/react.ts"), "trenchcoat/look-provider": here("src/elements/internal/look.ts") } },
+  resolve: { alias: { ...LIBS, "trenchcoat/react": here("src/elements/react.ts"), "trenchcoat/look-provider": here("src/elements/internal/look.ts"), "trenchcoat/illustrations/spot": here("illustrations/spot") } },
   server: { port: 5199, fs: { allow: [here(".")] } },
   build: { outDir: here("dist-gallery"), emptyOutDir: true },
   test: {
