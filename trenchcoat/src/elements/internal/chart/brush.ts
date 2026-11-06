@@ -6,6 +6,7 @@
  */
 import { svg } from "lit";
 import { txt } from "./axis";
+import { registerChartSheet } from "./element";
 import { formatNumber } from "./format";
 import { textWidth } from "./text";
 
@@ -219,3 +220,5 @@ export const brushCss = /* css */ `
   .tc-brush__chip, .tc-brush__tag-back { stroke: CanvasText; }
 }
 `;
+
+registerChartSheet("tc-brush", brushCss);

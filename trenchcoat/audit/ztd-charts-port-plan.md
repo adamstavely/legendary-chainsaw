@@ -41,9 +41,11 @@ tools with them.
   Korean strings are dropped.
 - **D9 · Canvas fallback stays.** Beeswarm, Bubble, Calendar and Parallel switch to canvas above a mark count, as ztd
   does; the canvas reads its colours from the resolved tokens.
-- **D10 · Spec and server.** `tc-chart` draws any chart from a JSON spec (ztd's spec, schema and validation). The
-  spec joins the generative-UI schema. Server rendering uses the charts' own `model()`/`draw()` through a string
-  renderer (no browser, no Lit SSR). The CLI and MCP server live under `trenchcoat/bin` and `trenchcoat/mcp`.
+- **D10 · Spec and server.** `tc-chart` draws any chart from a JSON spec (ztd's spec shape, its option names accepted).
+  Every chart already has a generative-UI schema, so models place charts through Generated UI's component blocks;
+  the spec route is for tools and data. Server rendering builds the chart off-screen and turns its own Lit template
+  into a string (no browser, no Lit SSR), the tokens resolved for a look and theme. The CLI and MCP commands join the
+  existing `trenchcoat` and `trenchcoat-mcp` rather than separate binaries.
 
 ## Parts (one PR each, merged on green)
 
@@ -66,5 +68,5 @@ tools with them.
 - [x] Part 2
 - [x] Part 3
 - [x] Part 4
-- [ ] Part 5
+- [x] Part 5
 - [ ] Part 6

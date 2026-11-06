@@ -6,10 +6,9 @@
  */
 import { nothing, svg } from "lit";
 import { property } from "lit/decorators.js";
-import { adoptStyles } from "../styles";
 import { numGetter, strGetter } from "./accessor";
 import { txt } from "./axis";
-import { categoricalInk, emphasisInk, TcChartElement, type ChartFrame, type ChartModel } from "./element";
+import { categoricalInk, emphasisInk, registerChartSheet, TcChartElement, type ChartFrame, type ChartModel } from "./element";
 import { arcPath, polar, sum, TAU } from "./geometry";
 import { resolveHighlight } from "./highlight";
 import { dodgeVertical, textWidth, truncate } from "./text";
@@ -61,11 +60,6 @@ export abstract class PieBase<T = Row> extends TcChartElement<Item<T>, T> {
   private slices: Slice<T>[] = [];
   private g = { cx: 0, cy: 0, R: 0, r0: 0, plotH: 0, plotW: 0, legendW: 0, legendRowH: 0, start: 0, legend: "none" as "right" | "bottom" | "none" };
   private outside = new Map<number, { x: number; y: number; anchor: "start" | "end" | "middle" }>();
-
-  override connectedCallback() {
-    adoptStyles("tc-pie", pieCss, this.ownerDocument);
-    super.connectedCallback();
-  }
 
   private rows() {
     const gl = strGetter(this.label, "label");
@@ -240,3 +234,5 @@ const pieCss = /* css */ `
 .tc-pie__total[data-small] { font-size: var(--tc-font-size-xl); }
 .tc-pie__swatch { stroke: var(--tc-border-subtle); stroke-width: 1; }
 `;
+
+registerChartSheet("tc-pie", pieCss);

@@ -60,6 +60,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Capacity Bars** (`capacity-bars.tsx`) – How loaded each person is – their allocation split by what they work on, against their capacity on one shared scale, each piece named with its amount, anyone over capacity marked and counted
 - **Change List** (`change-list.tsx`) – Proposed code changes as compact rows – state, title, where it is, lines added and removed, and its checks, with a menu per row and Show more.
 - **Change Summary** (`change-summary.tsx`) – What moved since last time – one metric per row with a colored trend
+- **Chart** (`chart.tsx`) – Any of the library's charts from a JSON spec – checked first, then drawn with the chart the spec names; what's wrong shown instead of a chart; the same specs draw as SVG on a server
 - **Chat Composer** (`chat-composer.tsx`) – Prompt composer with model picker, voice input, app connections and approval request; an optional toolbar row switches the model, opens model settings and the prompt library, connects or disconnects the page context, and adds a disclaimer line – folding to fit a side pane
 - **Chat History** (`chat-history.tsx`) – Your conversations, grouped by date – search, pin, folders, rename and delete with undo, smooth with thousands of chats
 - **Chat Minimap** (`chat-minimap.tsx`) – A rail of ticks beside a long chat, one per message you sent, longer for longer ones – the one in view lit, the message on hover or with the arrow keys, a click to jump back to it – following the chat as it scrolls

@@ -7,9 +7,8 @@
 import { html, nothing, svg } from "lit";
 import { property, state } from "lit/decorators.js";
 import { fitTickLabels, gridY, thinLabels, txt, yAxisWidth } from "./axis";
-import { adoptStyles } from "../styles";
-import { brushBand, brushCss, ChartBrush, changeRatio, defaultBrushWords, extremeTags, signedPercent, type BrushMode, type BrushRange, type XRange } from "./brush";
-import { AXIS_FONT, categoricalInk, emphasisInk, TcChartElement, type ChartFrame, type ChartModel } from "./element";
+import { brushBand, ChartBrush, changeRatio, defaultBrushWords, extremeTags, signedPercent, type BrushMode, type BrushRange, type XRange } from "./brush";
+import { AXIS_FONT, categoricalInk, emphasisInk, registerChartSheet, TcChartElement, type ChartFrame, type ChartModel } from "./element";
 import { makeTickFormatter } from "./format";
 import { areaPath, linePath, nearestIndex, type Curve } from "./geometry";
 import { resolveHighlight } from "./highlight";
@@ -461,11 +460,6 @@ export abstract class XYChart<T = Row> extends TcChartElement<SeriesDraw, T> {
         : nothing}`;
   }
 
-  override connectedCallback() {
-    adoptStyles("tc-xy", xyCss, this.ownerDocument);
-    adoptStyles("tc-brush", brushCss, this.ownerDocument);
-    super.connectedCallback();
-  }
 }
 
 const xyCss = /* css */ `
@@ -486,3 +480,5 @@ const xyCss = /* css */ `
 .tc-xy__glow { stop-color: var(--tc-plot-accent); stop-opacity: 0.28; }
 .tc-xy__glow[data-end] { stop-opacity: 0; }
 `;
+
+registerChartSheet("tc-xy", xyCss);
