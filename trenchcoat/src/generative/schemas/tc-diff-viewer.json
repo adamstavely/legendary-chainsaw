@@ -114,8 +114,8 @@
       "type": "string",
       "enum": [
         "added",
-        "modified",
         "deleted",
+        "modified",
         "renamed"
       ]
     }

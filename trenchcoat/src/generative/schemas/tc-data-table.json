@@ -81,11 +81,11 @@
         "type": {
           "type": "string",
           "enum": [
-            "title",
-            "tag",
             "link",
             "number",
-            "text"
+            "tag",
+            "text",
+            "title"
           ],
           "description": "title: logo and name · tag: colored pill with a picker · link: underlined URL · number · text"
         },
@@ -130,13 +130,13 @@
       "additionalProperties": {
         "anyOf": [
           {
-            "type": "string"
+            "not": {}
           },
           {
             "type": "number"
           },
           {
-            "not": {}
+            "type": "string"
           }
         ]
       }
@@ -144,12 +144,12 @@
     "TagTone": {
       "type": "string",
       "enum": [
-        "blue",
-        "violet",
-        "pink",
-        "green",
         "amber",
-        "gray"
+        "blue",
+        "gray",
+        "green",
+        "pink",
+        "violet"
       ]
     }
   }

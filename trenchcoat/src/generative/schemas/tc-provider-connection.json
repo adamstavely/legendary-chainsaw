@@ -53,11 +53,11 @@
         "at": {
           "anyOf": [
             {
-              "type": "string",
-              "format": "date-time"
+              "type": "number"
             },
             {
-              "type": "number"
+              "type": "string",
+              "format": "date-time"
             },
             {
               "type": "string"
@@ -196,9 +196,9 @@
     "ProviderConnectionHealth": {
       "type": "string",
       "enum": [
-        "healthy",
         "auth-failed",
         "expired",
+        "healthy",
         "model-unavailable",
         "unreachable"
       ],

@@ -42,9 +42,9 @@
     "status": {
       "type": "string",
       "enum": [
-        "idle",
-        "error",
         "done",
+        "error",
+        "idle",
         "summarising"
       ],
       "description": "Where the summary is: \"idle\", \"summarising\", \"done\" or \"error\""
@@ -82,8 +82,8 @@
     "length": {
       "type": "string",
       "enum": [
-        "short",
-        "detailed"
+        "detailed",
+        "short"
       ],
       "description": "Short or detailed. Changed by the user unless a tc-length-change listener calls preventDefault()"
     },
@@ -101,14 +101,14 @@
     "FileSummaryKind": {
       "type": "string",
       "enum": [
-        "pdf",
+        "audio",
         "doc",
+        "image",
+        "other",
+        "pdf",
         "sheet",
         "slides",
-        "image",
-        "audio",
-        "video",
-        "other"
+        "video"
       ]
     },
     "FileSummaryPoint": {
@@ -173,10 +173,10 @@
     "FileSummaryEntityKind": {
       "type": "string",
       "enum": [
-        "person",
-        "organization",
+        "amount",
         "date",
-        "amount"
+        "organization",
+        "person"
       ]
     }
   }

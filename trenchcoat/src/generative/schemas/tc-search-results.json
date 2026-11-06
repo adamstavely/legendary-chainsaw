@@ -48,9 +48,9 @@
     "status": {
       "type": "string",
       "enum": [
-        "idle",
-        "error",
         "done",
+        "error",
+        "idle",
         "searching"
       ],
       "description": "idle, searching, done or error"
@@ -245,13 +245,13 @@
         "icon": {
           "anyOf": [
             {
-              "type": "string"
-            },
-            {
               "type": "array",
               "items": {
                 "type": "string"
               }
+            },
+            {
+              "type": "string"
             }
           ]
         },

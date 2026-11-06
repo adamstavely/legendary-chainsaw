@@ -8,9 +8,9 @@
     "stack": {
       "type": "string",
       "enum": [
-        "stacked",
         "none",
-        "percent"
+        "percent",
+        "stacked"
       ],
       "description": "\"none\" overlaps the areas, \"stacked\" piles them up, \"percent\" stacks them to 100%; by default stacked when there are several"
     },
@@ -21,13 +21,13 @@
     "y": {
       "anyOf": [
         {
+          "$ref": "#/definitions/Accessor%3CRow%2Cnumber%3E"
+        },
+        {
           "type": "array",
           "items": {
             "type": "string"
           }
-        },
-        {
-          "$ref": "#/definitions/Accessor%3CRow%2Cnumber%3E"
         }
       ],
       "description": "The y field; a list of fields draws each as a series (a wide table); by default \"y\""
@@ -39,8 +39,8 @@
     "curve": {
       "type": "string",
       "enum": [
-        "smooth",
         "linear",
+        "smooth",
         "step"
       ],
       "description": "How lines bend between points: \"smooth\", \"linear\", \"step\" or \"monotone\""
@@ -48,9 +48,9 @@
     "xType": {
       "type": "string",
       "enum": [
-        "number",
+        "band",
         "date",
-        "band"
+        "number"
       ],
       "description": "What x is, when guessing from the values isn't right: \"date\", \"number\" or \"band\""
     },
@@ -70,8 +70,8 @@
     "colorMode": {
       "type": "string",
       "enum": [
-        "highlight",
-        "categorical"
+        "categorical",
+        "highlight"
       ],
       "description": "\"highlight\" paints the emphasised series and leaves the rest quiet; \"categorical\" gives each its own ink"
     },
@@ -94,6 +94,15 @@
       "type": "string",
       "description": "The y axis' title, above it: a unit, \"Requests / min\""
     },
+    "brush": {
+      "type": "string",
+      "enum": [
+        "none",
+        "select",
+        "zoom"
+      ],
+      "description": "Dragging across the plot (or Shift+arrows, then Enter) picks a range of x: \"select\" shows its change, high and low; \"zoom\" narrows the chart to it"
+    },
     "heading": {
       "type": "string",
       "description": "The heading, and the chart's name"
@@ -112,12 +121,6 @@
     "highlight": {
       "anyOf": [
         {
-          "type": "string"
-        },
-        {
-          "type": "number"
-        },
-        {
           "type": "array",
           "items": {
             "type": [
@@ -125,6 +128,12 @@
               "number"
             ]
           }
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
         }
       ],
       "description": "What to emphasise: an index, a label, a list of them, \"max\", \"min\", \"first\", \"last\", \"none\", or a test"
@@ -147,8 +156,8 @@
             "localeMatcher": {
               "type": "string",
               "enum": [
-                "lookup",
-                "best fit"
+                "best fit",
+                "lookup"
               ]
             },
             "style": {
@@ -202,10 +211,10 @@
     "easing": {
       "type": "string",
       "enum": [
-        "linear",
-        "spring",
+        "easeInOut",
         "easeOut",
-        "easeInOut"
+        "linear",
+        "spring"
       ],
       "description": "How marks move: \"spring\", \"easeOut\", \"easeInOut\" or \"linear\""
     },
@@ -228,8 +237,8 @@
     "view": {
       "type": "string",
       "enum": [
-        "table",
-        "chart"
+        "chart",
+        "table"
       ],
       "description": "The chart or the same numbers as a table. Changed by the Table button unless a tc-view-change listener calls preventDefault()"
     },
@@ -243,6 +252,9 @@
           "type": "string"
         },
         "value": {
+          "type": "string"
+        },
+        "share": {
           "type": "string"
         },
         "chart": {
@@ -287,13 +299,13 @@
     "FormatName": {
       "type": "string",
       "enum": [
-        "number",
-        "integer",
-        "percent",
-        "ratio",
         "compact",
         "currency",
-        "decimal"
+        "decimal",
+        "integer",
+        "number",
+        "percent",
+        "ratio"
       ],
       "description": "Number and date formats, through Intl; the default locale is en-US"
     },

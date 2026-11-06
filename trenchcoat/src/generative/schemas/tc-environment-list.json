@@ -86,11 +86,11 @@
     "EnvironmentKind": {
       "type": "string",
       "enum": [
-        "computer",
-        "folder",
-        "repo",
         "branch",
-        "custom"
+        "computer",
+        "custom",
+        "folder",
+        "repo"
       ]
     }
   }

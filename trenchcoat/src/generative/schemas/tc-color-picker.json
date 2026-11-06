@@ -24,9 +24,9 @@
     "format": {
       "type": "string",
       "enum": [
+        "cmyk",
         "hex",
-        "rgb",
-        "cmyk"
+        "rgb"
       ],
       "description": "Which fields show: \"hex\", \"rgb\" or \"cmyk\". Changed by the user unless a tc-format-change listener calls preventDefault()"
     },
@@ -178,9 +178,6 @@
     "ColorPickerSwatch": {
       "anyOf": [
         {
-          "type": "string"
-        },
-        {
           "type": "object",
           "properties": {
             "value": {
@@ -194,6 +191,9 @@
             "value"
           ],
           "additionalProperties": false
+        },
+        {
+          "type": "string"
         }
       ],
       "description": "A swatch: a hex colour, or one with a name (\"Primary\")"

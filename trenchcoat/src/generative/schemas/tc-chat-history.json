@@ -80,11 +80,11 @@
               "type": "number"
             },
             {
-              "type": "string"
-            },
-            {
               "type": "string",
               "format": "date-time"
+            },
+            {
+              "type": "string"
             }
           ],
           "description": "Last activity: epoch ms, an ISO string or a Date"

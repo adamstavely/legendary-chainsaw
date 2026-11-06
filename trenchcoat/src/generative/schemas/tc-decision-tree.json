@@ -73,8 +73,8 @@
       "type": "string",
       "enum": [
         "high",
-        "medium",
-        "low"
+        "low",
+        "medium"
       ]
     },
     "TreeDecisionOption": {
@@ -115,20 +115,20 @@
     "DecisionText": {
       "anyOf": [
         {
-          "type": "string"
-        },
-        {
           "type": "array",
           "items": {
             "anyOf": [
               {
-                "type": "string"
+                "$ref": "#/definitions/DecisionFlag"
               },
               {
-                "$ref": "#/definitions/DecisionFlag"
+                "type": "string"
               }
             ]
           }
+        },
+        {
+          "type": "string"
         }
       ],
       "description": "Plain text, or text with flagged parts in it"

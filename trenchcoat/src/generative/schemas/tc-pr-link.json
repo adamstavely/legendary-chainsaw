@@ -20,10 +20,10 @@
     "state": {
       "type": "string",
       "enum": [
+        "closed",
         "draft",
-        "open",
         "merged",
-        "closed"
+        "open"
       ],
       "description": "Open, draft, merged or closed"
     },

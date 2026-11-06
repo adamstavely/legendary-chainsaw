@@ -42,9 +42,9 @@
     "order": {
       "type": "string",
       "enum": [
-        "risk",
+        "given",
         "oldest",
-        "given"
+        "risk"
       ],
       "description": "\"risk\" (default): high risk first, then oldest · \"oldest\" · \"given\": as passed"
     },
@@ -64,11 +64,11 @@
     "undoTimeout": {
       "anyOf": [
         {
-          "type": "number"
-        },
-        {
           "type": "boolean",
           "const": false
+        },
+        {
+          "type": "number"
         }
       ],
       "description": "How long the Undo chip stays after a decision, in ms – false keeps it until the next decision"
@@ -143,8 +143,8 @@
         "format": {
           "type": "string",
           "enum": [
-            "text",
-            "code"
+            "code",
+            "text"
           ],
           "description": "\"code\" sets the body as a diff"
         },
@@ -185,8 +185,8 @@
       "type": "string",
       "enum": [
         "high",
-        "medium",
-        "low"
+        "low",
+        "medium"
       ]
     },
     "ReviewField": {
@@ -208,20 +208,20 @@
     "ReviewText": {
       "anyOf": [
         {
-          "type": "string"
-        },
-        {
           "type": "array",
           "items": {
             "anyOf": [
               {
-                "type": "string"
+                "$ref": "#/definitions/ReviewFlag"
               },
               {
-                "$ref": "#/definitions/ReviewFlag"
+                "type": "string"
               }
             ]
           }
+        },
+        {
+          "type": "string"
         }
       ],
       "description": "Plain text, or text with flagged spans in it"

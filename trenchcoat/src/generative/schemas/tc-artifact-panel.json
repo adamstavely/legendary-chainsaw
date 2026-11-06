@@ -23,8 +23,8 @@
     "view": {
       "type": "string",
       "enum": [
-        "preview",
-        "diff"
+        "diff",
+        "preview"
       ],
       "description": "\"preview\", or \"diff\" to compare the version with the one before. Changed by the user unless a tc-view-change listener calls preventDefault()"
     },
@@ -75,8 +75,8 @@
         "status": {
           "type": "string",
           "enum": [
-            "writing",
-            "ready"
+            "ready",
+            "writing"
           ],
           "description": "\"writing\" while the run is still producing it: the newest version streams"
         },
@@ -99,10 +99,10 @@
     "ArtifactKind": {
       "type": "string",
       "enum": [
-        "text",
         "code",
         "image",
-        "table"
+        "table",
+        "text"
       ]
     },
     "ArtifactVersion": {
@@ -126,10 +126,10 @@
         "content": {
           "anyOf": [
             {
-              "type": "string"
+              "$ref": "#/definitions/ArtifactTable"
             },
             {
-              "$ref": "#/definitions/ArtifactTable"
+              "type": "string"
             }
           ],
           "description": "Text or code; an image URL; a table (or CSV text)"

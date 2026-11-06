@@ -24,8 +24,8 @@
       "type": "string",
       "enum": [
         "name",
-        "risk",
-        "none"
+        "none",
+        "risk"
       ],
       "description": "\"risk\": most at risk first, then by name (default) · \"name\": by name · \"none\": as given"
     },
@@ -40,11 +40,11 @@
     "filter": {
       "anyOf": [
         {
-          "type": "string",
-          "const": "all"
+          "$ref": "#/definitions/WatchRisk"
         },
         {
-          "$ref": "#/definitions/WatchRisk"
+          "type": "string",
+          "const": "all"
         }
       ],
       "description": "The risk shown. Changed by the user unless a tc-filter-change listener calls preventDefault()"

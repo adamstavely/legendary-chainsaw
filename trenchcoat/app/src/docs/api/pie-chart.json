@@ -195,6 +195,7 @@
     "progressive": false,
     "why": "Tints and washes mixed from the tokens.",
     "via": [
+     "internal/chart/element",
      "tokens.css"
     ]
    },
@@ -388,7 +389,7 @@
   "windowed": false
  },
  "size": {
-  "min": 47679,
-  "gzip": 16976
+  "min": 48790,
+  "gzip": 17273
  }
 }

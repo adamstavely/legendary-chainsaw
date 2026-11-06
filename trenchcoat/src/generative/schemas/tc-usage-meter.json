@@ -45,14 +45,14 @@
     "resetAt": {
       "anyOf": [
         {
-          "type": "string"
-        },
-        {
           "type": "number"
         },
         {
           "type": "string",
           "format": "date-time"
+        },
+        {
+          "type": "string"
         }
       ],
       "description": "When the credits reset – shown as \"Resets in 9 days\""

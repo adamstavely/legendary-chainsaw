@@ -23,11 +23,11 @@
     "filter": {
       "anyOf": [
         {
-          "type": "string",
-          "const": "all"
+          "$ref": "#/definitions/ProblemSeverity"
         },
         {
-          "$ref": "#/definitions/ProblemSeverity"
+          "type": "string",
+          "const": "all"
         }
       ],
       "description": "Which severities show: all, error, warning or info"
@@ -58,9 +58,9 @@
     "status": {
       "type": "string",
       "enum": [
+        "done",
         "idle",
-        "running",
-        "done"
+        "running"
       ],
       "description": "idle, running or done"
     },
@@ -183,8 +183,8 @@
       "type": "string",
       "enum": [
         "error",
-        "warning",
-        "info"
+        "info",
+        "warning"
       ]
     },
     "ProblemListActionItem": {
@@ -199,13 +199,13 @@
         "icon": {
           "anyOf": [
             {
-              "type": "string"
-            },
-            {
               "type": "array",
               "items": {
                 "type": "string"
               }
+            },
+            {
+              "type": "string"
             }
           ]
         },

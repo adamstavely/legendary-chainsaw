@@ -19,13 +19,13 @@
     "versions": {
       "anyOf": [
         {
-          "type": "number"
-        },
-        {
           "type": "array",
           "items": {
             "type": "string"
           }
+        },
+        {
+          "type": "number"
         }
       ],
       "description": "All versions of the message, or just how many there are. From 2 on the version switcher shows"
@@ -45,16 +45,16 @@
     "feedback": {
       "type": "string",
       "enum": [
-        "up",
-        "down"
+        "down",
+        "up"
       ],
       "description": "The vote: \"up\", \"down\" or null for none. Unset, the bar keeps it, starting at `defaultFeedback`"
     },
     "defaultFeedback": {
       "type": "string",
       "enum": [
-        "up",
-        "down"
+        "down",
+        "up"
       ],
       "description": "The vote to start with while `feedback` is unset"
     },
@@ -96,8 +96,8 @@
       "type": "string",
       "enum": [
         "copy",
-        "regenerate",
         "feedback",
+        "regenerate",
         "speak"
       ]
     }

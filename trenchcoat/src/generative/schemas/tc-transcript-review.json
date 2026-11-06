@@ -28,8 +28,8 @@
     "kind": {
       "type": "string",
       "enum": [
-        "video",
-        "audio"
+        "audio",
+        "video"
       ],
       "description": "What `src` is: \"audio\" (default) or \"video\", which shows the picture above the waveform"
     },
@@ -204,12 +204,12 @@
     "TranscriptTone": {
       "type": "string",
       "enum": [
+        "amber",
         "blue",
-        "violet",
-        "teal",
         "pink",
         "rose",
-        "amber"
+        "teal",
+        "violet"
       ],
       "description": "A speaker's chip colour"
     }

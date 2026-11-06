@@ -132,8 +132,8 @@
     "PricingIconName": {
       "type": "string",
       "enum": [
-        "visitors",
         "seats",
+        "visitors",
         "workspaces"
       ],
       "description": "The built-in limit icons"

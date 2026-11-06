@@ -125,10 +125,10 @@
     "TriggerFrequency": {
       "type": "string",
       "enum": [
-        "hourly",
         "daily",
-        "weekly",
-        "monthly"
+        "hourly",
+        "monthly",
+        "weekly"
       ]
     },
     "TriggerActive": {
@@ -171,10 +171,10 @@
     "TriggerOperator": {
       "type": "string",
       "enum": [
-        "is",
-        "is-not",
         "contains",
         "gt",
+        "is",
+        "is-not",
         "lt"
       ]
     },
@@ -226,9 +226,9 @@
         "type": {
           "type": "string",
           "enum": [
-            "text",
             "number",
-            "select"
+            "select",
+            "text"
           ],
           "description": "\"text\" (the default), \"number\", or \"select\" with `options`"
         },

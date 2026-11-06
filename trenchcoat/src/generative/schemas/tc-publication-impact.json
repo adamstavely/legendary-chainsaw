@@ -137,11 +137,11 @@
     "filter": {
       "anyOf": [
         {
-          "type": "string",
-          "const": "all"
+          "$ref": "#/definitions/PublicationFeedbackKind"
         },
         {
-          "$ref": "#/definitions/PublicationFeedbackKind"
+          "type": "string",
+          "const": "all"
         }
       ],
       "description": "The feedback kind shown. Changed by the user unless a tc-filter-change listener calls preventDefault()"
@@ -188,11 +188,11 @@
     "PublicationTone": {
       "type": "string",
       "enum": [
-        "neutral",
+        "danger",
         "info",
+        "neutral",
         "success",
-        "warning",
-        "danger"
+        "warning"
       ]
     },
     "PublicationAuthor": {
@@ -309,9 +309,9 @@
     "PublicationSentiment": {
       "type": "string",
       "enum": [
-        "positive",
         "mixed",
-        "negative"
+        "negative",
+        "positive"
       ]
     }
   }

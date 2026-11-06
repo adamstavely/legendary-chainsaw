@@ -16,8 +16,8 @@
     "kind": {
       "type": "string",
       "enum": [
-        "nps",
-        "csat"
+        "csat",
+        "nps"
       ],
       "description": "\"nps\" for 0–10 answers, \"csat\" for 1–5"
     },

@@ -12,9 +12,9 @@
     "posture": {
       "type": "string",
       "enum": [
-        "stopped",
+        "elevated",
         "normal",
-        "elevated"
+        "stopped"
       ],
       "description": "The posture; unset follows the stops – a stop on everything is \"stopped\", any other stop \"elevated\""
     },
@@ -135,11 +135,11 @@
         "at": {
           "anyOf": [
             {
-              "type": "string",
-              "format": "date-time"
+              "type": "number"
             },
             {
-              "type": "number"
+              "type": "string",
+              "format": "date-time"
             },
             {
               "type": "string"

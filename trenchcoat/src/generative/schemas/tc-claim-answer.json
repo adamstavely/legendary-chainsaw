@@ -226,10 +226,10 @@
     "questionType": {
       "type": "string",
       "enum": [
-        "factual",
         "analytical",
-        "predictive",
-        "opinion"
+        "factual",
+        "opinion",
+        "predictive"
       ],
       "description": "The kind of question the answer replies to, shown as a tag in the head; unset shows none"
     },
@@ -338,22 +338,22 @@
     "ClaimSourceType": {
       "anyOf": [
         {
-          "type": "string",
-          "const": "grounded"
+          "$ref": "#/definitions/ClaimMediaType"
+        },
+        {
+          "$ref": "#/definitions/ClaimMemoryType"
         },
         {
           "type": "string",
-          "const": "model"
+          "const": "grounded"
         },
         {
           "type": "string",
           "const": "inferred"
         },
         {
-          "$ref": "#/definitions/ClaimMediaType"
-        },
-        {
-          "$ref": "#/definitions/ClaimMemoryType"
+          "type": "string",
+          "const": "model"
         }
       ],
       "description": "Where a claim came from: a retrieved source, the model's own knowledge, an inference from other claims – or a medium, or memory"
@@ -361,29 +361,29 @@
     "ClaimMediaType": {
       "type": "string",
       "enum": [
-        "transcript",
-        "video",
         "audio",
         "image",
-        "ocr"
+        "ocr",
+        "transcript",
+        "video"
       ],
       "description": "Read from a medium rather than a text: a machine transcript, a video, a recording, an image, or text read off a scan (OCR)"
     },
     "ClaimMemoryType": {
       "type": "string",
       "enum": [
+        "agent",
         "session",
-        "team",
-        "agent"
+        "team"
       ],
       "description": "Remembered rather than retrieved now: an earlier session, the team's shared knowledge, or another agent's finding"
     },
     "ClaimUncertainty": {
       "type": "string",
       "enum": [
-        "unsettled",
+        "beyond",
         "evidence",
-        "beyond"
+        "unsettled"
       ],
       "description": "Why a claim can't be certain: the world hasn't decided · the evidence is thin · it's beyond what the model can know"
     },
@@ -435,10 +435,10 @@
         "profile": {
           "anyOf": [
             {
-              "$ref": "#/definitions/ValidityProfileName"
+              "$ref": "#/definitions/ValidityProfile"
             },
             {
-              "$ref": "#/definitions/ValidityProfile"
+              "$ref": "#/definitions/ValidityProfileName"
             }
           ],
           "description": "How fast it decays (default \"standard\")"
@@ -473,24 +473,14 @@
           "type": "number"
         },
         {
-          "type": "string"
-        },
-        {
           "type": "string",
           "format": "date-time"
+        },
+        {
+          "type": "string"
         }
       ],
       "description": "A moment: epoch ms, an ISO date string or a Date"
-    },
-    "ValidityProfileName": {
-      "type": "string",
-      "enum": [
-        "fast",
-        "standard",
-        "slow",
-        "lasting"
-      ],
-      "description": "Built-in decay profiles – fast: hours and days (prices, status, news) · standard: weeks and months · slow: years (reference material) · lasting: never decays"
     },
     "ValidityProfile": {
       "type": "object",
@@ -513,12 +503,22 @@
       "additionalProperties": false,
       "description": "The band boundaries, as an age in days: younger than `high` is high, than `good` good, than `aging` aging; older is stale"
     },
+    "ValidityProfileName": {
+      "type": "string",
+      "enum": [
+        "fast",
+        "lasting",
+        "slow",
+        "standard"
+      ],
+      "description": "Built-in decay profiles – fast: hours and days (prices, status, news) · standard: weeks and months · slow: years (reference material) · lasting: never decays"
+    },
     "ValidityBand": {
       "type": "string",
       "enum": [
-        "high",
-        "good",
         "aging",
+        "good",
+        "high",
         "stale"
       ]
     }

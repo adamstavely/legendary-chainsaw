@@ -109,17 +109,17 @@
       "type": "string",
       "enum": [
         "agent",
-        "subagent",
         "llm",
+        "subagent",
         "tool"
       ]
     },
     "TraceSpanStatus": {
       "type": "string",
       "enum": [
-        "running",
         "done",
-        "failed"
+        "failed",
+        "running"
       ]
     },
     "TraceSpan": {

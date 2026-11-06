@@ -156,10 +156,10 @@
       "type": "string",
       "enum": [
         "air",
+        "other",
         "rail",
         "road",
-        "sea",
-        "other"
+        "sea"
       ]
     },
     "TravelSource": {
@@ -184,9 +184,9 @@
     "TravelFlagTone": {
       "type": "string",
       "enum": [
-        "warning",
         "danger",
-        "info"
+        "info",
+        "warning"
       ]
     }
   }

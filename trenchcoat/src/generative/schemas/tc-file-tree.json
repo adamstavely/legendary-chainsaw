@@ -119,13 +119,13 @@
         "icon": {
           "anyOf": [
             {
-              "type": "string"
-            },
-            {
               "type": "array",
               "items": {
                 "type": "string"
               }
+            },
+            {
+              "type": "string"
             }
           ],
           "description": "SVG path data for a 24×24 stroked icon, in place of the one for its kind"
@@ -140,8 +140,8 @@
       "type": "string",
       "enum": [
         "added",
-        "modified",
         "deleted",
+        "modified",
         "untracked"
       ]
     },
@@ -157,13 +157,13 @@
         "icon": {
           "anyOf": [
             {
-              "type": "string"
-            },
-            {
               "type": "array",
               "items": {
                 "type": "string"
               }
+            },
+            {
+              "type": "string"
             }
           ]
         },

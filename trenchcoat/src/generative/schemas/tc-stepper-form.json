@@ -8,7 +8,7 @@
     "steps": {
       "type": "array",
       "items": {
-        "$ref": "#/definitions/StepperFormStep%3Calias-2073358172-74138-74264-2073358172-0-218439%3Cstring%2Cunknown%3E%3E"
+        "$ref": "#/definitions/StepperFormStep%3Calias-1%3Cstring%2Cunknown%3E%3E"
       },
       "description": "The steps in order: id, title, content and the check Continue runs"
     },
@@ -32,7 +32,7 @@
   },
   "additionalProperties": false,
   "definitions": {
-    "StepperFormStep<alias-2073358172-74138-74264-2073358172-0-218439<string,unknown>>": {
+    "StepperFormStep<alias-1<string,unknown>>": {
       "type": "object",
       "properties": {
         "id": {

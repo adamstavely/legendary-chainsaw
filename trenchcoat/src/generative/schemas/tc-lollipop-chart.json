@@ -1,0 +1,221 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-lollipop-chart.json",
+  "title": "tc-lollipop-chart",
+  "description": "One value per item as a stem and a dot, ordered from the largest, the largest emphasised, with values past the dots\nand a table view.",
+  "type": "object",
+  "properties": {
+    "label": {
+      "type": "string",
+      "description": "The item's name field; by default \"label\""
+    },
+    "value": {
+      "type": "string",
+      "description": "The value field; by default \"value\""
+    },
+    "orientation": {
+      "type": "string",
+      "enum": [
+        "horizontal",
+        "vertical"
+      ],
+      "description": "Stems lying down with the names on the left (\"horizontal\") or upright with the names below (\"vertical\")"
+    },
+    "sort": {
+      "type": "boolean",
+      "description": "Orders the items from the largest; sort=\"false\" keeps the data's order"
+    },
+    "heading": {
+      "type": "string",
+      "description": "The heading, and the chart's name"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "data": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Row"
+      },
+      "description": "The rows to draw"
+    },
+    "highlight": {
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": [
+              "string",
+              "number"
+            ]
+          }
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
+        }
+      ],
+      "description": "What to emphasise: an index, a label, a list of them, \"max\", \"min\", \"first\", \"last\", \"none\", or a test"
+    },
+    "format": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/FormatName"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "suffix": {
+              "type": "string"
+            },
+            "prefix": {
+              "type": "string"
+            },
+            "localeMatcher": {
+              "type": "string",
+              "enum": [
+                "best fit",
+                "lookup"
+              ]
+            },
+            "style": {
+              "$ref": "#/definitions/Intl.NumberFormatOptionsStyle"
+            },
+            "currency": {
+              "type": "string"
+            },
+            "currencyDisplay": {
+              "$ref": "#/definitions/Intl.NumberFormatOptionsCurrencyDisplay"
+            },
+            "useGrouping": {
+              "$ref": "#/definitions/Intl.NumberFormatOptionsUseGrouping"
+            },
+            "minimumIntegerDigits": {
+              "type": "number"
+            },
+            "minimumFractionDigits": {
+              "type": "number"
+            },
+            "maximumFractionDigits": {
+              "type": "number"
+            },
+            "minimumSignificantDigits": {
+              "type": "number"
+            },
+            "maximumSignificantDigits": {
+              "type": "number"
+            }
+          }
+        }
+      ],
+      "description": "How values are written: \"number\", \"integer\", \"percent\", \"compact\", \"currency\", Intl options, or a function"
+    },
+    "unit": {
+      "type": "string",
+      "description": "The unit after each value: \"%\", \"ms\", \" runs\""
+    },
+    "locale": {
+      "type": "string",
+      "description": "The language for numbers and dates, e.g. \"de\"; by default the browser's"
+    },
+    "height": {
+      "type": "number",
+      "description": "The plot's height in px; by default the chart's own for its width"
+    },
+    "still": {
+      "type": "boolean",
+      "description": "Draws everything at once: no entrance and no transitions"
+    },
+    "easing": {
+      "type": "string",
+      "enum": [
+        "easeInOut",
+        "easeOut",
+        "linear",
+        "spring"
+      ],
+      "description": "How marks move: \"spring\", \"easeOut\", \"easeInOut\" or \"linear\""
+    },
+    "duration": {
+      "type": "number",
+      "description": "How long a move takes, in ms; by default the chart's own"
+    },
+    "hideLabels": {
+      "type": "boolean",
+      "description": "Leaves the values off the marks"
+    },
+    "hideTooltip": {
+      "type": "boolean",
+      "description": "No tooltip on hover or focus"
+    },
+    "bare": {
+      "type": "boolean",
+      "description": "No card: just the plot, for a chart inside another component"
+    },
+    "view": {
+      "type": "string",
+      "enum": [
+        "chart",
+        "table"
+      ],
+      "description": "The chart or the same numbers as a table. Changed by the Table button unless a tc-view-change listener calls preventDefault()"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "table": {
+          "type": "string"
+        },
+        "empty": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "share": {
+          "type": "string"
+        },
+        "chart": {
+          "type": "string"
+        },
+        "position": {
+          "type": "string"
+        },
+        "more": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The words it shows and says, merged over defaultChartLabels"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "Row": {
+      "type": "object",
+      "additionalProperties": {}
+    },
+    "FormatName": {
+      "type": "string",
+      "enum": [
+        "compact",
+        "currency",
+        "decimal",
+        "integer",
+        "number",
+        "percent",
+        "ratio"
+      ],
+      "description": "Number and date formats, through Intl; the default locale is en-US"
+    },
+    "Intl.NumberFormatOptionsStyle": {},
+    "Intl.NumberFormatOptionsCurrencyDisplay": {},
+    "Intl.NumberFormatOptionsUseGrouping": {
+      "type": "boolean"
+    }
+  }
+}

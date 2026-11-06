@@ -8,6 +8,8 @@ import { h, useControlled } from "./internal";
 export type { BarLayout, BarOrientation } from "../bar-chart";
 export type { ChartLabels, ChartMarkClick, ChartMarkHover, ChartView, ChartViewChange } from "../internal/chart/element";
 export type { ChartEvent } from "../internal/chart/types";
+export type { BrushMode, XRange } from "../internal/chart/brush";
+export type { ChartBrushChange } from "../internal/chart/xy";
 
 const RawBarChart = createComponent({
   tagName: "tc-bar-chart",

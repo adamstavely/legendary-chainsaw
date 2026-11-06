@@ -8,22 +8,22 @@
     "mode": {
       "type": "string",
       "enum": [
-        "strip",
-        "badge"
+        "badge",
+        "strip"
       ],
       "description": "\"badge\" – the mark and the band in words; \"strip\" – one bar per paragraph down a document's margin"
     },
     "observed": {
       "anyOf": [
         {
-          "type": "string"
-        },
-        {
           "type": "number"
         },
         {
           "type": "string",
           "format": "date-time"
+        },
+        {
+          "type": "string"
         }
       ],
       "description": "When the evidence was observed or published: epoch ms, an ISO date string or a Date"
@@ -31,10 +31,10 @@
     "profile": {
       "anyOf": [
         {
-          "$ref": "#/definitions/ValidityProfileName"
+          "$ref": "#/definitions/ValidityProfile"
         },
         {
-          "$ref": "#/definitions/ValidityProfile"
+          "$ref": "#/definitions/ValidityProfileName"
         }
       ],
       "description": "How fast it decays: \"fast\", \"standard\", \"slow\", \"lasting\", or your own band boundaries in days"
@@ -42,10 +42,10 @@
     "band": {
       "type": "string",
       "enum": [
-        "high",
-        "stale",
+        "aging",
         "good",
-        "aging"
+        "high",
+        "stale"
       ],
       "description": "The band, set outright – `observed` and the profile are then ignored"
     },
@@ -142,9 +142,9 @@
       "type": "string",
       "enum": [
         "fast",
-        "standard",
+        "lasting",
         "slow",
-        "lasting"
+        "standard"
       ],
       "description": "Built-in decay profiles – fast: hours and days (prices, status, news) · standard: weeks and months · slow: years (reference material) · lasting: never decays"
     },
@@ -179,10 +179,10 @@
         "profile": {
           "anyOf": [
             {
-              "$ref": "#/definitions/ValidityProfileName"
+              "$ref": "#/definitions/ValidityProfile"
             },
             {
-              "$ref": "#/definitions/ValidityProfile"
+              "$ref": "#/definitions/ValidityProfileName"
             }
           ],
           "description": "How fast it decays (default \"standard\")"
@@ -217,11 +217,11 @@
           "type": "number"
         },
         {
-          "type": "string"
-        },
-        {
           "type": "string",
           "format": "date-time"
+        },
+        {
+          "type": "string"
         }
       ],
       "description": "A moment: epoch ms, an ISO date string or a Date"
@@ -229,9 +229,9 @@
     "ValidityBand": {
       "type": "string",
       "enum": [
-        "high",
-        "good",
         "aging",
+        "good",
+        "high",
         "stale"
       ]
     }

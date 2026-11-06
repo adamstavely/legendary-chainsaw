@@ -16,25 +16,25 @@
     "value": {
       "anyOf": [
         {
-          "type": "string"
-        },
-        {
-          "type": "number"
-        },
-        {
-          "type": "boolean"
-        },
-        {
           "type": "array",
           "items": {
             "$ref": "#/definitions/JsonValue"
           }
         },
         {
+          "type": "boolean"
+        },
+        {
+          "type": "number"
+        },
+        {
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/JsonValue"
           }
+        },
+        {
+          "type": "string"
         }
       ],
       "description": "The document, already parsed. `source` is used when this is undefined"
@@ -108,28 +108,28 @@
     "JsonValue": {
       "anyOf": [
         {
-          "type": "null"
-        },
-        {
-          "type": "boolean"
-        },
-        {
-          "type": "number"
-        },
-        {
-          "type": "string"
-        },
-        {
           "type": "array",
           "items": {
             "$ref": "#/definitions/JsonValue"
           }
         },
         {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        },
+        {
+          "type": "number"
+        },
+        {
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/JsonValue"
           }
+        },
+        {
+          "type": "string"
         }
       ],
       "description": "Any JSON value"

@@ -17,8 +17,8 @@
     "layout": {
       "type": "string",
       "enum": [
-        "inline",
-        "banner"
+        "banner",
+        "inline"
       ],
       "description": "Where it sits: \"inline\" in a thread, where the content would have been, or \"banner\" across the top of a view"
     },
@@ -42,13 +42,13 @@
     "original": {
       "anyOf": [
         {
-          "type": "string"
-        },
-        {
           "type": "array",
           "items": {
             "$ref": "#/definitions/GuardrailSegment"
           }
+        },
+        {
+          "type": "string"
         }
       ],
       "description": "The content as it was, with personal data already masked by the app – text, or segments"
@@ -56,13 +56,13 @@
     "revised": {
       "anyOf": [
         {
-          "type": "string"
-        },
-        {
           "type": "array",
           "items": {
             "$ref": "#/definitions/GuardrailSegment"
           }
+        },
+        {
+          "type": "string"
         }
       ],
       "description": "The content as it went out – text, or segments; leave it out when nothing went out"
@@ -111,9 +111,9 @@
         "mark": {
           "type": "string",
           "enum": [
-            "removed",
             "added",
-            "masked"
+            "masked",
+            "removed"
           ]
         }
       },

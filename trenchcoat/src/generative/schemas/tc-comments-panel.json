@@ -49,8 +49,8 @@
       "type": "string",
       "enum": [
         "all",
-        "questions",
-        "edits"
+        "edits",
+        "questions"
       ],
       "description": "The filter tab"
     },
@@ -73,11 +73,11 @@
         "createdAt": {
           "anyOf": [
             {
-              "type": "string",
-              "format": "date-time"
+              "type": "number"
             },
             {
-              "type": "number"
+              "type": "string",
+              "format": "date-time"
             }
           ],
           "description": "When it was written – a Date or a timestamp"

@@ -12,9 +12,9 @@
     "status": {
       "type": "string",
       "enum": [
-        "success",
         "error",
-        "running"
+        "running",
+        "success"
       ],
       "description": "\"running\" shows a spinner and a live timer, \"success\" a check and the duration, \"error\" \"Failed\" and the message"
     },

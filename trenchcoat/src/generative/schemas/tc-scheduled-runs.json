@@ -45,8 +45,8 @@
     "mode": {
       "type": "string",
       "enum": [
-        "manual",
-        "auto"
+        "auto",
+        "manual"
       ],
       "description": "\"manual\" lets tasks move; \"auto\" plans them. Changed by the user unless a tc-mode-change listener calls preventDefault()"
     },

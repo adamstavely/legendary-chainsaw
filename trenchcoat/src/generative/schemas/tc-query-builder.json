@@ -135,10 +135,10 @@
     "QueryFieldType": {
       "type": "string",
       "enum": [
-        "text",
-        "number",
         "date",
-        "enum"
+        "enum",
+        "number",
+        "text"
       ],
       "description": "A field's kind of value, which decides its operators and its input"
     },
@@ -187,13 +187,13 @@
         "value": {
           "anyOf": [
             {
-              "type": "string"
-            },
-            {
               "type": "array",
               "items": {
                 "type": "string"
               }
+            },
+            {
+              "type": "string"
             }
           ]
         }
@@ -211,16 +211,16 @@
     "QueryOperator": {
       "type": "string",
       "enum": [
+        "after",
+        "any-of",
+        "before",
+        "between",
+        "contains",
+        "gt",
         "is",
         "is-not",
-        "contains",
-        "starts-with",
-        "gt",
         "lt",
-        "between",
-        "before",
-        "after",
-        "any-of"
+        "starts-with"
       ]
     },
     "QueryGroup": {

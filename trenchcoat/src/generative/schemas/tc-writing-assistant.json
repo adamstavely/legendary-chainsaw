@@ -67,8 +67,8 @@
         "role": {
           "type": "string",
           "enum": [
-            "user",
-            "assistant"
+            "assistant",
+            "user"
           ]
         },
         "text": {

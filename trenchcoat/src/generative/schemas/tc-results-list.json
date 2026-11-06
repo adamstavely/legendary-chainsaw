@@ -23,8 +23,8 @@
     "group": {
       "type": "string",
       "enum": [
-        "none",
-        "kind"
+        "kind",
+        "none"
       ],
       "description": "Group results under their kind, or list them as they come"
     },

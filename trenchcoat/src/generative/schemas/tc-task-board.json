@@ -81,11 +81,11 @@
         "estimate": {
           "type": "string",
           "enum": [
-            "XS",
-            "S",
-            "M",
             "L",
-            "XL"
+            "M",
+            "S",
+            "XL",
+            "XS"
           ]
         },
         "labels": {

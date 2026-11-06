@@ -162,11 +162,11 @@
     "AnnotationTone": {
       "type": "string",
       "enum": [
-        "teal",
-        "violet",
         "amber",
         "pink",
-        "rose"
+        "rose",
+        "teal",
+        "violet"
       ],
       "description": "One of the tone token families: --tc-tone-<tone>-bg / -fg / -solid"
     },

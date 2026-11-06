@@ -131,9 +131,9 @@
     "VersionStatus": {
       "type": "string",
       "enum": [
-        "draft",
         "active",
-        "deprecated"
+        "deprecated",
+        "draft"
       ],
       "description": "Where a version stands"
     },
@@ -158,8 +158,8 @@
       "type": "string",
       "enum": [
         "added",
-        "removed",
-        "changed"
+        "changed",
+        "removed"
       ],
       "description": "What a change did to the behaviour"
     }

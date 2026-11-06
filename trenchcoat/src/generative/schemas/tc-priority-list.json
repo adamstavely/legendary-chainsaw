@@ -27,11 +27,11 @@
     "filter": {
       "anyOf": [
         {
-          "type": "string",
-          "const": "all"
+          "$ref": "#/definitions/PriorityHealth"
         },
         {
-          "$ref": "#/definitions/PriorityHealth"
+          "type": "string",
+          "const": "all"
         }
       ],
       "description": "The health shown. Changed by the user unless a tc-filter-change listener calls preventDefault()"
@@ -159,8 +159,8 @@
       "type": "string",
       "enum": [
         "at-risk",
-        "watch",
-        "on-track"
+        "on-track",
+        "watch"
       ]
     }
   }

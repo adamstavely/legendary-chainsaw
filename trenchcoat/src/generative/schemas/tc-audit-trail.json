@@ -27,11 +27,11 @@
     "outcome": {
       "anyOf": [
         {
-          "type": "string",
-          "const": "all"
+          "$ref": "#/definitions/AuditOutcome"
         },
         {
-          "$ref": "#/definitions/AuditOutcome"
+          "type": "string",
+          "const": "all"
         }
       ],
       "description": "Which outcomes show"
@@ -142,9 +142,9 @@
     "AuditOutcome": {
       "type": "string",
       "enum": [
-        "success",
         "denied",
-        "failed"
+        "failed",
+        "success"
       ]
     }
   }

@@ -122,26 +122,26 @@
     "BiometricKind": {
       "type": "string",
       "enum": [
+        "dna",
         "face",
         "fingerprint",
-        "iris",
-        "dna",
-        "voice",
         "gait",
-        "signature",
+        "iris",
+        "other",
         "palm",
-        "other"
+        "signature",
+        "voice"
       ]
     },
     "BiometricState": {
       "type": "string",
       "enum": [
         "enrolled",
-        "on-file",
-        "partial",
+        "expired",
         "in-progress",
         "missing",
-        "expired"
+        "on-file",
+        "partial"
       ],
       "description": "enrolled / on-file: usable · partial: some of it, or low quality · in-progress: being captured or modelled · missing: nothing yet · expired: was enrolled, needs recapture"
     }

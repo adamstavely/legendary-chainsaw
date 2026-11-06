@@ -122,10 +122,10 @@
     "EngagementSignalKind": {
       "type": "string",
       "enum": [
-        "boilerplate",
-        "source-time",
         "batch-dismissal",
-        "repeated-commitment"
+        "boilerplate",
+        "repeated-commitment",
+        "source-time"
       ]
     },
     "EngagementWindow": {

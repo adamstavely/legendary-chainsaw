@@ -35,10 +35,10 @@
     "tab": {
       "type": "string",
       "enum": [
-        "settings",
         "context",
+        "financials",
         "reports",
-        "financials"
+        "settings"
       ],
       "description": "The section shown: context, reports, financials or settings"
     }
@@ -174,64 +174,6 @@
             },
             "kind": {
               "type": "string",
-              "const": "note"
-            },
-            "author": {
-              "$ref": "#/definitions/ContextPerson"
-            },
-            "when": {
-              "type": "string"
-            },
-            "text": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "id",
-            "kind",
-            "author",
-            "when",
-            "text"
-          ],
-          "additionalProperties": false
-        },
-        {
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "string"
-            },
-            "kind": {
-              "type": "string",
-              "const": "report"
-            },
-            "author": {
-              "$ref": "#/definitions/ContextPerson"
-            },
-            "when": {
-              "type": "string"
-            },
-            "report": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "id",
-            "kind",
-            "author",
-            "when",
-            "report"
-          ],
-          "additionalProperties": false
-        },
-        {
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "string"
-            },
-            "kind": {
-              "type": "string",
               "const": "files"
             },
             "author": {
@@ -287,6 +229,64 @@
             "connected"
           ],
           "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "kind": {
+              "type": "string",
+              "const": "note"
+            },
+            "author": {
+              "$ref": "#/definitions/ContextPerson"
+            },
+            "when": {
+              "type": "string"
+            },
+            "text": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "kind",
+            "author",
+            "when",
+            "text"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "kind": {
+              "type": "string",
+              "const": "report"
+            },
+            "author": {
+              "$ref": "#/definitions/ContextPerson"
+            },
+            "when": {
+              "type": "string"
+            },
+            "report": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "kind",
+            "author",
+            "when",
+            "report"
+          ],
+          "additionalProperties": false
         }
       ]
     },
@@ -314,10 +314,10 @@
         "type": {
           "type": "string",
           "enum": [
-            "pdf",
-            "xlsx",
             "csv",
-            "doc"
+            "doc",
+            "pdf",
+            "xlsx"
           ]
         }
       },

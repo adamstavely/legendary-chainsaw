@@ -166,11 +166,11 @@
     "ProcessStatus": {
       "type": "string",
       "enum": [
-        "starting",
-        "running",
-        "stopped",
         "crashed",
-        "exited"
+        "exited",
+        "running",
+        "starting",
+        "stopped"
       ]
     },
     "ProcessListAction": {

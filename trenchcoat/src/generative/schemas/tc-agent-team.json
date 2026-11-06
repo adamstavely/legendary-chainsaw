@@ -53,11 +53,11 @@
     "AgentTeamTool": {
       "type": "string",
       "enum": [
-        "linkedin",
-        "hubspot",
-        "slack",
         "gmail",
-        "salesforce"
+        "hubspot",
+        "linkedin",
+        "salesforce",
+        "slack"
       ]
     }
   }

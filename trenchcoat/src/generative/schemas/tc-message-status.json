@@ -8,25 +8,25 @@
     "receipt": {
       "type": "string",
       "enum": [
-        "sending",
+        "delivered",
         "failed",
         "read",
-        "sent",
-        "delivered"
+        "sending",
+        "sent"
       ],
       "description": "Where the message is: \"sending\", \"sent\", \"delivered\", \"read\" or \"failed\""
     },
     "time": {
       "anyOf": [
         {
-          "type": "string"
-        },
-        {
           "type": "number"
         },
         {
           "type": "string",
           "format": "date-time"
+        },
+        {
+          "type": "string"
         }
       ],
       "description": "When it was sent – a Date, an ISO string or epoch ms. Unset, no time shows"
@@ -132,10 +132,10 @@
     "MessageStatusAction": {
       "type": "string",
       "enum": [
-        "copy",
-        "retry",
         "branch",
-        "edit"
+        "copy",
+        "edit",
+        "retry"
       ]
     }
   }

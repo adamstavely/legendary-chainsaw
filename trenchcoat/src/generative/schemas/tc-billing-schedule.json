@@ -38,11 +38,11 @@
     "duration": {
       "type": "string",
       "enum": [
-        "milestone",
+        "12m",
         "1m",
         "3m",
         "6m",
-        "12m"
+        "milestone"
       ],
       "description": "Phase length"
     },
@@ -80,47 +80,14 @@
     "BillingRepeat": {
       "type": "string",
       "enum": [
-        "once",
         "monthly",
+        "once",
         "quarterly",
         "yearly"
       ]
     },
     "BillingScheduleLine": {
       "anyOf": [
-        {
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "string"
-            },
-            "kind": {
-              "type": "string",
-              "const": "product"
-            },
-            "name": {
-              "type": "string"
-            },
-            "repeat": {
-              "$ref": "#/definitions/BillingRepeat"
-            },
-            "price": {
-              "type": "number"
-            },
-            "timing": {
-              "$ref": "#/definitions/BillingTiming"
-            }
-          },
-          "required": [
-            "id",
-            "kind",
-            "name",
-            "repeat",
-            "price",
-            "timing"
-          ],
-          "additionalProperties": false
-        },
         {
           "type": "object",
           "properties": {
@@ -168,6 +135,39 @@
             "kind",
             "name",
             "amount"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "kind": {
+              "type": "string",
+              "const": "product"
+            },
+            "name": {
+              "type": "string"
+            },
+            "repeat": {
+              "$ref": "#/definitions/BillingRepeat"
+            },
+            "price": {
+              "type": "number"
+            },
+            "timing": {
+              "$ref": "#/definitions/BillingTiming"
+            }
+          },
+          "required": [
+            "id",
+            "kind",
+            "name",
+            "repeat",
+            "price",
+            "timing"
           ],
           "additionalProperties": false
         }

@@ -98,11 +98,11 @@
         "lastSync": {
           "anyOf": [
             {
-              "type": "string",
-              "format": "date-time"
+              "type": "number"
             },
             {
-              "type": "number"
+              "type": "string",
+              "format": "date-time"
             },
             {
               "type": "string"
@@ -136,11 +136,11 @@
     "KnowledgeSourceState": {
       "type": "string",
       "enum": [
-        "queued",
+        "failed",
         "indexing",
-        "ready",
         "paused",
-        "failed"
+        "queued",
+        "ready"
       ]
     },
     "KnowledgeSchedule": {
