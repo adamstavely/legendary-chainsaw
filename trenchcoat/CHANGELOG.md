@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.6.0 – Priority list: columns of the page's own, rows without a tier
+
+- **Priority List:** `figures` – more columns after Work, each `{ id, label, unit? }`, filled from each row's
+  `figures` by id; a missing value leaves its cell empty. Values are right-aligned tabular numbers like the work count,
+  and screen readers hear each with its column's label (“. 2 Last mo.”). The columns line up with their headings for
+  any number of them, and fold away after the work count and before the coverage bar as the element narrows; with
+  figures, the work count goes at 600px instead of 520px.
+- **Priority List:** `priority` is optional, and `badge` gives a row without one a short code (“CEC”) in a neutral
+  badge, read in place of the tier. The badge column widens to fit codes. With `grouped`, those rows come last, under
+  no header. A summary of centres can now look just like the priorities list.
+- **Priority List:** the narrow layouts' column widths now take effect. They were set on the element, which is its own
+  size container and so can't match its own container queries; below 680px the name column could shrink to nothing.
+  They're now set on the list's card, and `--tc-prl-cols` lists the columns after the badge.
+
 ## 0.5.0 – Org unit card: a team's own figures
 
 - **Org Unit Card:** `OrgTeam.figures` – more figures on a team's row, after coverage, gaps and FTE: each an `id`, a
