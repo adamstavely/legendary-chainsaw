@@ -86,12 +86,16 @@ jobs:
         run: npm run build:package
       - if: steps.version.outputs.publish == 'true'
         run: npm publish
-      # The tag marks the commit that was published; it's moved if an earlier attempt left it elsewhere. A tag pushed
-      # with GITHUB_TOKEN doesn't start another run
+      # The tag marks the commit that was published. An existing tag is never moved: bump the version instead. A tag
+      # pushed with GITHUB_TOKEN doesn't start another run
       - name: Tag the release
         if: steps.version.outputs.publish == 'true' && github.ref_type == 'branch'
         env:
           TAG: trenchcoat-v${{ steps.version.outputs.version }}
         run: |
-          git tag -f "$TAG" "$GITHUB_SHA"
-          git push -f origin "refs/tags/$TAG"
+          if git ls-remote --exit-code --tags origin "refs/tags/$TAG" >/dev/null; then
+            echo "::warning::$TAG already exists; left where it is"
+            exit 0
+          fi
+          git tag "$TAG" "$GITHUB_SHA"
+          git push origin "refs/tags/$TAG"

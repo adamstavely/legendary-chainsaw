@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-small-multiples.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-small-multiples.json",
   "title": "tc-small-multiples",
   "description": "One chart repeated in a grid, a panel per value of a field – any chart a spec can draw – on a shared scale, with\none legend and linked pointing.",
   "type": "object",

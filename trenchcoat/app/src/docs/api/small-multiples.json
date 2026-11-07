@@ -233,7 +233,7 @@
   {
    "tag": "tc-small-multiples",
    "className": "TcSmallMultiples",
-   "module": "trenchcoat/small-multiples",
+   "module": "@adamstavely/trenchcoat/small-multiples",
    "data": [
     "spec",
     "data",
@@ -508,7 +508,7 @@
   "windowed": false
  },
  "size": {
-  "min": 454559,
-  "gzip": 145384
+  "min": 454804,
+  "gzip": 145449
  }
 }

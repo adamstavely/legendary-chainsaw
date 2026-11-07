@@ -102,8 +102,8 @@ Dragging is for the pointer only; everything it shows is reachable from the keyb
 <tc-network-graph heading="Co-authors" description="Papers written together this year" drag-nodes></tc-network-graph>
 
 <script type="module">
-  import "trenchcoat/network-graph";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/network-graph";
+  import "@adamstavely/trenchcoat/tokens.css";
   const graph = document.querySelector("tc-network-graph");
   graph.nodes = [
     { id: "I. Ko", group: "Genomics" },
@@ -120,8 +120,8 @@ Dragging is for the pointer only; everything it shows is reachable from the keyb
 ```
 
 ```tsx
-import { NetworkGraph } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { NetworkGraph } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const nodes = [
   { id: "I. Ko", group: "Genomics" },

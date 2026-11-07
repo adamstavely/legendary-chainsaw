@@ -84,8 +84,8 @@ once.
 <tc-hexbin-chart heading="Calibration readings" x-label="Room temperature (°C)" y-label="Drift"></tc-hexbin-chart>
 
 <script type="module">
-  import "trenchcoat/hexbin-chart";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/hexbin-chart";
+  import "@adamstavely/trenchcoat/tokens.css";
   const chart = document.querySelector("tc-hexbin-chart");
   chart.x = "temperature";
   chart.y = "drift";
@@ -98,8 +98,8 @@ once.
 ```
 
 ```tsx
-import { HexbinChart } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { HexbinChart } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 export function Readings({ readings }: { readings: { temperature: number; drift: number; size: number }[] }) {
   return <HexbinChart title="Calibration readings" data={readings} x="temperature" y="drift" value="size" aggregate="mean" xLabel="Room temperature (°C)" yLabel="Drift" onMarkClick={(e) => console.log(e.label)} />;

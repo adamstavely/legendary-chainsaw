@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "trenchcoat/generative/schemas/tc-rose-chart.json",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-rose-chart.json",
   "title": "tc-rose-chart",
   "description": "Equal-angle wedges whose area shows each item's value – a polar area chart – stacked by series if wanted, with the\nlargest emphasised, round-value rings and a table view.",
   "type": "object",

@@ -213,7 +213,7 @@
   {
    "tag": "tc-hexbin-chart",
    "className": "TcHexbinChart",
-   "module": "trenchcoat/hexbin-chart",
+   "module": "@adamstavely/trenchcoat/hexbin-chart",
    "data": [
     "x",
     "y",
@@ -512,7 +512,7 @@
   "windowed": false
  },
  "size": {
-  "min": 50418,
-  "gzip": 17822
+  "min": 50434,
+  "gzip": 17829
  }
 }

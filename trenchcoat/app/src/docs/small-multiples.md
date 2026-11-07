@@ -82,8 +82,8 @@ in any chart. Moving with the arrows lights the same x in the other panels too.
 <tc-small-multiples facet="lab" sort="value"></tc-small-multiples>
 
 <script type="module">
-  import "trenchcoat/small-multiples";
-  import "trenchcoat/tokens.css";
+  import "@adamstavely/trenchcoat/small-multiples";
+  import "@adamstavely/trenchcoat/tokens.css";
   document.querySelector("tc-small-multiples").spec = {
     type: "line",
     title: "Samples processed by lab",
@@ -99,8 +99,8 @@ in any chart. Moving with the arrows lights the same x in the other panels too.
 ```
 
 ```tsx
-import { SmallMultiples } from "trenchcoat/react";
-import "trenchcoat/tokens.css";
+import { SmallMultiples } from "@adamstavely/trenchcoat/react";
+import "@adamstavely/trenchcoat/tokens.css";
 
 const rows = [
   { lab: "Genomics", month: "2026-01", samples: 182 },
