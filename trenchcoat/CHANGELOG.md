@@ -15,6 +15,8 @@
 - **Side Nav:** `--tc-snav-brand-size`, `--tc-snav-brand-weight` and `--tc-snav-logo-size` size the product's name and
   logo from the page, defaulting to today's look (the bar's font size, semibold, 28px). The logo is capped at the
   rail's inner width, so the collapsed rail still centres it whole.
+- **Side Nav:** `--tc-snav-head-gap` – the space between the brand's row and the first item, open or folded into the
+  rail. It defaults to `--tc-space-2`, as today, and leaves the space between the bar's other parts alone.
 
 ## 0.6.0 – Priority list: columns of the page's own, rows without a tier
 

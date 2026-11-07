@@ -28,7 +28,7 @@ icon-only rail.
 
 ## Anatomy
 
-1. **Head** `.ui-snav__head` – the brand and the collapse button
+1. **Head** `.ui-snav__head` – the brand and the collapse button; `--tc-snav-head-gap` is the space under it
 2. **Brand** `.ui-snav__brand` – the logo and the product's name, a link when `brand-href` is set; the name's size
    and weight are `--tc-snav-brand-size` and `--tc-snav-brand-weight`, the logo's box `--tc-snav-logo-size`
 3. **Collapse** `.ui-snav__toggle` – folds the bar into a rail and back
@@ -44,13 +44,14 @@ Standard is a gray bar, like the page behind a white panel, with the current ite
 bar with a hairline edge and the current item tinted in the accent. `--tc-snav-width` and `--tc-snav-rail` on
 `tc-side-nav` set the width open and as a rail; `--tc-snav-icon` sets the icons' size.
 
-The brand takes its size from the page too:
+The brand takes its size and the space under it from the page too:
 
 | Property | What it sets | Default |
 |---|---|---|
 | `--tc-snav-brand-size` | The product name's font size | The bar's own size (`--tc-font-size-md`) |
 | `--tc-snav-brand-weight` | The product name's weight | `--tc-font-weight-semibold` |
 | `--tc-snav-logo-size` | The logo's width and height | 28px, never more than the rail's inner width (44px by default) |
+| `--tc-snav-head-gap` | The space between the brand's row and the first item, open or as a rail | `--tc-space-2`, the space between the bar's other parts |
 
 A 32px logo and an xl name (`--tc-snav-brand-size: var(--tc-font-size-xl)`) fit beside the collapse button at the
 default width for a short name like a product's; a longer one is cut off with an ellipsis. Folded into the rail, the

@@ -276,6 +276,37 @@ describe("tc-side-nav", () => {
     expect(capped.right).toBeLessThanOrEqual(rail.right);
   });
 
+  test("--tc-snav-head-gap sets only the space under the head, open and as a rail; by default it's the bar's gap", async () => {
+    const space = (el: Element, token: string) => {
+      const probe = document.createElement("span");
+      probe.style.width = `var(${token})`;
+      probe.style.position = "absolute";
+      el.append(probe);
+      const w = probe.getBoundingClientRect().width;
+      probe.remove();
+      return w;
+    };
+    const under = (el: Element) => el.querySelector(".ui-snav__nav")!.getBoundingClientRect().top - el.querySelector(".ui-snav__head")!.getBoundingClientRect().bottom;
+    const between = (el: Element) => el.querySelector("p")!.getBoundingClientRect().top - el.querySelector(".ui-snav__nav")!.getBoundingClientRect().bottom;
+    const plain = await fixture<TcSideNav>(html`<tc-side-nav brand="Intellect" collapsible .items=${ITEMS} style="height: 480px"><p>Footer</p></tc-side-nav>`);
+    expect(under(plain)).toBeCloseTo(space(plain, "--tc-space-2"), 0);
+    const gap = between(plain);
+
+    const el = await fixture<TcSideNav>(html`<tc-side-nav brand="Intellect" collapsible .items=${ITEMS} style="height: 480px; --tc-snav-head-gap: var(--tc-space-6)"><p>Footer</p></tc-side-nav>`);
+    const six = space(el, "--tc-space-6");
+    expect(under(el)).toBeCloseTo(six, 0);
+    // The bar's other gaps stay as they were
+    expect(between(el)).toBeCloseTo(gap, 0);
+    // (The rail hides the page's children, so the token is measured above)
+    el.collapsed = true;
+    await finish(el);
+    expect(under(el)).toBeCloseTo(six, 0);
+    // Smaller than the bar's gap works too
+    el.style.setProperty("--tc-snav-head-gap", "0px");
+    await settle();
+    expect(under(el)).toBeCloseTo(0, 0);
+  });
+
   test("an item without an icon shows its first letter; no brand, no head content", async () => {
     const el = await fixture<TcSideNav>(html`<tc-side-nav .items=${[{ id: "a", label: "Archive" }]}></tc-side-nav>`);
     expect(text(el.querySelector(".ui-snav__initial"))).toBe("A");

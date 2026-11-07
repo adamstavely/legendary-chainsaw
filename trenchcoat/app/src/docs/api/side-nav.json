@@ -142,6 +142,14 @@
      ]
     },
     {
+     "name": "--tc-snav-head-gap",
+     "value": "var(--tc-space-2)",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    },
+    {
      "name": "--tc-snav-brand-weight",
      "value": "var(--tc-font-weight-semibold)",
      "looks": [
@@ -510,7 +518,7 @@
   "windowed": false
  },
  "size": {
-  "min": 22108,
-  "gzip": 7202
+  "min": 22369,
+  "gzip": 7303
  }
 }
