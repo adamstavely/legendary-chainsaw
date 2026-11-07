@@ -9,7 +9,8 @@ related: line-chart, area-chart, breakdown-chart, kpi-chart
 Values by category as bars. One series draws one bar per category, the highest taking the accent and the rest
 kept quiet, so the eye lands on what matters; `highlight` picks a different one, or several. Several series sit side
 by side (`layout="grouped"`), on top of each other (`"stacked"`) or stacked to 100% (`"percent"`), each in its own
-chart ink and named in the legend. `orientation="horizontal"` lays the bars down for long category names.
+chart ink and named in the legend. `orientation="horizontal"` lays the bars down for long category names. `yDomain` fixes
+the value axis's range, so several charts side by side share one scale (Small Multiples sets it for you).
 
 Values sit at the bars' ends, thinned when they'd overlap. The bars grow from the baseline when the chart scrolls into
 view and glide to new values when the data changes. Ported from ztd-charts (MIT).

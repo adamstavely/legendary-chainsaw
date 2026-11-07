@@ -1,0 +1,445 @@
+{
+ "elements": [
+  {
+   "tag": "tc-rose-chart",
+   "className": "TcRoseChart",
+   "description": "Equal-angle wedges whose area shows each item's value – a polar area chart – stacked by series if wanted, with the\nlargest emphasised, round-value rings and a table view.",
+   "properties": [
+    {
+     "name": "label",
+     "attribute": null,
+     "type": "Accessor<T, string> | undefined",
+     "default": "undefined",
+     "description": "The wedge's name field; by default \"label\"",
+     "readonly": false
+    },
+    {
+     "name": "value",
+     "attribute": null,
+     "type": "Accessor<T, number> | undefined",
+     "default": "undefined",
+     "description": "The value field; by default \"value\"",
+     "readonly": false
+    },
+    {
+     "name": "series",
+     "attribute": null,
+     "type": "Accessor<T, string> | undefined",
+     "default": "undefined",
+     "description": "The series field: each wedge is split into a ring per series, stacked out from the centre",
+     "readonly": false
+    },
+    {
+     "name": "startAngle",
+     "attribute": "start-angle",
+     "type": "number",
+     "default": "0",
+     "description": "Where the first wedge starts, in degrees clockwise from 12 o'clock",
+     "readonly": false
+    },
+    {
+     "name": "innerRadius",
+     "attribute": "inner-radius",
+     "type": "number",
+     "default": "0",
+     "description": "A hole in the middle, as a share of the radius (0–0.6)",
+     "readonly": false
+    },
+    {
+     "name": "roseLabels",
+     "attribute": null,
+     "type": "Partial<RoseLabels>",
+     "default": "{}",
+     "description": "The rose chart's own words, merged over defaultRoseLabels",
+     "readonly": false
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-view-change",
+     "detail": "",
+     "description": "The Table button was pressed ({ view }: ChartViewChange); cancelable – prevented, `view` stays as it was",
+     "cancelable": true
+    },
+    {
+     "name": "tc-mark-hover",
+     "detail": "",
+     "description": "The pointer or keyboard moved to a wedge, or off them ({ event }: ChartMarkHover)",
+     "cancelable": false
+    },
+    {
+     "name": "tc-mark-click",
+     "detail": "",
+     "description": "A wedge was clicked, or picked with Enter or Space ({ event }: ChartMarkClick)",
+     "cancelable": false
+    }
+   ],
+   "slots": [],
+   "methods": [],
+   "ui": "rse",
+   "cssProperties": [],
+   "tokens": [
+    "--tc-plot-bg"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "RoseChart",
+   "exported": true,
+   "props": [
+    {
+     "name": "title",
+     "type": "string",
+     "optional": true,
+     "description": "The heading, and the chart's name"
+    },
+    {
+     "name": "view",
+     "type": "ChartView",
+     "optional": true,
+     "description": "The chart or the table – controlled when given"
+    },
+    {
+     "name": "defaultView",
+     "type": "ChartView",
+     "optional": true,
+     "description": "The view on mount when `view` isn't controlled"
+    },
+    {
+     "name": "onViewChange",
+     "type": "(view: ChartView) => void",
+     "optional": true,
+     "description": "The Table button was pressed"
+    },
+    {
+     "name": "onMarkHover",
+     "type": "(event: ChartEvent | null) => void",
+     "optional": true,
+     "description": "The pointer or keyboard moved to a mark (null: off them)"
+    },
+    {
+     "name": "onMarkClick",
+     "type": "(event: ChartEvent) => void",
+     "optional": true,
+     "description": "A mark was clicked, or picked with Enter or Space"
+    }
+   ],
+   "hides": [
+    "heading",
+    "view",
+    "children"
+   ],
+   "events": {
+    "tc-view-change": null,
+    "tc-mark-hover": "onMarkHover",
+    "tc-mark-click": "onMarkClick"
+   }
+  }
+ ],
+ "changelog": [],
+ "frameworks": [
+  {
+   "tag": "tc-rose-chart",
+   "className": "TcRoseChart",
+   "module": "trenchcoat/rose-chart",
+   "data": [
+    "label",
+    "value",
+    "series",
+    "roseLabels"
+   ],
+   "attributes": [
+    {
+     "name": "startAngle",
+     "attribute": "start-angle"
+    },
+    {
+     "name": "innerRadius",
+     "attribute": "inner-radius"
+    }
+   ],
+   "events": [
+    {
+     "name": "tc-view-change",
+     "cancelable": true
+    },
+    {
+     "name": "tc-mark-hover",
+     "cancelable": false
+    },
+    {
+     "name": "tc-mark-click",
+     "cancelable": false
+    }
+   ],
+   "controlled": [],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "internal/chart/element",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "container-size",
+    "name": "Container size queries",
+    "bcd": "css.at-rules.container",
+    "versions": {
+     "chrome": "105",
+     "edge": "105",
+     "firefox": "110",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": false,
+    "why": "Components adapt to the width they're given, not the window's.",
+    "via": [
+     "internal/chart/element"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "internal/kit",
+     "internal/chart/element"
+    ]
+   },
+   {
+    "id": "object-hasown",
+    "name": "Object.hasOwn()",
+    "bcd": "javascript.builtins.Object.hasOwn",
+    "versions": {
+     "chrome": "93",
+     "edge": "93",
+     "firefox": "92",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "via": [
+     "internal/chart/accessor"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "internal/base",
+     "internal/chart/element",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "resize-observer",
+    "name": "ResizeObserver",
+    "bcd": "api.ResizeObserver",
+    "versions": {
+     "chrome": "64",
+     "edge": "79",
+     "firefox": "69",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "via": [
+     "internal/chart/element"
+    ]
+   },
+   {
+    "id": "intersection-observer",
+    "name": "IntersectionObserver",
+    "bcd": "api.IntersectionObserver",
+    "versions": {
+     "chrome": "51",
+     "edge": "15",
+     "firefox": "55",
+     "safari": "12.1",
+     "safari_ios": "12.2"
+    },
+    "progressive": false,
+    "via": [
+     "internal/chart/element"
+    ]
+   },
+   {
+    "id": "scrollbar-width",
+    "name": "scrollbar-width",
+    "bcd": "css.properties.scrollbar-width",
+    "versions": {
+     "chrome": "121",
+     "edge": "121",
+     "firefox": "64",
+     "safari": "18.2",
+     "safari_ios": "18.2"
+    },
+    "progressive": true,
+    "without": "Scrollbars keep the browser's default width.",
+    "via": [
+     "internal/chart/element"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "internal/chart/element",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [],
+  "frames": [
+   "requestAnimationFrame (internal/chart/motion › subscribeTick)",
+   "requestAnimationFrame (internal/chart/motion › loop)"
+  ],
+  "animations": 0,
+  "observers": [
+   "ResizeObserver (internal/chart/element › TcChartElement)",
+   "IntersectionObserver (internal/chart/element › TcChartElement)",
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)"
+  ],
+  "clock": [
+   "performance.now() (internal/chart/motion-controller › clock)"
+  ],
+  "listeners": [
+   "document pointerdown (internal/chart/element › TcChartElement)"
+  ],
+  "pauses": {
+   "offscreen": [
+    "internal/chart/element › TcChartElement"
+   ],
+   "hidden": [],
+   "reducedMotion": [
+    "CSS (internal/kit › kitCss)",
+    "CSS (internal/chart/element › chartCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 48976,
+  "gzip": 17432
+ }
+}

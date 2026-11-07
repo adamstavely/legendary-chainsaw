@@ -556,7 +556,7 @@
   "windowed": false
  },
  "size": {
-  "min": 64256,
-  "gzip": 22334
+  "min": 64448,
+  "gzip": 22404
  }
 }

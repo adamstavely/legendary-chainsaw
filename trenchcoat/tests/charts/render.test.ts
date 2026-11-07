@@ -48,7 +48,7 @@ describe("chart rendering without a browser", async () => {
       open: 10 + i, high: 14 + i, low: 8 + i, close: 11 + i, size: 1 + i, rank: (i % 3) + 1, target2: 60,
     }));
     for (const t of chartTypes.filter((d) => !d.pageOnly)) {
-      const encoding: Record<string, Record<string, string | string[]>> = { bullet: { target: "target2" }, bubble: { x: "value", y: "y" }, combo: { x: "label", bars: ["value"], lines: ["y"] } };
+      const encoding: Record<string, Record<string, string | string[]>> = { bullet: { target: "target2" }, bubble: { x: "value", y: "y" }, combo: { x: "label", bars: ["value"], lines: ["y"] }, hexbin: { x: "value", y: "y" } };
       // A Venn diagram's rows name sets, not fields
       const venn = [{ sets: ["A"], size: 12 }, { sets: ["B"], size: 9 }, { sets: ["A", "B"], size: 4 }];
       const spec = { type: t.type, data: t.type === "venn" ? venn : rows, encoding: encoding[t.type], options: t.type === "parallel" ? { dimensions: ["value", "y", "start"] } : undefined };

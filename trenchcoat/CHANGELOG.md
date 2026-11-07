@@ -1,5 +1,23 @@
 # Changelog
 
+## Unreleased – Charts: Rose, Hexbin, Network Graph and Small Multiples
+
+- **Rose Chart:** a polar area (Nightingale rose) chart – equal-angle wedges whose area shows each value, the largest
+  emphasised; stacked by `series` with a legend; `start-angle` and `inner-radius`; round-value rings on chips.
+- **Hexbin Chart:** many x–y points gathered into hexagons shaded by `aggregate` – count, or the sum or mean of a
+  `value` – with a ramp legend and the densest ringed; the hexagons grow on large data so 50,000 points stay in SVG.
+- **Network Graph:** any nodes and links laid out by a deterministic force simulation – same data, same picture; a
+  change glides from the last layout. Groups take their own inks with a legend, the most-linked are named, a node's
+  neighbourhood lights on hover or focus, `drag-nodes` lets the pointer pin nodes, and links move to a canvas past
+  `canvas-threshold` nodes. Nodes can come from link rows alone, so specs can draw it.
+- **Small Multiples:** one chart from a spec repeated in a grid, a panel per value of `facet`, on a shared scale
+  (`shared="y"` for Line, Area and Bar), with one legend, pointing linked across the panels, `sort` and columns that
+  fit the width.
+- **Bar Chart:** `yDomain`, a fixed value range, as Line and Area have.
+- **Chart base:** `linkActive(key)` lights a mark from outside without a tooltip or event – what Small Multiples uses.
+- **`tc-chart`, the CLI and MCP tools:** 39 chart types (`rose`, `hexbin`, `network`); `suggestCharts` proposes a
+  hexbin for thousands of points, a rose for a 7-, 12- or 24-step cycle and a network graph for looping links.
+
 ## Unreleased – Charts: Histogram, Combo Chart, Venn Diagram, trend lines and bands
 
 Charts the library still lacked after the ztd-charts port – not from ztd.

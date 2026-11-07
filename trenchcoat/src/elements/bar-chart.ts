@@ -54,12 +54,14 @@ export class TcBarChart<T = Row> extends TcChartElement<Seg, T> {
   @property() accessor orientation: BarOrientation = "vertical";
   /** Orders one series' bars from the largest */
   @property({ type: Boolean }) accessor sort = false;
+  /** A fixed value range, [low, high], to compare several charts on one scale; keep 0 inside it. Not for "percent" */
+  @property({ attribute: false }) accessor yDomain: [number, number] | undefined = undefined;
 
   protected override readonly kind = "Bar chart";
   protected override readonly icon = barIcon;
   protected override defaultDuration = 750;
   protected override stagger = 60;
-  protected override modelKeys = ["x", "y", "series", "layout", "orientation", "sort"];
+  protected override modelKeys = ["x", "y", "series", "layout", "orientation", "sort", "yDomain"];
 
   private sm: SeriesModel<T> = { type: "band", keys: [], xnum: [], labels: [], series: [], values: [], rows: [] };
   private segs: Seg[] = [];
@@ -128,7 +130,7 @@ export class TcBarChart<T = Row> extends TcChartElement<Seg, T> {
 
     const vals = segs.flatMap((s) => [s.v0, s.v1]);
     const [mn, mx] = extent(vals.length ? vals : [0, 1]);
-    const dom: [number, number] = layout === "percent" ? [0, 100] : fitDomain(mn, mx, horizontal ? Math.max(2, Math.round(W / 120)) : Math.max(2, Math.round(H / 70)));
+    const dom: [number, number] = layout === "percent" ? [0, 100] : this.yDomain ?? fitDomain(mn, mx, horizontal ? Math.max(2, Math.round(W / 120)) : Math.max(2, Math.round(H / 70)));
     const tickFmt = layout === "percent" ? (v: number) => `${v}%` : makeTickFormatter(this.format, f.locale, Math.max(Math.abs(dom[0]), Math.abs(dom[1])));
     const showValues = !this.hideLabels && (single || layout !== "grouped" || nS <= 3);
     const catW = horizontal ? Math.min(W * 0.32, Math.max(...model.labels.map((l) => textWidth(l, AXIS_FONT, 600)), 24) + 10) : 0;

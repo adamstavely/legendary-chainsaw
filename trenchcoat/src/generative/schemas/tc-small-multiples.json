@@ -1,0 +1,270 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "trenchcoat/generative/schemas/tc-small-multiples.json",
+  "title": "tc-small-multiples",
+  "description": "One chart repeated in a grid, a panel per value of a field – any chart a spec can draw – on a shared scale, with\none legend and linked pointing.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading; by default the spec's title, else \"{chart} by {facet}\""
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading; by default the spec's description"
+    },
+    "spec": {
+      "type": "object",
+      "properties": {
+        "$schema": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/definitions/SpecData"
+        },
+        "encoding": {
+          "type": "object",
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              {
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "options": {
+          "type": "object",
+          "additionalProperties": {}
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "data"
+      ],
+      "additionalProperties": false,
+      "description": "The chart as JSON, as tc-chart takes it – the rows are split by `facet`"
+    },
+    "facet": {
+      "type": "string",
+      "description": "The field whose values make the panels"
+    },
+    "type": {
+      "type": "string",
+      "description": "The chart type, without a spec: \"line\", \"bar\", \"donut\"…"
+    },
+    "data": {
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": {}
+          }
+        },
+        {
+          "type": "object",
+          "properties": {
+            "csv": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "csv"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "url": {
+              "type": "string"
+            },
+            "format": {
+              "type": "string",
+              "enum": [
+                "auto",
+                "csv",
+                "json"
+              ]
+            },
+            "select": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "url"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "values": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": {}
+              }
+            }
+          },
+          "required": [
+            "values"
+          ],
+          "additionalProperties": false
+        }
+      ],
+      "description": "The rows, without a spec"
+    },
+    "encoding": {
+      "type": "object",
+      "additionalProperties": {
+        "anyOf": [
+          {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          {
+            "type": "string"
+          }
+        ]
+      },
+      "description": "Channel → field, without a spec"
+    },
+    "options": {
+      "type": "object",
+      "additionalProperties": {},
+      "description": "The chart's other properties, without a spec"
+    },
+    "columns": {
+      "type": "number",
+      "description": "How many panels in a row; by default as many as fit at `min-panel-width`"
+    },
+    "minPanelWidth": {
+      "type": "number",
+      "description": "The narrowest a panel gets before the grid drops a column, in px"
+    },
+    "sort": {
+      "type": "string",
+      "enum": [
+        "alpha",
+        "data",
+        "value"
+      ],
+      "description": "The panels' order: the data's (\"data\"), by name (\"alpha\"), or the largest total first (\"value\")"
+    },
+    "shared": {
+      "type": "string",
+      "enum": [
+        "both",
+        "none",
+        "y"
+      ],
+      "description": "Which scales the panels share: the value axis (\"y\"), x too (\"both\"), or none"
+    },
+    "panelHeight": {
+      "type": "number",
+      "description": "Each panel's chart height, in px; by default the chart's own for its width"
+    },
+    "smallMultiplesLabels": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "list": {
+          "type": "string"
+        },
+        "none": {
+          "type": "string"
+        },
+        "problem": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The grid's own words, merged over defaultSmallMultiplesLabels"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "SpecData": {
+      "anyOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": {}
+          }
+        },
+        {
+          "type": "object",
+          "properties": {
+            "csv": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "csv"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "url": {
+              "type": "string"
+            },
+            "format": {
+              "type": "string",
+              "enum": [
+                "auto",
+                "csv",
+                "json"
+              ]
+            },
+            "select": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "url"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "values": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": {}
+              }
+            }
+          },
+          "required": [
+            "values"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}

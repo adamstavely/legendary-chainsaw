@@ -100,6 +100,9 @@ export function suggestCharts(rows: readonly Record<string, unknown>[], opts: { 
     const reciprocal = rows.some((r) => pairs.has(`${r[dst.name]}>${r[src.name]}`));
     const srcVals = new Set(rows.map((r) => String(r[src.name])));
     const chained = rows.some((r) => srcVals.has(String(r[dst.name])));
+    // Links that close loops among many nodes read as a network rather than a flow
+    const nodes = new Set(rows.flatMap((r) => [String(r[src.name]), String(r[dst.name])]));
+    if (nodes.size >= 8 && (reciprocal || chained)) out.push(mk("network", 0.83, `${nodes.size} nodes linked in loops and chains, so a network graph shows the clusters`, rows, { source: src.name, target: dst.name, value: v0.name }));
     if (reciprocal) out.push(mk("chord", 0.92, `${src.name}→${dst.name} goes both ways, so a chord diagram fits`, rows, { source: src.name, target: dst.name, value: v0.name }));
     out.push(mk("sankey", reciprocal ? 0.8 : 0.95, chained ? "The flow runs through several stages, which a Sankey diagram shows well" : "A Sankey diagram shows the amount between source and target as band width", rows, { source: src.name, target: dst.name, value: v0.name }));
   }
@@ -189,6 +192,7 @@ export function suggestCharts(rows: readonly Record<string, unknown>[], opts: { 
       if (allPos && k >= 6 && top20 >= 0.5) out.push(mk("pareto", 0.86, `The top 20% make up ${Math.round(top20 * 100)}%, so a Pareto chart shows the concentration`, rows, { label: cat.name, value: v0.name }));
       if (allPos && k >= 6) out.push(mk("treemap", 0.66, "A treemap shows the shares as area", rows, { label: cat.name, value: v0.name }));
       if (vals.length >= 3 && vals.every((v, i) => i === 0 || v <= vals[i - 1]) && k <= 8) out.push(mk("funnel", 0.78, "Values keep shrinking, so it reads like a funnel", rows, { label: cat.name, value: v0.name }));
+      if (allPos && (k === 7 || k === 12 || k === 24) && /month|hour|day|weekday/i.test(cat.name)) out.push(mk("rose", 0.78, `${k} steps of a cycle, so a rose chart shows the rhythm round the clock`, rows, { label: cat.name, value: v0.name }));
       if (allPos && vals.every((v) => v <= 100) && k <= 6) out.push(mk("radialBar", 0.66, "Values from 0 to 100 read as progress rings", rows, { label: cat.name, value: v0.name }));
     }
   }
@@ -235,6 +239,7 @@ export function suggestCharts(rows: readonly Record<string, unknown>[], opts: { 
     const enc: Record<string, string> = { x: nums[0].name, y: nums[1].name };
     if (nums[2]) enc.size = nums[2].name;
     if (label) enc.label = label.name;
+    if (n > 3000) out.push(mk("hexbin", 0.88, `${n} points would overlap in a scatter plot, so hexagons shaded by count show where they gather`, rows, { x: nums[0].name, y: nums[1].name }));
     out.push(mk("bubble", nums[2] ? 0.86 : 0.8, nums[2] ? `A bubble chart shows ${nums[0].name}, ${nums[1].name} and ${nums[2].name} together` : `A scatter plot shows how ${nums[0].name} relates to ${nums[1].name}`, rows, enc));
   }
 
