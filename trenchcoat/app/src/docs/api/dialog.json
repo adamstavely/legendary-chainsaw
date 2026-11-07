@@ -323,6 +323,22 @@
     ]
    },
    {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
     "id": "is-where",
     "name": ":is() and :where()",
     "bcd": "css.selectors.where",
@@ -401,7 +417,7 @@
   "windowed": false
  },
  "size": {
-  "min": 29487,
-  "gzip": 8263
+  "min": 30403,
+  "gzip": 8562
  }
 }

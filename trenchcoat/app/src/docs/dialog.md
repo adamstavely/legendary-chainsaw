@@ -42,6 +42,14 @@ never past 90% of the window. `sm` and `md` fit their content up to that width; 
 reports with tables or side-by-side sections. The widths are tokens on `tc-dialog` a page can override:
 `--tc-dialog-w-sm`, `--tc-dialog-w-md`, `--tc-dialog-w-lg` and `--tc-dialog-w-xl`.
 
+### Printing
+
+Printed, an open dialog is what prints – a report in an `xl` dialog with a Print button calling `window.print()`, say.
+It prints whole, from the top of the first page and across as many pages as it needs: no height limit or scrolling,
+no backdrop, shadow or rounded corners. The page behind it is hidden. The heading and description print; the footer
+doesn't, since Close and the actions are for the screen – put anything that must be on paper in the body. A page
+much longer than the dialog may print blank pages after it. A closed dialog changes nothing about printing.
+
 ## Keyboard
 
 | Key | What it does |

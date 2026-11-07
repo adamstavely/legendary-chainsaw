@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.8.0 – Dialogs that print whole, priority lists that keep their names
+
+- **Dialog:** printed, an open dialog prints whole – no height limit or scrolling, no backdrop, shadow, rounding or
+  fixed box – from the top of the first page, with the page behind it hidden. The heading and description print; the
+  footer (Close and the actions) doesn't. Before, only the first screenful printed.
+- **Priority List:** the name keeps at least 140px from 300px up. The columns fold on the list's own width – the
+  open pill now goes at 480px and the momentum's change at 400px, the work count at 560px – and with figures the
+  line, work count and open pill go at 760px. Before, at 300–480px the name could shrink to almost nothing.
+
 ## 0.7.0 – Switches in the account card
 
 - **Profile Menu:** an item with `checked` is an on/off switch – a button with `role="switch"` and `aria-checked`,

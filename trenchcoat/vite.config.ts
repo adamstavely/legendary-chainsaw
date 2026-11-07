@@ -103,6 +103,13 @@ export default defineConfig({
             headless: true,
             screenshotFailures: false,
             instances: [{ browser: "chromium" }, { browser: "firefox" }, { browser: "webkit" }],
+            // Print styles are tested under real print media: await commands.emulateMedia("print"), then null to undo
+            commands: {
+              emulateMedia: async (ctx, media: "print" | "screen" | null) => {
+                if (ctx.provider.name !== "playwright") throw new Error("emulateMedia needs the Playwright provider");
+                await (ctx as unknown as { page: { emulateMedia(o: { media: "print" | "screen" | null }): Promise<void> } }).page.emulateMedia({ media });
+              },
+            },
           },
         },
       },

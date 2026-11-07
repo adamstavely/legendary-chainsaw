@@ -527,6 +527,7 @@
     "progressive": false,
     "via": [
      "button",
+     "dialog",
      "progress-tracker"
     ]
    },
@@ -679,7 +680,7 @@
   "windowed": false
  },
  "size": {
-  "min": 82443,
-  "gzip": 21209
+  "min": 83359,
+  "gzip": 21495
  }
 }

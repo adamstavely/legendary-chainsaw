@@ -213,6 +213,28 @@ describe("tc-priority-list", () => {
     expect(document.activeElement).toBe(row(el, "edge"));
   });
 
+  for (const width of [300, 400, 600]) {
+    test(`at ${width}px the name keeps at least 140px, with or without figures; the rest folds away instead`, async () => {
+      for (const figures of [[], FIGURES]) {
+        for (const look of ["standard", "clean"] as const) {
+          const wrap = await fixture(html`<div style=${`width: ${width}px`}><tc-priority-list look=${look} .items=${[...ITEMS, ...CENTRES]} .figures=${figures}></tc-priority-list></div>`);
+          const el = wrap.querySelector("tc-priority-list")!;
+          await settle();
+          for (const id of ["climate", "energy"]) {
+            const who = row(el, id).querySelector(".ui-prl__who")!.getBoundingClientRect();
+            expect(who.width, `${id}, ${look}, ${figures.length} figures`).toBeGreaterThanOrEqual(140);
+            expect(row(el, id).querySelector(".ui-prl__name")!.getBoundingClientRect().width).toBeGreaterThan(0);
+          }
+          // The headings still line up with the rows
+          const name = el.querySelector(".ui-prl__col--name")!.getBoundingClientRect();
+          expect(name.left).toBeCloseTo(row(el, "climate").querySelector(".ui-prl__cell--badge")!.getBoundingClientRect().left, 0);
+          expect(el.scrollWidth).toBeLessThanOrEqual(el.clientWidth + 1);
+          wrap.remove();
+        }
+      }
+    });
+  }
+
   test("narrow with figures: the work count goes first, then the figures, and the row still fits", async () => {
     const wrap = await fixture(html`<div style="width: 580px"><tc-priority-list .items=${CENTRES} .figures=${FIGURES}></tc-priority-list></div>`);
     const el = wrap.querySelector("tc-priority-list")!;
