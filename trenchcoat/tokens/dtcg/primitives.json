@@ -2004,6 +2004,7 @@
     "sans": {
       "$type": "fontFamily",
       "$value": [
+        "Inter Variable",
         "Inter",
         "InterVariable",
         "ui-sans-serif",

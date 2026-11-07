@@ -9,6 +9,9 @@
 - **Profile Menu:** `"moon"` and `"sun"` built-in icons (Lucide), and `MoonIcon` and `SunIcon` in React.
 - **Header Nav:** a switch item in the account card fires `tc-account-select` with `checked` and keeps the card open;
   other actions still close it. React's `onAccountSelect` gets `checked` as a second argument.
+- **Tokens:** `--tc-font-sans` now starts with “Inter Variable”, the name `@fontsource-variable/inter` gives the face,
+  so apps that self-host Inter that way get it instead of the system font. “Inter” and “InterVariable” still follow.
+  Getting Started lists which ways of loading Inter it matches.
 
 ## 0.6.0 – Priority list: columns of the page's own, rows without a tier
 
