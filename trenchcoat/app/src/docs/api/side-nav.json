@@ -180,6 +180,22 @@
       "both"
      ],
      "fallback": true
+    },
+    {
+     "name": "--tc-snav-item-gap",
+     "value": "var(--tc-space-0-5)",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    },
+    {
+     "name": "--tc-snav-item-height",
+     "value": "var(--tc-control-h-md)",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
     }
    ],
    "tokens": [
@@ -526,7 +542,7 @@
   "windowed": false
  },
  "size": {
-  "min": 22576,
-  "gzip": 7379
+  "min": 22749,
+  "gzip": 7434
  }
 }

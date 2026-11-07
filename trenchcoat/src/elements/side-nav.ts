@@ -18,6 +18,10 @@ import { safeUrl } from "./internal/safe-url";
  * sit at the bottom. Arrow keys also move between items; Home and End go to the first and last.
  * Standard: a gray bar like the page behind a white panel, the current item on a white pill. Clean: a white bar with
  * a hairline edge, the current item tinted.
+ * Sized from the page with custom properties on tc-side-nav: --tc-snav-brand-size, --tc-snav-brand-weight,
+ * --tc-snav-brand-line-height and --tc-snav-logo-size for the brand; --tc-snav-head-gap under it;
+ * --tc-snav-item-gap between items (default --tc-space-0-5) and --tc-snav-item-height for each item's least height
+ * (default --tc-control-h-md) – the rail uses the same two.
  *
  *   <tc-side-nav brand="Intellect" current="portfolio" .items=${[{ id: "portfolio", label: "Portfolio", href: "/portfolio" }]}>
  *     <div class="promo">Portfolio review in 6 days <tc-button>Prep brief</tc-button></div>
@@ -273,7 +277,8 @@ export class TcSideNav extends TcElement {
 
 .ui-snav__nav { display: flex; flex: 1 0 auto; flex-direction: column; gap: var(--tc-space-3); }
 .ui-snav__section { margin: 0 0 var(--tc-space-1); padding: 0 var(--tc-space-2); font-size: var(--tc-caption-font-size); font-weight: var(--tc-caption-font-weight); line-height: var(--tc-caption-line-height); letter-spacing: var(--tc-caption-tracking); text-transform: var(--tc-caption-transform); color: var(--tc-caption-color); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.ui-snav__list { display: flex; flex-direction: column; gap: var(--tc-space-0-5); margin: 0; padding: 0; list-style: none; }
+/* The space between items is --tc-snav-item-gap and an item's least height --tc-snav-item-height, open or as a rail */
+.ui-snav__list { display: flex; flex-direction: column; gap: var(--tc-snav-item-gap, var(--tc-space-0-5)); margin: 0; padding: 0; list-style: none; }
 
 .ui-snav__link {
   position: relative;
@@ -281,7 +286,7 @@ export class TcSideNav extends TcElement {
   align-items: center;
   gap: var(--tc-space-2);
   width: 100%;
-  min-height: var(--tc-control-h-md);
+  min-height: var(--tc-snav-item-height, var(--tc-control-h-md));
   padding: 0 var(--tc-space-2);
   border-radius: var(--tc-radius-md);
   color: inherit;

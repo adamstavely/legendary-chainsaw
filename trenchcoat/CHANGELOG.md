@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.11.0 – Results list headings as given; priority lists without some columns
+## 0.11.0 – Results list headings as given; priority lists without some columns; side-nav item spacing
 
 - **Results List:** `plural-kinds="false"` (`pluralKinds`, true by default) shows each group heading exactly as its
   kind, for kinds that are proper names – “NREL” and “Sandia National Laboratories” instead of “NRELs” and
@@ -9,6 +9,9 @@
   `PriorityColumn` (`"momentum" | "coverage" | "open" | "work"`, exported). Hidden columns go from the header and the
   rows, and their grid tracks go too, so no gap is left and the name and figures take the room; the columns that remain
   still fold away as the list narrows.
+- **Side Nav:** `--tc-snav-item-gap` sets the space between items (default `--tc-space-0-5`, as today) and
+  `--tc-snav-item-height` each item's least height (default `--tc-control-h-md`, as today). The collapsed rail uses
+  the same two, with its icons still centred.
 
 ## 0.10.0 – A brand for app headers; large side-nav names aren't clipped
 
