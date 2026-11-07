@@ -38321,6 +38321,104 @@
     "errors": []
    }
   },
+  "select": {
+   "measuredAt": "2026-11-07",
+   "hash": "f1fe02004fd88afb",
+   "bundle": {
+    "own": {
+     "min": 16986,
+     "gzip": 5821
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 20089
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2217
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1864
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 440
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 435
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     }
+    ],
+    "withoutLit": {
+     "min": 23766,
+     "gzip": 7670
+    },
+    "withLit": {
+     "min": 44936,
+     "gzip": 14672
+    }
+   },
+   "render": {
+    "tag": "tc-select",
+    "source": "demo",
+    "runs": 7,
+    "cold": 20.6,
+    "first": 1.7,
+    "update": 0.3,
+    "updateKind": "one item of options replaced",
+    "nodes": 35,
+    "scale": {
+     "property": "options",
+     "demoItems": 6,
+     "points": [
+      {
+       "items": 100,
+       "first": 8.6,
+       "update": 0.6,
+       "nodes": 441
+      },
+      {
+       "items": 1000,
+       "first": 33.2,
+       "update": 2.7,
+       "nodes": 4341
+      }
+     ]
+    },
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
   "selection-toolbar": {
    "measuredAt": "2026-11-05",
    "hash": "f91cbd710d7c7468",

@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.9.0 – A single-choice dropdown
+
+- **Select:** `tc-select` (`@adamstavely/trenchcoat/select`, React `Select`, Angular `Select` from
+  `@adamstavely/trenchcoat/angular/select`), a plain single-choice dropdown for a page or card header, or a form.
+  - The trigger is a secondary button (the `--tc-action-secondary-*` and `--tc-control-*-md` tokens, so it lines up
+    with the buttons beside it) showing the chosen option's label, or `placeholder` (“Choose…”) while `value` is unset or
+    unknown, and a chevron. The list under it is the menu pattern: a `listbox` of `option`s with `aria-selected`, a
+    check on the chosen one and an optional `description` line; `disabled` options show but can't be picked.
+  - `options: SelectOption[]` (`{ value, label, description?, disabled? }`), `value`, `label` (the accessible name –
+    shown above the trigger with `label-visible`, else read by screen readers only), `placeholder`, `open`,
+    `align="start" | "end"`, `disabled`, `name` (a hidden input for native forms) and `look`.
+  - `tc-value-change` (`{ value }`) and `tc-open-change` (`{ open }`) are cancelable: prevented, `value` or `open`
+    stays (controlled use). Angular gets a value accessor for `ngModel` and reactive forms.
+  - ↓ / ↑ on the trigger open the list; in it the arrows, Home and End move past disabled options, Enter or Space
+    picks, letters jump to the next option starting with them, Esc closes and returns focus to the trigger, Tab or a
+    click outside closes. Near the edge of the screen the list slides in to stay whole. Option ids come from their
+    position, never from their values.
+
 ## 0.8.0 – Dialogs that print whole, priority lists that keep their names
 
 - **Dialog:** printed, an open dialog prints whole – no height limit or scrolling, no backdrop, shadow, rounding or

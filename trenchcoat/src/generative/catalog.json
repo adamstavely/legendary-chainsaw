@@ -2775,6 +2775,15 @@
     ]
   },
   {
+    "tag": "tc-select",
+    "name": "Select",
+    "description": "A single-choice dropdown: a secondary-button trigger that opens a listbox of options.",
+    "events": [
+      "tc-value-change",
+      "tc-open-change"
+    ]
+  },
+  {
     "tag": "tc-selection-toolbar",
     "name": "SelectionToolbar",
     "description": "A formatting bar that floats over selected text: actions, toggles that show their state, and option menus. It fires commands; the page's editor applies them.",

@@ -262,6 +262,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Secret Field** (`secret-field.tsx`) – A masked credential input with an explicit reveal control
 - **Segmented Bar** (`segmented-bar.tsx`) – Shares of one whole as a single bar cut into parts, with a list of names, values and shares – largest first in the accent, the rest in quiet shades or chart inks, tall or thin, parts that grow and glide
 - **Segmented Control** (`segmented-control.tsx`) – Switch between two to six options – a raised pill or underline that glides, stretches a little and can be dragged across, with icons, counts and badges
+- **Select** (`select.tsx`) – A plain single-choice dropdown – a secondary-button trigger with the chosen option opens a list with a check on it, optional descriptions and disabled options, arrow keys and type-ahead
 - **Selection Toolbar** (`selection-toolbar.tsx`) – The formatting bar that floats over selected text: quick actions, toggles like bold and italic that show what's on, menus for text style, colour and list, and a link – it fires commands for the page's editor to apply.
 - **Selection Translate** (`selection-translate.tsx`) – Select text and translate it – the translation in a card with the detected language, copy, replace in place and show original
 - **Sensitivity Label Picker** (`sensitivity-label-picker.tsx`) – Sets a file's classification – a mark and word on a small button, a list of labels with what each means, and a reason asked before lowering it

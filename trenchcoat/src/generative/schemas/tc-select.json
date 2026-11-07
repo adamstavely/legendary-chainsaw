@@ -1,0 +1,81 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-select.json",
+  "title": "tc-select",
+  "description": "A single-choice dropdown: a secondary-button trigger that opens a listbox of options.",
+  "type": "object",
+  "properties": {
+    "options": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/SelectOption"
+      },
+      "description": "The options, in list order"
+    },
+    "value": {
+      "type": "string",
+      "description": "The chosen option's value – unset or unknown shows the placeholder"
+    },
+    "label": {
+      "type": "string",
+      "description": "The control's accessible name; shown above the trigger with `label-visible`"
+    },
+    "labelVisible": {
+      "type": "boolean",
+      "description": "Show `label` above the trigger instead of only to screen readers"
+    },
+    "placeholder": {
+      "type": "string",
+      "description": "What the trigger says while no option is chosen"
+    },
+    "open": {
+      "type": "boolean",
+      "description": "Whether the list is open"
+    },
+    "align": {
+      "type": "string",
+      "enum": [
+        "end",
+        "start"
+      ],
+      "description": "Which edge of the trigger the list lines up with"
+    },
+    "disabled": {
+      "type": "boolean",
+      "description": "Turns the control off; the hidden form input is disabled too"
+    },
+    "name": {
+      "type": "string",
+      "description": "Submits the chosen value with a native form, through a hidden input"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "SelectOption": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string",
+          "description": "What `value` holds when this option is chosen"
+        },
+        "label": {
+          "type": "string",
+          "description": "The option's text, in the list and on the trigger"
+        },
+        "description": {
+          "type": "string",
+          "description": "One short line under the label, in the list only"
+        },
+        "disabled": {
+          "type": "boolean",
+          "description": "Shown but can't be picked; the keys skip it"
+        }
+      },
+      "required": [
+        "value",
+        "label"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

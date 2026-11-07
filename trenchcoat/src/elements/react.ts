@@ -336,6 +336,7 @@ export * from "./react/search-results";
 export * from "./react/secret-field";
 export * from "./react/segmented-bar";
 export * from "./react/segmented-control";
+export * from "./react/select";
 export * from "./react/selection-toolbar";
 export * from "./react/selection-translate";
 export * from "./react/sensitivity-label-picker";
