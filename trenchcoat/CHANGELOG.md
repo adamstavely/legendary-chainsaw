@@ -1,7 +1,14 @@
 # Changelog
 
-## Unreleased – Fixes
+## 0.4.0 – Dialog sizes, choice cards that wrap, textareas in the stepper
 
+- **Dialog:** `size` – `"sm"` (480px), `"md"` (640px, the default and today's width), `"lg"` (880px) or `"xl"`
+  (1120px), never past 90% of the window. sm and md fit their content up to that width; lg and xl always take it, for
+  reports with tables. The widths are tokens a page can override: `--tc-dialog-w-sm` … `--tc-dialog-w-xl`.
+- **Stepper choices:** the cards share a row only while each is at least `--tc-sf-choice-min` (168px) wide; more
+  wrap onto further rows instead of turning into slivers.
+- **Stepper input:** a `<textarea>` inside is styled and wired like an `<input>` – the field's border, focus ring and
+  invalid state, its id and description – starts at its `rows` and resizes vertically.
 - **Image Grid:** a download still fetching its image when the grid leaves the page now lets go of the image's object
   URL and saves nothing, instead of starting the download from a page that has moved on.
 

@@ -224,6 +224,7 @@
     "--tc-radius-sm",
     "--tc-radius-xl",
     "--tc-radius-xs",
+    "--tc-sf-choice-min",
     "--tc-shadow-raised",
     "--tc-space-0-5",
     "--tc-space-1",
@@ -402,6 +403,7 @@
     "--tc-radius-sm",
     "--tc-radius-xl",
     "--tc-radius-xs",
+    "--tc-sf-choice-min",
     "--tc-shadow-raised",
     "--tc-space-0-5",
     "--tc-space-1",
@@ -444,7 +446,7 @@
   {
    "tag": "tc-stepper-input",
    "className": "TcStepperInput",
-   "description": "A text field wired to its tc-stepper-field – label, message and aria come from there. Put a native <input> inside;\nevery attribute you give it stays yours.",
+   "description": "A text field wired to its tc-stepper-field – label, message and aria come from there. Put a native <input> or\n<textarea> inside (a textarea starts at its `rows` and resizes vertically); every attribute you give it stays yours.",
    "properties": [
     {
      "name": "prefixText",
@@ -581,6 +583,7 @@
     "--tc-radius-sm",
     "--tc-radius-xl",
     "--tc-radius-xs",
+    "--tc-sf-choice-min",
     "--tc-shadow-raised",
     "--tc-space-0-5",
     "--tc-space-1",
@@ -799,6 +802,7 @@
     "--tc-radius-sm",
     "--tc-radius-xl",
     "--tc-radius-xs",
+    "--tc-sf-choice-min",
     "--tc-shadow-raised",
     "--tc-space-0-5",
     "--tc-space-1",
@@ -1001,6 +1005,7 @@
     "--tc-radius-sm",
     "--tc-radius-xl",
     "--tc-radius-xs",
+    "--tc-sf-choice-min",
     "--tc-shadow-raised",
     "--tc-space-0-5",
     "--tc-space-1",
@@ -1171,6 +1176,7 @@
     "--tc-radius-sm",
     "--tc-radius-xl",
     "--tc-radius-xs",
+    "--tc-sf-choice-min",
     "--tc-shadow-raised",
     "--tc-space-0-5",
     "--tc-space-1",
@@ -1334,6 +1340,7 @@
     "--tc-radius-sm",
     "--tc-radius-xl",
     "--tc-radius-xs",
+    "--tc-sf-choice-min",
     "--tc-shadow-raised",
     "--tc-space-0-5",
     "--tc-space-1",
@@ -2267,7 +2274,7 @@
   "windowed": false
  },
  "size": {
-  "min": 88840,
-  "gzip": 19759
+  "min": 89692,
+  "gzip": 19976
  }
 }

@@ -6,6 +6,8 @@ import { settingsCss } from "./internal/settings";
 let next = 0;
 /** How the built-in Close button shows: "auto" is primary on its own and secondary beside app actions. */
 export type DialogCloseButton = "auto" | "primary" | "secondary" | "hidden";
+/** How wide the panel may grow: sm 480px, md 640px (the default), lg 880px, xl 1120px – never past 90% of the window */
+export type DialogSize = "sm" | "md" | "lg" | "xl";
 /** Native modal dialog with content, focus containment, Escape and focus restoration.
  * The body and the actions are the app's: the dialog's own control styles don't reach into them, so a hosted
  * tc-button or progress tracker renders as it does anywhere else.
@@ -17,7 +19,14 @@ export class TcDialog extends TcElement {
   static override css =
     settingsCss +
     `
-[data-ui="dialog"] > dialog { max-width: min(640px, 90vw); max-height: 85vh; padding: 0; border: 0; border-radius: var(--tc-card-radius); background: var(--tc-surface-raised); color: var(--tc-text-primary); box-shadow: var(--tc-shadow-overlay); }
+/* The panel's widest, per size – a page can override these on tc-dialog */
+[data-ui="dialog"] { --tc-dialog-w-sm: 480px; --tc-dialog-w-md: 640px; --tc-dialog-w-lg: 880px; --tc-dialog-w-xl: 1120px; --tc-dialog-w: var(--tc-dialog-w-md); }
+[data-ui="dialog"][size="sm"] { --tc-dialog-w: var(--tc-dialog-w-sm); }
+[data-ui="dialog"][size="lg"] { --tc-dialog-w: var(--tc-dialog-w-lg); }
+[data-ui="dialog"][size="xl"] { --tc-dialog-w: var(--tc-dialog-w-xl); }
+/* sm and md fit their content up to the size; lg and xl take the whole width, for reports and tables */
+[data-ui="dialog"] > dialog { max-width: min(var(--tc-dialog-w), 90vw); max-height: 85vh; padding: 0; border: 0; border-radius: var(--tc-card-radius); background: var(--tc-surface-raised); color: var(--tc-text-primary); box-shadow: var(--tc-shadow-overlay); }
+[data-ui="dialog"]:is([size="lg"], [size="xl"]) > dialog { width: min(var(--tc-dialog-w), 90vw); }
 [data-ui="dialog"] > dialog::backdrop { background: var(--tc-scrim); }
 [data-ui="dialog"] .tc-dialog-body { padding: var(--tc-space-4); }
 [data-ui="dialog"] .tc-dialog-body > :first-child { margin-top: 0; }
@@ -28,6 +37,8 @@ export class TcDialog extends TcElement {
 [data-ui="dialog"] .tc-dialog-footer:has(> .tc-dialog-actions:only-child:empty) { display: none; }
 [data-ui="dialog"] > :not(dialog) { display: none; }
 `;
+  /** How wide the panel may grow: "sm" (480px), "md" (640px, the default), "lg" (880px) or "xl" (1120px), within 90% of the window. lg and xl always take that width. */
+  @property({ reflect: true }) accessor size: DialogSize = "md";
   /** Whether the modal is open. */
   @property({ type: Boolean, reflect: true }) accessor open = false;
   /** Visible heading and accessible name. */
