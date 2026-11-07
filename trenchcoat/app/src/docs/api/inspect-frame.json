@@ -1,0 +1,730 @@
+{
+ "elements": [
+  {
+   "tag": "tc-inspect-frame",
+   "className": "TcInspectFrame",
+   "description": "A component seen like a selection in a design tool – tilted back, with a selection frame, spacing numbers and a\nguide walking through its rows. Its content is its first element child.",
+   "properties": [
+    {
+     "name": "label",
+     "attribute": "label",
+     "type": "string",
+     "default": "\"\"",
+     "description": "Accessible name; without it the illustration is decorative and hidden from screen readers",
+     "readonly": false
+    },
+    {
+     "name": "targets",
+     "attribute": "targets",
+     "type": "string",
+     "default": "\"\"",
+     "description": "CSS selector for the rows to walk through, inside the content; \"\" (the default) picks the root's block children",
+     "readonly": false
+    },
+    {
+     "name": "playing",
+     "attribute": "playing",
+     "type": "boolean",
+     "default": "true",
+     "description": "Walks the selection through the rows; false holds it on the first row",
+     "readonly": false
+    },
+    {
+     "name": "hold",
+     "attribute": "hold",
+     "type": "number",
+     "default": "1600",
+     "description": "How long the selection stays on a row, in ms",
+     "readonly": false
+    },
+    {
+     "name": "delay",
+     "attribute": "delay",
+     "type": "number",
+     "default": "600",
+     "description": "Wait before the first selection, in ms – e.g. until the section around it has come in",
+     "readonly": false
+    },
+    {
+     "name": "rounds",
+     "attribute": "rounds",
+     "type": "number",
+     "default": "2",
+     "description": "How many times it walks through the rows before it rests on the first one",
+     "readonly": false
+    },
+    {
+     "name": "mirror",
+     "attribute": "mirror",
+     "type": "boolean",
+     "default": "false",
+     "description": "Tilted the other way and fading out to the left – for the left side of a layout",
+     "readonly": false
+    },
+    {
+     "name": "flat",
+     "attribute": "flat",
+     "type": "boolean",
+     "default": "false",
+     "description": "No tilt and no fade",
+     "readonly": false
+    },
+    {
+     "name": "contentWidth",
+     "attribute": "content-width",
+     "type": "number",
+     "default": "300",
+     "description": "The content's width in px, before it's scaled to fit the frame",
+     "readonly": false
+    },
+    {
+     "name": "measuredRows",
+     "attribute": null,
+     "type": "readonly InspectFrameRow[]",
+     "default": null,
+     "description": "The rows as measured, in the content's CSS pixels",
+     "readonly": true
+    },
+    {
+     "name": "selectedIndex",
+     "attribute": null,
+     "type": "",
+     "default": null,
+     "description": "The row the selection is on",
+     "readonly": true
+    },
+    {
+     "name": "look",
+     "attribute": "look",
+     "type": "Look | undefined",
+     "default": "undefined",
+     "description": "Visual style: \"standard\" or \"clean\"; unset follows <tc-look-provider>, else \"standard\"",
+     "readonly": false
+    }
+   ],
+   "events": [],
+   "slots": [],
+   "methods": [
+    {
+     "name": "measure",
+     "params": "",
+     "returns": "void",
+     "description": "Measures the rows again – call it after changing the content in a way that keeps its size"
+    }
+   ],
+   "ui": "isp",
+   "cssProperties": [
+    {
+     "name": "--tc-inspect-frame-select",
+     "value": "var(--tc-blue-600, #2456d6)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-inspect-frame-on-select",
+     "value": "var(--tc-text-on-accent, #ffffff)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-inspect-frame-guide",
+     "value": "var(--tc-action-danger-bg, var(--tc-red-600))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-inspect-frame-on-guide",
+     "value": "var(--tc-action-danger-fg, #ffffff)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-inspect-frame-handle-fill",
+     "value": "var(--tc-surface-raised, light-dark(#ffffff, var(--tc-zinc-875)))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-inspect-frame-cursor",
+     "value": "var(--tc-text-primary, light-dark(rgba(0, 0, 0, 0.88), rgba(255, 255, 255, 0.9)))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-inspect-frame-cursor-edge",
+     "value": "var(--tc-surface-raised, light-dark(#ffffff, var(--tc-zinc-875)))",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-inspect-frame-tilt",
+     "value": "rotateX(22deg) rotateY(-16deg) rotateZ(5deg)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-inspect-frame-tilt-mirror",
+     "value": "rotateX(22deg) rotateY(16deg) rotateZ(-5deg)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-inspect-frame-perspective",
+     "value": "1100px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-inspect-frame-width",
+     "value": "300px",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-inspect-frame-fade",
+     "value": "linear-gradient(to right, #000 55%, transparent 98%)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-inspect-frame-fade-mirror",
+     "value": "linear-gradient(to left, #000 55%, transparent 98%)",
+     "looks": [
+      "both"
+     ]
+    },
+    {
+     "name": "--tc-inspect-frame-fade-y",
+     "value": "linear-gradient(to bottom, transparent, #000 14%, #000 86%, transparent)",
+     "looks": [
+      "both"
+     ]
+    }
+   ],
+   "tokens": [
+    "--tc-action-danger-bg",
+    "--tc-action-danger-fg",
+    "--tc-blue-600",
+    "--tc-duration-base",
+    "--tc-duration-moderate",
+    "--tc-duration-reveal",
+    "--tc-duration-slow",
+    "--tc-ease-move",
+    "--tc-ease-out",
+    "--tc-ease-standard",
+    "--tc-font-mono",
+    "--tc-font-sans",
+    "--tc-font-size-2xs",
+    "--tc-font-weight-semibold",
+    "--tc-line-height-tight",
+    "--tc-radius-xs",
+    "--tc-red-600",
+    "--tc-space-0-5",
+    "--tc-space-1",
+    "--tc-surface-raised",
+    "--tc-text-on-accent",
+    "--tc-text-primary",
+    "--tc-zinc-875"
+   ]
+  }
+ ],
+ "functions": [],
+ "react": [
+  {
+   "component": "InspectFrameOwn",
+   "exported": false,
+   "props": [
+    {
+     "name": "children",
+     "type": "React.ReactNode",
+     "optional": true,
+     "description": "The component to show – it's measured and walked through, row by row"
+    },
+    {
+     "name": "label",
+     "type": "string",
+     "optional": true,
+     "description": "Accessible name; without it the illustration is decorative"
+    },
+    {
+     "name": "targets",
+     "type": "string",
+     "optional": true,
+     "description": "CSS selector for the rows, inside the content; unset picks the root's block children"
+    },
+    {
+     "name": "playing",
+     "type": "boolean",
+     "optional": true,
+     "description": "Walks the selection through the rows; false holds it on the first row"
+    },
+    {
+     "name": "hold",
+     "type": "number",
+     "optional": true,
+     "description": "How long the selection stays on a row, in ms"
+    },
+    {
+     "name": "delay",
+     "type": "number",
+     "optional": true,
+     "description": "Wait before the first selection, in ms"
+    },
+    {
+     "name": "rounds",
+     "type": "number",
+     "optional": true,
+     "description": "How many times it walks through the rows before it rests on the first one"
+    },
+    {
+     "name": "mirror",
+     "type": "boolean",
+     "optional": true,
+     "description": "Tilted the other way and fading out to the left"
+    },
+    {
+     "name": "flat",
+     "type": "boolean",
+     "optional": true,
+     "description": "No tilt and no fade"
+    },
+    {
+     "name": "contentWidth",
+     "type": "number",
+     "optional": true,
+     "description": "The content's width in px, before it's scaled to fit"
+    },
+    {
+     "name": "className",
+     "type": "string",
+     "optional": true,
+     "description": "Classes on the root"
+    },
+    {
+     "name": "ref",
+     "type": "React.Ref<TcInspectFrame>",
+     "optional": true,
+     "description": "The root element"
+    }
+   ],
+   "hides": [],
+   "events": {}
+  },
+  {
+   "component": "InspectFrame",
+   "exported": true,
+   "props": [
+    {
+     "name": "children",
+     "type": "React.ReactNode",
+     "optional": true,
+     "description": "The component to show – it's measured and walked through, row by row"
+    },
+    {
+     "name": "label",
+     "type": "string",
+     "optional": true,
+     "description": "Accessible name; without it the illustration is decorative"
+    },
+    {
+     "name": "targets",
+     "type": "string",
+     "optional": true,
+     "description": "CSS selector for the rows, inside the content; unset picks the root's block children"
+    },
+    {
+     "name": "playing",
+     "type": "boolean",
+     "optional": true,
+     "description": "Walks the selection through the rows; false holds it on the first row"
+    },
+    {
+     "name": "hold",
+     "type": "number",
+     "optional": true,
+     "description": "How long the selection stays on a row, in ms"
+    },
+    {
+     "name": "delay",
+     "type": "number",
+     "optional": true,
+     "description": "Wait before the first selection, in ms"
+    },
+    {
+     "name": "rounds",
+     "type": "number",
+     "optional": true,
+     "description": "How many times it walks through the rows before it rests on the first one"
+    },
+    {
+     "name": "mirror",
+     "type": "boolean",
+     "optional": true,
+     "description": "Tilted the other way and fading out to the left"
+    },
+    {
+     "name": "flat",
+     "type": "boolean",
+     "optional": true,
+     "description": "No tilt and no fade"
+    },
+    {
+     "name": "contentWidth",
+     "type": "number",
+     "optional": true,
+     "description": "The content's width in px, before it's scaled to fit"
+    },
+    {
+     "name": "className",
+     "type": "string",
+     "optional": true,
+     "description": "Classes on the root"
+    },
+    {
+     "name": "ref",
+     "type": "React.Ref<TcInspectFrame>",
+     "optional": true,
+     "description": "The root element"
+    }
+   ],
+   "hides": [],
+   "events": {}
+  }
+ ],
+ "changelog": [
+  "**Inspect Frame** illustration (`tc-inspect-frame`): any component seen like a selection in a design tool – tilted back, a cursor walks its measured rows while a frame, padding guides and a width chip draw round each; finite, and still under reduced motion."
+ ],
+ "frameworks": [
+  {
+   "tag": "tc-inspect-frame",
+   "className": "TcInspectFrame",
+   "module": "@adamstavely/trenchcoat/inspect-frame",
+   "data": [],
+   "attributes": [
+    {
+     "name": "label",
+     "attribute": "label"
+    },
+    {
+     "name": "targets",
+     "attribute": "targets"
+    },
+    {
+     "name": "playing",
+     "attribute": "playing"
+    },
+    {
+     "name": "hold",
+     "attribute": "hold"
+    },
+    {
+     "name": "delay",
+     "attribute": "delay"
+    },
+    {
+     "name": "rounds",
+     "attribute": "rounds"
+    },
+    {
+     "name": "mirror",
+     "attribute": "mirror"
+    },
+    {
+     "name": "flat",
+     "attribute": "flat"
+    },
+    {
+     "name": "contentWidth",
+     "attribute": "content-width"
+    }
+   ],
+   "events": [],
+   "controlled": [],
+   "form": null,
+   "slots": []
+  }
+ ],
+ "browser": {
+  "floor": {
+   "chrome": "123",
+   "edge": "123",
+   "firefox": "120",
+   "safari": "17.5",
+   "safari_ios": "17.5"
+  },
+  "setBy": {
+   "chrome": [
+    "light-dark"
+   ],
+   "edge": [
+    "light-dark"
+   ],
+   "firefox": [
+    "light-dark"
+   ],
+   "safari": [
+    "light-dark"
+   ],
+   "safari_ios": [
+    "light-dark"
+   ]
+  },
+  "features": [
+   {
+    "id": "light-dark",
+    "name": "light-dark()",
+    "bcd": "css.types.color.light-dark",
+    "versions": {
+     "chrome": "123",
+     "edge": "123",
+     "firefox": "120",
+     "safari": "17.5",
+     "safari_ios": "17.5"
+    },
+    "progressive": false,
+    "why": "Every colour token is a light / dark pair; without it no colour token resolves.",
+    "via": [
+     "itself",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "color-mix",
+    "name": "color-mix()",
+    "bcd": "css.types.color.color-mix",
+    "versions": {
+     "chrome": "111",
+     "edge": "111",
+     "firefox": "113",
+     "safari": "16.2",
+     "safari_ios": "16.2"
+    },
+    "progressive": false,
+    "why": "Tints and washes mixed from the tokens.",
+    "via": [
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "inert",
+    "name": "inert",
+    "bcd": "api.HTMLElement.inert",
+    "versions": {
+     "chrome": "102",
+     "edge": "102",
+     "firefox": "112",
+     "safari": "15.5",
+     "safari_ios": "15.5"
+    },
+    "progressive": false,
+    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "focus-visible",
+    "name": ":focus-visible",
+    "bcd": "css.selectors.focus-visible",
+    "versions": {
+     "chrome": "86",
+     "edge": "86",
+     "firefox": "85",
+     "safari": "15.4",
+     "safari_ios": "15.4"
+    },
+    "progressive": false,
+    "why": "Focus rings for keyboard users.",
+    "via": [
+     "internal/kit"
+    ]
+   },
+   {
+    "id": "aspect-ratio",
+    "name": "aspect-ratio",
+    "bcd": "css.properties.aspect-ratio",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "89",
+     "safari": "15",
+     "safari_ios": "15"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "individual-transforms",
+    "name": "translate, scale and rotate properties",
+    "bcd": "css.properties.translate",
+    "versions": {
+     "chrome": "104",
+     "edge": "104",
+     "firefox": "72",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "is-where",
+    "name": ":is() and :where()",
+    "bcd": "css.selectors.where",
+    "versions": {
+     "chrome": "88",
+     "edge": "88",
+     "firefox": "78",
+     "safari": "14",
+     "safari_ios": "14"
+    },
+    "progressive": false,
+    "why": "Every rule is keyed on :where() so the page can override it.",
+    "via": [
+     "itself",
+     "internal/base",
+     "tokens.css"
+    ]
+   },
+   {
+    "id": "resize-observer",
+    "name": "ResizeObserver",
+    "bcd": "api.ResizeObserver",
+    "versions": {
+     "chrome": "64",
+     "edge": "79",
+     "firefox": "69",
+     "safari": "13.1",
+     "safari_ios": "13.4"
+    },
+    "progressive": false,
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "intersection-observer",
+    "name": "IntersectionObserver",
+    "bcd": "api.IntersectionObserver",
+    "versions": {
+     "chrome": "51",
+     "edge": "15",
+     "firefox": "55",
+     "safari": "12.1",
+     "safari_ios": "12.2"
+    },
+    "progressive": false,
+    "via": [
+     "internal/controllers"
+    ]
+   },
+   {
+    "id": "mask",
+    "name": "CSS masks",
+    "bcd": "css.properties.mask-image",
+    "versions": {
+     "chrome": "1",
+     "edge": "79",
+     "firefox": "53",
+     "safari": "4",
+     "safari_ios": "3.2"
+    },
+    "progressive": false,
+    "note": "with the -webkit- prefix",
+    "via": [
+     "itself"
+    ]
+   },
+   {
+    "id": "adopted-stylesheets",
+    "name": "adoptedStyleSheets",
+    "bcd": "api.Document.adoptedStyleSheets",
+    "versions": {
+     "chrome": "73",
+     "edge": "79",
+     "firefox": "101",
+     "safari": "16.4",
+     "safari_ios": "16.4"
+    },
+    "progressive": true,
+    "without": "Each element type's CSS goes into one <style> element in <head> instead – it looks and works the same.",
+    "via": [
+     "internal/styles"
+    ]
+   },
+   {
+    "id": "forced-colors",
+    "name": "forced-colors media query",
+    "bcd": "css.at-rules.media.forced-colors",
+    "versions": {
+     "chrome": "89",
+     "edge": "79",
+     "firefox": "89",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
+    "via": [
+     "itself",
+     "internal/card-head",
+     "internal/kit",
+     "tokens.css"
+    ]
+   }
+  ]
+ },
+ "runtime": {
+  "timers": [
+   "setTimeout"
+  ],
+  "frames": [
+   "requestAnimationFrame"
+  ],
+  "animations": 0,
+  "observers": [
+   "ResizeObserver",
+   "MutationObserver (internal/base › TcElement)",
+   "MutationObserver (internal/controllers › AriaForwardController)",
+   "IntersectionObserver (internal/controllers › OnScreenController)"
+  ],
+  "clock": [],
+  "listeners": [
+   "document visibilitychange (internal/controllers › OnScreenController)"
+  ],
+  "pauses": {
+   "offscreen": [
+    "itself",
+    "internal/controllers › OnScreenController"
+   ],
+   "hidden": [
+    "internal/controllers › OnScreenController"
+   ],
+   "reducedMotion": [
+    "CSS",
+    "CSS (internal/kit › kitCss)"
+   ]
+  },
+  "windowed": false
+ },
+ "size": {
+  "min": 23343,
+  "gzip": 7782
+ }
+}

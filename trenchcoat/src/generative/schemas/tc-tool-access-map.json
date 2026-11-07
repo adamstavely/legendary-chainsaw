@@ -1,0 +1,253 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-tool-access-map.json",
+  "title": "tc-tool-access-map",
+  "description": "One agent in the middle and every tool it can reach around it – used, failed, running, unused or off limits – with\neach tool's calls and a replay.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "agent": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/ToolAccessAgentStatus"
+        },
+        "task": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false,
+      "description": "The agent in the middle"
+    },
+    "tools": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ToolAccessTool"
+      },
+      "description": "Every tool it can reach, clockwise from the top"
+    },
+    "calls": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ToolAccessFeedCall"
+      },
+      "description": "Calls as one feed, each naming its tool in `to` – added to the tools' own `calls`"
+    },
+    "selected": {
+      "type": "string",
+      "description": "The open tool. Changed by the user unless a tc-selected-change listener calls preventDefault()"
+    },
+    "agents": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/ToolAccessAgentTab"
+      },
+      "description": "Agents to switch between, as tabs over the map – leave empty for none"
+    },
+    "agentId": {
+      "type": "string",
+      "description": "The chosen agent tab. Changed by the user unless a tc-agent-id-change listener calls preventDefault()"
+    },
+    "statusLabels": {
+      "type": "object",
+      "properties": {
+        "idle": {
+          "type": "string"
+        },
+        "running": {
+          "type": "string"
+        },
+        "done": {
+          "type": "string"
+        },
+        "failed": {
+          "type": "string"
+        },
+        "waiting": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The agent's status words, merged over defaultToolAccessAgentLabels"
+    },
+    "locale": {
+      "type": "string",
+      "description": "Locale for call times"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "ToolAccessAgentStatus": {
+      "type": "string",
+      "enum": [
+        "done",
+        "failed",
+        "idle",
+        "running",
+        "waiting"
+      ]
+    },
+    "ToolAccessTool": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "short": {
+          "type": "string",
+          "description": "A shorter name for the ring, e.g. \"Search\" for \"Web search\""
+        },
+        "access": {
+          "type": "string",
+          "enum": [
+            "allowed",
+            "none"
+          ],
+          "description": "\"none\" when the agent may not use it – \"allowed\" by default"
+        },
+        "detail": {
+          "type": "string",
+          "description": "What it is, one line in its panel"
+        },
+        "calls": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ToolAccessCall"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "ToolAccessCall": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "at": {
+          "type": "number",
+          "description": "When it was made (epoch ms)"
+        },
+        "ms": {
+          "type": "number",
+          "description": "How long it took (ms)"
+        },
+        "status": {
+          "$ref": "#/definitions/ToolAccessCallStatus",
+          "description": "\"ok\" by default"
+        },
+        "label": {
+          "type": "string",
+          "description": "What was asked, in a few words: \"query: stations updated since May\""
+        },
+        "args": {
+          "description": "The arguments – a string, or anything JSON can show"
+        },
+        "result": {
+          "description": "What came back – a string, or anything JSON can show"
+        }
+      },
+      "required": [
+        "id",
+        "at"
+      ],
+      "additionalProperties": false
+    },
+    "ToolAccessCallStatus": {
+      "type": "string",
+      "enum": [
+        "error",
+        "failed",
+        "ok",
+        "pending",
+        "running"
+      ],
+      "description": "\"error\" and \"pending\" are tc-agent-graph's words for \"failed\" and \"running\""
+    },
+    "ToolAccessFeedCall": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "to": {
+          "type": "string"
+        },
+        "from": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "at": {
+          "type": "number",
+          "description": "When it was made (epoch ms)"
+        },
+        "ms": {
+          "type": "number",
+          "description": "How long it took (ms)"
+        },
+        "status": {
+          "$ref": "#/definitions/ToolAccessCallStatus",
+          "description": "\"ok\" by default"
+        },
+        "label": {
+          "type": "string",
+          "description": "What was asked, in a few words: \"query: stations updated since May\""
+        },
+        "args": {
+          "description": "The arguments – a string, or anything JSON can show"
+        },
+        "result": {
+          "description": "What came back – a string, or anything JSON can show"
+        }
+      },
+      "required": [
+        "at",
+        "id",
+        "to"
+      ],
+      "description": "A call in the shared feed: `to` names the tool; `from`, when given, must be the agent's id"
+    },
+    "ToolAccessAgentTab": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

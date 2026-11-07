@@ -3,9 +3,13 @@
  */
 import { html } from "lit";
 import axe from "axe-core";
+import * as React from "react";
+import { act } from "react";
+import { createRoot } from "react-dom/client";
 import { afterEach, describe, expect, test, vi } from "vitest";
 import "../../src/elements/agent-inbox";
-import type { AgentInboxExpandedChange, AgentInboxViewChange, AgentTask, TcAgentInbox } from "../../src/elements/agent-inbox";
+import type { AgentInboxExpandedChange, AgentInboxUndo, AgentInboxViewChange, AgentTask, TcAgentInbox } from "../../src/elements/agent-inbox";
+import { AgentInbox } from "../../src/elements/react/agent-inbox";
 import { cleanup, fixture, settle } from "./helpers";
 
 afterEach(cleanup);
@@ -228,5 +232,181 @@ describe("tc-agent-inbox", () => {
     document.getAnimations().forEach((a) => a.finish());
     const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
     expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
+  });
+
+  describe("recap", () => {
+    // 6:40 PM to 8:10 AM the next morning, in local time
+    const SINCE = new Date(2026, 10, 5, 18, 40).getTime();
+    const NOW = SINCE + 13.5 * 3_600_000;
+    const H = 3_600_000;
+    const away: AgentTask[] = [
+      { id: "old", title: "Before you left", agent: "Opus", status: "done", finishedAt: SINCE - H },
+      { id: "grant", title: "Approve the grant budget", agent: "Opus", status: "waiting", finishedAt: SINCE + 7.5 * H },
+      { id: "sync", title: "Sync the reading list", agent: "Haiku", status: "failed", finishedAt: SINCE + 8.4 * H },
+      { id: "notes", title: "Summarise lab notes", agent: "Sonnet", status: "done", finishedAt: SINCE + 0.5 * H, undoable: true },
+      { id: "tag", title: "Tag new datasets", agent: "Haiku", status: "done", finishedAt: SINCE + 2 * H },
+      { id: "index", title: "Index the archive", agent: "Sonnet", status: "running", startedAt: SINCE + 13 * H },
+    ];
+    const recap = (look = "standard") =>
+      fixture<TcAgentInbox>(html`<tc-agent-inbox look=${look} view="recap" .since=${SINCE} .now=${NOW} .tasks=${away}></tc-agent-inbox>`);
+    const lane = (el: Element, name: string) => el.querySelector(`section[aria-label="${name}"]`)!;
+    const ids = (el: Element, name: string) => [...lane(el, name).querySelectorAll<HTMLElement>(".ui-ai__card")].map((c) => c.dataset.id);
+    const peaks = (el: Element) => [...el.querySelectorAll<HTMLElement>(".ui-ai__peak")];
+
+    for (const look of ["standard", "clean"] as const) {
+      test(`${look}: what changed since you left, grouped, with the period in words`, async () => {
+        const el = await recap(look);
+        expect(el.dataset.view).toBe("recap");
+        expect(el.querySelector(".ui-ai__recap-title")!.textContent).toBe("While you were away");
+        expect(el.querySelector(".ui-ai__recap-since")!.textContent!.replace(/\s+/g, " ")).toMatch(/^Since 6:40\s?PM · , 13h 30m$/);
+        expect(el.querySelector(".ui-ai__recap-sum")!.textContent).toBe("1 needs you · 1 failed · 2 done · 1 still running");
+        expect([...el.querySelectorAll("section")].map((x) => x.getAttribute("aria-label"))).toEqual(["Needs you", "Failed", "Done"]);
+        expect(ids(el, "Needs you")).toEqual(["grant"]);
+        expect(ids(el, "Failed")).toEqual(["sync"]);
+        // Tasks from before `since` are left out
+        expect(ids(el, "Done")).toEqual(["notes", "tag"]);
+        // Buttons sit on the card, without unfolding it
+        expect(button(lane(el, "Needs you"), "Approve")).toBeDefined();
+        expect(button(lane(el, "Failed"), "Retry")).toBeDefined();
+        expect(lane(el, "Done").querySelectorAll(".ui-ai__recap-actions").length).toBe(1);
+        expect(el.querySelector('[data-id="notes"] time')!.textContent).toMatch(/^7:10\s?PM$/);
+      });
+    }
+
+    test("the chart: a peak per task in time order, named in words, with a legend", async () => {
+      const el = await recap();
+      const p = peaks(el);
+      expect(p.map((x) => x.dataset.id)).toEqual(["notes", "tag", "grant", "sync"]);
+      expect(p[0].style.getPropertyValue("--x")).toBe(`${(0.5 / 13.5) * 100}%`);
+      expect(p[2].getAttribute("aria-label")).toMatch(/^Approve the grant budget – needs you, 2:10\s?AM$/);
+      expect(p.map((x) => x.dataset.group)).toEqual(["done", "done", "needs", "failed"]);
+      expect(el.querySelector('.ui-ai__peaks[role="group"]')!.getAttribute("aria-label")).toMatch(/^Timeline from 6:40\s?PM to 8:10\s?AM: 1 needs you, 1 failed, 2 done$/);
+      expect([...el.querySelectorAll(".ui-ai__legend li")].map((li) => li.textContent!.trim())).toEqual(["Needs you", "Failed", "Done"]);
+    });
+
+    test("a peak and its card light each other; arrows move along the chart; a click goes to the card", async () => {
+      const el = await recap();
+      let p = peaks(el);
+      expect(p.filter((x) => x.tabIndex === 0).map((x) => x.dataset.id)).toEqual(["notes"]);
+      p[0].focus();
+      await settle();
+      expect(el.querySelector('.ui-ai__card[data-hot]')?.getAttribute("data-id")).toBe("notes");
+      p[0].dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight", bubbles: true }));
+      await settle();
+      p = peaks(el);
+      expect(document.activeElement).toBe(p[1]);
+      expect(el.querySelector('.ui-ai__card[data-hot]')?.getAttribute("data-id")).toBe("tag");
+      p[1].dispatchEvent(new KeyboardEvent("keydown", { key: "End", bubbles: true }));
+      await settle();
+      expect(document.activeElement).toBe(peaks(el)[3]);
+      peaks(el)[3].click();
+      await settle();
+      expect(document.activeElement).toBe(el.querySelector('[data-id="sync"] .ui-ai__card-main'));
+      expect(el.querySelector(".ui-ai__peak[data-hot]")?.getAttribute("data-id")).toBe("sync");
+      // The pointer on a card lights its peak
+      el.querySelector('.ui-ai__card[data-id="grant"]')!.dispatchEvent(new MouseEvent("mouseenter"));
+      await settle();
+      expect(el.querySelector(".ui-ai__peak[data-hot]")?.getAttribute("data-id")).toBe("grant");
+    });
+
+    test("Undo: a cancelable tc-undo, then onUndo; the card says Undone", async () => {
+      const el = await recap();
+      const onUndo = vi.fn();
+      el.onUndo = onUndo;
+      const seen: string[] = [];
+      let block = true;
+      el.addEventListener("tc-undo", (e) => {
+        seen.push((e as CustomEvent<AgentInboxUndo>).detail.task.id);
+        if (block) e.preventDefault();
+      });
+      const undo = () => button(el, "Undo Summarise lab notes");
+      expect(button(el, "Undo Tag new datasets")).toBeUndefined();
+      undo().focus();
+      undo().click();
+      await settle();
+      expect(seen).toEqual(["notes"]);
+      expect(onUndo).not.toHaveBeenCalled();
+      block = false;
+      undo().click();
+      await settle();
+      expect(onUndo).toHaveBeenCalledWith(expect.objectContaining({ id: "notes" }));
+      expect(el.querySelector('[data-id="notes"] .ui-ai__undone')!.textContent).toBe("Undone");
+      expect(document.activeElement).toBe(el.querySelector('[data-id="notes"] .ui-ai__card-main'));
+    });
+
+    test("an async Undo waits and says so when it fails", async () => {
+      const el = await recap();
+      let fail!: () => void;
+      el.onUndo = () => new Promise<void>((_, reject) => (fail = () => reject(new Error("no"))));
+      button(el, "Undo Summarise lab notes").click();
+      await settle();
+      expect(button(el, "Undo Summarise lab notes").getAttribute("aria-disabled")).toBe("true");
+      fail();
+      await wait(0);
+      await settle();
+      expect(el.querySelector('[data-id="notes"] [role="alert"]')!.textContent).toMatch(/try again/);
+      expect(el.querySelector(".ui-ai__undone")).toBeNull();
+    });
+
+    test("Approve keeps the card in its group while it runs on", async () => {
+      const el = await recap();
+      el.onApprove = () => {};
+      button(el, "Approve").click();
+      await settle();
+      expect(el.querySelector('.ui-ai__card[data-id="grant"]')!.getAttribute("data-status")).toBe("running");
+      expect(ids(el, "Needs you")).toEqual(["grant"]);
+    });
+
+    test("Recap joins the layout switch only with `since`, and arrows cycle through three", async () => {
+      const el = await fixture<TcAgentInbox>(html`<tc-agent-inbox .tasks=${away}></tc-agent-inbox>`);
+      expect([...el.querySelectorAll('[role="radio"]')].map((r) => r.textContent!.trim())).toEqual(["Board", "List"]);
+      el.since = SINCE;
+      el.now = NOW;
+      await settle();
+      expect([...el.querySelectorAll('[role="radio"]')].map((r) => r.textContent!.trim())).toEqual(["Board", "List", "Recap"]);
+      const board = radio(el, "Board");
+      board.focus();
+      board.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowLeft", bubbles: true }));
+      await settle();
+      expect(el.dataset.view).toBe("recap");
+      expect(document.activeElement).toBe(radio(el, "Recap"));
+      radio(el, "Recap").dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight", bubbles: true }));
+      await settle();
+      expect(el.dataset.view).toBe("board");
+    });
+
+    test("the wrapper: recap with onUndo and a controlled view", async () => {
+      const host = document.createElement("div");
+      document.body.append(host);
+      const root = createRoot(host);
+      const undone: string[] = [];
+      const views: string[] = [];
+      await act(async () =>
+        root.render(React.createElement(AgentInbox, { tasks: away, view: "recap", since: SINCE, now: NOW, onUndo: (t) => void undone.push(t.id), onViewChange: (v) => views.push(v) })),
+      );
+      await settle();
+      const el = host.querySelector("tc-agent-inbox")!;
+      expect(el.dataset.view).toBe("recap");
+      button(el, "Undo Summarise lab notes").click();
+      await act(async () => settle());
+      expect(undone).toEqual(["notes"]);
+      radio(el, "List").click();
+      await act(async () => settle());
+      expect(views).toEqual(["list"]);
+      expect(el.dataset.view).toBe("recap");
+      await act(async () => root.unmount());
+    });
+
+    for (const theme of ["light", "dark"] as const) {
+      test(`axe: the recap in both looks (${theme})`, async () => {
+        const wrap = await fixture(html`<div data-tc-theme=${theme} style=${theme === "dark" ? "background: #0e0e10; color-scheme: dark" : ""}>
+          <tc-agent-inbox view="recap" .since=${SINCE} .now=${NOW} .tasks=${away} openable></tc-agent-inbox>
+          <tc-agent-inbox look="clean" heading="Clean" view="recap" .since=${SINCE} .now=${NOW} .tasks=${away}></tc-agent-inbox>
+        </div>`);
+        document.getAnimations().forEach((a) => a.finish());
+        const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
+        expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
+      });
+    }
   });
 });

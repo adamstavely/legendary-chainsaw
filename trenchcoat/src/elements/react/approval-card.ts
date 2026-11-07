@@ -12,7 +12,7 @@ import {
 } from "../approval-card";
 import { h, isNode, useStaged } from "./internal";
 
-export type { ApprovalConsequences, ApprovalEvidence, ApprovalRisk, ApprovalStatus, DenyReason } from "../approval-card";
+export type { ApprovalArgs, ApprovalConsequences, ApprovalDiff, ApprovalDiffLine, ApprovalEvidence, ApprovalRisk, ApprovalStatus, DenyReason } from "../approval-card";
 /** React nodes in place of elements */
 export type ApprovalDetail = {
   label: string;

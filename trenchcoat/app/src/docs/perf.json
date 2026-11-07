@@ -950,6 +950,124 @@
     "errors": []
    }
   },
+  "agent-fleet": {
+   "measuredAt": "2026-11-07",
+   "hash": "30a7b19430e8d072",
+   "bundle": {
+    "own": {
+     "min": 22520,
+     "gzip": 7010
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 22126
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2968
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 1877
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1877
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 444
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 436
+     },
+     {
+      "name": "internal/util",
+      "kind": "internal",
+      "min": 130
+     },
+     {
+      "name": "internal/format",
+      "kind": "internal",
+      "min": 127
+     },
+     {
+      "name": "agent-tree",
+      "kind": "element",
+      "min": 48237
+     },
+     {
+      "name": "src/internal/reduced-motion.ts",
+      "kind": "other",
+      "min": 96
+     }
+    ],
+    "withoutLit": {
+     "min": 80413,
+     "gzip": 20782
+    },
+    "withLit": {
+     "min": 103441,
+     "gzip": 28388
+    }
+   },
+   "render": {
+    "tag": "tc-agent-fleet",
+    "source": "demo",
+    "runs": 7,
+    "cold": 23,
+    "first": 2.9,
+    "update": 0.2,
+    "updateKind": "one item of agents replaced",
+    "nodes": 230,
+    "scale": {
+     "property": "agents",
+     "demoItems": 4,
+     "points": [
+      {
+       "items": 100,
+       "first": 15,
+       "update": 1.1,
+       "nodes": 2174
+      },
+      {
+       "items": 1000,
+       "first": 119.9,
+       "update": 8.8,
+       "nodes": 20399
+      }
+     ]
+    },
+    "idle": {
+     "visible": {
+      "frames": 56,
+      "timers": 4.33
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 56,
+      "timers": 4.33
+     }
+    },
+    "errors": []
+   }
+  },
   "agent-gallery": {
    "measuredAt": "2026-10-28",
    "hash": "e51958abb73d169d",
@@ -1238,18 +1356,18 @@
    }
   },
   "agent-inbox": {
-   "measuredAt": "2026-10-28",
-   "hash": "8f9d81914c55454b",
+   "measuredAt": "2026-11-07",
+   "hash": "4a2a3d34f5cf244c",
    "bundle": {
     "own": {
-     "min": 40711,
-     "gzip": 9954
+     "min": 52202,
+     "gzip": 12700
     },
     "shared": [
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 21083
+      "min": 21925
      },
      {
       "name": "internal/card-head",
@@ -1288,19 +1406,19 @@
      }
     ],
     "withoutLit": {
-     "min": 49346,
-     "gzip": 12497
+     "min": 60838,
+     "gzip": 15242
     },
     "withLit": {
-     "min": 71638,
-     "gzip": 19861
+     "min": 83947,
+     "gzip": 22882
     }
    },
    "render": {
     "tag": "tc-agent-inbox",
     "source": "demo",
     "runs": 7,
-    "cold": 10.3,
+    "cold": 14.4,
     "first": 2.1,
     "update": 0.4,
     "updateKind": "one item of tasks replaced",
@@ -1311,14 +1429,14 @@
      "points": [
       {
        "items": 100,
-       "first": 21.6,
-       "update": 2.3,
+       "first": 21.9,
+       "update": 2.7,
        "nodes": 4376
       },
       {
        "items": 1000,
-       "first": 245.7,
-       "update": 15.2,
+       "first": 227.8,
+       "update": 18.2,
        "nodes": 43256
       }
      ]
@@ -2178,12 +2296,12 @@
    }
   },
   "agent-tree": {
-   "measuredAt": "2026-10-28",
-   "hash": "c4e03d878d623e8e",
+   "measuredAt": "2026-11-07",
+   "hash": "707631b4f0ffd7e1",
    "bundle": {
     "own": {
-     "min": 50715,
-     "gzip": 13301
+     "min": 50742,
+     "gzip": 13249
     },
     "shared": [
      {
@@ -2223,20 +2341,20 @@
      }
     ],
     "withoutLit": {
-     "min": 59853,
-     "gzip": 15913
+     "min": 59880,
+     "gzip": 15842
     },
     "withLit": {
-     "min": 82965,
-     "gzip": 23535
+     "min": 82992,
+     "gzip": 23453
     }
    },
    "render": {
     "tag": "tc-agent-tree",
     "source": "demo",
     "runs": 7,
-    "cold": 12.3,
-    "first": 1.2,
+    "cold": 14.1,
+    "first": 1.1,
     "update": 0.2,
     "updateKind": "re-render with the same data",
     "nodes": 48,
@@ -3524,18 +3642,18 @@
    }
   },
   "approval-card": {
-   "measuredAt": "2026-11-04",
-   "hash": "246d37b5c6b88e9f",
+   "measuredAt": "2026-11-07",
+   "hash": "74d48283aea0e42f",
    "bundle": {
     "own": {
-     "min": 45486,
-     "gzip": 12566
+     "min": 51110,
+     "gzip": 13820
     },
     "shared": [
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 19977
+      "min": 19983
      },
      {
       "name": "internal/card-head",
@@ -3574,19 +3692,19 @@
      }
     ],
     "withoutLit": {
-     "min": 54369,
-     "gzip": 15371
+     "min": 59993,
+     "gzip": 16658
     },
     "withLit": {
-     "min": 75553,
-     "gzip": 22256
+     "min": 81179,
+     "gzip": 23483
     }
    },
    "render": {
     "tag": "tc-approval-card",
     "source": "demo",
     "runs": 7,
-    "cold": 17.8,
+    "cold": 17.7,
     "first": 1,
     "update": 0.4,
     "updateKind": "one item of details replaced",
@@ -3597,14 +3715,14 @@
      "points": [
       {
        "items": 100,
-       "first": 3.3,
+       "first": 2.2,
        "update": 0.3,
        "nodes": 350
       },
       {
        "items": 1000,
-       "first": 12.8,
-       "update": 1.5,
+       "first": 12.6,
+       "update": 1.3,
        "nodes": 3050
       }
      ]
@@ -3709,6 +3827,114 @@
        "first": 65.6,
        "update": 28.2,
        "nodes": 9765
+      }
+     ]
+    },
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
+  "approval-gates": {
+   "measuredAt": "2026-11-07",
+   "hash": "a287ca95c92a9126",
+   "bundle": {
+    "own": {
+     "min": 34033,
+     "gzip": 9793
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 21863
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2968
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1864
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 1317
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 444
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 435
+     },
+     {
+      "name": "internal/safe-url",
+      "kind": "internal",
+      "min": 329
+     },
+     {
+      "name": "approval-card",
+      "kind": "element",
+      "min": 48611
+     }
+    ],
+    "withoutLit": {
+     "min": 91683,
+     "gzip": 24109
+    },
+    "withLit": {
+     "min": 114467,
+     "gzip": 31587
+    }
+   },
+   "render": {
+    "tag": "tc-approval-gates",
+    "source": "demo",
+    "runs": 7,
+    "cold": 12.1,
+    "first": 1.3,
+    "update": 0.2,
+    "updateKind": "one item of gates replaced",
+    "nodes": 126,
+    "scale": {
+     "property": "gates",
+     "demoItems": 4,
+     "points": [
+      {
+       "items": 100,
+       "first": 2.7,
+       "update": 0.3,
+       "nodes": 510
+      },
+      {
+       "items": 1000,
+       "first": 13,
+       "update": 2,
+       "nodes": 4110
       }
      ]
     },
@@ -9756,6 +9982,129 @@
     "updateKind": "re-render with the same data",
     "nodes": 50,
     "scale": null,
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
+  "collaboration-stream": {
+   "measuredAt": "2026-11-07",
+   "hash": "38669c67c36882f4",
+   "bundle": {
+    "own": {
+     "min": 37501,
+     "gzip": 10486
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 21270
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2968
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1868
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 1317
+     },
+     {
+      "name": "internal/util",
+      "kind": "internal",
+      "min": 1149
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 444
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 436
+     },
+     {
+      "name": "internal/format",
+      "kind": "internal",
+      "min": 426
+     },
+     {
+      "name": "internal/safe-url",
+      "kind": "internal",
+      "min": 329
+     },
+     {
+      "name": "internal/safe-media",
+      "kind": "internal",
+      "min": 120
+     },
+     {
+      "name": "mention-picker",
+      "kind": "element",
+      "min": 30654
+     }
+    ],
+    "withoutLit": {
+     "min": 78886,
+     "gzip": 22379
+    },
+    "withLit": {
+     "min": 101089,
+     "gzip": 29593
+    }
+   },
+   "render": {
+    "tag": "tc-collaboration-stream",
+    "source": "demo",
+    "runs": 7,
+    "cold": 14.6,
+    "first": 2.9,
+    "update": 0.4,
+    "updateKind": "one item of messages replaced",
+    "nodes": 256,
+    "scale": {
+     "property": "messages",
+     "demoItems": 9,
+     "points": [
+      {
+       "items": 100,
+       "first": 12.7,
+       "update": 1.3,
+       "nodes": 2149
+      },
+      {
+       "items": 1000,
+       "first": 129.8,
+       "update": 8,
+       "nodes": 20949
+      }
+     ]
+    },
     "idle": {
      "visible": {
       "frames": 0,
@@ -17304,11 +17653,11 @@
   },
   "generated-ui": {
    "measuredAt": "2026-11-07",
-   "hash": "b3eb5cce81519af1",
+   "hash": "2b12d2bfc9fbcfc7",
    "bundle": {
     "own": {
      "min": 34126,
-     "gzip": 10973
+     "gzip": 10892
     },
     "shared": [
      {
@@ -17579,7 +17928,7 @@
      {
       "name": "chat-composer",
       "kind": "element",
-      "min": 135339
+      "min": 135338
      },
      {
       "name": "review-center",
@@ -17629,7 +17978,7 @@
      {
       "name": "client-context",
       "kind": "element",
-      "min": 61599
+      "min": 61608
      },
      {
       "name": "agent-plan",
@@ -17697,12 +18046,22 @@
       "min": 50503
      },
      {
+      "name": "agent-inbox",
+      "kind": "element",
+      "min": 50083
+     },
+     {
       "name": "json-viewer",
       "kind": "element",
       "min": 49393
      },
      {
       "name": "ai-workspace",
+      "kind": "element",
+      "min": 49235
+     },
+     {
+      "name": "approval-card",
       "kind": "element",
       "min": 49235
      },
@@ -17714,7 +18073,7 @@
      {
       "name": "agent-tree",
       "kind": "element",
-      "min": 48512
+      "min": 48538
      },
      {
       "name": "email-draft",
@@ -17792,14 +18151,14 @@
       "min": 44347
      },
      {
+      "name": "run-checkpoints",
+      "kind": "element",
+      "min": 43925
+     },
+     {
       "name": "inline-diff",
       "kind": "element",
       "min": 43595
-     },
-     {
-      "name": "approval-card",
-      "kind": "element",
-      "min": 43576
      },
      {
       "name": "conversation-annotation",
@@ -17814,7 +18173,7 @@
      {
       "name": "combobox",
       "kind": "element",
-      "min": 42862
+      "min": 42971
      },
      {
       "name": "output-schema-builder",
@@ -17862,11 +18221,6 @@
       "min": 38706
      },
      {
-      "name": "agent-inbox",
-      "kind": "element",
-      "min": 38557
-     },
-     {
       "name": "agent-steering",
       "kind": "element",
       "min": 38478
@@ -17907,9 +18261,9 @@
       "min": 35476
      },
      {
-      "name": "run-checkpoints",
+      "name": "collaboration-stream",
       "kind": "element",
-      "min": 35420
+      "min": 35356
      },
      {
       "name": "reflection-gate",
@@ -17969,7 +18323,7 @@
      {
       "name": "trigger-builder",
       "kind": "element",
-      "min": 33244
+      "min": 33245
      },
      {
       "name": "sandbox-log",
@@ -18017,6 +18371,11 @@
       "min": 31817
      },
      {
+      "name": "approval-gates",
+      "kind": "element",
+      "min": 31707
+     },
+     {
       "name": "ai-summary",
       "kind": "element",
       "min": 31270
@@ -18039,7 +18398,7 @@
      {
       "name": "mention-picker",
       "kind": "element",
-      "min": 30880
+      "min": 30879
      },
      {
       "name": "fan-out-grid",
@@ -18065,6 +18424,11 @@
       "name": "agent-ledger",
       "kind": "element",
       "min": 30327
+     },
+     {
+      "name": "tool-access-map",
+      "kind": "element",
+      "min": 30163
      },
      {
       "name": "smart-recommendation",
@@ -18104,7 +18468,7 @@
      {
       "name": "comment-thread",
       "kind": "element",
-      "min": 29096
+      "min": 29108
      },
      {
       "name": "attestation-check",
@@ -18129,7 +18493,7 @@
      {
       "name": "color-picker",
       "kind": "element",
-      "min": 27310
+      "min": 27379
      },
      {
       "name": "identifier-details",
@@ -18289,7 +18653,7 @@
      {
       "name": "co-occurrence",
       "kind": "element",
-      "min": 23499
+      "min": 23555
      },
      {
       "name": "evidence-list",
@@ -18392,6 +18756,11 @@
       "min": 21331
      },
      {
+      "name": "root-cause-tree",
+      "kind": "element",
+      "min": 21201
+     },
+     {
       "name": "routine-form",
       "kind": "element",
       "min": 21044
@@ -18445,6 +18814,11 @@
       "name": "agent-findings",
       "kind": "element",
       "min": 20179
+     },
+     {
+      "name": "agent-fleet",
+      "kind": "element",
+      "min": 20144
      },
      {
       "name": "confidence-brief",
@@ -18757,6 +19131,11 @@
       "min": 14681
      },
      {
+      "name": "inspect-frame",
+      "kind": "element",
+      "min": 14075
+     },
+     {
       "name": "case-review",
       "kind": "element",
       "min": 13856
@@ -18964,7 +19343,7 @@
      {
       "name": "collection-card",
       "kind": "element",
-      "min": 9724
+      "min": 9780
      },
      {
       "name": "uncertainty-mix",
@@ -19404,7 +19783,7 @@
      {
       "name": "src/generative/registry.ts",
       "kind": "other",
-      "min": 60170
+      "min": 61168
      },
      {
       "name": "src/generative/schemas/tc-ai-side-pane.json",
@@ -19522,6 +19901,11 @@
       "min": 4757
      },
      {
+      "name": "src/generative/schemas/tc-approval-card.json",
+      "kind": "other",
+      "min": 4741
+     },
+     {
       "name": "src/generative/schemas/tc-retrieval-inspector.json",
       "kind": "other",
       "min": 4592
@@ -19607,6 +19991,11 @@
       "min": 4161
      },
      {
+      "name": "src/generative/schemas/tc-collaboration-stream.json",
+      "kind": "other",
+      "min": 4125
+     },
+     {
       "name": "src/generative/schemas/tc-slope-chart.json",
       "kind": "other",
       "min": 4102
@@ -19615,6 +20004,11 @@
       "name": "src/generative/schemas/tc-box-plot.json",
       "kind": "other",
       "min": 4097
+     },
+     {
+      "name": "src/generative/schemas/tc-run-checkpoints.json",
+      "kind": "other",
+      "min": 4088
      },
      {
       "name": "src/generative/schemas/tc-conversation-annotation.json",
@@ -19652,6 +20046,11 @@
       "min": 4032
      },
      {
+      "name": "src/generative/schemas/tc-tool-access-map.json",
+      "kind": "other",
+      "min": 4020
+     },
+     {
       "name": "src/generative/schemas/tc-evaluation-dataset-editor.json",
       "kind": "other",
       "min": 3976
@@ -19665,11 +20064,6 @@
       "name": "src/generative/schemas/tc-segmented-bar.json",
       "kind": "other",
       "min": 3965
-     },
-     {
-      "name": "src/generative/schemas/tc-approval-card.json",
-      "kind": "other",
-      "min": 3946
      },
      {
       "name": "src/generative/schemas/tc-pie-chart.json",
@@ -19700,6 +20094,11 @@
       "name": "src/generative/schemas/tc-venn-diagram.json",
       "kind": "other",
       "min": 3840
+     },
+     {
+      "name": "src/generative/schemas/tc-approval-gates.json",
+      "kind": "other",
+      "min": 3787
      },
      {
       "name": "src/generative/schemas/tc-funnel-chart.json",
@@ -19927,6 +20326,11 @@
       "min": 3027
      },
      {
+      "name": "src/generative/schemas/tc-agent-inbox.json",
+      "kind": "other",
+      "min": 3023
+     },
+     {
       "name": "src/generative/schemas/tc-problem-list.json",
       "kind": "other",
       "min": 3021
@@ -20090,11 +20494,6 @@
       "name": "src/generative/schemas/tc-clarifying-questions.json",
       "kind": "other",
       "min": 2724
-     },
-     {
-      "name": "src/generative/schemas/tc-run-checkpoints.json",
-      "kind": "other",
-      "min": 2712
      },
      {
       "name": "src/generative/schemas/tc-session-context-bar.json",
@@ -20327,6 +20726,11 @@
       "min": 2310
      },
      {
+      "name": "src/generative/schemas/tc-root-cause-tree.json",
+      "kind": "other",
+      "min": 2301
+     },
+     {
       "name": "src/generative/schemas/tc-combobox.json",
       "kind": "other",
       "min": 2292
@@ -20385,11 +20789,6 @@
       "name": "src/generative/schemas/tc-uncertainty-mix.json",
       "kind": "other",
       "min": 2229
-     },
-     {
-      "name": "src/generative/schemas/tc-agent-inbox.json",
-      "kind": "other",
-      "min": 2213
      },
      {
       "name": "src/generative/schemas/tc-radar-chart.json",
@@ -20687,6 +21086,11 @@
       "min": 1787
      },
      {
+      "name": "src/generative/schemas/tc-agent-fleet.json",
+      "kind": "other",
+      "min": 1786
+     },
+     {
       "name": "src/generative/schemas/tc-writing-assistant.json",
       "kind": "other",
       "min": 1785
@@ -20860,6 +21264,11 @@
       "name": "src/generative/schemas/tc-decision-inbox.json",
       "kind": "other",
       "min": 1430
+     },
+     {
+      "name": "src/generative/schemas/tc-inspect-frame.json",
+      "kind": "other",
+      "min": 1426
      },
      {
       "name": "src/generative/schemas/tc-breadcrumbs.json",
@@ -21288,21 +21697,21 @@
      }
     ],
     "withoutLit": {
-     "min": 9646597,
-     "gzip": 2428951
+     "min": 9848500,
+     "gzip": 2451744
     },
     "withLit": {
-     "min": 9588923,
-     "gzip": 2405754
+     "min": 9789019,
+     "gzip": 2432049
     }
    },
    "render": {
     "tag": "tc-generated-ui",
     "source": "demo",
     "runs": 7,
-    "cold": 14,
-    "first": 1.9,
-    "update": 0.3,
+    "cold": 2.9,
+    "first": 0.6,
+    "update": 0.1,
     "updateKind": "re-render with the same data",
     "nodes": 9,
     "scale": null,
@@ -23597,6 +24006,87 @@
     "update": 0.2,
     "updateKind": "re-render with the same data",
     "nodes": 78,
+    "scale": null,
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
+  "inspect-frame": {
+   "measuredAt": "2026-11-07",
+   "hash": "060ee953941b6186",
+   "bundle": {
+    "own": {
+     "min": 16062,
+     "gzip": 5575
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 18942
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2217
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1864
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 692
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 440
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 435
+     }
+    ],
+    "withoutLit": {
+     "min": 23343,
+     "gzip": 7782
+    },
+    "withLit": {
+     "min": 43422,
+     "gzip": 14226
+    }
+   },
+   "render": {
+    "tag": "tc-inspect-frame",
+    "source": "demo",
+    "runs": 7,
+    "cold": 3.7,
+    "first": 0.3,
+    "update": 0.1,
+    "updateKind": "re-render with the same data",
+    "nodes": 1,
     "scale": null,
     "idle": {
      "visible": {
@@ -35867,6 +36357,104 @@
     "errors": []
    }
   },
+  "root-cause-tree": {
+   "measuredAt": "2026-11-07",
+   "hash": "4d883b049f0a7731",
+   "bundle": {
+    "own": {
+     "min": 23220,
+     "gzip": 7665
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 21098
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2971
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1868
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 444
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 436
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     }
+    ],
+    "withoutLit": {
+     "min": 30715,
+     "gzip": 9760
+    },
+    "withLit": {
+     "min": 53069,
+     "gzip": 17159
+    }
+   },
+   "render": {
+    "tag": "tc-root-cause-tree",
+    "source": "demo",
+    "runs": 7,
+    "cold": 9,
+    "first": 1.3,
+    "update": 0.4,
+    "updateKind": "one item of hypotheses replaced",
+    "nodes": 103,
+    "scale": {
+     "property": "hypotheses",
+     "demoItems": 5,
+     "points": [
+      {
+       "items": 100,
+       "first": 7.9,
+       "update": 1.5,
+       "nodes": 1414
+      },
+      {
+       "items": 1000,
+       "first": 87.1,
+       "update": 7.1,
+       "nodes": 13834
+      }
+     ]
+    },
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
   "rose-chart": {
    "measuredAt": "2026-11-07",
    "hash": "c7167a59ba4256d6",
@@ -36198,18 +36786,18 @@
    }
   },
   "run-checkpoints": {
-   "measuredAt": "2026-10-28",
-   "hash": "e41c97ab29da7512",
+   "measuredAt": "2026-11-07",
+   "hash": "872d386d7f1c7c7a",
    "bundle": {
     "own": {
-     "min": 37601,
-     "gzip": 10393
+     "min": 46073,
+     "gzip": 12166
     },
     "shared": [
      {
       "name": "Lit",
       "kind": "lit",
-      "min": 22088
+      "min": 22087
      },
      {
       "name": "internal/card-head",
@@ -36243,20 +36831,20 @@
      }
     ],
     "withoutLit": {
-     "min": 46495,
-     "gzip": 12996
+     "min": 54968,
+     "gzip": 14757
     },
     "withLit": {
-     "min": 69745,
-     "gzip": 20751
+     "min": 78220,
+     "gzip": 22455
     }
    },
    "render": {
     "tag": "tc-run-checkpoints",
     "source": "demo",
     "runs": 7,
-    "cold": 10,
-    "first": 1.9,
+    "cold": 8.9,
+    "first": 1.8,
     "update": 0.4,
     "updateKind": "one item of checkpoints replaced",
     "nodes": 164,
@@ -36266,14 +36854,14 @@
      "points": [
       {
        "items": 100,
-       "first": 10.5,
+       "first": 10.6,
        "update": 1,
        "nodes": 1491
       },
       {
        "items": 1000,
-       "first": 115,
-       "update": 11.5,
+       "first": 115.6,
+       "update": 7.5,
        "nodes": 14241
       }
      ]
@@ -43366,6 +43954,118 @@
      }
     },
     "errors": []
+   }
+  },
+  "tool-access-map": {
+   "measuredAt": "2026-11-07",
+   "hash": "16e93979d4453152",
+   "bundle": {
+    "own": {
+     "min": 32168,
+     "gzip": 9252
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 21087
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2968
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1868
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 444
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 436
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     },
+     {
+      "name": "internal/util",
+      "kind": "internal",
+      "min": 130
+     }
+    ],
+    "withoutLit": {
+     "min": 39753,
+     "gzip": 11369
+    },
+    "withLit": {
+     "min": 62047,
+     "gzip": 18712
+    }
+   },
+   "render": {
+    "tag": "tc-tool-access-map",
+    "source": "demo",
+    "runs": 7,
+    "cold": 10.9,
+    "first": 1.6,
+    "update": 0.7,
+    "updateKind": "one item of tools replaced",
+    "nodes": 181,
+    "scale": {
+     "property": "tools",
+     "demoItems": 9,
+     "points": [
+      {
+       "items": 100,
+       "first": 7.3,
+       "update": 5.4,
+       "nodes": 1344
+      },
+      {
+       "items": 1000,
+       "first": 79.2,
+       "update": 24.6,
+       "nodes": 12844
+      }
+     ]
+    },
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": [
+     "ResizeObserver loop completed with undelivered notifications.",
+     "ResizeObserver loop completed with undelivered notifications.",
+     "ResizeObserver loop completed with undelivered notifications.",
+     "ResizeObserver loop completed with undelivered notifications.",
+     "ResizeObserver loop completed with undelivered notifications.",
+     "ResizeObserver loop completed with undelivered notifications.",
+     "ResizeObserver loop completed with undelivered notifications.",
+     "ResizeObserver loop completed with undelivered notifications."
+    ]
    }
   },
   "tool-call-card": {

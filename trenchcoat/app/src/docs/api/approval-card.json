@@ -254,6 +254,38 @@
      "readonly": false
     },
     {
+     "name": "diff",
+     "attribute": null,
+     "type": "ApprovalDiff | undefined",
+     "default": "undefined",
+     "description": "A file change the action would make, shown as a small unified diff: `{ path, lines: [{ kind, text }] }`",
+     "readonly": false
+    },
+    {
+     "name": "diffLabel",
+     "attribute": "diff-label",
+     "type": "string",
+     "default": "\"Changes\"",
+     "description": "The heading of the diff",
+     "readonly": false
+    },
+    {
+     "name": "args",
+     "attribute": null,
+     "type": "ApprovalArgs | undefined",
+     "default": "undefined",
+     "description": "The call's arguments, shown as a readable code block",
+     "readonly": false
+    },
+    {
+     "name": "argsLabel",
+     "attribute": "args-label",
+     "type": "string",
+     "default": "\"Arguments\"",
+     "description": "The heading of the arguments",
+     "readonly": false
+    },
+    {
      "name": "look",
      "attribute": "look",
      "type": "Look | undefined",
@@ -317,6 +349,13 @@
      "looks": [
       "both"
      ]
+    },
+    {
+     "name": "--tc-approval-card-code-max",
+     "value": "220px",
+     "looks": [
+      "both"
+     ]
     }
    ],
    "tokens": [
@@ -367,6 +406,7 @@
     "--tc-focus-outline",
     "--tc-focus-ring-offset",
     "--tc-focus-ring-width",
+    "--tc-font-mono",
     "--tc-font-sans",
     "--tc-font-size-md",
     "--tc-font-size-sm",
@@ -383,6 +423,7 @@
     "--tc-kbd-radius",
     "--tc-kbd-shadow",
     "--tc-line-height-none",
+    "--tc-line-height-normal",
     "--tc-line-height-snug",
     "--tc-line-height-tight",
     "--tc-pill-font-size",
@@ -394,6 +435,7 @@
     "--tc-pill-px-lg",
     "--tc-pill-radius",
     "--tc-radius-lg",
+    "--tc-radius-md",
     "--tc-radius-xs",
     "--tc-space-0-5",
     "--tc-space-1",
@@ -414,6 +456,11 @@
     "--tc-surface-on-tray",
     "--tc-surface-raised",
     "--tc-surface-tray",
+    "--tc-syntax-keyword",
+    "--tc-syntax-number",
+    "--tc-syntax-property",
+    "--tc-syntax-string",
+    "--tc-syntax-text",
     "--tc-text-muted",
     "--tc-text-on-inverse",
     "--tc-text-primary",
@@ -558,7 +605,9 @@
     "onApprove",
     "label",
     "consequences",
-    "evidence"
+    "evidence",
+    "diff",
+    "args"
    ],
    "attributes": [
     {
@@ -652,6 +701,14 @@
     {
      "name": "evidenceLabel",
      "attribute": "evidence-label"
+    },
+    {
+     "name": "diffLabel",
+     "attribute": "diff-label"
+    },
+    {
+     "name": "argsLabel",
+     "attribute": "args-label"
     }
    ],
    "events": [
@@ -890,9 +947,27 @@
     "progressive": true,
     "without": "In a forced-colours mode the browser's own adjustments apply, without the components' fixes.",
     "via": [
+     "itself",
      "internal/card-head",
      "internal/kit",
      "tokens.css"
+    ]
+   },
+   {
+    "id": "overscroll-contain",
+    "name": "overscroll-behavior: contain",
+    "bcd": "css.properties.overscroll-behavior.contain",
+    "versions": {
+     "chrome": "63",
+     "edge": "18",
+     "firefox": "59",
+     "safari": "16",
+     "safari_ios": "16"
+    },
+    "progressive": true,
+    "without": "Scrolling past the end of a list carries on scrolling the page.",
+    "via": [
+     "itself"
     ]
    }
   ]
@@ -929,7 +1004,7 @@
   "windowed": false
  },
  "size": {
-  "min": 54369,
-  "gzip": 15292
+  "min": 59993,
+  "gzip": 16658
  }
 }
