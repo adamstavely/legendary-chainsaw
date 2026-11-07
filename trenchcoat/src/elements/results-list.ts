@@ -100,6 +100,9 @@ export class TcResultsList extends TcElement {
   @property({ attribute: false }) accessor results: SearchResult[] = [];
   /** Group results under their kind, or list them as they come */
   @property() accessor group: ResultsGroup = "kind";
+  /** Group headings put the kind in the plural ("Document" → "Documents"); `plural-kinds="false"` shows each kind
+   *  exactly as given, for proper names ("NREL", "Sandia National Laboratories") */
+  @property({ attribute: "plural-kinds", converter: { fromAttribute: (v: string | null) => v !== "false" } }) accessor pluralKinds = true;
   /** "Did you mean …" – a corrected query to offer */
   @property() accessor suggestion: string | undefined = undefined;
   /** How many there are in all, in words ("About 1,240 results"); by default the count of `results` */
@@ -315,7 +318,7 @@ export class TcResultsList extends TcElement {
                   ${this.groups.map((g, gi) =>
                     g.kind
                       ? html`<section class="ui-rsl__group" aria-labelledby=${`${id}-g-${gi}`}>
-                          <h4 class="ui-rsl__group-name" id=${`${id}-g-${gi}`}>${pluralKind(g.kind)} <span class="ui-rsl__count">${this.countOf(g.kind)}</span></h4>
+                          <h4 class="ui-rsl__group-name" id=${`${id}-g-${gi}`}>${this.pluralKinds ? pluralKind(g.kind) : g.kind} <span class="ui-rsl__count">${this.countOf(g.kind)}</span></h4>
                           <ul class="ui-rsl__list">${g.rows.map((r) => this.renderResult(r, tabStop))}</ul>
                         </section>`
                       : html`<ul class="ui-rsl__list" aria-labelledby=${`${id}-title`}>${g.rows.map((r) => this.renderResult(r, tabStop))}</ul>`,

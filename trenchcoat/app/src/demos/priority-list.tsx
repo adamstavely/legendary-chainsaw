@@ -45,7 +45,7 @@ export default function Demo({ ui }: { ui: typeof UI }) {
           {grouped ? "Show as one list" : "Group by priority"}
         </button>
       </div>
-      <PriorityList title="Centres" nameLabel="Centre" description="Each centre's topics rolled up." items={CENTRES} figures={PAPERS} noFilters />
+      <PriorityList title="Centres" nameLabel="Centre" description="Each centre's topics rolled up – coverage, open gaps and work left out." items={CENTRES} figures={PAPERS} hide={["coverage", "open", "work"]} noFilters />
     </div>
   );
 }

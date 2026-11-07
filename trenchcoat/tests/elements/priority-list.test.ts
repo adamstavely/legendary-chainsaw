@@ -235,6 +235,34 @@ describe("tc-priority-list", () => {
     });
   }
 
+  test("hide leaves columns out of the header, the rows and the grid; the name and figures take the room", async () => {
+    const wrap = await fixture(html`<div style="width: 820px"><tc-priority-list hide="coverage open work" .items=${CENTRES} .figures=${FIGURES}></tc-priority-list></div>`);
+    const el = wrap.querySelector<TcPriorityList>("tc-priority-list")!;
+    expect(el.hide).toEqual(["coverage", "open", "work"]);
+    for (const c of ["coverage", "open", "work"]) {
+      expect(el.querySelector(`.ui-prl__col--${c}`), c).toBeNull();
+    }
+    expect(el.querySelector(".ui-prl__coverage, .ui-prl__open-cell, .ui-prl__work")).toBeNull();
+    expect(el.querySelector(".ui-prl__col--momentum")).not.toBeNull();
+    // The tracks: badge, name, momentum, then one per figure – nothing for the hidden columns
+    const r = row(el, CENTRES[0].id);
+    const tracks = getComputedStyle(r).gridTemplateColumns.split(" ");
+    expect(tracks).toHaveLength(3 + FIGURES.length);
+    expect(getComputedStyle(el.querySelector(".ui-prl__columns")!).gridTemplateColumns.split(" ")).toHaveLength(3 + FIGURES.length);
+    // The last figure ends at the row's end: no empty gap after it
+    const last = r.querySelectorAll(".ui-prl__fig");
+    expect(r.getBoundingClientRect().right - last[last.length - 1].getBoundingClientRect().right).toBeLessThan(16);
+    // Narrow: the remaining columns still fold away and the row fits
+    (wrap as HTMLElement).style.width = "380px";
+    await settle();
+    await expect.poll(() => getComputedStyle(row(el, CENTRES[0].id)).gridTemplateColumns.split(" ").length).toBe(2);
+    expect(el.scrollWidth).toBeLessThanOrEqual(el.clientWidth + 1);
+    el.hide = [];
+    await settle();
+    expect(el.querySelector(".ui-prl__col--work")).not.toBeNull();
+    expect(el.querySelector(".ui-prl__card")!.hasAttribute("data-hide")).toBe(false);
+  });
+
   test("narrow with figures: the work count goes first, then the figures, and the row still fits", async () => {
     const wrap = await fixture(html`<div style="width: 580px"><tc-priority-list .items=${CENTRES} .figures=${FIGURES}></tc-priority-list></div>`);
     const el = wrap.querySelector("tc-priority-list")!;

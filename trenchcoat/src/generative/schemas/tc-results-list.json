@@ -28,6 +28,10 @@
       ],
       "description": "Group results under their kind, or list them as they come"
     },
+    "pluralKinds": {
+      "type": "boolean",
+      "description": "Group headings put the kind in the plural (\"Document\" → \"Documents\"); `plural-kinds=\"false\"` shows each kind exactly as given, for proper names (\"NREL\", \"Sandia National Laboratories\")"
+    },
     "suggestion": {
       "type": "string",
       "description": "\"Did you mean …\" – a corrected query to offer"

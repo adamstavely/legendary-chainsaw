@@ -34,6 +34,19 @@ describe("tc-results-list", () => {
     expect(queryTerms("a Coral  coral bleaching")).toEqual(["bleaching", "coral"]);
   });
 
+  test("plural-kinds=\"false\" shows each group heading exactly as its kind", async () => {
+    const labs: SearchResult[] = [
+      { id: "n", kind: "NREL", title: "Grid study" },
+      { id: "s", kind: "Sandia National Laboratories", title: "Battery report" },
+    ];
+    const el = await fixture<TcResultsList>(html`<tc-results-list plural-kinds="false" .results=${labs}></tc-results-list>`);
+    expect(el.pluralKinds).toBe(false);
+    expect([...el.querySelectorAll(".ui-rsl__group-name")].map(text)).toEqual(["NREL 1", "Sandia National Laboratories 1"]);
+    el.pluralKinds = true;
+    await settle();
+    expect(text(el.querySelector(".ui-rsl__group-name"))).toBe("NRELs 1");
+  });
+
   for (const look of ["standard", "clean"] as const) {
     test(`${look}: grouped by kind with counts, the query marked, one quiet line, one tab stop`, async () => {
       const el = await make(look);

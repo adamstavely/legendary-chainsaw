@@ -206,6 +206,31 @@ describe("tc-side-nav", () => {
     expect(text(el.querySelector("[role=status]"))).toBe("Navigation collapsed");
   });
 
+  test("--tc-snav-item-gap and --tc-snav-item-height space the items, open and as a rail", async () => {
+    const el = await fixture<TcSideNav>(html`<tc-side-nav brand="Intellect" collapsible .items=${ITEMS} style="--tc-snav-item-gap: 10px; --tc-snav-item-height: 44px"></tc-side-nav>`);
+    const links = () => [...el.querySelectorAll<HTMLElement>(".ui-snav__link")];
+    for (const collapsed of [false, true]) {
+      el.collapsed = collapsed;
+      await settle();
+      const [a, b] = links().map((l) => l.getBoundingClientRect());
+      expect(a.height, `collapsed ${collapsed}`).toBeCloseTo(44, 0);
+      expect(b.top - a.bottom, `collapsed ${collapsed}`).toBeCloseTo(10, 0);
+    }
+    // The rail still centres each icon
+    const link = links()[0].getBoundingClientRect();
+    const icon = links()[0].querySelector(".ui-snav__icon")!.getBoundingClientRect();
+    expect(icon.left + icon.width / 2).toBeCloseTo(link.left + link.width / 2, 0);
+    // Unset, the defaults are as before
+    el.removeAttribute("style");
+    el.collapsed = false;
+    await settle();
+    const probe = document.createElement("div");
+    probe.style.cssText = "height: var(--tc-control-h-md)";
+    el.append(probe);
+    expect(links()[0].getBoundingClientRect().height).toBeCloseTo(probe.getBoundingClientRect().height, 0);
+    probe.remove();
+  });
+
   test("a large brand name isn't clipped: its line height follows its own size, not the bar's", async () => {
     const el = await fixture<TcSideNav>(html`<tc-side-nav brand="Intellect" brand-href="#home" .items=${ITEMS} style="line-height: 16px; --tc-snav-brand-size: 48px"></tc-side-nav>`);
     const name = el.querySelector<HTMLElement>(".ui-snav__brand-name")!;

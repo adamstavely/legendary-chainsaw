@@ -31,6 +31,13 @@ export class ResultsList {
   @Input() set group(v: TcResultsList["group"]) {
     this.#el.group = v;
   }
+  /**
+   * Group headings put the kind in the plural ("Document" → "Documents"); `plural-kinds="false"` shows each kind
+   * exactly as given, for proper names ("NREL", "Sandia National Laboratories")
+   */
+  @Input() set pluralKinds(v: TcResultsList["pluralKinds"] | "" | "true" | "false") {
+    this.#el.pluralKinds = typeof v === "string" ? v !== "false" : v;
+  }
   /** "Did you mean …" – a corrected query to offer */
   @Input() set suggestion(v: TcResultsList["suggestion"]) {
     this.#el.suggestion = v;

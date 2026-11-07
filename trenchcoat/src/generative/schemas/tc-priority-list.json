@@ -20,6 +20,13 @@
       },
       "description": "The topics or projects, in the order to show them (within a group when grouped)"
     },
+    "hide": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/PriorityColumn"
+      },
+      "description": "Built-in columns to leave out of the header and the rows – space-separated as an attribute, e.g. `hide=\"coverage open work\"`; the name and the other columns take the room"
+    },
     "figures": {
       "type": "array",
       "items": {
@@ -182,6 +189,16 @@
         "on-track",
         "watch"
       ]
+    },
+    "PriorityColumn": {
+      "type": "string",
+      "enum": [
+        "coverage",
+        "momentum",
+        "open",
+        "work"
+      ],
+      "description": "A built-in column `hide` can leave out"
     },
     "PriorityFigureColumn": {
       "type": "object",

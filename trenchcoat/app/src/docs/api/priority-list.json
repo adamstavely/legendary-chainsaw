@@ -30,6 +30,14 @@
      "readonly": false
     },
     {
+     "name": "hide",
+     "attribute": "hide",
+     "type": "PriorityColumn[]",
+     "default": "[]",
+     "description": "Built-in columns to leave out of the header and the rows – space-separated as an attribute, e.g.\n`hide=\"coverage open work\"`; the name and the other columns take the room",
+     "readonly": false
+    },
+    {
      "name": "figures",
      "attribute": null,
      "type": "PriorityFigureColumn[]",
@@ -222,6 +230,10 @@
     "--tc-pill-h",
     "--tc-pill-px",
     "--tc-pill-radius",
+    "--tc-prl-c-coverage",
+    "--tc-prl-c-momentum",
+    "--tc-prl-c-open",
+    "--tc-prl-c-work",
     "--tc-prl-fig-w",
     "--tc-prl-lead",
     "--tc-prl-n",
@@ -335,6 +347,10 @@
     {
      "name": "description",
      "attribute": "description"
+    },
+    {
+     "name": "hide",
+     "attribute": "hide"
     },
     {
      "name": "grouped",
@@ -575,7 +591,7 @@
   "windowed": false
  },
  "size": {
-  "min": 33002,
-  "gzip": 9799
+  "min": 34822,
+  "gzip": 10270
  }
 }

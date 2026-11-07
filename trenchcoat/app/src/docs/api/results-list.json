@@ -38,6 +38,14 @@
      "readonly": false
     },
     {
+     "name": "pluralKinds",
+     "attribute": "plural-kinds",
+     "type": "boolean",
+     "default": "true",
+     "description": "Group headings put the kind in the plural (\"Document\" → \"Documents\"); `plural-kinds=\"false\"` shows each kind\nexactly as given, for proper names (\"NREL\", \"Sandia National Laboratories\")",
+     "readonly": false
+    },
+    {
      "name": "suggestion",
      "attribute": "suggestion",
      "type": "string | undefined",
@@ -341,6 +349,10 @@
      "attribute": "group"
     },
     {
+     "name": "pluralKinds",
+     "attribute": "plural-kinds"
+    },
+    {
      "name": "suggestion",
      "attribute": "suggestion"
     },
@@ -599,7 +611,7 @@
   "windowed": false
  },
  "size": {
-  "min": 28606,
-  "gzip": 9399
+  "min": 28796,
+  "gzip": 9478
  }
 }
