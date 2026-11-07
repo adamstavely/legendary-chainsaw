@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.0 – Side Nav
+
+- **Side Nav** (`tc-side-nav`): an app's main navigation down the side – the brand at the top, places with icons,
+  badges and section captions, one of them the current page (`aria-current="page"`), and the page's own children
+  at the bottom. Items with `href` are real links; a plain click fires a cancelable `tc-navigate` ({ id, href, item })
+  for a router, and ⌘/Ctrl- or Shift-clicks are left to the browser. `collapsible` folds it into an icon-only rail
+  (`collapsed`, cancelable `tc-collapsed-change`). React `SideNav`, Angular `SideNav`.
+
 ## Unreleased – Charts: Rose, Hexbin, Network Graph and Small Multiples
 
 - **Rose Chart:** a polar area (Nightingale rose) chart – equal-angle wedges whose area shows each value, the largest

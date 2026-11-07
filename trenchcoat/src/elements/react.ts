@@ -344,6 +344,7 @@ export * from "./react/share-panel";
 export * from "./react/shared-element";
 export * from "./react/shimmer-loader";
 export * from "./react/side-folder";
+export * from "./react/side-nav";
 export * from "./react/sla-status";
 export * from "./react/slider-field";
 export * from "./react/slope-chart";

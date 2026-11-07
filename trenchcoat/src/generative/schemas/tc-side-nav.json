@@ -1,0 +1,94 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-side-nav.json",
+  "title": "tc-side-nav",
+  "description": "An app's main navigation down the side: brand, places with icons and badges, the current page, a footer of your own.",
+  "type": "object",
+  "properties": {
+    "items": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/SideNavItem"
+      },
+      "description": "The places, top to bottom"
+    },
+    "current": {
+      "type": "string",
+      "description": "The id of the current page's item – it gets aria-current=\"page\""
+    },
+    "brand": {
+      "type": "string",
+      "description": "The product's name at the top"
+    },
+    "brandHref": {
+      "type": "string",
+      "description": "Where the brand links to; without it the brand is plain text"
+    },
+    "label": {
+      "type": "string",
+      "description": "The navigation landmark's name"
+    },
+    "collapsed": {
+      "type": "boolean",
+      "description": "Folded into an icon-only rail"
+    },
+    "collapsible": {
+      "type": "boolean",
+      "description": "Adds the button that folds the bar into a rail and back"
+    },
+    "labels": {
+      "type": "object",
+      "properties": {
+        "collapse": {
+          "type": "string"
+        },
+        "expand": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The collapse button's words, merged over defaultSideNavLabels"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "SideNavItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Your key for the item: `current` names it, tc-navigate hands it back"
+        },
+        "label": {
+          "type": "string",
+          "description": "Its name, shown beside the icon"
+        },
+        "href": {
+          "type": "string",
+          "description": "A link; without one the item is a button that only fires tc-navigate",
+          "format": "uri-reference"
+        },
+        "badge": {
+          "type": [
+            "string",
+            "number"
+          ],
+          "description": "A count or short word after the label: 12, \"New\""
+        },
+        "disabled": {
+          "type": "boolean",
+          "description": "Shown dimmed; it can't be chosen"
+        },
+        "section": {
+          "type": "string",
+          "description": "A caption over a group of items; consecutive items with the same section share it"
+        }
+      },
+      "required": [
+        "id",
+        "label"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

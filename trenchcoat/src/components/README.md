@@ -267,6 +267,7 @@ components are being ported to Lit web components (`audit/lit-port-plan.md`); th
 - **Setup Guide** (`setup-guide.tsx`) – Onboarding panel with a progress bar and collapsible task groups that strike through when done
 - **Share Link Manager** (`share-link-manager.tsx`) – The links that already share something – status in words, expiry, opens and who made them, with Copy, Change expiry and Revoke, which says how many opens it's had
 - **Share Panel** (`share-panel.tsx`) – Share with people and groups at a level for each – every recipient checked for entitlement first, with anyone not authorized flagged, the person sharing told, and left out of the share.
+- **Side Nav** (`side-nav.tsx`) – An app's main navigation down the side – brand, places with icons and badges in sections, the current page, real links with a cancelable `tc-navigate` for routing, a footer of the page's own and a fold into an icon-only rail
 - **SLA Status** (`sla-status.tsx`) – How well service levels are met – the share on time, a Met / At risk / Breached split in words and marks, a weekly trend, a bar per type of request with a readout, and a period chooser
 - **Slider Field** (`slider-field.tsx`) – A synchronized slider and numeric input
 - **Slope Chart** (`slope-chart.tsx`) – How each item changed between two moments, as lines from first value to last, the biggest rise emphasised, names and values nudged apart on both sides, lines that draw themselves in, and a table view

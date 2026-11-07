@@ -2827,6 +2827,15 @@
     ]
   },
   {
+    "tag": "tc-side-nav",
+    "name": "SideNav",
+    "description": "An app's main navigation down the side: brand, places with icons and badges, the current page, a footer of your own.",
+    "events": [
+      "tc-navigate",
+      "tc-collapsed-change"
+    ]
+  },
+  {
     "tag": "tc-sla-status",
     "name": "SlaStatus",
     "description": "Service-level performance – the on-time share, a Met / At risk / Breached split in words and marks, a weekly trend,",
