@@ -166,6 +166,14 @@
      "fallback": true
     },
     {
+     "name": "--tc-snav-brand-line-height",
+     "value": "1.2",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    },
+    {
      "name": "--tc-snav-logo-size",
      "value": "28px",
      "looks": [
@@ -518,7 +526,7 @@
   "windowed": false
  },
  "size": {
-  "min": 22369,
-  "gzip": 7303
+  "min": 22576,
+  "gzip": 7379
  }
 }

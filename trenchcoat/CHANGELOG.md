@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.10.0 – A brand for app headers; large side-nav names aren't clipped
+
+- **Header Brand:** `tc-header-brand` (`@adamstavely/trenchcoat/header-brand`, React `HeaderBrand`, Angular
+  `HeaderBrand` from `@adamstavely/trenchcoat/angular/header-brand`), the product's logo and name at the start of a
+  full-width app header.
+  - `name`; `href` makes it a link (through `safeUrl` – an unsafe link leaves plain text); `icon`, an SVG or img
+    element cloned before the name; `inverse` draws it in the dark theme's colours on a dark bar, as
+    `tc-header-nav inverse` does; and `look`.
+  - A click on the link fires a cancelable `tc-navigate` (`{ href }`): prevented, the link isn't followed, so an app's
+    router can take it. Clicks with a modifier key are left to the browser.
+  - Sized from the page: `--tc-hb-name-size` (default `--tc-font-size-lg`), `--tc-hb-logo-size` (24px),
+    `--tc-hb-weight` (semibold), `--tc-hb-gap` (`--tc-space-2`) and `--tc-hb-line-height` (1.1, relative to the
+    name's size). The name is never truncated or clipped, and the brand is centred vertically, with a focus ring on
+    the link.
+- **Side Nav:** the brand's name takes a line height relative to its own size (`--tc-snav-brand-line-height`, 1.2 by
+  default) instead of the bar's fixed one, so a large `--tc-snav-brand-size` (48px, say) is no longer clipped top
+  and bottom. It still ends in an ellipsis when it's too wide.
+
 ## 0.9.0 – A single-choice dropdown
 
 - **Select:** `tc-select` (`@adamstavely/trenchcoat/select`, React `Select`, Angular `Select` from

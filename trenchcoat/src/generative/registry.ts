@@ -160,6 +160,7 @@ export const registry: Record<string, { events: string[]; load: () => Promise<un
   "tc-guardrail-notice": { events: ["tc-open-change","tc-review-request","tc-dismiss"], load: () => import("../elements/guardrail-notice"), schema: () => import("./schemas/tc-guardrail-notice.json") },
   "tc-handoff": { events: ["tc-status-change","tc-checked-change","tc-note-change","tc-return"], load: () => import("../elements/handoff"), schema: () => import("./schemas/tc-handoff.json") },
   "tc-handoff-brief": { events: ["tc-acknowledged-change","tc-access-request","tc-accept"], load: () => import("../elements/handoff-brief"), schema: () => import("./schemas/tc-handoff-brief.json") },
+  "tc-header-brand": { events: ["tc-navigate"], load: () => import("../elements/header-brand"), schema: () => import("./schemas/tc-header-brand.json") },
   "tc-header-nav": { events: ["tc-panel-change","tc-account-select","tc-setup-continue"], load: () => import("../elements/header-nav"), schema: () => import("./schemas/tc-header-nav.json") },
   "tc-heatmap": { events: ["tc-selected-change","tc-view-change"], load: () => import("../elements/heatmap"), schema: () => import("./schemas/tc-heatmap.json") },
   "tc-hexbin-chart": { events: ["tc-view-change","tc-mark-hover","tc-mark-click"], load: () => import("../elements/hexbin-chart"), schema: () => import("./schemas/tc-hexbin-chart.json") },

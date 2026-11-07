@@ -262,7 +262,9 @@ export class TcSideNav extends TcElement {
 /* The brand's name and logo take their size from the page: --tc-snav-brand-size, --tc-snav-brand-weight and
    --tc-snav-logo-size on tc-side-nav. The logo never grows past the rail's inner width, so the rail can centre it */
 .ui-snav__brand { display: flex; flex: 1; align-items: center; gap: var(--tc-space-2); min-width: 0; color: var(--tc-text-primary); font-weight: var(--tc-snav-brand-weight, var(--tc-font-weight-semibold)); text-decoration: none; border-radius: var(--tc-radius-md); }
-.ui-snav__brand-name { overflow: hidden; font-size: var(--tc-snav-brand-size, 1em); text-overflow: ellipsis; white-space: nowrap; }
+/* A line height relative to the name's own size (--tc-snav-brand-line-height, 1.2 by default), so a large name isn't
+   clipped by the bar's fixed one */
+.ui-snav__brand-name { overflow: hidden; font-size: var(--tc-snav-brand-size, 1em); line-height: var(--tc-snav-brand-line-height, 1.2); text-overflow: ellipsis; white-space: nowrap; }
 .ui-snav__logo { display: grid; flex: none; place-items: center; width: min(var(--tc-snav-logo-size, 28px), var(--tc-snav-rail) - 2 * var(--tc-space-2)); aspect-ratio: 1; }
 .ui-snav__logo > * { max-width: 100%; max-height: 100%; }
 .ui-snav__toggle { display: grid; flex: none; place-items: center; width: var(--tc-control-h-md); height: var(--tc-control-h-md); border-radius: var(--tc-radius-md); color: var(--tc-icon-muted); }

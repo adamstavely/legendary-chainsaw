@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-header-brand.json",
+  "title": "tc-header-brand",
+  "description": "The product's logo and name in an app header, as a link home or plain text.",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "The product's name"
+    },
+    "href": {
+      "type": "string",
+      "description": "Where the brand links to; without it (or when it isn't a safe link) the brand is plain text",
+      "format": "uri-reference"
+    },
+    "inverse": {
+      "type": "boolean",
+      "description": "On a dark header bar: draw the brand in the dark theme's colours whatever the page's theme"
+    }
+  },
+  "additionalProperties": false
+}

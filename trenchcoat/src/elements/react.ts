@@ -186,6 +186,7 @@ export * from "./react/guardrail-notice";
 export * from "./react/hal-form";
 export * from "./react/handoff";
 export * from "./react/handoff-brief";
+export * from "./react/header-brand";
 export * from "./react/header-nav";
 export * from "./react/heatmap";
 export * from "./react/hexbin-chart";

@@ -175,6 +175,7 @@ export * from "./guardrail-notice";
 export * from "./hal-form";
 export * from "./handoff";
 export * from "./handoff-brief";
+export * from "./header-brand";
 export * from "./header-nav";
 export * from "./heatmap";
 export * from "./hexbin-chart";

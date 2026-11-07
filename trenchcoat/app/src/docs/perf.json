@@ -22873,6 +22873,92 @@
     "errors": []
    }
   },
+  "header-brand": {
+   "measuredAt": "2026-11-07",
+   "hash": "293ba12afb298b2a",
+   "bundle": {
+    "own": {
+     "min": 4916,
+     "gzip": 2480
+    },
+    "shared": [
+     {
+      "name": "Lit",
+      "kind": "lit",
+      "min": 18883
+     },
+     {
+      "name": "internal/card-head",
+      "kind": "internal",
+      "min": 2217
+     },
+     {
+      "name": "internal/base",
+      "kind": "internal",
+      "min": 1864
+     },
+     {
+      "name": "internal/kit",
+      "kind": "internal",
+      "min": 1348
+     },
+     {
+      "name": "internal/look",
+      "kind": "internal",
+      "min": 440
+     },
+     {
+      "name": "internal/styles",
+      "kind": "internal",
+      "min": 435
+     },
+     {
+      "name": "internal/safe-url",
+      "kind": "internal",
+      "min": 329
+     },
+     {
+      "name": "internal/controllers",
+      "kind": "internal",
+      "min": 132
+     }
+    ],
+    "withoutLit": {
+     "min": 11970,
+     "gzip": 4679
+    },
+    "withLit": {
+     "min": 32011,
+     "gzip": 11254
+    }
+   },
+   "render": {
+    "tag": "tc-header-brand",
+    "source": "demo",
+    "runs": 7,
+    "cold": 11.6,
+    "first": 1.1,
+    "update": 0.7,
+    "updateKind": "re-render with the same data",
+    "nodes": 6,
+    "scale": null,
+    "idle": {
+     "visible": {
+      "frames": 0,
+      "timers": 0
+     },
+     "away": {
+      "frames": 0,
+      "timers": 0
+     },
+     "reducedMotion": {
+      "frames": 0,
+      "timers": 0
+     }
+    },
+    "errors": []
+   }
+  },
   "header-nav": {
    "measuredAt": "2026-11-04",
    "hash": "74207e3aef02f630",
