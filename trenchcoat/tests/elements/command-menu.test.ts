@@ -7,7 +7,7 @@ import axe from "axe-core";
 import { afterEach, describe, expect, test, vi } from "vitest";
 import "../../src/elements/command-menu";
 import type { TcCommandMenu } from "../../src/elements/command-menu";
-import { cleanup, fixture, settle } from "./helpers";
+import { cleanup, finish, fixture, settle } from "./helpers";
 
 afterEach(() => {
   cleanup();
@@ -245,5 +245,186 @@ describe("tc-command-menu", () => {
     wrap.getAnimations({ subtree: true }).forEach((a) => a.finish());
     const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
     expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
+  });
+});
+
+// An app header's ⌘K search over results from a server: popover layout, server filtering, loading and empty states
+describe("tc-command-menu as a header search", () => {
+  const RESULTS = [
+    { id: "topics", label: "Topics", commands: [{ id: "topic:t-neuro", label: "Neuromorphic Computing", hint: "P1 · at risk" }, { id: "topic:t-edge", label: "Edge AI for Sensing" }] },
+    { id: "people", label: "People", commands: [{ id: "person:p-okonkwo", label: "Marcus Okonkwo", hint: "Cognitive Systems" }] },
+  ];
+  const labels = (el: Element) => [...el.querySelectorAll(".ui-cm__item .ui-cm__name")].map((n) => n.textContent);
+  const status = (el: Element) => el.querySelector('[role="status"]')!.textContent!.trim();
+  const make = (extra = "") => fixture<TcCommandMenu>(html`<div style="width: 320px; margin: 40px"><tc-command-menu layout="popover" filter="none" assistant="false" placeholder="Search topics, gaps, papers, people…" .groups=${RESULTS}></tc-command-menu></div>${extra}`).then((w) => w.querySelector("tc-command-menu")!);
+  const pop = (el: Element) => el.querySelector<HTMLElement>(".ui-cm__pop");
+
+  test("assistant=\"false\" leaves out the ask row; a match-less search shows the empty text instead", async () => {
+    const el = await fixture<TcCommandMenu>(html`<tc-command-menu assistant="false" empty-text="Nothing matches “{query}”"></tc-command-menu>`);
+    expect(el.assistant).toBe(false);
+    await type(combobox(el), "zzz");
+    expect(el.querySelector('[data-id="ask-about"]')).toBeNull();
+    expect(el.textContent).not.toContain("Ask assistant about");
+    expect(el.querySelector('.ui-cm__state[data-state="empty"]')!.textContent).toBe("Nothing matches “zzz”");
+    expect(el.querySelector<HTMLElement>('[role="listbox"]')!.hidden).toBe(true);
+    // The default still offers it
+    const other = await fixture<TcCommandMenu>(html`<tc-command-menu></tc-command-menu>`);
+    await type(combobox(other), "zzz");
+    expect(other.querySelector('[data-id="ask-about"]')).not.toBeNull();
+  });
+
+  test("filter=\"none\" shows the groups exactly as given, whatever is typed; matches are still highlighted", async () => {
+    const el = await make();
+    await type(combobox(el), "neur");
+    expect(labels(el)).toEqual(["Neuromorphic Computing", "Edge AI for Sensing", "Marcus Okonkwo"]);
+    expect(el.querySelector(".ui-cm__name mark")!.textContent).toBe("Neur");
+    el.groups = [{ id: "topics", label: "Topics", commands: [RESULTS[0].commands[0]] }];
+    await settle();
+    expect(labels(el)).toEqual(["Neuromorphic Computing"]);
+  });
+
+  test("popover: a compact field; focus opens the results under it; Esc closes and keeps the text; outside click closes", async () => {
+    const el = await make();
+    const field = el.querySelector<HTMLElement>(".ui-cm__search")!;
+    expect(field.getBoundingClientRect().height).toBeCloseTo(parseFloat(getComputedStyle(field).height), 0);
+    expect(field.getBoundingClientRect().height).toBeLessThanOrEqual(32);
+    expect(el.querySelector(".ui-cm__foot")).toBeNull();
+    expect(pop(el)).toBeNull();
+    const input = combobox(el);
+    expect(input.getAttribute("aria-expanded")).toBe("false");
+    expect(input.getAttribute("aria-autocomplete")).toBe("list");
+    expect(input.placeholder).toBe("Search topics, gaps, papers, people…");
+    input.focus();
+    await settle();
+    await expect.poll(() => pop(el)?.hasAttribute("data-placed")).toBe(true);
+    await finish(pop(el)!);
+    expect(input.getAttribute("aria-expanded")).toBe("true");
+    const box = pop(el)!.getBoundingClientRect();
+    expect(box.top).toBeGreaterThanOrEqual(field.getBoundingClientRect().bottom);
+    expect(Math.abs(box.left - field.getBoundingClientRect().left), "left edges").toBeLessThanOrEqual(1);
+    expect(box.width).toBeGreaterThanOrEqual(field.getBoundingClientRect().width - 1);
+    // The listbox lives in the popover; the field owns it and points at the active option
+    const list = pop(el)!.querySelector('[role="listbox"]')!;
+    expect(input.getAttribute("aria-controls")).toBe(list.id);
+    expect(input.getAttribute("aria-activedescendant")).toBe(list.querySelector('[role="option"]')!.id);
+
+    await type(input, "neur");
+    key(input, { key: "Escape" });
+    await settle();
+    expect(pop(el)).toBeNull();
+    expect(input.value).toBe("neur");
+    expect(document.activeElement).toBe(input);
+    expect(input.getAttribute("aria-expanded")).toBe("false");
+    expect(input.hasAttribute("aria-activedescendant")).toBe(false);
+    // ↓ opens it again; then a pointer-down outside closes it
+    key(input, { key: "ArrowDown" });
+    await settle();
+    expect(pop(el)).not.toBeNull();
+    document.body.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true }));
+    await settle();
+    expect(pop(el)).toBeNull();
+    expect(input.value).toBe("neur");
+  });
+
+  test("popover: ↓ moves, Enter runs the active row and closes; a click runs one too", async () => {
+    const el = await make();
+    const ran: string[] = [];
+    el.onRun = (id) => void ran.push(id);
+    const input = combobox(el);
+    input.focus();
+    await type(input, "m");
+    key(input, { key: "ArrowDown" });
+    key(input, { key: "ArrowDown" });
+    await settle();
+    expect(input.getAttribute("aria-activedescendant")).toBe(el.querySelector('[data-id="person:p-okonkwo"]')!.id);
+    key(input, { key: "Enter" });
+    await settle();
+    expect(ran).toEqual(["person:p-okonkwo"]);
+    expect(pop(el)).toBeNull();
+    // Enter in a closed popover doesn't run anything
+    key(input, { key: "Enter" });
+    expect(ran).toHaveLength(1);
+    input.focus();
+    key(input, { key: "ArrowDown" });
+    await settle();
+    el.querySelector<HTMLButtonElement>('[data-id="topic:t-edge"]')!.click();
+    await settle();
+    expect(ran).toEqual(["person:p-okonkwo", "topic:t-edge"]);
+    expect(pop(el)).toBeNull();
+  });
+
+  test("⌘K / Ctrl K focuses the field and opens the results", async () => {
+    const el = await make();
+    press({ key: "k", metaKey: true, ctrlKey: true });
+    await settle();
+    expect(document.activeElement).toBe(combobox(el));
+    await expect.poll(() => !!pop(el)).toBe(true);
+    // The hint shows in the empty field
+    expect(el.querySelector(".ui-cm__hotkey")!.textContent).toMatch(/K/);
+  });
+
+  test("loading shows and announces “Searching…”; the results that come back are announced as a count, or the empty text", async () => {
+    const el = await make();
+    el.groups = [];
+    await settle();
+    const input = combobox(el);
+    input.focus();
+    await type(input, "neu");
+    el.loading = true;
+    await settle();
+    expect(pop(el)!.querySelector('.ui-cm__state[data-state="loading"]')!.textContent).toBe("Searching…");
+    expect(status(el)).toBe("Searching…");
+    expect(input.getAttribute("aria-busy")).toBe("true");
+    el.groups = RESULTS;
+    el.loading = false;
+    await settle();
+    expect(pop(el)!.querySelector(".ui-cm__state")).toBeNull();
+    expect(status(el)).toBe("3 results");
+    expect(input.hasAttribute("aria-busy")).toBe(false);
+    el.groups = [];
+    await settle();
+    expect(pop(el)!.querySelector('.ui-cm__state[data-state="empty"]')!.textContent).toBe("Nothing matches “neu”");
+    expect(status(el)).toBe("Nothing matches “neu”");
+    el.emptyText = "No topics, gaps, papers or people match “{query}”";
+    await type(input, "xyz");
+    expect(status(el)).toBe("No topics, gaps, papers or people match “xyz”");
+  });
+
+  test("inverse: the field takes the dark theme's colours on a light page; the popover keeps the light theme", async () => {
+    const wrap = await fixture(html`<div data-tc-theme="light" style="width: 400px; background: #081d35">
+      <span class="probe" data-tc-theme="dark" style="color: var(--tc-text-muted)"></span>
+      <tc-command-menu layout="popover" filter="none" assistant="false" inverse .groups=${RESULTS}></tc-command-menu>
+    </div>`);
+    const el = wrap.querySelector("tc-command-menu")!;
+    expect(el.hasAttribute("inverse")).toBe(true);
+    const field = el.querySelector(".ui-cm__search")!;
+    expect(getComputedStyle(field).colorScheme).toBe("dark");
+    expect(getComputedStyle(field).color).toBe(getComputedStyle(wrap.querySelector(".probe")!).color);
+    combobox(el).focus();
+    await expect.poll(() => !!pop(el)).toBe(true);
+    expect(getComputedStyle(pop(el)!).colorScheme).toBe("light");
+  });
+
+  test("axe: the popover field open and closed, with results, loading and empty", async () => {
+    const el = await make();
+    const run = async () => {
+      const result = await axe.run(el.parentElement!.parentElement!, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
+      return result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ") + " " + n.failureSummary).join(", ")}`);
+    };
+    expect((await run()).join("\n")).toBe("");
+    combobox(el).focus();
+    await type(combobox(el), "ne");
+    await expect.poll(() => pop(el)?.hasAttribute("data-placed")).toBe(true);
+    await finish(pop(el)!);
+    expect((await run()).join("\n")).toBe("");
+    el.loading = true;
+    await settle();
+    await finish(pop(el)!);
+    expect((await run()).join("\n")).toBe("");
+    el.loading = false;
+    el.groups = [];
+    await settle();
+    await finish(pop(el)!);
+    expect((await run()).join("\n")).toBe("");
   });
 });

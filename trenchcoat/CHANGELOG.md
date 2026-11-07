@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.8.0 – Dialogs that print whole, priority lists that keep their names
+
+- **Dialog:** printed, an open dialog prints whole – no height limit or scrolling, no backdrop, shadow, rounding or
+  fixed box – from the top of the first page, with the page behind it hidden. The heading and description print; the
+  footer (Close and the actions) doesn't. Before, only the first screenful printed.
+- **Priority List:** the name keeps at least 140px from 300px up. The columns fold on the list's own width – the
+  open pill now goes at 480px and the momentum's change at 400px, the work count at 560px – and with figures the
+  line, work count and open pill go at 760px. Before, at 300–480px the name could shrink to almost nothing.
+- **Command Menu:** an app header's ⌘K search over results from a server.
+  - `layout="popover"`: a compact field (32 px, 280–420 px wide) with a ⌘K hint that opens the results in a popover
+    under it – a combobox and its listbox. Esc or a click outside closes it and keeps the text; Enter runs the active
+    row and closes it.
+  - `filter="none"`: `groups` show exactly as given, for the page to fill from its API on `tc-query-change`.
+  - `loading` shows and announces “Searching…”; `empty-text` (with `{query}`) is what shows when nothing matches; in
+    popover layout the results are announced as a count (“5 results”).
+  - `assistant="false"` leaves out the “Ask assistant about …” row.
+  - `inverse` styles the field for a dark header bar while the popover keeps the page's theme; `label` names the field.
+
 ## 0.7.0 – Switches in the account card
 
 - **Profile Menu:** an item with `checked` is an on/off switch – a button with `role="switch"` and `aria-checked`,

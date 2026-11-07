@@ -62,6 +62,62 @@
      "readonly": false
     },
     {
+     "name": "layout",
+     "attribute": "layout",
+     "type": "CommandMenuLayout",
+     "default": "\"panel\"",
+     "description": "\"panel\" (the default): the full menu · \"popover\": a compact field for an app header that opens the results under it",
+     "readonly": false
+    },
+    {
+     "name": "filter",
+     "attribute": "filter",
+     "type": "CommandMenuFilter",
+     "default": "\"local\"",
+     "description": "\"local\" (the default) filters `groups` by the typed text; \"none\" shows them as given, for results the page fetches",
+     "readonly": false
+    },
+    {
+     "name": "assistant",
+     "attribute": "assistant",
+     "type": "boolean",
+     "default": "true",
+     "description": "With text typed, offer to ask the assistant about it (the first row); assistant=\"false\" leaves it out",
+     "readonly": false
+    },
+    {
+     "name": "loading",
+     "attribute": "loading",
+     "type": "boolean",
+     "default": "false",
+     "description": "Results are on their way: shows \"Searching…\" and says so",
+     "readonly": false
+    },
+    {
+     "name": "emptyText",
+     "attribute": "empty-text",
+     "type": "string",
+     "default": "\"Nothing matches “{query}”\"",
+     "description": "What shows when the typed text matches nothing; {query} is replaced with it",
+     "readonly": false
+    },
+    {
+     "name": "label",
+     "attribute": "label",
+     "type": "string",
+     "default": "\"Command\"",
+     "description": "The search field's accessible name",
+     "readonly": false
+    },
+    {
+     "name": "inverse",
+     "attribute": "inverse",
+     "type": "boolean",
+     "default": "false",
+     "description": "In popover layout, on a dark header bar: the field takes the dark theme's colours, the popover keeps the page's",
+     "readonly": false
+    },
+    {
      "name": "look",
      "attribute": "look",
      "type": "Look | undefined",
@@ -87,7 +143,16 @@
    "slots": [],
    "methods": [],
    "ui": "cm",
-   "cssProperties": [],
+   "cssProperties": [
+    {
+     "name": "--tc-cm-field-w",
+     "value": "320px",
+     "looks": [
+      "both"
+     ],
+     "fallback": true
+    }
+   ],
    "tokens": [
     "--tc-accent",
     "--tc-accent-highlight",
@@ -102,6 +167,7 @@
     "--tc-caption-transform",
     "--tc-card-radius",
     "--tc-card-shadow",
+    "--tc-control-h-md",
     "--tc-divider",
     "--tc-duration-base",
     "--tc-duration-fast",
@@ -111,6 +177,10 @@
     "--tc-duration-slowest",
     "--tc-ease-move",
     "--tc-ease-standard",
+    "--tc-field-bg",
+    "--tc-field-bg-sunken",
+    "--tc-field-radius",
+    "--tc-field-shadow-focus",
     "--tc-fill-default",
     "--tc-focus-outline",
     "--tc-focus-ring-offset",
@@ -350,6 +420,34 @@
     {
      "name": "maxRows",
      "attribute": "max-rows"
+    },
+    {
+     "name": "layout",
+     "attribute": "layout"
+    },
+    {
+     "name": "filter",
+     "attribute": "filter"
+    },
+    {
+     "name": "assistant",
+     "attribute": "assistant"
+    },
+    {
+     "name": "loading",
+     "attribute": "loading"
+    },
+    {
+     "name": "emptyText",
+     "attribute": "empty-text"
+    },
+    {
+     "name": "label",
+     "attribute": "label"
+    },
+    {
+     "name": "inverse",
+     "attribute": "inverse"
     }
    ],
    "events": [
@@ -450,6 +548,23 @@
     ]
    },
    {
+    "id": "inert",
+    "name": "inert",
+    "bcd": "api.HTMLElement.inert",
+    "versions": {
+     "chrome": "102",
+     "edge": "102",
+     "firefox": "112",
+     "safari": "15.5",
+     "safari_ios": "15.5"
+    },
+    "progressive": false,
+    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
+    "via": [
+     "internal/popover"
+    ]
+   },
+   {
     "id": "focus-visible",
     "name": ":focus-visible",
     "bcd": "css.selectors.focus-visible",
@@ -485,6 +600,22 @@
     ]
    },
    {
+    "id": "inset",
+    "name": "inset",
+    "bcd": "css.properties.inset",
+    "versions": {
+     "chrome": "87",
+     "edge": "87",
+     "firefox": "66",
+     "safari": "14.1",
+     "safari_ios": "14.1"
+    },
+    "progressive": false,
+    "via": [
+     "internal/popover"
+    ]
+   },
+   {
     "id": "is-where",
     "name": ":is() and :where()",
     "bcd": "css.selectors.where",
@@ -516,7 +647,8 @@
     },
     "progressive": false,
     "via": [
-     "itself"
+     "itself",
+     "internal/popover"
     ]
    },
    {
@@ -534,6 +666,23 @@
     "without": "Scrollbars keep the browser's default width.",
     "via": [
      "itself"
+    ]
+   },
+   {
+    "id": "popover",
+    "name": "Popover API",
+    "bcd": "api.HTMLElement.popover",
+    "versions": {
+     "chrome": "114",
+     "edge": "114",
+     "firefox": "125",
+     "safari": "17",
+     "safari_ios": "18.3"
+    },
+    "progressive": true,
+    "without": "Lists open fixed to the window instead of in the top layer, so a clipping ancestor or a modal can cover them.",
+    "via": [
+     "internal/popover"
     ]
    },
    {
@@ -569,6 +718,7 @@
     "via": [
      "internal/card-head",
      "internal/kit",
+     "internal/popover",
      "tokens.css"
     ]
    }
@@ -576,14 +726,18 @@
  },
  "runtime": {
   "timers": [
-   "setTimeout"
+   "setTimeout",
+   "setTimeout (internal/popover › PopoverController)"
   ],
-  "frames": [],
+  "frames": [
+   "requestAnimationFrame, cancelled (internal/popover › PopoverController)"
+  ],
   "animations": 0,
   "observers": [
    "ResizeObserver",
    "MutationObserver (internal/base › TcElement)",
-   "MutationObserver (internal/controllers › AriaForwardController)"
+   "MutationObserver (internal/controllers › AriaForwardController)",
+   "ResizeObserver (internal/popover › PopoverController)"
   ],
   "clock": [],
   "listeners": [
@@ -594,13 +748,14 @@
    "hidden": [],
    "reducedMotion": [
     "CSS",
-    "CSS (internal/kit › kitCss)"
+    "CSS (internal/kit › kitCss)",
+    "CSS (internal/popover › popoverCss)"
    ]
   },
   "windowed": false
  },
  "size": {
-  "min": 47476,
-  "gzip": 15340
+  "min": 62174,
+  "gzip": 19782
  }
 }

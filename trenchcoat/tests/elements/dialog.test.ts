@@ -4,12 +4,16 @@ import * as React from "react";
 import { flushSync } from "react-dom";
 import { createRoot } from "react-dom/client";
 import { afterEach, describe, expect, test } from "vitest";
+import { commands } from "vitest/browser";
 import "../../src/elements/index";
 import { Button, Dialog } from "../../src/elements/react";
 import type { TcDialog } from "../../src/elements/dialog";
 import { cleanup, fixture, settle } from "./helpers";
 
-afterEach(cleanup);
+afterEach(async () => {
+  await commands.emulateMedia(null);
+  cleanup();
+});
 
 const buttons = (el: Element) => [...el.querySelectorAll<HTMLButtonElement>("button")];
 const named = (el: Element, text: string) => buttons(el).find((b) => b.textContent!.trim() === text);
@@ -213,4 +217,56 @@ describe("tc-dialog", () => {
         const result = await axe.run(wrap.querySelector("dialog")!, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
         expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.failureSummary).join("; ")}`)).toEqual([]);
       });
+
+  test("printed, an open dialog prints whole: no height limit, scrolling, backdrop or fixed box; the page and the footer hide", async () => {
+    const page = document.createElement("main");
+    page.textContent = "The page behind";
+    document.body.append(page);
+    const long = html`${Array.from({ length: 80 }, (_, i) => html`<p>Finding ${i + 1}: a paragraph of the directorate brief that runs long.</p>`)}`;
+    const el = await fixture<TcDialog>(html`<tc-dialog size="xl" label="Directorate brief" description="Q3, all centres" .content=${long} .actions=${html`<button>Print</button>`}></tc-dialog>`);
+    el.open = true;
+    await settle();
+    const dialog = el.querySelector("dialog")!;
+    // On screen it scrolls inside a capped box
+    expect(dialog.scrollHeight).toBeGreaterThan(dialog.clientHeight);
+
+    await commands.emulateMedia("print");
+    await expect.poll(() => matchMedia("print").matches).toBe(true);
+    const css = getComputedStyle(dialog);
+    expect(css.maxHeight).toBe("none");
+    expect(css.overflowY).toBe("visible");
+    expect(css.position).toBe("absolute");
+    expect(css.transform).toBe("none");
+    expect(css.boxShadow).toBe("none");
+    expect(dialog.scrollHeight).toBeLessThanOrEqual(dialog.clientHeight + 1);
+    expect(dialog.getBoundingClientRect().top).toBeCloseTo(0, 0);
+    expect(getComputedStyle(dialog, "::backdrop").display).toBe("none");
+    // The last paragraph is laid out inside the dialog's box, not cut off
+    const last = el.querySelector(".tc-dialog-body > :last-child")!.getBoundingClientRect();
+    expect(last.bottom).toBeLessThanOrEqual(dialog.getBoundingClientRect().bottom + 1);
+    // The heading and description print; the footer's Close and actions don't; the page behind is hidden
+    expect(getComputedStyle(el.querySelector("h3")!).visibility).toBe("visible");
+    expect(el.querySelector("h3")!.textContent).toBe("Directorate brief");
+    expect(getComputedStyle(footer(el)).display).toBe("none");
+    expect(getComputedStyle(page).visibility).toBe("hidden");
+    expect(getComputedStyle(el.querySelector(".tc-dialog-body p")!).visibility).toBe("visible");
+
+    // Back on screen, it's the capped, scrolling box again
+    await commands.emulateMedia(null);
+    await expect.poll(() => matchMedia("print").matches).toBe(false);
+    expect(dialog.scrollHeight).toBeGreaterThan(dialog.clientHeight);
+    expect(getComputedStyle(page).visibility).toBe("visible");
+    page.remove();
+  });
+
+  test("printed, a closed dialog leaves the page as it is", async () => {
+    const page = document.createElement("main");
+    page.textContent = "The page";
+    document.body.append(page);
+    await fixture<TcDialog>(html`<tc-dialog label="Closed"></tc-dialog>`);
+    await commands.emulateMedia("print");
+    await expect.poll(() => matchMedia("print").matches).toBe(true);
+    expect(getComputedStyle(page).visibility).toBe("visible");
+    page.remove();
+  });
 });

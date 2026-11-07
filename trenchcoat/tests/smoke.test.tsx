@@ -59,6 +59,15 @@ class Boundary extends Component<{ children: ReactNode }, { error: Error | null 
   }
 }
 
+/* Entries that need more than the default 30 s here, and why. By the time the run reaches them every element's CSS
+   is in the document, and jsdom's getComputedStyle then takes about half a second a call (real browsers take well
+   under a millisecond): an element that measures its content pays that per call. */
+const SLOW: Record<string, number> = {
+  // Measures each row of the components it frames – getComputedStyle per row and per parent, 19 calls: about 11 s
+  // locally and over 30 s on a CI runner
+  "illustrations/inspect-frame:standard": 120_000,
+};
+
 const cases = ENTRIES.flatMap((entry) =>
   (Object.keys(entry.load) as Variant[]).filter(() => entry.Demo).map((variant) => ({ entry, variant, key: `${entry.id}:${variant}` })),
 );
@@ -106,6 +115,6 @@ describe("smoke", () => {
       const budget = budgets[key] ?? 300;
       expect(commits, `React commits in ${SECONDS}s`).toBeLessThanOrEqual(Math.max(Math.ceil(budget * 1.3), budget + 15));
       expect(leftover, "timers/frames still pending after unmount").toBe(0);
-    });
+    }, SLOW[key]);
   }
 });

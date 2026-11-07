@@ -13,8 +13,8 @@ import { cardHead } from "./internal/card-head";
  *   · the rows are one tab stop: ↑ / ↓ move between them, Home / End to the ends; Enter or a click fires tc-open
  *   · `figures` adds columns of the page's own after Work, e.g. papers last month and this; each row's `figures` fills them
  *   · a row with no `priority` shows its `badge`, a short code, in a neutral badge; `grouped` puts such rows last
- *   · columns fold away as the element narrows: the momentum line first, then the work count, then the figures, then
- *     the coverage bar
+ *   · columns fold away as the element narrows, so the name keeps at least 140px: the momentum line first, then the
+ *     work count, then the figures and the open pill, then the momentum's change and the coverage bar
  * Standard: the header on a gray tray above a white card. Clean: one white card, the header its first row.
  *
  *   <tc-priority-list .items=${[{ id: "t1", name: "Neuromorphic Computing", priority: 1, health: "at-risk", coverage: 0.42 }]}></tc-priority-list>
@@ -437,28 +437,34 @@ export class TcPriorityList extends TcElement {
 .ui-prl__open[data-none] { background: var(--tc-fill-default); color: var(--tc-text-muted); }
 .ui-prl__work, .ui-prl__fig { justify-self: end; font-family: var(--tc-font-mono); font-size: var(--tc-font-size-xs); color: var(--tc-text-muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
 .ui-prl__empty { padding: var(--tc-space-6) var(--tc-space-4) !important; color: var(--tc-text-muted); text-align: center; }
+/* The name keeps at least 140px from 300px up: each step folds columns away before it gets narrower */
+@container (max-width: 760px) {
+  /* With figures (two, say), more goes sooner to make room for them: the line, the work count and the open pill */
+  .ui-prl__card[data-figs] { --tc-prl-cols: minmax(0, 1fr) 64px 96px; }
+  [data-figs] :is(.ui-prl__spark, .ui-prl__work, .ui-prl__col--work, .ui-prl__open-cell, .ui-prl__col--open) { display: none; }
+}
 @container (max-width: 680px) {
   .ui-prl__card { --tc-prl-cols: minmax(0, 1fr) 68px 104px 64px 36px; }
   [data-ui="prl"] .ui-prl__spark { display: none; }
 }
-/* With figures, the work count goes sooner to make room for them */
-@container (max-width: 600px) {
-  .ui-prl__card[data-figs] { --tc-prl-cols: minmax(0, 1fr) 64px 96px 60px; }
-  [data-figs] :is(.ui-prl__work, .ui-prl__col--work) { display: none; }
-}
-@container (max-width: 520px) {
-  .ui-prl__card, .ui-prl__card[data-figs] { --tc-prl-cols: minmax(0, 1fr) 64px 88px 60px; }
+@container (max-width: 560px) {
+  .ui-prl__card { --tc-prl-cols: minmax(0, 1fr) 64px 88px 60px; }
+  .ui-prl__card[data-figs] { --tc-prl-cols: minmax(0, 1fr) 64px 88px; }
   .ui-prl__work, .ui-prl__col--work { display: none; }
 }
-@container (max-width: 480px) {
+@container (max-width: 540px) {
   .ui-prl__card[data-figs] :is(.ui-prl__row, .ui-prl__columns) { grid-template-columns: var(--tc-prl-lead) var(--tc-prl-cols); }
   .ui-prl__fig, .ui-prl__col--fig { display: none; }
 }
-@container (max-width: 400px) {
-  .ui-prl__card, .ui-prl__card[data-figs] { --tc-prl-lead: 24px; --tc-prl-cols: minmax(0, 1fr) 48px 60px; }
-  .ui-prl__card[data-codes] { --tc-prl-lead: 36px; }
-  .ui-prl__bar, .ui-prl__cov-label { display: none; }
+@container (max-width: 480px) {
+  .ui-prl__card, .ui-prl__card[data-figs] { --tc-prl-cols: minmax(0, 1fr) 64px 88px; }
   .ui-prl__open-cell, .ui-prl__col--open { display: none; }
+}
+@container (max-width: 400px) {
+  .ui-prl__card, .ui-prl__card[data-figs] { --tc-prl-lead: 24px; --tc-prl-cols: minmax(0, 1fr) 60px; }
+  .ui-prl__card[data-codes] { --tc-prl-lead: 36px; }
+  .ui-prl__momentum, .ui-prl__col--momentum { display: none; }
+  .ui-prl__bar, .ui-prl__cov-label { display: none; }
   .ui-prl__row, .ui-prl__columns { gap: var(--tc-space-2); }
 }
 @media (forced-colors: active) {

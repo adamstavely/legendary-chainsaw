@@ -49,8 +49,13 @@ summarise things that have no tier: centres, teams, programmes. With `grouped`, 
 ## Looks
 
 Standard is a white card on a gray tray, with the header and the filters on the tray above it. Clean is one white
-card with the header as its first row. The rows are the same in both. As the element narrows, the momentum line folds
-to just its change, then the work count goes, then the figures, then the coverage bar and the open pill.
+card with the header as its first row. The rows are the same in both.
+
+The columns fold on the list's own width, not the window's, so it works in a side column as well as a full page, and
+the name always keeps at least 140px from 300px up. As the list narrows, the momentum line folds to just its change
+(680px), then the work count goes (560px), then the figures (540px) and the open pill (480px), then the momentum's
+change and the coverage bar, leaving the coverage share (400px). With figures – about two – the line, the work count
+and the open pill go sooner (760px) to make room for them.
 
 ## Keyboard
 

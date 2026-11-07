@@ -126,7 +126,7 @@
     "safari_ios": "14.1"
    },
    "progressive": false,
-   "elements": 186
+   "elements": 188
   },
   {
    "id": "resize-observer",
@@ -169,7 +169,7 @@
    },
    "progressive": false,
    "why": "Closed and leaving parts are out of the tab order and hidden from screen readers.",
-   "elements": 153
+   "elements": 154
   },
   {
    "id": "has",
@@ -447,7 +447,7 @@
    },
    "progressive": true,
    "without": "Lists open fixed to the window instead of in the top layer, so a clipping ancestor or a modal can cover them.",
-   "elements": 31
+   "elements": 32
   },
   {
    "id": "at-property",

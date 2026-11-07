@@ -36,6 +36,16 @@ export class TcDialog extends TcElement {
 [data-ui="dialog"] .tc-dialog-actions:empty { display: none; }
 [data-ui="dialog"] .tc-dialog-footer:has(> .tc-dialog-actions:only-child:empty) { display: none; }
 [data-ui="dialog"] > :not(dialog) { display: none; }
+/* Printed, an open dialog is what prints: the whole of it, as plain content from the top of the first page – no
+   height limit or scrolling, no backdrop, shadow or rounding – with the page behind it hidden. The footer's Close
+   button and actions are for the screen, so they don't print; the heading and description do */
+@media print {
+  :root:has([data-ui="dialog"][open]) body { visibility: hidden; }
+  [data-ui="dialog"][open] > dialog { visibility: visible; position: absolute; inset: 0 auto auto 0; width: 100%; max-width: none; height: auto; max-height: none; margin: 0; overflow: visible; border-radius: 0; box-shadow: none; transform: none; animation: none; }
+  [data-ui="dialog"][open] > dialog::backdrop { display: none; }
+  [data-ui="dialog"] > dialog > .tc-settings-card { overflow: visible; border-radius: 0; box-shadow: none; }
+  [data-ui="dialog"] .tc-dialog-footer { display: none; }
+}
 `;
   /** How wide the panel may grow: "sm" (480px), "md" (640px, the default), "lg" (880px) or "xl" (1120px), within 90% of the window. lg and xl always take that width. */
   @property({ reflect: true }) accessor size: DialogSize = "md";
