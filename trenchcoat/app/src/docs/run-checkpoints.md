@@ -12,11 +12,17 @@ going back discards: that step and every later one, the files they changed and w
 agent goes along with the restore, so the retry can go differently. People see the cost of rewinding before they
 commit to it.
 
+Going back doesn't have to erase anything: pass the new attempt in `branches` and the run branches out of the
+checkpoint it went back to, like git for agents. A small drawing of the attempts appears – the newest one solid, each
+attempt the run left faded and labelled “Earlier attempt” – and picking an attempt lists its steps, so what an
+earlier try did stays inspectable, and you can go back to one of its checkpoints too.
+
 ## When to use
 
 - Long agent runs where a wrong turn halfway through shouldn't mean starting over.
 - Letting people retry a failed step with a different instruction (“use the staging database instead”).
 - Making the cost of going back visible – discarded steps, file changes, tokens and money.
+- Keeping earlier attempts around to compare against or return to (`branches`).
 
 ## When not to use
 
@@ -32,12 +38,16 @@ commit to it.
 4. **Details** `.ui-rcp__panel` – what the picked checkpoint captured and what going back discards
 5. **Note** `.ui-rcp__note` – an optional instruction for the retry
 6. **Foot** `.ui-rcp__foot` – where the run starts again and “Go back to step N”
+7. **Attempts** `.ui-rcp__attempts` – with `branches`: a lane per attempt, its name and “Current attempt” or “Earlier
+   attempt”, its line forking out of the checkpoint it went back to; the attempt on show is picked
 
 ## Looks
 
 Standard sets the timeline, steps and details in a white card on a gray tray, with the foot and the Go back button
 on the tray below. Clean is one white card: the foot is its last row under a hairline, and the details' captions
-are small capitals. Both mark the picked step with an accent bar and hatch what going back discards.
+are small capitals. Both mark the picked step with an accent bar and hatch what going back discards. Earlier attempts are drawn in a
+quieter colour with a dashed fork – colour, not transparency, so their names stay readable. The attempts drawing keeps
+its size in a narrow card and scrolls sideways.
 
 ## Keyboard
 
@@ -50,6 +60,8 @@ are small capitals. Both mark the picked step with an accent bar and hatch what 
 | Enter | Picks the focused step and moves to the note |
 | Escape | On a step: clears the pick. In the note: returns to the picked step, the pick stays |
 | Enter in the note | Goes back to the picked step |
+| ↑ / ↓ / ← / → | In Attempts (one tab stop), moves to the previous or next attempt and shows it |
+| Home / End | In Attempts, shows the first or the newest attempt |
 
 ## Screen readers
 
@@ -61,6 +73,11 @@ step 4” and “Going back discards”; the note is named “Note for the agent
 is `aria-busy` while a restore is on its way. A polite live region says “Step 4 picked. Going back discards 3 steps
 and 1 file change.”, then “Went back to step 4 with your note.”; a failed restore shows an alert, “Couldn't go back
 – try again”.
+
+With branches, the attempts are a `radiogroup` named “Attempts”; each is a radio named by its label and “Current
+attempt” or “Earlier attempt”, followed by “4 steps, live, went back to 0:41 of First attempt”. The header's count
+adds “2 attempts”. While an earlier attempt is on show a line says so in words, and switching announces “Showing an
+earlier attempt, First attempt: 6 steps.”
 
 ## Content
 
@@ -74,12 +91,16 @@ and 1 file change.”, then “Went back to step 4 with your note.”; a failed 
 - Mark the running step `status: "active"` and a failed one `"failed"`, so the timeline shows where it went wrong.
 - Give each step its `files`, `tokens` and `cost`, so people can weigh what going back throws away.
 - Return a promise from `restorer` (`onRestore`) when rewinding takes time – the button waits and reports a failure.
+- When a restore starts a new attempt, append it to `branches` with `from` set to the checkpoint it went back to and
+  keep `checkpoints` as the first attempt – the element follows the new attempt even if an earlier one was on show.
+- Let `at` keep counting from the start of the run in every attempt, so the drawing reads left to right in time.
 
 ## Don't
 
 - Don't offer a checkpoint the run can't return to – set `restorable: false` and it says “No snapshot”.
 - Don't keep `status` running after the run stops; the component reads no clock, so `elapsed` and `status` are yours to update.
 - Don't use it for undo inside a document – it's for runs.
+- Don't rewrite an earlier attempt's checkpoints after it's been left – it's a record of what that try did.
 
 ## Example
 
@@ -96,7 +117,11 @@ and 1 file change.”, then “Went back to step 4 with your note.”; a failed 
     { id: "s1", title: "Read the billing schema", tool: "read_files", at: 0, tokens: 4200 },
     { id: "s2", title: "Run the test suite", tool: "run_tests", at: 41000, status: "failed", files: ["test_invoice.py"], tokens: 7300, cost: 0.04 },
   ];
-  run.addEventListener("tc-restore", (e) => console.log(e.detail.checkpointId, e.detail.instruction));
+  run.addEventListener("tc-restore", (e) => {
+    // The run branches out of the checkpoint it went back to
+    run.branches = [...run.branches, { id: `try${run.branches.length + 2}`, from: e.detail.checkpointId, checkpoints: [] }];
+  });
+  run.addEventListener("tc-branch-change", (e) => console.log("showing", e.detail.branch));
 </script>
 ```
 

@@ -1,0 +1,138 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "@adamstavely/trenchcoat/generative/schemas/tc-root-cause-tree.json",
+  "title": "tc-root-cause-tree",
+  "description": "A fault tree of what an agent suspects caused a failure – hypotheses ruled out one by one, and the way from the\nconfirmed cause up to the failure lit.",
+  "type": "object",
+  "properties": {
+    "heading": {
+      "type": "string",
+      "description": "The heading"
+    },
+    "description": {
+      "type": "string",
+      "description": "One line under the heading"
+    },
+    "failure": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "ref": {
+          "type": "string"
+        },
+        "detail": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "title"
+      ],
+      "additionalProperties": false,
+      "description": "What failed – the top of the tree"
+    },
+    "hypotheses": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/RootCauseHypothesis"
+      },
+      "description": "The hypotheses directly under the failure, with narrower ones nested in `children`"
+    },
+    "gate": {
+      "type": "string",
+      "enum": [
+        "and",
+        "or"
+      ],
+      "description": "How the top hypotheses combine – \"or\" by default"
+    },
+    "selected": {
+      "type": "string",
+      "description": "The node whose evidence is open. Changed by the user unless a tc-selected-change listener calls preventDefault()"
+    },
+    "statusLabels": {
+      "type": "object",
+      "properties": {
+        "confirmed": {
+          "type": "string"
+        },
+        "unchecked": {
+          "type": "string"
+        },
+        "checking": {
+          "type": "string"
+        },
+        "ruled-out": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "description": "The status words, merged over defaultRootCauseLabels"
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "RootCauseHypothesis": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string",
+          "description": "The suspected cause, short: \"Station codes are stale\""
+        },
+        "ref": {
+          "type": "string",
+          "description": "The evidence it's checked against – a file, a log, a table"
+        },
+        "status": {
+          "$ref": "#/definitions/RootCauseStatus"
+        },
+        "note": {
+          "type": "string",
+          "description": "What the agent found, shown when the node is opened"
+        },
+        "gate": {
+          "$ref": "#/definitions/RootCauseGate",
+          "description": "How the children combine: \"or\" – any one could cause it; \"and\" – only all of them together"
+        },
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RootCauseHypothesis"
+          },
+          "description": "Narrower hypotheses under this one"
+        }
+      },
+      "required": [
+        "id",
+        "title"
+      ],
+      "additionalProperties": false
+    },
+    "RootCauseStatus": {
+      "type": "string",
+      "enum": [
+        "checking",
+        "confirmed",
+        "ruled-out",
+        "unchecked"
+      ]
+    },
+    "RootCauseGate": {
+      "type": "string",
+      "enum": [
+        "and",
+        "or"
+      ]
+    }
+  }
+}

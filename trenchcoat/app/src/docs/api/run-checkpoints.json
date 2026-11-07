@@ -30,6 +30,22 @@
      "readonly": false
     },
     {
+     "name": "branches",
+     "attribute": null,
+     "type": "RunCheckpointBranch[]",
+     "default": "[]",
+     "description": "Later attempts at the run, oldest first – each branches out of the checkpoint it went back to; the last one is\nthe live attempt",
+     "readonly": false
+    },
+    {
+     "name": "branch",
+     "attribute": "branch",
+     "type": "string | null",
+     "default": "null",
+     "description": "The attempt on show: a branch's id, \"original\" for the first attempt, or null for the newest. Changes apply\nunless a tc-branch-change listener calls preventDefault()",
+     "readonly": false
+    },
+    {
      "name": "selected",
      "attribute": "selected",
      "type": "string | null",
@@ -98,6 +114,12 @@
      "detail": "",
      "description": "\"Go back to step N\" pressed (detail: { checkpointId: string, instruction: string, discarded: string[] })",
      "cancelable": false
+    },
+    {
+     "name": "tc-branch-change",
+     "detail": "",
+     "description": "Another attempt was picked (detail: { branch: string | null }); cancelable",
+     "cancelable": true
     }
    ],
    "slots": [],
@@ -143,6 +165,22 @@
       "standard",
       "clean"
      ]
+    },
+    {
+     "name": "--tc-run-checkpoints-lane",
+     "value": "36px",
+     "looks": [
+      "standard",
+      "clean"
+     ]
+    },
+    {
+     "name": "--tc-run-checkpoints-earlier",
+     "value": "var(--tc-border-strong)",
+     "looks": [
+      "standard",
+      "clean"
+     ]
     }
    ],
    "tokens": [
@@ -156,6 +194,7 @@
     "--tc-action-primary-shadow",
     "--tc-border-default",
     "--tc-border-selected",
+    "--tc-border-strong",
     "--tc-caption-color",
     "--tc-caption-font-size",
     "--tc-caption-font-weight",
@@ -222,6 +261,7 @@
     "--tc-radius-badge",
     "--tc-radius-full",
     "--tc-radius-lg",
+    "--tc-radius-md",
     "--tc-radius-sm",
     "--tc-run-checkpoints-cut",
     "--tc-shadow-raised",
@@ -253,7 +293,13 @@
    ]
   }
  ],
- "functions": [],
+ "functions": [
+  {
+   "name": "FIRST_ATTEMPT",
+   "signature": "FIRST_ATTEMPT: string",
+   "description": "The first attempt's id in `branch`"
+  }
+ ],
  "react": [
   {
    "component": "RunCheckpoints",
@@ -294,17 +340,37 @@
      "type": "(checkpointId: string, instruction: string, discarded: string[]) => void | Promise<unknown>",
      "optional": true,
      "description": "\"Go back to step N\" pressed: the checkpoint, the note for the agent (\"\" when none) and the ids of the steps it\ndiscards. May return a promise – the button waits, and says so if it rejects"
+    },
+    {
+     "name": "branch",
+     "type": "string | null",
+     "optional": true,
+     "description": "The attempt on show: a branch's id, \"original\" for the first attempt, null for the newest. Controlled when\ndefined; otherwise the component keeps it, starting at `defaultBranch`"
+    },
+    {
+     "name": "defaultBranch",
+     "type": "string | null",
+     "optional": true,
+     "description": "The attempt on show at first when uncontrolled"
+    },
+    {
+     "name": "onBranchChange",
+     "type": "(branch: string | null) => void",
+     "optional": true,
+     "description": "Called with the attempt the user picked"
     }
    ],
    "hides": [
     "checkpoints",
     "heading",
     "selected",
-    "restorer"
+    "restorer",
+    "branch"
    ],
    "events": {
     "tc-selected-change": null,
-    "tc-restore": null
+    "tc-restore": null,
+    "tc-branch-change": null
    }
   }
  ],
@@ -318,6 +384,7 @@
    "module": "@adamstavely/trenchcoat/run-checkpoints",
    "data": [
     "checkpoints",
+    "branches",
     "restorer"
    ],
    "attributes": [
@@ -328,6 +395,10 @@
     {
      "name": "heading",
      "attribute": "heading"
+    },
+    {
+     "name": "branch",
+     "attribute": "branch"
     },
     {
      "name": "selected",
@@ -358,9 +429,17 @@
     {
      "name": "tc-restore",
      "cancelable": false
+    },
+    {
+     "name": "tc-branch-change",
+     "cancelable": true
     }
    ],
    "controlled": [
+    {
+     "property": "branch",
+     "event": "tc-branch-change"
+    },
     {
      "property": "selected",
      "event": "tc-selected-change"
@@ -600,7 +679,7 @@
   "windowed": false
  },
  "size": {
-  "min": 46495,
-  "gzip": 12926
+  "min": 54968,
+  "gzip": 14757
  }
 }

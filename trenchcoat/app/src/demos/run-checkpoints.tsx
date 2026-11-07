@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import type * as UI from "../../../src/elements/react";
-import type { RunCheckpoint, RunCheckpointsStatus } from "../../../src/elements/react";
+import type { RunCheckpoint, RunCheckpointBranch, RunCheckpointsStatus } from "../../../src/elements/react";
 import { caption, textButton } from "../demo-kit";
 
 /* A live run that "fixed" a failing test by loosening it. Step 4 is picked: the card shows what its checkpoint holds
-   and what going back throws away. Add a note and press "Go back to step 4" – the run rewinds and tries again,
-   this time fixing the rounding instead. */
+   and what going back throws away. Add a note and press "Go back to step 4" – the run branches out of that
+   checkpoint and tries again, this time fixing the rounding instead; the attempt it left stays, faded, under
+   Attempts, and picking it lists its steps again. */
 
 const BEFORE: RunCheckpoint[] = [
   {
@@ -78,33 +79,40 @@ const BEFORE: RunCheckpoint[] = [
   { id: "s6", title: "Run the test suite again", tool: "run_tests", at: 66_000, status: "active", tokens: 2100, cost: 0.01 },
 ];
 
-/** What happens next, in order: [after ms, change] */
-type Beat = [number, (list: RunCheckpoint[]) => { list: RunCheckpoint[]; status?: RunCheckpointsStatus }];
+/** What happens next, in order: [after ms, change to the newest attempt's steps at run time `now`] */
+type Beat = [number, (list: RunCheckpoint[], now: number) => { list: RunCheckpoint[]; status?: RunCheckpointsStatus }];
 
 const finish = (list: RunCheckpoint[]) => list.map((c) => (c.status === "active" ? { ...c, status: "done" as const, detail: c.detail ?? (c.tool === "run_tests" ? "All 212 tests passed" : undefined) } : c));
 
 const FIRST_RUN: Beat[] = [
-  [1800, (l) => ({ list: [...finish(l), { id: "s7", title: "Open a pull request", tool: "create_pr", at: 79_000, status: "active", tokens: 1800, cost: 0.01 }] })],
+  [1800, (l, now) => ({ list: [...finish(l), { id: "s7", title: "Open a pull request", tool: "create_pr", at: now, status: "active", tokens: 1800, cost: 0.01 }] })],
   [1800, (l) => ({ list: finish(l), status: "done" })],
 ];
 
 const RETRY: Beat[] = [
-  [1400, (l) => ({ list: [...finish(l), { id: "r5", title: "Round totals half-up in cents", detail: "Quantize once, at the invoice level", tool: "edit_files", at: 52_000, status: "active", files: ["billing/invoice.py"], tokens: 6900, cost: 0.04 }] })],
-  [1400, (l) => ({ list: [...finish(l), { id: "r6", title: "Run the test suite again", tool: "run_tests", at: 61_000, status: "active", tokens: 2200, cost: 0.01 }] })],
-  [1400, (l) => ({ list: [...finish(l), { id: "r7", title: "Open a pull request", tool: "create_pr", at: 70_000, status: "active", tokens: 1800, cost: 0.01 }] })],
+  [1400, (l, now) => ({ list: [...finish(l), { id: "r5", title: "Round totals half-up in cents", detail: "Quantize once, at the invoice level", tool: "edit_files", at: now, status: "active", files: ["billing/invoice.py"], tokens: 6900, cost: 0.04 }] })],
+  [1400, (l, now) => ({ list: [...finish(l), { id: "r6", title: "Run the test suite again", tool: "run_tests", at: now, status: "active", tokens: 2200, cost: 0.01 }] })],
+  [1400, (l, now) => ({ list: [...finish(l), { id: "r7", title: "Open a pull request", tool: "create_pr", at: now, status: "active", tokens: 1800, cost: 0.01 }] })],
   [1400, (l) => ({ list: finish(l), status: "done" })],
 ];
 
 export default function Demo({ ui }: { ui: typeof UI }) {
   const { RunCheckpoints } = ui;
   const [checkpoints, setCheckpoints] = useState(BEFORE);
+  const [branches, setBranches] = useState<RunCheckpointBranch[]>([]);
   const [status, setStatus] = useState<RunCheckpointsStatus>("running");
   const [elapsed, setElapsed] = useState(70_000);
   const [selected, setSelected] = useState<string | null>("s4");
   const [beats, setBeats] = useState<Beat[]>(FIRST_RUN);
   const [last, setLast] = useState("");
-  const listRef = useRef(checkpoints);
-  listRef.current = checkpoints;
+  // The newest attempt's own steps – what the next beat changes
+  const current = branches.length ? branches[branches.length - 1].checkpoints : checkpoints;
+  const listRef = useRef(current);
+  listRef.current = current;
+  const elapsedRef = useRef(elapsed);
+  elapsedRef.current = elapsed;
+  const setCurrent = (list: RunCheckpoint[]) =>
+    branches.length ? setBranches((b) => [...b.slice(0, -1), { ...b[b.length - 1], checkpoints: list }]) : setCheckpoints(list);
 
   // The run's clock and its next step – both stop once the run is done
   useEffect(() => {
@@ -116,16 +124,19 @@ export default function Demo({ ui }: { ui: typeof UI }) {
     if (status !== "running" || !beats.length) return;
     const [wait, apply] = beats[0];
     const t = setTimeout(() => {
-      const next = apply(listRef.current);
-      setCheckpoints(next.list);
+      const next = apply(listRef.current, elapsedRef.current);
+      setCurrent(next.list);
       if (next.status) setStatus(next.status);
       setBeats((b) => b.slice(1));
     }, wait);
     return () => clearTimeout(t);
+    // setCurrent follows the attempts it was made with
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, beats]);
 
   const replay = () => {
     setCheckpoints(BEFORE);
+    setBranches([]);
     setStatus("running");
     setElapsed(70_000);
     setSelected("s4");
@@ -138,6 +149,7 @@ export default function Demo({ ui }: { ui: typeof UI }) {
       <RunCheckpoints
         title="Move billing from MySQL to Postgres"
         checkpoints={checkpoints}
+        branches={branches}
         status={status}
         elapsed={elapsed}
         selected={selected}
@@ -146,13 +158,18 @@ export default function Demo({ ui }: { ui: typeof UI }) {
           // Rewinding takes a moment: the workspace and the conversation are put back
           new Promise<void>((resolve) =>
             setTimeout(() => {
-              const i = listRef.current.findIndex((c) => c.id === id);
-              const at = listRef.current[i];
-              setCheckpoints([...listRef.current.slice(0, i), { ...at, id: `${at.id}-again`, status: "active", detail: note || "Same step, fresh attempt", files: undefined }]);
-              setElapsed(at.at + 2000);
+              // The run branches out of the checkpoint: a new attempt runs that step again, the old one stays
+              const at = [...checkpoints, ...branches.flatMap((b) => b.checkpoints)].find((c) => c.id === id)!;
+              const n = branches.length + 2;
+              const finished = listRef.current.map((c) => (c.status === "active" ? { ...c, status: "done" as const } : c));
+              setBranches((b) => [
+                ...(b.length ? [...b.slice(0, -1), { ...b[b.length - 1], checkpoints: finished }] : []),
+                { id: `try${n}`, from: id, label: note ? "With your note" : `Attempt ${n}`, checkpoints: [{ ...at, id: `${at.id}-${n}`, at: elapsedRef.current, status: "active", detail: note || "Same step, fresh attempt", files: undefined }] },
+              ]);
+              if (!branches.length) setCheckpoints(finished);
               setStatus("running");
               setBeats(RETRY);
-              setLast(`Went back to step ${i + 1} – ${discarded.length} steps discarded${note ? `, note: “${note}”` : ""}.`);
+              setLast(`Went back to “${at.title}” – ${discarded.length} steps left on the earlier attempt${note ? `, note: “${note}”` : ""}.`);
               resolve();
             }, 700),
           )

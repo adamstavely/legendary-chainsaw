@@ -27,6 +27,20 @@ export class RunCheckpoints {
   @Input() set heading(v: TcRunCheckpoints["heading"]) {
     this.#el.heading = v;
   }
+  /**
+   * Later attempts at the run, oldest first – each branches out of the checkpoint it went back to; the last one is
+   * the live attempt
+   */
+  @Input() set branches(v: TcRunCheckpoints["branches"]) {
+    this.#el.branches = v;
+  }
+  /**
+   * The attempt on show: a branch's id, "original" for the first attempt, or null for the newest. Changes apply
+   * unless a tc-branch-change listener calls preventDefault()
+   */
+  @Input() set branch(v: TcRunCheckpoints["branch"]) {
+    this.#el.branch = v;
+  }
   /** The picked checkpoint's id. Picks apply unless a tc-selected-change listener calls preventDefault() */
   @Input() set selected(v: TcRunCheckpoints["selected"]) {
     this.#el.selected = v;
@@ -65,4 +79,9 @@ export class RunCheckpoints {
    * Types $event; the element dispatches the event itself.
    */
   @Output("tc-restore") readonly tcRestore = new EventEmitter<CustomEvent<{ checkpointId: string; instruction: string; discarded: string[] }>>();
+  /**
+   * Another attempt was picked (detail: { branch: string | null }); cancelable
+   * Types $event; the element dispatches the event itself.
+   */
+  @Output("tc-branch-change") readonly tcBranchChange = new EventEmitter<CustomEvent<{ branch: string | null }>>();
 }

@@ -95,6 +95,9 @@
     "literal blurred shadow": 7,
     "literal spacing": 18
   },
+  "src/elements/agent-fleet.ts": {
+    "clock/environment read": 1
+  },
   "src/elements/agent-graph.ts": {
     "clock/environment read": 6,
     "literal line-height": 4,

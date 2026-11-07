@@ -1,7 +1,7 @@
 ---
 pattern: none
 status: react-twin
-related: permission-request, autonomy-dial, handoff, tool-call-card
+related: approval-gates, permission-request, autonomy-dial, handoff, tool-call-card
 ---
 
 ## Overview
@@ -18,6 +18,10 @@ you deny”, side by side), `editableDetails` (an “Edit arguments” mode that
 people can fix a recipient or an amount before approving) and `evidence` (chips that open the sources the request
 rests on). Left unset, the card looks exactly as it always has.
 
+Two more show exactly what would change: `diff` – a file change as a small unified diff, its path and +/− counts
+above the lines – and `args` – the call's arguments as a readable code block with its keys, strings and numbers
+coloured. Both sit in the preview and scroll past `--tc-approval-card-code-max`.
+
 ## When to use
 
 - An agent is about to send, pay, delete or publish, and a person must say yes first.
@@ -26,6 +30,7 @@ rests on). Left unset, the card looks exactly as it always has.
 - High-stakes requests where people need the reason, the consequences or the sources – add `why`, `consequences`
   and `evidence`.
 - Actions whose arguments a person may correct rather than deny – set `editable-details`.
+- Changes people should read line by line before saying yes – a file edit as `diff`, a command or migration as `args`.
 
 ## When not to use
 
@@ -33,12 +38,15 @@ rests on). Left unset, the card looks exactly as it always has.
 - Setting in advance what the agent may do without asking – use `autonomy-dial`.
 - Handing a task to a person to do, not just approve – use `handoff`.
 - Showing a tool call that has already run – use `tool-call-card`.
+- Several requests from one run that hold up its next steps – use `approval-gates`.
 
 ## Anatomy
 
 1. **Label** `.ui-ap__label` – where the request comes from, e.g. “Step 4 · gmail.send”
 2. **Header** – the shared card header: a boxed icon, the action, a line of context and the risk badge
 3. **Preview** `.ui-ap__preview` – custom content and the key-value details
+   - **Diff** `.ui-ap__code-sec` – the file's path and +/− counts above the changed lines, `.ui-ap__line` each
+   - **Arguments** `.ui-ap__code` – the call's arguments as indented JSON
 4. **Always allow** `.ui-ap__always` – approve this action from now on
 5. **Countdown** `.ui-ap__timer` – the time left, and Stop
 6. **Buttons** `.ui-ap__actions` – Edit, Deny and Approve, with their shortcuts
@@ -48,7 +56,8 @@ rests on). Left unset, the card looks exactly as it always has.
 Standard puts the header on a gray tray, above a white card with the preview and “Always allow”, and the countdown
 and buttons on the tray below it. In Standard the preview sits in its own gray box. Clean is one white card with the header as its first row: the preview
 as plain rows under a hairline, then “Always allow” and the countdown, with Edit, Deny and Approve at the bottom. `actions="tray"` or `actions="card"` moves the buttons
-in either look.
+in either look. The diff and the arguments sit in a white box on Standard's gray preview and on a soft fill in
+Clean; `--tc-approval-card-code-max` (220px) is the height they scroll past.
 
 ## Keyboard
 
@@ -60,6 +69,7 @@ in either look.
 | Space | On “Always allow”, ticks or clears it |
 | Enter / Space | On “Edit arguments”, turns the text details into fields and focuses the first; on “Done”, turns them back |
 | Escape | In an argument field, leaves “Edit arguments” (keeping the edits) and returns focus to its button – it doesn't deny |
+| Tab, then arrow keys | The diff and the arguments are each one tab stop; the arrow keys scroll them |
 
 ## Screen readers
 
@@ -74,6 +84,9 @@ With `why`, the card is also described by the reason line. Each argument field i
 “Amount”), and an edited row says “Edited”. The evidence chips are a list labelled “Evidence”: links when they have an
 `href` (opening in a new tab), buttons otherwise.
 
+The diff is a region named “Changes: report.config.ts”; each changed line starts with “Added:” or “Removed:” – the
++ and − are hidden – and the counts read “1 added, 1 removed”. The arguments are a region named “Arguments”.
+
 ## Content
 
 - Write the heading as the action in plain words: “Send campaign email”, not the tool's name.
@@ -83,6 +96,8 @@ With `why`, the card is also described by the reason line. Each argument field i
 - Write `why` as the trigger, not the action again: “Refunds over $1,000 need a person – this one is $2,400.”
 - Write each consequence as what actually happens next, including what can't be undone: “The email goes to 2,412
   contacts now. It can't be recalled.” – and for deny, what the agent does instead.
+- Keep a diff to the lines that change and two or three around them; link to the full file elsewhere.
+- Pass the arguments the call will actually run with, not a summary – that is what people are approving.
 - Label evidence chips by what they are (“Invoice INV-2291”), with the type or age in `detail`.
 
 ## Do
@@ -148,6 +163,25 @@ export function SendCampaign({ send }: { send: (always: boolean) => Promise<void
       expiresIn={45}
       onApprove={({ always }) => send(always)}
       onDeny={({ reason }) => console.log(reason)}
+    />
+  );
+}
+
+export function MoveEmbargo() {
+  return (
+    <ApprovalCard
+      title="Move the embargo forward a week"
+      risk="medium"
+      diff={{
+        path: "survey-2026/report.config.ts",
+        lines: [
+          { kind: "context", text: "export const report = {" },
+          { kind: "remove", text: '  embargo: "2026-11-20T09:00Z",' },
+          { kind: "add", text: '  embargo: "2026-11-13T09:00Z",' },
+          { kind: "context", text: "};" },
+        ],
+      }}
+      args={{ branch: "survey-2026", commit: true }}
     />
   );
 }

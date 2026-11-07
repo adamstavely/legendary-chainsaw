@@ -142,6 +142,22 @@ export class ApprovalCard {
   @Input() set evidenceLabel(v: TcApprovalCard["evidenceLabel"]) {
     this.#el.evidenceLabel = v;
   }
+  /** A file change the action would make, shown as a small unified diff: `{ path, lines: [{ kind, text }] }` */
+  @Input() set diff(v: TcApprovalCard["diff"]) {
+    this.#el.diff = v;
+  }
+  /** The heading of the diff */
+  @Input() set diffLabel(v: TcApprovalCard["diffLabel"]) {
+    this.#el.diffLabel = v;
+  }
+  /** The call's arguments, shown as a readable code block */
+  @Input() set args(v: TcApprovalCard["args"]) {
+    this.#el.args = v;
+  }
+  /** The heading of the arguments */
+  @Input() set argsLabel(v: TcApprovalCard["argsLabel"]) {
+    this.#el.argsLabel = v;
+  }
   /** Visual style: "standard" or "clean"; unset follows <tc-look-provider>, else "standard" */
   @Input() set look(v: TcApprovalCard["look"]) {
     this.#el.look = v;

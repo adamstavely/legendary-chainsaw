@@ -325,7 +325,9 @@
    }
   }
  ],
- "changelog": [],
+ "changelog": [
+  "**Agent Fleet** (`tc-agent-fleet`): several top-level agents as cards summing up their sub-agents; opening one shows its `tc-agent-tree` beside it (below it when narrow)."
+ ],
  "frameworks": [
   {
    "tag": "tc-agent-tree",
@@ -670,7 +672,7 @@
   "windowed": false
  },
  "size": {
-  "min": 59853,
-  "gzip": 15834
+  "min": 59880,
+  "gzip": 15842
  }
 }
