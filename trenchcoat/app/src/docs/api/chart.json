@@ -73,6 +73,7 @@
   }
  ],
  "changelog": [
+  "**`tc-chart`, the CLI and MCP tools:** 39 chart types (`rose`, `hexbin`, `network`); `suggestCharts` proposes a hexbin for thousands of points, a rose for a 7-, 12- or 24-step cycle and a network graph for looping links.",
   "**`tc-chart`, the CLI and MCP tools:** 36 chart types (`histogram`, `combo`, `venn`); `suggestCharts` proposes a histogram for one measure with no groups, and a combo chart for two measures on very different scales.",
   "**Chart** (`tc-chart`): any chart from a JSON spec – `{ type, data, encoding, options, title, description }` – checked first, what's wrong shown instead of a chart, only declared properties set. ztd-charts' specs draw as they are, and specs also draw Gauge, Heatmap, Radar Chart and Sparkline, their rows reshaped into those elements' properties."
  ],
@@ -249,7 +250,7 @@
   "windowed": false
  },
  "size": {
-  "min": 409215,
-  "gzip": 129576
+  "min": 444360,
+  "gzip": 141875
  }
 }

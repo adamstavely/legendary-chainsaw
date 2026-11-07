@@ -1481,6 +1481,16 @@
     ]
   },
   {
+    "tag": "tc-hexbin-chart",
+    "name": "HexbinChart",
+    "description": "Many points by x and y gathered into hexagons shaded by count – or the sum or mean of a value – with a ramp legend,",
+    "events": [
+      "tc-view-change",
+      "tc-mark-hover",
+      "tc-mark-click"
+    ]
+  },
+  {
     "tag": "tc-histogram",
     "name": "Histogram",
     "description": "How raw numbers spread, as touching bars on round bin edges – counts or a running total, a density curve and mean",
@@ -1892,6 +1902,16 @@
       "tc-view-change",
       "tc-date-change",
       "tc-visible-change"
+    ]
+  },
+  {
+    "tag": "tc-network-graph",
+    "name": "NetworkGraph",
+    "description": "Any nodes and links, laid out by force – clusters and bridges showing for themselves – with groups in their own inks,",
+    "events": [
+      "tc-view-change",
+      "tc-mark-hover",
+      "tc-mark-click"
     ]
   },
   {
@@ -2540,6 +2560,16 @@
     ]
   },
   {
+    "tag": "tc-rose-chart",
+    "name": "RoseChart",
+    "description": "Equal-angle wedges whose area shows each item's value – a polar area chart – stacked by series if wanted, with the",
+    "events": [
+      "tc-view-change",
+      "tc-mark-hover",
+      "tc-mark-click"
+    ]
+  },
+  {
     "tag": "tc-route-map",
     "name": "RouteMap",
     "description": "An app's routes as an indented list, with status, load time and last visit, filterable by status; pressing one opens it.",
@@ -2818,6 +2848,16 @@
     "description": "How each item changed between two moments, as lines from the first value to the last, the biggest rise",
     "events": [
       "tc-view-change",
+      "tc-mark-hover",
+      "tc-mark-click"
+    ]
+  },
+  {
+    "tag": "tc-small-multiples",
+    "name": "SmallMultiples",
+    "description": "One chart repeated in a grid, a panel per value of a field – any chart a spec can draw – on a shared scale, with",
+    "events": [
+      "tc-spec-check",
       "tc-mark-hover",
       "tc-mark-click"
     ]

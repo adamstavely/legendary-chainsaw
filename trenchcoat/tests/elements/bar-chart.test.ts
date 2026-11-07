@@ -88,6 +88,17 @@ describe("tc-bar-chart", () => {
     expect([...el.querySelectorAll(".tc-sr-only tbody th")].map((t) => t.textContent)).toEqual(["Genomics", "Neuro", "Proteomics", "Imaging"]);
   });
 
+  test("yDomain fixes the value axis, so charts side by side share a scale", async () => {
+    const el = await drawn(await make({ still: true }));
+    const ticks = () => [...el.querySelectorAll('.tc-chart__tick[text-anchor="end"]')].map((t) => Number(t.textContent));
+    expect(Math.max(...ticks())).toBeLessThan(400);
+    const tall = bars(el)[0].getBoundingClientRect().height;
+    el.yDomain = [0, 400];
+    await settle();
+    expect(Math.max(...ticks())).toBe(400);
+    expect(bars(el)[0].getBoundingClientRect().height).toBeLessThan(tall * 0.6);
+  });
+
   test("the entrance: bars grow from the baseline once on screen, then a data change glides", async () => {
     const el = await drawn(await make());
     const h = () => bars(el)[0].getBBox().height;

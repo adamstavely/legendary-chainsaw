@@ -39,6 +39,10 @@ export class BarChart {
   @Input() set sort(v: TcBarChart["sort"] | "" | "true" | "false") {
     this.#el.sort = typeof v === "string" ? v !== "false" : v;
   }
+  /** A fixed value range, [low, high], to compare several charts on one scale; keep 0 inside it. Not for "percent" */
+  @Input() set yDomain(v: TcBarChart["yDomain"]) {
+    this.#el.yDomain = v;
+  }
   /** The heading, and the chart's name */
   @Input() set heading(v: TcBarChart["heading"]) {
     this.#el.heading = v;

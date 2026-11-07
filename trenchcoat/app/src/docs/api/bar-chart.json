@@ -54,6 +54,14 @@
      "readonly": false
     },
     {
+     "name": "yDomain",
+     "attribute": null,
+     "type": "[number, number] | undefined",
+     "default": "undefined",
+     "description": "A fixed value range, [low, high], to compare several charts on one scale; keep 0 inside it. Not for \"percent\"",
+     "readonly": false
+    },
+    {
      "name": "look",
      "attribute": "look",
      "type": "Look | undefined",
@@ -157,7 +165,8 @@
    "data": [
     "x",
     "y",
-    "series"
+    "series",
+    "yDomain"
    ],
    "attributes": [
     {
@@ -444,7 +453,7 @@
   "windowed": false
  },
  "size": {
-  "min": 55470,
-  "gzip": 20090
+  "min": 55793,
+  "gzip": 20180
  }
 }

@@ -48,6 +48,15 @@
       "type": "boolean",
       "description": "Orders one series' bars from the largest"
     },
+    "yDomain": {
+      "type": "array",
+      "items": {
+        "type": "number"
+      },
+      "minItems": 2,
+      "maxItems": 2,
+      "description": "A fixed value range, [low, high], to compare several charts on one scale; keep 0 inside it. Not for \"percent\""
+    },
     "heading": {
       "type": "string",
       "description": "The heading, and the chart's name"

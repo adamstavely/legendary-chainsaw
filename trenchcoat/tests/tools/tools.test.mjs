@@ -178,8 +178,8 @@ describe("trenchcoat chart", () => {
     const out = run("chart", "types");
     assert.equal(out.status, 0, out.stderr);
     assert.match(out.stdout, /^bar\s+tc-bar-chart/m);
-    assert.match(out.stdout, /36 chart types/);
-    assert.equal(JSON.parse(run("chart", "types", "--json").stdout).length, 36);
+    assert.match(out.stdout, /39 chart types/);
+    assert.equal(JSON.parse(run("chart", "types", "--json").stdout).length, 39);
   });
 
   test("validate: exits 0 on a valid spec, 1 with the problems on a bad one", () => {
@@ -279,7 +279,7 @@ describe("trenchcoat-mcp", () => {
 
   test("charts: types, checking a spec, drawing one as SVG (inline data only), and suggestions", async () => {
     const types = JSON.parse((await tool("list_chart_types", {})).content[0].text);
-    assert.equal(types.length, 36);
+    assert.equal(types.length, 39);
     assert.ok(types.every((t) => t.tag.startsWith("tc-") && t.channels.length));
     const bad = JSON.parse((await tool("validate_chart_spec", { spec: { type: "bar", data: [{ a: 1 }] } })).content[0].text);
     assert.equal(bad.valid, false);

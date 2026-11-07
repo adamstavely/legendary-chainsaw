@@ -138,6 +138,9 @@ export const chartTypes: readonly ChartTypeDef[] = [
   def("histogram", "tc-histogram", "Histogram", "basic", "distribution", "Raw values binned into touching bars", "The shape of one measure from many raw values", "Comparing several groups (a box plot or ridgeline is clearer)", [VALUE]),
   def("combo", "tc-combo-chart", "Combo chart", "intermediate", "comparison", "Bars and lines over one x, with a second axis when their ranges differ", "A volume against a rate, like samples against turnaround", "More than 3 series, or two measures with no real link", [ch("x", "any", true, "Category or date field"), ch("bars", "number", true, "Fields drawn as bars", true), ch("lines", "number", false, "Fields drawn as lines", true)]),
   def("venn", "tc-venn-diagram", "Venn diagram", "intermediate", "relationship", "How 2 or 3 sets overlap, circles sized by the sets", "Members shared between two or three groups", "Four or more sets", [ch("sets", "any", true, "The set or sets a row is about, as a list"), ch("size", "number", true, "Size, or the size shared")]),
+  def("rose", "tc-rose-chart", "Rose chart", "intermediate", "comparison", "Equal-angle wedges whose area shows each value – a polar area chart", "A value for each step of a cycle, like months or hours", "Comparing values precisely (bars are clearer)", [LABEL, VALUE, ch("series", "string", false, "Series field, stacked in each wedge")]),
+  def("hexbin", "tc-hexbin-chart", "Hexbin chart", "intermediate", "relationship", "Many x–y points gathered into hexagons shaded by count", "Thousands of points where a scatter plot would be a blot", "A few hundred points or fewer (a scatter plot shows each)", [ch("x", "number", true, "X field"), ch("y", "number", true, "Y field"), ch("value", "number", false, "Value field for aggregate sum or mean")]),
+  def("network", "tc-network-graph", "Network graph", "advanced", "relationship", "Nodes and the links between them, laid out by force", "Clusters and the nodes that bridge them, in up to a few thousand nodes", "One node at the centre of everything (a relationship graph), or one-way flows (a sankey)", [ch("source", "string", true, "One end of a link"), ch("target", "string", true, "The other end"), ch("value", "number", false, "Link strength")]),
   // The library's own Gauge, Heatmap, Radar Chart and Sparkline, drawn in pages; their rows are reshaped to their properties
   def("gauge", "tc-gauge", "Gauge", "basic", "kpi", "One value against its range and target", "One measure, large, against a target", "Comparing several values", [ch("value", "number", true, "Value field (the first row's)"), ch("target", "number", false, "Target field")], { adapt: adaptGauge, pageOnly: true }),
   def("heatmap", "tc-heatmap", "Heatmap", "intermediate", "relationship", "Values where two categories meet, as shades", "Patterns such as runs by weekday and hour", "Exact values matter", [ch("x", "string", true, "Column field"), ch("y", "string", true, "Row field"), VALUE], { adapt: adaptHeatmap, pageOnly: true }),
@@ -151,7 +154,7 @@ for (const d of chartTypes) {
   byType.set(d.tag, d);
 }
 /** ztd's names for the same charts */
-for (const [alias, type] of [["radial-bar", "radialBar"], ["streamgraph", "stream"], ["violin", "box"], ["scatter", "bubble"], ["column", "bar"]] as const) byType.set(alias, byType.get(type.toLowerCase())!);
+for (const [alias, type] of [["radial-bar", "radialBar"], ["streamgraph", "stream"], ["violin", "box"], ["scatter", "bubble"], ["column", "bar"], ["polar", "rose"], ["nightingale", "rose"], ["graph", "network"]] as const) byType.set(alias, byType.get(type.toLowerCase())!);
 
 
 /** A chart type by name or tag; undefined when a spec can't draw it */

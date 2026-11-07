@@ -15,8 +15,8 @@ const LABS = [
 
 describe("chart specs", () => {
   test("every type maps to a chart tag, by name or tag, with ztd's aliases", () => {
-    expect(chartTypes.length).toBe(36);
-    expect(new Set(chartTypes.map((t) => t.tag)).size).toBe(36);
+    expect(chartTypes.length).toBe(39);
+    expect(new Set(chartTypes.map((t) => t.tag)).size).toBe(39);
     expect(chartType("bar")?.tag).toBe("tc-bar-chart");
     expect(chartType("tc-sankey-chart")?.type).toBe("sankey");
     expect(chartType("radialBar")?.tag).toBe("tc-radial-bar-chart");
@@ -97,5 +97,24 @@ describe("suggesting charts", () => {
     expect(suggestCharts(shapes[2]).suggestions[0].type).toBe("sankey");
     expect(suggestCharts(shapes[3]).suggestions.map((s) => s.type)).toContain("dumbbell");
     expect(suggestCharts(shapes[1]).suggestions[0].type).toBe("line");
+  });
+
+  test("the later charts are suggested where they fit, each with a valid spec", () => {
+    const has = (rows: Record<string, unknown>[], type: string) => {
+      const s = suggestCharts(rows).suggestions.find((x) => x.type === type);
+      expect(s, type).toBeDefined();
+      expect(validateSpec(s!.spec), type).toMatchObject({ valid: true });
+    };
+    // One measure, no groups
+    has(Array.from({ length: 40 }, (_, i) => ({ hours: 10 + ((i * 7) % 23) })), "histogram");
+    // Two measures far apart in scale along one x
+    has(Array.from({ length: 12 }, (_, i) => ({ month: `2026-${String(i + 1).padStart(2, "0")}-01`, samples: 150 + i * 9, hours: 20 + (i % 5) })), "combo");
+    // Too many points for a scatter plot
+    has(Array.from({ length: 4000 }, (_, i) => ({ temp: (i * 37) % 100, drift: (i * 53) % 70 })), "hexbin");
+    // A month cycle
+    has(["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"].map((month, i) => ({ month, applications: 20 + ((i * 11) % 30) })), "rose");
+    // Links that close loops among many nodes
+    const people = ["Ada", "Ben", "Cy", "Di", "Ed", "Flo", "Gus", "Hal", "Ivy"];
+    has(people.flatMap((p, i) => [{ source: p, target: people[(i + 1) % 9], weight: 1 + (i % 3) }, { source: p, target: people[(i + 3) % 9], weight: 1 }]), "network");
   });
 });

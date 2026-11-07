@@ -25,8 +25,8 @@ import { dataSignature } from "./parse";
 import type { ChartEvent, Highlight, Row, TooltipData } from "./types";
 
 export type ChartView = "chart" | "table";
-/** How the active mark was reached */
-export type ActiveVia = "pointer" | "keyboard" | "touch";
+/** How the active mark was reached; "linked" is another chart's echo (linkActive) */
+export type ActiveVia = "pointer" | "keyboard" | "touch" | "linked";
 
 /** Details of the events */
 export type ChartViewChange = { view: ChartView };
@@ -304,6 +304,17 @@ export abstract class TcChartElement<M, T = Row> extends TcElement {
     this.via = i === null ? null : via;
     if (changedMark) this.emit<ChartMarkHover<T>>("tc-mark-hover", { event: i === null ? null : (this.model.events[i] ?? null) });
   }
+  /**
+   * Shows the mark with this event key (or none) as active, as an echo of another chart – drawn, but with no tooltip,
+   * announcement or event – for charts that move together (tc-small-multiples). A mark the chart's own pointer or
+   * keyboard is on wins
+   */
+  linkActive(key: string | null) {
+    if (this.via !== null && this.via !== "linked") return;
+    const i = key === null ? -1 : this.model.events.findIndex((e) => e.key === key);
+    this.active = i < 0 ? null : i;
+    this.via = i < 0 ? null : "linked";
+  }
   /** Fires tc-mark-click for mark i */
   protected clickMark(i: number) {
     const event = this.model.events[i];
@@ -424,7 +435,7 @@ export abstract class TcChartElement<M, T = Row> extends TcElement {
   /* ---------- Rendering ---------- */
 
   private renderTip(frame: ChartFrame) {
-    if (this.hideTooltip || this.active === null || this.measured === null) return nothing;
+    if (this.hideTooltip || this.active === null || this.measured === null || this.via === "linked") return nothing;
     const t = this.tip(this.active, frame);
     if (!t) return nothing;
     const below = t.y < 64;
