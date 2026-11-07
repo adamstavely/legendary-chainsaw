@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.3.0 – Angular: one entry point per element
+
+- **Angular:** every directive has its own entry point, `@adamstavely/trenchcoat/angular/<name>` (typed by
+  `dist/angular/<name>.d.ts`): `import { SideNav } from "@adamstavely/trenchcoat/angular/side-nav"` loads that
+  element only, so an element used on a lazy route stays in that route's chunk. Through the index
+  (`@adamstavely/trenchcoat/angular`, still exported, with `TRENCHCOAT`), a bundler with lazy routes can hoist every
+  element imported that way into the initial bundle. The docs, `trenchcoat info` and `trenchcoat init` now show the
+  per-element import; `check:angular` compiles against one and checks, with an esbuild code-splitting build, that a
+  lazy chunk's elements stay out of the initial chunks.
+
 ## 0.2.1 – Side Nav: the brand routes too
 
 - **Side Nav:** a plain click on the linked brand (`brand-href`) fires the cancelable `tc-navigate` as the items do,

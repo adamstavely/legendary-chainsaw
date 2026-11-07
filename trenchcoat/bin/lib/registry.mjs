@@ -58,7 +58,7 @@ export function usageFor(entry) {
     usage.svelte = `<script>\n  ${plain.replace("\n", "\n  ")}\n</script>\n\n${tag}`;
     if (component) {
       usage.react = `import { ${component} } from "@adamstavely/trenchcoat/react";\nimport "@adamstavely/trenchcoat/tokens.css";\n\n<${component} />`;
-      usage.angular = `import { ${component} } from "@adamstavely/trenchcoat/angular";\n// add ${component} to the component's imports, then:\n// ${tag}`;
+      usage.angular = `import { ${component} } from "@adamstavely/trenchcoat/angular/${entry.slug}";\n// add ${component} to the component's imports, then:\n// ${tag}`;
     }
   }
   return usage;

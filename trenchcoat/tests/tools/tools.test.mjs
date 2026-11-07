@@ -119,7 +119,7 @@ describe("trenchcoat CLI", () => {
       const out = JSON.parse(run("info", name, "--json").stdout);
       assert.equal(out.tag, "tc-share-panel");
       assert.match(out.usage.react, /SharePanel/);
-      assert.match(out.usage.angular, /trenchcoat\/angular/);
+      assert.match(out.usage.angular, /from "@adamstavely\/trenchcoat\/angular\/share-panel"/);
       assert.match(out.usage.html, /trenchcoat\/share-panel/);
     }
     const missing = run("info", "nope");

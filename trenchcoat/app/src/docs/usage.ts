@@ -67,6 +67,8 @@ export type Framework = "html" | "react" | "vue" | "angular" | "svelte";
 
 /** The element's Angular directive in @adamstavely/trenchcoat/angular: its class name without "Tc" (TcCombobox → Combobox) */
 export const angularName = (f: { className: string }) => f.className.replace(/^Tc/, "");
+/** The element's own Angular entry point – @adamstavely/trenchcoat/angular/<slug> – which loads that element only, so a lazy route keeps it */
+export const angularModule = (f: { module: string }) => f.module.replace("@adamstavely/trenchcoat/", "@adamstavely/trenchcoat/angular/");
 /** [key, tab label, long label, code language] – HTML first: it's the one every other framework builds on */
 export const FRAMEWORKS: [Framework, string, string, string][] = [
   ["html", "HTML", "HTML", "html"],
@@ -163,7 +165,7 @@ ${data.length ? `${typeImport}\n\n${props}` : "\n"}${event ? `const ${handler(ev
 
   const directive = angularName(f);
   const angular = `import { Component${data.length ? ", input" : ""} } from "@angular/core";
-import { ${directive} } from "@adamstavely/trenchcoat/angular";
+import { ${directive} } from "${angularModule(f)}";
 ${data.length ? `${typeImport}\n` : ""}
 @Component({
   selector: "app-${slug}-example",
@@ -256,7 +258,7 @@ const ${on} = (e: ${detail}) => {
 </template>`;
 
   const angular = `import { Component, input, linkedSignal } from "@angular/core";
-import { ${angularName(f)} } from "@adamstavely/trenchcoat/angular";
+import { ${angularName(f)} } from "${angularModule(f)}";
 ${typeImport}
 
 @Component({
