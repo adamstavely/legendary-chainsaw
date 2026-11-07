@@ -46,6 +46,34 @@ export class CommandMenu {
   @Input() set maxRows(v: TcCommandMenu["maxRows"] | `${number}`) {
     this.#el.maxRows = typeof v === "string" ? Number(v) : v;
   }
+  /** "panel" (the default): the full menu · "popover": a compact field for an app header that opens the results under it */
+  @Input() set layout(v: TcCommandMenu["layout"]) {
+    this.#el.layout = v;
+  }
+  /** "local" (the default) filters `groups` by the typed text; "none" shows them as given, for results the page fetches */
+  @Input() set filter(v: TcCommandMenu["filter"]) {
+    this.#el.filter = v;
+  }
+  /** With text typed, offer to ask the assistant about it (the first row); assistant="false" leaves it out */
+  @Input() set assistant(v: TcCommandMenu["assistant"] | "" | "true" | "false") {
+    this.#el.assistant = typeof v === "string" ? v !== "false" : v;
+  }
+  /** Results are on their way: shows "Searching…" and says so */
+  @Input() set loading(v: TcCommandMenu["loading"] | "" | "true" | "false") {
+    this.#el.loading = typeof v === "string" ? v !== "false" : v;
+  }
+  /** What shows when the typed text matches nothing; {query} is replaced with it */
+  @Input() set emptyText(v: TcCommandMenu["emptyText"]) {
+    this.#el.emptyText = v;
+  }
+  /** The search field's accessible name */
+  @Input() set label(v: TcCommandMenu["label"]) {
+    this.#el.label = v;
+  }
+  /** In popover layout, on a dark header bar: the field takes the dark theme's colours, the popover keeps the page's */
+  @Input() set inverse(v: TcCommandMenu["inverse"] | "" | "true" | "false") {
+    this.#el.inverse = typeof v === "string" ? v !== "false" : v;
+  }
   /** Visual style: "standard" or "clean"; unset follows <tc-look-provider>, else "standard" */
   @Input() set look(v: TcCommandMenu["look"]) {
     this.#el.look = v;

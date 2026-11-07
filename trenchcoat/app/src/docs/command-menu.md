@@ -31,6 +31,8 @@ devices) focuses the field from anywhere on the page.
 2. **Group label** `.ui-cm__label` – the title above each group
 3. **Command** `.ui-cm__item` – one row: the tool's logo or an icon, the label, a hint and its keys
 4. **Hint** `.ui-cm__hint` – lighter text after the label: the tool, a person or a channel
+5. **State** `.ui-cm__state` – “Searching…” while `loading`, or the empty text when nothing matches
+6. **Popover** `.ui-cm__pop` – with `layout="popover"`, the results under the field
 
 ## Looks
 
@@ -39,6 +41,43 @@ the menu – in the tray below it. Clean is one white panel with hairline shadow
 ↵ key in the field, the hints as the panel's last row, and a highlight that fades when the pointer leaves the list.
 Both filter, run and announce the same way; below 480 px wide the keys and hints are hidden.
 
+### In an app header, over results from a server
+
+For a top bar's ⌘K search, set `layout="popover"`: a compact field, 32 px tall (28 px in Clean) and 280–420 px wide
+as its container allows, with the placeholder and a ⌘K (Ctrl K) hint. Focus or typing opens the results in a popover
+under it – in the top layer, so the header's `overflow` never clips it. Esc or a click outside closes it and keeps
+the text; Enter runs the active row and closes it.
+
+When the results come from your API, set `filter="none"`: the menu shows `groups` exactly as you give them, matches
+still highlighted. Fetch on `tc-query-change` (debounced on your side), set `loading` while the request is out – a
+quiet “Searching…” row – and `groups` when it's back. `empty-text` is what shows when nothing matches; `{query}` is
+replaced with what was typed. `assistant="false"` leaves out the “Ask assistant about …” row, for apps without one.
+
+On a header bar that's dark in both themes, add `inverse`: the field takes the dark theme's colours while the popover
+keeps the page's theme, as `tc-header-nav`'s `inverse` does.
+
+```html
+<tc-command-menu id="search" layout="popover" filter="none" assistant="false" inverse
+  placeholder="Search topics, gaps, papers, people…" empty-text="Nothing matches “{query}”"></tc-command-menu>
+
+<script type="module">
+  import "@adamstavely/trenchcoat/command-menu";
+
+  const search = document.querySelector("#search");
+  let timer;
+  search.addEventListener("tc-query-change", (e) => {
+    clearTimeout(timer);
+    timer = setTimeout(async () => {
+      search.loading = true;
+      const res = await fetch(`/search?q=${encodeURIComponent(e.detail.query)}`);
+      search.groups = await res.json();
+      search.loading = false;
+    }, 200);
+  });
+  search.onRun = (id) => location.assign(`/go/${id}`);
+</script>
+```
+
 ## Keyboard
 
 | Key | What it does |
@@ -46,7 +85,7 @@ Both filter, run and announce the same way; below 480 px wide the keys and hints
 | ↓ / ↑ | Moves to the next or previous command, wrapping at either end |
 | Enter | Runs the active command |
 | ⌘1–⌘5 (Ctrl 1–5) | Runs the first to fifth suggestion |
-| Escape | Clears the search; with the search empty, fires `tc-close` |
+| Escape | Clears the search; with the search empty, fires `tc-close`. In popover layout, closes the results first and keeps the text |
 | ⌘K (Ctrl K) | From anywhere on the page: focuses the field and selects its text (change it or turn it off with `hotkey`) |
 | Tab | Left to the browser – moves focus on |
 
@@ -58,6 +97,10 @@ title, each command an `option`, `aria-selected` on the active one; key chips ar
 says what ran – “Ran “Write an email”” or “Asked the assistant about “…”” – and says it again when the same command
 runs twice. While a promise from `onRun` is pending the menu is `aria-busy`; if it rejects, an alert says “Couldn't
 run “Write an email”” (or “Couldn't ask the assistant”).
+
+In popover layout the field is a combobox (`aria-autocomplete="list"`) that's expanded only while the popover is open,
+and `aria-activedescendant` points at a row only then. `loading` makes the field `aria-busy` and says “Searching…”;
+when results arrive the status region says how many (“5 results”), or the empty text.
 
 ## Content
 

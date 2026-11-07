@@ -1,4 +1,4 @@
-import { html, nothing, svg, type TemplateResult } from "lit";
+import { html, nothing, svg, type PropertyValues, type TemplateResult } from "lit";
 import { property, state } from "lit/decorators.js";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { keyed } from "lit/directives/keyed.js";
@@ -6,6 +6,7 @@ import { live } from "lit/directives/live.js";
 import { repeat } from "lit/directives/repeat.js";
 import { TcElement } from "./internal/base";
 import { HotkeyController } from "./internal/controllers";
+import { PopoverController } from "./internal/popover";
 
 /*
  * <tc-command-menu> – the Lit port of src/components/command-menu.tsx: search and run anything from one field.
@@ -21,6 +22,15 @@ import { HotkeyController } from "./internal/controllers";
  *
  * Logos and icons are elements, cloned per row; ids inside a clone (gradients) are made unique, so several menus on
  * one page never share them.
+ *
+ * For an app header's ⌘K search over results from a server: `layout="popover"` is a compact field that opens the
+ * results in a popover under it (a combobox and its listbox); `filter="none"` shows `groups` exactly as given, for the
+ * page to fill from its API on tc-query-change; `loading` shows "Searching…"; `empty-text` says when nothing matches;
+ * `assistant="false"` drops the "Ask assistant about …" row; `inverse` styles the field for a dark bar while the
+ * popover keeps the page's theme.
+ *
+ *   <tc-command-menu layout="popover" filter="none" assistant="false" .groups=${results} .onRun=${(id) => go(id)}
+ *     @tc-query-change=${(e) => search(e.detail.query)}></tc-command-menu>
  */
 
 export type CommandMenuCommand = {
@@ -154,6 +164,14 @@ let cloneId = 0;
 
 type RunStatus = { id: string; label: string; state: "pending" | "failed" };
 
+/** "panel": the full menu, field and list always shown · "popover": a compact field that opens the list under it */
+export type CommandMenuLayout = "panel" | "popover";
+/** "local": the menu filters `groups` by the typed text · "none": `groups` show as given (the page filters, e.g. on a server) */
+export type CommandMenuFilter = "local" | "none";
+
+/** Attributes for booleans that are on by default: "false" turns them off */
+const onByDefault = { fromAttribute: (v: string | null) => v !== "false" };
+
 /**
  * Search and run anything from one field.
  * @tag tc-command-menu
@@ -179,6 +197,20 @@ export class TcCommandMenu extends TcElement {
   @property({ type: Boolean, attribute: "autofocus" }) accessor autoFocus = false;
   /** Most rows rendered at once – with more matches the menu shows the first ones and asks to keep typing */
   @property({ type: Number, attribute: "max-rows" }) accessor maxRows = 200;
+  /** "panel" (the default): the full menu · "popover": a compact field for an app header that opens the results under it */
+  @property({ reflect: true }) accessor layout: CommandMenuLayout = "panel";
+  /** "local" (the default) filters `groups` by the typed text; "none" shows them as given, for results the page fetches */
+  @property() accessor filter: CommandMenuFilter = "local";
+  /** With text typed, offer to ask the assistant about it (the first row); assistant="false" leaves it out */
+  @property({ converter: onByDefault }) accessor assistant = true;
+  /** Results are on their way: shows "Searching…" and says so */
+  @property({ type: Boolean }) accessor loading = false;
+  /** What shows when the typed text matches nothing; {query} is replaced with it */
+  @property({ attribute: "empty-text" }) accessor emptyText = "Nothing matches “{query}”";
+  /** The search field's accessible name */
+  @property() accessor label = "Command";
+  /** In popover layout, on a dark header bar: the field takes the dark theme's colours, the popover keeps the page's */
+  @property({ type: Boolean, reflect: true }) accessor inverse = false;
 
   /** @internal */
   @state() private accessor active: string | null = null;
@@ -201,8 +233,22 @@ export class TcCommandMenu extends TcElement {
   private runs = new Set<AbortController>();
   private ranTimer = 0;
   private ro?: ResizeObserver;
+  private observedList: Element | null = null;
+  /** @internal What the results announcement last said, and for which text, so it's said once per change */
+  private announced = "";
   /** @internal Clones of logos and icons, per element, so gradient ids stay unique and nodes aren't re-cloned on every update */
   private clones = new WeakMap<Element, Element>();
+
+  /** @internal The results under the field, in popover layout */
+  private readonly pop = new PopoverController(this, {
+    popover: () => this.querySelector<HTMLElement>(".ui-cm__pop"),
+    anchor: () => this.querySelector<HTMLElement>(".ui-cm__search"),
+    side: "bottom",
+    align: "start",
+    gap: 4,
+    returnFocus: () => this.input,
+    onClose: () => this.requestUpdate(),
+  });
 
   constructor() {
     super();
@@ -263,6 +309,7 @@ export class TcCommandMenu extends TcElement {
   private observeHeight() {
     const list = this.querySelector<HTMLElement>(".ui-cm__list");
     const inner = this.querySelector<HTMLElement>(".ui-cm__inner");
+    this.observedList = list;
     if (!list || !inner) return;
     const measure = () => {
       const style = getComputedStyle(list);
@@ -279,14 +326,14 @@ export class TcCommandMenu extends TcElement {
   }
 
   /** @internal The rows that match the search */
-  private filter() {
+  private results() {
     const q = this.query.trim();
-    const needle = q.toLowerCase();
+    const needle = this.filter === "none" ? "" : q.toLowerCase();
     const result = this.groups
       .map((g) => ({ ...g, commands: g.commands.filter((c) => !needle || `${c.label} ${c.hint ?? ""} ${c.keywords ?? ""}`.toLowerCase().includes(needle)) }))
       .filter((g) => g.commands.length);
-    // With text typed, the first row always offers to ask the assistant about it
-    if (needle) result.unshift({ id: "ask-about", label: "Assistant", commands: [{ id: "ask-about", label: `Ask assistant about “${q}”`, logo: (sparkTile ??= svgEl(SPARK)) }] });
+    // With text typed, the first row offers to ask the assistant about it
+    if (q && this.assistant) result.unshift({ id: "ask-about", label: "Assistant", commands: [{ id: "ask-about", label: `Ask assistant about “${q}”`, logo: (sparkTile ??= svgEl(SPARK)) }] });
     const total = result.reduce((n, g) => n + g.commands.length, 0);
     if (total <= this.maxRows) return { q, groups: result, total, cut: false };
     let left = this.maxRows;
@@ -302,7 +349,7 @@ export class TcCommandMenu extends TcElement {
 
   /** @internal */
   private view() {
-    const filtered = this.filter();
+    const filtered = this.results();
     const order = filtered.groups.flatMap((g) => g.commands);
     const suggestions = filtered.groups.find((g) => g.id === "suggestions")?.commands ?? [];
     const current = order.find((c) => c.id === this.active) ?? order[0];
@@ -322,6 +369,22 @@ export class TcCommandMenu extends TcElement {
     if (ran) this.ranTimer = window.setTimeout(() => (this.ran = null), 1800);
   }
 
+  /** @internal Whether the popover has anything to show: rows, "Searching…" or the empty text */
+  private get hasResults() {
+    return this.view().order.length > 0 || this.loading || !!this.query.trim();
+  }
+
+  /** @internal Opens the results under the field (popover layout), when there's something to show */
+  private openPop() {
+    if (this.layout !== "popover" || this.pop.open || !this.hasResults) return;
+    this.pop.show();
+  }
+
+  /** @internal The empty text for what's typed */
+  private get emptyMessage() {
+    return this.emptyText.split("{query}").join(this.query.trim());
+  }
+
   /** @internal */
   private setQuery(query: string) {
     if (this.emit("tc-query-change", { query }, { cancelable: true })) this.query = query;
@@ -333,6 +396,7 @@ export class TcCommandMenu extends TcElement {
     if (this.status?.state === "pending") return;
     const q = this.query.trim();
     this.active = cmd.id;
+    if (this.layout === "popover") this.pop.close();
     const label = cmd.id === "ask-about" ? `Asked the assistant about “${q}”` : cmd.label;
     const controller = new AbortController();
     const result = cmd.id === "ask-about" ? this.onRun?.("ask", q, { signal: controller.signal }) : this.onRun?.(cmd.id, undefined, { signal: controller.signal });
@@ -377,12 +441,21 @@ export class TcCommandMenu extends TcElement {
     // Keys typed into an IME belong to the IME
     if (e.isComposing || e.keyCode === 229) return;
     const { current, suggestions } = this.view();
+    const popover = this.layout === "popover";
     if (e.key === "ArrowDown" || e.key === "ArrowUp") {
       e.preventDefault();
-      this.move(e.key === "ArrowDown" ? 1 : -1);
-    } else if (e.key === "Enter" && current) {
+      // In a closed popover the first arrow only opens it
+      if (popover && !this.pop.open) this.openPop();
+      else this.move(e.key === "ArrowDown" ? 1 : -1);
+    } else if (e.key === "Enter" && current && (!popover || this.pop.open)) {
       e.preventDefault();
       this.run(current);
+    } else if (e.key === "Escape" && popover) {
+      // Esc closes the results and keeps the text; in a closed popover it clears the text
+      e.preventDefault();
+      if (this.pop.open) this.pop.close("escape");
+      else if (this.query) this.setQuery("");
+      else this.emit("tc-close", null);
     } else if (e.key === "Escape") {
       if (this.query) this.setQuery("");
       else this.emit("tc-close", null);
@@ -399,7 +472,33 @@ export class TcCommandMenu extends TcElement {
     this.observeHeight();
   }
 
+  protected override willUpdate(changed: Map<PropertyKey, unknown>) {
+    super.willUpdate(changed as PropertyValues);
+    // Searching, and the results that come back, are announced politely – once per change. The panel's list is always
+    // on screen, so only the popover says how many results there are
+    if (changed.has("loading") && this.loading) {
+      this.announced = "";
+      this.said = { text: "Searching…", alert: false, n: this.said.n + 1 };
+      return;
+    }
+    if (this.layout !== "popover" || this.loading || !(changed.has("groups") || changed.has("query") || changed.has("loading"))) return;
+    const q = this.query.trim();
+    if (!q) return;
+    const n = this.view().order.filter((c) => c.id !== "ask-about").length;
+    const text = n ? `${n} result${n === 1 ? "" : "s"}` : this.emptyMessage;
+    if (`${q}\u0000${text}` === this.announced) return;
+    this.announced = `${q}\u0000${text}`;
+    this.said = { text, alert: false, n: this.said.n + 1 };
+  }
+
   protected override updated(changed: Map<PropertyKey, unknown>) {
+    // The popover's list comes and goes: its height follows its rows while it's there
+    if (this.querySelector(".ui-cm__list") !== this.observedList) this.observeHeight();
+    // New results while the field has focus open the popover; none left to show closes it
+    if (this.layout === "popover") {
+      if (!this.pop.open && this.contains(document.activeElement) && this.query.trim() && (changed.has("groups") || changed.has("loading"))) this.openPop();
+      else if (this.pop.open && !this.hasResults) this.pop.close();
+    }
     if (this.status?.state === "pending") this.setAttribute("aria-busy", "true");
     else this.removeAttribute("aria-busy");
     if (changed.has("autoFocus") && this.autoFocus) this.input?.focus();
@@ -447,91 +546,131 @@ export class TcCommandMenu extends TcElement {
     </footer>`;
   }
 
+  /** @internal The search field: the panel's first row, or the popover layout's compact field */
+  private renderSearch(clean: boolean, popover: boolean, current: CommandMenuCommand | undefined) {
+    const id = this.baseId;
+    const expanded = popover ? this.pop.open : true;
+    const icon = clean || popover
+      ? html`<svg viewBox="0 0 16 16" aria-hidden="true">${svg`<circle cx="7.25" cy="7.25" r="4.75"></circle><path d="m13.5 13.5-2.9-2.9"></path>`}</svg>`
+      : html`<svg viewBox="0 0 24 24" aria-hidden="true">${svg`<circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path>`}</svg>`;
+    const end = popover
+      ? this.hotkey
+        ? html`<span class="ui-cm__hotkey" aria-hidden="true">${comboKeys(this.hotkey, this.mod).map((k) => html`<kbd>${k}</kbd>`)}</span>`
+        : nothing
+      : clean
+        ? html`<kbd class="ui-cm__enter" aria-hidden="true"><svg viewBox="0 0 16 16">${svg`<path d="M12.5 4v3a2 2 0 0 1-2 2h-7M6 6.5 3.5 9 6 11.5"></path>`}</svg></kbd>`
+        : html`<span class="ui-cm__enter" aria-hidden="true"><svg viewBox="0 0 24 24">${svg`<path d="M19 6v5a3 3 0 0 1-3 3H6m4-4-4 4 4 4"></path>`}</svg>Enter</span>`;
+    return html`<label class="ui-cm__search">
+      ${icon}
+      <input
+        .value=${live(this.query)}
+        placeholder=${this.placeholder}
+        aria-label=${this.label}
+        role="combobox"
+        aria-autocomplete=${ifDefined(popover ? "list" : undefined)}
+        aria-expanded=${expanded ? "true" : "false"}
+        aria-controls=${`${id}-list`}
+        aria-busy=${ifDefined(this.loading ? "true" : undefined)}
+        aria-activedescendant=${ifDefined(expanded && current ? `${id}-${current.id}` : undefined)}
+        @focus=${() => this.openPop()}
+        @click=${() => this.openPop()}
+        @input=${(e: Event) => {
+          this.active = null;
+          this.setQuery((e.target as HTMLInputElement).value);
+          this.openPop();
+        }}
+        @keydown=${this.onKeyDown}
+      />
+      ${end}
+    </label>`;
+  }
+
+  /** @internal The results: the listbox, "Searching…", the empty text and the "keep typing" line */
+  private renderResults(view: ReturnType<TcCommandMenu["view"]>) {
+    const id = this.baseId;
+    const { filtered, order, suggestions, current } = view;
+    const q = filtered.q;
+    const empty = !this.loading && !!q && !order.length;
+    return html`
+      ${this.loading ? html`<p class="ui-cm__state" data-state="loading">Searching…</p>` : nothing}
+      ${empty ? html`<p class="ui-cm__state" data-state="empty">${this.emptyMessage}</p>` : nothing}
+      <div id=${`${id}-list`} class="ui-cm__list" role="listbox" aria-label=${this.layout === "popover" ? "Results" : "Commands"} ?hidden=${!order.length} @mouseleave=${() => (this.lit = false)}>
+        ${order.length ? html`<span class="ui-cm__pill" ?data-lit=${this.lit} aria-hidden="true"></span>` : nothing}
+        <div class="ui-cm__inner">
+          ${repeat(
+            filtered.groups,
+            (g) => g.id,
+            (group) => html`<div role="group" aria-label=${group.label} class="ui-cm__group">
+              ${group.id !== "ask-about" ? html`<span class="ui-cm__label">${group.label}</span>` : nothing}
+              ${repeat(
+                group.commands,
+                (c) => c.id,
+                (cmd) => {
+                  const n = group.id === "suggestions" ? suggestions.indexOf(cmd) + 1 : 0;
+                  const keys = n ? [this.mod, String(n)] : cmd.keys;
+                  return html`<button
+                    id=${`${id}-${cmd.id}`}
+                    data-id=${cmd.id}
+                    type="button"
+                    role="option"
+                    aria-selected=${cmd.id === current?.id ? "true" : "false"}
+                    ?data-ran=${this.ran?.id === cmd.id}
+                    ?data-pending=${this.status?.state === "pending" && this.status.id === cmd.id}
+                    class="ui-cm__item"
+                    tabindex="-1"
+                    @mousemove=${() => {
+                      this.lit = true;
+                      if (cmd.id !== this.view().current?.id) this.active = cmd.id;
+                    }}
+                    @click=${() => {
+                      this.run(cmd);
+                      this.input?.focus({ preventScroll: true });
+                    }}
+                  >
+                    ${cmd.logo ? html`<span class="ui-cm__logo">${this.mark(cmd.logo)}</span>` : html`<span class="ui-cm__icon">${cmd.icon ? this.mark(cmd.icon) : nothing}</span>`}
+                    <span class="ui-cm__text">
+                      <span class="ui-cm__name">${highlight(cmd.label, q)}</span>
+                      ${cmd.hint ? html`<span class="ui-cm__hint">${highlight(cmd.hint, q)}</span>` : nothing}
+                    </span>
+                    ${keys ? html`<span class="ui-cm__keys" aria-hidden="true">${keys.map((k) => html`<kbd>${k}</kbd>`)}</span>` : nothing}
+                  </button>`;
+                },
+              )}
+            </div>`,
+          )}
+        </div>
+      </div>
+      ${filtered.cut ? html`<p class="ui-cm__more">Showing ${order.length} of ${filtered.total} – keep typing to narrow the list</p>` : nothing}
+    `;
+  }
+
   protected override render() {
     const clean = this.resolvedLook === "clean";
-    const id = this.baseId;
-    const { filtered, order, suggestions, current } = this.view();
-    const q = filtered.q;
-    const foot = this.footer(clean);
+    const popover = this.layout === "popover";
+    const view = this.view();
     const said = this.said;
+    const live = html`<span class="ui-cm__sr" role="status">${!said.alert && said.text ? said.text + (said.n % 2 ? "" : " ") : ""}</span>
+      <span class="ui-cm__sr" role="alert">${said.alert ? said.text + (said.n % 2 ? "" : " ") : ""}</span>`;
 
+    if (popover) {
+      // The field, and the results in a popover under it (in the top layer, so a header's overflow never clips it)
+      return html`
+        ${this.renderSearch(clean, true, view.current)}
+        ${this.pop.open
+          ? html`<div class="tc-pop ui-cm__pop" style=${`--tc-cm-field-w: ${this.querySelector(".ui-cm__search")?.getBoundingClientRect().width ?? 0}px`}>${this.renderResults(view)}</div>`
+          : nothing}
+        ${live}
+      `;
+    }
+    const foot = this.footer(clean);
     return html`
       <div class="ui-cm__card">
-        <label class="ui-cm__search">
-          ${clean
-            ? html`<svg viewBox="0 0 16 16" aria-hidden="true">${svg`<circle cx="7.25" cy="7.25" r="4.75"></circle><path d="m13.5 13.5-2.9-2.9"></path>`}</svg>`
-            : html`<svg viewBox="0 0 24 24" aria-hidden="true">${svg`<circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path>`}</svg>`}
-          <input
-            .value=${live(this.query)}
-            placeholder=${this.placeholder}
-            aria-label="Command"
-            role="combobox"
-            aria-expanded="true"
-            aria-controls=${`${id}-list`}
-            aria-activedescendant=${ifDefined(current ? `${id}-${current.id}` : undefined)}
-            @input=${(e: Event) => {
-              this.active = null;
-              this.setQuery((e.target as HTMLInputElement).value);
-            }}
-            @keydown=${this.onKeyDown}
-          />
-          ${clean
-            ? html`<kbd class="ui-cm__enter" aria-hidden="true"><svg viewBox="0 0 16 16">${svg`<path d="M12.5 4v3a2 2 0 0 1-2 2h-7M6 6.5 3.5 9 6 11.5"></path>`}</svg></kbd>`
-            : html`<span class="ui-cm__enter" aria-hidden="true"><svg viewBox="0 0 24 24">${svg`<path d="M19 6v5a3 3 0 0 1-3 3H6m4-4-4 4 4 4"></path>`}</svg>Enter</span>`}
-        </label>
-
-        <div id=${`${id}-list`} class="ui-cm__list" role="listbox" aria-label="Commands" @mouseleave=${() => (this.lit = false)}>
-          ${order.length ? html`<span class="ui-cm__pill" ?data-lit=${this.lit} aria-hidden="true"></span>` : nothing}
-          <div class="ui-cm__inner">
-            ${repeat(
-              filtered.groups,
-              (g) => g.id,
-              (group) => html`<div role="group" aria-label=${group.label} class="ui-cm__group">
-                ${group.id !== "ask-about" ? html`<span class="ui-cm__label">${group.label}</span>` : nothing}
-                ${repeat(
-                  group.commands,
-                  (c) => c.id,
-                  (cmd) => {
-                    const n = group.id === "suggestions" ? suggestions.indexOf(cmd) + 1 : 0;
-                    const keys = n ? [this.mod, String(n)] : cmd.keys;
-                    return html`<button
-                      id=${`${id}-${cmd.id}`}
-                      data-id=${cmd.id}
-                      type="button"
-                      role="option"
-                      aria-selected=${cmd.id === current?.id ? "true" : "false"}
-                      ?data-ran=${this.ran?.id === cmd.id}
-                      ?data-pending=${this.status?.state === "pending" && this.status.id === cmd.id}
-                      class="ui-cm__item"
-                      tabindex="-1"
-                      @mousemove=${() => {
-                        this.lit = true;
-                        if (cmd.id !== this.view().current?.id) this.active = cmd.id;
-                      }}
-                      @click=${() => {
-                        this.run(cmd);
-                        this.input?.focus({ preventScroll: true });
-                      }}
-                    >
-                      ${cmd.logo ? html`<span class="ui-cm__logo">${this.mark(cmd.logo)}</span>` : html`<span class="ui-cm__icon">${cmd.icon ? this.mark(cmd.icon) : nothing}</span>`}
-                      <span class="ui-cm__text">
-                        <span class="ui-cm__name">${highlight(cmd.label, q)}</span>
-                        ${cmd.hint ? html`<span class="ui-cm__hint">${highlight(cmd.hint, q)}</span>` : nothing}
-                      </span>
-                      ${keys ? html`<span class="ui-cm__keys" aria-hidden="true">${keys.map((k) => html`<kbd>${k}</kbd>`)}</span>` : nothing}
-                    </button>`;
-                  },
-                )}
-              </div>`,
-            )}
-          </div>
-        </div>
-        ${filtered.cut ? html`<p class="ui-cm__more">Showing ${order.length} of ${filtered.total} – keep typing to narrow the list</p>` : nothing}
+        ${this.renderSearch(clean, false, view.current)}
+        ${this.renderResults(view)}
         ${clean ? foot : nothing}
       </div>
       ${!clean ? foot : nothing}
-      <span class="ui-cm__sr" role="status">${!said.alert && said.text ? said.text + (said.n % 2 ? "" : " ") : ""}</span>
-      <span class="ui-cm__sr" role="alert">${said.alert ? said.text + (said.n % 2 ? "" : " ") : ""}</span>
+      ${live}
     `;
   }
 
@@ -721,6 +860,29 @@ export class TcCommandMenu extends TcElement {
 :where([data-look="clean"], [data-look="clean"] *).ui-cm__item { height: 44px; }
 :where([data-look="clean"], [data-look="clean"] *).ui-cm__search { height: 52px; }
 }
+/* "Searching…" and the empty text – quiet rows where results go */
+.ui-cm__state { margin: 0; padding: var(--tc-space-3) var(--tc-space-3-5); font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); color: var(--tc-text-muted); }
+.ui-cm__list[hidden] { display: none; }
+/* Popover layout: a compact search field for an app header – no tray or card – that opens the results under it */
+[data-ui="cm"][layout="popover"] { display: block; width: 100%; min-width: min(280px, 100%); max-width: 420px; padding: 0; border-radius: 0; background: none; box-shadow: none; }
+[data-ui="cm"][layout="popover"] .ui-cm__search { display: flex; align-items: center; gap: var(--tc-space-2); height: var(--tc-control-h-md); padding: 0 var(--tc-space-1-5) 0 var(--tc-space-2-5); border: 0; border-radius: var(--tc-field-radius); background: var(--tc-field-bg-sunken); color: var(--tc-text-muted); cursor: text; transition: background-color var(--tc-duration-fast) var(--tc-ease-standard); }
+[data-ui="cm"][layout="popover"] .ui-cm__search:focus-within { background: var(--tc-field-bg); box-shadow: var(--tc-field-shadow-focus); }
+[data-ui="cm"][layout="popover"] .ui-cm__search > svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; }
+[data-ui="cm"][layout="popover"] .ui-cm__search input { flex: 1; min-width: 0; height: 100%; padding: 0; border: 0; background: transparent; font: inherit; font-size: var(--tc-font-size-md); color: var(--tc-text-primary); outline: none; }
+.ui-cm__search input::-webkit-search-cancel-button { display: none; }
+/* The ⌘K hint goes once there's text */
+.ui-cm__hotkey { display: inline-flex; flex: none; gap: var(--tc-space-0-5); }
+.ui-cm__search:has(input:not(:placeholder-shown)) .ui-cm__hotkey { display: none; }
+/* The results: as wide as the field, and never narrower than 320px */
+.ui-cm__pop { width: max(var(--tc-cm-field-w, 320px), 320px); padding: 0; overflow: hidden; }
+.ui-cm__pop .ui-cm__list { max-height: min(400px, 60vh); padding: var(--tc-space-1); overflow-y: auto; scrollbar-width: thin; }
+.ui-cm__pop .ui-cm__label { padding: var(--tc-space-2) var(--tc-space-2) var(--tc-space-1); }
+.ui-cm__pop .ui-cm__pill { left: var(--tc-space-1); right: var(--tc-space-1); }
+.ui-cm__pop .ui-cm__item { height: 36px; padding: 0 var(--tc-space-2); }
+/* Search results often have no icon: no empty slot before the label */
+.ui-cm__pop .ui-cm__icon:empty { display: none; }
+/* On a dark header bar (inverse): the field takes the dark theme's colours; the popover, its sibling, keeps the page's */
+[data-ui="cm"][layout="popover"][inverse] .ui-cm__search { color-scheme: dark; }
 .ui-cm__more { margin: 0; padding: var(--tc-space-2) var(--tc-space-3-5) var(--tc-space-2-5); border-top: var(--tc-hairline) solid var(--tc-divider); font-size: var(--tc-font-size-sm); line-height: var(--tc-line-height-tight); color: var(--tc-text-muted); }
 .ui-cm__sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 @media (prefers-reduced-motion: reduce) {
