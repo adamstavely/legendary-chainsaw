@@ -45,6 +45,16 @@ export type OrgStat = {
   /** "danger" marks the value, e.g. over budget; the sub-line should say why */
   tone?: "default" | "success" | "warning" | "danger";
 };
+/** One more figure on a team's row, after coverage, gaps and FTE */
+export type OrgFigure = {
+  id: string;
+  /** Written as shown, e.g. "50%", "—" */
+  value: string;
+  /** The quiet word under it, e.g. "joint" */
+  label: string;
+  /** Tints the value, as a stat's tone does */
+  tone?: "default" | "success" | "warning" | "danger";
+};
 export type OrgHealthCounts = Partial<Record<OrgHealth, number>>;
 export type OrgItem = {
   id: string;
@@ -77,6 +87,8 @@ export type OrgTeam = {
   gaps?: number;
   /** Effort, in full-time equivalents */
   fte?: number;
+  /** More figures of the page's own, after coverage, gaps and FTE */
+  figures?: OrgFigure[];
   items?: OrgItem[];
 };
 export type OrgAction = { id: string; label: string; variant?: "primary" | "secondary" };
@@ -311,6 +323,9 @@ export class TcOrgUnitCard extends TcElement {
           ${t.coverage !== undefined ? html`<span class="ui-orgu__fig"><span class="ui-orgu__fig-n">${pct(t.coverage)}</span><span class="ui-orgu__fig-l">coverage</span></span>` : nothing}
           ${t.gaps !== undefined ? html`<span class="ui-orgu__fig"><span class="ui-orgu__fig-n">${t.gaps}</span><span class="ui-orgu__fig-l">gaps</span></span>` : nothing}
           ${t.fte !== undefined ? html`<span class="ui-orgu__fig"><span class="ui-orgu__fig-n">${t.fte}</span><span class="ui-orgu__fig-l">FTE</span></span>` : nothing}
+          ${(t.figures ?? []).map(
+            (f) => html`<span class="ui-orgu__fig" data-id=${f.id} data-tone=${f.tone ?? "default"}><span class="ui-orgu__fig-n">${f.value}</span><span class="ui-orgu__fig-l">${f.label}</span></span>`,
+          )}
         </span>
       </button>
       <ul class="ui-orgu__items" id=${listId} aria-label=${`${t.name}: ${this.itemsLabel}`} ?hidden=${!open || !items.length}>
@@ -470,6 +485,9 @@ export class TcOrgUnitCard extends TcElement {
 .ui-orgu__figures { display: flex; flex: none; gap: var(--tc-space-4); }
 .ui-orgu__fig { display: grid; justify-items: end; min-width: 40px; }
 .ui-orgu__fig-n { font-size: var(--tc-font-size-sm); font-weight: var(--tc-font-weight-medium); line-height: var(--tc-line-height-tight); color: var(--tc-text-primary); font-variant-numeric: tabular-nums; }
+.ui-orgu__fig[data-tone="success"] .ui-orgu__fig-n { color: var(--tc-status-success-fg); }
+.ui-orgu__fig[data-tone="warning"] .ui-orgu__fig-n { color: var(--tc-status-warning-fg); }
+.ui-orgu__fig[data-tone="danger"] .ui-orgu__fig-n { color: var(--tc-status-danger-fg); }
 .ui-orgu__fig-l { font-size: var(--tc-font-size-2xs); line-height: var(--tc-line-height-tight); color: var(--tc-text-muted); }
 /* A team's items, indented under it */
 .ui-orgu__items { padding: 0 0 var(--tc-space-2) var(--tc-space-6) !important; animation: ui-orgu-in var(--tc-duration-moderate) var(--tc-ease-move) both; }

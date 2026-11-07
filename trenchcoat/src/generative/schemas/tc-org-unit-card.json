@@ -185,6 +185,13 @@
           "type": "number",
           "description": "Effort, in full-time equivalents"
         },
+        "figures": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OrgFigure"
+          },
+          "description": "More figures of the page's own, after coverage, gaps and FTE"
+        },
         "items": {
           "type": "array",
           "items": {
@@ -234,6 +241,39 @@
         }
       },
       "additionalProperties": false
+    },
+    "OrgFigure": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string",
+          "description": "Written as shown, e.g. \"50%\", \"—\""
+        },
+        "label": {
+          "type": "string",
+          "description": "The quiet word under it, e.g. \"joint\""
+        },
+        "tone": {
+          "type": "string",
+          "enum": [
+            "danger",
+            "default",
+            "success",
+            "warning"
+          ],
+          "description": "Tints the value, as a stat's tone does"
+        }
+      },
+      "required": [
+        "id",
+        "value",
+        "label"
+      ],
+      "additionalProperties": false,
+      "description": "One more figure on a team's row, after coverage, gaps and FTE"
     },
     "OrgItem": {
       "type": "object",

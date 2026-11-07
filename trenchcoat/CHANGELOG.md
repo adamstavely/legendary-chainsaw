@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.5.0 – Org unit card: a team's own figures
+
+- **Org Unit Card:** `OrgTeam.figures` – more figures on a team's row, after coverage, gaps and FTE: each an `id`, a
+  `value` written as shown ("50%", "—"), a quiet `label` under it ("joint") and an optional `tone` (`"success"`,
+  `"warning"`, `"danger"`) that tints the value as a stat's tone does. Like the built-in figures, they hide when the
+  card is narrower than 560px. The `OrgFigure` type is exported, from the React entry too.
+
 ## 0.4.1 – Lint fixes for charts
 
 - **`trenchcoat lint`:** a chart's own properties inherited from the chart base – `heading`, `description`, `data`,

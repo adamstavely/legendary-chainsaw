@@ -156,6 +156,44 @@ describe("tc-org-unit-card", () => {
     expect(row(el, "t:cog").getAttribute("tabindex")).toBe("0");
   });
 
+  test("a team's own figures follow coverage, gaps and FTE in order, tinted by tone; a team without them shows none", async () => {
+    const teams: OrgTeam[] = [
+      {
+        ...TEAMS[0],
+        figures: [
+          { id: "joint", value: "50%", label: "joint", tone: "success" },
+          { id: "late", value: "3", label: "late", tone: "danger" },
+          { id: "pubs", value: "—", label: "papers" },
+        ],
+      },
+      TEAMS[1],
+    ];
+    const el = await fixture<TcOrgUnitCard>(html`<tc-org-unit-card heading="Intelligent Systems" .teams=${teams}></tc-org-unit-card>`);
+    const figs = [...row(el, "t:cog").querySelectorAll<HTMLElement>(".ui-orgu__fig")];
+    expect(figs.map((f) => [f.querySelector(".ui-orgu__fig-n")!.textContent, f.querySelector(".ui-orgu__fig-l")!.textContent])).toEqual([
+      ["61%", "coverage"],
+      ["5", "gaps"],
+      ["2.6", "FTE"],
+      ["50%", "joint"],
+      ["3", "late"],
+      ["—", "papers"],
+    ]);
+    const color = (f: HTMLElement) => getComputedStyle(f.querySelector(".ui-orgu__fig-n")!).color;
+    const probe = (token: string) => {
+      const p = document.createElement("span");
+      p.style.color = `var(${token})`;
+      el.append(p);
+      const c = getComputedStyle(p).color;
+      p.remove();
+      return c;
+    };
+    expect(color(figs[3])).toBe(probe("--tc-status-success-fg"));
+    expect(color(figs[4])).toBe(probe("--tc-status-danger-fg"));
+    expect(color(figs[3])).not.toBe(color(figs[2]));
+    expect(color(figs[5])).toBe(color(figs[2]));
+    expect(row(el, "t:auto").querySelectorAll(".ui-orgu__fig")).toHaveLength(0);
+  });
+
   test("header actions fire tc-action; an element with no lead, health or teams renders just its header", async () => {
     const el = await make();
     const ids: string[] = [];

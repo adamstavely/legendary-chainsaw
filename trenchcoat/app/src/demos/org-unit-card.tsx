@@ -25,6 +25,7 @@ const TEAMS: OrgTeam[] = [
     coverage: 0.61,
     gaps: 5,
     fte: 2.6,
+    figures: [{ id: "joint", value: "50%", label: "joint", tone: "success" }],
     items: [
       { id: "neuro", label: "Neuromorphic Computing", priority: 1, tag: "Flagship", detail: "4 in work", coverage: 0.42, open: 4, momentum: -0.08, health: "at-risk" },
       { id: "adv", label: "Adversarial ML Robustness", priority: 3, tag: "Core", detail: "3 in work", coverage: 0.8, open: 1, momentum: 0.06, health: "on-track" },
@@ -39,6 +40,7 @@ const TEAMS: OrgTeam[] = [
     coverage: 0.71,
     gaps: 3,
     fte: 1.9,
+    figures: [{ id: "joint", value: "—", label: "joint" }],
     items: [
       { id: "swarm", label: "Autonomous Swarm Coordination", priority: 2, tag: "Core", detail: "2 in work", coverage: 0.83, open: 1, momentum: 0.05, health: "on-track" },
       { id: "edge", label: "Edge AI for Sensing", priority: 4, detail: "2 in work", coverage: 0.58, open: 2, momentum: 0.02, health: "watch" },
