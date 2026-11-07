@@ -7,7 +7,7 @@ import { afterEach, describe, expect, test, vi } from "vitest";
 import { userEvent } from "vitest/browser";
 import "../../src/elements/tips-panel";
 import type { TcTipsPanel, TipsPanelTip } from "../../src/elements/tips-panel";
-import { cleanup, fixture, settle } from "./helpers";
+import { cleanup, finish, fixture, settle } from "./helpers";
 
 afterEach(cleanup);
 
@@ -137,6 +137,8 @@ describe("tc-tips-panel", () => {
       <tc-tips-panel .tips=${tips} .done=${["a"]} closable></tc-tips-panel>
       <tc-tips-panel look="clean" heading="Clean" .tips=${tips} closable></tc-tips-panel>
     </div>`);
+    // The tips fade in one after another: measure contrast on settled colours, not mid-fade
+    await finish(wrap);
     const result = await axe.run(wrap, { runOnly: { type: "tag", values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"] }, resultTypes: ["violations"] });
     expect(result.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
   });

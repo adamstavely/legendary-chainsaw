@@ -100,8 +100,9 @@ const slugify = (s: string) =>
     .replace(/^-|-$/g, "")
     .slice(0, 48) || "image";
 
-/** Saves an image: data: and blob: URLs directly, others through fetch (a cross-origin image without CORS opens in a new tab instead) */
-async function saveImage(src: string, filename: string, keep: (url: string) => void) {
+/** Saves an image: data: and blob: URLs directly, others through fetch (a cross-origin image without CORS opens in a new tab instead).
+ *  `keep` takes the fetched image's object URL; when it returns false (the grid went away while fetching), nothing is saved */
+async function saveImage(src: string, filename: string, keep: (url: string) => boolean) {
   const safe = safeMediaUrl(src);
   if (!safe) return;
   src = safe;
@@ -113,7 +114,7 @@ async function saveImage(src: string, filename: string, keep: (url: string) => v
       const res = await fetch(src);
       if (!res.ok) throw new Error(String(res.status));
       a.href = URL.createObjectURL(await res.blob());
-      keep(a.href);
+      if (!keep(a.href)) return;
     } catch {
       a.target = "_blank";
       a.rel = "noopener";
@@ -329,12 +330,18 @@ export class TcImageGrid extends TcElement {
     const name = tile.filename ?? `${slugify(this.heading)}-${i + 1}.${extOf(tile.src)}`;
     this.said = `Downloading ${labelOf(tile, i)}`;
     void saveImage(tile.src, name, (url) => {
+      // The grid left while the image was fetched: let go of it, and don't start a download from a page that moved on
+      if (!this.isConnected) {
+        URL.revokeObjectURL(url);
+        return false;
+      }
       // Revoked once the download has started, or when the grid goes away
       this.urls.add(url);
       this.later(() => {
         URL.revokeObjectURL(url);
         this.urls.delete(url);
       }, 4000);
+      return true;
     });
   }
 
