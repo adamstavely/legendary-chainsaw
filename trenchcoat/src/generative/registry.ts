@@ -298,6 +298,7 @@ export const registry: Record<string, { events: string[]; load: () => Promise<un
   "tc-search-results": { events: ["tc-search","tc-options-change","tc-expanded-change","tc-selected-change","tc-open","tc-replacement-change","tc-replace","tc-action"], load: () => import("../elements/search-results"), schema: () => import("./schemas/tc-search-results.json") },
   "tc-segmented-bar": { events: ["tc-view-change","tc-mark-hover","tc-mark-click"], load: () => import("../elements/segmented-bar"), schema: () => import("./schemas/tc-segmented-bar.json") },
   "tc-segmented-control": { events: ["tc-value-change"], load: () => import("../elements/segmented-control"), schema: () => import("./schemas/tc-segmented-control.json") },
+  "tc-select": { events: ["tc-value-change","tc-open-change"], load: () => import("../elements/select"), schema: () => import("./schemas/tc-select.json") },
   "tc-selection-toolbar": { events: ["tc-command","tc-pressed-change","tc-values-change","tc-close"], load: () => import("../elements/selection-toolbar"), schema: () => import("./schemas/tc-selection-toolbar.json") },
   "tc-sensitivity-label-picker": { events: ["tc-value-change"], load: () => import("../elements/sensitivity-label-picker"), schema: () => import("./schemas/tc-sensitivity-label-picker.json") },
   "tc-session-context-bar": { events: ["tc-term-edit","tc-terms-changed"], load: () => import("../elements/session-context-bar"), schema: () => import("./schemas/tc-session-context-bar.json") },

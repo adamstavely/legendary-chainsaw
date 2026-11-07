@@ -325,6 +325,7 @@ export * from "./search-results";
 export * from "./secret-field";
 export * from "./segmented-bar";
 export * from "./segmented-control";
+export * from "./select";
 export * from "./selection-toolbar";
 export * from "./selection-translate";
 export * from "./sensitivity-label-picker";
